@@ -23,7 +23,7 @@
 ##
 ## ### REF
 ## The full commit id of the current latest master.
-
+##
 ## ### PATCHES
 ## A list of patches to be applied to the extracted sources.
 ##
@@ -37,7 +37,7 @@
 ## * [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
 
 function(vcpkg_from_git)
-  set(oneValueArgs OUT_SOURCE_PATH URL REF)
+  set(oneValueArgs OUT_SOURCE_PATH URL REF SHA512)
   set(multipleValuesArgs PATCHES)
   cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
@@ -53,11 +53,32 @@ function(vcpkg_from_git)
     message(FATAL_ERROR "The git ref must be specified.")
   endif()
 
+  if(NOT DEFINED _vdud_SHA512)
+    message(FATAL_ERROR "vcpkg_from_git requires a SHA512 argument. If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
+  endif()
+
   string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
-  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.tar.gz")
+  set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}.zip")
+  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.zip")
   set(TEMP_SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SANITIZED_REF}")
 
+  function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)
+    file(SHA512 ${FILE_PATH} FILE_HASH)
+    if(NOT FILE_HASH STREQUAL _vdud_SHA512)
+        message(FATAL_ERROR
+            "\nFile does not have expected hash:\n"
+            "        File path: [ ${FILE_PATH} ]\n"
+            "    Expected hash: [ ${_vdud_SHA512} ]\n"
+            "      Actual hash: [ ${FILE_HASH} ]\n"
+            "${CUSTOM_ERROR_ADVICE}\n")
+    endif()
+  endfunction()
+
   if(NOT EXISTS "${ARCHIVE}")
+    if(_VCPKG_NO_DOWNLOADS)
+        message(FATAL_ERROR "Downloads are disabled, but '${ARCHIVE}' does not exist.")
+    endif()
+    message(STATUS "Fetching ${_vdud_URL}...")
     find_program(GIT NAMES git git.cmd)
     # Note: git init is safe to run multiple times
     vcpkg_execute_required_process(
@@ -70,19 +91,28 @@ function(vcpkg_from_git)
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch
     )
+    file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     vcpkg_execute_required_process(
-      COMMAND ${GIT} archive ${_vdud_REF} -o "${ARCHIVE}"
+      COMMAND ${GIT} archive ${_vdud_REF} -o "${TEMP_ARCHIVE}"
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-archive
     )
+    test_hash("${TEMP_ARCHIVE}" "downloaded repo" "")
+    get_filename_component(downloaded_file_dir "${ARCHIVE}" DIRECTORY)
+    file(MAKE_DIRECTORY "${downloaded_file_dir}")
+    file(RENAME "${TEMP_ARCHIVE}" "${ARCHIVE}")
+  else()
+    message(STATUS "Using cached ${ARCHIVE}")
+    test_hash("${ARCHIVE}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
   endif()
 
-  vcpkg_extract_source_archive("${ARCHIVE}" "${TEMP_SOURCE_PATH}")
-
-  vcpkg_apply_patches(
-    SOURCE_PATH "${TEMP_SOURCE_PATH}"
+  vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    REF "${SANITIZED_REF}"
     PATCHES ${_vdud_PATCHES}
+    NO_REMOVE_ONE_LEVEL
   )
-  set(${_vdud_OUT_SOURCE_PATH} "${TEMP_SOURCE_PATH}" PARENT_SCOPE)
-  message(STATUS "Using source at ${TEMP_SOURCE_PATH}")
+
+  set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
