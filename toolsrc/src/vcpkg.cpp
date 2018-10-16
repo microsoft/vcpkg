@@ -113,7 +113,7 @@ static void inner(const VcpkgCmdArguments& args)
 #endif
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
 
-    if (args.command != "autocomplete")
+    if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
         std::string surveydate = *GlobalState::g_surveydate.lock();
