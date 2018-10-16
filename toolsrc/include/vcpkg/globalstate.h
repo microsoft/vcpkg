@@ -22,6 +22,8 @@ namespace vcpkg
 
         struct CtrlCStateMachine
         {
+            CtrlCStateMachine();
+
             void transition_to_spawn_process() noexcept;
             void transition_from_spawn_process() noexcept;
             void transition_handle_ctrl_c() noexcept;
@@ -34,7 +36,7 @@ namespace vcpkg
                 exit_requested,
             };
 
-            std::atomic<CtrlCState> m_state = CtrlCState::normal;
+            std::atomic<CtrlCState> m_state;
         };
 
         static CtrlCStateMachine g_ctrl_c_state;

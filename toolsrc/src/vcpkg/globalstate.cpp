@@ -17,6 +17,8 @@ namespace vcpkg
 
     GlobalState::CtrlCStateMachine GlobalState::g_ctrl_c_state;
 
+    GlobalState::CtrlCStateMachine::CtrlCStateMachine() : m_state(CtrlCState::normal) {}
+
     void GlobalState::CtrlCStateMachine::transition_to_spawn_process() noexcept
     {
         auto expected = CtrlCState::normal;
