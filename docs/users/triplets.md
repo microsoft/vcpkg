@@ -107,6 +107,9 @@ Valid settings:
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
 
+### VCPKG_NO_INSTALL
+When enabled, this option disables the building and installation of ports. See the section on **Per-port customization** for how to enable this variable for specific ports.
+
 ## MacOS Variables
 
 ### VCPKG_INSTALL_NAME_DIR
