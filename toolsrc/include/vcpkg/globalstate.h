@@ -18,5 +18,25 @@ namespace vcpkg
 
         static std::atomic<int> g_init_console_cp;
         static std::atomic<int> g_init_console_output_cp;
+        static std::atomic<bool> g_init_console_initialized;
+
+        struct CtrlCStateMachine
+        {
+            void transition_to_spawn_process() noexcept;
+            void transition_from_spawn_process() noexcept;
+            void transition_handle_ctrl_c() noexcept;
+
+        private:
+            enum class CtrlCState
+            {
+                normal,
+                blocked_on_child,
+                exit_requested,
+            };
+
+            std::atomic<CtrlCState> m_state = CtrlCState::normal;
+        };
+
+        static CtrlCStateMachine g_ctrl_c_state;
     };
 }

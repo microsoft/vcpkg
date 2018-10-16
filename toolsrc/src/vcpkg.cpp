@@ -261,6 +261,7 @@ int main(const int argc, const char* const* const argv)
 #if defined(_WIN32)
     GlobalState::g_init_console_cp = GetConsoleCP();
     GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
+    GlobalState::g_init_console_initialized = true;
 
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
@@ -275,6 +276,9 @@ int main(const int argc, const char* const* const argv)
         locked_metrics->track_property("cmdline", trimmed_command_line);
 #endif
     }
+
+    Checks::register_console_ctrl_handler();
+
     load_config();
 
     const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
@@ -292,8 +296,6 @@ int main(const int argc, const char* const* const argv)
     if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (const auto p = args.debug.get()) GlobalState::debugging = *p;
-
-    Checks::register_console_ctrl_handler();
 
     if (GlobalState::debugging)
     {

@@ -133,7 +133,7 @@ namespace vcpkg::System
     static void windows_create_clean_process(const CStringView cmd_line,
                                              const std::unordered_map<std::string, std::string>& extra_env,
                                              PROCESS_INFORMATION& process_info,
-                                             DWORD dwCreationFlags)
+                                             DWORD dwCreationFlags) noexcept
     {
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
@@ -242,7 +242,7 @@ namespace vcpkg::System
 #endif
 
 #if defined(_WIN32)
-    void cmd_execute_no_wait(const CStringView cmd_line)
+    void cmd_execute_no_wait(const CStringView cmd_line) noexcept
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -258,7 +258,8 @@ namespace vcpkg::System
     }
 #endif
 
-    int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
+    int cmd_execute_clean(const CStringView cmd_line,
+                          const std::unordered_map<std::string, std::string>& extra_env) noexcept
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
@@ -266,11 +267,13 @@ namespace vcpkg::System
         PROCESS_INFORMATION process_info;
         memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 
+        GlobalState::g_ctrl_c_state.transition_to_spawn_process();
         windows_create_clean_process(cmd_line, extra_env, process_info, NULL);
 
         CloseHandle(process_info.hThread);
 
         const DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
+        GlobalState::g_ctrl_c_state.transition_from_spawn_process();
         Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
 
         DWORD exit_code = 0;
@@ -279,6 +282,7 @@ namespace vcpkg::System
         CloseHandle(process_info.hProcess);
 
         Debug::println("CreateProcessW() returned %lu after %d us", exit_code, static_cast<int>(timer.microseconds()));
+
         return static_cast<int>(exit_code);
 #else
         Debug::println("system(%s)", cmd_line.c_str());
@@ -289,16 +293,18 @@ namespace vcpkg::System
 #endif
     }
 
-    int cmd_execute(const CStringView cmd_line)
+    int cmd_execute(const CStringView cmd_line) noexcept
     {
         // Flush stdout before launching external process
         fflush(nullptr);
 
-        // Basically we are wrapping it in quotes
 #if defined(_WIN32)
+        // We are wrap the command line in quotes to cause cmd.exe to correctly process it
         const std::string& actual_cmd_line = Strings::format(R"###("%s")###", cmd_line);
         Debug::println("_wsystem(%s)", actual_cmd_line);
+        GlobalState::g_ctrl_c_state.transition_to_spawn_process();
         const int exit_code = _wsystem(Strings::to_utf16(actual_cmd_line).c_str());
+        GlobalState::g_ctrl_c_state.transition_from_spawn_process();
         Debug::println("_wsystem() returned %d", exit_code);
 #else
         Debug::println("_system(%s)", cmd_line);
@@ -308,7 +314,7 @@ namespace vcpkg::System
         return exit_code;
     }
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line)
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line) noexcept
     {
         // Flush stdout before launching external process
         fflush(stdout);
@@ -321,9 +327,11 @@ namespace vcpkg::System
         Debug::println("_wpopen(%s)", actual_cmd_line);
         std::wstring output;
         wchar_t buf[1024];
+        GlobalState::g_ctrl_c_state.transition_to_spawn_process();
         const auto pipe = _wpopen(Strings::to_utf16(actual_cmd_line).c_str(), L"r");
         if (pipe == nullptr)
         {
+            GlobalState::g_ctrl_c_state.transition_from_spawn_process();
             return {1, Strings::to_utf8(output.c_str())};
         }
         while (fgetws(buf, 1024, pipe))
@@ -332,10 +340,12 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
+            GlobalState::g_ctrl_c_state.transition_from_spawn_process();
             return {1, Strings::to_utf8(output.c_str())};
         }
 
         const auto ec = _pclose(pipe);
+        GlobalState::g_ctrl_c_state.transition_from_spawn_process();
 
         // On Win7, output from powershell calls contain a utf-8 byte order mark in the utf-16 stream, so we strip it
         // out if it is present. 0xEF,0xBB,0xBF is the UTF-8 byte-order mark
