@@ -1,3 +1,0 @@
-add_library(vulkan-memory-allocator::vulkan-memory-allocator INTERFACE IMPORTED GLOBAL)
-target_include_directories(vulkan-memory-allocator::vulkan-memory-allocator INTERFACE "@CURRENT_INSTALLED_DIR@/include")
-add_library(vulkan-memory-allocator ALIAS vulkan-memory-allocator::vulkan-memory-allocator)
