@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         001-fix-unresolved-symbol.patch
         002-fix-install-path.patch
+        install-one-flavor.patch
 )
 
 vcpkg_configure_cmake(
