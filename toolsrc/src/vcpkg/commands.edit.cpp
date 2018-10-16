@@ -155,6 +155,16 @@ namespace vcpkg::Commands::Edit
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
         const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+
+        auto editor_exe = env_editor.filename().u8string();
+
+#ifdef _WIN32
+        if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
+        {
+            System::cmd_execute_no_wait(cmd_line + " <NUL");
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+#endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
     }
 }
