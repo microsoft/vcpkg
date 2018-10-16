@@ -223,7 +223,7 @@ namespace vcpkg::System
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
         startup_info.cb = sizeof(STARTUPINFOW);
 
-        // Basically we are wrapping it in quotes
+        // Wrapping the command in a single set of quotes causes cmd.exe to correctly execute
         const std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
         Debug::println("CreateProcessW(%s)", actual_cmd_line);
         bool succeeded = TRUE == CreateProcessW(nullptr,
@@ -316,9 +316,6 @@ namespace vcpkg::System
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line) noexcept
     {
-        // Flush stdout before launching external process
-        fflush(stdout);
-
         auto timer = Chrono::ElapsedTimer::create_started();
 
 #if defined(_WIN32)
@@ -328,6 +325,8 @@ namespace vcpkg::System
         std::wstring output;
         wchar_t buf[1024];
         GlobalState::g_ctrl_c_state.transition_to_spawn_process();
+        // Flush stdout before launching external process
+        fflush(stdout);
         const auto pipe = _wpopen(Strings::to_utf16(actual_cmd_line).c_str(), L"r");
         if (pipe == nullptr)
         {
@@ -364,6 +363,8 @@ namespace vcpkg::System
         Debug::println("popen(%s)", actual_cmd_line);
         std::string output;
         char buf[1024];
+        // Flush stdout before launching external process
+        fflush(stdout);
         const auto pipe = popen(actual_cmd_line.c_str(), "r");
         if (pipe == nullptr)
         {
