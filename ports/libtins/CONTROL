@@ -1,0 +1,3 @@
+Source: libtins
+Version: 4.0
+Description: High-level, multiplatform C++ network packet sniffing and crafting library
