@@ -13,7 +13,7 @@ namespace vcpkg::Export::IFW
 
     static std::string create_release_date()
     {
-        const tm date_time = System::get_current_date_time();
+        const tm date_time = Chrono::get_current_date_time_local();
 
         // Format is: YYYY-mm-dd
         // 10 characters + 1 null terminating character will be written for a total of 11 chars

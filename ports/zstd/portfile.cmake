@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 d3c8c1dfabd251b03205b64eff97898c1e2ca457191b1f6257450e6d2675451a68aa0bc2220b2c65baa69a6997d98490612779d95b3325320c0a3202810ae554
     HEAD_REF dev)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ZSTD_STATIC 1)
     set(ZSTD_SHARED 0)
 else()
@@ -14,10 +14,12 @@ else()
     set(ZSTD_SHARED 1)
 endif()
 
-# Enable multithreaded mode. CMake build doesn't provide a multithreaded
-# library target, but it is the default in Makefile and VS projects.
-set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /DZSTD_MULTITHREAD")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS}")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    # Enable multithreaded mode. CMake build doesn't provide a multithreaded
+    # library target, but it is the default in Makefile and VS projects.
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -DZSTD_MULTITHREAD")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS}")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
@@ -36,7 +38,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     foreach(HEADER zdict.h zstd.h zstd_errors.h)
         file(READ ${CURRENT_PACKAGES_DIR}/include/${HEADER} HEADER_CONTENTS)
         string(REPLACE "defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)" "1" HEADER_CONTENTS "${HEADER_CONTENTS}")

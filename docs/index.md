@@ -1,6 +1,6 @@
 ### Quick Start
 
-Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are currently in a preview state; your involvement is vital to its success.
+Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement are vital to its success!
 
 - [How to use Sqlite in your application](examples/using-sqlite.md)
 

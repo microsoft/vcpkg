@@ -1,11 +1,3 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -14,11 +6,8 @@ vcpkg_from_github(
     REF 563bc6e87a43c38b5495469307922c768edbd191
     SHA512 4377b3b8fe421812be2afb9f9df138f2fb7c9415fe0767d3716491e4264cb1d948b4f372ac9f046633c1037bfeabec02a8e7543794091791c51336bb608ec148
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH} 
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Do-not-generate-build-version.inc.patch
+    PATCHES
+        0001-Do-not-generate-build-version.inc.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/third_party/glslang)
@@ -36,11 +25,11 @@ endif()
 # shaderc uses python to manipulate copyright information
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
+vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DSHADERC_SKIP_TESTS=true ${OPTIONS}
+    OPTIONS -DSHADERC_SKIP_TESTS=true ${OPTIONS} -Dglslang_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include
     OPTIONS_DEBUG -DSUFFIX_D=true
     OPTIONS_RELEASE -DSUFFIX_D=false
 )

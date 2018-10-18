@@ -52,21 +52,14 @@ target_include_directories(libuv PUBLIC ./include PRIVATE ./src)
 set_target_properties(libuv PROPERTIES DEFINE_SYMBOL BUILDING_UV_SHARED)
 
 if(NOT UV_SKIP_HEADERS)
-    install(FILES
-    include/tree.h
-    include/uv.h
-    include/uv-version.h
-    include/uv-errno.h
-    include/uv-threadpool.h
-    include/uv-win.h
-    include/uv-unix.h
-    include/uv-darwin.h
-    include/pthread-barrier.h
-    DESTINATION include
-)
+    install(
+        DIRECTORY include/
+        DESTINATION include
+    )
 endif()
 
 install(TARGETS libuv
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib)
+    LIBRARY DESTINATION lib
+)
