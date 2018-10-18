@@ -1,0 +1,3 @@
+Source: getopt-win32
+Version: 0.1
+Description: An implementation of getopt provided by https://github.com/libimobiledevice-win32

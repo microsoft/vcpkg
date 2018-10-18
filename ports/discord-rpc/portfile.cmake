@@ -8,26 +8,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(STATIC_CRT OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(STATIC_CRT ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DUSE_STATIC_CRT=${STATIC_CRT}
+    PREFER_NINJA
+    OPTIONS
+        -DUSE_STATIC_CRT=${STATIC_CRT}
+        -DBUILD_EXAMPLES=OFF
+        -DRAPIDJSONTEST=TRUE
+        -DRAPIDJSON=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
 
-# Remove bin and debug include
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin
-                        ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/send-presence.exe
-                ${CURRENT_PACKAGES_DIR}/debug/bin/send-presence.exe)
-endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Copy copright information

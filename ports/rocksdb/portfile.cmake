@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v5.12.4
-  SHA512 661e30a9fd2a83f2d8dbcc9f27e8ae2e83f384bb7f4f61dc41d89e85d93edc1032b70ab97063e0e3c0bda591612214793d1b075c6dcfeda2e0a32acb6e9d8689
+  REF v5.14.2
+  SHA512 44ea887157daa1b504205d73ec07ff2c74164973aa057e58a02f39e0540dc394af8218da8bda57152c2a3171262e7147a5dbc4b6dd2c25eb35388d0786de0e35
   HEAD_REF master
 )
 
@@ -13,6 +13,7 @@ vcpkg_apply_patches(
   PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/0002-disable-gtest.patch"
     "${CMAKE_CURRENT_LIST_DIR}/0003-only-build-one-flavor.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/0004-zlib-findpackage.patch"
     "${CMAKE_CURRENT_LIST_DIR}/use-find-package.patch"
     "${CMAKE_CURRENT_LIST_DIR}/pass-major-version.patch"
 )

@@ -3,10 +3,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.8.10
-    SHA512 8b80019feb6bffd63bdd64e4ddad5a85b42f0ed7c27f7d82475b60b0b4db3945bd70d8d75921dd9ae8830b941d7eef6b89364ee1ab418558b75397a784314949
+    REF Release-1.8.13
+    SHA512 578d039399846f994dd8e4b94a7b56f2bcec45571c2144705fc4e2fe6a3e1d878d79a96c0484350d54b46eef7796d46becda9f5d50f266cd730f63d97af0650e
     HEAD_REF master
+    PATCHES
+        # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
+        #             since libraw port installs 'raw_r' library as 'raw'
+        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
+file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILDSTATIC ON)
@@ -14,6 +21,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     set(BUILDSTATIC OFF)
     set(LINKSTATIC OFF)
+endif()
+
+# Features
+set(USE_LIBRAW OFF)
+if("libraw" IN_LIST FEATURES)
+    set(USE_LIBRAW ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -27,7 +40,7 @@ vcpkg_configure_cmake(
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
         -DUSE_GIF=OFF
-        -DUSE_LIBRAW=OFF
+        -DUSE_LIBRAW=${USE_LIBRAW}
         -DUSE_NUKE=OFF
         -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
@@ -37,6 +50,9 @@ vcpkg_configure_cmake(
         -DUSE_QT=OFF
         -DBUILDSTATIC=${BUILDSTATIC}
         -DLINKSTATIC=${LINKSTATIC}
+        -DBUILD_MISSING_PYBIND11=OFF
+        -DBUILD_MISSING_DEPS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
 
 vcpkg_install_cmake()

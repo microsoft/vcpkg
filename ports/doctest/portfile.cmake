@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onqtam/doctest
-    REF 1.2.8
-    SHA512 4558909c6a846fa8679539a9d44e442d9ce6aae37c807ef34d95648abfabe0a16e4593aef83293e3d03bcf80e0269742ff0b95d54eb434c7a18be136608cd24d
+    REF 2.0.0
+    SHA512 ad167201fa10890e868fab628d73588e66470fbf6d5bdf0cd4e4ce13510f0727411fa709eb748eb1b5de19307c75d2efbcd71cb678e3ef1d0632056d7af2f012
     HEAD_REF master
 )
 
