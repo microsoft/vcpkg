@@ -1,0 +1,222 @@
+diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
+index 91c67d5..b94129e 100644
+--- a/c++/src/CMakeLists.txt
++++ b/c++/src/CMakeLists.txt
+@@ -197,10 +197,10 @@ endif(BUILD_LIBHDFSPP)
+ add_library (orc STATIC ${SOURCE_FILES})
+
+ target_link_libraries (orc
+-  protobuf
+-  zlib
+-  snappy
+-  lz4
++  protobuf::libprotoc protobuf::libprotobuf
++  ZLIB::ZLIB
++  Snappy::snappy
++  ${LZ4_LIBRARY_RELEASE}
+   ${LIBHDFSPP_LIBRARIES}
+   )
+
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 0272263..b0519eb 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -55,24 +55,14 @@ if (NOT "${SNAPPY_HOME}" STREQUAL "")
+   find_package (Snappy REQUIRED)
+   set(SNAPPY_VENDORED FALSE)
+ else ()
+-  set(SNAPPY_HOME "${THIRDPARTY_DIR}/snappy_ep-install")
+-  set(SNAPPY_INCLUDE_DIR "${SNAPPY_HOME}/include")
+-  set(SNAPPY_STATIC_LIB "${SNAPPY_HOME}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}snappy${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(SNAPPY_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${SNAPPY_HOME}
+-                        -DBUILD_SHARED_LIBS=OFF)
+-
+-  ExternalProject_Add (snappy_ep
+-    URL "https://github.com/google/snappy/archive/${SNAPPY_VERSION}.tar.gz"
+-    CMAKE_ARGS ${SNAPPY_CMAKE_ARGS}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS "${SNAPPY_STATIC_LIB}")
+-
+-  set(SNAPPY_VENDORED TRUE)
++  find_package(Snappy CONFIG REQUIRED)
++  set(SNAPPY_VENDORED FALSE)
++  message( "*** USE VCPKG : SNAPPY")
+ endif ()
+
+ include_directories (SYSTEM ${SNAPPY_INCLUDE_DIR})
+ add_library (snappy STATIC IMPORTED)
+-set_target_properties (snappy PROPERTIES IMPORTED_LOCATION ${SNAPPY_STATIC_LIB})
++# set_target_properties (snappy PROPERTIES IMPORTED_LOCATION ${SNAPPY_STATIC_LIB})
+
+ if (SNAPPY_VENDORED)
+   add_dependencies (snappy snappy_ep)
+@@ -89,32 +79,14 @@ if (NOT "${ZLIB_HOME}" STREQUAL "")
+   find_package (ZLIB REQUIRED)
+   set(ZLIB_VENDORED FALSE)
+ else ()
+-  set(ZLIB_PREFIX "${THIRDPARTY_DIR}/zlib_ep-install")
+-  set(ZLIB_INCLUDE_DIR "${ZLIB_PREFIX}/include")
+-  if (MSVC)
+-    set(ZLIB_STATIC_LIB_NAME zlibstatic)
+-    if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
+-      set(ZLIB_STATIC_LIB_NAME ${ZLIB_STATIC_LIB_NAME}d)
+-    endif ()
+-  else ()
+-    set(ZLIB_STATIC_LIB_NAME z)
+-  endif ()
+-  set(ZLIB_STATIC_LIB "${ZLIB_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}${ZLIB_STATIC_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(ZLIB_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${ZLIB_PREFIX}
+-                      -DBUILD_SHARED_LIBS=OFF)
+-
+-  ExternalProject_Add (zlib_ep
+-    URL "http://zlib.net/fossils/zlib-${ZLIB_VERSION}.tar.gz"
+-    CMAKE_ARGS ${ZLIB_CMAKE_ARGS}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS "${ZLIB_STATIC_LIB}")
+-
+-  set(ZLIB_VENDORED TRUE)
++  find_package (ZLIB REQUIRED)
++  set(ZLIB_VENDORED FALSE)
++  message( "*** USE VCPKG : ZLIB")
+ endif ()
+
+ include_directories (SYSTEM ${ZLIB_INCLUDE_DIR})
+ add_library (zlib STATIC IMPORTED)
+-set_target_properties (zlib PROPERTIES IMPORTED_LOCATION ${ZLIB_STATIC_LIB})
++# set_target_properties (zlib PROPERTIES IMPORTED_LOCATION ${ZLIB_STATIC_LIB})
+
+ if (ZLIB_VENDORED)
+   add_dependencies (zlib zlib_ep)
+@@ -131,31 +103,14 @@ if (NOT "${LZ4_HOME}" STREQUAL "")
+   find_package (LZ4 REQUIRED)
+   set(LZ4_VENDORED FALSE)
+ else ()
+-  set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
+-  set(LZ4_INCLUDE_DIR "${LZ4_PREFIX}/include")
+-  set(LZ4_STATIC_LIB "${LZ4_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}lz4${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(LZ4_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${LZ4_PREFIX}
+-                     -DBUILD_SHARED_LIBS=OFF)
+-
+-  if (CMAKE_VERSION VERSION_GREATER "3.7")
+-    set(LZ4_CONFIGURE SOURCE_SUBDIR "contrib/cmake_unofficial" CMAKE_ARGS ${LZ4_CMAKE_ARGS})
+-  else()
+-    set(LZ4_CONFIGURE CONFIGURE_COMMAND "${THIRDPARTY_CONFIGURE_COMMAND}" ${LZ4_CMAKE_ARGS}
+-                                        "${CMAKE_CURRENT_BINARY_DIR}/lz4_ep-prefix/src/lz4_ep/contrib/cmake_unofficial")
+-  endif()
+-
+-  ExternalProject_Add(lz4_ep
+-    URL "https://github.com/lz4/lz4/archive/v${LZ4_VERSION}.tar.gz"
+-    ${LZ4_CONFIGURE}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS ${LZ4_STATIC_LIB})
+-
+-  set(LZ4_VENDORED TRUE)
++  find_library(LZ4_LIBRARY_RELEASE NAMES lz4 liblz4)
++  set(LZ4_VENDORED FALSE)
++  message( "*** USE VCPKG : LZ4 : " ${LZ4_LIBRARY_RELEASE})
+ endif ()
+
+ include_directories (SYSTEM ${LZ4_INCLUDE_DIR})
+ add_library (lz4 STATIC IMPORTED)
+-set_target_properties (lz4 PROPERTIES IMPORTED_LOCATION ${LZ4_STATIC_LIB})
++# set_target_properties (lz4 PROPERTIES IMPORTED_LOCATION ${LZ4_STATIC_LIB})
+
+ if (LZ4_VENDORED)
+   add_dependencies (lz4 lz4_ep)
+@@ -215,7 +170,7 @@ if (BUILD_CPP_TESTS)
+   include_directories (SYSTEM ${GTEST_INCLUDE_DIR})
+
+   add_library (gmock STATIC IMPORTED)
+-  set_target_properties (gmock PROPERTIES IMPORTED_LOCATION ${GMOCK_STATIC_LIB})
++  # set_target_properties (gmock PROPERTIES IMPORTED_LOCATION ${GMOCK_STATIC_LIB})
+
+   if (GTEST_VENDORED)
+     add_dependencies (gmock googletest_ep)
+@@ -234,45 +189,25 @@ if (NOT "${PROTOBUF_HOME}" STREQUAL "")
+   find_package (Protobuf REQUIRED)
+   set(PROTOBUF_VENDORED FALSE)
+ else ()
+-  set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
+-  set(PROTOBUF_INCLUDE_DIR "${PROTOBUF_PREFIX}/include")
+-  set(PROTOBUF_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PROTOBUF_PREFIX}
+-                          -DBUILD_SHARED_LIBS=OFF
+-                          -Dprotobuf_BUILD_TESTS=OFF)
+-  if (MSVC)
+-    set(PROTOBUF_STATIC_LIB_PREFIX lib)
+-    list(APPEND PROTOBUF_CMAKE_ARGS -Dprotobuf_MSVC_STATIC_RUNTIME=OFF
+-                                    -Dprotobuf_DEBUG_POSTFIX=)
+-  else ()
+-    set(PROTOBUF_STATIC_LIB_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+-  endif ()
+-  set(PROTOBUF_STATIC_LIB "${PROTOBUF_PREFIX}/lib/${PROTOBUF_STATIC_LIB_PREFIX}protobuf${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(PROTOC_STATIC_LIB "${PROTOBUF_PREFIX}/lib/${PROTOBUF_STATIC_LIB_PREFIX}protoc${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(PROTOBUF_EXECUTABLE "${PROTOBUF_PREFIX}/bin/protoc${CMAKE_EXECUTABLE_SUFFIX}")
++  find_package(protobuf CONFIG REQUIRED)
++  set(PROTOBUF_VENDORED FALSE)
++  message( "*** USE VCPKG : PROTOBUF")
+
+-  if (CMAKE_VERSION VERSION_GREATER "3.7")
+-    set(PROTOBUF_CONFIGURE SOURCE_SUBDIR "cmake" CMAKE_ARGS ${PROTOBUF_CMAKE_ARGS})
++  if (WIN32)
++    set(PROTOBUF_EXECUTABLE ${PROTOBUF_PROTOC_EXECUTABLE}.exe)
+   else()
+-    set(PROTOBUF_CONFIGURE CONFIGURE_COMMAND "${THIRDPARTY_CONFIGURE_COMMAND}" ${PROTOBUF_CMAKE_ARGS}
+-                                             "${CMAKE_CURRENT_BINARY_DIR}/protobuf_ep-prefix/src/protobuf_ep/cmake")
++    set(PROTOBUF_EXECUTABLE ${PROTOBUF_PROTOC_EXECUTABLE})
+   endif()
+-
+-  ExternalProject_Add(protobuf_ep
+-    URL "https://github.com/google/protobuf/archive/v${PROTOBUF_VERSION}.tar.gz"
+-    ${PROTOBUF_CONFIGURE}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS "${PROTOBUF_STATIC_LIB}" "${PROTOC_STATIC_LIB}")
+-
+-  set(PROTOBUF_VENDORED TRUE)
++  message( "*** USE VCPKG : PROTOC : " ${PROTOBUF_EXECUTABLE})
+ endif ()
+
+ include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
+
+ add_library (protobuf STATIC IMPORTED)
+-set_target_properties (protobuf PROPERTIES IMPORTED_LOCATION ${PROTOBUF_STATIC_LIB})
++# set_target_properties (protobuf PROPERTIES IMPORTED_LOCATION ${PROTOBUF_STATIC_LIB})
+
+ add_library (protoc STATIC IMPORTED)
+-set_target_properties (protoc PROPERTIES IMPORTED_LOCATION ${PROTOC_STATIC_LIB})
++# set_target_properties (protoc PROPERTIES IMPORTED_LOCATION ${PROTOC_STATIC_LIB})
+
+ if (PROTOBUF_VENDORED)
+   add_dependencies (protoc protobuf_ep)
+@@ -324,7 +259,7 @@ if(BUILD_LIBHDFSPP)
+       include_directories (SYSTEM ${LIBHDFSPP_INCLUDE_DIR})
+
+       add_library (libhdfspp STATIC IMPORTED)
+-      set_target_properties (libhdfspp PROPERTIES IMPORTED_LOCATION ${LIBHDFSPP_STATIC_LIB})
++      # set_target_properties (libhdfspp PROPERTIES IMPORTED_LOCATION ${VCPKG_INSTALLED_DIR})
+       add_dependencies (libhdfspp libhdfspp_ep)
+       if (INSTALL_VENDORED_LIBS)
+         install(FILES "${LIBHDFSPP_STATIC_LIB}"
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index 667fab4..9295491 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -49,7 +49,7 @@ add_executable (orc-metadata
+
+ target_link_libraries (orc-metadata
+   orc
+-  protobuf
++  protobuf::libprotoc protobuf::libprotobuf
+   )
+
+  add_executable (orc-statistics
+@@ -86,6 +86,9 @@ target_link_libraries (csv-import
+
+ install(TARGETS
+    orc-contents
++   orc-scan
+    orc-metadata
+    orc-statistics
+-   DESTINATION bin)
++   orc-memory
++   csv-import
++   DESTINATION tools/orc)
