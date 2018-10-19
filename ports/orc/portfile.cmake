@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       0001-dependencies-from-vcpkg.patch
+      0002-fix-executable-output-folder.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
