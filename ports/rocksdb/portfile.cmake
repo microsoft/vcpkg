@@ -71,5 +71,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/s
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
 
 vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME RocksDB)
