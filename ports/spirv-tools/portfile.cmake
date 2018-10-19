@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(WARNING "Dynamic not supported. Building static")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,12 +20,14 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSPIRV-Headers_SOURCE_DIR=${SPIRV_HEADERS_PATH}
+    OPTIONS
+        -DSPIRV-Headers_SOURCE_DIR=${SPIRV_HEADERS_PATH}
+        -DSPIRV_WERROR=OFF
 )
 
 vcpkg_install_cmake()

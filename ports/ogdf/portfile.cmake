@@ -10,6 +10,11 @@ vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/2018-03-28
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCOIN_INSTALL_LIBRARY_DIR:STRING=lib
+        -DCOIN_INSTALL_CMAKE_DIR:STRING=lib/cmake/OGDF
+        -DOGDF_INSTALL_LIBRARY_DIR:STRING=lib
+        -DOGDF_INSTALL_CMAKE_DIR:STRING=lib/cmake/OGDF
 )
 
 vcpkg_install_cmake()

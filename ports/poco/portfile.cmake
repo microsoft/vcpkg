@@ -6,15 +6,11 @@ vcpkg_from_github(
     REF poco-1.9.0-release
     SHA512 de2346d62b2e89ba04abe62a83f6ede7a496e80bcbe53a880a1aa8e87a8ebd9a430dd70fdc6aada836bb1021c6df21375fd0cbcf62dbb6e29a2f65d6d90cf2b9
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/config_h.patch
-        ${CMAKE_CURRENT_LIST_DIR}/find_pcre.patch
-        ${CMAKE_CURRENT_LIST_DIR}/foundation-public-include-pcre.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-static-internal-pcre.patch
+        config_h.patch
+        find_pcre.patch
+        foundation-public-include-pcre.patch
+        fix-static-internal-pcre.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
@@ -46,8 +42,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/cpspc.exe ${CURRENT_PACKAGES_DIR}/tools/cpspc.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/f2cpsp.exe ${CURRENT_PACKAGES_DIR}/tools/f2cpsp.exe)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpspc.exe")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/cpspc.exe ${CURRENT_PACKAGES_DIR}/tools/cpspc.exe)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/f2cpsp.exe ${CURRENT_PACKAGES_DIR}/tools/f2cpsp.exe)
+else()
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/cpspc ${CURRENT_PACKAGES_DIR}/tools/cpspc)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/f2cpsp ${CURRENT_PACKAGES_DIR}/tools/f2cpsp)
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE 
@@ -64,7 +65,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/poco)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Poco)
 
 # copy license
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/poco)
