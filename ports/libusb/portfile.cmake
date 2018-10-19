@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(LIBUSB_REVISION fc9962027f2c4f22f2c5e7853d737ef89aa5b6a3)
-set(LIBUSB_HASH f8485b68feb7759ef4b469fa2fae10b93794bdb2c69d48aacd4a6fb87d7597779e06a15e8d9a72fe223a2f08c861c6f5023c4f6e869f13a8c4c92091fb38780e)
+set(LIBUSB_REVISION v1.0.22)
+set(LIBUSB_HASH b1fed66aafa82490889ee488832c6884a95d38ce7b28fb7c3234b9bce1f749455d7b91cde397a0abc25101410edb13ab2f9832c59aa7b0ea8c19ba2cf4c63b00)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libusb)
 
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
@@ -16,14 +16,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/libfreenect2.patch"
-)
-
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
-else ()
+else()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
@@ -42,27 +37,20 @@ else()
 endif()
 
 vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
-    )
+    PROJECT_PATH ${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
+)
 
-vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/msvc/libusb_usbdk_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
-    )
-   
-   
 file(
     INSTALL
         ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.lib
-        ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.lib
-    DESTINATION 
+    DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 
 file(
     INSTALL
         ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.lib
-        ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.lib
-    DESTINATION 
+    DESTINATION
         ${CURRENT_PACKAGES_DIR}/lib
 )
 
@@ -70,15 +58,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(
         INSTALL
             ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.dll
-            ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.dll
-        DESTINATION 
+        DESTINATION
             ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 
     file(
         INSTALL
             ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.dll
-            ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.dll
         DESTINATION
             ${CURRENT_PACKAGES_DIR}/bin
     )
