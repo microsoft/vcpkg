@@ -43,6 +43,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
+if(TOOLS)
+  file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/orc)
+  file(REMOVE ${TOOLS})
+endif()
+
+file(GLOB BINS ${CURRENT_PACKAGES_DIR}/bin/*)
+if(NOT BINS)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
