@@ -1,13 +1,13 @@
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/orc
-    REF f47e02cfbf346f14d7f38c3ddd45d39e3b515847
-    SHA512 5a389f4ab3b0ce4e7c8869493cf9e91feb4917a42bf2740abd71602fa03a2a53217b572e60af7328b7568dab084c07275ea275438ec8ae87f230a87fb60f2601
-    HEAD_REF master
-    PATCHES
-      0001-dependencies-from-vcpkg.patch
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO apache/orc
+  REF f47e02cfbf346f14d7f38c3ddd45d39e3b515847
+  SHA512 5a389f4ab3b0ce4e7c8869493cf9e91feb4917a42bf2740abd71602fa03a2a53217b572e60af7328b7568dab084c07275ea275438ec8ae87f230a87fb60f2601
+  HEAD_REF master
+  PATCHES
+    0001-dependencies-from-vcpkg.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
@@ -41,6 +41,17 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
+if(TOOLS)
+  file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/orc)
+  file(REMOVE ${TOOLS})
+endif()
+
+file(GLOB BINS ${CURRENT_PACKAGES_DIR}/bin/*)
+if(NOT BINS)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
