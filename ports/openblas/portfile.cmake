@@ -58,7 +58,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON -DNUM_THREADS=32   
+        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
     )
 
     # add just built path to environment for gen_config_h.exe,

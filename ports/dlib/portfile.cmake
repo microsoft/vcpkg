@@ -27,6 +27,12 @@ if("cuda" IN_LIST FEATURES)
   set(WITH_CUDA ON)
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-mac-jpeg.patch
+            ${CMAKE_CURRENT_LIST_DIR}/fix-static-linkage.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA 
@@ -40,7 +46,9 @@ vcpkg_configure_cmake(
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
-        -DCMAKE_DEBUG_POSTFIX=d
+        -DCMAKE_DEBUG_POSTFIX=d	
+        -DDLIB_USE_MKL_SEQUENTIAL=ON
+        -DDLIB_PREFER_STATIC_LIBS=ON
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
