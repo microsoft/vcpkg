@@ -209,7 +209,7 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DCMAKE_OSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
     endif()
     if(DEFINED VCPKG_OSX_SYSROOT)
-        list(APPEND _csc_OPTIONS "-DMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
+        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
 
     set(rel_command
