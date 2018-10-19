@@ -21,5 +21,17 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB LIBS ${CURRENT_PACKAGES_DIR}/lib/*.so* ${CURRENT_PACKAGES_DIR}/debug/lib/*.so*)
+    if(LIBS)
+        file(REMOVE ${LIBS})
+    endif()
+else()
+    file(GLOB LIBS ${CURRENT_PACKAGES_DIR}/lib/*.a ${CURRENT_PACKAGES_DIR}/debug/lib/*.a)
+    if(LIBS)
+        file(REMOVE ${LIBS})
+    endif()
+endif()
+
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/tmxparser/copyright COPYONLY)
