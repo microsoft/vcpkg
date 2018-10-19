@@ -73,13 +73,7 @@ else()
 endif()
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(PLATFORM "win32-msvc2015")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(PLATFORM "win32-msvc2017")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(PLATFORM "win32-msvc2013")
-    endif()
+    set(PLATFORM "win32-msvc")
 
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
