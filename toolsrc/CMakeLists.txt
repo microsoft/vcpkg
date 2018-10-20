@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.3.1)
 project(vcpkg C CXX)
 
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
