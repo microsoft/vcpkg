@@ -9,7 +9,8 @@ vcpkg_from_github(
     PATCHES
         # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
         #             since libraw port installs 'raw_r' library as 'raw'
-        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
+        fix_libraw.patch
+        use-webp.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -36,6 +37,7 @@ vcpkg_configure_cmake(
         -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
+        -DUSE_DICOM=OFF
         -DUSE_FFMPEG=OFF
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
@@ -45,14 +47,19 @@ vcpkg_configure_cmake(
         -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
         -DUSE_OPENJPEG=OFF
+        -DUSE_OPENSSL=OFF
         -DUSE_PTEX=OFF
         -DUSE_PYTHON=OFF
         -DUSE_QT=OFF
+        -DUSE_WEBP=OFF
         -DBUILDSTATIC=${BUILDSTATIC}
         -DLINKSTATIC=${LINKSTATIC}
         -DBUILD_MISSING_PYBIND11=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DVERBOSE=ON
+    OPTIONS_DEBUG
+        -DOPENEXR_CUSTOM_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
 vcpkg_install_cmake()
