@@ -20,6 +20,7 @@ vcpkg_apply_patches(
         PATCHES
                 ${CMAKE_CURRENT_LIST_DIR}/cmakelists-install.patch
                 ${CMAKE_CURRENT_LIST_DIR}/find_dsound.patch
+                ${CMAKE_CURRENT_LIST_DIR}/wasapi_support.patch
                 ${CMAKE_CURRENT_LIST_DIR}/crt_linkage_build_config.patch)
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
