@@ -1,0 +1,3 @@
+Source: reproc
+Version: v1.0.0
+Description: Cross-platform library that simplifies working with external CLI applications from C and C++ 
