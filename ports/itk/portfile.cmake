@@ -45,7 +45,10 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_PNG=ON
         -DITK_USE_SYSTEM_TIFF=ON
         -DITK_USE_SYSTEM_ZLIB=ON
+        # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
+
+        -DITK_SKIP_PATH_LENGTH_CHECKS=ON
 
         # I havn't tried Python wrapping in vcpkg
         #-DITK_WRAP_PYTHON=ON
