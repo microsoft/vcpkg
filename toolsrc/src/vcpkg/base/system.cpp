@@ -19,19 +19,6 @@
 
 namespace vcpkg::System
 {
-    tm get_current_date_time()
-    {
-        using std::chrono::system_clock;
-        std::time_t now_time = system_clock::to_time_t(system_clock::now());
-        tm parts{};
-#if defined(_WIN32)
-        localtime_s(&parts, &now_time);
-#else
-        parts = *localtime(&now_time);
-#endif
-        return parts;
-    }
-
     fs::path get_exe_path_of_current_process()
     {
 #if defined(_WIN32)
@@ -402,7 +389,7 @@ namespace vcpkg::System
 #if defined(_WIN32)
         const HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-        CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info{};
+        CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info {};
         GetConsoleScreenBufferInfo(console_handle, &console_screen_buffer_info);
         const auto original_color = console_screen_buffer_info.wAttributes;
 

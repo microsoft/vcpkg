@@ -3,19 +3,29 @@ include(vcpkg_common_functions)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "WindowsStore not supported")
 endif()
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libssh-0.7.5)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libssh.org/files/0.7/libssh-0.7.5.tar.xz"
-    FILENAME "libssh-0.7.5.tar.xz"
-    SHA512 6c7f539899caaedf13d66fa2e0fac1a475ecdfe389131abcbdf908bdebc50a0b9e6b0d43e67e52aea85c32f6aa68e46ca2f50695992f82ded83489f445a8e775
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+set(VERSION 0.7.6)
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.libssh.org/files/0.7/libssh-${VERSION}.tar.xz"
+    FILENAME "libssh-${VERSION}.tar.xz"
+    SHA512 2a01402b5a9fab9ecc29200544ed45d3f2c40871ed1c8241ca793f8dc7fdb3ad2150f6a522c4321affa9b8778e280dc7ed10f76adfc4a73f0751ae735a42f56c
+)
+
+vcpkg_download_distfile(WINPATCH
+    URLS "https://bugs.libssh.org/file/data/qswxtcazmvjrycu5gcx4/PHID-FILE-azin7nwumsm64mw5pequ/file"
+    FILENAME "libssh-0a53c5b1.patch"
+    SHA512 f3f6088f8f1bf8fe6226c1aa7b355d877be7f2aa9482c5e3de74b6a35fc5b28d8f89221d3afa5a5d3a5900519a86e5906516667ed22ad98f058616a8120999cd
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${VERSION}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/build-one-flavor.patch
-        ${CMAKE_CURRENT_LIST_DIR}/only-one-flavor-threads.patch
+        build-one-flavor.patch
+        only-one-flavor-threads.patch
+        "${WINPATCH}"
+        missing-includes.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" WITH_STATIC_LIB)

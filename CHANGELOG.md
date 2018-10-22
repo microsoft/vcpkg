@@ -1,3 +1,451 @@
+vcpkg (2018.10.20)
+--------------
+  * Add ports:
+    - 3fd            2.6.2
+    - argtable2      2.13-1
+    - asyncplusplus  1.0-1
+    - bde            3.2.0.0
+    - boost-hana-msvc 1.67.0-1
+    - boost-yap      1.68.0
+    - check          0.12.0-1
+    - concurrentqueue 1.0.0-beta
+    - crossguid      0.2.2-2018-06-16
+    - darts-clone    1767ab87cffe
+    - dcmtk          3.6.3
+    - docopt         2018-04-16-2
+    - egl-registry   2018-06-30
+    - embree2        2.16.4-3
+    - embree3        3.2.0-2
+    - esaxx          ca7cb332011ec37
+    - fastfeat       391d5e9
+    - fmilib         2.0.3
+    - fruit          3.4.0-1
+    - getopt         0
+    - getopt-win32   0.1
+    - gmmlib         18.3.pre2-1
+    - graphqlparser  v0.7.0
+    - ideviceinstaller 1.1.2.23-1
+    - idevicerestore 1.0.12-1
+    - inih           42
+    - intelrdfpmathlib 20U2
+    - io2d           0.1-1
+    - json11         2017-06-20
+    - kangaru        4.1.2
+    - kf5archive     5.50.0
+    - kf5holidays    5.50.0
+    - laszip         3.2.2-1
+    - libdshowcapture 0.6.0
+    - libideviceactivation 1.0.38-1
+    - libimobiledevice 1.2.1.215-1
+    - libirecovery   1.0.25-2
+    - liblemon       1.3.1-2
+    - libmaxminddb   1.3.2-1
+    - libmodbus      3.1.4-1
+    - libmorton      2018-19-07
+    - libplist       2.0.1.197-2
+    - libusbmuxd     1.0.107-2
+    - libyaml        0.2.1-1
+    - linenoise-ng   4754bee2d8eb3
+    - luabridge      2.1-1
+    - milerius-sfml-imgui 1.1
+    - minisat-master-keying 2.2-mod-1
+    - mio            2018-10-18-1
+    - modp-base64
+    - morton-nd      2.0.0
+    - nanorange      0.0.0
+    - nng            1.0.1
+    - ogdf           2018-03-28-2
+    - opengl-registry 2018-06-30
+    - openssl-unix   1.0.2p
+    - openssl-uwp    1.0.2l-winrt
+    - openssl-windows 1.0.2p-1
+    - osg-qt         3.5.7
+    - parquet        1.4.0
+    - pcg            0.98.1
+    - pegtl          2.7.1
+    - plib           1.8.5-2
+    - pngwriter      0.7.0-1
+    - python2        2.7.15-1
+    - qt5-activeqt   5.9.2-0
+    - qt5-script     5.9.2
+    - readerwriterqueue 1.0.0
+    - readline       0
+    - readline-win32 5.0-2
+    - restbed        4.16-07-28-2018
+    - safeint        3.19.2
+    - sais           2.4.1
+    - selene         0.1.1
+    - shiva          1.0
+    - shiva-sfml     1.0
+    - simpleini      2018-08-31-1
+    - soil           2008.07.07-1
+    - sol2           2.20.4
+    - spaceland      7.8.2-0
+    - spirv-cross    2018-08-07-1
+    - tinyfiledialogs 3.3.7-1
+    - tinyobjloader  1.2.0-1
+    - tinyspline     0.2.0-1
+    - tinyutf8       2.1.1-1
+    - tl-expected    0.3-1
+    - tmx            1.0.0
+    - tmxparser      2.1.0-1
+    - usbmuxd        1.1.1.133-1
+    - usrsctp        35c1d97020a
+    - uvw            1.11.2
+    - vtk-dicom      0.8.8-alpha-1
+    - vulkan-memory-allocator 2.1.0-1
+    - wangle         v2018.07.30.00-1
+    - woff2          1.0.2
+  * Update ports:
+    - abseil         2018-05-01-1 -> 2018-09-18-3
+    - ace            6.4.8 -> 6.5.2
+    - alembic        1.7.8 -> 1.7.9
+    - allegro5       5.2.3.0 -> 5.2.4.0
+    - angle          2017-06-14-8d471f-4 -> 2017-06-14-8d471f-5
+    - apr            1.6.3 -> 1.6.5
+    - args           2018-05-17 -> 2018-06-28
+    - arrow          0.6.0-1 -> 0.9.0-1
+    - asio           1.12.0-2 -> 1.12.1
+    - assimp         4.1.0-1 -> 4.1.0-2
+    - aws-sdk-cpp    1.4.52 -> 1.6.12-1
+    - azure-c-shared-utility 1.1.3 -> 1.1.5
+    - azure-storage-cpp 4.0.0 -> 5.1.1
+    - azure-uhttp-c  2018-02-09 -> LTS_01_2018_Ref01
+    - azure-umqtt-c  1.1.3 -> 1.1.5
+    - benchmark      1.4.0 -> 1.4.1
+    - blaze          3.3 -> 3.4-1
+    - boost          1.67.0 -> 1.68.0
+    - boost-accumulators 1.67.0 -> 1.68.0
+    - boost-algorithm 1.67.0 -> 1.68.0
+    - boost-align    1.67.0 -> 1.68.0
+    - boost-any      1.67.0 -> 1.68.0
+    - boost-array    1.67.0 -> 1.68.0
+    - boost-asio     1.67.0-1 -> 1.68.0-1
+    - boost-assert   1.67.0 -> 1.68.0
+    - boost-assign   1.67.0 -> 1.68.0
+    - boost-atomic   1.67.0 -> 1.68.0
+    - boost-beast    1.67.0 -> 1.68.0
+    - boost-bimap    1.67.0 -> 1.68.0
+    - boost-bind     1.67.0 -> 1.68.0
+    - boost-build    1.67.0 -> 1.68.0
+    - boost-callable-traits 1.67.0 -> 1.68.0
+    - boost-chrono   1.67.0 -> 1.68.0
+    - boost-circular-buffer 1.67.0 -> 1.68.0
+    - boost-compatibility 1.67.0 -> 1.68.0
+    - boost-compute  1.67.0 -> 1.68.0
+    - boost-concept-check 1.67.0 -> 1.68.0
+    - boost-config   1.67.0 -> 1.68.0
+    - boost-container 1.67.0 -> 1.68.0
+    - boost-container-hash 1.67.0 -> 1.68.0
+    - boost-context  1.67.0 -> 1.68.0-1
+    - boost-contract 1.67.0 -> 1.68.0
+    - boost-conversion 1.67.0 -> 1.68.0
+    - boost-convert  1.67.0 -> 1.68.0
+    - boost-core     1.67.0 -> 1.68.0
+    - boost-coroutine 1.67.0 -> 1.68.0
+    - boost-coroutine2 1.67.0 -> 1.68.0
+    - boost-crc      1.67.0 -> 1.68.0
+    - boost-date-time 1.67.0 -> 1.68.0
+    - boost-detail   1.67.0 -> 1.68.0
+    - boost-di       1.0.1 -> 1.0.2
+    - boost-disjoint-sets 1.67.0 -> 1.68.0
+    - boost-dll      1.67.0 -> 1.68.0
+    - boost-dynamic-bitset 1.67.0 -> 1.68.0
+    - boost-endian   1.67.0 -> 1.68.0
+    - boost-exception 1.67.0 -> 1.68.0
+    - boost-fiber    1.67.0 -> 1.68.0
+    - boost-filesystem 1.67.0 -> 1.68.0
+    - boost-flyweight 1.67.0 -> 1.68.0
+    - boost-foreach  1.67.0 -> 1.68.0
+    - boost-format   1.67.0 -> 1.68.0
+    - boost-function 1.67.0 -> 1.68.0
+    - boost-function-types 1.67.0 -> 1.68.0
+    - boost-functional 1.67.0 -> 1.68.0
+    - boost-fusion   1.67.0 -> 1.68.0
+    - boost-geometry 1.67.0 -> 1.68.0
+    - boost-gil      1.67.0 -> 1.68.0
+    - boost-graph    1.67.0 -> 1.68.0
+    - boost-graph-parallel 1.67.0 -> 1.68.0
+    - boost-hana     1.67.0 -> 1.68.0-1
+    - boost-heap     1.67.0 -> 1.68.0
+    - boost-hof      1.67.0 -> 1.68.0
+    - boost-icl      1.67.0 -> 1.68.0
+    - boost-integer  1.67.0 -> 1.68.0
+    - boost-interprocess 1.67.0 -> 1.68.0
+    - boost-interval 1.67.0 -> 1.68.0
+    - boost-intrusive 1.67.0 -> 1.68.0
+    - boost-io       1.67.0 -> 1.68.0
+    - boost-iostreams 1.67.0 -> 1.68.0
+    - boost-iterator 1.67.0 -> 1.68.0
+    - boost-lambda   1.67.0 -> 1.68.0
+    - boost-lexical-cast 1.67.0 -> 1.68.0
+    - boost-local-function 1.67.0 -> 1.68.0
+    - boost-locale   1.67.0 -> 1.68.0
+    - boost-lockfree 1.67.0 -> 1.68.0-1
+    - boost-log      1.67.0 -> 1.68.0
+    - boost-logic    1.67.0 -> 1.68.0
+    - boost-math     1.67.0 -> 1.68.0
+    - boost-metaparse 1.67.0 -> 1.68.0
+    - boost-modular-build-helper 2018-05-14 -> 2018-08-21
+    - boost-move     1.67.0 -> 1.68.0
+    - boost-mp11     1.67.0 -> 1.68.0
+    - boost-mpi      1.67.0-1 -> 1.68.0-1
+    - boost-mpl      1.67.0 -> 1.68.0
+    - boost-msm      1.67.0 -> 1.68.0
+    - boost-multi-array 1.67.0 -> 1.68.0
+    - boost-multi-index 1.67.0 -> 1.68.0
+    - boost-multiprecision 1.67.0 -> 1.68.0
+    - boost-numeric-conversion 1.67.0 -> 1.68.0
+    - boost-odeint   1.67.0 -> 1.68.0
+    - boost-optional 1.67.0 -> 1.68.0
+    - boost-parameter 1.67.0 -> 1.68.0
+    - boost-phoenix  1.67.0 -> 1.68.0
+    - boost-poly-collection 1.67.0 -> 1.68.0
+    - boost-polygon  1.67.0 -> 1.68.0
+    - boost-pool     1.67.0 -> 1.68.0
+    - boost-predef   1.67.0 -> 1.68.0
+    - boost-preprocessor 1.67.0 -> 1.68.0
+    - boost-process  1.67.0 -> 1.68.0
+    - boost-program-options 1.67.0 -> 1.68.0
+    - boost-property-map 1.67.0 -> 1.68.0
+    - boost-property-tree 1.67.0 -> 1.68.0
+    - boost-proto    1.67.0 -> 1.68.0
+    - boost-ptr-container 1.67.0 -> 1.68.0
+    - boost-python   1.67.0-1 -> 1.68.0-2
+    - boost-qvm      1.67.0 -> 1.68.0
+    - boost-random   1.67.0 -> 1.68.0
+    - boost-range    1.67.0 -> 1.68.0
+    - boost-ratio    1.67.0 -> 1.68.0
+    - boost-rational 1.67.0 -> 1.68.0
+    - boost-regex    1.67.0 -> 1.68.0
+    - boost-scope-exit 1.67.0 -> 1.68.0
+    - boost-serialization 1.67.0 -> 1.68.0
+    - boost-signals  1.67.0 -> 1.68.0
+    - boost-signals2 1.67.0 -> 1.68.0
+    - boost-smart-ptr 1.67.0 -> 1.68.0
+    - boost-sort     1.67.0 -> 1.68.0
+    - boost-spirit   1.67.0 -> 1.68.0
+    - boost-stacktrace 1.67.0 -> 1.68.0
+    - boost-statechart 1.67.0 -> 1.68.0
+    - boost-static-assert 1.67.0 -> 1.68.0
+    - boost-system   1.67.0 -> 1.68.0
+    - boost-test     1.67.0-2 -> 1.68.0-2
+    - boost-thread   1.67.0 -> 1.68.0
+    - boost-throw-exception 1.67.0 -> 1.68.0
+    - boost-timer    1.67.0 -> 1.68.0
+    - boost-tokenizer 1.67.0 -> 1.68.0
+    - boost-tti      1.67.0 -> 1.68.0
+    - boost-tuple    1.67.0 -> 1.68.0
+    - boost-type-erasure 1.67.0 -> 1.68.0
+    - boost-type-index 1.67.0 -> 1.68.0
+    - boost-type-traits 1.67.0 -> 1.68.0
+    - boost-typeof   1.67.0 -> 1.68.0
+    - boost-ublas    1.67.0 -> 1.68.0
+    - boost-units    1.67.0 -> 1.68.0
+    - boost-unordered 1.67.0 -> 1.68.0
+    - boost-utility  1.67.0 -> 1.68.0
+    - boost-uuid     1.67.0 -> 1.68.0
+    - boost-variant  1.67.0 -> 1.68.0
+    - boost-vmd      1.67.0 -> 1.68.0
+    - boost-wave     1.67.0 -> 1.68.0
+    - boost-winapi   1.67.0 -> 1.68.0
+    - boost-xpressive 1.67.0 -> 1.68.0
+    - botan          2.0.1 -> 2.8.0
+    - breakpad       2018-04-17 -> 2018-09-18
+    - brotli         1.0.2-3 -> 1.0.2-4
+    - cairo          1.15.8-1 -> 1.15.8-3
+    - cartographer   0.3.0-4 -> 0.3.0-5
+    - catch2         2.2.2 -> 2.4.0
+    - celero         2.1.0-2 -> 2.3.0-1
+    - cgal           4.12 -> 4.13-1
+    - chaiscript     6.0.0 -> 6.1.0
+    - chakracore     1.8.4 -> 1.11.1-1
+    - cimg           2.2.3 -> 2.3.6
+    - clockutils     1.1.1-3651f232c27074c4ceead169e223edf5f00247c5-1 -> 1.1.1-3651f232c27074c4ceead169e223edf5f00247c5-2
+    - cmark          0.28.3-1 -> 0.28.3-2
+    - coolprop       6.1.0-3 -> 6.1.0-4
+    - cpprestsdk     2.10.2-1 -> 2.10.6-1
+    - crc32c         1.0.5 -> 1.0.5-1
+    - cryptopp       6.1.0-2 -> 7.0.0
+    - curl           7.60.0 -> 7.61.1-1
+    - cxxopts        1.3.0 -> 2.1.0-1
+    - dimcli         3.1.1-1 -> 3.1.1-2
+    - directxmesh    may2018 -> aug2018
+    - directxtex     may2018 -> aug2018b
+    - directxtk      may2018 -> aug2018
+    - discord-rpc    3.3.0 -> 3.3.0-1
+    - dlib           19.10-1 -> 19.16
+    - doctest        1.2.9 -> 2.0.0
+    - double-conversion 3.0.0-2 -> 3.1.0
+    - draco          1.2.5 -> 1.3.3
+    - eastl          3.09.00 -> 3.12.01
+    - ecm            5.40.0 -> 5.50.0
+    - eigen3         3.3.4-2 -> 3.3.5
+    - entt           2.5.0 -> 2.7.3
+    - exiv2          2018-05-17 -> 2018-09-18
+    - expat          2.2.5 -> 2.2.6
+    - exprtk         2018.04.30-46877b6 -> 2018.09.30-9836f21
+    - fastrtps       1.5.0 -> 1.5.0-1
+    - fdk-aac        2018-05-17 -> 2018-07-08
+    - flatbuffers    1.8.0-2 -> 1.9.0-2
+    - fmt            4.1.0 -> 5.2.0
+    - folly          2018.05.14.00 -> 2018.09.17.00
+    - fontconfig     2.12.4-1 -> 2.12.4-7
+    - forest         7.0.7 -> 9.0.5
+    - freeglut       3.0.0-4 -> 3.0.0-5
+    - freetype-gl    2018-02-25 -> 2018-09-18
+    - gdal           2.3.0-1 -> 2.3.2
+    - gdcm2          2.8.6 -> 2.8.7
+    - geogram        1.6.0-1 -> 1.6.4
+    - geos           3.6.2-3 -> 3.6.3-2
+    - glbinding      2.1.1-3 -> 3.0.2-3
+    - glfw3          3.2.1-2 -> 3.2.1-3
+    - glib           2.52.3-9 -> 2.52.3-11
+    - glm            0.9.8.5-1 -> 0.9.9.2
+    - globjects      1.0.0-1 -> 1.1.0-2018-09-19
+    - glslang        2018-03-02 -> 2018-03-02-1
+    - google-cloud-cpp 0.1.0 -> 0.1.0-1
+    - graphicsmagick 1.3.28 -> 1.3.30-1
+    - graphite2      1.3.10 -> 1.3.12
+    - grpc           1.10.1-2 -> 1.14.1
+    - gtest          1.8.0-8 -> 1.8.0-9
+    - guetzli        2017-09-02-cb5e4a86f69628-1 -> 2018-07-30
+    - gumbo          0.10.1-1 -> 0.10.1-2
+    - harfbuzz       1.7.6-1 -> 1.8.4-2
+    - http-parser    2.7.1-3 -> 2.8.1
+    - hwloc          1.11.7-2 -> 1.11.7-3
+    - icu            61.1-1 -> 61.1-4
+    - imgui          1.60 -> 1.65
+    - json-dto       0.2.5 -> 0.2.6
+    - jsonnet        2018-05-17 -> 2018-09-18
+    - kf5plotting    5.37.0 -> 5.50.0
+    - lcms           2.8-4 -> 2.8-5
+    - leptonica      1.74.4-3 -> 1.76.0
+    - libarchive     3.3.2-1 -> 3.3.3-2
+    - libflac        1.3.2-5 -> 1.3.2-6
+    - libgeotiff     1.4.2-3 -> 1.4.2-4
+    - libgit2        0.26.0 -> 0.27.4-2
+    - libgo          2.7 -> 2.8-2
+    - liblzma        5.2.3-2 -> 5.2.4
+    - libmariadb     3.0.2 -> 3.0.2-1
+    - libmysql       8.0.4-2 -> 8.0.4-3
+    - libodb         2.4.0-2 -> 2.4.0-3
+    - libodb-mysql   2.4.0-1 -> 2.4.0-2
+    - libp7-baical   4.4-2 -> 4.4-3
+    - libpng         1.6.34-3 -> 1.6.35
+    - libpqxx        6.0.0 -> 6.0.0-1
+    - libraw         0.18.2-5 -> 0.19.0-1
+    - libsndfile     1.0.29-6830c42-3 -> 1.0.29-6830c42-5
+    - libssh         0.7.5-4 -> 0.7.6
+    - libssh2        1.8.0-3 -> 1.8.0-4
+    - libuv          1.20.3-2 -> 1.23.0
+    - libvorbis      1.3.5-143caf4-3 -> 1.3.6-112d3bd-1
+    - libwebsockets  3.0.0 -> 3.0.1
+    - libzip         rel-1-5-1 -> rel-1-5-1-vcpkg1
+    - live555        2018.02.28 -> latest
+    - llvm           6.0.0-1 -> 7.0.0
+    - log4cplus      REL_2_0_0-RC2 -> REL_2_0_1
+    - luasocket      2018-02-25 -> 2018-09-18
+    - lz4            1.8.2 -> 1.8.3
+    - mbedtls        2.6.1 -> 2.13.1
+    - mongo-cxx-driver 3.1.1-2 -> 3.1.1-3
+    - monkeys-audio  4.3.3 -> 4.3.3-1
+    - mosquitto      1.4.15 -> 1.5.0
+    - ms-gsl         2018-05-17 -> 2018-09-18
+    - mujs           2018-05-17 -> 2018-07-30
+    - nana           1.5.5 -> 1.6.2
+    - nanodbc        2.12.4-1 -> 2.12.4-2
+    - nanomsg        1.1.2 -> 1.1.4
+    - nghttp2        1.30.0-1 -> 1.33.0
+    - nlohmann-json  3.1.2 -> 3.3.0
+    - nlopt          2.4.2-c43afa08d~vcpkg1-1 -> 2.4.2-1226c127
+    - nuklear        2018-05-17 -> 2018-09-18
+    - octomap        cefed0c1d79afafa5aeb05273cf1246b093b771c-2 -> cefed0c1d79afafa5aeb05273cf1246b093b771c-3
+    - openal-soft    1.18.2-2 -> 1.19.0
+    - openimageio    Release-1.9.2dev -> Release-1.8.13
+    - openmama       6.2.1-a5a93a24d2f89a0def0145552c8cd4a53c69e2de -> 6.2.2
+    - openmesh       6.3 -> 7.0
+    - openssl        1.0.2o-2 -> 0
+    - openvr         1.0.15 -> 1.0.16
+    - opusfile       0.9-1 -> 0.11-1
+    - osg            3.5.6-2 -> 3.6.2
+    - osgearth       2.9 -> 2.9-1
+    - paho-mqtt      1.2.0-3 -> 1.2.1
+    - parson         2018-05-17 -> 2018-09-18
+    - pcl            1.8.1-10 -> 1.8.1-12
+    - pdal           1.7.1-2 -> 1.7.1-3
+    - pdcurses       3.4-1 -> 3.6
+    - picosha2       2018-02-25 -> 2018-07-30
+    - pixman         0.34.0-2 -> 0.34.0-4
+    - plibsys        0.0.3-1 -> 0.0.4-1
+    - pmdk           1.4-2 -> 1.4.2
+    - poco           1.9.0 -> 1.9.0-1
+    - podofo         0.9.5-2 -> 0.9.6
+    - protobuf       3.5.1-4 -> 3.6.1-4
+    - pybind11       2.2.1 -> 2.2.3-1
+    - python3        3.6.4-1 -> 3.6.4-2
+    - qpid-proton    0.18.1 -> 0.24.0
+    - qt5-base       5.9.2-6 -> 5.9.2-7
+    - qt5-modularscripts 3 -> 4
+    - re2            2018-05-17 -> 2018-09-18
+    - realsense2     2.10.4 -> 2.16.1
+    - restinio       0.4.5.1 -> 0.4.8
+    - rocksdb        5.13.1 -> 5.14.2
+    - rs-core-lib    2018-05-17 -> 2018-09-18
+    - sciter         4.1.7 -> 4.2.2
+    - sdl2-image     2.0.2-1 -> 2.0.2-3
+    - sfgui          0.3.2-1 -> 0.3.2-2
+    - sfml           2.4.2-3 -> 2.5.0-2
+    - shaderc        12fb656ab20ea9aa06e7084a74e5ff832b7ce2da-1 -> 12fb656ab20ea9aa06e7084a74e5ff832b7ce2da-2
+    - signalrclient  1.0.0-beta1-3 -> 1.0.0-beta1-4
+    - sobjectizer    5.5.22 -> 5.5.22.1
+    - soci           2016.10.22-1 -> 3.2.3-1
+    - spdlog         0.16.3 -> 1.0.0
+    - sqlite-modern-cpp 3.2 -> 3.2-e2248fa
+    - sqlite-orm     1.1 -> 1.2
+    - sqlite3        3.23.1-1 -> 3.24.0-1
+    - string-theory  1.7 -> 2.1
+    - strtk          2018.05.07-48c9554 -> 2018.09.30-b887974
+    - sundials       2.7.0-1 -> 3.1.1
+    - tbb            2018_U3 -> 2018_U5-4
+    - tesseract      3.05.01-3 -> 3.05.02
+    - thor           2.0-1 -> 2.0-2
+    - thrift         2018-05-17 -> 2018-09-18
+    - tiff           4.0.9 -> 4.0.9-4
+    - tiny-dnn       2018-03-13 -> 2018-09-18
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-2 -> 2018-07-03
+    - unicorn        2018-05-17 -> 2018-09-18
+    - unicorn-lib    2018-05-17 -> 2018-09-18
+    - uriparser      0.8.5 -> 0.8.6
+    - wt             4.0.3 -> 4.0.4
+    - x264           152-e9a5903edf8ca59-1 -> 157-303c484ec828ed0
+    - xlnt           1.2.0-1 -> 1.3.0-1
+    - yaml-cpp       0.6.2 -> 0.6.2-2
+    - yara           e3439e4ead4ed5d3b75a0b46eaf15ddda2110bb9 -> e3439e4ead4ed5d3b75a0b46eaf15ddda2110bb9-1
+    - yoga           1.8.0-1 -> 1.9.0
+    - zeromq         2018-05-17 -> 2018-09-18
+  * Change version format of the `vcpkg` tool to a date
+  * Improve handling of ctrl-c inside `install` or `build`
+  * Improvements in `vcpkg edit`:
+    - Fix console blocking when using VSCode and no other instance of VSCode is running
+    - `--all` option now opens package folders
+    - Now checks the default user-wide installation dir of VSCode (in addition to system-wide)
+  * `vcpkg env`: add argument to execute a command in the environment of the selected triplet
+    - e.g. `vcpkg env --triplet x64-windows "cl.exe"`
+  * Survey message changes:
+    - Survey message may pop-up only in `install`, `remove`, `export`, `update`. This prevents issues with parsing the output of other more script-oriented commands
+    - Adjust the survey frequency to 6 months, with an additional once after 10 days of use
+    - Improve metrics performance on Windows
+  * Fix OSX build for old gcc versions
+  * Fix handling of symlink when installing or removing a library
+  * Use -fPIC in all builds to enable mixing static libs with shared objects.
+  * Move graph options to `vcpkg depend-info` (from `vcpkg search`)
+  * Add `vcpkg_from_gitlab` function
+  * Documentation improvements in various `vcpkg_*` cmake functions
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 20 Oct 2018 17:00:00 -0800
+
+
 vcpkg (0.0.113)
 --------------
   * Add ports:
