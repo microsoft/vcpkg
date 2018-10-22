@@ -18,11 +18,18 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDL1_2017.sln DESTINATION ${SOURCE_PATH}/VisualC/ )
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDL.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDL )
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDLmain.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain )
+
 file(INSTALL ${SOURCE_PATH}/include/SDL_config.h.default DESTINATION ${SOURCE_PATH}/include/ RENAME SDL_config.h)
+
+# This text file gets copied as a library, and included as one in the package 
+file(REMOVE_RECURSE ${SOURCE_PATH}/src/hermes/COPYING.LIB)
 
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH VisualC/SDL.sln
+    PROJECT_SUBPATH VisualC/SDL1_2017.sln
     INCLUDES_SUBPATH include
     LICENSE_SUBPATH COPYING
     PLATFORM Win32
@@ -32,7 +39,7 @@ vcpkg_install_msbuild(
         /p:VIDEO_VULKAN=OFF
         /p:FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         /p:LIBC=ON
-    REMOVE_ROOT_INCLUDES
+    ALLOW_ROOT_INCLUDES
     USE_VCPKG_INTEGRATION
 )
 
@@ -74,8 +81,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
         file(WRITE "${SHARE_FILE}" "${_contents}")
     endforeach()
 endif()
-
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME SDL1)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl1 RENAME copyright)
 vcpkg_copy_pdbs()
