@@ -1,7 +1,7 @@
-diff --git a/devil/src-ILU/CMakeLists.txt b/devil/src-ILU/CMakeLists.txt
+diff --git a/DevIL/src-ILU/CMakeLists.txt b/DevIL/src-ILU/CMakeLists.txt
 index 17a3afe..a46ab41 100644
---- a/devil/src-ILU/CMakeLists.txt
-+++ b/devil/src-ILU/CMakeLists.txt
+--- a/DevIL/src-ILU/CMakeLists.txt
++++ b/DevIL/src-ILU/CMakeLists.txt
 @@ -43,7 +43,7 @@ source_group("Header Files" FILES ${ILU_INC} )
  source_group("Resource Files" FILES ${ILU_RSRC} )
  
@@ -11,10 +11,10 @@ index 17a3afe..a46ab41 100644
  
  
  ## ILU requires IL
-diff --git a/devil/src-ILUT/CMakeLists.txt b/devil/src-ILUT/CMakeLists.txt
+diff --git a/DevIL/src-ILUT/CMakeLists.txt b/DevIL/src-ILUT/CMakeLists.txt
 index 21470cb..398d3c1 100644
---- a/devil/src-ILUT/CMakeLists.txt
-+++ b/devil/src-ILUT/CMakeLists.txt
+--- a/DevIL/src-ILUT/CMakeLists.txt
++++ b/DevIL/src-ILUT/CMakeLists.txt
 @@ -43,7 +43,7 @@ source_group("Header Files" FILES ${ILUT_INC} )
  source_group("Resource Files" FILES ${ILUT_RSRC} )
  

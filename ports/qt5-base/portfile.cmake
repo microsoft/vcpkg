@@ -53,6 +53,7 @@ set(CORE_OPTIONS
     -system-pcre
     -system-harfbuzz
     -system-doubleconversion
+    -system-sqlite
     -no-fontconfig
     -nomake examples
     -nomake tests
@@ -61,24 +62,16 @@ set(CORE_OPTIONS
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND CORE_OPTIONS
         -static
-        -no-sqlite
     )
 else()
     list(APPEND CORE_OPTIONS
         -sql-sqlite
         -sql-psql
-        -system-sqlite
     )
 endif()
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(PLATFORM "win32-msvc2015")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(PLATFORM "win32-msvc2017")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(PLATFORM "win32-msvc2013")
-    endif()
+    set(PLATFORM "win32-msvc")
 
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
@@ -174,16 +167,16 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
     file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
-endif()
 
-#---------------------------------------------------------------------------
-# Qt5Bootstrap: only used to bootstrap qmake dependencies
-#---------------------------------------------------------------------------
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl)
-#---------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
+    # Qt5Bootstrap: only used to bootstrap qmake dependencies
+    #---------------------------------------------------------------------------
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.prl)
+    #---------------------------------------------------------------------------
+endif()
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
 file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)

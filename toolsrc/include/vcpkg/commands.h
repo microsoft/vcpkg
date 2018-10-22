@@ -119,6 +119,12 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args);
     }
 
+    namespace X_VSInstances
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Hash
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);

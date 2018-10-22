@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 1bc175d24b49de1b1e41eaf39598194e583afffb924c86c8d2e569d935af21874be76b2cbd4d9655a1d38bac3d4cd811de88bc2c72d81bad79115e69e5b0d839
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
+        fix-uwp.patch
+        disable-lite.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -108,6 +109,10 @@ else()
     file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
+endif()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libprotobuf-lite.lib)
+    message(FATAL_ERROR "Expected to not build the lite runtime because it contains some of the same symbols as the full runtime.")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
