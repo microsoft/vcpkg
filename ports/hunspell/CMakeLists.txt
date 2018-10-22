@@ -61,6 +61,11 @@ set(LIBHUNSPELL_HDRS
 #hunspell/libhunspell
 add_library(libhunspell ${LIBHUNSPELL_HDRS} ${LIBHUNSPELL_SRCS})
 target_compile_definitions(libhunspell PRIVATE -DBUILDING_LIBHUNSPELL)
+install(TARGETS libhunspell
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
 
 #parsers/libparsers
 set(LIBPARSERS_SRCS
@@ -93,59 +98,58 @@ set(TESTPARSER_SRCS
     src/parsers/odfparser.cxx
 )
 
-add_executable(testparser ${TESTPARSER_SRCS})
-target_link_libraries(testparser libhunspell)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_executable(testparser ${TESTPARSER_SRCS})
+    target_link_libraries(testparser libhunspell)
 
-#tools/analyze
-add_executable(analyze "src/tools/analyze.cxx")
-target_link_libraries(analyze libhunspell)
+    #tools/analyze
+    add_executable(analyze "src/tools/analyze.cxx")
+    target_link_libraries(analyze libhunspell)
 
-#tools/chmorph
-add_executable(chmorph "src/tools/chmorph.cxx" $<TARGET_OBJECTS:libparsers>)
-target_link_libraries(chmorph libhunspell)
+    #tools/chmorph
+    add_executable(chmorph "src/tools/chmorph.cxx" $<TARGET_OBJECTS:libparsers>)
+    target_link_libraries(chmorph libhunspell)
 
-#tools/hunspell
-include(CheckIncludeFile)
-check_include_file("curses.h" HAVE_CURSES_H)
-check_include_file("langinfo.h" HAVE_LANGINFO_CODESET)
-check_include_file("libintl.h" HAVE_LIBINTL_H)
-check_include_file("locale.h" HAVE_LOCALE_H)
-check_include_file("ncursesw/curses.h" HAVE_NCURSESW_H)
-check_include_file("unistd.h" HAVE_UNISTD_H)
-configure_file("config.h.in" "config.h")
+    #tools/hunspell
+    include(CheckIncludeFile)
+    check_include_file("curses.h" HAVE_CURSES_H)
+    check_include_file("langinfo.h" HAVE_LANGINFO_CODESET)
+    check_include_file("libintl.h" HAVE_LIBINTL_H)
+    check_include_file("locale.h" HAVE_LOCALE_H)
+    check_include_file("ncursesw/curses.h" HAVE_NCURSESW_H)
+    check_include_file("unistd.h" HAVE_UNISTD_H)
+    configure_file("config.h.in" "config.h")
 
-add_executable(hunspell "src/tools/hunspell.cxx" $<TARGET_OBJECTS:libparsers>)
-target_include_directories(hunspell PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-target_link_libraries(hunspell libhunspell)
+    add_executable(hunspell "src/tools/hunspell.cxx" $<TARGET_OBJECTS:libparsers>)
+    target_include_directories(hunspell PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+    target_link_libraries(hunspell libhunspell)
 
-#tools/munch
-add_executable(munch "src/tools/munch.cxx")
+    #tools/munch
+    add_executable(munch "src/tools/munch.cxx")
 
-#tools/unmunch
-add_executable(unmunch "src/tools/unmunch.cxx")
+    #tools/unmunch
+    add_executable(unmunch "src/tools/unmunch.cxx")
 
-#tools/hzip
-#add_executable(hzip "src/tools/hzip.cxx")
-#target_link_libraries(hzip libhunspell)
+    #tools/hzip
+    #add_executable(hzip "src/tools/hzip.cxx")
+    #target_link_libraries(hzip libhunspell)
 
-#tools/hunzip
-add_executable(hunzip "src/tools/hunzip.cxx")
-target_link_libraries(hunzip libhunspell)
+    #tools/hunzip
+    add_executable(hunzip "src/tools/hunzip.cxx")
+    target_link_libraries(hunzip libhunspell)
 
-install(
-TARGETS 
-    libhunspell 
-    hunspell 
-    testparser
-    analyze
-    chmorph
-    munch
-    unmunch
-#    hzip
-    hunzip 
-ARCHIVE DESTINATION lib
-LIBRARY DESTINATION lib
-RUNTIME DESTINATION bin
-)
+    install(
+        TARGETS
+            hunspell 
+            testparser
+            analyze
+            chmorph
+            munch
+            unmunch
+        #    hzip
+            hunzip 
+        DESTINATION tools/hunspell
+    )
+endif()
 
 install(FILES ${LIBHUNSPELL_HDRS} DESTINATION "include/hunspell/")
