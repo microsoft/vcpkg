@@ -6,12 +6,7 @@ vcpkg_from_github(
     REF v32
     SHA512 001660b540880d9b1777d41ceb564b603a8d442649da86f9272e34cc642e10b43217ffadbc7d7fa7d32cb60dcc3daa0be17f86d5de48e8fce25f8681c645025d
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/disable_master_project.patch
+    PATCHES disable_master_project.patch
 )
 
 vcpkg_configure_cmake(
@@ -31,5 +26,4 @@ if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/trompeloeil.hpp)
     message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/trompeloeil RENAME copyright)
-
+configure_file(${SOURCE_PATH}/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/trompeloeil/copyright COPYONLY)
