@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taocpp/pegtl
-    REF 2.6.0
-    SHA512 e70aa70961c41d2b3dc4874429b2be491eed12f229a11d83ffe98cb3ee7a2b39061f9f9ec86f3ed02a6c347a875cdc52bd82112c4deb29d46e2002110e256f9f
+    REF 2.7.1
+    SHA512 fe89ef5a519f7b0070a8cfaf7d1a76f9a73e747065d872cc9434a31b2e77c12140d581b87fade9498c9db9d7867556b0c34fcd43f9d6e0946029d4886d291b21
     HEAD_REF master
 )
 
