@@ -2,22 +2,23 @@ include(vcpkg_common_functions)
 
 set(LIBGEOTIFF_VERSION 1.4.2)
 set(LIBGEOTIFF_HASH 059c6e05eb0c47f17b102c7217a2e1636e76d622c4d1bdcf0bd89fb3505f3130bffa881e21c73cfd2ca0d6863b81322f85784658ba3539b53b63c3a8f38d1deb)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/1/libgeotiff-${LIBGEOTIFF_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/geotiff/libgeotiff/libgeotiff-${LIBGEOTIFF_VERSION}.tar.gz"
     FILENAME "libgeotiff-${LIBGEOTIFF_VERSION}.tar.gz"
-    SHA512 ${LIBGEOTIFF_HASH})
+    SHA512 ${LIBGEOTIFF_HASH}
+)
 
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/1)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Updates-to-CMake-configuration-to-align-with-other-C.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0002-Fix-directory-output.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0004-Fix-libxtiff-installation.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0005-Control-shared-library-build-with-option.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0006-Fix-utility-link-error.patch"
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${LIBGEOTIFF_VERSION}
+    PATCHES
+        0001-Updates-to-CMake-configuration-to-align-with-other-C.patch
+        0002-Fix-directory-output.patch
+        0004-Fix-libxtiff-installation.patch
+        0005-Control-shared-library-build-with-option.patch
+        0006-Fix-utility-link-error.patch
 )
 
 vcpkg_configure_cmake(
