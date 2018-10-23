@@ -10,6 +10,7 @@ vcpkg_from_github(
             config.patch
             config_install.patch
             find_flann.patch
+            find_flann_add_search_path_suffix.patch
             find_qhull.patch
             find_openni2.patch
             find_cuda.patch

@@ -1,0 +1,13 @@
+diff --git a/cmake/Modules/FindFLANN.cmake b/cmake/Modules/FindFLANN.cmake
+index 4041a2539..d2c3fd07e 100644
+--- a/cmake/Modules/FindFLANN.cmake
++++ b/cmake/Modules/FindFLANN.cmake
+@@ -41,7 +41,7 @@ find_library(FLANN_LIBRARY_DEBUG
+              NAMES ${FLANN_DEBUG_NAME} ${FLANN_RELEASE_NAME}
+ 	     HINTS ${PC_FLANN_LIBDIR} ${PC_FLANN_LIBRARY_DIRS} "${FLANN_ROOT}" "$ENV{FLANN_ROOT}"
+ 	     PATHS "$ENV{PROGRAMFILES}/Flann" "$ENV{PROGRAMW6432}/Flann" 
+-	     PATH_SUFFIXES lib)
++	     PATH_SUFFIXES lib debug/lib)
+ 
+ if(NOT FLANN_LIBRARY_DEBUG)
+   set(FLANN_LIBRARY_DEBUG ${FLANN_LIBRARY})
