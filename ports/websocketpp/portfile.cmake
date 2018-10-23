@@ -7,12 +7,8 @@ vcpkg_from_github(
     REF 0.7.0
     SHA512 91a86d4f5120db3f474169bb146f865f82167b1e9eedabec8793b31005e4ce3d22083283bc1b9f9e37fa0da835addcb2b68260a27c753852c06b3b1bb2f3c12e
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/openssl_110.patch
+        openssl_110.patch
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/websocketpp)

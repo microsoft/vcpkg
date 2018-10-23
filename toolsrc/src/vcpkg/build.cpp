@@ -245,7 +245,7 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::format(R"("%s" %s %s %s %s 2>&1)",
+        return Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
                                toolset.vcvarsall.u8string(),
                                Strings::join(" ", toolset.vcvarsall_options),
                                arch,
@@ -381,9 +381,15 @@ namespace vcpkg::Build
             });
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
-        if (!command.empty()) command.append(" && ");
+        if (!command.empty())
+        {
+#ifdef _WIN32
+            command.append(" & ");
+#else
+            command.append(" && ");
+#endif
+        }
         command.append(cmd_launch_cmake);
-
         const auto timer = Chrono::ElapsedTimer::create_started();
 
         const int return_code = System::cmd_execute_clean(command);

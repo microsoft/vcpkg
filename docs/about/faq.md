@@ -35,7 +35,7 @@ To use different versions of a library for different projects, we recommend maki
 
 If your application is very sensitive to the versions of libraries, we recommend checking in the specific set of portfiles you need into your source control along with your project sources and using the `--vcpkg-root` option to redirect the working directory of `vcpkg.exe`.
 
-## How does Vcpkg protect my Privacy?
+## How does Vcpkg protect my privacy?
 See the [Privacy document](privacy.md) for all information regarding privacy.
 
 ## Can I use my own CMake toolchain file with Vcpkg's toolchain file?
@@ -108,7 +108,7 @@ Conan.io is a publicly-federated, project-centric, cross-platform, C++ package m
 
 - **Cross-platform vs single-platform**. While being hosted on many platforms is an excellent north star, we believe the level of system integration and stability provided by apt-get, yum, and homebrew is well worth needing to exchange `apt-get install libboost-all-dev` with `brew install boost` in automated scripts. We chose to make our system as easy as possible to integrate into a world with these very successful system managers -- one more line for `vcpkg install boost` -- instead of attempting to replace them where they are already so successful and well-loved.
 
-- **C++/CMake vs python**. While Python is an excellent language loved by many, we believe that transparency and familiarity are the most important factors when choosing a tool as important to your workflow as a package manager. Consequently, we chose to make the implementation languages be as universally accepted as possible: C++ should be used in a C++ package manager for C++ programmers. You should not be required to learn another language just to understand your package manager.
+- **C++/CMake vs python**. While Python is an excellent language loved by many, we believe that transparency and familiarity are the most important factors when choosing a tool as important to your workflow as a package manager. Consequently, we chose to make the implementation languages be as universally accepted as possible: C++ should be used in a C++ package manager for C++ programmers. You should not be required to learn another programming language just to understand your package manager.
 
 ## Why not Chocolatey?
 Chocolatey is an excellent system for managing applications. However, it is not currently designed to acquire redistributable developer assets and help you with debugging. Vcpkg, in comparison, is designed to get you the libraries you need to build your application and help you deliver through any platform you'd like (including Chocolatey!).
