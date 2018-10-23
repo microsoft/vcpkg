@@ -216,10 +216,18 @@ namespace vcpkg::Files
         {
             return fs::stdfs::copy_file(oldpath, newpath, opts, ec);
         }
+        virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        {
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+        }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
         {
             return fs::stdfs::status(path, ec);
+        }
+        virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const override
+        {
+            return fs::stdfs::symlink_status(path, ec);
         }
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {

@@ -68,7 +68,12 @@ function(vcpkg_download_distfile VAR)
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
     set(download_file_path_part "${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}")
 
-    file(REMOVE_RECURSE "${DOWNLOADS}/temp")
+    # Works around issue #3399
+    if(IS_DIRECTORY "${DOWNLOADS}/temp")
+        file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
+        file(RENAME "${DOWNLOADS}/temp" "${DOWNLOADS}/temp0")
+        file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
+    endif()
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)

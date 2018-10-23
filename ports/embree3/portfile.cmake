@@ -43,9 +43,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/models)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/models)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/embree)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree/doc)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/embree3)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree3/doc)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/embree)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/embree/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/embree/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/embree3)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/embree3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/embree3/copyright)
