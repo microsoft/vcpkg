@@ -1,26 +1,19 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:/path/to/current/vcpkg>
-#   TARGET_TRIPLET is the current triplet (${VCPKG_TARGET_ARCHITECTURE}-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}/buildtrees/${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}/packages/${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/portaudio)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz"
     FILENAME "pa_stable_v190600_20161030.tgz"
     SHA512 7ec692cbd8c23878b029fad9d9fd63a021f57e60c4921f602995a2fca070c29f17a280c7f2da5966c4aad29d28434538452f4c822eacf3a60af59a6dc8e9704c
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-                ${CMAKE_CURRENT_LIST_DIR}/cmakelists-install.patch
-                ${CMAKE_CURRENT_LIST_DIR}/find_dsound.patch
-                ${CMAKE_CURRENT_LIST_DIR}/crt_linkage_build_config.patch)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        cmakelists-install.patch
+        find_dsound.patch
+        wasapi_support.patch
+        crt_linkage_build_config.patch
+)
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
 # in a sibling folder of the portaudio source in vcpkg/buildtrees/portaudio/src
