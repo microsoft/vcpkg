@@ -1,0 +1,27 @@
+Source: nonstd
+Version: 0.1.0
+Description: nonstd librairies from martinmoene
+
+Feature: expected
+Description: Expected objects for C++11 and later (and later perhaps C++98) 
+
+Feature: span
+Description: A single-file header-only version of a C++20-like span for C++98, C++11 and later 
+
+Feature: optional
+Description: A single-file header-only version of a C++17-like optional, a nullable object for C++98, C++11 and later 
+
+Feature: variant
+Description: A single-file header-only version of a C++17-like variant, a type-safe union for C++98, C++11 and later  
+
+Feature: string-view
+Description: A single-file header-only version of a C++17-like string_view for C++98, C++11 and later 
+
+Feature: byte
+Description: A single-file header-only C++17-like byte type for C++98, C++11 and later 
+
+Feature: any
+Description: A single-file header-only C++17-like any, a type-safe container for single values of any type for C++98, C++11 and later 
+
+Feature: observer-ptr
+Description: A single-file header-only C++98, C++03, C++11, C++14 version of ISO C++17 std::observer_ptr 
