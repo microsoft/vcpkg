@@ -1,6 +1,7 @@
 include(vcpkg_acquire_msys)
-include(vcpkg_append_to_path)
+include(vcpkg_add_to_path)
 include(vcpkg_check_linkage)
+include(vcpkg_clean_msbuild)
 include(vcpkg_download_distfile)
 include(vcpkg_extract_source_archive)
 include(vcpkg_execute_required_process)

@@ -39,14 +39,19 @@ vcpkg_install_msbuild(
     OPTIONS_RELEASE /p:XERCESCROOT=${CURRENT_INSTALLED_DIR}
     OPTIONS_DEBUG /p:XERCESCROOT=${CURRENT_INSTALLED_DIR}/debug
     LICENSE_SUBPATH c/LICENSE
+    SKIP_CLEAN
 )
 
 file(COPY ${SOURCE_PATH}/c/src/xalanc DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.hpp)
 
-# LocalMsgIndex.hpp is here
-file(GLOB LOCALMSGINDEX ${CURRENT_BUILDTREES_DIR}/${VCPKG_TARGET_TRIPLET}-rel/*/c/Build/*/VC10/Release/Nls/Include/LocalMsgIndex.hpp)
+# LocalMsgIndex.hpp and LocalMsgData.hpp are here
+file(GLOB NLS_INCLUDES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/c/Build/*/VC10/Release/Nls/Include/*.hpp")
+if(NOT NLS_INCLUDES)
+    message(FATAL_ERROR "Could not locate LocalMsgIndex.hpp")
+endif()
+file(COPY ${NLS_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/xalanc/PlatformSupport)
 
-file(COPY ${LOCALMSGINDEX} DESTINATION ${CURRENT_PACKAGES_DIR}/include/xalanc/PlatformSupport)
+vcpkg_clean_msbuild()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/NLS)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/util/MsgLoaders/ICU/resources)
