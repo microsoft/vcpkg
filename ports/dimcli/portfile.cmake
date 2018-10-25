@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLINK_STATIC_RUNTIME:BOOL=${staticCrt}
         -DINSTALL_LIBS:BOOL=ON
-        -DBUILD_PROJECT_NAME="dimcli"
+        -DBUILD_PROJECT_NAME=dimcli
 )
 
 vcpkg_install_cmake()
