@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_VERSION 3.2.0)
+set(SOURCE_VERSION 3.3.0)
 
 vcpkg_download_distfile(HEADER
     URLS "https://github.com/nlohmann/json/releases/download/v${SOURCE_VERSION}/json.hpp"
     FILENAME "nlohmann-json-${SOURCE_VERSION}.hpp"
-    SHA512 c9090ccb5b00812d69e9fde44826b7168ba4a68d254440f3b4ac9354899785871a9d2806aac5cdba84359035a55ac19ec024c36a32a893eee1c7740536dd0eca
+    SHA512 c4e4bb84d1488f87a02c4e12409491225e345cc508e6dbbee1a3542fbd4953052c256d0fe78c4d3ce02d44c3a2155fe66f0c8a93a3851ddf94fec4f9f3fd6918
 )
 
 vcpkg_download_distfile(LICENSE

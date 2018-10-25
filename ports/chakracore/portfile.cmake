@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF v1.11.1
-    SHA512 cabec836af505504ffff99050de79320fe32e7311842bc5c715dae18ae7e006b63bb56f4d071016708ddec05a2a07143677371a76a57def68fb7f428012452d3
+    REF v1.11.2
+    SHA512 6261a7028bf398703a610d9ad42b6bde7c6309d2997c7cfaa785c1fbcf582adbbbe60756bbe411af1d6e1d26ac9acca5cbe734608885d8b5f2881819477292b7
     HEAD_REF master
 )
 
@@ -24,10 +24,7 @@ set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(REMOVE_RECURSE ${BUILDTREE_PATH})
 file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
-set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore default is static CRT linkage
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-	set(CHAKRA_RUNTIME_LIB "dynamic_library")
-endif()
+set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
