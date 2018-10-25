@@ -16,12 +16,20 @@ if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
 endif()
 string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OSG_PLUGINS_SUBDIR}")
 
+vcpkg_download_distfile(
+    VS2017PATCH
+    URLS "https://github.com/remoe/osgearth/commit/f7081cc4f9991c955c6a0ef7b7b50e48360d14fd.diff"
+    FILENAME "osgearth-f7081cc4f9991c955c6a0ef7b7b50e48360d14fd.patch"
+    SHA512 eadb47a5713c00c05add8627e5cad22844db041da34081d59104151a1a1e2d5ac9552909d67171bfc0449a3e4d2930dd3a7914d3ec7ef7ff1015574e9c9a6105
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
     REF d1884d819d4a43de32b7ca1ded655c73964bed17
     SHA512 525ad4ce8bcbd7d73a2ed66e7fbcd9d302582276f26dda1ef2baa3828da5c1e302ba81aac95d0a0632c7395cbcd072d2b19d084ba641c1ba92872d42bb6f769c
     HEAD_REF master
+    PATCHES ${VS2017PATCH}
 )
 
 vcpkg_configure_cmake(

@@ -12,8 +12,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_download_distfile(WINPATCH
-    URLS "https://bugs.libssh.org/file/data/qswxtcazmvjrycu5gcx4/PHID-FILE-azin7nwumsm64mw5pequ/file"
-    FILENAME "libssh-0a53c5b1.patch"
+    URLS "https://bugs.libssh.org/rLIBSSHf81ca6161223e3566ce78a427571235fb6848fe9?diff=1"
+    FILENAME "libssh-f81ca616.patch"
     SHA512 f3f6088f8f1bf8fe6226c1aa7b355d877be7f2aa9482c5e3de74b6a35fc5b28d8f89221d3afa5a5d3a5900519a86e5906516667ed22ad98f058616a8120999cd
 )
 

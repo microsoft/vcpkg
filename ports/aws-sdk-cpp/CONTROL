@@ -1,5 +1,5 @@
 Source: aws-sdk-cpp
-Version: 1.6.12-1
+Version: 1.6.29
 Description: AWS SDK for C++
 Build-Depends: openssl (!uwp&!windows), curl (!uwp&!windows)
 Default-Features: dynamodb, s3, kinesis
