@@ -53,15 +53,15 @@
 ## Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
 ##
 ## ### SKIP_CLEAN
-## Indicates that the build tree should not be automatically removed.  Call
-## `vcpkg_clean_msbuild()` to manually clean up.
+## Indicates that the intermediate files should not be removed.
+##
+## Ports using this option should later call [`vcpkg_clean_msbuild()`](vcpkg_clean_msbuild.md) to manually clean up.
 ##
 ## ### RELEASE_CONFIGURATION
 ## The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
 ##
 ## ### DEBUG_CONFIGURATION
-## The configuration (``/p:Configuration`` msbuild parameter)
-## used for Debug builds.
+## The configuration (``/p:Configuration`` msbuild parameter) used for Debug builds.
 ##
 ## ### TARGET_PLATFORM_VERSION
 ## The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
@@ -86,6 +86,7 @@
 ##
 ## ## Examples
 ##
+## * [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
 ## * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 
 include(vcpkg_clean_msbuild)
@@ -203,7 +204,7 @@ function(vcpkg_install_msbuild)
     vcpkg_copy_pdbs()
 
     if(NOT _csc_SKIP_CLEAN)
-      vcpkg_clean_msbuild()
+        vcpkg_clean_msbuild()
     endif()
 
     if(DEFINED _csc_INCLUDES_SUBPATH)

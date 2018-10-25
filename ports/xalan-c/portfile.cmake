@@ -46,6 +46,9 @@ file(COPY ${SOURCE_PATH}/c/src/xalanc DESTINATION ${CURRENT_PACKAGES_DIR}/includ
 
 # LocalMsgIndex.hpp and LocalMsgData.hpp are here
 file(GLOB NLS_INCLUDES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/c/Build/*/VC10/Release/Nls/Include/*.hpp")
+if(NOT NLS_INCLUDES)
+    message(FATAL_ERROR "Could not locate LocalMsgIndex.hpp")
+endif()
 file(COPY ${NLS_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/xalanc/PlatformSupport)
 
 vcpkg_clean_msbuild()
