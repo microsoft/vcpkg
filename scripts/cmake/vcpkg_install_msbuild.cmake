@@ -53,8 +53,8 @@
 ## Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
 ##
 ## ### SKIP_CLEAN
-## Indicates that the build tree should be removed.  Call `vcpkg_clean_msbuild()` to manually
-## clean up.
+## Indicates that the build tree should not be automatically removed.  Call
+## `vcpkg_clean_msbuild()` to manually clean up.
 ##
 ## ### RELEASE_CONFIGURATION
 ## The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
@@ -202,7 +202,7 @@ function(vcpkg_install_msbuild)
 
     vcpkg_copy_pdbs()
 
-	if(NOT _csc_SKIP_CLEAN)
+    if(NOT _csc_SKIP_CLEAN)
       vcpkg_clean_msbuild()
     endif()
 
