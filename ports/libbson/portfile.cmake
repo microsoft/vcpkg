@@ -45,12 +45,21 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib
-        ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib)
+	if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+		file(RENAME
+	        ${CURRENT_PACKAGES_DIR}/lib/libbson-static-1.0.a
+	        ${CURRENT_PACKAGES_DIR}/lib/libbson-1.0.a)
+	    file(RENAME
+	        ${CURRENT_PACKAGES_DIR}/debug/lib/libbson-static-1.0.a
+	        ${CURRENT_PACKAGES_DIR}/debug/lib/libbson-1.0.a)
+	else()
+		file(RENAME
+	        ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib
+	        ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
+	    file(RENAME
+	        ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib
+	        ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib)
+	endif()
 
     # drop the __declspec(dllimport) when building static
     vcpkg_apply_patches(
