@@ -13,8 +13,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     message(
 "GLFW3 currently requires the following libraries from the system package manager:
     xinerama
+    xcursor
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev")
 endif()
 
 vcpkg_configure_cmake(
