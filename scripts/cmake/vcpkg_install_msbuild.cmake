@@ -52,6 +52,10 @@
 ## ### REMOVE_ROOT_INCLUDES
 ## Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
 ##
+## ### SKIP_CLEAN
+## Indicates that the build tree should be removed.  Call `vcpkg_clean_msbuild()` to manually
+## clean up.
+##
 ## ### RELEASE_CONFIGURATION
 ## The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
 ##
@@ -84,10 +88,12 @@
 ##
 ## * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 
+include(vcpkg_clean_msbuild)
+
 function(vcpkg_install_msbuild)
     cmake_parse_arguments(
         _csc
-        "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES"
+        "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
         ${ARGN}
@@ -196,10 +202,9 @@ function(vcpkg_install_msbuild)
 
     vcpkg_copy_pdbs()
 
-    file(REMOVE_RECURSE
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    )
+	if(NOT _csc_SKIP_CLEAN)
+      vcpkg_clean_msbuild()
+    endif()
 
     if(DEFINED _csc_INCLUDES_SUBPATH)
         file(COPY ${_csc_SOURCE_PATH}/${_csc_INCLUDES_SUBPATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
