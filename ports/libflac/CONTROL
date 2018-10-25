@@ -1,4 +1,4 @@
 Source: libflac
-Version: 1.3.2-5
+Version: 1.3.2-6
 Description: Library for manipulating FLAC files
 Build-Depends: libogg

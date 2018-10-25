@@ -1,5 +1,5 @@
 Source: opusfile
-Version: 0.9-3
+Version: 0.11-1
 Description: Stand-alone decoder library for .opus streams
 Build-Depends: libogg, opus
 

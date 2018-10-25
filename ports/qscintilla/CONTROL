@@ -1,4 +1,4 @@
 Source: qscintilla
-Version: 2.10-4
+Version: 2.10-5
 Description: QScintilla is a port to Qt of the Scintilla editing component. Features syntax highlighting, code-completion and much more (Barebone build without python bindings (missing dependeny PyQt) and without QtDesigner plugin)
 Build-Depends: qt5-base

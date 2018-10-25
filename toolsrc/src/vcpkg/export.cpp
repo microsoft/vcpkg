@@ -108,7 +108,7 @@ namespace vcpkg::Export
 
     static std::string create_export_id()
     {
-        const tm date_time = System::get_current_date_time();
+        const tm date_time = Chrono::get_current_date_time_local();
 
         // Format is: YYYYmmdd-HHMMSS
         // 15 characters + 1 null terminating character will be written for a total of 16 chars
@@ -227,10 +227,10 @@ namespace vcpkg::Export
     {
         const std::vector<fs::path> integration_files_relative_to_root = {
             {".vcpkg-root"},
-            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
-            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
-            {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
-            {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
+            {fs::path {"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
+            {fs::path {"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
+            {fs::path {"scripts"} / "buildsystems" / "vcpkg.cmake"},
+            {fs::path {"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)

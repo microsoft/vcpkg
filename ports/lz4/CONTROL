@@ -1,3 +1,3 @@
 Source: lz4
-Version: 1.8.2
+Version: 1.8.3
 Description: Lossless compression algorithm, providing compression speed at 400 MB/s per core.
