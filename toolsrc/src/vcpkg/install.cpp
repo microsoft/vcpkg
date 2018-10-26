@@ -173,7 +173,7 @@ namespace vcpkg::Install
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path) {
             std::string as_string = path.generic_string();
             as_string.erase(0, package_remove_char_count);
-            return std::move(as_string);
+            return as_string;
         });
 
         return SortedVector<std::string>(std::move(package_files));
