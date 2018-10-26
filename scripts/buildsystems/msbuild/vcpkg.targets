@@ -59,7 +59,7 @@
 	Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
 	<VcpkgAutoLink Condition="$(UseLldLink)">false</VcpkgAutoLink>
   </PropertyGroup>
-  
+
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
       <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)debug\lib\*.lib</AdditionalDependencies>
