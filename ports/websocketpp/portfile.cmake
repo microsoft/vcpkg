@@ -13,13 +13,15 @@ vcpkg_from_github(
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/websocketpp)
 
-# Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/websocketpp/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/websocketpp/COPYING ${CURRENT_PACKAGES_DIR}/share/websocketpp/copyright)
-
 # Copy the header files
 file(COPY "${SOURCE_PATH}/websocketpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.hpp")
 
-set(INSTALL_INCLUDE_DIR "\${CMAKE_CURRENT_LIST_DIR}/../../include")
-set(WEBSOCKETPP_VERSION 0.7.0)
+set(PACKAGE_INSTALL_INCLUDE_DIR "\${CMAKE_CURRENT_LIST_DIR}/../../include")
+set(WEBSOCKETPP_VERSION 0.8.1)
+set(PACKAGE_INIT "
+macro(set_and_check)
+  set(\${ARGV})
+endmacro()
+")
 configure_file(${SOURCE_PATH}/websocketpp-config.cmake.in "${CURRENT_PACKAGES_DIR}/share/websocketpp/websocketpp-config.cmake" @ONLY)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/websocketpp/copyright COPYONLY)
