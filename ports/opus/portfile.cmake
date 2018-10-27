@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
-    REF v1.2.1
-    SHA512 fdc64b43875dd07dc9eb1c37e9a61d1c10e3095de62ed9597d51b93445136958c9f5fee78c33ae7f90c72a20200083cdc727d8e79f2f9e580ad4e2f8c50cccb4
+    REF v1.3
+    SHA512 5ac067514b6471432fcd027b912dcaa765e2bdc986ea289a2aeb57660d18fa1460a0a697b9736d8e2b65eb7b72ad4fa36b9b213389fe1e64335db8e9ad51b750
     HEAD_REF master
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/no-main.patch"
 )
