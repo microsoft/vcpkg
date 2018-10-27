@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
         find_dsound.patch
         wasapi_support.patch
         crt_linkage_build_config.patch
+        pa_win_waveformat.patch
 )
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
