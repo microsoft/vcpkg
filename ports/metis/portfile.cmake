@@ -7,22 +7,25 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/metis-5.1.0)
+
+set(METIS_VERSION 5.1.0)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.1.0.tar.gz"
-    FILENAME "metis-5.1.0.tar.gz"
+    URLS "http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-${METIS_VERSION}.tar.gz"
+    FILENAME "metis-${METIS_VERSION}.tar.gz"
     SHA512 deea47749d13bd06fbeaf98a53c6c0b61603ddc17a43dae81d72c8015576f6495fd83c11b0ef68d024879ed5415c14ebdbd87ce49c181bdac680573bea8bdb25
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${METIS_VERSION}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/enable-install.patch
-        ${CMAKE_CURRENT_LIST_DIR}/disable-programs.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-runtime-install-destination.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-metis-vs14-math.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-gklib-vs14-math.patch
+        enable-install.patch
+        disable-programs.patch
+        fix-runtime-install-destination.patch
+        fix-metis-vs14-math.patch
+        fix-gklib-vs14-math.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

@@ -1,0 +1,4 @@
+Source: vxl
+Version: 20180414-7a130cf-1
+Build-Depends: zlib, tiff, expat, libpng, bzip2, libjpeg-turbo, shapelib, libgeotiff
+Description: A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.

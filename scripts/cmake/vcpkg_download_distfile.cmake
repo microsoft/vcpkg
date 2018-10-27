@@ -68,7 +68,12 @@ function(vcpkg_download_distfile VAR)
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
     set(download_file_path_part "${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}")
 
-    file(REMOVE_RECURSE "${DOWNLOADS}/temp")
+    # Works around issue #3399
+    if(IS_DIRECTORY "${DOWNLOADS}/temp")
+        file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
+        file(RENAME "${DOWNLOADS}/temp" "${DOWNLOADS}/temp0")
+        file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
+    endif()
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)
@@ -81,9 +86,8 @@ function(vcpkg_download_distfile VAR)
             return()
         endif()
 
-        message(STATUS "Testing integrity of ${FILE_KIND}...")
         file(SHA512 ${FILE_PATH} FILE_HASH)
-        if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
+        if(NOT FILE_HASH STREQUAL vcpkg_download_distfile_SHA512)
             message(FATAL_ERROR
                 "\nFile does not have expected hash:\n"
                 "        File path: [ ${FILE_PATH} ]\n"
@@ -91,10 +95,9 @@ function(vcpkg_download_distfile VAR)
                 "      Actual hash: [ ${FILE_HASH} ]\n"
                 "${CUSTOM_ERROR_ADVICE}\n")
         endif()
-        message(STATUS "Testing integrity of ${FILE_KIND}... OK")
     endfunction()
 
-    if(EXISTS ${downloaded_file_path})
+    if(EXISTS "${downloaded_file_path}")
         message(STATUS "Using cached ${downloaded_file_path}")
         test_hash("${downloaded_file_path}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
@@ -104,7 +107,7 @@ function(vcpkg_download_distfile VAR)
 
         # Tries to download the file.
         list(GET vcpkg_download_distfile_URLS 0 SAMPLE_URL)
-        if(${_VCPKG_DOWNLOAD_TOOL} MATCHES "ARIA2" AND NOT ${SAMPLE_URL} MATCHES "aria2")
+        if(_VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT SAMPLE_URL MATCHES "aria2")
             vcpkg_find_acquire_program("ARIA2")
             message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
             execute_process(
@@ -127,7 +130,6 @@ function(vcpkg_download_distfile VAR)
                 )
                 set(download_success 0)
             else()
-                message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}... OK")
                 file(REMOVE
                     ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
                     ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
@@ -144,7 +146,6 @@ function(vcpkg_download_distfile VAR)
                     message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
                     set(download_success 0)
                 else()
-                    message(STATUS "Downloading ${url}... OK")
                     set(download_success 1)
                     break()
                 endif()

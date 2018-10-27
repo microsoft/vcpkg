@@ -11,6 +11,7 @@ vcpkg_from_bitbucket(
     [REF <v2.0.0>]
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
+    [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
 
@@ -39,6 +40,11 @@ This is most easily determined by first setting it to `1`, then trying to build 
 The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
 
 For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
+
+### PATCHES
+A list of patches to be applied to the extracted sources.
+
+Relative paths are based on the port directory.
 
 ## Notes:
 At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.

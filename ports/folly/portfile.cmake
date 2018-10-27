@@ -12,20 +12,17 @@ include(vcpkg_common_functions)
 # Required to run build/generate_escape_tables.py et al.
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.04.09.00
-    SHA512 625034437ee6c261949652dbd6cafb50b0954b691750e4591cd0eb03cf369348cfae3b4b98c012bd906a157b7642ebcb1d8843311c74416ed51bffc5b1da3018
+    REF v2018.10.22.00
+    SHA512 ca039ee85c4269fb79ff01beb9e67a6a17220cdc997f59c5ca27514407e533f3d65c358fc5d99c5008a63d3837703db78707a04ba88093b9e63306012a5759e5
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
+        find-gflags.patch
+        no-werror.patch
 )
 
 file(COPY
@@ -33,6 +30,7 @@ file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
     DESTINATION ${SOURCE_PATH}/CMake/
 )
+file(REMOVE ${SOURCE_PATH}/CMake/FindGFlags.cmake)
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -68,6 +66,7 @@ vcpkg_configure_cmake(
         -DLIBAIO_FOUND=OFF
         -DLIBURCU_FOUND=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
+        -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
 
@@ -75,7 +74,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/folly)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

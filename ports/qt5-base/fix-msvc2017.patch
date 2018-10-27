@@ -1,0 +1,27 @@
+diff -Naur a/mkspecs/common/msvc-version.conf b/mkspecs/common/msvc-version.conf
+--- a/mkspecs/common/msvc-version.conf	2018-06-15 03:29:31.000000000 -0400
++++ b/mkspecs/common/msvc-version.conf	2018-08-23 00:26:46.436806400 -0400
+@@ -112,4 +112,11 @@
+     COMPAT_MKSPEC       =
+ }
+ 
++
++# MSVC 2017 15.8+ fixed std::aligned_storage but compilation fails without
++# this flag since the fix breaks binary compatibility.
++greaterThan(QMAKE_MSC_VER, 1914) {
++    DEFINES += _ENABLE_EXTENDED_ALIGNED_STORAGE
++}
++
+ !isEmpty(COMPAT_MKSPEC):!$$COMPAT_MKSPEC: CONFIG += $$COMPAT_MKSPEC
+diff -Naur a/qmake/Makefile.win32 b/qmake/Makefile.win32
+--- a/qmake/Makefile.win32	2018-06-15 03:29:31.000000000 -0400
++++ b/qmake/Makefile.win32	2018-08-23 00:27:45.764849600 -0400
+@@ -39,7 +39,7 @@
+               -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS \
+               -DQT_VERSION_STR=\"$(QT_VERSION)\" -DQT_VERSION_MAJOR=$(QT_MAJOR_VERSION) -DQT_VERSION_MINOR=$(QT_MINOR_VERSION) -DQT_VERSION_PATCH=$(QT_PATCH_VERSION) \
+               -DQT_BUILD_QMAKE -DQT_BOOTSTRAPPED -DPROEVALUATOR_FULL \
+-              -DQT_NO_FOREACH -DUNICODE
++              -DQT_NO_FOREACH -DUNICODE -D_ENABLE_EXTENDED_ALIGNED_STORAGE
+ CFLAGS   = $(CFLAGS_PCH) $(CFLAGS_BARE) $(CFLAGS)
+ 
+ CXXFLAGS_BARE = $(CFLAGS_BARE)

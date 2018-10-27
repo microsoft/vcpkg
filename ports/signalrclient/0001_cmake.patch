@@ -26,7 +26,7 @@ index 8c73730..4cd9074 100644
 +else()
 +	file(READ include/signalrclient/_exports.h EXPORTS_H)
 +	string(REPLACE "#ifdef NO_SIGNALRCLIENT_EXPORTS" "#if 1" EXPORTS_H_2 ${EXPORTS_H})
-+	file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_exports.h ${EXPORTS_H_2})
++	file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_exports.h "${EXPORTS_H_2}")
 +
 +	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/_exports.h DESTINATION include/signalrclient)
 +endif()

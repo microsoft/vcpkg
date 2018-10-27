@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e59ee5b..b5f6a0d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -238,6 +238,9 @@ set_target_properties (${PROJECT_NAME} ${PROJECT_NAME}
+ target_link_libraries (${PROJECT_NAME} PRIVATE ${NNG_REQUIRED_LIBRARIES})
+ target_link_libraries (${PROJECT_NAME} PRIVATE Threads::Threads)
+ 
++# See: https://github.com/nanomsg/nanomsg/pull/949/
++target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
++
+ install (TARGETS ${PROJECT_NAME}
+     EXPORT ${PROJECT_NAME}-target
+     FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library
