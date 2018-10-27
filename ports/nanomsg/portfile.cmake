@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nanomsg
-    REF 1.1.2
-    SHA512 f95ce24b34c25d139cf3de46585f6354e0311a9d5e7135ad71df62b8bb5df26f81a58b9773c39c320df2d0e97cd2905a8576f9f00b0a4d33774f1b610271cee5
+    REF 1.1.4
+    SHA512 a1f002f988f2d98eff03387b496fe15a099fef4eb9ccd1c46ade63fbbe5a4ad4cf9fa0fd1e612e1a6f2747bc2af63b7044ec1e920e1c9a0d8c8bc2191ad7046a
     HEAD_REF master
 )
 
@@ -22,6 +22,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/nanomsg")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

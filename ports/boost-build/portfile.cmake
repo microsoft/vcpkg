@@ -11,21 +11,21 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
-    REF boost-1.66.0
-    SHA512 db94eefa0c2fe410cfdf7599102670377a069d52a7c8d4181f6209e3e65860e9d92f86ec5994e402b8a773a47a4ad5c074acf9763eabbe293266af19380e7ca9
+    REF boost-1.68.0
+    SHA512 ede4ea6bba966bfdc590ea21b8787f090c690db851fd6eb19644f089de8828b6cec504a7f4be203d57017de2a0288f0e12772e50d9017287221520dca1676a79
     HEAD_REF master
 )
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.66.0/LICENSE_1_0.txt"
+    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.68.0/LICENSE_1_0.txt"
     FILENAME "boost_LICENSE_1_0.txt"
     SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
 )
 
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
-    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.66.0/boostcpp.jam"
-    FILENAME "boost-1.66.0-boostcpp.jam"
-    SHA512 ef2ae1d6a53a7f93654950e2e8e679da6b0359f02baafc03db970801634c1f5d4229633b5b6d74ad96a306e6efe3429d436669dc165b1fa655917e0ec74714e4
+    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.68.0/boostcpp.jam"
+    FILENAME "boost-1.68.0-boostcpp.jam"
+    SHA512 4d887b05b4873e651fd9bc20f04fc072c7d801fd50445c989517cd39c3a8aa132ed46c407fb0efb35825fc0fc1035393d5ac0da5922be2c120cf2bfff952b3bc
 )
 
 file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build RENAME copyright)

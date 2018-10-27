@@ -10,7 +10,9 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-datetime-to-boost-libs.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/add-datetime-to-boost-libs.patch
+        ${CMAKE_CURRENT_LIST_DIR}/boost-167.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTORRENT_SHARED)

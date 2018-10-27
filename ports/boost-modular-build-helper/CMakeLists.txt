@@ -9,6 +9,10 @@ set(VCPKG_PLATFORM_TOOLSET external)
 
 set(B2_OPTIONS)
 
+if(DEFINED BOOST_CMAKE_FRAGMENT)
+    include(${BOOST_CMAKE_FRAGMENT})
+endif()
+
 # Add build type specific options
 if(BUILD_SHARED_LIBS)
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -24,13 +28,51 @@ else()
     list(APPEND B2_OPTIONS link=static)
 endif()
 
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     list(APPEND B2_OPTIONS address-model=64)
+else()
+    list(APPEND B2_OPTIONS address-model=32)
 endif()
 
-list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+if(APPLE)
+    list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
+else()
+    list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+endif()
 
-string(REPLACE " " " <compileflags>" CXXFLAGS "${CMAKE_CXX_FLAGS}")
+# Properly handle compiler and linker flags passed by VCPKG
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+    if(BUILD_SHARED_LIBS)
+        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
+    else()
+        set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_RELEASE}")
+    endif()
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+    set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
+    if(BUILD_SHARED_LIBS)
+        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
+    else()
+        set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_DEBUG}")
+    endif()
+endif()
+
+string(STRIP "${CXXFLAGS}" CXXFLAGS)
+string(STRIP "${CFLAGS}"   CFLAGS)
+string(STRIP "${LDFLAGS}"  LDFLAGS)
+
+if(NOT CXXFLAGS STREQUAL "")
+    string(REPLACE " " " <cxxflags>" CXXFLAGS "<cxxflags>${CXXFLAGS}")
+endif()
+if(NOT CFLAGS STREQUAL "")
+    string(REPLACE " " " <cflags>" CFLAGS "<cflags>${CFLAGS}")
+endif()
+if(NOT LDLAGS STREQUAL "")
+    string(REPLACE " " " <linkflags>" LDFLAGS "<linkflags>${LDFLAGS}")
+endif()
+
 #set(CXXFLAGS "${CXXFLAGS} <compileflags>-Wno-error=unused-command-line-argument")
 if(CMAKE_CXX_COMPILER_TARGET)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
@@ -44,6 +86,10 @@ endif()
 foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_INCLUDE_FLAG_C}${CMAKE_INCLUDE_FLAG_C_SEP}${INCDIR}")
 endforeach()
+
+if(APPLE)
+  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
+endif()
 
 find_library(ZLIB_LIBPATH z)
 list(APPEND B2_OPTIONS
@@ -112,7 +158,7 @@ add_custom_target(boost ALL
         threading=multi
         threadapi=pthread
         debug-symbols=on
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    WORKING_DIRECTORY ${SOURCE_PATH}/build
 )
 
 install(

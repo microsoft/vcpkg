@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.66.0
-    SHA512 558c84fe83909b9eb410ed5b846d2393733811e3765e99e41884a7fc7020163437a42584911b4f634706c1a0e79e23bb09bd6a3ffa219c9e524a10ace02728af
+    REF boost-1.68.0
+    SHA512 6e7c85a307ff8c8f41b1002e02c5c68d9ca5c89e95063adc0f134a5c96be728334f1a0548f92c07f85ed639b73588e49df1b0c2d964fa83cee86c746634d5b94
     HEAD_REF master
 )
 
@@ -19,6 +19,7 @@ endif()
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/cmake-fragment.cmake"
     OPTIONS
         boost.locale.iconv=off
         boost.locale.posix=off

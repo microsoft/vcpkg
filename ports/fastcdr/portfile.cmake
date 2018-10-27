@@ -6,11 +6,7 @@ vcpkg_from_github(
     REF v1.0.6
     SHA512 80861ff6a0283e1398306e081fe70d7d185f980e5714ae51864cae012b8f79719efa24e7f41025b2bfb2052cb2a3098436c75a38407f8f5a331593cb91868fb2
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/install-cmake.patch
+    PATCHES install-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -24,6 +20,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/fastcdr/cmake)
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/fastcdr/fastcdrConfig.cmake" _contents)
+string(REPLACE "include(\${fastcdr_LIB_DIR}/fastcdr/cmake/fastcdrTargets.cmake)" "include(\${CMAKE_CURRENT_LIST_DIR}/fastcdrTargets.cmake)" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/fastcdr/fastcdrConfig.cmake" "${_contents}")
 
 vcpkg_copy_pdbs()
 

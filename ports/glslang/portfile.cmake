@@ -1,8 +1,6 @@
 include(vcpkg_common_functions)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  message(WARNING "Dynamic not supported. Building static")
-  set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -15,6 +13,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
+  OPTIONS -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()

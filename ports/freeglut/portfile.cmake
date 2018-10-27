@@ -7,6 +7,10 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message("Freeglut currently requires the following libraries from the system package manager:\n    opengl\n    glu\n    libx11\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev")
+endif()
+
 # disable debug suffix, because FindGLUT.cmake from CMake 3.8 doesn't support it
 file(READ ${SOURCE_PATH}/CMakeLists.txt FREEGLUT_CMAKELISTS)
 string(REPLACE "SET( CMAKE_DEBUG_POSTFIX \"d\" )"
@@ -21,6 +25,12 @@ else()
     set(FREEGLUT_DYNAMIC OFF)
 endif()
 
+# Patch header
+file(READ ${SOURCE_PATH}/include/GL/freeglut_std.h FREEGLUT_STDH)
+string(REGEX REPLACE "\"freeglut[_a-z]+.lib\""
+                     "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
+file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -32,18 +42,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Patch header
-file(READ ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h FREEGLUT_STDH)
-string(REPLACE "pragma comment (lib, \"freeglut_staticd.lib\")"
-               "pragma comment (lib, \"freeglut.lib\")" FREEGLUT_STDH "${FREEGLUT_STDH}")
-string(REPLACE "pragma comment (lib, \"freeglutd.lib\")"
-               "pragma comment (lib, \"freeglut.lib\")" FREEGLUT_STDH "${FREEGLUT_STDH}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
-
 # Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut.lib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut.lib)
+    endif()
 endif()
 
 # Clean

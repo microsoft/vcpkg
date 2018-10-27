@@ -6,17 +6,15 @@ vcpkg_from_github(
     REF a7ed7e224f98b396762c865b81b62dc3abea2e81
     SHA512 2ab167c1c314591b4916baf70b8ad92ae542986c3578319d2454c904adae10f8027bc696579d6e2864d3606a6711563b82438e847527cad4ab0c2bd603a63eb7
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
+	PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-packages.patch
+        ${CMAKE_CURRENT_LIST_DIR}/disable-C2338-cartographer.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS        
+    PREFER_NINJA
+    OPTIONS
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF 
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF 
         -Dgtest_disable_pthreads=ON 
@@ -27,7 +25,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cartographer)
 vcpkg_copy_pdbs()
 
 # Clean

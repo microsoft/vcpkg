@@ -76,8 +76,11 @@ add_definitions(
     -DGTK_DISABLE_SINGLE_INCLUDES
     -D_USE_MATH_DEFINES)
 
+add_definitions(-DG_ENABLE_DEBUG)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_definitions(-DG_ENABLE_DEBUG)
+	add_definitions(-DG_ENABLE_CONSISTENCY_CHECKS)
+else()
+	add_definitions(-DG_DISABLE_CAST_CHECKS)
 endif()
 
 macro(extract_vcproj_sources VC_PROJECT OUT_VAR)

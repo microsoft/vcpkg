@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-uamqp-c
-    REF 1.2.2
-    SHA512 66d4169ecfa1f0bc37c1b61de34908703d1f2d49d5b6edf5aa0c208795117b614a3c0afbba95df3ffc5364f4fd45debe2c95ac7a5be86fbd42d997b4db2aaf9c
+    REF 1.2.3
+    SHA512 18fc978517371fcb19e1c078f07d06b3bf8ec046c5cba955dd3cfe0a364d8775542acc970d81fa42384942ea4db7fb60d8939e80e90baf582c9d9e6ff0b577b5
     HEAD_REF master
 )
 

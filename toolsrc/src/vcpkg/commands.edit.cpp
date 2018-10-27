@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
@@ -52,10 +53,57 @@ namespace vcpkg::Commands::Edit
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string("edit zlib"),
         1,
-        1,
+        10,
         {EDIT_SWITCHES, {}},
         &valid_arguments,
     };
+
+    static std::vector<std::string> create_editor_arguments(const VcpkgPaths& paths,
+                                                            const ParsedArguments& options,
+                                                            const std::vector<std::string>& ports)
+    {
+        if (Util::Sets::contains(options.switches, OPTION_ALL))
+        {
+            const auto& fs = paths.get_filesystem();
+            auto packages = fs.get_files_non_recursive(paths.packages);
+
+            return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
+                const auto portpath = paths.ports / port_name;
+                const auto portfile = portpath / "portfile.cmake";
+                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                const auto pattern = port_name + "_";
+
+                std::string package_paths;
+                for (auto&& package : packages)
+                {
+                    if (Strings::case_insensitive_ascii_starts_with(package.filename().u8string(), pattern))
+                    {
+                        package_paths.append(Strings::format(" \"%s\"", package.u8string()));
+                    }
+                }
+
+                return Strings::format(R"###("%s" "%s" "%s"%s)###",
+                                       portpath.u8string(),
+                                       portfile.u8string(),
+                                       buildtrees_current_dir.u8string(),
+                                       package_paths);
+            });
+        }
+
+        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
+        {
+            return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
+                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                return Strings::format(R"###("%s")###", buildtrees_current_dir.u8string());
+            });
+        }
+
+        return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
+            const auto portpath = paths.ports / port_name;
+            const auto portfile = portpath / "portfile.cmake";
+            return Strings::format(R"###("%s" "%s")###", portpath.u8string(), portfile.u8string());
+        });
+    }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
@@ -65,10 +113,14 @@ namespace vcpkg::Commands::Edit
         auto& fs = paths.get_filesystem();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
-        const std::string port_name = args.command_arguments.at(0);
 
-        const fs::path portpath = paths.ports / port_name;
-        Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
+        const std::vector<std::string>& ports = args.command_arguments;
+        for (auto&& port_name : ports)
+        {
+            const fs::path portpath = paths.ports / port_name;
+            Checks::check_exit(
+                VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
+        }
 
         std::vector<fs::path> candidate_paths;
         auto maybe_editor_path = System::get_environment_variable("EDITOR");
@@ -91,6 +143,14 @@ namespace vcpkg::Commands::Edit
             candidate_paths.push_back(*pf / VS_CODE);
         }
 
+        const auto& app_data = System::get_environment_variable("APPDATA");
+        if (const auto* ad = app_data.get())
+        {
+            const fs::path default_base = fs::path{*ad}.parent_path() / "Local" / "Programs";
+            candidate_paths.push_back(default_base / VS_CODE_INSIDERS);
+            candidate_paths.push_back(default_base / VS_CODE);
+        }
+
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
 
@@ -107,29 +167,19 @@ namespace vcpkg::Commands::Edit
         }
 
         const fs::path env_editor = *it;
-        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
+        const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
+        const auto args_as_string = Strings::join(" ", arguments);
+        const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+
+        auto editor_exe = env_editor.filename().u8string();
+
+#ifdef _WIN32
+        if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            const auto buildtrees_current_dir = paths.buildtrees / port_name;
-
-            const auto cmd_line =
-                Strings::format(R"("%s" "%s" -n)", env_editor.u8string(), buildtrees_current_dir.u8string());
-            Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
+            System::cmd_execute_no_wait(cmd_line + " <NUL");
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
-
-        if (Util::Sets::contains(options.switches, OPTION_ALL))
-        {
-            const auto buildtrees_current_dir = paths.buildtrees / port_name;
-
-            const auto cmd_line = Strings::format(
-                R"("%s" "%s" "%s" -n)", env_editor.u8string(), portpath.u8string(), buildtrees_current_dir.u8string());
-            Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
-        }
-
-        const auto cmd_line = Strings::format(
-            R"("%s" "%s" "%s" -n)",
-            env_editor.u8string(),
-            portpath.u8string(),
-            (portpath / "portfile.cmake").u8string());
+#endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
     }
 }

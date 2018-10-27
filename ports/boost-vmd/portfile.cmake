@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/vmd
-    REF boost-1.66.0
-    SHA512 a0112a6751d1dc9c015d8ba8a2dce5ebe13c2189cec1039a5bc57e71efad7244c39eabdb5e24c8d8111edfc1a9856154b9c3f658f36bfd935274e02229e86821
+    REF boost-1.68.0
+    SHA512 5d12edebb0beabb8b82d2aab15b50b35555e171eb5e289d67872c67d30fadcbd890f7c61db9a1b599572b5eebbb6978accf8673e86c6373181ff66c5c56b3cc8
     HEAD_REF master
 )
 

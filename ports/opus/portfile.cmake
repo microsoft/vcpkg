@@ -9,6 +9,7 @@ vcpkg_from_github(
     REF v1.2.1
     SHA512 fdc64b43875dd07dc9eb1c37e9a61d1c10e3095de62ed9597d51b93445136958c9f5fee78c33ae7f90c72a20200083cdc727d8e79f2f9e580ad4e2f8c50cccb4
     HEAD_REF master
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/no-main.patch"
 )
 
 # Ensure proper crt linkage
