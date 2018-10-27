@@ -11,19 +11,33 @@
 #
 
 include(vcpkg_common_functions)
+find_program(GIT git)
+
+set(GIT_URL "https://github.com/sebastiandev/zipper.git")
+set(GIT_REV "541530f1082f109c28523cb5bc09453c498942ee")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zipper)
 
-vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO sebastiandev/zipper
-  REF 541530f1082f109c28523cb5bc09453c498942ee
-  SHA512 045dbb9c7afca7cd41c4436018baf52deddeea7c7bc3e1fe0959b76f5d34363dfeebc7f07673c496a156d48f365dba5e4cc4510199029eaa36496f033b74173e
-  HEAD_REF master
-  PATCHES zipper.patch
-)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
+if(NOT EXISTS "${SOURCE_PATH}/.git")
+	# vcpkg_from_github doesn't fetch submodules
+	#
+	# Note: Zipper uses a minizip fork that isn't packaged yet in vcpkg.
+	#		https://github.com/nmoinvaz/minizip
+	message(STATUS "Cloning and fetching submodules")
+	vcpkg_execute_required_process(
+	  COMMAND ${GIT} clone --recursive ${GIT_URL} ${SOURCE_PATH}
+	  WORKING_DIRECTORY ${SOURCE_PATH}
+	  LOGNAME clone
+	)
+
+	message(STATUS "Checkout revision ${GIT_REV}")
+	vcpkg_execute_required_process(
+	  COMMAND ${GIT} checkout ${GIT_REV}
+	  WORKING_DIRECTORY ${SOURCE_PATH}
+	  LOGNAME checkout
+	)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -32,8 +46,5 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Handle copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zipper RENAME copyright)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME zipper)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/zipper RENAME copyright)
