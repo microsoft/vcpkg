@@ -1,4 +1,3 @@
 Source: zipper
 Version: 541530f1082f109c28523cb5bc09453c498942ee
 Description: C++ wrapper around minizip compression library
-Build-Depends: minizip
