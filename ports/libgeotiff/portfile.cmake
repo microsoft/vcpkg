@@ -56,4 +56,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT V
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
+# Move and cleanup doc files
+file(GLOB DOC_FILES "${CURRENT_PACKAGES_DIR}/doc/*") 
+file(INSTALL ${DOC_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgeotiff/doc) 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/debug/doc) 
+
 vcpkg_copy_pdbs()
