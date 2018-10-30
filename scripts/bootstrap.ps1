@@ -328,7 +328,7 @@ if ($disableMetrics)
 }
 
 $platform = "x86"
-$vcpkgReleaseDir = "$vcpkgSourcesPath\release"
+$vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
 
 if ($win64)
 {
@@ -339,7 +339,7 @@ if ($win64)
     }
 
     $platform = "x64"
-    $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\release"
+    $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x64.release"
 }
 
 $arguments = (
