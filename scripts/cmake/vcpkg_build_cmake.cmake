@@ -46,6 +46,7 @@ function(vcpkg_build_cmake)
         set(BUILD_ARGS
             "/p:VCPkgLocalAppDataDisabled=true"
             "/p:UseIntelMKL=No"
+            "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}"
         )
         set(PARALLEL_ARG "/m")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "NMake")

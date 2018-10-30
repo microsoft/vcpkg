@@ -85,32 +85,15 @@ function(vcpkg_configure_cmake)
         set(GENERATOR "Ninja")
     elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
         set(GENERATOR "Ninja")
-
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(GENERATOR "Visual Studio 12 2013")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(GENERATOR "Visual Studio 12 2013 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(GENERATOR "Visual Studio 12 2013 ARM")
-
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(GENERATOR "Visual Studio 14 2015")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(GENERATOR "Visual Studio 14 2015 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(GENERATOR "Visual Studio 14 2015 ARM")
-
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017 ARM")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017")
-        set(ARCH "ARM64")
     else()
-        message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
+        if(NOT VCPKG_CMAKE_VS_GENERATOR)
+            message(STATUS "CMAKE VS Generator not set: ${VCPKG_CMAKE_VS_GENERATOR}")
+            message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
+        endif()
+        set(GENERATOR "${VCPKG_CMAKE_VS_GENERATOR}")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(ARCH "ARM64")
+        endif()
     endif()
 
     # If we use Ninja, make sure it's on PATH
@@ -211,24 +194,47 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DCMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
 
+    
     set(rel_command
         ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
-        -G ${GENERATOR}
+        -G ${GENERATOR} -T ${VCPKG_PLATFORM_TOOLSET}
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR})
     set(dbg_command
         ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
-        -G ${GENERATOR}
+        -G ${GENERATOR} -T ${VCPKG_PLATFORM_TOOLSET}
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
-
+    
+    if(GENERATOR STREQUAL "Ninja" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        if(NOT VCPKG_C_COMPILER OR NOT VCPKG_CXX_COMPILER OR NOT VCPKG_LINKER)
+            vcpkg_determine_compiler_and_linker()
+            message(STATUS "VCPKG_C_COMPILER=${VCPKG_C_COMPILER}")
+            message(STATUS "VCPKG_CXX_COMPILER=${VCPKG_CXX_COMPILER}")
+            message(STATUS "VCPKG_LINKER=${VCPKG_LINKER}")
+        endif()
+        
+        set(rel_command
+            ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+            -G ${GENERATOR}
+            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
+            -DCMAKE_C_COMPILER:FILEPATH=${VCPKG_C_COMPILER}
+            -DCMAKE_CXX_COMPILER:FILEPATH=${VCPKG_CXX_COMPILER}
+            -DCMAKE_LINKER:FILEPATH=${VCPKG_LINKER})
+        set(dbg_command
+            ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
+            -G ${GENERATOR} 
+            -DCMAKE_BUILD_TYPE=Debug
+            -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
+            -DCMAKE_C_COMPILER:FILEPATH=${VCPKG_C_COMPILER}
+            -DCMAKE_CXX_COMPILER:FILEPATH=${VCPKG_CXX_COMPILER}
+            -DCMAKE_LINKER:FILEPATH=${VCPKG_LINKER})
+    endif()
+    set(_csc_DISABLE_PARALLEL_CONFIGURE "1")
     if(NINJA_HOST AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
-        vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
-
-        #parallelize the configure step
+    #parallelize the configure step
         set(_contents
             "rule CreateProcess\n  command = $process\n\n"
         )

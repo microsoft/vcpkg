@@ -303,8 +303,13 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
+!triplets/x64-windows-llvm.cmake
+!triplets/x64-windows-intel19.cmake
 *.exe
 *.zip
+
+/scripts/dummy/compiler_linker_info.txt
+/scripts/dummy/build/*
 
 ############################################################
 # vcpkg - End
