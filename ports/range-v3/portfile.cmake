@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
-    REF 7f2eb04e62e44074ddae64ba3715bc800f7c317b
-    SHA512 118e4bdba0ade864967ca56f82c7b26cfb6767c483844ffb9995b5e860533d365f91f6795b227e78a228569a2280e995c6d23feac5c493ad7718b6ae00d40eed
+    REF 01ccd0e552860efe00e4e3e55bf823be445aabb4
+    SHA512 5e6c3e597dc40128ae0642ca43340c88654c25d9239e6929edda44035f23b7dec3735baecd486ca3b161b453c8fe826f82124ced24da66e288e0e93fa5d51c54
     HEAD_REF master
 )
 
@@ -12,11 +12,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DRANGE_V3_TESTS=ON
-        -DRANGE_V3_EXAMPLES=ON
-        -DRANGE_V3_PERF=ON
-        -DRANGE_V3_HEADER_CHECKS=ON
-        -DRANGES_CXX_STD=17
+        -DRANGE_V3_TESTS=OFF
+        -DRANGE_V3_EXAMPLES=OFF
+        -DRANGE_V3_PERF=OFF
+        -DRANGE_V3_HEADER_CHECKS=OFF
 )
 
 vcpkg_install_cmake()
