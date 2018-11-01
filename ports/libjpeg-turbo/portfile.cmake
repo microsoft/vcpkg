@@ -1,21 +1,13 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(GETENV_PATCH
-    URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/commit/bd96b30b74fe166fc94218cfc64a097fafdcc05f.diff"
-    FILENAME "libjpeg-turbo-bd96b30b74fe166fc94218cfc64a097fafdcc05f.diff"
-    SHA512 4cd064521b5e4baba4adf972f9f574f6dd43a2cd3e3ad143ca2cdf0f165024406d4fd2ed094124d0c17c5370394140e82fdd892d3cdc49609acdf8f79db1758c
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 1.5.3
-    SHA512 0e7a2cd9943b610f49b562c20a5c350a50326a87bce1d39f14fe45760ed2f89a0d2d3e3f0de9f6a7714f566aabadec6b2422b592591ebb98bbad600ea411fea7
+    REF 2.0.0
+    SHA512 e280d94ed35d41a881dfe78048620ab0345449137237cab3505ca3afed28dd11a9b6cb249406121ab79ad07f12bf4df6d29bfdbe0bb719c2169b5d5ce2aa33d0
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch
-        linux-cmake.patch
-        "${GETENV_PATCH}"
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
