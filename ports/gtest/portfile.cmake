@@ -26,8 +26,6 @@ vcpkg_configure_cmake(
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
-set(ENV{_CL_} "/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
-
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest)
 
