@@ -390,3 +390,4 @@ Write-Verbose("Placing vcpkg.exe in the correct location")
 
 Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe" | Out-Null
 Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe" | Out-Null
+Remove-Item "$vcpkgReleaseDir" -Force -Recurse -ErrorAction SilentlyContinue
