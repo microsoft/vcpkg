@@ -7,11 +7,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF ba96d0b1161f540656efdaed035b3c062b60e006
-    SHA512 ce78098f973b45f4a177db387c42a56d5ea34407a2af278760b850c326e8450760a58991d62a5408f5df79f89fefd10fee71745b7e8669b2a6f74fa63a259600
+    REF release-1.8.1
+    SHA512 e6283c667558e1fd6e49fa96e52af0e415a3c8037afe1d28b7ff1ec4c2ef8f49beb70a9327b7fc77eb4052a58c4ccad8b5260ec90e4bceeac7a46ff59c4369d7
     HEAD_REF master
-	PATCHES
-			${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
+    PATCHES
             ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
 )
 
@@ -30,6 +29,7 @@ vcpkg_configure_cmake(
 set(ENV{_CL_} "/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest)
 
 file(
     INSTALL
