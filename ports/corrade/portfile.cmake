@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/corrade
-    REF v2018.04
-    SHA512 be14f0cb76c904a37f962af16b331407ec6a1f7a31245c7221f41fcbce2749a1ad67057d451736814e357eaa59e015f16996bdba819f69a1dd0f3d5a3cad34a4
+    REF v2018.10
+    SHA512 594c15d9622fa0abdf893c15054f27bdcc40b5de1543d722b7173138ec5d299c45b7a85376ed617cdf9b4f52a05bf7a3d1ea1983e112b62690211116c255d201
     HEAD_REF master
 )
 

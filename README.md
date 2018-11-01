@@ -10,7 +10,7 @@ Prerequisites:
 - Windows 10, 8.1, 7, Linux, or MacOS
 - Visual Studio 2017 or Visual Studio 2015 Update 3 (on Windows)
 - Git
-- *Optional: CMake 3.10.2*
+- *Optional:* CMake 3.10.2
 
 To get started:
 ```
@@ -18,19 +18,19 @@ To get started:
 > cd vcpkg
 
 PS> .\bootstrap-vcpkg.bat
-Ubuntu:~/$ ./bootstrap-vcpkg.sh
+Linux:~/$ ./bootstrap-vcpkg.sh
 ```
 
 Then, to hook up user-wide [integration](docs/users/integration.md), run (note: requires admin on first use)
 ```
 PS> .\vcpkg integrate install
-Ubuntu:~/$ ./vcpkg integrate install
+Linux:~/$ ./vcpkg integrate install
 ```
 
 Install any packages with
 ```
 PS> .\vcpkg install sdl2 curl
-Ubuntu:~/$ ./vcpkg install sdl2 curl
+Linux:~/$ ./vcpkg install sdl2 curl
 ```
 
 The best way to use installed libraries with CMake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake`.

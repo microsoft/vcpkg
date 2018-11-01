@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
 project(cairo C)
 
 # Add include directories
@@ -162,14 +162,10 @@ set(CMAKE_DEBUG_POSTFIX "d")
 
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
-
-# Make the pixman library available
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(PIXMAN_SUFFIX "d")
-endif()
-find_library(PIXMAN_LIBRARY NAMES pixman-1${PIXMAN_SUFFIX})
-
-find_package(Freetype CONFIG REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(unofficial-glib CONFIG REQUIRED)
+find_package(unofficial-fontconfig CONFIG REQUIRED)
+find_package(unofficial-pixman CONFIG REQUIRED)
 
 # Cairo needs to be told which features of FreeType are availible
 add_definitions(
@@ -178,9 +174,6 @@ add_definitions(
     -DHAVE_FT_GLYPHSLOT_OBLIQUE=1
     -DHAVE_FT_LOAD_SFNT_TABLE=1
     -DHAVE_FT_GET_X11_FONT_FORMAT=1)
-
-# Find FontConfig
-find_library(FONTCONFIG_LIBRARY fontconfig)
 
 # additional features for macOS
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -196,20 +189,7 @@ endif()
 
 add_library(cairo ${SOURCES})
 
-if(MSVC)
-  # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
-  # NOTE: options only available to MSVC, clang in macOS doesn't understand these flags
-  target_compile_options(cairo PUBLIC "/wd4244" PUBLIC "/wd4146" PUBLIC "/wd4312" PUBLIC "/wd4267" 
-                               PUBLIC "/wd4996" PUBLIC "/wd4311" PUBLIC "/wd4334" PUBLIC "/wd4101")
-endif()
-
-target_link_libraries(cairo gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG freetype ${PIXMAN_LIBRARY} ${FONTCONFIG_LIBRARY})
-
-install(TARGETS cairo
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
-  ARCHIVE DESTINATION lib
-)
+target_link_libraries(cairo PRIVATE gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
 
 # GObject support module
 
@@ -225,16 +205,43 @@ if(BUILD_SHARED_LIBS)
         PROPERTIES COMPILE_DEFINITIONS "cairo_public=__declspec(dllexport)")
 endif()
 
-# Make GLib's GObject available
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_LIBRARY NAMES glib-2.0)
-find_library(GOBJECT_LIBRARY NAMES gobject-2.0)
-set(GLIB_LIBRARIES ${GLIB_LIBRARY} ${GOBJECT_LIBRARY})
-
 add_library(cairo-gobject ${CAIRO_GOBJECT_SOURCES}) 
-target_link_libraries(cairo-gobject cairo ${GLIB_LIBRARIES})
-target_include_directories(cairo-gobject PRIVATE ${GLIB_INCLUDE_DIR})
-install(TARGETS cairo-gobject
+target_link_libraries(cairo-gobject PRIVATE cairo unofficial::glib::gobject unofficial::glib::glib)
+
+if(MSVC)
+    # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
+    # NOTE: options only available to MSVC, clang in macOS doesn't understand these flags
+    target_compile_options(cairo PRIVATE
+        "/wd4244" "/wd4146" "/wd4312" "/wd4267" "/wd4996" "/wd4311" "/wd4334" "/wd4101"
+    )
+    target_compile_options(cairo-gobject PRIVATE
+        "/wd4244" "/wd4146" "/wd4312" "/wd4267" "/wd4996" "/wd4311" "/wd4334" "/wd4101"
+    )
+endif()
+
+install(TARGETS cairo cairo-gobject
+    EXPORT cairo-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+    ARCHIVE DESTINATION lib
+)
+
+install(
+    EXPORT cairo-targets
+    NAMESPACE unofficial::cairo::
+    FILE unofficial-cairo-targets.cmake
+    DESTINATION share/unofficial-cairo
+)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-cairo-config.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+find_dependency(PNG)
+find_dependency(Freetype)
+find_dependency(unofficial-glib CONFIG)
+find_dependency(unofficial-fontconfig CONFIG)
+find_dependency(unofficial-pixman CONFIG)
+
+include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-cairo-targets.cmake)
+")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-cairo-config.cmake DESTINATION share/unofficial-cairo)

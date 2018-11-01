@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
-    REF v2018.07.30.00
-    SHA512 f83378a8751b47fac2c862e07ffeb2750fd681735e66d778657d7624fe3e839b2e2bfcb049ecd3a3516c206d93f9c168144599ded823720967e44037b536ba5d
+    REF v2018.10.22.00
+    SHA512 cfaf783362989c67dad54d6bd15c3b2f710fd1c1e858cf549367033a50718b69f78fc58001e6202bf8cc84fbb0e9752c433a03dd2d91800bfe2645c7b5519fca
     HEAD_REF master
     PATCHES
         build.patch
@@ -16,8 +18,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS=OFF
-    OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+        -DINCLUDE_INSTALL_DIR:STRING=include
 )
 
 vcpkg_install_cmake()
@@ -25,6 +26,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/wangle")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE 
+    ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/include/wangle/util/test
     ${CURRENT_PACKAGES_DIR}/include/wangle/ssl/test/certs
     ${CURRENT_PACKAGES_DIR}/include/wangle/service/test

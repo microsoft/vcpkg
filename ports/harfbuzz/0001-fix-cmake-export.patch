@@ -13,9 +13,9 @@ index e881dbd1..69496561 100644
      FRAMEWORK DESTINATION Library/Frameworks
    )
 +  install(EXPORT harfbuzzConfig
-+      NAMESPACE unofficial::harfbuzz::
-+      FILE unofficial-harfbuzz-config.cmake
-+      DESTINATION share/unofficial-harfbuzz
++      NAMESPACE harfbuzz::
++      FILE harfbuzz-config.cmake
++      DESTINATION share/harfbuzz
 +  )
    if (HB_BUILD_UTILS)
      install(TARGETS hb-view
