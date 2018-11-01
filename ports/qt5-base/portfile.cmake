@@ -12,13 +12,13 @@ include(configure_qt)
 include(install_qt)
 
 set(MAJOR_MINOR 5.11)
-set(FULL_VERSION ${MAJOR_MINOR}.1)
+set(FULL_VERSION ${MAJOR_MINOR}.2)
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 5f45405872e541565d811c1973ae95b0f19593f4495375306917b72e21146e14fe8f7db5fbd629476476807f89ef1679aa59737ca5efdd9cbe6b14d7aa371b81
+    SHA512 b2f14126caa1c664887203a9a98551b85b57630cf7745c17f76e1e8aaf464f0091fe2de5615a138506dac7c8fbb16e5f33f984aef8e61e23f0c3bf74f6ef0835
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -28,7 +28,6 @@ vcpkg_extract_source_archive_ex(
         fix-system-freetype.patch
         fix-system-pcre2.patch
         fix-system-pcre2-linux.patch
-        fix-msvc2017.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
