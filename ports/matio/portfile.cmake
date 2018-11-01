@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tbeu/matio
-    REF v1.5.12
-    SHA512 3bf6d2bf6460531dd2a740813bca3f3da6347b9fadb39803257f11bcceeaa7cf6657921c9ca9c8db02bf2020d5adf2ecf544b2455aa0ca897c0644493b1902a4
+    REF v1.5.13
+    SHA512 8525ee2c3f0e5cccf3dbae888d09a9477cbd1f2b17160fd15cc8e18792b027954ac18404ea74465ec6b8b5d057661502b1fc31fa6d119113139004c1bce7f712
     HEAD_REF master
 )
 

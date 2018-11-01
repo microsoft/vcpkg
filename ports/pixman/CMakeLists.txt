@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
-project(pixman VERSION 0.32.0 LANGUAGES C)
+project(pixman VERSION 0.34.0 LANGUAGES C)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_DEBUG_POSTFIX "d")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    add_definitions(-DTLS=__thread)
+if(UNIX)
     add_definitions(-DHAVE_PTHREADS)
 endif()
 
