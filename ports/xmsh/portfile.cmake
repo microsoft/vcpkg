@@ -17,7 +17,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
