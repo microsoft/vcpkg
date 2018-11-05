@@ -15,8 +15,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emil-e/rapidcheck
-    REF 5f0eb302f28979395a070bbdfde1f6d4cad94409
-    SHA512 352f02d6458458fdd92d545514d57815512e02029719dfc74dff0dfc2228ef0150951005dd3971947e81758ac10269c231f91e9e0aa0809e831dabaac4a2724b
+    REF cf9e0d8bd8c94e9dc00dc0ab302352bfaf1a3ac5
+    SHA512 6cef62edbda391c3527d63db350842f669841ad2c751a64773250cd40bb65f26c2c394b107ef5530c2d3bd15b7079148fa9778d68a7346225bbb15227b1553c5
     HEAD_REF master
 )
 
@@ -24,13 +24,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(STATUS "Warning: RapidCheck does not support dynamic linking. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
-# Keep this variable in case RapidCheck can eventually be used as a shared library.
-set(RC_SHARED_LIB OFF)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DRC_INSTALL_ALL_EXTRAS=ON -DRC_BUILD_SHARED_LIB=${RC_SHARED_LIB}
+    OPTIONS -DRC_INSTALL_ALL_EXTRAS=ON -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_install_cmake()
