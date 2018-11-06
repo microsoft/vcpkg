@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kholidays
-    REF v5.50.0
-    SHA512 01c1258213e1bbab90b9af9c41965599637b1ccd4cd285cbe9bc11579fae1363162567ae14c33001b8b1cc085bae4dfdf4ed79b7ff27f93187bce79db662b4e2
+    REF v5.51.0
+    SHA512 ef73729656198997ab61114fd49feb10ff5c6df84b4649de61574a00588a52111bc07c9e7fc4337799707fcdd9ff527ba0b3f384f2112037a26c268ae8d2ed4f
     HEAD_REF master
 )
 

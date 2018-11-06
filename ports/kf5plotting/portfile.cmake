@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kplotting
-    REF v5.50.0
-    SHA512 512a0f8e8a5147f06345d86fa29effa8d0a59b62f5a24b70a09c4ddf5204d626e13f421be7c42d2103c5634e863db5ac8e6763db886351597f0798e05bc97f33
+    REF v5.51.0
+    SHA512 44da08cfffa5e6bb767c104c1be0b6d2e49142e52a2bc9230f0eaa65703089a10b9df088b3efc6616faf6d59ca5ff598912d4510e8a15dd9078dfac0df5eac1b
     HEAD_REF master
 )
 
