@@ -4,8 +4,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nagzira/xmsh
-  REF v0.2.2
-  SHA512 7d1810c78637b3ba2e546a69f4186bd9e7a6b3a58b78bcea1dab9a095a4f7b695ab8c0d27d1f977372bff196d1f55f285df2c6aa5ebd8fcbdc69046d819a2e1d
+  REF v0.2.3
+  SHA512 8a93e41e5b83db637d44e4e2a33d2f7c4ddd751d5ff454b032307b4795e453743dea02eb89c793f9b0a938787f56dad8b5da013a7fd8fe93771bf171a8f47768
   HEAD_REF master
   )
 
