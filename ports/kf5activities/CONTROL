@@ -1,0 +1,4 @@
+Source: kf5activities
+Version: 5.51.0
+Description: Core components for the KDE's Activities
+Build-Depends: ecm, qt5-declarative, qt5-tools, kf5config, kf5coreaddons, kf5windowsystem, boost
