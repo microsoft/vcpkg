@@ -1,7 +1,7 @@
 Source: vtk
-Version: 8.1.0-2
+Version: 8.1.0-3
 Description: Software system for 3D computer graphics, image processing, and visualization
-Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora
+Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora, atlmfc (windows)
 
 Feature: openvr
 Description: OpenVR functionality for VTK
