@@ -162,6 +162,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_FORBID_DOWNLOADS=ON
+        -DModule_vtkGUISupportMFC=ON
         ${ADDITIONAL_OPTIONS}
 )
 
