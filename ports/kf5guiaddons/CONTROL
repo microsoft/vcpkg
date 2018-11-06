@@ -1,0 +1,4 @@
+Source: kf5guiaddons
+Version: 5.51.0
+Description: Addons to QtGui
+Build-Depends: ecm, qt5-winextras, qt5-tools
