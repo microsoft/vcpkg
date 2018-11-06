@@ -617,7 +617,11 @@ namespace vcpkg::PostBuildLint
             const std::string cmd_line =
                 Strings::format(R"("%s" /directives "%s")", dumpbin_exe.u8string(), lib.u8string());
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               ec_data.exit_code == 0,
+                               "Running command:\n   %s\n failed with message:\n%s",
+                               cmd_line,
+                               ec_data.output);
 
             for (const BuildType& bad_build_type : bad_build_types)
             {

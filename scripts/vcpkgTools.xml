@@ -73,6 +73,13 @@
         <sha512>2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3</sha512>
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
+    <tool name="ninja" os="windows">
+        <version>1.8.2</version>
+        <exeRelativePath>ninja.exe</exeRelativePath>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip</url>
+        <sha512>9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5</sha512>
+        <archiveName>ninja-win.zip</archiveName>
+    </tool>
     <tool name="ninja" os="linux">
         <version>1.8.2</version>
         <exeRelativePath>ninja</exeRelativePath>

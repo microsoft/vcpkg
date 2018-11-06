@@ -3,13 +3,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.8.12
-    SHA512 2475792ff475d34b47b6af5ca71c6cf6d9d8c60452a506b1bf740b9dbb20ea72109117dc9a531b8302095de99f6280172723f26e23dc6e038256cbb43b697145
+    REF Release-1.8.15
+    SHA512 e022e5c7e300d3dd952bcf3476e1b676a8931f67ba6b3959b26c75b9709907ac1c1b99de651f5876045f9a333e325a161b0d5159cb5bf385eb4f9f90a04707c7
     HEAD_REF master
     PATCHES
         # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
         #             since libraw port installs 'raw_r' library as 'raw'
-        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
+        fix_libraw.patch
+        use-webp.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -36,6 +37,7 @@ vcpkg_configure_cmake(
         -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
+        -DUSE_DICOM=OFF
         -DUSE_FFMPEG=OFF
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
@@ -45,14 +47,19 @@ vcpkg_configure_cmake(
         -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
         -DUSE_OPENJPEG=OFF
+        -DUSE_OPENSSL=OFF
         -DUSE_PTEX=OFF
         -DUSE_PYTHON=OFF
         -DUSE_QT=OFF
+        -DUSE_WEBP=OFF
         -DBUILDSTATIC=${BUILDSTATIC}
         -DLINKSTATIC=${LINKSTATIC}
         -DBUILD_MISSING_PYBIND11=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DVERBOSE=ON
+    OPTIONS_DEBUG
+        -DOPENEXR_CUSTOM_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
 vcpkg_install_cmake()

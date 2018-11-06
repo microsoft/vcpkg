@@ -20,7 +20,7 @@ namespace fs
 
     inline bool is_regular_file(file_status s) { return stdfs::is_regular_file(s); }
     inline bool is_directory(file_status s) { return stdfs::is_directory(s); }
-    inline bool status_known(file_status s) { return stdfs::status_known(s); }
+    inline bool is_symlink(file_status s) { return stdfs::is_symlink(s); }
 }
 
 namespace vcpkg::Files
@@ -55,7 +55,9 @@ namespace vcpkg::Files
                                const fs::path& newpath,
                                fs::copy_options opts,
                                std::error_code& ec) = 0;
+        virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
+        virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const = 0;
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
 

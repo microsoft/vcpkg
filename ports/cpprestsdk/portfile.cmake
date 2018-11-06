@@ -16,6 +16,11 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
 endif()
 
+set(CPPREST_EXCLUDE_WEBSOCKETS ON)
+if("websockets" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_WEBSOCKETS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Release
     PREFER_NINJA
@@ -23,7 +28,7 @@ vcpkg_configure_cmake(
         ${OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-        -DCPPREST_EXCLUDE_WEBSOCKETS=OFF
+        -DCPPREST_EXCLUDE_WEBSOCKETS=${CPPREST_EXCLUDE_WEBSOCKETS}
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
     OPTIONS_DEBUG
@@ -32,7 +37,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/share") # transition
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
+else()
+    vcpkg_fixup_cmake_targets() # v2.10.6 and below
+endif()
+
+
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt
