@@ -16,6 +16,7 @@
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
 - [vcpkg\_find\_acquire\_program](vcpkg_find_acquire_program.md)
 - [vcpkg\_from\_bitbucket](vcpkg_from_bitbucket.md)
+- [vcpkg\_from\_git](vcpkg_from_git.md)
 - [vcpkg\_from\_github](vcpkg_from_github.md)
 - [vcpkg\_from\_gitlab](vcpkg_from_gitlab.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md)
