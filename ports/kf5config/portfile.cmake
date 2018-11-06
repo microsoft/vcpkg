@@ -22,6 +22,7 @@ vcpkg_install_cmake()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5config)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconfig_compiler_kf5.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kconfig_compiler_kf5.exe)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconf_update.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kconf_update.exe)
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Config)
 
 if("tools" IN_LIST FEATURES)
