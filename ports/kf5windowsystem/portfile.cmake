@@ -15,16 +15,13 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
+            -DPLUGIN_INSTALL_DIR=plugins
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5WindowSystem)
 vcpkg_copy_pdbs()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/plugins ${CURRENT_PACKAGES_DIR}/plugins)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/plugins ${CURRENT_PACKAGES_DIR}/debug/plugins)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/plugins)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/plugins)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
