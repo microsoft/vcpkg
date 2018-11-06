@@ -1,0 +1,4 @@
+Source: kf5globalaccel
+Version: 5.51.0
+Description: Add support for global workspace shortcuts
+Build-Depends: ecm, qt5-tools, kf5crash, kf5config, kf5dbusaddons
