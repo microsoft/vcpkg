@@ -2,43 +2,39 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
-    REF 3.2.3
-    SHA512 8c597b37efe82c85e6d951f66cb0f818d2c12cb673914bc7b322bc0a9da676e6c02f221c9104fb06d1b4b02fed4e5a4fb872dd3370b9117f248c3b948faf4fb3
     HEAD_REF master
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/no-define-snprintf.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOCI_STATIC)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSOCI_TESTS=OFF
         -DSOCI_CXX_C11=ON
-        -DSOCI_LIBDIR:STRING=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
-        -DLIBDIR:STRING=lib
+        -DSOCI_LIBDIR=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
-
-        -DWITH_SQLITE3=ON
-
-        -DWITH_BOOST=OFF
-        -DWITH_MYSQL=OFF
-        -DWITH_ODBC=OFF
-        -DWITH_ORACLE=OFF
-        -DWITH_POSTGRESQL=OFF
-        -DWITH_FIREBIRD=OFF
-        -DWITH_DB2=OFF
 )
 
+
+
 vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/soci)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/soci/SOCIConfig.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SOCI-release.cmake ${CURRENT_PACKAGES_DIR}/share/soci/SOCI-release.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/cmake/SOCI-debug.cmake ${CURRENT_PACKAGES_DIR}/share/soci/SOCI-debug.cmake)
+file(READ ${CURRENT_PACKAGES_DIR}/share/soci/SOCIConfig.cmake CONFIG_FILE)
+set(pattern "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\n")
+string(REPLACE "${pattern}" "${pattern}${pattern}" CONFIG_FILE ${CONFIG_FILE})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/soci/SOCIConfig.cmake ${CONFIG_FILE})
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
 # Handle copyright
-file(COPY ${SOURCE_PATH}/src/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/soci)
+file(COPY ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/soci)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/soci/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/soci/copyright)
 
 vcpkg_copy_pdbs()
