@@ -3,25 +3,35 @@
 # Other packages can depend on this package to declare a dependency on Vulkan.
 include(vcpkg_common_functions)
 
-if(EXISTS "$ENV{VULKAN_SDK}Include/vulkan/vulkan.h")
-    message(FATAL_ERROR "Could not find Vulkan SDK. Before continuing, please download and install Vulkan from:"
-                        "\n    https://vulkan.lunarg.com/sdk/home\n")
+message(STATUS "Querying VULKAN_SDK Enviroment variable")
+file(TO_CMAKE_PATH "$ENV{VULKAN_SDK}" VULKAN_DIR)
+set(VULKAN_INCLUDE "${VULKAN_DIR}/Include/vulkan/")
+set(VULKAN_ERROR_DL "Before continuing, please download and install Vulkan from:\n    https://vulkan.lunarg.com/sdk/home\n")
+
+if(NOT DEFINED ENV{VULKAN_SDK})
+    message(FATAL_ERROR "Could not find Vulkan SDK. ${VULKAN_ERROR_DL}")
 endif()
 
+message(STATUS "Searching " ${VULKAN_INCLUDE} " for vulkan.h")
+if(NOT EXISTS "${VULKAN_INCLUDE}/vulkan.h")
+    message(FATAL_ERROR "Could not find vulkan.h. ${VULKAN_ERROR_DL}")
+endif()
+message(STATUS "Found vulkan.h")
+
 # Check if the user left the version in the installation directory e.g. c:/vulkanSDK/1.1.82.1/
-if($ENV{VULKAN_SDK} MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
+if(VULKAN_DIR MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
     set(VULKAN_VERSION "${CMAKE_MATCH_1}")
     set(VULKAN_MAJOR "${CMAKE_MATCH_2}")
     set(VULKAN_MINOR "${CMAKE_MATCH_3}")
     set(VULKAN_PATCH "${CMAKE_MATCH_4}")
-    message(STATUS "FOUND VERSION " ${VULKAN_VERSION} " at location:\n      " $ENV{VULKAN_SDK})
+    message(STATUS "Found Vulkan SDK version ${VULKAN_VERSION}")
 
     set(VULKAN_REQUIRED_VERSION "1.1.82.1")
     if (VULKAN_MAJOR LESS 1 OR VULKAN_MINOR LESS 1 OR VULKAN_PATCH LESS 82)
-        message(FATAL_ERROR "Vuklan ${VULKAN_VERSION} but ${VULKAN_REQUIRED_VERSION} is required. Please download and install a more recent version from:"
+        message(FATAL_ERROR "Vulkan ${VULKAN_VERSION} but ${VULKAN_REQUIRED_VERSION} is required. Please download and install a more recent version from:"
                             "\n    https://vulkan.lunarg.com/sdk/home\n")
     endif()
 endif()
 
-configure_file($ENV{VULKAN_SDK}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+configure_file(${VULKAN_DIR}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
