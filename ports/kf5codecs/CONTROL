@@ -1,0 +1,4 @@
+Source: kf5codecs
+Version: 5.51.0
+Description: Provide a collection of methods to manipulate strings using various encodings
+Build-Depends: ecm, qt5-tools, qt5-base
