@@ -11,15 +11,9 @@ vcpkg_find_acquire_program(PYTHON3)
 
 # Add python3 to path
 get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
-SET(ENV{PATH} "${PYTHON_PATH};$ENV{PATH}")
-
-set(BUILD_OPTIONS
-    "${SOURCE_PATH}/Qt4Qt5/qscintilla.pro"
-    CONFIG+=build_all
-    CONFIG-=hide_symbols
-)
-
-SET(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
+vcpkg_add_to_path(PREPEND ${PYTHON_PATH})
+vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
+vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
 
 #Store build paths
 set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
@@ -30,6 +24,7 @@ vcpkg_configure_qmake(
     OPTIONS
         CONFIG+=build_all
         CONFIG-=hide_symbols
+        DEFINES+=SCI_NAMESPACE
 )
 
 vcpkg_build_qmake(
@@ -38,27 +33,27 @@ vcpkg_build_qmake(
 )
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/Qt4Qt5/Qsci/*)
-file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
+file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
 
-file(INSTALL
+configure_file(
     ${RELEASE_DIR}/release/qscintilla2_qt5.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    RENAME qscintilla2.lib
+    ${CURRENT_PACKAGES_DIR}/lib/qscintilla2.lib
+    COPYONLY
 )
 
-file(INSTALL
+configure_file(
     ${DEBUG_DIR}/debug/qscintilla2_qt5.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    RENAME qscintilla2.lib
+    ${CURRENT_PACKAGES_DIR}/debug/lib/qscintilla2.lib
+    COPYONLY
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-   file(INSTALL
+   file(COPY
        ${RELEASE_DIR}/release/qscintilla2_qt5.dll
        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
 
-    file(INSTALL
+    file(COPY
         ${DEBUG_DIR}/debug/qscintilla2_qt5.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )

@@ -1,10 +1,10 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "2.3.0")
-set(GDAL_VERSION_PKG "230")
+set(GDAL_VERSION_STR "2.3.2")
+set(GDAL_VERSION_PKG "232")
 set(GDAL_VERSION_LIB "203")
-set(GDAL_PACKAGE_SUM "f3f790b7ecb28916d6d0628b15ddc6b396a25a8f1f374589ea5e95b5a50addc99e05e363113f907b6c96faa69870b5dc9fdf3d771f9c8937b4aa8819bd78b190")
+set(GDAL_PACKAGE_SUM "9eb26be57657b1f1eaada4794859584d53bd58e0d504eb12ab97e9c60353d0a565dc894a89829ee50fc549cb7d069a75b7895c0dd4cea887e010671f63e945b8")
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -22,21 +22,27 @@ vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
     FILENAME "gdal${GDAL_VERSION_PKG}.zip"
     SHA512 ${GDAL_PACKAGE_SUM}
-    )
+)
 
 # Extract source into architecture specific directory, because GDALs' nmake based build currently does not
 # support out of source builds.
 set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-${GDAL_VERSION_STR})
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-${GDAL_VERSION_STR})
 
-foreach(BUILD_TYPE debug release)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    list(APPEND BUILD_TYPES "release")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    list(APPEND BUILD_TYPES "debug")
+endif()
+
+foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
         PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-        ${CMAKE_CURRENT_LIST_DIR}/no-my-bool.patch
     )
 endforeach()
 
@@ -76,11 +82,6 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib" SQLITE_LIBRARY_REL)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib" SQLITE_LIBRARY_DBG)
 
-# Setup MySQL libraries + include path
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib" MYSQL_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib" MYSQL_LIBRARY_DBG)
-
 # Setup PostgreSQL libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PGSQL_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" PGSQL_LIBRARY_REL)
@@ -106,7 +107,26 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" LZMA_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/lzma.lib" LZMA_LIBRARY_REL)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib" LZMA_LIBRARY_DBG)
 
-set(NMAKE_OPTIONS
+if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
+    # Setup MySQL libraries + include path
+    if("mysql-libmysql" IN_LIST FEATURES)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib" MYSQL_LIBRARY_REL)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib" MYSQL_LIBRARY_DBG)
+    endif()
+
+    if("mysql-libmariadb" IN_LIST FEATURES)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmariadb.lib" MYSQL_LIBRARY_REL)
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmariadb.lib" MYSQL_LIBRARY_DBG)
+    endif()
+
+    list(APPEND NMAKE_OPTIONS MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR})
+    list(APPEND NMAKE_OPTIONS_REL MYSQL_LIB=${MYSQL_LIBRARY_REL})
+    list(APPEND NMAKE_OPTIONS_DBG MYSQL_LIB=${MYSQL_LIBRARY_DBG})
+endif()
+
+list(APPEND NMAKE_OPTIONS
     GDAL_HOME=${NATIVE_PACKAGES_DIR}
     DATADIR=${NATIVE_DATA_DIR}
     HTMLDIR=${NATIVE_HTML_DIR}
@@ -117,7 +137,6 @@ set(NMAKE_OPTIONS
     EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}
     CURL_INC=-I${CURL_INCLUDE_DIR}
     SQLITE_INC=-I${SQLITE_INCLUDE_DIR}
-    MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR}
     PG_INC_DIR=${PGSQL_INCLUDE_DIR}
     OPENJPEG_ENABLED=YES
     OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}
@@ -147,8 +166,8 @@ else()
     set(LINKAGE_FLAGS "/MD")
 endif()
 
-set(NMAKE_OPTIONS_REL
-    "${NMAKE_OPTIONS}"
+list(APPEND NMAKE_OPTIONS_REL
+    ${NMAKE_OPTIONS}
     CXX_CRT_FLAGS=${LINKAGE_FLAGS}
     PROJ_LIBRARY=${PROJ_LIBRARY_REL}
     PNG_LIB=${PNG_LIBRARY_REL}
@@ -156,15 +175,14 @@ set(NMAKE_OPTIONS_REL
     EXPAT_LIB=${EXPAT_LIBRARY_REL}
     "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
     SQLITE_LIB=${SQLITE_LIBRARY_REL}
-    MYSQL_LIB=${MYSQL_LIBRARY_REL}
     PG_LIB=${PGSQL_LIBRARY_REL}
     OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
     WEBP_LIBS=${WEBP_LIBRARY_REL}
     LIBXML2_LIB=${XML2_LIBRARY_REL}
 )
 
-set(NMAKE_OPTIONS_DBG
-    "${NMAKE_OPTIONS}"
+list(APPEND NMAKE_OPTIONS_DBG
+    ${NMAKE_OPTIONS}
     CXX_CRT_FLAGS="${LINKAGE_FLAGS}d"
     PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
     PNG_LIB=${PNG_LIBRARY_DBG}
@@ -172,7 +190,6 @@ set(NMAKE_OPTIONS_DBG
     EXPAT_LIB=${EXPAT_LIBRARY_DBG}
     "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
     SQLITE_LIB=${SQLITE_LIBRARY_DBG}
-    MYSQL_LIB=${MYSQL_LIBRARY_DBG}
     PG_LIB=${PGSQL_LIBRARY_DBG}
     OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
     WEBP_LIBS=${WEBP_LIBRARY_DBG}
@@ -250,6 +267,4 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gdal/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/gdal/copyright)
-
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
+configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/gdal/copyright COPYONLY)

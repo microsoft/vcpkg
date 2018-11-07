@@ -8,8 +8,6 @@
 
 namespace vcpkg::System
 {
-    tm get_current_date_time();
-
     fs::path get_exe_path_of_current_process();
 
     struct CMakeVariable
@@ -32,15 +30,15 @@ namespace vcpkg::System
     };
 
     int cmd_execute_clean(const CStringView cmd_line,
-                          const std::unordered_map<std::string, std::string>& extra_env = {});
+                          const std::unordered_map<std::string, std::string>& extra_env = {}) noexcept;
 
-    int cmd_execute(const CStringView cmd_line);
+    int cmd_execute(const CStringView cmd_line) noexcept;
 
 #if defined(_WIN32)
-    void cmd_execute_no_wait(const CStringView cmd_line);
+    void cmd_execute_no_wait(const CStringView cmd_line) noexcept;
 #endif
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line) noexcept;
 
     enum class Color
     {

@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  message(WARNING "building static")
-  set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -13,24 +10,23 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
-  -DCRC32C_BUILD_TESTS=OFF
-  -DCRC32C_BUILD_BENCHMARKS=OFF
-  -DCRC32C_USE_GLOG=OFF
+    -DCRC32C_BUILD_TESTS=OFF
+    -DCRC32C_BUILD_BENCHMARKS=OFF
+    -DCRC32C_USE_GLOG=OFF
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/Crc32c")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 

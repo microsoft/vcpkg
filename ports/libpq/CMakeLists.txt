@@ -120,6 +120,7 @@ set(pg_libpq_interface
     ${CMAKE_CURRENT_BINARY_DIR}/include/pg_config_ext.h
     ${CMAKE_CURRENT_BINARY_DIR}/include/pg_config.h
     src/interfaces/libpq/libpq-fe.h
+    src/interfaces/libpq/libpq-events.h
 )
 set(pg_libpq_catalog_interface
     src/include/catalog/pg_type.h
