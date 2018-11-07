@@ -6,13 +6,10 @@ vcpkg_from_github(
     REF release-2.0.9
     SHA512 444c906c0baa720c86ca72d1b4cd66fdf6f516d5d2a9836169081a2997a5aebaaf9caa687ec060fa02292d79cfa4a62442333e00f90a0239edd1601529f6b056
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/export-symbols-only-in-shared-build.patch
-        ${CMAKE_CURRENT_LIST_DIR}/enable-winrt-cmake.patch
+        export-symbols-only-in-shared-build.patch
+        fix-x86-windows.patch
+        enable-winrt-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -75,5 +72,5 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     endforeach()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2 RENAME copyright)
+configure_file(${SOURCE_PATH}/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2/copyright COPYONLY)
 vcpkg_copy_pdbs()
