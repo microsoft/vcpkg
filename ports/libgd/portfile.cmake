@@ -1,19 +1,15 @@
 include(vcpkg_common_functions)
 
-set(LIBGD_VERSION 2.2.4)
-set(LIBGD_HASH 02ce40c45f31cf1645ad1d3fd9b9b498323b2709d40b0681cd403c11072a1f2149f5af844a6bf9e695c29e3247013bb94c57c0225a54189d728f64caf0a938ee)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libgd-gd-${LIBGD_VERSION})
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libgd/libgd/archive/gd-${LIBGD_VERSION}.tar.gz"
-    FILENAME "gd-${LIBGD_VERSION}.tar.gz"
-    SHA512 ${LIBGD_HASH})
-
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-cmake.patch")
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libgd/libgd
+    REF gd-2.2.4
+    SHA512 02ce40c45f31cf1645ad1d3fd9b9b498323b2709d40b0681cd403c11072a1f2149f5af844a6bf9e695c29e3247013bb94c57c0225a54189d728f64caf0a938ee
+    HEAD_REF master
+    PATCHES
+        0001-fix-cmake.patch
+        no-write-source-dir.patch
+)
 
 #delete CMake builtins modules
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/CMakeParseArguments.cmake)
