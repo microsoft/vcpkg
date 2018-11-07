@@ -47,6 +47,8 @@ else ()
 	file (REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif ()
 
+vcpkg_copy_pdbs()
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/portaudio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/portaudio/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/portaudio/copyright)
