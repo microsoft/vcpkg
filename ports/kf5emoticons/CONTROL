@@ -1,0 +1,4 @@
+Source: kf5emoticons
+Version: 5.51.0
+Description: Support for emoticons and emoticons themes
+Build-Depends: ecm, qt5-tools, kf5archive, kf5service
