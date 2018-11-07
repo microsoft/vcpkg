@@ -9,7 +9,8 @@ vcpkg_from_github(
 )
 
 file(COPY ${SOURCE_PATH}/igloo DESTINATION ${CURRENT_PACKAGES_DIR}/include/ FILES_MATCHING PATTERN *.h)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/igloo/external/snowhouse/spec)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/igloo/external/snowhouse)
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/igloo/external/snowhouse/snowhouse/snowhouse.h" "#include <snowhouse/snowhouse.h>")
 
 file(COPY ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/igloo)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/igloo/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/igloo/copyright)
