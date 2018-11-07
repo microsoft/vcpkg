@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dascandy/pixel
-    REF 0.1
-    SHA512 023b084450ef86f73488f9add2a91a7902591d1614f22958ded8c5b0458e71dd710cef73dd7cc1563e35b02770cf0baf94f2ce40532c7119ce90f0178543efca
+    REF v0.2
+    SHA512 53485d298e34f8fda6c14dc07687e21281e4ef9d0567a654e5ded0589e1ac8e6bd84adbef922f0a12806f508c887299a6fc99c2415313029b8f7a6efc1cc3f59
     HEAD_REF master
 )
 
