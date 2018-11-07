@@ -1,0 +1,4 @@
+Source: kf5
+Version: 5.51.0
+Description: KDE Frameworks is a framework of libraries built on the top of Qt
+Build-Depends: ecm, kf5activities, kf5archive, kf5codecs, kf5config, kf5coreaddons, kf5crash, kf5dbusaddons, kf5emoticons, kf5globalaccel, kf5guiaddons, kf5holidays, kf5i18n, kf5itemmodels, kf5itemviews, kf5jobwidgets, kf5package, kf5plotting, kf5service, kf5solid, kf5threadweaver, kf5unitconversion, kf5widgetsaddons, kf5windowsystem
