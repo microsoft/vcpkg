@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF v3.3.2
-    SHA512 7bc17d6f742080278e35f86b0233d70045df0ca1578cd427126e0acce183709bf33ecca689db65e2e67bdfaf687c04d36cae1202a926beeebc88076648aa40bc
+    REF v3.3.3
+    SHA512 10063764b610c0c966ba0177cac0d2cb781e297a45545cc8a587741513089af26f40769670894c86e7985b73c47e9cb985253bc3bef3a12fa83fe2a6a30acb6d
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
@@ -17,11 +17,48 @@ vcpkg_from_github(
         ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
 )
 
+set(BUILD_libarchive_bzip2 OFF)
+if("bzip2" IN_LIST FEATURES)
+  set(BUILD_libarchive_bzip2 ON)
+endif()
+
+set(BUILD_libarchive_libxml2 OFF)
+if("libxml2" IN_LIST FEATURES)
+  set(BUILD_libarchive_libxml2 ON)
+endif()
+set(BUILD_libarchive_libxml2 OFF)
+
+set(BUILD_libarchive_lz4 OFF)
+if("lz4" IN_LIST FEATURES)
+  set(BUILD_libarchive_lz4 ON)
+endif()
+
+set(BUILD_libarchive_lzma OFF)
+if("lzma" IN_LIST FEATURES)
+  set(BUILD_libarchive_lzma ON)
+endif()
+
+set(BUILD_libarchive_lzo OFF)
+if("lzo" IN_LIST FEATURES)
+  set(BUILD_libarchive_lzo ON)
+endif()
+
+set(BUILD_libarchive_openssl OFF)
+if("openssl" IN_LIST FEATURES)
+  set(BUILD_libarchive_openssl ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_LZO=OFF
+        -DENABLE_BZip2=${BUILD_libarchive_bzip2}
+        -DENABLE_LIBXML2=${BUILD_libarchive_libxml2}
+        -DENABLE_LZ4=${BUILD_libarchive_lz4}
+        -DENABLE_LZMA=${BUILD_libarchive_lzma}
+        -DENABLE_LZO=${BUILD_libarchive_lzo}
+        -DENABLE_OPENSSL=${BUILD_libarchive_openssl}
+        -DENABLE_PCREPOSIX=OFF
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF

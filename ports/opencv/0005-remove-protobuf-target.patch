@@ -1,6 +1,8 @@
+diff --git a/cmake/OpenCVFindProtobuf.cmake b/cmake/OpenCVFindProtobuf.cmake
+index b9171f14f..6e06310b1 100644
 --- a/cmake/OpenCVFindProtobuf.cmake
 +++ b/cmake/OpenCVFindProtobuf.cmake
-@@ -44,17 +44,6 @@ else()
+@@ -43,17 +43,6 @@ else()
    # end of compatibility block
  
    if(Protobuf_FOUND)
@@ -11,21 +13,10 @@
 -      add_library(libprotobuf UNKNOWN IMPORTED)
 -      set_target_properties(libprotobuf PROPERTIES
 -        IMPORTED_LOCATION "${Protobuf_LIBRARY}"
--        INTERFACE_INCLUDE_DIRECTORIES "${Protobuf_INCLUDE_DIR}"
+-        INTERFACE_INCLUDE_SYSTEM_DIRECTORIES "${Protobuf_INCLUDE_DIR}"
 -      )
 -      get_protobuf_version(Protobuf_VERSION "${Protobuf_INCLUDE_DIR}")
 -    endif()
      set(HAVE_PROTOBUF TRUE)
    endif()
  endif()
---- a/modules/dnn/CMakeLists.txt
-+++ b/modules/dnn/CMakeLists.txt
-@@ -65,7 +65,7 @@ endif()
- 
- ocv_module_include_directories(${fw_inc} ${CMAKE_CURRENT_LIST_DIR}/src/ocl4dnn/include ${OPENCL_INCLUDE_DIRS})
- ocv_glob_module_sources(SOURCES ${fw_srcs})
--ocv_create_module(libprotobuf ${LAPACK_LIBRARIES})
-+ocv_create_module()
- ocv_add_samples()
- ocv_add_accuracy_tests()
- ocv_add_perf_tests()

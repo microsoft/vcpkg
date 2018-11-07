@@ -56,6 +56,7 @@ namespace vcpkg::Commands::Autocomplete
                 "cache",
                 "version",
                 "contact",
+                "upgrade"
             };
 
             Util::unstable_keep_if(public_commands, [&](const std::string& s) {
@@ -124,6 +125,7 @@ namespace vcpkg::Commands::Autocomplete
             CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
             CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
             CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
+            CommandEntry{"upgrade", R"###(^upgrade(\s+)(\S*)$)###", Upgrade::COMMAND_STRUCTURE},
         };
 
         for (auto&& command : COMMANDS)
