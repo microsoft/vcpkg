@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
         -DPA_USE_WASAPI=ON
         -DPA_USE_WDMKS=ON
         -DPA_USE_WMME=ON
+        -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )
 
 vcpkg_install_cmake()
