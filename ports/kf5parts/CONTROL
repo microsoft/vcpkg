@@ -1,0 +1,4 @@
+Source: kf5parts
+Version: 5.51.0
+Description: Document centric plugin system
+Build-Depends: ecm, qt5-tools, kf5kio
