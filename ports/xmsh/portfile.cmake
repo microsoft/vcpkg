@@ -1,16 +1,18 @@
 include(vcpkg_common_functions)
-vcpkg_find_acquire_program(PYTHON3)
+find_program(PYTHON3 /usr/bin/python3)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nagzira/xmsh
-  REF v0.4
-  SHA512 1c0f30afa29e32fbb7e716c376d37fc6858468fd592f2d63af59b6f85052773cf830cae72ed4e82a0e7d700f8d5e0c827da8296297691579bf8bf4047cb61e66
+  REF v0.4.1
+  SHA512 7bd9fe9e565b33722fec37a7e3d9bd8b7b132692add5d26e31954367fb284b49a26a21532ddcb0e425af7f8208e755f21f2d8de81b33ed2a1149724f4ccd2c38
   HEAD_REF master
   )
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  OPTIONS
+   -DPYTHON3_EXECUTABLE=${PYTHON3}
   PREFER_NINJA
   )
 
