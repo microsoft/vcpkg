@@ -36,7 +36,7 @@ install(TARGETS libbz2
 if(NOT BZIP2_SKIP_TOOLS)
     add_executable(bzip2 bzip2.c ${LIBBZ2_SOURCES})
     add_executable(bzip2recover bzip2recover.c ${LIBBZ2_SOURCES})
-    install(TARGETS bzip2 bzip2recover DESTINATION tools)
+    install(TARGETS bzip2 bzip2recover DESTINATION tools/bzip2)
 endif()
 
 if(NOT BZIP2_SKIP_HEADERS)
