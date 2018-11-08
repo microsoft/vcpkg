@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KDE/kpackage
+    REPO KDE/kdeclarative
     REF v5.51.0
-    SHA512 b467fae9c1f64ced7de5f87ca10007f25d5c94fd0ae93584cfa55f93eb6d65c6362cfb91b462e5bacde2457373bc19caea271df2493423df43e44b0e83a3b4b1
+    SHA512 d0d937115febef941ab3f50f63d4916299569ed3a58a2339178e11aca55f8b63c095af3eef42297bc8e29870f2452832cf0fd51d7fd0f60a771d40b0e07213ab
     HEAD_REF master
 )
 
@@ -19,21 +19,19 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
+            -DQML_INSTALL_DIR=qml
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Package)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Declarative)
 vcpkg_copy_pdbs()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5package)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kpackagetool5.exe ${CURRENT_PACKAGES_DIR}/tools/kf5package/kpackagetool5.exe)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5package)
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kpackagetool5.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/kpackagelauncherqml.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/kpackagelauncherqml.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/kf5package RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/kf5declarative RENAME copyright)
