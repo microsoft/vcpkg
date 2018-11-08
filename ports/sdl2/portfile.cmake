@@ -72,5 +72,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     endforeach()
 endif()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2)
 configure_file(${SOURCE_PATH}/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2/copyright COPYONLY)
 vcpkg_copy_pdbs()
