@@ -15,7 +15,7 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
-            -DPLUGIN_INSTALL_DIR=plugins
+            -DKDE_INSTALL_PLUGINDIR=plugins
 )
 
 vcpkg_install_cmake()

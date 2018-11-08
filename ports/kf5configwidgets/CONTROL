@@ -1,0 +1,4 @@
+Source: kf5configwidgets
+Version: 5.51.0
+Description: Widgets for KF5Config
+Build-Depends: ecm, qt5-tools, kf5auth, kf5codecs, kf5config, kf5guiaddons, kf5i18n, kf5widgetsaddons
