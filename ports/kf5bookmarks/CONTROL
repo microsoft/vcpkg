@@ -1,0 +1,4 @@
+Source: kf5bookmarks
+Version: 5.51.0
+Description: Support for bookmarks and the XBEL format
+Build-Depends: ecm, qt5-tools, kf5xmlgui
