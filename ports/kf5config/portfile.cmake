@@ -25,14 +25,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kconf_update.exe ${CURRENT_PACKAGES_DIR}
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Config)
 
-if("tools" IN_LIST FEATURES)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kreadconfig5.exe)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5.exe ${CURRENT_PACKAGES_DIR}/tools/kf5config/kwriteconfig5.exe)
-else()
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5.exe)
-endif()
-
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kconfig_compiler_kf5.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kconf_update.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kreadconfig5.exe)
