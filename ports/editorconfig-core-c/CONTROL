@@ -2,6 +2,3 @@ Source: editorconfig-core-c
 Version: 0.12.2
 Description: EditorConfig core code written in C (for use by plugins supporting EditorConfig parsing)
 Build-Depends: pcre
-
-Feature: tool
-Description: Installs editorconfig executable

@@ -15,16 +15,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if("tool" IN_LIST FEATURES)
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/editorconfig-core-c)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/editorconfig.exe ${CURRENT_PACKAGES_DIR}/tools/editorconfig-core-c/editorconfig.exe)
-	vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/editorconfig-core-c)
-else()
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/editorconfig.exe)
-endif()
-
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/editorconfig.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/editorconfig.exe)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
