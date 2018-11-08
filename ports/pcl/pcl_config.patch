@@ -1,26 +1,8 @@
 diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index f4ef6a0ff..3a2c259dc 100644
+index 7ec40baa0..837d78c82 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
-@@ -155,7 +155,7 @@ macro(find_qhull)
-     NAMES "@QHULL_LIBRARY_DEBUG_NAME@"
-     HINTS "${QHULL_ROOT}" "$ENV{QHULL_ROOT}"
-     PATHS "$ENV{PROGRAMFILES}/qhull" "$ENV{PROGRAMW6432}/qhull" 
--    PATH_SUFFIXES project build bin lib)
-+    PATH_SUFFIXES project build bin lib debug/lib)
-   
-   find_package_handle_standard_args(qhull DEFAULT_MSG QHULL_LIBRARY QHULL_INCLUDE_DIRS)
- 
-@@ -443,7 +443,7 @@ macro(find_flann)
-     HINTS ${PC_FLANN_LIBDIR} ${PC_FLANN_LIBRARY_DIRS} "${FLANN_ROOT}" "$ENV{FLANN_ROOT}"
-     PATHS "$ENV{PROGRAMFILES}/flann 1.6.9" "$ENV{PROGRAMW6432}/flann 1.6.9" 
-           "$ENV{PROGRAMFILES}/flann" "$ENV{PROGRAMW6432}/flann"
--    PATH_SUFFIXES lib)
-+    PATH_SUFFIXES lib debug/lib)
- 
-   find_package_handle_standard_args(Flann DEFAULT_MSG FLANN_LIBRARY FLANN_INCLUDE_DIRS)
-   if(FLANN_FOUND)
-@@ -715,25 +715,18 @@ file(TO_CMAKE_PATH "${PCL_DIR}" PCL_DIR)
+@@ -388,25 +388,18 @@ file(TO_CMAKE_PATH "${PCL_DIR}" PCL_DIR)
  if(WIN32 AND NOT MINGW)
  # PCLConfig.cmake is installed to PCL_ROOT/cmake
    get_filename_component(PCL_ROOT "${PCL_DIR}" PATH)
@@ -49,13 +31,13 @@ index f4ef6a0ff..3a2c259dc 100644
    if(EXISTS "${PCL_ROOT}/3rdParty")
      set(PCL_ALL_IN_ONE_INSTALLER ON)
    endif(EXISTS "${PCL_ROOT}/3rdParty")
-@@ -743,9 +736,9 @@ elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
+@@ -416,9 +409,9 @@ elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
    set(PCL_INCLUDE_DIRS "${PCL_DIR}/include") # for pcl_config.h
    set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
    set(PCL_SOURCES_TREE "@CMAKE_SOURCE_DIR@")
 -else(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl/pcl_config.h")
 +else(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
-   pcl_report_not_found("PCL can not be found on this machine")  
+   pcl_report_not_found("PCL can not be found on this machine")
 -endif(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl/pcl_config.h")
 +endif(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
  

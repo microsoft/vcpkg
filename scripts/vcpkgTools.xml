@@ -60,7 +60,7 @@
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>18.01.0</version>
+        <version>18.1.0</version>
         <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
         <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
         <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
@@ -78,20 +78,20 @@
         <exeRelativePath>ninja.exe</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip</url>
         <sha512>9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5</sha512>
-        <archiveName>ninja-win.zip</archiveName>
+        <archiveName>ninja-win-1.8.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
         <version>1.8.2</version>
         <exeRelativePath>ninja</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
         <sha512>38fcb68e745c1f15b4b50f20069ffe686b1ef5baf93b74958e132ea5d30d155cf6970d6dc1b095aafd421ebd8bcc63acf4f64e305c496266b5182f99b815cca5</sha512>
-        <archiveName>ninja-linux.zip</archiveName>
+        <archiveName>ninja-linux-1.8.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
         <version>1.8.2</version>
         <exeRelativePath>ninja</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
         <sha512>acadfb286eb7d93676629701917fa0c3c39f36daa068c169e4a098c29f97380d1ea95abfd42b04798ff118fd9dc93fdb250fcda36086bac20bc5506354214fc3</sha512>
-        <archiveName>ninja-mac.zip</archiveName>
+        <archiveName>ninja-mac-1.8.2.zip</archiveName>
     </tool>
 </tools>

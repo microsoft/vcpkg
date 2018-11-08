@@ -1,0 +1,4 @@
+Source: fmi4cpp
+Version: 0.4.0
+Description: FMI 2.0 implementation written in modern C++
+Build-Depends: boost-property-tree, boost-ublas, boost-odeint, bzip2 (linux), openssl (linux), libzip

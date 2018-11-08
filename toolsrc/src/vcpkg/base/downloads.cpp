@@ -102,7 +102,17 @@ namespace vcpkg::Downloads
                                      const fs::path& path,
                                      const std::string& sha512)
     {
-        const std::string actual_hash = vcpkg::Hash::get_file_hash(fs, path, "SHA512");
+        std::string actual_hash = vcpkg::Hash::get_file_hash(fs, path, "SHA512");
+
+        // <HACK to handle NuGet.org changing nupkg hashes.>
+        // This is the NEW hash for 7zip
+        if (actual_hash == "a9dfaaafd15d98a2ac83682867ec5766720acf6e99d40d1a00d480692752603bf3f3742623f0ea85647a92374df"
+                           "405f331afd6021c5cf36af43ee8db198129c0")
+            // This is the OLD hash for 7zip
+            actual_hash = "8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b257"
+                          "1305b3ae3f4e2b85fc4a290aeda63d1a13b8";
+        // </HACK>
+
         Checks::check_exit(VCPKG_LINE_INFO,
                            sha512 == actual_hash,
                            "File does not have the expected hash:\n"
