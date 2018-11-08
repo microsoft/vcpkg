@@ -12,11 +12,11 @@
 
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/geogram_1.6.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/geogram_1.6.9)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://gforge.inria.fr/frs/download.php/file/37525/geogram_1.6.4.tar.gz"
-    FILENAME "geogram_1.6.4.tar.gz"
-    SHA512 a89b824cc7c055b7d0a5882e2f1922f09729f6eed5ed656136e8375e9b414e286fdbc5372fdb69b1ea5ce340dc81231db0228974b997be805043227de3c341b8
+    URLS "https://gforge.inria.fr/frs/download.php/file/37779/geogram_1.6.9.tar.gz"
+    FILENAME "geogram_1.6.9.tar.gz"
+    SHA512 1b5c7540bef734c1908f213f26780aba63b4911a8022d5eb3f7c90eabe2cb69efd1f298b30cdc8e2c636a5b37c8c25832dd4aad0b7c2ff5f0a5b5caa17970136
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
