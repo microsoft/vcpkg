@@ -26,6 +26,8 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5ConfigWidgets)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/preparetips5)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/preparetips5)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

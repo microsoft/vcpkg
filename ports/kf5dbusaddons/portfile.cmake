@@ -21,6 +21,8 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5DBusAddons)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kquitapp5.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kquitapp5.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

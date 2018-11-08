@@ -25,6 +25,8 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Codecs)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)

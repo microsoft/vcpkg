@@ -25,6 +25,8 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/desktoptojson.exe ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons/desktoptojson.exe)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/desktoptojson.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

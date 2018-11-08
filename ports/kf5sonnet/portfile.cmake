@@ -31,6 +31,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Sonnet)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gentrigrams.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/parsetrigrams.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

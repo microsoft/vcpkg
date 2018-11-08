@@ -35,6 +35,8 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5.exe)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5config)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
