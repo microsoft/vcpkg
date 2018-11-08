@@ -1,5 +1,5 @@
 diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
-index 69f1e76a4..37305815e 100644
+index 41a64a269..a12718339 100644
 --- a/cmake/pcl_utils.cmake
 +++ b/cmake/pcl_utils.cmake
 @@ -105,7 +105,7 @@ macro(SET_INSTALL_DIRS)

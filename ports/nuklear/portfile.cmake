@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vurtun/nuklear
-    REF 19c14bb777ebccf93fc9ed8a8b295f4a62cb32c9
-    SHA512 ff9d9fcbba41b602e13060445dd67a6c07322fce4b9b210cde72e4ba9bb5f3805fec5aad66e2c9aeca191d0fdd4e9b747021e5e8aa62175f927fa39a91847b1a
+    REF 181cfd86c47ae83eceabaf4e640587b844e613b6
+    SHA512 33f6200d046c96b8d42ff851ba788bf4f57d8aa99591b866e8691204378f23d5dce06343521834cd10ffaecc42566d97ce2c3becf48caaadf0cdc270cf69bdbb
     HEAD_REF master
 )
 file(INSTALL ${SOURCE_PATH}/nuklear.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)

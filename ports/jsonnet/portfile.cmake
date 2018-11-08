@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/jsonnet
-    REF edfcffc596af4a5977891849a2b813cf31bbff5e
-    SHA512 a0568fa00331ef2fe2e14c25c36b6668d15fbe3c4e92453a382832ae715c6eaff5047f0a91a98429052e0eaa16db25b850bb4544f44974abb7769125a1f4a7f2
+    REF a0876b301daf8f45e16ac5f7bb814d0617772bb0
+    SHA512 a57380ecc578b11f3a763202abb7ab703f2cc3c098ca7602d0bd199594a9e8d1cebc6d51332658edb08bf088e565d6afae0cb2faaf127fa33542a406de1ac055
     HEAD_REF master
 )
 
