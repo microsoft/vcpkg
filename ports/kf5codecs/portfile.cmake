@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_EXE_PATH ${GPERF} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${GPERF_EXE_PATH}")
+vcpkg_add_to_path(${GPERF_EXE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

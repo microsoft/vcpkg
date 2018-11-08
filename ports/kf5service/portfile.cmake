@@ -12,7 +12,8 @@ vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES mingw-w64-i686-gettext)
 set(GETTEXT_PATH ${MSYS_ROOT}/mingw32/bin)
-set(ENV{PATH} "$ENV{PATH};${GETTEXT_PATH};${FLEX_EXE_PATH}")
+vcpkg_add_to_path(${GETTEXT_PATH})
+vcpkg_add_to_path(${FLEX_EXE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

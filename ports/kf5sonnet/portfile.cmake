@@ -18,6 +18,7 @@ vcpkg_configure_cmake(
             -DKDE_INSTALL_PLUGINDIR=plugins
 )
 
+
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)

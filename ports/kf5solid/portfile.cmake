@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${FLEX_EXE_PATH}")
+vcpkg_add_to_path(${FLEX_EXE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
