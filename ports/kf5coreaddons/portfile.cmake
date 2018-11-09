@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
+            -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_install_cmake()
@@ -24,6 +25,7 @@ vcpkg_copy_pdbs()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/desktoptojson.exe ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons/desktoptojson.exe)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons)
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5coreaddons/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)

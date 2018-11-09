@@ -20,6 +20,7 @@ vcpkg_configure_cmake(
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
             -DKDE_INSTALL_PLUGINDIR=plugins
+            -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_install_cmake()
@@ -29,6 +30,7 @@ vcpkg_copy_pdbs()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/kf5kio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/protocoltojson.exe ${CURRENT_PACKAGES_DIR}/tools/kf5kio/protocoltojson.exe)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5kio)
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5kio/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kcookiejar5.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/ktelnetservice5.exe)

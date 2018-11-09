@@ -33,6 +33,7 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kreadconfig5.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5.exe)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5config)
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5config/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)

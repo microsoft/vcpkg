@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
             -DBUILD_MAN_DOCS=OFF
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
+            -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_install_cmake()
@@ -22,6 +23,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5GlobalAccel)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/kglobalaccel5.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/kglobalaccel5.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)

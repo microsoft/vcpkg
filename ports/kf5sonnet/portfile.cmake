@@ -16,6 +16,7 @@ vcpkg_configure_cmake(
             -DBUILD_QTHELP_DOCS=OFF
             -DBUILD_TESTING=OFF
             -DKDE_INSTALL_PLUGINDIR=plugins
+            -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_add_to_path(${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
@@ -29,6 +30,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/bin/parsetrigrams.exe ${CURRENT_PACKAGES_DIR
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Sonnet)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/kf5sonnet)
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/kf5sonnet/qt.conf "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
