@@ -194,7 +194,7 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DCMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
 
-    
+
     set(rel_command
         ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
         -G ${GENERATOR} -T ${VCPKG_PLATFORM_TOOLSET}
@@ -205,7 +205,7 @@ function(vcpkg_configure_cmake)
         -G ${GENERATOR} -T ${VCPKG_PLATFORM_TOOLSET}
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
-    
+
     if(GENERATOR STREQUAL "Ninja" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         if(NOT VCPKG_C_COMPILER OR NOT VCPKG_CXX_COMPILER OR NOT VCPKG_LINKER)
             vcpkg_determine_compiler_and_linker()
