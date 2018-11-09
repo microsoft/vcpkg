@@ -4,7 +4,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://android.googlesource.com/platform/external/fdlibm
     REF 59f7335e4dd8275a7dc2f8aeb4fd00758fde37ac
-    SHA512 08c16ff7cc6f24d962090bf5ab192d3c8ab33d9f60390ca510898c918cefa1b19572ad6bbf49c327bb09d8a9ab52d8341ec14c44abe169d2d319523567f1300f
+    SHA512 bc788c840a57716f996513980d31b203bd86ce9af1ac3656a187266bfdc2fbb22a9ddf88f79ffc91dd75f3f1f1e4fd3449a42b566ffe5e49e9384efd91a68613
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
