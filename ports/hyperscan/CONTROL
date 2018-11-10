@@ -1,0 +1,4 @@
+Source: hyperscan
+Version: 5.0.0
+Description: A regular expression library with O(length of input) match times that takes advantage of Intel hardware to provide blazing speed.
+Build-Depends: boost, python3, ragel
