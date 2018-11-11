@@ -1,5 +1,5 @@
 Source: graphicsmagick
 Maintainer: josuegomes@gmail.com
-Version: 1.3.30
+Version: 1.3.30-1
 Build-Depends: zlib, bzip2, freetype, libjpeg-turbo, libpng, tiff
 Description: Image processing library

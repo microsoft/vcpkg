@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e881dbd1..69496561 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -761,11 +761,17 @@ endif ()
+ 
+ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+   install(TARGETS harfbuzz
++    EXPORT harfbuzzConfig
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     FRAMEWORK DESTINATION Library/Frameworks
+   )
++  install(EXPORT harfbuzzConfig
++      NAMESPACE harfbuzz::
++      FILE harfbuzz-config.cmake
++      DESTINATION share/harfbuzz
++  )
+   if (HB_BUILD_UTILS)
+     install(TARGETS hb-view
+       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

@@ -6,10 +6,6 @@ vcpkg_from_bitbucket(
     REF bbe39c81b68eb0d8647da703899e1ee4a82cdfd3
     SHA512 84eb8226672d9d11d194d165e7aaa333a0d49ca090bb94472f19242e5f2ad0c3e08a30cdafe055cff51b210b603533f879800bd6784f3ffdb0d9eeca65d58b25
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         avoid-src-dir-generation.patch
 )

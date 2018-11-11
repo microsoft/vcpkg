@@ -2,11 +2,10 @@
 include(vcpkg_common_functions)
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
-    REF 2.5.0
+    REF 2.5.1
     HEAD_REF master
-    SHA512 94306dcbed7d68bb7e226cd91e25950a07bcf393988c4bb79f9de3555c18c78cae4573e911235f712e711a7c02a614bf370df32b8d85240d2f08142327e05076
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/use-system-freetype.patch"
+    SHA512 7aed2fc29d1da98e6c4d598d5c86cf536cb4eb5c2079cdc23bb8e502288833c052579dadbe0ce13ad6461792d959bf6d9660229f54c54cf90a541c88c6b03d59
+    PATCHES use-system-freetype.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/extlibs)

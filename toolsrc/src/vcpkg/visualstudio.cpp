@@ -22,6 +22,17 @@ namespace vcpkg::VisualStudio
             LEGACY
         };
 
+        static std::string release_type_to_string(const ReleaseType& release_type)
+        {
+            switch (release_type)
+            {
+                case ReleaseType::STABLE: return "STABLE";
+                case ReleaseType::PRERELEASE: return "PRERELEASE";
+                case ReleaseType::LEGACY: return "LEGACY";
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }
+
         static bool preferred_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
         {
             const auto get_preference_weight = [](const ReleaseType& type) -> int {
@@ -51,10 +62,15 @@ namespace vcpkg::VisualStudio
         std::string version;
         ReleaseType release_type;
 
+        std::string to_string() const
+        {
+            return Strings::format("%s, %s, %s", root_path.u8string(), version, release_type_to_string(release_type));
+        }
+
         std::string major_version() const { return version.substr(0, 2); }
     };
 
-    static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
+    static std::vector<VisualStudioInstance> get_visual_studio_instances_internal(const VcpkgPaths& paths)
     {
         const auto& fs = paths.get_filesystem();
         std::vector<VisualStudioInstance> instances;
@@ -66,7 +82,7 @@ namespace vcpkg::VisualStudio
         if (fs.exists(vswhere_exe))
         {
             const auto code_and_output = System::cmd_execute_and_capture_output(
-                Strings::format(R"("%s" -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
+                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "Running vswhere.exe failed with message:\n%s",
@@ -114,15 +130,22 @@ namespace vcpkg::VisualStudio
         {
             // We want lexically_normal(), but it is not available
             // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash. Try both.
-            auto common7_tools = fs::path{*path_as_string};
-            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path());
-            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path().parent_path());
+            auto common7_tools = fs::path {*path_as_string};
+            append_if_has_cl(fs::path {*path_as_string}.parent_path().parent_path());
+            append_if_has_cl(fs::path {*path_as_string}.parent_path().parent_path().parent_path());
         }
 
         // VS2015 instance from Program Files
         append_if_has_cl(program_files_32_bit / "Microsoft Visual Studio 14.0");
 
         return instances;
+    }
+
+    std::vector<std::string> get_visual_studio_instances(const VcpkgPaths& paths)
+    {
+        std::vector<VisualStudioInstance> sorted {get_visual_studio_instances_internal(paths)};
+        std::sort(sorted.begin(), sorted.end(), VisualStudioInstance::preferred_first_comparator);
+        return Util::fmap(sorted, [](const VisualStudioInstance& instance) { return instance.to_string(); });
     }
 
     std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths)
@@ -137,8 +160,8 @@ namespace vcpkg::VisualStudio
         std::vector<Toolset> found_toolsets;
         std::vector<Toolset> excluded_toolsets;
 
-        const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances(paths),
-                                                        VisualStudioInstance::preferred_first_comparator};
+        const SortedVector<VisualStudioInstance> sorted {get_visual_studio_instances_internal(paths),
+                                                         VisualStudioInstance::preferred_first_comparator};
 
         const bool v140_is_available = Util::find_if(sorted, [&](const VisualStudioInstance& vs_instance) {
                                            return vs_instance.major_version() == "14";
@@ -194,7 +217,7 @@ namespace vcpkg::VisualStudio
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        const Toolset v141_toolset{
+                        const Toolset v141_toolset {
                             vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
 
                         const auto english_language_pack = dumpbin_path.parent_path() / "1033";
@@ -209,12 +232,12 @@ namespace vcpkg::VisualStudio
 
                         if (v140_is_available)
                         {
-                            const Toolset v140_toolset{vs_instance.root_path,
-                                                       dumpbin_path,
-                                                       vcvarsall_bat,
-                                                       {"-vcvars_ver=14.0"},
-                                                       V_140,
-                                                       supported_architectures};
+                            const Toolset v140_toolset {vs_instance.root_path,
+                                                        dumpbin_path,
+                                                        vcvarsall_bat,
+                                                        {"-vcvars_ver=14.0"},
+                                                        V_140,
+                                                        supported_architectures};
                             found_toolsets.push_back(v140_toolset);
                         }
 
