@@ -68,9 +68,9 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest_main.lib)
 
     file(READ ${CURRENT_PACKAGES_DIR}/share/gtest/GTestTargets-release.cmake RELEASE_CONFIG)
     string(REPLACE "\${_IMPORT_PREFIX}/lib/gtest_main.lib"
-                   "\${_IMPORT_PREFIX}/manual-link/gtest_main.lib" RELEASE_CONFIG "${RELEASE_CONFIG}")
+                   "\${_IMPORT_PREFIX}/lib/manual-link/gtest_main.lib" RELEASE_CONFIG "${RELEASE_CONFIG}")
     string(REPLACE "\${_IMPORT_PREFIX}/lib/gmock_main.lib"
-                   "\${_IMPORT_PREFIX}/manual-link/gmock_main.lib" RELEASE_CONFIG "${RELEASE_CONFIG}")
+                   "\${_IMPORT_PREFIX}/lib/manual-link/gmock_main.lib" RELEASE_CONFIG "${RELEASE_CONFIG}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/gtest/GTestTargets-release.cmake "${RELEASE_CONFIG}")
 endif()
 
