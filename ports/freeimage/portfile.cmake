@@ -40,6 +40,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/use-external-webp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-external-openexr.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-freeimage-config-include.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/fix-function-overload.patch"
 )
 
 vcpkg_configure_cmake(
