@@ -1,0 +1,4 @@
+Source: prometheus-cpp
+Version: 0.6.0
+Description: Prometheus Client Library for Modern C++
+Build-Depends: curl, zlib
