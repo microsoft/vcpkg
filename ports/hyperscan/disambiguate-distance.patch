@@ -1,0 +1,22 @@
+diff --git a/src/nfa/limex_compile.cpp b/src/nfa/limex_compile.cpp
+index 6053b56..bbb2660 100644
+--- a/src/nfa/limex_compile.cpp
++++ b/src/nfa/limex_compile.cpp
+@@ -980,7 +980,7 @@ u32 addSquashMask(const build_info &args, const NFAVertex &v,
+     // see if we've already seen it, otherwise add a new one.
+     auto it = find(squash.begin(), squash.end(), sit->second);
+     if (it != squash.end()) {
+-        return verify_u32(distance(squash.begin(), it));
++        return verify_u32(std::distance(squash.begin(), it));
+     }
+     u32 idx = verify_u32(squash.size());
+     squash.push_back(sit->second);
+@@ -1007,7 +1007,7 @@ u32 addReports(const flat_set<ReportID> &r, vector<ReportID> &reports,
+     auto it = search(begin(reports), end(reports), begin(my_reports),
+                      end(my_reports));
+     if (it != end(reports)) {
+-        u32 offset = verify_u32(distance(begin(reports), it));
++        u32 offset = verify_u32(std::distance(begin(reports), it));
+         DEBUG_PRINTF("reusing found report list at %u\n", offset);
+         return offset;
+     }
