@@ -10,6 +10,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON2_DIR}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
