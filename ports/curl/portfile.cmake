@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_61_0
-    SHA512 b6d2f57059e72139540cb93b945703857cb447920ed9b283993611453fed623432290adc5a3558181e3decc15c7cf54fff475010d922957807a37d1a1449be6c
+    REF curl-7_61_1
+    SHA512 09fa3c87f8d516eabe3241247a5094c32ee0481961cf85bf78ecb13acdf23bb2ec82f113d2660271d22742c79e76d73fb122730fa28e34c7f5477c05a4a6534c
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
@@ -114,6 +114,8 @@ else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib")
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib")
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
     endif()
 endif()

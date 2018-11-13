@@ -92,8 +92,8 @@ namespace vcpkg::Commands::Edit
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
-        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
+        static const fs::path VS_CODE_INSIDERS = fs::path {"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path {"Microsoft VS Code"} / "Code.exe";
 
         auto& fs = paths.get_filesystem();
 
@@ -128,6 +128,14 @@ namespace vcpkg::Commands::Edit
             candidate_paths.push_back(*pf / VS_CODE);
         }
 
+        const auto& app_data = System::get_environment_variable("APPDATA");
+        if (const auto* ad = app_data.get())
+        {
+            const fs::path default_base = fs::path {*ad}.parent_path() / "Local" / "Programs";
+            candidate_paths.push_back(default_base / VS_CODE_INSIDERS);
+            candidate_paths.push_back(default_base / VS_CODE);
+        }
+
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
 
@@ -147,6 +155,16 @@ namespace vcpkg::Commands::Edit
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
         const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+
+        auto editor_exe = env_editor.filename().u8string();
+
+#ifdef _WIN32
+        if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
+        {
+            System::cmd_execute_no_wait(cmd_line + " <NUL");
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+#endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
     }
 }

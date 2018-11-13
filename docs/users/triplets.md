@@ -62,6 +62,7 @@ See also the CMake documentation for toolchain files: https://cmake.org/cmake/he
 Sets additional compiler flags to be used when not using `VCPKG_CHAINLOAD_TOOLCHAIN_FILE`.
 
 This option also has forms for configuration-specific and C flags:
+- `VCPKG_CXX_FLAGS`
 - `VCPKG_CXX_FLAGS_DEBUG`
 - `VCPKG_CXX_FLAGS_RELEASE`
 - `VCPKG_C_FLAGS`

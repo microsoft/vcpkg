@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.10.5
-    SHA512 7942185e0e1cd5080b57737887f44c12e706cfb6428e55762dcbad2fd2c557f25bd26abe25b6abd9769ab6c0cea564541e7e95dcaff53e609124dda065fa41be
+    REF v2.10.6
+    SHA512 f0848f329df80ced68132600914f0f4ba1ed42c7c16188e0f2bd41cf0c50173c27ca42c8db72ff239ca881bc8789fa4d1e3189c492832f6c22d36d504b7ce8dd
     HEAD_REF master
 )
 
@@ -32,7 +32,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/share") # transition
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
+else()
+    vcpkg_fixup_cmake_targets() # v2.10.6 and below
+endif()
+
+
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt

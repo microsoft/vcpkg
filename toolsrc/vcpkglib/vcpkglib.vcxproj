@@ -233,6 +233,7 @@
     <ClCompile Include="..\src\vcpkg\commands.search.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.version.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp" />
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />

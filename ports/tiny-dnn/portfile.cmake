@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tiny-dnn/tiny-dnn
-    REF a8de26ad40d955908c5ec4fc946c3c67dd381c6c
-    SHA512 4dc89f038a4dd4bd706077f1c72afdd503fa41edc3b1eb0e8c459c55c9a658d17add98e66dac48914e253df121818da3d277b1a0fac945f22efe9d76d2f9476e
+    REF 1aec6a1ece0ba7a5e018a070bd52e045d49d1411
+    SHA512 173607504cf4e6cc5f70febbfc305dd1fe7168bc6eff82c90d202caa342c3aecf13a3c3cc7f70f4f9674b5649d3a14180fb682742025c408e3e4ea9ec6b99f8a
     HEAD_REF master
 )
 
