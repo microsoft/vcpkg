@@ -8,12 +8,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-uamqp-c
-    REF 1.2.3
-    SHA512 18fc978517371fcb19e1c078f07d06b3bf8ec046c5cba955dd3cfe0a364d8775542acc970d81fa42384942ea4db7fb60d8939e80e90baf582c9d9e6ff0b577b5
+    REF ec107011716bc797d3d7a4a4a1141df4367038a3
+    SHA512 db25018a6f93a29da4bae8426f6e021a0d823075375f69f617c6aba776f5ac6ed5107e055f0a436f22ede2057045d28fab15607a58703c6c43937abec87ab076
     HEAD_REF master
 )
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${CMAKE_CURRENT_LIST_DIR}/glob-headers.patch)
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
 
