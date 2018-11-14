@@ -12,10 +12,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
-
 set(USE_WIN_WCHAR_T OFF)
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(USE_WIN_WCHAR_T ON)
 endif()
 
@@ -23,7 +21,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=${VXL_SHARED_LIBS}
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
         -DVXL_FORCE_V3P_BZLIB2=OFF
