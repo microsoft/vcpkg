@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("azure-uhttp-c only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,15 +12,13 @@ vcpkg_from_github(
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/c-utility/configs/)
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_AS_DYNAMIC)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
-        -Dbuild_as_dynamic=${BUILD_AS_DYNAMIC}
+        -Dbuild_as_dynamic=OFF
         -DCMAKE_INSTALL_INCLUDEDIR=include
 )
 
@@ -33,8 +28,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/uhttp)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-uhttp-c RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uhttp-c/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
