@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.9.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.9.5)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/mongo-c-driver/archive/1.9.2.tar.gz"
-    FILENAME "mongo-c-driver-1.9.2.tar.gz"
-    SHA512 a2c819da77aef93ce261093e98e8e8c41c449af56bd03d875e2838a067ae71b5ceb16fed2fb8df9458c84310451b813464377592806fc9ac39d9df2f4ddba83b
+    URLS "https://github.com/mongodb/mongo-c-driver/archive/1.9.5.tar.gz"
+    FILENAME "mongo-c-driver-1.9.5.tar.gz"
+    SHA512 bee584c83bb317802eb855fececc98f2013d7c3134f063c3146521ab535c8a89c2dfe89ccfa6ebbe2d7c64edec0e53105ead361da83b885c7778b40e4801de62
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
