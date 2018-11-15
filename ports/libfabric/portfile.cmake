@@ -28,7 +28,9 @@ endif()
 set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v141")
 set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v141")
 
-set(NETDIRECTDDK_PATH "C:/Users/ct/Downloads/NetworkDirect_DDK")
+#Set this variable to the path to your installation of NetworkDirect_DDK
+#
+#set(NETDIRECTDDK_PATH "")
 
 if(NETDIRECTDDK_PATH STREQUAL "")
     message(FATAL_ERROR "Set variable 'NETDIRECTDDK_PATH' in directory '$VCPKG_ROOT/ports/libfabric/portfile.cmake' to the directory NetworkDirect_DDK.zip was decompressed into. NetworkDirect can be downloaded from nuget at https://www.nuget.org/packages/NetworkDirect or https://www.microsoft.com/en-us/download/details.aspx?id=36043")
