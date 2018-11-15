@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
 
-set(LIBTIFF_VERSION 4.0.9)
+set(LIBTIFF_VERSION 4.0.10)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/libtiff/tiff-${LIBTIFF_VERSION}.tar.gz"
     FILENAME "tiff-${LIBTIFF_VERSION}.tar.gz"
-    SHA512 04f3d5eefccf9c1a0393659fe27f3dddd31108c401ba0dc587bca152a1c1f6bc844ba41622ff5572da8cc278593eff8c402b44e7af0a0090e91d326c2d79f6cd
+    SHA512 d213e5db09fd56b8977b187c5a756f60d6e3e998be172550c2892dbdb4b2a8e8c750202bc863fe27d0d1c577ab9de1710d15e9f6ed665aadbfd857525a81eea8
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
