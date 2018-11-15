@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
-    REF 01ccd0e552860efe00e4e3e55bf823be445aabb4
-    SHA512 5e6c3e597dc40128ae0642ca43340c88654c25d9239e6929edda44035f23b7dec3735baecd486ca3b161b453c8fe826f82124ced24da66e288e0e93fa5d51c54
+    REF 87a6c31cdd9d13f0673da4f650b44c2171cb2744
+    SHA512 8ddf91adf02599bdb87622d80a00fa02da060331572d4e614aec9e22bc6e1890a00da68fcf27d83f9c8de576ec043296e2a7c99a3676b6ddaec6d10d19387479
     HEAD_REF master
 )
 
