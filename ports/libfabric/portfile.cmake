@@ -79,4 +79,4 @@ vcpkg_install_msbuild(
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libfabric RENAME copyright)
 
 # Post-build test for cmake libraries
- vcpkg_test_cmake(PACKAGE_NAME libfabric)
+# vcpkg_test_cmake(PACKAGE_NAME libfabric)
