@@ -11,6 +11,11 @@
 #
 
 include(vcpkg_common_functions)
+
+# MAINTAINER NOTE: set this variable to the
+# latest version of libfabric to update the 
+# vcpkg port
+#
 set(LIBFABRIC_VERSION 1.6.2)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libfabric-${LIBFABRIC_VERSION})
