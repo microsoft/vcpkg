@@ -22,11 +22,11 @@
         <archiveName>cmake-3.12.4-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.17.1</version>
+        <version>2.19.1</version>
         <exeRelativePath>cmd\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.17.1.windows.1/MinGit-2.17.1-32-bit.zip</url>
-        <sha512>8bf93f6d3b6eb8a4ccbf840ff0b8b11a8b3a28fc5cd27aaa98dab5964acebbd17307e8ecec4e0cdd8b8ba095491d39bc9d55f4330284089cf3dadcab1d3fb7a4</sha512>
-        <archiveName>MinGit-2.17.1-32-bit.zip</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.19.1.windows.1/MinGit-2.19.1-32-bit.zip</url>
+        <sha512>8a6d2caae2cbaacee073a641cda21465a749325c0af620dabd0e5521c84c92c8d747caa468b111d2ec52b99aee2ee3e6ec41a0a07a8fff582f4c8da568ea329e</sha512>
+        <archiveName>MinGit-2.19.1-32-bit.zip</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
