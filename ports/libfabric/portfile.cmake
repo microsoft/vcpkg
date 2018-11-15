@@ -11,10 +11,12 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libfabric-1.6.2)
+set(LIBFABRIC_VERSION 1.6.2)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libfabric-${LIBFABRIC_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ofiwg/libfabric/archive/v1.6.2.zip"
-    FILENAME "libfabric-1.6.2.zip"
+    URLS "https://github.com/ofiwg/libfabric/archive/v${LIBFABRIC_VERSION}.zip"
+    FILENAME "libfabric-${LIBFABRIC_VERSION}.zip"
     SHA512 1a31546e4610beb9ae68ad2c42939ea363bd058bf6fa4260825fdc22489e22dea755648e78ae42bdd52238ac9ec0db93a848373ecded5813afc59fd6964dc348
 )
 vcpkg_extract_source_archive(${ARCHIVE})
@@ -30,7 +32,7 @@ set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v141")
 
 #Set this variable to the path to your installation of NetworkDirect_DDK
 #
-#set(NETDIRECTDDK_PATH "")
+set(NETDIRECTDDK_PATH "")
 
 if(NETDIRECTDDK_PATH STREQUAL "")
     message(FATAL_ERROR "Set variable 'NETDIRECTDDK_PATH' in directory '$VCPKG_ROOT/ports/libfabric/portfile.cmake' to the directory NetworkDirect_DDK.zip was decompressed into. NetworkDirect can be downloaded from nuget at https://www.nuget.org/packages/NetworkDirect or https://www.microsoft.com/en-us/download/details.aspx?id=36043")
