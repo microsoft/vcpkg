@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
             ${CMAKE_CURRENT_LIST_DIR}/0002-Add-CONFIG_INSTALL_PATH-option.patch
             ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-UWP.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-macOS-defines.patch
 )
 
 vcpkg_configure_cmake(
