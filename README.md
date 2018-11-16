@@ -50,7 +50,7 @@ and restart Powershell.
 
 
 ## Examples
-See the [documentation](docs/index.md) for specific walkthroughs, including [installing and using a package](docs/examples/installing-and-using-packages.md) and [adding a new package](docs/examples/packaging-zipfiles.md).
+See the [documentation](docs/index.md) for specific walkthroughs, including [installing and using a package](docs/examples/installing-and-using-packages.md), [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md), and [adding a new package from a GitHub repo](docl/examples/packaging-github-repos.md).
 
 Our docs are now also available online at ReadTheDocs: <https://vcpkg.readthedocs.io/>!
 

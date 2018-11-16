@@ -10,7 +10,7 @@ Yes! See [the `export` command](../users/integration.md#export).
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
 
 ## How do I get more libraries?
-The list of libraries is enumerated from the [`ports\`](https://github.com/Microsoft/vcpkg/blob/master/ports) directory. By design, you can add and remove libraries from this directory as you see fit for yourself or your company -- see our [packaging example](../examples/packaging-zipfiles.md).
+The list of libraries is enumerated from the [`ports\`](https://github.com/Microsoft/vcpkg/blob/master/ports) directory. By design, you can add and remove libraries from this directory as you see fit for yourself or your company -- see our examples on packaging [zipfiles](../examples/packaging-zipfiles.md) and [GitHub repos](../examples/packaging-github-repos.md).
 
 We recommend cloning directly from [GitHub](https://github.com/microsoft/vcpkg) and using `git pull` to update the list of portfiles. Once you've updated your portfiles, `vcpkg update` will indicate any installed libraries that are now out of date.
 

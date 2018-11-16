@@ -8,6 +8,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 - [Installing and Using Packages Example: sqlite](examples/installing-and-using-packages.md)
 - [Packaging Zipfiles Example: zlib](examples/packaging-zipfiles.md)
+- [Packaging GitHub Repositories Example: libogg](examples/packaging-github-repos.md)
 - [Patching Example: Patching libpng to work for x86-uwp](examples/patching.md)
 
 ### User Help
