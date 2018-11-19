@@ -63,7 +63,7 @@
         <version>18.1.0</version>
         <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
         <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
-        <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
+        <sha512>a9dfaaafd15d98a2ac83682867ec5766720acf6e99d40d1a00d480692752603bf3f3742623f0ea85647a92374df405f331afd6021c5cf36af43ee8db198129c0</sha512>
         <archiveName>7-zip.commandline.18.1.0.nupkg</archiveName>
     </tool>
     <tool name="aria2" os="windows">
