@@ -109,6 +109,7 @@ If you are using CMake through Open Folder with Visual Studio 2017 you can defin
   }]
 }
 ```
+*Note: It might be necessary to delete the CMake cache folder of each modified configuration, to force a full regeneration. In the `CMake` menu, under `Cache (<configuration name>)` you'll find `Delete Cache Folders`.*
 
 Now let's make a simple CMake project with a main file.
 ```cmake
