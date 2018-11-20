@@ -1,10 +1,11 @@
 --- a/CMakeLists.txt	2018-11-20 15:06:35.000000000 +0100
-+++ b/CMakeLists.txt	2018-11-20 14:59:20.000000000 +0100
++++ b/CMakeLists.txt	2018-11-20 15:50:02.000000000 +0100
 @@ -313,7 +313,14 @@
  
  if (HB_HAVE_GLIB)
    add_definitions(-DHAVE_GLIB)
-+
+-
++  
 +  if(APPLE)
 +    find_package(Threads REQUIRED)
 +    find_package(unofficial-iconv REQUIRED)
