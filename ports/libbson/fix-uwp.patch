@@ -1,94 +1,148 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 553f13b..03dc546 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -230,6 +230,9 @@
-    ${SOURCE_DIR}/src/bson/bson-writer.h
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -217,6 +217,9 @@ set (HEADERS_FORWARDING
+    ${PROJECT_SOURCE_DIR}/src/bson/forwarding/bson.h
  )
  
 +add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 +
-+if (NOT BSON_ENABLE_STATIC)
- add_library(bson_shared SHARED ${SOURCES} ${HEADERS})
- set(CMAKE_CXX_VISIBILITY_PRESET hidden)
- set_target_properties(bson_shared PROPERTIES COMPILE_DEFINITIONS "BSON_COMPILATION;JSONSL_PARSE_NAN")
-@@ -263,16 +266,21 @@
++if (NOT ENABLE_STATIC MATCHES "ON|AUTO")
+ add_library (bson_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ set (CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set_target_properties (bson_shared PROPERTIES COMPILE_DEFINITIONS "BSON_COMPILATION;JSONSL_PARSE_NAN")
+@@ -258,16 +261,21 @@ if (WIN32)
     # must be handled specially since we can't resolve them
-    set(BSON_SYSTEM_LIBS ${BSON_SYSTEM_LIBS} ws2_32)
- endif()
-+endif()
+    set (BSON_SYSTEM_LIBRARIES ${BSON_SYSTEM_LIBRARIES} ws2_32)
+ endif ()
++endif ()
  
- if (BSON_ENABLE_STATIC)
-    add_library(bson_static STATIC ${SOURCES} ${HEADERS})
+ if (ENABLE_STATIC MATCHES "ON|AUTO")
+    add_library (bson_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
 +   set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-    set_target_properties(bson_static PROPERTIES COMPILE_DEFINITIONS "BSON_COMPILATION;BSON_STATIC;JSONSL_PARSE_NAN")
-    set_target_properties(bson_static PROPERTIES VERSION ${BSON_VERSION})
-    set_target_properties(bson_static PROPERTIES OUTPUT_NAME "bson-static-${BSON_API_VERSION}")
+    set_target_properties (bson_static PROPERTIES COMPILE_DEFINITIONS "BSON_COMPILATION;BSON_STATIC;JSONSL_PARSE_NAN")
+    set_target_properties (bson_static PROPERTIES VERSION 0.0.0)
+    set_target_properties (bson_static PROPERTIES OUTPUT_NAME "bson-static-${BSON_API_VERSION}")
 +   set(THREADS_PREFER_PTHREAD_FLAG 1)
 +   find_package (Threads REQUIRED)
-    target_link_libraries(bson_static Threads::Threads)
+    target_link_libraries (bson_static Threads::Threads)
     if (RT_LIBRARY)
        target_link_libraries (bson_static ${RT_LIBRARY})
-    endif()
+    endif ()
 +   find_library(M_LIBRARY m)
     if (M_LIBRARY)
        target_link_libraries (bson_static ${M_LIBRARY})
-    endif()
-@@ -332,7 +340,7 @@
-     add_executable (${bin} ${BSON_EXAMPLE_SOURCES})
+    endif ()
+@@ -282,7 +290,7 @@ function (add_example bin src)
+    add_executable (${bin} ${BSON_EXAMPLE_SOURCES})
  
-     # Link against the shared lib like normal apps
--    target_link_libraries(${bin} bson_shared)
-+    target_link_libraries(${bin} bson_shared bson_static)
+    # Link against the shared lib like normal apps
+-   target_link_libraries (${bin} bson_shared)
++   target_link_libraries (${bin} bson_shared bson_static)
  
-     set (EXAMPLES ${EXAMPLES} ${bin})
+    set (EXAMPLES ${EXAMPLES} ${bin})
  endfunction ()
-@@ -349,6 +357,7 @@
- endif () # ENABLE_EXAMPLES
+@@ -304,6 +312,7 @@ set (BSON_HEADER_INSTALL_DIR
+    "${CMAKE_INSTALL_INCLUDEDIR}/libbson-${BSON_API_VERSION}"
+ )
  
- set (BSON_HEADER_INSTALL_DIR "include/libbson-${BSON_API_VERSION}")
-+if (NOT BSON_ENABLE_STATIC)
- install(
-   TARGETS bson_shared ${EXAMPLES}
-   LIBRARY DESTINATION lib
-@@ -355,6 +364,7 @@
-   ARCHIVE DESTINATION lib
-   RUNTIME DESTINATION bin
++if (NOT ENABLE_STATIC MATCHES "ON|AUTO")
+ install (
+    TARGETS bson_shared ${EXAMPLES}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -311,6 +320,7 @@ install (
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR} 
  )
 +endif ()
- if (BSON_ENABLE_STATIC)
-    install(
-      TARGETS bson_static ${EXAMPLES}
-diff --git a/src/bson/bson-compat.h b/src/bson/bson-compat.h
-index 05fc614..e8e2214 100644
---- a/src/bson/bson-compat.h
-+++ b/src/bson/bson-compat.h
-@@ -39,11 +39,11 @@
+ if (ENABLE_STATIC MATCHES "ON|AUTO")
+    install (
+       TARGETS bson_static ${EXAMPLES}
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -609,6 +609,7 @@ if (WIN32)
+    set (LIBRARIES ${LIBRARIES} ws2_32)
+ endif ()
  
++if (NOT MONGOC_ENABLE_STATIC)
+ add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ set_target_properties (mongoc_shared PROPERTIES CMAKE_CXX_VISIBILITY_PRESET hidden)
+ target_link_libraries (mongoc_shared ${LIBRARIES} ${BSON_LIBRARIES})
+@@ -617,6 +618,7 @@ target_compile_definitions (mongoc_shared PUBLIC MONGOC_COMPILATION ${BSON_DEFIN
  
- #ifdef BSON_OS_WIN32
--#if defined(_WIN32_WINNT) && (_WIN32_WINNT < 0x0600)
-+#if defined(_WIN32_WINNT) && (_WIN32_WINNT < 0x0602)
- #undef _WIN32_WINNT
- #endif
- #ifndef _WIN32_WINNT
--#define _WIN32_WINNT 0x0600
-+#define _WIN32_WINNT 0x0602
- #endif
- #ifndef NOMINMAX
- #define NOMINMAX
-diff --git a/src/bson/bson-iso8601.c b/src/bson/bson-iso8601.c
-index 8beea90..cb4b531 100644
---- a/src/bson/bson-iso8601.c
-+++ b/src/bson/bson-iso8601.c
-@@ -115,8 +115,8 @@ _bson_iso8601_date_parse (const char *str,
-    const char *day_ptr;
-    const char *hour_ptr;
-    const char *min_ptr;
--   const char *sec_ptr;
--   const char *millis_ptr;
-+   const char *sec_ptr = NULL;
-+   const char *millis_ptr = NULL;
-    const char *tz_ptr;
+ set_target_properties (mongoc_shared PROPERTIES VERSION 0.0.0 SOVERSION 0)
+ set_target_properties (mongoc_shared PROPERTIES OUTPUT_NAME "mongoc-${MONGOC_API_VERSION}" PREFIX "lib")
++endif ()
  
-    int32_t year_len = 0;
+ if (MONGOC_ENABLE_STATIC)
+    add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+@@ -639,7 +641,11 @@ if (ENABLE_APPLE_FRAMEWORK)
+ endif ()
+ 
+ add_executable (mongoc-stat ${PROJECT_SOURCE_DIR}/../../src/tools/mongoc-stat.c)
++if (MONGOC_ENABLE_STATIC)
++target_link_libraries (mongoc-stat mongoc_static)
++else ()
+ target_link_libraries (mongoc-stat mongoc_shared)
++endif ()
+ 
+ # mongoc-stat works if shared memory performance counters are enabled.
+ if (ENABLE_SHM_COUNTERS STREQUAL "ON")
+@@ -870,6 +876,7 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/json DESTINATION ${PROJECT_BINARY_DIR}/te
+ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}/tests)
+ file (COPY ${PROJECT_SOURCE_DIR}/tests/release_files DESTINATION ${PROJECT_BINARY_DIR}/tests)
+ 
++if (NOT MONGOC_ENABLE_STATIC)
+ install (
+    TARGETS mongoc_shared ${EXAMPLES}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -877,10 +884,11 @@ install (
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR} 
+ )
++endif ()
+ 
+ if (MONGOC_ENABLE_STATIC)
+    install (
+-      TARGETS mongoc_shared mongoc_static ${EXAMPLES}
++      TARGETS mongoc_static ${EXAMPLES}
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+--- a/src/libmongoc/src/mongoc/mongoc-gridfs-file.c
++++ b/src/libmongoc/src/mongoc/mongoc-gridfs-file.c
+@@ -765,7 +765,7 @@ _mongoc_gridfs_file_refresh_page (mongoc_gridfs_file_t *file)
+    bson_t query;
+    bson_t child;
+    bson_t opts;
+-   const bson_t *chunk;
++   const bson_t *chunk = NULL;
+    const char *key;
+    bson_iter_t iter;
+    int64_t existing_chunks;
+--- a/src/libmongoc/src/mongoc/mongoc-handshake.c
++++ b/src/libmongoc/src/mongoc/mongoc-handshake.c
+@@ -286,7 +286,8 @@ _get_os_version (void)
+    char *ret = bson_malloc (HANDSHAKE_OS_VERSION_MAX);
+    bool found = false;
+ 
+-#ifdef _WIN32
++#if defined (WINAPI_FAMILY_PARTITION) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
++#elif defined (_WIN32)
+    OSVERSIONINFO osvi;
+    ZeroMemory (&osvi, sizeof (OSVERSIONINFO));
+    osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
+--- a/src/libmongoc/src/mongoc/mongoc-util.c
++++ b/src/libmongoc/src/mongoc/mongoc-util.c
+@@ -84,7 +84,11 @@ _mongoc_hex_md5 (const char *input)
+ void
+ _mongoc_usleep (int64_t usec)
+ {
+-#ifdef _WIN32
++#if defined (WINAPI_FAMILY_PARTITION) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
++   if (usec / 1000 > MAXDWORD || usec < 0)
++      __fastfail(-1);
++   Sleep((DWORD)(usec / 1000));
++#elif defined(_WIN32)
+    LARGE_INTEGER ft;
+    HANDLE timer;
+ 

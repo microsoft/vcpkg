@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
 
-set(LIBBSON_VERSION 1.9.2)
+set(LIBBSON_VERSION 1.13.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/libbson/archive/${LIBBSON_VERSION}.tar.gz"
-    FILENAME "libbson-${LIBBSON_VERSION}.tar.gz"
-    SHA512 a05f1e8fbabb34e847692397e2e41fc5923ddd18dba861e5ab8a31acdf6738e13ab719eae8f9f8563f08fc43aab5c8d1f53cb6a47c38c96e132fa4a62a48d2bf
+    URLS "https://github.com/mongodb/mongo-c-driver/archive/${LIBBSON_VERSION}.tar.gz"
+    FILENAME "mongo-c-driver-${LIBBSON_VERSION}.tar.gz"
+    SHA512 d2f5b04b3d2dbdeba4547ec1fe8a0da7bad5214de92fff480ef0ff7d97ea45d5e6347c11c249867d4905b1dd81b76c7cfbb9094a58df586dae881955ee246907
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,7 +23,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DENABLE_MONGOC=OFF
+        -DENABLE_BSON=ON
         -DENABLE_TESTS=OFF
+        -DENABLE_EXAMPLES=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
 )
 
@@ -33,6 +36,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libbson-1.0")
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 
 # This rename is needed because the official examples expect to use #include <bson.h>
 # See Microsoft/vcpkg#904
