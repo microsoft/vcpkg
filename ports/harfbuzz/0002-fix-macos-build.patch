@@ -4,12 +4,11 @@
  
  if (HB_HAVE_GLIB)
    add_definitions(-DHAVE_GLIB)
--
++
 +  if(APPLE)
-+    # libintl(gettext)
-+    find_library(LIBINTL_LIBRARY NAMES intl libintl)
 +    find_package(Threads REQUIRED)
 +    find_package(unofficial-iconv REQUIRED)
++    find_library(LIBINTL_LIBRARY NAMES intl libintl)
 +    list(APPEND THIRD_PARTY_LIBS ${LIBINTL_LIBRARY})
 +  endif()
 +  

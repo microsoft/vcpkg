@@ -11,7 +11,7 @@ vcpkg_from_github(
         find-package-freetype-2.patch
         glib-cmake.patch
         0001-fix-cmake-export.patch
-	0002-fix-macos-build.patch
+        0002-fix-macos-build.patch
 )
 
 SET(HB_HAVE_ICU "OFF")
