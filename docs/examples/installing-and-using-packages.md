@@ -1,4 +1,4 @@
-# Example: Using Sqlite
+## Installing and Using Packages Example: SQLite
 
   - [Step 1: Install](#install)
   - [Step 2: Use](#use)
@@ -10,7 +10,7 @@
 <a name="install"></a>
 ## Step 1: Install
 
-First, we need to know what name [Sqlite](https://sqlite.org) goes by in the ports tree. To do that, we'll run the `search` command and inspect the output:
+First, we need to know what name [SQLite](https://sqlite.org) goes by in the ports tree. To do that, we'll run the `search` command and inspect the output:
 ```no-highlight
 PS D:\src\vcpkg> .\vcpkg search sqlite
 libodb-sqlite        2.4.0            Sqlite support for the ODB ORM library
@@ -82,7 +82,7 @@ Installing new libraries will make them instantly available.
 ```
 *Note: You will need to restart Visual Studio or perform a Build to update intellisense with the changes.* 
 
-You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio 2017 and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
+You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio 2017 and the library will be automatically available. For SQLite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
 
 To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 
