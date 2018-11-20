@@ -11,12 +11,6 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-#vcpkg_apply_patches(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PATCHES
-#        ${CMAKE_CURRENT_LIST_DIR}/use-szip-config.patch
-#)
-
 if ("parallel" IN_LIST FEATURES)
     set(ENABLE_PARALLEL ON)
 else()
