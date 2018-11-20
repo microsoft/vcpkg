@@ -2,7 +2,7 @@ diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
 index c2b81dc..a86d2d5 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
-@@ -81,6 +81,16 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+@@ -94,6 +94,16 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
    if (NOT SZIP_USE_EXTERNAL)
      find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
      if (NOT SZIP_FOUND)
@@ -18,4 +18,4 @@ index c2b81dc..a86d2d5 100644
 +    if (NOT SZIP_FOUND)
        find_package (SZIP) # Legacy find
        if (SZIP_FOUND)
-         set (LINK_LIBS ${LINK_LIBS} ${SZIP_LIBRARIES})
+         set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
