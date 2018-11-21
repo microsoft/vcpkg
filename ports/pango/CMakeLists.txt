@@ -5,7 +5,12 @@ set(PANGO_LIB_SUFFIX 1.0)
 set(PANGO_DLL_SUFFIX 1)
 set(GLIB_LIB_VERSION 2.0)
 
-configure_file(./config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+if(WIN32)
+  configure_file(./config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+else()
+  configure_file(./config.h.unix ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+endif()
+
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(. ./pango)
 
@@ -100,12 +105,14 @@ pango_add_module(pango
     pango/shape.c
     pango/pango-enum-types.c)
 
+if(WIN32)
 pango_add_module(pangowin32
     pango/pangowin32.c
     pango/pangowin32-fontcache.c
     pango/pangowin32-fontmap.c
     pango/pangowin32-shape.c)
 target_link_libraries(pangowin32 usp10 pango)
+endif()
 
 pango_add_module(pangoft2
     pango/pangofc-font.c
@@ -125,14 +132,20 @@ target_include_directories(pangoft2 PRIVATE ${FONT_INCLUDE_DIRS})
 pango_add_module(pangocairo
     pango/pangocairo-fcfont.c
     pango/pangocairo-fcfontmap.c
-    pango/pangocairo-win32font.c
-    pango/pangocairo-win32fontmap.c
     pango/pangocairo-context.c
     pango/pangocairo-font.c
     pango/pangocairo-fontmap.c
     pango/pangocairo-render.c)
 target_link_libraries(pangocairo ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
 target_include_directories(pangocairo PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
+
+if(WIN32)
+pango_add_module(pangocairowin32
+    pango/pangocairo-win32font.c
+    pango/pangocairo-win32fontmap.c)
+target_link_libraries(pangocairowin32 ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
+target_include_directories(pangocairowin32 PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
+endif()
 
 if(NOT PANGO_SKIP_HEADERS)
     install(FILES

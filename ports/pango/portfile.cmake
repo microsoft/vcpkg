@@ -8,6 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.unix DESTINATION ${SOURCE_PATH})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
