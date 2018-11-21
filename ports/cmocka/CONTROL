@@ -1,0 +1,4 @@
+Source: cmocka
+Version: 1.1.3
+Description: An elegant unit testing framework for C with support for mock objects
+Build-Depends:
