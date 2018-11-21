@@ -129,23 +129,24 @@ pango_add_module(pangoft2
 target_link_libraries(pangoft2 pango ${FONT_LIBRARIES})
 target_include_directories(pangoft2 PRIVATE ${FONT_INCLUDE_DIRS})
 
-pango_add_module(pangocairo
-    pango/pangocairo-fcfont.c
+list(APPEND PANGO_CAIRO_SOURCES 
+	pango/pangocairo-fcfont.c
     pango/pangocairo-fcfontmap.c
     pango/pangocairo-context.c
     pango/pangocairo-font.c
     pango/pangocairo-fontmap.c
     pango/pangocairo-render.c)
+	
+if(WIN32)
+	list(APPEND PANGO_CAIRO_SOURCES 
+		pango/pangocairo-win32font.c
+		pango/pangocairo-win32fontmap.c)
+endif()
+
+pango_add_module(pangocairo ${PANGO_CAIRO_SOURCES})
 target_link_libraries(pangocairo ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
 target_include_directories(pangocairo PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
 
-if(WIN32)
-pango_add_module(pangocairowin32
-    pango/pangocairo-win32font.c
-    pango/pangocairo-win32fontmap.c)
-target_link_libraries(pangocairowin32 ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
-target_include_directories(pangocairowin32 PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
-endif()
 
 if(NOT PANGO_SKIP_HEADERS)
     install(FILES
