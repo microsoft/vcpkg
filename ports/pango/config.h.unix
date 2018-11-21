@@ -26,7 +26,11 @@
 /* #undef HAVE_CAIRO_XLIB */
 
 /* Whether CoreText is available on the system */
-#define HAVE_CORE_TEXT 1
+#ifdef __APPLE_CC__
+    #define HAVE_CORE_TEXT 1
+#else
+    #undef HAVE_CORE_TEXT
+#endif
 
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
