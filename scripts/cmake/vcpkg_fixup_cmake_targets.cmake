@@ -154,6 +154,20 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${MAIN_CONFIG} "${_contents}")
     endforeach()
 
+    file(GLOB_RECURSE MAIN_CONFIGS "${RELEASE_SHARE}/*[Dd]epends.cmake")
+    foreach(MAIN_CONFIG IN LISTS MAIN_CONFIGS)
+        file(READ ${MAIN_CONFIG} _contents)
+        string(REGEX REPLACE
+            "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+            "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+            _contents "${_contents}")
+        string(REGEX REPLACE
+            "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
+            "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+            _contents "${_contents}")
+        file(WRITE ${MAIN_CONFIG} "${_contents}")
+    endforeach()
+
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
     if(NOT REMAINING_FILES)
