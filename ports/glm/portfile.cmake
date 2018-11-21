@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO g-truc/glm
-    REF 0.9.9.2
-    SHA512 80a5fbeaaea5f1034cd6f8ad3f4daf8b5fa8d9410ccce15ced20f37e24c0f6083332fde82b1fa7357399b3e37c1a31dd3a14f257b7847a5f1ddefa627b50351a
+    REF 0.9.9.3
+    SHA512 44152ea6438763feda3b78813287fd59d3574a9630a41647a157825bf5ce4a18fbbecae5a5ccd94acc118ed3d42cbce53d3a67f25632d0c00ab77e7de2bb4650
     HEAD_REF master
 )
 
