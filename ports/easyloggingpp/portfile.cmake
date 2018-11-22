@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO muflihun/easyloggingpp
@@ -8,23 +10,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(BUILD_STATIC_LIBS ON)
-else()
-  set(BUILD_STATIC_LIBS OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-      -Dbuild_static_lib=${BUILD_STATIC_LIBS}
+        -Dbuild_static_lib=ON
 )
 vcpkg_install_cmake()
 
-if(BUILD_STATIC_LIBS)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/easyloggingpp RENAME copyright)
