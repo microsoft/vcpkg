@@ -22,6 +22,7 @@ vcpkg_apply_patches(
     PATCHES
       "${CMAKE_CURRENT_LIST_DIR}/0001-fix-path.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0002-add-ffmpeg-missing-defines.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0003-fix-cuda.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
