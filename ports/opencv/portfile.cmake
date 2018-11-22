@@ -121,7 +121,7 @@ if("ffmpeg" IN_LIST FEATURES)
   )
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/ffmpeg_version.cmake"
-    FILENAME "opencv-cache/ffmpeg/8041bd6f5ad37045c258904ba3030bb3442e3911-ffmpeg_version.cmake"
+    FILENAME "opencv-cache/ffmpeg/3b90f67f4b429e77d3da36698cef700c-ffmpeg_version.cmake"
     SHA512 7d0142c30ac6f6260c1bcabc22753030fd25a708477fa28053e8df847c366967d3b93a8ac14af19a2b7b73d9f8241749a431458faf21a0c8efc7d6d99eecfdcf
   )
 endif()
