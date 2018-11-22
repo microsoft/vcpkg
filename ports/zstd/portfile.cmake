@@ -4,7 +4,9 @@ vcpkg_from_github(
     REPO facebook/zstd
     REF v1.3.7
     SHA512 b7a432b13e237ac1490cd82b87727f6a4385d5ea7b89f566dea61a3993e17909c03288f727326ada326e36eb47ea5f9eab67c097808ee42f52cc800a7f7e1738
-    HEAD_REF dev)
+    HEAD_REF dev
+    PATCHES enable-debug-mode.patch
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ZSTD_STATIC 1)
