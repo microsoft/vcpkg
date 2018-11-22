@@ -8,10 +8,6 @@ vcpkg_from_github(
     REF ${OPENCV_PORT_VERSION}
     SHA512 d653a58eb5e3939b9fdb7438ac35f77cf4385cf72d5d22bfd21722a109e1b3283dbb9407985061b7548114f0d05c9395aac9bb62b4d2bc1f68da770a49987fef
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
       "${CMAKE_CURRENT_LIST_DIR}/0001-winrt-fixes.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
@@ -19,8 +15,6 @@ vcpkg_apply_patches(
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0005-remove-protobuf-target.patch"
 )
-
-file(WRITE "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/rework.stamp")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
@@ -127,7 +121,7 @@ if("ffmpeg" IN_LIST FEATURES)
   )
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/ffmpeg_version.cmake"
-    FILENAME "opencv-cache/ffmpeg/3b90f67f4b429e77d3da36698cef700c-ffmpeg_version.cmake"
+    FILENAME "opencv-cache/ffmpeg/8041bd6f5ad37045c258904ba3030bb3442e3911-ffmpeg_version.cmake"
     SHA512 7d0142c30ac6f6260c1bcabc22753030fd25a708477fa28053e8df847c366967d3b93a8ac14af19a2b7b73d9f8241749a431458faf21a0c8efc7d6d99eecfdcf
   )
 endif()
