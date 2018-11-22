@@ -6,13 +6,13 @@ set(PANGO_DLL_SUFFIX 1)
 set(GLIB_LIB_VERSION 2.0)
 
 if(WIN32)
-  configure_file(./config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+  configure_file(./config.h.win32 ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 else()
-  configure_file(./config.h.unix ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+  configure_file(./config.h.unix ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 endif()
 
 add_definitions(-DHAVE_CONFIG_H)
-include_directories(. ./pango)
+include_directories(. ./pango ${CMAKE_CURRENT_BINARY_DIR})
 
 # find libintl
 find_path(LIBINTL_INCLUDE_DIR libintl.h)
