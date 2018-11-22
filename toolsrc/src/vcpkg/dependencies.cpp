@@ -489,11 +489,10 @@ namespace vcpkg::Dependencies
         plus = true;
 
         auto p_source = cluster.source.get();
-        if (!p_source)
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Error: Cannot find definition for package `%s`.", cluster.spec.name());
-        }
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           p_source != nullptr,
+                           "Error: Cannot find definition for package `%s`.",
+                           cluster.spec.name());
 
         if (feature.empty())
         {
