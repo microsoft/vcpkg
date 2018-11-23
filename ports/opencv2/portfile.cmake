@@ -125,7 +125,7 @@ vcpkg_configure_cmake(
         -DWITH_ZLIB=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(DISABLE_PARALLEL)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv2)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv2/LICENSE ${CURRENT_PACKAGES_DIR}/share/opencv2/copyright)
