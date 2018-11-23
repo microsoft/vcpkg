@@ -8,47 +8,40 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+message(STATUS "MOOS Essential Source Path: ${SOURCE_PATH}")
+message(STATUS "MOOS Essential CMAKE_CURRENT_LIST_DIR: ${CMAKE_CURRENT_LIST_DIR}")
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix.patch
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-
-
-#LIST(APPEND CMAKE_PREFIX_PATH ${CURRENT_INSTALLED_DIR} )
-#find_package(MOOS REQUIRED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED}
-#        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=
-#        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=
-#        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=
-
-
 )
 
 vcpkg_install_cmake()
 
-## Move CMake config files to the right place
-#if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-#    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake" TARGET_PATH share/${PORT})
-#else()
-#	vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/MOOS" TARGET_PATH share/${PORT})
-#endif()
-#
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-#endif()
-#
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/MOOS/libMOOS/Thirdparty/getpot)
-#
-## Put the licence file where vcpkg expects it
-#file(COPY
-#    ${SOURCE_PATH}/Core/GPLCore.txt
-#    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-#file(RENAME
-#    ${CURRENT_PACKAGES_DIR}/share/${PORT}/GPLCore.txt
-#    ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/pAntler")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pAntler ${CURRENT_PACKAGES_DIR}/tools/MOOS/pAntler)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pLogger ${CURRENT_PACKAGES_DIR}/tools/MOOS/pLoggers)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pMOOSBridge ${CURRENT_PACKAGES_DIR}/tools/MOOS/pMOOSBridge)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pScheduler ${CURRENT_PACKAGES_DIR}/tools/MOOS/pScheduler)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pShare ${CURRENT_PACKAGES_DIR}/tools/MOOS/pShare)
+endif()
+
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
+endif()
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/fake_header.h "// fake header to pass vcpkg post install check \n")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "see moos-core for copyright\n" )
 #
 #
