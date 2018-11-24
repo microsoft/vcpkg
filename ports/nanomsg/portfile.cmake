@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nanomsg
-    REF 1.1.4
-    SHA512 a1f002f988f2d98eff03387b496fe15a099fef4eb9ccd1c46ade63fbbe5a4ad4cf9fa0fd1e612e1a6f2747bc2af63b7044ec1e920e1c9a0d8c8bc2191ad7046a
+    REF 1.1.5
+    SHA512 773b8e169a7accac21414c63972423a249164f5b843c6c65c1b03a2eb90d21da788a98debdeb396dab795e52d30605696bc2cf65e5e05687bf115438d5b22717
     HEAD_REF master
+    PATCHES
+        fix-install-destination.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NN_STATIC_LIB)
@@ -25,7 +27,7 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/nanomsg")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(READ ${CURRENT_PACKAGES_DIR}/include/nanomsg/nn.h _contents)
