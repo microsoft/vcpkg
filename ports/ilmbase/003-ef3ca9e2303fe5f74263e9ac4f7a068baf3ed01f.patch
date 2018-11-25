@@ -1,0 +1,48 @@
+From ef3ca9e2303fe5f74263e9ac4f7a068baf3ed01f Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Sat, 22 Sep 2018 16:37:41 -0700
+Subject: [PATCH] Removed OpenEXRViewers.pc.in and PyIlmBase.pc.in. Since these
+ modules are binaries, not libraries, there is no need to support pkgconfig
+ for them.
+
+---
+ OpenEXR_Viewers/OpenEXR_Viewers.pc.in | 11 -----------
+ PyIlmBase/PyIlmBase.pc.in             | 11 -----------
+ 2 files changed, 22 deletions(-)
+ delete mode 100644 OpenEXR_Viewers/OpenEXR_Viewers.pc.in
+ delete mode 100644 PyIlmBase/PyIlmBase.pc.in
+
+diff --git a/OpenEXR_Viewers/OpenEXR_Viewers.pc.in b/OpenEXR_Viewers/OpenEXR_Viewers.pc.in
+deleted file mode 100644
+index a9d7f937..00000000
+--- a/OpenEXR_Viewers/OpenEXR_Viewers.pc.in
++++ /dev/null
+@@ -1,11 +0,0 @@
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@libdir@
+-includedir=@includedir@
+-OpenEXR_includedir=@includedir@/OpenEXR
+-
+-Name: OpenEXR_Viewers
+-Description: OpenEXR Viewers
+-Version: @OPENEXR_VIEWERS_VERSION@
+-Libs: -L${libdir} @OPENEXR_CTL_LDFLAGS@ @OPENEXR_CTL_LIBS@
+-Cflags: @OPENEXR_CTL_CXXFLAGS@ 
+diff --git a/PyIlmBase/PyIlmBase.pc.in b/PyIlmBase/PyIlmBase.pc.in
+deleted file mode 100644
+index 63a77deb..00000000
+--- a/PyIlmBase/PyIlmBase.pc.in
++++ /dev/null
+@@ -1,11 +0,0 @@
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@libdir@
+-includedir=@includedir@
+-PyIlmBase_includedir=@includedir@/OpenEXR
+-
+-Name: PyIlmBase
+-Description: Python bindings for the IlmBase libraries
+-Version: @PYILMBASE_VERSION@
+-Libs: -L${libdir} @ILMBASE_LDFLAGS@ -lIlmImf -lz @ILMBASE_LIBS@
+-Cflags: @ILMBASE_CXXFLAGS@ -I${PyIlmBase_includedir}

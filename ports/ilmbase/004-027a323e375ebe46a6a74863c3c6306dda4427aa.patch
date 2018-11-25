@@ -1,0 +1,44 @@
+From 027a323e375ebe46a6a74863c3c6306dda4427aa Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Sat, 22 Sep 2018 17:12:23 -0700
+Subject: [PATCH] Update the README files with instructions for building on
+ Windows, specifically calling out the proper Visual Studio version.
+
+---
+ IlmBase/README.md | 6 +++++-
+ OpenEXR/README.md | 3 +++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/IlmBase/README.md b/IlmBase/README.md
+index 54ff55ad..a803c396 100644
+--- a/IlmBase/README.md
++++ b/IlmBase/README.md
+@@ -75,9 +75,13 @@ To generate Visual Studio solution files and build the libraries:
+        setlocal
+        del /f CMakeCache.txt
+        cmake -DCMAKE_INSTALL_PREFIX=<where you want to install the ilmbase builds>
+-           -G "Visual Studio 10 Win64" 
++           -G "Visual Studio 15 2017 Win64" 
+            ..\ilmbase
+ 
++   Note: The "15 2017" indicates the specific Visual Studio version;
++   if compiling for a different version, replace this with the proper
++   target version string.
++
+ 2. Navigate to ``IlmBase`` folder in Windows Explorer, open ``ILMBase.sln``
+    and build the solution. When it builds successfully, right click
+    ``INSTALL project`` and build. It will install the output to the path
+diff --git a/OpenEXR/README.md b/OpenEXR/README.md
+index 4b69baf0..b7969a2d 100644
+--- a/OpenEXR/README.md
++++ b/OpenEXR/README.md
+@@ -83,6 +83,9 @@ CMakeLists.txt file to build all the libraries at once.
+ 
+ #### Building on Windows using **cmake**
+ 
++See the ``README`` file in the IlmBase library for a guide to building
++on Windows.
++
+ #### Building on **macOS**
+ 
+ **macOS** supports multiple architectures. By default, IlmBase will be

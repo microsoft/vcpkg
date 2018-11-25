@@ -1,0 +1,524 @@
+From 26c86195935f5365685bfefe046f0ac7e98fa231 Mon Sep 17 00:00:00 2001
+From: Kimball Thurston <kdt3rd@gmail.com>
+Date: Sat, 8 Sep 2018 18:09:01 +1200
+Subject: [PATCH] fix standalone and combined cmake
+
+This puts the version numbers into one file, and the settings and
+variables for building into another, that is then replicated and
+conditionally included when building a standalone package.
+
+Signed-off-by: Kimball Thurston <kdt3rd@gmail.com>
+---
+ CMakeLists.txt                 | 108 +--------------------------------
+ IlmBase/CMakeLists.txt         |  32 +++++++---
+ IlmBase/Makefile.am            |   5 +-
+ IlmBase/README.md              |   3 +
+ OpenEXR/CMakeLists.txt         |  18 +++++-
+ OpenEXR/Makefile.am            |   8 ++-
+ OpenEXR/README.md              |   3 +
+ OpenEXR_Viewers/CMakeLists.txt |  18 +++++-
+ OpenEXR_Viewers/Makefile.am    |   6 +-
+ PyIlmBase/CMakeLists.txt       |  28 ++++++++-
+ PyIlmBase/Makefile.am          |   9 ++-
+ cmake/OpenEXRSettings.cmake    |  98 ++++++++++++++++++++++++++++++
+ cmake/OpenEXRVersion.cmake     |   8 +++
+ 13 files changed, 221 insertions(+), 123 deletions(-)
+ create mode 100644 cmake/OpenEXRSettings.cmake
+ create mode 100644 cmake/OpenEXRVersion.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b06d97ee..3001d520 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,112 +4,13 @@ ELSE()
+   CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+ ENDIF()
+ 
+-# Version
+-set(OPENEXR_VERSION_MAJOR 2)
+-set(OPENEXR_VERSION_MINOR 3)
+-set(OPENEXR_VERSION_PATCH 0)
+-set(OPENEXR_VERSION ${OPENEXR_VERSION_MAJOR}.${OPENEXR_VERSION_MINOR}.${OPENEXR_VERSION_PATCH})
+-set(OPENEXR_VERSION_API ${OPENEXR_VERSION_MAJOR}_${OPENEXR_VERSION_MINOR})
+-set(OPENEXR_SOVERSION 24)
+-
+-project(OpenEXR VERSION ${OPENEXR_VERSION})
+-
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+-#set(OPENEXR_LOCATION ${CMAKE_INSTALL_PREFIX})
+-
+-#-------------------------------------------------------------------------------
+-# The following user options are cached. They are named with the OPENEXR
+-# prefix in order that they be grouped together in tools such as ccmake and cmake-gui.
+-
+-option(OPENEXR_BUILD_ILMBASE        "Build IlmBase"              ON)
+-option(OPENEXR_BUILD_OPENEXR        "Build OpenEXR"              ON)
+-option(OPENEXR_BUILD_PYTHON_LIBS    "Build the Python bindings"  ON)
+-option(OPENEXR_BUILD_VIEWERS        "Build the viewers"          OFF)
+-option(OPENEXR_BUILD_TESTS          "Enable the tests"           ON)
+-# when enabled, adds the (long) running fuzz tests to the "make test" rule
+-# even when this is disabled, as long as OPENEXR_BUILD_TESTS is enabled, one
+-# can still run "make fuzz" (or equivalent)
+-option(OPENEXR_RUN_FUZZ_TESTS       "Run damaged-input tests"    OFF)
+-option(OPENEXR_BUILD_UTILS          "Build the utility programs" ON)
+-
+-option(OPENEXR_BUILD_SHARED         "Build Shared Libraries"     ON)
+-option(OPENEXR_BUILD_STATIC         "Build Static Libraries"     OFF)
+-option(OPENEXR_NAMESPACE_VERSIONING "Use Namespace Versioning"   ON)
+-option(OPENEXR_FORCE_CXX03          "Force CXX03"                OFF)
+-set(OPENEXR_PYTHON_MAJOR "2" CACHE STRING "Python major version")
+-set(OPENEXR_PYTHON_MINOR "7" CACHE STRING "Python minor version")
+-
+-# For more info on finding boost python:
+-# https://cmake.org/cmake/help/v3.11/module/FindBoost.html
+-
+-# end of user options
+-#-------------------------------------------------------------------------------
+ 
++include(OpenEXRVersion)
+ 
+-if (OPENEXR_BUILD_VIEWERS AND NOT OPENEXR_BUILD_OPENEXR)
+-  message(ERROR, "Configuration error, enable OPENEXR_BUILD_OPENEXR for OPENEXR_BUILD_VIEWERS")
+-endif()
+-
+-if (WIN32 AND OPENEXR_BUILD_ILMBASE AND OPENEXR_BUILD_OPENEXR AND OPENEXR_BUILD_SHARED)
+-    # necessary for building dwa lookup tables, and b44log tables on windows
+-    set(BUILD_ILMBASE_STATIC ON)
+-elseif (OPENEXR_BUILD_ILMBASE AND OPENEXR_BUILD_STATIC)
+-    set(BUILD_ILMBASE_STATIC ON)
+-else()
+-    set(BUILD_ILMBASE_STATIC OFF)
+-endif()
+-
+-if (NOT OPENEXR_BUILD_SHARED)
+-  set(OPENEXR_TARGET_SUFFIX _static)
+-endif()
+-
+-# Testing
+-set(ENABLE_TESTS ${OPENEXR_BUILD_TESTS})
+-if(ENABLE_TESTS)
+-  include(CTest)
+-  enable_testing()
+-endif()
+-
+-# CPACK
+-set(CPACK_PROJECT_NAME             ${PROJECT_NAME})
+-set(CPACK_PROJECT_VERSION          ${PROJECT_VERSION})
+-set(CPACK_SOURCE_IGNORE_FILES      "/.git*;/.cvs*;${CPACK_SOURCE_IGNORE_FILES}")
+-set(CPACK_SOURCE_GENERATOR         "TGZ")
+-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENEXR_VERSION}" )
+-include(CPack)
+-
+-# Configuration
+-if(OPENEXR_FORCE_CXX03)
+-  ADD_DEFINITIONS ( -std=c++03 )
+-else(OPENEXR_FORCE_CXX03)
+-  # VP18 switches to c++14, so let's do that by default
+-  set(CMAKE_CXX_STANDARD 14 CACHE STRING "C++ ISO Standard")
+-  # but switch gnu++14 or other extensions off for portability
+-  set(CMAKE_CXX_EXTENSIONS OFF)
+-endif()
+-
+-add_definitions( -DHAVE_CONFIG_H )
+-
+-if(NOT WIN32)
+-  add_definitions( -pthread )
+-endif()
+-
+-if(WIN32)
+-  set(RUNTIME_DIR bin)
+-else()
+-  set(RUNTIME_DIR lib)
+-endif()
+-
+-set(OPENEXR_LIBSUFFIX "")
+-set(ILMBASE_LIBSUFFIX "")
+-if(OPENEXR_NAMESPACE_VERSIONING)
+-  set( OPENEXR_LIBSUFFIX "-${OPENEXR_VERSION_API}" )
+-  set( ILMBASE_LIBSUFFIX "-${OPENEXR_VERSION_API}" )
+-endif()
++project(OpenEXR VERSION ${OPENEXR_VERSION})
+ 
+-# MacOs/linux rpathing
+-set(CMAKE_MACOSX_RPATH 1)
+-set(BUILD_WITH_INSTALL_RPATH 1)
++include(OpenEXRSettings)
+ 
+ # Packages
+ find_package(ZLIB)
+@@ -170,9 +71,6 @@ if ((OPENEXR_BUILD_UTILS OR OPENEXR_BUILD_TESTS OR OPENEXR_BUILD_VIEWERS) AND NO
+   endif()
+ endif()
+ 
+-# Set position independent code (mostly for static builds, but not a bad idea regardless)
+-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-
+ # Perform the build
+ if(OPENEXR_BUILD_ILMBASE)
+     add_subdirectory(IlmBase)
+diff --git a/IlmBase/CMakeLists.txt b/IlmBase/CMakeLists.txt
+index e13c7686..488dc0ee 100644
+--- a/IlmBase/CMakeLists.txt
++++ b/IlmBase/CMakeLists.txt
+@@ -5,14 +5,30 @@ ELSE()
+     CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+ ENDIF()
+ 
+-PROJECT ( ilmbase )
+-
+-set(ILMBASE_BASEVERSION   ${OPENEXR_BASEVERSION})
+-set(ILMBASE_VERSION_MAJOR ${OPENEXR_VERSION_MAJOR})
+-set(ILMBASE_VERSION_MINOR ${OPENEXR_VERSION_MINOR})
+-set(ILMBASE_VERSION_PATCH ${OPENEXR_VERSION_PATCH})
+-set(ILMBASE_VERSION       ${OPENEXR_VERSION})
+-set(ILMBASE_VERSION_API   ${OPENEXR_VERSION_API})
++# test if we are being built as a standalone library or if
++# we are being built as part of the overall project
++IF(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
++  IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++  ELSE()
++    MESSAGE(FATAL_ERROR "Please compile using the top-level CMakeLists.txt or a pre-built package")
++  ENDIF()
++  INCLUDE(OpenEXRVersion)
++  SET(ILMBASE_STANDALONE ON)
++ENDIF()
++
++SET(ILMBASE_BASEVERSION   ${OPENEXR_BASEVERSION})
++SET(ILMBASE_VERSION_MAJOR ${OPENEXR_VERSION_MAJOR})
++SET(ILMBASE_VERSION_MINOR ${OPENEXR_VERSION_MINOR})
++SET(ILMBASE_VERSION_PATCH ${OPENEXR_VERSION_PATCH})
++SET(ILMBASE_VERSION       ${OPENEXR_VERSION})
++SET(ILMBASE_VERSION_API   ${OPENEXR_VERSION_API})
++
++PROJECT(ilmbase VERSION ${ILMBASE_VERSION})
++
++IF(ILMBASE_STANDALONE)
++  INCLUDE(OpenEXRSettings)
++ENDIF()
+ 
+ INCLUDE_DIRECTORIES ( Iex IexMath Imath Half
+     IlmThread IexTest ImathTest HalfTest
+diff --git a/IlmBase/Makefile.am b/IlmBase/Makefile.am
+index 1989d7d4..5223a764 100644
+--- a/IlmBase/Makefile.am
++++ b/IlmBase/Makefile.am
+@@ -18,8 +18,11 @@ EXTRA_DIST = \
+ 	README.md \
+ 	bootstrap \
+ 	config.windows/IlmBaseConfig.h \
+-        CMakeLists.txt
++	CMakeLists.txt
+ 
++dist-hook:
++	cp -fpR $(abspath $(srcdir)/..)/cmake $(distdir)
++	find $(distdir)/cmake -type d ! -perm -700 -exec chmod u+rwx {} \;
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = IlmBase.pc
+diff --git a/IlmBase/README.md b/IlmBase/README.md
+index 7a5ccd87..54ff55ad 100644
+--- a/IlmBase/README.md
++++ b/IlmBase/README.md
+@@ -62,6 +62,9 @@ configuration scripts by running ``bootstrap``, then ``configure`` and
+     make
+     make install
+ 
++Optionally, compiling from git using cmake, one can use the top level
++CMakeLists.txt file to build all the libraries at once.
++
+ #### Building on Windows using **cmake**
+ 
+ To generate Visual Studio solution files and build the libraries:
+diff --git a/OpenEXR/CMakeLists.txt b/OpenEXR/CMakeLists.txt
+index 9ddafa83..1df2d27e 100644
+--- a/OpenEXR/CMakeLists.txt
++++ b/OpenEXR/CMakeLists.txt
+@@ -4,7 +4,23 @@ ELSE()
+   CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+ ENDIF()
+ 
+-PROJECT (openexr)
++# test if we are being built as a standalone library or if
++# we are being built as part of the overall project
++IF(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
++  IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++  ELSE()
++    MESSAGE(FATAL_ERROR "Please compile using the top-level CMakeLists.txt or a pre-built package")
++  ENDIF()
++  INCLUDE(OpenEXRVersion)
++  SET(OPENEXR_STANDALONE ON)
++ENDIF()
++
++PROJECT (openexr VERSION ${OPENEXR_VERSION})
++
++IF(OPENEXR_STANDALONE)
++  INCLUDE(OpenEXRSettings)
++ENDIF()
+ 
+ IF (NOT ILMBASE_PACKAGE_PREFIX)
+   SET (ILMBASE_PACKAGE_PREFIX ${CMAKE_INSTALL_PREFIX})
+diff --git a/OpenEXR/Makefile.am b/OpenEXR/Makefile.am
+index 492a093b..43e1979f 100644
+--- a/OpenEXR/Makefile.am
++++ b/OpenEXR/Makefile.am
+@@ -13,10 +13,14 @@ DIST_SUBDIRS = \
+ 
+ EXTRA_DIST = \
+ 	AUTHORS ChangeLog LICENSE NEWS PATENTS \
+-        README.md \
++	README.md \
+ 	bootstrap openexr.m4 \
+ 	config.windows/OpenEXRConfig.h \
+-        CMakeLists.txt
++	CMakeLists.txt
++
++dist-hook:
++	cp -fpR $(abspath $(srcdir)/..)/cmake $(distdir)
++	find $(distdir)/cmake -type d ! -perm -700 -exec chmod u+rwx {} \;
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = OpenEXR.pc
+diff --git a/OpenEXR/README.md b/OpenEXR/README.md
+index 1fdaf2df..4b69baf0 100644
+--- a/OpenEXR/README.md
++++ b/OpenEXR/README.md
+@@ -78,6 +78,9 @@ configuration scripts by running ``bootstrap``, then ``configure`` and
+     make
+     make install
+ 
++Optionally, compiling from git using cmake, one can use the top level
++CMakeLists.txt file to build all the libraries at once.
++
+ #### Building on Windows using **cmake**
+ 
+ #### Building on **macOS**
+diff --git a/OpenEXR_Viewers/CMakeLists.txt b/OpenEXR_Viewers/CMakeLists.txt
+index 7d58f99f..f324bdfb 100644
+--- a/OpenEXR_Viewers/CMakeLists.txt
++++ b/OpenEXR_Viewers/CMakeLists.txt
+@@ -4,7 +4,23 @@ ELSE()
+   CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+ ENDIF()
+ 
+-PROJECT (openexr_viewers)
++# test if we are being built as a standalone library or if
++# we are being built as part of the overall project
++IF(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
++  IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++  ELSE()
++    MESSAGE(FATAL_ERROR "Please compile using the top-level CMakeLists.txt or a pre-built package")
++  ENDIF()
++  INCLUDE(OpenEXRVersion)
++  SET(OPENEXR_VIEWERS_STANDALONE ON)
++ENDIF()
++
++PROJECT (openexr_viewers VERSION ${OPENEXR_VERSION})
++
++IF(OPENEXR_VIEWERS_STANDALONE)
++  INCLUDE(OpenEXRSettings)
++ENDIF()
+ 
+ IF (NOT ILMBASE_PACKAGE_PREFIX)
+   SET (ILMBASE_PACKAGE_PREFIX ${CMAKE_INSTALL_PREFIX})
+diff --git a/OpenEXR_Viewers/Makefile.am b/OpenEXR_Viewers/Makefile.am
+index 6eb758a9..0b306306 100644
+--- a/OpenEXR_Viewers/Makefile.am
++++ b/OpenEXR_Viewers/Makefile.am
+@@ -10,7 +10,11 @@ DIST_SUBDIRS = \
+ EXTRA_DIST = \
+ 	ChangeLog \
+ 	LICENSE \
+-        README.md \
++	README.md \
+ 	bootstrap
+ 
++dist-hook:
++	cp -fpR $(abspath $(srcdir)/..)/cmake $(distdir)
++	find $(distdir)/cmake -type d ! -perm -700 -exec chmod u+rwx {} \;
++
+ 
+diff --git a/PyIlmBase/CMakeLists.txt b/PyIlmBase/CMakeLists.txt
+index 5c70f314..6513dfe0 100644
+--- a/PyIlmBase/CMakeLists.txt
++++ b/PyIlmBase/CMakeLists.txt
+@@ -1,5 +1,31 @@
+ 
+-PROJECT (pyilmbase)
++IF (WIN32)
++    CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
++ELSE()
++    CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
++ENDIF()
++
++# test if we are being built as a standalone library or if
++# we are being built as part of the overall project
++IF(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
++  IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++  ELSE()
++    MESSAGE(FATAL_ERROR "Please compile using the top-level CMakeLists.txt or a pre-built package")
++  ENDIF()
++  INCLUDE(OpenEXRVersion)
++  SET(PYILMBASE_STANDALONE ON)
++ENDIF()
++
++PROJECT (pyilmbase VERSION ${OPENEXR_VERSION})
++
++IF(PYILMBASE_STANDALONE)
++  INCLUDE(OpenEXRSettings)
++ENDIF()
++
++IF (NOT ILMBASE_PACKAGE_PREFIX)
++  SET (ILMBASE_PACKAGE_PREFIX ${CMAKE_INSTALL_PREFIX})
++ENDIF ()
+ 
+ IF (OPENEXR_BUILD_SHARED)
+   # User wants to build Dynamic Libraries, so change the LIB_TYPE variable to CMake keyword 'SHARED'
+diff --git a/PyIlmBase/Makefile.am b/PyIlmBase/Makefile.am
+index ec19b002..91318e5a 100644
+--- a/PyIlmBase/Makefile.am
++++ b/PyIlmBase/Makefile.am
+@@ -15,16 +15,19 @@ SUBDIRS = $(PYIMATH_SUBDIRS) $(MAYBE_PYIMATHNUMPY_SUBDIRS)
+ 
+ DIST_SUBDIRS = \
+ 	$(PYIMATH_SUBDIRS) \
+-	$(PYIMATHNUMPY_SUBDIRS) \
+-	#vc
++	$(PYIMATHNUMPY_SUBDIRS)
+ 
+ EXTRA_DIST = \
+ 	LICENSE README.md \
+ 	ChangeLog \
+-        bootstrap \
++	bootstrap \
+ 	pyilmbase.m4 \
+ 	config.windows/PyIlmBaseConfig.h
+ 
++dist-hook:
++	cp -fpR $(abspath $(srcdir)/..)/cmake $(distdir)
++	find $(distdir)/cmake -type d ! -perm -700 -exec chmod u+rwx {} \;
++
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = PyIlmBase.pc
+ 
+diff --git a/cmake/OpenEXRSettings.cmake b/cmake/OpenEXRSettings.cmake
+new file mode 100644
+index 00000000..bbceec44
+--- /dev/null
++++ b/cmake/OpenEXRSettings.cmake
+@@ -0,0 +1,98 @@
++#set(OPENEXR_LOCATION ${CMAKE_INSTALL_PREFIX})
++
++#-------------------------------------------------------------------------------
++# The following user options are cached. They are named with the OPENEXR
++# prefix in order that they be grouped together in tools such as ccmake and cmake-gui.
++
++option(OPENEXR_BUILD_ILMBASE        "Build IlmBase"              ON)
++option(OPENEXR_BUILD_OPENEXR        "Build OpenEXR"              ON)
++option(OPENEXR_BUILD_PYTHON_LIBS    "Build the Python bindings"  ON)
++option(OPENEXR_BUILD_VIEWERS        "Build the viewers"          OFF)
++option(OPENEXR_BUILD_TESTS          "Enable the tests"           ON)
++# when enabled, adds the (long) running fuzz tests to the "make test" rule
++# even when this is disabled, as long as OPENEXR_BUILD_TESTS is enabled, one
++# can still run "make fuzz" (or equivalent)
++option(OPENEXR_RUN_FUZZ_TESTS       "Run damaged-input tests"    OFF)
++option(OPENEXR_BUILD_UTILS          "Build the utility programs" ON)
++
++option(OPENEXR_BUILD_SHARED         "Build Shared Libraries"     ON)
++option(OPENEXR_BUILD_STATIC         "Build Static Libraries"     OFF)
++option(OPENEXR_NAMESPACE_VERSIONING "Use Namespace Versioning"   ON)
++option(OPENEXR_FORCE_CXX03          "Force CXX03"                OFF)
++set(OPENEXR_PYTHON_MAJOR "2" CACHE STRING "Python major version")
++set(OPENEXR_PYTHON_MINOR "7" CACHE STRING "Python minor version")
++
++# For more info on finding boost python:
++# https://cmake.org/cmake/help/v3.11/module/FindBoost.html
++
++# end of user options
++#-------------------------------------------------------------------------------
++
++
++if (OPENEXR_BUILD_VIEWERS AND NOT OPENEXR_BUILD_OPENEXR)
++  message(ERROR, "Configuration error, enable OPENEXR_BUILD_OPENEXR for OPENEXR_BUILD_VIEWERS")
++endif()
++
++if (WIN32 AND OPENEXR_BUILD_ILMBASE AND OPENEXR_BUILD_OPENEXR AND OPENEXR_BUILD_SHARED)
++    # necessary for building dwa lookup tables, and b44log tables on windows
++    set(BUILD_ILMBASE_STATIC ON)
++elseif (OPENEXR_BUILD_ILMBASE AND OPENEXR_BUILD_STATIC)
++    set(BUILD_ILMBASE_STATIC ON)
++else()
++    set(BUILD_ILMBASE_STATIC OFF)
++endif()
++
++if (NOT OPENEXR_BUILD_SHARED)
++  set(OPENEXR_TARGET_SUFFIX _static)
++endif()
++
++# Testing
++set(ENABLE_TESTS ${OPENEXR_BUILD_TESTS})
++if(ENABLE_TESTS)
++  include(CTest)
++  enable_testing()
++endif()
++
++# CPACK
++set(CPACK_PROJECT_NAME             ${PROJECT_NAME})
++set(CPACK_PROJECT_VERSION          ${PROJECT_VERSION})
++set(CPACK_SOURCE_IGNORE_FILES      "/.git*;/.cvs*;${CPACK_SOURCE_IGNORE_FILES}")
++set(CPACK_SOURCE_GENERATOR         "TGZ")
++set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENEXR_VERSION}" )
++include(CPack)
++
++# Configuration
++if(OPENEXR_FORCE_CXX03)
++  ADD_DEFINITIONS ( -std=c++03 )
++else(OPENEXR_FORCE_CXX03)
++  # VP18 switches to c++14, so let's do that by default
++  set(CMAKE_CXX_STANDARD 14 CACHE STRING "C++ ISO Standard")
++  # but switch gnu++14 or other extensions off for portability
++  set(CMAKE_CXX_EXTENSIONS OFF)
++endif()
++
++add_definitions( -DHAVE_CONFIG_H )
++
++if(NOT WIN32)
++  add_definitions( -pthread )
++endif()
++
++if(WIN32)
++  set(RUNTIME_DIR bin)
++else()
++  set(RUNTIME_DIR lib)
++endif()
++
++set(OPENEXR_LIBSUFFIX "")
++set(ILMBASE_LIBSUFFIX "")
++if(OPENEXR_NAMESPACE_VERSIONING)
++  set( OPENEXR_LIBSUFFIX "-${OPENEXR_VERSION_API}" )
++  set( ILMBASE_LIBSUFFIX "-${OPENEXR_VERSION_API}" )
++endif()
++
++# MacOs/linux rpathing
++set(CMAKE_MACOSX_RPATH 1)
++set(BUILD_WITH_INSTALL_RPATH 1)
++
++# Set position independent code (mostly for static builds, but not a bad idea regardless)
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+diff --git a/cmake/OpenEXRVersion.cmake b/cmake/OpenEXRVersion.cmake
+new file mode 100644
+index 00000000..82f00869
+--- /dev/null
++++ b/cmake/OpenEXRVersion.cmake
+@@ -0,0 +1,8 @@
++# Version
++set(OPENEXR_VERSION_MAJOR 2)
++set(OPENEXR_VERSION_MINOR 3)
++set(OPENEXR_VERSION_PATCH 0)
++set(OPENEXR_VERSION ${OPENEXR_VERSION_MAJOR}.${OPENEXR_VERSION_MINOR}.${OPENEXR_VERSION_PATCH})
++set(OPENEXR_VERSION_API ${OPENEXR_VERSION_MAJOR}_${OPENEXR_VERSION_MINOR})
++set(OPENEXR_SOVERSION 24)
++
