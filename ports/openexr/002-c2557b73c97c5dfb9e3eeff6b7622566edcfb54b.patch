@@ -1,0 +1,455 @@
+From c2557b73c97c5dfb9e3eeff6b7622566edcfb54b Mon Sep 17 00:00:00 2001
+From: mancoast <RobertPancoast77@gmail.com>
+Date: Sat, 15 Sep 2018 06:32:34 -0400
+Subject: [PATCH] Rebuild OpenEXR NuGet with 2.3 source and enable exrviewer
+ for testing purposes
+
+---
+ .../NuGet/OpenEXR-msvc-x64-build.nuget.bat    | 146 ++++++++++++++++++
+ Contrib/NuGet/OpenEXR-msvc-x64.nuspec         |  15 ++
+ Contrib/NuGet/OpenEXR-msvc-x64.targets        |  29 ++++
+ .../NuGet/OpenEXR-msvc-x86-build.nuget.bat    | 146 ++++++++++++++++++
+ Contrib/NuGet/OpenEXR-msvc-x86.nuspec         |  15 ++
+ Contrib/NuGet/OpenEXR-msvc-x86.targets        |  29 ++++
+ OpenEXR_Viewers/exrdisplay/CMakeLists.txt     |   4 +
+ 7 files changed, 384 insertions(+)
+ create mode 100644 Contrib/NuGet/OpenEXR-msvc-x64-build.nuget.bat
+ create mode 100644 Contrib/NuGet/OpenEXR-msvc-x64.nuspec
+ create mode 100644 Contrib/NuGet/OpenEXR-msvc-x64.targets
+ create mode 100644 Contrib/NuGet/OpenEXR-msvc-x86-build.nuget.bat
+ create mode 100644 Contrib/NuGet/OpenEXR-msvc-x86.nuspec
+ create mode 100644 Contrib/NuGet/OpenEXR-msvc-x86.targets
+
+diff --git a/Contrib/NuGet/OpenEXR-msvc-x64-build.nuget.bat b/Contrib/NuGet/OpenEXR-msvc-x64-build.nuget.bat
+new file mode 100644
+index 00000000..53fad38f
+--- /dev/null
++++ b/Contrib/NuGet/OpenEXR-msvc-x64-build.nuget.bat
+@@ -0,0 +1,146 @@
++REM @echo off
++
++Echo LIB Windows Build NuGet
++
++REM # Build Vars #
++set _SCRIPT_DRIVE=%~d0
++set _SCRIPT_FOLDER=%~dp0
++set INITDIR=%_SCRIPT_FOLDER%
++set SRC=%INITDIR%\..\..\
++set BUILDTREE=%SRC%\build-win\
++SET tbs_arch=x64
++SET vcvar_arg=x86_amd64
++SET cmake_platform="Visual Studio 15 2017 Win64"
++
++REM # VC Vars #
++SET VCVAR="%programfiles(x86)%\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvarsall.bat"
++if exist %VCVAR% call %VCVAR% %vcvar_arg%
++SET VCVAR="%programfiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat"
++if exist %VCVAR% call %VCVAR% %vcvar_arg%
++
++REM # Clean Build Tree #
++rd /s /q %BUILDTREE%
++mkdir %BUILDTREE%
++mkdir %BUILDTREE%\deps
++
++REM # Change to Build Tree drive #
++%_SCRIPT_DRIVE%
++REM # Change to Build Tree directory #
++cd %BUILDTREE%
++
++:nuget_Dep
++REM # packages from nuget #
++mkdir %BUILDTREE%\deps
++cd %BUILDTREE%\deps
++SET VER=1.2.11.8899
++set ZLIBDIR=%BUILDTREE%\deps\zlib-msvc-%tbs_arch%.%VER%\build\native
++nuget install zlib-msvc-%tbs_arch% -Version %VER%
++SET VER=1.3.4.8788
++set FLTKDIR=%BUILDTREE%\deps\FLTK-msvc-%tbs_arch%.%VER%\build\native
++nuget install FLTK-msvc-%tbs_arch% -Version %VER%
++
++:copy_files
++set BINDIR=%SRC%\build-nuget\
++rd /s /q %BINDIR%
++mkdir %BINDIR%
++mkdir %BINDIR%\lib
++set PATH=%BINDIR%\lib;%PATH%
++echo %BINDIR%
++
++:static_LIB
++REM # LIB STATIC #
++ECHO %cmake_platform% STATIC
++
++rd /s /q %BUILDTREE%\OpenEXR
++mkdir %BUILDTREE%\OpenEXR
++cd %BUILDTREE%\OpenEXR
++cmake -G %cmake_platform% ^
++-DBUILD_ILMBASE_STATIC:BOOL=ON ^
++-DOPENEXR_BUILD_ILMBASE:BOOL=ON ^
++-DOPENEXR_BUILD_OPENEXR:BOOL=ON ^
++-DOPENEXR_BUILD_PYTHON_LIBS:BOOL=OFF ^
++-DOPENEXR_BUILD_VIEWERS:BOOL=ON ^
++-DOPENEXR_BUILD_TESTS:BOOL=ON ^
++-DOPENEXR_RUN_FUZZ_TESTS:BOOL=OFF ^
++-DOPENEXR_BUILD_UTILS:BOOL=ON ^
++-DOPENEXR_BUILD_SHARED:BOOL=OFF ^
++-DOPENEXR_BUILD_STATIC:BOOL=ON ^
++-DCMAKE_CXX_FLAGS_RELEASE="/MD" ^
++-DCMAKE_CXX_FLAGS_DEBUG="/MDd" ^
++-DCMAKE_C_FLAGS_RELEASE="/MD" ^
++-DCMAKE_C_FLAGS_DEBUG="/MDd" ^
++-DZLIB_LIBRARY=%ZLIBDIR%\lib_release\zlibstatic.lib ^
++-DZLIB_INCLUDE_DIR=%ZLIBDIR%\include ^
++-DFLTK_BASE_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk.lib ^
++-DFLTK_GL_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_gl.lib ^
++-DFLTK_FORMS_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_forms.lib ^
++-DFLTK_IMAGES_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_images.lib ^
++-DFLTK_BASE_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltkd.lib ^
++-DFLTK_GL_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_gld.lib ^
++-DFLTK_FORMS_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_formsd.lib ^
++-DFLTK_IMAGES_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_imagesd.lib ^
++-DFLTK_INCLUDE_DIR=%FLTKDIR%\include ^
++-DCMAKE_INSTALL_PREFIX=%BINDIR% ^
++-DCMAKE_BUILD_TYPE="Release" %SRC%
++cmake --build . --config Release --target install
++
++move %BINDIR%lib %BINDIR%lib_release
++move %BINDIR%bin %BINDIR%bin_release
++
++REM # DEBUG #
++REM # Clean Build Tree #
++rd /s /q %BUILDTREE%\OpenEXR
++mkdir %BUILDTREE%\OpenEXR
++cd %BUILDTREE%\OpenEXR
++cmake -G %cmake_platform% ^
++-DBUILD_ILMBASE_STATIC:BOOL=ON ^
++-DOPENEXR_BUILD_ILMBASE:BOOL=ON ^
++-DOPENEXR_BUILD_OPENEXR:BOOL=ON ^
++-DOPENEXR_BUILD_PYTHON_LIBS:BOOL=OFF ^
++-DOPENEXR_BUILD_VIEWERS:BOOL=ON ^
++-DOPENEXR_BUILD_TESTS:BOOL=ON ^
++-DOPENEXR_RUN_FUZZ_TESTS:BOOL=OFF ^
++-DOPENEXR_BUILD_UTILS:BOOL=ON ^
++-DOPENEXR_BUILD_SHARED:BOOL=OFF ^
++-DOPENEXR_BUILD_STATIC:BOOL=ON ^
++-DCMAKE_CXX_FLAGS_RELEASE="/MD" ^
++-DCMAKE_CXX_FLAGS_DEBUG="/MDd" ^
++-DCMAKE_C_FLAGS_RELEASE="/MD" ^
++-DCMAKE_C_FLAGS_DEBUG="/MDd" ^
++-DZLIB_LIBRARY=%ZLIBDIR%\lib_debug\zlibstaticd.lib ^
++-DZLIB_INCLUDE_DIR=%ZLIBDIR%\include ^
++-DFLTK_BASE_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk.lib ^
++-DFLTK_GL_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_gl.lib ^
++-DFLTK_FORMS_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_forms.lib ^
++-DFLTK_IMAGES_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_images.lib ^
++-DFLTK_BASE_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltkd.lib ^
++-DFLTK_GL_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_gld.lib ^
++-DFLTK_FORMS_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_formsd.lib ^
++-DFLTK_IMAGES_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_imagesd.lib ^
++-DFLTK_INCLUDE_DIR=%FLTKDIR%\include ^
++-DCMAKE_INSTALL_PREFIX=%BINDIR% ^
++-DCMAKE_BUILD_TYPE="DEBUG" %SRC%
++cmake --build . --config DEBUG --target install
++
++move %BINDIR%lib %BINDIR%lib_debug
++move %BINDIR%bin %BINDIR%bin_debug
++
++REM # TODO: ENABLE SHARED Build
++GOTO:nuget_req
++mkdir %BINDIR%\static\
++move /Y %BINDIR%\lib %BINDIR%\static\
++
++:shared_LIB
++REM # LIB SHARED #
++ECHO %cmake_platform% SHARED
++
++
++:nuget_req
++cd %BINDIR%
++REM # make nuget packages from binaries #
++copy %INITDIR%\OpenEXR-msvc-%tbs_arch%.targets %BINDIR%\OpenEXR-msvc-%tbs_arch%.targets
++cd %BUILDTREE%
++nuget pack %INITDIR%\OpenEXR-msvc-%tbs_arch%.nuspec
++cd %INITDIR%
++REM --- exit ----
++GOTO:eof
+diff --git a/Contrib/NuGet/OpenEXR-msvc-x64.nuspec b/Contrib/NuGet/OpenEXR-msvc-x64.nuspec
+new file mode 100644
+index 00000000..75923171
+--- /dev/null
++++ b/Contrib/NuGet/OpenEXR-msvc-x64.nuspec
+@@ -0,0 +1,15 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
++    <metadata>
++        <id>openexr-msvc-x64</id>
++        <version>2.3.0.8788</version>
++        <authors>administrator</authors>
++        <requireLicenseAcceptance>false</requireLicenseAcceptance>
++        <description>Visual Studio 2017 Release OpenEXR as NuGet package.</description>
++    </metadata>
++    <files>
++        <file src="..\..\LICENSE" target="LICENSE" />
++        <file src="..\..\README.md" target="README.md" />
++		<file src="..\..\build-nuget\**\*.*" target="build\native" />
++    </files>
++</package>
+\ No newline at end of file
+diff --git a/Contrib/NuGet/OpenEXR-msvc-x64.targets b/Contrib/NuGet/OpenEXR-msvc-x64.targets
+new file mode 100644
+index 00000000..75540d4f
+--- /dev/null
++++ b/Contrib/NuGet/OpenEXR-msvc-x64.targets
+@@ -0,0 +1,29 @@
++<?xml version="1.0" encoding="utf-8"?>
++<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemDefinitionGroup Label="Release and x64" Condition="( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And '$(Platform.ToLower())' == 'x64'">
++    <ClCompile>
++      <PreprocessorDefinitions>HAS_OpenEXR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ClCompile>
++    <ResourceCompile>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ResourceCompile>
++    <Link>
++      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib_release/*.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Label="Debug and x64" Condition="( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And '$(Platform.ToLower())' == 'x64'">
++    <ClCompile>
++      <PreprocessorDefinitions>HAS_OpenEXR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ClCompile>
++    <ResourceCompile>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ResourceCompile>
++    <Link>
++      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib_debug/*.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
++  <Target Name="openexr-msvc">
++  </Target>
++</Project>
+diff --git a/Contrib/NuGet/OpenEXR-msvc-x86-build.nuget.bat b/Contrib/NuGet/OpenEXR-msvc-x86-build.nuget.bat
+new file mode 100644
+index 00000000..428bfd12
+--- /dev/null
++++ b/Contrib/NuGet/OpenEXR-msvc-x86-build.nuget.bat
+@@ -0,0 +1,146 @@
++REM @echo off
++
++Echo LIB Windows Build NuGet
++
++REM # Build Vars #
++set _SCRIPT_DRIVE=%~d0
++set _SCRIPT_FOLDER=%~dp0
++set INITDIR=%_SCRIPT_FOLDER%
++set SRC=%INITDIR%\..\..\
++set BUILDTREE=%SRC%\build-win\
++SET tbs_arch=x86
++SET vcvar_arg=x86
++SET cmake_platform="Visual Studio 15 2017"
++
++REM # VC Vars #
++SET VCVAR="%programfiles(x86)%\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvarsall.bat"
++if exist %VCVAR% call %VCVAR% %vcvar_arg%
++SET VCVAR="%programfiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat"
++if exist %VCVAR% call %VCVAR% %vcvar_arg%
++
++REM # Clean Build Tree #
++rd /s /q %BUILDTREE%
++mkdir %BUILDTREE%
++mkdir %BUILDTREE%\deps
++
++REM # Change to Build Tree drive #
++%_SCRIPT_DRIVE%
++REM # Change to Build Tree directory #
++cd %BUILDTREE%
++
++:nuget_Dep
++REM # packages from nuget #
++mkdir %BUILDTREE%\deps
++cd %BUILDTREE%\deps
++SET VER=1.2.11.8899
++set ZLIBDIR=%BUILDTREE%\deps\zlib-msvc-%tbs_arch%.%VER%\build\native
++nuget install zlib-msvc-%tbs_arch% -Version %VER%
++SET VER=1.3.4.8788
++set FLTKDIR=%BUILDTREE%\deps\FLTK-msvc-%tbs_arch%.%VER%\build\native
++nuget install FLTK-msvc-%tbs_arch% -Version %VER%
++
++:copy_files
++set BINDIR=%SRC%\build-nuget\
++rd /s /q %BINDIR%
++mkdir %BINDIR%
++mkdir %BINDIR%\lib
++set PATH=%BINDIR%\lib;%PATH%
++echo %BINDIR%
++
++:static_LIB
++REM # LIB STATIC #
++ECHO %cmake_platform% STATIC
++
++rd /s /q %BUILDTREE%\OpenEXR
++mkdir %BUILDTREE%\OpenEXR
++cd %BUILDTREE%\OpenEXR
++cmake -G %cmake_platform% ^
++-DBUILD_ILMBASE_STATIC:BOOL=ON ^
++-DOPENEXR_BUILD_ILMBASE:BOOL=ON ^
++-DOPENEXR_BUILD_OPENEXR:BOOL=ON ^
++-DOPENEXR_BUILD_PYTHON_LIBS:BOOL=OFF ^
++-DOPENEXR_BUILD_VIEWERS:BOOL=ON ^
++-DOPENEXR_BUILD_TESTS:BOOL=ON ^
++-DOPENEXR_RUN_FUZZ_TESTS:BOOL=OFF ^
++-DOPENEXR_BUILD_UTILS:BOOL=ON ^
++-DOPENEXR_BUILD_SHARED:BOOL=OFF ^
++-DOPENEXR_BUILD_STATIC:BOOL=ON ^
++-DCMAKE_CXX_FLAGS_RELEASE="/MD" ^
++-DCMAKE_CXX_FLAGS_DEBUG="/MDd" ^
++-DCMAKE_C_FLAGS_RELEASE="/MD" ^
++-DCMAKE_C_FLAGS_DEBUG="/MDd" ^
++-DZLIB_LIBRARY=%ZLIBDIR%\lib_release\zlibstatic.lib ^
++-DZLIB_INCLUDE_DIR=%ZLIBDIR%\include ^
++-DFLTK_BASE_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk.lib ^
++-DFLTK_GL_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_gl.lib ^
++-DFLTK_FORMS_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_forms.lib ^
++-DFLTK_IMAGES_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_images.lib ^
++-DFLTK_BASE_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltkd.lib ^
++-DFLTK_GL_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_gld.lib ^
++-DFLTK_FORMS_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_formsd.lib ^
++-DFLTK_IMAGES_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_imagesd.lib ^
++-DFLTK_INCLUDE_DIR=%FLTKDIR%\include ^
++-DCMAKE_INSTALL_PREFIX=%BINDIR% ^
++-DCMAKE_BUILD_TYPE="Release" %SRC%
++cmake --build . --config Release --target install
++
++move %BINDIR%lib %BINDIR%lib_release
++move %BINDIR%bin %BINDIR%bin_release
++
++REM # DEBUG #
++REM # Clean Build Tree #
++rd /s /q %BUILDTREE%\OpenEXR
++mkdir %BUILDTREE%\OpenEXR
++cd %BUILDTREE%\OpenEXR
++cmake -G %cmake_platform% ^
++-DBUILD_ILMBASE_STATIC:BOOL=ON ^
++-DOPENEXR_BUILD_ILMBASE:BOOL=ON ^
++-DOPENEXR_BUILD_OPENEXR:BOOL=ON ^
++-DOPENEXR_BUILD_PYTHON_LIBS:BOOL=OFF ^
++-DOPENEXR_BUILD_VIEWERS:BOOL=ON ^
++-DOPENEXR_BUILD_TESTS:BOOL=ON ^
++-DOPENEXR_RUN_FUZZ_TESTS:BOOL=OFF ^
++-DOPENEXR_BUILD_UTILS:BOOL=ON ^
++-DOPENEXR_BUILD_SHARED:BOOL=OFF ^
++-DOPENEXR_BUILD_STATIC:BOOL=ON ^
++-DCMAKE_CXX_FLAGS_RELEASE="/MD" ^
++-DCMAKE_CXX_FLAGS_DEBUG="/MDd" ^
++-DCMAKE_C_FLAGS_RELEASE="/MD" ^
++-DCMAKE_C_FLAGS_DEBUG="/MDd" ^
++-DZLIB_LIBRARY=%ZLIBDIR%\lib_debug\zlibstaticd.lib ^
++-DZLIB_INCLUDE_DIR=%ZLIBDIR%\include ^
++-DFLTK_BASE_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk.lib ^
++-DFLTK_GL_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_gl.lib ^
++-DFLTK_FORMS_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_forms.lib ^
++-DFLTK_IMAGES_LIBRARY_RELEASE=%FLTKDIR%\lib_release\fltk_images.lib ^
++-DFLTK_BASE_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltkd.lib ^
++-DFLTK_GL_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_gld.lib ^
++-DFLTK_FORMS_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_formsd.lib ^
++-DFLTK_IMAGES_LIBRARY_DEBUG=%FLTKDIR%\lib_debug\fltk_imagesd.lib ^
++-DFLTK_INCLUDE_DIR=%FLTKDIR%\include ^
++-DCMAKE_INSTALL_PREFIX=%BINDIR% ^
++-DCMAKE_BUILD_TYPE="DEBUG" %SRC%
++cmake --build . --config DEBUG --target install
++
++move %BINDIR%lib %BINDIR%lib_debug
++move %BINDIR%bin %BINDIR%bin_debug
++
++REM # TODO: ENABLE SHARED Build
++GOTO:nuget_req
++mkdir %BINDIR%\static\
++move /Y %BINDIR%\lib %BINDIR%\static\
++
++:shared_LIB
++REM # LIB SHARED #
++ECHO %cmake_platform% SHARED
++
++
++:nuget_req
++cd %BINDIR%
++REM # make nuget packages from binaries #
++copy %INITDIR%\OpenEXR-msvc-%tbs_arch%.targets %BINDIR%\OpenEXR-msvc-%tbs_arch%.targets
++cd %BUILDTREE%
++nuget pack %INITDIR%\OpenEXR-msvc-%tbs_arch%.nuspec
++cd %INITDIR%
++REM --- exit ----
++GOTO:eof
+diff --git a/Contrib/NuGet/OpenEXR-msvc-x86.nuspec b/Contrib/NuGet/OpenEXR-msvc-x86.nuspec
+new file mode 100644
+index 00000000..a2d93b48
+--- /dev/null
++++ b/Contrib/NuGet/OpenEXR-msvc-x86.nuspec
+@@ -0,0 +1,15 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
++    <metadata>
++        <id>openexr-msvc-x86</id>
++        <version>2.3.0.8788</version>
++        <authors>administrator</authors>
++        <requireLicenseAcceptance>false</requireLicenseAcceptance>
++        <description>Visual Studio 2017 Release OpenEXR as NuGet package.</description>
++    </metadata>
++    <files>
++        <file src="..\..\LICENSE" target="LICENSE" />
++        <file src="..\..\README.md" target="README.md" />
++		<file src="..\..\build-nuget\**\*.*" target="build\native" />
++    </files>
++</package>
+\ No newline at end of file
+diff --git a/Contrib/NuGet/OpenEXR-msvc-x86.targets b/Contrib/NuGet/OpenEXR-msvc-x86.targets
+new file mode 100644
+index 00000000..d7a8f93d
+--- /dev/null
++++ b/Contrib/NuGet/OpenEXR-msvc-x86.targets
+@@ -0,0 +1,29 @@
++<?xml version="1.0" encoding="utf-8"?>
++<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemDefinitionGroup Label="Release and win32" Condition="( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And '$(Platform.ToLower())' == 'win32'">
++    <ClCompile>
++      <PreprocessorDefinitions>HAS_OpenEXR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ClCompile>
++    <ResourceCompile>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ResourceCompile>
++    <Link>
++      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib_release/*.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Label="Debug and win32" Condition="( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And '$(Platform.ToLower())' == 'win32'">
++    <ClCompile>
++      <PreprocessorDefinitions>HAS_OpenEXR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ClCompile>
++    <ResourceCompile>
++      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/OpenEXR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ResourceCompile>
++    <Link>
++      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib_debug/*.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
++  <Target Name="openexr-msvc">
++  </Target>
++</Project>
+diff --git a/OpenEXR_Viewers/exrdisplay/CMakeLists.txt b/OpenEXR_Viewers/exrdisplay/CMakeLists.txt
+index 9ce1019f..4301acd3 100644
+--- a/OpenEXR_Viewers/exrdisplay/CMakeLists.txt
++++ b/OpenEXR_Viewers/exrdisplay/CMakeLists.txt
+@@ -24,6 +24,10 @@ TARGET_LINK_LIBRARIES ( exrdisplay
+ 	OpenEXR::IlmImf${OPENEXR_TARGET_SUFFIX}
+ 	IlmBase::Iex${OPENEXR_TARGET_SUFFIX}
+ 	IlmBase::Half${OPENEXR_TARGET_SUFFIX}
++	IlmBase::Imath${OPENEXR_TARGET_SUFFIX}
++	IlmBase::IlmThread${OPENEXR_TARGET_SUFFIX}
++	${PTHREAD_LIB}
++	${ZLIB_LIBRARIES}
+ 	${FLTK_LIBRARIES}
+ 	${OPENGL_LIBRARIES}
+ )

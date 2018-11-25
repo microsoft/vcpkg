@@ -1,0 +1,38 @@
+diff --git a/cmake/FindIlmBase.cmake b/cmake/FindIlmBase.cmake
+index 3501c1f..b63775d 100644
+--- a/cmake/FindIlmBase.cmake
++++ b/cmake/FindIlmBase.cmake
+@@ -108,7 +108,6 @@ foreach(ILMBASE_LIB
+             "${OPENEXR_LOCATION}"
+             "$ENV{OPENEXR_LOCATION}"
+         PATH_SUFFIXES
+-            lib/
+             debug/lib/
+         DOC
+             "OPENEXR's ${ILMBASE_LIB} debug library path"
+@@ -139,7 +138,6 @@ foreach(ILMBASE_LIB
+             "${OPENEXR_LOCATION}"
+             "$ENV{OPENEXR_LOCATION}"
+         PATH_SUFFIXES
+-            lib/
+             debug/lib/
+         DOC
+             "OPENEXR's ${ILMBASE_LIB} static debug library path"
+@@ -168,7 +166,7 @@ foreach(ILMBASE_LIB
+     IlmThread)
+ 
+     if (OPENEXR_${ILMBASE_LIB}_LIBRARY)
+-        add_library(IlmBase::${ILMBASE_LIB} SHARED IMPORTED)
++        add_library(IlmBase::${ILMBASE_LIB} UNKNOWN IMPORTED)
+         set_target_properties(IlmBase::${ILMBASE_LIB} PROPERTIES IMPORTED_LOCATION_RELEASE ${OPENEXR_${ILMBASE_LIB}_LIBRARY})
+         set_target_properties(IlmBase::${ILMBASE_LIB} PROPERTIES IMPORTED_LOCATION_DEBUG ${OPENEXR_${ILMBASE_LIB}_DEBUG_LIBRARY})
+         set_target_properties(IlmBase::${ILMBASE_LIB} PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
+@@ -177,7 +175,7 @@ foreach(ILMBASE_LIB
+     endif()
+ 
+     if (OPENEXR_${ILMBASE_LIB}_STATIC_LIBRARY)
+-        add_library(IlmBase::${ILMBASE_LIB}_static SHARED IMPORTED)
++        add_library(IlmBase::${ILMBASE_LIB}_static UNKNOWN IMPORTED)
+         set_target_properties(IlmBase::${ILMBASE_LIB}_static PROPERTIES IMPORTED_LOCATION_RELEASE ${OPENEXR_${ILMBASE_LIB}_STATIC_LIBRARY})
+         set_target_properties(IlmBase::${ILMBASE_LIB}_static PROPERTIES IMPORTED_LOCATION_DEBUG ${OPENEXR_${ILMBASE_LIB}_STATIC_DEBUG_LIBRARY})
+         set_target_properties(IlmBase::${ILMBASE_LIB}_static PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)

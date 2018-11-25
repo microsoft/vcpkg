@@ -1,0 +1,20 @@
+From eb2392c88152c05c3b554cc14bc8a1fafb344340 Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Sat, 22 Sep 2018 17:25:19 -0700
+Subject: [PATCH] add build-win/, build-nuget/, and *~ to .gitignore.
+
+---
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index 067bab7a..a9c8e947 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -21,3 +21,6 @@ missing
+ .DS_Store
+ *.project
+ *.cproject
++build-win/
++build-nuget/
++*~
