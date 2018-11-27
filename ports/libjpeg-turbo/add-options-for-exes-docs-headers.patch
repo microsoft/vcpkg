@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1719522..ef5359f 100644
+index efeb51a..5c7d829 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -145,6 +145,12 @@ option(ENABLE_SHARED "Build shared libraries" TRUE)
+@@ -147,6 +147,12 @@ option(ENABLE_SHARED "Build shared libraries" TRUE)
  boolean_number(ENABLE_SHARED)
  option(ENABLE_STATIC "Build static libraries" TRUE)
  boolean_number(ENABLE_STATIC)
@@ -15,7 +15,7 @@ index 1719522..ef5359f 100644
  option(REQUIRE_SIMD "Generate a fatal error if SIMD extensions are not available for this platform (default is to fall back to a non-SIMD build)" FALSE)
  boolean_number(REQUIRE_SIMD)
  option(WITH_12BIT "Encode/decode JPEG images with 12-bit samples (implies WITH_ARITH_DEC=0 WITH_ARITH_ENC=0 WITH_JAVA=0 WITH_SIMD=0 WITH_TURBOJPEG=0 )" FALSE)
-@@ -591,17 +597,19 @@ if(WITH_TURBOJPEG)
+@@ -593,17 +599,19 @@ if(WITH_TURBOJPEG)
          LINK_FLAGS "${TJMAPFLAG}${TJMAPFILE}")
      endif()
  
@@ -44,7 +44,7 @@ index 1719522..ef5359f 100644
    endif()
  
    if(ENABLE_STATIC)
-@@ -614,14 +622,16 @@ if(WITH_TURBOJPEG)
+@@ -616,14 +624,16 @@ if(WITH_TURBOJPEG)
        set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
      endif()
  
@@ -68,7 +68,7 @@ index 1719522..ef5359f 100644
      endif()
    endif()
  endif()
-@@ -637,7 +647,7 @@ else()
+@@ -639,7 +649,7 @@ else()
    set(DJPEG_BMP_SOURCES wrbmp.c wrtarga.c)
  endif()
  
@@ -77,7 +77,7 @@ index 1719522..ef5359f 100644
    add_executable(cjpeg-static cjpeg.c cdjpeg.c rdgif.c rdppm.c rdswitch.c
      ${CJPEG_BMP_SOURCES})
    set_property(TARGET cjpeg-static PROPERTY COMPILE_FLAGS ${COMPILE_FLAGS})
-@@ -653,9 +663,11 @@ if(ENABLE_STATIC)
+@@ -655,9 +665,11 @@ if(ENABLE_STATIC)
    set_property(TARGET jpegtran-static PROPERTY COMPILE_FLAGS "${USE_SETMODE}")
  endif()
  
@@ -91,7 +91,7 @@ index 1719522..ef5359f 100644
  
  
  ###############################################################################
-@@ -1324,26 +1336,32 @@ set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
+@@ -1326,26 +1338,32 @@ set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
  
  if(WITH_TURBOJPEG)
    if(ENABLE_SHARED)
@@ -129,7 +129,7 @@ index 1719522..ef5359f 100644
      install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/cjpeg-static${EXE}
        DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME cjpeg${EXE})
      install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/djpeg-static${EXE}
-@@ -1353,18 +1371,22 @@ if(ENABLE_STATIC)
+@@ -1355,21 +1373,25 @@ if(ENABLE_STATIC)
    endif()
  endif()
  
@@ -162,10 +162,14 @@ index 1719522..ef5359f 100644
 +  endif()
  endif()
  
- if(UNIX OR MINGW)
-@@ -1378,10 +1400,12 @@ if(UNIX OR MINGW)
-     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
- endif()
+-if(UNIX OR MINGW)
++if((UNIX OR MINGW) AND INSTALL_DOCS)
+   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cjpeg.1
+     ${CMAKE_CURRENT_SOURCE_DIR}/djpeg.1 ${CMAKE_CURRENT_SOURCE_DIR}/jpegtran.1
+     ${CMAKE_CURRENT_SOURCE_DIR}/rdjpgcom.1
+@@ -1380,10 +1402,12 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc
+   ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
  
 -install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
 -  ${CMAKE_CURRENT_SOURCE_DIR}/jerror.h ${CMAKE_CURRENT_SOURCE_DIR}/jmorecfg.h
