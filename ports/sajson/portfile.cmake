@@ -19,6 +19,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/unofficial-sajson TARGET_PATH share/unofficial-sajson)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright

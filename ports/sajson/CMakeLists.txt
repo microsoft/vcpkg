@@ -20,6 +20,7 @@ install(TARGETS sajson EXPORT unofficial-sajson-config)
 
 install(EXPORT unofficial-sajson-config
     FILE unofficial-sajson-config.cmake
+    NAMESPACE unofficial::sajson::
     DESTINATION share/cmake/unofficial-sajson
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
