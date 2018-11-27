@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8543256..425483c 100644
+index 8543256..8ebce9c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,15 +1,26 @@
@@ -19,8 +19,8 @@ index 8543256..425483c 100644
 +install(TARGETS rapidstring EXPORT rapidstringConfig)
 +
 +install(EXPORT rapidstringConfig
-+    FILE rapidstringConfig.cmake
-+    NAMESPACE rapidstring::
++    FILE unofficial-rapidstringConfig.cmake
++    NAMESPACE unofficial::rapidstring::
 +    DESTINATION share/cmake/rapidstring
 +    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
  
