@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c7193fbb..bcd14837 100644
+index c7193fbb..50c997f8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -152,8 +152,7 @@ add_subdirectory("common")
@@ -38,8 +38,8 @@ index c7193fbb..bcd14837 100644
 +endif()
 +
 +install(EXPORT ${PROJECT_NAME}-config
-+    FILE ${PROJECT_NAME}-config.cmake
-+    NAMESPACE libui::
++    FILE unofficial-${PROJECT_NAME}-config.cmake
++    NAMESPACE unofficial::libui::
 +    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 +)
 +

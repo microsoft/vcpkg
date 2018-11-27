@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libui)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libui TARGET_PATH share/unofficial-libui)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
