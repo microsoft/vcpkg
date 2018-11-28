@@ -52,4 +52,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAG
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
