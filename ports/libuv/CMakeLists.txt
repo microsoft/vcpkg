@@ -76,4 +76,4 @@ install(TARGETS libuv
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 )
-install(EXPORT libuv FILE libuv-targets.cmake DESTINATION share/libuv)
+install(EXPORT libuv FILE unofficial-libuv-targets.cmake NAMESPACE unofficial::libuv:: DESTINATION share/unofficial-libuv)
