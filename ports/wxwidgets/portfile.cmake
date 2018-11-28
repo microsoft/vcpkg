@@ -48,4 +48,8 @@ endif()
 # Handle copyright
 file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
