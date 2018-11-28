@@ -11,6 +11,7 @@
 ##     [REF <v2.0.0>]
 ##     [SHA512 <45d0d7f8cc350...>]
 ##     [HEAD_REF <master>]
+##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
 ## ```
 ##
@@ -40,6 +41,11 @@
 ##
 ## For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
 ##
+## ### PATCHES
+## A list of patches to be applied to the extracted sources.
+##
+## Relative paths are based on the port directory.
+##
 ## ## Notes:
 ## At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
 ##
@@ -50,7 +56,7 @@
 ## * [blaze](https://github.com/Microsoft/vcpkg/blob/master/ports/blaze/portfile.cmake)
 function(vcpkg_from_bitbucket)
     set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 HEAD_REF)
-    set(multipleValuesArgs)
+    set(multipleValuesArgs PATCHES)
     cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
     if(NOT _vdud_OUT_SOURCE_PATH)
@@ -115,7 +121,7 @@ function(vcpkg_from_bitbucket)
             string(REGEX REPLACE "\"hash\": \"([a-f0-9]+)\"" "\\1" _version ${x})
             string(SUBSTRING ${_version} 0 12 _version) # Get the 12 first numbers from commit hash
         else()
-            set(_version ${_vdud_REF})
+            string(SUBSTRING ${_vdud_REF} 0 12 _version) # Get the 12 first numbers from commit hash
         endif()
 
         vcpkg_download_distfile(ARCHIVE
@@ -123,8 +129,14 @@ function(vcpkg_from_bitbucket)
             SHA512 "${_vdud_SHA512}"
             FILENAME "${ORG_NAME}-${REPO_NAME}-${_vdud_REF}.tar.gz"
         )
-        vcpkg_extract_source_archive_ex(ARCHIVE "${ARCHIVE}")
-        set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src ${_version})
+
+        vcpkg_extract_source_archive_ex(
+            OUT_SOURCE_PATH SOURCE_PATH
+            ARCHIVE "${ARCHIVE}"
+            REF "${_vdud_REF}"
+            PATCHES ${_vdud_PATCHES}
+        )
+        set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
         return()
     endif()
 
@@ -164,11 +176,6 @@ function(vcpkg_from_bitbucket)
         )
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        ARCHIVE "${ARCHIVE}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
-    )
-
     # Parse the github refs response with regex.
     # TODO: use some JSON swiss-army-knife utility instead.
     file(READ "${ARCHIVE_VERSION}" _contents)
@@ -179,5 +186,12 @@ function(vcpkg_from_bitbucket)
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
 
-    set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/head ${_vdud_HEAD_REF})
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE "${downloaded_file_path}"
+        REF "${_vdud_HEAD_REF}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
+        PATCHES ${_vdud_PATCHES}
+    )
+    set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

@@ -164,6 +164,45 @@ function(boost_modular_build)
          -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}/lib"
     )
 
+    # Properly handle compiler and linker flags passed by VCPKG
+    if(VCPKG_CXX_FLAGS)
+        list(APPEND _bm_OPTIONS cxxflags="${VCPKG_CXX_FLAGS}")
+    endif()
+
+    if(VCPKG_CXX_FLAGS_RELEASE)
+        list(APPEND _bm_OPTIONS_REL cxxflags="${VCPKG_CXX_FLAGS_RELEASE}")
+    endif()
+
+    if(VCPKG_CXX_FLAGS_DEBUG)
+        list(APPEND _bm_OPTIONS_DBG cxxflags="${VCPKG_CXX_FLAGS_DEBUG}")
+    endif()
+
+
+    if(VCPKG_C_FLAGS)
+        list(APPEND _bm_OPTIONS cflags="${VCPKG_C_FLAGS}")
+    endif()
+
+    if(VCPKG_C_FLAGS_RELEASE)
+        list(APPEND _bm_OPTIONS_REL cflags="${VCPKG_C_FLAGS_RELEASE}")
+    endif()
+
+    if(VCPKG_C_FLAGS_DEBUG)
+        list(APPEND _bm_OPTIONS_DBG cflags="${VCPKG_C_FLAGS_DEBUG}")
+    endif()
+
+
+    if(VCPKG_LINKER_FLAGS)
+        list(APPEND _bm_OPTIONS linkflags="${VCPKG_LINKER_FLAGS}")
+    endif()
+
+    if(VCPKG_LINKER_FLAGS_RELEASE)
+        list(APPEND _bm_OPTIONS_REL linkflags="${VCPKG_LINKER_FLAGS_RELEASE}")
+    endif()
+
+    if(VCPKG_LINKER_FLAGS_DEBUG)
+        list(APPEND _bm_OPTIONS_DBG linkflags="${VCPKG_LINKER_FLAGS_DEBUG}")
+    endif()
+
 
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -309,7 +348,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_67" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_68" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do

@@ -3,22 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.8.1
-    SHA512 9e7c87fb750a176712f08d215a906012c9e8174b687bbc8c08fa65de083b4468951bd8017b10409015d5eff0fc343885d2aae5c340346118b1a251af7bdd5cd7
+    REF pcl-1.9.0
+    SHA512 b2fb6cb1f8b4d203c711ac580e12946cacfba3f06bec95536e01705c63e709d488cee85d2a24b758c958972a0f4f3544a10a2c308ea637e9e23874e9de59becc
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/cmakelists.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/config.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/config_install.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_flann.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_qhull.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_openni2.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_cuda.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/vs2017-15.4-workaround.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/boost_uuid_random_generator_compat.patch"
+    PATCHES pcl_utils.patch
+            pcl_config.patch
+            find_flann.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -60,6 +50,7 @@ vcpkg_configure_cmake(
         # PCL
         -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
+        -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         # WITH
         -DWITH_CUDA=${WITH_CUDA}

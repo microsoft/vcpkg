@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{F589
 		..\scripts\get_triplet_environment.cmake = ..\scripts\get_triplet_environment.cmake
 		..\scripts\internalCI.ps1 = ..\scripts\internalCI.ps1
 		..\scripts\ports.cmake = ..\scripts\ports.cmake
+		..\scripts\vcpkgTools.xml = ..\scripts\vcpkgTools.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmake", "cmake", "{A0122231-04D5-420B-81CA-7960946E5E65}"
@@ -45,6 +46,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmake", "cmake", "{A0122231
 		..\scripts\cmake\vcpkg_get_windows_sdk.cmake = ..\scripts\cmake\vcpkg_get_windows_sdk.cmake
 		..\scripts\cmake\vcpkg_install_cmake.cmake = ..\scripts\cmake\vcpkg_install_cmake.cmake
 		..\scripts\cmake\vcpkg_install_meson.cmake = ..\scripts\cmake\vcpkg_install_meson.cmake
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BCE555DF-F471-4ACC-98E5-76CBE8E8F79E}"
+	ProjectSection(SolutionItems) = preProject
+		vcpkg.natvis = vcpkg.natvis
 	EndProjectSection
 EndProject
 Global

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f58ee19..dda72e9 100644
+index a59fd818e3..774ee2f725 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -87,6 +87,9 @@ if(UNIX)
+@@ -89,6 +89,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -12,7 +12,7 @@ index f58ee19..dda72e9 100644
  endif()
  
  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-@@ -152,6 +155,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+@@ -155,6 +158,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -23,7 +23,7 @@ index f58ee19..dda72e9 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -186,6 +193,7 @@ function(protobuf_generate_grpc_cpp)
+@@ -189,6 +196,7 @@ function(protobuf_generate_grpc_cpp)
    endforeach()
  endfunction()
  
@@ -31,7 +31,7 @@ index f58ee19..dda72e9 100644
  add_custom_target(plugins
    DEPENDS
    grpc_cpp_plugin
-@@ -215,6 +223,8 @@ add_custom_target(tools_cxx
+@@ -218,6 +226,8 @@ add_custom_target(tools_cxx
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)
  
@@ -40,7 +40,7 @@ index f58ee19..dda72e9 100644
  if (gRPC_BUILD_TESTS)
  add_custom_target(buildtests_c)
  add_dependencies(buildtests_c algorithm_test)
-@@ -3595,7 +3605,6 @@ foreach(_hdr
+@@ -3661,7 +3671,6 @@ foreach(_hdr
      DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
    )
  endforeach()
@@ -48,7 +48,7 @@ index f58ee19..dda72e9 100644
  
  
  if (gRPC_INSTALL)
-@@ -3605,6 +3614,7 @@ if (gRPC_INSTALL)
+@@ -3671,6 +3680,7 @@ if (gRPC_INSTALL)
      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
@@ -56,7 +56,7 @@ index f58ee19..dda72e9 100644
  
  if (gRPC_BUILD_TESTS)
  
-@@ -3725,7 +3735,7 @@ foreach(_hdr
+@@ -3793,7 +3803,7 @@ foreach(_hdr
      DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
    )
  endforeach()
@@ -65,7 +65,7 @@ index f58ee19..dda72e9 100644
  
  
  if (gRPC_INSTALL)
-@@ -3735,6 +3745,7 @@ if (gRPC_INSTALL)
+@@ -3803,6 +3813,7 @@ if (gRPC_INSTALL)
      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
@@ -74,7 +74,7 @@ index f58ee19..dda72e9 100644
  if (gRPC_BUILD_TESTS)
  
 diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-index 55efe0e..f538f26 100644
+index 55efe0e9dd..f538f26edf 100644
 --- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 +++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 @@ -60,6 +60,8 @@ bool check_bios_data(const char* bios_data_file) {

@@ -39,3 +39,5 @@ vcpkg_copy_pdbs()
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libiconv/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libiconv/copyright)
+
+vcpkg_test_cmake(PACKAGE_NAME unofficial-iconv)
