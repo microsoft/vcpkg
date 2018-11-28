@@ -1,22 +1,28 @@
 diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
-index 41a64a269..a12718339 100644
+index f523dbc8c..a171b6d24 100644
 --- a/cmake/pcl_utils.cmake
 +++ b/cmake/pcl_utils.cmake
-@@ -105,7 +105,7 @@ macro(SET_INSTALL_DIRS)
+@@ -97,21 +97,12 @@ macro(SET_INSTALL_DIRS)
+   if (NOT DEFINED LIB_INSTALL_DIR)
+     set(LIB_INSTALL_DIR "lib")
    endif (NOT DEFINED LIB_INSTALL_DIR)
-     if(NOT ANDROID)
-       set(INCLUDE_INSTALL_ROOT
--          "include/${PROJECT_NAME_LOWER}-${PCL_MAJOR_VERSION}.${PCL_MINOR_VERSION}")
-+          "include")
-     else(NOT ANDROID)
-       set(INCLUDE_INSTALL_ROOT "include") # Android, don't put into subdir
-     endif(NOT ANDROID)
-@@ -114,7 +114,7 @@ macro(SET_INSTALL_DIRS)
+-    if(NOT ANDROID)
+-      set(INCLUDE_INSTALL_ROOT
+-          "include/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
+-    else(NOT ANDROID)
+-      set(INCLUDE_INSTALL_ROOT "include") # Android, don't put into subdir
+-    endif(NOT ANDROID)
++    set(INCLUDE_INSTALL_ROOT "include") 
+     set(INCLUDE_INSTALL_DIR "${INCLUDE_INSTALL_ROOT}/pcl")
+     set(DOC_INSTALL_DIR "share/doc/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
      set(BIN_INSTALL_DIR "bin")
      set(PKGCFG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig")
-     if(WIN32 AND NOT MINGW)
+-    if(WIN32 AND NOT MINGW)
 -        set(PCLCONFIG_INSTALL_DIR "cmake")
-+        set(PCLCONFIG_INSTALL_DIR "share/pcl")
-       else(WIN32 AND NOT MINGW)
-         set(PCLCONFIG_INSTALL_DIR "share/${PROJECT_NAME_LOWER}-${PCL_MAJOR_VERSION}.${PCL_MINOR_VERSION}")
-       endif(WIN32 AND NOT MINGW)
+-      else(WIN32 AND NOT MINGW)
+-        set(PCLCONFIG_INSTALL_DIR "share/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
+-      endif(WIN32 AND NOT MINGW)
++    set(PCLCONFIG_INSTALL_DIR "share/pcl")
+ endmacro(SET_INSTALL_DIRS)
+ 
+ 
