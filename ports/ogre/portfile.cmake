@@ -6,13 +6,9 @@ vcpkg_from_github(
     REF v1.11.3
     SHA512 af52821022ab6148e64fdf183b1aa4607b101c7d0edc20d2ccc909f50eed218d7a283fa3b58260fd41cd3f324ecafad8c5137c66e05786580b043240551b2c42 
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-cmake-install-dir.patch
-        ${CMAKE_CURRENT_LIST_DIR}/002-link-optimized-lib-workaround.patch
+        001-cmake-install-dir.patch
+        002-link-optimized-lib-workaround.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
