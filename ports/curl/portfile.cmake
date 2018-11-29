@@ -7,15 +7,15 @@ vcpkg_from_github(
     SHA512 09fa3c87f8d516eabe3241247a5094c32ee0481961cf85bf78ecb13acdf23bb2ec82f113d2660271d22742c79e76d73fb122730fa28e34c7f5477c05a4a6534c
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0003_fix_libraries.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0004_nghttp2_staticlib.patch
+        0001_cmake.patch
+        0002_fix_uwp.patch
+        0003_fix_libraries.patch
+        0004_nghttp2_staticlib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
-# Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
+# Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
 set(HTTP2_OPTIONS)
 if("http2" IN_LIST FEATURES)
     set(HTTP2_OPTIONS -DUSE_NGHTTP2=ON)
@@ -23,35 +23,21 @@ endif()
 
 # SSL
 set(USE_OPENSSL OFF)
+if("openssl" IN_LIST FEATURES)
+    set(USE_OPENSSL ON)
+endif()
+
 set(USE_WINSSL OFF)
+if("winssl" IN_LIST FEATURES)
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        message(FATAL_ERROR "winssl is not supported on non-Windows platforms")
+    endif()
+    set(USE_WINSSL ON)
+endif()
+
 set(USE_MBEDTLS OFF)
-
-if("ssl" IN_LIST FEATURES) # For backward compatibility
-    message(WARNING "The 'ssl' feature is deprecated. Use the [openssl,winssl,mbedtls] features to specify one or more SSL backends")
-
-	foreach(conflict IN ITEMS "openssl" "winssl" "mbedtls")
-        if(${conflict} IN_LIST FEATURES)
-            message(FATAL_ERROR "You cannot enable the 'ssl' feature along with the '${conflict}' feature!")
-        endif()
-    endforeach()
-
-    if(CURL_USE_WINSSL)
-        set(USE_WINSSL ON)
-    else()
-        set(USE_OPENSSL ON)
-    endif()
-else()
-    if("openssl" IN_LIST FEATURES)
-        set(USE_OPENSSL ON)
-    endif()
-
-    if("winssl" IN_LIST FEATURES)
-        set(USE_WINSSL ON)
-    endif()
-
-    if("mbedtls" IN_LIST FEATURES)
-        set(USE_MBEDTLS ON)
-    endif()
+if("mbedtls" IN_LIST FEATURES)
+    set(USE_MBEDTLS ON)
 endif()
 
 # SSH
@@ -86,7 +72,7 @@ endif()
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_PATH}")
+vcpkg_add_to_path(${PERL_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
