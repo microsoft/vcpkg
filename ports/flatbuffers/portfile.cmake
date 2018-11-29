@@ -10,7 +10,9 @@ vcpkg_from_github(
     REF v1.9.0
     SHA512 0ba07dbe5b2fde1d0a6e14ee26ee2816062541d934eda204b846a30c019362f2626761b628c900293928b9b546dba8ca477c13182e022c3e0e0a142fd67f0696
     HEAD_REF master
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ignore_use_of_cmake_toolchain_file.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/ignore_use_of_cmake_toolchain_file.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
 )
 
 set(OPTIONS)
