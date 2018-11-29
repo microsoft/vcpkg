@@ -20,7 +20,7 @@ if("libpng" IN_LIST FEATURES)
 endif()
 
 set(IL_NO_TIF 1)
-if("libtiff" IN_LIST FEATURES)
+if("tiff" IN_LIST FEATURES)
     set(IL_NO_TIF 0)
 endif()
 
