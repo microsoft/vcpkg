@@ -1,0 +1,4 @@
+Source: zxing
+Version: 3.3.3
+Build-Depends: 
+Description: Barcode detection and decoding library.
