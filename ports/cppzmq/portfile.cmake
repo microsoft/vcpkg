@@ -1,4 +1,3 @@
-#header-only library
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -12,13 +11,14 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DCPPZMQ_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/cppzmq)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/cppzmq/libzmq-pkg-config)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppzmq)
