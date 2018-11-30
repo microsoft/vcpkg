@@ -15,7 +15,7 @@ Build-Depends: nghttp2, curl[ssl]
 Description: HTTP2 support
 
 Feature: ssl
-Build-Depends: curl[openssl] (!windows&&!uwp), curl[winssl] (windows), curl[winssl] (uwp)
+Build-Depends: curl[openssl] (!windows), curl[winssl] (windows)
 Description: Default SSL backend
 
 Feature: ssh
