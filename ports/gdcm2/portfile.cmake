@@ -4,7 +4,6 @@ vcpkg_from_github(
     REPO malaterre/GDCM
     REF v2.8.8
     SHA512 92efa1b85e38a5e463933c36a275e1392608c9da4d7c3ab17acfa70bfa112bc03e8705086eaac4a3ad5153fde5116ccc038093adaa8598b18000f403f39db738
-    PATCHES socketxx.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -22,7 +21,7 @@ vcpkg_configure_cmake(
         -DGDCM_INSTALL_INCLUDE_DIR=include
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
-        ${ADDITIONAL_OPTIONS}
+        -DGDCM_USE_SYSTEM_OPENJPEG=OFF
 )
 
 vcpkg_install_cmake()
@@ -34,6 +33,17 @@ file(REMOVE_RECURSE
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdcm-2.8 ${CURRENT_PACKAGES_DIR}/share/gdcm2)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdcm-2.8/GDCMTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/gdcm2/GDCMTargets-debug.cmake)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/gdcm-2.8)
+    # fixing debug path
+    file(READ "${CURRENT_PACKAGES_DIR}/share/gdcm2/GDCMTargets-debug.cmake" _contents)
+    string(REPLACE "/lib" "/debug/lib" _contents "${_contents}")
+    string(REPLACE "/bin" "/debug/bin" _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/gdcm2/GDCMTargets-debug.cmake" "${_contents}")
 endif()
 
 # Handle copyright
