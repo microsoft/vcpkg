@@ -18,14 +18,14 @@ while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
 done
 
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
+    downloadsDir="$vcpkgRootDir/downloads"
+else
+    downloadsDir="$VCPKG_DOWNLOADS"
     if [ ! -d "$VCPKG_DOWNLOADS" ]; then
         echo "VCPKG_DOWNLOADS was set to '$VCPKG_DOWNLOADS', but that was not a directory."
         exit 1
     fi
 
-    downloadsDir="$VCPKG_DOWNLOADS"
-else
-    downloadsDir="$vcpkgRootDir/downloads"
 fi
 
 extractStringBetweenDelimiters()
