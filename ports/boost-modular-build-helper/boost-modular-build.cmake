@@ -360,4 +360,5 @@ function(boost_modular_build)
     endforeach()
 
     vcpkg_copy_pdbs()
+    vcpkg_copy_sourcelink_file()
 endfunction()
