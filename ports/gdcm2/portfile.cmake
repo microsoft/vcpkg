@@ -6,6 +6,11 @@ vcpkg_from_github(
     SHA512 92efa1b85e38a5e463933c36a275e1392608c9da4d7c3ab17acfa70bfa112bc03e8705086eaac4a3ad5153fde5116ccc038093adaa8598b18000f403f39db738
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES find-openjpeg.patch
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(GDCM_BUILD_SHARED_LIBS ON)
 else()
@@ -21,7 +26,7 @@ vcpkg_configure_cmake(
         -DGDCM_INSTALL_INCLUDE_DIR=include
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
-        -DGDCM_USE_SYSTEM_OPENJPEG=OFF
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON
 )
 
 vcpkg_install_cmake()
