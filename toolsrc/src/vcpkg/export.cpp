@@ -77,6 +77,7 @@ namespace vcpkg::Export
             Build::DownloadTool::BUILT_IN,
             Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
+            Build::EnableSourceLink::NO,
         };
 
         for (const ExportPlanType plan_type : ORDER)
