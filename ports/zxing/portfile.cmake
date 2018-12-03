@@ -19,7 +19,11 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/zxing/cmake")
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/zxing)
+if (WIN32)
 file(COPY ${CURRENT_PACKAGES_DIR}/bin/zxing.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/zxing)
+else(WIN32)
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/zxing DESTINATION ${CURRENT_PACKAGES_DIR}/tools/zxing)
+endif(WIN32)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/zxing)
 
 vcpkg_copy_pdbs()
