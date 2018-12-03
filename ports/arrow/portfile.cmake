@@ -14,11 +14,11 @@ vcpkg_from_github(
 
 set(CPP_SOURCE_PATH "${SOURCE_PATH}/cpp")
 
-#vcpkg_apply_patches(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PATCHES
-#    "${CMAKE_CURRENT_LIST_DIR}/all.patch"
-#)
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/all.patch"
+)
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
