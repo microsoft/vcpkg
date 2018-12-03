@@ -42,7 +42,9 @@ namespace vcpkg
             if (!fs::stdfs::is_directory(asPath))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid downloads override directory: %s", asPath.string());
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid downloads override directory: %s; "
+                    "create that directory or unset VCPKG_DOWNLOADS to use the default downloads location.",
+                    asPath.string());
             }
 
             paths.downloads = fs::stdfs::canonical(std::move(asPath), ec);
