@@ -184,4 +184,8 @@ function(vcpkg_build_cmake)
             endif()
         endif()
     endforeach()
+
+    if(VCPKG_ENABLE_SOURCE_LINK AND VCPKG_LIBRARY_LINKAGE STREQUAL static AND EXISTS ${CURRENT_SOURCELINK_FILE})
+        file(INSTALL ${CURRENT_SOURCELINK_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/sourcelink)
+    endif()
 endfunction()

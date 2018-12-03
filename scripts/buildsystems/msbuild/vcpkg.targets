@@ -60,12 +60,20 @@
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' and '$(VcpkgAutoLink)' == ''">false</VcpkgAutoLink>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <VcpkgSourceLinkFiles Include="$(VcpkgRoot)sourcelink\*.json"/>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <VcpkgSourceLinkOpts>@(VcpkgSourceLinkFiles->'/SOURCELINK:&quot;%(Identity)&quot;', ' ')</VcpkgSourceLinkOpts>
+  </PropertyGroup>
+
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
       <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)debug\lib\*.lib</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)lib\*.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(VcpkgRoot)lib;$(VcpkgRoot)lib\manual-link</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgRoot)debug\lib;$(VcpkgRoot)debug\lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) $(VcpkgSourceLinkOpts)</AdditionalOptions>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
