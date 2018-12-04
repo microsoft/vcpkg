@@ -7,7 +7,7 @@ vcpkg_from_bitbucket(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/core/bitserializer DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/archives/bitserializer_rapidjson DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bitserializer RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bitserializer-rapidjson RENAME copyright)
