@@ -55,7 +55,7 @@ namespace vcpkg::Remove
 
                 auto target = paths.installed / suffix;
 
-                const auto status = fs.status(target, ec);
+                const auto status = fs.symlink_status(target, ec);
                 if (ec)
                 {
                     System::println(System::Color::error, "failed: status(%s): %s", target.u8string(), ec.message());
@@ -66,7 +66,7 @@ namespace vcpkg::Remove
                 {
                     dirs_touched.push_back(target);
                 }
-                else if (fs::is_regular_file(status))
+                else if (fs::is_regular_file(status) || fs::is_symlink(status))
                 {
                     fs.remove(target, ec);
                     if (ec)

@@ -5,4 +5,4 @@ Description: Sparse volume data structure and tools
 
 Feature: tools
 Description: OpenVDB utilities: view, print and render
-Build-Depends: glew, glfw3
+Build-Depends: glew, glfw3, boost-ptr-container

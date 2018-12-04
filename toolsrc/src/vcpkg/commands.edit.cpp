@@ -64,14 +64,29 @@ namespace vcpkg::Commands::Edit
     {
         if (Util::Sets::contains(options.switches, OPTION_ALL))
         {
+            const auto& fs = paths.get_filesystem();
+            auto packages = fs.get_files_non_recursive(paths.packages);
+
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
                 const auto portpath = paths.ports / port_name;
                 const auto portfile = portpath / "portfile.cmake";
                 const auto buildtrees_current_dir = paths.buildtrees / port_name;
-                return Strings::format(R"###("%s" "%s" "%s")###",
+                const auto pattern = port_name + "_";
+
+                std::string package_paths;
+                for (auto&& package : packages)
+                {
+                    if (Strings::case_insensitive_ascii_starts_with(package.filename().u8string(), pattern))
+                    {
+                        package_paths.append(Strings::format(" \"%s\"", package.u8string()));
+                    }
+                }
+
+                return Strings::format(R"###("%s" "%s" "%s"%s)###",
                                        portpath.u8string(),
                                        portfile.u8string(),
-                                       buildtrees_current_dir.u8string());
+                                       buildtrees_current_dir.u8string(),
+                                       package_paths);
             });
         }
 
@@ -92,9 +107,6 @@ namespace vcpkg::Commands::Edit
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const fs::path VS_CODE_INSIDERS = fs::path {"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
-        static const fs::path VS_CODE = fs::path {"Microsoft VS Code"} / "Code.exe";
-
         auto& fs = paths.get_filesystem();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -114,6 +126,10 @@ namespace vcpkg::Commands::Edit
             candidate_paths.emplace_back(*editor_path);
         }
 
+#ifdef _WIN32
+        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
+
         const auto& program_files = System::get_program_files_platform_bitness();
         if (const fs::path* pf = program_files.get())
         {
@@ -131,13 +147,17 @@ namespace vcpkg::Commands::Edit
         const auto& app_data = System::get_environment_variable("APPDATA");
         if (const auto* ad = app_data.get())
         {
-            const fs::path default_base = fs::path {*ad}.parent_path() / "Local" / "Programs";
+            const fs::path default_base = fs::path{*ad}.parent_path() / "Local" / "Programs";
             candidate_paths.push_back(default_base / VS_CODE_INSIDERS);
             candidate_paths.push_back(default_base / VS_CODE);
         }
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
+#elif defined(__APPLE__)
+        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
+        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
+#endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
@@ -155,6 +175,16 @@ namespace vcpkg::Commands::Edit
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
         const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+
+        auto editor_exe = env_editor.filename().u8string();
+
+#ifdef _WIN32
+        if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
+        {
+            System::cmd_execute_no_wait(cmd_line + " <NUL");
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+#endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
     }
 }
