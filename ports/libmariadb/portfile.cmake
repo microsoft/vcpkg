@@ -11,6 +11,7 @@ vcpkg_from_github(
     REF v3.0.2
     SHA512 a5086ff149b1ca0e1b652013475c5f3793824416a60ec35018b6dcd502bd38b50fa040271ff8d308520dadecc9601671fccf67046fcda2425f1d7c59e1c6c52f
     HEAD_REF master
+    PATCHES md.patch
 )
 
 vcpkg_configure_cmake(
@@ -78,7 +79,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb)
 
 # copy & remove header files
-file(GLOB HEADER_FILES ${CURRENT_PACKAGES_DIR}/include/mariadb/*)
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/include/mariadb/my_config.h.in
     ${CURRENT_PACKAGES_DIR}/include/mariadb/mysql_version.h.in

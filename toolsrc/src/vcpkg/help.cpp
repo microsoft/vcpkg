@@ -116,6 +116,8 @@ namespace vcpkg::Help
             "  --vcpkg-root <path>             Specify the vcpkg root directory\n"
             "                                  (default: " ENVVAR(VCPKG_ROOT) ")\n"
             "\n"
+            "  @response_file                  Specify a response file to provide additional parameters\n"
+            "\n"
             "For more help (including examples) see the accompanying README.md.",
             Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING);
     }

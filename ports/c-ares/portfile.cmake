@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_14_0
-    SHA512 3ae7938648aec2fae651667bef02139f7eef2e7cd425cc310b7e3d56f409646f6170d37a3c9269aa654bfb1ced0a52b89fe49be9023edf8ff57efd0efaf59052
+    REF cares-1_15_0
+    SHA512 3c925e0b3a25f3b656a145966ca763f77ae4ccefd87f2d9ae01cae786eeca0ce8397af4ab21da64f516b4603850638f969056184c310372d22aeb5cbfd2704c8
     HEAD_REF master
 )
 

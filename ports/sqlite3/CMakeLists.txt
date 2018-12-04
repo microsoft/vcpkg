@@ -16,6 +16,7 @@ target_compile_definitions(
         ${API}
         -DSQLITE_ENABLE_RTREE
         -DSQLITE_ENABLE_UNLOCK_NOTIFY
+        -DSQLITE_ENABLE_COLUMN_METADATA
 )
 target_include_directories(sqlite3 INTERFACE $<INSTALL_INTERFACE:include>)
 if(NOT WIN32)

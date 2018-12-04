@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF v2.4.0
-    SHA512 7bd148271520dfce24f64bab084226387a6adc9f0a5439b6cb2fa6b4e44b495475ecd9bc5936c6fa4f17e45132e826d8d47410b33d6c218d7a3202f5bb0ccbf4
+    REF v2.4.2
+    SHA512 7422c5c114d93b57cac5596e573d0993ecc6db37708df3491d346bb3aad7a1ee1d1008689ae7b8ef4b0b4fa41aa66566580f807778ae2e4f278687d6fe7aa38b
     HEAD_REF master
 )
 
