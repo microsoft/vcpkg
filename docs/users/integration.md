@@ -35,7 +35,7 @@ cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.c
 ```
 Projects configured with the Vcpkg toolchain file will have the appropriate Vcpkg folders added to the cmake search paths. This makes all libraries available to be found through `find_package()`, `find_path()`, and `find_library()`.
 
-See [Example: Using Sqlite](../examples/using-sqlite.md) for a fully worked example using our CMake toolchain.
+See [Installing and Using Packages Example: sqlite](../examples/installing-and-using-packages.md) for a fully worked example using our CMake toolchain.
 
 Note that we do not automatically add ourselves to your compiler include paths. To use a header-only library, simply use `find_path()`, which will correctly work on all platforms:
 ```cmake

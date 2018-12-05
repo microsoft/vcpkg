@@ -1,3 +1,199 @@
+vcpkg (2018.11.23)
+--------------
+  * Add ports:
+    - aixlog         1.2.1
+    - civetweb       1.11-1
+    - cli11          1.6.1
+    - cub            1.8.0
+    - cutelyst2      2.5.2-1
+    - easyloggingpp  9.96.5-1
+    - ecsutil        1.0.1.2-1
+    - fdlibm         5.3-2
+    - fizz           2018.10.15.00
+    - fmi4cpp        0.4.0
+    - fribidi        1.0.5
+    - glad           0.1.28-3
+    - igloo          1.1.1
+    - libtins        4.0-2
+    - linalg         2.1
+    - miniupnpc      2.1
+    - nanovg         master
+    - orc            1.5.2-f47e02c-2
+    - pixel          0.3
+    - plustache      0.4.0-1
+    - prometheus-cpp 0.6.0
+    - rapidcheck     2018-11-05-1
+    - reproc         v1.0.0
+    - sdl1           1.2.15-3
+    - sdl1-net       1.2.8-2
+    - snowhouse      3.0.1
+    - so5extra       1.2.1
+    - socket-io-client 1.6.1
+    - stlab          1.3.3
+    - tl-optional    0.5-1
+    - trompeloeil    32-1
+    - vulkan         1.1.82.1
+  * Update ports:
+    - abseil         2018-09-18-3 -> 2018-11-08
+    - args           2018-06-28 -> 2018-10-25
+    - asio           1.12.1 -> 1.12.1-1
+    - asmjit         673dcefaa048c5f5a2bf8b85daf8f7b9978d018a -> 2018-11-08
+    - assimp         4.1.0-2 -> 4.1.0-3
+    - aws-sdk-cpp    1.6.12-1 -> 1.6.47
+    - azure-c-shared-utility 1.1.5 -> 1.1.10-1
+    - azure-iot-sdk-c 1.2.3 -> 1.2.10-1
+    - azure-storage-cpp 5.1.1 -> 5.2.0
+    - azure-uamqp-c  1.2.3 -> 1.2.10-1
+    - azure-uhttp-c  LTS_01_2018_Ref01 -> 1.1.10-1
+    - azure-umqtt-c  1.1.5 -> 1.1.10-1
+    - berkeleydb     4.8.30 -> 4.8.30-2
+    - boost-modular-build-helper 2018-08-21 -> 2018-10-19
+    - brynet         0.9.0 -> 1.0.0
+    - bzip2          1.0.6-2 -> 1.0.6-3
+    - c-ares         cares-1_14_0 -> cares-1_15_0
+    - catch2         2.4.0 -> 2.4.2
+    - celero         2.3.0-1 -> 2.4.0
+    - cgal           4.13-1 -> 4.13-2
+    - chakracore     1.11.1-1 -> 1.11.2
+    - cimg           2.3.6 -> 2.4.1
+    - clara          2018-04-02 -> 2018-11-01
+    - corrade        2018.04-1 -> 2018.10-1
+    - cpprestsdk     2.10.6-1 -> 2.10.6-3
+    - cxxopts        2.1.0-1 -> 2.1.1
+    - dimcli         3.1.1-2 -> 4.0.1-1
+    - directxmesh    aug2018 -> oct2018
+    - directxtex     aug2018b -> oct2018
+    - directxtk      aug2018 -> oct2018b
+    - doctest        2.0.0 -> 2.0.1
+    - double-conversion 3.1.0 -> 3.1.0-1
+    - eastl          3.12.01 -> 3.12.04
+    - egl-registry   2018-06-30 -> 2018-06-30-1
+    - entityx        1.2.0-1 -> 1.2.0-2
+    - entt           2.7.3 -> 2.7.3-1
+    - exiv2          2018-09-18 -> 2018-11-08
+    - exprtk         2018.09.30-9836f21 -> 2018-10-11
+    - fastcdr        1.0.6-1 -> 1.0.6-2
+    - fftw3          3.3.7-2 -> 3.3.8
+    - flann          1.9.1-7 -> 1.9.1-8
+    - fmt            5.2.0 -> 5.2.1
+    - folly          2018.09.17.00 -> 2018.11.05.00
+    - forest         9.0.5 -> 9.0.6
+    - freeimage      3.17.0-4 -> 3.18.0-2
+    - gdcm2          2.8.7 -> 2.8.8
+    - glm            0.9.9.2 -> 0.9.9.3
+    - google-cloud-cpp 0.1.0-1 -> 0.3.0-1
+    - gtest          1.8.0-9 -> 1.8.1-1
+    - gtk            3.22.19-1 -> 3.22.19-2
+    - hunspell       1.6.1-2 -> 1.6.1-3
+    - jsonnet        2018-09-18 -> 2018-11-01
+    - libfreenect2   0.2.0 -> 0.2.0-1
+    - libgd          2.2.4-3 -> 2.2.4-4
+    - libgeotiff     1.4.2-4 -> 1.4.2-6
+    - liblinear      2.20 -> 221
+    - libpng         1.6.35 -> 1.6.35-1
+    - libpq          9.6.1-4 -> 9.6.1-5
+    - libusb         1.0.21-fc99620 -> 1.0.22-1
+    - libuv          1.23.0 -> 1.24.0
+    - libwebm        1.0.0.27-2 -> 1.0.0.27-3
+    - magnum         2018.04-1 -> 2018.10-1
+    - magnum-extras  2018.04-1 -> 2018.10-1
+    - magnum-integration 2018.04-1 -> 2018.10-1
+    - magnum-plugins 2018.04-1 -> 2018.10-1
+    - matio          1.5.12 -> 1.5.13
+    - metis          5.1.0-1 -> 5.1.0-2
+    - minizip        1.2.11-2 -> 1.2.11-3
+    - mpir           3.0.0-4 -> 3.0.0-5
+    - ms-gsl         2018-09-18 -> 2018-11-08
+    - nghttp2        1.33.0 -> 1.34.0
+    - nlohmann-json  3.3.0 -> 3.4.0
+    - nng            1.0.1 -> 1.1.0
+    - nuklear        2018-09-18 -> 2018-11-01
+    - openal-soft    1.19.0 -> 1.19.1
+    - opencv         3.4.1 -> 3.4.3-3
+    - opengl-registry 2018-06-30 -> 2018-06-30-1
+    - openimageio    Release-1.8.13 -> 1.8.16
+    - openssl-unix   1.0.2p -> 1.0.2p-1
+    - opus           1.2.1-1 -> 1.3
+    - osgearth       2.9-1 -> 2.9-2
+    - pcl            1.8.1-12 -> 1.9.0-1
+    - pixman         0.34.0-4 -> 0.34.0-5
+    - portaudio      19.0.6.00-2 -> 19.0.6.00-4
+    - qhull          2015.2-2 -> 2015.2-3
+    - qscintilla     2.10-4 -> 2.10-7
+    - qt5            5.9.2-1 -> 5.11.2
+    - qt5-3d         5.9.2-0 -> 5.11.2
+    - qt5-activeqt   5.9.2-0 -> 5.11.2
+    - qt5-base       5.9.2-7 -> 5.11.2-1
+    - qt5-charts     5.9.2-0 -> 5.11.2
+    - qt5-datavis3d  5.9.2-0 -> 5.11.2
+    - qt5-declarative 5.9.2-0 -> 5.11.2
+    - qt5-gamepad    5.9.2-0 -> 5.11.2
+    - qt5-graphicaleffects 5.9.2-0 -> 5.11.2
+    - qt5-imageformats 5.9.2-0 -> 5.11.2
+    - qt5-modularscripts 4 -> 2018-11-01-1
+    - qt5-multimedia 5.9.2-0 -> 5.11.2
+    - qt5-networkauth 5.9.2-0 -> 5.11.2
+    - qt5-quickcontrols 5.9.2-1 -> 5.11.2
+    - qt5-quickcontrols2 5.9.2-1 -> 5.11.2
+    - qt5-script     5.9.2 -> 5.11.2
+    - qt5-scxml      5.9.2-0 -> 5.11.2
+    - qt5-serialport 5.9.2-0 -> 5.11.2
+    - qt5-speech     5.9.2-0 -> 5.11.2
+    - qt5-svg        5.9.2-0 -> 5.11.2
+    - qt5-tools      5.9.2-0 -> 5.11.2
+    - qt5-virtualkeyboard 5.9.2-0 -> 5.11.2
+    - qt5-websockets 5.9.2-0 -> 5.11.2
+    - qt5-winextras  5.9.2-0 -> 5.11.2
+    - qt5-xmlpatterns 5.9.2-0 -> 5.11.2
+    - qwt            6.1.3-5 -> 6.1.3-6
+    - range-v3       0.3.5 -> 0.4.0-20181122
+    - rapidjson      1.1.0-1 -> 1.1.0-2
+    - re2            2018-09-18 -> 2018-11-01
+    - rocksdb        5.14.2 -> 5.15.10
+    - rs-core-lib    2018-09-18 -> 2018-10-25
+    - rttr           0.9.5-2 -> 0.9.5-3
+    - scintilla      4.0.3 -> 4.1.2
+    - sdl2           2.0.8-1 -> 2.0.9-1
+    - sfml           2.5.0-2 -> 2.5.1
+    - sobjectizer    5.5.22.1 -> 5.5.23
+    - spdlog         1.0.0 -> 1.2.1
+    - sqlite3        3.24.0-1 -> 3.25.2
+    - suitesparse    4.5.5-4 -> 5.1.2
+    - tbb            2018_U5-4 -> 2018_U6
+    - thrift         2018-09-18 -> 2018-11-01
+    - tiff           4.0.9-4 -> 4.0.10
+    - tiny-dnn       2018-09-18 -> 2018-10-25
+    - unicorn        2018-09-18 -> 2018-10-25
+    - unicorn-lib    2018-09-18 -> 2018-10-25
+    - uriparser      0.8.6 -> 0.9.0
+    - vtk            8.1.0-1 -> 8.1.0-3
+    - vxl            20180414-7a130cf-1 -> v1.18.0-2
+    - wangle         v2018.07.30.00-1 -> 2018.11.05.00
+    - websocketpp    0.7.0-1 -> 0.8.1
+    - winpcap        4.1.3-1 -> 4.1.3-2
+    - xalan-c        1.11-1 -> 1.11-4
+    - xerces-c       3.1.4-3 -> 3.2.2-5
+    - yoga           1.9.0 -> 1.10.0
+    - zeromq         2018-09-18 -> 2018-11-01
+  * `vcpkg install`: Improve error messages
+  * `vcpkg hash`: Now also tries `shaABCsum tools`, instead of only `shasum`. Allows building in OSes like Alpine.
+  * `vcpkg edit`: No longer launches the editor in a clean (purged) environment.
+  * `vcpkg upgrade`: now tab-completed in powershell (it was missing before).
+  * Add new function: `vcpkg_from_git()`
+  * Enable Visual Studio versions greater than 15.
+  * Add Visual Studio Code autotection on OSX (#4589)
+  * Work-around hash issue caused by NuGet adding signatures to all their files.
+  * Improve building `vcpkg.exe` (Windows-only):
+    - Builds out of source
+    - Temporary files are removed after bootstrap
+    - User Property Pages are ignored (#4620)
+  * `vcpkg` now prints URL and filepath, when downloading a tool (#4640)
+  * Bump version of `cmake` to 3.12.4
+  * Bump version of `git` to 2.9.1
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 23 Nov 2018 14:30:00 -0800
+
+
 vcpkg (2018.10.20)
 --------------
   * Add ports:

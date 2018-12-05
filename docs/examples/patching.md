@@ -1,4 +1,4 @@
-## Example 3: Patching libpng to work for x86-uwp
+## Patching Example: Patching libpng to work for x86-uwp
 
 ### Initial error logs
 First, try building:
