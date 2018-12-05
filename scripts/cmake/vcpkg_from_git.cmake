@@ -65,9 +65,10 @@ function(vcpkg_from_git)
     message(FATAL_ERROR "vcpkg_from_git requires a SHA512 argument. If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
   endif()
 
+  # using .tar.gz instead of .zip because the hash of the latter is affected by timezone.
   string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
-  set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}.zip")
-  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.zip")
+  set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}.tar.gz")
+  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.tar.gz")
   set(TEMP_SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SANITIZED_REF}")
 
   function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)

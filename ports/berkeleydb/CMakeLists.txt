@@ -15,12 +15,12 @@ add_definitions(
 
 if (BUILD_SHARED_LIBS)
 	add_definitions(
-		-D_LIB
+		-DDB_CREATE_DLL
+		-D_USRDLL
 	)
 else()
 	add_definitions(
-		-DDB_CREATE_DLL
-		-D_USRDLL
+		-D_LIB
 	)
 endif()
 
