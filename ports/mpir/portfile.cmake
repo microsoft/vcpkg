@@ -71,7 +71,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     )
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    configure_file(${SOURCE_PATH}/COPYING.lib ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
+    configure_file(${SOURCE_PATH}/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/mpir/copyright COPYONLY)
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
