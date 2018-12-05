@@ -430,16 +430,14 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
-    static constexpr StringLiteral OPTION_ENABLE_SOURCE_LINK = "--source-link";
 
-    static constexpr std::array<CommandSwitch, 7> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
-        {OPTION_ENABLE_SOURCE_LINK, "Enable Source Link support"},
     }};
     static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
@@ -595,7 +593,6 @@ namespace vcpkg::Install
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
-        const bool enable_source_link = Util::Sets::contains(options.switches, (OPTION_ENABLE_SOURCE_LINK));
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -611,7 +608,6 @@ namespace vcpkg::Install
             download_tool,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
-            Util::Enum::to_enum<Build::EnableSourceLink>(enable_source_link),
         };
 
         auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);

@@ -71,7 +71,6 @@ namespace vcpkg::Build::Command
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
-            Build::EnableSourceLink::NO,
         };
 
         std::set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
@@ -371,8 +370,6 @@ namespace vcpkg::Build
                 {"PORT", config.scf.core_paragraph->name},
                 {"CURRENT_PORT_DIR", config.port_dir},
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
-                {"VCPKG_ENABLE_SOURCE_LINK",
-                 Util::Enum::to_bool(config.build_package_options.enable_source_link) ? "1" : "0"},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
                  Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},

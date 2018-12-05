@@ -76,12 +76,6 @@ namespace vcpkg::Build
         YES
     };
 
-    enum class EnableSourceLink
-    {
-        NO = 0,
-        YES
-    };
-
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -91,7 +85,6 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
-        EnableSourceLink enable_source_link;
     };
 
     enum class BuildResult
