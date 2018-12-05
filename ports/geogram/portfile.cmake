@@ -32,7 +32,8 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    # Geogram cannot be built with ninja because it embeds $(Configuration) in some of the generated paths. These require MSBuild in order to be evaluated.
+    #PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DVORPALINE_BUILD_DYNAMIC=${VORPALINE_BUILD_DYNAMIC}
         -DGEOGRAM_WITH_GRAPHICS=${GEOGRAM_WITH_GRAPHICS}
