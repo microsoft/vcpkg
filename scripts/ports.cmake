@@ -27,8 +27,8 @@ set(BUILDTREES_DIR ${VCPKG_ROOT_DIR}/buildtrees CACHE PATH "Location to perform 
 
 if(PORT)
     set(CURRENT_BUILDTREES_DIR ${BUILDTREES_DIR}/${PORT})
-    set(CURRENT_SOURCELINK_FILE ${BUILDTREES_DIR}/_sourcelink/${PORT}.json)
     set(CURRENT_PACKAGES_DIR ${PACKAGES_DIR}/${PORT}_${TARGET_TRIPLET})
+    set(_CURRENT_SOURCELINK_FILE ${BUILDTREES_DIR}/${PORT}/sourcelink/${PORT}.json)
 endif()
 
 

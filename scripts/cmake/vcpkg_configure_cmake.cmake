@@ -172,8 +172,8 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
     endif()
 
-    if(EXISTS ${CURRENT_SOURCELINK_FILE})
-        list(APPEND _csc_OPTIONS "-DVCPKG_SOURCELINK_FILE=${CURRENT_SOURCELINK_FILE}")
+    if(EXISTS ${_CURRENT_SOURCELINK_FILE})
+        list(APPEND _csc_OPTIONS "-DVCPKG_SOURCELINK_FILE=${_CURRENT_SOURCELINK_FILE}")
     endif()
 
     list(APPEND _csc_OPTIONS
