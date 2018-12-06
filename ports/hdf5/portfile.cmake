@@ -58,7 +58,7 @@ configure_file(
 
 # Fix static szip link
 file(READ ${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-targets.cmake HDF5_TARGETS_DATA)
-STRING(REPLACE LINK_ONLY:szip-static [[LINK_ONLY:${_IMPORT_PREFIX}/lib/libszip.lib]] HDF5_TARGETS_NEW "${HDF5_TARGETS_DATA}")
+STRING(REPLACE LINK_ONLY:szip-static [[LINK_ONLY:${_IMPORT_PREFIX}/$<$<CONFIG:Debug>:debug/>lib/libszip$<$<CONFIG:Debug>:_D>.lib]] HDF5_TARGETS_NEW "${HDF5_TARGETS_DATA}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-targets.cmake "${HDF5_TARGETS_NEW}")
 
 
