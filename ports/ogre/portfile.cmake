@@ -103,7 +103,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)
         else()
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic_d.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic_d.lib)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib)
         endif()
     endif()
 
