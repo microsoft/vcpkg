@@ -1,0 +1,13 @@
+--- a/google/cloud/bigtable/CMakeLists.txt	2018-11-09 10:56:34.029389338 -0500
++++ a/google/cloud/bigtable/CMakeLists.txt	2018-11-09 10:57:18.461259917 -0500
+@@ -53,6 +53,10 @@
+ # Configure the location of proto files, particulary the googleapis protos.
+ list(APPEND PROTOBUF_IMPORT_DIRS "${PROJECT_THIRD_PARTY_DIR}/googleapis"
+             "${PROJECT_SOURCE_DIR}")
++find_path(PROTO_INCLUDE_DIR google/protobuf/descriptor.proto)
++if(PROTO_INCLUDE_DIR)
++    list(INSERT PROTOBUF_IMPORT_DIRS 0 "${PROTO_INCLUDE_DIR}")
++endif()
+ 
+ # Include the functions to compile proto files.
+ include(CompileProtos)

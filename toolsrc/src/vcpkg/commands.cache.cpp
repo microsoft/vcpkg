@@ -61,7 +61,7 @@ namespace vcpkg::Commands::Cache
             for (const BinaryParagraph& binary_paragraph : binary_paragraphs)
             {
                 const std::string displayname = binary_paragraph.displayname();
-                if (Strings::case_insensitive_ascii_find(displayname, args.command_arguments[0]) == displayname.end())
+                if (!Strings::case_insensitive_ascii_contains(displayname, args.command_arguments[0]))
                 {
                     continue;
                 }

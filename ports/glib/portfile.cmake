@@ -42,9 +42,11 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DGLIB_SKIP_HEADERS=ON
         -DGLIB_SKIP_TOOLS=ON
-    )
+)
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-glib TARGET_PATH share/unofficial-glib)
+
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/glib)
 

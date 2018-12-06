@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/kplotting-5.37.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.kde.org/stable/frameworks/5.37/kplotting-5.37.0.zip"
-    FILENAME "kplotting-5.37.0.zip"
-    SHA512 3a1b3f993123dea7141d280cd53ae1b5e49b859e9df39a188bac216758576106efd8b744e8f10f96fac158f980d79ae94d2b27f3d85a48fcd5673263ffce3c4e
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KDE/kplotting
+    REF v5.50.0
+    SHA512 512a0f8e8a5147f06345d86fa29effa8d0a59b62f5a24b70a09c4ddf5204d626e13f421be7c42d2103c5634e863db5ac8e6763db886351597f0798e05bc97f33
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -21,4 +22,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Plotting)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/KF5plotting RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/kf5plotting RENAME copyright)

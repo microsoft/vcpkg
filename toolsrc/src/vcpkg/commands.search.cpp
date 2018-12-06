@@ -10,46 +10,9 @@
 
 namespace vcpkg::Commands::Search
 {
-    static constexpr StringLiteral OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
     static constexpr StringLiteral OPTION_FULLDESC =
         "--x-full-desc"; // TODO: This should find a better home, eventually
-
-    static std::string replace_dashes_with_underscore(const std::string& input)
-    {
-        std::string output = input;
-        std::replace(output.begin(), output.end(), '-', '_');
-        return output;
-    }
-
-    static std::string create_graph_as_string(
-        const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
-    {
-        int empty_node_count = 0;
-
-        std::string s;
-        s.append("digraph G{ rankdir=LR; edge [minlen=3]; overlap=false;");
-
-        for (const auto& source_control_file : source_control_files)
-        {
-            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
-            if (source_paragraph.depends.empty())
-            {
-                empty_node_count++;
-                continue;
-            }
-
-            const std::string name = replace_dashes_with_underscore(source_paragraph.name);
-            s.append(Strings::format("%s;", name));
-            for (const Dependency& d : source_paragraph.depends)
-            {
-                const std::string dependency_name = replace_dashes_with_underscore(d.name());
-                s.append(Strings::format("%s -> %s;", name, dependency_name));
-            }
-        }
-
-        s.append(Strings::format("empty [label=\"%d singletons...\"]; }", empty_node_count));
-        return s;
-    }
+    
     static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {
         if (full_desc)
@@ -80,8 +43,7 @@ namespace vcpkg::Commands::Search
         }
     }
 
-    static constexpr std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
-        {OPTION_GRAPH, "Open editor into the port-specific buildtree subfolder"},
+    static constexpr std::array<CommandSwitch, 1> SEARCH_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
     }};
 
@@ -101,13 +63,6 @@ namespace vcpkg::Commands::Search
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
         auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
-
-        if (Util::Sets::contains(options.switches, OPTION_GRAPH))
-        {
-            const std::string graph_as_string = create_graph_as_string(source_paragraphs);
-            System::println(graph_as_string);
-            Checks::exit_success(VCPKG_LINE_INFO);
-        }
 
         if (args.command_arguments.empty())
         {

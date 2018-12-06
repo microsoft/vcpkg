@@ -8,8 +8,6 @@
 
 namespace vcpkg::System
 {
-    tm get_current_date_time();
-
     fs::path get_exe_path_of_current_process();
 
     struct CMakeVariable
@@ -25,15 +23,6 @@ namespace vcpkg::System
                                const fs::path& cmake_script,
                                const std::vector<CMakeVariable>& pass_variables);
 
-    struct PowershellParameter
-    {
-        PowershellParameter(const CStringView varname, const char* varvalue);
-        PowershellParameter(const CStringView varname, const std::string& varvalue);
-        PowershellParameter(const CStringView varname, const fs::path& path);
-
-        std::string s;
-    };
-
     struct ExitCodeAndOutput
     {
         int exit_code;
@@ -41,19 +30,15 @@ namespace vcpkg::System
     };
 
     int cmd_execute_clean(const CStringView cmd_line,
-                          const std::unordered_map<std::string, std::string>& extra_env = {});
+                          const std::unordered_map<std::string, std::string>& extra_env = {}) noexcept;
 
-    int cmd_execute(const CStringView cmd_line);
+    int cmd_execute(const CStringView cmd_line) noexcept;
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
+#if defined(_WIN32)
+    void cmd_execute_no_wait(const CStringView cmd_line) noexcept;
+#endif
 
-    void powershell_execute(const std::string& title,
-                            const fs::path& script_path,
-                            const std::vector<PowershellParameter>& parameters = {});
-
-    std::string powershell_execute_and_capture_output(const std::string& title,
-                                                      const fs::path& script_path,
-                                                      const std::vector<PowershellParameter>& parameters = {});
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line) noexcept;
 
     enum class Color
     {

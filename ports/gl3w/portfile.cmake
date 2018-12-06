@@ -9,15 +9,7 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_download_distfile(
-  GLCOREARB_H
-  URLS "http://www.opengl.org/registry/api/GL/glcorearb.h"
-  FILENAME "glcorearb-2018-02-27.h"
-  SHA512 02c3672606e6360f2e1e8335fe581bc2d2b3d518b0f24b0c327006a70de07261dace4b53b13e93029a8eb2af43bcba904c4392f2c35ac512c7f278534ef8eb5d
-)
-
-file(INSTALL ${GLCOREARB_H} DESTINATION ${SOURCE_PATH}/include/GL RENAME glcorearb.h)
+file(COPY ${CURRENT_INSTALLED_DIR}/include/GL/glcorearb.h DESTINATION ${SOURCE_PATH}/include/GL)
 
 vcpkg_apply_patches(
   SOURCE_PATH ${SOURCE_PATH}

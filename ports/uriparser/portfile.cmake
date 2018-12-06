@@ -1,11 +1,10 @@
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF uriparser-0.8.5
-    SHA512 b5a4eb316b96bdd5b87cac9fdd30b8988c158914e71030a45aafabd04df67a94bba9696782d98e9fa2169baf351e95ab1479bc76d8afe37968a941bc27a3ffb6
+    REF uriparser-0.9.0
+    SHA512 d0a317fa55531f75b0e7ec712ea36f8e36a8cf72fdb4f959f3df7cc7c519d09752b194579a4f288bcea56d7be105da3d79dd8323960e74daff93f1dad2b5085d
     HEAD_REF master
 )
 

@@ -1,0 +1,4 @@
+Source: selene
+Version: 0.1.1
+Description: A C++14 image representation, processing and I/O library.
+Build-Depends: zlib, libpng, libjpeg-turbo

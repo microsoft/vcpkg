@@ -3,7 +3,7 @@ project(SDL2_image C)
 
 ### configuration ###
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/libwebp")
 # enable all file formats which are supported natively
 set(SUPPORTED_FORMATS BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
 
@@ -11,6 +11,8 @@ set(SUPPORTED_FORMATS BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
 # first try to load them statically (lib file in vcpkg installation)
 # if this fails try to make them a dynamic dependency (dll will be loaded at runtime) if possible. vcpkg cannot resolve these dependencies!
 # else do not support this file format at all
+
+# Can be explicitly enabled or disabled via USE_XYZ
 set(DEPENDENCIES PNG JPEG TIFF WEBP)
 
 # patch library names for preprocessor flags
@@ -62,7 +64,10 @@ include_directories(${CMAKE_SOURCE_DIR})
 target_link_libraries(SDL2_image ${SDL_LIBRARY})
 
 # external dependencies
-foreach(DEPENDENCY ${DEPENDENCIES})
+foreach(DEPENDENCY IN LISTS DEPENDENCIES)
+    if(NOT USE_${DEPENDENCY})
+        continue()
+    endif()
     find_package(${DEPENDENCY})
 
     if(NOT DEFINED ${DEPENDENCY}_FLAG)

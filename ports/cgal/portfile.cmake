@@ -3,16 +3,22 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF 27859944b4d96797030fc018892d5123b7cba0b2
-    SHA512 020d4398fcae0607cd3fe1bd22a190fbe1d45cba0c7e3c95d6d3dfb6d23c43949a1608069972e511f5d47fc787c350c0a0a0085faa2f4b9fd26ce101376752c6 
+    REF releases/CGAL-4.13
+    SHA512 3a12d7f567487c282928a162a47737c41c22258556ca0083b9cf492fc8f0a7c334b491b14dbfd6a62e71feeeb1b4995769c13a604e0882548f21c41b996d4eaf
     HEAD_REF master
 )
+
+set(WITH_CGAL_Qt5  OFF)
+if("qt" IN_LIST FEATURES)
+  set(WITH_CGAL_Qt5 ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DCGAL_INSTALL_CMAKE_DIR=share/cgal
+        -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
 )
 
 vcpkg_install_cmake()
@@ -24,11 +30,33 @@ vcpkg_copy_pdbs()
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    foreach(ROOT ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE
+            ${ROOT}/cgal_create_CMakeLists
+            ${ROOT}/cgal_create_cmake_script
+            ${ROOT}/cgal_make_macosx_app
+        )
+    endforeach()
+endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake _contents)
 string(REPLACE "CGAL_IGNORE_PRECONFIGURED_GMP" "1" _contents "${_contents}")
 string(REPLACE "CGAL_IGNORE_PRECONFIGURED_MPFR" "1" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake "${_contents}")
 
-# Handle copyright of suitesparse and metis
-file(COPY ${SOURCE_PATH}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "include (\$\{CMAKE_CURRENT_LIST_DIR\}/../../share/cgal/CGALConfig.cmake)")
+
+file(COPY ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/cgal/LICENSE ${CURRENT_PACKAGES_DIR}/share/cgal/copyright)
+
+file(
+    COPY
+        ${SOURCE_PATH}/Installation/LICENSE.BSL
+        ${SOURCE_PATH}/Installation/LICENSE.FREE_USE
+        ${SOURCE_PATH}/Installation/LICENSE.GPL
+        ${SOURCE_PATH}/Installation/LICENSE.LGPL
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
+)

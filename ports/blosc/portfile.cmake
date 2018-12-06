@@ -16,6 +16,8 @@ else()
     set(BLOSC_SHARED ON)
 endif()
 
+file(REMOVE_RECURSE ${SOURCE_PATH}/internal-complibs)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DPREFER_EXTERNAL_LZ4=ON

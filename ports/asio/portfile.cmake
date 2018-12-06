@@ -4,14 +4,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-12-0
-    SHA512 a0e341fd6a848784e1533df84d1e6b361c8468f59d4fbde68c1500c1f8a2124ad78db0169098dbbc594ce26717eb9760f37af13cb288a549e2bda563eecf2be3
+    REF asio-1-12-1
+    SHA512 e335eea05c27a72faae95dd5d5ca997ac8bb144cd5fb68e5538129ea6afb3b4d88e2be1c31a1effdbbbe4c93e07ee274a7e5817453c29faf56abf9ab692b2dd6
     HEAD_REF master
 )
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/asio/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/asio/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Copy the asio header files
 file(INSTALL ${SOURCE_PATH}/asio/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")

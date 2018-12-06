@@ -12,14 +12,15 @@ include(vcpkg_common_functions)
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 1f6f9afc6bf3c4f60ea510fc75f89634f282d15d)
-set(SCITER_SHA 53be8007c22349e9801c413483d70cad437bc3399686f2c503da9b7aa96bf212e7563b13fff8e62942b0991fa775e87e542b5ff9c3dbc4aff1fd5291200b2c8e)
+set(SCITER_REVISION 8add927504c84d72833973a659e834081672237f)
+set(SCITER_SHA 85aa711b51e7911f62162cf8c3b74e7693c92a02618e074ed24578da56cf7a589e8336a677b21e7359957bcd7357adfb5da54a9fafa12b7f0bee8e480115c84c)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH 64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     set(SCITER_ARCH 32)
 endif()
+
 
 # check out the `https://github.com/c-smile/sciter-sdk/archive/${SCITER_REVISION}.tar.gz`
 # hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
@@ -39,15 +40,15 @@ vcpkg_apply_patches(
 # install include directory
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/sciter
     FILES_MATCHING
-    PATTERN "sciter-gtk-main.cpp" EXCLUDE
-    PATTERN "sciter-osx-main.mm" EXCLUDE
     PATTERN "*.cpp"
+    PATTERN "*.mm"
     PATTERN "*.h"
     PATTERN "*.hpp"
 )
 
 set(SCITER_SHARE ${CURRENT_PACKAGES_DIR}/share/sciter)
 set(SCITER_TOOLS ${CURRENT_PACKAGES_DIR}/tools/sciter)
+set(TOOL_PERMS FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # license
 file(COPY ${SOURCE_PATH}/logfile.htm DESTINATION ${SCITER_SHARE})
@@ -59,16 +60,42 @@ file(COPY ${SOURCE_PATH}/samples DESTINATION ${SCITER_SHARE})
 file(COPY ${SOURCE_PATH}/widgets DESTINATION ${SCITER_SHARE})
 
 # tools
-file(INSTALL ${SOURCE_PATH}/bin/packfolder.exe DESTINATION ${SCITER_TOOLS})
-file(INSTALL ${SOURCE_PATH}/bin/tiscript.exe DESTINATION ${SCITER_TOOLS})
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux AND VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(SCITER_BIN ${SOURCE_PATH}/bin.gtk/x64)
 
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.exe DESTINATION ${SCITER_TOOLS})
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/inspector.exe DESTINATION ${SCITER_TOOLS})
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SCITER_BIN}/usciter DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
 
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    set(SCITER_BIN ${SOURCE_PATH}/bin.osx)
+
+    file(INSTALL ${SCITER_BIN}/packfolder DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
+    file(INSTALL ${SCITER_BIN}/inspector.app DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
+
+    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+else()
+    set(SCITER_BIN ${SOURCE_PATH}/bin/${SCITER_ARCH})
+
+    file(INSTALL ${SOURCE_PATH}/bin/packfolder.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SOURCE_PATH}/bin/tiscript.exe DESTINATION ${SCITER_TOOLS})
+
+    file(INSTALL ${SCITER_BIN}/sciter.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/inspector.exe DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
+
+    file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 message(STATUS "Warning: Sciter requires manual deployment of the correct DLL files.")
