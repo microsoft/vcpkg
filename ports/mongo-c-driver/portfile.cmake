@@ -1,16 +1,11 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.13.0)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/mongo-c-driver/archive/1.13.0.tar.gz"
-    FILENAME "mongo-c-driver-1.13.0.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mongodb/mongo-c-driver
+    REF 1.13.0
     SHA512 d2f5b04b3d2dbdeba4547ec1fe8a0da7bad5214de92fff480ef0ff7d97ea45d5e6347c11c249867d4905b1dd81b76c7cfbb9094a58df586dae881955ee246907
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+    HEAD_REF master
+    PATCHES fix-uwp.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -38,7 +33,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-static-1.0")
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-1.0")
@@ -67,13 +62,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
         PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/static.patch
+            static.patch
     )
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver RENAME copyright)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/copyright COPYONLY)
 file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -82,6 +77,7 @@ else()
     set(PORT_POSTFIX "1.0")
 endif()
 
+# Create cmake files for _both_ find_package(mongo-c-driver) and find_package(libmongoc-static-1.0)/find_package(libmongoc-1.0)
 file(READ ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config.cmake LIBMONGOC_CONFIG_CMAKE)
 string(REPLACE "/include/libmongoc-1.0" "/include" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
 string(REPLACE "mongoc-static-1.0" "mongoc-1.0" LIBMONGOC_CONFIG_CMAKE "${LIBMONGOC_CONFIG_CMAKE}")
