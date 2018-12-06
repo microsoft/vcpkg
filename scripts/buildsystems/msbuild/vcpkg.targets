@@ -55,15 +55,17 @@
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
-    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!). 
+    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
     <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' and '$(VcpkgAutoLink)' == ''">false</VcpkgAutoLink>
+    <!-- Enable Source Link only when using toolset greater or equal to Visual Studio 2017 Version 15.8. -->
+    <VcpkgSourceLink Condition="'$(UseLldLink)' != 'true' and '$(VCToolsVersion)' != '' and '$(VCToolsVersion)' &gt;= '14.15.26726.0' and '$(VcpkgSourceLink)' == ''">true</VcpkgSourceLink>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
+  <ItemGroup Condition="'$(VcpkgSourceLink)' == 'true'">
     <VcpkgSourceLinkFiles Include="$(VcpkgRoot)sourcelink\*.json"/>
   </ItemGroup>
-  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
+  <PropertyGroup Condition="'$(VcpkgSourceLink)' == 'true'">
     <VcpkgSourceLinkOpts>@(VcpkgSourceLinkFiles->'/SOURCELINK:&quot;%(Identity)&quot;', ' ')</VcpkgSourceLinkOpts>
   </PropertyGroup>
 

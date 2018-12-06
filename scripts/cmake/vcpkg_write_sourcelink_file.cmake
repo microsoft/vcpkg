@@ -26,13 +26,11 @@ function(vcpkg_write_sourcelink_file)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
     endif()
 
-    if(VCPKG_ENABLE_SOURCE_LINK)
-        # Normalize and escape (for JSON) the source path.
-        file(TO_NATIVE_PATH "${_vwsf_SOURCE_PATH}" SOURCELINK_SOURCE_PATH)
-        string(REGEX REPLACE "\\\\" "\\\\\\\\" SOURCELINK_SOURCE_PATH "${SOURCELINK_SOURCE_PATH}")
+    # Normalize and escape (for JSON) the source path.
+    file(TO_NATIVE_PATH "${_vwsf_SOURCE_PATH}" SOURCELINK_SOURCE_PATH)
+    string(REGEX REPLACE "\\\\" "\\\\\\\\" SOURCELINK_SOURCE_PATH "${SOURCELINK_SOURCE_PATH}")
 
-        file(WRITE  "${CURRENT_SOURCELINK_FILE}" "{\"documents\":{\n")
-        file(APPEND "${CURRENT_SOURCELINK_FILE}" "  \"${SOURCELINK_SOURCE_PATH}\": \"${_vwsf_SERVER_PATH}\"\n")
-        file(APPEND "${CURRENT_SOURCELINK_FILE}" "}}")
-    endif()
+    file(WRITE  "${CURRENT_SOURCELINK_FILE}" "{\"documents\":{\n")
+    file(APPEND "${CURRENT_SOURCELINK_FILE}" "  \"${SOURCELINK_SOURCE_PATH}\": \"${_vwsf_SERVER_PATH}\"\n")
+    file(APPEND "${CURRENT_SOURCELINK_FILE}" "}}")
 endfunction()
