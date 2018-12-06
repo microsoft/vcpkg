@@ -312,11 +312,15 @@ endforeach()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/vtk)
 
 function(_vtk_move_tool TOOL_NAME)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${CMAKE_EXECUTABLE_SUFFIX})
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/vtk/${TOOL_NAME}${CMAKE_EXECUTABLE_SUFFIX})
-    endif()
 
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    foreach(SUFFIX "" ".exe")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${SUFFIX}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/vtk/${TOOL_NAME}${SUFFIX}")
+        endif()
+
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}${SUFFIX}")
+	endforeach()
+
 endfunction()
 
 set(VTK_TOOLS
