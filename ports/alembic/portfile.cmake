@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.9
-    SHA512 8025c20525ffbd5bdc9dd5a33ad8238e49f063d244ab9d112e7d1ddb7ee7cf9b36ceb74cb45d658ce22d3033552c89bddf6b818cf466ea46aa1a70a41fdeddb2
+    REF 1.7.10
+    SHA512 e98ffaedb98dbc5c53fe9703d3063bb118d32c83c47e3af04c8fc96237034b02fe0fc2c628ca82bdd0e0ef17d9375f4f48e0022ce33380b9ad91970539611ced
     HEAD_REF master
 )
 
