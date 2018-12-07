@@ -5,50 +5,24 @@
 #   Updated certstore. See certstore.pem in the output dirs
 #
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
 
-find_program(GIT git)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+vcpkg_add_to_path(${PERL_EXE_PATH})
 
-# Set git variables to qca version 2.2.0 commit 
-set(GIT_URL "git://anongit.kde.org/qca.git")
-set(GIT_REF "19ec49f89a0a560590ec733c549b92e199792837") # Commit
-
-# Prepare source dir
-if(NOT EXISTS "${DOWNLOADS}/qca.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/qca.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
-message(STATUS "Cloning done")
 
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/qca.git
-        LOGNAME worktree
-    )
-endif()
-message(STATUS "Adding worktree done")
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
-
-# Apply the patch to install to the expected folders
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-fix-path-for-vcpkg.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KDE/qca
+    REF 19ec49f89a0a560590ec733c549b92e199792837
+    SHA512 6a83ee6715a9a922f4fde5af571e2aad043ac5cbd522f57365038dd31879b44eb57a099ff797793d7ee19e320e0a151e5beacdff3bed525d39ea0b8e46efca9a
+    PATCHES 0001-fix-path-for-vcpkg.patch
 )
 
 # According to:
@@ -72,9 +46,8 @@ message(STATUS "Importing certstore done")
 # Configure and build
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
+    PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=ON
         -DUSE_RELATIVE_PATHS=ON
         -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
