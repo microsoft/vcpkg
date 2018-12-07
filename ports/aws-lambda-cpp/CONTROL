@@ -1,0 +1,4 @@
+Source: aws-lambda-cpp
+Version: 2018-12-06
+Build-Depends: curl
+Description: C++ Runtime for AWS Lambda.
