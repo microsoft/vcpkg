@@ -40,13 +40,13 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/proj4)
 
 # Rename library and adapt cmake configuration
-if(MSVC AND NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(READ ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-release.cmake _contents)
     string(REPLACE "proj_4_9.lib" "proj.lib" _contents "${_contents}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-release.cmake "${_contents}")
 endif()
 
-if(MSVC AND NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(READ ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-debug.cmake _contents)
     string(REPLACE "proj_4_9_d.lib" "projd.lib" _contents "${_contents}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-debug.cmake "${_contents}")
