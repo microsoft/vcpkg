@@ -14,9 +14,11 @@ endif()
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(. ./pango ${CMAKE_CURRENT_BINARY_DIR})
 
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # find libintl
 find_path(LIBINTL_INCLUDE_DIR libintl.h)
 find_library(LIBINTL_LIBRARY NAMES libintl intl)
+endif()
 
 # find glib
 find_path(GLIB_INCLUDE_DIR glib.h)
