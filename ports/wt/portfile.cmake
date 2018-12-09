@@ -36,13 +36,18 @@ vcpkg_configure_cmake(
 
         -DUSE_SYSTEM_SQLITE3=ON
         -DUSE_SYSTEM_GLEW=ON
+
+        -DCMAKE_INSTALL_DIR=share
 )
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/wt)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/wt)
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/var)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/var)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/wt RENAME copyright)
 vcpkg_copy_pdbs()
