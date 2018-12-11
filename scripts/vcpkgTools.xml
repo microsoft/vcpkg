@@ -24,9 +24,9 @@
     <tool name="git" os="windows">
         <version>2.19.1</version>
         <exeRelativePath>cmd\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.19.1.windows.1/MinGit-2.19.1-32-bit.zip</url>
-        <sha512>8a6d2caae2cbaacee073a641cda21465a749325c0af620dabd0e5521c84c92c8d747caa468b111d2ec52b99aee2ee3e6ec41a0a07a8fff582f4c8da568ea329e</sha512>
-        <archiveName>MinGit-2.19.1-32-bit.zip</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.19.1.windows.1/PortableGit-2.19.1-32-bit.7z.exe</url>
+        <sha512>50e11ba1190bca0210cf1aac4a1a10acddc8cff2f15ac4d036c1fcbab816ee35089b6115554e7d346dfb6f37003dc5da4bea396f3db4dae9b2f2bdd23fd0d876</sha512>
+        <archiveName>PortableGit-2.19.1-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
