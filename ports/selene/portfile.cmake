@@ -1,13 +1,5 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/selene-0.2)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	set(SELENE_EXPORT_SYMBOLS TRUE)
-else()
-	set(SELENE_EXPORT_SYMBOLS FALSE)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kmhofmann/selene
@@ -19,12 +11,12 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS
-	  -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=${SELENE_EXPORT_SYMBOLS}
+    OPTIONS
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/selene")
 vcpkg_copy_pdbs()
 
 # Include files should not be duplicated into the /debug/include directory.
