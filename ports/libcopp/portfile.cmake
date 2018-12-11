@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO owt5008137/libcopp
@@ -11,32 +13,18 @@ vcpkg_from_github(
 # Use libcopp's own build process, skipping examples and tests
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+    # PREFER_NINJA # Disabled because Ninja does not invoke masm correctly for this project
 )
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libcopp)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp)
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp)
 file(COPY ${SOURCE_PATH}/BOOST_LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp)
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp/copyright)
 
 vcpkg_copy_pdbs()
 
-set(LIBCOPP_FOR_VCPKG_PLATFORM_SUFFIX "")
-
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib")
-    file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/libcopp-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp/)
-    file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/libcopp-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp/)
-endif()
-
-# if(EXISTS "${CURRENT_PACKAGES_DIR}/lib64")
-#     file(COPY ${CURRENT_PACKAGES_DIR}/lib64/cmake/libcopp-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp/)
-#     file(COPY ${CURRENT_PACKAGES_DIR}/lib64/cmake/libcopp-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp/)
-# endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
