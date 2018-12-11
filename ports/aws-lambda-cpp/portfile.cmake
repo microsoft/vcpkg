@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp
-    REF 9183f81cbb5bfb1fe3eeb4e38d1993a858a58744
-    SHA512 6b25223bd07c46ff6f6ee239c794bf4b4a8b97430d85ad434eff80da3bf9692a5f47d428929efcba17f4392eb87c86c27e2fd6bf8d216ecd7c690dcf8cd4fad4
+    REF v0.1.0
+    SHA512 78b1ad1dcd88176a954c03b38cbb962c77488da6c75acb37a8b64cde147c030b02c6e51f0a974edb042e59c3c969d110d181ad097ef76f43255500b272a94454
     HEAD_REF master
 )
 
