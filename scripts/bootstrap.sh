@@ -17,7 +17,16 @@ while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
     vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
-downloadsDir="$vcpkgRootDir/downloads"
+if [ -z ${VCPKG_DOWNLOADS+x} ]; then
+    downloadsDir="$vcpkgRootDir/downloads"
+else
+    downloadsDir="$VCPKG_DOWNLOADS"
+    if [ ! -d "$VCPKG_DOWNLOADS" ]; then
+        echo "VCPKG_DOWNLOADS was set to '$VCPKG_DOWNLOADS', but that was not a directory."
+        exit 1
+    fi
+
+fi
 
 extractStringBetweenDelimiters()
 {
@@ -181,9 +190,14 @@ selectCXX()
     gccversion="$(extractStringBetweenDelimiters "$gccversion" "gcc version " ".")"
     if [ "$gccversion" -lt "6" ]; then
         echo "CXX ($CXX) is too old; please install a newer compiler such as g++-7."
+        echo "On Ubuntu try the following:"
         echo "sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
         echo "sudo apt-get update -y"
         echo "sudo apt-get install g++-7 -y"
+        echo "On CentOS try the following:"
+        echo "sudo yum install centos-release-scl"
+        echo "sudo yum install devtoolset-7"
+        echo "scl enable devtoolset-7 bash"
         return 1
     fi
 
