@@ -163,7 +163,6 @@ namespace vcpkg
                 if (const auto version = maybe_version.get())
                 {
                     output.emplace_back(PathAndVersion{p, *version});
-                    return output;
                 }
             }
 
