@@ -181,9 +181,14 @@ selectCXX()
     gccversion="$(extractStringBetweenDelimiters "$gccversion" "gcc version " ".")"
     if [ "$gccversion" -lt "6" ]; then
         echo "CXX ($CXX) is too old; please install a newer compiler such as g++-7."
+        echo "On Ubuntu try the following:"
         echo "sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
         echo "sudo apt-get update -y"
         echo "sudo apt-get install g++-7 -y"
+        echo "On CentOS try the following:"
+        echo "sudo yum install centos-release-scl"
+        echo "sudo yum install devtoolset-7"
+        echo "scl enable devtoolset-7 bash"
         return 1
     fi
 
