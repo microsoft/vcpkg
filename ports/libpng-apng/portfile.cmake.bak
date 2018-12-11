@@ -13,7 +13,7 @@ vcpkg_from_github(
 vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
     URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_APNG_VERSION}/libpng-${LIBPNG_APNG_VERSION}-apng.patch.gz"
     FILENAME "libpng-${LIBPNG_APNG_VERSION}-apng.patch.gz"
-    SHA512 8fa213204768b058459ffd5eae6b3661c3f185d3baf1913da4337e7b7855e567f2525e7f67411c32fa8cb177a5f93d538c3d0ce17a94d4aa71bd9cffabe8b311
+    SHA512 1
 )
 
 vcpkg_find_acquire_program(7Z)
