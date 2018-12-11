@@ -36,15 +36,17 @@ namespace vcpkg
         paths.buildtrees = paths.root / "buildtrees";
 
         const auto overriddenDownloadsPath = System::get_environment_variable("VCPKG_DOWNLOADS");
-        if (overriddenDownloadsPath)
+        if (auto odp = overriddenDownloadsPath.get())
         {
-            auto asPath = fs::u8path(*overriddenDownloadsPath.get());
+            auto asPath = fs::u8path(*odp);
             if (!fs::stdfs::is_directory(asPath))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid downloads override directory: %s; "
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO,
+                    "Invalid downloads override directory: %s; "
                     "create that directory or unset VCPKG_DOWNLOADS to use the default downloads location.",
-                    asPath.string());
+                    asPath.u8string());
             }
 
             paths.downloads = fs::stdfs::canonical(std::move(asPath), ec);
