@@ -160,6 +160,16 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
         }
 
         $majorVersion = $version.Substring(0,2);
+        if ($majorVersion -eq "16")
+        {
+            $VCFolder= "$path\VC\Tools\MSVC\"
+            if (Test-Path $VCFolder)
+            {
+                Write-Verbose "Picking: $instanceCandidate"
+                return "$path\MSBuild\Current\Bin\MSBuild.exe", "v141"
+            }
+        }
+
         if ($majorVersion -eq "15")
         {
             $VCFolder= "$path\VC\Tools\MSVC\"
