@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(OPENCV_PORT_VERSION "3.4.3")
+set(OPENCV_PORT_VERSION "3.4.4")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_PORT_VERSION}
-    SHA512 d653a58eb5e3939b9fdb7438ac35f77cf4385cf72d5d22bfd21722a109e1b3283dbb9407985061b7548114f0d05c9395aac9bb62b4d2bc1f68da770a49987fef
+    SHA512 f74f0f80991a9fe13971b2a88fa155e215339c957332e219cc56d93ed68dfbf21ac1eb970f57c32327fe107de1de21aacd22218caf8247abc16bafbfc9d42da5
     HEAD_REF master
     PATCHES
       "${CMAKE_CURRENT_LIST_DIR}/0001-winrt-fixes.patch"
@@ -110,17 +110,17 @@ set(WITH_FFMPEG OFF)
 if("ffmpeg" IN_LIST FEATURES)
   set(WITH_FFMPEG ON)
   vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/opencv_ffmpeg.dll"
-    FILENAME "opencv-cache/ffmpeg/fa5a2a4e2f37defcb95bde8ed145c2b3-opencv_ffmpeg.dll"
-    SHA512 875f922e1d9fc2fe7c8e879ede35b1001b6ad8b3c4d71feb3823421ce861f580df3418c791315b23870fcb0378d297b01e0761d3f65277ff11ec2fef8c0b08b7
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fe71c0ad807fdc33c2178e48e488f1e9b177c39a/ffmpeg/opencv_ffmpeg.dll"
+    FILENAME "opencv-cache/ffmpeg/41b81bb9a50cabd4bea385f7b50a069a-opencv_ffmpeg.dll"
+    SHA512 60f40ec3c50ee8a18978caf6dd141d0d9753ff135cf7af07971979e4b35415cf84ea779475e0c1399f171a68294d2563a77a9e32500eb1e61b265b5f39274303
   )
   vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/opencv_ffmpeg_64.dll"
-    FILENAME "opencv-cache/ffmpeg/2cc08fc4fef8199fe80e0f126684834f-opencv_ffmpeg_64.dll"
-    SHA512 4e74aa4cb115f103b929f93bbc8dcf675de7d0c7916f8f0a80ac46761134b088634be95f959ce5827753ae9ecb2365ca40440dfbb9a9bf89f22ee11b6c8342b3
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fe71c0ad807fdc33c2178e48e488f1e9b177c39a/ffmpeg/opencv_ffmpeg_64.dll"
+    FILENAME "opencv-cache/ffmpeg/a9ea7dbbc8e5afd08e00e223a831b578-opencv_ffmpeg_64.dll"
+    SHA512 49e7fc70489e6800f1690bcc295fc69be280a54fd0e67df7f81704b0b66ac6fe3a5a61d6ac7143bf3ddc68910d072c6303d211600da7fa9436747cd127501eb3
   )
   vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/ffmpeg_version.cmake"
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fe71c0ad807fdc33c2178e48e488f1e9b177c39a/ffmpeg/ffmpeg_version.cmake"
     FILENAME "opencv-cache/ffmpeg/3b90f67f4b429e77d3da36698cef700c-ffmpeg_version.cmake"
     SHA512 7d0142c30ac6f6260c1bcabc22753030fd25a708477fa28053e8df847c366967d3b93a8ac14af19a2b7b73d9f8241749a431458faf21a0c8efc7d6d99eecfdcf
   )
@@ -130,18 +130,57 @@ set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
 
-  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_intel64_general_20180518.zip"
-      FILENAME "opencv-cache/ippicv/915ff92958089ede8ea532d3c4fe7187-ippicv_2017u3_win_intel64_general_20180518.zip"
-      SHA512 8aa08292d542d521c042864446e47a7a6bdbf3896d86fc7b43255459c24a2e9f34a4e9b177023d178fed7a2e82a9db410f89d81375a542d049785d263f46c64d
-    )
+  if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_mac_intel64_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/fe6b2bb75ae0e3f19ad3ae1a31dfa4a2-ippicv_2019_mac_intel64_general_20180723.tgz"
+        SHA512 266fe3fecf8e95e1f51c09b65330a577743ef72b423b935d4d1fe8d87f1b4f258c282fe6a18fc805d489592f137ebed37c9f1d1b34026590d9f1ba107015132e
+      )
+    else()
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_mac_ia32_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/b5dfa78c87eb75c64470cbe5ec876f4f-ippicv_2019_mac_ia32_general_20180723.tgz"
+        SHA512 e1af76b313173640b62b91d0962139730cdfcd54b4df09c05403e0960d19791020645ea34559c8947769205531b1bb2b21e9c5dc6692af7d97dcf04b3c4b4331
+      )
+    endif()
+  elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_intel64_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/c0bd78adb4156bbf552c1dfe90599607-ippicv_2019_lnx_intel64_general_20180723.tgz"
+        SHA512 e4ec6b3b9fc03d7b3ae777c2a26f57913e83329fd2f7be26c259b07477ca2a641050b86979e0c96e25aa4c1f9f251b28727690358a77418e76dd910d0f4845c9
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_ia32_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/4f38432c30bfd6423164b7a24bbc98a0-ippicv_2019_lnx_ia32_general_20180723.tgz"
+        SHA512 d96d3989928ff11a18e631bf5ecfdedf88fd350162a23fa2c8f7dbc3bf878bf442aff7fb2a07dc56671d7268cc20682055891be75b9834e9694d20173e92b6a3
+      )
+    else()
+      message(WARNING "This target architecture is not supported IPPICV.")
+      set(WITH_IPP OFF)
+    endif()
+  elseif(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_intel64_20180723_general.zip"
+        FILENAME "opencv-cache/ippicv/1d222685246896fe089f88b8858e4b2f-ippicv_2019_win_intel64_20180723_general.zip"
+        SHA512 b6c4f2696e2004b8f5471efd9bdc6c684b77830e0533d8880310c0b665b450d6f78e10744c937f5592ab900e187c475e46cb49e98701bb4bcbbc7da77723011d
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_ia32_20180723_general.zip"
+        FILENAME "opencv-cache/ippicv/0157251a2eb9cd63a3ebc7eed0f3e59e-ippicv_2019_win_ia32_20180723_general.zip"
+        SHA512 c33fd4019c71b064b153e1b25e0307f9c7ada693af8ec910410edeab471c6f14df9b11bf9f5302ceb0fcd4282f5c0b6c92fb5df0e83eb50ed630c45820d1e184
+      )
+    else()
+      message(WARNING "This target architecture is not supported IPPICV.")
+      set(WITH_IPP OFF)
+    endif()
   else()
-    vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_ia32_general_20180518.zip"
-      FILENAME "opencv-cache/ippicv/928168c2d99ab284047dfcfb7a821d91-ippicv_2017u3_win_ia32_general_20180518.zip"
-      SHA512 b89b0fb739152303cafc9fb064fa8b24fd94850697137ccbb5c1e344e0f5094115603a5e3be3a25f85d0faefc5c53429a7d65da0142d012ada41e8db2bcdd6b7
-    )
+    message(WARNING "This platform is not supported IPPICV.")
+    set(WITH_IPP OFF)
   endif()
 endif()
 
@@ -212,7 +251,7 @@ if(BUILD_opencv_contrib)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_PORT_VERSION}
-      SHA512 456c6f878fb3bd5459f6430405cf05c609431f8d7db743aa699fc75c305d019682ee3a804bf0cf5107597dd1dbbb69b08be3535a0e6c717e4773ed7c05d08e59
+      SHA512 1e780371b1877b59524226b654e7dc1d8f3b8d6b886bfd0987f5dfc5202583cb88b96342c9609e87eb22744ef9a36f0bac0a0a3aec8d42d0d3f21563adfb1f4a
       HEAD_REF master
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
@@ -279,6 +318,7 @@ vcpkg_configure_cmake(
         # OPENCV
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
+        -DOPENCV_GENERATE_SETUPVARS=OFF
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
