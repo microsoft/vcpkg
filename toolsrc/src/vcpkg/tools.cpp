@@ -253,6 +253,11 @@ namespace vcpkg
 
         static PathAndVersion get_path(const VcpkgPaths& paths)
         {
+            if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+            {
+                return {"cmake", "0"};
+            }
+
             std::vector<fs::path> candidate_paths;
 #if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
             static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "cmake");
@@ -317,6 +322,11 @@ namespace vcpkg
 
         static PathAndVersion get_path(const VcpkgPaths& paths)
         {
+            if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+            {
+                return {"ninja", "0"};
+            }
+
             static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "ninja");
 
             std::vector<fs::path> candidate_paths;
