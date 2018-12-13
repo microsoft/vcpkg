@@ -255,6 +255,11 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(mpfr PRIVATE __GMP_LIBGMP_DLL)
 endif()
 
+try_compile(I_HAVE_STDARG ${CMAKE_BINARY_DIR} ${PROJECT_SOURCE_DIR}/test_stdarg.c)
+if (I_HAVE_STDARG)
+    target_compile_definitions(mpfr PRIVATE HAVE_STDARG)
+endif (I_HAVE_STDARG)
+
 target_link_libraries(mpfr ${GMP_LIBRARIES})
 
 target_include_directories(mpfr PUBLIC ${GMP_INCLUDE_DIRS})
