@@ -10,6 +10,9 @@ set(SOURCES "tinyxml.cpp"
 
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 
+add_definitions(-D_WINDOWS)
+add_definitions(-DDLL_EXPORT)
+
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 add_library(tinyxml ${SOURCES})

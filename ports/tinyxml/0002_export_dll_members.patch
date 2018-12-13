@@ -1,0 +1,35 @@
+From Francisco de Paula Dias Neto
+Date Wed Dec 12 12:25:48 2018 -0200
+Subject: [PATCH] Export dll members.
+
+diff --git a/tinyxml.h b/tinyxml.h
+--- a/tinyxml.h
++++ b/tinyxml.h
+@@ -32,6 +32,16 @@
+ #pragma warning( disable : 4786 )
+ #endif
+ 
++#ifdef _WINDOWS
++#ifdef DLL_EXPORT
++#define MEMBER_DECLSPEC __declspec( dllexport )
++#else
++#define MEMBER_DECLSPEC __declspec( dllimport )
++#endif
++#else
++#define MEMBER_DECLSPEC
++#endif
++
+ #include <ctype.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -413,8 +423,8 @@
+ 		MAX_ENTITY_LENGTH = 6
+ 
+ 	};
+-	static Entity entity[ NUM_ENTITY ];
+-  static bool condenseWhiteSpace;
++  static Entity entity[ NUM_ENTITY ];
++  MEMBER_DECLSPEC static bool condenseWhiteSpace;
+ };
+ 
+ 
