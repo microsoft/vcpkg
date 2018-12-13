@@ -1,3 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4448b98..cb9d87e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -710,6 +710,8 @@ endif()
+ 
+ set(ARROW_TEST_LINK_LIBS ${ARROW_MIN_TEST_LIBS})
+ 
++message(STATUS, "Arrow Pre Dependencies Are: ${ARROW_STATIC_LINK_LIBS} and ${PTHREAD_LIBRARY}")
++
+ if (ARROW_JEMALLOC)
+   add_definitions(-DARROW_JEMALLOC)
+   add_definitions(-DARROW_JEMALLOC_INCLUDE_DIR=${JEMALLOC_INCLUDE_DIR})
+@@ -743,10 +745,10 @@ elseif (PTHREAD_LIBRARY)
+   # linking order.
+   set(ARROW_LINK_LIBS
+     ${ARROW_LINK_LIBS}
+-    ${PTHREAD_LIBRARY})
++    pthreadshared)
+   set(ARROW_STATIC_LINK_LIBS
+     ${ARROW_STATIC_LINK_LIBS}
+-    ${PTHREAD_LIBRARY})
++    pthreadshared)
+ endif()
+ 
+ ############################################################
+@@ -780,3 +782,4 @@ endif()
+ if(ARROW_GANDIVA)
+   add_subdirectory(src/gandiva)
+ endif()
++
 diff --git a/cmake_modules/FindBrotli.cmake b/cmake_modules/FindBrotli.cmake
 index ea971f0..3e98ede 100644
 --- a/cmake_modules/FindBrotli.cmake
@@ -178,113 +209,97 @@ index 5402766..5ed3a03 100644
  mark_as_advanced(
    THRIFT_STATIC_LIB
    THRIFT_COMPILER
+diff --git a/cmake_modules/FindZLIB.cmake b/cmake_modules/FindZLIB.cmake
+index ca6060b..2ba97fd 100644
+--- a/cmake_modules/FindZLIB.cmake
++++ b/cmake_modules/FindZLIB.cmake
+@@ -30,13 +30,6 @@
+ #  ZLIB_SHARED_LIB, path to libz's shared library
+ #  ZLIB_FOUND, whether zlib has been found
+ 
+-if( NOT "${ZLIB_HOME}" STREQUAL "")
+-    file( TO_CMAKE_PATH "${ZLIB_HOME}" _native_path )
+-    list( APPEND _zlib_roots ${_native_path} )
+-elseif ( ZLIB_HOME )
+-    list( APPEND _zlib_roots ${ZLIB_HOME} )
+-endif()
+-
+ if (MSVC)
+   # zlib uses zlib.lib for Windows.
+   set(ZLIB_LIB_NAME zlib.lib)
+@@ -47,25 +40,15 @@ else ()
+ endif ()
+ 
+ # Try the parameterized roots, if they exist
+-if (_zlib_roots)
+-  find_path(ZLIB_INCLUDE_DIR NAMES zlib.h
+-    PATHS ${_zlib_roots} NO_DEFAULT_PATH
+-    PATH_SUFFIXES "include")
++pkg_check_modules(PKG_ZLIB zlib)
++if (PKG_ZLIB_FOUND)
++  set(ZLIB_INCLUDE_DIR ${PKG_ZLIB_INCLUDEDIR})
+   find_library(ZLIB_SHARED_LIB
+     NAMES ${ZLIB_LIB_NAME}
+-    PATHS ${_zlib_roots} NO_DEFAULT_PATH
+-    PATH_SUFFIXES "lib")
++    PATHS ${PKG_ZLIB_LIBDIR} NO_DEFAULT_PATH)
+ else ()
+-  pkg_check_modules(PKG_ZLIB zlib)
+-  if (PKG_ZLIB_FOUND)
+-    set(ZLIB_INCLUDE_DIR ${PKG_ZLIB_INCLUDEDIR})
+-    find_library(ZLIB_SHARED_LIB
+-      NAMES ${ZLIB_LIB_NAME}
+-      PATHS ${PKG_ZLIB_LIBDIR} NO_DEFAULT_PATH)
+-  else ()
+-    find_path(ZLIB_INCLUDE_DIR NAMES zlib.h)
+-    find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME})
+-  endif ()
++  find_path(ZLIB_INCLUDE_DIR NAMES zlib.h)
++  find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME})
+ endif ()
+ 
+ if (ZLIB_INCLUDE_DIR AND ZLIB_SHARED_LIB)
 diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
-index 810e5c0..062cfa9 100644
+index 810e5c0..61548fa 100644
 --- a/cmake_modules/FindZSTD.cmake
 +++ b/cmake_modules/FindZSTD.cmake
-@@ -1,53 +1,62 @@
--# Licensed to the Apache Software Foundation (ASF) under one
--# or more contributor license agreements.  See the NOTICE file
--# distributed with this work for additional information
--# regarding copyright ownership.  The ASF licenses this file
--# to you under the Apache License, Version 2.0 (the
--# "License"); you may not use this file except in compliance
--# with the License.  You may obtain a copy of the License at
- #
--#   http://www.apache.org/licenses/LICENSE-2.0
-+# Licensed under the Apache License, Version 2.0 (the "License");
-+# you may not use this file except in compliance with the License.
-+# You may obtain a copy of the License at
-+#
-+# http://www.apache.org/licenses/LICENSE-2.0
-+#
-+# Unless required by applicable law or agreed to in writing, software
-+# distributed under the License is distributed on an "AS IS" BASIS,
-+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+# See the License for the specific language governing permissions and
-+# limitations under the License.
-+#
-+# Tries to find ZSTD headers and libraries.
-+#
-+# Usage of this module as follows:
-+#
-+#  find_package(Snappy)
- #
--# Unless required by applicable law or agreed to in writing,
--# software distributed under the License is distributed on an
--# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
--# KIND, either express or implied.  See the License for the
--# specific language governing permissions and limitations
--# under the License.
--
--# - Find ZSTD (zstd.h, libzstd.a, libzstd.so, and libzstd.so.0)
- # This module defines
- #  ZSTD_INCLUDE_DIR, directory containing headers
--#  ZSTD_SHARED_LIB, path to libzstd shared library
--#  ZSTD_STATIC_LIB, path to libzstd static library
--#  ZSTD_FOUND, whether zstd has been found
--
+@@ -22,13 +22,6 @@
+ #  ZSTD_STATIC_LIB, path to libzstd static library
+ #  ZSTD_FOUND, whether zstd has been found
+ 
 -if( NOT "${ZSTD_HOME}" STREQUAL "")
 -    file( TO_CMAKE_PATH "${ZSTD_HOME}" _native_path )
 -    list( APPEND _zstd_roots ${_native_path} )
 -elseif ( ZStd_HOME )
 -    list( APPEND _zstd_roots ${ZStd_HOME} )
 -endif()
-+#  ZSTD_LIBS, directory containing ZSTD libraries
-+#  ZSTD_STATIC_LIB, path to zstd.a
-+#  ZSTD_SHARED_LIB, path to ZSTD's shared library
-+#  ZSTD_FOUND, whether ZSTD has been found
+-
+ if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+ endif()
+@@ -40,12 +33,8 @@ set(ZSTD_STATIC_LIB_NAME
+   ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
  
--if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
--  set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
-+find_path(ZSTD_INCLUDE_DIR ZSTD.h
-+  PATH_SUFFIXES "include")
-+  
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(ZSTD_LIB_SUFFIX "d")
-+else()
-+  set(ZSTD_LIB_SUFFIX "")
+ find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
+-  PATHS ${_zstd_roots}
+-  NO_DEFAULT_PATH
+   PATH_SUFFIXES "include" )
+ find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
+-  PATHS ${_zstd_roots}
+-  NO_DEFAULT_PATH
+   PATH_SUFFIXES "lib" )
+ 
+ include(FindPackageHandleStandardArgs)
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 1c7cd62..0e2be76 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -302,6 +302,8 @@ if (WIN32)
+ else()
+   find_library(PTHREAD_LIBRARY pthread)
+   message(STATUS "Found pthread: ${PTHREAD_LIBRARY}")
++  add_library(pthreadshared SHARED IMPORTED)
++  set_target_properties(pthreadshared PROPERTIES IMPORTED_LOCATION ${PTHREAD_LIBRARY})
  endif()
  
--set(ZSTD_STATIC_LIB_SUFFIX
--  "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
-+find_library( ZSTD_LIBRARIES NAMES zstd${ZSTD_LIB_SUFFIX} zstd_static${ZSTD_LIB_SUFFIX}
-+  PATH_SUFFIXES "lib")
- 
--set(ZSTD_STATIC_LIB_NAME
--  ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
-+if (ZSTD_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR ZSTD_LIBRARIES))
-+  set(ZSTD_FOUND TRUE)
-+  get_filename_component( ZSTD_LIBS ${ZSTD_LIBRARIES} PATH )
-+  set(ZSTD_HEADER_NAME zstd.h)
-+  set(ZSTD_HEADER ${ZSTD_INCLUDE_DIR}/${ZSTD_HEADER_NAME})
-+  set(ZSTD_STATIC_LIB ${ZSTD_LIBRARIES})
-+  set(ZSTD_SHARED_LIB ${ZSTD_LIBRARIES})
-+else ()
-+  set(ZSTD_FOUND FALSE)
-+endif ()
- 
--find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
--  PATHS ${_zstd_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "include" )
--find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
--  PATHS ${_zstd_roots}
--  NO_DEFAULT_PATH
--  PATH_SUFFIXES "lib" )
-+if (ZSTD_FOUND)
-+  message(STATUS "Found the ZSTD library: ${ZSTD_LIBRARIES}")
-+else ()
-+  message(FATAL_ERROR "Could not find the ZSTD library.")
-+endif ()
- 
--include(FindPackageHandleStandardArgs)
--find_package_handle_standard_args(ZSTD REQUIRED_VARS
--  ZSTD_STATIC_LIB ZSTD_INCLUDE_DIR)
-+mark_as_advanced(
-+  ZSTD_INCLUDE_DIR
-+  ZSTD_LIBS
-+  ZSTD_LIBRARIES
-+  ZSTD_STATIC_LIB
-+  ZSTD_SHARED_LIB
-+)
+ # ----------------------------------------------------------------------
