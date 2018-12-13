@@ -1,12 +1,23 @@
 #!/bin/sh
 
 vcpkgDisableMetrics="OFF"
+vcpkgUseSystem=false
 for var in "$@"
 do
-    if [ "$var" = "-disableMetrics" ]; then
+    if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
         vcpkgDisableMetrics="ON"
+    elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
+        vcpkgUseSystem=true
+    elif [ "$var" = "-help" -o "$var" = "--help" ]; then
+        echo "Usage: ./bootstrap-vcpkg.sh [options]"
+        echo
+        echo "Options:"
+        echo "    -help                Display usage help"
+        echo "    -disableMetrics      Do not build metrics reporting into the executable"
+        echo "    -useSystemBinaries   Force use of the system utilities for building vcpkg"
+        exit 1
     else
-        echo "Unknown argument $var"
+        echo "Unknown argument $var. Use '-help' for help."
         exit 1
     fi
 done
@@ -17,7 +28,16 @@ while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
     vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
-downloadsDir="$vcpkgRootDir/downloads"
+if [ -z ${VCPKG_DOWNLOADS+x} ]; then
+    downloadsDir="$vcpkgRootDir/downloads"
+else
+    downloadsDir="$VCPKG_DOWNLOADS"
+    if [ ! -d "$VCPKG_DOWNLOADS" ]; then
+        echo "VCPKG_DOWNLOADS was set to '$VCPKG_DOWNLOADS', but that was not a directory."
+        exit 1
+    fi
+
+fi
 
 extractStringBetweenDelimiters()
 {
@@ -181,9 +201,14 @@ selectCXX()
     gccversion="$(extractStringBetweenDelimiters "$gccversion" "gcc version " ".")"
     if [ "$gccversion" -lt "6" ]; then
         echo "CXX ($CXX) is too old; please install a newer compiler such as g++-7."
-        echo "sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
-        echo "sudo apt-get update -y"
-        echo "sudo apt-get install g++-7 -y"
+        echo "On Ubuntu try the following:"
+        echo "  sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
+        echo "  sudo apt-get update -y"
+        echo "  sudo apt-get install g++-7 -y"
+        echo "On CentOS try the following:"
+        echo "  sudo yum install centos-release-scl"
+        echo "  sudo yum install devtoolset-7"
+        echo "  scl enable devtoolset-7 bash"
         return 1
     fi
 
@@ -192,8 +217,14 @@ selectCXX()
 
 # Preparation
 UNAME="$(uname)"
-fetchTool "cmake" "$UNAME" cmakeExe || exit 1
-fetchTool "ninja" "$UNAME" ninjaExe || exit 1
+
+if $vcpkgUseSystem; then
+    cmakeExe="cmake"
+    ninjaExe="ninja"
+else
+    fetchTool "cmake" "$UNAME" cmakeExe || exit 1
+    fetchTool "ninja" "$UNAME" ninjaExe || exit 1
+fi
 selectCXX CXX || exit 1
 
 # Do the build

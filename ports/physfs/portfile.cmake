@@ -6,7 +6,13 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "physfs-${PHYSFS_VERSION}.tar.bz2"
     SHA512 ddf3b075ccb506da5e9a1ce96001be402752b9b777c2e816a85d48aff3626ff0886ea43eb07bd300fe3a9f59b9a002f54d822c51d483a4ee94b38378534c1879
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${PHYSFS_VERSION}
+    PATCHES
+        physfs.3.0.1.GetUserProfileDirectory.patch # Fixes GetUserProfileDirectory issue on Win10 build 1809(+?); See: https://hg.icculus.org/icculus/physfs/rev/ece6769c0676
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PHYSFS_SHARED) 

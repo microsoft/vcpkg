@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
-    REF v2018.10.22.00
-    SHA512 cfaf783362989c67dad54d6bd15c3b2f710fd1c1e858cf549367033a50718b69f78fc58001e6202bf8cc84fbb0e9752c433a03dd2d91800bfe2645c7b5519fca
+    REF v2018.11.05.00
+    SHA512 287fd19e352f04666d2d925eb6322aa5b74b1b8808142d37c1089b34df650bc56f0489ff4746b1ddfbec7544d99df71f9583d47ef5abef600e9bc5d434dceab6
     HEAD_REF master
     PATCHES
         build.patch

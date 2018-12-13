@@ -191,8 +191,8 @@ namespace vcpkg
         if (!fs.exists(tool_data.download_path))
         {
             System::println("Downloading %s...", tool_name);
+            System::println("  %s -> %s", tool_data.url, tool_data.download_path.string());
             Downloads::download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
-            System::println("Downloading %s... done.", tool_name);
         }
         else
         {
@@ -203,7 +203,6 @@ namespace vcpkg
         {
             System::println("Extracting %s...", tool_name);
             Archives::extract_archive(paths, tool_data.download_path, tool_data.tool_dir_path);
-            System::println("Extracting %s... done.", tool_name);
         }
         else
         {
@@ -254,6 +253,11 @@ namespace vcpkg
 
         static PathAndVersion get_path(const VcpkgPaths& paths)
         {
+            if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+            {
+                return {"cmake", "0"};
+            }
+
             std::vector<fs::path> candidate_paths;
 #if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
             static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "cmake");
@@ -318,6 +322,11 @@ namespace vcpkg
 
         static PathAndVersion get_path(const VcpkgPaths& paths)
         {
+            if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+            {
+                return {"ninja", "0"};
+            }
+
             static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "ninja");
 
             std::vector<fs::path> candidate_paths;

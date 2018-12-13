@@ -488,25 +488,22 @@ namespace vcpkg::Dependencies
         if (plus) return MarkPlusResult::SUCCESS;
         plus = true;
 
+        auto p_source = cluster.source.get();
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           p_source != nullptr,
+                           "Error: Cannot find definition for package `%s`.",
+                           cluster.spec.name());
+
         if (feature.empty())
         {
             // Add default features for this package. This is an exact reference, so ignore prevent_default_features.
-            if (auto p_source = cluster.source.get())
+            for (auto&& default_feature : p_source->scf->core_paragraph.get()->default_features)
             {
-                for (auto&& default_feature : p_source->scf->core_paragraph.get()->default_features)
+                auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
+                if (res != MarkPlusResult::SUCCESS)
                 {
-                    auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
-                    if (res != MarkPlusResult::SUCCESS)
-                    {
-                        return res;
-                    }
+                    return res;
                 }
-            }
-            else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Error: Unable to install default features because can't find CONTROL for %s",
-                                          cluster.spec);
             }
 
             // "core" is always required.
@@ -515,28 +512,20 @@ namespace vcpkg::Dependencies
 
         if (feature == "*")
         {
-            if (auto p_source = cluster.source.get())
+            for (auto&& fpgh : p_source->scf->feature_paragraphs)
             {
-                for (auto&& fpgh : p_source->scf->feature_paragraphs)
-                {
-                    auto res = mark_plus(fpgh->name, cluster, graph, graph_plan, prevent_default_features);
+                auto res = mark_plus(fpgh->name, cluster, graph, graph_plan, prevent_default_features);
 
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       res == MarkPlusResult::SUCCESS,
-                                       "Error: Unable to locate feature %s in %s",
-                                       fpgh->name,
-                                       cluster.spec);
-                }
-
-                auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
-
-                Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS);
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   res == MarkPlusResult::SUCCESS,
+                                   "Error: Internal error while installing feature %s in %s",
+                                   fpgh->name,
+                                   cluster.spec);
             }
-            else
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: Unable to handle '*' because can't find CONTROL for %s", cluster.spec);
-            }
+
+            auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
+
+            Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS);
             return MarkPlusResult::SUCCESS;
         }
 
@@ -643,7 +632,7 @@ namespace vcpkg::Dependencies
     }
 
     /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
-    /// <param name="map">Map of all source files in the current environment.</param>
+    /// <param name="map">Map of all source control files in the current environment.</param>
     /// <param name="specs">Feature specifications to resolve dependencies for.</param>
     /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
@@ -666,7 +655,11 @@ namespace vcpkg::Dependencies
 
         auto res = mark_plus(spec.feature(), spec_cluster, *m_graph, *m_graph_plan, prevent_default_features);
 
-        Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           res == MarkPlusResult::SUCCESS,
+                           "Error: `%s` is not a feature of package `%s`",
+                           spec.feature(),
+                           spec.name());
 
         m_graph_plan->install_graph.add_vertex(ClusterPtr{&spec_cluster});
     }
