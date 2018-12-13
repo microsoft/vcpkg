@@ -9,7 +9,7 @@ $g_is_debug = $g_install_root -match '(.*\\)?debug(\\)?$'
 # Ensure we create the copied files log, even if we don't end up copying any files
 if ($copiedFilesLog)
 {
-    Set-Content -Path $copiedFilesLog -Value "" -Encoding UTF
+    Set-Content -Path $copiedFilesLog -Value "" -Encoding UTF8
 }
 
 # Note: this function signature is depended upon by the qtdeploy.ps1 script introduced in 5.7.1-7
