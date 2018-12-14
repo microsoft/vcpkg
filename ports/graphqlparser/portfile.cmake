@@ -16,7 +16,7 @@ if(UNIX)
     )
 elseif(WIN32)
     vcpkg_find_acquire_program(PYTHON2)
-    vcpkg_find_acquire_program(FLEX)
+    vcpkg_find_acquire_program(FLEX) #
     vcpkg_find_acquire_program(BISON)
 
     get_filename_component(VCPKG_DOWNLOADS_PYTHON2_DIR "${PYTHON2}" DIRECTORY)
