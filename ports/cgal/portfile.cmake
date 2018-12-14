@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DCGAL_HEADER_ONLY=ON
         -DCGAL_INSTALL_CMAKE_DIR=share/cgal
         -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
 )
