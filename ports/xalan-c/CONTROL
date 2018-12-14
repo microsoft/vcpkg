@@ -1,4 +1,4 @@
 Source: xalan-c
-Version: 1.11-4
+Version: 1.11-5
 Description: Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML document types
 Build-Depends: xerces-c
