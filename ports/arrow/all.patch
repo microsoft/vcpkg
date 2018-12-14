@@ -260,10 +260,10 @@ index ca6060b..2ba97fd 100644
  
  if (ZLIB_INCLUDE_DIR AND ZLIB_SHARED_LIB)
 diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
-index 810e5c0..61548fa 100644
+index 810e5c0..7dfa050 100644
 --- a/cmake_modules/FindZSTD.cmake
 +++ b/cmake_modules/FindZSTD.cmake
-@@ -22,13 +22,6 @@
+@@ -22,30 +22,10 @@
  #  ZSTD_STATIC_LIB, path to libzstd static library
  #  ZSTD_FOUND, whether zstd has been found
  
@@ -274,19 +274,25 @@ index 810e5c0..61548fa 100644
 -    list( APPEND _zstd_roots ${ZStd_HOME} )
 -endif()
 -
- if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
-   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
- endif()
-@@ -40,12 +33,8 @@ set(ZSTD_STATIC_LIB_NAME
-   ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
- 
+-if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+-  set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+-endif()
+-
+-set(ZSTD_STATIC_LIB_SUFFIX
+-  "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-
+-set(ZSTD_STATIC_LIB_NAME
+-  ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+-
  find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
 -  PATHS ${_zstd_roots}
 -  NO_DEFAULT_PATH
    PATH_SUFFIXES "include" )
- find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
+-find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
 -  PATHS ${_zstd_roots}
 -  NO_DEFAULT_PATH
++
++find_library(ZSTD_STATIC_LIB NAMES zstd libzstd zstd_static libzstd_static
    PATH_SUFFIXES "lib" )
  
  include(FindPackageHandleStandardArgs)
