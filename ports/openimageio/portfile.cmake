@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.8.16
-    SHA512 a919341df7d9625a869cad266d8434881b63a47f3da8daccf4bbab6675d45bd121ff780dd911a7447450fee44cd7bdd42d73aec59a99b667d6d98e79682db2c7
+    REF Release-2.0.3
+    SHA512 72c4fd6ba7a0fb0d18488bbd1da323871066b474418eef699b5effe8888693a471408ddbe1a42a236713a864f8765497d3ba6752b0c6cf3598ae332afcafdc70
     HEAD_REF master
     PATCHES
         # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
