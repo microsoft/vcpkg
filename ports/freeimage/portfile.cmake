@@ -2,9 +2,9 @@ include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FreeImage)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/freeimage/FreeImage3170.zip"
-    FILENAME "FreeImage3170.zip"
-    SHA512 703c2626c0bcfe73eb40d720f45745208ca9650a7730759680a2b38ad3f6c719a43008477032bc70b76a95761f7d4b6f901b961359d36b54ace906dd78fb391b
+    URLS "http://downloads.sourceforge.net/freeimage/FreeImage3180.zip"
+    FILENAME "FreeImage3180.zip"
+    SHA512 9d9cc7e2d57552c3115e277aeb036e0455204d389026b17a3f513da5be1fd595421655488bb1ec2f76faebed66049119ca55e26e2a6d37024b3fb7ef36ad4818
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -40,6 +40,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/use-external-webp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-external-openexr.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-freeimage-config-include.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/fix-function-overload.patch"
 )
 
 vcpkg_configure_cmake(

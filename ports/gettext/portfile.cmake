@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
     ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
+    ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
     DESTINATION ${SOURCE_PATH}/gettext-runtime
 )
 file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
