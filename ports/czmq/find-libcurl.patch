@@ -1,0 +1,14 @@
+diff --git a/Findlibcurl.cmake b/Findlibcurl.cmake
+index 4a00c9b7..9a52361a 100644
+--- a/Findlibcurl.cmake
++++ b/Findlibcurl.cmake
+@@ -25,7 +25,8 @@ find_path (
+ 
+ find_library (
+     LIBCURL_LIBRARIES
+-    NAMES curl
++    # https://stackoverflow.com/questions/37358427/cmake-how-to-link-a-library-which-has-a-lib-prefix-on-windows
++    NAMES curl libcurl
+     HINTS ${PC_LIBCURL_LIBRARY_HINTS}
+ )
+ 

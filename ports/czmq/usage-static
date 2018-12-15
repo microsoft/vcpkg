@@ -1,0 +1,4 @@
+The package czmq provides CMake integration:
+
+    find_package(czmq CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE czmq-static)    

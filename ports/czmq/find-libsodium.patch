@@ -1,0 +1,13 @@
+diff --git a/Findlibsodium.cmake b/Findlibsodium.cmake
+index 846eaa98..0364138d 100644
+--- a/Findlibsodium.cmake
++++ b/Findlibsodium.cmake
+@@ -26,7 +26,7 @@ find_path (
+ 
+ find_library (
+     LIBSODIUM_LIBRARIES
+-    NAMES sodium
++    NAMES sodium libsodium
+     HINTS ${PC_LIBSODIUM_LIBRARY_HINTS}
+ )
+ 
