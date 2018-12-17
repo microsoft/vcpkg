@@ -11,14 +11,14 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(MAJOR_MINOR 5.11)
-set(FULL_VERSION ${MAJOR_MINOR}.2)
+set(MAJOR_MINOR 5.12)
+set(FULL_VERSION ${MAJOR_MINOR}.0)
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 b2f14126caa1c664887203a9a98551b85b57630cf7745c17f76e1e8aaf464f0091fe2de5615a138506dac7c8fbb16e5f33f984aef8e61e23f0c3bf74f6ef0835
+    SHA512 8e6c51b754840d17e694b5b4a0d732afe04ebe48d166bca429db01ce3ac9014bb0ed35fe99ad165973889d96919f6b6774429585bae9a7fdba6b07f4c1eb3570
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
