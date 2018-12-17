@@ -1,17 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4448b98..cb9d87e 100644
+index 4448b98..d6aa484 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -710,6 +710,8 @@ endif()
- 
- set(ARROW_TEST_LINK_LIBS ${ARROW_MIN_TEST_LIBS})
- 
-+message(STATUS, "Arrow Pre Dependencies Are: ${ARROW_STATIC_LINK_LIBS} and ${PTHREAD_LIBRARY}")
-+
- if (ARROW_JEMALLOC)
-   add_definitions(-DARROW_JEMALLOC)
-   add_definitions(-DARROW_JEMALLOC_INCLUDE_DIR=${JEMALLOC_INCLUDE_DIR})
-@@ -743,10 +745,10 @@ elseif (PTHREAD_LIBRARY)
+@@ -743,10 +743,10 @@ elseif (PTHREAD_LIBRARY)
    # linking order.
    set(ARROW_LINK_LIBS
      ${ARROW_LINK_LIBS}
@@ -24,7 +15,7 @@ index 4448b98..cb9d87e 100644
  endif()
  
  ############################################################
-@@ -780,3 +782,4 @@ endif()
+@@ -780,3 +780,4 @@ endif()
  if(ARROW_GANDIVA)
    add_subdirectory(src/gandiva)
  endif()
@@ -210,10 +201,10 @@ index 5402766..5ed3a03 100644
    THRIFT_STATIC_LIB
    THRIFT_COMPILER
 diff --git a/cmake_modules/FindZLIB.cmake b/cmake_modules/FindZLIB.cmake
-index ca6060b..2ba97fd 100644
+index ca6060b..2af60da 100644
 --- a/cmake_modules/FindZLIB.cmake
 +++ b/cmake_modules/FindZLIB.cmake
-@@ -30,13 +30,6 @@
+@@ -30,43 +30,17 @@
  #  ZLIB_SHARED_LIB, path to libz's shared library
  #  ZLIB_FOUND, whether zlib has been found
  
@@ -227,7 +218,11 @@ index ca6060b..2ba97fd 100644
  if (MSVC)
    # zlib uses zlib.lib for Windows.
    set(ZLIB_LIB_NAME zlib.lib)
-@@ -47,25 +40,15 @@ else ()
+ else ()
+   # zlib uses libz.so for non Windows.
+-  set(ZLIB_LIB_NAME
+-    ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX})
++  set(ZLIB_LIB_NAME libz.a)
  endif ()
  
  # Try the parameterized roots, if they exist
@@ -235,15 +230,11 @@ index ca6060b..2ba97fd 100644
 -  find_path(ZLIB_INCLUDE_DIR NAMES zlib.h
 -    PATHS ${_zlib_roots} NO_DEFAULT_PATH
 -    PATH_SUFFIXES "include")
-+pkg_check_modules(PKG_ZLIB zlib)
-+if (PKG_ZLIB_FOUND)
-+  set(ZLIB_INCLUDE_DIR ${PKG_ZLIB_INCLUDEDIR})
-   find_library(ZLIB_SHARED_LIB
-     NAMES ${ZLIB_LIB_NAME}
+-  find_library(ZLIB_SHARED_LIB
+-    NAMES ${ZLIB_LIB_NAME}
 -    PATHS ${_zlib_roots} NO_DEFAULT_PATH
 -    PATH_SUFFIXES "lib")
-+    PATHS ${PKG_ZLIB_LIBDIR} NO_DEFAULT_PATH)
- else ()
+-else ()
 -  pkg_check_modules(PKG_ZLIB zlib)
 -  if (PKG_ZLIB_FOUND)
 -    set(ZLIB_INCLUDE_DIR ${PKG_ZLIB_INCLUDEDIR})
@@ -254,11 +245,12 @@ index ca6060b..2ba97fd 100644
 -    find_path(ZLIB_INCLUDE_DIR NAMES zlib.h)
 -    find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME})
 -  endif ()
-+  find_path(ZLIB_INCLUDE_DIR NAMES zlib.h)
-+  find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME})
- endif ()
+-endif ()
++find_path(ZLIB_INCLUDE_DIR NAMES zlib.h PATH_SUFFIXES "include")
++find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME} PATH_SUFFIXES "lib")
  
  if (ZLIB_INCLUDE_DIR AND ZLIB_SHARED_LIB)
+   set(ZLIB_FOUND TRUE)
 diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
 index 810e5c0..7dfa050 100644
 --- a/cmake_modules/FindZSTD.cmake
