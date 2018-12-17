@@ -1,0 +1,98 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6630b958..79c69ba7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,7 +16,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+ # Select flags
+ SET(CMAKE_C_FLAGS_RELEASE "-O3")
+ 
+-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/Modules)
++set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/Modules)
+ 
+ # Will be used to add flags to pkg-config useful when apps want to statically link
+ set(pkg_config_libs_private "")
+@@ -136,7 +136,8 @@ ENDIF (LIBZMQ_FOUND)
+ # UUID dependency
+ ########################################################################
+ find_package(uuid)
+-IF (UUID_FOUND)
++option(BUILD_WITH_UUID "Build with libuuid" OFF)
++IF (BUILD_WITH_UUID AND UUID_FOUND)
+     include_directories(${UUID_INCLUDE_DIRS})
+     list(APPEND MORE_LIBRARIES ${UUID_LIBRARIES})
+   IF (PC_UUID_FOUND)
+@@ -147,7 +148,7 @@ IF (UUID_FOUND)
+   ENDIF (PC_UUID_FOUND)
+     add_definitions(-DHAVE_UUID)
+     list(APPEND OPTIONAL_LIBRARIES ${UUID_LIBRARIES})
+-ENDIF (UUID_FOUND)
++ENDIF (BUILD_WITH_UUID AND UUID_FOUND)
+ 
+ ########################################################################
+ # SYSTEMD dependency
+@@ -170,7 +171,8 @@ ENDIF (SYSTEMD_FOUND)
+ # LZ4 dependency
+ ########################################################################
+ find_package(lz4)
+-IF (LZ4_FOUND)
++option(BUILD_WITH_LZ4 "Build with lz4" OFF)
++IF (BUILD_WITH_LZ4 AND LZ4_FOUND)
+     include_directories(${LZ4_INCLUDE_DIRS})
+     list(APPEND MORE_LIBRARIES ${LZ4_LIBRARIES})
+   IF (PC_LZ4_FOUND)
+@@ -181,13 +183,14 @@ IF (LZ4_FOUND)
+   ENDIF (PC_LZ4_FOUND)
+     add_definitions(-DHAVE_LIBLZ4)
+     list(APPEND OPTIONAL_LIBRARIES ${LZ4_LIBRARIES})
+-ENDIF (LZ4_FOUND)
++ENDIF (BUILD_WITH_LZ4 AND LZ4_FOUND)
+ 
+ ########################################################################
+ # LIBCURL dependency
+ ########################################################################
+ find_package(libcurl)
+-IF (LIBCURL_FOUND)
++option(BUILD_WITH_CURL "Build with libcurl" OFF)
++IF (BUILD_WITH_CURL AND LIBCURL_FOUND)
+     include_directories(${LIBCURL_INCLUDE_DIRS})
+     list(APPEND MORE_LIBRARIES ${LIBCURL_LIBRARIES})
+   IF (PC_LIBCURL_FOUND)
+@@ -198,7 +201,7 @@ IF (LIBCURL_FOUND)
+   ENDIF (PC_LIBCURL_FOUND)
+     add_definitions(-DHAVE_LIBCURL)
+     list(APPEND OPTIONAL_LIBRARIES ${LIBCURL_LIBRARIES})
+-ENDIF (LIBCURL_FOUND)
++ENDIF (BUILD_WITH_CURL AND LIBCURL_FOUND)
+ 
+ ########################################################################
+ # version
+@@ -474,6 +477,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/czmqConfig.cmake
+ ########################################################################
+ # executables
+ ########################################################################
++option(BUILD_TOOLS "Build czmq tool" ON)
++if (BUILD_TOOLS)
+ add_executable(
+     zmakecert
+     "${SOURCE_DIR}/src/zmakecert.c"
+@@ -519,6 +524,11 @@ target_link_libraries(
+     ${OPTIONAL_LIBRARIES_STATIC}
+ )
+ endif()
++endif(BUILD_TOOLS)
++
++include(CTest)
++
++if (BUILD_TESTING)
+ add_executable(
+     test_randof
+     "${SOURCE_DIR}/src/test_randof.c"
+@@ -655,7 +665,7 @@ foreach(TEST_CLASS ${TEST_CLASSES})
+     )
+ endforeach(TEST_CLASS)
+ 
+-include(CTest)
++endif(BUILD_TESTING)
+ 
+ ########################################################################
+ # cleanup

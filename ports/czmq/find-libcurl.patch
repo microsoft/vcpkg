@@ -1,14 +1,28 @@
 diff --git a/Findlibcurl.cmake b/Findlibcurl.cmake
-index 4a00c9b7..9a52361a 100644
+index 4a00c9b7..a93d4a30 100644
 --- a/Findlibcurl.cmake
 +++ b/Findlibcurl.cmake
-@@ -25,7 +25,8 @@ find_path (
+@@ -17,17 +17,13 @@ if (NOT MSVC)
+     endif(PC_LIBCURL_FOUND)
+ endif (NOT MSVC)
  
- find_library (
-     LIBCURL_LIBRARIES
+-find_path (
+-    LIBCURL_INCLUDE_DIRS
+-    NAMES curl/curl.h
+-    HINTS ${PC_LIBCURL_INCLUDE_HINTS}
+-)
++# https://github.com/Microsoft/vcpkg/issues/4312
++find_package (CURL QUIET)
+ 
+-find_library (
+-    LIBCURL_LIBRARIES
 -    NAMES curl
-+    # https://stackoverflow.com/questions/37358427/cmake-how-to-link-a-library-which-has-a-lib-prefix-on-windows
-+    NAMES curl libcurl
-     HINTS ${PC_LIBCURL_LIBRARY_HINTS}
- )
+-    HINTS ${PC_LIBCURL_LIBRARY_HINTS}
+-)
++if (CURL_FOUND)
++    set(LIBCURL_INCLUDE_DIRS ${CURL_INCLUDE_DIRS})
++    set(LIBCURL_LIBRARIES ${CURL_LIBRARIES})
++endif ()
+ 
+ include(FindPackageHandleStandardArgs)
  
