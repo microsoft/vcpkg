@@ -1,3 +1,7 @@
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
+endif()
+
 include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.1")
