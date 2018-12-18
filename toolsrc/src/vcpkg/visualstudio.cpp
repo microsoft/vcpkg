@@ -170,7 +170,7 @@ namespace vcpkg::VisualStudio
         for (const VisualStudioInstance& vs_instance : sorted)
         {
             const std::string major_version = vs_instance.major_version();
-            if (major_version == "15")
+            if (major_version >= "15")
             {
                 const fs::path vc_dir = vs_instance.root_path / "VC";
 

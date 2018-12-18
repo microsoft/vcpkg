@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-umqtt-c
-    REF e5ab6b66ccba5a7ff7ed7421ffe0fa13ecabe000
-    SHA512 19878f798d73f98afdee6ac574e136f1b2f8ddd3a7537ee666a98d04cade6ecd2526714eb74335af2eff05165492933ec90cb79a9cb914093fa96cfe35a84cb4
+    REF ff05514c9b4742ae8d7785719a399a7fe6eac09b
+    SHA512 d750390d38555ab00e5d5cc5aa0b07ae452afd2e2af0dade5fc1c55f63ad367688b5ff7e97e65ab00f0153340b8bcc1e5039e80e5795b9f9c0cd2c48eedad081
     HEAD_REF master
 )
 

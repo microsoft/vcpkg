@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF v3.3.0
     SHA512 8bb2674edefabf75670ceca29364d69e2002152bff9fe55757f4cda03544b4d827ff33595d98e6d8acdc73ca61cef8ab8054ad0a1ffc905cb26496068b15025f
     HEAD_REF master
+    PATCHES disable-downloading.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
@@ -20,6 +21,10 @@ vcpkg_configure_cmake(
         -DRAPIDJSONTEST=TRUE
         -DRAPIDJSON=${CURRENT_INSTALLED_DIR}
 )
+
+if(EXISTS ${SOURCE_PATH}/thirdparty)
+    message(FATAL_ERROR "The source directory should not be modified during the build.")
+endif()
 
 vcpkg_install_cmake()
 

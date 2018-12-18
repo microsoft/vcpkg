@@ -42,6 +42,28 @@ namespace vcpkg::Downloads
                                     0);
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
+        // Win7 IE Proxy fallback
+        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater()) {
+            // First check if any proxy has been found automatically
+            WINHTTP_PROXY_INFO proxyInfo;
+            DWORD proxyInfoSize = sizeof(WINHTTP_PROXY_INFO);
+            auto noProxyFound = 
+                !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) 
+                || proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
+
+            // If no proxy was found automatically, use IE's proxy settings, if any
+            if (noProxyFound) {
+                WINHTTP_CURRENT_USER_IE_PROXY_CONFIG ieProxy;
+                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr) {
+                    WINHTTP_PROXY_INFO proxy;
+                    proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+                    proxy.lpszProxy = ieProxy.lpszProxy;
+                    proxy.lpszProxyBypass = ieProxy.lpszProxyBypass;
+                    WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+                }
+            }
+        }
+
         // Use Windows 10 defaults on Windows 7
         DWORD secure_protocols(WINHTTP_FLAG_SECURE_PROTOCOL_SSL3 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 |
                                WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_1 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2);

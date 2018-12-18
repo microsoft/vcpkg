@@ -8,8 +8,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GoogleCloudPlatform/google-cloud-cpp
-    REF v0.3.0
-    SHA512 90f876ebf4bea40c5bc12d2bd20d27b48202f951d57a68b657c07b7d468b2ac5a00e39a3a6fca48f92030d89ba7d9706eb52b3c8e734b392aee63632af042b5d
+    REF v0.4.0
+    SHA512 2198a7e055c37c2a0d782e2226c2cfb4009e01c36783fe23a0a32b10c7800c1998fbaea17281cb831e7b58975d1bcdb1b2bfec0a5e4fd9d08f25299b96e8893a
     HEAD_REF master
     PATCHES include-protobuf.patch
 )
