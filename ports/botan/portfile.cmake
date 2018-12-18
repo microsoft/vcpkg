@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(BOTAN_VERSION 2.8.0)
+set(BOTAN_VERSION 2.9.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF cb14e9ce95bcaae2ada7ffe96ef0cce6a2b38593
-    SHA512 3d8fbf1c65e2b0259f225db46ffa4a7eb989a518b230574e94f82dc13afd7dc32cfe6a8a0127e7dd0dea30e06f3946db78db50e107937382eff8ed823e996dc3
+    REF 0129d3172ec419beb90a2b3487f6385a35da0742
+    SHA512 a8328df5ad2693a96935d1d2202ddd6678a5ba9c63a8159acbe56f1c884fa5faaa71339e8f56284cfd00574a9b4f91bdb1fb22c36c8e899d9b4cbe881f4867d3
     HEAD_REF master
 )
 
