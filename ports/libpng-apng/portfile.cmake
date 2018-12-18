@@ -1,19 +1,19 @@
 include(vcpkg_common_functions)
 
-set(LIBPNG_APNG_VERSION 1.6.34)
+set(LIBPNG_APNG_VERSION 1.6.36)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glennrp/libpng
     REF v${LIBPNG_APNG_VERSION}
-    SHA512 23b6112a1d16a34c8037d5c5812944d4385fc96ed819a22172776bdd5acd3a34e55f073b46087b77d1c12cecc68f9e8ba7754c86b5ab6ed3016063e1c795de7a
+    SHA512 aeb00b48347c9e84d31995b3fe7e40580029734aa8103d774eee5745f5ca1fd1fd91a15f32d492277ab94346e4e7f731ee9bfea1783f930094f9f87eb3d9397d
     HEAD_REF master
 )
 
 vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
     URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_APNG_VERSION}/libpng-${LIBPNG_APNG_VERSION}-apng.patch.gz"
     FILENAME "libpng-${LIBPNG_APNG_VERSION}-apng.patch.gz"
-    SHA512 0777b8e55aeee207ee92479f2258ef1f60f16d7951fdbc6d89a80ef533b86dadecd1ef659d6fe7602d8ea3a8e711a096b0f77ee09b993799b73dfffddfe5dd3c
+    SHA512 8fa213204768b058459ffd5eae6b3661c3f185d3baf1913da4337e7b7855e567f2525e7f67411c32fa8cb177a5f93d538c3d0ce17a94d4aa71bd9cffabe8b311
 )
 
 vcpkg_find_acquire_program(7Z)
@@ -35,6 +35,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
+        ${CMAKE_CURRENT_LIST_DIR}/skip-install-symlink.patch
         ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_APNG_VERSION}-apng.patch
 )
 
@@ -57,15 +58,20 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=ON
+        -DSKIP_INSTALL_SYMLINK=ON
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib ${CURRENT_PACKAGES_DIR}/lib/libpng16.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16d.lib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib ${CURRENT_PACKAGES_DIR}/lib/libpng16.lib)
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16d.lib)
+    endif()
 endif()
 
 # Remove CMake config files as they are incorrectly generated and everyone uses built-in FindPNG anyway.
@@ -76,3 +82,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpng-apng/LICENSE ${CURRENT_PACKAGES
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/png)
+endif()

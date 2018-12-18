@@ -59,7 +59,7 @@ namespace vcpkg
 #if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
-        static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
+        static const std::regex XML_VERSION_REGEX {R"###(<tools[\s]+version="([^"]+)">)###"};
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
         std::smatch match_xml_version;
         const bool has_xml_version = std::regex_search(XML.cbegin(), XML.cend(), match_xml_version, XML_VERSION_REGEX);
@@ -75,7 +75,7 @@ namespace vcpkg
                            XML_VERSION,
                            match_xml_version[1]);
 
-        const std::regex tool_regex{Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">)###", tool, OS_STRING)};
+        const std::regex tool_regex {Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">)###", tool, OS_STRING)};
         std::smatch match_tool_entry;
         const bool has_tool_entry = std::regex_search(XML.cbegin(), XML.cend(), match_tool_entry, tool_regex);
         if (!has_tool_entry)
@@ -106,13 +106,13 @@ namespace vcpkg
         const fs::path tool_dir_path = paths.tools / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
 
-        return ToolData{*version.get(),
-                        exe_path,
-                        url,
-                        paths.downloads / archive_name.value_or(exe_relative_path).to_string(),
-                        archive_name.has_value(),
-                        tool_dir_path,
-                        sha512};
+        return ToolData {*version.get(),
+                         exe_path,
+                         url,
+                         paths.downloads / archive_name.value_or(exe_relative_path).to_string(),
+                         archive_name.has_value(),
+                         tool_dir_path,
+                         sha512};
 #endif
     }
 
@@ -460,10 +460,31 @@ git version 2.17.1.windows.2
 
         const PathAndVersion& get_tool_pathversion(const VcpkgPaths& paths, const std::string& tool) const
         {
-            return path_version_cache.get_lazy(tool, [&]() {
-                if (tool == Tools::CMAKE) return get_path(paths, CMakeProvider());
-                if (tool == Tools::GIT) return get_path(paths, GitProvider());
-                if (tool == Tools::NINJA) return get_path(paths, NinjaProvider());
+            return path_version_cache.get_lazy(tool, [&]() -> PathAndVersion {
+                if (tool == Tools::CMAKE)
+                {
+                    if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+                    {
+                        return {"cmake", "0"};
+                    }
+                    return get_path(paths, CMakeProvider());
+                }
+                if (tool == Tools::GIT)
+                {
+                    if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+                    {
+                        return {"git", "0"};
+                    }
+                    return get_path(paths, GitProvider());
+                }
+                if (tool == Tools::NINJA)
+                {
+                    if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+                    {
+                        return {"ninja", "0"};
+                    }
+                    return get_path(paths, NinjaProvider());
+                }
                 if (tool == Tools::NUGET) return get_path(paths, NuGetProvider());
                 if (tool == Tools::IFW_INSTALLER_BASE) return get_path(paths, IfwInstallerBaseProvider());
 
