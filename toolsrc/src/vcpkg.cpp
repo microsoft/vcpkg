@@ -171,8 +171,10 @@ static void inner(const VcpkgCmdArguments& args)
             default_triplet = Triplet::from_canonical_name("x64-osx");
 #elif defined(__FreeBSD__)
             default_triplet = Triplet::from_canonical_name("x64-freebsd");
-#else
+#elif defined(__GLIBC__)
             default_triplet = Triplet::from_canonical_name("x64-linux");
+#else
+            default_triplet = Triplet::from_canonical_name("x64-linux-musl");
 #endif
         }
     }
