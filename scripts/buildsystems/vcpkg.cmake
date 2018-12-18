@@ -137,16 +137,57 @@ foreach(_VCPKG_TOOLS_DIR ${_VCPKG_TOOLS_DIRS})
 endforeach()
 
 function(vcpkg_add_sourcelink_link_options target)
-    if(MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0")
+    if(NOT _CMAKE_IN_TRY_COMPILE AND
+        MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.15.26726.0")
         # Support added in Visual Studio 2017 Version 15.8.
+
+        if(CMAKE_GENERATOR MATCHES "Visual Studio")
+            set(PASS_SOURCELINK_DIRECTLY 1)
+        else()
+            # Due to cmd.exe command line length limitations (encountered by e.g. Ninja), /sourcelink
+            # parameters are passed indirectly through a response file.
+            set(PASS_SOURCE_LINK_DIRECTLY 0)
+
+            set(SOURCELINK_RSP "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.rsp")
+            set(SOURCELINK_RSP_TMP "${SOURCELINK_RSP}.tmp")
+
+            file(WRITE "${SOURCELINK_RSP_TMP}" "")
+        endif()
+
         if(VCPKG_SOURCELINK_FILE)
-            set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " /sourcelink:${VCPKG_SOURCELINK_FILE}")
+            if(PASS_SOURCELINK_DIRECTLY)
+                set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " /sourcelink:\"${VCPKG_SOURCELINK_FILE}\"")
+            else()
+                file(APPEND "${SOURCELINK_RSP_TMP}" "/sourcelink:\"${VCPKG_SOURCELINK_FILE}\"\n")
+            endif()
         endif()
         file(GLOB SOURCELINK_FILES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
         if(SOURCELINK_FILES)
             foreach(SOURCELINK_FILE ${SOURCELINK_FILES})
-                set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " /sourcelink:${SOURCELINK_FILE}")
+                if(PASS_SOURCELINK_DIRECTLY)
+                    set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " /sourcelink:\"${SOURCELINK_FILE}\"")
+                else()
+                    file(APPEND "${SOURCELINK_RSP_TMP}" "/sourcelink:\"${SOURCELINK_FILE}\"\n")
+                endif()
             endforeach()
+        endif()
+
+        if(NOT PASS_SOURCELINK_DIRECTLY)
+            if(NOT EXISTS "${SOURCELINK_RSP}")
+                set(SOURCELINK_RSP_HASH "0")
+            else()
+                file(MD5 "${SOURCELINK_RSP}" SOURCELINK_RSP_HASH)
+            endif()
+            file(MD5 "${SOURCELINK_RSP_TMP}" SOURCELINK_RSP_TMP_HASH)
+
+            if(NOT SOURCELINK_RSP_HASH STREQUAL SOURCELINK_RSP_TMP_HASH)
+                file(RENAME "${SOURCELINK_RSP_TMP}" "${SOURCELINK_RSP}")
+            else()
+                file(REMOVE "${SOURCELINK_RSP_TMP}")
+            endif()
+
+            file(RELATIVE_PATH SOURCELINK_RSP_REL_PATH "${CMAKE_CURRENT_BINARY_DIR}" "${SOURCELINK_RSP}")
+            set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " @\"${SOURCELINK_RSP_REL_PATH}\"")
         endif()
     endif()
 endfunction()

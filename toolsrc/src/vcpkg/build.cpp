@@ -472,7 +472,7 @@ namespace vcpkg::Build
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
-        abi_tag_entries.emplace_back(AbiEntry{"sourcelink", "2"});
+        abi_tag_entries.emplace_back(AbiEntry{"sourcelink", "3"});
 
         abi_tag_entries.emplace_back(
             AbiEntry{"portfile", vcpkg::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
