@@ -13,7 +13,7 @@ vcpkg_from_github(
       "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-protobuf-target.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-custom-protobuf-find-package.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -291,6 +291,7 @@ vcpkg_configure_cmake(
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_JPEG=${WITH_JPEG}
         -DWITH_LAPACK=OFF
+        -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENEXR=${WITH_OPENEXR}
