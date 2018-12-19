@@ -78,3 +78,4 @@ endif()
 file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/antlr4 RENAME copyright)
 
 message(STATUS "Installing done")
+#
