@@ -40,7 +40,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<target name="generate-vcpkg"> 
-								<exec executable="${basedir}/vcpkg/bootstrap-vcpkg.bat" failonerror="true"/>
+								<exec executable="${basedir}/bootstrap-vcpkg.bat" failonerror="true"/>
 							</target>
 						</configuration>
 					</execution>
@@ -52,7 +52,7 @@
 						<phase>compile</phase>
 						<configuration>
 							<target name="build-vcpkg"> 
-								<exec executable="${basedir}/vcpkg/vcpkg.exe" failonerror="true">
+								<exec executable="${basedir}.exe" failonerror="true">
 									<arg value="install" />
 									<arg value="boost:x64-windows-static" />
 									<arg value="bzip2:x64-windows-static" />
@@ -83,7 +83,7 @@
 							<outputDirectory>${project.build.directory}/package/${project.artifactId}</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/vcpkg/installed/x64-windows-static</directory>
+									<directory>${basedir}/installed/x64-windows-static</directory>
 									<includes>
 										<include>debug/**</include>
 										<include>include/**</include>
