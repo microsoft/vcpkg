@@ -47,6 +47,12 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/sodium
 )
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/sodium/export.h _contents)
+    string(REPLACE "#ifdef SODIUM_STATIC" "#if 1 //#ifdef SODIUM_STATIC" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sodium/export.h "${_contents}")
+endif ()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(INSTALL
         ${SOURCE_PATH}/Build/${LIBSODIUM_RELEASE_CONFIGURATION}/${BUILD_ARCH}/libsodium.dll
