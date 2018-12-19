@@ -52,7 +52,7 @@
 						<phase>compile</phase>
 						<configuration>
 							<target name="build-vcpkg"> 
-								<exec executable="${basedir}.exe" failonerror="true">
+								<exec executable="${basedir}/vcpkg.exe" failonerror="true">
 									<arg value="install" />
 									<arg value="boost:x64-windows-static" />
 									<arg value="bzip2:x64-windows-static" />
