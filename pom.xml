@@ -1,0 +1,164 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.imanage.work.thirdparty</groupId>
+    <artifactId>vcpkg</artifactId>
+    <version>1.0-SNAPSHOT</version>
+	
+	<name>Thirdparty</name>
+	
+	<properties>
+		<versionPrefix>10.2.1</versionPrefix>
+		<build.path></build.path>
+		<cmake.path></cmake.path>
+		<nuget.path></nuget.path>
+		<build.sdk>10.0.17134.0</build.sdk>
+		<build.msvc>14.14.26428</build.msvc>
+	</properties>
+	
+	<distributionManagement>
+		<repository>
+			<id>internal</id>
+			<url>http://archiva.imanage.com/repository/internal</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://archiva.imanage.com/repository/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-vcpkg</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target name="generate-vcpkg"> 
+								<exec executable="${basedir}/vcpkg/bootstrap-vcpkg.bat" failonerror="true"/>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>build-vcpkg</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<target name="build-vcpkg"> 
+								<exec executable="${basedir}/vcpkg/vcpkg.exe" failonerror="true">
+									<arg value="install" />
+									<arg value="boost:x64-windows-static" />
+									<arg value="bzip2:x64-windows-static" />
+									<arg value="cpprestsdk:x64-windows-static" />
+									<arg value="curl:x64-windows-static" />
+									<arg value="gtest:x64-windows-static" />
+									<arg value="libssh2:x64-windows-static" />
+									<arg value="openssl:x64-windows-static" />
+									<arg value="xerces-c:x64-windows-static" />
+									<arg value="zlib:x64-windows-static" />
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-vcpkg</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/package/${project.artifactId}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/vcpkg/installed/x64-windows-static</directory>
+									<includes>
+										<include>debug/**</include>
+										<include>include/**</include>
+										<include>lib/**</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>none</phase>
+					</execution>
+					<execution>
+						<id>vcpkg</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classesDirectory>${project.build.directory}/package</classesDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.googlecode.maven-download-plugin</groupId>
+					<artifactId>download-maven-plugin</artifactId>
+					<version>1.4.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.6.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
