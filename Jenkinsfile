@@ -6,7 +6,7 @@ node('work-server') {
 			deleteDir()
 		}
 			
-		stage ("Clone Thirdparty Sources") {
+		stage ("Clone Vcpkg") {
 			checkout scm
 		}
 		
