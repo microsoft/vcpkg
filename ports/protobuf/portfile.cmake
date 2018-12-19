@@ -106,9 +106,12 @@ if(CMAKE_HOST_WIN32)
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
     endif()
 else()
+    file(GLOB EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/protoc*)
+    foreach(E IN LISTS EXECUTABLES)
+        file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
+    endforeach()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
