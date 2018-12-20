@@ -31,6 +31,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
+        -Dzstd=OFF
         ${TIFF_CXX_TARGET}
 )
 
