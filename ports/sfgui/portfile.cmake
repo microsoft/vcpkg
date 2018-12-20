@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TankOs/SFGUI
-    REF 0.3.2
-    SHA512 cd97e421695f6189995c1b7a4180e3738bf785abae37d3eb51ac6d687a88a26a1f088863b37e065edaff6ba43eea379e423b31118324c4daa65dba0b3e904869
+    REF 0.4.0
+    SHA512 15456c6080b7095bcdcec08489b2b91b5cfc36cdf3c0b645b305072e7e835837eb4f95b59371ff176630b2b7ae51da475d8ea0bde5ff7fc0ba74c463bf5f54cf
     HEAD_REF master
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-sfml-targets.patch"
 )
@@ -26,9 +26,6 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfgui RENAME copyright)
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/Modules/FindSFGUI.cmake ${CURRENT_PACKAGES_DIR}/share/sfgui/FindSFGUI.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake/Modules)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)

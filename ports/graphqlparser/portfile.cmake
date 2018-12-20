@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -18,7 +6,7 @@ vcpkg_from_github(
     REF v0.7.0
     SHA512 973292b164d0d2cfe453a2f01559dbdb1b9d22b6304f6a3aabf71e2c0a3e24ab69dfd72a086764ad5befecf0005620f8e86f552dacc324f9615a05f31de7cede
     HEAD_REF master
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/win-cmake.patch
+    PATCHES win-cmake.patch
 )
 
 if(UNIX)
@@ -28,7 +16,7 @@ if(UNIX)
     )
 elseif(WIN32)
     vcpkg_find_acquire_program(PYTHON2)
-    vcpkg_find_acquire_program(FLEX)
+    vcpkg_find_acquire_program(FLEX) #
     vcpkg_find_acquire_program(BISON)
 
     get_filename_component(VCPKG_DOWNLOADS_PYTHON2_DIR "${PYTHON2}" DIRECTORY)
@@ -47,5 +35,7 @@ endif()
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/graphqlparser RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/graphqlparser/copyright COPYONLY)
