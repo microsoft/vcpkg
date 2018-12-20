@@ -148,7 +148,7 @@ function(vcpkg_add_sourcelink_link_options target)
             # parameters are passed indirectly through a response file.
             set(PASS_SOURCE_LINK_DIRECTLY 0)
 
-            set(SOURCELINK_RSP "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.rsp")
+            set(SOURCELINK_RSP "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.rsp")
             set(SOURCELINK_RSP_TMP "${SOURCELINK_RSP}.tmp")
 
             file(WRITE "${SOURCELINK_RSP_TMP}" "")
@@ -173,6 +173,7 @@ function(vcpkg_add_sourcelink_link_options target)
         endif()
 
         if(NOT PASS_SOURCELINK_DIRECTLY)
+
             if(NOT EXISTS "${SOURCELINK_RSP}")
                 set(SOURCELINK_RSP_HASH "0")
             else()
@@ -186,7 +187,7 @@ function(vcpkg_add_sourcelink_link_options target)
                 file(REMOVE "${SOURCELINK_RSP_TMP}")
             endif()
 
-            file(RELATIVE_PATH SOURCELINK_RSP_REL_PATH "${CMAKE_CURRENT_BINARY_DIR}" "${SOURCELINK_RSP}")
+            file(RELATIVE_PATH SOURCELINK_RSP_REL_PATH "${CMAKE_BINARY_DIR}" "${SOURCELINK_RSP}")
             set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " @\"${SOURCELINK_RSP_REL_PATH}\"")
         endif()
     endif()
