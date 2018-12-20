@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 418f91efc207fa227558212d82c41639c0bb59e84ea47447e0b6276c4842e97f1f8aaf5802c071ef15d80ec525e317e70b6a39661a6c96ab39d33d9bd1570da1
     HEAD_REF v1.x
     PATCHES
-        fmt-external-cmake-option.patch
+        fmt-external-cmake-option.patch # This patch is in the upstream project and can be removed next version update.
 )
 
 vcpkg_configure_cmake(
