@@ -60,7 +60,7 @@ else() # Assume some Linux variant
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_UNIX} ${UV_SOURCES_LINUX})
 endif()
 
-target_include_directories(libuv PUBLIC ./include PRIVATE ./src)
+target_include_directories(libuv PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 set_target_properties(libuv PROPERTIES DEFINE_SYMBOL BUILDING_UV_SHARED)
 
 if(NOT UV_SKIP_HEADERS)
@@ -71,7 +71,9 @@ if(NOT UV_SKIP_HEADERS)
 endif()
 
 install(TARGETS libuv
+    EXPORT libuv
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 )
+install(EXPORT libuv FILE unofficial-libuv-targets.cmake NAMESPACE unofficial::libuv:: DESTINATION share/unofficial-libuv)
