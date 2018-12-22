@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1df8007..753d54a 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,8 +4,6 @@ cmake_minimum_required(VERSION 2.6)
+ 
+ project(linenoise)
+ 
+-set(CMAKE_BINARY_DIR "${CMAKE_SOURCE_DIR}/build")
+-
+ if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release CACHE string "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+ endif()
