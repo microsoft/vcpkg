@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d5a1936..9c13405 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -120,7 +120,7 @@ endif()
+ 
+ if (MSVC)
+   set_property(TARGET ${PROGRAM}
+-    APPEND PROPERTY LINK_FLAGS /INCREMENTAL:NO)
++    APPEND_STRING PROPERTY LINK_FLAGS " /INCREMENTAL:NO")
+ endif(MSVC)
+ 
+ set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
