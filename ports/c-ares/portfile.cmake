@@ -13,11 +13,11 @@ vcpkg_from_github(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(CARES_STATIC ON)
-    set(CARES_SHARED OFF)
+    set(CARES_STATIC 1)
+    set(CARES_SHARED 0)
 else()
-    set(CARES_STATIC OFF)
-    set(CARES_SHARED ON)
+    set(CARES_STATIC 0)
+    set(CARES_SHARED 1)
 endif()
 
 vcpkg_configure_cmake(

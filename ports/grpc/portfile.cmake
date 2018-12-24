@@ -11,8 +11,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.14.1
-    SHA512 f0e4fe9777ebc3316a85cb581edad19fef785cdcd2859b1dc54bf7407aa2ba804718973661595e318ea62463620f30ca828e5d7638798cca154af5e1d456ed1e
+    REF v1.17.1
+    SHA512 45ba731fd4d1bc3cf590511e53ea6a73de6970f4bb379eb0ef90d550cdc13358f673ead8c6877c02c71dccdba914ad4765c58e173e0dd7895b5d25ebbad38e8e
     HEAD_REF master
     PATCHES fix-uwp.patch
 )
@@ -81,3 +81,4 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
+##
