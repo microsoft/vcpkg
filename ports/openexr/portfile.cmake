@@ -12,6 +12,7 @@ vcpkg_from_github(
             004-027a323e375ebe46a6a74863c3c6306dda4427aa.patch
             005-eb2392c88152c05c3b554cc14bc8a1fafb344340.patch
             FindIlmBase.patch
+            OpenEXR_CMakeLists.patch
 )
 
 # Copy OpenEXR/OpenEXRConfig.h for FindIlmBase.cmake

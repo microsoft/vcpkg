@@ -1,0 +1,12 @@
+diff --git a/OpenEXR/CMakeLists.txt b/OpenEXR/CMakeLists.txt
+index 1df2d27..0f6d1f8 100644
+--- a/OpenEXR/CMakeLists.txt
++++ b/OpenEXR/CMakeLists.txt
+@@ -40,6 +40,7 @@ ENDIF()
+ MACRO(SET_ILMBASE_INCLUDE_DIRS _target)
+   TARGET_INCLUDE_DIRECTORIES(${_target}
+     PRIVATE ${ZLIB_INCLUDE_DIR}
++    PRIVETE ${ILMBASE_INCLUDE_DIR}/OpenEXR
+     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../config
+     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../IlmBase/config
+     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
