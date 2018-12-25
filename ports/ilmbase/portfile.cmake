@@ -34,6 +34,9 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 foreach(HEADER halfExport.h IexExport.h IexMathFloatExc.h IlmThreadExport.h ImathExport.h)
     file(READ ${CURRENT_PACKAGES_DIR}/include/OpenEXR/${HEADER} HEADER_FILE)
