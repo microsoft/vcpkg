@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 set(PHYSFS_VERSION 3.0.1)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/physfs-${PHYSFS_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://icculus.org/physfs/downloads/physfs-${PHYSFS_VERSION}.tar.bz2"
+    URLS "https://icculus.org/physfs/downloads/physfs-${PHYSFS_VERSION}.tar.bz2" "https://deb.debian.org/debian/pool/main/libp/libphysfs/libphysfs_${PHYSFS_VERSION}.orig.tar.bz2"
     FILENAME "physfs-${PHYSFS_VERSION}.tar.bz2"
     SHA512 ddf3b075ccb506da5e9a1ce96001be402752b9b777c2e816a85d48aff3626ff0886ea43eb07bd300fe3a9f59b9a002f54d822c51d483a4ee94b38378534c1879
 )
