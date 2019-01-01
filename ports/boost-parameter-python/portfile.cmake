@@ -4,13 +4,11 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO boostorg/signals
-    REF boost-1.68.0
-    SHA512 3d5a26de28050e03779a26f6af5f96bdab0023d6be3047be9652a660c607e7839b46b3abb257ec5b1791e2e4dc5cbcbefe433244ddc6140ee64ae531b2c0b01d
+    REPO boostorg/parameter_python
+    REF boost-1.69.0
+    SHA512 1a50243b3f527a6bfd95964053e0c0624c5bd859d037770e0c41c4158b4ae4d0da6bcf493759b6cdd66cc08ee9c6c5d82fa4173f67b2a20f9715e2f30f90e6cb
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

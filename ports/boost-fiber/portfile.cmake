@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/fiber
-    REF boost-1.68.0
-    SHA512 54325a9b6fcb7d153fd8705a44a802ad34d55af042bee9b74beebda6c66e470cf08bfe49ada6c8d9f2603847d7b695ceba7ebed8eaf1dc3fdf069d07717a47a9
+    REF boost-1.69.0
+    SHA512 c76794d63742ce9b4cc2d0aea2bc806071ea8ce03bda3759ab225edfd2c92c30bb437027e8bb8d6e526406180589f1021f64611a001545a68be41c9a41714a47
     HEAD_REF master
 )
 
