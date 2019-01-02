@@ -325,10 +325,10 @@ index 5402766..6cff9fa 100644
    THRIFT_STATIC_LIB
    THRIFT_COMPILER
 diff --git a/cmake_modules/FindZLIB.cmake b/cmake_modules/FindZLIB.cmake
-index ca6060b..2af60da 100644
+index ca6060b..85a4585 100644
 --- a/cmake_modules/FindZLIB.cmake
 +++ b/cmake_modules/FindZLIB.cmake
-@@ -30,43 +30,17 @@
+@@ -30,43 +30,15 @@
  #  ZLIB_SHARED_LIB, path to libz's shared library
  #  ZLIB_FOUND, whether zlib has been found
  
@@ -337,18 +337,21 @@ index ca6060b..2af60da 100644
 -    list( APPEND _zlib_roots ${_native_path} )
 -elseif ( ZLIB_HOME )
 -    list( APPEND _zlib_roots ${ZLIB_HOME} )
--endif()
--
- if (MSVC)
-   # zlib uses zlib.lib for Windows.
-   set(ZLIB_LIB_NAME zlib.lib)
- else ()
-   # zlib uses libz.so for non Windows.
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(ZLIB_LIB_NAME_SUFFIX "d")
++else()
++  set(ZLIB_LIB_NAME_SUFFIX "")
+ endif()
+ 
+-if (MSVC)
+-  # zlib uses zlib.lib for Windows.
+-  set(ZLIB_LIB_NAME zlib.lib)
+-else ()
+-  # zlib uses libz.so for non Windows.
 -  set(ZLIB_LIB_NAME
 -    ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX})
-+  set(ZLIB_LIB_NAME libz.a)
- endif ()
- 
+-endif ()
+-
  # Try the parameterized roots, if they exist
 -if (_zlib_roots)
 -  find_path(ZLIB_INCLUDE_DIR NAMES zlib.h
@@ -371,12 +374,12 @@ index ca6060b..2af60da 100644
 -  endif ()
 -endif ()
 +find_path(ZLIB_INCLUDE_DIR NAMES zlib.h PATH_SUFFIXES "include")
-+find_library(ZLIB_SHARED_LIB NAMES ${ZLIB_LIB_NAME} PATH_SUFFIXES "lib")
++find_library(ZLIB_SHARED_LIB NAMES z zlib${ZLIB_LIB_NAME_SUFFIX} PATH_SUFFIXES "lib")
  
  if (ZLIB_INCLUDE_DIR AND ZLIB_SHARED_LIB)
    set(ZLIB_FOUND TRUE)
 diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
-index 810e5c0..de1bd26 100644
+index 810e5c0..d272d8f 100644
 --- a/cmake_modules/FindZSTD.cmake
 +++ b/cmake_modules/FindZSTD.cmake
 @@ -22,30 +22,16 @@
@@ -395,9 +398,9 @@ index 810e5c0..de1bd26 100644
 -if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
 -  set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
 +if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(ZSTD_LIB_NAME zstdd)
++  set(ZSTD_LIB_NAME_SUFFIX "d")
 +else()
-+  set(ZSTD_LIB_NAME zstd)
++  set(ZSTD_LIB_NAME_SUFFIX "")
  endif()
  
 -set(ZSTD_STATIC_LIB_SUFFIX
@@ -413,7 +416,7 @@ index 810e5c0..de1bd26 100644
 -find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
 -  PATHS ${_zstd_roots}
 -  NO_DEFAULT_PATH
-+find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_LIB_NAME}
++find_library(ZSTD_STATIC_LIB NAMES zstd${ZSTD_LIB_NAME_SUFFIX} zstd_static${ZSTD_LIB_NAME_SUFFIX}
    PATH_SUFFIXES "lib" )
  
  include(FindPackageHandleStandardArgs)
