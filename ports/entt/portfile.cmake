@@ -4,15 +4,27 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/entt
-    REF v2.7.2
-    SHA512 334b94ef142bb234204315e47c9783f55c7639c59a214b772ce76c6b7cf4008280ab6762a3cf6049f51932773f5ae62e45d9423efe0dd5043b20103b1f857167
+    REF v2.7.3
+    SHA512 ffdb26f43ebf0090eed5de589df4194282e2ab89e5014bfe4acc2670729b86c93ea85e25b4b1e72de975287b8f0aa9e72d89e1cfb649e0a0f4f72838b00e5215
+    HEAD_REF master
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/src/entt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
-# Handle copyright/readme/package files
+vcpkg_install_cmake()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/entt)
+endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+
+# Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/entt RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/entt)

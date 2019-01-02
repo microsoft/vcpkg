@@ -267,6 +267,4 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gdal/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/gdal/copyright)
-
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
+configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/gdal/copyright COPYONLY)

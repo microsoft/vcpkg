@@ -201,6 +201,17 @@ function(vcpkg_configure_cmake)
         )
     endif()
 
+    # Sets configuration variables for macOS builds
+    if(DEFINED VCPKG_INSTALL_NAME_DIR)
+        list(APPEND _csc_OPTIONS "-DCMAKE_INSTALL_NAME_DIR=${VCPKG_INSTALL_NAME_DIR}")
+    endif()
+    if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+    endif()
+    if(DEFINED VCPKG_OSX_SYSROOT)
+        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
+    endif()
+
     set(rel_command
         ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
         -G ${GENERATOR}

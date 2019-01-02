@@ -1,16 +1,11 @@
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
+endif()
+
 include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.1")
 set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO "Kitware/VTK"
-    REF "v${VTK_LONG_VERSION}"
-    SHA512 09e110cba4ad9a6684e9b2af0cbb5b9053e3596ccb62aab96cd9e71aa4a96c809d96e13153ff44c28ad83015a61ba5195f7d34056707b62654c1bc057f9b9edf
-    HEAD_REF "master"
-)
-
 # =============================================================================
 # Options:
 
@@ -46,13 +41,18 @@ endif()
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
+
 # =============================================================================
-# Apply patches to the source code
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+# Clone & patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "Kitware/VTK"
+    REF "v${VTK_LONG_VERSION}"
+    SHA512 09e110cba4ad9a6684e9b2af0cbb5b9053e3596ccb62aab96cd9e71aa4a96c809d96e13153ff44c28ad83015a61ba5195f7d34056707b62654c1bc057f9b9edf
+    HEAD_REF "master"
     PATCHES
         # Disable ssize_t because this can conflict with ssize_t that is defined on windows.
-        ${CMAKE_CURRENT_LIST_DIR}/dont-define-ssize_t.patch
+        dont-define-ssize_t.patch
 
         # We force CMake to use it's own version of the FindHDF5 module since newer versions
         # shipped with CMake behave differently. E.g. the one shipped with CMake 3.9 always
@@ -61,16 +61,17 @@ vcpkg_apply_patches(
         # Maybe in the future we can disable the patch and use the new version shipped with CMake
         # together with the hdf5-config.cmake that is written by HDF5 itself, but currently VTK
         # disables taking the config into account explicitly.
-        ${CMAKE_CURRENT_LIST_DIR}/use-fixed-find-hdf5.patch
+        use-fixed-find-hdf5.patch
 
         # We disable a workaround in the VTK CMake scripts that can lead to the fact that a dependency
         # will link to both, the debug and the release library.
-        ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
+        disable-workaround-findhdf5.patch
 
-        ${CMAKE_CURRENT_LIST_DIR}/fix-find-libproj4.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-find-libharu.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-find-mysql.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-find-odbc.patch
+        fix-find-libproj4.patch
+        fix-find-libharu.patch
+        fix-find-mysql.patch
+        fix-find-odbc.patch
+        fix-find-lz4.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -165,6 +166,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
+        -DVTK_INSTALL_RUNTIME_DIR=tools
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
 )
@@ -293,16 +295,23 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTE
 string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/lib/[^\\.]*\\.lib" "" VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
 
+# Remove any remaining stray absolute references to the installed directory.
+file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/*.cmake)
+foreach(FILE IN LISTS CMAKE_FILES)
+    file(READ "${FILE}" _contents)
+    string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
+    file(WRITE "${FILE}" "${_contents}")
+endforeach()
+
 # =============================================================================
-# Move executable to tools directory and clean-up other directories
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/vtk)
+# Clean-up other directories
 
-function(_vtk_move_tool TOOL_NAME)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/${TOOL_NAME}.exe)
+
+function(_vtk_remove_tool TOOL_NAME)
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
     endif()
-
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
 endfunction()
 
 set(VTK_TOOLS
@@ -326,7 +335,7 @@ string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
 
 foreach(TOOL_NAME IN LISTS VTK_TOOLS)
-    _vtk_move_tool("${TOOL_NAME}")
+    _vtk_remove_tool("${TOOL_NAME}")
 endforeach()
 
 # =============================================================================

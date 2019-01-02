@@ -3,10 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF ce9f0cb155ad0e97cfc7703d9d7c8e5bec3201bc
-    SHA512 e1fca685e3397398bd259d126560902e813d1e2fb5cdb04de9d3f2fd74961f53af53dbaf9a555113a5588f07a3859d16bdc64f0a0ff65a7b5cf89965e764e68d
+    REF v1.1.0
+    SHA512 79f8d66cdf1d8f0f50f888edf59b46671ca7439d1da0f25e5f729bd1365b4bc2969c90a377bbd25c41f84eeb231d03fb0bc7c2d5435e3e55f4cf80ae62f9b934
     HEAD_REF master
-    PATCHES fix-include-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
@@ -31,21 +30,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Move CMake config files to the right place
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/nng)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Put the licence file where vcpkg expects it
-file(COPY
-    ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/nng)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/share/nng/LICENSE.txt
-    ${CURRENT_PACKAGES_DIR}/share/nng/copyright)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/nng/copyright COPYONLY)
 
 vcpkg_copy_pdbs()

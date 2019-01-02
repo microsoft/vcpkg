@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-4.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2"
-    FILENAME "ffmpeg-3.3.3.tar.bz2"
-    SHA512 1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
+    URLS "http://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2"
+    FILENAME "ffmpeg-4.1.tar.bz2"
+    SHA512 ccf6d07268dc47e08ca619eb182a003face2a8ee73ec1a28157330dd7de1df88939def1fc1c7e6b6ac7b59752cdad84657d589b2fafb73e14e5ef03fb6e33417
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -67,6 +67,12 @@ if("tools" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --disable-network") # FIXME: prevent compiliing problems for winsock
 else()
     set(OPTIONS "${OPTIONS} --disable-ffmpeg --disable-ffprobe")
+endif()
+
+if("ffprobe" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffprobe")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffprobe")
 endif()
 
 if("zlib" IN_LIST FEATURES)

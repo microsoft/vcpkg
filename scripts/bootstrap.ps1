@@ -160,6 +160,16 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
         }
 
         $majorVersion = $version.Substring(0,2);
+        if ($majorVersion -eq "16")
+        {
+            $VCFolder= "$path\VC\Tools\MSVC\"
+            if (Test-Path $VCFolder)
+            {
+                Write-Verbose "Picking: $instanceCandidate"
+                return "$path\MSBuild\Current\Bin\MSBuild.exe", "v141"
+            }
+        }
+
         if ($majorVersion -eq "15")
         {
             $VCFolder= "$path\VC\Tools\MSVC\"
@@ -328,7 +338,7 @@ if ($disableMetrics)
 }
 
 $platform = "x86"
-$vcpkgReleaseDir = "$vcpkgSourcesPath\release"
+$vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
 
 if ($win64)
 {
@@ -339,7 +349,7 @@ if ($win64)
     }
 
     $platform = "x64"
-    $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\release"
+    $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x64.release"
 }
 
 $arguments = (
@@ -388,5 +398,6 @@ Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 Write-Verbose("Placing vcpkg.exe in the correct location")
 
-Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe" | Out-Null
-Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe" | Out-Null
+Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
+Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe"
+Remove-Item "$vcpkgReleaseDir" -Force -Recurse -ErrorAction SilentlyContinue
