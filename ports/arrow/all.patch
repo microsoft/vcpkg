@@ -21,30 +21,37 @@ index 4448b98..d6aa484 100644
  endif()
 +
 diff --git a/cmake_modules/FindBrotli.cmake b/cmake_modules/FindBrotli.cmake
-index ea971f0..3e98ede 100644
+index ea971f0..e8dfb3c 100644
 --- a/cmake_modules/FindBrotli.cmake
 +++ b/cmake_modules/FindBrotli.cmake
-@@ -43,53 +43,31 @@ find_path( BROTLI_INCLUDE_DIR NAMES brotli/decode.h
-   NO_DEFAULT_PATH
+@@ -39,57 +39,27 @@ elseif ( Brotli_HOME )
+ endif()
+ 
+ find_path( BROTLI_INCLUDE_DIR NAMES brotli/decode.h
+-  PATHS ${_brotli_roots}
+-  NO_DEFAULT_PATH
    PATH_SUFFIXES "include" )
  
 -find_library( BROTLI_LIBRARY_ENC NAMES libbrotlienc.a libbrotlienc-static.a brotlienc
+-  PATHS ${_brotli_roots}
+-  NO_DEFAULT_PATH
+-  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
 +find_library( BROTLI_LIBRARY_ENC NAMES libbrotlienc libbrotlienc-static brotlienc brotlienc-static
-   PATHS ${_brotli_roots}
-   NO_DEFAULT_PATH
-   PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
++  PATH_SUFFIXES "lib" )
  
 -find_library( BROTLI_LIBRARY_DEC NAMES libbrotlidec.a libbrotlidec-static.a brotlidec
+-  PATHS ${_brotli_roots}
+-  NO_DEFAULT_PATH
+-  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
 +find_library( BROTLI_LIBRARY_DEC NAMES libbrotlidec libbrotlidec-static brotlidec brotlidec-static
-   PATHS ${_brotli_roots}
-   NO_DEFAULT_PATH
-   PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
++  PATH_SUFFIXES "lib" )
  
 -find_library( BROTLI_LIBRARY_COMMON NAMES libbrotlicommon.a libbrotlicommon-static.a brotlicommon
+-  PATHS ${_brotli_roots}
+-  NO_DEFAULT_PATH
+-  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
 +find_library( BROTLI_LIBRARY_COMMON NAMES libbrotlicommon libbrotlicommon-static brotlicommon brotlicommon-static
-   PATHS ${_brotli_roots}
-   NO_DEFAULT_PATH
-   PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib" )
++  PATH_SUFFIXES "lib" )
  
  set(BROTLI_LIBRARIES ${BROTLI_LIBRARY_ENC} ${BROTLI_LIBRARY_DEC}
      ${BROTLI_LIBRARY_COMMON})
@@ -88,29 +95,102 @@ index ea971f0..3e98ede 100644
    set(BROTLI_FOUND FALSE)
  endif ()
 diff --git a/cmake_modules/FindFlatbuffers.cmake b/cmake_modules/FindFlatbuffers.cmake
-index 975c869..c714218 100644
+index 975c869..9cee8a0 100644
 --- a/cmake_modules/FindFlatbuffers.cmake
 +++ b/cmake_modules/FindFlatbuffers.cmake
-@@ -53,6 +53,7 @@ endif ()
+@@ -31,31 +31,26 @@
+ #  FLATBUFFERS_STATIC_LIB, path to libflatbuffers.a
+ #  FLATBUFFERS_FOUND, whether flatbuffers has been found
+ 
+-if( NOT "${FLATBUFFERS_HOME}" STREQUAL "")
+-    file( TO_CMAKE_PATH "${FLATBUFFERS_HOME}" _native_path )
+-    list( APPEND _flatbuffers_roots "${_native_path}" )
+-elseif ( Flatbuffers_HOME )
+-    list( APPEND _flatbuffers_roots "${Flatbuffers_HOME}" )
++if(WIN32)
++  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(FLATBUFFERS_LIB_SUFFIX mdd)
++  else()
++    set(FLATBUFFERS_LIB_SUFFIX md)
++  endif()
++else()
++  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(FLATBUFFERS_LIB_SUFFIX "d")
++  else()
++    set(FLATBUFFERS_LIB_SUFFIX "")
++  endif()
+ endif()
+ 
+-# Try the parameterized roots, if they exist
+-if ( _flatbuffers_roots )
+-    find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h
+-        PATHS "${_flatbuffers_roots}" NO_DEFAULT_PATH
+-        PATH_SUFFIXES "include" )
+-    find_library( FLATBUFFERS_LIBRARIES NAMES flatbuffers
+-        PATHS "${_flatbuffers_roots}" NO_DEFAULT_PATH
+-        PATH_SUFFIXES "lib" "lib64")
+-else ()
+-    find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h )
+-    find_library( FLATBUFFERS_LIBRARIES NAMES flatbuffers )
+-endif ()
++find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h )
++find_library( FLATBUFFERS_LIBRARIES NAMES flatbuffers )
  
  find_program(FLATBUFFERS_COMPILER flatc
-   "${FLATBUFFERS_HOME}/bin"
+-  "${FLATBUFFERS_HOME}/bin"
+-  /usr/local/bin
+-  /usr/bin
+-  NO_DEFAULT_PATH
++  PATH_SUFFIXES
 +  "${FLATBUFFERS_HOME}/tools/flatbuffers"
-   /usr/local/bin
-   /usr/bin
-   NO_DEFAULT_PATH
+ )
+ 
+ if (FLATBUFFERS_INCLUDE_DIR AND FLATBUFFERS_LIBRARIES)
+diff --git a/cmake_modules/FindGLOG.cmake b/cmake_modules/FindGLOG.cmake
+index f22e4df..53e545b 100644
+--- a/cmake_modules/FindGLOG.cmake
++++ b/cmake_modules/FindGLOG.cmake
+@@ -29,11 +29,6 @@
+ #  GLOG_STATIC_LIB, path to libglog.a
+ #  GLOG_FOUND, whether glog has been found
+ 
+-if( NOT "${GLOG_HOME}" STREQUAL "")
+-    file( TO_CMAKE_PATH "${GLOG_HOME}" _native_path )
+-    list( APPEND _glog_roots ${_native_path} )
+-endif()
+-
+ message(STATUS "GLOG_HOME: ${GLOG_HOME}")
+ # Try the parameterized roots, if they exist
+ if ( _glog_roots )
+@@ -43,10 +38,10 @@ if ( _glog_roots )
+     endif ()
+ 
+     find_path( GLOG_INCLUDE_DIR NAMES glog/logging.h
+-        PATHS ${_glog_roots} NO_DEFAULT_PATH
++        PATHS ${_glog_roots}
+         PATH_SUFFIXES "include" )
+     find_library( GLOG_LIBRARIES NAMES glog
+-        PATHS ${_glog_roots} NO_DEFAULT_PATH
++        PATHS ${_glog_roots}
+         PATH_SUFFIXES ${lib_dirs})
+ else ()
+     find_path( GLOG_INCLUDE_DIR NAMES glog/logging.h )
 diff --git a/cmake_modules/FindLz4.cmake b/cmake_modules/FindLz4.cmake
-index 3a89c8d..3157197 100644
+index 3a89c8d..1e068b4 100644
 --- a/cmake_modules/FindLz4.cmake
 +++ b/cmake_modules/FindLz4.cmake
-@@ -29,21 +29,11 @@ elseif ( Lz4_HOME )
+@@ -29,23 +29,16 @@ elseif ( Lz4_HOME )
      list( APPEND _lz4_roots ${Lz4_HOME} )
  endif()
  
 -if (MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
 -  set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
--endif()
--
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(LZ4_LIB_NAME lz4d)
++else()
++  set(LZ4_LIB_NAME lz4)
+ endif()
+ 
 -set(LZ4_STATIC_LIB_SUFFIX
 -  "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
 -
@@ -118,32 +198,67 @@ index 3a89c8d..3157197 100644
 -  ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_STATIC_LIB_SUFFIX})
 -
  find_path(LZ4_INCLUDE_DIR NAMES lz4.h
-   PATHS ${_lz4_roots}
-   NO_DEFAULT_PATH
+-  PATHS ${_lz4_roots}
+-  NO_DEFAULT_PATH
    PATH_SUFFIXES "include" )
 -find_library(LZ4_STATIC_LIB NAMES ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
-+find_library(LZ4_STATIC_LIB NAMES lz4 liblz4
-   PATHS ${_lz4_roots}
-   NO_DEFAULT_PATH
+-  PATHS ${_lz4_roots}
+-  NO_DEFAULT_PATH
++
++find_library(LZ4_STATIC_LIB NAMES ${LZ4_LIB_NAME}
    PATH_SUFFIXES "lib" )
+ 
+ include(FindPackageHandleStandardArgs)
 diff --git a/cmake_modules/FindSnappy.cmake b/cmake_modules/FindSnappy.cmake
-index 867963c..8a432db 100644
+index 867963c..fd45321 100644
 --- a/cmake_modules/FindSnappy.cmake
 +++ b/cmake_modules/FindSnappy.cmake
-@@ -55,7 +55,7 @@ if (SNAPPY_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR SNAPPY_LIBRARIES))
+@@ -31,31 +31,23 @@
+ #  SNAPPY_SHARED_LIB, path to libsnappy's shared library
+ #  SNAPPY_FOUND, whether snappy has been found
+ 
+-if( NOT "${SNAPPY_HOME}" STREQUAL "")
+-    file( TO_CMAKE_PATH "${SNAPPY_HOME}" _native_path )
+-    list( APPEND _snappy_roots ${_native_path} )
+-elseif ( Snappy_HOME )
+-    list( APPEND _snappy_roots ${Snappy_HOME} )
+-endif()
+-
+-message(STATUS "SNAPPY_HOME: ${SNAPPY_HOME}")
+-find_path(SNAPPY_INCLUDE_DIR snappy.h HINTS
+-  ${_snappy_roots}
+-  NO_DEFAULT_PATH
++find_path(SNAPPY_INCLUDE_DIR snappy.h 
+   PATH_SUFFIXES "include")
+ 
+-find_library( SNAPPY_LIBRARIES NAMES snappy PATHS
+-  ${_snappy_roots}
+-  NO_DEFAULT_PATH
+-  PATH_SUFFIXES "lib")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(SNAPPY_LIB_NAME snappyd)
++else()
++  set(SNAPPY_LIB_NAME snappy)
++endif()
++
++find_library( SNAPPY_LIBRARIES NAMES ${SNAPPY_LIB_NAME} PATH_SUFFIXES "lib")
+ 
+ if (SNAPPY_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR SNAPPY_LIBRARIES))
+   set(SNAPPY_FOUND TRUE)
+   get_filename_component( SNAPPY_LIBS ${SNAPPY_LIBRARIES} PATH )
    set(SNAPPY_HEADER_NAME snappy.h)
    set(SNAPPY_HEADER ${SNAPPY_INCLUDE_DIR}/${SNAPPY_HEADER_NAME})
-   set(SNAPPY_LIB_NAME snappy)
+-  set(SNAPPY_LIB_NAME snappy)
 -  set(SNAPPY_STATIC_LIB ${SNAPPY_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
 +  set(SNAPPY_STATIC_LIB ${SNAPPY_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX})
    set(SNAPPY_SHARED_LIB ${SNAPPY_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
  else ()
    set(SNAPPY_FOUND FALSE)
 diff --git a/cmake_modules/FindThrift.cmake b/cmake_modules/FindThrift.cmake
-index 5402766..5ed3a03 100644
+index 5402766..6cff9fa 100644
 --- a/cmake_modules/FindThrift.cmake
 +++ b/cmake_modules/FindThrift.cmake
-@@ -28,41 +28,22 @@
+@@ -28,41 +28,31 @@
  #  THRIFT_STATIC_LIB, THRIFT static library
  #  THRIFT_FOUND, If false, do not try to use ant
  
@@ -170,10 +285,18 @@ index 5402766..5ed3a03 100644
 -
 -if (MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
 -  set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
-+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+  set(THRIFT_LIB_SUFFIX mdd)
++if(WIN32)
++  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(THRIFT_LIB_SUFFIX mdd)
++  else()
++    set(THRIFT_LIB_SUFFIX md)
++  endif()
 +else()
-+  set(THRIFT_LIB_SUFFIX md)
++  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(THRIFT_LIB_SUFFIX "d")
++  else()
++    set(THRIFT_LIB_SUFFIX "")
++  endif()
  endif()
  
  find_library(THRIFT_STATIC_LIB NAMES
@@ -182,6 +305,7 @@ index 5402766..5ed3a03 100644
 -  NO_DEFAULT_PATH
 -  PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib"
 +  thrift${THRIFT_LIB_SUFFIX}
++  PATH_SUFFIXES lib
  )
  
  find_program(THRIFT_COMPILER thrift HINTS
@@ -192,7 +316,7 @@ index 5402766..5ed3a03 100644
  )
  
  function(EXTRACT_THRIFT_VERSION)
-@@ -111,7 +92,6 @@ else ()
+@@ -111,7 +101,6 @@ else ()
    endif ()
  endif ()
  
@@ -252,10 +376,10 @@ index ca6060b..2af60da 100644
  if (ZLIB_INCLUDE_DIR AND ZLIB_SHARED_LIB)
    set(ZLIB_FOUND TRUE)
 diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
-index 810e5c0..7dfa050 100644
+index 810e5c0..de1bd26 100644
 --- a/cmake_modules/FindZSTD.cmake
 +++ b/cmake_modules/FindZSTD.cmake
-@@ -22,30 +22,10 @@
+@@ -22,30 +22,16 @@
  #  ZSTD_STATIC_LIB, path to libzstd static library
  #  ZSTD_FOUND, whether zstd has been found
  
@@ -265,29 +389,63 @@ index 810e5c0..7dfa050 100644
 -elseif ( ZStd_HOME )
 -    list( APPEND _zstd_roots ${ZStd_HOME} )
 -endif()
--
++find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
++  PATH_SUFFIXES "include" )
+ 
 -if (MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
 -  set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
--endif()
--
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(ZSTD_LIB_NAME zstdd)
++else()
++  set(ZSTD_LIB_NAME zstd)
+ endif()
+ 
 -set(ZSTD_STATIC_LIB_SUFFIX
 -  "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
 -
 -set(ZSTD_STATIC_LIB_NAME
 -  ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
 -
- find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
+-find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
 -  PATHS ${_zstd_roots}
 -  NO_DEFAULT_PATH
-   PATH_SUFFIXES "include" )
+-  PATH_SUFFIXES "include" )
 -find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
 -  PATHS ${_zstd_roots}
 -  NO_DEFAULT_PATH
-+
-+find_library(ZSTD_STATIC_LIB NAMES zstd libzstd zstd_static libzstd_static
++find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_LIB_NAME}
    PATH_SUFFIXES "lib" )
  
  include(FindPackageHandleStandardArgs)
+diff --git a/cmake_modules/Finddouble-conversion.cmake b/cmake_modules/Finddouble-conversion.cmake
+new file mode 100644
+index 0000000..4fa0995
+--- /dev/null
++++ b/cmake_modules/Finddouble-conversion.cmake
+@@ -0,0 +1,23 @@
++# Licensed to the Apache Software Foundation (ASF) under one
++# or more contributor license agreements.  See the NOTICE file
++# distributed with this work for additional information
++# regarding copyright ownership.  The ASF licenses this file
++# to you under the Apache License, Version 2.0 (the
++# "License"); you may not use this file except in compliance
++# with the License.  You may obtain a copy of the License at
++#
++#   http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing,
++# software distributed under the License is distributed on an
++# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++# KIND, either express or implied.  See the License for the
++# specific language governing permissions and limitations
++# under the License.
++
++find_path(DOUBLE_CONVERSION_INCLUDE_DIR NAMES double-conversion.h PATH_SUFFIXES "include/double-conversion" )
++
++find_library(DOUBLE_CONVERSION_STATIC_LIB NAMES double-conversion PATH_SUFFIXES "lib" )
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(DOUBLE_CONVERSION REQUIRED_VARS DOUBLE_CONVERSION_STATIC_LIB DOUBLE_CONVERSION_INCLUDE_DIR)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
 index 1c7cd62..0e2be76 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
