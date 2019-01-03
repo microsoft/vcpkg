@@ -1,0 +1,54 @@
+image:
+#- Visual Studio 2017
+- Visual Studio 2015
+
+platform:
+- x64
+
+cache:
+  - C:\projects\vcpkg-0n61n\installed
+#  - C:\projects\vcpkg-0n61n\installed\x64-windows
+#  - C:\projects\vcpkg-0n61n\installed\vcpkg
+  - C:\projects\vcpkg-0n61n\packages
+      
+install:
+  - rd /s /q c:\OpenSSL-v11-Win32
+  - rd /s /q c:\OpenSSL-v11-Win64
+  - rd /s /q C:\OpenSSL-Win64
+  - rd /s /q C:\OpenSSL-Win32
+#  - rd /s /q C:\projects\vcpkg-0n61n\installed\x64-windows-static
+  - cd C:\projects\vcpkg-0n61n
+#  - git pull
+  - bootstrap-vcpkg.bat
+  - vcpkg.exe remove --outdated
+#  - vcpkg.exe ci x64-windows # Build execution time has reached the maximum allowed time for your plan (60 minutes).
+  - vcpkg.exe install curl[*]:x64-windows --keep-going
+#  - vcpkg.exe install hdf5[core]:x64-windows --keep-going
+  - mkdir C:\projects\vcpkg-0n61n\arch
+#      - 7z a C:\projects\vcpkg-0n61n\arch\speex_x64-windows-static.zip C:\projects\vcpkg-0n61n\packages\speex_x64-windows-static\*
+  - for /D %%d in (C:\projects\vcpkg-0n61n\packages\*.*) do 7z a -tzip "%%d.zip" "%%d"
+  - move C:\projects\vcpkg-0n61n\packages\*.zip C:\projects\vcpkg-0n61n\arch
+# https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc733145(v=ws.11)
+# /E or /S - subdirectories
+#  - robocopy C:\projects\vcpkg-0n61n\packages C:\projects\vcpkg-0n61n\arch *.zip /MOV
+# - for /D %%A in (C:\projects\vcpkg-0n61n\packages\*.*) do 7z a -tzip "C:\projects\vcpkg-0n61n\arch\%%~nxA.zip" "%%A"
+
+
+build: off
+
+artifacts:
+- path: "arch\\*.zip"
+#  name: "arch\\speex_x64-windows-static" #отсутствовал
+  type: zip
+
+deploy:
+- provider: GitHub
+  auth_token:
+   secure: x4Sk+aXfTR4Nuz2XdGFyesYZIO/8MRwNdl1DkjdqYiNnnVcCadb0Xjv1nKYr4zCp
+  artifact: /.*\.zip/            # upload all zip packages to release assets
+ 
+#  type: zip #отсутствовал
+
+  
+  
+  
