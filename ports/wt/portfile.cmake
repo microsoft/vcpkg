@@ -44,6 +44,14 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/wt)
 
+# Fix absolute paths.
+file(GLOB CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/wt/*.cmake)
+foreach(CMAKE_FILE ${CMAKE_FILES})
+    file(READ ${CMAKE_FILE} _contents)
+    string(REPLACE "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
+    file(WRITE ${CMAKE_FILE} "${_contents}")
+endforeach()
+
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
