@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF 14b74af735aee8bfbe9d6a222835e1c2db1d8d88
-    SHA512 b826a4966b8dfe9532b1f1f719bb91afd7bf1baf6fabe7a846aba361564069dcc01c19d601a6bef500680370582169d7b764e9425c72766462493328ee6345d9
+    REF b2884129bf6db53cb102137d81e7176e893c5e5f
+    SHA512 5d66d3c1a09b4f62b7bba6395a473c30c7e1d0f61d07eb96a6c2e35837409c0dd71d5a64e45772ad90c112c3997ad8acdfdbb60b1e01c9245b8bb1793ff8e134
     HEAD_REF master
 )
 
