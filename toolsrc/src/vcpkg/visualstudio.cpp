@@ -22,6 +22,17 @@ namespace vcpkg::VisualStudio
             LEGACY
         };
 
+        static std::string release_type_to_string(const ReleaseType& release_type)
+        {
+            switch (release_type)
+            {
+                case ReleaseType::STABLE: return "STABLE";
+                case ReleaseType::PRERELEASE: return "PRERELEASE";
+                case ReleaseType::LEGACY: return "LEGACY";
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }
+
         static bool preferred_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
         {
             const auto get_preference_weight = [](const ReleaseType& type) -> int {
@@ -51,10 +62,15 @@ namespace vcpkg::VisualStudio
         std::string version;
         ReleaseType release_type;
 
+        std::string to_string() const
+        {
+            return Strings::format("%s, %s, %s", root_path.u8string(), version, release_type_to_string(release_type));
+        }
+
         std::string major_version() const { return version.substr(0, 2); }
     };
 
-    static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
+    static std::vector<VisualStudioInstance> get_visual_studio_instances_internal(const VcpkgPaths& paths)
     {
         const auto& fs = paths.get_filesystem();
         std::vector<VisualStudioInstance> instances;
@@ -66,7 +82,7 @@ namespace vcpkg::VisualStudio
         if (fs.exists(vswhere_exe))
         {
             const auto code_and_output = System::cmd_execute_and_capture_output(
-                Strings::format(R"("%s" -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
+                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "Running vswhere.exe failed with message:\n%s",
@@ -125,6 +141,13 @@ namespace vcpkg::VisualStudio
         return instances;
     }
 
+    std::vector<std::string> get_visual_studio_instances(const VcpkgPaths& paths)
+    {
+        std::vector<VisualStudioInstance> sorted{get_visual_studio_instances_internal(paths)};
+        std::sort(sorted.begin(), sorted.end(), VisualStudioInstance::preferred_first_comparator);
+        return Util::fmap(sorted, [](const VisualStudioInstance& instance) { return instance.to_string(); });
+    }
+
     std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths)
     {
         using CPU = System::CPUArchitecture;
@@ -137,7 +160,7 @@ namespace vcpkg::VisualStudio
         std::vector<Toolset> found_toolsets;
         std::vector<Toolset> excluded_toolsets;
 
-        const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances(paths),
+        const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances_internal(paths),
                                                         VisualStudioInstance::preferred_first_comparator};
 
         const bool v140_is_available = Util::find_if(sorted, [&](const VisualStudioInstance& vs_instance) {
@@ -147,7 +170,7 @@ namespace vcpkg::VisualStudio
         for (const VisualStudioInstance& vs_instance : sorted)
         {
             const std::string major_version = vs_instance.major_version();
-            if (major_version == "15")
+            if (major_version >= "15")
             {
                 const fs::path vc_dir = vs_instance.root_path / "VC";
 
@@ -179,8 +202,8 @@ namespace vcpkg::VisualStudio
                 // Locate the "best" MSVC toolchain version
                 const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
                 std::vector<fs::path> msvc_subdirectories = fs.get_files_non_recursive(msvc_path);
-                Util::unstable_keep_if(msvc_subdirectories,
-                                       [&fs](const fs::path& path) { return fs.is_directory(path); });
+                Util::erase_remove_if(msvc_subdirectories,
+                                      [&fs](const fs::path& path) { return !fs.is_directory(path); });
 
                 // Sort them so that latest comes first
                 std::sort(

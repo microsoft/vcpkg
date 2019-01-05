@@ -46,6 +46,7 @@ namespace vcpkg::Commands
             {"autocomplete", &Autocomplete::perform_and_exit},
             {"hash", &Hash::perform_and_exit},
             {"fetch", &Fetch::perform_and_exit},
+            {"x-vsinstances", &X_VSInstances::perform_and_exit},
         };
         return t;
     }

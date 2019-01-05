@@ -1,3 +1,4 @@
 Source: readline
-Version: 5.0-1
-Description: GNU readline
+Version: 0
+Description: GNU readline and history libraries
+Build-Depends: readline-win32 (windows)

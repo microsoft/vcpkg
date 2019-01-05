@@ -1,0 +1,100 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc75346..5b3a5c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,6 +59,12 @@ cmake_dependent_option(SPDLOG_BUILD_TESTING
+     "BUILD_TESTING" OFF
+ )
+ 
++option(SPDLOG_FMT_EXTERNAL "Use external fmt library instead of bundled" OFF)
++
++if(SPDLOG_FMT_EXTERNAL)
++    find_package(fmt REQUIRED CONFIG)
++endif()
++
+ target_include_directories(
+     spdlog
+     INTERFACE
+@@ -66,6 +72,11 @@ target_include_directories(
+     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+ )
+ 
++if(SPDLOG_FMT_EXTERNAL)
++    target_compile_definitions(spdlog INTERFACE SPDLOG_FMT_EXTERNAL)
++    target_link_libraries(spdlog INTERFACE fmt::fmt)
++endif()
++
+ set(HEADER_BASE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ 
+ if(SPDLOG_BUILD_EXAMPLES)
+@@ -88,7 +99,8 @@ set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+ set(include_install_dir "${CMAKE_INSTALL_INCLUDEDIR}")
+ set(pkgconfig_install_dir "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ set(version_config "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+-set(project_config "${PROJECT_NAME}Config.cmake")
++set(project_config "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
++set(targets_config "${PROJECT_NAME}Targets.cmake")
+ set(pkg_config "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc")
+ set(targets_export_name "${PROJECT_NAME}Targets")
+ set(namespace "${PROJECT_NAME}::")
+@@ -101,6 +113,8 @@ write_basic_package_version_file(
+ 
+ # configure pkg config file
+ configure_file("cmake/spdlog.pc.in" "${pkg_config}" @ONLY)
++# configure spdlogConfig.cmake file
++configure_file("cmake/Config.cmake.in" "${project_config}" @ONLY)
+ 
+ # install targets
+ install(
+@@ -114,9 +128,9 @@ install(
+     DESTINATION "${include_install_dir}"
+ )
+ 
+-# install project version file
++# install project config and version file
+ install(
+-    FILES "${version_config}"
++    FILES "${project_config}" "${version_config}"
+     DESTINATION "${config_install_dir}"
+ )
+ 
+@@ -126,19 +140,19 @@ install(
+     DESTINATION "${pkgconfig_install_dir}"
+ )
+ 
+-# install project config file
++# install targets config file
+ install(
+     EXPORT "${targets_export_name}"
+     NAMESPACE "${namespace}"
+     DESTINATION "${config_install_dir}"
+-    FILE ${project_config}
++    FILE ${targets_config}
+ )
+ 
+-# export build directory config file
++# export build directory targets file
+ export(
+     EXPORT ${targets_export_name}
+     NAMESPACE "${namespace}"
+-    FILE ${project_config}
++    FILE ${targets_config}
+ )
+ 
+ # register project in CMake user registry
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index ba0b36f..0b0fd11 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -21,4 +21,11 @@
+ # * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
+ # *************************************************************************/
+ 
++set(SPDLOG_FMT_EXTERNAL @SPDLOG_FMT_EXTERNAL@)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
++
++if(SPDLOG_FMT_EXTERNAL)
++    include(CMakeFindDependencyMacro)
++    find_dependency(fmt CONFIG)
++endif()

@@ -22,17 +22,19 @@ else()
     set(LIBSODIUM_DEBUG_CONFIGURATION Debug)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/libsodium.vcxproj
-    RELEASE_CONFIGURATION ${LIBSODIUM_RELEASE_CONFIGURATION}
-    DEBUG_CONFIGURATION ${LIBSODIUM_DEBUG_CONFIGURATION}
-)
-
 IF(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     SET(BUILD_ARCH "Win32")
 ELSE()
     SET(BUILD_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 ENDIF()
+
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/libsodium.vcxproj
+    RELEASE_CONFIGURATION ${LIBSODIUM_RELEASE_CONFIGURATION}
+    DEBUG_CONFIGURATION ${LIBSODIUM_DEBUG_CONFIGURATION}
+    OPTIONS
+        /p:ForceImportBeforeCppTargets=${SOURCE_PATH}/builds/msvc/properties/${BUILD_ARCH}.props
+)
 
 file(INSTALL
     ${SOURCE_PATH}/src/libsodium/include/sodium.h
@@ -44,6 +46,12 @@ file(INSTALL
     ${LIBSODIUM_HEADERS}
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/sodium
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/sodium/export.h _contents)
+    string(REPLACE "#ifdef SODIUM_STATIC" "#if 1 //#ifdef SODIUM_STATIC" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sodium/export.h "${_contents}")
+endif ()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(INSTALL

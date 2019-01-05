@@ -1,16 +1,11 @@
 include(vcpkg_common_functions)
 
-set(JSON_DTO_VERSION 0.2.5)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/json_dto-${JSON_DTO_VERSION}-vcpkg)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/sobjectizerteam/json_dto-0.2/downloads/json_dto-${JSON_DTO_VERSION}-vcpkg.zip"
-    FILENAME "json_dto-${JSON_DTO_VERSION}-vcpkg.zip"
-    SHA512 cc21f2abc2799cb9f1c95ae3ae3512869e33d7d0b79c3e05e71d6f0a4376dcf948d89a4d71fe4266efa9d84c19c8a4b8ca2bc8d3d8c217df9ba4e6b87e50c33e
+vcpkg_from_bitbucket(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO sobjectizerteam/json_dto-0.2
+    REF v.0.2.6
+    SHA512 f6562b6177c941a9b898013eacb4bd78f2b8d460a82b773824bf51e106a92c27c52dca4ab6dd07a2d5e063ca3442a20c27dfd80bdcd78207e65f328b95972890
 )
-
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/dev

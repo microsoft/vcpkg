@@ -11,20 +11,20 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
-    REF boost-1.67.0
-    SHA512 93aa3f0c76245fefe2ceabde9c287e7738f79cdab71eeb42ba426f06e7846b5da5c00fc7581d7f31135687e10660521d34c7ffb1ce7299b70d7330a81b0e5acc
+    REF boost-1.68.0
+    SHA512 ede4ea6bba966bfdc590ea21b8787f090c690db851fd6eb19644f089de8828b6cec504a7f4be203d57017de2a0288f0e12772e50d9017287221520dca1676a79
     HEAD_REF master
 )
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.67.0/LICENSE_1_0.txt"
+    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.68.0/LICENSE_1_0.txt"
     FILENAME "boost_LICENSE_1_0.txt"
     SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
 )
 
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
-    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.67.0/boostcpp.jam"
-    FILENAME "boost-1.67.0-boostcpp.jam"
+    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.68.0/boostcpp.jam"
+    FILENAME "boost-1.68.0-boostcpp.jam"
     SHA512 4d887b05b4873e651fd9bc20f04fc072c7d801fd50445c989517cd39c3a8aa132ed46c407fb0efb35825fc0fc1035393d5ac0da5922be2c120cf2bfff952b3bc
 )
 

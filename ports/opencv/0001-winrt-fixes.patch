@@ -1,17 +1,6 @@
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -311,7 +311,7 @@ OCV_OPTION(INSTALL_TESTS            "Install accuracy and performance test binar
- # OpenCV build options
- # ===================================================
- OCV_OPTION(ENABLE_CCACHE              "Use ccache"                                               (UNIX AND NOT IOS AND (CMAKE_GENERATOR MATCHES "Makefile" OR CMAKE_GENERATOR MATCHES "Ninja")) )
--OCV_OPTION(ENABLE_PRECOMPILED_HEADERS "Use precompiled headers"                                  ON IF (NOT IOS AND NOT CMAKE_CROSSCOMPILING) )
-+OCV_OPTION(ENABLE_PRECOMPILED_HEADERS "Use precompiled headers"                                  ON IF (NOT IOS AND (MSVC OR NOT CMAKE_CROSSCOMPILING)) )
- OCV_OPTION(ENABLE_SOLUTION_FOLDERS    "Solution folder in Visual Studio or in other IDEs"        (MSVC_IDE OR CMAKE_GENERATOR MATCHES Xcode) )
- OCV_OPTION(ENABLE_PROFILING           "Enable profiling in the GCC compiler (Add flags: -g -pg)" OFF  IF CMAKE_COMPILER_IS_GNUCXX )
- OCV_OPTION(ENABLE_COVERAGE            "Enable coverage collection with  GCov"                    OFF  IF CMAKE_COMPILER_IS_GNUCXX )
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
-@@ -842,7 +842,7 @@ macro(ocv_create_module)
+@@ -848,7 +848,7 @@ macro(ocv_create_module)
      set(the_module_target ${the_module})
    endif()
 
@@ -30,8 +19,6 @@
  using namespace Windows::UI::Xaml::Controls;
 
  namespace cv
-diff --git a/modules/highgui/src/window_winrt_bridge.hpp b/modules/highgui/src/window_winrt_bridge.hpp
-index 25f4aef..5429f0b 100644
 --- a/modules/highgui/src/window_winrt_bridge.hpp
 +++ b/modules/highgui/src/window_winrt_bridge.hpp
 @@ -28,6 +28,7 @@
@@ -42,8 +29,6 @@ index 25f4aef..5429f0b 100644
 
  using namespace Windows::UI::Xaml::Controls;
 
-diff --git a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
-index 236e227..e2417dc 100644
 --- a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
 +++ b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
 @@ -94,10 +94,10 @@ Media::CaptureFrameGrabber::~CaptureFrameGrabber()
