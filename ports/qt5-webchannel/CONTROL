@@ -1,4 +1,4 @@
-Source: qt5-serialbus
+Source: qt5-webchannel
 Version: 5.12.0
-Description: Qt5 Serial Bus module - Provides access to serial industrial bus interface. Currently the module supports the CAN bus and Modbus protocols.
+Description: Qt5 Web Channel module - Provides access to QObject or QML objects from HTML clients for seamless integration of Qt applications with HTML/JavaScript clients.
 Build-Depends: qt5-modularscripts, qt5-base
