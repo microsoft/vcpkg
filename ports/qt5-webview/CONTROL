@@ -1,0 +1,4 @@
+Source: qt5-webview
+Version: 5.12.0
+Description: Qt5 Web View module - Displays web content in a QML application by using APIs native to the platform, without the need to include a full web browser stack.
+Build-Depends: qt5-modularscripts, qt5-base
