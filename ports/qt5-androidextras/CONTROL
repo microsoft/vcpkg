@@ -1,0 +1,4 @@
+Source: qt5-androidextras
+Version: 5.12.0
+Description: Qt5 Android Extras module - Provides platform specific APIs for Android.
+Build-Depends: qt5-modularscripts, qt5-base
