@@ -1,0 +1,4 @@
+Source: qt5-serialbus
+Version: 5.12.0
+Description: Qt5 Serial Bus module - Provides access to serial industrial bus interface. Currently the module supports the CAN bus and Modbus protocols.
+Build-Depends: qt5-modularscripts, qt5-base
