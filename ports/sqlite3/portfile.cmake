@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(SQLITE_VERSION 3250200)
-set(SQLITE_HASH f87b4ab405f85df85b5d63e9e28c4db76202dc2d5461e0d0c626fa7521570d89a1122403c037704859ecb58ac1747ebf4b3c8a2f3a3c3d8492e8060df92e379f)
+set(SQLITE_VERSION 3260000)
+set(SQLITE_HASH ba089abd16857a65fc6cf26558a0d3e6f20c278b8df451b357eea5154f8ccd5645c9cfdb30d0fd4fe64f19dd2f876a6cc4a28455b7b013770c2ce9a607171107)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2018/sqlite-amalgamation-${SQLITE_VERSION}.zip"

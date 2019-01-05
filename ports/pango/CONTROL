@@ -1,4 +1,4 @@
 Source: pango
-Version: 1.40.11-2
+Version: 1.40.11-3
 Description: Text and font handling library.
 Build-Depends: glib, gettext, cairo, fontconfig, freetype, harfbuzz[glib] (!windows-static)
