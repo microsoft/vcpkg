@@ -26,16 +26,16 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/geos-config)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/geos)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/geos/geos-config)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 # Handle copyright
