@@ -1,0 +1,4 @@
+Source: qt5-x11extras
+Version: 5.12.0
+Description: Qt5 X11 Extras module - Provides platform-specific APIs for X11.
+Build-Depends: qt5-modularscripts, qt5-base
