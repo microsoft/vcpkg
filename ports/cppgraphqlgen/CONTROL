@@ -1,4 +1,4 @@
 Source: cppgraphqlgen
-Version: 0.7
+Version: 1.0.0
 Build-Depends: pegtl, rapidjson
 Description: C++ GraphQL schema service generator
