@@ -20,13 +20,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.3.5
-    SHA512 ccfa58aebb8685b2dbbab7038ab7f7e0788dba2fc391abafad5a0e05c71c8f02c7e1e3521e1c59076057f9643737c2d96a4fffdeb7991214234f2db80c78254b
+    REF release-1.3.6
+    SHA512 249ff2e9b381d827311eaec910962685243a3b65335c7bd404a35e11cd204c63bc7ea69787f0e27ea9c9144024e45867fd4ae7d30688a3695cd45fee1ce89ec9
     HEAD_REF master
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/EbmlConfig.cmake DESTINATION ${SOURCE_PATH})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
