@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF 1d622902d7842f94193fc394987f2b4e978bb700
     SHA512 e7b3671955aeefe8e748bc68dd9f914fbb86c9cf325606691efc332cffa0d80b61f87d5f5c1026676c35fd1c5e88f22ca60f2e811c351aeba659f810fdc52e84
     HEAD_REF master
+    PATCHES no-double-expand-cmake.patch
 )
 
 vcpkg_configure_cmake(
