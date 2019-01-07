@@ -9,7 +9,15 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "plplot-${PLPLOT_VERSION}.tar.gz"
     SHA512 ${PLPLOT_HASH}
 )
+
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+      "${CMAKE_CURRENT_LIST_DIR}/0001-findwxwidgets-fixes.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0002-wxwidgets-dev-fixes.patch"
+)
 
 set(BUILD_with_wxwidgets OFF)
 if("wxwidgets" IN_LIST FEATURES)
@@ -32,9 +40,7 @@ vcpkg_configure_cmake(
         -DPLPLOT_USE_QT5=OFF
         -DENABLE_ocaml=OFF
         -DPL_DOUBLE=ON
-        -DENABLE_wxwidgets=${ENABLE_wxwidgets}
-        -DPLD_wxpng=${ENABLE_wxwidgets}
-        -DPLD_wxwidgets=${ENABLE_wxwidgets}
+        -DPLD_wxwidgets=${BUILD_with_wxwidgets}
         -DENABLE_DYNDRIVERS=OFF
         -DDATA_DIR=${CURRENT_PACKAGES_DIR}/share/plplot
     OPTIONS_DEBUG
@@ -51,6 +57,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/plplot)
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/pltek.exe
     ${CURRENT_PACKAGES_DIR}/bin/pltek.exe
+	${CURRENT_PACKAGES_DIR}/debug/bin/wxPLViewer.exe
+	${CURRENT_PACKAGES_DIR}/bin/wxPLViewer.exe
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
