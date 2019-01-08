@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message("nanopb currently only supports static library linkage")
+    set(VCPKG_LIBRARY_LINKAGE static)
+    set(VCPKG_CRT_LINKAGE static)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
