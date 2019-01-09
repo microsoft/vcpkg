@@ -1,12 +1,8 @@
 node('work-server') {
 	try {
 		notify('warning', "STARTED")
-		
-		stage ("Clean Workspace") {
-			deleteDir()
-		}
 			
-		stage ("Clone Vcpkg") {
+		stage ("Clone vcpkg") {
 			checkout scm
 		}
 		
@@ -19,13 +15,17 @@ node('work-server') {
 				}
 
 				stage ("Set versions") {
-					bat "mvn clean versions:set -DnewVersion=${versionPrefix}"
+					bat "mvn -s settings.xml clean versions:set -DnewVersion=${versionPrefix}"
 				}
 
-				stage ("Deploy") {
-					bat "mvn clean deploy -Dbuild.path=\"C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin/\""
+				stage ("Deploy vcpkg") {
+					bat "mvn -s settings.xml clean deploy -Dbuild.path=\"C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin/\""
 				}
 			}
+		}
+		
+		stage ("Clean workspace") {
+			deleteDir()
 		}
 
 		notify('good', 'SUCCESS')

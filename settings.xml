@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <mirrors>
+        <mirror>
+            <id>archiva.default</id>
+            <url>http://archiva.imanage.com/repository/internal/</url>
+            <mirrorOf>*,!snapshots</mirrorOf>
+        </mirror>
+    </mirrors>
+
+	<localRepository>./repository</localRepository>
+	
+	<profiles>
+		<profile>
+			<repositories>
+				<repository>
+					<id>internal</id>
+					<name>Archiva Managed Internal Repository</name>
+					<url>http://archiva.imanage.com/repository/internal/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+</settings>
