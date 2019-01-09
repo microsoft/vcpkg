@@ -172,6 +172,8 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/freebsd.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/mingw.cmake")
     endif()
 
     list(APPEND _csc_OPTIONS
