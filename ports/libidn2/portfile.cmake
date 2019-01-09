@@ -2,14 +2,18 @@ include(vcpkg_common_functions)
 
 set(IDN2_VERSION 2.0.5)
 set(IDN2_FILENAME libidn2-${IDN2_VERSION}.tar.gz)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libidn2-${IDN2_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
     SHA512 9d040d60de40316788825d8720d509d5b8a82287415e09e17792c2f32fad99ca77f43e55888b9484db69426eaa0ece59e9671eee9cc46411afbdb0f81af31a79
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${IDN2_VERSION}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/string.h DESTINATION ${SOURCE_PATH}/gl)
