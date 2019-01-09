@@ -104,7 +104,7 @@ SET(CMAKE_FIND_ROOT_PATH
 SET(CMAKE_PREFIX_PATH 
 	"${MSYS_ROOT}/mingw${BITS}"
 	"${MSYS_ROOT}/mingw${BITS}/${MINGW_CHOST}"
-	"${VCPKG_ROOT_DIR}/
+#	"${CURRENT_INSTALLED_DIR}"
 )
 
 # search for programs in the build host directories
