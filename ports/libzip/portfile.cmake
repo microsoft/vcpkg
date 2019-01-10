@@ -8,7 +8,7 @@ vcpkg_from_github(
     PATCHES cmake_dont_build_more_than_needed.patch
 )
 
-# SSL
+# AES encryption
 set(USE_OPENSSL OFF)
 if("openssl" IN_LIST FEATURES)
     set(USE_OPENSSL ON)
@@ -23,6 +23,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
         OPTIONS
+            # see https://github.com/nih-at/libzip/blob/master/INSTALL.md
             -DENABLE_OPENSSL=${USE_OPENSSL}
             -DENABLE_MBEDTLS=${USE_MBEDTLS}
 )
