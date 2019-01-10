@@ -10,8 +10,6 @@ find_library(OGG_LIBRARY ogg)
 find_path(OPUS_INCLUDE_DIR opus.h PATH_SUFFIXES opus)
 find_library(OPUS_LIBRARY opus)
 
-find_package(OpenSSL MODULE REQUIRED)
-
 add_library(opusfile
     src/info.c
     src/internal.c
@@ -21,18 +19,27 @@ add_library(opusfile
 target_include_directories(opusfile PRIVATE include PUBLIC ${OGG_INCLUDE_DIR} ${OPUS_INCLUDE_DIR})
 target_link_libraries(opusfile PRIVATE ${OGG_LIBRARY} ${OPUS_LIBRARY})
 
-add_library(opusurl
-    src/http.c
-    src/wincerts.c)
-
-target_compile_definitions(opusurl PRIVATE OP_ENABLE_HTTP)
-target_include_directories(opusurl PRIVATE include)
-target_link_libraries(opusurl PRIVATE opusfile OpenSSL::SSL ws2_32.lib crypt32.lib)
-
-install(TARGETS opusfile opusurl
+install(TARGETS opusfile
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib)
+
+if(BUILD_OPUSURL)
+    find_package(OpenSSL MODULE REQUIRED)
+
+    add_library(opusurl
+        src/http.c
+        src/wincerts.c)
+
+    target_compile_definitions(opusurl PRIVATE OP_ENABLE_HTTP)
+    target_include_directories(opusurl PRIVATE include)
+    target_link_libraries(opusurl PRIVATE opusfile OpenSSL::SSL ws2_32.lib crypt32.lib)
+	
+    install(TARGETS opusurl
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+endif()
 
 if(NOT OPUSFILE_SKIP_HEADERS)
     install(FILES include/opusfile.h 

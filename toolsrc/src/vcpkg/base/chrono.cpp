@@ -5,6 +5,61 @@
 
 namespace vcpkg::Chrono
 {
+    static std::time_t get_current_time_as_time_since_epoch()
+    {
+        using std::chrono::system_clock;
+        return system_clock::to_time_t(system_clock::now());
+    }
+
+    static std::time_t utc_mktime(tm* time_ptr)
+    {
+#if defined(_WIN32)
+        return _mkgmtime(time_ptr);
+#else
+        return timegm(time_ptr);
+#endif
+    }
+
+    static tm to_local_time(const std::time_t& t)
+    {
+        tm parts {};
+#if defined(_WIN32)
+        localtime_s(&parts, &t);
+#else
+        parts = *localtime(&t);
+#endif
+        return parts;
+    }
+
+    static Optional<tm> to_utc_time(const std::time_t& t)
+    {
+        tm parts {};
+#if defined(_WIN32)
+        const errno_t err = gmtime_s(&parts, &t);
+        if (err)
+        {
+            return nullopt;
+        }
+#else
+        auto null_if_failed = gmtime_r(&t, &parts);
+        if (null_if_failed == nullptr)
+        {
+            return nullopt;
+        }
+#endif
+        return parts;
+    }
+
+    static tm date_plus_hours(tm* date, const int hours)
+    {
+        using namespace std::chrono_literals;
+        static constexpr std::chrono::seconds SECONDS_IN_ONE_HOUR =
+            std::chrono::duration_cast<std::chrono::seconds>(1h);
+
+        const std::time_t date_in_seconds = utc_mktime(date) + (hours * SECONDS_IN_ONE_HOUR.count());
+        return to_utc_time(date_in_seconds).value_or_exit(VCPKG_LINE_INFO);
+    }
+
     static std::string format_time_userfriendly(const std::chrono::nanoseconds& nanos)
     {
         using std::chrono::duration_cast;
@@ -63,30 +118,14 @@ namespace vcpkg::Chrono
 
     Optional<CTime> CTime::get_current_date_time()
     {
-        CTime ret;
-
-#if defined(_WIN32)
-        struct _timeb timebuffer;
-
-        _ftime_s(&timebuffer);
-
-        const errno_t err = gmtime_s(&ret.m_tm, &timebuffer.time);
-
-        if (err)
+        const std::time_t ct = get_current_time_as_time_since_epoch();
+        const Optional<tm> opt = to_utc_time(ct);
+        if (auto p_tm = opt.get())
         {
-            return nullopt;
+            return CTime {*p_tm};
         }
-#else
-        time_t now = {0};
-        time(&now);
-        auto null_if_failed = gmtime_r(&now, &ret.m_tm);
-        if (null_if_failed == nullptr)
-        {
-            return nullopt;
-        }
-#endif
 
-        return ret;
+        return nullopt;
     }
 
     Optional<CTime> CTime::parse(CStringView str)
@@ -111,19 +150,28 @@ namespace vcpkg::Chrono
         ret.m_tm.tm_year -= 1900;
         if (ret.m_tm.tm_mon < 1) return nullopt;
         ret.m_tm.tm_mon -= 1;
-        mktime(&ret.m_tm);
+        utc_mktime(&ret.m_tm);
+
         return ret;
     }
 
+    CTime CTime::add_hours(const int hours) const { return CTime {date_plus_hours(&this->m_tm, hours)}; }
+
     std::string CTime::to_string() const
     {
-        std::array<char, 80> date{};
+        std::array<char, 80> date {};
         strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S.0Z", &m_tm);
         return &date[0];
     }
     std::chrono::system_clock::time_point CTime::to_time_point() const
     {
-        const time_t t = mktime(&m_tm);
+        const time_t t = utc_mktime(&m_tm);
         return std::chrono::system_clock::from_time_t(t);
+    }
+
+    tm get_current_date_time_local()
+    {
+        const std::time_t now_time = get_current_time_as_time_since_epoch();
+        return Chrono::to_local_time(now_time);
     }
 }

@@ -245,7 +245,7 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::format(R"("%s" %s %s %s %s 2>&1)",
+        return Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
                                toolset.vcvarsall.u8string(),
                                Strings::join(" ", toolset.vcvarsall_options),
                                arch,
@@ -372,7 +372,8 @@ namespace vcpkg::Build
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
-                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"DOWNLOADS", paths.downloads},
                 {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
                 {"GIT", git_exe_path},
@@ -381,9 +382,15 @@ namespace vcpkg::Build
             });
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
-        if (!command.empty()) command.append(" && ");
+        if (!command.empty())
+        {
+#ifdef _WIN32
+            command.append(" & ");
+#else
+            command.append(" && ");
+#endif
+        }
         command.append(cmd_launch_cmake);
-
         const auto timer = Chrono::ElapsedTimer::create_started();
 
         const int return_code = System::cmd_execute_clean(command);
@@ -440,7 +447,7 @@ namespace vcpkg::Build
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
-                if (fs.is_directory(file) && file.filename() != "src")
+                if (fs.is_directory(file)) // Will only keep the logs
                 {
                     std::error_code ec;
                     fs.remove_all(file, ec);
@@ -462,16 +469,16 @@ namespace vcpkg::Build
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
 
-        std::vector<AbiEntry> abi_tag_entries;
+        std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
-
-        abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(
             AbiEntry{"portfile", vcpkg::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
         abi_tag_entries.emplace_back(
             AbiEntry{"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
+
+        abi_tag_entries.emplace_back(AbiEntry{"vcpkg_fixup_cmake_targets", "1"});
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
@@ -497,7 +504,7 @@ namespace vcpkg::Build
         }
 
         auto abi_tag_entries_missing = abi_tag_entries;
-        Util::stable_keep_if(abi_tag_entries_missing, [](const AbiEntry& p) { return p.value.empty(); });
+        Util::erase_remove_if(abi_tag_entries_missing, [](const AbiEntry& p) { return !p.value.empty(); });
 
         if (abi_tag_entries_missing.empty())
         {
@@ -575,8 +582,8 @@ namespace vcpkg::Build
         Util::sort_unique_erase(dep_pspecs);
 
         // Find all features that aren't installed. This mutates required_fspecs.
-        Util::unstable_keep_if(required_fspecs, [&](FeatureSpec const& fspec) {
-            return !status_db.is_installed(fspec) && fspec.name() != name;
+        Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
+            return status_db.is_installed(fspec) || fspec.name() == name;
         });
 
         if (!required_fspecs.empty())

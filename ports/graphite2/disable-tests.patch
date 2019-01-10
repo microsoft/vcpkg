@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a4c648e..db90735 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,11 +80,13 @@ if (BUILD_SHARED_LIBS)
+ endif (BUILD_SHARED_LIBS)
+ 
+ add_subdirectory(src)
++if(NOT DISABLE_TESTS)
+ add_subdirectory(tests)
+ add_subdirectory(doc)
+ if (NOT GRAPHITE2_NFILEFACE)
+     add_subdirectory(gr2fonttest)
+ endif (NOT GRAPHITE2_NFILEFACE)
++endif()
+ 
+ set(version 3.0.1)
+ set(libdir ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})

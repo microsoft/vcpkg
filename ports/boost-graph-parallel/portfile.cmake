@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/graph_parallel
-    REF boost-1.67.0
-    SHA512 f83c9bfb65c519e545657bd2e2752b37ce45d5e21877dd8a8fc36c895c5612cf0284508188be6b46719a5a5b771d5ad1e0fcb00a3082f7f9c5fb0788f2b9d560
+    REF boost-1.68.0
+    SHA512 668f8d2569cad12e5b5b173b0da012c1c43eb27e4a74d036b7bacdee3417a5148c8b30ecccbbd1b2cd30a8ffc92b6272a268b5595d5965a22a068779f8c2d1c7
     HEAD_REF master
 )
 

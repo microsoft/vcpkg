@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_2_0_0-RC2
-    SHA512  34392d85088534e0661e6fa9726c5970647a5acaa559bafb5d3746a70f5baca01012f457d50c15e73d9aca1d3ed9ec99028cc65fab07f73cdadbbc0b4329bcb5
+    REF REL_2_0_1
+    SHA512  7a84bf237bb5db3eccd90196c0f97adb75d0dd247d73852150078b9458f169d883f3ae92908217ea668bcf25c64766c86380bbcc64b432eb1bae6427c9268b18
     HEAD_REF master
 )
 

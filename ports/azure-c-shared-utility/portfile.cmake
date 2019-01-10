@@ -1,19 +1,15 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("azure-c-shared-utility only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-c-shared-utility
-    REF e7aef25f8012e9e9333c72433a1d21f90f3a28b4
-    SHA512 73b644bc1ea3d87fcdc0916f969fd779a20ed5ae263643dd21cc600265f84cab443f6578ff30f364ddea9e91ca4488615b78898e9c06f15cbc5d0af725ebfa00
+    REF 1d622902d7842f94193fc394987f2b4e978bb700
+    SHA512 e7b3671955aeefe8e748bc68dd9f914fbb86c9cf325606691efc332cffa0d80b61f87d5f5c1026676c35fd1c5e88f22ca60f2e811c351aeba659f810fdc52e84
     HEAD_REF master
+    PATCHES no-double-expand-cmake.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_AS_DYNAMIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,7 +18,7 @@ vcpkg_configure_cmake(
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Duse_default_uuid=ON
-        -Dbuild_as_dynamic=${BUILD_AS_DYNAMIC}
+        -Dbuild_as_dynamic=OFF
 )
 
 vcpkg_install_cmake()
@@ -33,8 +29,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
 file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility)
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility/copyright COPYONLY)
 
 vcpkg_copy_pdbs()

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/unicorn-lib
-    REF 10e940d50daeb63464f1000e688304b6d48761cd
-    SHA512 752df8f09a9512b9775f2ac652e98449767b446413c4340d2ffefd9524aabc3d0ecb9e7a16f91a8aff0c4a540f16d084f9c52dd0894c8bbaecdc748f1eb60bd2
+    REF a4015d502f462ad5ba1003a51edcbd07400c14d2
+    SHA512 bfdfe4062c17a5d0d1971f1482ddbc28f4d041c7bcc173350e5b2210ad466c2e5496d3a548e31fa1e1f83c12bd8d646e766cf3b8388d13d3782af50a189fb47d
     HEAD_REF master
 )
 

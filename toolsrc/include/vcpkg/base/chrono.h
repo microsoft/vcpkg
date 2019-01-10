@@ -52,8 +52,10 @@ namespace vcpkg::Chrono
         static Optional<CTime> get_current_date_time();
         static Optional<CTime> parse(CStringView str);
 
-        constexpr CTime() noexcept : m_tm{0} {}
-        explicit constexpr CTime(tm t) noexcept : m_tm{t} {}
+        constexpr CTime() noexcept : m_tm {0} {}
+        explicit constexpr CTime(tm t) noexcept : m_tm {t} {}
+
+        CTime add_hours(const int hours) const;
 
         std::string to_string() const;
 
@@ -62,4 +64,6 @@ namespace vcpkg::Chrono
     private:
         mutable tm m_tm;
     };
+
+    tm get_current_date_time_local();
 }

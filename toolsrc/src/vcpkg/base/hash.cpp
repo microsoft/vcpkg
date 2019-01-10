@@ -174,21 +174,14 @@ namespace vcpkg::Hash
         return hash_type.substr(3, hash_type.length() - 3);
     }
 
-    static std::string run_shasum_and_post_process(const std::string& cmd_line)
+    static std::string parse_shasum_output(const std::string& shasum_output)
     {
-        const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           ec_data.exit_code == 0,
-                           "Failed to run:\n"
-                           "    %s",
-                           cmd_line);
-
-        std::vector<std::string> split = Strings::split(ec_data.output, " ");
+        std::vector<std::string> split = Strings::split(shasum_output, " ");
         Checks::check_exit(VCPKG_LINE_INFO,
                            split.size() == 3,
                            "Expected output of the form [hash filename\n] (3 tokens), but got\n"
                            "[%s] (%s tokens)",
-                           ec_data.output,
+                           shasum_output,
                            std::to_string(split.size()));
 
         return split[0];
@@ -198,8 +191,28 @@ namespace vcpkg::Hash
     {
         const std::string digest_size = get_digest_size(hash_type);
         Checks::check_exit(VCPKG_LINE_INFO, fs.exists(path), "File %s does not exist", path.u8string());
-        const std::string cmd_line = Strings::format(R"(shasum -a %s "%s")", digest_size, path.u8string());
-        return run_shasum_and_post_process(cmd_line);
+
+        // Try hash-specific tools, like sha512sum
+        {
+            const auto ec_data = System::cmd_execute_and_capture_output(
+                Strings::format(R"(sha%ssum "%s")", digest_size, path.u8string()));
+            if (ec_data.exit_code == 0)
+            {
+                return parse_shasum_output(ec_data.output);
+            }
+        }
+
+        // Try shasum
+        {
+            const auto ec_data = System::cmd_execute_and_capture_output(
+                Strings::format(R"(shasum -a %s "%s")", digest_size, path.u8string()));
+            if (ec_data.exit_code == 0)
+            {
+                return parse_shasum_output(ec_data.output);
+            }
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Could not hash file %s with %s", path.u8string(), hash_type);
     }
 
     std::string get_string_hash(const std::string& s, const std::string& hash_type)
@@ -207,8 +220,27 @@ namespace vcpkg::Hash
         const std::string digest_size = get_digest_size(hash_type);
         verify_has_only_allowed_chars(s);
 
-        const std::string cmd_line = Strings::format(R"(echo -n "%s" | shasum -a %s)", s, digest_size);
-        return run_shasum_and_post_process(cmd_line);
+        // Try hash-specific tools, like sha512sum
+        {
+            const auto ec_data =
+                System::cmd_execute_and_capture_output(Strings::format(R"(echo -n "%s" | sha%ssum)", s, digest_size));
+            if (ec_data.exit_code == 0)
+            {
+                return parse_shasum_output(ec_data.output);
+            }
+        }
+
+        // Try shasum
+        {
+            const auto ec_data = System::cmd_execute_and_capture_output(
+                Strings::format(R"(echo -n "%s" | shasum -a %s)", s, digest_size));
+            if (ec_data.exit_code == 0)
+            {
+                return parse_shasum_output(ec_data.output);
+            }
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Could not hash input string with %s", hash_type);
     }
 #endif
 }
