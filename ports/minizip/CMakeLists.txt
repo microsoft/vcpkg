@@ -15,21 +15,27 @@ include_directories(${MIN_SRC} ${ZLIB_INCLUDE_DIRS} ${BZIP2_INCLUDE_DIR})
 
 set(SRC
   ${MIN_SRC}/ioapi.c
-  ${MIN_SRC}/iowin32.c
   ${MIN_SRC}/unzip.c
   ${MIN_SRC}/zip.c
   ${MIN_SRC}/unzip.c
   ${MIN_SRC}/mztools.c
 )
+if(WIN32)
+  list(APPEND SRC ${MIN_SRC}/iowin32.c)
+endif()
+
 set(HEADERS
   ${MIN_SRC}/crypt.h
   ${MIN_SRC}/ioapi.h
-  ${MIN_SRC}/iowin32.h
   ${MIN_SRC}/unzip.h
   ${MIN_SRC}/zip.h
   ${MIN_SRC}/unzip.h
   ${MIN_SRC}/mztools.h
 )
+if(WIN32)
+  list(APPEND HEADERS ${MIN_SRC}/iowin32.h)
+endif()
+
 if(BUILD_SHARED_LIBS)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()

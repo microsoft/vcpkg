@@ -33,24 +33,6 @@ Valid options include any CMake system name, such as:
 - `Darwin` (Mac OSX)
 - `Linux` (Linux)
 
-### VCPKG_PLATFORM_TOOLSET
-Specifies the VS-based C/C++ compiler toolchain to use.
-
-This can be set to `v141`, `v140`, or left blank. If left blank, we select the latest compiler toolset available on your machine.
-
-Visual Studio 2015 platform toolset is `v140`  
-Visual Studio 2017 platform toolset is `v141`
-
-### VCPKG_VISUAL_STUDIO_PATH
-Specifies the Visual Studio installation to use.
-
-When unspecified, a Visual Studio instance is selected automatically, preferring Stable 2017, then Preview 2017, then 2015.
-
-The path should be absolute, formatted with backslashes, and have no trailing slash:
-```cmake
-set(VCPKG_VISUAL_STUDIO_PATH "C:\\Program Files (x86)\\Microsoft Visual Studio\\Preview\\Community")
-```
-
 ### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 Specifies an alternate CMake Toolchain file to use.
 
@@ -69,7 +51,28 @@ This option also has forms for configuration-specific and C flags:
 - `VCPKG_C_FLAGS_DEBUG`
 - `VCPKG_C_FLAGS_RELEASE`
 
-## macOS Variables
+## Windows Variables
+
+### VCPKG_PLATFORM_TOOLSET
+Specifies the VS-based C/C++ compiler toolchain to use.
+
+This can be set to `v141`, `v140`, or left blank. If left blank, we select the latest compiler toolset available on your machine.
+
+Visual Studio 2015 platform toolset is `v140`
+Visual Studio 2017 platform toolset is `v141`
+
+<a name="VCPKG_VISUAL_STUDIO_PATH"></a>
+### VCPKG_VISUAL_STUDIO_PATH
+Specifies the Visual Studio installation to use.
+
+When unspecified, a Visual Studio instance is selected automatically, preferring Stable 2017, then Preview 2017, then 2015.
+
+The path should be absolute, formatted with backslashes, and have no trailing slash:
+```cmake
+set(VCPKG_VISUAL_STUDIO_PATH "C:\\Program Files (x86)\\Microsoft Visual Studio\\Preview\\Community")
+```
+
+## MacOS Variables
 
 ### VCPKG_INSTALL_NAME_DIR
 Sets the install name used when building macOS dynamic libraries. Default value is `@rpath`. See the CMake documentation for [CMAKE_INSTALL_NAME_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_NAME_DIR.html) for more information.

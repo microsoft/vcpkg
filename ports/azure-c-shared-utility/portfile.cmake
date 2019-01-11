@@ -5,9 +5,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-c-shared-utility
-    REF 68ede5bbc58c7d976f3bd68325edec181c254e5e
-    SHA512 97253c081cab90c7c879da9ecfa076be43d19fd0d442d91fcab8ab3149e792b868c363c56b5afc3e3880a18b400e663661d257237d2f1ef97544522a1cabcd5a
+    REF 1d622902d7842f94193fc394987f2b4e978bb700
+    SHA512 e7b3671955aeefe8e748bc68dd9f914fbb86c9cf325606691efc332cffa0d80b61f87d5f5c1026676c35fd1c5e88f22ca60f2e811c351aeba659f810fdc52e84
     HEAD_REF master
+    PATCHES no-double-expand-cmake.patch
 )
 
 vcpkg_configure_cmake(
