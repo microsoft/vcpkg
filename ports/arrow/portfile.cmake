@@ -7,19 +7,18 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.6.0
-    SHA512  c0e89b959dfe75e895a3427edd4eee663be5ee542e9ea13f7311d0775fe7a00188eafa07ba524e3d3c0a71fc8e11213f10fe4ebfdf451754816062249ffa7f3d
+    REF apache-arrow-0.9.0
+    SHA512 789d0948eee3af20eb922e09c14eb721f20fa041ca3c0cf57bd869718fc9919b45590bd72714efafdf19196f35abb6bdbe0a3972ca74fcc2af92c1f9ade8fa00
     HEAD_REF master
 )
 
 set(CPP_SOURCE_PATH "${SOURCE_PATH}/cpp")
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${CPP_SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/all.patch"
 )
-
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)

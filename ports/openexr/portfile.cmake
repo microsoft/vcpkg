@@ -13,6 +13,7 @@ vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch"
     "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/fix-static-linking.patch"
 )
 
 # Ensure helper executables can run during build
@@ -20,7 +21,7 @@ set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
 
 # In debug build buildsystem cannot locate IlmBase headers
 set(VCPKG_C_FLAGS_DEBUG "${VCPKG_C_FLAGS_DEBUG}")
-set(VCPKG_CXX_FLAGS_DEBUG "${VCPKG_CXX_FLAGS_DEBUG} -I\"${CURRENT_INSTALLED_DIR}/include/OpenExr\"")
+set(VCPKG_CXX_FLAGS_DEBUG "${VCPKG_CXX_FLAGS_DEBUG} -I\"${CURRENT_INSTALLED_DIR}/include/OpenEXR\"")
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

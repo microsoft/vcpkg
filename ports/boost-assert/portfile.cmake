@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/assert
-    REF boost-1.67.0
-    SHA512 e0559f543bffc1acd6a95bf54978a29eff42c6e8c5f825a7b93cb652a5260bcfd5eb1a09b2859e9a3621c3438e7670e4e4132735acdce4d43608cfdf426e5444
+    REF boost-1.68.0
+    SHA512 fd5ffc755f9f0926adeb1d0f3ceea448094e5dcd94c3c9eaa203676bb790729c8e02e66633535f7eaa1df186d88eeb983ed894c181666489a6a3bf9323a8eac0
     HEAD_REF master
 )
 

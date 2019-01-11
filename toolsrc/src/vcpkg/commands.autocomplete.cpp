@@ -40,26 +40,25 @@ namespace vcpkg::Commands::Autocomplete
             const std::string requested_command = match[1].str();
 
             // First try public commands
-            std::vector<std::string> public_commands = {
-                "install",
-                "search",
-                "remove",
-                "list",
-                "update",
-                "hash",
-                "help",
-                "integrate",
-                "export",
-                "edit",
-                "create",
-                "owns",
-                "cache",
-                "version",
-                "contact",
-            };
+            std::vector<std::string> public_commands = {"install",
+                                                        "search",
+                                                        "remove",
+                                                        "list",
+                                                        "update",
+                                                        "hash",
+                                                        "help",
+                                                        "integrate",
+                                                        "export",
+                                                        "edit",
+                                                        "create",
+                                                        "owns",
+                                                        "cache",
+                                                        "version",
+                                                        "contact",
+                                                        "upgrade"};
 
-            Util::unstable_keep_if(public_commands, [&](const std::string& s) {
-                return Strings::case_insensitive_ascii_starts_with(s, requested_command);
+            Util::erase_remove_if(public_commands, [&](const std::string& s) {
+                return !Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
             if (!public_commands.empty())
@@ -78,8 +77,8 @@ namespace vcpkg::Commands::Autocomplete
                 "portsdiff",
             };
 
-            Util::unstable_keep_if(private_commands, [&](const std::string& s) {
-                return Strings::case_insensitive_ascii_starts_with(s, requested_command);
+            Util::erase_remove_if(private_commands, [&](const std::string& s) {
+                return !Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
             output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(private_commands));
@@ -98,8 +97,8 @@ namespace vcpkg::Commands::Autocomplete
             }
 
             std::vector<std::string> triplets = paths.get_available_triplets();
-            Util::unstable_keep_if(triplets, [&](const std::string& s) {
-                return Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
+            Util::erase_remove_if(triplets, [&](const std::string& s) {
+                return !Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
             });
 
             auto result = combine_port_with_triplets(port_name, triplets);
@@ -124,6 +123,7 @@ namespace vcpkg::Commands::Autocomplete
             CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
             CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
             CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
+            CommandEntry{"upgrade", R"###(^upgrade(\s+)(\S*)$)###", Upgrade::COMMAND_STRUCTURE},
         };
 
         for (auto&& command : COMMANDS)
@@ -150,8 +150,8 @@ namespace vcpkg::Commands::Autocomplete
                     }
                 }
 
-                Util::unstable_keep_if(results, [&](const std::string& s) {
-                    return Strings::case_insensitive_ascii_starts_with(s, prefix);
+                Util::erase_remove_if(results, [&](const std::string& s) {
+                    return !Strings::case_insensitive_ascii_starts_with(s, prefix);
                 });
 
                 if (command.name == "install" && results.size() == 1 && !is_option)

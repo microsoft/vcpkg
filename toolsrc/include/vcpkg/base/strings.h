@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/cstringview.h>
+#include <vcpkg/base/stringliteral.h>
 
 #include <vector>
 
@@ -53,6 +54,7 @@ namespace vcpkg::Strings
     std::string ascii_to_uppercase(std::string s);
 
     bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern);
+    bool ends_with(const std::string& s, StringLiteral pattern);
 
     template<class Container, class Transformer>
     std::string join(const char* delimiter, const Container& v, Transformer transformer)

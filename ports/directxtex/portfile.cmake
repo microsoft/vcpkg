@@ -12,8 +12,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF apr2018
-    SHA512 b4e55358628c13f2a8f1f3cb0258a0d126057bc1dfa45e645e0ec21203cdda091c8244deeb775ec950ed534bddd82b71aa1d00f7356bf7f7c49a072bd206b373
+    REF nov2018
+    SHA512 bcf721820e0a4069b7b1daac44d776b2c69a6ebdc0a817fb2e1fcd94938df8b3fbabc1827c28050d0db4b26cc42a011987f50b7db04487a7075741b34ddb58a8
     HEAD_REF master
 )
 

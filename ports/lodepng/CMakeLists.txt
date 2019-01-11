@@ -14,9 +14,9 @@ include_directories(".")
 
 add_library(lodepng  lodepng.cpp lodepng_util.cpp)
 
-add_executable(pngdetail pngdetail.cpp)
+# add_executable(pngdetail pngdetail.cpp)
 
-target_link_libraries(pngdetail lodepng)
+# target_link_libraries(pngdetail lodepng)
 
 install(
   TARGETS lodepng
@@ -25,12 +25,12 @@ install(
   ARCHIVE DESTINATION lib
 )
 
-if(NOT DISABLE_INSTALL_TOOLS)
-  install (
-    TARGETS pngdetail
-    RUNTIME DESTINATION tools/lodepng
-  )
-endif()
+# if(NOT DISABLE_INSTALL_TOOLS)
+#   install (
+#     TARGETS pngdetail
+#     RUNTIME DESTINATION tools/lodepng
+#   )
+# endif()
 
 if(NOT DDISABLE_INSTALL_EXAMPLES)
   install(DIRECTORY examples  DESTINATION share/lodepng/)

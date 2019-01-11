@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(SDL2_NET C)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4996")
+if (MSVC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4996")
+endif()
 
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_library(SDL_LIBRARY NAMES SDL2d SDL2)

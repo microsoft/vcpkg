@@ -62,7 +62,7 @@ vcpkg_configure_cmake(
     -DUSE_SNPE=OFF
     -DUSE_ZMQ=OFF
     -DBUILD_TEST=OFF
-    -DPROTOBUF_PROTOC_EXECUTABLE:FILEPATH=${CURRENT_INSTALLED_DIR}/tools/protoc.exe
+    -DPROTOBUF_PROTOC_EXECUTABLE:FILEPATH=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc.exe
 )
 
 vcpkg_install_cmake()

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
-    REF v1.1
-    SHA512 ebd3c956660b90b1ea64420374db009c68cbab1edd3694d15e953c968190c066e084934327dcf674bcea31e23b14d32c54af7e9ba54f7c6036c3e7cb7cdc6c8d
+    REF v1.2
+    SHA512 b2c87bb643337b5f59d96f8a22e2c6ae040116f51bd86b75e1085d0c06618af131a36d312040d0cf49533269fa840f4e575812b017c7b80b121e1f27825723b5
     HEAD_REF master
 )
 

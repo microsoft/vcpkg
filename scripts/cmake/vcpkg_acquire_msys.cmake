@@ -39,6 +39,10 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   set(TOOLPATH ${DOWNLOADS}/tools/msys2)
   cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
 
+  if(NOT CMAKE_HOST_WIN32)
+    message(FATAL_ERROR "vcpkg_acquire_msys() can only be used on Windows hosts")
+  endif()
+
   # detect host architecture
   if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
       set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
