@@ -11,15 +11,15 @@ node('work-server') {
 				pom = readMavenPom file: 'pom.xml'
 				versionPrefix = pom.getProperties().getProperty('versionPrefix')
 				script {
-					currentBuild.displayName = "${versionPrefix}.${BUILD_NUMBER}"
+					currentBuild.displayName = "${versionPrefix}-${BUILD_NUMBER}"
 				}
 
 				stage ("Set versions") {
-					bat "mvn -s settings.xml clean versions:set -DnewVersion=${versionPrefix}"
+					bat "mvn -s settings.xml versions:set -DnewVersion=${versionPrefix}"
 				}
 
 				stage ("Deploy vcpkg") {
-					bat "mvn -s settings.xml clean deploy -Dbuild.path=\"C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin/\""
+					bat "mvn -s settings.xml clean deploy"
 				}
 			}
 		}

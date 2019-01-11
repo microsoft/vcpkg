@@ -2,17 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.imanage.work.thirdparty</groupId>
     <artifactId>vcpkg</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>10.2.1-SNAPSHOT</version>
 	
 	<name>Thirdparty</name>
 	
 	<properties>
-		<versionPrefix>10.2.1</versionPrefix>
-		<build.path></build.path>
-		<cmake.path></cmake.path>
-		<nuget.path></nuget.path>
-		<build.sdk>10.0.17134.0</build.sdk>
-		<build.msvc>14.14.26428</build.msvc>
+		<version.prefix>10.2.1</version.prefix>
 	</properties>
 	
 	<distributionManagement>
