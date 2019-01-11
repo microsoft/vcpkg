@@ -9,7 +9,7 @@ node('work-server') {
 		withMaven (maven: "default", mavenSettings: "maven-settings") {
 			if (env.BRANCH_NAME == 'master') {
 				pom = readMavenPom file: 'pom.xml'
-				versionPrefix = pom.getProperties().getProperty('versionPrefix')
+				versionPrefix = pom.getProperties().getProperty('version.prefix')
 				script {
 					currentBuild.displayName = "${versionPrefix}-${BUILD_NUMBER}"
 				}
