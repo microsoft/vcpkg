@@ -15,19 +15,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF mysql-8.0.4
-    SHA512 8d9129e7670e88df14238299052a5fe6d4f3e40bf27ef7a3ca8f4f91fb40507b13463e9bd24435b34e5d06c5d056dfb259fb04e77cc251b188eea734db5642be
+    REF mysql-8.0.13
+    SHA512 60732f1799f754e8ee80833e9cb18b97a65aea8a21bae126cbae977e6bd147758e644f7fd7ca93762fda353b0e7dee8fe5c7a4ae3e5e45db22eebcaa4f318b3c
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
-        ${CMAKE_CURRENT_LIST_DIR}/system-libs.patch
+        system-libs.patch
 )
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)
+file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_67_0)
 
 set(STACK_DIRECTION)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -73,8 +68,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/docs
     ${CURRENT_PACKAGES_DIR}/debug/docs
-    ${CURRENT_PACKAGES_DIR}/lib/debug
-    ${CURRENT_PACKAGES_DIR}/lib/plugin/debug)
+    ${CURRENT_PACKAGES_DIR}/lib/debug)
 
 # remove misc files
 file(REMOVE
