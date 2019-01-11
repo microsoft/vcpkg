@@ -79,13 +79,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             ${CORE_OPTIONS}
             -mp
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
             FREETYPE_LIBS="-lfreetype"
             PSQL_LIBS="-llibpq"
         OPTIONS_DEBUG
+            LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
@@ -100,8 +101,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             ${CORE_OPTIONS}
             -no-sqlite
             -no-opengl # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
@@ -109,6 +110,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a"
         OPTIONS_DEBUG
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
