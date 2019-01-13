@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/vlfeat
-    REF 1.0.0
-    SHA512 845c2518885386f3ea6725d440e4a0d8e7d8a835d80251d79f1b3c50e23af449986ad7356f52d3c1d4eca47c61c561352220382e6b071ad201c2550ae40e80ed
+    REF 1.0.1
+    SHA512 5aa85fd96408531faabc6894d45b6805c031dac8d64bca9423b61368a50b8b756e9dc830478d3c8df1cc2035fdb72faab82bec8b655905e176c95f9744b09b37
     HEAD_REF cDc
 )
 
