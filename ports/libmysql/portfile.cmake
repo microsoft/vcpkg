@@ -25,6 +25,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
         ${CMAKE_CURRENT_LIST_DIR}/system-libs.patch
+        ${CMAKE_CURRENT_LIST_DIR}/linux_libmysql.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)

@@ -1,0 +1,16 @@
+--- a/buildtrees/libmysql/src/ysql-8.0.4-6271934d70/configure.cmake
++++ b/buildtrees/libmysql/src/ysql-8.0.4-6271934d70/configure.cmake
+@@ -456,7 +456,11 @@
+ ENDIF()
+ 
+ IF(NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
+-  STRING(TOLOWER ${CMAKE_SYSTEM_PROCESSOR}  processor)
++  IF(${CMAKE_SYSTEM_PROCESSOR})
++    STRING(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} processor)
++  ELSE()
++    STRING(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} processor)
++  ENDIF()
+   IF(processor MATCHES "86" OR processor MATCHES "amd64" OR processor MATCHES "x64")
+     IF(NOT CMAKE_SYSTEM_NAME MATCHES "SunOS")
+       # The loader in some Solaris versions has a bug due to which it refuses to
+
