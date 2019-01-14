@@ -166,7 +166,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
-        -DVTK_INSTALL_RUNTIME_DIR=tools
+        -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
 )
@@ -306,11 +306,20 @@ endforeach()
 # =============================================================================
 # Clean-up other directories
 
-
-function(_vtk_remove_tool TOOL_NAME)
+# Delete the debug binary TOOL_NAME that is not required
+function(_vtk_remove_debug_tool TOOL_NAME)
     set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
     if(EXISTS ${filename})
         file(REMOVE ${filename})
+    endif()
+endfunction()
+
+# Move the release binary TOOL_NAME from bin to tools
+function(_vtk_move_release_tool TOOL_NAME)
+    set(old_filename "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe")
+    if(EXISTS ${old_filename})
+        file(COPY ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(REMOVE ${old_filename})
     endif()
 endfunction()
 
@@ -329,14 +338,15 @@ set(VTK_TOOLS
     pvtkpython
 )
 
+foreach(TOOL_NAME IN LISTS VTK_TOOLS)
+    _vtk_remove_debug_tool("${TOOL_NAME}")
+    _vtk_move_release_tool("${TOOL_NAME}")
+endforeach()
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
 string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
 string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
-
-foreach(TOOL_NAME IN LISTS VTK_TOOLS)
-    _vtk_remove_tool("${TOOL_NAME}")
-endforeach()
 
 # =============================================================================
 # Remove other files and directories that are not valid for vcpkg
@@ -357,3 +367,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
+
+vcpkg_copy_pdbs()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
