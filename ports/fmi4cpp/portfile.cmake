@@ -14,18 +14,25 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SFI-Mechatronics/FMI4cpp
-    REF v0.4.0
-    SHA512 356485da5799a5720b3bea9bd935a76c36eb5c242cecfd2325f47175bad0eafa1e088fb1b96b639b8419e2a5a39f7b07fbe9d89d3f8e568e00b8910b7e991111
+    REPO NTNU-IHB/FMI4cpp
+    REF v0.5.2
+    SHA512 a52007b635da537a8c0404519b91981f2a7dd0f357bdde29bc7e6d83ed44384a5b4f3746e3defd951ae281b32110290d126b23599225f9a87e1924a1abdf907e
     HEAD_REF master
 )
 
+set(WITH_ODEINT OFF)
+if("odeint" IN_LIST FEATURES)
+    set(WITH_ODEINT ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS 
+        -DFMI4CPP_BUILD_TOOL=OFF
         -DFMI4CPP_BUILD_TESTS=OFF
         -DFMI4CPP_BUILD_EXAMPLES=OFF
+	-DFMI4CPP_WITH_ODEINT=${WITH_ODEINT}
 )
 
 vcpkg_install_cmake()
