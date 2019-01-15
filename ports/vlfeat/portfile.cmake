@@ -22,7 +22,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+if(WIN32)
+	vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+else()
+	vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/vlfeat")
+endif()
 
 vcpkg_copy_pdbs()
 
