@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
     REF v1.67
-    SHA512 c8b4e9eeafec480ec524d230d094ea40633945fd6afea7bea0fe84ee28db4d12351a0afcb02ad29aa16a054e94a914863a1eda5605fd80d79d3813fa75af0dce
+    SHA512 14cca66a55597517d6e1cafa59897b8e8f482db0a31a73d87a3ca634a12afe9ece2f423c17ece802e23bb2c09322502b2b2c4318054fad03bd1c537031fd6f71
     HEAD_REF master
 )
 
