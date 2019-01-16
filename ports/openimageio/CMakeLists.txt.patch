@@ -1,0 +1,22 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 8f955ff..cfb6411 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -213,8 +213,15 @@ add_subdirectory (src/nuke)
+ install (FILES src/cmake/modules/FindOpenImageIO.cmake
+          DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/Modules
+          COMPONENT cmake)
+-
+-
++# Run the install command so it generates the Config files.
++install(
++    TARGETS OpenImageIO
++    EXPORT OpenImageIO
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)
++install(EXPORT OpenImageIO FILE OpenImageIO-targets.cmake DESTINATION share/OpenImageIO)
+ 
+ #########################################################################
+ # Testing

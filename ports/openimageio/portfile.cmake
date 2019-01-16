@@ -3,10 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.8.16
-    SHA512 a919341df7d9625a869cad266d8434881b63a47f3da8daccf4bbab6675d45bd121ff780dd911a7447450fee44cd7bdd42d73aec59a99b667d6d98e79682db2c7
+    REF Release-2.0.4
+    SHA512 f6de620fba52e871f546e129c2d4b1792ff20504ab4219d8098be48cb552fd70a7064e8d487b9e1ad6473deda57f116e7f0185d7778ef3c5da7c077415288356
     HEAD_REF master
     PATCHES
+        CMakeLists.txt.patch
         # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
         #             since libraw port installs 'raw_r' library as 'raw'
         fix_libraw.patch
@@ -64,14 +65,20 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_copy_pdbs()
-
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/OpenImageIO-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/OpenImageIO/OpenImageIO-config.cmake
+    @ONLY
+)
+
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openimageio)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openimageio/LICENSE ${CURRENT_PACKAGES_DIR}/share/openimageio/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/OpenImageIO/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/OpenImageIO/copyright)
+
+vcpkg_copy_pdbs()
