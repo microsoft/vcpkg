@@ -6,11 +6,7 @@ vcpkg_from_github(
     REF 28a23f14997dc2e08990b884c07075b48979cac7
     SHA512 58058543e07857f8b1480301b72f789290eee2d65382bee29773bcc1e3f45cedcee33b762bdb870b6cae8a0daab38ebdecde40e2f02720cf0f6fcf10f2007f25
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-default-configs-on-all-platforms.patch"
+    PATCHES "use-default-config-on-all-platforms.patch"
 )
 
 vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH}/QGLViewer/QGLViewer.pro)

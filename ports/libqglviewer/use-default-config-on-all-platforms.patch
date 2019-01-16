@@ -1,9 +1,5 @@
----
- QGLViewer/QGLViewer.pro | 6 ------
- 1 file changed, 6 deletions(-)
-
 diff --git a/QGLViewer/QGLViewer.pro b/QGLViewer/QGLViewer.pro
-index e0205e5..679545f 100644
+index e0205e5..6db4c81 100644
 --- a/QGLViewer/QGLViewer.pro
 +++ b/QGLViewer/QGLViewer.pro
 @@ -108,9 +108,6 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
@@ -25,6 +21,13 @@ index e0205e5..679545f 100644
 -
  	# Needed by Intel C++, (icl.exe) so that WINGDIAPI is a defined symbol in gl.h.
  	DEFINES *= WIN32
-
---
-2.20.1.windows.1
+ 
+@@ -279,7 +273,7 @@ win32 {
+ 		QMAKE_CXXFLAGS *= -TP -GR
+ 		DEFINES += NOMINMAX
+ 		win32-msvc {
+-			QMAKE_CXXFLAGS *= -EH -FS
++			QMAKE_CXXFLAGS *= -EHs -FS
+ 		} else {
+ 			QMAKE_CXXFLAGS *= -EHs
+ 		}
