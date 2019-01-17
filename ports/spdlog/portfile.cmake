@@ -3,18 +3,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF v1.2.1
-    SHA512 418f91efc207fa227558212d82c41639c0bb59e84ea47447e0b6276c4842e97f1f8aaf5802c071ef15d80ec525e317e70b6a39661a6c96ab39d33d9bd1570da1
+    REF v1.3.0
+    SHA512 019a52d4b6c66287ee2a6e8177457ecbbb78e1cb894f4a0a90b83a84d66cd37b397cdf77892d9116e4c34113bd3277d606d578bc96ec6521ae7745f08b1aa54f
     HEAD_REF v1.x
     PATCHES
-        fmt-external-cmake-option.patch # This patch is in the upstream project and can be removed next version update.
+        disable-master-project-check.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSPDLOG_BUILD_TESTING=OFF
         -DSPDLOG_FMT_EXTERNAL=ON
 )
 
