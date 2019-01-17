@@ -47,7 +47,7 @@ function(vcpkg_fixup_cmake_targets)
 
             # This roundabout handling enables CONFIG_PATH share
             file(MAKE_DIRECTORY ${DEBUG_SHARE})
-            file(GLOB FILES ${DEBUG_CONFIG}/*)
+            file(GLOB_RECURSE FILES ${DEBUG_CONFIG}/*)
             file(COPY ${FILES} DESTINATION ${DEBUG_SHARE})
             file(REMOVE_RECURSE ${DEBUG_CONFIG})
         endif()
