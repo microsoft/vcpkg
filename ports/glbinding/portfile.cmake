@@ -22,10 +22,11 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding TARGET_PATH share/glbinding/cmake/glbinding)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding-aux TARGET_PATH share/glbinding/cmake/glbinding-aux)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake)
+# vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding-aux TARGET_PATH share/glbinding/glbinding-aux)
+# vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding TARGET_PATH share/glbinding/glbinding)
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/cmake/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/cmake/glbinding-aux/glbinding-aux-export.cmake)\nset(glbinding_FOUND TRUE)\n")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/glbinding-aux/glbinding-aux-export.cmake)\nset(glbinding_FOUND TRUE)\n")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
