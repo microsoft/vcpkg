@@ -17,12 +17,24 @@ if("fontconfig" IN_LIST FEATURES)
   set(PODOFO_NO_FONTMANAGER OFF)
 endif()
 
+set(UNIQUE_PTR OFF)
+if("unique_ptr" IN_LIST FEATURES)
+  set(UNIQUE_PTR ON)
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PODOFO_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PODOFO_BUILD_STATIC)
 
 set(IS_WIN32 OFF)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
     set(IS_WIN32 ON)
+endif()
+
+if(UNIQUE_PTR)
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES ${CMAKE_CURRENT_LIST_DIR}/unique_ptr.patch
+    )
 endif()
 
 vcpkg_configure_cmake(
