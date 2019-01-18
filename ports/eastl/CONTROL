@@ -1,4 +1,4 @@
 Source: eastl
-Version: 3.12.08
+Version: 3.13.00
 Description: Electronic Arts Standard Template Library.
     It is a C++ template library of containers, algorithms, and iterators useful for runtime and tool development across multiple platforms. It is a fairly extensive and robust implementation of such a library and has an emphasis on high performance above all other considerations.
