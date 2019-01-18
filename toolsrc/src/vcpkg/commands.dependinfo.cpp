@@ -137,6 +137,10 @@ namespace vcpkg::Commands::DependInfo
                 }
             }
         }
+        else
+        {
+            System::println(System::Color::warning, "package '%s' does not exist", requested_package);
+        }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
