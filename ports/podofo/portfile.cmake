@@ -11,6 +11,10 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${PODOFO_VERSION}
 )
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/unique_ptr.patch
+)
 
 set(PODOFO_NO_FONTMANAGER ON)
 if("fontconfig" IN_LIST FEATURES)
