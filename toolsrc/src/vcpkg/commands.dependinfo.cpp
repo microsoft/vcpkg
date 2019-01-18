@@ -88,7 +88,7 @@ namespace vcpkg::Commands::DependInfo
             {
                 for (const Dependency& d : feature_paragraph->depends)
                 {
-                    links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" />", name, d.name()));
+                    links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" StrokeDashArray=\"4\" />", name, d.name()));
                 }
             }
         }
