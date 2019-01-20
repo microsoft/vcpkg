@@ -8,8 +8,8 @@ function(qt_modular_library NAME HASH)
         )
     endif()
 
-    set(MAJOR_MINOR 5.11)
-    set(FULL_VERSION ${MAJOR_MINOR}.2)
+    set(MAJOR_MINOR 5.12)
+    set(FULL_VERSION ${MAJOR_MINOR}.0)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
@@ -40,7 +40,7 @@ function(qt_modular_library NAME HASH)
 
     string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
     string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
-    
+
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
 

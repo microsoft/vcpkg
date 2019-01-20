@@ -1,5 +1,5 @@
---- a/cmake/CMakeLists.txt
-+++ b/cmake/CMakeLists.txt
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
 @@ -13,10 +13,12 @@
  # directory, but can also be used for custom projects.
  #############################################################
@@ -8,7 +8,7 @@
 -	set(OGRE_CMAKE_DIR "CMake")
 -else()
 -	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
-+if (NOT DEFINED OGRE_CMAKE_DIR)
++if(NOT DEFINED OGRE_CMAKE_DIR)
 +  if(WIN32 OR APPLE)
 +    set(OGRE_CMAKE_DIR "CMake")
 +  else()
@@ -16,10 +16,10 @@
 +  endif()
  endif()
  
- set(INST_FILES
---- a/cmake/InstallResources.cmake
-+++ b/cmake/InstallResources.cmake
-@@ -241,10 +241,12 @@ endif ()
+ set(INST_FILES Utils/FindPkgMacros.cmake) 
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -242,10 +242,12 @@
  # Create the CMake package files
  include(CMakePackageConfigHelpers)
  
@@ -27,7 +27,7 @@
 -  set(OGRE_CMAKE_DIR "CMake")
 -else()
 -  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
-+if (NOT DEFINED OGRE_CMAKE_DIR)
++if(NOT DEFINED OGRE_CMAKE_DIR)
 +  if(WIN32 OR APPLE)
 +    set(OGRE_CMAKE_DIR "CMake")
 +  else()
