@@ -213,6 +213,7 @@ $libraries_found = ls $scriptsDir/boost/libs -directory | % name | % {
         "interval"
         "odeint"
         "ublas"
+        "safe_numerics"
     }
     else
     {
