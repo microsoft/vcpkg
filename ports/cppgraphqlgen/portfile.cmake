@@ -3,17 +3,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cppgraphqlgen
-    REF v0.6
-    SHA512 cc2596f5cd975377fcc9432eee11973e2ff044c244c3ac13c3f45549874c2fe0ac5c48bccb96813b48a1b7c940bb54decc194d9eb358c6ae39d1288b9ce58b01
+    REF v1.0.3
+    SHA512 136f17460d6a7ed3bd20e2be5f9326d2a4a039bc1a7a212155a31a5e165e0f1fd061638c3f77f22d6c3d4230e9a57563585ad29ef59eea355e1521b374ce1ce4
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS -DBUILD_TESTS=OFF -DUPDATE_SAMPLES=OFF
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    OPTIONS_RELEASE -DCMAKE_INSTALL_CONFIGDIR=${CURRENT_PACKAGES_DIR}/share/cppgraphqlgen -DCMAKE_INSTALL_TOOLSDIR=${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen
+    OPTIONS_DEBUG -DCMAKE_INSTALL_CONFIGDIR=${CURRENT_PACKAGES_DIR}/debug/share/cppgraphqlgen -DCMAKE_INSTALL_TOOLSDIR=${CURRENT_PACKAGES_DIR}/debug/tools/cppgraphqlgen
 )
 
 vcpkg_install_cmake()
