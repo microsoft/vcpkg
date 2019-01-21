@@ -1,4 +1,4 @@
 Source: orc
-Version: 1.5.3-599a784
+Version: 1.5.4
 Build-Depends: zlib, protobuf, lz4, snappy, zstd, gtest
 Description: The smallest, fastest columnar storage for Hadoop workloads.
