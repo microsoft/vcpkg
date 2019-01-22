@@ -9,10 +9,6 @@ vcpkg_from_github(
     REPO libevent/libevent
     REF release-2.1.8-stable
     SHA512 0d5c872dc797b69ab8ea4b83aebcbac20735b8c6f5adfcc2950aa4d6013d240f5fac3376e817da75ae0ccead50cec0d931619e135a050add438777457b086549
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/fix-target-files.patch"
 )
@@ -22,6 +18,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DEVENT_INSTALL_CMAKE_DIR:PATH=share/libevent
+        -DEEVENT_INSTALL_INCLUDE_DIR:PATH=include/libevent
         -DEVENT__DISABLE_BENCHMARK=ON
         -DEVENT__DISABLE_TESTS=ON
         -DEVENT__DISABLE_REGRESS=ON
