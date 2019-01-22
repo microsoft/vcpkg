@@ -9,7 +9,7 @@ add_library(darts src/darts.cc)
 
 target_include_directories(darts
     PUBLIC
-        $<INSTALL_INTERFACE:include>
+        $<INSTALL_INTERFACE:include/darts-clone>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -24,6 +24,6 @@ install(
 
 if(NOT DISABLE_INSTALL_HEADERS)
   install(
-    DIRECTORY include/ DESTINATION include/
+    DIRECTORY include/ DESTINATION include/darts-clone/
   )
 endif()
