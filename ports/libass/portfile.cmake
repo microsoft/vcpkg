@@ -9,7 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/libass/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/libass/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/libass)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libass RENAME copyright)
