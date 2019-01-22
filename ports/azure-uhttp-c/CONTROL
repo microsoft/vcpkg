@@ -2,3 +2,7 @@ Source: azure-uhttp-c
 Version: 1.1.11-2
 Build-Depends: azure-c-shared-utility
 Description: Azure HTTP Library written in C
+
+Feature: public-preview
+Description: Azure HTTP Library written in C (public preview)
+Build-Depends: azure-c-shared-utility[public-preview]
