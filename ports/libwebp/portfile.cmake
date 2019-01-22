@@ -3,35 +3,41 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libwebp
-    REF v0.6.1
-    SHA512 313b345a01c91eb07c2e4d46b93fcda9c50dca9e05e39f757238a679355514a2e9bc9bc220f3d3eb6d6a55148957cb2be14dac330203953337759841af1a32bf
+    REF v1.0.2
+    SHA512 27ca4e7c87d3114a5d3dba6801b5608207a9adc44d0fa62f7523d39be789d389d342d9db5e28c9301eff8fcb1471809c76680a68abd4ff97217b17dd13c4e22b
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/build_fixes.patch
+      0001-enable-dllexport.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_DEBUG_POSTFIX=d
-        -DWEBP_BUILD_MUX=ON
+      -DWEBP_ENABLE_SIMD:BOOL=ON
+      -DWEBP_BUILD_ANIM_UTILS:BOOL=OFF
+      -DWEBP_BUILD_CWEBP:BOOL=OFF
+      -DWEBP_BUILD_DWEBP:BOOL=OFF
+      -DWEBP_BUILD_GIF2WEBP:BOOL=OFF
+      -DWEBP_BUILD_IMG2WEBP:BOOL=OFF
+      -DWEBP_BUILD_VWEBP:BOOL=OFF
+      -DWEBP_BUILD_WEBPINFO:BOOL=OFF
+      -DWEBP_BUILD_WEBPMUX:BOOL=OFF
+      -DWEBP_BUILD_EXTRAS:BOOL=OFF
+      -DWEBP_BUILD_WEBP_JS:BOOL=OFF
+      -DWEBP_NEAR_LOSSLESS:BOOL=OFF
+      -DWEBP_ENABLE_SWAP_16BIT_CSP:BOOL=OFF
+    OPTIONS_DEBUG
+      -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebp/COPYING ${CURRENT_PACKAGES_DIR}/share/libwebp/copyright)
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/WebP/cmake/" TARGET_PATH "share/libwebp/")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/WebP)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindWebP.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebp/COPYING ${CURRENT_PACKAGES_DIR}/share/libwebp/copyright)
