@@ -55,8 +55,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/WebP/cmake/" TARGET_PATH "share/libwebp/")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/WebP)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/WebP/cmake/" TARGET_PATH "share/WebP/")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if("all" IN_LIST FEATURES)
