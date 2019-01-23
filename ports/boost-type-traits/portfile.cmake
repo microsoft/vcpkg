@@ -8,6 +8,9 @@ vcpkg_from_github(
     REF boost-1.69.0
     SHA512 83d585933374420808aaf3743cda48d914bb7d536bf3f19e59bba1b24403a1482ff509e1f804a0b55d3bc434aceedcb0b75f873b9feaa9ba1c1a762a11d4fc94
     HEAD_REF master
+    PATCHES
+        msvc-arm.patch
+        msvc-arm-2.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
