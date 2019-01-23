@@ -1,0 +1,21 @@
+From fb8d1ca4eaefe58d42c27b6fc676f64f137f4675 Mon Sep 17 00:00:00 2001
+From: Ray Kim <msca8h@naver.com>
+Date: Sat, 21 Jul 2018 21:42:15 +0900
+Subject: [PATCH] fixed build error on gcc-7
+
+---
+ tensorflow/compiler/xla/service/gpu/xfeed_queue.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tensorflow/compiler/xla/service/gpu/xfeed_queue.h b/tensorflow/compiler/xla/service/gpu/xfeed_queue.h
+index 737c7eb0253..dd46ff433ba 100644
+--- a/tensorflow/compiler/xla/service/gpu/xfeed_queue.h
++++ b/tensorflow/compiler/xla/service/gpu/xfeed_queue.h
+@@ -17,6 +17,7 @@ limitations under the License.
+ #define TENSORFLOW_COMPILER_XLA_SERVICE_GPU_XFEED_QUEUE_H_
+ 
+ #include <deque>
++#include <functional>
+ #include <vector>
+ 
+ #include "tensorflow/core/platform/mutex.h"

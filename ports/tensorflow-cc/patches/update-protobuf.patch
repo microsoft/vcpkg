@@ -1,0 +1,146 @@
+From 3bfd3aeb7856f414e511e20493dd1bdf952649cf Mon Sep 17 00:00:00 2001
+From: Gunhan Gulsoy <gunan@google.com>
+Date: Wed, 20 Jun 2018 11:29:27 -0700
+Subject: [PATCH] Update protobuf dependency of TF to 3.6.
+
+PiperOrigin-RevId: 201386306
+---
+ tensorflow/contrib/cmake/external/protobuf.cmake   |  2 +-
+ .../tools/ci_build/install/install_pip_packages.sh |  4 ++--
+ .../tools/ci_build/install/install_proto3.sh       |  2 +-
+ .../install/install_python3.5_pip_packages.sh      |  2 +-
+ .../install/install_python3.6_pip_packages.sh      |  2 +-
+ tensorflow/tools/pip_package/setup.py              |  2 +-
+ tensorflow/workspace.bzl                           | 24 +++++++++++-----------
+ 7 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/tensorflow/contrib/cmake/external/protobuf.cmake b/tensorflow/contrib/cmake/external/protobuf.cmake
+index ab464bc99a4..f56fb35a0f7 100644
+--- a/tensorflow/contrib/cmake/external/protobuf.cmake
++++ b/tensorflow/contrib/cmake/external/protobuf.cmake
+@@ -16,7 +16,7 @@ include (ExternalProject)
+ 
+ set(PROTOBUF_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/protobuf/src/protobuf/src)
+ set(PROTOBUF_URL https://github.com/google/protobuf.git)
+-set(PROTOBUF_TAG b04e5cba356212e4e8c66c61bbe0c3a20537c5b9)
++set(PROTOBUF_TAG v3.6.0)
+ 
+ if(WIN32)
+   if(${CMAKE_GENERATOR} MATCHES "Visual Studio.*")
+diff --git a/tensorflow/tools/ci_build/install/install_pip_packages.sh b/tensorflow/tools/ci_build/install/install_pip_packages.sh
+index 88f1d041932..fbed4574e02 100755
+--- a/tensorflow/tools/ci_build/install/install_pip_packages.sh
++++ b/tensorflow/tools/ci_build/install/install_pip_packages.sh
+@@ -51,8 +51,8 @@ pip2 install --upgrade markdown==2.6.8
+ pip3 install --upgrade markdown==2.6.8
+ 
+ # Install protobuf.
+-pip2 install --upgrade protobuf==3.3.0
+-pip3 install --upgrade protobuf==3.3.0
++pip2 install --upgrade protobuf==3.6.0
++pip3 install --upgrade protobuf==3.6.0
+ 
+ # Remove obsolete version of six, which can sometimes confuse virtualenv.
+ rm -rf /usr/lib/python3/dist-packages/six*
+diff --git a/tensorflow/tools/ci_build/install/install_proto3.sh b/tensorflow/tools/ci_build/install/install_proto3.sh
+index 7934002b2c9..821d50baff3 100755
+--- a/tensorflow/tools/ci_build/install/install_proto3.sh
++++ b/tensorflow/tools/ci_build/install/install_proto3.sh
+@@ -17,7 +17,7 @@
+ # Install protobuf3.
+ 
+ # Select protobuf version.
+-PROTOBUF_VERSION="3.3.0"
++PROTOBUF_VERSION="3.6.0"
+ protobuf_ver_flat=$(echo $PROTOBUF_VERSION | sed 's/\.//g' | sed 's/^0*//g')
+ local_protobuf_ver=$(protoc --version)
+ local_protobuf_ver_flat=$(echo $local_protobuf_ver | sed 's/\.//g' | sed 's/^0*//g')
+diff --git a/tensorflow/tools/ci_build/install/install_python3.5_pip_packages.sh b/tensorflow/tools/ci_build/install/install_python3.5_pip_packages.sh
+index acd69ef346f..037fc0e2e1e 100755
+--- a/tensorflow/tools/ci_build/install/install_python3.5_pip_packages.sh
++++ b/tensorflow/tools/ci_build/install/install_python3.5_pip_packages.sh
+@@ -48,7 +48,7 @@ pip3.5 install --upgrade absl-py
+ pip3.5 install --upgrade six==1.10.0
+ 
+ # Install protobuf.
+-pip3.5 install --upgrade protobuf==3.3.0
++pip3.5 install --upgrade protobuf==3.6.0
+ 
+ # Remove obsolete version of six, which can sometimes confuse virtualenv.
+ rm -rf /usr/lib/python3/dist-packages/six*
+diff --git a/tensorflow/tools/ci_build/install/install_python3.6_pip_packages.sh b/tensorflow/tools/ci_build/install/install_python3.6_pip_packages.sh
+index 323b30f48e3..8fd65a3ee26 100755
+--- a/tensorflow/tools/ci_build/install/install_python3.6_pip_packages.sh
++++ b/tensorflow/tools/ci_build/install/install_python3.6_pip_packages.sh
+@@ -60,7 +60,7 @@ pip3 install --upgrade absl-py
+ pip3 install --upgrade six==1.10.0
+ 
+ # Install protobuf.
+-pip3 install --upgrade protobuf==3.3.0
++pip3 install --upgrade protobuf==3.6.0
+ 
+ # Remove obsolete version of six, which can sometimes confuse virtualenv.
+ rm -rf /usr/lib/python3/dist-packages/six*
+diff --git a/tensorflow/tools/pip_package/setup.py b/tensorflow/tools/pip_package/setup.py
+index 97f625e7e9c..253802b9598 100644
+--- a/tensorflow/tools/pip_package/setup.py
++++ b/tensorflow/tools/pip_package/setup.py
+@@ -53,7 +53,7 @@
+     'gast >= 0.2.0',
+     'numpy >= 1.13.3',
+     'six >= 1.10.0',
+-    'protobuf >= 3.4.0',
++    'protobuf >= 3.6.0',
+     'setuptools <= 39.1.0',
+     'tensorboard >= 1.8.0, < 1.9.0',
+     'termcolor >= 1.1.0',
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index b32d4732199..1f1d106bfb9 100644
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -330,11 +330,11 @@ def tf_workspace(path_prefix="", tf_repo_name=""):
+   tf_http_archive(
+       name = "protobuf_archive",
+       urls = [
+-          "https://mirror.bazel.build/github.com/google/protobuf/archive/396336eb961b75f03b25824fe86cf6490fb75e3a.tar.gz",
+-          "https://github.com/google/protobuf/archive/396336eb961b75f03b25824fe86cf6490fb75e3a.tar.gz",
++          "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.6.0.tar.gz",
++          "https://github.com/google/protobuf/archive/v3.6.0.tar.gz",
+       ],
+-      sha256 = "846d907acf472ae233ec0882ef3a2d24edbbe834b80c305e867ac65a1f2c59e3",
+-      strip_prefix = "protobuf-396336eb961b75f03b25824fe86cf6490fb75e3a",
++      sha256 = "50a5753995b3142627ac55cfd496cebc418a2e575ca0236e29033c67bd5665f4",
++      strip_prefix = "protobuf-3.6.0",
+   )
+ 
+   # We need to import the protobuf library under the names com_google_protobuf
+@@ -343,21 +343,21 @@ def tf_workspace(path_prefix="", tf_repo_name=""):
+   tf_http_archive(
+       name = "com_google_protobuf",
+       urls = [
+-          "https://mirror.bazel.build/github.com/google/protobuf/archive/396336eb961b75f03b25824fe86cf6490fb75e3a.tar.gz",
+-          "https://github.com/google/protobuf/archive/396336eb961b75f03b25824fe86cf6490fb75e3a.tar.gz",
++          "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.6.0.tar.gz",
++          "https://github.com/google/protobuf/archive/v3.6.0.tar.gz",
+       ],
+-      sha256 = "846d907acf472ae233ec0882ef3a2d24edbbe834b80c305e867ac65a1f2c59e3",
+-      strip_prefix = "protobuf-396336eb961b75f03b25824fe86cf6490fb75e3a",
++      sha256 = "50a5753995b3142627ac55cfd496cebc418a2e575ca0236e29033c67bd5665f4",
++      strip_prefix = "protobuf-3.6.0",
+   )
+ 
+   tf_http_archive(
+       name = "com_google_protobuf_cc",
+       urls = [
+-          "https://mirror.bazel.build/github.com/google/protobuf/archive/396336eb961b75f03b25824fe86cf6490fb75e3a.tar.gz",
+-          "https://github.com/google/protobuf/archive/396336eb961b75f03b25824fe86cf6490fb75e3a.tar.gz",
++          "https://mirror.bazel.build/github.com/google/protobuf/archive/v3.6.0.tar.gz",
++          "https://github.com/google/protobuf/archive/v3.6.0.tar.gz",
+       ],
+-      sha256 = "846d907acf472ae233ec0882ef3a2d24edbbe834b80c305e867ac65a1f2c59e3",
+-      strip_prefix = "protobuf-396336eb961b75f03b25824fe86cf6490fb75e3a",
++      sha256 = "50a5753995b3142627ac55cfd496cebc418a2e575ca0236e29033c67bd5665f4",
++      strip_prefix = "protobuf-3.6.0",
+   )
+ 
+   tf_http_archive(

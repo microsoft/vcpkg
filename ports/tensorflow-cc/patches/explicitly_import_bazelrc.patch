@@ -1,0 +1,24 @@
+From 03e63a291bc95dacaa821585f39a360b43465cb5 Mon Sep 17 00:00:00 2001
+From: Yun Peng <pcloudy@google.com>
+Date: Wed, 7 Nov 2018 11:18:53 +0100
+Subject: [PATCH] Explicitly import tools/bazel.rc
+
+To fix build with Bazel 0.19.0 or later and it won't break build with old version or Bazel
+Fixes https://github.com/tensorflow/tensorflow/issues/23398
+---
+ configure.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/configure.py b/configure.py
+index 2eeeceb3399c..2d2bcd8d5838 100644
+--- a/configure.py
++++ b/configure.py
+@@ -1555,6 +1555,9 @@ def main():
+   check_bazel_version('0.15.0')
+ 
+   reset_tf_configure_bazelrc()
++  # Explicitly import tools/bazel.rc, this is needed for Bazel 0.19.0 or later
++  write_to_bazelrc('import %workspace%/tools/bazel.rc')
++
+   cleanup_makefile()
+   setup_python(environ_cp)

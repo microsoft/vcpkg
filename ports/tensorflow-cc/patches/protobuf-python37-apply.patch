@@ -1,0 +1,28 @@
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index 758c94c542..42312d7eeb 100755
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -377,6 +377,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
+         sha256 = PROTOBUF_SHA256,
+         strip_prefix = PROTOBUF_STRIP_PREFIX,
+         urls = PROTOBUF_URLS,
++        patch_file = clean_dep("//third_party:protobuf-python37.patch"),
+     )
+ 
+     # We need to import the protobuf library under the names com_google_protobuf
+@@ -387,6 +388,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
+         sha256 = PROTOBUF_SHA256,
+         strip_prefix = PROTOBUF_STRIP_PREFIX,
+         urls = PROTOBUF_URLS,
++        patch_file = clean_dep("//third_party:protobuf-python37.patch"),
+     )
+ 
+     tf_http_archive(
+@@ -394,6 +396,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
+         sha256 = PROTOBUF_SHA256,
+         strip_prefix = PROTOBUF_STRIP_PREFIX,
+         urls = PROTOBUF_URLS,
++        patch_file = clean_dep("//third_party:protobuf-python37.patch"),
+     )
+ 
+     tf_http_archive(

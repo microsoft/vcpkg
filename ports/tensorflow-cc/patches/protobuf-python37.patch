@@ -1,0 +1,91 @@
+From 5c42943e75231b79f4ffcc37a22f0077a2fb0e7d Mon Sep 17 00:00:00 2001
+From: Ben Webb <ben@salilab.org>
+Date: Tue, 3 Jul 2018 09:51:09 -0700
+Subject: [PATCH] Add Python 3.7 compatibility
+
+Compilation of Python wrappers fails with Python 3.7 because
+the Python folks changed their C API such that
+PyUnicode_AsUTF8AndSize() now returns a const char* rather
+than a char*. Add a patch to work around. Relates #4086.
+---
+ python/google/protobuf/pyext/descriptor.cc            | 2 +-
+ python/google/protobuf/pyext/descriptor_containers.cc | 2 +-
+ python/google/protobuf/pyext/descriptor_pool.cc       | 2 +-
+ python/google/protobuf/pyext/extension_dict.cc        | 2 +-
+ python/google/protobuf/pyext/message.cc               | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/python/google/protobuf/pyext/descriptor.cc b/python/google/protobuf/pyext/descriptor.cc
+index 8af0cb1289..19a1c38a62 100644
+--- a/python/google/protobuf/pyext/descriptor.cc
++++ b/python/google/protobuf/pyext/descriptor.cc
+@@ -56,7 +56,7 @@
+   #endif
+   #define PyString_AsStringAndSize(ob, charpp, sizep) \
+     (PyUnicode_Check(ob)? \
+-       ((*(charpp) = PyUnicode_AsUTF8AndSize(ob, (sizep))) == NULL? -1: 0): \
++       ((*(charpp) = const_cast<char*>(PyUnicode_AsUTF8AndSize(ob, (sizep)))) == NULL? -1: 0): \
+        PyBytes_AsStringAndSize(ob, (charpp), (sizep)))
+ #endif
+ 
+diff --git a/python/google/protobuf/pyext/descriptor_containers.cc b/python/google/protobuf/pyext/descriptor_containers.cc
+index bc007f7efa..0153664f50 100644
+--- a/python/google/protobuf/pyext/descriptor_containers.cc
++++ b/python/google/protobuf/pyext/descriptor_containers.cc
+@@ -66,7 +66,7 @@
+   #endif
+   #define PyString_AsStringAndSize(ob, charpp, sizep) \
+     (PyUnicode_Check(ob)? \
+-       ((*(charpp) = PyUnicode_AsUTF8AndSize(ob, (sizep))) == NULL? -1: 0): \
++       ((*(charpp) = const_cast<char*>(PyUnicode_AsUTF8AndSize(ob, (sizep)))) == NULL? -1: 0): \
+        PyBytes_AsStringAndSize(ob, (charpp), (sizep)))
+ #endif
+ 
+diff --git a/python/google/protobuf/pyext/descriptor_pool.cc b/python/google/protobuf/pyext/descriptor_pool.cc
+index 95882aeb35..962accc6e9 100644
+--- a/python/google/protobuf/pyext/descriptor_pool.cc
++++ b/python/google/protobuf/pyext/descriptor_pool.cc
+@@ -48,7 +48,7 @@
+   #endif
+   #define PyString_AsStringAndSize(ob, charpp, sizep) \
+     (PyUnicode_Check(ob)? \
+-       ((*(charpp) = PyUnicode_AsUTF8AndSize(ob, (sizep))) == NULL? -1: 0): \
++       ((*(charpp) = const_cast<char*>(PyUnicode_AsUTF8AndSize(ob, (sizep)))) == NULL? -1: 0): \
+        PyBytes_AsStringAndSize(ob, (charpp), (sizep)))
+ #endif
+ 
+diff --git a/python/google/protobuf/pyext/extension_dict.cc b/python/google/protobuf/pyext/extension_dict.cc
+index 018b5c2c49..174c5470c2 100644
+--- a/python/google/protobuf/pyext/extension_dict.cc
++++ b/python/google/protobuf/pyext/extension_dict.cc
+@@ -53,7 +53,7 @@
+   #endif
+   #define PyString_AsStringAndSize(ob, charpp, sizep) \
+     (PyUnicode_Check(ob)? \
+-       ((*(charpp) = PyUnicode_AsUTF8AndSize(ob, (sizep))) == NULL? -1: 0): \
++       ((*(charpp) = const_cast<char*>(PyUnicode_AsUTF8AndSize(ob, (sizep)))) == NULL? -1: 0): \
+        PyBytes_AsStringAndSize(ob, (charpp), (sizep)))
+ #endif
+ 
+diff --git a/python/google/protobuf/pyext/message.cc b/python/google/protobuf/pyext/message.cc
+index 53736b9c9f..b2984509dd 100644
+--- a/python/google/protobuf/pyext/message.cc
++++ b/python/google/protobuf/pyext/message.cc
+@@ -79,7 +79,7 @@
+     (PyUnicode_Check(ob)? PyUnicode_AsUTF8(ob): PyBytes_AsString(ob))
+   #define PyString_AsStringAndSize(ob, charpp, sizep) \
+     (PyUnicode_Check(ob)? \
+-       ((*(charpp) = PyUnicode_AsUTF8AndSize(ob, (sizep))) == NULL? -1: 0): \
++       ((*(charpp) = const_cast<char*>(PyUnicode_AsUTF8AndSize(ob, (sizep)))) == NULL? -1: 0): \
+        PyBytes_AsStringAndSize(ob, (charpp), (sizep)))
+   #endif
+ #endif
+@@ -1529,7 +1529,7 @@ PyObject* HasField(CMessage* self, PyObject* arg) {
+     return NULL;
+   }
+ #else
+-  field_name = PyUnicode_AsUTF8AndSize(arg, &size);
++  field_name = const_cast<char*>(PyUnicode_AsUTF8AndSize(arg, &size));
+   if (!field_name) {
+     return NULL;
+   }
