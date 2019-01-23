@@ -1,18 +1,21 @@
---- a/CMakeLists.txt	2018-11-20 15:06:35.000000000 +0100
-+++ b/CMakeLists.txt	2018-11-20 15:50:02.000000000 +0100
-@@ -313,7 +313,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5c613e0..32d3a29 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.8.0)
++cmake_minimum_required(VERSION 3.5.0)
+ project(harfbuzz)
  
- if (HB_HAVE_GLIB)
-   add_definitions(-DHAVE_GLIB)
--
-+  
+ enable_testing()
+@@ -316,6 +316,10 @@ if (HB_HAVE_GLIB)
+ 
+   find_package(Threads REQUIRED)
+   find_package(unofficial-iconv REQUIRED)
 +  if(APPLE)
-+    find_package(Threads REQUIRED)
-+    find_package(unofficial-iconv REQUIRED)
-+    find_library(LIBINTL_LIBRARY NAMES intl libintl)
-+    list(APPEND THIRD_PARTY_LIBS ${LIBINTL_LIBRARY})
++    find_package(unofficial-gettext CONFIG REQUIRED)
++    list(APPEND THIRD_PARTY_LIBS unofficial::gettext::libintl)
 +  endif()
-+  
    find_package(unofficial-glib CONFIG REQUIRED)
  
    list(APPEND project_sources ${PROJECT_SOURCE_DIR}/src/hb-glib.cc)
