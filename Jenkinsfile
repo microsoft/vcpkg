@@ -6,7 +6,11 @@ node('work-server') {
 			checkout scm
 		}
 		
-		withMaven (maven: "default", mavenSettings: "maven-settings") {
+		withMaven (maven: "default", mavenSettings: "maven-settings", mavenLocalRepo: ".repository", 
+			options: [
+				artifactsPublisher(disabled: true)
+				]
+			) {
 			if (env.BRANCH_NAME == 'master') {
 				pom = readMavenPom file: 'pom.xml'
 				versionPrefix = pom.getProperties().getProperty('version.prefix')
@@ -15,11 +19,11 @@ node('work-server') {
 				}
 
 				stage ("Set versions") {
-					bat "mvn -s settings.xml versions:set -DnewVersion=${versionPrefix}"
+					bat "mvn versions:set -DnewVersion=${versionPrefix}"
 				}
 
 				stage ("Deploy vcpkg") {
-					bat "mvn -s settings.xml clean deploy"
+					bat "mvn clean deploy"
 				}
 			}
 		}
