@@ -7,6 +7,9 @@ project(FreeImage C CXX)
 find_package(zlib REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
+if(NOT JPEG_LIBRARY_DEBUG)
+    set(JPEG_LIBRARY_DEBUG ${JPEG_LIBRARY_RELEASE})
+endif()
 find_package(TIFF REQUIRED)
 find_package(OPENJPEG REQUIRED)
 
@@ -36,9 +39,8 @@ set(ROOT_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/CacheFile.h
                          ${REAL_SOURCE_DIR}/Plugin.h 
                          ${REAL_SOURCE_DIR}/Quantizers.h 
                          ${REAL_SOURCE_DIR}/ToneMapping.h 
-                         ${REAL_SOURCE_DIR}/Utilities.h
-                         ${REAL_SOURCE_DIR}/DeprecationManager/DeprecationMgr.h)
-                         
+                         ${REAL_SOURCE_DIR}/Utilities.h)
+
 file(GLOB FREEIMAGE_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/FreeImage/*.h)
 file(GLOB FREEIMAGE_TOOLKIT_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/FreeImageToolkit/*.h)
 file(GLOB METADATA_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/Metadata/*.h)

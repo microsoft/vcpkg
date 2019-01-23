@@ -10,6 +10,18 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 2e79a2c8f755c9660ffc94b26b6bd4b140685e05a88d8e5abb19a2f271383a3f2f398b173ef403f65dc33af75206214bd21ac012c39b4c0051b3a9f61f642fe6
 )
 
+vcpkg_download_distfile(XALAN_PATCH8
+    URLS "https://github.com/rleigh-codelibre/vcpkg-patches/raw/ca09d69280469ce8f787c67b48f86e46a463ef5d/xalan-c/0008-remove-unary-binary-function.patch"
+    FILENAME "0008-remove-unary-binary-function.patch"
+    SHA512 059d9a39b29125ae770369e4c44ab7804ae16d4ff5c90e35f25b7990dc987161bf1187ceb2dcbab181ffb72490a9d9f45e30ab5928644734e7627cb74b03e201
+)
+
+vcpkg_download_distfile(XALAN_PATCH9
+    URLS "https://raw.githubusercontent.com/rleigh-codelibre/vcpkg-patches/ca09d69280469ce8f787c67b48f86e46a463ef5d/xalan-c/0009-remove-select-workaround.patch"
+    FILENAME "0009-remove-select-workaround.patch"
+    SHA512 73730736cd1f1809ebcc35562017402d606cbfd5a64665d104a21d89d679ab3274f6f5685ab63305c57fffab74e62084c0e18c76d19eb5f9c2e36be6679fd4d3
+)
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -22,6 +34,8 @@ vcpkg_extract_source_archive_ex(
         0005-fix-ftbfs-ld-as-needed.patch
         0006-fix-testxslt-segfault.patch
         0007-fix-readme-typos.patch
+        ${XALAN_PATCH8}
+        ${XALAN_PATCH9}
 )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")

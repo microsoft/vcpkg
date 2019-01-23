@@ -1,5 +1,5 @@
 Source: ogre
-Version: 1.10.11
+Version: 1.11.3-3
 Build-Depends: freeimage, freetype, zlib, zziplib
 Description: 3D Object-Oriented Graphics Rendering Engine
 
