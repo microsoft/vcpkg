@@ -4,7 +4,8 @@ vcpkg_from_github(
     REPO malaterre/GDCM
     REF v2.8.8
     SHA512 92efa1b85e38a5e463933c36a275e1392608c9da4d7c3ab17acfa70bfa112bc03e8705086eaac4a3ad5153fde5116ccc038093adaa8598b18000f403f39db738
-    PATCHES socketxx.patch
+    HEAD_REF master
+    PATCHES find-openjpeg.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -22,17 +23,20 @@ vcpkg_configure_cmake(
         -DGDCM_INSTALL_INCLUDE_DIR=include
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
-        ${ADDITIONAL_OPTIONS}
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON
+        -DGDCM_BUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/gdcm-2.8 TARGET_PATH share/gdcm)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 

@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF v0.5
     SHA512 7ebeec108f33f1aa8b1ad08e3ca128a837b22d33e3fc580021f981784043b023a1bf563bbfa8b51d46863db770b336d24fc84ee3d836b85e0da1848281b2a5b2
     HEAD_REF master
+	PATCHES deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
