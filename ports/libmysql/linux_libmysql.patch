@@ -1,5 +1,5 @@
---- a/buildtrees/libmysql/src/ysql-8.0.4-6271934d70/configure.cmake
-+++ b/buildtrees/libmysql/src/ysql-8.0.4-6271934d70/configure.cmake
+--- a/configure.cmake
++++ b/configure.cmake
 @@ -456,7 +456,11 @@
  ENDIF()
  
