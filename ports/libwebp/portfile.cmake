@@ -8,6 +8,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-build-fixes.patch
+    0002-cmake-config-add-backwards-compatibility.patch
 )
 
 set(WEBP_BUILD_ANIM_UTILS OFF)
