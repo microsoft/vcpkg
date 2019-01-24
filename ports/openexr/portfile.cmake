@@ -44,14 +44,6 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openexr)
 
 vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/OpenEXR/ImfExport.h HEADER_FILE)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "defined(OPENEXR_DLL)" "1" HEADER_FILE "${HEADER_FILE}")
-else()
-    string(REPLACE "defined(OPENEXR_DLL)" "0" HEADER_FILE "${HEADER_FILE}")
-endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/OpenEXR/ImfExport.h "${HEADER_FILE}")
-
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenEXR)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/OpenEXR/LICENSE ${CURRENT_PACKAGES_DIR}/share/OpenEXR/copyright)
 
