@@ -30,6 +30,7 @@ function(vcpkg_fixup_cmake_targets)
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
 
+
     if(_vfct_CONFIG_PATH AND NOT RELEASE_SHARE STREQUAL "${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH}")
         if(_vfct_CONFIG_PATH STREQUAL "share")
             file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/share2)
@@ -47,11 +48,11 @@ function(vcpkg_fixup_cmake_targets)
 
             # This roundabout handling enables CONFIG_PATH share
             file(MAKE_DIRECTORY ${DEBUG_SHARE})
-            file(GLOB_RECURSE FILES ${DEBUG_CONFIG}/*)
+            file(GLOB FILES ${DEBUG_CONFIG}/*)
             file(COPY ${FILES} DESTINATION ${DEBUG_SHARE})
             file(REMOVE_RECURSE ${DEBUG_CONFIG})
         endif()
-
+		
         file(GLOB FILES ${RELEASE_CONFIG}/*)
         file(COPY ${FILES} DESTINATION ${RELEASE_SHARE})
         file(REMOVE_RECURSE ${RELEASE_CONFIG})
@@ -135,8 +136,17 @@ function(vcpkg_fixup_cmake_targets)
     foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
         file(READ ${MAIN_CMAKE} _contents)
 		string(REGEX REPLACE
-			"get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
-			"get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
             _contents "${_contents}")
          string(REGEX REPLACE
             "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
