@@ -51,8 +51,8 @@ index bb22164..3ad256f 100644
 +endif()
 +
 +if(NOT WEBP_MUX_LIBRARY AND NOT WebP_MUX_LIBRARY)
-+  find_library(WEBP_MUX_LIBRARY_RELEASE NAMES webpmux)
-+  find_library(WEBP_MUX_LIBRARY_DEBUG NAMES webpmuxd)
++  find_library(WEBP_MUX_LIBRARY_RELEASE NAMES libwebpmux)
++  find_library(WEBP_MUX_LIBRARY_DEBUG NAMES libwebpmuxd)
 +  select_library_configurations(WEBP_MUX)
 +  set(WebP_MUX_LIBRARY ${WEBP_MUX_LIBRARY})
 +  if(WEBP_MUX_LIBRARY)
