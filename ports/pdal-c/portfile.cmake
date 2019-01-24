@@ -12,10 +12,6 @@ vcpkg_from_github(
 	REF 1.8
 	SHA512 6a5f4cb3d36b419f3cd195028c3e6dc17abf3cdb7495aa3df638bc1f842ba98243c73e051e9cfcd3afe22787309cb871374b152ded92e6e06f404cd7b1ae50bf
 	HEAD_REF master
-)
-
-vcpkg_apply_patches(
-	SOURCE_PATH ${SOURCE_PATH}
 	PATCHES
 		${CMAKE_CURRENT_LIST_DIR}/fix-docs-version.patch
 		${CMAKE_CURRENT_LIST_DIR}/preserve-install-dir.patch
