@@ -1,5 +1,5 @@
 Source: tensorflow-cc
-Version: 1.12.0
+Version: 1.12.0-1
 Description: Library for computation using data flow graphs for scalable machine learning
   [1] https://github.com/Microsoft/vcpkg/issues/3048
   [2] https://github.com/FloopCZ/tensorflow_cc

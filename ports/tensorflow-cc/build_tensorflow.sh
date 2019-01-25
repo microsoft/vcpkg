@@ -1,6 +1,5 @@
-export CURRENT_PACKAGES_DIR=$1
+set -e
 
-export PYTHON_BIN_PATH=/usr/bin/python
 export USE_DEFAULT_PYTHON_LIB_PATH=1
 export TF_NEED_JEMALLOC=1
 export TF_NEED_KAFKA=0
@@ -25,12 +24,13 @@ export NCCL_INSTALL_PATH=/usr
 export CC_OPT_FLAGS="-march=x86-64"
 export TF_NEED_CUDA=0
 
-./configure
+echo | ${PYTHON_BIN_PATH} configure.py
 
 #https://github.com/tensorflow/tensorflow/issues/24527
 bazel build \
     --config=opt \
     --incompatible_package_name_is_a_function=false \
+    --define=no_tensorflow_py_deps=true \
     //tensorflow:libtensorflow_cc.so \
     //tensorflow:install_headers
 
@@ -38,14 +38,20 @@ mkdir -p ${CURRENT_PACKAGES_DIR}/include/
 chmod 755 ${CURRENT_PACKAGES_DIR}/include/
 cp -rp bazel-genfiles/tensorflow/include ${CURRENT_PACKAGES_DIR}/
 
-mkdir -p ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
-chmod 755 ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
-chmod 755 ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/external/
-cp -rp bazel-genfiles/tensorflow/include/tensorflow/external \
-    ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
+# mkdir -p ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
+# chmod 755 ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
+# chmod 755 ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/external/
+# cp -rp bazel-genfiles/tensorflow/include/tensorflow/external \
+#     ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
 
 mkdir -p ${CURRENT_PACKAGES_DIR}/lib
 chmod 755 ${CURRENT_PACKAGES_DIR}/lib
 for i in bazel-bin/tensorflow/*.so; do
     install -m755  $i ${CURRENT_PACKAGES_DIR}/lib/;
+done;
+
+mkdir -p ${CURRENT_PACKAGES_DIR}/debug/lib
+chmod 755 ${CURRENT_PACKAGES_DIR}/debug/lib
+for i in bazel-bin/tensorflow/*.so; do
+    install -m755  $i ${CURRENT_PACKAGES_DIR}/debug/lib/;
 done;
