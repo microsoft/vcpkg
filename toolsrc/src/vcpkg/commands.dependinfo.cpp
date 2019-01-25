@@ -52,7 +52,7 @@ namespace vcpkg::Commands::DependInfo
             s.append(Strings::format("%s;", name));
             for (const Dependency& d : source_paragraph.depends)
             {
-                const std::string dependency_name = replace_dashes_with_underscore(d.name());
+                const std::string dependency_name = replace_dashes_with_underscore(d.depend.name);
                 s.append(Strings::format("%s -> %s;", name, dependency_name));
             }
         }
@@ -77,7 +77,11 @@ namespace vcpkg::Commands::DependInfo
             // Iterate over dependencies.
             for (const Dependency& d : source_paragraph.depends)
             {
-                links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" />", name, d.name()));
+                if (d.qualifier.empty())
+                    links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" />", name, d.depend.name));
+                else
+                    links.append(Strings::format(
+                        "<Link Source=\"%s\" Target=\"%s\" StrokeDashArray=\"4\" />", name, d.depend.name));
             }
 
             // Iterate over feature dependencies.
@@ -87,7 +91,8 @@ namespace vcpkg::Commands::DependInfo
             {
                 for (const Dependency& d : feature_paragraph->depends)
                 {
-                    links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" StrokeDashArray=\"4\" />", name, d.name()));
+                    links.append(Strings::format(
+                        "<Link Source=\"%s\" Target=\"%s\" StrokeDashArray=\"4\" />", name, d.depend.name));
                 }
             }
         }
@@ -131,7 +136,7 @@ namespace vcpkg::Commands::DependInfo
             {
                 for (const auto& dependency : (*source_control_file)->core_paragraph->depends)
                 {
-                    build_dependencies_list(packages_to_keep, dependency.name(), source_control_files);
+                    build_dependencies_list(packages_to_keep, dependency.depend.name, source_control_files);
                 }
             }
         }
