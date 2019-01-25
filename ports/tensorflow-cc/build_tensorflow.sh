@@ -34,9 +34,16 @@ bazel build \
     //tensorflow:libtensorflow_cc.so \
     //tensorflow:install_headers
 
-mkdir -p ${CURRENT_PACKAGES_DIR}/include
-chmod 755 ${CURRENT_PACKAGES_DIR}/include
+mkdir -p ${CURRENT_PACKAGES_DIR}/include/
+chmod 755 ${CURRENT_PACKAGES_DIR}/include/
 cp -rp bazel-genfiles/tensorflow/include ${CURRENT_PACKAGES_DIR}/
+
+mkdir -p ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
+chmod 755 ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
+chmod 755 ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/external/
+cp -rp bazel-genfiles/tensorflow/include/tensorflow/external \
+    ${CURRENT_PACKAGES_DIR}/include/tensorflow-etc/
+
 mkdir -p ${CURRENT_PACKAGES_DIR}/lib
 chmod 755 ${CURRENT_PACKAGES_DIR}/lib
 for i in bazel-bin/tensorflow/*.so; do

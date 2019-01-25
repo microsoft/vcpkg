@@ -47,7 +47,8 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(
 if (TENSORFLOW_CC_FOUND)
     set(TENSORFLOW_CC_INCLUDE_DIRS
         ${TENSORFLOW_CC_INCLUDE_DIR}
-        ${TENSORFLOW_CC_INCLUDE_DIR}/external/com_google_absl
+        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-etc
+        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-etc/external/com_google_absl
     )
 
     if (NOT TARGET tensorflow_cc::tensorflow_framework)
