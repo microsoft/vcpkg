@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kmhofmann/selene
-    REF v0.3
-    SHA512 53a4a6577b4e618c5b080e0ddaa1e0e28b7c0a27e800eb9d1b1a2a6fbfaf630a6f326a3d070ad0c3f9bd8fb5e6bdd7fafbbd5a49e5f9a6f9ae79e0b50d20f741
+    REF v0.3.1
+    SHA512 7bc57ebe9e2442da2716eb5c1af11f8d610b0b09fe96e3122d1028575732b6045a987c499bbf7de53003edd627b8809d86c80ea4975fc2264a1c61d5891a46c3
     HEAD_REF master
 )
 
