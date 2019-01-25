@@ -12,16 +12,16 @@ namespace vcpkg::Commands::DependInfo
     constexpr StringLiteral OPTION_DOT = "--dot";
     constexpr StringLiteral OPTION_DGML = "--dgml";
 
-    constexpr std::array<CommandSwitch, 2> DEPEND_SWITCHES = { {
-        { OPTION_DOT, "Creates graph on basis of dot" },
-        { OPTION_DGML, "Creates graph on basis of dgml" },
-        } };
+    constexpr std::array<CommandSwitch, 2> DEPEND_SWITCHES = {{
+        {OPTION_DOT, "Creates graph on basis of dot"},
+        {OPTION_DGML, "Creates graph on basis of dgml"},
+    }};
 
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string(R"###(depend-info [pat])###"),
         0,
         SIZE_MAX,
-        { DEPEND_SWITCHES,{} },
+        {DEPEND_SWITCHES, {}},
         nullptr,
     };
 
@@ -32,8 +32,7 @@ namespace vcpkg::Commands::DependInfo
         return output;
     }
 
-    std::string create_dot_as_string(
-        const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+    std::string create_dot_as_string(const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
     {
         int empty_node_count = 0;
 
@@ -62,8 +61,7 @@ namespace vcpkg::Commands::DependInfo
         return s;
     }
 
-    std::string create_dgml_as_string(
-        const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+    std::string create_dgml_as_string(const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
     {
         std::string s;
         s.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -83,7 +81,8 @@ namespace vcpkg::Commands::DependInfo
             }
 
             // Iterate over feature dependencies.
-            const std::vector<std::unique_ptr<FeatureParagraph>>& feature_paragraphs = source_control_file->feature_paragraphs;
+            const std::vector<std::unique_ptr<FeatureParagraph>>& feature_paragraphs =
+                source_control_file->feature_paragraphs;
             for (const auto& feature_paragraph : feature_paragraphs)
             {
                 for (const Dependency& d : feature_paragraph->depends)
@@ -101,9 +100,8 @@ namespace vcpkg::Commands::DependInfo
         return s;
     }
 
-    std::string create_graph_as_string(
-        const std::unordered_set<std::string>& switches,
-        const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+    std::string create_graph_as_string(const std::unordered_set<std::string>& switches,
+                                       const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
     {
         if (Util::Sets::contains(switches, OPTION_DOT))
         {
@@ -117,8 +115,8 @@ namespace vcpkg::Commands::DependInfo
     }
 
     void build_dependencies_list(std::set<std::string>& packages_to_keep,
-                                         const std::string& requested_package,
-                                         const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+                                 const std::string& requested_package,
+                                 const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
     {
         const auto source_control_file =
             Util::find_if(source_control_files, [&requested_package](const auto& source_control_file) {
