@@ -36,6 +36,25 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/azure_c_shared_utility)
 
+# General fixup doesn't work for azure_c_shared_utility
+file(GLOB CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/azure_c_shared_utility/*.cmake)
+foreach(CMAKE_FILE ${CMAKE_FILES})
+    file(READ ${CMAKE_FILE} _contents)
+    string(REPLACE 
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+        _contents 
+        "${_contents}")
+    file(WRITE ${CMAKE_FILE} "${_contents}")
+endforeach()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility)
