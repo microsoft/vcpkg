@@ -4,6 +4,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "WindowsStore not supported")
 endif()
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(VERSION 1.1.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://cmocka.org/files/1.1/cmocka-${VERSION}.tar.xz"
