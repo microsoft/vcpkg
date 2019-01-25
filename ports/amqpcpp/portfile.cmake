@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CopernicaMarketingSoftware/AMQP-CPP
@@ -9,12 +11,6 @@ vcpkg_from_github(
     PATCHES
         find-openssl.patch
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_SHARED ON)
-else()
-    set(BUILD_SHARED OFF)
-endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX_TCP ON)
@@ -26,7 +22,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DAMQP-CPP_BUILD_SHARED=${BUILD_SHARED}
+        -DAMQP-CPP_BUILD_SHARED=OFF
         -DAMQP-CPP_LINUX_TCP=${LINUX_TCP}
 )
 
