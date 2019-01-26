@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF 7.1.2
     SHA512 9479eb6188a68388d470e38ec7b08aaeeb03a1028a574258b52e1c39ce0b1b1aaf97a5cb898447f68c989badd23903ba7a059f5daf59160c660ba751d668c0eb
     HEAD_REF master
+    PATCHES PatchHeaderIncludeGuard.patch
 )
 
 if("xcomplex" IN_LIST FEATURES)
