@@ -16,6 +16,6 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE 
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/tsl-hopscotch-map 
+     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} 
      RENAME copyright
 )
