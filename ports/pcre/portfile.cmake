@@ -15,7 +15,7 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "pcre-${PCRE_VERSION}.zip"
     SHA512 a3fd57090a5d9ce9d608aeecd59f42f04deea5b86a5c5899bdb25b18d8ec3a89b2b52b62e325c6485a87411eb65f1421604f80c3eaa653bd7dbab05ad22795ea
 )
-vcpkg_extract_source_archive(
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PCRE_VERSION}
