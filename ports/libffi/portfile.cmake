@@ -9,15 +9,12 @@ vcpkg_from_github(
     REF v3.1
     SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/export-global-data.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/export-global-data.patch
-)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
