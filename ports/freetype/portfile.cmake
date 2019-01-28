@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE})
+    ARCHIVE ${ARCHIVE}
     REF ${FT_VERSION}
     PATCHES 
         ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
