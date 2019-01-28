@@ -10,11 +10,10 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${FT_VERSION}
-    PATCHES
-        0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
-        0002-Add-CONFIG_INSTALL_PATH-option.patch
-        0003-Fix-UWP.patch
-        0004-Fix-macOS-defines.patch
+    PATCHES 
+        ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002-Add-CONFIG_INSTALL_PATH-option.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-UWP.patch
 )
 
 vcpkg_configure_cmake(
