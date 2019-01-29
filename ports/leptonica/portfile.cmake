@@ -26,6 +26,15 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
 
+# Fix relative paths that vcpkg_fixup_cmake_targets didn't pick up
+file(READ ${CURRENT_PACKAGES_DIR}/share/leptonica/LeptonicaTargets.cmake _contents)
+string(REGEX REPLACE
+    "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+    _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/leptonica/LeptonicaTargets.cmake "${_contents}")
+
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
