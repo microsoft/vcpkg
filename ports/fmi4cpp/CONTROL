@@ -1,4 +1,10 @@
 Source: fmi4cpp
-Version: 0.4.0
+Version: 0.5.3
 Description: FMI 2.0 implementation written in modern C++
-Build-Depends: boost-property-tree, boost-ublas, boost-odeint, bzip2 (linux), openssl (linux), libzip
+Build-Depends: boost-property-tree, bzip2 (linux), openssl (linux), libzip, spdlog
+
+Feature: odeint
+Build-Depends: boost-ublas, boost-odeint
+Description: Adds support for wrapping Model Exchange models as Co-simulation models using odeint solvers
+
+
