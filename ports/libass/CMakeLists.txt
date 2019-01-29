@@ -27,10 +27,6 @@ find_path(FRIBIDI_INCLUDE_DIR
 find_path(HARFBUZZ_INCLUDE_DIR
           NAMES hb.h
           PATH_SUFFIXES harfbuzz)
-          
-find_path(FONTCONFIG_INCLUDE_DIR
-          NAMES fontconfig.h
-          PATH_SUFFIXES fontconfig)
 
 find_library(FRIBIDI_LIBRARY NAMES fribidi)
 find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
@@ -39,8 +35,7 @@ add_library(ass ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/libass.def)
 
 target_include_directories(ass PRIVATE 
   ${FRIBIDI_INCLUDE_DIR} 
-  ${HARFBUZZ_INCLUDE_DIR}
-  ${FONTCONFIG_INCLUDE_DIR})
+  ${HARFBUZZ_INCLUDE_DIR})
 
 target_link_libraries(ass PRIVATE 
   Freetype::Freetype 
