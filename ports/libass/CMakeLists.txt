@@ -9,6 +9,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 #    macOS - CONFIG_CORETEXT
 #    linux - CONFIG_FONTCONFIG
 add_compile_definitions(CONFIG_DIRECTWRITE)
+add_compile_definitions(CONFIG_FREETYPE)
 add_compile_definitions(CONFIG_FRIBIDI)
 add_compile_definitions(CONFIG_HARFBUZZ)
 
