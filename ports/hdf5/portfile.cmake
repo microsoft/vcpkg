@@ -3,16 +3,17 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.1/hdf5-1.10.1)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.1/src/CMake-hdf5-1.10.1.zip"
     FILENAME "CMake-hdf5-1.10.1.zip"
     SHA512 0045a6301c6e3479be70f025d8690297ff33b9e6e99ec217a33e9b916d9410fb3f7110b7361fbeaec163c35b8e6bd948ac8d5fdace80930c98c6a0b27c6fd5c4
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF 1.10.1
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-szip-config.patch
         ${CMAKE_CURRENT_LIST_DIR}/disable-static-libs.patch
