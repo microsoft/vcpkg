@@ -9,6 +9,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 #    macOS - CONFIG_CORETEXT
 #    linux - CONFIG_FONTCONFIG
 add_compile_definitions(CONFIG_DIRECTWRITE)
+add_compile_definitions(CONFIG_FREETYPE)
+add_compile_definitions(CONFIG_FRIBIDI)
+add_compile_definitions(CONFIG_HARFBUZZ)
 
 file (GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/libass/*.c)
 
@@ -21,13 +24,23 @@ find_path(FRIBIDI_INCLUDE_DIR
           NAMES fribidi.h
           PATH_SUFFIXES fribidi)
 
+find_path(HARFBUZZ_INCLUDE_DIR
+          NAMES hb.h
+          PATH_SUFFIXES harfbuzz)
+
 find_library(FRIBIDI_LIBRARY NAMES fribidi)
+find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
 
-add_library(ass STATIC ${SOURCES})
+add_library(ass ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/libass.def)
 
-target_include_directories(ass PRIVATE ${FRIBIDI_INCLUDE_DIR})
+target_include_directories(ass PRIVATE 
+  ${FRIBIDI_INCLUDE_DIR} 
+  ${HARFBUZZ_INCLUDE_DIR})
 
-target_link_libraries(ass PRIVATE Freetype::Freetype)
+target_link_libraries(ass PRIVATE 
+  Freetype::Freetype 
+  ${FRIBIDI_LIBRARY} 
+  ${HARFBUZZ_LIBRARY})
 
 install(TARGETS ass
   RUNTIME DESTINATION bin
