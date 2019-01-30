@@ -27,12 +27,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCLanguage TARGET_PATH share/SystemCLanguage)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCTLM TARGET_PATH share/SystemCTLM)
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/systemc RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/SystemCLanguage/SystemCLanguageTargets-debug.cmake _contents)
-string(REPLACE "lib/" "debug/lib/" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/SystemCLanguage/SystemCLanguageTargets-debug.cmake "${_contents}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/sysc/packages/qt/time)
 
