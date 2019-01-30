@@ -19,10 +19,18 @@ vcpkg_install_cmake()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/Async++.cmake ${CURRENT_PACKAGES_DIR}/cmake/Async++Targets.cmake)
 
+# Fix targets import paths
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/async++)
+set(TARGETS_CMAKE ${CURRENT_PACKAGES_DIR}/share/async++/Async++Targets.cmake)
+file(READ ${TARGETS_CMAKE} _contents)
+string(REGEX REPLACE
+    "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+    _contents "${_contents}")
+file(WRITE ${TARGETS_CMAKE} "${_contents}")
+file(RENAME ${TARGETS_CMAKE} ${CURRENT_PACKAGES_DIR}/share/async++/Async++.cmake)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/async++/Async++Targets.cmake ${CURRENT_PACKAGES_DIR}/share/async++/Async++.cmake)
-
+# Update Async++Config.cmake
 file(READ ${CURRENT_PACKAGES_DIR}/share/async++/Async++Config.cmake _contents)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/async++/Async++Config.cmake "include(CMakeFindDependencyMacro)\n${_contents}")
 
