@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/dll-wins.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/Fix-link-error-C1128.patch
 )
 
 vcpkg_configure_cmake(
