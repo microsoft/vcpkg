@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.9)
 project(libass C CXX)
 
+set(LIBASS_VERSION 0.14.0)
+
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
@@ -34,3 +36,15 @@ install(TARGETS ass
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 
+# pkgconfig file
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+set(PACKAGE_VERSION ${LIBASS_VERSION})
+set(PKG_REQUIRES_PRIVATE "harfbuzz >= 0.9.5, fribidi >= 0.19.0, freetype2 >= 9.10.3")
+set(PKG_LIBS_PRIVATE -lm)
+configure_file(libass.pc.in libass.pc @ONLY)
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/libass.pc
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
