@@ -4,26 +4,25 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT VCPKG_CMAKE_SYSTEM_NAME OR 
 endif()
 
 include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyobjloader
-    REF 8fd9f6e57bf8c70d5ae47cf0f0d1bf1ccae2dfc2
-    SHA512 5b6a2822989c5a28eabee0a33724c045b5d07cf0ccfd4288c7c3a5a2cc5b0c3f6ee8aca45e8e22c941278fbbfabd8f909f5010cd34b9d905c4d84102d151c73b
+    REF v1.4.1
+    SHA512 5b18fed89435a95fb3fc89829ea6904b4cc4508b0907642b39194e3e3c55678ddc1c07687e4b7ea171f270f7188ca593ed53b828c022667e54a889c36c60373e
     HEAD_REF master
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TINYOBJLOADER_COMPILATION_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        -DTINYOBJLOADER_COMPILATION_SHARED=${TINYOBJLOADER_COMPILATION_SHARED}
         -DCMAKE_INSTALL_DOCDIR:STRING=share/tinyobjloader
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/tinyobjloader/cmake)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/tinyobjloader/cmake")
 
 file(
     REMOVE_RECURSE

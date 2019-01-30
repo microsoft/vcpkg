@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO "dtschump/CImg"
-    REF v.2.4.2
+    REF v.2.4.4
     HEAD_REF master
-    SHA512 dc27e7c0b06cd619c4270a91d830dbd3e0dfea851e04d7aab46fe9f2131e4b3717f73ac53bc4d70497ff2efe3bee1ae693e621d993cd63735d00368a362833f3)
+    SHA512 16106e6b225fa53f4d825a1c91a05fca27b7b9219126b4328aa74fc2bdead9f145445524f456d230cef18ea2e2fe39f9f725cdf78ed4556270af728be3aa80e8)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

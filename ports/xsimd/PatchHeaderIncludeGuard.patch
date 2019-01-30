@@ -1,0 +1,24 @@
+diff --git a/include/xsimd/stl/algorithms.hpp b/include/xsimd/stl/algorithms.hpp
+index 4cb2b79..1590b89 100644
+--- a/include/xsimd/stl/algorithms.hpp
++++ b/include/xsimd/stl/algorithms.hpp
+@@ -6,6 +6,9 @@
+ * The full license is in the file LICENSE, distributed with this software. *
+ ****************************************************************************/
+ 
++#ifndef XSIMD_ALGORITHMS_HPP
++#define XSIMD_ALGORITHMS_HPP
++
+ #include "xsimd/memory/xsimd_load_store.hpp"
+ 
+ namespace xsimd
+@@ -126,4 +129,6 @@ namespace xsimd
+ 
+         #undef XSIMD_LOOP_MACRO
+     }
+-}
+\ No newline at end of file
++}
++
++#endif
+\ No newline at end of file
