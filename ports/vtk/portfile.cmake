@@ -391,6 +391,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
 
-vcpkg_copy_pdbs()
-
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
