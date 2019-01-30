@@ -308,19 +308,42 @@ endforeach()
 
 # Delete the debug binary TOOL_NAME that is not required
 function(_vtk_remove_debug_tool TOOL_NAME)
-    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
-    if(EXISTS ${filename})
-        file(REMOVE ${filename})
+    # on windows, the tools end with .exe
+    set(filename_win ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
+    if(EXISTS ${filename_win})
+        file(REMOVE ${filename_win})
     endif()
+    # on other OS, it doesn't
+    set(filename_unix ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME})
+    if(EXISTS ${filename_unix})
+        file(REMOVE ${filename_unix})
+    endif()
+    # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
+    # to make them point to the release version of the tools
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
+    string(REPLACE "debug/bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake" "${VTK_TARGETS_CONTENT_DEBUG}")
 endfunction()
 
 # Move the release binary TOOL_NAME from bin to tools
 function(_vtk_move_release_tool TOOL_NAME)
-    set(old_filename "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe")
-    if(EXISTS ${old_filename})
-        file(COPY ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
-        file(REMOVE ${old_filename})
+    # on windows, the tools end with .exe
+    set(old_filename_win "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe")
+    if(EXISTS ${old_filename_win})
+        file(INSTALL ${old_filename_win} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(REMOVE ${old_filename_win})
     endif()
+    # on other OS, it doesn't
+    set(old_filename_unix "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}")
+    if(EXISTS ${old_filename_unix})
+        file(INSTALL ${old_filename_unix} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(REMOVE ${old_filename_unix})
+    endif()
+    # we also have to bend the lines referencing the tools in VTKTargets-release.cmake
+    # to make them point to the tool folder
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
+    string(REPLACE "bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_RELEASE "${VTK_TARGETS_CONTENT_RELEASE}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" "${VTK_TARGETS_CONTENT_RELEASE}")
 endfunction()
 
 set(VTK_TOOLS
