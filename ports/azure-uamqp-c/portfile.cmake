@@ -35,6 +35,15 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/uamqp)
 
+# Fix relative paths that vcpkg_fixup_cmake_targets didn't pick up
+set(TARGETS_CMAKE ${CURRENT_PACKAGES_DIR}/share/uamqp/uamqpTargets.cmake)
+file(READ ${TARGETS_CMAKE} _contents)
+string(REGEX REPLACE
+    "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+    _contents "${_contents}")
+file(WRITE ${TARGETS_CMAKE} "${_contents}")
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uamqp-c/copyright COPYONLY)
