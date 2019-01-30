@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO png85/json_spirit
@@ -10,10 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/dll-wins.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_STATIC_LIBS=on -DJSON_SPIRIT_DEMOS=off -DJSON_SPIRIT_TESTS=off)
+    OPTIONS -DBUILD_STATIC_LIBS=off -DJSON_SPIRIT_DEMOS=off -DJSON_SPIRIT_TESTS=off)
 
 vcpkg_install_cmake()
 
