@@ -51,6 +51,15 @@ else()
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/zeromq/ZeroMQConfig.cmake "${_contents}")
 
+# Fix relative paths that vcpkg_fixup_cmake_targets didn't pick up
+set(TARGETS_CMAKE ${CURRENT_PACKAGES_DIR}/share/zeromq/ZeroMQTargets.cmake)
+file(READ ${TARGETS_CMAKE} _contents)
+string(REGEX REPLACE
+    "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+    _contents "${_contents}")
+file(WRITE ${TARGETS_CMAKE} "${_contents}")
+
 # Handle copyright
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/zmq/COPYING.LESSER.txt ${CURRENT_PACKAGES_DIR}/share/zeromq/copyright)
 
