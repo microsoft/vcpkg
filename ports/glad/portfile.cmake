@@ -12,7 +12,16 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON2_DIR}")
+vcpkg_add_to_path("${PYTHON2_DIR}")
+
+file(COPY
+    ${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h
+    ${CURRENT_INSTALLED_DIR}/share/egl-registry/egl.xml
+    ${CURRENT_INSTALLED_DIR}/share/opengl-registry/gl.xml
+    ${CURRENT_INSTALLED_DIR}/share/opengl-registry/glx.xml
+    ${CURRENT_INSTALLED_DIR}/share/opengl-registry/wgl.xml
+    DESTINATION ${SOURCE_PATH}/glad/files
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -32,5 +41,5 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glad)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/KHR)
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/glad/copyright COPYONLY)

@@ -1,0 +1,4 @@
+Source: spectra
+Version: 0.7.0
+Description: A header-only C++ library for large scale eigenvalue problems https://spectralib.org
+Build-Depends: eigen3
