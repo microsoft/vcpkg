@@ -10,8 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt "project(nlohmann-json" "project(nlohmann_json")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
