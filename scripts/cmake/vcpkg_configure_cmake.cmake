@@ -77,9 +77,6 @@ function(vcpkg_configure_cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(NINJA_CAN_BE_USED OFF)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        # Arm64 usage should be allowed once github issue #2375 is resolved
-        set(NINJA_CAN_BE_USED OFF)
     endif()
 
     if(_csc_GENERATOR)
