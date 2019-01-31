@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e891aee..9f12295 100644
+index aa287ff8..20fe7b49 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -125,7 +125,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+@@ -118,7 +118,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_C
  
      if(CMAKE_TARGET_ARCHITECTURE STREQUAL "x86_64")
          list(APPEND LIBCDS_PUBLIC_CXX_FLAGS "-mcx16")
