@@ -478,7 +478,10 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back(
             AbiEntry{"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
 
-        abi_tag_entries.emplace_back(AbiEntry{"vcpkg_fixup_cmake_targets", "1"});
+		// TODO: [viromer] Hash vcpkg_fixump_cmake_targets
+        abi_tag_entries.emplace_back(AbiEntry{
+            "vcpkg_fixup_cmake_targets",
+            vcpkg::Hash::get_file_hash(fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", "SHA1")});
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
