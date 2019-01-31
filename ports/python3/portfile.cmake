@@ -19,6 +19,8 @@ vcpkg_from_github(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-iomodule-for-RS4-SDK.patch
         ${CMAKE_CURRENT_LIST_DIR}/0005-Fix-DefaultWindowsSDKVersion.patch
+        dev16.patch
+        Microsoft.VisualStudio.Setup.Configuration.Native.patch
 )
 
 # We need per-triplet directories because we need to patch the project files differently based on the linkage

@@ -1,21 +1,26 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("azure-uhttp-c only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE "static")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if("public-preview" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-uhttp-c
+        REF e459385a811ce075f42aa7202db96ba1d1f55ac1
+        SHA512 b96382184893b49f30ad75d4c19eeb48f7a7823e9d48f2896ee4760be20f2f5b5ee3e78e39f10ae26363165360e5871c3ba82aa9edf3943b9f0ef9c0e3036ea6
+        HEAD_REF public-preview
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-uhttp-c
+        REF 647ec7cc75961cd7ff7cbb7eca30e1de819802ed
+        SHA512 1768ea978ab7fa328b74444573c3d1eb2a5fae1e36dbe1dcc186df3e2ab2a0a3b1ba8a434934462184582525b3a1850fc04ca2927f95f0df0ae483f8a1673e30
+        HEAD_REF master
+    )
 endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Azure/azure-uhttp-c
-    REF LTS_01_2018_Ref01
-    SHA512 baf7366e499c32210d0227188044ea1f7f7a78e2bad83d52ca6a71a76a59118ab2cd08ae9e7c511b612b885dcd94fe7a24a619136d3ee03187f780a9bc862218
-    HEAD_REF master
-)
-
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/c-utility/configs/)
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_AS_DYNAMIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -23,7 +28,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
-        -Dbuild_as_dynamic=${BUILD_AS_DYNAMIC}
+        -Dbuild_as_dynamic=OFF
         -DCMAKE_INSTALL_INCLUDEDIR=include
 )
 
@@ -33,8 +38,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/uhttp)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-uhttp-c RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uhttp-c/copyright COPYONLY)
 
 vcpkg_copy_pdbs()

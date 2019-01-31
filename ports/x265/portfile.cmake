@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO multicoreware/x265
-    REF 2.7
-    SHA512 fd2f43830bbe4fa0ac98ac6d8e3689d0a8a5142da9d67c0dd16fbbde40500c52a370c5c5a30e93195c2e998660a51abab76b09baed87378c9e366cf2f694f2b9
+    REF 2.9
+    SHA512 5bd9732b6af67e7f7c5b1e71d26acbd98fb98e9e81c6052cda2e1e9254e3eaaa28914805d3f8cd2535dd042022047e54f8ae49ea02269160b609d191a7d99e94
     HEAD_REF master
 )
 
@@ -29,7 +29,12 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x265)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
+
+if(UNIX)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265 ${CURRENT_PACKAGES_DIR}/tools/x265/x265)
+elseif(WIN32)    
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)

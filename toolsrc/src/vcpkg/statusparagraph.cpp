@@ -105,7 +105,7 @@ namespace vcpkg
         {
             dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
         }
-        Util::unstable_keep_if(deps, [&](auto&& e) { return e != l_spec.name(); });
+        Util::erase_remove_if(deps, [&](auto&& e) { return e == l_spec.name(); });
         // </hack>
         Util::sort_unique_erase(deps);
 
