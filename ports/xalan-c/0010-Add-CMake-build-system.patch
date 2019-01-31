@@ -1,0 +1,3427 @@
+From 63456a75826a9076d77c8237c3d5d3f3fd268b75 Mon Sep 17 00:00:00 2001
+From: Roger Leigh <rleigh@dundee.ac.uk>
+Date: Thu, 15 Jun 2017 16:10:26 +0100
+Subject: [PATCH] Add CMake build system
+
+---
+ .appveyor.yml                                      |  130 +++
+ .travis.yml                                        |   40 +
+ CMakeLists.txt                                     |  122 +++
+ Makefile.incl.in                                   |    6 +-
+ Tests/CMakeLists.txt                               |   59 ++
+ Tests/Performance/TestHarness.hpp                  |    1 +
+ cmake/FindICU.cmake                                |  394 +++++++
+ cmake/RunTest.cmake                                |   88 ++
+ cmake/XalanDLL.cmake                               |   58 ++
+ cmake/XalanDLL.cmake~                              |   63 ++
+ cmake/XalanICU.cmake                               |   22 +
+ cmake/XalanLFS.cmake                               |   27 +
+ cmake/XalanMsgLoaderSelection.cmake                |   94 ++
+ cmake/XalanOperatorDelete.cmake                    |   43 +
+ cmake/XalanPathMax.cmake                           |   30 +
+ cmake/XalanTest.cmake                              |   80 ++
+ cmake/XalanTranscoderSelection.cmake               |   39 +
+ cmake/XalanWarnings.cmake                          |   89 ++
+ cmake/XalanXerces.cmake                            |   22 +
+ samples/CMakeLists.txt                             |   52 +
+ scripts/ci-appveyor-setup                          |   65 ++
+ scripts/ci-travis                                  |  133 +++
+ src/xalanc/CMakeLists.txt                          | 1101 ++++++++++++++++++++
+ .../PlatformSupport/XalanNLSMessageLoader.cpp      |   41 +-
+ src/xalanc/Utils/CMakeLists.txt                    |  178 ++++
+ src/xalanc/Utils/MsgCreator/CMakeLists.txt         |   49 +
+ src/xalanc/Utils/XalanMsgLib/CMakeLists.txt        |   75 ++
+ src/xalanc/XalanCConfig.cmake.in                   |   11 +
+ xalan-c.pc.in                                      |   10 +
+ 29 files changed, 3103 insertions(+), 19 deletions(-)
+ create mode 100644 .appveyor.yml
+ create mode 100644 .travis.yml
+ create mode 100644 CMakeLists.txt
+ create mode 100644 Tests/CMakeLists.txt
+ create mode 100644 cmake/FindICU.cmake
+ create mode 100644 cmake/RunTest.cmake
+ create mode 100644 cmake/XalanDLL.cmake
+ create mode 100644 cmake/XalanDLL.cmake~
+ create mode 100644 cmake/XalanICU.cmake
+ create mode 100644 cmake/XalanLFS.cmake
+ create mode 100644 cmake/XalanMsgLoaderSelection.cmake
+ create mode 100644 cmake/XalanOperatorDelete.cmake
+ create mode 100644 cmake/XalanPathMax.cmake
+ create mode 100644 cmake/XalanTest.cmake
+ create mode 100644 cmake/XalanTranscoderSelection.cmake
+ create mode 100644 cmake/XalanWarnings.cmake
+ create mode 100644 cmake/XalanXerces.cmake
+ create mode 100644 samples/CMakeLists.txt
+ create mode 100755 scripts/ci-appveyor-setup
+ create mode 100755 scripts/ci-travis
+ create mode 100644 src/xalanc/CMakeLists.txt
+ create mode 100644 src/xalanc/Utils/CMakeLists.txt
+ create mode 100644 src/xalanc/Utils/MsgCreator/CMakeLists.txt
+ create mode 100644 src/xalanc/Utils/XalanMsgLib/CMakeLists.txt
+ create mode 100644 src/xalanc/XalanCConfig.cmake.in
+ create mode 100644 xalan-c.pc.in
+
+diff --git a/.appveyor.yml b/.appveyor.yml
+new file mode 100644
+index 00000000..abb00908
+--- /dev/null
++++ b/.appveyor.yml
+@@ -0,0 +1,130 @@
++environment:
++  AV_PROJECTS: 'c:\projects'
++  AV_XERCES_SOURCE: 'c:\projects\xerces-c-source'
++  AV_XERCES_BUILD: 'c:\projects\xerces-c-build'
++  AV_XERCES_INSTALL: 'c:\projects\xerces-c'
++  AV_XALAN_DOWNLOAD: 'c:\projects\download'
++  AV_XALAN_TOOLS: 'c:\projects\tools'
++  AV_XALAN_SOURCE: 'c:\projects\xalan-c'
++  AV_XALAN_BUILD: 'c:\projects\build'
++  AV_XALAN_INSTALL: 'c:/projects/libs'
++
++  matrix:
++    - compiler: cygwin
++      configuration: Release
++      generator: Unix Makefiles
++      shared: ON
++      msgloader: inmemory
++      transcoder: default
++    - compiler: cygwin
++      configuration: Debug
++      generator: Unix Makefiles
++      shared: OFF
++      msgloader:
++      transcoder:
++    - compiler: mingw
++      configuration: Release
++      generator: Ninja
++      shared: ON
++      msgloader: inmemory
++      transcoder:
++    - compiler: mingw
++      configuration: Debug
++      generator: Ninja
++      shared: OFF
++      msgloader:
++      transcoder: default
++    - compiler: vc14
++      configuration: Release
++      generator: Visual Studio 14 2015 Win64
++      shared: ON
++      msgloader:
++      transcoder:
++    - compiler: vc14
++      configuration: Debug
++      generator: Visual Studio 14 2015 Win64
++      shared: OFF
++      msgloader: inmemory
++      transcoder: icu
++
++cache:
++  - 'c:\projects\download -> scripts/ci-appveyor-setup'
++  - 'c:\projects\icu -> scripts/ci-appveyor-setup'
++  - 'c:\projects\xerces-c -> scripts/ci-appveyor-setup'
++
++# Operating system (build VM template)
++os: 'Visual Studio 2015'
++
++# clone directory
++clone_folder: 'c:\projects\xalan-c'
++clone_depth: 5
++
++platform: x64
++
++init:
++  - git config --global core.autocrlf input
++  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XERCES_SOURCE%`) DO SET AV_XERCES_CYG_SOURCE=%%F'
++  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XERCES_INSTALL%`) DO SET AV_XERCES_CYG_INSTALL=%%F'
++  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XALAN_DOWNLOAD%`) DO SET AV_XALAN_CYG_DOWNLOAD=%%F'
++  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XALAN_TOOLS%`) DO SET AV_XALAN_CYG_TOOLS=%%F'
++  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XALAN_SOURCE%`) DO SET AV_XALAN_CYG_SOURCE=%%F'
++  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XALAN_INSTALL%`) DO SET AV_XALAN_CYG_INSTALL=%%F'
++  - 'if NOT EXIST "%AV_XALAN_DOWNLOAD%\" mkdir %AV_XALAN_DOWNLOAD%'
++  - 'if NOT EXIST "%AV_XALAN_TOOLS%\" mkdir %AV_XALAN_TOOLS%'
++  - 'if %compiler%==cygwin C:\Cygwin64\setup-x86_64 -q -R C:\Cygwin64 -s http://cygwin.mirror.constant.com -l %AV_XALAN_DOWNLOAD%\cygwin -P libcurl-devel,cmake'
++  - if [%msgloader%] == [icu] set AV_DO_ICU_BUILD=true
++  - if [%transcoder%] == [icu] set AV_DO_ICU_BUILD=true
++  - set AV_DO_XERCES_BUILD=true
++  - 'if EXIST "%AV_PROJECTS%\icu" AV_DO_ICU_BUILD=false'
++  - 'if EXIST "%AV_PROJECTS%\xerces-c" AV_DO_XERCES_BUILD=false'
++  - 'set "PATH=C:\Program Files (x86)\cmake\bin;%AV_XALAN_TOOLS%;%PATH%"'
++  - 'if %compiler%==cygwin set "PATH=C:\Cygwin64\bin;%PATH%"'
++  - 'if %compiler%==mingw set "PATH=C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%"'
++  - set "AV_CMAKE_ARGS=-DBUILD_SHARED_LIBS:BOOL=%shared%"
++  - if NOT [%msgloader%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmessage-loader=%msgloader%"
++  - if NOT [%transcoder%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dtranscoder=%transcoder%"
++  - set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_SOURCE%"
++  - set "AV_XERCES_CMAKE_INSTALL=%AV_XERCES_INSTALL%"
++  - 'if %compiler%==cygwin set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_CYG_SOURCE%'
++  - 'if %compiler%==cygwin set "AV_XERCES_CMAKE_INSTALL=%AV_XERCES_CYG_INSTALL%'
++  - set "AV_XALAN_CMAKE_SOURCE=%AV_XALAN_SOURCE%"
++  - set "AV_XALAN_CMAKE_INSTALL=%AV_XALAN_INSTALL%"
++  - 'if %compiler%==cygwin set "AV_XALAN_CMAKE_SOURCE=%AV_XALAN_CYG_SOURCE%'
++  - 'if %compiler%==cygwin set "AV_XALAN_CMAKE_INSTALL=%AV_XALAN_CYG_INSTALL%'
++
++before_build:
++  - 'C:\cygwin64\bin\bash %AV_XALAN_CYG_SOURCE%/scripts/ci-appveyor-setup'
++  - set ICU_PLATFORM=x64
++  - if [%platform%] == [x86] set ICU_PLATFORM=Win32
++  - 'if [%AV_DO_ICU_BUILD%] == [true] cd "%AV_PROJECTS%\icu"'
++  - 'if [%AV_DO_ICU_BUILD%] == [true] echo "Running msbuild to build ICU"'
++  - 'if [%AV_DO_ICU_BUILD%] == [true] call "%VS140COMNTOOLS%..\..\VC\vcvarsall.bat" %platform%'
++  - 'if [%AV_DO_ICU_BUILD%] == [true] msbuild source\allinone\allinone.sln /p:Configuration=%configuration% /p:Platform=%ICU_PLATFORM% /m'
++  - 'if [%AV_DO_ICU_BUILD%] == [true] set "PATH=%AV_PROJECTS%\icu\bin;%AV_PROJECTS%\icu\bin64;%PATH%"'
++  - mkdir %AV_XERCES_BUILD%
++  - cd %AV_XERCES_BUILD%
++  - if [%AV_DO_XERCES_BUILD%] == [true] cmake -G "%generator%" -DCMAKE_INSTALL_PREFIX:PATH=%AV_XERCES_CMAKE_INSTALL% -DCMAKE_BUILD_TYPE=%configuration% %AV_XERCES_CMAKE_SOURCE%
++  - if [%AV_DO_XERCES_BUILD%] == [true] cd %AV_XERCES_BUILD%
++  - if [%AV_DO_XERCES_BUILD%] == [true] cmake --build . --config %configuration%
++  - if [%AV_DO_XERCES_BUILD%] == [true] cmake --build . --config %configuration% --target install
++  - if [%AV_DO_XERCES_BUILD%] == [true] ctest -V -C %configuration%
++  - 'set "PATH=%AV_XERCES_CMAKE_INSTALL%\bin;%PATH%"'
++  - 'set "CMAKE_PREFIX_PATH=%AV_XERCES_INSTALL%;%AV_PROJECTS%\icu"'
++  - 'echo CPP: %CMAKE_PREFIX_PATH%'
++  - mkdir %AV_XALAN_BUILD%
++  - cd %AV_XALAN_BUILD%
++  - echo Running cmake -G "%generator%" -DCMAKE_INSTALL_PREFIX=%AV_XALAN_CMAKE_INSTALL% -DCMAKE_BUILD_TYPE=%configuration% %AV_XALAN_CMAKE_SOURCE%
++  - cmake -G "%generator%" -DCMAKE_INSTALL_PREFIX=%AV_XALAN_CMAKE_INSTALL% -DCMAKE_BUILD_TYPE=%configuration% %AV_CMAKE_ARGS% %AV_XALAN_CMAKE_SOURCE%
++
++build_script:
++  - cd %AV_XALAN_BUILD%
++  - cmake --build . --config %configuration%
++  - cmake --build . --config %configuration% --target install
++
++after_build:
++  - cd %AV_XALAN_INSTALL%
++  - '7z a %AV_XALAN_SOURCE%\xalan-c.zip * -tzip'
++
++before_test:
++  - cd %AV_XALAN_BUILD%
++  - ctest -V -C %configuration%
+diff --git a/.travis.yml b/.travis.yml
+new file mode 100644
+index 00000000..8b436d34
+--- /dev/null
++++ b/.travis.yml
+@@ -0,0 +1,40 @@
++language: c
++
++sudo: false
++dist: trusty
++
++cache:
++  directories:
++    - download
++
++addons:
++  apt_packages:
++    - libxerces-c-dev
++    - libicu-dev
++    - libcurl4-openssl-dev
++    - autoconf
++    - automake
++    - libtool
++
++before_install:
++  - if test "$(uname -s)" = Darwin; then brew update; fi
++  - if test "$(uname -s)" = Darwin; then brew install xerces-c; fi
++
++os:
++  - linux
++  - osx
++
++env:
++  matrix:
++    - BUILD=autoconf TYPE=Release MSGLOADER=inmem TRANSCODER=default
++    - BUILD=cmake TOOL="Unix Makefiles" TYPE=Debug MSGLOADER=inmemory TRANSCODER=default
++    - BUILD=cmake TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
++
++matrix:
++  fast_finish: true
++  exclude:
++    - os: osx
++      env: BUILD=cmake TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
++
++script:
++  - ./scripts/ci-travis "$BUILD" "$TOOL" "$TYPE" "$MSGLOADER" "$TRANSCODER"
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 00000000..737c0c29
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,120 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Run "cmake" to generate the build files for your platform
++
++cmake_minimum_required(VERSION 3.2.0)
++
++# Use new variable expansion policy.
++if (POLICY CMP0053)
++  cmake_policy(SET CMP0053 NEW)
++endif(POLICY CMP0053)
++if (POLICY CMP0054)
++  cmake_policy(SET CMP0054 NEW)
++endif(POLICY CMP0054)
++if (POLICY CMP0067)
++  cmake_policy(SET CMP0067 NEW)
++endif(POLICY CMP0067)
++
++# Try C++14, then fall back to C++11 and C++98.  Used for feature tests
++# for optional features.
++set(CMAKE_CXX_STANDARD 14)
++
++# Use folders (for IDE project grouping)
++set_property(GLOBAL PROPERTY USE_FOLDERS ON)
++
++# Source additional modules from the "cmake" directory
++list(APPEND CMAKE_MODULE_PATH
++     "${CMAKE_CURRENT_LIST_DIR}/cmake")
++
++# Read version information from version.incl.
++include(XalanDLL)
++string(REGEX REPLACE "([^_]+)_([^_]+)_([^_]+)" "\\1.\\2.\\3" xalan_c_version "${XALAN_META_VER}")
++message(STATUS "Configuring Apache Xalan-C++ version ${xalan_c_version}")
++
++# Project version
++project(${XALAN_META_PROJECT_NAME}
++        VERSION "${xalan_c_version}"
++        LANGUAGES C CXX)
++enable_testing()
++
++# For autotools header compatibility
++set(PACKAGE "${PROJECT_NAME}")
++set(PACKAGE_NAME "${PROJECT_NAME}")
++set(PACKAGE_TARNAME "${PROJECT_NAME}")
++set(PACKAGE_VERSION "${PROJECT_VERSION}")
++set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
++set(PACKAGE_BUGREPORT "dev@xalan.apache.org")
++set(PACKAGE_URL "https://xalan.apache.org/xalan-c/")
++
++find_package(Threads)
++include(GNUInstallDirs)
++include(XalanWarnings)
++include(XalanICU)
++include(XalanXerces)
++include(XalanMsgLoaderSelection)
++include(XalanTranscoderSelection)
++include(XalanOperatorDelete)
++include(XalanPathMax)
++include(XalanLFS)
++
++# Generate pkg-config file
++set(pkgconfig-dir "${CMAKE_INSTALL_LIBDIR}/pkgconfig" CACHE STRING "pkg-config installation directory (default ${CMAKE_INSTALL_LIBDIR}/pkgconfig)")
++set(PKGCONFIGDIR "${pkgconfig-dir}")
++
++set(prefix "${CMAKE_INSTALL_PREFIX}")
++set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
++set(libdir "${CMAKE_INSTALL_FULL_LIBDIR}")
++set(includedir "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/xalan-c.pc.in
++               ${CMAKE_CURRENT_BINARY_DIR}/xalan-c.pc)
++install(
++  FILES ${CMAKE_CURRENT_BINARY_DIR}/xalan-c.pc
++  DESTINATION "${PKGCONFIGDIR}"
++  COMPONENT "development")
++
++# Process subdirectories
++add_subdirectory(src/xalanc/Utils/MsgCreator)
++add_subdirectory(src/xalanc/Utils)
++add_subdirectory(src/xalanc/Utils/XalanMsgLib)
++add_subdirectory(src/xalanc)
++
++# Display configuration summary
++message(STATUS "")
++message(STATUS "Xalan-C++ configuration summary")
++message(STATUS "-------------------------------")
++message(STATUS "")
++message(STATUS "  Version:                     ${xalan-c_VERSION}")
++message(STATUS "  Library version:             ${XALAN_META_VER}")
++if(MSVC)
++message(STATUS "  Library major version:       ${XALAN_META_MS_LIB_MAJOR_VER}")
++message(STATUS "  Library minor version:       ${XALAN_META_MS_LIB_MINOR_VER}")
++else()
++message(STATUS "  Library major version:       ${XALAN_META_LIB_MAJOR_VER}")
++message(STATUS "  Library minor version:       ${XALAN_META_LIB_MINOR_VER}")
++endif()
++message(STATUS "")
++message(STATUS "  Installation directory:      ${prefix}")
++message(STATUS "  C compiler:                  ${CMAKE_C_COMPILER}")
++message(STATUS "  C++ compiler:                ${CMAKE_CXX_COMPILER}")
++message(STATUS "")
++message(STATUS "  Build shared libraries:      ${BUILD_SHARED_LIBS}")
++message(STATUS "  Transcoder:                  ${transcoder}")
++message(STATUS "  Message Loader:              ${msgloader}")
++message(STATUS "  Message Loader Locale:       ${message-locale}")
+diff --git a/Makefile.incl.in b/Makefile.incl.in
+index 131681e1..d204b4bf 100644
+--- a/Makefile.incl.in
++++ b/Makefile.incl.in
+@@ -172,11 +172,11 @@ ifeq ($(PLATFORM), CYGWIN)
+   CC4 = $(CC1)
+   LINK = $(CXX) -D${PLATFORM} ${LDFLAGS}
+    
+-  MAKE_SHARED = $(LINK) $(CXXFLAGS) ${LDFLAGS} -shared   -Wl,--warn-once \
++  MAKE_SHARED = $(LINK) ${LDFLAGS} -shared   -Wl,--warn-once \
+  							  -Wl,--out-implib \
+  							  -Wl,$(XSL_LIB_DIR)/$(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)
+  											        																            
+-  MAKE_SHARED_LOC = $(LINK) $(CXXFLAGS) ${LDFLAGS} -shared -Wl,--warn-once \
++  MAKE_SHARED_LOC = $(LINK) ${LDFLAGS} -shared -Wl,--warn-once \
+ 							-Wl,--out-implib \
+         						-Wl,$(XSL_LIB_DIR)/$(LOC_LIB)
+ 
+@@ -592,7 +592,7 @@ ifeq ($(PLATFORM), MACOSX)
+   ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
+   SHLIBSUFFIX=.dylib
+   CC1 = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+-  CC4 = ${CC} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
++  CC4 = ${CC} $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+   LIB = $(LIB_NAME).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
+   SO_NAME = $(LIB_NAME).$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+   MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x38000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LINK_NAME} ${LDFLAGS}
+diff --git a/Tests/CMakeLists.txt b/Tests/CMakeLists.txt
+new file mode 100644
+index 00000000..ea2ce5f9
+--- /dev/null
++++ b/Tests/CMakeLists.txt
+@@ -0,0 +1,59 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++add_executable(Performance
++  Performance/Logger.cpp
++  Performance/Logger.hpp
++  Performance/Parameters.cpp
++  Performance/Parameters.hpp
++  Performance/perf.cpp
++  Performance/TestHarness.cpp
++  Performance/TestHarness.hpp
++  Performance/Timer.hpp
++  Performance/Utils.cpp
++  Performance/Utils.hpp
++  Performance/XalanCProcessor.cpp
++  Performance/XalanCProcessor.hpp
++  )
++target_link_libraries(Performance XalanC::XalanC)
++set_target_properties(Performance PROPERTIES FOLDER "Tests")
++
++add_executable(Threads
++  Threads/ThreadTest.cpp)
++target_link_libraries(Threads XalanC::XalanC Threads::Threads)
++set_target_properties(Threads PROPERTIES FOLDER "Tests")
++
++add_executable(Conf
++  Conf/conf.cpp)
++target_link_libraries(Conf XalanC::XalanC)
++set_target_properties(Conf PROPERTIES FOLDER "Tests")
++
++foreach(test Performance Threads Conf)
++  add_test(
++    NAME ${test}
++    COMMAND $<TARGET_FILE:${test}>
++    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${test}")
++  if(msgloader STREQUAL "nls")
++    set_tests_properties(${test} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
++  endif()
++  if(WIN32)
++    string(REPLACE ";" "\\;" OLDPATH "$ENV{PATH}")
++    set_tests_properties(${test} PROPERTIES ENVIRONMENT "PATH=$<SHELL_PATH:$<TARGET_FILE_DIR:xalan-c>>\;$<SHELL_PATH:$<TARGET_FILE_DIR:xalanMsg>>\;${OLDPATH}")
++  endif()
++endforeach()
+diff --git a/Tests/Performance/TestHarness.hpp b/Tests/Performance/TestHarness.hpp
+index 56c27a80..41e5a0ce 100644
+--- a/Tests/Performance/TestHarness.hpp
++++ b/Tests/Performance/TestHarness.hpp
+@@ -28,6 +28,7 @@
+ #include <fstream.h>
+ #else
+ #include <fstream>
++#include <sstream>
+ #endif
+ 
+ 
+diff --git a/cmake/FindICU.cmake b/cmake/FindICU.cmake
+new file mode 100644
+index 00000000..0e61b3dc
+--- /dev/null
++++ b/cmake/FindICU.cmake
+@@ -0,0 +1,394 @@
++# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
++# file Copyright.txt or https://cmake.org/licensing for details.
++
++#.rst:
++# FindICU
++# -------
++#
++# Find the International Components for Unicode (ICU) libraries and
++# programs.
++#
++# This module supports multiple components.
++# Components can include any of: ``data``, ``i18n``, ``io``, ``le``,
++# ``lx``, ``test``, ``tu`` and ``uc``.
++#
++# Note that on Windows ``data`` is named ``dt`` and ``i18n`` is named
++# ``in``; any of the names may be used, and the appropriate
++# platform-specific library name will be automatically selected.
++#
++# This module reports information about the ICU installation in
++# several variables.  General variables::
++#
++#   ICU_VERSION - ICU release version
++#   ICU_FOUND - true if the main programs and libraries were found
++#   ICU_LIBRARIES - component libraries to be linked
++#   ICU_INCLUDE_DIRS - the directories containing the ICU headers
++#
++# Imported targets::
++#
++#   ICU::<C>
++#
++# Where ``<C>`` is the name of an ICU component, for example
++# ``ICU::i18n``.
++#
++# ICU programs are reported in::
++#
++#   ICU_GENCNVAL_EXECUTABLE - path to gencnval executable
++#   ICU_ICUINFO_EXECUTABLE - path to icuinfo executable
++#   ICU_GENBRK_EXECUTABLE - path to genbrk executable
++#   ICU_ICU-CONFIG_EXECUTABLE - path to icu-config executable
++#   ICU_GENRB_EXECUTABLE - path to genrb executable
++#   ICU_GENDICT_EXECUTABLE - path to gendict executable
++#   ICU_DERB_EXECUTABLE - path to derb executable
++#   ICU_PKGDATA_EXECUTABLE - path to pkgdata executable
++#   ICU_UCONV_EXECUTABLE - path to uconv executable
++#   ICU_GENCFU_EXECUTABLE - path to gencfu executable
++#   ICU_MAKECONV_EXECUTABLE - path to makeconv executable
++#   ICU_GENNORM2_EXECUTABLE - path to gennorm2 executable
++#   ICU_GENCCODE_EXECUTABLE - path to genccode executable
++#   ICU_GENSPREP_EXECUTABLE - path to gensprep executable
++#   ICU_ICUPKG_EXECUTABLE - path to icupkg executable
++#   ICU_GENCMN_EXECUTABLE - path to gencmn executable
++#
++# ICU component libraries are reported in::
++#
++#   ICU_<C>_FOUND - ON if component was found
++#   ICU_<C>_LIBRARIES - libraries for component
++#
++# ICU datafiles are reported in::
++#
++#   ICU_MAKEFILE_INC - Makefile.inc
++#   ICU_PKGDATA_INC - pkgdata.inc
++#
++# Note that ``<C>`` is the uppercased name of the component.
++#
++# This module reads hints about search results from::
++#
++#   ICU_ROOT - the root of the ICU installation
++#
++# The environment variable ``ICU_ROOT`` may also be used; the
++# ICU_ROOT variable takes precedence.
++#
++# The following cache variables may also be set::
++#
++#   ICU_<P>_EXECUTABLE - the path to executable <P>
++#   ICU_INCLUDE_DIR - the directory containing the ICU headers
++#   ICU_<C>_LIBRARY - the library for component <C>
++#
++# .. note::
++#
++#   In most cases none of the above variables will require setting,
++#   unless multiple ICU versions are available and a specific version
++#   is required.
++#
++# Other variables one may set to control this module are::
++#
++#   ICU_DEBUG - Set to ON to enable debug output from FindICU.
++
++# Written by Roger Leigh <rleigh@codelibre.net>
++
++set(icu_programs
++  gencnval
++  icuinfo
++  genbrk
++  icu-config
++  genrb
++  gendict
++  derb
++  pkgdata
++  uconv
++  gencfu
++  makeconv
++  gennorm2
++  genccode
++  gensprep
++  icupkg
++  gencmn)
++
++set(icu_data
++  Makefile.inc
++  pkgdata.inc)
++
++# The ICU checks are contained in a function due to the large number
++# of temporary variables needed.
++function(_ICU_FIND)
++  # Set up search paths, taking compiler into account.  Search ICU_ROOT,
++  # with ICU_ROOT in the environment as a fallback if unset.
++  if(ICU_ROOT)
++    list(APPEND icu_roots "${ICU_ROOT}")
++  else()
++    if(NOT "$ENV{ICU_ROOT}" STREQUAL "")
++      file(TO_CMAKE_PATH "$ENV{ICU_ROOT}" NATIVE_PATH)
++      list(APPEND icu_roots "${NATIVE_PATH}")
++      set(ICU_ROOT "${NATIVE_PATH}"
++          CACHE PATH "Location of the ICU installation" FORCE)
++    endif()
++  endif()
++
++  # Find include directory
++  list(APPEND icu_include_suffixes "include")
++  find_path(ICU_INCLUDE_DIR
++            NAMES "unicode/utypes.h"
++            HINTS ${icu_roots}
++            PATH_SUFFIXES ${icu_include_suffixes}
++            DOC "ICU include directory")
++  set(ICU_INCLUDE_DIR "${ICU_INCLUDE_DIR}" PARENT_SCOPE)
++
++  # Get version
++  if(ICU_INCLUDE_DIR AND EXISTS "${ICU_INCLUDE_DIR}/unicode/uvernum.h")
++    file(STRINGS "${ICU_INCLUDE_DIR}/unicode/uvernum.h" icu_header_str
++      REGEX "^#define[\t ]+U_ICU_VERSION[\t ]+\".*\".*")
++
++    string(REGEX REPLACE "^#define[\t ]+U_ICU_VERSION[\t ]+\"([^ \\n]*)\".*"
++      "\\1" icu_version_string "${icu_header_str}")
++    set(ICU_VERSION "${icu_version_string}")
++    set(ICU_VERSION "${icu_version_string}" PARENT_SCOPE)
++    unset(icu_header_str)
++    unset(icu_version_string)
++  endif()
++
++  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
++    # 64-bit binary directory
++    set(_bin64 "bin64")
++    # 64-bit library directory
++    set(_lib64 "lib64")
++  endif()
++
++
++  # Find all ICU programs
++  list(APPEND icu_binary_suffixes "${_bin64}" "bin")
++  foreach(program ${icu_programs})
++    string(TOUPPER "${program}" program_upcase)
++    set(cache_var "ICU_${program_upcase}_EXECUTABLE")
++    set(program_var "ICU_${program_upcase}_EXECUTABLE")
++    find_program("${cache_var}" "${program}"
++      HINTS ${icu_roots}
++      PATH_SUFFIXES ${icu_binary_suffixes}
++      DOC "ICU ${program} executable")
++    mark_as_advanced(cache_var)
++    set("${program_var}" "${${cache_var}}" PARENT_SCOPE)
++  endforeach()
++
++  # Find all ICU libraries
++  list(APPEND icu_library_suffixes "${_lib64}" "lib")
++  set(ICU_REQUIRED_LIBS_FOUND ON)
++  foreach(component ${ICU_FIND_COMPONENTS})
++    string(TOUPPER "${component}" component_upcase)
++    set(component_cache "ICU_${component_upcase}_LIBRARY")
++    set(component_cache_release "${component_cache}_RELEASE")
++    set(component_cache_debug "${component_cache}_DEBUG")
++    set(component_found "${component_upcase}_FOUND")
++    set(component_libnames "icu${component}")
++    set(component_debug_libnames "icu${component}d")
++
++    # Special case deliberate library naming mismatches between Unix
++    # and Windows builds
++    unset(component_libnames)
++    unset(component_debug_libnames)
++    list(APPEND component_libnames "icu${component}")
++    list(APPEND component_debug_libnames "icu${component}d")
++    if(component STREQUAL "data")
++      list(APPEND component_libnames "icudt")
++      # Note there is no debug variant at present
++      list(APPEND component_debug_libnames "icudtd")
++    endif()
++    if(component STREQUAL "dt")
++      list(APPEND component_libnames "icudata")
++      # Note there is no debug variant at present
++      list(APPEND component_debug_libnames "icudatad")
++    endif()
++    if(component STREQUAL "i18n")
++      list(APPEND component_libnames "icuin")
++      list(APPEND component_debug_libnames "icuind")
++    endif()
++    if(component STREQUAL "in")
++      list(APPEND component_libnames "icui18n")
++      list(APPEND component_debug_libnames "icui18nd")
++    endif()
++
++    find_library("${component_cache_release}" ${component_libnames}
++      HINTS ${icu_roots}
++      PATH_SUFFIXES ${icu_library_suffixes}
++      DOC "ICU ${component} library (release)")
++    find_library("${component_cache_debug}" ${component_debug_libnames}
++      HINTS ${icu_roots}
++      PATH_SUFFIXES ${icu_library_suffixes}
++      DOC "ICU ${component} library (debug)")
++    include(SelectLibraryConfigurations)
++    select_library_configurations(ICU_${component_upcase})
++    mark_as_advanced("${component_cache_release}" "${component_cache_debug}")
++    if(${component_cache})
++      set("${component_found}" ON)
++      list(APPEND ICU_LIBRARY "${${component_cache}}")
++    endif()
++    mark_as_advanced("${component_found}")
++    set("${component_cache}" "${${component_cache}}" PARENT_SCOPE)
++    set("${component_found}" "${${component_found}}" PARENT_SCOPE)
++    if(${component_found})
++      if (ICU_FIND_REQUIRED_${component})
++        list(APPEND ICU_LIBS_FOUND "${component} (required)")
++      else()
++        list(APPEND ICU_LIBS_FOUND "${component} (optional)")
++      endif()
++    else()
++      if (ICU_FIND_REQUIRED_${component})
++        set(ICU_REQUIRED_LIBS_FOUND OFF)
++        list(APPEND ICU_LIBS_NOTFOUND "${component} (required)")
++      else()
++        list(APPEND ICU_LIBS_NOTFOUND "${component} (optional)")
++      endif()
++    endif()
++  endforeach()
++  set(_ICU_REQUIRED_LIBS_FOUND "${ICU_REQUIRED_LIBS_FOUND}" PARENT_SCOPE)
++  set(ICU_LIBRARY "${ICU_LIBRARY}" PARENT_SCOPE)
++
++  # Find all ICU data files
++  if(CMAKE_LIBRARY_ARCHITECTURE)
++    list(APPEND icu_data_suffixes
++      "${_lib64}/${CMAKE_LIBRARY_ARCHITECTURE}/icu/${ICU_VERSION}"
++      "lib/${CMAKE_LIBRARY_ARCHITECTURE}/icu/${ICU_VERSION}"
++      "${_lib64}/${CMAKE_LIBRARY_ARCHITECTURE}/icu"
++      "lib/${CMAKE_LIBRARY_ARCHITECTURE}/icu")
++  endif()
++  list(APPEND icu_data_suffixes
++    "${_lib64}/icu/${ICU_VERSION}"
++    "lib/icu/${ICU_VERSION}"
++    "${_lib64}/icu"
++    "lib/icu")
++  foreach(data ${icu_data})
++    string(TOUPPER "${data}" data_upcase)
++    string(REPLACE "." "_" data_upcase "${data_upcase}")
++    set(cache_var "ICU_${data_upcase}")
++    set(data_var "ICU_${data_upcase}")
++    find_file("${cache_var}" "${data}"
++      HINTS ${icu_roots}
++      PATH_SUFFIXES ${icu_data_suffixes}
++      DOC "ICU ${data} data file")
++    mark_as_advanced(cache_var)
++    set("${data_var}" "${${cache_var}}" PARENT_SCOPE)
++  endforeach()
++
++  if(NOT ICU_FIND_QUIETLY)
++    if(ICU_LIBS_FOUND)
++      message(STATUS "Found the following ICU libraries:")
++      foreach(found ${ICU_LIBS_FOUND})
++        message(STATUS "  ${found}")
++      endforeach()
++    endif()
++    if(ICU_LIBS_NOTFOUND)
++      message(STATUS "The following ICU libraries were not found:")
++      foreach(notfound ${ICU_LIBS_NOTFOUND})
++        message(STATUS "  ${notfound}")
++      endforeach()
++    endif()
++  endif()
++
++  if(ICU_DEBUG)
++    message(STATUS "--------FindICU.cmake search debug--------")
++    message(STATUS "ICU binary path search order: ${icu_roots}")
++    message(STATUS "ICU include path search order: ${icu_roots}")
++    message(STATUS "ICU library path search order: ${icu_roots}")
++    message(STATUS "----------------")
++  endif()
++endfunction()
++
++_ICU_FIND()
++
++include(FindPackageHandleStandardArgs)
++FIND_PACKAGE_HANDLE_STANDARD_ARGS(ICU
++                                  FOUND_VAR ICU_FOUND
++                                  REQUIRED_VARS ICU_INCLUDE_DIR
++                                                ICU_LIBRARY
++                                                _ICU_REQUIRED_LIBS_FOUND
++                                  VERSION_VAR ICU_VERSION
++                                  FAIL_MESSAGE "Failed to find all ICU components")
++
++unset(_ICU_REQUIRED_LIBS_FOUND)
++
++if(ICU_FOUND)
++  set(ICU_INCLUDE_DIRS "${ICU_INCLUDE_DIR}")
++  set(ICU_LIBRARIES "${ICU_LIBRARY}")
++  foreach(_ICU_component ${ICU_FIND_COMPONENTS})
++    string(TOUPPER "${_ICU_component}" _ICU_component_upcase)
++    set(_ICU_component_cache "ICU_${_ICU_component_upcase}_LIBRARY")
++    set(_ICU_component_cache_release "ICU_${_ICU_component_upcase}_LIBRARY_RELEASE")
++    set(_ICU_component_cache_debug "ICU_${_ICU_component_upcase}_LIBRARY_DEBUG")
++    set(_ICU_component_lib "ICU_${_ICU_component_upcase}_LIBRARIES")
++    set(_ICU_component_found "${_ICU_component_upcase}_FOUND")
++    set(_ICU_imported_target "ICU::${_ICU_component}")
++    if(${_ICU_component_found})
++      set("${_ICU_component_lib}" "${${_ICU_component_cache}}")
++      if(NOT TARGET ${_ICU_imported_target})
++        add_library(${_ICU_imported_target} UNKNOWN IMPORTED)
++        if(ICU_INCLUDE_DIR)
++          set_target_properties(${_ICU_imported_target} PROPERTIES
++            INTERFACE_INCLUDE_DIRECTORIES "${ICU_INCLUDE_DIR}")
++        endif()
++        if(EXISTS "${${_ICU_component_cache}}")
++          set_target_properties(${_ICU_imported_target} PROPERTIES
++            IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
++            IMPORTED_LOCATION "${${_ICU_component_cache}}")
++        endif()
++        if(EXISTS "${${_ICU_component_cache_release}}")
++          set_property(TARGET ${_ICU_imported_target} APPEND PROPERTY
++            IMPORTED_CONFIGURATIONS RELEASE)
++          set_target_properties(${_ICU_imported_target} PROPERTIES
++            IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
++            IMPORTED_LOCATION_RELEASE "${${_ICU_component_cache_release}}")
++        endif()
++        if(EXISTS "${${_ICU_component_cache_debug}}")
++          set_property(TARGET ${_ICU_imported_target} APPEND PROPERTY
++            IMPORTED_CONFIGURATIONS DEBUG)
++          set_target_properties(${_ICU_imported_target} PROPERTIES
++            IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
++            IMPORTED_LOCATION_DEBUG "${${_ICU_component_cache_debug}}")
++        endif()
++      endif()
++    endif()
++    unset(_ICU_component_upcase)
++    unset(_ICU_component_cache)
++    unset(_ICU_component_lib)
++    unset(_ICU_component_found)
++    unset(_ICU_imported_target)
++  endforeach()
++endif()
++
++if(ICU_DEBUG)
++  message(STATUS "--------FindICU.cmake results debug--------")
++  message(STATUS "ICU found: ${ICU_FOUND}")
++  message(STATUS "ICU_VERSION number: ${ICU_VERSION}")
++  message(STATUS "ICU_ROOT directory: ${ICU_ROOT}")
++  message(STATUS "ICU_INCLUDE_DIR directory: ${ICU_INCLUDE_DIR}")
++  message(STATUS "ICU_LIBRARIES: ${ICU_LIBRARIES}")
++
++  foreach(program IN LISTS icu_programs)
++    string(TOUPPER "${program}" program_upcase)
++    set(program_lib "ICU_${program_upcase}_EXECUTABLE")
++    message(STATUS "${program} program: ${${program_lib}}")
++    unset(program_upcase)
++    unset(program_lib)
++  endforeach()
++
++  foreach(data IN LISTS icu_data)
++    string(TOUPPER "${data}" data_upcase)
++    string(REPLACE "." "_" data_upcase "${data_upcase}")
++    set(data_lib "ICU_${data_upcase}")
++    message(STATUS "${data} data: ${${data_lib}}")
++    unset(data_upcase)
++    unset(data_lib)
++  endforeach()
++
++  foreach(component IN LISTS ICU_FIND_COMPONENTS)
++    string(TOUPPER "${component}" component_upcase)
++    set(component_lib "ICU_${component_upcase}_LIBRARIES")
++    set(component_found "${component_upcase}_FOUND")
++    message(STATUS "${component} library found: ${${component_found}}")
++    message(STATUS "${component} library: ${${component_lib}}")
++    unset(component_upcase)
++    unset(component_lib)
++    unset(component_found)
++  endforeach()
++  message(STATUS "----------------")
++endif()
++
++unset(icu_programs)
+diff --git a/cmake/RunTest.cmake b/cmake/RunTest.cmake
+new file mode 100644
+index 00000000..2c684710
+--- /dev/null
++++ b/cmake/RunTest.cmake
+@@ -0,0 +1,88 @@
++# CMake tests for libtiff (common functionality)
++#
++# Copyright © 2015 Open Microscopy Environment / University of Dundee
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Permission to use, copy, modify, distribute, and sell this software and
++# its documentation for any purpose is hereby granted without fee, provided
++# that (i) the above copyright notices and this permission notice appear in
++# all copies of the software and related documentation, and (ii) the names of
++# Sam Leffler and Silicon Graphics may not be used in any advertising or
++# publicity relating to the software without the specific, prior written
++# permission of Sam Leffler and Silicon Graphics.
++#
++# THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
++# EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
++# WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
++#
++# IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
++# ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
++# OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
++# WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
++# LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
++# OF THIS SOFTWARE.
++
++# Run a test command, and print out any observed output discrepancies
++macro(test_command command)
++  file(MAKE_DIRECTORY "${OBSERVED_DIR}")
++
++  if(STDIN)
++    set(input INPUT_FILE "${STDIN}")
++  endif()
++
++  string(REGEX REPLACE ";" " " display_args "${ARGN}")
++  message(STATUS "Running ${command} ${display_args}")
++
++  set(ENV{XERCESC_NLS_HOME} "${NLS_HOME}")
++
++  execute_process(
++    COMMAND "${command}" ${ARGN}
++    RESULT_VARIABLE TEST_STATUS
++    ${input}
++    OUTPUT_FILE "${OBSERVED_DIR}/${NAME}.log"
++    ERROR_FILE "${OBSERVED_DIR}/${NAME}.log"
++    WORKING_DIRECTORY "${WORKDIR}")
++  if(TEST_STATUS AND NOT EXPECT_FAIL)
++    message(FATAL_ERROR "Returned failed status ${TEST_STATUS}")
++  endif()
++  if(NOT TEST_STATUS AND EXPECT_FAIL)
++    message(FATAL_ERROR "Unexpected success")
++  endif()
++
++  # Replace timings in output, and convert newlines for safe comparison
++  file(READ "${OBSERVED_DIR}/${NAME}.log" output)
++  string(REGEX REPLACE " *[0-9]+ *ms *" "{timing removed}" output "${output}")
++  file(WRITE "${OBSERVED_DIR}/${NAME}-mod.log" ${output})
++  configure_file("${OBSERVED_DIR}/${NAME}-mod.log" "${OBSERVED_DIR}/${NAME}.log"
++    @ONLY NEWLINE_STYLE UNIX)
++  configure_file("${EXPECTED_DIR}/${NAME}.log" "${OBSERVED_DIR}/${NAME}-exp.log"
++    @ONLY NEWLINE_STYLE UNIX)
++  file(REMOVE "${OBSERVED_DIR}/${NAME}-mod.log")
++
++  file(READ "${OBSERVED_DIR}/${NAME}.log" observed)
++  file(READ "${OBSERVED_DIR}/${NAME}-exp.log" expected)
++
++  # If the observed and expected logs differ, output a diff and fail
++  if(NOT observed STREQUAL expected)
++    if(DIFF)
++      execute_process(COMMAND ${DIFF} -u "${OBSERVED_DIR}/${NAME}-exp.log" "${OBSERVED_DIR}/${NAME}.log")
++    endif()
++    file(REMOVE "${OBSERVED_DIR}/${NAME}-exp.log")
++    message(FATAL_ERROR "Observed output does not match expected output")
++  endif()
++  file(REMOVE "${OBSERVED_DIR}/${NAME}-exp.log")
++endmacro()
++
++# Add the directory containing libxerces-c to the PATH (Windows only)
++if(WIN32)
++  get_filename_component(LIBXERCES_C_DIR "${LIBXERCES_C}" DIRECTORY)
++  file(TO_NATIVE_PATH "${LIBXERCES_C_DIR}" LIBXERCES_C_DIR)
++  set(ENV{PATH} "${LIBXERCES_C_DIR};$ENV{PATH}")
++endif()
++if(CYGWIN)
++  get_filename_component(LIBXERCES_C_DIR "${LIBXERCES_C}" DIRECTORY)
++  file(TO_NATIVE_PATH "${LIBXERCES_C_DIR}" LIBXERCES_C_DIR)
++  set(ENV{PATH} "${LIBXERCES_C_DIR}:$ENV{PATH}")
++endif()
++
++test_command("${PROGRAM}" ${ARGS})
+diff --git a/cmake/XalanDLL.cmake b/cmake/XalanDLL.cmake
+new file mode 100644
+index 00000000..1383869e
+--- /dev/null
++++ b/cmake/XalanDLL.cmake
+@@ -0,0 +1,58 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Option for selection of shared or static libraries, exported as
++# cache variable
++
++set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
++
++# Add a D postfix to Debug libraries on Windows
++
++if(MSVC)
++  set(CMAKE_DEBUG_POSTFIX "D")
++endif()
++
++# To prevent a lot of spam warnings about standard POSIX functions and
++# unsafe use of the standard library.
++
++if(MSVC)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS=1 -D_SCL_SECURE_NO_WARNINGS=1)
++endif()
++
++# Versioning information
++
++file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/../version.incl" xalan_verinfo
++  REGEX "^[^#].*=.*")
++
++foreach(item IN LISTS xalan_verinfo)
++  string(REGEX REPLACE "^([^= ]+) *= *(.*)"
++    "\\1" meta_key "${item}")
++  string(REGEX REPLACE "^([^= ]+) *= *(.*)"
++    "\\2" meta_value "${item}")
++  set(XALAN_META_${meta_key} "${meta_value}")
++endforeach()
++
++string(REGEX REPLACE "^([0-9]+)_(.*)"
++  "\\1"
++  XALAN_META_MS_LIB_MAJOR_VER
++  "${XALAN_META_MS_VER}")
++string(REGEX REPLACE "^([0-9]+)_(.*)"
++  "\\2"
++  XALAN_META_MS_LIB_MINOR_VER
++  "${XALAN_META_MS_VER}")
+diff --git a/cmake/XalanDLL.cmake~ b/cmake/XalanDLL.cmake~
+new file mode 100644
+index 00000000..07eccf38
+--- /dev/null
++++ b/cmake/XalanDLL.cmake~
+@@ -0,0 +1,63 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Option for selection of shared or static libraries, exported as
++# cache variable
++
++set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
++
++# Add a d postfix to Debug libraries on Windows
++
++if(MSVC)
++  set(CMAKE_DEBUG_POSTFIX "d")
++endif()
++
++# DLL export and import macros
++
++set(XERCES_PLATFORM_EXPORT)
++set(XERCES_PLATFORM_IMPORT)
++set(XERCES_DLL_EXPORT)
++set(XERCES_STATIC_LIBRARY)
++if(NOT BUILD_SHARED_LIBS)
++  set(XERCES_STATIC_LIBRARY 1)
++else()
++  if(WIN32)
++    set(XERCES_PLATFORM_EXPORT "__declspec(dllexport)")
++    set(XERCES_PLATFORM_IMPORT "__declspec(dllimport)")
++    set(XERCES_DLL_EXPORT 1)
++  endif()
++endif()
++
++# Versioning information
++
++file(STRINGS "${PROJECT_SOURCE_DIR}/version.incl" icu_verinfo
++  REGEX "^[^#].*=.*")
++
++foreach(item IN LISTS icu_verinfo)
++  string(REGEX REPLACE "^([^=]+)=(.*)"
++    "\\1" lib_key "${item}")
++  string(REGEX REPLACE "^([^=]+)=(.*)"
++    "\\2" lib_value "${item}")
++  set(LIB_${lib_key} "${lib_value}")
++endforeach()
++
++string(REGEX REPLACE "^([0-9]+)_.*"
++  "\\1"
++  LIB_INTERFACE_VER_U_MAJOR
++  "${LIB_INTERFACE_VER_U}")
+diff --git a/cmake/XalanICU.cmake b/cmake/XalanICU.cmake
+new file mode 100644
+index 00000000..40e884b5
+--- /dev/null
++++ b/cmake/XalanICU.cmake
+@@ -0,0 +1,22 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Determine if ICU is available
++
++find_package(ICU COMPONENTS uc data i18n)
+diff --git a/cmake/XalanLFS.cmake b/cmake/XalanLFS.cmake
+new file mode 100644
+index 00000000..8835d934
+--- /dev/null
++++ b/cmake/XalanLFS.cmake
+@@ -0,0 +1,27 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Large file support
++
++if (UNIX)
++  # This might not catch every possibility catered for by
++  # AC_SYS_LARGEFILE.
++  add_definitions(-D_FILE_OFFSET_BITS=64)
++  set(FILE_OFFSET_BITS 64)
++endif()
+diff --git a/cmake/XalanMsgLoaderSelection.cmake b/cmake/XalanMsgLoaderSelection.cmake
+new file mode 100644
+index 00000000..dea230fd
+--- /dev/null
++++ b/cmake/XalanMsgLoaderSelection.cmake
+@@ -0,0 +1,94 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# message loader selection
++
++# message loaders in order of preference
++list(APPEND msgloaders inmemory)
++
++include(CheckIncludeFileCXX)
++include(CheckFunctionExists)
++check_include_file_cxx(nl_types.h HAVE_NLTYPES_H)
++check_function_exists(catopen HAVE_CATOPEN)
++check_function_exists(catclose HAVE_CATCLOSE)
++check_function_exists(catgets HAVE_CATGETS)
++if(HAVE_NLTYPES_H AND HAVE_CATOPEN AND HAVE_CATCLOSE AND HAVE_CATGETS)
++  set(nls_available 1)
++endif()
++if(nls_available)
++  list(APPEND msgloaders nls-broken)
++endif()
++
++# Note ICU support is broken.
++if(ICU_FOUND)
++  list(APPEND msgloaders icu-broken)
++endif()
++
++string(REPLACE ";" "|" msgloader_help "${msgloaders}")
++list(GET msgloaders 0 xerces_msgloader_default)
++set(message-loader "${xerces_msgloader_default}" CACHE STRING "Message loader (${msgloader_help})")
++set(msgloader "${message-loader}")
++
++list(FIND msgloaders "${msgloader}" msgloader_found)
++if(msgloader_found EQUAL -1)
++  message(FATAL_ERROR "${msgloader} message loader unavailable")
++endif()
++
++list(FIND msgloaders ${msgloader} msgloader_valid)
++if(msgloader_valid EQUAL -1)
++  message(FATAL_ERROR "Invalid message loader: \"${msgloader}\"")
++endif()
++
++file(GLOB locale_files
++  RELATIVE "${PROJECT_SOURCE_DIR}/src/xalanc/NLS/"
++  "${PROJECT_SOURCE_DIR}/src/xalanc/NLS/*/*.xlf")
++foreach(locale_file IN LISTS locale_files)
++  get_filename_component(fc "${locale_file}" DIRECTORY)
++  list(APPEND locales "${fc}")
++endforeach()
++
++string(REPLACE ";" "|" locale_help "${locales}")
++set(message-locale "en_US" CACHE STRING "Message loader locale  (${locale_help})")
++set(LOCALE "${message-locale}")
++list(FIND locales "${message-locale}" locale_valid)
++if(locale_valid EQUAL -1)
++  message(FATAL_ERROR "Invalid message locale: \"${message-locale}\"")
++endif()
++
++if(msgloader STREQUAL "inmemory")
++  set(MSGLOADER_DEF XALAN_INMEM_MSG_LOADER)
++elseif(msgloader STREQUAL "icu-broken")
++  set(msgloader "icu")
++  set(MSGLOADER_DEF XALAN_ICU_MSG_LOADER)
++elseif(msgloader STREQUAL "nls-broken")
++  set(msgloader "nls")
++  set(MSGLOADER_DEF XALAN_NLS_MSG_LOADER)
++
++  check_cxx_source_compiles("
++#include <stdlib.h>
++
++#ifndef __GNU_LIBRARY__
++#error Not glibc
++#endif
++
++int main() {
++  return 0;
++}"
++  XALAN_USING_GLIBC)
++endif()
+diff --git a/cmake/XalanOperatorDelete.cmake b/cmake/XalanOperatorDelete.cmake
+new file mode 100644
+index 00000000..0ab9d1f4
+--- /dev/null
++++ b/cmake/XalanOperatorDelete.cmake
+@@ -0,0 +1,43 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Check whether the compiler chokes on a placement operator delete
++
++include(CheckCXXSourceCompiles)
++
++check_cxx_source_compiles("
++#include <stdlib.h>
++
++class XMemory {
++public:
++  void* operator new(size_t s) { return 0; }
++  void* operator new(size_t s, void* ptr) { return 0; }
++  void operator delete(void* p) {}
++  void operator delete(void* p, void* ptr) {}
++};
++
++int main() {
++  return 0;
++}"
++  CXX_matching-delete-operator)
++
++set(XERCES_NO_MATCHING_DELETE_OPERATOR 0)
++if(NOT CXX_matching-delete-operator)
++  set(XERCES_NO_MATCHING_DELETE_OPERATOR 1)
++endif()
+diff --git a/cmake/XalanPathMax.cmake b/cmake/XalanPathMax.cmake
+new file mode 100644
+index 00000000..49c44a32
+--- /dev/null
++++ b/cmake/XalanPathMax.cmake
+@@ -0,0 +1,30 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# PATH_MAX
++
++include(CheckCXXSourceCompiles)
++
++check_cxx_source_compiles("
++#include <limits.h>
++int main(void) {
++  char dummy[PATH_MAX];
++  return 0;
++}"
++  HAVE_PATH_MAX)
+diff --git a/cmake/XalanTest.cmake b/cmake/XalanTest.cmake
+new file mode 100644
+index 00000000..2cb488c6
+--- /dev/null
++++ b/cmake/XalanTest.cmake
+@@ -0,0 +1,80 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# test macros
++
++find_program(DIFF_EXECUTABLE diff)
++
++set(xerces_test_dir "${CMAKE_CURRENT_LIST_DIR}")
++
++macro(add_generic_xerces_test name)
++  set(options EXPECT_FAIL)
++  set(oneValueArgs WORKING_DIRECTORY OBSERVED_DIR EXPECTED_DIR STDIN)
++  set(multiValueArgs COMMAND)
++  cmake_parse_arguments(AXT "${options}" "${oneValueArgs}"
++    "${multiValueArgs}" ${ARGN})
++
++  list(GET AXT_COMMAND 0 command)
++  list(REMOVE_AT AXT_COMMAND 0)
++
++  if(NOT AXT_WORKING_DIRECTORY)
++    set(AXT_WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/samples/data")
++  endif()
++
++  unset(xerces_test_extra_args)
++  if(WIN32)
++    list(APPEND xerces_test_extra_args "-DWIN32=${WIN32}")
++  endif()
++  if(CYGWIN)
++    list(APPEND xerces_test_extra_args "-DCYGWIN=${CYGWIN}")
++  endif()
++
++  add_test(NAME "${name}"
++    COMMAND "${CMAKE_COMMAND}"
++    "-DNAME=${name}"
++    "-DPROGRAM=$<TARGET_FILE:${command}>"
++    "-DARGS=${AXT_COMMAND}"
++    "-DLIBXERCES_C=$<TARGET_FILE:xerces-c>"
++    "-DWORKDIR=${AXT_WORKING_DIRECTORY}"
++    "-DSTDIN=${AXT_STDIN}"
++    "-DEXPECT_FAIL=${AXT_EXPECT_FAIL}"
++    "-DOBSERVED_DIR=${CMAKE_CURRENT_BINARY_DIR}/observed"
++    "-DEXPECTED_DIR=${CMAKE_CURRENT_SOURCE_DIR}/expected"
++    "-DDIFF=${DIFF_EXECUTABLE}"
++    "-DNLS_HOME=${PROJECT_BINARY_DIR}/src"
++    ${xerces_test_extra_args}
++    -P "${xerces_test_dir}/RunTest.cmake"
++    )
++endmacro()
++
++macro(add_xerces_test name)
++  add_generic_xerces_test(
++    ${name}
++    OBSERVED_DIR "${PROJECT_BINARY_DIR}/tests/observed"
++    EXPECTED_DIR "${PROJECT_SOURCE_DIR}/tests/expected"
++    ${ARGN})
++endmacro()
++
++macro(add_xerces_sample_test name)
++  add_generic_xerces_test(
++    ${name}
++    OBSERVED_DIR "${PROJECT_BINARY_DIR}/samples/observed"
++    EXPECTED_DIR "${PROJECT_SOURCE_DIR}/samples/expected"
++    ${ARGN})
++endmacro()
+diff --git a/cmake/XalanTranscoderSelection.cmake b/cmake/XalanTranscoderSelection.cmake
+new file mode 100644
+index 00000000..7f5bf18e
+--- /dev/null
++++ b/cmake/XalanTranscoderSelection.cmake
+@@ -0,0 +1,39 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# transcoder selection
++
++# transcoders in order of preference
++
++# ICU
++if(ICU_FOUND)
++  list(APPEND transcoders icu)
++endif()
++
++# Default
++list(APPEND transcoders default)
++
++string(REPLACE ";" "|" transcoder_help "${transcoders}")
++list(GET transcoders 0 xalan_transcoder_default)
++set(transcoder "${xalan_transcoder_default}" CACHE STRING "Transcoder (${transcoder_help})")
++
++list(FIND transcoders "${transcoder}" transcoder_found)
++if(transcoder_found EQUAL -1)
++  message(FATAL_ERROR "${transcoder} transcoder unavailable")
++endif()
+diff --git a/cmake/XalanWarnings.cmake b/cmake/XalanWarnings.cmake
+new file mode 100644
+index 00000000..f91be0fa
+--- /dev/null
++++ b/cmake/XalanWarnings.cmake
+@@ -0,0 +1,89 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# compiler warnings
++
++# These are annoyingly verbose, produce false positives or don't work
++# nicely with all supported compiler versions, so are disabled unless
++# explicitly enabled.
++option(extra-warnings "Enable extra compiler warnings" OFF)
++
++# This will cause the compiler to fail when an error occurs.
++option(fatal-warnings "Compiler warnings are errors" OFF)
++
++# Check if the compiler supports each of the following additional
++# flags, and enable them if supported.  This greatly improves the
++# quality of the build by checking for a number of common problems,
++# some of which are quite serious.
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
++   CMAKE_CXX_COMPILER_ID MATCHES "Clang")
++  set(test_flags
++      -Wall
++      -Wcast-align
++      -Wcast-qual
++      -Wctor-dtor-privacy
++      -Wextra
++      -Wformat=2
++      -Wimplicit-atomic-properties
++      -Wmissing-declarations
++      -Wno-long-long
++      -Woverlength-strings
++      -Woverloaded-virtual
++      -Wredundant-decls
++      -Wreorder
++      -Wswitch-default
++      -Wunused-variable
++      -Wwrite-strings
++      -Wno-variadic-macros
++      -fstrict-aliasing)
++  if(extra-warnings)
++    list(APPEND test_flags
++        -Wfloat-equal
++        -Wmissing-prototypes
++        -Wunreachable-code)
++  endif()
++  if(fatal-warnings)
++    list(APPEND test_flags
++         -Werror)
++  endif()
++elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++  set(test_flags)
++  if(extra-warnings)
++    list(APPEND test_flags
++         /W4)
++  else()
++    list(APPEND test_flags
++         /W3)
++  endif()
++  if (fatal-warnings)
++    list(APPEND test_flags
++         /WX)
++  endif()
++endif()
++
++include(CheckCXXCompilerFlag)
++
++foreach(flag ${test_flags})
++  string(REGEX REPLACE "[^A-Za-z0-9]" "_" flag_var "${flag}")
++  set(test_c_flag "CXX_FLAG${flag_var}")
++  CHECK_CXX_COMPILER_FLAG(${flag} "${test_c_flag}")
++  if (${test_c_flag})
++     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
++  endif (${test_c_flag})
++endforeach(flag ${test_flags})
+diff --git a/cmake/XalanXerces.cmake b/cmake/XalanXerces.cmake
+new file mode 100644
+index 00000000..25e569d0
+--- /dev/null
++++ b/cmake/XalanXerces.cmake
+@@ -0,0 +1,22 @@
++# CMake build for xerces-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Determine if Xerces-C
++
++find_package(XercesC 3.1 REQUIRED)
+diff --git a/samples/CMakeLists.txt b/samples/CMakeLists.txt
+new file mode 100644
+index 00000000..e8f6ffc9
+--- /dev/null
++++ b/samples/CMakeLists.txt
+@@ -0,0 +1,52 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++add_custom_target(samples COMMENT Build sample programs)
++set_target_properties(samples PROPERTIES FOLDER "Samples")
++
++# ApacheModuleXSLT?
++foreach(sample
++    CompileStylesheet
++    DocumentBuilder
++    EntityResolver
++    ExternalFunction
++    ParsedSourceWrappers
++    SerializeNodeSet
++    SimpleTransform
++    SimpleXPathAPI
++    StreamTransform
++    TraceListen
++    TransformToXercesDOM
++    UseStylesheetParam
++    XalanTransform
++    XalanTransformerCallback
++    ThreadSafe)
++  add_executable(${sample} ${sample}/${sample}.cpp)
++  target_link_libraries(${sample} XalanC::XalanC)
++  set_target_properties(${sample} PROPERTIES FOLDER "Samples")
++  add_dependencies(samples ${sample})
++endforeach()
++
++foreach(sample
++    SimpleXPathCAPI)
++  add_executable(${sample} ${sample}/${sample}.c)
++  target_link_libraries(${sample} XalanC::XalanC)
++  set_target_properties(${sample} PROPERTIES FOLDER "Samples")
++  add_dependencies(samples ${sample})
++endforeach()
+diff --git a/scripts/ci-appveyor-setup b/scripts/ci-appveyor-setup
+new file mode 100755
+index 00000000..3c91ae7a
+--- /dev/null
++++ b/scripts/ci-appveyor-setup
+@@ -0,0 +1,65 @@
++#!c:/cygwin64/bin/bash
++
++set -e
++set -x
++
++PATH="/cygdrive/c/cygwin64/bin:$PATH"
++
++download_file()
++(
++    url="$1"
++    file="$2"
++    hash="$3"
++    hash_output="${hash} *$file"
++
++  if [ ! -f "$file" ]; then
++    echo "Downloading $file"
++  else
++    if [ "$(sha512sum "$file")" != "$hash_output" ]; then
++      echo "$file sha512sum mismatch"
++    fi
++  fi
++
++  if [ ! -f "$file" ] || [ "$(sha512sum "$file")" != "$hash_output" ]; then
++    rm -f "$file"
++    curl -L -o "$file" "$url"
++  fi
++  [ "$(sha512sum "$file")" = "$hash_output" ]
++)
++
++icu_source=icu4c-59_1-src.zip
++icu_url="http://download.icu-project.org/files/icu4c/59.1/${icu_source}"
++icu_hash="1d3b39678e7cc4e9794e724982886a4918642231048eb76b9f683aad5a19e0b7c52b3b9c7107cb1a3879464682c4a3a97b58ab012d082bd9e5a80c67adf8ce8b"
++
++xerces_git_uri="git://git.apache.org/xerces-c.git"
++xerces_git_branch="trunk"
++
++ninja_binary="ninja-win.zip"
++ninja_url="https://github.com/ninja-build/ninja/releases/download/v1.7.2/${ninja_binary}"
++ninja_hash="cccab9281b274c564f9ad77a2115be1f19be67d7b2ee14a55d1db1b27f3b68db8e76076e4f804b61eb8e573e26a8ecc9985675a8dcf03fd7a77b7f57234f1393"
++
++
++if [ "$msgloader" = "icu" ] || [ "$transcoder" = icu ]; then
++    (
++        cd "$AV_XALAN_CYG_DOWNLOAD"
++        download_file "$icu_url" "$icu_source" "$icu_hash"
++        cd "$AV_PROJECTS"
++        rm -rf icu
++        7z x "${AV_XALAN_DOWNLOAD}\\$icu_source"
++    )
++fi
++
++(
++    cd "$AV_PROJECTS"
++    git clone -b "$xerces_git_branch" "$xerces_git_uri" "$(cygpath -u "${AV_XERCES_SOURCE}")"
++)
++
++if [ "$generator" = "Ninja" ]; then
++    (
++        cd "$AV_XALAN_CYG_DOWNLOAD"
++        download_file "$ninja_url" "$ninja_binary" "$ninja_hash"
++        cd "$AV_XALAN_CYG_TOOLS"
++        rm -f ninja
++        7z e "${AV_XALAN_DOWNLOAD}\\$ninja_binary"
++    )
++fi
+diff --git a/scripts/ci-travis b/scripts/ci-travis
+new file mode 100755
+index 00000000..bdad6ded
+--- /dev/null
++++ b/scripts/ci-travis
+@@ -0,0 +1,133 @@
++#!/bin/sh
++# This script is used for testing the build, primarily for use
++# with travis, but may be used by hand as well.
++
++set -e
++set -x
++
++# Test autoconf build
++autoconf_build()
++{
++    opts=""
++    if [ -n "$3" ]; then
++        opts="$opts -m $3"
++    fi
++    if [ -n "$4" ]; then
++        opts="$opts -t $4"
++    fi
++    case $(uname -s) in
++        Linux) opts="$opts -p linux";;
++        Darwin) opts="$opts -p macosx";;
++    esac
++
++    autoreconf -ivf
++
++    export XALANCROOT=$(pwd)
++    export CXXFLAGS=-std=c++11
++
++    mkdir autoconf-build
++    cd autoconf-build
++    echo "Running ../runConfigure -P $(pwd)/../autoconf-install) ${opts}"
++    ../runConfigure -P $(pwd)/../autoconf-install ${opts}
++    make
++    make samples
++    make install
++    make install-package
++    make tests
++}
++
++# Install needed tools
++cmake_deps()
++{
++    mkdir -p download
++    mkdir -p tools
++
++    if [ "$(uname -s)" = "Linux" ]; then
++        cmake_file="cmake-3.8.2-Linux-x86_64.tar.gz"
++        cmake_hash="574673d3f37b0be6a0813b894a8bce9c4af08c13f1ec25c030a69f42e0e4b349e0192385ef20c8a9271055b7c3b24c5b20fb5009762131a3fba3d17576e641f1"
++    elif [ "$(uname -s)" = "Darwin" ]; then
++        cmake_file="cmake-3.8.2-Darwin-x86_64.tar.gz"
++        cmake_hash="fd1c09dd73fe2b23fdc9ac915a90343d2e27409182dd1f2bf509ddf54ca926f97e1906fc18f119e8ea52797c05d4b919772f43500bffbcf2c3cdc86828d9067e"
++    fi
++    cmake_url="https://cmake.org/files/v3.8/${cmake_file}"
++
++    if [ "$(uname -s)" = "Linux" ]; then
++        ninja_file="ninja-linux.zip"
++        ninja_hash="2dddc52750c5e6f841acd0d978b894c9a6562f12ddb4ba9e5118a213f54265f065682ffe1bc7bc2ac6146760145d17800a4b7373791cd1fbbaf0836faf050e19"
++    elif [ "$(uname -s)" = "Darwin" ]; then
++        ninja_file="ninja-mac.zip"
++        ninja_hash="e008c9814447bbf356be7f2daf6d212657fb22b67e7de3885bd2f27766cd7c8a2ad61a4aace170674464ccf55813cbe2bf311485bc2058e89867f17b692642b9"
++    fi
++    ninja_url="https://github.com/ninja-build/ninja/releases/download/v1.7.2/${ninja_file}"
++
++    (
++        cd download
++        if [ ! -f "$cmake_file" ] || [ "$(shasum -a 512 "$cmake_file")" != "$cmake_hash  $cmake_file" ]; then
++            wget "$cmake_url"
++            if [ "$(shasum -a 512 "$cmake_file")" != "$cmake_hash  $cmake_file" ]; then
++                echo "Error: cmake download hash mismatch" >&2
++                exit 1
++            fi
++        fi
++        tar xf "$cmake_file"
++        cp -a ${cmake_file%.tar.gz}/* ../tools
++
++        if [ "$1" = "Ninja" ]; then
++            if [ ! -f "$ninja_file" ] || [ "$(shasum -a 512 "$ninja_file")" != "$ninja_hash  $ninja_file" ]; then
++                wget "$ninja_url"
++                if [ "$(shasum -a 512 "$ninja_file")" != "$ninja_hash  $ninja_file" ]; then
++                    echo "Error: ninja download hash mismatch" >&2
++                    exit 1
++                fi
++            fi
++            unzip "$ninja_file"
++            mkdir -p ../tools/bin
++            mv ninja ../tools/bin
++        fi
++    )
++}
++
++# Test autoconf build
++cmake_build()
++{
++    opts=""
++    if [ -n "$3" ]; then
++        opts="$opts -Dmessage-loader=$3"
++    fi
++    if [ -n "$4" ]; then
++        opts="$opts -Dtranscoder=$4"
++    fi
++
++    PATH="$(pwd)/tools/bin:$PATH"
++    if [ "$(uname -s)" = "Darwin" ]; then
++        PATH="$(pwd)/tools/CMake.app/Contents/bin:$PATH"
++    fi
++    mkdir cmake-build
++    cd cmake-build
++    echo "Running cmake -G "$1" -DCMAKE_BUILD_TYPE="$2" -DCMAKE_INSTALL_PREFIX=../cmake-install ${opts} .."
++    cmake -G "$1" -DCMAKE_BUILD_TYPE="$2" -DCMAKE_INSTALL_PREFIX=../cmake-install ${opts} ..
++    cmake --build .
++    cmake --build . --target install
++    ctest -V
++}
++
++build=$1
++shift
++
++case $build in
++    autoconf)
++        echo "Testing Autoconf build"
++        autoconf_build "$@"
++        ;;
++    cmake)
++        echo "Testing CMake build"
++        cmake_deps "$@"
++        cmake_build "$@"
++        ;;
++    *)
++        echo "Invalid argument: \"$arg\"" >&2
++        exit 1
++        ;;
++esac
++
++exit 0
+diff --git a/src/xalanc/CMakeLists.txt b/src/xalanc/CMakeLists.txt
+new file mode 100644
+index 00000000..599ed6e7
+--- /dev/null
++++ b/src/xalanc/CMakeLists.txt
+@@ -0,0 +1,1090 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++set(xalandom_sources
++  XalanDOM/XalanAttr.cpp
++  XalanDOM/XalanCDataSection.cpp
++  XalanDOM/XalanCharacterData.cpp
++  XalanDOM/XalanComment.cpp
++  XalanDOM/XalanDocument.cpp
++  XalanDOM/XalanDocumentFragment.cpp
++  XalanDOM/XalanDocumentType.cpp
++  XalanDOM/XalanDOMException.cpp
++  XalanDOM/XalanDOMImplementation.cpp
++  XalanDOM/XalanDOMInit.cpp
++  XalanDOM/XalanDOMString.cpp
++  XalanDOM/XalanElement.cpp
++  XalanDOM/XalanEmptyNamedNodeMap.cpp
++  XalanDOM/XalanEntity.cpp
++  XalanDOM/XalanEntityReference.cpp
++  XalanDOM/XalanNamedNodeMap.cpp
++  XalanDOM/XalanNode.cpp
++  XalanDOM/XalanNodeList.cpp
++  XalanDOM/XalanNodeListDummy.cpp
++  XalanDOM/XalanNodeListSurrogate.cpp
++  XalanDOM/XalanNotation.cpp
++  XalanDOM/XalanProcessingInstruction.cpp
++  XalanDOM/XalanText.cpp)
++
++set(xalandom_headers
++  XalanDOM/XalanAttr.hpp
++  XalanDOM/XalanCDATASection.hpp
++  XalanDOM/XalanCharacterData.hpp
++  XalanDOM/XalanComment.hpp
++  XalanDOM/XalanDocumentFragment.hpp
++  XalanDOM/XalanDocument.hpp
++  XalanDOM/XalanDocumentType.hpp
++  XalanDOM/XalanDOMDefinitions.hpp
++  XalanDOM/XalanDOMException.hpp
++  XalanDOM/XalanDOMImplementation.hpp
++  XalanDOM/XalanDOMInit.hpp
++  XalanDOM/XalanDOMString.hpp
++  XalanDOM/XalanElement.hpp
++  XalanDOM/XalanEmptyNamedNodeMap.hpp
++  XalanDOM/XalanEntity.hpp
++  XalanDOM/XalanEntityReference.hpp
++  XalanDOM/XalanNamedNodeMap.hpp
++  XalanDOM/XalanNode.hpp
++  XalanDOM/XalanNodeListDummy.hpp
++  XalanDOM/XalanNodeList.hpp
++  XalanDOM/XalanNodeListSurrogate.hpp
++  XalanDOM/XalanNotation.hpp
++  XalanDOM/XalanProcessingInstruction.hpp
++  XalanDOM/XalanText.hpp
++)
++
++set(platformsupport_sources
++  PlatformSupport/AttributeListImpl.cpp
++  PlatformSupport/AttributesImpl.cpp
++  PlatformSupport/DOMStringHelper.cpp
++  PlatformSupport/DOMStringPrintWriter.cpp
++  PlatformSupport/DoubleSupport.cpp
++  PlatformSupport/ExecutionContext.cpp
++  PlatformSupport/FormatterListener.cpp
++  PlatformSupport/NamedNodeMapAttributeList.cpp
++  PlatformSupport/NullPrintWriter.cpp
++  PlatformSupport/PlatformSupportInit.cpp
++  PlatformSupport/PrefixResolver.cpp
++  PlatformSupport/PrintWriter.cpp
++  PlatformSupport/ProblemListenerBase.cpp
++  PlatformSupport/StdBinInputStream.cpp
++  PlatformSupport/StringTokenizer.cpp
++  PlatformSupport/URISupport.cpp
++  PlatformSupport/Writer.cpp
++  PlatformSupport/XalanBitmap.cpp
++  PlatformSupport/XalanDecimalFormatSymbols.cpp
++  PlatformSupport/XalanDOMStringAllocator.cpp
++  PlatformSupport/XalanDOMStringCache.cpp
++  PlatformSupport/XalanDOMStringHashTable.cpp
++  PlatformSupport/XalanDOMStringPool.cpp
++  PlatformSupport/XalanDOMStringReusableAllocator.cpp
++  PlatformSupport/XalanEncodingPropertyCache.cpp
++  PlatformSupport/XalanFileOutputStream.cpp
++  PlatformSupport/XalanFStreamOutputStream.cpp
++  PlatformSupport/XalanICUMessageLoader.cpp
++  PlatformSupport/XalanInMemoryMessageLoader.cpp
++  PlatformSupport/XalanMemoryManagement.cpp
++  PlatformSupport/XalanMemoryManagerDefault.cpp
++  PlatformSupport/XalanMessageLoader.cpp
++  PlatformSupport/XalanNLSMessageLoader.cpp
++  PlatformSupport/XalanNullOutputStream.cpp
++  PlatformSupport/XalanNumberFormat.cpp
++  PlatformSupport/XalanOutputStream.cpp
++  PlatformSupport/XalanOutputStreamPrintWriter.cpp
++  PlatformSupport/XalanParsedURI.cpp
++  PlatformSupport/XalanReferenceCountedObject.cpp
++  PlatformSupport/XalanSimplePrefixResolver.cpp
++  PlatformSupport/XalanStdOutputStream.cpp
++  PlatformSupport/XalanToXercesTranscoderWrapper.cpp
++  PlatformSupport/XalanTranscodingServices.cpp
++  PlatformSupport/XalanUTF16Transcoder.cpp
++  PlatformSupport/XalanXMLChar.cpp
++  PlatformSupport/XSLException.cpp)
++
++set(platformsupport_headers
++  PlatformSupport/ArenaAllocator.hpp
++  PlatformSupport/ArenaBlockBase.hpp
++  PlatformSupport/ArenaBlock.hpp
++  PlatformSupport/AttributeListImpl.hpp
++  PlatformSupport/AttributesImpl.hpp
++  PlatformSupport/AttributeVectorEntryExtended.hpp
++  PlatformSupport/AttributeVectorEntry.hpp
++  PlatformSupport/DirectoryEnumerator.hpp
++  PlatformSupport/DOMStringHelper.hpp
++  PlatformSupport/DOMStringPrintWriter.hpp
++  PlatformSupport/DoubleSupport.hpp
++  PlatformSupport/ExecutionContext.hpp
++  PlatformSupport/FormatterListener.hpp
++  PlatformSupport/NamedNodeMapAttributeList.hpp
++  PlatformSupport/NullPrintWriter.hpp
++  PlatformSupport/PlatformSupportDefinitions.hpp
++  PlatformSupport/PlatformSupportInit.hpp
++  PlatformSupport/PrefixResolver.hpp
++  PlatformSupport/PrintWriter.hpp
++  PlatformSupport/ProblemListenerBase.hpp
++  PlatformSupport/ReusableArenaAllocator.hpp
++  PlatformSupport/ReusableArenaBlock.hpp
++  PlatformSupport/StdBinInputStream.hpp
++  PlatformSupport/StringTokenizer.hpp
++  PlatformSupport/URISupport.hpp
++  PlatformSupport/Writer.hpp
++  PlatformSupport/XalanAllocator.hpp
++  PlatformSupport/XalanArrayAllocator.hpp
++  PlatformSupport/XalanBitmap.hpp
++  PlatformSupport/XalanCollationServices.hpp
++  PlatformSupport/XalanDecimalFormatSymbols.hpp
++  PlatformSupport/XalanDOMStringAllocator.hpp
++  PlatformSupport/XalanDOMStringCache.hpp
++  PlatformSupport/XalanDOMStringHashTable.hpp
++  PlatformSupport/XalanDOMStringPool.hpp
++  PlatformSupport/XalanDOMStringReusableAllocator.hpp
++  PlatformSupport/XalanEncodingPropertyCache.hpp
++  PlatformSupport/XalanFileOutputStream.hpp
++  PlatformSupport/XalanFStreamOutputStream.hpp
++  PlatformSupport/XalanICUMessageLoader.hpp
++  PlatformSupport/XalanInMemoryMessageLoader.hpp
++  PlatformSupport/XalanLocator.hpp
++  PlatformSupport/XalanMemoryManagerDefault.hpp
++  PlatformSupport/XalanMessageLoader.hpp
++  PlatformSupport/XalanNamespace.hpp
++  PlatformSupport/XalanNLSMessageLoader.hpp
++  PlatformSupport/XalanNullOutputStream.hpp
++  PlatformSupport/XalanNumberFormat.hpp
++  PlatformSupport/XalanOutputStream.hpp
++  PlatformSupport/XalanOutputStreamPrintWriter.hpp
++  PlatformSupport/XalanParsedURI.hpp
++  PlatformSupport/XalanReferenceCountedObject.hpp
++  PlatformSupport/XalanSimplePrefixResolver.hpp
++  PlatformSupport/XalanStdOutputStream.hpp
++  PlatformSupport/XalanToXercesTranscoderWrapper.hpp
++  PlatformSupport/XalanTranscodingServices.hpp
++  PlatformSupport/XalanUnicode.hpp
++  PlatformSupport/XalanUTF16Transcoder.hpp
++  PlatformSupport/XalanXMLChar.hpp
++  PlatformSupport/XSLException.hpp)
++
++set(domsupport_sources
++  DOMSupport/DOMServices.cpp
++  DOMSupport/DOMSupport.cpp
++  DOMSupport/DOMSupportDefault.cpp
++  DOMSupport/DOMSupportException.cpp
++  DOMSupport/DOMSupportInit.cpp
++  DOMSupport/TreeWalker.cpp
++  DOMSupport/XalanDocumentPrefixResolver.cpp
++  DOMSupport/XalanNamespacesStack.cpp)
++
++set(domsupport_headers
++  DOMSupport/DOMServices.hpp
++  DOMSupport/DOMSupportDefault.hpp
++  DOMSupport/DOMSupportDefinitions.hpp
++  DOMSupport/DOMSupportException.hpp
++  DOMSupport/DOMSupport.hpp
++  DOMSupport/DOMSupportInit.hpp
++  DOMSupport/TreeWalker.hpp
++  DOMSupport/XalanDocumentPrefixResolver.hpp
++  DOMSupport/XalanNamespacesStack.hpp)
++
++set(xmlsupport_sources
++  XMLSupport/FormatterToHTML.cpp
++  XMLSupport/FormatterToNull.cpp
++  XMLSupport/FormatterToText.cpp
++  XMLSupport/FormatterToXML.cpp
++  XMLSupport/FormatterTreeWalker.cpp
++  XMLSupport/XalanHTMLElementsProperties.cpp
++  XMLSupport/XalanUTF16Writer.cpp
++  XMLSupport/XalanUTF8Writer.cpp
++  XMLSupport/XalanXMLSerializerBase.cpp
++  XMLSupport/XalanXMLSerializerFactory.cpp
++  XMLSupport/XMLParserLiaison.cpp
++  XMLSupport/XMLSupportException.cpp
++  XMLSupport/XMLSupportInit.cpp)
++
++set(xmlsupport_headers
++  XMLSupport/FormatterToHTML.hpp
++  XMLSupport/FormatterToNull.hpp
++  XMLSupport/FormatterToText.hpp
++  XMLSupport/FormatterToXML.hpp
++  XMLSupport/FormatterToXMLUnicode.hpp
++  XMLSupport/FormatterTreeWalker.hpp
++  XMLSupport/XalanDummyIndentWriter.hpp
++  XMLSupport/XalanFormatterWriter.hpp
++  XMLSupport/XalanHTMLElementsProperties.hpp
++  XMLSupport/XalanIndentWriter.hpp
++  XMLSupport/XalanOtherEncodingWriter.hpp
++  XMLSupport/XalanUTF16Writer.hpp
++  XMLSupport/XalanUTF8Writer.hpp
++  XMLSupport/XalanXMLSerializerBase.hpp
++  XMLSupport/XalanXMLSerializerFactory.hpp
++  XMLSupport/XMLParserLiaison.hpp
++  XMLSupport/XMLSupportDefinitions.hpp
++  XMLSupport/XMLSupportException.hpp
++  XMLSupport/XMLSupportInit.hpp)
++
++set(xpath_sources
++  XPath/ElementPrefixResolverProxy.cpp
++  XPath/FormatterStringLengthCounter.cpp
++  XPath/FunctionConcat.cpp
++  XPath/FunctionContains.cpp
++  XPath/Function.cpp
++  XPath/FunctionID.cpp
++  XPath/FunctionLang.cpp
++  XPath/FunctionNamespaceURI.cpp
++  XPath/FunctionNormalizeSpace.cpp
++  XPath/FunctionStartsWith.cpp
++  XPath/FunctionString.cpp
++  XPath/FunctionSubstringAfter.cpp
++  XPath/FunctionSubstringBefore.cpp
++  XPath/FunctionSubstring.cpp
++  XPath/FunctionTranslate.cpp
++  XPath/MutableNodeRefList.cpp
++  XPath/NodeRefListBase.cpp
++  XPath/NodeRefList.cpp
++  XPath/XalanDocumentFragmentNodeRefListBaseProxy.cpp
++  XPath/XalanQNameByReference.cpp
++  XPath/XalanQNameByValueAllocator.cpp
++  XPath/XalanQNameByValue.cpp
++  XPath/XalanQName.cpp
++  XPath/XalanXPathException.cpp
++  XPath/XBoolean.cpp
++  XPath/XNodeSetAllocator.cpp
++  XPath/XNodeSetBase.cpp
++  XPath/XNodeSet.cpp
++  XPath/XNodeSetNodeProxyAllocator.cpp
++  XPath/XNodeSetNodeProxy.cpp
++  XPath/XNodeSetResultTreeFragProxy.cpp
++  XPath/XNumberAllocator.cpp
++  XPath/XNumberBase.cpp
++  XPath/XNumber.cpp
++  XPath/XObject.cpp
++  XPath/XObjectFactory.cpp
++  XPath/XObjectFactoryDefault.cpp
++  XPath/XObjectResultTreeFragProxyBase.cpp
++  XPath/XObjectResultTreeFragProxy.cpp
++  XPath/XObjectResultTreeFragProxyText.cpp
++  XPath/XObjectTypeCallback.cpp
++  XPath/XPathAllocator.cpp
++  XPath/XPathConstructionContext.cpp
++  XPath/XPathConstructionContextDefault.cpp
++  XPath/XPath.cpp
++  XPath/XPathEnvSupport.cpp
++  XPath/XPathEnvSupportDefault.cpp
++  XPath/XPathEvaluator.cpp
++  XPath/XPathExecutionContext.cpp
++  XPath/XPathExecutionContextDefault.cpp
++  XPath/XPathExpression.cpp
++  XPath/XPathFactoryBlock.cpp
++  XPath/XPathFactory.cpp
++  XPath/XPathFactoryDefault.cpp
++  XPath/XPathFunctionTable.cpp
++  XPath/XPathInit.cpp
++  XPath/XPathParserException.cpp
++  XPath/XPathProcessor.cpp
++  XPath/XPathProcessorImpl.cpp
++  XPath/XStringAdapterAllocator.cpp
++  XPath/XStringAdapter.cpp
++  XPath/XStringAllocator.cpp
++  XPath/XStringBase.cpp
++  XPath/XStringCachedAllocator.cpp
++  XPath/XStringCached.cpp
++  XPath/XString.cpp
++  XPath/XStringReferenceAllocator.cpp
++  XPath/XStringReference.cpp
++  XPath/XToken.cpp
++  XPath/XTokenNumberAdapterAllocator.cpp
++  XPath/XTokenNumberAdapter.cpp
++  XPath/XTokenStringAdapterAllocator.cpp
++  XPath/XTokenStringAdapter.cpp
++  XPath/XUnknown.cpp)
++
++set(xpath_headers
++  XPath/ElementPrefixResolverProxy.hpp
++  XPath/FormatterStringLengthCounter.hpp
++  XPath/FunctionConcat.hpp
++  XPath/FunctionContains.hpp
++  XPath/Function.hpp
++  XPath/FunctionID.hpp
++  XPath/FunctionLang.hpp
++  XPath/FunctionNamespaceURI.hpp
++  XPath/FunctionNormalizeSpace.hpp
++  XPath/FunctionStartsWith.hpp
++  XPath/FunctionString.hpp
++  XPath/FunctionSubstringAfter.hpp
++  XPath/FunctionSubstringBefore.hpp
++  XPath/FunctionSubstring.hpp
++  XPath/FunctionTranslate.hpp
++  XPath/MutableNodeRefList.hpp
++  XPath/NameSpace.hpp
++  XPath/NodeRefListBase.hpp
++  XPath/NodeRefList.hpp
++  XPath/XalanDocumentFragmentNodeRefListBaseProxy.hpp
++  XPath/XalanQNameByReference.hpp
++  XPath/XalanQNameByValueAllocator.hpp
++  XPath/XalanQNameByValue.hpp
++  XPath/XalanQName.hpp
++  XPath/XalanXPathException.hpp
++  XPath/XBoolean.hpp
++  XPath/XNodeSetAllocator.hpp
++  XPath/XNodeSetBase.hpp
++  XPath/XNodeSet.hpp
++  XPath/XNodeSetNodeProxyAllocator.hpp
++  XPath/XNodeSetNodeProxy.hpp
++  XPath/XNodeSetResultTreeFragProxy.hpp
++  XPath/XNumberAllocator.hpp
++  XPath/XNumberBase.hpp
++  XPath/XNumber.hpp
++  XPath/XObjectFactoryDefault.hpp
++  XPath/XObjectFactory.hpp
++  XPath/XObject.hpp
++  XPath/XObjectResultTreeFragProxyBase.hpp
++  XPath/XObjectResultTreeFragProxy.hpp
++  XPath/XObjectResultTreeFragProxyText.hpp
++  XPath/XObjectTypeCallback.hpp
++  XPath/XPathAllocator.hpp
++  XPath/XPathConstructionContextDefault.hpp
++  XPath/XPathConstructionContext.hpp
++  XPath/XPathDefinitions.hpp
++  XPath/XPathEnvSupportDefault.hpp
++  XPath/XPathEnvSupport.hpp
++  XPath/XPathEvaluator.hpp
++  XPath/XPathExecutionContextDefault.hpp
++  XPath/XPathExecutionContext.hpp
++  XPath/XPathExpression.hpp
++  XPath/XPathFactoryBlock.hpp
++  XPath/XPathFactoryDefault.hpp
++  XPath/XPathFactory.hpp
++  XPath/XPathFunctionTable.hpp
++  XPath/XPath.hpp
++  XPath/XPathInit.hpp
++  XPath/XPathParserException.hpp
++  XPath/XPathProcessor.hpp
++  XPath/XPathProcessorImpl.hpp
++  XPath/XStringAdapterAllocator.hpp
++  XPath/XStringAdapter.hpp
++  XPath/XStringAllocator.hpp
++  XPath/XStringBase.hpp
++  XPath/XStringCachedAllocator.hpp
++  XPath/XStringCached.hpp
++  XPath/XString.hpp
++  XPath/XStringReferenceAllocator.hpp
++  XPath/XStringReference.hpp
++  XPath/XToken.hpp
++  XPath/XTokenNumberAdapterAllocator.hpp
++  XPath/XTokenNumberAdapter.hpp
++  XPath/XTokenStringAdapterAllocator.hpp
++  XPath/XTokenStringAdapter.hpp
++  XPath/XUnknown.hpp)
++
++set(xercesparserliaison_sources
++  XercesParserLiaison/FormatterToXercesDOM.cpp
++  XercesParserLiaison/XercesAttrWrapperAllocator.cpp
++  XercesParserLiaison/XercesAttrWrapper.cpp
++  XercesParserLiaison/XercesCDATASectionWrapper.cpp
++  XercesParserLiaison/XercesCommentWrapper.cpp
++  XercesParserLiaison/XercesDocumentTypeWrapper.cpp
++  XercesParserLiaison/XercesDocumentWrapper.cpp
++  XercesParserLiaison/XercesDOMException.cpp
++  XercesParserLiaison/XercesDOMFormatterWalker.cpp
++  XercesParserLiaison/XercesDOMImplementationWrapper.cpp
++  XercesParserLiaison/XercesDOMSupport.cpp
++  XercesParserLiaison/XercesDOMWalker.cpp
++  XercesParserLiaison/XercesDOMWrapperException.cpp
++  XercesParserLiaison/XercesElementWrapperAllocator.cpp
++  XercesParserLiaison/XercesElementWrapper.cpp
++  XercesParserLiaison/XercesEntityReferenceWrapper.cpp
++  XercesParserLiaison/XercesEntityWrapper.cpp
++  XercesParserLiaison/XercesLiaisonXalanDOMStringPool.cpp
++  XercesParserLiaison/XercesNamedNodeMapAttributeList.cpp
++  XercesParserLiaison/XercesNamedNodeMapWrapper.cpp
++  XercesParserLiaison/XercesNodeListWrapper.cpp
++  XercesParserLiaison/XercesNotationWrapper.cpp
++  XercesParserLiaison/XercesParserLiaison.cpp
++  XercesParserLiaison/XercesProcessingInstructionWrapper.cpp
++  XercesParserLiaison/XercesTextWrapperAllocator.cpp
++  XercesParserLiaison/XercesTextWrapper.cpp
++  XercesParserLiaison/XercesWrapperHelper.cpp
++  XercesParserLiaison/XercesWrapperNavigatorAllocator.cpp
++  XercesParserLiaison/XercesWrapperNavigator.cpp
++  XercesParserLiaison/XercesWrapperToXalanNodeMap.cpp)
++
++set(xercesparserliaison_headers
++  XercesParserLiaison/FormatterToXercesDOM.hpp
++  XercesParserLiaison/XercesAttrWrapperAllocator.hpp
++  XercesParserLiaison/XercesAttrWrapper.hpp
++  XercesParserLiaison/XercesCDATASectionWrapper.hpp
++  XercesParserLiaison/XercesCommentWrapper.hpp
++  XercesParserLiaison/XercesDocumentTypeWrapper.hpp
++  XercesParserLiaison/XercesDocumentWrapper.hpp
++  XercesParserLiaison/XercesDOMException.hpp
++  XercesParserLiaison/XercesDOMFormatterWalker.hpp
++  XercesParserLiaison/XercesDOMImplementationWrapper.hpp
++  XercesParserLiaison/XercesDOMSupport.hpp
++  XercesParserLiaison/XercesDOMWalker.hpp
++  XercesParserLiaison/XercesDOMWrapperException.hpp
++  XercesParserLiaison/XercesElementWrapperAllocator.hpp
++  XercesParserLiaison/XercesElementWrapper.hpp
++  XercesParserLiaison/XercesEntityReferenceWrapper.hpp
++  XercesParserLiaison/XercesEntityWrapper.hpp
++  XercesParserLiaison/XercesLiaisonXalanDOMStringPool.hpp
++  XercesParserLiaison/XercesNamedNodeMapAttributeList.hpp
++  XercesParserLiaison/XercesNamedNodeMapWrapper.hpp
++  XercesParserLiaison/XercesNodeListWrapper.hpp
++  XercesParserLiaison/XercesNotationWrapper.hpp
++  XercesParserLiaison/XercesParserLiaisonDefinitions.hpp
++  XercesParserLiaison/XercesParserLiaison.hpp
++  XercesParserLiaison/XercesProcessingInstructionWrapper.hpp
++  XercesParserLiaison/XercesTextWrapperAllocator.hpp
++  XercesParserLiaison/XercesTextWrapper.hpp
++  XercesParserLiaison/XercesWrapperHelper.hpp
++  XercesParserLiaison/XercesWrapperNavigatorAllocator.hpp
++  XercesParserLiaison/XercesWrapperNavigator.hpp
++  XercesParserLiaison/XercesWrapperToXalanNodeMap.hpp
++  XercesParserLiaison/XercesWrapperTypes.hpp)
++
++set(xercesparserliaison_deprecated_sources
++  XercesParserLiaison/Deprecated/FormatterToDeprecatedXercesDOM.cpp
++  XercesParserLiaison/Deprecated/XercesAttrBridge.cpp
++  XercesParserLiaison/Deprecated/XercesAttributeBridgeAllocator.cpp
++  XercesParserLiaison/Deprecated/XercesBridgeHelper.cpp
++  XercesParserLiaison/Deprecated/XercesBridgeNavigator.cpp
++  XercesParserLiaison/Deprecated/XercesCDATASectionBridge.cpp
++  XercesParserLiaison/Deprecated/XercesCommentBridge.cpp
++  XercesParserLiaison/Deprecated/XercesDocumentBridge.cpp
++  XercesParserLiaison/Deprecated/XercesDocumentFragmentBridge.cpp
++  XercesParserLiaison/Deprecated/XercesDocumentTypeBridge.cpp
++  XercesParserLiaison/Deprecated/XercesDOMImplementationBridge.cpp
++  XercesParserLiaison/Deprecated/XercesDOM_NodeHack.cpp
++  XercesParserLiaison/Deprecated/XercesElementBridgeAllocator.cpp
++  XercesParserLiaison/Deprecated/XercesElementBridge.cpp
++  XercesParserLiaison/Deprecated/XercesEntityBridge.cpp
++  XercesParserLiaison/Deprecated/XercesEntityReferenceBridge.cpp
++  XercesParserLiaison/Deprecated/XercesNamedNodeMapBridge.cpp
++  XercesParserLiaison/Deprecated/XercesNodeListBridge.cpp
++  XercesParserLiaison/Deprecated/XercesNotationBridge.cpp
++  XercesParserLiaison/Deprecated/XercesProcessingInstructionBridge.cpp
++  XercesParserLiaison/Deprecated/XercesTextBridgeAllocator.cpp
++  XercesParserLiaison/Deprecated/XercesTextBridge.cpp
++  XercesParserLiaison/Deprecated/XercesToXalanNodeMap.cpp
++  XercesParserLiaison/Deprecated/XercesTreeWalker.cpp)
++
++set(xercesparserliaison_deprecated_headers
++  XercesParserLiaison/Deprecated/FormatterToDeprecatedXercesDOM.hpp
++  XercesParserLiaison/Deprecated/XercesAttrBridge.hpp
++  XercesParserLiaison/Deprecated/XercesAttributeBridgeAllocator.hpp
++  XercesParserLiaison/Deprecated/XercesBridgeHelper.hpp
++  XercesParserLiaison/Deprecated/XercesBridgeNavigator.hpp
++  XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp
++  XercesParserLiaison/Deprecated/XercesCDATASectionBridge.hpp
++  XercesParserLiaison/Deprecated/XercesCommentBridge.hpp
++  XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp
++  XercesParserLiaison/Deprecated/XercesDocumentFragmentBridge.hpp
++  XercesParserLiaison/Deprecated/XercesDocumentTypeBridge.hpp
++  XercesParserLiaison/Deprecated/XercesDOMImplementationBridge.hpp
++  XercesParserLiaison/Deprecated/XercesDOM_NodeHack.hpp
++  XercesParserLiaison/Deprecated/XercesElementBridgeAllocator.hpp
++  XercesParserLiaison/Deprecated/XercesElementBridge.hpp
++  XercesParserLiaison/Deprecated/XercesEntityBridge.hpp
++  XercesParserLiaison/Deprecated/XercesEntityReferenceBridge.hpp
++  XercesParserLiaison/Deprecated/XercesNamedNodeMapBridge.hpp
++  XercesParserLiaison/Deprecated/XercesNodeListBridge.hpp
++  XercesParserLiaison/Deprecated/XercesNotationBridge.hpp
++  XercesParserLiaison/Deprecated/XercesProcessingInstructionBridge.hpp
++  XercesParserLiaison/Deprecated/XercesTextBridgeAllocator.hpp
++  XercesParserLiaison/Deprecated/XercesTextBridge.hpp
++  XercesParserLiaison/Deprecated/XercesToXalanNodeMap.hpp
++  XercesParserLiaison/Deprecated/XercesTreeWalker.hpp)
++
++set(xalansourcetree_sources
++  XalanSourceTree/FormatterToSourceTree.cpp
++  XalanSourceTree/XalanSourceTreeAttr.cpp
++  XalanSourceTree/XalanSourceTreeAttributeAllocator.cpp
++  XalanSourceTree/XalanSourceTreeAttributeNSAllocator.cpp
++  XalanSourceTree/XalanSourceTreeAttrNS.cpp
++  XalanSourceTree/XalanSourceTreeCommentAllocator.cpp
++  XalanSourceTree/XalanSourceTreeComment.cpp
++  XalanSourceTree/XalanSourceTreeContentHandler.cpp
++  XalanSourceTree/XalanSourceTreeDocument.cpp
++  XalanSourceTree/XalanSourceTreeDocumentFragment.cpp
++  XalanSourceTree/XalanSourceTreeDOMSupport.cpp
++  XalanSourceTree/XalanSourceTreeElementAAllocator.cpp
++  XalanSourceTree/XalanSourceTreeElementA.cpp
++  XalanSourceTree/XalanSourceTreeElementANSAllocator.cpp
++  XalanSourceTree/XalanSourceTreeElementANS.cpp
++  XalanSourceTree/XalanSourceTreeElement.cpp
++  XalanSourceTree/XalanSourceTreeElementNAAllocator.cpp
++  XalanSourceTree/XalanSourceTreeElementNA.cpp
++  XalanSourceTree/XalanSourceTreeElementNANSAllocator.cpp
++  XalanSourceTree/XalanSourceTreeElementNANS.cpp
++  XalanSourceTree/XalanSourceTreeHelper.cpp
++  XalanSourceTree/XalanSourceTreeInit.cpp
++  XalanSourceTree/XalanSourceTreeParserLiaison.cpp
++  XalanSourceTree/XalanSourceTreeProcessingInstructionAllocator.cpp
++  XalanSourceTree/XalanSourceTreeProcessingInstruction.cpp
++  XalanSourceTree/XalanSourceTreeTextAllocator.cpp
++  XalanSourceTree/XalanSourceTreeText.cpp
++  XalanSourceTree/XalanSourceTreeTextIWSAllocator.cpp
++  XalanSourceTree/XalanSourceTreeTextIWS.cpp)
++
++set(xalansourcetree_headers
++  XalanSourceTree/FormatterToSourceTree.hpp
++  XalanSourceTree/XalanSourceTreeAttr.hpp
++  XalanSourceTree/XalanSourceTreeAttributeAllocator.hpp
++  XalanSourceTree/XalanSourceTreeAttributeNSAllocator.hpp
++  XalanSourceTree/XalanSourceTreeAttrNS.hpp
++  XalanSourceTree/XalanSourceTreeCommentAllocator.hpp
++  XalanSourceTree/XalanSourceTreeComment.hpp
++  XalanSourceTree/XalanSourceTreeContentHandler.hpp
++  XalanSourceTree/XalanSourceTreeDefinitions.hpp
++  XalanSourceTree/XalanSourceTreeDocumentFragment.hpp
++  XalanSourceTree/XalanSourceTreeDocument.hpp
++  XalanSourceTree/XalanSourceTreeDOMSupport.hpp
++  XalanSourceTree/XalanSourceTreeElementAAllocator.hpp
++  XalanSourceTree/XalanSourceTreeElementA.hpp
++  XalanSourceTree/XalanSourceTreeElementANSAllocator.hpp
++  XalanSourceTree/XalanSourceTreeElementANS.hpp
++  XalanSourceTree/XalanSourceTreeElement.hpp
++  XalanSourceTree/XalanSourceTreeElementNAAllocator.hpp
++  XalanSourceTree/XalanSourceTreeElementNA.hpp
++  XalanSourceTree/XalanSourceTreeElementNANSAllocator.hpp
++  XalanSourceTree/XalanSourceTreeElementNANS.hpp
++  XalanSourceTree/XalanSourceTreeHelper.hpp
++  XalanSourceTree/XalanSourceTreeInit.hpp
++  XalanSourceTree/XalanSourceTreeParserLiaison.hpp
++  XalanSourceTree/XalanSourceTreeProcessingInstructionAllocator.hpp
++  XalanSourceTree/XalanSourceTreeProcessingInstruction.hpp
++  XalanSourceTree/XalanSourceTreeTextAllocator.hpp
++  XalanSourceTree/XalanSourceTreeText.hpp
++  XalanSourceTree/XalanSourceTreeTextIWSAllocator.hpp
++  XalanSourceTree/XalanSourceTreeTextIWS.hpp)
++
++set(xpathcapi_sources
++  XPathCAPI/XPathCAPI.cpp)
++
++set(xpathcapi_headers
++  XPathCAPI/XPathCAPI.h)
++
++set(xslt_sources
++  XSLT/AVT.cpp
++  XSLT/AVTPart.cpp
++  XSLT/AVTPartSimple.cpp
++  XSLT/AVTPartXPath.cpp
++  XSLT/Constants.cpp
++  XSLT/CountersTable.cpp
++  XSLT/ElemApplyImport.cpp
++  XSLT/ElemApplyTemplates.cpp
++  XSLT/ElemAttribute.cpp
++  XSLT/ElemAttributeSet.cpp
++  XSLT/ElemCallTemplate.cpp
++  XSLT/ElemChoose.cpp
++  XSLT/ElemComment.cpp
++  XSLT/ElemCopy.cpp
++  XSLT/ElemCopyOf.cpp
++  XSLT/ElemDecimalFormat.cpp
++  XSLT/ElemElement.cpp
++  XSLT/ElemEmpty.cpp
++  XSLT/ElemExtensionCall.cpp
++  XSLT/ElemFallback.cpp
++  XSLT/ElemForEach.cpp
++  XSLT/ElemForwardCompatible.cpp
++  XSLT/ElemIf.cpp
++  XSLT/ElemLiteralResult.cpp
++  XSLT/ElemMessage.cpp
++  XSLT/ElemNumber.cpp
++  XSLT/ElemOtherwise.cpp
++  XSLT/ElemParam.cpp
++  XSLT/ElemPI.cpp
++  XSLT/ElemSort.cpp
++  XSLT/ElemTemplate.cpp
++  XSLT/ElemTemplateElement.cpp
++  XSLT/ElemText.cpp
++  XSLT/ElemTextLiteral.cpp
++  XSLT/ElemUse.cpp
++  XSLT/ElemValueOf.cpp
++  XSLT/ElemVariable.cpp
++  XSLT/ElemWhen.cpp
++  XSLT/ElemWithParam.cpp
++  XSLT/ExtensionFunctionHandler.cpp
++  XSLT/ExtensionNSHandler.cpp
++  XSLT/FunctionCurrent.cpp
++  XSLT/FunctionDocument.cpp
++  XSLT/FunctionElementAvailable.cpp
++  XSLT/FunctionFormatNumber.cpp
++  XSLT/FunctionFunctionAvailable.cpp
++  XSLT/FunctionGenerateID.cpp
++  XSLT/FunctionKey.cpp
++  XSLT/FunctionSystemProperty.cpp
++  XSLT/FunctionUnparsedEntityURI.cpp
++  XSLT/GenerateEvent.cpp
++  XSLT/KeyTable.cpp
++  XSLT/NamespacesHandler.cpp
++  XSLT/NodeSorter.cpp
++  XSLT/NodeSortKey.cpp
++  XSLT/OutputContextStack.cpp
++  XSLT/ProblemListener.cpp
++  XSLT/ProblemListenerDefault.cpp
++  XSLT/ResultNamespacesStack.cpp
++  XSLT/SelectionEvent.cpp
++  XSLT/StylesheetConstructionContext.cpp
++  XSLT/StylesheetConstructionContextDefault.cpp
++  XSLT/Stylesheet.cpp
++  XSLT/StylesheetExecutionContext.cpp
++  XSLT/StylesheetExecutionContextDefault.cpp
++  XSLT/StylesheetHandler.cpp
++  XSLT/StylesheetRoot.cpp
++  XSLT/TopLevelArg.cpp
++  XSLT/TraceListener.cpp
++  XSLT/TraceListenerDefault.cpp
++  XSLT/TracerEvent.cpp
++  XSLT/VariablesStack.cpp
++  XSLT/XalanAVTAllocator.cpp
++  XSLT/XalanAVTPartSimpleAllocator.cpp
++  XSLT/XalanAVTPartXPathAllocator.cpp
++  XSLT/XalanElemApplyTemplatesAllocator.cpp
++  XSLT/XalanElemAttributeAllocator.cpp
++  XSLT/XalanElemAttributeSetAllocator.cpp
++  XSLT/XalanElemCallTemplateAllocator.cpp
++  XSLT/XalanElemElementAllocator.cpp
++  XSLT/XalanElemEmptyAllocator.cpp
++  XSLT/XalanElemLiteralResultAllocator.cpp
++  XSLT/XalanElemTemplateAllocator.cpp
++  XSLT/XalanElemTextAllocator.cpp
++  XSLT/XalanElemTextLiteralAllocator.cpp
++  XSLT/XalanElemValueOfAllocator.cpp
++  XSLT/XalanElemVariableAllocator.cpp
++  XSLT/XalanMatchPatternDataAllocator.cpp
++  XSLT/XalanMatchPatternData.cpp
++  XSLT/XalanNumberingResourceBundle.cpp
++  XSLT/XalanSourceTreeDocumentAllocator.cpp
++  XSLT/XalanSourceTreeDocumentFragmentAllocator.cpp
++  XSLT/XalanSpaceNodeTester.cpp
++  XSLT/XResultTreeFragAllocator.cpp
++  XSLT/XResultTreeFrag.cpp
++  XSLT/XSLTEngineImpl.cpp
++  XSLT/XSLTInit.cpp
++  XSLT/XSLTInputSource.cpp
++  XSLT/XSLTProcessor.cpp
++  XSLT/XSLTProcessorEnvSupport.cpp
++  XSLT/XSLTProcessorEnvSupportDefault.cpp
++  XSLT/XSLTProcessorException.cpp
++  XSLT/XSLTResultTarget.cpp
++)
++
++set(xslt_headers
++  XSLT/AVT.hpp
++  XSLT/AVTPart.hpp
++  XSLT/AVTPartSimple.hpp
++  XSLT/AVTPartXPath.hpp
++  XSLT/Constants.hpp
++  XSLT/CountersTable.hpp
++  XSLT/DecimalToRoman.hpp
++  XSLT/ElemApplyImport.hpp
++  XSLT/ElemApplyTemplates.hpp
++  XSLT/ElemAttribute.hpp
++  XSLT/ElemAttributeSet.hpp
++  XSLT/ElemCallTemplate.hpp
++  XSLT/ElemChoose.hpp
++  XSLT/ElemComment.hpp
++  XSLT/ElemCopy.hpp
++  XSLT/ElemCopyOf.hpp
++  XSLT/ElemDecimalFormat.hpp
++  XSLT/ElemElement.hpp
++  XSLT/ElemEmpty.hpp
++  XSLT/ElemExtensionCall.hpp
++  XSLT/ElemFallback.hpp
++  XSLT/ElemForEach.hpp
++  XSLT/ElemForwardCompatible.hpp
++  XSLT/ElemIf.hpp
++  XSLT/ElemLiteralResult.hpp
++  XSLT/ElemMessage.hpp
++  XSLT/ElemNumber.hpp
++  XSLT/ElemOtherwise.hpp
++  XSLT/ElemParam.hpp
++  XSLT/ElemPI.hpp
++  XSLT/ElemSort.hpp
++  XSLT/ElemTemplateElement.hpp
++  XSLT/ElemTemplate.hpp
++  XSLT/ElemText.hpp
++  XSLT/ElemTextLiteral.hpp
++  XSLT/ElemUse.hpp
++  XSLT/ElemValueOf.hpp
++  XSLT/ElemVariable.hpp
++  XSLT/ElemWhen.hpp
++  XSLT/ElemWithParam.hpp
++  XSLT/ExtensionFunctionHandler.hpp
++  XSLT/ExtensionNSHandler.hpp
++  XSLT/FunctionCurrent.hpp
++  XSLT/FunctionDocument.hpp
++  XSLT/FunctionElementAvailable.hpp
++  XSLT/FunctionFormatNumber.hpp
++  XSLT/FunctionFunctionAvailable.hpp
++  XSLT/FunctionGenerateID.hpp
++  XSLT/FunctionKey.hpp
++  XSLT/FunctionSystemProperty.hpp
++  XSLT/FunctionUnparsedEntityURI.hpp
++  XSLT/GenerateEvent.hpp
++  XSLT/KeyDeclaration.hpp
++  XSLT/KeyTable.hpp
++  XSLT/NamespacesHandler.hpp
++  XSLT/NodeSorter.hpp
++  XSLT/NodeSortKey.hpp
++  XSLT/OutputContextStack.hpp
++  XSLT/ProblemListenerDefault.hpp
++  XSLT/ProblemListener.hpp
++  XSLT/ResultNamespacesStack.hpp
++  XSLT/SelectionEvent.hpp
++  XSLT/StylesheetConstructionContextDefault.hpp
++  XSLT/StylesheetConstructionContext.hpp
++  XSLT/StylesheetExecutionContextDefault.hpp
++  XSLT/StylesheetExecutionContext.hpp
++  XSLT/StylesheetHandler.hpp
++  XSLT/Stylesheet.hpp
++  XSLT/StylesheetRoot.hpp
++  XSLT/TopLevelArg.hpp
++  XSLT/TraceListenerDefault.hpp
++  XSLT/TraceListener.hpp
++  XSLT/TracerEvent.hpp
++  XSLT/VariablesStack.hpp
++  XSLT/XalanAVTAllocator.hpp
++  XSLT/XalanAVTPartSimpleAllocator.hpp
++  XSLT/XalanAVTPartXPathAllocator.hpp
++  XSLT/XalanElemApplyTemplatesAllocator.hpp
++  XSLT/XalanElemAttributeAllocator.hpp
++  XSLT/XalanElemAttributeSetAllocator.hpp
++  XSLT/XalanElemCallTemplateAllocator.hpp
++  XSLT/XalanElemElementAllocator.hpp
++  XSLT/XalanElemEmptyAllocator.hpp
++  XSLT/XalanElemLiteralResultAllocator.hpp
++  XSLT/XalanElemTemplateAllocator.hpp
++  XSLT/XalanElemTextAllocator.hpp
++  XSLT/XalanElemTextLiteralAllocator.hpp
++  XSLT/XalanElemValueOfAllocator.hpp
++  XSLT/XalanElemVariableAllocator.hpp
++  XSLT/XalanMatchPatternDataAllocator.hpp
++  XSLT/XalanMatchPatternData.hpp
++  XSLT/XalanNumberingResourceBundle.hpp
++  XSLT/XalanParamHolder.hpp
++  XSLT/XalanSourceTreeDocumentAllocator.hpp
++  XSLT/XalanSourceTreeDocumentFragmentAllocator.hpp
++  XSLT/XalanSpaceNodeTester.hpp
++  XSLT/XResultTreeFragAllocator.hpp
++  XSLT/XResultTreeFrag.hpp
++  XSLT/XSLTDefinitions.hpp
++  XSLT/XSLTEngineImpl.hpp
++  XSLT/XSLTInit.hpp
++  XSLT/XSLTInputSource.hpp
++  XSLT/XSLTProcessorEnvSupportDefault.hpp
++  XSLT/XSLTProcessorEnvSupport.hpp
++  XSLT/XSLTProcessorException.hpp
++  XSLT/XSLTProcessor.hpp
++  XSLT/XSLTResultTarget.hpp)
++
++set(xalanextensions_sources
++  XalanExtensions/FunctionDifference.cpp
++  XalanExtensions/FunctionDistinct.cpp
++  XalanExtensions/FunctionEvaluate.cpp
++  XalanExtensions/FunctionHasSameNodes.cpp
++  XalanExtensions/FunctionIntersection.cpp
++  XalanExtensions/FunctionNodeSet.cpp
++  XalanExtensions/XalanExtensions.cpp)
++
++set(xalanextensions_headers
++  XalanExtensions/FunctionDifference.hpp
++  XalanExtensions/FunctionDistinct.hpp
++  XalanExtensions/FunctionEvaluate.hpp
++  XalanExtensions/FunctionHasSameNodes.hpp
++  XalanExtensions/FunctionIntersection.hpp
++  XalanExtensions/FunctionNodeSet.hpp
++  XalanExtensions/XalanExtensionsDefinitions.hpp
++  XalanExtensions/XalanExtensions.hpp)
++
++set(xalantransformer_sources
++  XalanTransformer/XalanCAPI.cpp
++  XalanTransformer/XalanCompiledStylesheetDefault.cpp
++  XalanTransformer/XalanDefaultDocumentBuilder.cpp
++  XalanTransformer/XalanDefaultParsedSource.cpp
++  XalanTransformer/XalanParsedSource.cpp
++  XalanTransformer/XalanSourceTreeWrapperParsedSource.cpp
++  XalanTransformer/XalanTransformer.cpp
++  XalanTransformer/XalanTransformerOutputStream.cpp
++  XalanTransformer/XalanTransformerProblemListener.cpp
++  XalanTransformer/XercesDOMParsedSource.cpp
++  XalanTransformer/XercesDOMWrapperParsedSource.cpp)
++
++set(xalantransformer_headers
++  XalanTransformer/XalanCompiledStylesheetDefault.hpp
++  XalanTransformer/XalanCompiledStylesheet.hpp
++  XalanTransformer/XalanDefaultDocumentBuilder.hpp
++  XalanTransformer/XalanDefaultParsedSource.hpp
++  XalanTransformer/XalanDocumentBuilder.hpp
++  XalanTransformer/XalanParsedSource.hpp
++  XalanTransformer/XalanSourceTreeWrapperParsedSource.hpp
++  XalanTransformer/XalanTransformerDefinitions.hpp
++  XalanTransformer/XalanTransformer.hpp
++  XalanTransformer/XalanTransformerOutputStream.hpp
++  XalanTransformer/XalanTransformerProblemListener.hpp
++  XalanTransformer/XercesDOMParsedSource.hpp
++  XalanTransformer/XercesDOMWrapperParsedSource.hpp)
++
++set(xalanexslt_sources
++  XalanEXSLT/XalanEXSLTCommon.cpp
++  XalanEXSLT/XalanEXSLTDateTime.cpp
++  XalanEXSLT/XalanEXSLTDynamic.cpp
++  XalanEXSLT/XalanEXSLTMath.cpp
++  XalanEXSLT/XalanEXSLTSet.cpp
++  XalanEXSLT/XalanEXSLTString.cpp)
++
++set(xalanexslt_headers
++  XalanEXSLT/XalanEXSLTCommon.hpp
++  XalanEXSLT/XalanEXSLTCommonImpl.hpp
++  XalanEXSLT/XalanEXSLTDateTime.hpp
++  XalanEXSLT/XalanEXSLTDateTimeImpl.hpp
++  XalanEXSLT/XalanEXSLTDefinitions.hpp
++  XalanEXSLT/XalanEXSLTDynamic.hpp
++  XalanEXSLT/XalanEXSLTDynamicImpl.hpp
++  XalanEXSLT/XalanEXSLTMath.hpp
++  XalanEXSLT/XalanEXSLTMathImpl.hpp
++  XalanEXSLT/XalanEXSLTSet.hpp
++  XalanEXSLT/XalanEXSLTSetImpl.hpp
++  XalanEXSLT/XalanEXSLTString.hpp
++  XalanEXSLT/XalanEXSLTStringImpl.hpp)
++
++set(harness_sources
++  Harness/XalanDiagnosticMemoryManager.cpp
++  Harness/XalanFileUtility.cpp
++  Harness/XalanXMLFileReporter.cpp)
++
++set(harness_headers
++  Harness/XalanDiagnosticMemoryManager.hpp
++  Harness/XalanFileUtility.hpp
++  Harness/XalanHarnessDefinitions.hpp
++  Harness/XalanXMLFileReporter.hpp)
++
++set(include_headers
++  Include/AIXDefinitions.hpp
++  Include/GCCDefinitions.hpp
++  Include/HPUXDefinitions.hpp
++  Include/IntelDefinitions.hpp
++  Include/OS390Definitions.hpp
++  Include/OS400Definitions.hpp
++  Include/PlatformDefinitions.hpp
++  Include/SolarisDefinitions.hpp
++  Include/STLHelper.hpp
++  Include/TRU64Definitions.hpp
++  Include/VCPPDefinitions.hpp
++  Include/XalanAutoPtr.hpp
++  Include/XalanDeque.hpp
++  Include/XalanList.hpp
++  Include/XalanMap.hpp
++  Include/XalanMemMgrAutoPtr.hpp
++  Include/XalanMemoryManagement.hpp
++  Include/XalanObjectCache.hpp
++  Include/XalanObjectStackCache.hpp
++  Include/XalanSet.hpp
++  Include/XalanVector.hpp
++  Include/XalanVersion.hpp)
++
++set(icubridge_sources
++  ICUBridge/ICUBridgeCleanup.cpp
++  ICUBridge/ICUBridgeCollationCompareFunctor.cpp
++  ICUBridge/ICUBridgeCollationCompareFunctorImpl.cpp
++  ICUBridge/ICUBridge.cpp
++  ICUBridge/ICUFormatNumberFunctor.cpp
++  ICUBridge/ICUXalanNumberFormatFactory.cpp
++  ICUBridge/ICUXalanNumberFormatProxy.cpp)
++
++set(icubridge_headers
++  ICUBridge/ICUBridgeCleanup.hpp
++  ICUBridge/ICUBridgeCollationCompareFunctor.hpp
++  ICUBridge/ICUBridgeCollationCompareFunctorImpl.hpp
++  ICUBridge/ICUBridgeDefinitions.hpp
++  ICUBridge/ICUBridge.hpp
++  ICUBridge/ICUFormatNumberFunctor.hpp
++  ICUBridge/ICUXalanNumberFormatFactory.hpp
++  ICUBridge/ICUXalanNumberFormatProxy.hpp)
++
++set(libxalan_c_SOURCES
++  ${xalandom_sources}
++  ${platformsupport_sources}
++  ${domsupport_sources}
++  ${xmlsupport_sources}
++  ${xpath_sources}
++  ${xercesparserliaison_sources}
++  ${xercesparserliaison_deprecated_sources}
++  ${xalansourcetree_sources}
++  ${xpathcapi_sources}
++  ${xslt_sources}
++  ${xalanextensions_sources}
++  ${xalantransformer_sources}
++  ${xalanexslt_sources}
++  ${harness_sources}
++)
++
++set(libxalan_c_HEADERS
++  ${xalandom_headers}
++  ${platformsupport_headers}
++  ${domsupport_headers}
++  ${xmlsupport_headers}
++  ${xpath_headers}
++  ${xercesparserliaison_headers}
++  ${xercesparserliaison_deprecated_headers}
++  ${xalansourcetree_headers}
++  ${xpathcapi_headers}
++  ${xslt_headers}
++  ${xalanextensions_headers}
++  ${xalantransformer_headers}
++  ${xalanexslt_headers}
++  ${harness_headers}
++  ${include_headers}
++)
++
++if(transcoder STREQUAL "icu")
++  list(APPEND libxalan_c_SOURCES ${icubridge_sources})
++  list(APPEND libxalan_c_HEADERS ${icubridge_headers})
++endif()
++
++# Search the project binary dir for config.h
++include_directories(
++  ${PROJECT_BINARY_DIR}
++  ${CMAKE_CURRENT_SOURCE_DIR}
++  ${CMAKE_CURRENT_BINARY_DIR}
++)
++
++# Search the project binary dir for config.h
++include_directories(
++  ${PROJECT_BINARY_DIR}
++  ${CMAKE_CURRENT_SOURCE_DIR}
++  ${CMAKE_CURRENT_BINARY_DIR}
++)
++
++add_custom_target(xalan-c-headers SOURCES ${libxalan_c_HEADERS})
++set_target_properties(xalan-c-headers PROPERTIES FOLDER "Library")
++
++add_library(xalan-c
++  ${libxalan_c_SOURCES}
++  ${libxalan_c_RESOURCES})
++target_compile_definitions(xalan-c PRIVATE "${MSGLOADER_DEF}=1")
++if(BUILD_SHARED_LIBS)
++  target_compile_definitions(xalan-c PRIVATE XALAN_BUILD_DLL=1)
++endif()
++target_include_directories(xalan-c PUBLIC
++  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
++  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
++  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/xalanc/PlatformSupport>
++  $<INSTALL_INTERFACE:include/xalanc>)
++if(transcoder STREQUAL "icu")
++  target_compile_definitions(xalan-c PRIVATE XALAN_USE_ICU=1)
++  target_link_libraries(xalan-c ICU::uc ICU::i18n ICU::data)
++endif()
++target_link_libraries(xalan-c XercesC::XercesC Threads::Threads)
++if(msgloader STREQUAL "inmemory")
++target_link_libraries(xalan-c XalanC::XalanMsg)
++endif()
++
++add_library(XalanC::XalanC ALIAS xalan-c)
++
++if(MSVC)
++  # Add configuration-specific library name to resource file.
++  target_compile_definitions(xalan-c PRIVATE "XALAN_DLL_NAME=\"$<TARGET_FILE_NAME:xalan-c>\\0\"")
++  # Different naming for Windows than for Unix builds for backward
++  # compatibility with the existing project files.
++  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_META_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
++  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_META_MS_LIB_MAJOR_VER}_${XALAN_META_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
++  set_target_properties(xalan-c PROPERTIES DEBUG_POSTFIX "D")
++else()
++  # Not used for the common cases, though this would be the default if
++  # not for libtool compatibility.
++  set_target_properties(xalan-c PROPERTIES SOVERSION ${XALAN_META_LIB_MAJOR_VER})
++  if(NOT CYGWIN)
++    # This property causes shared libraries on Linux to have the full
++    # version encoded into their final filename.  We disable this on
++    # Cygwin because it causes xalan-c-${XALAN_C_FULL_VERSION}.dll
++    # to be created when xalan-c.dll seems to be the default.
++    set_target_properties(xalan-c PROPERTIES VERSION ${XALAN_META_LIB_MAJOR_VER}.${XALAN_META_LIB_MINOR_VER})
++  endif()
++endif()
++set_target_properties(xalan-c PROPERTIES FOLDER "Library")
++
++set(xalan_config_dir "${CMAKE_INSTALL_DATAROOTDIR}/XalanC")
++
++install(TARGETS xalan-c
++  EXPORT XalanCConfigInternal
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  COMPONENT "runtime"
++  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++install(EXPORT XalanCConfigInternal
++        DESTINATION "${xalan_config_dir}"
++        NAMESPACE "xalan_"
++        COMPONENT "development")
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/XalanCConfig.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/XalanCConfig.cmake"
++  INSTALL_DESTINATION "${xalan_config_dir}")
++write_basic_package_version_file(
++  ${CMAKE_CURRENT_BINARY_DIR}/XalanCConfigVersion.cmake
++  VERSION "${PROJECT_VERSION}"
++  COMPATIBILITY SameMajorVersion)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/XalanCConfig.cmake
++              ${CMAKE_CURRENT_BINARY_DIR}/XalanCConfigVersion.cmake
++              DESTINATION "${xalan_config_dir}")
++
++foreach(hdr IN LISTS libxalan_c_HEADERS)
++  get_filename_component(hdrdir "${hdr}" DIRECTORY)
++  install(
++    FILES "${hdr}"
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/xalanc/${hdrdir}"
++    COMPONENT "development")
++endforeach()
++
++# Source file grouping (for IDE project layout)
++set(source_files ${libxalan_c_SOURCES} ${libxalan_c_HEADERS})
++list(SORT source_files)
++unset(group_dir)
++unset(group_files)
++foreach(file IN LISTS source_files)
++  get_filename_component(dir "${file}" PATH)
++  if(group_dir AND NOT dir STREQUAL group_dir)
++    if(group_files)
++      source_group("${group_dir}" FILES ${group_files})
++    endif()
++    unset(group_files)
++  endif()
++  list(APPEND group_files "${file}")
++  set(group_dir "${dir}")
++endforeach()
++if(group_files)
++  source_group("${group_dir}" FILES ${group_files})
++endif()
++unset(group_dir)
++unset(group_files)
++
++add_executable(TestXSLT TestXSLT/process.cpp)
++target_link_libraries(TestXSLT XalanC::XalanC)
++set_target_properties(TestXSLT PROPERTIES FOLDER "Tests")
++
++add_executable(TestXPath
++  TestXPath/NodeNameTreeWalker.cpp
++  TestXPath/NodeNameTreeWalker.hpp
++  TestXPath/TestXPath.cpp)
++target_link_libraries(TestXPath XalanC::XalanC)
++set_target_properties(TestXPath PROPERTIES FOLDER "Tests")
++
++
+diff --git a/src/xalanc/PlatformSupport/XalanNLSMessageLoader.cpp b/src/xalanc/PlatformSupport/XalanNLSMessageLoader.cpp
+index e3897ad2..c3eb74ce 100644
+--- a/src/xalanc/PlatformSupport/XalanNLSMessageLoader.cpp
++++ b/src/xalanc/PlatformSupport/XalanNLSMessageLoader.cpp
+@@ -27,7 +27,10 @@
+ 
+ #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+ 
++#include <locale.h>
++
+ #include <cstring>
++#include <cstdlib>
+ 
+ #include <cerrno>
+ 
+@@ -36,7 +39,7 @@ XALAN_CPP_NAMESPACE_BEGIN
+ 
+ XALAN_USING_XERCES(XMLMsgLoader)
+ 
+-static const char* const    MSG_FILE_NAME = "XalanMsg_";
++static const char* const    MSG_FILE_NAME = "Xalan.cat";
+ 
+ #define MAX_LOCALTION_NAME 1024
+ 
+@@ -44,22 +47,17 @@ static const char* const    s_errorMessage = "Message can't be located in the NL
+ 
+ XalanNLSMessageLoader::~XalanNLSMessageLoader()
+ {
+-    if ((int)m_catalogHandle != -1)
++    if (m_catalogHandle != reinterpret_cast<nl_catd>(-1))
+     {
+         catclose(m_catalogHandle);
+     }
+ }
+ 
+ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
+-    m_catalogHandle(nl_catd(-1)),
++    m_catalogHandle(reinterpret_cast<nl_catd>(-1)),
+     m_memoryManager(theManager)
+ {
+ 
+-    char fileName[50];
+-    fileName[0] = 0;
+-    
+-    sprintf(fileName,"%s", MSG_FILE_NAME);
+-
+     const char* Locale = XMLMsgLoader::getLocale();
+ 
+     if(Locale == 0)
+@@ -67,17 +65,28 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
+         Locale = "en_US";
+     }
+ 
+-    strcat(fileName, Locale);
+-
+-    strcat(fileName, ".cat");
++    const char* msg = setlocale(LC_MESSAGES, 0);
++    char *saved_msg = 0;
++    if (msg)
++    {
++        saved_msg = new char[strlen(msg) + 1];
++        strcpy(saved_msg, msg);
++    }
++    setlocale(LC_MESSAGES, Locale);
+ 
+    /**
+     * To open user-specified locale specific cat file
+     * and default cat file if necessary
+     */
+-    m_catalogHandle = catopen(fileName, 0);
++    m_catalogHandle = catopen(MSG_FILE_NAME, 0);
++
++    if(saved_msg)
++      {
++        setlocale(LC_MESSAGES, saved_msg);
++        delete[] saved_msg;
++      }
+ 
+-    if (reinterpret_cast<int>(m_catalogHandle) == -1)
++    if (m_catalogHandle == reinterpret_cast<nl_catd>(-1))
+     {
+         // Probably have to call panic here
+         // the user will get an error with retrieving messages
+@@ -87,8 +96,8 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
+ 
+ bool
+ XalanNLSMessageLoader::loadMsg(
+-            XalanMessages::Codes    msgToLoad
+-            XalanDOMChar*           toFill
++            XalanMessages::Codes    msgToLoad,
++            XalanDOMChar*           toFill,
+             XalanSize_t             maxChars)
+ {
+     
+@@ -99,7 +108,7 @@ XalanNLSMessageLoader::loadMsg(
+         return bRetValue;
+     }
+ 
+-    if (static_cast<int>(m_catalogHandle) == -1)
++    if (m_catalogHandle == reinterpret_cast<nl_catd>(-1))
+     {
+         // for transcoding to Unicode
+         const XalanDOMString    errorMsg("Message can't be retrieved: the message catalog is not open.", m_memoryManager );
+diff --git a/src/xalanc/Utils/CMakeLists.txt b/src/xalanc/Utils/CMakeLists.txt
+new file mode 100644
+index 00000000..dc39ad0c
+--- /dev/null
++++ b/src/xalanc/Utils/CMakeLists.txt
+@@ -0,0 +1,178 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++set(GEN_SUPPORTDIR "${PROJECT_BINARY_DIR}/src/xalanc/PlatformSupport")
++file(MAKE_DIRECTORY "${GEN_SUPPORTDIR}")
++
++set(XSL_NLS_SRC_DIR "${PROJECT_SOURCE_DIR}/src/xalanc/NLS")
++set(XSL_NLS_BIN_DIR "${PROJECT_BINARY_DIR}/src/xalanc/NLS")
++set(XSL_NLS_INC_DIR "${PROJECT_BINARY_DIR}/src/xalanc/NLS/include")
++set(XSL_NLS_GEN_DIR "${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen")
++file(MAKE_DIRECTORY "${XSL_NLS_LIB_DIR}")
++file(MAKE_DIRECTORY "${XSL_NLS_GEN_DIR}")
++file(MAKE_DIRECTORY "${XSL_NLS_INC_DIR}")
++
++set(MSGFILENAME XalanMsg_${LOCALE})
++
++set(XLIFF_FILE_NAME ${XSL_NLS_SRC_DIR}/${LOCALE}/${MSGFILENAME}.xlf)
++
++set(GENMSGINDEX "${XSL_NLS_GEN_DIR}/LocalMsgIndex.hpp")
++set(GENMSGDATA "${XSL_NLS_GEN_DIR}/LocalMsgData.hpp")
++set(INCLUDEMSGDATA "${XSL_NLS_INC_DIR}/LocalMsgData.hpp")
++set(SUPPORTMSGINDEX "${GEN_SUPPORTDIR}/LocalMsgIndex.hpp")
++
++add_custom_target(locale ALL)
++set_target_properties(locale PROPERTIES FOLDER "Message Library")
++
++if(msgloader STREQUAL "inmemory")
++  add_custom_command(
++    OUTPUT "${GENMSGINDEX}"
++           "${GENMSGDATA}"
++    COMMAND "$<TARGET_FILE:MsgCreator>"
++           "${XLIFF_FILE_NAME}"
++           -TYPE inmem
++           -LOCALE ${LOCALE}
++    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
++    COMMENT "Generating inmemory locale message data"
++    DEPENDS MsgCreator "${XLIFF_FILE_NAME}")
++
++  add_custom_command(
++    OUTPUT "${INCLUDEMSGDATA}"
++    COMMAND "${CMAKE_COMMAND}" -E copy "${GENMSGDATA}" "${INCLUDEMSGDATA}"
++    DEPENDS "${GENMSGDATA}"
++    COMMENT "Creating ${INCLUDEMSGDATA}")
++
++  add_custom_command(
++    OUTPUT "${SUPPORTMSGINDEX}"
++    COMMAND "${CMAKE_COMMAND}" -E copy "${GENMSGINDEX}" "${SUPPORTMSGINDEX}"
++    DEPENDS "${GENMSGINDEX}"
++    COMMENT "Creating ${SUPPORTMSGINDEX}")
++
++  add_custom_target(inmemory-dependencies
++    DEPENDS "${INCLUDEMSGDATA}" "${SUPPORTMSGINDEX}")
++  add_dependencies(locale inmemory-dependencies)
++  set_target_properties(inmemory-dependencies PROPERTIES FOLDER "Message Library")
++endif()
++
++# Note that ICU message loading is broken due to pkgdata no longer
++# generating DLLs.  This support was removed some time ago; what
++# support remains is broken.
++if(msgloader STREQUAL "icu")
++  # Do we need a configuration-specific location for the generated
++  # package?
++  set(XSL_NLS_LIB_DIR "${PROJECT_SOURCE_DIR}/src/xalanc/NLS/lib/$<CONFIG>")
++  set(GENLOCALETXT "${XSL_NLS_GEN_DIR}/${LOCALE}.txt")
++  set(GENRESFILELIST "${XSL_NLS_GEN_DIR}/res-file-list.txt")
++  set(RESFILE "${LOCALE}.res")
++  set(GENRESFILE "${XSL_NLS_GEN_DIR}/${RESFILE}")
++  set(LOC_PROJECT_NAME xalanMsg)
++
++  file(WRITE "${GENRESFILELIST}" "${GENRESFILE}")
++
++  add_custom_command(
++    OUTPUT "${GENMSGINDEX}"
++           "${GENLOCALETXT}"
++    COMMAND "$<TARGET_FILE:MsgCreator>"
++            "${XLIFF_FILE_NAME}"
++            -TYPE icu
++            -LOCALE ${LOCALE}
++    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
++    COMMENT "Generating ICU locale message data"
++    DEPENDS MsgCreator "${XLIFF_FILE_NAME}")
++
++  add_custom_command(
++    OUTPUT "${GENRESFILE}"
++    COMMAND "${ICU_GENRB_EXECUTABLE}"
++            -d "${XSL_NLS_GEN_DIR}"
++            -i "${XSL_NLS_GEN_DIR}"
++            "${GENLOCALETXT}"
++    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
++    COMMENT "Generating ICU locale message resource"
++    DEPENDS "${GENLOCALETXT}")
++
++  # Needs to use generator for lib dir name
++  add_custom_command(OUTPUT "testlibxxx"
++    COMMAND "${ICU_PKGDATA_EXECUTABLE}"
++            --name "${LOC_PROJECT_NAME}"
++            -T "${XSL_NLS_GEN_DIR}"
++            -v
++            -O "${ICU_MAKEFILE_INC}"
++            --mode dll
++            -d "${XSL_NLS_LIB_DIR}"
++            "${RESFILE}"
++    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
++    COMMENT "Generating ICU locale message data package"
++    DEPENDS "${GENRESFILE}")
++
++  # Further needed ICU actions...
++
++  # Test ICU actions to this point; it's incomplete due to ICU pkgdata
++  # not working.
++  add_custom_target(icutest
++    DEPENDS "testlibxxx")
++  set_target_properties(icutest PROPERTIES FOLDER "Message Library")
++endif()
++
++if(msgloader STREQUAL "nls")
++  set(CATALOG_NAME Xalan)
++  set(CATALOG_MSG "${XSL_NLS_GEN_DIR}/${MSGFILENAME}.msg")
++  set(CATALOG "${XSL_NLS_GEN_DIR}/${CATALOG_NAME}.cat")
++  set(locale_dependencies "${CATALOG}")
++
++  add_custom_command(
++    OUTPUT "${CATALOG_MSG}"
++    COMMAND "$<TARGET_FILE:MsgCreator>"
++            "${XLIFF_FILE_NAME}"
++            -TYPE nls
++            -LOCALE ${LOCALE}
++    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
++    COMMENT "Generating nls locale message data"
++    DEPENDS MsgCreator "${XLIFF_FILE_NAME}")
++
++  add_custom_command(
++    OUTPUT "${CATALOG}"
++    COMMAND gencat "${CATALOG}" "${CATALOG_MSG}"
++    DEPENDS "${CATALOG_MSG}"
++    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
++    COMMENT "Generating nls message catalog")
++
++  add_custom_command(
++    OUTPUT "${SUPPORTMSGINDEX}"
++    COMMAND "${CMAKE_COMMAND}" -E copy "${GENMSGINDEX}" "${SUPPORTMSGINDEX}"
++    DEPENDS "${GENMSGINDEX}"
++    COMMENT "Creating ${SUPPORTMSGINDEX}")
++
++  add_custom_target(nls-dependencies DEPENDS "${CATALOG}" "${SUPPORTMSGINDEX}")
++  add_dependencies(locale nls-dependencies)
++  set_target_properties(nls-dependencies PROPERTIES FOLDER "Message Library")
++
++  if(NOT XALAN_USING_GLIBC)
++    install(FILES "${CATALOG}"
++      DESTINATION "${CMAKE_INSTALL_LIBDIR}/nls/${LOCALE}"
++      COMPONENT "runtime")
++  else()
++    install(FILES "${CATALOG}"
++      DESTINATION "${CMAKE_INSTALL_LOCALEDIR}/${LOCALE}/LC_MESSAGES"
++      COMPONENT "runtime")
++  endif()
++endif()
++
++install(FILES "${SUPPORTMSGINDEX}"
++  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/xalanc/PlatformSupport"
++  COMPONENT "development")
+diff --git a/src/xalanc/Utils/MsgCreator/CMakeLists.txt b/src/xalanc/Utils/MsgCreator/CMakeLists.txt
+new file mode 100644
+index 00000000..20215d47
+--- /dev/null
++++ b/src/xalanc/Utils/MsgCreator/CMakeLists.txt
+@@ -0,0 +1,49 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++set(msgcreator_sources
++  ICUResHandler.cpp
++  InMemHandler.cpp
++  MsgCreator.cpp
++  MsgFileOutputStream.cpp
++  NLSHandler.cpp
++  SAX2Handler.cpp)
++
++set(msgcreator_headers
++  ICUResData.hpp
++  ICUResHandler.hpp
++  IndexFileData.hpp
++  InMemData.hpp
++  InMemHandler.hpp
++  MsgCreator.hpp
++  MsgFileOutputStream.hpp
++  NLSData.hpp
++  NLSHandler.hpp
++  SAX2Handler.hpp)
++
++add_executable(MsgCreator ${msgcreator_sources} ${msgcreator_headers})
++target_include_directories(MsgCreator PUBLIC
++  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
++  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>)
++target_link_libraries(MsgCreator XercesC::XercesC)
++if(transcoder STREQUAL "icu")
++  target_link_libraries(MsgCreator ICU::uc ICU::i18n)
++endif()
++
++set_target_properties(MsgCreator PROPERTIES FOLDER "Message Library")
+diff --git a/src/xalanc/Utils/XalanMsgLib/CMakeLists.txt b/src/xalanc/Utils/XalanMsgLib/CMakeLists.txt
+new file mode 100644
+index 00000000..7de95277
+--- /dev/null
++++ b/src/xalanc/Utils/XalanMsgLib/CMakeLists.txt
+@@ -0,0 +1,75 @@
++# CMake build for xalan-c
++#
++# Written by Roger Leigh <rleigh@codelibre.net>
++#
++# Licensed to the Apache Software Foundation (ASF) under one or more
++# contributor license agreements.  See the NOTICE file distributed with
++# this work for additional information regarding copyright ownership.
++# The ASF licenses this file to You under the Apache License, Version 2.0
++# (the "License"); you may not use this file except in compliance with
++# the License.  You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++if(msgloader STREQUAL "inmemory")
++
++  set(msglib_sources
++    XalanMsgLib.cpp)
++
++  set(msglib_headers
++    XalanMsgLib.hpp
++    XalanMsgLibDefinitions.hpp)
++
++  add_library(xalanMsg ${msglib_sources} ${msglib_headers})
++  add_dependencies(xalanMsg locale)
++  target_compile_definitions(xalanMsg PRIVATE "${MSGLOADER_DEF}=1")
++  if(BUILD_SHARED_LIBS)
++    target_compile_definitions(xalanMsg PRIVATE XALAN_XALANMSGLIB_BUILD_DLL=1)
++  endif()
++  target_include_directories(xalanMsg PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
++    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
++    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/xalanc/PlatformSupport>
++    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/xalanc/NLS/include>
++    $<INSTALL_INTERFACE:include/xalanc>)
++  target_link_libraries(xalanMsg XercesC::XercesC)
++
++  add_library(XalanC::XalanMsg ALIAS xalanMsg)
++
++  if(MSVC)
++    # Add configuration-specific library name to resource file.
++    target_compile_definitions(xalanMsg PRIVATE "XALAN_DLL_NAME=\"$<TARGET_FILE_NAME:xalanMsg>\\0\"")
++    # Different naming for Windows than for Unix builds for backward
++    # compatibility with the existing project files.
++    set_target_properties(xalanMsg PROPERTIES OUTPUT_NAME "XalanMsgLib_${XALAN_META_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
++    set_target_properties(xalanMsg PROPERTIES RUNTIME_OUTPUT_NAME "XalanMessages_${XALAN_META_MS_LIB_MAJOR_VER}_${XALAN_META_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
++    set_target_properties(xalanMsg PROPERTIES DEBUG_POSTFIX "D")
++  else()
++    # Not used for the common cases, though this would be the default if
++    # not for libtool compatibility.
++    set_target_properties(xalanMsg PROPERTIES SOVERSION ${XALAN_META_LIB_MAJOR_VER})
++    if(NOT CYGWIN)
++      # This property causes shared libraries on Linux to have the full
++      # version encoded into their final filename.  We disable this on
++      # Cygwin because it causes xalanMsg-${XALAN_C_FULL_VERSION}.dll
++      # to be created when xalanMsg.dll seems to be the default.
++      set_target_properties(xalanMsg PROPERTIES VERSION ${XALAN_META_LIB_MAJOR_VER}.${XALAN_META_LIB_MINOR_VER})
++    endif()
++  endif()
++  set_target_properties(xalanMsg PROPERTIES FOLDER "Message Library")
++
++  install(TARGETS xalanMsg
++    EXPORT XalanCConfigInternal
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    COMPONENT "runtime"
++    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++
++endif()
+diff --git a/src/xalanc/XalanCConfig.cmake.in b/src/xalanc/XalanCConfig.cmake.in
+new file mode 100644
+index 00000000..17e1b38a
+--- /dev/null
++++ b/src/xalanc/XalanCConfig.cmake.in
+@@ -0,0 +1,13 @@
++@PACKAGE_INIT@
++include(${CMAKE_CURRENT_LIST_DIR}/XalanCConfigInternal.cmake)
++
++find_package(XercesC 3.1 REQUIRED)
++find_package(Threads REQUIRED)
++
++add_library(XalanC::XalanC INTERFACE IMPORTED)
++set_target_properties(XalanC::XalanC PROPERTIES INTERFACE_LINK_LIBRARIES xalan_xalan-c)
++
++# For compatibility with FindXalanC.
++set(XalanC_VERSION "@xalan-c_VERSION@")
++get_target_property(XalanC_INCLUDE_DIRS xalan_xalan-c INTERFACE_INCLUDE_DIRECTORIES)
++set(XalanC_LIBRARIES XalanC::XalanC)
+diff --git a/xalan-c.pc.in b/xalan-c.pc.in
+new file mode 100644
+index 00000000..f61962cb
+--- /dev/null
++++ b/xalan-c.pc.in
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: Xalan-C
++Description: XSLT library for C/C++
++Version: @xalan_c_version@
++Libs: -L${libdir} -lxalan-c
++Cflags: -I${includedir}
+-- 
+2.15.1
+

@@ -1,7 +1,7 @@
-diff --git a/c/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj b/c/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj
+diff --git a/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj b/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj
 index 5a9d6a0..a0d12e8 100644
---- a/c/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj
-+++ b/c/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj
+--- a/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj
++++ b/Projects/Win32/VC10/AllInOne/AllInOne.vcxproj
 @@ -159,7 +159,7 @@
      <ClCompile>
        <Optimization>Disabled</Optimization>
@@ -20,10 +20,10 @@ index 5a9d6a0..a0d12e8 100644
        <StringPooling>true</StringPooling>
        <MinimalRebuild>true</MinimalRebuild>
        <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-diff --git a/c/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj b/c/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj
+diff --git a/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj b/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj
 index 27958b5..9f7767b 100644
---- a/c/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj
-+++ b/c/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj
+--- a/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj
++++ b/Projects/Win32/VC10/Utils/MsgCreator/MsgCreator.vcxproj
 @@ -159,6 +159,7 @@
      <ClCompile>
        <Optimization>Disabled</Optimization>
@@ -41,10 +41,10 @@ index 27958b5..9f7767b 100644
        <StringPooling>true</StringPooling>
        <MinimalRebuild>true</MinimalRebuild>
        <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-diff --git a/c/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj b/c/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
+diff --git a/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj b/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
 index facbbc1..53b83a8 100644
---- a/c/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
-+++ b/c/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
+--- a/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
++++ b/Projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
 @@ -144,7 +144,7 @@
        <Optimization>Disabled</Optimization>
        <WholeProgramOptimization>false</WholeProgramOptimization>

@@ -1,0 +1,1142 @@
+diff --git a/src/xalanc/Include/STLHelper.hpp b/src/xalanc/Include/STLHelper.hpp
+index 0a55ebe9..dc334cdf 100644
+--- a/src/xalanc/Include/STLHelper.hpp
++++ b/src/xalanc/Include/STLHelper.hpp
+@@ -97,21 +97,8 @@ makeXalanDestroyFunctor(const Type*     /* theType */)
+  * Functor to delete objects, used in STL iteration algorithms.
+  */
+ template <class Type>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DeleteFunctor : public unary_function<const Type*, void>
+-#else
+-struct DeleteFunctor : public std::unary_function<const Type*, void>
+-#endif
++struct DeleteFunctor
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<const Type*, void>       BaseClassType;
+-#else
+-    typedef std::unary_function<const Type*, void>  BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+     DeleteFunctor(MemoryManager&    theManager) :
+         m_memoryManager(theManager)
+     {
+@@ -122,8 +109,8 @@ struct DeleteFunctor : public std::unary_function<const Type*, void>
+      *
+      * @param thePointer pointer to object to be deleted
+      */
+-    result_type
+-    operator()(argument_type    thePointer) const
++    void
++    operator()(const Type*    thePointer) const
+     {
+         return makeXalanDestroyFunctor(thePointer)(thePointer, m_memoryManager);
+     }
+@@ -217,31 +204,16 @@ struct select2nd : public std::unary_function<PairType, typename PairType::secon
+  * Functor to call a clear() member function on its argument.
+  */
+ template <class Type>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct ClearFunctor : public unary_function<Type, void>
+-#else
+-struct ClearFunctor : public std::unary_function<Type, void>
+-#endif
++struct ClearFunctor
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<Type, void>      BaseClassType;
+-#else
+-    typedef std::unary_function<Type, void> BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+-    typedef Type                                    value_type;
+-
+     /**
+      * Retrieve the value of a key-value pair.
+      *
+      * @param thePair key-value pair
+      * @return value
+      */
+-    result_type
+-    operator()(argument_type&   theArg) const
++    void
++    operator()(Type&   theArg) const
+     {
+         return theArg.clear();
+     }
+@@ -253,21 +225,8 @@ struct ClearFunctor : public std::unary_function<Type, void>
+  * Functor to delete value objects in maps, used in STL iteration algorithms.
+  */
+ template <class T>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct MapValueDeleteFunctor : public unary_function<const typename T::value_type&, void>
+-#else
+-struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
+-#endif
++struct MapValueDeleteFunctor
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<const typename T::value_type&, void>         BaseClassType;
+-#else
+-    typedef std::unary_function<const typename T::value_type&, void>    BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+     MapValueDeleteFunctor(MemoryManager&    theManager) :
+         m_memoryManager(theManager)
+     {
+@@ -279,8 +238,8 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
+      *
+      * @param thePair key-value pair
+      */
+-    result_type
+-    operator()(argument_type    thePair) const
++    void
++    operator()(const typename T::value_type&    thePair) const
+     {
+         return makeXalanDestroyFunctor(thePair.second)(thePair.second, m_memoryManager);
+     }
+@@ -311,22 +270,8 @@ makeMapValueDeleteFunctor(MapType&   theMap)
+  * the default will allow the map to work as expected.
+  */
+ template<class T>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct less_null_terminated_arrays : public binary_function<const T*, const T*, bool>
+-#else
+-struct less_null_terminated_arrays : public std::binary_function<const T*, const T*, bool>
+-#endif
++struct less_null_terminated_arrays
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef binary_function<const T*, const T*, bool>           BaseClassType;
+-#else
+-    typedef std::binary_function<const T*, const T*, bool>      BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type             result_type;
+-    typedef typename BaseClassType::first_argument_type     first_argument_type;
+-    typedef typename BaseClassType::second_argument_type    second_argument_type;
+-
+     /**
+      * Compare the values of two objects.
+      *
+@@ -335,10 +280,10 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
+      * @param theRHS second object to compare
+      * @return true if objects are the same
+      */
+-    result_type
++    bool
+     operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const T*    theLHS,
++            const T*    theRHS) const
+     {
+         while(*theLHS && *theRHS)
+         {
+@@ -360,13 +305,8 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
+ 
+ 
+ template<class T>
+-struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
++struct equal_null_terminated_arrays
+ {
+-    typedef XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>       BaseClassType;
+-
+-    typedef typename BaseClassType::result_type             result_type;
+-    typedef typename BaseClassType::first_argument_type     first_argument_type;
+-    typedef typename BaseClassType::second_argument_type    second_argument_type;
+     /**
+      * Compare the values of two objects.
+      *
+@@ -375,10 +315,10 @@ struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function
+      * @param theRHS second object to compare
+      * @return true if objects are the same
+      */
+-    result_type
++    bool
+     operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const T*    theLHS,
++            const T*    theRHS) const
+     {
+         while(*theLHS && *theRHS)
+         {
+@@ -418,22 +358,17 @@ XalanScalarHash(
+ 
+ 
+ template <class T>
+-struct hash_non_terminated_array : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
++struct hash_non_terminated_array
+ {
+-    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>    BaseClassType;
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+-    result_type
++    size_t
+     operator() (
+-        argument_type   theKey,
+-        result_type     theLength,
+-        result_type     theInitialValue = 0) const
++        const T*    theKey,
++        size_t      theLength,
++        size_t      theInitialValue = 0) const
+     {
+-        result_type     theHashValue = theInitialValue; 
++        size_t      theHashValue = theInitialValue; 
+ 
+-        const argument_type     theEnd =
++        const T*    theEnd =
+                 theKey + theLength;
+ 
+         while (theKey != theEnd)
+@@ -450,19 +385,14 @@ struct hash_non_terminated_array : public XALAN_STD_QUALIFIER unary_function<con
+ 
+ 
+ template <class T>
+-struct hash_null_terminated_array : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
++struct hash_null_terminated_array
+ {
+-    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>    BaseClassType;
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+-    result_type
++    size_t
+     operator() (
+-        argument_type   theKey,
+-        result_type     theInitialValue = 0) const
++        const T*   theKey,
++        size_t     theInitialValue = 0) const
+     {
+-        result_type     theHashValue = theInitialValue; 
++        size_t     theHashValue = theInitialValue; 
+ 
+         while (*theKey)
+         {
+@@ -570,26 +500,12 @@ private:
+ 
+ 
+ template<class T>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct pointer_equals : public binary_function<const T*, const T*, bool>
+-#else
+-struct pointer_equals : public std::binary_function<const T*, const T*, bool>
+-#endif
++struct pointer_equals
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef binary_function<const T*, const T*, bool>           BaseClassType;
+-#else
+-    typedef std::binary_function<const T*, const T*, bool>      BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type             result_type;
+-    typedef typename BaseClassType::first_argument_type     first_argument_type;
+-    typedef typename BaseClassType::second_argument_type    second_argument_type;
+-
+-    result_type
++    bool
+     operator()(
+-        first_argument_type     theLHS,
+-        second_argument_type    theRHS) const
++        const T*    theLHS,
++        const T*    theRHS) const
+     {
+         assert(theLHS != 0 && theRHS != 0);
+ 
+@@ -600,29 +516,16 @@ struct pointer_equals : public std::binary_function<const T*, const T*, bool>
+ 
+ 
+ template<class T>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct pointer_equals_predicate : public unary_function<const T*, bool>
+-#else
+-struct pointer_equals_predicate : public std::unary_function<const T*, bool>
+-#endif
++struct pointer_equals_predicate
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<const T*, bool>          BaseClassType;
+-#else
+-    typedef std::unary_function<const T*, bool>     BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+-    pointer_equals_predicate(argument_type  theArg) :
++    pointer_equals_predicate(const T*    theArg) :
+         m_arg(theArg)
+     {
+     }
+ 
+-    result_type
++    bool
+     operator()(
+-        argument_type   theOther) const
++        const T*   theOther) const
+     {
+         assert(theOther != 0);
+ 
+@@ -631,32 +534,18 @@ struct pointer_equals_predicate : public std::unary_function<const T*, bool>
+ 
+ private:
+ 
+-    const argument_type     m_arg;
++    const T*    m_arg;
+ };
+ 
+ 
+ 
+ template<class T>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct pointer_less : public binary_function<const T*, const T*, bool>
+-#else
+-struct pointer_less : public std::binary_function<const T*, const T*, bool>
+-#endif
++struct pointer_less
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef binary_function<const T*, const T*, bool>           BaseClassType;
+-#else
+-    typedef std::binary_function<const T*, const T*, bool>      BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type             result_type;
+-    typedef typename BaseClassType::first_argument_type     first_argument_type;
+-    typedef typename BaseClassType::second_argument_type    second_argument_type;
+-
+-    result_type
++    bool
+     operator()(
+-        first_argument_type     theLHS,
+-        second_argument_type    theRHS) const
++        const T*    theLHS,
++        const T*    theRHS) const
+     {
+         assert(theLHS != 0 && theRHS != 0);
+ 
+@@ -671,18 +560,12 @@ struct pointer_less : public std::binary_function<const T*, const T*, bool>
+ 
+ 
+ template<class T>
+-struct pointer_equal : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
++struct pointer_equal
+ {
+-    typedef XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool> BaseClassType;
+-
+-    typedef typename BaseClassType::result_type             result_type;
+-    typedef typename BaseClassType::first_argument_type     first_argument_type;
+-    typedef typename BaseClassType::second_argument_type    second_argument_type;
+-
+-    result_type
++    bool
+     operator()(
+-        first_argument_type     theLHS,
+-        second_argument_type    theRHS) const
++        const T*    theLHS,
++        const T*    theRHS) const
+     {
+         assert(theLHS != 0 && theRHS != 0);
+         return XALAN_STD_QUALIFIER equal_to<T>()(*theLHS, *theRHS);
+diff --git a/src/xalanc/Include/XalanMap.hpp b/src/xalanc/Include/XalanMap.hpp
+index 198073a7..34be55e0 100644
+--- a/src/xalanc/Include/XalanMap.hpp
++++ b/src/xalanc/Include/XalanMap.hpp
+@@ -46,7 +46,7 @@ XALAN_CPP_NAMESPACE_BEGIN
+ typedef size_t  size_type;
+ 
+ template <class Key>
+-class XalanHasher : public XALAN_STD_QUALIFIER unary_function<Key, size_type>
++class XalanHasher
+ {
+ public:
+     size_type operator()(const Key& key) const
+diff --git a/src/xalanc/PlatformSupport/DOMStringHelper.hpp b/src/xalanc/PlatformSupport/DOMStringHelper.hpp
+index 263e1f6f..4ace2928 100644
+--- a/src/xalanc/PlatformSupport/DOMStringHelper.hpp
++++ b/src/xalanc/PlatformSupport/DOMStringHelper.hpp
+@@ -2683,14 +2683,10 @@ MakeXalanDOMCharVector(const XalanDOMString&    data,
+ 
+ 
+ 
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct c_wstr_functor : public unary_function<XalanDOMString, const XalanDOMChar*>
+-#else
+-struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDOMChar*>
+-#endif
++struct c_wstr_functor
+ {
+-    result_type
+-    operator() (const argument_type&    theString) const
++    const XalanDOMChar*
++    operator() (const XalanDOMString&    theString) const
+     {
+         return theString.c_str();
+     }
+@@ -2705,15 +2701,11 @@ struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDO
+  * @param theRHS second string to compare
+  * @return true if the theLHS is less than theRHS, without respect to case.
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringLessThanIgnoreCaseASCIIFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringLessThanIgnoreCaseASCIIFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
+     }
+@@ -2728,15 +2720,11 @@ struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<co
+  * @param theRHS second string to compare
+  * @return true if the theLHS is less than or equal to theRHS
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringLessThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringLessThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringLessThanOrEqualFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return compare(theLHS, theRHS) <= 0 ? true : false;
+     }
+@@ -2751,15 +2739,11 @@ struct DOMStringLessThanOrEqualFunction : public std::binary_function<const Xala
+  * @param theRHS second string to compare
+  * @return true if the theLHS is greater than theRHS
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringGreaterThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringGreaterThanFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return compare(theLHS, theRHS) > 0 ? true : false;
+     }
+@@ -2774,15 +2758,11 @@ struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOM
+  * @param theRHS second string to compare
+  * @return true if the theLHS is greater than or equal to theRHS
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringGreaterThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringGreaterThanOrEqualFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return compare(theLHS, theRHS) >= 0 ? true : false;
+     }
+@@ -2795,11 +2775,7 @@ struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const X
+  * manner.  It substitutes for the default less<type*> so that the contents of wide strings
+  * can be compared, rather than just the pointers.
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct less_no_case_ascii_wide_string : public binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
+-#else
+-struct less_no_case_ascii_wide_string : public std::binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
+-#endif
++struct less_no_case_ascii_wide_string
+ {
+     /**
+      * Compare the values of two objects.
+@@ -2809,10 +2785,10 @@ struct less_no_case_ascii_wide_string : public std::binary_function<const XalanD
+      * @param theRHS second object to compare
+      * @return true if objects are the same
+      */
+-    result_type
++    bool
+     operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const XalanDOMChar*    theLHS,
++            const XalanDOMChar*    theRHS) const
+     {
+         return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
+     }
+diff --git a/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp b/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp
+index 2e610d2c..b6f6bd2c 100644
+--- a/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp
++++ b/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp
+@@ -198,14 +198,10 @@ public:
+ 
+ 
+ 
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DirectoryFilterPredicate : public unary_function<FindFileStruct, bool>
+-#else
+-struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, bool>
+-#endif
++struct DirectoryFilterPredicate
+ {
+-    result_type
+-    operator()(const argument_type& theFindData) const
++    bool
++    operator()(const FindFileStruct& theFindData) const
+     {
+         return theFindData.isDirectory();
+     }
+@@ -213,14 +209,10 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
+ 
+ 
+ 
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct FilesOnlyFilterPredicate : public unary_function<FindFileStruct, bool>
+-#else
+-struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, bool>
+-#endif
++struct FilesOnlyFilterPredicate
+ {
+-    result_type
+-    operator()(const argument_type& theFindData) const
++    bool
++    operator()(const FindFileStruct& theFindData) const
+     {
+         DirectoryFilterPredicate        theDirectoryPredicate;
+ 
+@@ -468,21 +460,8 @@ template<class CollectionType,
+      class StringType = XalanDOMString,
+      class FilterPredicateType = FilesOnlyFilterPredicate,
+      class StringConversionFunction = c_wstr_functor>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>
+-#else
+-struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, CollectionType>
+-#endif
++struct DirectoryEnumeratorFunctor
+ {
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<StringType, CollectionType>  BaseClassType;
+-#else
+-    typedef std::unary_function<StringType, CollectionType> BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+     explicit
+     DirectoryEnumeratorFunctor(
+                 MemoryManager&  theMemoryManager,
+@@ -494,8 +473,8 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
+             
+     void
+     operator()(
+-            const argument_type&    theFullSearchSpec,
+-            CollectionType&         theCollection) const
++            const StringType&    theFullSearchSpec,
++            CollectionType&      theCollection) const
+     {
+         XALAN_USING_STD(back_inserter)
+ 
+@@ -508,10 +487,10 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
+             m_includeSelfAndParent);
+     }
+ 
+-    result_type
+-    operator()(const argument_type&     theFullSearchSpec) const
++    CollectionType
++    operator()(const StringType&     theFullSearchSpec) const
+     {
+-        result_type     theCollection;
++        CollectionType     theCollection;
+ 
+         operator()(
+                 theFullSearchSpec,
+@@ -522,9 +501,9 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
+ 
+     void
+     operator()(
+-            const argument_type&    theDirectory,
+-            const argument_type&    theSearchSpec,
+-            CollectionType&         theCollection) const
++            const StringType&    theDirectory,
++            const StringType&    theSearchSpec,
++            CollectionType&      theCollection) const
+     {
+         EnumerateDirectory(
+             m_memoryManager,
+@@ -536,12 +515,12 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
+             m_includeSelfAndParent);
+     }
+ 
+-    result_type
++    CollectionType
+     operator()(
+-            const argument_type&    theDirectory,
+-            const argument_type&    theSearchSpec) const
++            const StringType&    theDirectory,
++            const StringType&    theSearchSpec) const
+     {
+-        result_type     theCollection;
++        CollectionType     theCollection;
+ 
+         operator()(
+                 theDirectory,
+diff --git a/src/xalanc/PlatformSupport/DoubleSupport.hpp b/src/xalanc/PlatformSupport/DoubleSupport.hpp
+index d360e44d..c510558e 100644
+--- a/src/xalanc/PlatformSupport/DoubleSupport.hpp
++++ b/src/xalanc/PlatformSupport/DoubleSupport.hpp
+@@ -353,179 +353,131 @@ public:
+ 
+     // Some functors to do the same thing.  This is for
+     // STL integration...
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct equalFunction : public binary_function<const double&, const double&, bool>
+-    #else
+-    struct equalFunction : public std::binary_function<const double&, const double&, bool>
+-    #endif
++    struct equalFunction
+     {
+-        result_type
++        bool
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return equal(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct notEqualFunction : public binary_function<const double&, const double&, bool>
+-    #else
+-    struct notEqualFunction : public std::binary_function<const double&, const double&, bool>
+-    #endif
++    struct notEqualFunction
+     {
+-        result_type
++        bool
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return notEqual(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct lessThanFunction : public binary_function<const double&, const double&, bool>
+-    #else
+-    struct lessThanFunction : public std::binary_function<const double&, const double&, bool>
+-    #endif
++    struct lessThanFunction
+     {
+-        result_type
++        bool
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return lessThan(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct lessThanOrEqualFunction : public binary_function<const double&, const double&, bool>
+-    #else
+-    struct lessThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
+-    #endif
++    struct lessThanOrEqualFunction
+     {
+-        result_type
++        bool
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return lessThanOrEqual(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct greaterThanFunction : public binary_function<const double&, const double&, bool>
+-    #else
+-    struct greaterThanFunction : public std::binary_function<const double&, const double&, bool>
+-    #endif
++    struct greaterThanFunction
+     {
+-        result_type
++        bool
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return greaterThan(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct greaterThanOrEqualFunction : public binary_function<const double&, const double&, bool>
+-    #else
+-    struct greaterThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
+-    #endif
++    struct greaterThanOrEqualFunction
+     {
+-        result_type
++        bool
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return greaterThanOrEqual(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct addFunction : public binary_function<const double&, const double&, double>
+-    #else
+-    struct addFunction : public std::binary_function<const double&, const double&, double>
+-    #endif
++    struct addFunction
+     {
+-        result_type
++        double
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return add(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct subtractFunction : public binary_function<const double&, const double&, double>
+-    #else
+-    struct subtractFunction : public std::binary_function<const double&, const double&, double>
+-    #endif
++    struct subtractFunction
+     {
+-        result_type
++        double
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return subtract(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct multiplyFunction : public binary_function<const double&, const double&, double>
+-    #else
+-    struct multiplyFunction : public std::binary_function<const double&, const double&, double>
+-    #endif
++    struct multiplyFunction
+     {
+-        result_type
++        double
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return multiply(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct divideFunction : public binary_function<const double&, const double&, double>
+-    #else
+-    struct divideFunction : public std::binary_function<const double&, const double&, double>
+-    #endif
++    struct divideFunction
+     {
+-        result_type
++        double
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return divide(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct modulusFunction : public binary_function<const double&, const double&, double>
+-    #else
+-    struct modulusFunction : public std::binary_function<const double&, const double&, double>
+-    #endif
++    struct modulusFunction
+     {
+-        result_type
++        double
+         operator()(
+-            first_argument_type     theLHS,
+-            second_argument_type    theRHS) const
++            const double&    theLHS,
++            const double&    theRHS) const
+         {
+             return modulus(theLHS, theRHS);
+         }
+     };
+ 
+-    #if defined(XALAN_NO_STD_NAMESPACE)
+-    struct negativeFunction : public unary_function<const double&, double>
+-    #else
+-    struct negativeFunction : public std::unary_function<const double&, double>
+-    #endif
++    struct negativeFunction
+     {
+-        result_type
+-        operator()(argument_type    theDouble) const
++        double
++        operator()(const double&        theDouble) const
+         {
+             return negative(theDouble);
+         }
+diff --git a/src/xalanc/XPath/XObjectFactory.hpp b/src/xalanc/XPath/XObjectFactory.hpp
+index 46529f7d..d41689ce 100644
+--- a/src/xalanc/XPath/XObjectFactory.hpp
++++ b/src/xalanc/XPath/XObjectFactory.hpp
+@@ -238,11 +238,7 @@ public:
+      * A public functor for use with stl algorithms.
+      *
+      */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    struct DeleteXObjectFunctor : public unary_function<XObject*, void>
+-#else
+-    struct DeleteXObjectFunctor : public std::unary_function<XObject*, bool>
+-#endif
++    struct DeleteXObjectFunctor
+     {
+     public:
+ 
+@@ -254,8 +250,8 @@ public:
+         {
+         }
+ 
+-        result_type
+-        operator()(argument_type    theXObject) const
++        bool
++        operator()(XObject*    theXObject) const
+         {
+             if (m_fInReset == true)
+             {
+diff --git a/src/xalanc/XPath/XPathFactory.hpp b/src/xalanc/XPath/XPathFactory.hpp
+index a2f4bede..b45965b6 100644
+--- a/src/xalanc/XPath/XPathFactory.hpp
++++ b/src/xalanc/XPath/XPathFactory.hpp
+@@ -80,11 +80,7 @@ public:
+      * A functor for use with stl algorithms.
+      *
+      */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    struct DeleteXPathFunctor : public unary_function<const XPath*, void>
+-#else
+-    struct DeleteXPathFunctor : public std::unary_function<const XPath*, bool>
+-#endif
++    struct DeleteXPathFunctor
+     {
+     public:
+ 
+@@ -96,8 +92,8 @@ public:
+         {
+         }
+ 
+-        result_type
+-        operator()(argument_type    theXPath) const
++        bool
++        operator()(const XPath*    theXPath) const
+         {
+             if (m_fInReset == true)
+             {
+diff --git a/src/xalanc/XSLT/NodeSorter.cpp b/src/xalanc/XSLT/NodeSorter.cpp
+index 905270f2..ed30375e 100644
+--- a/src/xalanc/XSLT/NodeSorter.cpp
++++ b/src/xalanc/XSLT/NodeSorter.cpp
+@@ -153,9 +153,9 @@ doCollationCompare(
+ 
+ int
+ NodeSorter::NodeSortKeyCompare::compare(
+-                first_argument_type     theLHS,
+-                second_argument_type    theRHS,
+-                XalanSize_t             theKeyIndex) const
++                const NodeVectorType::value_type&    theLHS,
++                const NodeVectorType::value_type&    theRHS,
++                XalanSize_t                          theKeyIndex) const
+ {
+     assert(theLHS.m_node != 0 && theRHS.m_node != 0);
+     assert(theKeyIndex < m_nodeSortKeys.size());
+@@ -265,9 +265,9 @@ getResult(
+ 
+ double
+ NodeSorter::NodeSortKeyCompare::getNumberResult(
+-                const NodeSortKey&      theKey,
+-                XalanSize_t             theKeyIndex,
+-                first_argument_type     theEntry) const
++                const NodeSortKey&                   theKey,
++                XalanSize_t                          theKeyIndex,
++                const NodeVectorType::value_type&    theEntry) const
+ {
+     assert(theKey.getPrefixResolver() != 0);
+ 
+@@ -423,9 +423,9 @@ cacheValue(const XalanDOMString&    theEntry)
+ 
+ const XalanDOMString&
+ NodeSorter::NodeSortKeyCompare::getStringResult(
+-                const NodeSortKey&      theKey,
+-                XalanSize_t             theKeyIndex,
+-                first_argument_type     theEntry) const
++                const NodeSortKey&                   theKey,
++                XalanSize_t                          theKeyIndex,
++                const NodeVectorType::value_type&    theEntry) const
+ {
+     assert(theKey.getPrefixResolver() != 0);
+ 
+diff --git a/src/xalanc/XSLT/NodeSorter.hpp b/src/xalanc/XSLT/NodeSorter.hpp
+index 4e60a0e6..35299bca 100644
+--- a/src/xalanc/XSLT/NodeSorter.hpp
++++ b/src/xalanc/XSLT/NodeSorter.hpp
+@@ -108,11 +108,7 @@ public:
+     /**
+      * Return the results of a compare of two nodes.
+      */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
+-#else
+-    struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
+-#endif
++    struct XALAN_XSLT_EXPORT NodeSortKeyCompare
+     {
+     public:
+ 
+@@ -146,9 +142,9 @@ public:
+          */
+         int
+         compare(
+-                first_argument_type     theLHS,
+-                second_argument_type    theRHS,
+-                XalanSize_t             theKeyIndex = 0) const;
++                const NodeVectorType::value_type&    theLHS,
++                const NodeVectorType::value_type&    theRHS,
++                XalanSize_t                          theKeyIndex = 0) const;
+ 
+         /**
+          * Compare two nodes as a less predicate.
+@@ -158,10 +154,10 @@ public:
+          * @param theKeyIndex the index of the key to use
+          * @return true if theLHS is less than theRHS
+          */
+-        result_type
++        bool
+         operator()(
+-                first_argument_type     theLHS,
+-                second_argument_type    theRHS,
++                const NodeVectorType::value_type&    theLHS,
++                const NodeVectorType::value_type&    theRHS,
+                 XalanSize_t             theKeyIndex = 0) const
+         {
+             return compare(theLHS, theRHS, theKeyIndex) < 0 ? true : false;
+@@ -171,15 +167,15 @@ public:
+ 
+         double
+         getNumberResult(
+-                const NodeSortKey&      theKey,
+-                XalanSize_t             theKeyIndex,
+-                first_argument_type     theEntry) const;
++                const NodeSortKey&                   theKey,
++                XalanSize_t                          theKeyIndex,
++                const NodeVectorType::value_type&    theEntry) const;
+ 
+         const XalanDOMString&
+         getStringResult(
+-                const NodeSortKey&      theKey,
+-                XalanSize_t             theKeyIndex,
+-                first_argument_type     theEntry) const;
++                const NodeSortKey&                   theKey,
++                XalanSize_t                          theKeyIndex,
++                const NodeVectorType::value_type&    theEntry) const;
+ 
+     private:
+ 
+diff --git a/src/xalanc/XalanDOM/XalanDOMString.hpp b/src/xalanc/XalanDOM/XalanDOMString.hpp
+index 7f3411e5..d2e3db2e 100644
+--- a/src/xalanc/XalanDOM/XalanDOMString.hpp
++++ b/src/xalanc/XalanDOM/XalanDOMString.hpp
+@@ -847,10 +847,10 @@ private:
+  * @param theKey XalanDOMString to be hashed
+  * @return hash value for XalanDOMString
+  */
+-struct DOMStringHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString&, size_t>
++struct DOMStringHashFunction
+ {
+-    result_type
+-    operator() (argument_type   theKey) const
++    size_t
++    operator() (const XalanDOMString&   theKey) const
+     {
+         return theKey.hash();
+     }
+@@ -864,10 +864,10 @@ struct DOMStringHashFunction : public XALAN_STD_QUALIFIER unary_function<const X
+  * @param theKey XalanDOMString to be hashed
+  * @return hash value for XalanDOMString
+  */
+-struct DOMStringPointerHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString*, size_t>
++struct DOMStringPointerHashFunction
+ {
+-    result_type
+-    operator() (argument_type   theKey) const
++    size_t
++    operator() (const XalanDOMString*    theKey) const
+     {
+         assert (theKey != 0);
+ 
+@@ -899,15 +899,11 @@ struct XalanMapKeyTraits<const XalanDOMString*>
+  * @param theRHS second string to compare
+  * @return true if the contents of both strings are identical
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringEqualsFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return XalanDOMString::equals(theLHS, theRHS);
+     }
+@@ -922,15 +918,11 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
+  * @param theRHS second string to compare
+  * @return true if the contents of both strings are identical
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringNotEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringNotEqualsFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return !XalanDOMString::equals(theLHS, theRHS);
+     }
+@@ -945,15 +937,11 @@ struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMSt
+  * @param theRHS second string to compare
+  * @return true if the theLHS is less than theRHSl
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringLessThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#else
+-struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+-#endif
++struct DOMStringLessThanFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString&    theLHS,
++                const XalanDOMString&    theRHS) const
+     {
+         return theLHS.compare(theRHS) < 0 ? true : false;
+     }
+@@ -967,11 +955,11 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
+  * @param theRHS second string to compare
+  * @return true if the theLHS is equal to theRHS
+  */
+-struct DOMStringPointerEqualToFunction : public XALAN_STD_QUALIFIER binary_function<const XalanDOMString*, const XalanDOMString*, bool>
++struct DOMStringPointerEqualToFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString*    theLHS,
++                const XalanDOMString*    theRHS) const
+     {
+         assert(theLHS != 0 && theRHS != 0);
+ 
+@@ -987,15 +975,11 @@ struct DOMStringPointerEqualToFunction : public XALAN_STD_QUALIFIER binary_funct
+  * @param theRHS second string to compare
+  * @return true if the theLHS is less than theRHSl
+  */
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct DOMStringPointerLessThanFunction : public binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+-#else
+-struct DOMStringPointerLessThanFunction : public std::binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+-#endif
++struct DOMStringPointerLessThanFunction
+ {
+-    result_type
+-    operator() (first_argument_type     theLHS,
+-                second_argument_type    theRHS) const
++    bool
++    operator() (const XalanDOMString*    theLHS,
++                const XalanDOMString*    theRHS) const
+     {
+         assert(theLHS != 0 && theRHS != 0);
+ 
+-- 
+2.19.1
+
