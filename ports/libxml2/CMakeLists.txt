@@ -13,6 +13,7 @@ find_package(unofficial-iconv REQUIRED)
 file(GLOB SOURCES *.c)
 list(FILTER SOURCES EXCLUDE REGEX "/(run|test|trio)[^/]*$")
 list(FILTER SOURCES EXCLUDE REGEX "xml(lint|catalog).c$")
+list(FILTER SOURCES EXCLUDE REGEX "rngparser\.c")
 
 # Generate xmlexports with fixed definition of LIBXML_STATIC
 file(READ include/libxml/xmlexports.h XMLEXPORTS_H)
