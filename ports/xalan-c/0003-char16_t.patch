@@ -1,6 +1,6 @@
-diff -urN a/c/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp b/c/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp
---- a/c/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp	2012-03-19 16:18:10.000000000 +0000
-+++ b/c/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp	2018-09-07 16:08:39.207316486 +0100
+diff -urN a/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp b/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp
+--- a/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp	2012-03-19 16:18:10.000000000 +0000
++++ b/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp	2018-09-07 16:08:39.207316486 +0100
 @@ -84,7 +84,7 @@
      const XalanDOMChar*
      getName() const
@@ -19,9 +19,9 @@ diff -urN a/c/src/xalanc/PlatformSupport/DirectoryEnumerator.hpp b/c/src/xalanc/
              &theFindData);
  #pragma warning(pop)
  
-diff -urN a/c/src/xalanc/PlatformSupport/DOMStringHelper.cpp b/c/src/xalanc/PlatformSupport/DOMStringHelper.cpp
---- a/c/src/xalanc/PlatformSupport/DOMStringHelper.cpp	2012-03-19 16:18:10.000000000 +0000
-+++ b/c/src/xalanc/PlatformSupport/DOMStringHelper.cpp	2018-09-07 16:08:39.207316486 +0100
+diff -urN a/src/xalanc/PlatformSupport/DOMStringHelper.cpp b/src/xalanc/PlatformSupport/DOMStringHelper.cpp
+--- a/src/xalanc/PlatformSupport/DOMStringHelper.cpp	2012-03-19 16:18:10.000000000 +0000
++++ b/src/xalanc/PlatformSupport/DOMStringHelper.cpp	2018-09-07 16:08:39.207316486 +0100
 @@ -868,7 +868,7 @@
              const XalanDOMChar*     theRHS)
  {
@@ -31,9 +31,9 @@ diff -urN a/c/src/xalanc/PlatformSupport/DOMStringHelper.cpp b/c/src/xalanc/Plat
  #else
      return doCollationCompare(
                  theLHS,
-diff -urN a/c/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp b/c/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp
---- a/c/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp	2012-03-19 16:18:10.000000000 +0000
-+++ b/c/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp	2018-09-07 16:08:39.207316486 +0100
+diff -urN a/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp b/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp
+--- a/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp	2012-03-19 16:18:10.000000000 +0000
++++ b/src/xalanc/PlatformSupport/XalanFileOutputStream.cpp	2018-09-07 16:08:39.207316486 +0100
 @@ -123,7 +123,7 @@
  
  #if defined(XALAN_WINDOWS)

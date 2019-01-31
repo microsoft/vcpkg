@@ -1,0 +1,117 @@
+diff --git a/src/xalanc/Include/GCCDefinitions.hpp b/src/xalanc/Include/GCCDefinitions.hpp
+index c43e9df0..e5a3a1c2 100644
+--- a/src/xalanc/Include/GCCDefinitions.hpp
++++ b/src/xalanc/Include/GCCDefinitions.hpp
+@@ -33,7 +33,6 @@
+ 
+ 
+ 
+-#define XALAN_SGI_BASED_STL
+ #define XALAN_INLINE_INITIALIZATION
+ #define XALAN_HAS_CPP_NAMESPACE
+ #define XALAN_HAS_STD_ITERATORS
+diff --git a/src/xalanc/Include/HPUXDefinitions.hpp b/src/xalanc/Include/HPUXDefinitions.hpp
+index 3b63be68..052c9287 100644
+--- a/src/xalanc/Include/HPUXDefinitions.hpp
++++ b/src/xalanc/Include/HPUXDefinitions.hpp
+@@ -42,7 +42,6 @@
+ #define XALAN_NO_STD_NAMESPACE
+ #define XALAN_CLASSIC_IOSTREAMS
+ #define XALAN_NO_STD_ALLOCATORS
+-#define XALAN_SGI_BASED_STL
+ #endif
+ 
+ #define XALAN_HAS_CPP_NAMESPACE
+diff --git a/src/xalanc/Include/STLHelper.hpp b/src/xalanc/Include/STLHelper.hpp
+index dc334cdf..113294c5 100644
+--- a/src/xalanc/Include/STLHelper.hpp
++++ b/src/xalanc/Include/STLHelper.hpp
+@@ -121,85 +121,6 @@ private:
+ };
+ 
+ 
+-
+-#if !defined(XALAN_SGI_BASED_STL)
+-
+-/**
+- * Functor to retrieve the key of a key-value pair in a map, used in STL
+- * iteration algorithms.
+- */
+-template <class PairType>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct select1st : public unary_function<PairType, PairType::first_type>
+-#else
+-struct select1st : public std::unary_function<PairType, typename PairType::first_type>
+-#endif
+-{
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<PairType, PairType::first_type>  BaseClassType;
+-#else
+-    typedef std::unary_function<PairType, typename PairType::first_type>    BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+-    typedef PairType                                value_type;
+-
+-    /**
+-     * Retrieve the key of a key-value pair.
+-     *
+-     * @param thePair key-value pair
+-     * @return key
+-     */
+-    result_type
+-    operator()(const argument_type&     thePair) const
+-    {
+-        return thePair.first;
+-    }
+-};
+-
+-
+-
+-/**
+- * Functor to retrieve the value of a key-value pair in a map, used in STL
+- * iteration algorithms.
+- */
+-template <class PairType>
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-struct select2nd : public unary_function<PairType, PairType::second_type>
+-#else
+-struct select2nd : public std::unary_function<PairType, typename PairType::second_type>
+-#endif
+-{
+-#if defined(XALAN_NO_STD_NAMESPACE)
+-    typedef unary_function<PairType, PairType::second_type> BaseClassType;
+-#else
+-    typedef std::unary_function<PairType, typename PairType::second_type>   BaseClassType;
+-#endif
+-
+-    typedef typename BaseClassType::result_type     result_type;
+-    typedef typename BaseClassType::argument_type   argument_type;
+-
+-    typedef PairType                                value_type;
+-
+-    /**
+-     * Retrieve the value of a key-value pair.
+-     *
+-     * @param thePair key-value pair
+-     * @return value
+-     */
+-    result_type
+-    operator()(const argument_type&     thePair) const
+-    {
+-        return thePair.second;
+-    }
+-};
+-
+-#endif
+-
+-
+-
+ /**
+  * Functor to call a clear() member function on its argument.
+  */
+-- 
+2.19.1
+
