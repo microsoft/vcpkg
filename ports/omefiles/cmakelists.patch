@@ -1,0 +1,30 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -98,8 +98,6 @@
+ if(MSVC)
+   # Debug library suffix.
+   set(CMAKE_DEBUG_POSTFIX "d")
+-  # Require dynamic linking and disable autolinking.
+-  add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
+   # To prevent a lot of spam warnings about standard POSIX functions
+   # and unsafe use of the standard library.
+   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+--- a/lib/ome/files/CMakeLists.txt
++++ b/lib/ome/files/CMakeLists.txt
+@@ -188,14 +188,11 @@
+ endif()
+ 
+ set_target_properties(ome-files PROPERTIES VERSION ${ome-files_VERSION})
++set_target_properties(ome-files PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ 
+ add_library(OME::Files ALIAS ome-files)
+ 
+-if(WIN32)
+-  set(ome_files_config_dir "cmake")
+-else()
+-  set(ome_files_config_dir "${CMAKE_INSTALL_LIBDIR}/cmake/OMEFiles")
+-endif()
++set(ome_files_config_dir "${CMAKE_INSTALL_DATAROOTDIR}/OMEFiles")
+ 
+ install(TARGETS ome-files
+         EXPORT OMEFilesInternal

@@ -1,0 +1,4 @@
+Source: omecommon
+Version: 5.5.0
+Description: C++ library providing common and portability functionality for all OME C++ components
+Build-Depends: boost, xerces-c, xalan-c

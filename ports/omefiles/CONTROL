@@ -1,0 +1,4 @@
+Source: omefiles
+Version: 0.5.0
+Description: OME Files is a C++ library for reading and writing data using the open and standard OME-TIFF file format using the OME data model
+Build-Depends: omemodel, boost, hdf5, libpng, tiff

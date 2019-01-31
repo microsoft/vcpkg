@@ -1,0 +1,80 @@
+--- a/lib/ome/common/CMakeLists.txt
++++ b/lib/ome/common/CMakeLists.txt
+@@ -126,7 +126,8 @@
+                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+                            $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib>
+                            $<BUILD_INTERFACE:${LibDl_INCLUDE_DIRS}>
+-                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++                           PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+ 
+ if(OME_HAVE_BOOST_LOG)
+   set(log_libraries
+@@ -150,15 +151,19 @@
+ 
+ set_target_properties(ome-common PROPERTIES LINKER_LANGUAGE CXX)
+ set_target_properties(ome-common PROPERTIES VERSION ${ome-common_VERSION})
++set_target_properties(ome-common PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ 
+-add_library(OME::Common ALIAS ome-common)
++include(GenerateExportHeader)
++generate_export_header(ome-common BASE_NAME ome_common)
+ 
+-if(WIN32)
+-  set(ome_common_config_dir "cmake")
+-else()
+-  set(ome_common_config_dir "${CMAKE_INSTALL_LIBDIR}/cmake/OMECommon")
++if (NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(ome-common PUBLIC -Dome_common_STATIC)
+ endif()
+ 
++add_library(OME::Common ALIAS ome-common)
++
++set(ome_common_config_dir "${CMAKE_INSTALL_DATAROOTDIR}/OMECommon")
++
+ install(TARGETS ome-common
+         EXPORT OMECommonInternal
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+@@ -166,6 +171,7 @@
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         COMPONENT "runtime"
+         INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++
+ install(EXPORT OMECommonInternal
+         DESTINATION "${ome_common_config_dir}"
+         NAMESPACE "ome_common_"
+@@ -187,6 +193,7 @@
+ 
+ set(ome_common_includedir "${CMAKE_INSTALL_INCLUDEDIR}/ome/common")
+ 
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ome_common_export.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+ install(FILES ${ome_common_static_headers} ${ome_common_generated_headers}
+         DESTINATION ${ome_common_includedir}
+         COMPONENT "development")
+--- a/lib/ome/compat/CMakeLists.txt
++++ b/lib/ome/compat/CMakeLists.txt
+@@ -54,11 +54,7 @@
+ 
+ add_library(OME::Compat ALIAS ome-compat)
+ 
+-if(WIN32)
+-  set(ome_compat_config_dir "cmake")
+-else()
+-  set(ome_compat_config_dir "${CMAKE_INSTALL_LIBDIR}/cmake/OMECompat")
+-endif()
++set(ome_compat_config_dir "${CMAKE_INSTALL_DATAROOTDIR}/OMECompat")
+ 
+ install(TARGETS ome-compat
+         EXPORT OMECompatInternal
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -91,8 +91,6 @@
+ if(MSVC)
+   # Debug library suffix.
+   set(CMAKE_DEBUG_POSTFIX "d")
+-  # Require dynamic linking and disable autolinking.
+-  add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
+   # To prevent a lot of spam warnings about standard POSIX functions
+   # and unsafe use of the standard library.
+   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+
