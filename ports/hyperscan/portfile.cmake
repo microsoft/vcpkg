@@ -11,16 +11,16 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hyperscan-5.0.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hyperscan-5.1.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/intel/hyperscan/archive/v5.0.0.zip"
-    FILENAME "v5.0.0.zip"
-    SHA512 59f716ea3bd0796c86c0d9e80930c6f0d6cc91714a466447b92b3e5e0d16d14784077fd8941df7f55e010962c081cb9f1993ec80ed8e50eadf2cf29f4bd8f3db
+    URLS "https://github.com/intel/hyperscan/archive/v5.1.0.zip"
+    FILENAME "v5.1.0.zip"
+    SHA512 89a826c1e66175f1781f57d0d430f2d5d245ab590acc4b5df6638c5f6fe43914db028f8bc86e566ea27b55883c91be0d8da079b3d7547899f7cf540b52a3cf0a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hyperscan-5.0.0
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hyperscan-5.1.0
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/disambiguate-distance.patch"
 )
 
