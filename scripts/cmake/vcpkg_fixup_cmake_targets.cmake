@@ -134,19 +134,10 @@ function(vcpkg_fixup_cmake_targets)
     file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
     foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
         file(READ ${MAIN_CMAKE} _contents)
-        string(REPLACE
-[[
-get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-]]
-[[
-get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-]]
-            _contents "${_contents}") # Better understandable than the regex see #1044 for details why this replacement is necessary
+        string(REGEX REPLACE
+            "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+            "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+            _contents "${_contents}") # see #1044 for details why this replacement is necessary. See #4782 why it must be a regex.
          string(REGEX REPLACE
             "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
             "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
