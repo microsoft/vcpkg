@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.16.1
-    SHA512 e030f7b1833db787b8976ead734535fb2209a19317d74d4f68bd8f8cae38abe2343d584e88131a1a66bf6f9f1c0a17bc2c64540841a74cf6300fecf3e69f9dff
+    REF v2.18.0
+    SHA512 235ebe677d1dd6a252e1c57d7262297b2923c294a7fc381b35da20be4bed53b0b609138ba476d67a9ea6aa912fa773fdda3562beddcd736f3a3f48f0ce8396d7
     HEAD_REF development
+    PATCHES
+      "${CMAKE_CURRENT_LIST_DIR}/fix_libusb.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LIBRARY_LINKAGE)
@@ -30,6 +32,7 @@ vcpkg_configure_cmake(
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
+        -DBUILD_WITH_TM2=OFF
     OPTIONS_DEBUG
         # BUILD
         -DBUILD_EXAMPLES=OFF
@@ -47,12 +50,12 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(BUILD_EXAMPLES)
-    file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/realsense2)
-    file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/realsense2)
+  file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+  file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+  file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/realsense2)
+  file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
+  vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/realsense2)
 endif()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/realsense2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/realsense2/COPYING ${CURRENT_PACKAGES_DIR}/share/realsense2/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/realsense2)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/realsense2/LICENSE ${CURRENT_PACKAGES_DIR}/share/realsense2/copyright)
