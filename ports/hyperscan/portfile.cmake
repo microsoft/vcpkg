@@ -19,11 +19,6 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hyperscan-5.1.0
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/disambiguate-distance.patch"
-)
-
 vcpkg_find_acquire_program(PYTHON3)
 
 # Add python3 to path
