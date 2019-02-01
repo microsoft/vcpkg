@@ -18,49 +18,62 @@ vcpkg_configure_cmake(
 )
 
 # Generate xmlversion.h
+if(NOT EXISTS ${SOURCE_PATH}/include/libxml/xmlversion.h)
+    # Get version info from `configure.ac`
+    file(STRINGS "${SOURCE_PATH}/configure.ac"
+        _version_lines REGEX "LIBXML_(MAJOR|MINOR|MICRO)_VERSION[^=]*=.*")
+    string(REGEX REPLACE ".*LIBXML_MAJOR_VERSION=([0-9]+).*"
+        "\\1" _major_version ${_version_lines})
+    string(REGEX REPLACE ".*LIBXML_MINOR_VERSION=([0-9]+).*"
+        "\\1" _minor_version ${_version_lines})
+    string(REGEX REPLACE ".*LIBXML_MICRO_VERSION=([0-9]+).*"
+        "\\1" _micro_version ${_version_lines})
+    string(REGEX REPLACE ".*LIBXML_MICRO_VERSION_SUFFIX=(.*)"
+        "\\1" _micro_version_suffix ${_version_lines})
 
-# TODO: Read version number from `configure.ac`.
-set(VERSION 2.9.9)
-set(LIBXML_VERSION_NUMBER 20909)
+    set(VERSION ${_major_version}.${_minor_version}.${_micro_version})
+    math(EXPR LIBXML_VERSION_NUMBER
+        "${_major_version} * 10000 + ${_minor_version} * 100 + ${_micro_version}")
 
-set(WITH_TRIO 0)
-set(WITH_THREADS 1)
-set(WITH_THREAD_ALLOC 0)
-set(WITH_TREE 1)
-set(WITH_OUTPUT 1)
-set(WITH_PUSH 1)
-set(WITH_READER 1)
-set(WITH_PATTERN 1)
-set(WITH_WRITER 1)
-set(WITH_SAX1 1)
-set(WITH_FTP 1)
-set(WITH_HTTP 1)
-set(WITH_VALID 1)
-set(WITH_HTML 1)
-set(WITH_LEGACY 1)
-set(WITH_C14N 1)
-set(WITH_CATALOG 1)
-set(WITH_DOCB 1)
-set(WITH_XPATH 1)
-set(WITH_XPTR 1)
-set(WITH_XINCLUDE 1)
-set(WITH_ICONV 1)
-set(WITH_ICU 0)
-set(WITH_ISO8859X 1)
-set(WITH_DEBUG 1)
-set(WITH_MEM_DEBUG 0)
-set(WITH_RUN_DEBUG 0)
-set(WITH_REGEXPS 1)
-set(WITH_SCHEMAS 1)
-set(WITH_SCHEMATRON 1)
-set(WITH_MODULES 1)
-set(MODULE_EXTENSION ".so")
-set(WITH_ZLIB 1)
-set(WITH_LZMA 1)
+    set(WITH_TRIO 0)
+    set(WITH_THREADS 1)
+    set(WITH_THREAD_ALLOC 0)
+    set(WITH_TREE 1)
+    set(WITH_OUTPUT 1)
+    set(WITH_PUSH 1)
+    set(WITH_READER 1)
+    set(WITH_PATTERN 1)
+    set(WITH_WRITER 1)
+    set(WITH_SAX1 1)
+    set(WITH_FTP 1)
+    set(WITH_HTTP 1)
+    set(WITH_VALID 1)
+    set(WITH_HTML 1)
+    set(WITH_LEGACY 1)
+    set(WITH_C14N 1)
+    set(WITH_CATALOG 1)
+    set(WITH_DOCB 1)
+    set(WITH_XPATH 1)
+    set(WITH_XPTR 1)
+    set(WITH_XINCLUDE 1)
+    set(WITH_ICONV 1)
+    set(WITH_ICU 0)
+    set(WITH_ISO8859X 1)
+    set(WITH_DEBUG 1)
+    set(WITH_MEM_DEBUG 0)
+    set(WITH_RUN_DEBUG 0)
+    set(WITH_REGEXPS 1)
+    set(WITH_SCHEMAS 1)
+    set(WITH_SCHEMATRON 1)
+    set(WITH_MODULES 1)
+    set(MODULE_EXTENSION ".so")
+    set(WITH_ZLIB 1)
+    set(WITH_LZMA 1)
 
-configure_file(
-    ${SOURCE_PATH}/include/libxml/xmlversion.h.in
-    ${SOURCE_PATH}/include/libxml/xmlversion.h)
+    configure_file(
+        ${SOURCE_PATH}/include/libxml/xmlversion.h.in
+        ${SOURCE_PATH}/include/libxml/xmlversion.h)
+endif()
 
 vcpkg_install_cmake()
 
