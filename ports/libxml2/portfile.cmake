@@ -10,13 +10,6 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
-)
-
 # Generate xmlversion.h
 if(NOT EXISTS ${SOURCE_PATH}/include/libxml/xmlversion.h)
     # Get version info from `configure.ac`
@@ -74,6 +67,13 @@ if(NOT EXISTS ${SOURCE_PATH}/include/libxml/xmlversion.h)
         ${SOURCE_PATH}/include/libxml/xmlversion.h.in
         ${SOURCE_PATH}/include/libxml/xmlversion.h)
 endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
+    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
+)
 
 vcpkg_install_cmake()
 
