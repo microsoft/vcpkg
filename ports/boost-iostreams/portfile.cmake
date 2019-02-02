@@ -5,10 +5,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/iostreams
-    REF boost-1.68.0
-    SHA512 a0c008537c2ceb8ea4f9d1fe7e66fea01f55d753e3b349aa3f664f7a0cd129f11770e520645a18feabde4110f6471194e8bae2479b95ac6d13d8b42be43c5f2e
+    REF boost-1.69.0
+    SHA512 263d06f2533a345eb4fe3926742c6606b486d9f7d024a001f00b09592201ee987854036174b44c39c6d9a47b52262a96f9a8ebf2af215ef217fa11aa1209fe86
     HEAD_REF master
-    PATCHES "${CURRENT_PORT_DIR}/Removeseekpos.patch"
+    PATCHES Removeseekpos.patch
 )
 
 vcpkg_download_distfile(LICENSE
