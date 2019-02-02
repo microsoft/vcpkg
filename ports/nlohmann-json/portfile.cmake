@@ -41,10 +41,13 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug
     ${CURRENT_PACKAGES_DIR}/lib
 )
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis
-    ${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_json.natvis
-)
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis)
+    file(RENAME
+        ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis
+        ${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_json.natvis
+    )
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/nlohmann-json RENAME copyright)
