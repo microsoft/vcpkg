@@ -12,22 +12,20 @@ include(configure_qt)
 include(install_qt)
 
 set(MAJOR_MINOR 5.12)
-set(FULL_VERSION ${MAJOR_MINOR}.0)
+set(FULL_VERSION ${MAJOR_MINOR}.1)
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 8e6c51b754840d17e694b5b4a0d732afe04ebe48d166bca429db01ce3ac9014bb0ed35fe99ad165973889d96919f6b6774429585bae9a7fdba6b07f4c1eb3570
+    SHA512 51494d8947ae16ab7aee22aca156035718f5a700737547de59b4d61d3919c00f4de858111c8928a66c0385604623d847d231892d964d53924a8c97b6e2bedf25
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE_FILE}"
     REF ${FULL_VERSION}
     PATCHES
-        fix-system-freetype.patch
-        fix-system-pcre2.patch
-        fix-system-pcre2-linux.patch
+        fix-gui-configure-json.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -62,11 +60,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND CORE_OPTIONS
         -static
     )
-else()
-    list(APPEND CORE_OPTIONS
-        -sql-sqlite
-        -sql-psql
-    )
 endif()
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -83,13 +76,15 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
-            FREETYPE_LIBS="-lfreetype"
             PSQL_LIBS="-llibpq"
+            PCRE2_LIBS="-lpcre2-16"
+            FREETYPE_LIBS="-lfreetype"
         OPTIONS_DEBUG
             LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
+            PCRE2_LIBS="-lpcre2-16d"
             FREETYPE_LIBS="-lfreetyped"
     )
 
