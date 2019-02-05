@@ -2,16 +2,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/corrade
-    REF v2018.04
-    SHA512 be14f0cb76c904a37f962af16b331407ec6a1f7a31245c7221f41fcbce2749a1ad67057d451736814e357eaa59e015f16996bdba819f69a1dd0f3d5a3cad34a4
+    REF v2018.10
+    SHA512 594c15d9622fa0abdf893c15054f27bdcc40b5de1543d722b7173138ec5d299c45b7a85376ed617cdf9b4f52a05bf7a3d1ea1983e112b62690211116c255d201
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC 1)
-else()
-    set(BUILD_STATIC 0)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 # Handle features
 set(_COMPONENT_FLAGS "")
@@ -45,16 +41,20 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Install tools
 if("utility" IN_LIST FEATURES)
+    file(GLOB EXES
+        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc
+        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe
+    )
+
     # Drop a copy of tools
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe
-         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/corrade)
+    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/corrade)
 
     # Tools require dlls
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/corrade)
 
-    file(GLOB_RECURSE TO_REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/*.exe
-        ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+    file(GLOB TO_REMOVE
+        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc*
+        ${CURRENT_PACKAGES_DIR}/debug/bin/corrade-rc*)
     file(REMOVE ${TO_REMOVE})
 endif()
 
@@ -68,7 +68,7 @@ if(NOT FEATURES)
     # debug is completely empty, as include and share
     # have already been removed.
 
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # No dlls
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin

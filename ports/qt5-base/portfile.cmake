@@ -7,45 +7,37 @@ if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
     )
 endif()
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Qt5 doesn't currently support static builds. Please use a dynamic triplet instead.")
-endif()
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(SRCDIR_NAME "qtbase-5.9.2")
-set(ARCHIVE_NAME "qtbase-opensource-src-5.9.2")
-set(ARCHIVE_EXTENSION ".tar.xz")
+set(MAJOR_MINOR 5.12)
+set(FULL_VERSION ${MAJOR_MINOR}.0)
+set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://download.qt.io/official_releases/qt/5.9/5.9.2/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
-    FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
-    SHA512 a2f965871645256f3d019f71f3febb875455a29d03fccc7a3371ddfeb193b0af12394e779df05adf69fd10fe7b0d966f3915a24528ec7eb3bc36c2db6af2b6e7
+    URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+    FILENAME ${ARCHIVE_NAME}
+    SHA512 8e6c51b754840d17e694b5b4a0d732afe04ebe48d166bca429db01ce3ac9014bb0ed35fe99ad165973889d96919f6b6774429585bae9a7fdba6b07f4c1eb3570
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
-if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
-    file(RENAME ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME} ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
-endif()
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE "${ARCHIVE_FILE}"
+    REF ${FULL_VERSION}
+    PATCHES
+        fix-system-freetype.patch
+        fix-system-pcre2.patch
+        fix-system-pcre2-linux.patch
+)
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion)
+foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
 endforeach()
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2-linux.patch"
-)
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
 set(ENV{_CL_} "/utf-8")
@@ -60,39 +52,47 @@ set(CORE_OPTIONS
     -system-pcre
     -system-harfbuzz
     -system-doubleconversion
+    -system-sqlite
     -no-fontconfig
-    -nomake examples -nomake tests
+    -nomake examples
+    -nomake tests
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND CORE_OPTIONS
+        -static
+    )
+else()
+    list(APPEND CORE_OPTIONS
+        -sql-sqlite
+        -sql-psql
+    )
+endif()
+
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(PLATFORM "win32-msvc2015")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(PLATFORM "win32-msvc2017")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(PLATFORM "win32-msvc2013")
-    endif()
+    set(PLATFORM "win32-msvc")
+
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
         PLATFORM ${PLATFORM}
         OPTIONS
             ${CORE_OPTIONS}
-            -sql-sqlite
-            -sql-psql
-            -system-sqlite
             -mp
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
             FREETYPE_LIBS="-lfreetype"
+            PSQL_LIBS="-llibpq"
         OPTIONS_DEBUG
+            LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
             FREETYPE_LIBS="-lfreetyped"
     )
+
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
@@ -101,8 +101,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             ${CORE_OPTIONS}
             -no-sqlite
             -no-opengl # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
@@ -110,6 +110,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a"
         OPTIONS_DEBUG
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
@@ -167,6 +168,15 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
     file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
+
+    #---------------------------------------------------------------------------
+    # Qt5Bootstrap: only used to bootstrap qmake dependencies
+    #---------------------------------------------------------------------------
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.prl)
+    #---------------------------------------------------------------------------
 endif()
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")

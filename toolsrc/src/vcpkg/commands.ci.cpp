@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/graphs.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
@@ -28,15 +29,20 @@ namespace vcpkg::Commands::CI
 
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
+    static constexpr StringLiteral OPTION_PURGE_TOMBSTONES = "--purge-tombstones";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
+    static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
 
     static constexpr std::array<CommandSetting, 2> CI_SETTINGS = {{
         {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
-    static constexpr std::array<CommandSwitch, 1> CI_SWITCHES = {
-        {{OPTION_DRY_RUN, "Print out plan without execution"}}};
+    static constexpr std::array<CommandSwitch, 3> CI_SWITCHES = {{
+        {OPTION_DRY_RUN, "Print out plan without execution"},
+        {OPTION_RANDOMIZE, "Randomize the install order"},
+        {OPTION_PURGE_TOMBSTONES, "Purge failure tombstones and retry building the ports"},
+    }};
 
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string("ci x64-windows"),
@@ -46,10 +52,18 @@ namespace vcpkg::Commands::CI
         nullptr,
     };
 
-    UnknownCIPortsResults find_unknown_ports_for_ci(const VcpkgPaths& paths,
-                                                    const std::set<std::string>& exclusions,
-                                                    const Dependencies::PortFileProvider& provider,
-                                                    const std::vector<FeatureSpec>& fspecs)
+    struct UnknownCIPortsResults
+    {
+        std::vector<FullPackageSpec> unknown;
+        std::map<PackageSpec, Build::BuildResult> known;
+        std::map<PackageSpec, std::vector<std::string>> features;
+    };
+
+    static UnknownCIPortsResults find_unknown_ports_for_ci(const VcpkgPaths& paths,
+                                                           const std::set<std::string>& exclusions,
+                                                           const Dependencies::PortFileProvider& provider,
+                                                           const std::vector<FeatureSpec>& fspecs,
+                                                           const bool purge_tombstones)
     {
         UnknownCIPortsResults ret;
 
@@ -58,14 +72,21 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, std::string> abi_tag_map;
         std::set<PackageSpec> will_fail;
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
-                                                                 Build::AllowDownloads::YES,
-                                                                 Build::CleanBuildtrees::YES,
-                                                                 Build::CleanPackages::YES};
+        const Build::BuildPackageOptions build_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+            Build::CleanPackages::YES,
+            Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::YES,
+        };
 
         vcpkg::Cache<Triplet, Build::PreBuildInfo> pre_build_info_cache;
 
-        auto action_plan = Dependencies::create_feature_install_plan(provider, fspecs, StatusParagraphs{});
+        auto action_plan = Dependencies::create_feature_install_plan(provider, fspecs, {}, {});
+
+        auto timer = Chrono::ElapsedTimer::create_started();
 
         for (auto&& action : action_plan)
         {
@@ -77,8 +98,8 @@ namespace vcpkg::Commands::CI
                 {
                     auto triplet = p->spec.triplet();
 
-                    const Build::BuildPackageConfig build_config{
-                        *scf, triplet, paths.port_dir(p->spec), install_plan_options, p->feature_list};
+                    const Build::BuildPackageConfig build_config {
+                        *scf, triplet, paths.port_dir(p->spec), build_options, p->feature_list};
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -114,7 +135,16 @@ namespace vcpkg::Commands::CI
                 auto archive_path = archives_root_dir / archive_subpath;
                 auto archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
 
+                if (purge_tombstones)
+                {
+                    std::error_code ec;
+                    fs.remove(archive_tombstone_path, ec); // Ignore error
+                }
+
                 bool b_will_build = false;
+
+                ret.features.emplace(p->spec,
+                                     std::vector<std::string> {p->feature_list.begin(), p->feature_list.end()});
 
                 if (Util::Sets::contains(exclusions, p->spec.name()))
                 {
@@ -141,13 +171,15 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    ret.unknown.push_back(p->spec);
+                    ret.unknown.push_back({p->spec, {p->feature_list.begin(), p->feature_list.end()}});
                     b_will_build = true;
                 }
 
                 System::println("%40s: %1s %8s: %s", p->spec, (b_will_build ? "*" : " "), state, abi);
             }
         }
+
+        System::print("Time to determine pass/fail: %s\n", timer.elapsed().to_string());
 
         return ret;
     }
@@ -169,7 +201,8 @@ namespace vcpkg::Commands::CI
             exclusions_set.insert(exclusions.begin(), exclusions.end());
         }
 
-        auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
+        const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
+        const auto purge_tombstones = Util::Sets::contains(options.switches, OPTION_PURGE_TOMBSTONES);
 
         std::vector<Triplet> triplets;
         for (const std::string& triplet : args.command_arguments)
@@ -185,10 +218,15 @@ namespace vcpkg::Commands::CI
         StatusParagraphs status_db = database_load_check(paths);
         const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
-                                                                 Build::AllowDownloads::YES,
-                                                                 Build::CleanBuildtrees::YES,
-                                                                 Build::CleanPackages::YES};
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+            Build::CleanPackages::YES,
+            Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::YES,
+        };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;
 
@@ -198,25 +236,67 @@ namespace vcpkg::Commands::CI
         {
             Input::check_triplet(triplet, paths);
 
+            Dependencies::PackageGraph pgraph(paths_port_file, status_db);
+
             std::vector<PackageSpec> specs = PackageSpec::to_package_specs(all_ports, triplet);
             // Install the default features for every package
             auto all_fspecs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
-            auto split_specs = find_unknown_ports_for_ci(paths, exclusions_set, paths_port_file, all_fspecs);
-            auto fspecs = Util::fmap(split_specs.unknown, [](auto& spec) { return FeatureSpec(spec, ""); });
+            auto split_specs =
+                find_unknown_ports_for_ci(paths, exclusions_set, paths_port_file, all_fspecs, purge_tombstones);
+            auto fspecs = FullPackageSpec::to_feature_specs(split_specs.unknown);
 
-            auto action_plan = Dependencies::create_feature_install_plan(paths_port_file, fspecs, status_db);
+            for (auto&& fspec : fspecs)
+                pgraph.install(fspec);
 
-            for (auto&& action : action_plan)
+            Dependencies::CreateInstallPlanOptions serialize_options;
+
+            struct RandomizerInstance : Graphs::Randomizer
             {
-                if (auto p = action.install_action.get())
+                virtual int random(int i) override
                 {
-                    p->build_options = install_plan_options;
-                    if (Util::Sets::contains(exclusions_set, p->spec.name()))
-                    {
-                        p->plan_type = InstallPlanType::EXCLUDED;
-                    }
+                    if (i <= 1) return 0;
+                    std::uniform_int_distribution<int> d(0, i - 1);
+                    return d(e);
                 }
+
+                std::random_device e;
+            } randomizer_instance;
+
+            if (Util::Sets::contains(options.switches, OPTION_RANDOMIZE))
+            {
+                serialize_options.randomizer = &randomizer_instance;
             }
+
+            auto action_plan = [&]() {
+                int iterations = 0;
+                do
+                {
+                    bool inconsistent = false;
+                    auto action_plan = pgraph.serialize(serialize_options);
+
+                    for (auto&& action : action_plan)
+                    {
+                        if (auto p = action.install_action.get())
+                        {
+                            p->build_options = install_plan_options;
+                            if (Util::Sets::contains(exclusions_set, p->spec.name()))
+                            {
+                                p->plan_type = InstallPlanType::EXCLUDED;
+                            }
+
+                            for (auto&& feature : split_specs.features[p->spec])
+                                if (p->feature_list.find(feature) == p->feature_list.end())
+                                {
+                                    pgraph.install({p->spec, feature});
+                                    inconsistent = true;
+                                }
+                        }
+                    }
+
+                    if (!inconsistent) return action_plan;
+                    Checks::check_exit(VCPKG_LINE_INFO, ++iterations < 100);
+                } while (true);
+            }();
 
             if (is_dry_run)
             {
@@ -251,7 +331,7 @@ namespace vcpkg::Commands::CI
                 for (auto&& result : known_result)
                 {
                     xunit_doc +=
-                        Install::InstallSummary::xunit_result(result.first, Chrono::ElapsedTime{}, result.second);
+                        Install::InstallSummary::xunit_result(result.first, Chrono::ElapsedTime {}, result.second);
                 }
             }
 

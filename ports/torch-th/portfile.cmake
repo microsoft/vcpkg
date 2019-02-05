@@ -10,8 +10,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO torch/torch7
-    REF 89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8
-    SHA512 0b28762768129f5e59e24d505e271418bb4513db0e99acb293f01095949700711116463b299fe42d65ca07c1f0a9f6d0d1d72e21275a2825a4a9fb0197525e72
+    REF fd0ee3bbf7bfdd21ab10c5ee70b74afaef9409e1
+    SHA512 3a7a006ec624f25216e2b433380ccaf04710fd452f28ce853d3018e4ced6b6e066e61ff9165b8c0526825748a335c976cfb7accff4d1a16ae1be0db94b2c8a22
     HEAD_REF master
 )
 

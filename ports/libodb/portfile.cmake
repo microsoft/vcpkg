@@ -15,7 +15,11 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 f1311458634695eb6ba307ebfd492e3b260e7beb06db1c5c46df58c339756be4006322cdc4e42d055bf5b2ad14ce4656ddcafcc4e16c282034db8a77d255c3eb
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY
+  ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+  ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
+  DESTINATION ${SOURCE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
@@ -43,6 +47,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     string(REPLACE "#ifdef LIBODB_STATIC_LIB" "#if 0" LIBODB_HEADER ${LIBODB_HEADER})
 endif()
-file(WRITE ${LIBODB_HEADER_PATH} ${LIBODB_HEADER})
+file(WRITE ${LIBODB_HEADER_PATH} "${LIBODB_HEADER}")
 
 vcpkg_copy_pdbs()

@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/qvm
-    REF boost-1.67.0
-    SHA512 dce723e782bb19737a51e99c3535ab7101569ad217a475b25c742d4a35fd774d5b02883a3604b75a4141f8cbb385c82ed1496051032d1d993fb6218549885095
+    REF boost-1.69.0
+    SHA512 b801ce8f2e96364fbafa31d1a501706a81d57b7d6f2c0ce63c4ca103957f8a4504eb1797fa96e812dac032e4972b18bc973e8a4bc24cfb38ac3a367dad75b4f7
     HEAD_REF master
 )
 

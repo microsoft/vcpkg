@@ -1,19 +1,15 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.1.1)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.1.tar.gz"
-    FILENAME "mongo-cxx-driver-r3.1.1.tar.gz"
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+    REPO mongodb/mongo-cxx-driver
+	REF r3.1.1
     SHA512 ba8a735e5645cbce4497df71a4577e891d507f577dbd5270ec8a82e54c39c2806bf2ff4848b621f18b36d31fb6031e5b4211972b661c43009bff0ed7ab6cf338
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/disable_test_and_example.patch
-        ${CMAKE_CURRENT_LIST_DIR}/disable_shared.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+	HEAD_REF master
+	PATCHES
+	 "${CURRENT_PORT_DIR}/disable_test_and_example.patch"
+	 "${CURRENT_PORT_DIR}/disable_shared.patch"
+	 "${CURRENT_PORT_DIR}/fix-uwp.patch"
+	 "${CURRENT_PORT_DIR}/disable-c2338-mongo-cxx-driver.patch"
 )
 
 vcpkg_configure_cmake(

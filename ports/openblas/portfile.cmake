@@ -24,14 +24,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.2.20
-    SHA512 8dfc8e8c8d456b834d2e9544c8eadd9f4770e30db8b8dd76af601ec0735fd86c9cf63dd6a03ccd23fc02ec2e05069a09875b9073dfe29f99aadab3a958ae2634
+    REF v0.3.5
+    SHA512 91b3074eb922453bf843158b4281cde65db9e8bbdd7590e75e9e6cdcb486157f7973f2936f327bb3eb4f1702ce0ba51ae6729d8d4baf2d986c50771e8f696df0
     HEAD_REF develop
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-openblas.patch" "${CMAKE_CURRENT_LIST_DIR}/whitespace.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/uwp.patch"
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -77,16 +77,14 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
         OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
         "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
+elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
-        # PREFER_NINJA # Disable this option if project cannot be built with Ninja
-        # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-        # OPTIONS_RELEASE -DOPTIMIZE=1
-        # OPTIONS_DEBUG -DDEBUGGABLE=1
-)
-
+        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DNOFORTRAN=ON)
 endif()
 
 
@@ -96,9 +94,6 @@ vcpkg_install_cmake()
 # but I think in most case, libraries will not include these files, they define their own used function prototypes
 # this is only to quite vcpkg
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/openblas_common.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(COPY ${SOURCE_PATH}/config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/include/config.h ${CURRENT_PACKAGES_DIR}/include/openblas_config.h)
 
 file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
@@ -110,4 +105,4 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DI
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)

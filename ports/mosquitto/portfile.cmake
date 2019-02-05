@@ -12,17 +12,16 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
-    REF v1.4.15
-    SHA512 428ef9434d3fe022232dcde415fe8cd948d237507d512871803a116230f9e011c10fa01313111ced0946f906e8cc7e26d9eee5de6caa7f82590753a4d087f6fd
+    REF v1.5
+    SHA512 f6a5c8e71d642ef931176fe428fb79353933facc2db226d9e55b87d4ff9bd6610a1bd05d71159e30c8afb1fda542d233630ae164770e652baa7ea51117211489
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/0001-win64-cmake.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/cmake.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/cmake-2.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/win64-cmake.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/output_folders-cmake.patch"
 )
 
 vcpkg_configure_cmake(
@@ -34,6 +33,7 @@ vcpkg_configure_cmake(
         -DWITH_TLS=ON
         -DWITH_TLS_PSK=ON
         -DWITH_THREADING=ON
+        -DDOCUMENTATION=OFF 
     OPTIONS_RELEASE
         -DENABLE_DEBUG=OFF
     OPTIONS_DEBUG

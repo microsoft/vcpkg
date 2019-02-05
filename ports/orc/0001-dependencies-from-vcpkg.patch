@@ -1,0 +1,141 @@
+diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
+index 91c67d5..4377b83 100644
+--- a/c++/src/CMakeLists.txt
++++ b/c++/src/CMakeLists.txt
+@@ -197,11 +197,12 @@ endif(BUILD_LIBHDFSPP)
+ add_library (orc STATIC ${SOURCE_FILES})
+ 
+ target_link_libraries (orc
+-  protobuf
+-  zlib
+-  snappy
+-  lz4
+-  ${LIBHDFSPP_LIBRARIES}
++  PUBLIC
++    protobuf::libprotobuf
++    ZLIB::ZLIB
++    Snappy::snappy
++    ${LZ4_STATIC_LIB}
++    ${LIBHDFSPP_LIBRARIES}
+   )
+ 
+ install(TARGETS orc DESTINATION lib)
+\ No newline at end of file
+diff --git a/c++/test/CMakeLists.txt b/c++/test/CMakeLists.txt
+index 015814a..2b55f4e 100644
+--- a/c++/test/CMakeLists.txt
++++ b/c++/test/CMakeLists.txt
+@@ -48,10 +48,6 @@ add_executable (orc-test
+ 
+ target_link_libraries (orc-test
+   orc
+-  lz4
+-  protobuf
+-  snappy
+-  zlib
+   ${GTEST_LIBRARIES}
+ )
+ 
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 0272263..8b79a12 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -51,8 +51,8 @@ endif ()
+ # ----------------------------------------------------------------------
+ # Snappy
+ 
+-if (NOT "${SNAPPY_HOME}" STREQUAL "")
+-  find_package (Snappy REQUIRED)
++if (NOT "${SNAPPY_HOME}" STREQUAL "" OR 1)
++  find_package (Snappy CONFIG REQUIRED)
+   set(SNAPPY_VENDORED FALSE)
+ else ()
+   set(SNAPPY_HOME "${THIRDPARTY_DIR}/snappy_ep-install")
+@@ -70,10 +70,6 @@ else ()
+   set(SNAPPY_VENDORED TRUE)
+ endif ()
+ 
+-include_directories (SYSTEM ${SNAPPY_INCLUDE_DIR})
+-add_library (snappy STATIC IMPORTED)
+-set_target_properties (snappy PROPERTIES IMPORTED_LOCATION ${SNAPPY_STATIC_LIB})
+-
+ if (SNAPPY_VENDORED)
+   add_dependencies (snappy snappy_ep)
+   if (INSTALL_VENDORED_LIBS)
+@@ -85,7 +81,7 @@ endif ()
+ # ----------------------------------------------------------------------
+ # ZLIB
+ 
+-if (NOT "${ZLIB_HOME}" STREQUAL "")
++if (NOT "${ZLIB_HOME}" STREQUAL "" OR 1)
+   find_package (ZLIB REQUIRED)
+   set(ZLIB_VENDORED FALSE)
+ else ()
+@@ -112,10 +108,6 @@ else ()
+   set(ZLIB_VENDORED TRUE)
+ endif ()
+ 
+-include_directories (SYSTEM ${ZLIB_INCLUDE_DIR})
+-add_library (zlib STATIC IMPORTED)
+-set_target_properties (zlib PROPERTIES IMPORTED_LOCATION ${ZLIB_STATIC_LIB})
+-
+ if (ZLIB_VENDORED)
+   add_dependencies (zlib zlib_ep)
+   if (INSTALL_VENDORED_LIBS)
+@@ -127,8 +119,8 @@ endif ()
+ # ----------------------------------------------------------------------
+ # LZ4
+ 
+-if (NOT "${LZ4_HOME}" STREQUAL "")
+-  find_package (LZ4 REQUIRED)
++if (NOT "${LZ4_HOME}" STREQUAL "" OR 1)
++  find_library(LZ4_STATIC_LIB NAMES lz4d lz4)
+   set(LZ4_VENDORED FALSE)
+ else ()
+   set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
+@@ -154,8 +146,6 @@ else ()
+ endif ()
+ 
+ include_directories (SYSTEM ${LZ4_INCLUDE_DIR})
+-add_library (lz4 STATIC IMPORTED)
+-set_target_properties (lz4 PROPERTIES IMPORTED_LOCATION ${LZ4_STATIC_LIB})
+ 
+ if (LZ4_VENDORED)
+   add_dependencies (lz4 lz4_ep)
+@@ -230,8 +220,8 @@ endif ()
+ # ----------------------------------------------------------------------
+ # Protobuf
+ 
+-if (NOT "${PROTOBUF_HOME}" STREQUAL "")
+-  find_package (Protobuf REQUIRED)
++if (NOT "${PROTOBUF_HOME}" STREQUAL "" OR 1)
++  find_package(protobuf CONFIG REQUIRED)
+   set(PROTOBUF_VENDORED FALSE)
+ else ()
+   set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
+@@ -266,13 +256,8 @@ else ()
+   set(PROTOBUF_VENDORED TRUE)
+ endif ()
+ 
+-include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
+ 
+-add_library (protobuf STATIC IMPORTED)
+-set_target_properties (protobuf PROPERTIES IMPORTED_LOCATION ${PROTOBUF_STATIC_LIB})
+ 
+-add_library (protoc STATIC IMPORTED)
+-set_target_properties (protoc PROPERTIES IMPORTED_LOCATION ${PROTOC_STATIC_LIB})
+ 
+ if (PROTOBUF_VENDORED)
+   add_dependencies (protoc protobuf_ep)
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index 667fab4..eb6d232 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -49,7 +49,6 @@ add_executable (orc-metadata
+ 
+ target_link_libraries (orc-metadata
+   orc
+-  protobuf
+   )
+ 
+  add_executable (orc-statistics

@@ -1,4 +1,4 @@
 Source: freetype-gl
-Version: 2018-02-25
+Version: 2018-09-18
 Description: OpenGL text using one vertex buffer, one texture and FreeType
 Build-Depends: glew, freetype

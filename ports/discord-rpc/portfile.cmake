@@ -3,31 +3,31 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO discordapp/discord-rpc
-    REF v3.3.0
-    SHA512 8bb2674edefabf75670ceca29364d69e2002152bff9fe55757f4cda03544b4d827ff33595d98e6d8acdc73ca61cef8ab8054ad0a1ffc905cb26496068b15025f
+    REF v3.4.0
+    SHA512 ca981b833aff5f21fd629a704deadd8e3fb5423d959ddb75e381313f6462d984c567671b10c8f031905c08d85792ddbe2dddc402ba2613c42de9e80fc68d0d51
     HEAD_REF master
+    PATCHES disable-downloading.patch
 )
 
-set(STATIC_CRT OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(STATIC_CRT ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+file(REMOVE_RECURSE ${SOURCE_PATH}/thirdparty)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DUSE_STATIC_CRT=${STATIC_CRT}
+    PREFER_NINJA
+    OPTIONS
+        -DUSE_STATIC_CRT=${STATIC_CRT}
+        -DBUILD_EXAMPLES=OFF
+        -DRAPIDJSONTEST=TRUE
+        -DRAPIDJSON=${CURRENT_INSTALLED_DIR}
 )
+
+if(EXISTS ${SOURCE_PATH}/thirdparty)
+    message(FATAL_ERROR "The source directory should not be modified during the build.")
+endif()
 
 vcpkg_install_cmake()
 
-# Remove bin and debug include
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin
-                        ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/send-presence.exe
-                ${CURRENT_PACKAGES_DIR}/debug/bin/send-presence.exe)
-endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Copy copright information

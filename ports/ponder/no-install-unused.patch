@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 091f56d..715f86e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -325,14 +325,14 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/PonderConfig.cmake ${CMAKE_CURRENT_BIN
+     COMPONENT devel
+ )
+ 
+-install(FILES README.md COPYING.txt
+-    DESTINATION ${INSTALL_MISC_DIR}
+-)
+-
+-install(DIRECTORY cmake
+-    DESTINATION ${INSTALL_MISC_DIR}
+-    COMPONENT utils
+-)
++#install(FILES README.md COPYING.txt
++#    DESTINATION ${INSTALL_MISC_DIR}
++#)
++
++#install(DIRECTORY cmake
++#    DESTINATION ${INSTALL_MISC_DIR}
++#    COMPONENT utils
++#)
+ 
+ ###############################
+ # packaging

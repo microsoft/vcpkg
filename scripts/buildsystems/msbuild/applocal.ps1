@@ -62,7 +62,7 @@ function resolve([string]$targetBinary) {
         $g_searched.Set_Item($_, $true)
         if (Test-Path "$installedDir\$_") {
             deployBinary $baseTargetBinaryDir $installedDir "$_"
-            if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $targetBinaryDir "$g_install_root\plugins" "$_" }
+            if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $baseTargetBinaryDir "$g_install_root\plugins" "$_" }
             if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
             if (Test-Path function:\deployPluginsIfMagnum) {
                 if ($g_is_debug) {

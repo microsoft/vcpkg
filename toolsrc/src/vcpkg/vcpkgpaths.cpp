@@ -9,6 +9,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/visualstudio.h>
 
 namespace vcpkg
 {
@@ -33,7 +34,32 @@ namespace vcpkg
 
         paths.packages = paths.root / "packages";
         paths.buildtrees = paths.root / "buildtrees";
-        paths.downloads = paths.root / "downloads";
+
+        const auto overriddenDownloadsPath = System::get_environment_variable("VCPKG_DOWNLOADS");
+        if (auto odp = overriddenDownloadsPath.get())
+        {
+            auto asPath = fs::u8path(*odp);
+            if (!fs::stdfs::is_directory(asPath))
+            {
+                Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO,
+                    "Invalid downloads override directory: %s; "
+                    "create that directory or unset VCPKG_DOWNLOADS to use the default downloads location.",
+                    asPath.u8string());
+            }
+
+            paths.downloads = fs::stdfs::canonical(std::move(asPath), ec);
+            if (ec)
+            {
+                return ec;
+            }
+        }
+        else
+        {
+            paths.downloads = paths.root / "downloads";
+        }
+
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
@@ -92,7 +118,13 @@ namespace vcpkg
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
     {
-        return this->tool_paths.get_lazy(tool, [&]() { return Commands::Fetch::get_tool_path(*this, tool); });
+        if (!m_tool_cache) m_tool_cache = get_tool_cache();
+        return m_tool_cache->get_tool_path(*this, tool);
+    }
+    const std::string& VcpkgPaths::get_tool_version(const std::string& tool) const
+    {
+        if (!m_tool_cache) m_tool_cache = get_tool_cache();
+        return m_tool_cache->get_tool_version(*this, tool);
     }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
@@ -117,8 +149,8 @@ namespace vcpkg
 #if !defined(_WIN32)
         Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
 #else
-        const std::vector<Toolset>& vs_toolsets = this->toolsets.get_lazy(
-            [this]() { return Commands::Fetch::find_toolset_instances_preferred_first(*this); });
+        const std::vector<Toolset>& vs_toolsets =
+            this->toolsets.get_lazy([this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
         const auto tsv = prebuildinfo.platform_toolset.get();
@@ -130,8 +162,8 @@ namespace vcpkg
 
         if (tsv && vsp)
         {
-            Util::stable_keep_if(
-                candidates, [&](const Toolset* t) { return *tsv == t->version && *vsp == t->visual_studio_root_path; });
+            Util::erase_remove_if(
+                candidates, [&](const Toolset* t) { return *tsv != t->version || *vsp != t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s with %s toolset.",
@@ -144,7 +176,7 @@ namespace vcpkg
 
         if (tsv)
         {
-            Util::stable_keep_if(candidates, [&](const Toolset* t) { return *tsv == t->version; });
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return *tsv != t->version; });
             Checks::check_exit(
                 VCPKG_LINE_INFO, !candidates.empty(), "Could not find Visual Studio instance with %s toolset.", *tsv);
         }
@@ -152,12 +184,32 @@ namespace vcpkg
         if (vsp)
         {
             const fs::path vs_root_path = *vsp;
-            Util::stable_keep_if(candidates,
-                                 [&](const Toolset* t) { return vs_root_path == t->visual_studio_root_path; });
+            Util::erase_remove_if(candidates,
+                                  [&](const Toolset* t) { return vs_root_path != t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s.",
                                vs_root_path.generic_string());
+        }
+
+        if (prebuildinfo.cmake_system_name == "WindowsStore")
+        {
+            // For now, cmake does not support VS 2019 when using the MSBuild generator.
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !candidates.empty(),
+                               "With the current CMake version, UWP binaries can only be built with toolset version "
+                               "v141 or below. Please install the v141 toolset in VS 2019.");
+        }
+
+        if (System::get_host_processor() == System::CPUArchitecture::X86)
+        {
+            // For now, cmake does not support VS 2019 when using the MSBuild generator.
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !candidates.empty(),
+                               "With the current CMake version, 32-bit machines can build with toolset version "
+                               "v141 or below. Please install the v141 toolset in VS 2019.");
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");

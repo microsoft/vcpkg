@@ -126,7 +126,7 @@ else()
     target_link_libraries(glib PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 endif()
 target_include_directories(glib PRIVATE ${PCRE_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
-target_include_directories(glib PUBLIC ${LIBINTL_INCLUDE_DIR})
+target_include_directories(glib PUBLIC $<BUILD_INTERFACE:${LIBINTL_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS glib)
 if(NOT GLIB_SKIP_HEADERS)
     install(FILES glib/glib.h glib/glib-object.h ${CMAKE_BINARY_DIR}/config/glib/glibconfig.h DESTINATION include)
@@ -151,7 +151,7 @@ extract_vcproj_sources(win32/vs14/gobject.vcxproj GOBJECT_SOURCES)
 add_library(gobject ${GOBJECT_SOURCES})
 target_compile_definitions(gobject PRIVATE GOBJECT_COMPILATION G_LOG_DOMAIN="GLib-GObject")
 target_link_libraries(gobject PRIVATE gthread glib ${FFI_LIBRARY})
-target_include_directories(gobject PRIVATE ${FFI_INCLUDE_DIR})
+target_include_directories(gobject PRIVATE ${FFI_INCLUDE_DIR} PUBLIC $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS gobject)
 if(NOT GLIB_SKIP_HEADERS)
     file(GLOB GOBJECT_HEADERS gobject/*.h gobject/gobjectnotifyqueue.c)
@@ -164,7 +164,7 @@ add_library(gmodule gmodule/gmodule.c)
 target_compile_definitions(gmodule PRIVATE G_LOG_DOMAIN="GModule")
 target_link_libraries(gmodule PRIVATE glib ${LIBINTL_LIBRARY})
 target_include_directories(gmodule PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gmodule>)
-target_include_directories(gmodule PRIVATE ${LIBINTL_INCLUDE_DIR})
+target_include_directories(gmodule PRIVATE ${LIBINTL_INCLUDE_DIR} PUBLIC $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS gmodule)
 if(NOT GLIB_SKIP_HEADERS)
     install(FILES gmodule/gmodule.h DESTINATION include)
@@ -232,7 +232,7 @@ endif()
 add_library(gio ${GIO_SOURCES})
 target_compile_definitions(gio PRIVATE GIO_COMPILATION G_LOG_DOMAIN="GLib-GIO")
 target_link_libraries(gio PRIVATE glib gmodule gobject ZLIB::ZLIB ${LIBRESOLV_LIBRARY} ${LIBINTL_LIBRARY})
-target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gio>)
+target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gio> $<INSTALL_INTERFACE:include/gio>)
 if(WIN32)
     target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi)
 elseif(APPLE)
@@ -297,7 +297,28 @@ if(NOT GLIB_SKIP_TOOLS)
     install(TARGETS ${GLIB_TOOLS} RUNTIME DESTINATION tools/glib)
 endif()
 
-install(TARGETS ${GLIB_TARGETS} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
+install(
+    TARGETS ${GLIB_TARGETS}
+    EXPORT glib
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+install(
+    EXPORT glib
+    NAMESPACE unofficial::glib::
+    FILE unofficial-glib-targets.cmake
+    DESTINATION share/unofficial-glib
+)
+configure_file(
+    cmake/unofficial-glib-config.in.cmake
+    cmake/unofficial-glib-config.cmake
+    @ONLY
+)
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-glib-config.cmake
+    DESTINATION share/unofficial-glib
+)
 
 message(STATUS "Link-time dependencies:")
 message(STATUS "  " ${ZLIB_LIBRARIES})

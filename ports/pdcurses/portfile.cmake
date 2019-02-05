@@ -9,8 +9,8 @@ find_program(NMAKE nmake)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wmcbrine/PDCurses
-    REF PDCurses_3_4
-    SHA512 a05065c2e43771bf769f25f229b6058c4dc6add65d993f2e304e98bded8a8af88e674638c7385383451fddc45cf3bd8c9a95febffc7abcbcce0e6384e4f397b3
+    REF 3.6
+    SHA512 1ed34e7eb791c9e00aae60878339e79f6b3af086c45d88d2b59d9b2b4020481ff5a5c21e078e59ae24f2de3b4d412f0240f21a50eb743f7e172c832a7e17ed5e
     HEAD_REF master
 )
 
@@ -24,23 +24,11 @@ file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
-file(READ ${SOURCE_PATH}/win32/vcwin32.mak PDC_MAK_ORIG)
-string(REPLACE " -pdb:none" "" PDC_MAK_ORIG ${PDC_MAK_ORIG})
+set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)                                                          
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    string(REPLACE "/MACHINE:IX86 " "/MACHINE:X64 " PDC_MAK_X64 ${PDC_MAK_ORIG})
-    file(WRITE ${SOURCE_PATH}/win32/vcpkg_x64.mak ${PDC_MAK_X64})
-    set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg_x64.mak WIDE=Y UTF8=Y)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    string(REPLACE "/MACHINE:IX86 " "/MACHINE:X86 " PDC_MAK_X86 ${PDC_MAK_ORIG})
-    file(WRITE ${SOURCE_PATH}/win32/vcpkg_x86.mak ${PDC_MAK_X86})
-    set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg_x86.mak WIDE=Y UTF8=Y)
-else()
-    message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
 
-set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
-set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
+set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)                                                                                                   
+set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)   
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/rs-core-lib
-    REF eb5c851f4e82d31692d7c45225b41fdc374134aa
-    SHA512 e1a3a8cd16f069c8c58858dfe516df0aa2dd07f4e415a2ef7539104024910383217f75c16481347ef0a92a17faad98aa051320ec9e4693426ad9cd297983d923
+    REF fa2144ec238def8d5e08d8489fda6ccfe19a8db1
+    SHA512 c6c6405a15e197cc7f335e26193b46f00d3293606c042d7d6a2c50e79aa93c9c2ed14537a71b6dad30c271f80138cb7d294bf85bf0e67cbec6c0709e9f0f624f
     HEAD_REF master
 )
 

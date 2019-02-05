@@ -62,7 +62,7 @@ namespace vcpkg::Install
         auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
-            const auto status = fs.status(file, ec);
+            const auto status = fs.symlink_status(file, ec);
             if (ec)
             {
                 System::println(System::Color::error, "failed: %s: %s", file.u8string(), ec.message());
@@ -104,6 +104,23 @@ namespace vcpkg::Install
                                         ec.message());
                     }
                     fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
+                    if (ec)
+                    {
+                        System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
+                    }
+                    output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
+                    break;
+                }
+                case fs::file_type::symlink:
+                {
+                    if (fs.exists(target))
+                    {
+                        System::println(System::Color::warning,
+                                        "File %s was already present and will be overwritten",
+                                        target.u8string(),
+                                        ec.message());
+                    }
+                    fs.copy_symlink(file, target, ec);
                     if (ec)
                     {
                         System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
@@ -588,7 +605,10 @@ namespace vcpkg::Install
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
-            download_tool};
+            download_tool,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::NO,
+        };
 
         auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         std::unordered_map<std::string, SourceControlFile> scf_map;
