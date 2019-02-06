@@ -98,6 +98,10 @@ macro(add_assembly ASMFILE)
 endmacro()
 
 if("${TARGET}" STREQUAL "X86")
+    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m32")
+endif()
+
+if("${TARGET}" STREQUAL "X86")
     add_assembly(src/x86/sysv.S)
     add_assembly(src/x86/win32.S)
 elseif("${TARGET}" STREQUAL "X86_64")

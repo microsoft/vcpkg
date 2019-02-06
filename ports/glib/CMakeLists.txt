@@ -76,8 +76,8 @@ else()
                 --disable-libelf
                 --disable-libmount
                 "CPPFLAGS=-I${PCRE_INCLUDE_DIR}"
-                "CFLAGS=-I${PCRE_INCLUDE_DIR}"
-                "LDFLAGS=-L${LIB_DIR}"
+                "CFLAGS=${VCPKG_C_FLAGS} -I${PCRE_INCLUDE_DIR}"
+                "LDFLAGS=${VCPKG_LINKER_FLAGS} -L${LIB_DIR}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
             RESULT_VARIABLE res
         )
