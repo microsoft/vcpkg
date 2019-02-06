@@ -1,25 +1,20 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GoogleCloudPlatform/google-cloud-cpp
-    REF v0.1.0
-    SHA512 3947cc24ca1ed97309f055f17945afe2d6b22ae8f54f86d3395f8c491b7409d4b7bb12206889d04d07f51236e9fd5afd65b904c8c80521a3313588d8069545c2
+    REF v0.5.0
+    SHA512 48c5f4828bc85ae2c4bfe52b5bb51ff5da6a4cd6759f819aefaf9c23d7fffeb0a10390274f0e83f030f66f59a364c05583240e426143073187f104345e0b05d5
     HEAD_REF master
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/include-protobuf.patch"
 )
 
-set(GOOGLEAPIS_VERSION 92f10d7033c6fa36e1a5a369ab5aa8bafd564009)
+set(GOOGLEAPIS_VERSION 6a3277c0656219174ff7c345f31fb20a90b30b97)
 vcpkg_download_distfile(GOOGLEAPIS
-    URLS "https://github.com/google/googleapis/archive/92f10d7033c6fa36e1a5a369ab5aa8bafd564009.zip"
+    URLS "https://github.com/google/googleapis/archive/${GOOGLEAPIS_VERSION}.zip"
     FILENAME "googleapis-${GOOGLEAPIS_VERSION}.zip"
-    SHA512 4280ece965a231f6a0bb3ea38a961d15babd9eac517f9b0d57e12f186481bbab6a27e4f0ee03ba3c587c9aa93d3c2e6c95f67f50365c65bb10594f0229279287
+    SHA512 809b7cf0429df9867c8ab558857785e9d7d70aea033c6d588b60d29d2754001e9aea5fcdd8cae22fad8145226375bedbd1516d86af7d1e9731fffea331995ad9
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/third_party)
@@ -30,16 +25,14 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DGOOGLE_CLOUD_CPP_GRPC_PROVIDER=vcpkg
-        -DGOOGLE_CLOUD_CPP_GMOCK_PROVIDER=vcpkg
+        -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package
+        -DGOOGLE_CLOUD_CPP_ENABLE_MACOS_OPENSSL_CHECK=OFF
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bigtable/client/testing)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake TARGET_PATH share/bigtable_client)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/google-cloud-cpp RENAME copyright)
 
