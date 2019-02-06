@@ -1,0 +1,11 @@
+--- a/GUISupport/MFC/vtkMFCWindow.cpp	Wed Feb  6 15:46:54 2019
++++ b/GUISupport/MFC/vtkMFCWindow.cpp	Wed Feb  6 15:40:42 2019
+@@ -192,7 +192,7 @@
+   this->pvtkWin32OpenGLRW->Render();
+ 
+   unsigned char *pixels =
+-    this->pvtkWin32OpenGLRW->GetPixelData(0,0,size[0]-1,size[1]-1,0);
++    this->pvtkWin32OpenGLRW->GetPixelData(0,0,size[0]-1,size[1]-1,0,0);
+ 
+   // now copy he result to the HDC
+   int dataWidth = ((cxWindow*3+3)/4)*4;
