@@ -67,6 +67,7 @@ vcpkg_from_github(
         fix-find-libharu.patch
         fix-find-mysql.patch
         fix-find-odbc.patch
+        fix-mfc-error.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
