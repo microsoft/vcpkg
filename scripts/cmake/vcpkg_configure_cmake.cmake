@@ -77,6 +77,8 @@ function(vcpkg_configure_cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(NINJA_CAN_BE_USED OFF)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "Intel")
+        set(NINJA_CAN_BE_USED OFF)
     endif()
 
     if(_csc_GENERATOR)
