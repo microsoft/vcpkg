@@ -26,7 +26,6 @@ set(BUILD_libarchive_libxml2 OFF)
 if("libxml2" IN_LIST FEATURES)
   set(BUILD_libarchive_libxml2 ON)
 endif()
-set(BUILD_libarchive_libxml2 OFF)
 
 set(BUILD_libarchive_lz4 OFF)
 if("lz4" IN_LIST FEATURES)
