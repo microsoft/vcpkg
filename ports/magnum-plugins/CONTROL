@@ -26,6 +26,10 @@ Build-Depends: magnum[audio]
 Feature: drwavaudioimporter
 Description: DrWavAudioImporter plugin
 Build-Depends: magnum[audio]
+#
+#Feature: faad2audioimporter
+#Description: Faad2AudioImporter plugin
+#Build-Depends: magnum[audio], faad2
 
 Feature: freetypefont
 Description: FreeTypeFont plugin
