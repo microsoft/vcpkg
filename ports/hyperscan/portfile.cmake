@@ -1,7 +1,7 @@
 # Build with 'vcpkg.exe install hyperscan:x86-windows-static-release'; Hyperscan doesn't support dynamic libraries on Windows.
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 
 set(HYPERSCAN_VERSION 5.1.0)
@@ -38,4 +38,4 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/hy
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME hyperscan)
+# vcpkg_test_cmake(PACKAGE_NAME hs)
