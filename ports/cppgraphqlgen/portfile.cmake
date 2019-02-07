@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cppgraphqlgen
-    REF v2.0.1
-    SHA512 c49b9caaa85352b30370532d36c9db5ac1d4dfc2d31befe99e2ee257c841ffe793760885d08e1929be39b7dfbc3bcdbd110c3033549e31ac1143974fb466e92b
+    REF v2.0.2
+    SHA512 259c8bc844b70e99332cd52caf48de3e5f0dfdf5bba6d986209a0e5a9f4491953901b365f43e8612f171bdcaef80b524d6b261b62fb8a429e529a5701a839ca1
     HEAD_REF master
 )
 
