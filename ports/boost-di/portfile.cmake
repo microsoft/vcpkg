@@ -1,11 +1,11 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/di-1.0.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/di-1.1.0)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/boost-experimental/di/archive/v1.0.2.tar.gz"
-    FILENAME "di-1.0.2.tar.gz"
-    SHA512 1a5fc3738db2c3c18c198ce58e82a60f4f3d39fb66c9dc2b465df89da66a19ffca79eca148e68cd70c76524185ba2145e2857504a25eda4fa70ffd2f05f3be40
+    URLS "https://github.com/boost-experimental/di/archive/v1.1.0.tar.gz"
+    FILENAME "di-1.1.0.tar.gz"
+    SHA512 69f7b0567cffea9bf983aedd7eabd1a07ae20249cd56a13de98eaa0cc835cbe3b76e790da68489536dd07edeb99271a69111f4d0c6b0aa3721ce9f5ead848fe0
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

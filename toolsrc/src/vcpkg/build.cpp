@@ -473,10 +473,44 @@ namespace vcpkg::Build
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
-        abi_tag_entries.emplace_back(
-            AbiEntry{"portfile", vcpkg::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
-        abi_tag_entries.emplace_back(
-            AbiEntry{"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
+        // If there is an unusually large number of files in the port then
+        // something suspicious is going on.  Rather than hash all of them
+        // just mark the port as no-hash
+        const int max_port_file_count = 100;
+
+        // the order of recursive_directory_iterator is undefined so save the names to sort
+        std::vector<fs::path> port_files;
+        for (auto &port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
+        {
+            if (fs::is_regular_file(status(port_file)))
+            {
+                port_files.push_back(port_file);
+                if (port_files.size() > max_port_file_count)
+                {
+                    abi_tag_entries.emplace_back(AbiEntry{ "no_hash_max_portfile", "" });
+                    break;
+                }
+            }
+        }
+
+        if (port_files.size() <= max_port_file_count)
+        {
+            std::sort(port_files.begin(), port_files.end());
+
+            int counter = 0;
+            for (auto & port_file : port_files)
+            {
+                // When vcpkg takes a dependency on C++17 it can use fs::relative,
+                // which will give a stable ordering and better names in the key entry.
+                // this is not available in the filesystem TS so instead number the files for the key.
+                std::string key = Strings::format("file_%03d", counter++);
+                if (GlobalState::debugging)
+                {
+                    System::println("[DEBUG] mapping %s from %s", key, port_file.string());
+                }
+                abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1") });
+            }
+        }
 
         abi_tag_entries.emplace_back(AbiEntry{"vcpkg_fixup_cmake_targets", "1"});
 
