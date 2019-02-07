@@ -2,9 +2,9 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 712fb1d..440a63a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -32,6 +32,9 @@ PROJECT ( OpenVDB )
- 
- ENABLE_TESTING()
+@@ -38,6 +38,9 @@
+     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+ endif(CCACHE_FOUND)
  
 +OPTION ( OPENVDB_BUILD_TOOLS "Build OpenVDB utilities" ON )
 +OPTION ( OPENVDB_STATIC "Build statically linked library" ON )
@@ -16,15 +16,15 @@ diff --git a/openvdb/CMakeLists.txt b/openvdb/CMakeLists.txt
 index 5703eb9..6ff3c6a 100644
 --- a/openvdb/CMakeLists.txt
 +++ b/openvdb/CMakeLists.txt
-@@ -26,6 +26,7 @@
- #
- PROJECT ( OpenVDBCore )
+@@ -29,6 +29,7 @@
+ 
+ set(CMAKE_CXX_STANDARD 11)
  
 +IF ( OPENVDB_BUILD_TOOLS )
  IF ( USE_GLFW3 )
    FIND_PACKAGE ( GLFW3 REQUIRED )
    SET ( OPENVDB_USE_GLFW_FLAG "-DOPENVDB_USE_GLFW_3" )
-@@ -42,9 +43,12 @@ ELSE ()
+@@ -45,9 +46,12 @@
    SET ( GLFW_LINK_LIBRARY ${GLFW_glfw_LIBRARY} )
    SET ( GLFW_INCLUDE_DIRECTORY  ${GLFW_INCLUDE_DIR} CACHE STRING "GLFW include directory")
  ENDIF ()
@@ -37,7 +37,7 @@ index 5703eb9..6ff3c6a 100644
  ELSE ()
    FIND_PACKAGE ( Threads REQUIRED )
  ENDIF()
-@@ -75,7 +79,7 @@ SET ( OPENVDB_PATCH_VERSION_NUMBER ${_openvdb_patch_version_number} CACHE STRING
+@@ -78,7 +82,7 @@
  # MESSAGE ( "OPENVDB_MINOR_VERSION_NUMBER = ${OPENVDB_MINOR_VERSION_NUMBER}" )
  # MESSAGE ( "OPENVDB_PATCH_VERSION_NUMBER = ${OPENVDB_PATCH_VERSION_NUMBER}" )
  
@@ -46,7 +46,7 @@ index 5703eb9..6ff3c6a 100644
  IF (WIN32 AND OPENVDB_DISABLE_BOOST_IMPLICIT_LINKING)
    ADD_DEFINITIONS ( -DBOOST_ALL_NO_LIB )
  ENDIF ()
-@@ -85,7 +89,9 @@ FIND_PACKAGE ( TBB REQUIRED )
+@@ -88,7 +92,9 @@
  FIND_PACKAGE ( ZLIB REQUIRED )
  FIND_PACKAGE ( ILMBase REQUIRED )
  FIND_PACKAGE ( OpenEXR REQUIRED )
@@ -56,7 +56,7 @@ index 5703eb9..6ff3c6a 100644
  IF (OPENVDB_BUILD_DOCS)
    FIND_PACKAGE ( Doxygen REQUIRED )
  ENDIF ()
-@@ -127,7 +133,10 @@ INCLUDE_DIRECTORIES ( SYSTEM ${BLOSC_INCLUDE_DIR} )
+@@ -130,7 +136,10 @@
  INCLUDE_DIRECTORIES ( SYSTEM ${CPPUNIT_INCLUDE_DIR} )
  
  IF (WIN32)
@@ -68,7 +68,7 @@ index 5703eb9..6ff3c6a 100644
  ELSE ()
    ADD_DEFINITIONS ( -pthread -fPIC )
  ENDIF ()
-@@ -167,16 +176,20 @@ SET ( OPENVDB_LIBRARY_SOURCE_FILES
+@@ -170,16 +179,20 @@
  
  SET_SOURCE_FILES_PROPERTIES ( ${OPENVDB_LIBRARY_SOURCE_FILES}
    PROPERTIES
@@ -91,7 +91,7 @@ index 5703eb9..6ff3c6a 100644
  TARGET_LINK_LIBRARIES ( openvdb_static
    ${Boost_IOSTREAMS_LIBRARY}
    ${Boost_SYSTEM_LIBRARY}
-@@ -185,6 +198,8 @@ TARGET_LINK_LIBRARIES ( openvdb_static
+@@ -188,6 +201,8 @@
    ${ZLIB_LIBRARY}
    ${BLOSC_blosc_LIBRARY}
    )
@@ -100,7 +100,7 @@ index 5703eb9..6ff3c6a 100644
  TARGET_LINK_LIBRARIES ( openvdb_shared
    ${Boost_IOSTREAMS_LIBRARY}
    ${Boost_SYSTEM_LIBRARY}
-@@ -193,7 +208,9 @@ TARGET_LINK_LIBRARIES ( openvdb_shared
+@@ -196,7 +211,9 @@
    ${ZLIB_LIBRARY}
    ${BLOSC_blosc_LIBRARY}
    )
@@ -110,7 +110,7 @@ index 5703eb9..6ff3c6a 100644
  IF (WIN32)
    SET_TARGET_PROPERTIES ( openvdb_static
  	PROPERTIES OUTPUT_NAME libopenvdb
-@@ -203,7 +220,9 @@ ELSE()
+@@ -206,7 +223,9 @@
  	PROPERTIES OUTPUT_NAME openvdb
  	)
  ENDIF()
@@ -120,7 +120,7 @@ index 5703eb9..6ff3c6a 100644
  SET_TARGET_PROPERTIES(
    openvdb_shared
    PROPERTIES
-@@ -211,13 +230,15 @@ SET_TARGET_PROPERTIES(
+@@ -214,13 +233,15 @@
    SOVERSION ${OPENVDB_MAJOR_VERSION_NUMBER}.${OPENVDB_MINOR_VERSION_NUMBER}
    VERSION ${OPENVDB_MAJOR_VERSION_NUMBER}.${OPENVDB_MINOR_VERSION_NUMBER}.${OPENVDB_PATCH_VERSION_NUMBER}
    )
@@ -137,7 +137,14 @@ index 5703eb9..6ff3c6a 100644
  ADD_EXECUTABLE ( vdb_print
    ${VDB_PRINT_SOURCE_FILES}
    )
-@@ -231,7 +252,7 @@ TARGET_LINK_LIBRARIES ( vdb_print
+@@ -229,14 +250,12 @@
+   openvdb_shared
+   ${CMAKE_THREAD_LIBS_INIT}
+   ${BLOSC_blosc_LIBRARY}
+-  m
+-  stdc++
+   )
+ 
  SET ( VDB_RENDER_SOURCE_FILES cmd/openvdb_render/main.cc )
  SET_SOURCE_FILES_PROPERTIES ( ${VDB_RENDER_SOURCE_FILES}
    PROPERTIES
@@ -146,7 +153,16 @@ index 5703eb9..6ff3c6a 100644
    )
  ADD_EXECUTABLE ( vdb_render
    ${VDB_RENDER_SOURCE_FILES}
-@@ -256,26 +277,26 @@ SET ( VDB_VIEW_SOURCE_FILES
+@@ -249,8 +268,6 @@
+   ${Openexr_ILMIMF_LIBRARY}
+   ${Ilmbase_ILMTHREAD_LIBRARY}
+   ${Ilmbase_IEX_LIBRARY}
+-  m
+-  stdc++
+   )
+ 
+ SET ( VDB_VIEW_SOURCE_FILES
+@@ -263,9 +280,8 @@
    )
  SET_SOURCE_FILES_PROPERTIES ( ${VDB_VIEW_SOURCE_FILES}
    PROPERTIES
@@ -157,6 +173,7 @@ index 5703eb9..6ff3c6a 100644
    ADD_EXECUTABLE ( vdb_view
      ${VDB_VIEW_SOURCE_FILES}
      )
+@@ -274,19 +290,18 @@
  
    TARGET_LINK_LIBRARIES ( vdb_view
      openvdb_shared
@@ -173,6 +190,8 @@ index 5703eb9..6ff3c6a 100644
      ${GLFW_LINK_LIBRARY}
      ${GLFW_DEPENDENT_LIBRARIES}
      ${GLEW_GLEW_LIBRARY}
+-    m
+-    stdc++
      )
 -ENDIF ()
 +
@@ -180,7 +199,16 @@ index 5703eb9..6ff3c6a 100644
  
  SET ( UNITTEST_SOURCE_FILES
    unittest/main.cc
-@@ -405,27 +426,32 @@ IF (OPENVDB_BUILD_DOCS)
+@@ -392,8 +407,6 @@
+   TARGET_LINK_LIBRARIES ( vdb_test
+     ${CPPUnit_cppunit_LIBRARY}
+     openvdb_shared
+-    m
+-    stdc++
+     )
+ 
+   ADD_TEST ( vdb_unit_test vdb_test )
+@@ -418,27 +431,32 @@
  
  ENDIF ()
  
@@ -215,7 +243,7 @@ index 5703eb9..6ff3c6a 100644
  IF (WIN32)
    INSTALL ( TARGETS
  	openvdb_shared
-@@ -439,6 +465,7 @@ ELSE()
+@@ -452,6 +470,7 @@
  	lib
  	)
  ENDIF ()

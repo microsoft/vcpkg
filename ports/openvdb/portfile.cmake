@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dreamworksanimation/openvdb
-    REF v5.0.0
-    SHA512 8916d54683d81144114e57f8332be43b7547e6da5d194f6147bcefd4ee9e8e7ec817f27b65adb129dfd149e6b308f4bab30591ee953ee2c319636491bf051a2b
+    REF v5.2.0
+    SHA512 69e21190c27a055e476a319b0c2d961303fa2f3fec30bec93ed44072d01816ef89e5e8f0abfc3a22d1c73742aa31284c664596747b49cd985fea1a751776506e
     HEAD_REF master
 )
 
