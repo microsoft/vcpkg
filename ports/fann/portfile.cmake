@@ -14,8 +14,13 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "FANN does not support static linkage. Building dynamically.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-# Finish Directories
+    # Finish Directories
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/fann.dll ${CURRENT_PACKAGES_DIR}/bin/fann.dll)
     file(RENAME ${CURRENT_PACKAGES_DIR}/doublefann.dll ${CURRENT_PACKAGES_DIR}/bin/doublefann.dll)
@@ -39,8 +44,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-else()
-    message(FATAL_ERROR "Fann is not supported static")
 endif()
 
 # Handle copyright
