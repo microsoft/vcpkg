@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -Duse_installed_dependencies=ON
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
+        -Duse_edge_modules=ON
 )
 
 vcpkg_install_cmake()
