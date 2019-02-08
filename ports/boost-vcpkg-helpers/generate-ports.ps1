@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.68.0"
+    $version = "1.69.0"
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
@@ -95,6 +95,12 @@ function Generate()
         "    REF boost-$version"
         "    SHA512 $Hash"
         "    HEAD_REF master"
+    )
+    if ($Name -eq "thread")
+    {
+        $portfileLines += @("    PATCHES avoid-winapi.patch")
+    }
+    $portfileLines += @(
         ")"
         ""
     )
@@ -144,7 +150,12 @@ function Generate()
         {
             $portfileLines += @(
                 "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
-                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH} REQUIREMENTS `"<library>/boost/date_time//boost_date_time`" OPTIONS /boost/thread//boost_thread)"
+                "boost_modular_build("
+                "    SOURCE_PATH `${SOURCE_PATH}"
+                "    REQUIREMENTS `"<library>/boost/date_time//boost_date_time`""
+                "    OPTIONS /boost/thread//boost_thread"
+                "    BOOST_CMAKE_FRAGMENT `${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+                ")"
             )
         }
         else
@@ -160,51 +171,9 @@ function Generate()
         "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
     )
 
-    if ($Name -eq "exception")
+    if (Test-Path "$scriptsDir/post-build-stubs/$Name.cmake")
     {
-        $portfileLines += @(
-            ""
-            "set(VCPKG_LIBRARY_LINKAGE static)"
-            "file(REMOVE_RECURSE `${CURRENT_PACKAGES_DIR}/bin `${CURRENT_PACKAGES_DIR}/debug/bin)"
-         )
-    }
-    if ($Name -eq "config")
-    {
-        $portfileLines += @(
-            "file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n`")"
-            "file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#undef BOOST_ALL_DYN_LINK\n`")"
-            ""
-            "if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)"
-            "    file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#define BOOST_ALL_DYN_LINK\n`")"
-            "endif()"
-            "file(COPY `${SOURCE_PATH}/checks DESTINATION `${CURRENT_PACKAGES_DIR}/share/boost-config)"
-        )
-    }
-    if ($Name -eq "predef")
-    {
-        $portfileLines += @(
-            ""
-            "file(COPY `${SOURCE_PATH}/tools/check DESTINATION `${CURRENT_PACKAGES_DIR}/share/boost-predef)"
-        )
-    }
-    if ($Name -eq "test")
-    {
-        $portfileLines += @(
-            "if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL `"release`")"
-            "    file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
-            "    file(GLOB MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)"
-            "    file(COPY `${MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
-            "    file(REMOVE `${MONITOR_LIBS})"
-            "endif()"
-            ""
-            "if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL `"debug`")"
-            "    file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
-            "    file(GLOB DEBUG_MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)"
-            "    file(COPY `${DEBUG_MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
-            "    file(REMOVE `${DEBUG_MONITOR_LIBS})"
-            "endif()"
-            ""
-        )
+        $portfileLines += @(get-content "$scriptsDir/post-build-stubs/$Name.cmake")
     }
 
     $portfileLines | out-file -enc ascii "$scriptsDir/../boost-$sanitizedName/portfile.cmake"
@@ -244,6 +213,7 @@ $libraries_found = ls $scriptsDir/boost/libs -directory | % name | % {
         "interval"
         "odeint"
         "ublas"
+        "safe_numerics"
     }
     else
     {
@@ -297,7 +267,7 @@ foreach ($library in $libraries)
                 -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
                 -replace "boost/functional/hash.hpp","boost/container_hash/hash.hpp" `
                 -replace "boost/detail/([^/]+)/","boost/`$1/" `
-                -replace "#include ?<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" `
+                -replace " *# *include *<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" `
                 -replace "/|\.hp?p?| ","" } | group | % name | % {
             # mappings
             Write-Verbose "${library}: $_"
@@ -306,9 +276,9 @@ foreach ($library in $libraries)
             elseif ($_ -eq "type") { "core" }
             elseif ($_ -match "unordered_") { "unordered" }
             elseif ($_ -match "cstdint") { "integer" }
-            elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior") { "utility" }
-            elseif ($_ -eq "version") { "config" }
-            elseif ($_ -match "shared_ptr|make_shared|intrusive_ptr|scoped_ptr|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
+            elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior|compressed_pair") { "utility" }
+            elseif ($_ -match "^version|^workaround") { "config" }
+            elseif ($_ -match "enable_shared_from_this|shared_ptr|make_shared|make_unique|intrusive_ptr|scoped_ptr|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
             elseif ($_ -match "iterator_adaptors|generator_iterator|pointee") { "iterator" }
             elseif ($_ -eq "regex_fwd") { "regex" }
             elseif ($_ -eq "make_default") { "convert" }
@@ -327,6 +297,7 @@ foreach ($library in $libraries)
             elseif ($_ -eq "exception_ptr") { "exception" }
             elseif ($_ -eq "multi_index_container") { "multi_index" }
             elseif ($_ -eq "lexical_cast") { "lexical_cast"; "math" }
+            elseif ($_ -match "token_iterator|token_functions") { "tokenizer" }
             elseif ($_ -eq "numeric" -and $library -notmatch "numeric_conversion|interval|odeint|ublas") { "numeric_conversion"; "interval"; "odeint"; "ublas" }
             else { $_ }
         } | group | % name | ? { $_ -ne $library }
@@ -339,7 +310,7 @@ foreach ($library in $libraries)
 
         $deps = @($deps | ? {
             # Boost contains cycles, so remove a few dependencies to break the loop.
-            (($library -notmatch "core|assert|mpl|detail|throw_exception|type_traits") -or ($_ -notmatch "utility")) `
+            (($library -notmatch "core|assert|mpl|detail|throw_exception|type_traits|^exception") -or ($_ -notmatch "utility")) `
             -and `
             (($library -notmatch "range") -or ($_ -notmatch "algorithm"))`
             -and `
@@ -356,6 +327,10 @@ foreach ($library in $libraries)
             ($_ -notmatch "mpi")`
             -and `
             (($library -notmatch "spirit") -or ($_ -notmatch "serialization"))`
+            -and `
+            (($library -notmatch "throw_exception") -or ($_ -notmatch "^exception"))`
+            -and `
+            (($library -notmatch "iostreams") -or ($_ -notmatch "random"))`
             -and `
             (($library -notmatch "utility|concept_check") -or ($_ -notmatch "iterator"))
         } | % { "boost-$_" -replace "_","-" } | % {
@@ -407,22 +382,24 @@ foreach ($library in $libraries)
     }
 }
 
-# Generate master boost control file which depends on each individual library
-# mpi is excluded due to it having a dependency on msmpi
-$boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-" } | ? { $_ -notmatch "boost-mpi" }) -join ", "
+if ($libraries_in_boost_port.length -gt 1) {
+    # Generate master boost control file which depends on each individual library
+    # mpi is excluded due to it having a dependency on msmpi
+    $boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-" } | ? { $_ -notmatch "boost-mpi" }) -join ", "
 
-@(
-    "# Automatically generated by boost-vcpkg-helpers/generate-ports.ps1"
-    "Source: boost"
-    "Version: $version"
-    "Description: Peer-reviewed portable C++ source libraries"
-    "Build-Depends: $boostDependsList"
-    ""
-    "Feature: mpi"
-    "Description: Build with MPI support"
-    "Build-Depends: boost-mpi"
-) | out-file -enc ascii $scriptsDir/../boost/CONTROL
+    @(
+        "# Automatically generated by boost-vcpkg-helpers/generate-ports.ps1"
+        "Source: boost"
+        "Version: $version"
+        "Description: Peer-reviewed portable C++ source libraries"
+        "Build-Depends: $boostDependsList"
+        ""
+        "Feature: mpi"
+        "Description: Build with MPI support"
+        "Build-Depends: boost-mpi"
+    ) | out-file -enc ascii $scriptsDir/../boost/CONTROL
 
-"set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" | out-file -enc ascii $scriptsDir/../boost/portfile.cmake
+    "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" | out-file -enc ascii $scriptsDir/../boost/portfile.cmake
+}
 
 return

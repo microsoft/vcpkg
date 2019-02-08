@@ -1,4 +1,4 @@
 Source: gdcm2
-Version: 2.8.8
+Version: 2.8.8-2
 Description: Grassroots DICOM library
-Build-Depends: zlib, expat
+Build-Depends: zlib, expat, openjpeg
