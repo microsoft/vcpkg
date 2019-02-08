@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 2c8ffd6de946a6f8ea94a8e0c00f03f67753ad99534e0d5fcaaaeb472fe76a3383324bcb628a31d8c01bc5f60254790f5508c8394096a4f05672f814dbd6fe2e
     HEAD_REF master
     PATCHES
+    disable-matlab-mex.patch
     workaround-msvc-optimizer-ice.patch
     install-targets.patch
 )
