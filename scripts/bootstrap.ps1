@@ -138,7 +138,7 @@ function getVisualStudioInstances()
 function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
 {
     $VisualStudioInstances = getVisualStudioInstances
-	if ($null -eq $VisualStudioInstances)
+    if ($null -eq $VisualStudioInstances)
     {
         throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
     }
@@ -210,7 +210,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 10 SDK
     function CheckWindows10SDK($path)
     {
-		if ($null -eq $path)	
+        if ($null -eq $path)	
         {
             return
         }
@@ -262,7 +262,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 8.1 SDK
     function CheckWindows81SDK($path)
     {
-		if ($null -eq $path)
+        if ($null -eq $path)
         {
             return
         }
