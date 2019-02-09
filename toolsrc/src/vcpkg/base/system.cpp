@@ -30,7 +30,7 @@ namespace vcpkg::System
         static constexpr const uint32_t buff_size = 1024 * 32;
         uint32_t size = buff_size;
         char buf[buff_size] = {};
-        bool result = _NSGetExecutablePath(buf, &size);
+        int result = _NSGetExecutablePath(buf, &size);
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
         std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
