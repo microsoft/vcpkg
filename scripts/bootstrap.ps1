@@ -210,7 +210,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 10 SDK
     function CheckWindows10SDK($path)
     {
-        if ($null -eq $path)	
+        if ($null -eq $path)
         {
             return
         }
