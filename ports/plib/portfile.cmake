@@ -1,9 +1,5 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Note: plib only supports static library linkage")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/plib-1.8.5)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://plib.sourceforge.net/dist/plib-1.8.5.tar.gz"
@@ -25,3 +21,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/plib RENAME copyright)
+

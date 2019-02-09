@@ -296,45 +296,40 @@ set(ul_HEADERS
     src/util/ulRTTI.h)
 
 # Create and configure the targets
-add_library(plib_fnt STATIC ${fnt_SOURCES} ${fnt_HEADERS})
+add_library(plib_fnt ${fnt_SOURCES} ${fnt_HEADERS})
 target_include_directories(plib_fnt PRIVATE src/sg src/util)
 
-add_library(plib_js STATIC ${js_SOURCES} ${js_HEADERS})
+add_library(plib_js ${js_SOURCES} ${js_HEADERS})
 target_include_directories(plib_js PRIVATE src/util)
 
-add_library(plib_net STATIC ${net_SOURCES} ${net_HEADERS})
+add_library(plib_net ${net_SOURCES} ${net_HEADERS})
 target_include_directories(plib_net PRIVATE src/util)
 
-add_library(plib_psl STATIC ${psl_SOURCES} ${psl_HEADERS})
+add_library(plib_psl ${psl_SOURCES} ${psl_HEADERS})
 target_include_directories(plib_psl PRIVATE src/util)
 
-add_library(plib_puAux STATIC ${puAux_SOURCES} ${puAux_HEADERS})
-target_include_directories(plib_puAux PRIVATE
-    src/fnt
-    src/pui
-    src/sg
-    src/util
-)
+add_library(plib_puAux ${puAux_SOURCES} ${puAux_HEADERS})
+target_include_directories(plib_puAux PRIVATE src/fnt src/pui src/sg src/util)
 
-add_library(plib_pui STATIC ${pui_SOURCES} ${pui_HEADERS})
+add_library(plib_pui ${pui_SOURCES} ${pui_HEADERS})
 target_include_directories(plib_pui PRIVATE src/fnt src/sg src/util)
 
-add_library(plib_pw STATIC ${pw_SOURCES} ${pw_HEADERS})
+add_library(plib_pw ${pw_SOURCES} ${pw_HEADERS})
 target_include_directories(plib_pw PRIVATE src/util)
 
-add_library(plib_sg STATIC ${sg_SOURCES} ${sg_HEADERS})
+add_library(plib_sg ${sg_SOURCES} ${sg_HEADERS})
 target_include_directories(plib_sg PRIVATE src/util)
 
-add_library(plib_sl STATIC ${sl_SOURCES} ${sl_HEADERS})
+add_library(plib_sl ${sl_SOURCES} ${sl_HEADERS})
 target_include_directories(plib_sl PRIVATE src/util)
 
-add_library(plib_ssg STATIC ${ssg_SOURCES} ${ssg_HEADERS})
+add_library(plib_ssg ${ssg_SOURCES} ${ssg_HEADERS})
 target_include_directories(plib_ssg PRIVATE src/sg src/util)
 
-add_library(plib_ssgAux STATIC ${ssgAux_SOURCES} ${ssgAux_HEADERS})
+add_library(plib_ssgAux ${ssgAux_SOURCES} ${ssgAux_HEADERS})
 target_include_directories(plib_ssgAux PRIVATE src/sg src/ssg src/util)
 
-add_library(plib_ul STATIC ${ul_SOURCES} ${ul_HEADERS})
+add_library(plib_ul ${ul_SOURCES} ${ul_HEADERS})
 
 # Install
 install(
@@ -359,3 +354,4 @@ install(
           ${ul_HEADERS}
     DESTINATION include/plib
 )
+
