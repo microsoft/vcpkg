@@ -25,7 +25,7 @@ $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
 function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Parameter(Mandatory=$true)]$propertyName)
 {
-    if ($object -eq $null)
+    if ($null -eq $object)
     {
         return $false
     }
@@ -36,12 +36,12 @@ function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Par
 function getProgramFiles32bit()
 {
     $out = ${env:PROGRAMFILES(X86)}
-    if ($out -eq $null)
+    if ($null -eq $out)
     {
         $out = ${env:PROGRAMFILES}
     }
 
-    if ($out -eq $null)
+    if ($null -eq $out)
     {
         throw "Could not find [Program Files 32-bit]"
     }
@@ -138,7 +138,7 @@ function getVisualStudioInstances()
 function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
 {
     $VisualStudioInstances = getVisualStudioInstances
-    if ($VisualStudioInstances -eq $null)
+	if ($null -eq $VisualStudioInstances)
     {
         throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
     }
@@ -210,7 +210,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 10 SDK
     function CheckWindows10SDK($path)
     {
-        if ($path -eq $null)
+		if ($null -eq $path)	
         {
             return
         }
@@ -262,7 +262,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 8.1 SDK
     function CheckWindows81SDK($path)
     {
-        if ($path -eq $null)
+		if ($null -eq $path)
         {
             return
         }
