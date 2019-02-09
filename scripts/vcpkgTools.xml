@@ -21,6 +21,13 @@
         <sha512>ee9eded0c72e06ef99554f09553d40842478700ca6f07319c28247f1d45301708c703c65ad617cf618833257bacc3b9f63a54b32288bfb619d38758669dcd20f</sha512>
         <archiveName>cmake-3.12.4-Linux-x86_64.tar.gz</archiveName>
     </tool>
+    <tool name="cmake" os="freebsd">
+        <version>3.12.4</version>
+        <exeRelativePath>cmake-3.12.4-FreeBSD-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/ivysnow/CMake/releases/download/v3.12.4/cmake-3.12.4-FreeBSD-x86_64.tar.gz</url>
+        <sha512>b5aeb2de36f3c29757c9404e33756da88580ddfa07f29079c7f275ae0d6d018fdfe3f55d54d1403f38e359865cf93436e084c6b1ea91f26c88bc01dde3793479</sha512>
+        <archiveName>cmake-3.12.4-FreeBSD-x86_64.tar.gz</archiveName>
+    </tool>
     <tool name="git" os="windows">
         <version>2.20.0</version>
         <exeRelativePath>cmd\git.exe</exeRelativePath>
@@ -35,6 +42,12 @@
         <sha512></sha512>
     </tool>
     <tool name="git" os="osx">
+        <version>2.7.4</version>
+        <exeRelativePath></exeRelativePath>
+        <url></url>
+        <sha512></sha512>
+    </tool>
+    <tool name="git" os="freebsd">
         <version>2.7.4</version>
         <exeRelativePath></exeRelativePath>
         <url></url>
@@ -93,5 +106,12 @@
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
         <sha512>acadfb286eb7d93676629701917fa0c3c39f36daa068c169e4a098c29f97380d1ea95abfd42b04798ff118fd9dc93fdb250fcda36086bac20bc5506354214fc3</sha512>
         <archiveName>ninja-mac-1.8.2.zip</archiveName>
+    </tool>
+    <tool name="ninja" os="freebsd">
+        <version>1.8.2</version>
+        <exeRelativePath>ninja</exeRelativePath>
+        <url>https://github.com/ivysnow/ninja/releases/download/v1.8.2/ninja-freebsd.zip</url>
+        <sha512>56a55ae9a6b5dfad4f28f9fe9b8114f1475c999d2f07fff7efa7375f987e74b498e9b63c41fc6c577756f15f3a1459c6d5d367902de3bedebdf9a9fd49089a86</sha512>
+        <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
 </tools>

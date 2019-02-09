@@ -192,6 +192,26 @@ namespace vcpkg
                                vs_root_path.generic_string());
         }
 
+        if (prebuildinfo.cmake_system_name == "WindowsStore")
+        {
+            // For now, cmake does not support VS 2019 when using the MSBuild generator.
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !candidates.empty(),
+                               "With the current CMake version, UWP binaries can only be built with toolset version "
+                               "v141 or below. Please install the v141 toolset in VS 2019.");
+        }
+
+        if (System::get_host_processor() == System::CPUArchitecture::X86)
+        {
+            // For now, cmake does not support VS 2019 when using the MSBuild generator.
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !candidates.empty(),
+                               "With the current CMake version, 32-bit machines can build with toolset version "
+                               "v141 or below. Please install the v141 toolset in VS 2019.");
+        }
+
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
         return *candidates.front();
 
