@@ -49,6 +49,7 @@ vcpkg_configure_cmake(
         -DHB_HAVE_ICU=${HB_HAVE_ICU}
         -DHB_HAVE_GLIB=${HAVE_GLIB}
         -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
+        -DHB_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
@@ -60,4 +61,4 @@ vcpkg_copy_pdbs()
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
 
-#vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
+vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
