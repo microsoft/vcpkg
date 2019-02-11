@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.2.0
-    SHA512 5bd3bfa6f4bcfce7f7442876a576529252eeae79af8fe667b20a1c13a0fccc813445e832c85d46e6256ca13aa50e2eb1b81eee98fe9adf63ad3e842dbf2e38cb
+    REF 2.3.1
+    SHA512 c90f8a530bf49e91f5297f6a3c2f4be65f8907e3b41892cd5fbc1353ce7036aae7e182bfd0ea8cb32b0310cbe7284a3de8b6622e08db9736c3f0bba6cb1f9f01
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
@@ -60,4 +60,4 @@ vcpkg_copy_pdbs()
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
 
-vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
+#vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
