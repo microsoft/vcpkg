@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cginternals/glbinding
-    REF v3.0.2
-    SHA512 524ad20a11af7d8ee1764f53326b43efb3b3dbd6c64d1539f4d9fa2bcb7b58a6bd6caf460d6944aed4fd7439b82536d8f28a0f0f51c14c62c2f0c73baab9afcb
+    REF d7a1873ad741fb13a9c6dcbae93d0cda45a11933
+    SHA512 70848d8ddad3e2ddfc54549ed3cdde569991858135140b30b50fa6e92c5aec6e3dd235418e091456f9b68da2fad09fbef117dedac7b48c26bcab62b6f0fa791f
     HEAD_REF master
     PATCHES force-system-install.patch
 )

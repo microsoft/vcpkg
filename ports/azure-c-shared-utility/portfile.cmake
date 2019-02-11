@@ -2,13 +2,25 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Azure/azure-c-shared-utility
-    REF bcf6393b1ce3cecf0fcdf8988621fd6e4d414df3
-    SHA512 e5ae3c895777df90e725da7686939b46fa4df19ce5626bbe13a5aaf1b844ee56c96ddf2a9ad8426a96cdc34e8be338c95b6759e618143e19445c5180fb0f7ed1
-    HEAD_REF master
-)
+if("public-preview" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-c-shared-utility
+        REF 773980d7882e4d5f1e7c9be2a0797d61fbc19da1
+        SHA512 fa374db336f5d186bcfd6ba70660167fdc87a1847376579cee894af3d2810aba097b3468e75c0b4213b68423cc07215032eeae6ee07590378237606112286ac4
+        HEAD_REF master
+        PATCHES no-double-expand-cmake.patch
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-c-shared-utility
+        REF 773980d7882e4d5f1e7c9be2a0797d61fbc19da1
+        SHA512 fa374db336f5d186bcfd6ba70660167fdc87a1847376579cee894af3d2810aba097b3468e75c0b4213b68423cc07215032eeae6ee07590378237606112286ac4
+        HEAD_REF master
+        PATCHES no-double-expand-cmake.patch
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

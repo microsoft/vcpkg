@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
@@ -122,7 +123,7 @@ namespace vcpkg::Commands::Integrate
 
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFOW sh_ex_info{};
+        SHELLEXECUTEINFOW sh_ex_info {};
         sh_ex_info.cbSize = sizeof(sh_ex_info);
         sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
         sh_ex_info.hwnd = nullptr;
@@ -404,6 +405,47 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         Checks::exit_with_code(VCPKG_LINE_INFO, rc);
     }
+#elif defined(__unix__)
+    static void integrate_bash(const VcpkgPaths& paths)
+    {
+        const auto home_path = System::get_environment_variable("HOME").value_or_exit(VCPKG_LINE_INFO);
+        const fs::path bashrc_path = fs::path {home_path} / ".bashrc";
+
+        auto& fs = paths.get_filesystem();
+        const fs::path completion_script_path = paths.scripts / "vcpkg_completion.bash";
+
+        Expected<std::vector<std::string>> maybe_bashrc_content = fs.read_lines(bashrc_path);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, maybe_bashrc_content.has_value(), "Unable to read %s", bashrc_path.u8string());
+
+        std::vector<std::string> bashrc_content = maybe_bashrc_content.value_or_exit(VCPKG_LINE_INFO);
+
+        std::vector<std::string> matches;
+        for (auto&& line : bashrc_content)
+        {
+            std::smatch match;
+            if (std::regex_match(line, match, std::regex {R"###(^source.*scripts/vcpkg_completion.bash$)###"}))
+            {
+                matches.push_back(line);
+            }
+        }
+
+        if (!matches.empty())
+        {
+            System::print("vcpkg bash completion is already imported to your %s file.\n"
+                          "The following entries were found:\n"
+                          "    %s\n"
+                          "Please make sure you have started a new bash shell for the changes to take effect.\n",
+                          bashrc_path.u8string(),
+                          Strings::join("\n    ", matches));
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+
+        System::print("Adding vcpkg completion entry to %s\n", bashrc_path.u8string());
+        bashrc_content.push_back(Strings::format("source %s", completion_script_path.u8string()));
+        fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content));
+        Checks::exit_success(VCPKG_LINE_INFO);
+    }
 #endif
 
 #if defined(_WIN32)
@@ -425,11 +467,12 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static const std::string REMOVE = "remove";
         static const std::string PROJECT = "project";
         static const std::string POWERSHELL = "powershell";
+        static const std::string BASH = "bash";
     }
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths&)
     {
-        return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT, Subcommand::POWERSHELL};
+        return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT, Subcommand::POWERSHELL, Subcommand::BASH};
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -462,6 +505,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         if (args.command_arguments[0] == Subcommand::POWERSHELL)
         {
             return integrate_powershell(paths);
+        }
+#elif defined(__unix__)
+        if (args.command_arguments[0] == Subcommand::BASH)
+        {
+            return integrate_bash(paths);
         }
 #endif
 
