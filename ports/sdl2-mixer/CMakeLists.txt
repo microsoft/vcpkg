@@ -22,8 +22,8 @@ endif()
 
 # FLAC support
 if(SDL_MIXER_ENABLE_FLAC)
-    find_path(FLAC_INCLUDE_DIR flac/all.h)
-    find_library(FLAC_LIBRARY flac)
+    find_path(FLAC_INCLUDE_DIR FLAC/all.h)
+    find_library(FLAC_LIBRARY FLAC)
     list(APPEND SDL_MIXER_INCLUDES ${FLAC_INCLUDE_DIR})
     list(APPEND SDL_MIXER_LIBRARIES ${FLAC_LIBRARY})
     list(APPEND SDL_MIXER_DEFINES MUSIC_FLAC)
