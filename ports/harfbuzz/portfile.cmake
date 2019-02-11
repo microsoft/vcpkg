@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
+        0002-fix-uwp-build.patch
 )
 
 SET(HB_HAVE_ICU "OFF")
