@@ -9,8 +9,11 @@
 
 function(vcpkg_build_qmake)
     cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
-    vcpkg_find_acquire_program(JOM)
-
+    if(WINDOWS OR WINDOWS_STORE)
+        vcpkg_find_acquire_program(JOM)
+    else()
+        set(JOM "make")
+    endif()
     # Make sure that the linker finds the libraries used 
     set(ENV_PATH_BACKUP "$ENV{PATH}")
     
