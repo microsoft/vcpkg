@@ -38,8 +38,10 @@ function(qt_modular_library NAME HASH)
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 
-    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    if(WIN32 OR WINDOWS_STORE)
+        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    endif()
 
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
@@ -60,7 +62,11 @@ function(qt_modular_library NAME HASH)
     foreach(MAKEFILE ${MAKEFILES})
         file(READ "${MAKEFILE}" _contents)
         #Set the correct install directory to packages
-        string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
+        if(WIN32 OR WINDOWS_STORE)
+            string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
+        else()
+            string(REPLACE "(INSTALL_ROOT)${NATIVE_INSTALLED_DIR}" "(INSTALL_ROOT)${NATIVE_PACKAGES_DIR}" _contents "${_contents}")
+        endif()
         file(WRITE "${MAKEFILE}" "${_contents}")
     endforeach()
 
