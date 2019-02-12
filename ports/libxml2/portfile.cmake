@@ -12,21 +12,26 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 # Generate xmlversion.h
 if(NOT EXISTS ${SOURCE_PATH}/include/libxml/xmlversion.h)
-    # Get version info from `configure.ac`
-    file(STRINGS "${SOURCE_PATH}/configure.ac"
-        _version_lines REGEX "LIBXML_(MAJOR|MINOR|MICRO)_VERSION[^=]*=.*")
-    string(REGEX REPLACE ".*LIBXML_MAJOR_VERSION=([0-9]+).*"
-        "\\1" _major_version ${_version_lines})
-    string(REGEX REPLACE ".*LIBXML_MINOR_VERSION=([0-9]+).*"
-        "\\1" _minor_version ${_version_lines})
-    string(REGEX REPLACE ".*LIBXML_MICRO_VERSION=([0-9]+).*"
-        "\\1" _micro_version ${_version_lines})
-    string(REGEX REPLACE ".*LIBXML_MICRO_VERSION_SUFFIX=(.*)"
-        "\\1" _micro_version_suffix ${_version_lines})
+    message(STATUS "Reading version info from configure.ac")
 
-    set(VERSION ${_major_version}.${_minor_version}.${_micro_version})
+    file(STRINGS "${SOURCE_PATH}/configure.ac"
+        _libxml_version_defines REGEX "LIBXML_(MAJOR|MINOR|MICRO)_VERSION=([0-9]+)$")
+
+    foreach(ver ${_libxml_version_defines})
+        if(ver MATCHES "LIBXML_(MAJOR|MINOR|MICRO)_VERSION=([0-9]+)$")
+            set(LIBXML_${CMAKE_MATCH_1}_VERSION "${CMAKE_MATCH_2}" CACHE INTERNAL "")
+        endif()
+    endforeach()
+
+    set(VERSION ${LIBXML_MAJOR_VERSION}.${LIBXML_MINOR_VERSION}.${LIBXML_MICRO_VERSION})
     math(EXPR LIBXML_VERSION_NUMBER
-        "${_major_version} * 10000 + ${_minor_version} * 100 + ${_micro_version}")
+        "${LIBXML_MAJOR_VERSION} * 10000 + ${LIBXML_MINOR_VERSION} * 100 + ${LIBXML_MICRO_VERSION}")
+
+    message(STATUS "LIBXML_MAJOR_VERSION: ${LIBXML_MAJOR_VERSION}")
+    message(STATUS "LIBXML_MINOR_VERSION: ${LIBXML_MINOR_VERSION}")
+    message(STATUS "LIBXML_MICRO_VERSION: ${LIBXML_MICRO_VERSION}")
+    message(STATUS "VERSION: ${VERSION}")
+    message(STATUS "LIBXML_VERSION_NUMBER: ${LIBXML_VERSION_NUMBER}")
 
     set(WITH_TRIO 0)
     set(WITH_THREADS 1)
@@ -62,6 +67,8 @@ if(NOT EXISTS ${SOURCE_PATH}/include/libxml/xmlversion.h)
     set(MODULE_EXTENSION ".so")
     set(WITH_ZLIB 1)
     set(WITH_LZMA 1)
+
+    message(STATUS "Generating xmlversion.h")
 
     configure_file(
         ${SOURCE_PATH}/include/libxml/xmlversion.h.in
