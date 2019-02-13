@@ -5,11 +5,9 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xeus
-    REF 24ad09ef6cfa251b842462e2eb84cb00987b1327
-    SHA512 59a3ec921f5ee8e5347630fb478fb06e20f61fa1bc3d1d833ba545c6d39e9b06de316bb6118c7b9bae2b337057f9d00b08da0b6aa5f37fd907e95ed90cb757c8
+    REF f78c60c7ce28baecb2479f2b82e4e8d1a6c35188
+    SHA512 9d83f32f641bcad4ac96e263c465d46bdfa7d18d41f1e201309244c95587ce08ff2426f7cdd3a4399563d46064ed9bedd4d0babf4840f65e95c6a2c6f23ac9bb
     HEAD_REF master
-    PATCHES
-        no-override-debug-flags.patch
 )
 
 vcpkg_configure_cmake(
