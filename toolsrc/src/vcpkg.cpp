@@ -102,7 +102,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     Debug::println("Using vcpkg-root: %s", vcpkg_root_dir.u8string());
 
-    auto default_vs_path = System::get_environment_variable("VCPKG_DEFAULT_VS_PATH").value_or("");
+    auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
     const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
     Checks::check_exit(VCPKG_LINE_INFO,
