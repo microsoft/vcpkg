@@ -39,7 +39,7 @@
 							</target>
 						</configuration>
 					</execution>
-					<execution>
+					<!--execution>
 						<id>build-vcpkg</id>
 						<goals>
 							<goal>run</goal>
@@ -50,18 +50,27 @@
 								<exec executable="${basedir}/vcpkg.exe" failonerror="true">
 									<arg value="install" />
 									<arg value="boost:x64-windows-static" />
+									<arg value="boost:x86-windows-static" />
 									<arg value="bzip2:x64-windows-static" />
+									<arg value="bzip2:x86-windows-static" />
 									<arg value="cpprestsdk:x64-windows-static" />
+									<arg value="cpprestsdk:x86-windows-static" />
 									<arg value="curl:x64-windows-static" />
+									<arg value="curl:x86-windows-static" />
 									<arg value="gtest:x64-windows-static" />
+									<arg value="gtest:x86-windows-static" />
 									<arg value="libssh2:x64-windows-static" />
+									<arg value="libssh2:x86-windows-static" />
 									<arg value="openssl:x64-windows-static" />
+									<arg value="openssl:x86-windows-static" />
 									<arg value="xerces-c:x64-windows-static" />
+									<arg value="xerces-c:x86-windows-static" />
 									<arg value="zlib:x64-windows-static" />
+									<arg value="zlib:x86-windows-static" />
 								</exec>
 							</target>
 						</configuration>
-					</execution>
+					</execution-->
 				</executions>
 			</plugin>
 			<plugin>
@@ -69,21 +78,76 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>copy-vcpkg</id>
+						<id>copy-vcpkg-release-includes</id>
 						<phase>prepare-package</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/package/${project.artifactId}</outputDirectory>
+							<outputDirectory>${project.build.directory}/package/${project.artifactId}/include</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/installed/x64-windows-static</directory>
-									<includes>
-										<include>debug/**</include>
-										<include>include/**</include>
-										<include>lib/**</include>
-									</includes>
+									<directory>${basedir}/installed/x64-windows-static/include</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-vcpkg-x64-release-libs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Release/x64</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/installed/x64-windows-static/lib</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-vcpkg-x64-debug-libs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Debug/x64</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/installed/x64-windows-static/debug/lib</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-vcpkg-win32-release-libs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Release/win32</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/installed/x86-windows-static/lib</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-vcpkg-win32-debug-libs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib//Debug/win32</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/installed/x86-windows-static/debug/lib</directory>
 								</resource>
 							</resources>
 						</configuration>

@@ -19,7 +19,7 @@ node('work-server') {
 				}
 
 				stage ("Set versions") {
-					bat "mvn versions:set -DnewVersion=${versionPrefix}"
+					bat "mvn versions:set -DnewVersion=${versionPrefix}-${BUILD_NUMBER}"
 				}
 
 				stage ("Deploy vcpkg") {
