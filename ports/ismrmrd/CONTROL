@@ -1,4 +1,4 @@
 Source: ismrmrd
 Version: 1.4
 Description: ISMRM Raw Data Format with vcpkg compatibility 
-Build-Depends: pugixml, fftw3
+Build-Depends: pugixml, fftw3, hdf5
