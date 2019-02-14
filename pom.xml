@@ -39,7 +39,7 @@
 							</target>
 						</configuration>
 					</execution>
-					<!--execution>
+					<execution>
 						<id>build-vcpkg</id>
 						<goals>
 							<goal>run</goal>
@@ -70,7 +70,7 @@
 								</exec>
 							</target>
 						</configuration>
-					</execution-->
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
