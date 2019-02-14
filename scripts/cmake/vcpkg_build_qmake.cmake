@@ -9,14 +9,14 @@
 
 function(vcpkg_build_qmake)
     cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
-    if(WINDOWS OR WINDOWS_STORE)
+    if(WIN32 OR WINDOWS_STORE)
         vcpkg_find_acquire_program(JOM)
     else()
         set(JOM "make")
     endif()
-    # Make sure that the linker finds the libraries used 
+    # Make sure that the linker finds the libraries used
     set(ENV_PATH_BACKUP "$ENV{PATH}")
-    
+
     set(DEBUG_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     set(RELEASE_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
@@ -86,7 +86,7 @@ function(vcpkg_build_qmake)
     endif()
 
     run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} rel)
-    
+
     # Restore the original value of ENV{PATH}
     set(ENV{PATH} "${ENV_PATH_BACKUP}")
     set(ENV{_CL_} "${ENV_CL_BACKUP}")
