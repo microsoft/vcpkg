@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
-    REF v1.3.2
-    SHA512 eb806f71c4b183105b3270d658a68195e009c0f7ca37f54f76d650a4d5c83c44d26b5f12a4c47c608aae9990cd04f1204b0c57e6438ca34a271fd54880133106
+    REF 89d4f9982e8e593124ff981f91c97ad5b898eb00 
+    SHA512 363390820bba665ab6fbd74c5ba862cb7ea9b8e7b21d68828e0d7f78616cd2ff5f91a11d872ff8cc92a1daed406c43c34da1dfb4309cd401467b8ec76c2f0d59
     HEAD_REF master
 )
 
@@ -23,9 +23,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/ismrmrd/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll)
     file(COPY ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll)
@@ -36,10 +33,33 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
 endif()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ismrmrd)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/FindFFTW3.cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/FindFFTW3.cmake)
+
+set(ISMRMRD_CMAKE_DIRS ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+foreach(ISMRMRD_CMAKE_DIR IN LISTS ISMRMRD_CMAKE_DIRS)
+if (EXISTS ${ISMRMRD_CMAKE_DIR})
+    file(GLOB ISMRMRD_CMAKE_FILES ${ISMRMRD_CMAKE_DIR} "ISMRMRD*.cmake")
+    foreach(ICF IN LISTS ${ISMRMRD_CMAKE_FILES})
+        file(COPY ${ISMRMRD_CMAKE_DIR}/ISMRMRD/${ICF} DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd/cmake)
+    endforeach()
+    file(REMOVE_RECURSE ${ISMRMRD_CMAKE_DIR})
+endif()
+endforeach()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_info.exe)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_c_example.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debub/bin/ismrmrd_c_example.exe)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_read_timing_test.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_read_timing_test.exe)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ismrmrd/LICENSE ${CURRENT_PACKAGES_DIR}/share/ismrmrd/copyright)
