@@ -27,6 +27,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package
         -DGOOGLE_CLOUD_CPP_ENABLE_MACOS_OPENSSL_CHECK=OFF
+	-DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)

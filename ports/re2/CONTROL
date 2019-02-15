@@ -1,3 +1,3 @@
 Source: re2
-Version: 2019-01-09
+Version: 2019-01-30
 Description: RE2 is a fast, safe, thread-friendly alternative to backtracking regular expression engines like those used in PCRE, Perl, and Python. It is a C++ library.
