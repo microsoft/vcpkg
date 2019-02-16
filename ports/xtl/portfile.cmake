@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xtl
-    REF 0.5.3
-    SHA512 340e10a113d88be81833e8c123835de0fd30bc9b80387cd260edbff5e54ff2d78a72f77ec8803e3031f54f32c7f189a7afc9e0c1b7446fc6340a4482f308ccbf
+    REF 0.5.4
+    SHA512 6181334dda9a2afce4ce2809572605c2f911770f7805a8328e14fa94d4572475c7725f2ead54daec00e62933df6a4c22616a247798c5b7f1f3bd4290945776c8
     HEAD_REF master
 )
 
