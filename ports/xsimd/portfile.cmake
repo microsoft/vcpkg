@@ -5,10 +5,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xsimd
-    REF 7.1.2
-    SHA512 9479eb6188a68388d470e38ec7b08aaeeb03a1028a574258b52e1c39ce0b1b1aaf97a5cb898447f68c989badd23903ba7a059f5daf59160c660ba751d668c0eb
+    REF 7.1.3
+    SHA512 9f0e2babee9a3a80e16440466277bd635a26197f80cdf806312f7e1cc616db59062887566d50b4cdebe3c3ba4d60155b477684177607428aee53e1d5a95de926
     HEAD_REF master
-    PATCHES PatchHeaderIncludeGuard.patch
 )
 
 if("xcomplex" IN_LIST FEATURES)
