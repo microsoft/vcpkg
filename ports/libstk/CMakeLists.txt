@@ -202,15 +202,14 @@ set(LIBSTK_HEADERS
 	include/WvOut.h
 )
 
-add_library(libstk SHARED ${LIBSTK_SOURCES})
-set_target_properties(libstk PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-target_include_directories(libstk PRIVATE include)
+add_library(libstk ${LIBSTK_SOURCES})
+target_include_directories(libstk PRIVATE include PUBLIC $<INSTALL_INTERFACE:include>)
 set_target_properties(libstk PROPERTIES PUBLIC_HEADER "${LIBSTK_HEADERS}")
 target_compile_definitions(libstk PRIVATE __LITTLE_ENDIAN__)
 
-install(TARGETS libstk EXPORT LibStkConfig
+install(TARGETS libstk EXPORT unofficial-libstk-config
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
 	RUNTIME DESTINATION bin
 	PUBLIC_HEADER DESTINATION include/stk)
-install(EXPORT LibStkConfig DESTINATION share/libstk)
+install(EXPORT unofficial-libstk-config NAMESPACE unofficial::libstk:: DESTINATION share/unofficial-libstk)
