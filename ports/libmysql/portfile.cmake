@@ -20,6 +20,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         system-libs.patch
+        fix-openssl-link-win32.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_67_0)

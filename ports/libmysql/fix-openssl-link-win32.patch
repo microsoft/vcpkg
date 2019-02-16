@@ -1,0 +1,13 @@
+diff --git a/libmysql/CMakeLists.txt b/libmysql/CMakeLists.txt
+index dd0cfa7..8bab8cf 100644
+--- a/libmysql/CMakeLists.txt
++++ b/libmysql/CMakeLists.txt
+@@ -216,7 +216,7 @@ ENDIF()
+ IF(WITH_SSL STREQUAL "wolfssl")
+   LIST(APPEND LIBS_TO_MERGE wolfssl wolfcrypt)
+ ELSE()
+-  IF(WIN32)
++  IF(WIN32 AND 0)
+     # SSL_LIBRARIES are IMPORTED, and must be merged.
+     LIST(APPEND LIBS_TO_MERGE ${SSL_LIBRARIES})
+   ELSE()
