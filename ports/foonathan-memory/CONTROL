@@ -1,0 +1,6 @@
+Source: foonathan-memory
+Version: 2018-10-10
+Description: STL compatible C++ memory allocator library
+
+Feature: tool
+Description: Build foonathan memory tool

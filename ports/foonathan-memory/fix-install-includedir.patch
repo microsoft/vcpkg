@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf28169..eb2ad4d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,7 +24,6 @@ endif()
+ if(UNIX)
+     include(GNUInstallDirs)
+ 
+-    set(FOONATHAN_MEMORY_INC_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/foonathan_memory") 
+     set(FOONATHAN_MEMORY_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}") 
+     set(FOONATHAN_MEMORY_LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
+     set(FOONATHAN_MEMORY_ARCHIVE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
+@@ -34,10 +33,10 @@ if(UNIX)
+     set(FOONATHAN_MEMORY_ADDITIONAL_FILES_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/foonathan_memory")
+ 
+     set(FOONATHAN_MEMORY_RUNTIME_INSTALL_DIR "bin") # for the nodesize_dbg, just ignore version and the like
+-    set(FOONATHAN_MEMORY_INC_INSTALL_DIR "include/foonathan_memory") # header filestree
++    set(FOONATHAN_MEMORY_INC_INSTALL_DIR "include/foonathan/memory") # header filestree
+ 
+ elseif(WIN32)
+-    set(FOONATHAN_MEMORY_INC_INSTALL_DIR "include/foonathan_memory")
++    set(FOONATHAN_MEMORY_INC_INSTALL_DIR "include/foonathan/memory")
+     set(FOONATHAN_MEMORY_RUNTIME_INSTALL_DIR   "bin") 
+     set(FOONATHAN_MEMORY_LIBRARY_INSTALL_DIR   "bin")
+     set(FOONATHAN_MEMORY_ARCHIVE_INSTALL_DIR   "lib")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 030dba3..1ef262b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -117,7 +117,7 @@ write_basic_package_version_file(${version_file}
+                                  COMPATIBILITY AnyNewerVersion)
+ 
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/config_impl.hpp DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR})
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/container_node_sizes_impl.hpp DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR}/foonathan/memory/detail)
+-install(FILES ${header}                                   DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR}/foonathan/memory)
+-install(FILES ${detail_header}                            DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR}/foonathan/memory/detail)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/container_node_sizes_impl.hpp DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR}/detail)
++install(FILES ${header}                                   DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR})
++install(FILES ${detail_header}                            DESTINATION ${FOONATHAN_MEMORY_INC_INSTALL_DIR}/detail)
+ install(FILES ${version_file}                             DESTINATION ${FOONATHAN_MEMORY_CMAKE_CONFIG_INSTALL_DIR})
