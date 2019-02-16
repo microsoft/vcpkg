@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/lest
-    REF v1.34.0
-    SHA512 aca8a13915ecb2542c0401e17e4d1395ddc9d6299b6cc6521ccb0477aec8dbfe9e7e4e9838fcc2ef15a83cdf8161fa2ed3beeac5fdc825e1b86936f219e9a62d
+    REF v1.34.1
+    SHA512 e2e2764f4095ff95b9faab01c2cb4bd2b527d3e582eba10a699d8e44d194c90409eabbc842cf7627fd6f1f1eaa4c45cf314959e79aea858346fb844962009f92
 )
 
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
