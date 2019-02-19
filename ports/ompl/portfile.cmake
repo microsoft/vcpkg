@@ -53,4 +53,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ompl RENAME copyright)
 
 # Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME ompl)
+# vcpkg_test_cmake(PACKAGE_NAME ompl)
