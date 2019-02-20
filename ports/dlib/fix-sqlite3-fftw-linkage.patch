@@ -1,6 +1,7 @@
 diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
 --- a/dlib/CMakeLists.txt
 +++ b/dlib/CMakeLists.txt
+@@ -747,32 +750,15 @@
  
  
        if (DLIB_LINK_WITH_SQLITE3)
@@ -33,7 +34,24 @@ diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
 -         endif()
 -         mark_as_advanced(fftw fftw_path)
 +         find_package(FFTW3 CONFIG)
-+         set(dlib_needed_libraries ${dlib_needed_libraries} FFTW3::fftw3 )
++         set(dlib_needed_libraries ${dlib_needed_libraries} FFTW3::fftw3)
        endif()
  
  
+--- a/dlib/cmake_utils/dlibConfig.cmake.in
++++ b/dlib/cmake_utils/dlibConfig.cmake.in
+@@ -28,6 +28,14 @@
+    include("${dlib_CMAKE_DIR}/dlib.cmake")
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++if("@DLIB_USE_FFTW@")
++   find_dependency(FFTW3 CONFIG)
++endif()
++if("@DLIB_LINK_WITH_SQLITE3@")
++   find_dependency(sqlite3 CONFIG)
++endif()
++
+ set(dlib_LIBRARIES dlib::dlib)
+ set(dlib_LIBS      dlib::dlib)
+ set(dlib_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@" "@dlib_needed_includes@")
