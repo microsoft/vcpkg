@@ -1,5 +1,5 @@
 Source: opencv
-Version: 3.4.3-4
+Version: 3.4.3-5
 Build-Depends: zlib
 Description: computer vision library
 Default-Features: opengl, jpeg, png, tiff, eigen, flann
@@ -36,6 +36,10 @@ Description: prebuilt ffmpeg support for opencv
 
 Feature: ipp
 Description: Enable Intel Integrated Performance Primitives
+
+Feature: tbb
+Build-Depends: tbb
+Description: Enable Intel Threading Building Blocks
 
 Feature: qt
 Build-Depends: qt5

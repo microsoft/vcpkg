@@ -220,6 +220,8 @@ namespace vcpkg::Metrics
                                    "OSX",
 #elif defined(__linux__)
                                    "Linux",
+#elif defined(__FreeBSD__)
+                                   "FreeBSD",
 #elif defined(__unix__)
                                    "Unix",
 #else

@@ -77,9 +77,6 @@ function(vcpkg_configure_cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(NINJA_CAN_BE_USED OFF)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        # Arm64 usage should be allowed once github issue #2375 is resolved
-        set(NINJA_CAN_BE_USED OFF)
     endif()
 
     if(_csc_GENERATOR)
@@ -170,6 +167,8 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/freebsd.cmake")
     endif()
 
     list(APPEND _csc_OPTIONS
