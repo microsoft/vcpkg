@@ -13,10 +13,12 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-install-pdb.patch
 )
 
+set(ENABLE_ASSEMBLY OFF)
 if (WIN32)
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
     set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+    set(ENABLE_ASSEMBLY ON)
 endif ()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
@@ -25,7 +27,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/source
     PREFER_NINJA
     OPTIONS
-        -DENABLE_ASSEMBLY=ON
+        -DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}
         -DENABLE_SHARED=${ENABLE_SHARED}
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
