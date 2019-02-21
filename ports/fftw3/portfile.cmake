@@ -17,33 +17,60 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+	${CMAKE_CURRENT_LIST_DIR}/patch_targets.patch
+	${CMAKE_CURRENT_LIST_DIR}/omp_test.patch
+)
+
+if ("openmp" IN_LIST FEATURES)
+    set(ENABLE_OPENMP ON)
+else()
+    set(ENABLE_OPENMP OFF)
+endif()
+
 foreach(PRECISION ENABLE_DEFAULT_PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE)
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-		PREFER_NINJA
-		OPTIONS 
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS 
 			-D${PRECISION}=ON
-	)
+			-DENABLE_OPENMP=${ENABLE_OPENMP}
+    )
 
-	vcpkg_install_cmake()
-	vcpkg_copy_pdbs()
+    vcpkg_install_cmake()
+    vcpkg_copy_pdbs()
 
-	file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
-	if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-		vcpkg_apply_patches(
-			   SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-			   PATCHES
-					   ${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
-	endif()
+    if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+        vcpkg_apply_patches(
+               SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
+               PATCHES
+                       ${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
+    endif()
 
-	# Cleanup
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    # Cleanup
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 endforeach()
-	
+
+#Fix MinSizeRelease and RelWithDebInfo targets
+file(GLOB FFTW3LibsDeps ${CURRENT_PACKAGES_DIR}/share/fftw3/FFTW3*LibraryDepends.cmake)
+
+foreach(FFTW3DepsFile ${FFTW3LibsDeps})
+    file(READ ${FFTW3DepsFile} FFTW3DepsData)
+    STRING(REPLACE [[  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]] 
+[[  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release]]
+  FFTW3NewDeps "${FFTW3DepsData}")
+    file(WRITE ${FFTW3DepsFile} "${FFTW3NewDeps}")
+endforeach()
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fftw3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/fftw3/COPYING ${CURRENT_PACKAGES_DIR}/share/fftw3/copyright)
