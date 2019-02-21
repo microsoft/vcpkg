@@ -6,12 +6,9 @@ vcpkg_from_github(
     REF mlpack-3.0.4
     SHA512 07730a826efb55a41fce2286de8df15421e7a7189b9cdc4699c6a32e3d4b1964a98e3829a60513994ef747640952229e7a3b744ac0ae324f5e5e57f982a86f66
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/meta_info_extractor.patch
-			${CMAKE_CURRENT_LIST_DIR}/cmakelists.patch
+	PATCHES 
+		meta_info_extractor.patch
+		cmakelists.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MLPACK_SHARED_LIBS)
