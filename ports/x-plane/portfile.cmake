@@ -1,5 +1,8 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    message(FATAL_ERROR "the x-plane SDK cannot be built for the x86 architecture")
+endif()
 vcpkg_download_distfile(
     OUT_SOURCE_PATH
     URLS http://developer.x-plane.com/wp-content/plugins/code-sample-generation/sample_templates/XPSDK301.zip
