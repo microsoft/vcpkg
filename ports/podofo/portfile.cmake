@@ -10,6 +10,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PODOFO_VERSION}
+    PATCHES unique_ptr.patch
 )
 
 set(PODOFO_NO_FONTMANAGER ON)

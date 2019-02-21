@@ -10,6 +10,7 @@ vcpkg_from_github(
   REF v1.2.11
   SHA512 104c62ed1228b5f1199bc037081861576900eb0697a226cafa62a35c4c890b5cb46622e399f9aad82ee5dfb475bae26ae75e2bd6da3d261361b1c8b996970faf
   HEAD_REF master
+  PATCHES minizip.patch # enable decrypt support for password-encrypted ZIP files
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

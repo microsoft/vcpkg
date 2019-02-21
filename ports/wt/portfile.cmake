@@ -7,7 +7,6 @@ vcpkg_from_github(
     SHA512 5513b428bfd3e778726c947606677f3e0774b38e640e61cd94906a2e0c75d204a68072b54ddeb3614a7ba08f5668e6eb3a96d9c8df3744b09dc36ad9be12d924
     HEAD_REF master
     PATCHES
-        0001-boost-1.66.patch
         0002-link-glew.patch
         0003-disable-boost-autolink.patch
         0004-link-ssl.patch
