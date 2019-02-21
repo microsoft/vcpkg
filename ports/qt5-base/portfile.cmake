@@ -11,14 +11,14 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(MAJOR_MINOR 5.11)
-set(FULL_VERSION ${MAJOR_MINOR}.2)
+set(MAJOR_MINOR 5.12)
+set(FULL_VERSION ${MAJOR_MINOR}.0)
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 b2f14126caa1c664887203a9a98551b85b57630cf7745c17f76e1e8aaf464f0091fe2de5615a138506dac7c8fbb16e5f33f984aef8e61e23f0c3bf74f6ef0835
+    SHA512 8e6c51b754840d17e694b5b4a0d732afe04ebe48d166bca429db01ce3ac9014bb0ed35fe99ad165973889d96919f6b6774429585bae9a7fdba6b07f4c1eb3570
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -79,13 +79,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             ${CORE_OPTIONS}
             -mp
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
             FREETYPE_LIBS="-lfreetype"
             PSQL_LIBS="-llibpq"
         OPTIONS_DEBUG
+            LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
@@ -100,8 +101,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             ${CORE_OPTIONS}
             -no-sqlite
             -no-opengl # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
@@ -109,6 +110,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a"
         OPTIONS_DEBUG
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"

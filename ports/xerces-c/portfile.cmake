@@ -9,6 +9,11 @@ vcpkg_from_github(
     PATCHES disable-tests.patch
 )
 
+set(DISABLE_ICU ON)
+if("icu" IN_LIST FEATURES)
+    set(DISABLE_ICU OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -16,6 +21,7 @@ vcpkg_configure_cmake(
         -DDISABLE_TESTS=ON
         -DDISABLE_DOC=ON
         -DDISABLE_SAMPLES=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_ICU=${DISABLE_ICU}
 )
 
 vcpkg_install_cmake()

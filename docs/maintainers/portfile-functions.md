@@ -14,6 +14,7 @@
 - [vcpkg\_download\_distfile](vcpkg_download_distfile.md)
 - [vcpkg\_execute\_required\_process](vcpkg_execute_required_process.md)
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
+- [vcpkg\_extract\_source\_archive\_ex](vcpkg_extract_source_archive_ex.md)
 - [vcpkg\_find\_acquire\_program](vcpkg_find_acquire_program.md)
 - [vcpkg\_from\_bitbucket](vcpkg_from_bitbucket.md)
 - [vcpkg\_from\_git](vcpkg_from_git.md)

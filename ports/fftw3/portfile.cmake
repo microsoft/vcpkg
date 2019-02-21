@@ -20,15 +20,23 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/patch_targets.patch
+	${CMAKE_CURRENT_LIST_DIR}/patch_targets.patch
+	${CMAKE_CURRENT_LIST_DIR}/omp_test.patch
 )
+
+if ("openmp" IN_LIST FEATURES)
+    set(ENABLE_OPENMP ON)
+else()
+    set(ENABLE_OPENMP OFF)
+endif()
 
 foreach(PRECISION ENABLE_DEFAULT_PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
         OPTIONS 
-            -D${PRECISION}=ON
+			-D${PRECISION}=ON
+			-DENABLE_OPENMP=${ENABLE_OPENMP}
     )
 
     vcpkg_install_cmake()
