@@ -8,12 +8,54 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "gsoap_${GSOAP_VERSION}${GSOAP_SUB_VERSION}.zip"
     SHA512 c115044d2662c2dd355c4756a974a0013b7213dd28c536aba179e53c19466279bfa34ce16b4426db5aa7a24d94c18e0ed7e7cdf05e799bf89f7b54031aa0874e
 )
+
 vcpkg_extract_source_archive(${ARCHIVE})
 
+#vcpkg_extract_source_archive_ex(
+#    OUT_SOURCE_PATH SOURCE_PATH
+#    ARCHIVE ${ARCHIVE}
+#    PATCHES
+#       "${CMAKE_CURRENT_LIST_DIR}/fix-build-in-windows.patch"
+#)
+
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(BUILD_ARCH "Win32")
+else()
+    message("gsoap only supported Win32")
+    set(BUILD_ARCH "Win32")
+endif()
+
 # Handle binary files and includes
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap/win32 ${CURRENT_PACKAGES_DIR}/tools/gsoap/macosx)
-file(COPY ${SOURCE_PATH}/gsoap/bin/win32/soapcpp2.exe ${SOURCE_PATH}/gsoap/bin/win32/wsdl2h.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/win32)
-file(COPY ${SOURCE_PATH}/gsoap/bin/macosx/soapcpp2 ${SOURCE_PATH}/gsoap/bin/macosx/wsdl2h DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/macosx)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap ${CURRENT_PACKAGES_DIR}/debug/tools)
+
+if (WIN32)
+    file(COPY ${CURRENT_PORT_DIR}/soapcpp2.sln DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/)
+    file(COPY ${CURRENT_PORT_DIR}/soapcpp2.vcxproj DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2/)
+    file(COPY ${CURRENT_PORT_DIR}/wsdl2h.sln DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/)
+    file(COPY ${CURRENT_PORT_DIR}/wsdl2h.vcxproj DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/wsdl2h/)
+    vcpkg_build_msbuild(
+        USE_VCPKG_INTEGRATION
+        PROJECT_PATH ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
+        PLATFORM ${BUILD_ARCH}
+        TARGET Build
+    )
+    vcpkg_build_msbuild(
+        USE_VCPKG_INTEGRATION
+        PROJECT_PATH ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln
+        PLATFORM ${BUILD_ARCH}
+        TARGET Build
+    )
+    
+    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/release/soapcpp2.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/)
+    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/release/wsdl2h.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/)
+    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/debug/soapcpp2.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/gsoap/)
+    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/debug/wsdl2h.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/gsoap/)
+else()
+    message(FATAL_ERROR "Sorry but gsoap only can be build in Windows temporary")
+    #file(COPY ${SOURCE_PATH}/gsoap/bin/macosx/soapcpp2 ${SOURCE_PATH}/gsoap/bin/macosx/wsdl2h DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/)
+endif()
+
+    
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOURCE_PATH}/gsoap/stdsoap2.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
@@ -21,4 +63,6 @@ file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOUR
 file(COPY ${SOURCE_PATH}/LICENSE.txt ${SOURCE_PATH}/INSTALL.txt ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsoap)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/copyright)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/INSTALL.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/install)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/README.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/readme)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsoap/README.txt ${CURRENT_PACKAGES_DIR}/share/gsoap/readme) 
+
+vcpkg_copy_pdbs()
