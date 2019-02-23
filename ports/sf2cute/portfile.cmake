@@ -1,46 +1,33 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO markusobi/sf2cute
-    REF b86e0c177b1cc8605c67a16f39e994dcfd35e294
-    SHA512 d61b768bbfd0c66d1fac637727f31093755c75dae48ee866fd61e04f50c216bbb8496cac4616153f5211bd3224d43bca358e32f7557da06019a1afec67c245d1
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/gocha/sf2cute/archive/v0.1.zip"
+    FILENAME "v0.1.zip"
+    SHA512 aa7e96e7b23b2050ea64ab41c56206fb37e1da62e76fdfb6c09148ee3f181ca71c3acec575837e79b1f541d8627c7a3095f211560b584d558267b3059a28f7e0
 )
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
+
+file(COPY "${CURRENT_PORT_DIR}/cmake/sf2cute-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake/")
+file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS
-		-DDISABLE_INSTALL_EXECUTABLES=ON
+    OPTIONS
+        -DSF2CUTE_BUILD_WITH_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
-# headers shall be installed only once
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/sf2cute/sf2cute-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute/cmake/)
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/sf2cute/sf2cute-targets.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute/cmake/)
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/sf2cute/sf2cute-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute/cmake/)
-
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/sf2cute/sf2cute-targets-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute/cmake/)
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/sf2cute/sf2cute-targets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute/)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+# move the .cmake files from the given directory to the expected directory by vcpkg
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/sf2cute)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute RENAME copyright)

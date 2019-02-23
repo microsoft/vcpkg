@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+if(NOT TARGET sf2cute::sf2cute)
+    include(${CMAKE_CURRENT_LIST_DIR}/sf2cute-targets.cmake)
+endif()
