@@ -46,6 +46,12 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/stxxl-config.cmake
+    "\${STXXL_CMAKE_DIR}/../include"
+    "\${STXXL_CMAKE_DIR}/../../include"
+)
+
 if(CMAKE_HOST_WIN32)
     set(EXECUTABLE_SUFFIX ".exe")
 else()
@@ -60,7 +66,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/bin)
+    ${CURRENT_PACKAGES_DIR}/bin
+)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
