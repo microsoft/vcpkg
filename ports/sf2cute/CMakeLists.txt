@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8.2)
 
 project(sf2cute
     LANGUAGES C CXX
-    VERSION 0.2.0)
+    VERSION 0.1.0)
 
 option(SF2CUTE_BUILD_WITH_EXAMPLES "build the example executable" ON)
 
