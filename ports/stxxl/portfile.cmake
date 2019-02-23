@@ -12,6 +12,8 @@ vcpkg_from_github(
     REF b9e44f0ecba7d7111fbb33f3330c3e53f2b75236
     SHA512 800a8fb95b52b21256cecb848f95645c54851f4dc070e0cd64fb5009f7663c0c962a24ca3f246e54d6d45e81a5c734309268d7ea6f0b0987336a50a3dcb99616
     HEAD_REF master
+    PATCHES
+        fix-include-dir.patch
 )
 
 vcpkg_configure_cmake(
