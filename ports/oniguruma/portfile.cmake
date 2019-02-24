@@ -30,10 +30,16 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/oniguruma.h
-        "#ifndef ONIG_EXTERN"
-        "#if 0"
+        "#if defined(ONIGURUMA_EXPORT)"
+        "#if 0 // defined(ONIGURUMA_EXPORT)"
+    )
+else()
+    # oniguruma.h uses `\n` as line break.
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/oniguruma.h
+        "#ifndef ONIG_EXTERN\n#if defined(_WIN32) && !defined(__GNUC__)"
+        "#if 0\n#if defined(_WIN32) && !defined(__GNUC__)"
     )
 endif()
 
