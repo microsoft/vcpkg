@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
     REF             1.4
-    SHA512          edd8f9384ba75f10038892e55f0937edfdb8987affbee04d8f5680306fc3f72c69db4f84f31142b18edb24bb057f0c984d0b90de0adb0ca0521b0fece6dae523
+    SHA512          981c9c728c7888995880a97e8533fa31f41085ef57e1c61e53e555f329d20d4a882d9de724d9e93e3d009dc3fe0669fe4d1af403654a9373e4aab44c933628a3
     HEAD_REF        master
 )
 
@@ -13,7 +13,7 @@ if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
 endif()
 
 # package: 'ms-gsl'
-message(STATUS "Using GSL with header path: ${CURRENT_INSTALLED_DIR}/include")
+message(STATUS "Using Guideline Support Library at ${CURRENT_INSTALLED_DIR}/include")
 
 set(DLL_LINKAGE false)
 if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
@@ -39,7 +39,7 @@ file(
     RENAME      copyright
 )
 
-if(WIN32) # for win32, move dll files to bin
+if(WIN32 AND DLL_LINKAGE)
     file(INSTALL        ${CURRENT_PACKAGES_DIR}/debug/lib/coroutine.dll
          DESTINATION    ${CURRENT_PACKAGES_DIR}/debug/bin
     )
