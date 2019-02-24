@@ -2,10 +2,10 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO luncliff/coroutine
-    REF be75a5dd2b2b85233b7260bc6aabeb924d8ebeb8
-    SHA512 edd8f9384ba75f10038892e55f0937edfdb8987affbee04d8f5680306fc3f72c69db4f84f31142b18edb24bb057f0c984d0b90de0adb0ca0521b0fece6dae523
-    HEAD_REF vcpkg
+    REPO            luncliff/coroutine
+    REF             1.4
+    SHA512          edd8f9384ba75f10038892e55f0937edfdb8987affbee04d8f5680306fc3f72c69db4f84f31142b18edb24bb057f0c984d0b90de0adb0ca0521b0fece6dae523
+    HEAD_REF        master
 )
 
 if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
