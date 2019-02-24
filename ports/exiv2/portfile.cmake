@@ -3,17 +3,23 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF dc086d2ebbb04817458b214708c5038600e96095
+    REF 2ea90398797b13b70a0955a6ffbbbddfbd40119a
     SHA512 8a3dc2d948a31f6355f8c23620f4730599379fe83a6cacfe1c88d45f35cfd4a2e37c6e0c36e951961b3b9083aef9b881ccee1989c6f139e699e04db1f2d9dba9
     HEAD_REF master
     PATCHES iconv.patch
 )
 
+if(WIN32)
+    set(enable_win_unicode TRUE)
+elseif()
+    set(enable_win_unicode FALSE)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DEXIV2_ENABLE_WIN_UNICODE:BOOL=TRUE
+        -DEXIV2_ENABLE_WIN_UNICODE:BOOL=${enable_win_unicode}
 )
 
 vcpkg_install_cmake()
