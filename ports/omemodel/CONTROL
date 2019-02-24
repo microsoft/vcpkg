@@ -1,4 +1,0 @@
-Source: omemodel
-Version: 5.5.0
-Description: OME model (specification, code generator, implementation)
-Build-Depends: boost, omecommon, gtest, xerces-c, xalan-c, libpng, tiff
