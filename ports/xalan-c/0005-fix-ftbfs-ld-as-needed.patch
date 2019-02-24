@@ -1,6 +1,6 @@
-diff -urN a/c/samples/Makefile.in b/c/samples/Makefile.in
---- a/c/samples/Makefile.in	2012-03-19 16:18:12.000000000 +0000
-+++ b/c/samples/Makefile.in	2018-09-07 16:07:59.063089005 +0100
+diff -urN a/samples/Makefile.in b/samples/Makefile.in
+--- a/samples/Makefile.in	2012-03-19 16:18:12.000000000 +0000
++++ b/samples/Makefile.in	2018-09-07 16:07:59.063089005 +0100
 @@ -88,7 +88,7 @@
  
  $(XSL_LIB_DIR)/mod_xslt$(SHLIBSUFFIX) : $(XSL_OBJ_DIR)/mod_xslt.o
@@ -154,9 +154,9 @@ diff -urN a/c/samples/Makefile.in b/c/samples/Makefile.in
  $(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/ThreadSafe/%.cpp
  	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
  
-diff -urN a/c/Tests/Makefile.in b/c/Tests/Makefile.in
---- a/c/Tests/Makefile.in	2012-03-19 16:18:12.000000000 +0000
-+++ b/c/Tests/Makefile.in	2018-09-07 16:07:59.063089005 +0100
+diff -urN a/Tests/Makefile.in b/Tests/Makefile.in
+--- a/Tests/Makefile.in	2012-03-19 16:18:12.000000000 +0000
++++ b/Tests/Makefile.in	2018-09-07 16:07:59.063089005 +0100
 @@ -62,7 +62,7 @@
  
  $(XSL_BIN_DIR)/ThreadTest: ${XSL_OBJ_DIR}/ThreadTest.o 

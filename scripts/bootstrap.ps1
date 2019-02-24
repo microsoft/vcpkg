@@ -160,6 +160,16 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
         }
 
         $majorVersion = $version.Substring(0,2);
+        if ($majorVersion -eq "16")
+        {
+            $VCFolder= "$path\VC\Tools\MSVC\"
+            if (Test-Path $VCFolder)
+            {
+                Write-Verbose "Picking: $instanceCandidate"
+                return "$path\MSBuild\Current\Bin\MSBuild.exe", "v142"
+            }
+        }
+
         if ($majorVersion -eq "15")
         {
             $VCFolder= "$path\VC\Tools\MSVC\"
@@ -182,7 +192,7 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
         }
     }
 
-    throw "Could not find MSBuild version with C++ support. VS2015 or VS2017 (with C++) needs to be installed."
+    throw "Could not find MSBuild version with C++ support. VS2015, VS2017, or VS2019 (with C++) needs to be installed."
 }
 function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = $False,
                         [Parameter(Mandatory=$False)][switch]$DisableWin81SDK = $False,
@@ -386,7 +396,7 @@ if ($ec -ne 0)
 }
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
-Write-Verbose("Placing vcpkg.exe in the correct location")
+Write-Verbose "Placing vcpkg.exe in the correct location"
 
 Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
 Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe"

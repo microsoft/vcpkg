@@ -23,6 +23,9 @@ foreach(COMPONENT core cpp glsl hlsl msl reflect util)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake TARGET_PATH share/spirv_cross_${COMPONENT})
 endforeach()
 
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*")
+file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+
 # cleanup
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-cross/copyright COPYONLY)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

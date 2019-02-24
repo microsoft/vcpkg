@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libsodium
-    REF 1.0.16
-    SHA512 a9b5c4484f08f3ec1703a6c3af0acfa233214d0d38f32c1fc26305fc01cd2d9c8d469d52d98e6329729c08c15ee0494494037d5ad1472864d3cbdb55a751afec
+    REF 1.0.17
+    SHA512 faf6ab57d113b6b1614b51390823a646f059018327b6f493e9e918a908652d0932a75a1a6683032b7a3869f516f387d67acdf944568387feddff7b2f5b6e77d6
     HEAD_REF master
 )
 
@@ -22,17 +22,19 @@ else()
     set(LIBSODIUM_DEBUG_CONFIGURATION Debug)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/libsodium.vcxproj
-    RELEASE_CONFIGURATION ${LIBSODIUM_RELEASE_CONFIGURATION}
-    DEBUG_CONFIGURATION ${LIBSODIUM_DEBUG_CONFIGURATION}
-)
-
 IF(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     SET(BUILD_ARCH "Win32")
 ELSE()
     SET(BUILD_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 ENDIF()
+
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/libsodium.vcxproj
+    RELEASE_CONFIGURATION ${LIBSODIUM_RELEASE_CONFIGURATION}
+    DEBUG_CONFIGURATION ${LIBSODIUM_DEBUG_CONFIGURATION}
+    OPTIONS
+        /p:ForceImportBeforeCppTargets=${SOURCE_PATH}/builds/msvc/properties/${BUILD_ARCH}.props
+)
 
 file(INSTALL
     ${SOURCE_PATH}/src/libsodium/include/sodium.h
@@ -44,6 +46,12 @@ file(INSTALL
     ${LIBSODIUM_HEADERS}
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/sodium
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/sodium/export.h _contents)
+    string(REPLACE "#ifdef SODIUM_STATIC" "#if 1 //#ifdef SODIUM_STATIC" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sodium/export.h "${_contents}")
+endif ()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(INSTALL

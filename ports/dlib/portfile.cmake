@@ -11,6 +11,10 @@ vcpkg_from_github(
     REF v19.16
     SHA512 4e040ef88acff05e1a48e499b813c876b22ad3f989d076bdf19969d01036b62e51a0dff30b70046910ba31dfa1b1c2450a7fad41ae3142b7285ed74b8d584887
     HEAD_REF master
+    PATCHES
+        fix-mac-jpeg.patch
+        fix-static-linkage.patch
+        fix-sqlite3-fftw-linkage.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libjpeg)
@@ -26,12 +30,6 @@ set(WITH_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
   set(WITH_CUDA ON)
 endif()
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-mac-jpeg.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix-static-linkage.patch
-)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
