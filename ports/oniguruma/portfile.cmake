@@ -47,4 +47,4 @@ endif()
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 # CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
