@@ -1,0 +1,44 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO kkos/oniguruma
+    REF v6.9.1
+    SHA512 a1af020f2042dba2423fb0d0db1ca2c30413c4e950493ac44caa11f616adec98c24df6882413548540095d7f3d8a295afd3ce51e8349ea92fa13d900ee58b126
+    HEAD_REF master
+)
+
+if("non-posix" IN_LIST FEATURES)
+    set(ENABLE_POSIX_API OFF)
+else()
+    set(ENABLE_POSIX_API ON)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DENABLE_POSIX_API=${ENABLE_POSIX_API}
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/oniguruma.h
+        "#ifndef ONIG_EXTERN"
+        "#if 0"
+    )
+endif()
+
+# Handle copyright
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+
+# CMake integration test
+vcpkg_test_cmake(PACKAGE_NAME ${PORT})
