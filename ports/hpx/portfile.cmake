@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.1.0
-    SHA512 435250143ddbd2608995fe3dc5c229a096312d7ac930925ae56d0abd2d5689886126f6e81bc7e37b84ca9bc99f951ef1f39580168a359c48788ac8d008bc7078
+    REF 1.2.1
+    SHA512 46e9e36cbd9bec935b2a1efce8167c641de88aca8e4dd9c2e3269a1d82ab2965812b5483b6dff4465634f454757b19ad4f73ddcc5ddd73d6efbf28d0819f7dc7
     HEAD_REF master
 )
 
@@ -20,7 +20,6 @@ vcpkg_configure_cmake(
         "-DBOOST_ROOT=${CURRENT_INSTALLED_DIR}/share/boost"
         "-DHWLOC_ROOT=${CURRENT_INSTALLED_DIR}/share/hwloc"
         -DHPX_WITH_VCPKG=ON
-        -DHPX_WITH_HWLOC=ON
         -DHPX_WITH_TESTS=OFF
         -DHPX_WITH_EXAMPLES=OFF
         -DHPX_WITH_TOOLS=OFF
@@ -30,9 +29,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # post build cleanup
-file(GLOB SHARE_DIR ${CURRENT_PACKAGES_DIR}/share/hpx-*)
-file(RENAME ${SHARE_DIR} ${CURRENT_PACKAGES_DIR}/share/hpx)
-
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/HPX)
 
 file(GLOB_RECURSE CMAKE_FILES "${CURRENT_PACKAGES_DIR}/share/hpx/*.cmake")
@@ -44,7 +40,7 @@ foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
         _contents "${_contents}")
     string(REGEX REPLACE
         "lib/hpx/([A-Za-z0-9_.-]+\\.dll)"
-        "bin/\\1"
+        "bin/hpx/\\1"
         _contents "${_contents}")
     file(WRITE ${CMAKE_FILE} "${_contents}")
 endforeach()
@@ -65,7 +61,7 @@ endif()
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/hpx/*.dll)
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/hpx)
     file(REMOVE ${DLLS})
 endif()
 
@@ -77,7 +73,7 @@ endif()
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/hpx/*.dll)
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/hpx)
     file(REMOVE ${DLLS})
 endif()
 

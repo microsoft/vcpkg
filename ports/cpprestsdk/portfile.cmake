@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.10.6
-    SHA512 f0848f329df80ced68132600914f0f4ba1ed42c7c16188e0f2bd41cf0c50173c27ca42c8db72ff239ca881bc8789fa4d1e3189c492832f6c22d36d504b7ce8dd
+    REF v2.10.10
+    SHA512 6169d0907aead80a4e0a3f6a25fb71ab13a46a10a9700974c629b91948a83ee3c841a4ac7dfac8155ea3731c0eedee594c07ec37050d57770faf4eee608660e5
     HEAD_REF master
 )
 
@@ -19,6 +19,11 @@ endif()
 set(CPPREST_EXCLUDE_WEBSOCKETS ON)
 if("websockets" IN_LIST FEATURES)
     set(CPPREST_EXCLUDE_WEBSOCKETS OFF)
+endif()
+
+set(CPPREST_EXCLUDE_BROTLI ON)
+if ("brotli" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_BROTLI OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -37,18 +42,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/share") # transition
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
-else()
-    vcpkg_fixup_cmake_targets() # v2.10.6 and below
-endif()
-
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
 
 vcpkg_copy_pdbs()
-

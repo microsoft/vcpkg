@@ -107,9 +107,6 @@ namespace vcpkg::Commands::Edit
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
-        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
-
         auto& fs = paths.get_filesystem();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -128,6 +125,10 @@ namespace vcpkg::Commands::Edit
         {
             candidate_paths.emplace_back(*editor_path);
         }
+
+#ifdef _WIN32
+        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
 
         const auto& program_files = System::get_program_files_platform_bitness();
         if (const fs::path* pf = program_files.get())
@@ -153,6 +154,13 @@ namespace vcpkg::Commands::Edit
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
+#elif defined(__APPLE__)
+        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
+        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
+#elif defined(__linux__)
+        candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
+        candidate_paths.push_back(fs::path{"/usr/bin/code"});
+#endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())

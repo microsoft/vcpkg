@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
         find_dsound.patch
         wasapi_support.patch
         crt_linkage_build_config.patch
+        pa_win_waveformat.patch
 )
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
@@ -25,6 +26,7 @@ vcpkg_configure_cmake(
         -DPA_USE_WASAPI=ON
         -DPA_USE_WDMKS=ON
         -DPA_USE_WMME=ON
+        -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )
 
 vcpkg_install_cmake()
@@ -46,6 +48,8 @@ else ()
 	file (REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/portaudio_${VCPKG_TARGET_ARCHITECTURE}.lib)
 	file (REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif ()
+
+vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/portaudio)
