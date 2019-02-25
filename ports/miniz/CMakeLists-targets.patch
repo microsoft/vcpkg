@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7dd6309..479b4af 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,9 +44,17 @@ endif()
+ # add_executable(miniz_tester ${MINIZ_TESTER_SRC_LIST})
+ # target_link_libraries(miniz_tester miniz)
+ 
+-install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
+-    ARCHIVE  DESTINATION lib
+-    LIBRARY DESTINATION lib
++install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config
++    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     )
++export(TARGETS ${PROJECT_NAME}
++    NAMESPACE miniz::
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
++)
++install(EXPORT ${PROJECT_NAME}Config
++    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/miniz"
++    NAMESPACE miniz::
++)
+ file(GLOB INSTALL_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+ install(FILES ${INSTALL_HEADERS} DESTINATION include/${PROJECT_NAME})
+\ No newline at end of file
