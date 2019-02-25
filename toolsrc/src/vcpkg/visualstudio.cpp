@@ -12,6 +12,7 @@ namespace vcpkg::VisualStudio
     static constexpr CStringView V_120 = "v120";
     static constexpr CStringView V_140 = "v140";
     static constexpr CStringView V_141 = "v141";
+    static constexpr CStringView V_142 = "v142";
 
     struct VisualStudioInstance
     {
@@ -213,35 +214,62 @@ namespace vcpkg::VisualStudio
 
                 for (const fs::path& subdir : msvc_subdirectories)
                 {
+                    auto toolset_version_full = subdir.filename().u8string();
+                    auto toolset_version_prefix = toolset_version_full.substr(0, 4);
+                    CStringView toolset_version;
+                    std::string vcvars_option;
+                    if (toolset_version_prefix.size() != 4)
+                    {
+                        // unknown toolset
+                        continue;
+                    }
+                    else if (toolset_version_prefix[3] == '1')
+                    {
+                        toolset_version = V_141;
+                        vcvars_option = "-vcvars_ver=14.1";
+                    }
+                    else if (toolset_version_prefix[3] == '2')
+                    {
+                        toolset_version = V_142;
+                        vcvars_option = "-vcvars_ver=14.2";
+                    }
+                    else
+                    {
+                        // unknown toolset minor version
+                        continue;
+                    }
                     const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        const Toolset v141_toolset{
-                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
+                        Toolset toolset{vs_instance.root_path,
+                                        dumpbin_path,
+                                        vcvarsall_bat,
+                                        {vcvars_option},
+                                        toolset_version,
+                                        supported_architectures};
 
                         const auto english_language_pack = dumpbin_path.parent_path() / "1033";
 
                         if (!fs.exists(english_language_pack))
                         {
-                            excluded_toolsets.push_back(v141_toolset);
-                            break;
+                            excluded_toolsets.push_back(std::move(toolset));
+                            continue;
                         }
 
-                        found_toolsets.push_back(v141_toolset);
+                        found_toolsets.push_back(std::move(toolset));
 
                         if (v140_is_available)
                         {
-                            const Toolset v140_toolset{vs_instance.root_path,
-                                                       dumpbin_path,
-                                                       vcvarsall_bat,
-                                                       {"-vcvars_ver=14.0"},
-                                                       V_140,
-                                                       supported_architectures};
-                            found_toolsets.push_back(v140_toolset);
+                            found_toolsets.push_back({vs_instance.root_path,
+                                                      dumpbin_path,
+                                                      vcvarsall_bat,
+                                                      {"-vcvars_ver=14.0"},
+                                                      V_140,
+                                                      supported_architectures});
                         }
 
-                        break;
+                        continue;
                     }
                 }
 
