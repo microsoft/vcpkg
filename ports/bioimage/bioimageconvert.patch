@@ -1,0 +1,23 @@
+--- CMakeLists.1.txt	Mon Feb 25 12:15:55 2019
++++ CMakeLists.txt	Mon Feb 25 12:24:52 2019
+@@ -67,6 +67,11 @@
+     cmake_policy(SET CMP0060 NEW)
+ endif()
+ 
++# Make IMPORTED_LINK_INTERFACE_LIBRARIES per configuration when exported
++if(POLICY CMP0022)
++   cmake_policy(SET CMP0022 OLD)
++endif()
++
+ 
+ #---------------------------------------------------------------------
+ # Set project information
+@@ -200,7 +205,7 @@
+ set(BIC_LIBTIFF_REQUIRED_VERSION 4.0.4)
+ set(BIC_PROJ4_REQUIRED_VERSION 4.8.0)
+ set(BIC_LIBWEBP_REQUIRED_VERSION 0.4.3)
+-set(BIC_EXIV2_REQUIRED_VERSION 0.25)
++set(BIC_EXIV2_REQUIRED_VERSION "")
+ set(BIC_LIBJPEG_TURBO_REQUIRED_VERSION 1.2.90)
+ set(BIC_ZLIB_REQUIRED_VERSION 1.2.7)
+ 

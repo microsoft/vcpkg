@@ -39,6 +39,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(COPY ${SOURCE_PATH}/libtiff/tiffiop.h
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/libtiff/tif_dir.h
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libtiff/tif_config.h
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
