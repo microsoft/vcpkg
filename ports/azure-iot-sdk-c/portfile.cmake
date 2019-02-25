@@ -6,8 +6,8 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 74b03316ec90f1602c20ebeab67a3b4a61065d8e
-        SHA512 78ab8d7cd6e25886e41f98500cb8cd9609ca677426a882ed0364a908e5267ec6191bb15fd65fb2c420a108df41f52a8ba6d5e6d626874bbfae4f56e8af5ca428
+        REF 6633c5b18710febf1af7713cf1a336fd38f623ed
+        SHA512 17787aa4ef52d4cf39f939fee05555fcef85cde63620036f6715b699902fd3fd766250c26ea6065f5f36572ac2b9d5293e79ba17ea9d8f4cbce267322269e7e4
         HEAD_REF public-preview
         PATCHES improve-external-deps.patch
     )
@@ -15,8 +15,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 350b51f5abaedc975dae5419ad1fa4add7635fd2
-        SHA512 7559768f7d1c67f6b28d16871c3c783e9f88d9dc4f9051a7a3c0329311d39821301edf64fcbde15a8e904c6d5a6326feee25be8e46cb657c21455ae920b266eb
+        REF a46d038a9151ff1fc7d9b70f2d7fcca03c19b972
+        SHA512 bcd9c656ab721ab15da3cb690772c84e58e09d8785b975b046d4986b5fa16fb9e74a06af00acbe91fd8d4b897cd12dba9b2318ea5465865bff98f5429d2ee618
         HEAD_REF master
         PATCHES improve-external-deps.patch
     )
@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -Duse_installed_dependencies=ON
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
+        -Duse_edge_modules=ON
 )
 
 vcpkg_install_cmake()

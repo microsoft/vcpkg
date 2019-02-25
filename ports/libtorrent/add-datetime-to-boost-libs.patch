@@ -1,13 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 340e38f..1963d90 100644
+index 944602b..9d95446 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -258,7 +258,7 @@ endif()
+@@ -678,9 +678,9 @@ else()
+ endif()
  
  # Boost
- if(NOT DEFINED Boost_INCLUDE_DIR OR NOT DEFINED Boost_LIBRARIES)
--	FIND_PACKAGE(Boost REQUIRED COMPONENTS system chrono random)
-+	FIND_PACKAGE(Boost REQUIRED COMPONENTS system date_time chrono random)
- endif()
- include_directories(${Boost_INCLUDE_DIRS})
- target_link_libraries(torrent-rasterbar ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+-find_public_dependency(Boost REQUIRED COMPONENTS system)
++find_public_dependency(Boost REQUIRED COMPONENTS system date_time)
+ target_include_directories(torrent-rasterbar PUBLIC ${Boost_INCLUDE_DIRS})
+-target_link_libraries(torrent-rasterbar PUBLIC ${Boost_SYSTEM_LIBRARY})
++target_link_libraries(torrent-rasterbar PUBLIC ${Boost_LIBRARIES})
+ 
+ if (exceptions)
+ 	if (MSVC)
