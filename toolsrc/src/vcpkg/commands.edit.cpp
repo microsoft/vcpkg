@@ -1,7 +1,8 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
@@ -13,7 +14,7 @@ namespace vcpkg::Commands::Edit
         std::vector<fs::path> output;
 
 #if defined(_WIN32)
-        static const std::array<const char*, 3> REGKEYS = {
+        static const std::array<StringLiteral, 3> REGKEYS = {
             R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
             R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
             R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
@@ -25,7 +26,7 @@ namespace vcpkg::Commands::Edit
                 System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
-                const fs::path install_path = fs::path(*c);
+                const fs::path install_path = fs::u8path(*c);
                 output.push_back(install_path / "Code - Insiders.exe");
                 output.push_back(install_path / "Code.exe");
             }
@@ -165,12 +166,12 @@ namespace vcpkg::Commands::Edit
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
         {
-            System::println(
+            System::print2(
                 System::Color::error,
-                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.");
-            System::println("The following paths were examined:");
+                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.\n");
+            System::print2("The following paths were examined:\n");
             Files::print_paths(candidate_paths);
-            System::println("You can also set the environmental variable EDITOR to your editor of choice.");
+            System::print2("You can also set the environmental variable EDITOR to your editor of choice.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 

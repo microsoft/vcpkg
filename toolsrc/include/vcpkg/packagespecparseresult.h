@@ -12,6 +12,12 @@ namespace vcpkg
         INVALID_CHARACTERS
     };
 
+    namespace Strings::details
+    {
+        // TODO: Layering violation; we should not inject functions into another layer's namespace
+        void append_internal(std::string& out, PackageSpecParseResult p);
+    }
+
     CStringView to_string(PackageSpecParseResult ev) noexcept;
 
     template<>
