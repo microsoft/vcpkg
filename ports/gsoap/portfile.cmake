@@ -9,14 +9,12 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 c115044d2662c2dd355c4756a974a0013b7213dd28c536aba179e53c19466279bfa34ce16b4426db5aa7a24d94c18e0ed7e7cdf05e799bf89f7b54031aa0874e
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
-
-#vcpkg_extract_source_archive_ex(
-#    OUT_SOURCE_PATH SOURCE_PATH
-#    ARCHIVE ${ARCHIVE}
-#    PATCHES
-#       "${CMAKE_CURRENT_LIST_DIR}/fix-build-in-windows.patch"
-#)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+       "${CMAKE_CURRENT_LIST_DIR}/fix-build-in-windows.patch"
+)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(BUILD_ARCH "Win32")
@@ -29,10 +27,6 @@ endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap ${CURRENT_PACKAGES_DIR}/debug/tools)
 
 if (WIN32)
-    file(COPY ${CURRENT_PORT_DIR}/soapcpp2.sln DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/)
-    file(COPY ${CURRENT_PORT_DIR}/soapcpp2.vcxproj DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2/)
-    file(COPY ${CURRENT_PORT_DIR}/wsdl2h.sln DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/)
-    file(COPY ${CURRENT_PORT_DIR}/wsdl2h.vcxproj DESTINATION ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/wsdl2h/)
     vcpkg_build_msbuild(
         USE_VCPKG_INTEGRATION
         PROJECT_PATH ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
@@ -52,7 +46,6 @@ if (WIN32)
     file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/debug/wsdl2h.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/gsoap/)
 else()
     message(FATAL_ERROR "Sorry but gsoap only can be build in Windows temporary")
-    #file(COPY ${SOURCE_PATH}/gsoap/bin/macosx/soapcpp2 ${SOURCE_PATH}/gsoap/bin/macosx/wsdl2h DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/)
 endif()
 
     
