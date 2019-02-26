@@ -29,7 +29,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EMCECS/ecs-object-client-windows-cpp
     REF v1.0.4.1
-    SHA512 3321f4f02f28a8ebc71f719a270047fc8956607f6accca4aada68bd7219480267b9b6243b43ecc26b6956a19783815d4699f42b415cfe4514e797b836eae400e
+    SHA512 3b9f2e5e49e2afb9be23cdb8f325ceceb005799a8dc7a43f056f7a560fdbe68ddbea74d22e667a58c48560c5f5a72ea4d5a8f3aa3f5bf6da60227b98eaab8cc2
     HEAD_REF master
     PATCHES NoLibSyms.patch
 )
