@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 0.27
     SHA512 ec605db73abcf3cc2df78c1fc3aae5335a51192f660668e39a4f20fc7f372b18c3cec9b704e1c71c356315fd75e791622de1dffe576432ee0fb12bf63a98a423
     HEAD_REF master
+    PATCHES
+        iconv.patch
 )
 
 if(WIN32 AND ("unicode" IN_LIST FEATURES))
@@ -24,6 +26,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/exiv2/cmake")
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    ${CURRENT_PACKAGES_DIR}/share/exiv2
+    @ONLY
+)
 
 vcpkg_copy_pdbs()
 
