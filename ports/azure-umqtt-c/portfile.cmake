@@ -2,13 +2,23 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Azure/azure-umqtt-c
-    REF 3205eb26401e9c6639100934e8fb75b75275760d
-    SHA512 002c0d4f0373faeb7171465afce268f18b52d80ec057af36c81dd807de8ccf2bf1a46ef00c7f8e8fcdbef8d7f5c36616a304007c98ea5700c5f662b4c8868c2c
-    HEAD_REF master
-)
+if("public-preview" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-umqtt-c
+        REF f68e8d535d18028e3e6ed4d806ce8994037a49fa
+        SHA512 9bea4c3dbd26f5221c4da782954a4e8b4d372aca75b71a9eb63b818f31f153e4be534a20960c007c3aa184766f2a826c5ba11e780e23098707419ab39f055cc1
+        HEAD_REF master
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-umqtt-c
+        REF 6bb14b0a731e5c896758fc2f6ffe3d4bd31d2187
+        SHA512 001b04f203327e5096ad3453268939da7738952704a4e0b88ea033b0a2566bec7502b3a674eadf476f9df0da605d25b8a7f6a306e23a42690884188326bd0743
+        HEAD_REF master
+    )
+endif()
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/c-utility/configs/)
 

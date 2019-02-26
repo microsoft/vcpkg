@@ -354,7 +354,7 @@ namespace vcpkg::Dependencies
 
         auto installed_ports = get_installed_ports(status_db);
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set});
+        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
     }
 
     std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
@@ -396,7 +396,7 @@ namespace vcpkg::Dependencies
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<ExportPlanAction> toposort =
-            Graphs::topological_sort(specs, ExportAdjacencyProvider{status_db, specs_as_set});
+            Graphs::topological_sort(specs, ExportAdjacencyProvider{status_db, specs_as_set}, {});
         return toposort;
     }
 
@@ -605,13 +605,10 @@ namespace vcpkg::Dependencies
         }
     }
 
-    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
-    /// <param name="provider">Contains the ports of the current environment.</param>
-    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
-    /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db)
+                                                       const StatusParagraphs& status_db,
+                                                       const CreateInstallPlanOptions& options)
     {
         std::unordered_set<std::string> prevent_default_features;
         for (auto&& spec : specs)
@@ -628,7 +625,7 @@ namespace vcpkg::Dependencies
             pgraph.install(spec, prevent_default_features);
         }
 
-        return pgraph.serialize();
+        return pgraph.serialize(options);
     }
 
     /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
@@ -672,13 +669,15 @@ namespace vcpkg::Dependencies
         mark_minus(spec_cluster, *m_graph, *m_graph_plan, {});
     }
 
-    std::vector<AnyAction> PackageGraph::serialize() const
+    std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& options) const
     {
         auto remove_vertex_list = m_graph_plan->remove_graph.vertex_list();
-        auto remove_toposort = Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph);
+        auto remove_toposort =
+            Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph, options.randomizer);
 
         auto insert_vertex_list = m_graph_plan->install_graph.vertex_list();
-        auto insert_toposort = Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph);
+        auto insert_toposort =
+            Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph, options.randomizer);
 
         std::vector<AnyAction> plan;
 

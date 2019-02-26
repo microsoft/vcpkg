@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CLIUtils/CLI11
-    REF v1.6.2
-    SHA512 0160323a7a87ecdf5cff081a4270a30977b87f0592041d8fde84ec655b28cdbc40813567f95df375a4f6f953b60a638deacfb3cc5dec562c4d348dcc532f0ab7
+    REF v1.7.0
+    SHA512 e8a1fa8c09c2c2e4d805c5faa119f5d3d2bd3d18ca6bbc28be8890adbc53ea8c53a5b73ee2911fff7dadef6b0d4b870b1b574367ed520a790ee6ce34cbfe9c59
     HEAD_REF master
 )
 

@@ -116,8 +116,22 @@ if(NOT WIN32)
 endif()
 
 install(TARGETS libintl
+  EXPORT unofficial-gettext-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION bin
   ARCHIVE DESTINATION lib
 )
 
+install(
+    EXPORT unofficial-gettext-targets
+    FILE unofficial-gettext-targets.cmake
+    NAMESPACE unofficial::gettext::
+    DESTINATION share/unofficial-gettext
+)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gettext-config.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-iconv)
+find_dependency(Threads)
+include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-gettext-targets.cmake)
+")
