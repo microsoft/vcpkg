@@ -16,7 +16,6 @@ vcpkg_extract_source_archive(
 )
 
 file(MAKE_DIRECTORY
-    ${CURRENT_PACKAGES_DIR}/include/x-plane/
     ${CURRENT_PACKAGES_DIR}/lib
     ${CURRENT_PACKAGES_DIR}/debug/lib
 )
