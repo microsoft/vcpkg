@@ -1,0 +1,119 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 654bebd..6d1c671 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -39,6 +39,10 @@ option(OpenMVG_USE_OPENCV "Build or not opencv+openMVG samples programs" OFF)
+ # ==============================================================================
+ option(OpenMVG_USE_OCVSIFT "Add or not OpenCV SIFT in available features" OFF)
+ 
++if(OpenMVG_BUILD_SHARED AND MSVC)
++  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
++endif(OpenMVG_BUILD_SHARED AND MSVC)
++
+ # ==============================================================================
+ # OpenMVG version
+ # ==============================================================================
+@@ -88,11 +92,11 @@ endif()
+ # ==============================================================================
+ # Check that submodule have been initialized and updated
+ # ==============================================================================
+-if (NOT EXISTS ${PROJECT_SOURCE_DIR}/dependencies/cereal/include)
+-  message(FATAL_ERROR
+-    "\n submodule(s) are missing, please update your repository:\n"
+-    "  > git submodule update -i\n")
+-endif()
++# if (NOT EXISTS ${PROJECT_SOURCE_DIR}/dependencies/cereal/include)
++#   message(FATAL_ERROR
++#     "\n submodule(s) are missing, please update your repository:\n"
++#     "  > git submodule update -i\n")
++# endif()
+ 
+ # ==============================================================================
+ # Additional cmake find modules
+@@ -184,12 +188,12 @@ if (OpenMVG_BUILD_OPENGL_EXAMPLES)
+ endif (OpenMVG_BUILD_OPENGL_EXAMPLES)
+ 
+ # Dependencies install rules
+-install(
+-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/
+-  DESTINATION include/openMVG_dependencies
+-  COMPONENT headers
+-  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
+-)
++# install(
++#   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/
++#   DESTINATION include/openMVG_dependencies
++#   COMPONENT headers
++#   FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
++# )
+ 
+ # ==============================================================================
+ # --END-- SUBMODULE CONFIGURATION
+diff --git a/src/cmakeFindModules/FindClp.cmake b/src/cmakeFindModules/FindClp.cmake
+index c997b87..74c3aae 100644
+--- a/src/cmakeFindModules/FindClp.cmake
++++ b/src/cmakeFindModules/FindClp.cmake
+@@ -51,8 +51,8 @@ IF(EXISTS "${CLP_DIR}" AND NOT "${CLP_DIR}" STREQUAL "")
+         SET(CLP_INCLUDE_DIR ${CLP_DIR})
+ 
+         FIND_LIBRARY(CLP_LIBRARY NAMES Clp)
+-        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver)
+-        FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
++        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver Clp)
++        FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp Clp)
+ 
+         # locate Clp libraries
+         IF(DEFINED CLP_LIBRARY AND DEFINED CLPSOLVER_LIBRARY AND DEFINED OSICLP_LIBRARY)
+diff --git a/src/openMVG/matching/CMakeLists.txt b/src/openMVG/matching/CMakeLists.txt
+index 80b1fe6..cb396c7 100644
+--- a/src/openMVG/matching/CMakeLists.txt
++++ b/src/openMVG/matching/CMakeLists.txt
+@@ -38,7 +38,7 @@ target_link_libraries(openMVG_matching
+     openMVG_features
+     Threads::Threads
+ )
+-if (NOT DEFINED OpenMVG_USE_INTERNAL_FLANN)
++if (NOT OpenMVG_USE_INTERNAL_FLANN)
+ target_link_libraries(openMVG_matching
+   PUBLIC
+     ${FLANN_LIBRARIES}
+diff --git a/src/third_party/CMakeLists.txt b/src/third_party/CMakeLists.txt
+index 816a941..f0b7145 100644
+--- a/src/third_party/CMakeLists.txt
++++ b/src/third_party/CMakeLists.txt
+@@ -18,7 +18,7 @@ add_subdirectory(stlplus3)
+ set(STLPLUS_LIBRARY openMVG_stlplus PARENT_SCOPE)
+ 
+ # Add graph library
+-if(DEFINED OpenMVG_USE_INTERNAL_LEMON)
++if(OpenMVG_USE_INTERNAL_LEMON)
+   add_subdirectory(lemon)
+   set_property(TARGET openMVG_lemon PROPERTY FOLDER OpenMVG/3rdParty/lemon)
+   set_property(TARGET check PROPERTY FOLDER OpenMVG/3rdParty/lemon)
+@@ -68,7 +68,7 @@ endif (NOT TIFF_FOUND)
+ add_subdirectory(vectorGraphics)
+ 
+ # Add ceres-solver (A Nonlinear Least Squares Minimizer)
+-if (DEFINED OpenMVG_USE_INTERNAL_CERES)
++if (OpenMVG_USE_INTERNAL_CERES)
+   add_subdirectory(cxsparse)
+   add_subdirectory(ceres-solver)
+   set_property(TARGET openMVG_cxsparse PROPERTY FOLDER OpenMVG/3rdParty/ceres)
+@@ -76,7 +76,7 @@ if (DEFINED OpenMVG_USE_INTERNAL_CERES)
+ endif()
+ 
+ # Add an Approximate Nearest Neighbor library
+-if (DEFINED OpenMVG_USE_INTERNAL_FLANN)
++if (OpenMVG_USE_INTERNAL_FLANN)
+   set(FLANN_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/openMVG/third_party/flann/src/cpp)
+   add_subdirectory(flann)
+ endif()
+@@ -90,7 +90,7 @@ add_subdirectory(fast)
+ ##
+ # Install Header only libraries if necessary
+ ##
+-if (DEFINED OpenMVG_USE_INTERNAL_EIGEN)
++if (OpenMVG_USE_INTERNAL_EIGEN)
+   #Configure Eigen install
+   set(EIGEN_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/openMVG/third_party/eigen)
+   add_subdirectory(eigen)
