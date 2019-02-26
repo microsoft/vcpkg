@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7dd6309..14a6bc9 100644
+index 7dd6309..abeadb8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -8,11 +8,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
@@ -16,7 +16,17 @@ index 7dd6309..14a6bc9 100644
  
  set(EXAMPLE1_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.c")
  set(EXAMPLE2_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example2.c")
-@@ -44,9 +43,17 @@ endif()
+@@ -41,12 +40,27 @@ if(${UNIX})
+     target_link_libraries(example6 m)
+ endif()
+ 
++target_compile_definitions(example1 PRIVATE _CRT_SECURE_NO_WARNINGS)
++target_compile_definitions(example2 PRIVATE _CRT_SECURE_NO_WARNINGS)
++target_compile_definitions(example3 PRIVATE _CRT_SECURE_NO_WARNINGS)
++target_compile_definitions(example4 PRIVATE _CRT_SECURE_NO_WARNINGS)
++target_compile_definitions(example5 PRIVATE _CRT_SECURE_NO_WARNINGS)
++target_compile_definitions(example6 PRIVATE _CRT_SECURE_NO_WARNINGS)
++
  # add_executable(miniz_tester ${MINIZ_TESTER_SRC_LIST})
  # target_link_libraries(miniz_tester miniz)
  
