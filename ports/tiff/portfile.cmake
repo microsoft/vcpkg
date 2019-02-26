@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
         add-component-options.patch
         fix-cxx-shared-libs.patch
         crt-secure-no-deprecate.patch
+        fix-stddef.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -31,6 +32,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
+        -Dwebp=OFF
         -Dzstd=OFF
         ${TIFF_CXX_TARGET}
 )
