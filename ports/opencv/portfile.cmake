@@ -145,6 +145,11 @@ if("ipp" IN_LIST FEATURES)
   endif()
 endif()
 
+set(WITH_TBB OFF)
+if("tbb" IN_LIST FEATURES)
+  set(WITH_TBB ON)
+endif()
+
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ON)
@@ -299,6 +304,7 @@ vcpkg_configure_cmake(
         -DWITH_PNG=${WITH_PNG}
         -DWITH_PROTOBUF=${WITH_PROTOBUF}
         -DWITH_QT=${WITH_QT}
+        -DWITH_TBB=${WITH_TBB}
         -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}

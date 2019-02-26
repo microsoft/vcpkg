@@ -1,5 +1,5 @@
 Source: rocksdb
-Version: 5.15.10
+Version: 5.17.2
 Description: A library that provides an embeddable, persistent key-value store for fast storage
 Default-Features: zlib
 
@@ -14,3 +14,7 @@ Description: snappy support in rocksdb
 Feature: zlib
 Build-Depends: zlib
 Description: zlib support in rocksdb
+
+Feature: tbb
+Build-Depends: tbb
+Description: tbb support in rocksdb

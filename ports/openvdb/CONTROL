@@ -1,8 +1,8 @@
 Source: openvdb
-Version: 5.0.0-1
-Build-Depends: ilmbase, openexr, tbb, blosc, boost-iostreams, boost-system, boost-thread, boost-date-time, boost-any, boost-uuid, boost-interprocess
+Version: 6.0.0
+Build-Depends: boost-ptr-container, openexr, tbb, blosc, boost-iostreams, boost-system, boost-thread, boost-date-time, boost-any, boost-uuid, boost-interprocess
 Description: Sparse volume data structure and tools
 
 Feature: tools
 Description: OpenVDB utilities: view, print and render
-Build-Depends: glew, glfw3, boost-ptr-container
+Build-Depends: glew, glfw3

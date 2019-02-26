@@ -123,6 +123,8 @@ fetchTool()
         os="linux"
     elif [ "$UNAME" = "Darwin" ]; then
         os="osx"
+    elif [ "$UNAME" = "FreeBSD" ]; then
+        os="freebsd"
     else
         echo "Unknown uname: $UNAME"
         return 1
