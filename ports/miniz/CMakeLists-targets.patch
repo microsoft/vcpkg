@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7dd6309..abeadb8 100644
+index 7dd6309..eaf160f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -8,11 +8,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
+@@ -8,12 +8,12 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
  CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
  endif ()
  
@@ -14,9 +14,11 @@ index 7dd6309..abeadb8 100644
 +add_library(miniz STATIC ${miniz_SOURCE})
 +target_compile_definitions(miniz PRIVATE _CRT_SECURE_NO_WARNINGS)
  
++if(FALSE)
  set(EXAMPLE1_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.c")
  set(EXAMPLE2_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example2.c")
-@@ -41,12 +40,27 @@ if(${UNIX})
+ set(EXAMPLE3_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example3.c")
+@@ -41,12 +41,28 @@ if(${UNIX})
      target_link_libraries(example6 m)
  endif()
  
@@ -29,6 +31,7 @@ index 7dd6309..abeadb8 100644
 +
  # add_executable(miniz_tester ${MINIZ_TESTER_SRC_LIST})
  # target_link_libraries(miniz_tester miniz)
++endif()
  
 -install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 -    ARCHIVE  DESTINATION lib
