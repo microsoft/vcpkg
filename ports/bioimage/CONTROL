@@ -1,7 +1,7 @@
 Source: bioimage
 Version: 2.5.2 
 Description: LibBioImage is a C++ library for access and process biological 3D images. It supports many input and output formats and basic image processing operations.
-Build-Depends: libraw, eigen3, proj4, libjpeg-turbo, libgeotiff, exiv2
+Build-Depends: libraw, eigen3, proj4, libjpeg-turbo, libgeotiff, exiv2[unicode]
 
 Feature: opencv
 Description: opencv functionality for bioimage
