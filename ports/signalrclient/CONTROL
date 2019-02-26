@@ -1,4 +1,4 @@
 Source: signalrclient
-Version: 1.0.0-beta1-3
+Version: 1.0.0-beta1-4
 Build-Depends: cpprestsdk
 Description: C++ client for SignalR.

@@ -2,6 +2,7 @@
 
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
 
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/expected.h>
@@ -78,6 +79,7 @@ namespace vcpkg
         fs::path ports_cmake;
 
         const fs::path& get_tool_exe(const std::string& tool) const;
+        const std::string& get_tool_version(const std::string& tool) const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
@@ -89,10 +91,11 @@ namespace vcpkg
 
     private:
         Lazy<std::vector<std::string>> available_triplets;
-        Cache<std::string, fs::path> tool_paths;
         Lazy<std::vector<Toolset>> toolsets;
         Lazy<std::vector<Toolset>> toolsets_vs2013;
 
         fs::path default_vs_path;
+
+        mutable std::unique_ptr<ToolCache> m_tool_cache;
     };
 }

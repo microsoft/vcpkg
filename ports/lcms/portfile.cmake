@@ -5,7 +5,8 @@ vcpkg_from_github(
     REPO mm2/Little-CMS
     REF lcms2.8
     SHA512 22ee94aa3333db4248607d8aa84343d324e04b30c154c46672c6f668e14a369b9b72f2557b8465218b6e9a2676cf8fa37d617b4aa13a013dc2337197a599e63a
-    HEAD_REF master 
+    HEAD_REF master
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/remove_library_directive.patch"
 ) 
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/unicorn-lib
-    REF 2c8e7f8948aaf51654685e2f6fa3ea1da3fa8d24
-    SHA512 1eb3f8d8a6cbe383c4dd01c5a9883d57a024d47b2adc94c437ca815be7532d7b26a4883061ee31c16194336d095d59bce2ca3a538f100f0d05dc1ff8e0b3f7ad
+    REF e5e6615ce4297a8b385884c21c1b78a6515cb766
+    SHA512 bdffd177d106882f1dcb59ac9dcecb985a8b6f9cec8dc44ff1eea3201bed1258e760a964163fed3514aa661a4be4bd92a0c437d769dbdffa04693a870ecf355c
     HEAD_REF master
 )
 
@@ -12,6 +12,7 @@ file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS_DEBUG
         -DUNICORN_LIB_SKIP_HEADERS=ON
 )
