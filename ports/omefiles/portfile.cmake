@@ -78,6 +78,38 @@ foreach(CMAKELIST IN LISTS CMAKELIST_FOLDERS)
     file(WRITE ${CMAKELIST} "${_contents}")
 endforeach()
 
+set(BOOST_CMAKE_FILES 
+    ome-common/cmake/BoostChecks.cmake
+    ome-common/cmake/FilesystemChecks.cmake
+    ome-common/CMakeLists.txt
+    ome-files/cmake/BoostChecks.cmake
+    ome-model/CMakeLists.txt
+    ome-model/cmake/BoostChecks.cmake
+    ome-model/CMakeLists.txt)
+
+# Install config files in share folder across platforms
+foreach(BOOST_CMAKE_FILE IN LISTS BOOST_CMAKE_FILES)
+    message("Patching: ${SOURCE_PATH}/${BOOST_CMAKE_FILE}")
+    file(READ ${SOURCE_PATH}/${BOOST_CMAKE_FILE} _contents)
+    string(REPLACE  
+         "set(CMAKE_REQUIRED_DEFINITIONS \$\{CMAKE_REQUIRED_DEFINITIONS\} -DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)" ""
+        _contents "${_contents}")   
+    string(REPLACE  
+         "set(Boost_USE_STATIC_LIBS OFF)" ""
+        _contents "${_contents}")
+    file(WRITE ${SOURCE_PATH}/${BOOST_CMAKE_FILE} "${_contents}")
+endforeach()
+
+set(LOG_FILE ${SOURCE_PATH}/ome-common/lib/ome/common/log.h)
+file(READ ${LOG_FILE} _contents)
+string(REPLACE  
+       "#define BOOST_LOG_DYN_LINK" ""
+       _contents "${_contents}")
+file(WRITE ${LOG_FILE} "${_contents}")
+
+file(REMOVE ${SOURCE_PATH}/ome-files/cmake/FindTIFF.cmake)
+
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}  
     PATCHES cmakelists.patch
@@ -93,6 +125,7 @@ vcpkg_configure_cmake(
        -Dtest:BOOL=OFF
        -Dextended-tests:BOOL=OFF
        -Drelocatable-install:BOOL=ON
+       -Dsphinx:BOOL=OFF
        -DCMAKE_CXX_STANDARD=14
 )
 
