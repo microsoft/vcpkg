@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
         fix-cxx-shared-libs.patch
         crt-secure-no-deprecate.patch
         fix-stddef.patch
+        additional-exports.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")

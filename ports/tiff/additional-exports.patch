@@ -1,0 +1,11 @@
+--- a/libtiff/libtiff.def
++++ b/libtiff/libtiff.def
+@@ -164,5 +164,6 @@
+ 	_TIFFmemcpy
+ 	_TIFFmemset
+ 	_TIFFrealloc
+-        _TIFFMultiply32
+-        _TIFFMultiply64
++   _TIFFMultiply32
++   _TIFFMultiply64
++	_TIFFSeekOK
