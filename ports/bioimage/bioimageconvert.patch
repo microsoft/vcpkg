@@ -1,5 +1,5 @@
---- CMakeLists.1.txt	Mon Feb 25 12:15:55 2019
-+++ CMakeLists.txt	Mon Feb 25 12:24:52 2019
+--- CMakeLists.txt
++++ CMakeLists.txt
 @@ -67,6 +67,11 @@
      cmake_policy(SET CMP0060 NEW)
  endif()
@@ -12,12 +12,166 @@
  
  #---------------------------------------------------------------------
  # Set project information
-@@ -200,7 +205,7 @@
- set(BIC_LIBTIFF_REQUIRED_VERSION 4.0.4)
- set(BIC_PROJ4_REQUIRED_VERSION 4.8.0)
- set(BIC_LIBWEBP_REQUIRED_VERSION 0.4.3)
--set(BIC_EXIV2_REQUIRED_VERSION 0.25)
-+set(BIC_EXIV2_REQUIRED_VERSION "")
- set(BIC_LIBJPEG_TURBO_REQUIRED_VERSION 1.2.90)
- set(BIC_ZLIB_REQUIRED_VERSION 1.2.7)
+--- cmake/bioimageConfig.cmake.in
++++ cmake/bioimageConfig.cmake.in
+@@ -1,4 +1,8 @@
+ @PACKAGE_INIT@
  
++include(CMakeFindDependencyMacro)
++find_dependency(PROJ4)
++find_dependency(GeoTIFF)
++find_dependency(Exiv2)
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+ check_required_components("@PROJECT_NAME@")
+
+--- cmake/Modules/FindLCMS2.cmake
++++ cmake/Modules/FindLCMS2.cmake
+@@ -29,18 +29,32 @@
+    PATH_SUFFIXES lcms2 liblcms2
+ )
+ 
+-find_library(LCMS2_LIBRARIES NAMES lcms2 liblcms2 lcms-2 liblcms-2
++find_library(LCMS2_RELEASE_LIBRARY NAMES lcms2
+    PATHS     
+    ${PC_LCMS2_LIBDIR}
+    ${PC_LCMS2_LIBRARY_DIRS}
+    PATH_SUFFIXES lcms2
+ )
+ 
+-if(LCMS2_INCLUDE_DIR AND LCMS2_LIBRARIES)
++find_library(LCMS2_DEBUG_LIBRARY NAMES lcms2d
++   PATHS     
++   ${PC_LCMS2_LIBDIR}
++   ${PC_LCMS2_LIBRARY_DIRS}
++   PATH_SUFFIXES lcms2
++)
++
++
++if(LCMS2_INCLUDE_DIR AND LCMS2_RELEASE_LIBRARY)
+    set(LCMS2_FOUND TRUE)
+-else(LCMS2_INCLUDE_DIR AND LCMS2_LIBRARIES)
++else()
+    set(LCMS2_FOUND FALSE)
+-endif(LCMS2_INCLUDE_DIR AND LCMS2_LIBRARIES)
++endif()
++
++if (LCMS2_DEBUG_LIBRARY)
++   set(LCMS2_LIBRARIES optimized "${LCMS2_RELEASE_LIBRARY}" debug "${LCMS2_DEBUG_LIBRARY}")
++else()
++   set(LCMS2_LIBRARIES ${LCMS2_RELEASE_LIBRARY})
++endif()
+ 
+ if(LCMS2_FOUND)
+    file(READ ${LCMS2_INCLUDE_DIR}/lcms2.h LCMS2_VERSION_CONTENT)
+--- cmake/Modules/FindTIFF.cmake
++++ cmake/Modules/FindTIFF.cmake
+@@ -47,14 +47,55 @@
+ endforeach()
+ 
+ if(NOT TIFF_LIBRARY)
+-    find_library(TIFF_LIBRARY_RELEASE NAMES ${TIFF_NAMES})
+-    find_library(TIFF_LIBRARY_DEBUG NAMES ${TIFF_NAMES_DEBUG})
++    find_library(TIFF_LIBRARY_RELEASE 
++        NAMES ${TIFF_NAMES}
++        PATH_SUFFIXES "lib" "local/lib")
++    find_library(TIFF_LIBRARY_DEBUG 
++        NAMES ${TIFF_NAMES_DEBUG}
++        PATH_SUFFIXES "debug/lib" "lib" "local/lib")
++
++    if(TIFF_LIBRARY_RELEASE)
++
++        get_filename_component(TIFF_LIBRARY_NAME ${TIFF_LIBRARY_RELEASE} NAME_WE)
++        get_filename_component(TIFF_LIBRARY_EXTENSION ${TIFF_LIBRARY_RELEASE} EXT)
++        get_filename_component(TIFF_LIBRARY_PATH ${TIFF_LIBRARY_RELEASE} DIRECTORY)
++        get_filename_component(TIFF_DEBUG_LIBRARY_PATH ${TIFF_LIBRARY_DEBUG} DIRECTORY)
++
++        message("searching for: "${TIFF_LIBRARY_NAME}xx${TIFF_LIBRARY_EXTENSION}" in ${TIFF_LIBRARY_PATH}")
++
++        find_library(TIFFXX_LIBRARY_RELEASE 
++            NAMES "${TIFF_LIBRARY_NAME}xx${TIFF_LIBRARY_EXTENSION}"
++            PATHS ${TIFF_LIBRARY_PATH}
++            NO_DEFAULT_PATH)
++        find_library(TIFFXX_LIBRARY_DEBUG
++            NAMES "${TIFF_LIBRARY_NAME}xxd${TIFF_LIBRARY_EXTENSION}"
++            PATHS ${TIFF_DEBUG_LIBRARY_PATH}
++            NO_DEFAULT_PATH)
++
++        if(TIFFXX_LIBRARY_RELEASE)
++            list(APPEND TIFF_LIBRARY_RELEASE ${TIFFXX_LIBRARY_RELEASE})
++            list(APPEND TIFF_LIBRARY_DEBUG ${TIFFXX_LIBRARY_DEBUG})
++            set(CPP_TIFF_LIBRARY optimised  ${TIFFXX_LIBRARY_RELEASE} debug  ${TIFFXX_LIBRARY_DEBUG})
++            set(TIFF_CXX_FOUND TRUE)
++        else()
++            message(FATAL_ERROR "Could NOT find TIFF/C++ library ${CPP_TIFF_LIBRARY}.")
++        endif()
++
++    endif()
++
+     include(SelectLibraryConfigurations)
+     select_library_configurations(TIFF)
+     mark_as_advanced(TIFF_LIBRARY_RELEASE TIFF_LIBRARY_DEBUG)
++
+ endif()
+ unset(TIFF_NAMES)
+ unset(TIFF_NAMES_DEBUG)
++unset(TIFF_LIBRARY_NAME)
++unset(TIFF_LIBRARY_PATH)
++unset(TIFF_LIBRARY_EXTENSION)
++
++message("${TIFF_FOUND} ==== ${TIFF_LIBRARY} ==== ${TIFF_LIBRARY_RELEASE} ==== ${TIFF_LIBRARY_DEBUG}")
++message("TIFF_LIBRARY: ${TIFF_LIBRARY}")
+ 
+ if(TIFF_INCLUDE_DIR AND EXISTS "${TIFF_INCLUDE_DIR}/tiffvers.h")
+     file(STRINGS "${TIFF_INCLUDE_DIR}/tiffvers.h" tiff_version_str
+@@ -101,49 +142,6 @@
+         endif()
+     endif()
+ 
+-    # looking for C++ version of library libtiffxx.so
+-    set(TIFF_CXX_FOUND FALSE)
+-    foreach(TIFF_LIBRARY ${TIFF_LIBRARIES})
+-        # We do not want just any tiffxx library, we specifically want
+-        # the one that belongs to the tiff library we found before. So we
+-        # expect the same path and extension.
+-        get_filename_component(TIFF_LIBRARY_NAME ${TIFF_LIBRARY} NAME_WE)
+-        get_filename_component(TIFF_LIBRARY_PATH ${TIFF_LIBRARY} DIRECTORY)
+-        get_filename_component(TIFF_LIBRARY_EXTENSION ${TIFF_LIBRARY} EXT)
+-        if(TIFF_LIBRARY_NAME MATCHES "d$")
+-            # Check for libtiffdxx:
+-            set(CPP_TIFF_LIBRARY "${TIFF_LIBRARY_PATH}/${TIFF_LIBRARY_NAME}xx${TIFF_LIBRARY_EXTENSION}")
+-            if(NOT EXISTS ${CPP_TIFF_LIBRARY})
+-                message("-- Could NOT find (debug) TIFF/C++ library ${CPP_TIFF_LIBRARY}.")
+-                # Check for libtiffxxd:
+-                string(REGEX REPLACE "d$" "" TIFF_LIBRARY_NAME ${TIFF_LIBRARY_NAME})
+-                set(CPP_TIFF_LIBRARY "${TIFF_LIBRARY_PATH}/${TIFF_LIBRARY_NAME}xxd${TIFF_LIBRARY_EXTENSION}")
+-                if(NOT EXISTS ${CPP_TIFF_LIBRARY})
+-                    message("-- Could NOT find (debug) TIFF/C++ library ${CPP_TIFF_LIBRARY}.")
+-                    continue()
+-                endif()
+-            endif()
+-        else()
+-            # Check for libtiffxx:
+-            set(CPP_TIFF_LIBRARY "${TIFF_LIBRARY_PATH}/${TIFF_LIBRARY_NAME}xx${TIFF_LIBRARY_EXTENSION}")
+-            if(NOT EXISTS ${CPP_TIFF_LIBRARY})
+-                message("-- Could NOT find TIFF/C++ library ${CPP_TIFF_LIBRARY}.")
+-                continue()
+-            endif()
+-        endif()
+-
+-        message("-- Found TIFF/C++ library ${CPP_TIFF_LIBRARY}")
+-        set(TIFF_CXX_FOUND TRUE)
+-        list(APPEND TIFF_LIBRARIES "${CPP_TIFF_LIBRARY}")
+-        unset(TIFF_LIBRARY)
+-        unset(TIFF_LIBRARY_NAME)
+-        unset(TIFF_LIBRARY_PATH)
+-        unset(TIFF_LIBRARY_EXTENSION)
+-        break()
+-    endforeach()
+-    if(NOT TIFF_CXX_FOUND)
+-        message(FATAL_ERROR "Could NOT find TIFF/C++ library ${CPP_TIFF_LIBRARY}.")
+-    endif()
+ endif()
+ 
+-mark_as_advanced(TIFF_INCLUDE_DIR TIFF_LIBRARY)
+\ No newline at end of file
++mark_as_advanced(TIFF_INCLUDE_DIR TIFF_LIBRARY)

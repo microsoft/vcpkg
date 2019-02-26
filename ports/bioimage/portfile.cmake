@@ -21,8 +21,23 @@ if("opencv" IN_LIST FEATURES)
 endif()
 
 # Built-in FindExiv2 is out of date, remove to force use of config file
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindLibRaw.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindExiv2.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindGeoTIFF.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPROJ4.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindEigen3.cmake)
 
+
+set(CMAKELIST ${SOURCE_PATH}/CMakeLists.txt)
+file(READ ${CMAKELIST} _contents)
+string(REPLACE "\${BIC_PROJ4_REQUIRED_VERSION}" "" _contents "${_contents}")
+string(REPLACE "\${BIC_LIBRAW_REQUIRED_VERSION} " "" _contents "${_contents}")
+string(REPLACE "\${BIC_EXIV2_REQUIRED_VERSION} " "" _contents "${_contents}")
+string(REPLACE "\${BIC_LCMS2_REQUIRED_VERSION} " "" _contents "${_contents}")
+string(REPLACE "\${EXIV2_LIBRARIES}" "exiv2lib" _contents "${_contents}")
+string(REPLACE "\${GEOTIFF_LIBRARIES}" "geotiff_library" _contents "${_contents}")
+message("Patching: ${CMAKELIST}")
+file(WRITE ${CMAKELIST} "${_contents}")
 
 vcpkg_configure_cmake(
    SOURCE_PATH ${SOURCE_PATH}

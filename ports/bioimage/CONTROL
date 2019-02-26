@@ -5,4 +5,4 @@ Build-Depends: libraw, eigen3, proj4, libjpeg-turbo, libgeotiff, exiv2
 
 Feature: opencv
 Description: opencv functionality for bioimage
-Build-Depends: opencv
+Build-Depends: opencv[core]
