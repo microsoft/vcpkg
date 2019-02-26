@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7dd6309..3dc74ff 100644
+index 7dd6309..62f6fe9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -8,8 +8,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
+@@ -8,11 +8,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
  CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
  endif ()
  
@@ -10,7 +10,11 @@ index 7dd6309..3dc74ff 100644
 -
  set(miniz_SOURCE miniz.c miniz_zip.c miniz_tinfl.c miniz_tdef.c)
  
- add_library(miniz ${miniz_SOURCE})
+-add_library(miniz ${miniz_SOURCE})
++add_library(miniz STATIC ${miniz_SOURCE})
+ 
+ set(EXAMPLE1_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.c")
+ set(EXAMPLE2_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example2.c")
 @@ -44,9 +42,17 @@ endif()
  # add_executable(miniz_tester ${MINIZ_TESTER_SRC_LIST})
  # target_link_libraries(miniz_tester miniz)
