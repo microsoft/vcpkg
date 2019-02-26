@@ -18,6 +18,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DENTITYX_BUILD_TESTING=false
+        -DENTITYX_BUILD_SHARED=0
 )
 
 vcpkg_install_cmake()

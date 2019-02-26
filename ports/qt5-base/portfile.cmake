@@ -11,23 +11,21 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(MAJOR_MINOR 5.11)
-set(FULL_VERSION ${MAJOR_MINOR}.2)
+set(MAJOR_MINOR 5.12)
+set(FULL_VERSION ${MAJOR_MINOR}.1)
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 b2f14126caa1c664887203a9a98551b85b57630cf7745c17f76e1e8aaf464f0091fe2de5615a138506dac7c8fbb16e5f33f984aef8e61e23f0c3bf74f6ef0835
+    SHA512 51494d8947ae16ab7aee22aca156035718f5a700737547de59b4d61d3919c00f4de858111c8928a66c0385604623d847d231892d964d53924a8c97b6e2bedf25
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE_FILE}"
     REF ${FULL_VERSION}
     PATCHES
-        fix-system-freetype.patch
-        fix-system-pcre2.patch
-        fix-system-pcre2-linux.patch
+        fix-gui-configure-json.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -62,11 +60,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND CORE_OPTIONS
         -static
     )
-else()
-    list(APPEND CORE_OPTIONS
-        -sql-sqlite
-        -sql-psql
-    )
 endif()
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -79,16 +72,19 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             ${CORE_OPTIONS}
             -mp
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
-            FREETYPE_LIBS="-lfreetype"
             PSQL_LIBS="-llibpq"
+            PCRE2_LIBS="-lpcre2-16"
+            FREETYPE_LIBS="-lfreetype"
         OPTIONS_DEBUG
+            LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
+            PCRE2_LIBS="-lpcre2-16d"
             FREETYPE_LIBS="-lfreetyped"
     )
 
@@ -98,23 +94,24 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PLATFORM "linux-g++"
         OPTIONS
             ${CORE_OPTIONS}
-            -no-sqlite
-            -no-opengl # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
         OPTIONS_RELEASE
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a"
+            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
+            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
         OPTIONS_DEBUG
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a"
+            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
+            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
     )
 endif()
 
