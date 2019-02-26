@@ -1,4 +1,4 @@
 Source: tinyexif
-Version: 1.0.1-2
+Version: 1.0.2-4
 Build-Depends: tinyxml2
 Description: tiny ISO-compliant C++ EXIF and XMP parsing library for JPEG images

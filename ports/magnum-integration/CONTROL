@@ -1,6 +1,6 @@
 Source: magnum-integration
-Version: 2018.10-1
-Build-Depends: magnum
+Version: 2019.01-1
+Build-Depends: magnum[core]
 Description: Integrations for magnum, C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
 Default-Features:
 
@@ -11,6 +11,10 @@ Build-Depends: bullet3
 Feature: glm
 Description: GlmIntegration library
 Build-Depends: glm
+
+Feature: imgui
+Description: ImGuiIntegration library
+Build-Depends: imgui
 #Feature: ovr
 #Description: OvrIntegration library
 #Build-Depends: ovrsdk
