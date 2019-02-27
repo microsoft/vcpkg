@@ -21,6 +21,9 @@ vcpkg_extract_source_archive_ex(
         0006-Fix-utility-link-error.patch
 )
 
+# Delete FindPROJ4.cmake
+file(REMOVE ${SOURCE_PATH}/cmake/FindPROJ4.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

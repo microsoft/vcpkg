@@ -167,6 +167,9 @@ find_package(Freetype REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(unofficial-fontconfig CONFIG REQUIRED)
 find_package(unofficial-pixman CONFIG REQUIRED)
+if(APPLE)
+  find_package(Threads REQUIRED)
+endif()
 
 # Cairo needs to be told which features of FreeType are availible
 add_definitions(
