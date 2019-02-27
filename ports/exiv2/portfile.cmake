@@ -21,6 +21,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DEXIV2_ENABLE_WIN_UNICODE:BOOL=${enable_win_unicode}
+        -DEXIV2_BUILD_EXIV2_COMMAND:BOOL=FALSE
+        -DEXIV2_BUILD_UNIT_TESTS:BOOL=FALSE
+        -DEXIV2_BUILD_SAMPLES:BOOL=FALSE
+#        -DEXIV2_ENABLE_NLS:BOOL=OFF
 )
 
 vcpkg_install_cmake()
@@ -36,8 +40,7 @@ configure_file(
 vcpkg_copy_pdbs()
 
 # Clean
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${EXE} ${DEBUG_EXE})
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
