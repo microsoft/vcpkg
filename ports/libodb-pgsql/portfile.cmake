@@ -7,7 +7,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY
+  ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+  ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
+  DESTINATION ${SOURCE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG

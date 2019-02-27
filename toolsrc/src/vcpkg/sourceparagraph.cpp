@@ -194,16 +194,13 @@ namespace vcpkg
             auto pos = depend_string.find(' ');
             if (pos == std::string::npos) return Dependency::parse_dependency(depend_string, "");
             // expect of the form "\w+ \[\w+\]"
-            Dependency dep;
-
-            dep.depend.name = depend_string.substr(0, pos);
             if (depend_string.c_str()[pos + 1] != '(' || depend_string[depend_string.size() - 1] != ')')
             {
                 // Error, but for now just slurp the entire string.
                 return Dependency::parse_dependency(depend_string, "");
             }
-            dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
-            return dep;
+            return Dependency::parse_dependency(depend_string.substr(0, pos),
+                                                depend_string.substr(pos + 2, depend_string.size() - pos - 3));
         });
     }
 

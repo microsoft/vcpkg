@@ -53,24 +53,32 @@ This option also has forms for configuration-specific and C flags:
 
 ## Windows Variables
 
-### VCPKG_PLATFORM_TOOLSET
-Specifies the VS-based C/C++ compiler toolchain to use.
-
-This can be set to `v141`, `v140`, or left blank. If left blank, we select the latest compiler toolset available on your machine.
-
-Visual Studio 2015 platform toolset is `v140`
-Visual Studio 2017 platform toolset is `v141`
-
 <a name="VCPKG_VISUAL_STUDIO_PATH"></a>
 ### VCPKG_VISUAL_STUDIO_PATH
 Specifies the Visual Studio installation to use.
 
-When unspecified, a Visual Studio instance is selected automatically, preferring Stable 2017, then Preview 2017, then 2015.
+To select the precise combination of Visual Studio instance and toolset version, we walk through the following algorithm:
+1. Determine the setting for `VCPKG_VISUAL_STUDIO_PATH` from the triplet, or the environment variable `VCPKG_VISUAL_STUDIO_PATH`, or consider it unset
+2. Determine the setting for `VCPKG_PLATFORM_TOOLSET` from the triplet or consider it unset
+3. Gather a list of all pairs of Visual Studio Instances with all toolsets available in those instances
+    1. This is ordered first by instance type (Stable, Prerelease, Legacy) and then by toolset version (v142, v141, v140)
+4. Filter the list based on the settings for `VCPKG_VISUAL_STUDIO_PATH` and `VCPKG_PLATFORM_TOOLSET`.
+5. Select the best remaining option
 
 The path should be absolute, formatted with backslashes, and have no trailing slash:
 ```cmake
 set(VCPKG_VISUAL_STUDIO_PATH "C:\\Program Files (x86)\\Microsoft Visual Studio\\Preview\\Community")
 ```
+
+### VCPKG_PLATFORM_TOOLSET
+Specifies the VS-based C/C++ compiler toolchain to use.
+
+See [`VCPKG_VISUAL_STUDIO_PATH`](#VCPKG_VISUAL_STUDIO_PATH) for the full selection algorithm.
+
+Valid settings:
+* The Visual Studio 2019 platform toolset is `v142`.
+* The Visual Studio 2017 platform toolset is `v141`.
+* The Visual Studio 2015 platform toolset is `v140`.
 
 ## MacOS Variables
 
