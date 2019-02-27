@@ -1,5 +1,5 @@
 Source: oniguruma
-Version: 6.9.1-2
+Version: 2019-02-26
 Description: Modern and flexible regular expressions library
 
 Feature: non-posix

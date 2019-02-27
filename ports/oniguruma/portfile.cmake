@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF v6.9.1
-    SHA512 a1af020f2042dba2423fb0d0db1ca2c30413c4e950493ac44caa11f616adec98c24df6882413548540095d7f3d8a295afd3ce51e8349ea92fa13d900ee58b126
+    REF 502b1f416746ed8700498229bbfceb180e400fbc
+    SHA512 0faf12f415de59716d8faa4d3dc026874c3bd6a3624f75f2a184843025294eb885d57164ae6dcb916cba5c7d1a4da4bcb0dc23fce3ceae5b34b7320e8f0e2c02
     HEAD_REF master
 )
 
