@@ -1,0 +1,6 @@
+Source: oniguruma
+Version: 2019-02-26
+Description: Modern and flexible regular expressions library
+
+Feature: non-posix
+Description: Disable POSIX API
