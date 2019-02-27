@@ -42,11 +42,12 @@ For more information, see our [using a package](docs/examples/installing-and-usi
 Additional notes on macOS and Linux support can be found in the [official announcement](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
 
 ## Tab-Completion / Auto-Completion
-`vcpkg` supports auto-completion of commands, package names, options etc. To enable tab-completion in Powershell, use
+`vcpkg` supports auto-completion of commands, package names, options etc in Powershell and bash. To enable tab-completion, use one of the following:
 ```
-.\vcpkg integrate powershell
+PS> .\vcpkg integrate powershell
+Linux:~/$ ./vcpkg integrate bash
 ```
-and restart Powershell.
+and restart your console.
 
 
 ## Examples

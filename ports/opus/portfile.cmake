@@ -3,6 +3,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 endif()
 
 include(vcpkg_common_functions)
+
+set(OPUS_VERSION "1.3")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
@@ -10,6 +13,11 @@ vcpkg_from_github(
     SHA512 5ac067514b6471432fcd027b912dcaa765e2bdc986ea289a2aeb57660d18fa1460a0a697b9736d8e2b65eb7b72ad4fa36b9b213389fe1e64335db8e9ad51b750
     HEAD_REF master
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/no-main.patch"
+)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/package_version.in
+    ${SOURCE_PATH}/package_version
 )
 
 # Ensure proper crt linkage

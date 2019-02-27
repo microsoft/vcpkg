@@ -1,0 +1,3 @@
+Source: aws-c-common
+Version: 0.3.0
+Description: AWS common library for C

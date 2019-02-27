@@ -1,4 +1,9 @@
 Source: libzip
-Version: rel-1-5-1-vcpkg1
+Version: rel-1-5-1-vcpkg2
 Build-Depends: zlib
+Default-Features: openssl
 Description: A library for reading, creating, and modifying zip archives.
+
+Feature: openssl
+Build-Depends: openssl
+Description: AES (encryption) support using OpenSSL
