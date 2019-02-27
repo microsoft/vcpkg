@@ -1,13 +1,15 @@
-diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
-index e220e2f..992b887 100644
 --- a/cmake/findDependencies.cmake
 +++ b/cmake/findDependencies.cmake
-@@ -39,7 +39,7 @@
-     find_package(Intl REQUIRED)
+@@ -36,10 +36,10 @@
+ 
+ 
+ if (EXIV2_ENABLE_NLS)
+-    find_package(Intl REQUIRED)
++    find_package(unofficial-gettext CONFIG)
  endif( )
  
 -find_package(Iconv)
-+find_package(unofficial-iconv CONFIG REQUIRED)
++find_package(unofficial-iconv CONFIG)
  if( ICONV_FOUND )
      message ( "-- ICONV_INCLUDE_DIR : " ${Iconv_INCLUDE_DIR} )
      message ( "-- ICONV_LIBRARIES : " ${Iconv_LIBRARY} )
@@ -15,7 +17,14 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 91469b6..4c51068 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -214,8 +214,8 @@
+@@ -208,14 +208,13 @@
+ endif()
+ 
+ if( EXIV2_ENABLE_NLS )
+-    target_link_libraries(exiv2lib PRIVATE ${Intl_LIBRARIES})
+-    target_include_directories(exiv2lib PRIVATE ${Intl_INCLUDE_DIRS})
++    target_link_libraries(exiv2lib PRIVATE unofficial::gettext::libintl)
+     # Definition needed for translations
      target_compile_definitions(exiv2lib PUBLIC EXV_LOCALEDIR="/../${CMAKE_INSTALL_LOCALEDIR}")
  endif()
  
@@ -25,4 +34,6 @@ index 91469b6..4c51068 100644
 +    target_link_libraries( exiv2lib PRIVATE unofficial::iconv::libiconv )
  endif()
  
+ 
+
  
