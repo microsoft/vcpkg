@@ -1,22 +1,21 @@
---- a/CMakeFilters.cmake	2018-02-10 12:03:46.501616360 +0900
-+++ b/CMakeFilters.cmake	2018-02-10 12:28:36.063407750 +0900
-@@ -95,7 +95,18 @@
- if (HDF5_ENABLE_SZIP_SUPPORT)
-   option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" OFF)
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index c2b81dc..a86d2d5 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -81,6 +81,16 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
    if (NOT SZIP_USE_EXTERNAL)
--    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
-+    # explicitly specify whether static or shared component required
-+    if (NOT DISABLE_STATIC_LIBS)
-+      find_package (SZIP COMPONENTS static MODULE)
-+      if (SZIP_static_FOUND) # workaround for szip-config bug
-+        set (SZIP_FOUND TRUE)
-+      endif (SZIP_static_FOUND)
-+    else (NOT DISABLE_STATIC_LIBS)
-+      find_package (SZIP COMPONENTS shared MODULE)
-+      if (SZIP_shared_FOUND) # workaround for szip-config bug
-+        set (SZIP_FOUND TRUE)
-+      endif(SZIP_shared_FOUND)
-+    endif (NOT DISABLE_STATIC_LIBS)
+     find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
      if (NOT SZIP_FOUND)
++      find_package (SZIP CONFIG)
++      if (SZIP_FOUND)
++        if (TARGET szip-shared)
++          set(SZIP_LIBRARIES szip-shared)
++        else (TARGET szip-shared)
++          set(SZIP_LIBRARIES szip-static)
++        endif (TARGET szip-shared)
++      endif (SZIP_FOUND)
++    endif (NOT SZIP_FOUND)
++    if (NOT SZIP_FOUND)
        find_package (SZIP) # Legacy find
        if (SZIP_FOUND)
+         set (LINK_LIBS ${LINK_LIBS} ${SZIP_LIBRARIES})

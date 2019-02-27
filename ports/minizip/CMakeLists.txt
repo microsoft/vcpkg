@@ -7,7 +7,7 @@ endif()
 
 find_package(ZLIB REQUIRED)
 
-find_package(Bzip2 REQUIRED)
+find_package(BZip2 REQUIRED)
 
 set(MIN_SRC contrib/minizip)
 

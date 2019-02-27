@@ -1,0 +1,12 @@
+_find_package(${ARGS})
+
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+   find_package(SZIP CONFIG REQUIRED)
+   if(TARGET hdf5::hdf5-static)
+      if (TARGET szip-shared)
+         set_property(TARGET hdf5::hdf5-static APPEND PROPERTY INTERFACE_LINK_LIBRARIES szip-shared)
+      else ()
+         set_property(TARGET hdf5::hdf5-static APPEND PROPERTY INTERFACE_LINK_LIBRARIES szip-static)
+      endif ()
+    endif()
+endif()

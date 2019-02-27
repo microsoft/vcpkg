@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,51 @@
 +# #%L
 +# OME C++ libraries (cmake super-build infrastructure)
 +# %%
@@ -49,6 +49,9 @@
 +add_subdirectory(ome-common)
 +add_subdirectory(ome-model)
 +add_subdirectory(ome-files)
++
++set_target_properties(ome-common ome-compat ome-xerces-util ome-xalan-util ome-xml ome-files 
++                      PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
 \ No newline at end of file
 
 --- a/ome-files/lib/ome/files/OMEFilesConfig.cmake.in
