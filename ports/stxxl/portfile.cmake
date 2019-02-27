@@ -13,6 +13,7 @@ vcpkg_from_github(
     SHA512 800a8fb95b52b21256cecb848f95645c54851f4dc070e0cd64fb5009f7663c0c962a24ca3f246e54d6d45e81a5c734309268d7ea6f0b0987336a50a3dcb99616
     HEAD_REF master
     PATCHES
+        # This patch can be removed when stxxl/stxxl/#95 is accepted
         fix-include-dir.patch
 )
 
