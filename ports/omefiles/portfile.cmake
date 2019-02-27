@@ -97,6 +97,13 @@ foreach(BOOST_CMAKE_FILE IN LISTS BOOST_CMAKE_FILES)
     string(REPLACE  
          "set(Boost_USE_STATIC_LIBS OFF)" ""
         _contents "${_contents}")
+    string(REPLACE
+        "add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)" ""
+        _contents "${_contents}")
+    string(REPLACE
+        "set(CMAKE_REQUIRED_LIBRARIES \$\{CMAKE_REQUIRED_LIBRARIES\} \$\{Boost_FILESYSTEM_LIBRARY_RELEASE\} \$\{Boost_SYSTEM_LIBRARY_RELEASE\})" 
+        "set(CMAKE_REQUIRED_LIBRARIES \$\{CMAKE_REQUIRED_LIBRARIES\} Boost::filesystem Boost::system)"
+        _contents "${_contents}")
     file(WRITE ${SOURCE_PATH}/${BOOST_CMAKE_FILE} "${_contents}")
 endforeach()
 
