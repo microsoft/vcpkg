@@ -1,17 +1,13 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("nanopb currently only supports static library linkage")
-    set(VCPKG_LIBRARY_LINKAGE static)
-    set(VCPKG_CRT_LINKAGE static)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
-    REF ae9901f2a31500e8fdc93fa9804d24851c58bb1e
-    SHA512 2173096e8fc0191e348f79e73662ebc1b1ffeeae96f22344b098fc19603459f78abadab5f6ea8dbbb54e9c237502f114214f9870daa2971c3fef4c2fa999e732
+    REF d1305ddef1c18b4cb33992254494ccd255701aaa
+    SHA512 70e588b0ff13846005658a9fafe57551dc2c126a32f351fe0b6c166c142c42b3bcc44567288f609f2f3a5adc1fe1bf1c585fec8c5fe90817b5b3ab47955aa1fc
     HEAD_REF master
+    PATCHES
+        shared-lib.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" BUILD_STATIC_LIBS)
@@ -23,6 +19,7 @@ vcpkg_configure_cmake(
         -Dnanopb_BUILD_RUNTIME=ON
         -Dnanopb_BUILD_GENERATOR=OFF
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -Dnanopb_MSVC_STATIC_RUNTIME=OFF
 )
 
 vcpkg_install_cmake()
