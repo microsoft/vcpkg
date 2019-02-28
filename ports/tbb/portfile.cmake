@@ -1,7 +1,10 @@
 include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message("tbb only supports dynamic library linkage")
+        set(VCPKG_LIBRARY_LINKAGE "dynamic")
+    endif()
 endif()
 
 vcpkg_from_github(
