@@ -157,6 +157,9 @@ namespace vcpkg::Commands::Edit
 #elif defined(__APPLE__)
         candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
         candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
+#elif defined(__linux__)
+        candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
+        candidate_paths.push_back(fs::path{"/usr/bin/code"});
 #endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
