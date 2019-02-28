@@ -29,6 +29,10 @@
 ## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
+
+INCLUDE(ProcessorCount)
+PROCESSORCOUNT(PROCS)
+
 function(vcpkg_build_cmake)
     cmake_parse_arguments(_bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "TARGET;LOGFILE_ROOT" "" ${ARGN})
 
@@ -41,6 +45,7 @@ function(vcpkg_build_cmake)
 
     if(_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
         set(BUILD_ARGS "-v") # verbose output
+        set(PARALLEL_ARG "-j${PROCS}")
         set(NO_PARALLEL_ARG "-j1")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
         set(BUILD_ARGS
