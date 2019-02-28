@@ -1,3 +1,7 @@
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
+endif()
+
 include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.1")
@@ -162,6 +166,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
+        -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
 )
@@ -299,15 +304,46 @@ foreach(FILE IN LISTS CMAKE_FILES)
 endforeach()
 
 # =============================================================================
-# Move executable to tools directory and clean-up other directories
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/vtk)
+# Clean-up other directories
 
-function(_vtk_move_tool TOOL_NAME)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/${TOOL_NAME}.exe)
+# Delete the debug binary TOOL_NAME that is not required
+function(_vtk_remove_debug_tool TOOL_NAME)
+    # on windows, the tools end with .exe
+    set(filename_win ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
+    if(EXISTS ${filename_win})
+        file(REMOVE ${filename_win})
     endif()
+    # on other OS, it doesn't
+    set(filename_unix ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME})
+    if(EXISTS ${filename_unix})
+        file(REMOVE ${filename_unix})
+    endif()
+    # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
+    # to make them point to the release version of the tools
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
+    string(REPLACE "debug/bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake" "${VTK_TARGETS_CONTENT_DEBUG}")
+endfunction()
 
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
+# Move the release binary TOOL_NAME from bin to tools
+function(_vtk_move_release_tool TOOL_NAME)
+    # on windows, the tools end with .exe
+    set(old_filename_win "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe")
+    if(EXISTS ${old_filename_win})
+        file(INSTALL ${old_filename_win} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(REMOVE ${old_filename_win})
+    endif()
+    # on other OS, it doesn't
+    set(old_filename_unix "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}")
+    if(EXISTS ${old_filename_unix})
+        file(INSTALL ${old_filename_unix} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(REMOVE ${old_filename_unix})
+    endif()
+    # we also have to bend the lines referencing the tools in VTKTargets-release.cmake
+    # to make them point to the tool folder
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
+    string(REPLACE "bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_RELEASE "${VTK_TARGETS_CONTENT_RELEASE}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" "${VTK_TARGETS_CONTENT_RELEASE}")
 endfunction()
 
 set(VTK_TOOLS
@@ -325,14 +361,15 @@ set(VTK_TOOLS
     pvtkpython
 )
 
+foreach(TOOL_NAME IN LISTS VTK_TOOLS)
+    _vtk_remove_debug_tool("${TOOL_NAME}")
+    _vtk_move_release_tool("${TOOL_NAME}")
+endforeach()
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
 string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
 string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
-
-foreach(TOOL_NAME IN LISTS VTK_TOOLS)
-    _vtk_move_tool("${TOOL_NAME}")
-endforeach()
 
 # =============================================================================
 # Remove other files and directories that are not valid for vcpkg
@@ -353,3 +390,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)

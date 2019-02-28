@@ -34,7 +34,32 @@ namespace vcpkg
 
         paths.packages = paths.root / "packages";
         paths.buildtrees = paths.root / "buildtrees";
-        paths.downloads = paths.root / "downloads";
+
+        const auto overriddenDownloadsPath = System::get_environment_variable("VCPKG_DOWNLOADS");
+        if (auto odp = overriddenDownloadsPath.get())
+        {
+            auto asPath = fs::u8path(*odp);
+            if (!fs::stdfs::is_directory(asPath))
+            {
+                Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO,
+                    "Invalid downloads override directory: %s; "
+                    "create that directory or unset VCPKG_DOWNLOADS to use the default downloads location.",
+                    asPath.u8string());
+            }
+
+            paths.downloads = fs::stdfs::canonical(std::move(asPath), ec);
+            if (ec)
+            {
+                return ec;
+            }
+        }
+        else
+        {
+            paths.downloads = paths.root / "downloads";
+        }
+
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
@@ -165,6 +190,26 @@ namespace vcpkg
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s.",
                                vs_root_path.generic_string());
+        }
+
+        if (prebuildinfo.cmake_system_name == "WindowsStore")
+        {
+            // For now, cmake does not support VS 2019 when using the MSBuild generator.
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !candidates.empty(),
+                               "With the current CMake version, UWP binaries can only be built with toolset version "
+                               "v141 or below. Please install the v141 toolset in VS 2019.");
+        }
+
+        if (System::get_host_processor() == System::CPUArchitecture::X86)
+        {
+            // For now, cmake does not support VS 2019 when using the MSBuild generator.
+            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !candidates.empty(),
+                               "With the current CMake version, 32-bit machines can build with toolset version "
+                               "v141 or below. Please install the v141 toolset in VS 2019.");
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");

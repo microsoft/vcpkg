@@ -1,13 +1,12 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/crc32c
-  REF 12a65bfb328fefae5c05879132676f702a3f68e8
-  SHA512 610b7c54b0247edd2d37ec18db68c1f8a55b60b2fd3ddcede41e6321eb45d040f513cece493cbdc67e881065a643c4972126864811ff08b24aa7e82642e54f56
+  REF 1.0.6
+  SHA512 c30f6510d6348f15dcdddc06e375f21a69681cd615483d67628b32de747e5e98200fa49faf7e3fc30a1302991fd1f9c9a706c9eb4e13c9c6c09e74066474ea7b
   HEAD_REF master
+  PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001_export_symbols.patch
 )
 
 vcpkg_configure_cmake(

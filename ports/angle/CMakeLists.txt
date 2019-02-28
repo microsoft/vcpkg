@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(angle CXX)
+project(angle)
 
 if(WIN32 AND NOT WINDOWS_STORE)
     set(WINDOWS_DESKTOP 1)
@@ -45,13 +45,22 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 ##########
 # angle::common
 if(WINDOWS_ANY)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
 elseif(APPLE)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
 endif()
-file(GLOB ANGLE_COMMON_SOURCES "src/common/*.h" "src/common/*.inl" "src/common/*.cpp" "src/common/third_party/base/*.h")
+file(GLOB ANGLE_COMMON_SOURCES 
+    "src/common/*.h"
+    "src/common/*.inl"
+    "src/common/*.cpp"
+    "src/common/third_party/smhasher/src/*.h"
+    "src/common/third_party/smhasher/src/*.cpp"
+    "src/common/third_party/xxhash/*.h"
+    "src/common/third_party/xxhash/*.c"
+    "src/common/third_party/base/anglebase/*.h"
+    "src/common/third_party/base/anglebase/*.cc")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
@@ -71,6 +80,10 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/glslang.y"
     "src/compiler/translator/*.h"
     "src/compiler/translator/*.cpp"
+    "src/compiler/translator/tree_util/*.h"
+    "src/compiler/translator/tree_util/*.cpp"
+    "src/compiler/translator/tree_ops/*.h"
+    "src/compiler/translator/tree_ops/*.cpp"
     "src/third_party/compiler/ArrayBoundsClamper.cpp"
 )
 add_library(angle_translator STATIC ${TRANSLATOR_SOURCES})
@@ -221,6 +234,7 @@ elseif(WINDOWS_DESKTOP)
         angle::renderer::d3d
         angle::renderer::win32
         angle::renderer::opengl
+        gdi32
     )
 else()
     set(LIBANGLE_RENDERER_PLATFORM )
@@ -260,6 +274,7 @@ target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
         -DGL_GLEXT_PROTOTYPES
+        -DGL_API=
         -DGL_APICALL=
         -DEGLAPI=
 )
