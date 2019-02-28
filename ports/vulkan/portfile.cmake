@@ -5,7 +5,7 @@ include(vcpkg_common_functions)
 
 message(STATUS "Querying VULKAN_SDK Enviroment variable")
 file(TO_CMAKE_PATH "$ENV{VULKAN_SDK}" VULKAN_DIR)
-set(VULKAN_INCLUDE "${VULKAN_DIR}/Include/vulkan/")
+set(VULKAN_INCLUDE "${VULKAN_DIR}/include/vulkan/")
 set(VULKAN_ERROR_DL "Before continuing, please download and install Vulkan from:\n    https://vulkan.lunarg.com/sdk/home\n")
 
 if(NOT DEFINED ENV{VULKAN_SDK})
