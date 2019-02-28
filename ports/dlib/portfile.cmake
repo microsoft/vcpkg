@@ -13,7 +13,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-mac-jpeg.patch
-        fix-static-linkage.patch
         fix-sqlite3-fftw-linkage.patch
 )
 
@@ -45,8 +44,6 @@ vcpkg_configure_cmake(
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DCMAKE_DEBUG_POSTFIX=d	
-        -DDLIB_USE_MKL_SEQUENTIAL=ON
-        -DDLIB_PREFER_STATIC_LIBS=ON
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
