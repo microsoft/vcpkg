@@ -8,9 +8,18 @@ vcpkg_from_github(
     PATCHES cmake_dont_build_more_than_needed.patch
 )
 
+# AES encryption
+set(USE_OPENSSL OFF)
+if("openssl" IN_LIST FEATURES)
+    set(USE_OPENSSL ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+        OPTIONS
+            # see https://github.com/nih-at/libzip/blob/rel-1-5-1/INSTALL.md
+            -DENABLE_OPENSSL=${USE_OPENSSL}
 )
 
 vcpkg_install_cmake()

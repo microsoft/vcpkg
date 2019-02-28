@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3c52731..8305f27 100644
+index 2d6e77e8..36e4b4e6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -314,22 +314,12 @@ endif ()
+@@ -306,22 +306,14 @@ endif ()
  if (HB_HAVE_GLIB)
    add_definitions(-DHAVE_GLIB)
  
@@ -15,6 +15,8 @@ index 3c52731..8305f27 100644
 -  find_path(GLIB_INCLUDE_DIR NAMES glib.h HINTS ${PC_GLIB_INCLUDEDIR} ${PC_GLIB_INCLUDE_DIRS} PATH_SUFFIXES glib-2.0)
 -
 -  include_directories(${GLIBCONFIG_INCLUDE_DIR} ${GLIB_INCLUDE_DIR})
++  find_package(Threads REQUIRED)
++  find_package(unofficial-iconv REQUIRED)
 +  find_package(unofficial-glib CONFIG REQUIRED)
  
    list(APPEND project_sources ${PROJECT_SOURCE_DIR}/src/hb-glib.cc)

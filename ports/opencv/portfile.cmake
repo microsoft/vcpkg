@@ -13,7 +13,7 @@ vcpkg_from_github(
       "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-protobuf-target.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-custom-protobuf-find-package.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -143,6 +143,11 @@ if("ipp" IN_LIST FEATURES)
       SHA512 b89b0fb739152303cafc9fb064fa8b24fd94850697137ccbb5c1e344e0f5094115603a5e3be3a25f85d0faefc5c53429a7d65da0142d012ada41e8db2bcdd6b7
     )
   endif()
+endif()
+
+set(WITH_TBB OFF)
+if("tbb" IN_LIST FEATURES)
+  set(WITH_TBB ON)
 endif()
 
 set(WITH_QT OFF)
@@ -282,7 +287,7 @@ vcpkg_configure_cmake(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
-        -DWITH_CUBLAS=OFF
+        -DWITH_CUBLAS=${WITH_CUDA}
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_EIGEN=${WITH_EIGEN}
         -DWITH_FFMPEG=${WITH_FFMPEG}
@@ -291,6 +296,7 @@ vcpkg_configure_cmake(
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_JPEG=${WITH_JPEG}
         -DWITH_LAPACK=OFF
+        -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENEXR=${WITH_OPENEXR}
@@ -298,6 +304,7 @@ vcpkg_configure_cmake(
         -DWITH_PNG=${WITH_PNG}
         -DWITH_PROTOBUF=${WITH_PROTOBUF}
         -DWITH_QT=${WITH_QT}
+        -DWITH_TBB=${WITH_TBB}
         -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}

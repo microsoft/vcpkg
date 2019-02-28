@@ -1,4 +1,7 @@
 Source: azure-c-shared-utility
-Version: 1.1.11-1
+Version: 1.1.11-5
 Description: Azure C SDKs common code
 Build-Depends: curl (linux), openssl (linux)
+
+Feature: public-preview
+Description: Azure C SDKs common code (public preview)
