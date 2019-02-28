@@ -30,7 +30,7 @@ set(SRCS
 add_library(opencsg ${SRCS} ${HEADERS})
 
 include_directories(src include RenderTexture ".")
-find_package(GLEW CONFIG REQUIRED)
+find_package(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})
 target_link_libraries(opencsg PRIVATE GLEW::GLEW)
 
