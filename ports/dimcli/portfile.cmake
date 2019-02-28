@@ -3,19 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF v3.1.1
-    SHA512 ed9aeedc59a9d48c59aa8dd1adb9cb110771c1eab0bbab8f8b518e12a45cdafb0ea94301d082ed3a033ca2428c19c8d990c76f666d1e9822cddf6e744f1db701
+    REF v4.1.0
+    SHA512 5de010b5abfda9e6996bba8c621e03ae0cf81dbc2f69cd859e2ebf7b1706c451f7f8e142299784646d89ca3c3e5803e8711215680b8bdb8eb663158bff3b4f3d
     HEAD_REF master
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-cmake.patch"
 )
 set(staticCrt OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(staticCrt ON)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(ENV{_CL_} "/DDIMCLI_LIB_DYN_LINK")
 endif()
 
 vcpkg_configure_cmake(
@@ -23,7 +17,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLINK_STATIC_RUNTIME:BOOL=${staticCrt}
         -DINSTALL_LIBS:BOOL=ON
-        -DRECURSIVE_GENERATE=ON
+        -DBUILD_PROJECT_NAME=dimcli
 )
 
 vcpkg_install_cmake()

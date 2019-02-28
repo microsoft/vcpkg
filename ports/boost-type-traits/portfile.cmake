@@ -5,9 +5,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/type_traits
-    REF boost-1.68.0
-    SHA512 d9bdb5eb2e602085bf1f6d4339a7895c2f1a7227889e7c20088cc9fe35da5f1c44ff297c043f1713a8831b0785ef871b5ac02c8ad2b7ee305c1a6310678b5985
+    REF boost-1.69.0
+    SHA512 83d585933374420808aaf3743cda48d914bb7d536bf3f19e59bba1b24403a1482ff509e1f804a0b55d3bc434aceedcb0b75f873b9feaa9ba1c1a762a11d4fc94
     HEAD_REF master
+    PATCHES
+        msvc-arm.patch
+        msvc-arm-2.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

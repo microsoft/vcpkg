@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF 5.2.0
-    SHA512 75d53e6d8087288607f75fb891bb8812c7b9fe65e5ab7a20cdffeb5e56bd1f48e0de24c8cf1c2dd603fe3ed76f9fa067804ec5d3560f177db8f0a747c36f9d1c
+    REF 5.3.0
+    SHA512 9ef0f3d328681253c1e1776576d54d67dec49c19fd7fc422ae63c3610b01a3f05f6e83cdf5e913dfd09bac42e52fe35c38ebe1ea91f4207d226a32aaf69eb4a8
     HEAD_REF master
 )
 

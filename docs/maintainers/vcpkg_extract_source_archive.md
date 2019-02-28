@@ -1,6 +1,6 @@
 # vcpkg_extract_source_archive
 
-Extract an archive into the source directory.
+Extract an archive into the source directory. Deprecated in favor of [`vcpkg_extract_source_archive_ex`](vcpkg_extract_source_archive_ex.md).
 
 ## Usage
 ```cmake

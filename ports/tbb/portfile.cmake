@@ -1,14 +1,17 @@
 include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message("tbb only supports dynamic library linkage")
+        set(VCPKG_LIBRARY_LINKAGE "dynamic")
+    endif()
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2018_U5
-    SHA512 3e8d20276ccb1b50099f96b6cf968e3d0ada53caea1fa836ecb8652f1dca236fbbbf2c783e64ea2f761f7f21725064d19b72d176e35e4dc29706b8a30965153b
+    REF 2019_U3
+    SHA512 b6eaaea95658c4d49e6894811eb9ca38541820462bf1b606db16ca697af4329a94627d8ae01a73f2b07567280865b3ea92ca0ce091fa95dd3551cebbdd35976d
     HEAD_REF tbb_2018
 )
 

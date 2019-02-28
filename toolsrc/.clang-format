@@ -30,3 +30,4 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: All
 PenaltyReturnTypeOnItsOwnLine: 1000
 SpaceAfterTemplateKeyword: false
+SpaceBeforeCpp11BracedList: false
