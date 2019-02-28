@@ -27,3 +27,4 @@ if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
        endif()
    endforeach()
 endif()
+
