@@ -33,5 +33,12 @@ if(VULKAN_DIR MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
     endif()
 endif()
 
-configure_file(${VULKAN_DIR}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+if (EXISTS ${VULKAN_DIR}/../LICENSE.TXT)
+    configure_file(${VULKAN_DIR}/../LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+elseif(EXISTS ${VULKAN_DIR}/LICENSE.TXT)
+    configure_file(${VULKAN_DIR}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+else()
+    message(FATAL_ERROR "Could not find LICENSE.TXT")
+endif()
+
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)

@@ -20,5 +20,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sfml-imgui)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml-imgui)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sfml-imgui/LICENSE ${CURRENT_PACKAGES_DIR}/share/sfml-imgui/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/milerius-sfml-imgui)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/milerius-sfml-imgui/LICENSE ${CURRENT_PACKAGES_DIR}/share/milerius-sfml-imgui/copyright)

@@ -1,7 +1,7 @@
 Source: harfbuzz
-Version: 1.8.4-2
+Version: 1.8.4-4
 Description: HarfBuzz OpenType text shaping engine
-Build-Depends: freetype, ragel
+Build-Depends: freetype, ragel, gettext (osx)
 Default-Features: ucdn
 
 Feature: graphite2
