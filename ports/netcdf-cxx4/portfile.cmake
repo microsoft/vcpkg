@@ -42,3 +42,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-cxx4)
+file(
+    RENAME
+        ${CURRENT_PACKAGES_DIR}/share/netcdf-cxx4/COPYRIGHT
+        ${CURRENT_PACKAGES_DIR}/share/netcdf-cxx4/copyright
+)
