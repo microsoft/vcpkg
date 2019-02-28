@@ -9,9 +9,9 @@ endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_2/ACE.zip"
-    FILENAME "ACE-6.5.2.zip"
-    SHA512 ca8a55942b50628e851cad7074a249c480d82f916979a50bb24174432248037fb7a79ca055c7e6553d96aa58f14b97e8e8bf5dbc8671b72b8712e8a65f63ac98
+    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-6.5.4.zip"
+    FILENAME ACE-6.5.4.zip
+    SHA512 d18248f1fcea0e4993d5ba9c62ff99883d4eaecfb0b6b88062961723c0f30ac423c9f550ada98042cd7913d2586feb2f8d47b5779403017afaa89a622613d1ae
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -23,11 +23,17 @@ else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
+if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    set(SOLUTION_TYPE vs2017)
+else()
+    set(SOLUTION_TYPE vc14)
+endif()
+
 # Add ace/config.h file
 # see http://www.dre.vanderbilt.edu/~schmidt/DOC_ROOT/ACE/ACE-INSTALL.html#win32
 file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/ace_vc14.sln
+    PROJECT_PATH ${SOURCE_PATH}/ace_${SOLUTION_TYPE}.sln
     PLATFORM ${MSBUILD_PLATFORM}
 )
 

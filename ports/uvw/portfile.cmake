@@ -13,6 +13,11 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
+file(INSTALL
+    ${SOURCE_PATH}/src/uvw.hpp
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+)
+
 # Handle copyright/readme/package files
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvw RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvw)

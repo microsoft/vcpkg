@@ -17,8 +17,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.11.05.00
-    SHA512 08eee201c2b1179a4e52398cc65964fb299abfb95934687f4ce3d72df1ff70493964835d5e52c8821c63553e0be0d578e1130e50e353a7eab6b0334532e4df2e
+    REF v2019.01.28.00
+    SHA512 cdd32d863bd98b31332fbcb25a548407857ffd8e611fb5d243821f43fcf240cb796fb4520dddec5537f398c10492e1ecb03de22f7ec0384b98411e9906f40d09
     HEAD_REF master
     PATCHES
         find-gflags.patch

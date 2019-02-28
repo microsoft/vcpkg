@@ -50,12 +50,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
-file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
-file(REMOVE ${EXE})
-file(REMOVE ${DEBUG_EXE})
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
+    file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
+    file(REMOVE ${EXE})
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+    file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
+    file(REMOVE ${DEBUG_EXE})
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clang TARGET_PATH share/clang)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
