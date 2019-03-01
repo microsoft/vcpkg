@@ -6,13 +6,9 @@ vcpkg_from_github(
     REF v2.3.3
     SHA512 95e67da4336d622d47bdf124d76827ca3e82e65ab5f725ccf58c2d7957960e7d17ee1ebb2126eed70f7a3ca1c97f840d9f59c1ae2eb80215d10abf70b215e510
     HEAD_REF master
-) 
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake-install.patch
-        ${CMAKE_CURRENT_LIST_DIR}/lib-suffix-option.patch
+        cmake-install.patch
+        lib-suffix-option.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_INSTALL_STATIC)
