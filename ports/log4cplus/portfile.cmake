@@ -2,16 +2,16 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_2_0_1
-    SHA512  7a84bf237bb5db3eccd90196c0f97adb75d0dd247d73852150078b9458f169d883f3ae92908217ea668bcf25c64766c86380bbcc64b432eb1bae6427c9268b18
+    REF REL_2_0_3
+    SHA512 c4c8887137214a9c66545ffa7f13cbede3db1536916681081f53c0a272cfb17d5e42cdc54c2c1bdd6eb5f86c3c3ce0840cbf827f792848ecb8f97636f1fcddf2
     HEAD_REF master
 )
 
-set(THREADPOOL_REF dda9e3d40502e85ce082c05d2c05c1bc94348b6a)
+set(THREADPOOL_REF cc0b6371d3963f7028c2da5fc007733f9f3bf205)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/log4cplus/ThreadPool/archive/${THREADPOOL_REF}.tar.gz"
     FILENAME "log4cplus-threadpool-${THREADPOOL_REF}.tar.gz"
-    SHA512 225adb11f447495a00e401d32f63d9a7eb3a8191d477a21bfa3c39f1ff5cbe8bfb7770a740e840c5748f816137cdef1a5915b17d16b3dd4c3399d1a67ab0f381
+    SHA512 ad4d287c1f83acac4c127136bc92489c43bb5293613dc54b878b8e75a8583f7eefda6434d09789dad47b87a5d38f10a07a746d42d299410c11f2dbcce8af3012
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
