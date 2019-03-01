@@ -1,4 +1,4 @@
-_find_package(${ARGS} CONFIG)
+_find_package(${ARGS})
 
 if (NOT PROJECT_NAME STREQUAL "VTK")
    # Fill in missing static/shared targets
