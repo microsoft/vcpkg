@@ -62,18 +62,6 @@ else()
     set(OPTIONS "${OPTIONS} --disable-ffmpeg")
 endif()
 
-if("ffmpeg" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffmpeg")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffmpeg")
-endif()
-
-if("ffmpeg" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffmpeg")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffmpeg")
-endif()
-
 if("ffplay" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffplay")
 else()
