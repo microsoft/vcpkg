@@ -22,6 +22,8 @@ vcpkg_from_github(
 	REF OpenSceneGraph-3.6.2
 	SHA512 6949dd4dea9dcffe4228086b72eafdb253bf1403b3b7a70a4727848c3cde23ad0270f41b1c3e2bdbfd410ec067ecce2052a5d26c61b032b6d46ce84b8c931bfb
 	HEAD_REF master
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/collada.patch"
 )
 
 vcpkg_configure_cmake(

@@ -160,12 +160,16 @@ endif()
 
 set(CMAKE_DEBUG_POSTFIX "d")
 
+find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(unofficial-fontconfig CONFIG REQUIRED)
 find_package(unofficial-pixman CONFIG REQUIRED)
+if(APPLE)
+  find_package(Threads REQUIRED)
+endif()
 
 # Cairo needs to be told which features of FreeType are availible
 add_definitions(
@@ -176,7 +180,7 @@ add_definitions(
     -DHAVE_FT_GET_X11_FONT_FORMAT=1)
 
 # additional features for macOS
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if((CMAKE_SYSTEM_NAME STREQUAL "Darwin") OR (CMAKE_SYSTEM_NAME STREQUAL "Linux"))
   add_definitions(
       -DHAVE_INTTYPES_H=1
       -DHAVE_STDINT_H=1

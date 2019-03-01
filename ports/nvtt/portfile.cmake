@@ -18,6 +18,8 @@ vcpkg_from_github(
     REF 2.1.0
     SHA512 6c5c9588af57023fc384de080cbe5c5ccd8707d04a9533384c606efd09730d780cb21bcf2d3576102a3facd2f281cacb2625958d74575e71550fd98da92e38b6
     HEAD_REF master
+    PATCHES
+        "001-define-value-for-HAVE_UNISTD_H-in-mac-os.patch"
 )
 
 vcpkg_configure_cmake(

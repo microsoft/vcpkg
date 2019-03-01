@@ -5,7 +5,7 @@ include(vcpkg_common_functions)
 
 message(STATUS "Querying VULKAN_SDK Enviroment variable")
 file(TO_CMAKE_PATH "$ENV{VULKAN_SDK}" VULKAN_DIR)
-set(VULKAN_INCLUDE "${VULKAN_DIR}/Include/vulkan/")
+set(VULKAN_INCLUDE "${VULKAN_DIR}/include/vulkan/")
 set(VULKAN_ERROR_DL "Before continuing, please download and install Vulkan from:\n    https://vulkan.lunarg.com/sdk/home\n")
 
 if(NOT DEFINED ENV{VULKAN_SDK})
@@ -33,5 +33,12 @@ if(VULKAN_DIR MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
     endif()
 endif()
 
-configure_file(${VULKAN_DIR}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+if (EXISTS ${VULKAN_DIR}/../LICENSE.TXT)
+    configure_file(${VULKAN_DIR}/../LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+elseif(EXISTS ${VULKAN_DIR}/LICENSE.TXT)
+    configure_file(${VULKAN_DIR}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+else()
+    message(FATAL_ERROR "Could not find LICENSE.TXT")
+endif()
+
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
