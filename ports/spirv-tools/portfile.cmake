@@ -33,7 +33,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*${CMAKE_EXECUTABLE_SUFFIX}")
 file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE ${EXES})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

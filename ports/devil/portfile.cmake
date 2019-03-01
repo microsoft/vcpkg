@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001_fix-encoding.patch
         0002_fix-missing-mfc-includes.patch
+        0003_fix-openexr.patch
         enable-static.patch
 )
 

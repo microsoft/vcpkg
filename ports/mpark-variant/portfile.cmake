@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mpark/variant
-    REF v1.3.0
-    SHA512 53735d14a9b241d93191fa3b7ac8ed8fb17a8f8766318b2817c4dd1948088377190ca168027a297bae41bb2cc1f6043fe51752d43b8c33badcc9f2df9fa08ece
+    REF v1.4.0
+    SHA512 598ef21824f9cd7586f88de5a51bfe24dde4c492e8e6b8288d2912920812c48fd01c54d9683e1620cb034563c4eac737a382620e6b4af473808a2e77017a89e3
     HEAD_REF master
 )
 

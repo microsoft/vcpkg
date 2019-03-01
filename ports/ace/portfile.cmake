@@ -23,11 +23,17 @@ else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
+if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    set(SOLUTION_TYPE vs2017)
+else()
+    set(SOLUTION_TYPE vc14)
+endif()
+
 # Add ace/config.h file
 # see http://www.dre.vanderbilt.edu/~schmidt/DOC_ROOT/ACE/ACE-INSTALL.html#win32
 file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/ace_vc14.sln
+    PROJECT_PATH ${SOURCE_PATH}/ace_${SOLUTION_TYPE}.sln
     PLATFORM ${MSBUILD_PLATFORM}
 )
 
