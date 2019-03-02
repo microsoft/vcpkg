@@ -1,0 +1,22 @@
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7dd6309..eaf160f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -121,18 +121,18 @@        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glslang/${dir})
+    endforeach()
+endif(ENABLE_GLSLANG_INSTALL)
+
++install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config
++    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++     )
++export(TARGETS ${PROJECT_NAME}
++    NAMESPACE glslang::
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
++)
++install(EXPORT ${PROJECT_NAME}Config
++    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
++    NAMESPACE glslang::
++)
++install(FILES ${INSTALL_HEADERS} DESTINATION include/${PROJECT_NAME})
