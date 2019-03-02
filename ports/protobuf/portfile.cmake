@@ -3,13 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/protobuf
-    REF v3.6.1.3
-    SHA512 9eadb46c7daa19e612516958169bc90943b38b429a4b2cf2171b66b57f50a2f8a9b66cbf58bdd44517af414b78e0f3ab2e1361891dc60ecd098185da2638d37e
+    REF v3.7.0
+    SHA512 c570ece1d42706982dd87f601af6b3dd1d788d1b150b543190d10d2f070c67f0d006726ec4eafd3b9234a679e7ef77ac9d97749414f53f619287a1f23a0b739c
     HEAD_REF master
     PATCHES
         fix-uwp.patch
         disable-lite.patch
-        version-rc-msvc.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
