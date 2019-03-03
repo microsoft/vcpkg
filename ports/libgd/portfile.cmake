@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
-    REF gd-2.2.4
-    SHA512 02ce40c45f31cf1645ad1d3fd9b9b498323b2709d40b0681cd403c11072a1f2149f5af844a6bf9e695c29e3247013bb94c57c0225a54189d728f64caf0a938ee
+    REF gd-2.2.5
+    SHA512 e4ee4c0d1064c93640c29b5741f710872297f42bcc883026a63124807b6ff23bd79ae66bb9148a30811907756c4566ba8f1c0560673ccafc20fee38d82ca838f
     HEAD_REF master
     PATCHES
         0001-fix-cmake.patch
