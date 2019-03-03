@@ -1,17 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0d453cc6..ae4713b7 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -45,9 +45,6 @@ endif(ENABLE_HLSL)
-
- if(WIN32)
-     set(CMAKE_DEBUG_POSTFIX "d")
--    if(MSVC)
--        include(ChooseMSVCCRT.cmake)
--    endif(MSVC)
-     add_definitions(-DGLSLANG_OSINCLUDE_WIN32)
- elseif(UNIX)
-     add_definitions(-DGLSLANG_OSINCLUDE_UNIX)
 diff --git a/OGLCompilersDLL/CMakeLists.txt b/OGLCompilersDLL/CMakeLists.txt
 index 5bb3f0ee..1e248b55 100644
 --- a/OGLCompilersDLL/CMakeLists.txt
