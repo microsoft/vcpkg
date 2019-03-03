@@ -1,5 +1,18 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(WARNING "\
+The author of nanopb advises using this lib as a static library. \
+For more details, please visit: \
+https://github.com/nanopb/nanopb/pull/383#issuecomment-467852459"
+    )
+endif ()
+
+message(WARNING "\
+The nanopb's code generator is not installed as part of the installation \
+currently. So you have to run the code generator manually."
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
