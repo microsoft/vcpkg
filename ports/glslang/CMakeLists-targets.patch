@@ -8,7 +8,7 @@ index 5bb3f0ee..1e248b55 100644
  if(ENABLE_GLSLANG_INSTALL)
 -    install(TARGETS OGLCompiler
 -            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    install(TARGETS OGLCompiler EXPORT OGLCompilerConfig
++    install(TARGETS OGLCompiler EXPORT glslangConfig
 +            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    )
@@ -17,7 +17,7 @@ index 5bb3f0ee..1e248b55 100644
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/OGLCompiler-config.cmake"
 +    )
 +    install(
-+        EXPORT OGLCompilerConfig
++        EXPORT glslangConfig
 +        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
 +        NAMESPACE glslang::
 +    )
@@ -58,7 +58,7 @@ index 1bf49e12..bd02ca1e 100644
  if(ENABLE_GLSLANG_INSTALL)
 -    install(TARGETS OSDependent
 -            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    install(TARGETS OSDependent EXPORT OSDependentConfig
++    install(TARGETS OSDependent EXPORT glslangConfig
 +            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    )
@@ -67,7 +67,7 @@ index 1bf49e12..bd02ca1e 100644
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/OSDependent-config.cmake"
 +    )
 +    install(
-+        EXPORT OSDependentConfig
++        EXPORT glslangConfig
 +        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
 +        NAMESPACE glslang::
 +    )
@@ -82,7 +82,7 @@ index f257418a..ed2d208d 100644
  if(ENABLE_GLSLANG_INSTALL)
 -    install(TARGETS OSDependent
 -            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    install(TARGETS OSDependent EXPORT OSDependentConfig
++    install(TARGETS OSDependent EXPORT glslangConfig
 +            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    )
@@ -91,7 +91,7 @@ index f257418a..ed2d208d 100644
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/OSDependent-config.cmake"
 +    )
 +    install(
-+        EXPORT OSDependentConfig
++        EXPORT glslangConfig
 +        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
 +        NAMESPACE glslang::
 +    )
@@ -106,7 +106,7 @@ index 98dfad7c..1fe4a5cb 100755
  if(ENABLE_GLSLANG_INSTALL)
 -    install(TARGETS HLSL
 -            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    install(TARGETS HLSL EXPORT HLSLConfig
++    install(TARGETS HLSL EXPORT glslangConfig
 +            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    )
@@ -115,7 +115,7 @@ index 98dfad7c..1fe4a5cb 100755
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/HLSL-config.cmake"
 +    )
 +    install(
-+        EXPORT HLSLConfig
++        EXPORT glslangConfig
 +        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
 +        NAMESPACE glslang::
 +    )
