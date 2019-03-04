@@ -46,7 +46,7 @@ foreach(PRECISION ENABLE_DEFAULT_PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE)
 
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
-    if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         vcpkg_apply_patches(
                SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
                PATCHES
