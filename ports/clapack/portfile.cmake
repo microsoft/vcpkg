@@ -32,6 +32,13 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-other-blas-and-install-include.patch"
 )
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch"
+    )
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 
