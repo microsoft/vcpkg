@@ -51,33 +51,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 
-find_file(LUADLL lua.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-find_file(EAYDLL libeay32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-find_file(SSLDLL ssleay32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-find_file(SSH2DLL libssh2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-
-        set(DEPENDANCIES_RELEASE_DLL
-                ${LUADLL}
-				${EAYDLL}
-				${SSLDLL}
-				${SSH2DLL}
-				)
-				
-find_file(LUADLL_D lua.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-find_file(EAYDLL_D libeay32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-find_file(SSLDLL_D ssleay32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-find_file(SSH2DLL_D libssh2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-        set(DEPENDANCIES_DEBUG_DLL
-                ${LUADLL_D}
-				${EAYDLL_D}
-				${SSLDLL_D}
-				${SSH2DLL_D}
-				)
-
-#file(COPY ${DEPENDANCIES_RELEASE_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml/Release)
-#file(COPY ${DEPENDANCIES_DEBUG_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml/Debug)
-
-set(OPTIONS "--with-openssl=${SSLDLL}: --with-libssh2=${SSH2DLL} ")
+set(OPTIONS "--with-openssl=${VCPKG_ROOT_DIR}/installed/x64-windows/bin/ --with-libssh2=${VCPKG_ROOT_DIR}/installed/x64-windows/bin/")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
