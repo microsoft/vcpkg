@@ -1,0 +1,34 @@
+From f8217a342bae6c42bcd86e6ebcf3478ac0801b97 Mon Sep 17 00:00:00 2001
+From: Ali Ahmed <alahmed.se@gmail.com>
+Date: Mon, 23 Sep 2019 17:52:35 -0700
+Subject: [PATCH] Fix Cmake to build _pulsar for osx
+
+---
+ pulsar-client-cpp/CMakeLists.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/pulsar-client-cpp/CMakeLists.txt b/pulsar-client-cpp/CMakeLists.txt
+index 0cb2a24bbc..e8352b1d03 100644
+--- a/pulsar-client-cpp/CMakeLists.txt
++++ b/pulsar-client-cpp/CMakeLists.txt
+@@ -86,12 +86,14 @@ if (LINK_STATIC)
+         endif (LOG4CXX_USE_DYNAMIC_LIBS)
+     endif (USE_LOG4CXX)
+ 
+-    if (NOT MSVC)
+-        set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+-    else()
++    if (MSVC)
+         add_definitions(-DCURL_STATICLIB)
+     endif()
+ 
++    if (LINUX)
++        set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
++    endif()
++
+     SET(Boost_USE_STATIC_LIBS   ON)
+     SET(OPENSSL_USE_STATIC_LIBS TRUE)
+ else()
+-- 
+2.23.0
+

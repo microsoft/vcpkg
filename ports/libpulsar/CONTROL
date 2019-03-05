@@ -1,0 +1,4 @@
+Source: libpulsar
+Version: 2.4.1
+Build-Depends: jsoncpp, openssl, zstd, snappy, boost-regex, boost-system, boost-program-options, boost-asio, boost-date-time, boost-serialization, boost-accumulators, boost-circular-buffer, boost-dynamic-bitset, boost-property-tree, boost-format, boost-xpressive, protobuf, dlfcn-win32 (windows), curl
+Description: Pulsar cpp library
