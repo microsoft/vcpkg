@@ -5,7 +5,9 @@ vcpkg_from_github(
     REF 1.9.5
     SHA512 bee584c83bb317802eb855fececc98f2013d7c3134f063c3146521ab535c8a89c2dfe89ccfa6ebbe2d7c64edec0e53105ead361da83b885c7778b40e4801de62
     HEAD_REF master
-    PATCHES fix-uwp.patch
+    PATCHES
+        fix-uwp.patch
+        fix-lib-name.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -59,11 +61,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
             ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-1.0.a)
     else()
         file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mongoc-static-1.0.lib
-            ${CURRENT_PACKAGES_DIR}/lib/mongoc-1.0.lib)
+            ${CURRENT_PACKAGES_DIR}/lib/libmongoc-static-1.0.lib
+            ${CURRENT_PACKAGES_DIR}/lib/libmongoc-1.0.lib)
         file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-static-1.0.lib
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-1.0.lib)
+            ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-static-1.0.lib
+            ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-1.0.lib)
     endif()
 
     # drop the __declspec(dllimport) when building static

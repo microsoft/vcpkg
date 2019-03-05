@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6938cb8..fdd3f65 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -641,7 +641,7 @@ target_compile_definitions (mongoc_shared PUBLIC MONGOC_COMPILATION ${BSON_DEFIN
+ # https://cmake.org/pipermail/cmake/2007-September/016501.html
+ # This hack sets up standard symlink, libmongoc-1.0.so -> libmongoc-1.0.0.so
+ set_target_properties(mongoc_shared PROPERTIES VERSION 0 SOVERSION ${MONGOC_MAJOR_VERSION})
+-set_target_properties(mongoc_shared PROPERTIES OUTPUT_NAME "mongoc-${MONGOC_API_VERSION}" PREFIX "lib")
++set_target_properties(mongoc_shared PROPERTIES OUTPUT_NAME "libmongoc-${MONGOC_API_VERSION}")
+ endif ()
+ 
+ if (MONGOC_ENABLE_STATIC)
+@@ -650,7 +650,7 @@ if (MONGOC_ENABLE_STATIC)
+    target_include_directories (mongoc_static BEFORE PUBLIC ${BSON_STATIC_INCLUDE_DIRS} ${MONGOC_INTERNAL_INCLUDE_DIRS})
+    target_compile_definitions (mongoc_static PUBLIC MONGOC_COMPILATION MONGOC_STATIC ${BSON_STATIC_DEFINITIONS})
+    set_target_properties(mongoc_static PROPERTIES VERSION ${MONGOC_VERSION})
+-   set_target_properties(mongoc_static PROPERTIES OUTPUT_NAME "mongoc-static-${MONGOC_API_VERSION}")
++   set_target_properties(mongoc_static PROPERTIES OUTPUT_NAME "libmongoc-static-${MONGOC_API_VERSION}")
+ endif ()
+ 
+ function(mongoc_add_test test use_shared)
