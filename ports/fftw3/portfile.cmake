@@ -58,19 +58,6 @@ foreach(PRECISION ENABLE_DEFAULT_PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 endforeach()
 
-#Fix MinSizeRelease and RelWithDebInfo targets
-file(GLOB FFTW3LibsDeps ${CURRENT_PACKAGES_DIR}/share/fftw3/FFTW3*LibraryDepends.cmake)
-
-foreach(FFTW3DepsFile ${FFTW3LibsDeps})
-    file(READ ${FFTW3DepsFile} FFTW3DepsData)
-    STRING(REPLACE [[  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]] 
-[[  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-  MAP_IMPORTED_CONFIG_MINSIZEREL Release
-  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release]]
-  FFTW3NewDeps "${FFTW3DepsData}")
-    file(WRITE ${FFTW3DepsFile} "${FFTW3NewDeps}")
-endforeach()
-
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fftw3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/fftw3/COPYING ${CURRENT_PACKAGES_DIR}/share/fftw3/copyright)
