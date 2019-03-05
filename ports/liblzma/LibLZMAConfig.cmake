@@ -1,6 +1,6 @@
 include("${CMAKE_CURRENT_LIST_DIR}/LibLZMATargets.cmake")
 
-set(LibLZMA_LIBRARIES LibLZMA::LibLZMA)
+set(LIBLZMA_LIBRARIES LibLZMA::LibLZMA)
 get_filename_component(LIBLZMA_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../include" ABSOLUTE)
 
 if(LIBLZMA_INCLUDE_DIR AND EXISTS "${LIBLZMA_INCLUDE_DIR}/lzma/version.h")
@@ -15,8 +15,8 @@ if(LIBLZMA_INCLUDE_DIR AND EXISTS "${LIBLZMA_INCLUDE_DIR}/lzma/version.h")
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LibLZMA  REQUIRED_VARS  LibLZMA_LIBRARIES
+find_package_handle_standard_args(LibLZMA  REQUIRED_VARS  LIBLZMA_LIBRARIES
                                                           LIBLZMA_INCLUDE_DIR
                                            VERSION_VAR    LIBLZMA_VERSION_STRING
                                  )
-mark_as_advanced( LIBLZMA_INCLUDE_DIR LibLZMA_LIBRARIES )
+mark_as_advanced( LIBLZMA_INCLUDE_DIR LIBLZMA_LIBRARIES )
