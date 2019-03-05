@@ -3,11 +3,11 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.4/hdf5-1.10.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.5/hdf5-1.10.5)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.4/src/CMake-hdf5-1.10.4.zip"
-    FILENAME "CMake-hdf5-1.10.4.zip"
-    SHA512 cd40b98c60951907094ec2a5a662325e50ea806d9411b3d3654649b5f3e471fe032e7af0d0948d3da6f902707e9ef53579747b6491785eb63dafa1748288b028
+    URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.zip"
+    FILENAME "CMake-hdf5-1.10.5.zip"
+    SHA512 d799ae987d00f493a0a0a2c9f61beaa1a5a1dfd18509e310bd7eb2b3bb411d337fbff5f7f8cc58d0708ba2542d8831fec1ae1adc0f845b3d3579809ec7edc4e0
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -49,12 +49,6 @@ vcpkg_copy_pdbs()
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/hdf5/data/COPYING ${CURRENT_PACKAGES_DIR}/share/hdf5/copyright)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/hdf5)
-
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    ${CURRENT_PACKAGES_DIR}/share/hdf5
-    @ONLY
-)
 
 # Fix static szip link
 file(READ ${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-targets.cmake HDF5_TARGETS_DATA)
