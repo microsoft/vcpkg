@@ -7,7 +7,7 @@ set(minitrace_SOURCES minitrace.c)
 add_library(minitrace ${minitrace_SOURCES})
 
 # Install headers
-install(FILES ${minitrace_HEADERS} DESTINATION include)
+install(FILES ${minitrace_HEADERS} DESTINATION include/minitrace)
 
 # Install minitrace
 install(
