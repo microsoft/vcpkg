@@ -32,7 +32,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
             ${CMAKE_CURRENT_LIST_DIR}/auto-define-lzma-api-static.patch)
 endif()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/LibLZMA TARGET_PATH share/LibLZMA)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/LibLZMAConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/LibLZMA)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/liblzma/COPYING ${CURRENT_PACKAGES_DIR}/share/liblzma/copyright)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
+#file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)

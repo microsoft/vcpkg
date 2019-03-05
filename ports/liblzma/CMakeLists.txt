@@ -70,7 +70,7 @@ include_directories(src/liblzma/lzma)
 include_directories(src/liblzma/rangecoder)
 include_directories(src/liblzma/simple)
 
-add_library(lzma
+add_library(LibLZMA
     src/common/tuklib_cpucores.c
     src/common/tuklib_physmem.c
     src/liblzma/check/check.c
@@ -145,10 +145,17 @@ add_library(lzma
     src/liblzma/simple/sparc.c
     src/liblzma/simple/x86.c)
 
-install(TARGETS lzma
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib)
+install(TARGETS LibLZMA
+        EXPORT LibLZMATargets
+        RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib)
+
+install(EXPORT LibLZMATargets
+        FILE LibLZMATargets.cmake
+        NAMESPACE LibLZMA::
+        DESTINATION share/LibLZMA
+       )
 
 if(NOT LIBLZMA_SKIP_HEADERS)
     install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma DESTINATION include)
