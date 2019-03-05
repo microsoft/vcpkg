@@ -1,3 +1,13 @@
+diff --git a/ChooseMSVCCRT.cmake b/ChooseMSVCCRT.cmake
+index 2097881..f0cddd7 100644
+--- a/ChooseMSVCCRT.cmake
++++ b/ChooseMSVCCRT.cmake
+@@ -102,4 +102,4 @@ set(MSVC_CRT
+   MT
+   MTd)
+ 
+-choose_msvc_crt(MSVC_CRT)
++# choose_msvc_crt(MSVC_CRT)
 diff --git a/OGLCompilersDLL/CMakeLists.txt b/OGLCompilersDLL/CMakeLists.txt
 index 5bb3f0ee..1e248b55 100644
 --- a/OGLCompilersDLL/CMakeLists.txt
