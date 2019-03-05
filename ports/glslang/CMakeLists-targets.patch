@@ -9,10 +9,10 @@ index 2097881..f0cddd7 100644
 -choose_msvc_crt(MSVC_CRT)
 +# choose_msvc_crt(MSVC_CRT)
 diff --git a/OGLCompilersDLL/CMakeLists.txt b/OGLCompilersDLL/CMakeLists.txt
-index 5bb3f0ee..1e248b55 100644
+index 5bb3f0e..e7be6e6 100644
 --- a/OGLCompilersDLL/CMakeLists.txt
 +++ b/OGLCompilersDLL/CMakeLists.txt
-@@ -9,6 +9,17 @@ if(WIN32)
+@@ -9,6 +9,12 @@ if(WIN32)
  endif(WIN32)
  
  if(ENABLE_GLSLANG_INSTALL)
@@ -26,14 +26,30 @@ index 5bb3f0ee..1e248b55 100644
 +           NAMESPACE glslang::
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/OGLCompiler-config.cmake"
 +    )
-+    install(
-+        EXPORT glslangConfig
-+        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
-+        NAMESPACE glslang::
+ endif(ENABLE_GLSLANG_INSTALL)
+diff --git a/SPIRV/CMakeLists.txt b/SPIRV/CMakeLists.txt
+index b682419..3a10f1a 100755
+--- a/SPIRV/CMakeLists.txt
++++ b/SPIRV/CMakeLists.txt
+@@ -64,8 +64,14 @@ if(WIN32)
+ endif(WIN32)
+ 
+ if(ENABLE_GLSLANG_INSTALL)
+-    install(TARGETS SPIRV SPVRemapper
+-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    install(TARGETS SPIRV EXPORT glslangConfig
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    )
++    export(TARGETS SPIRV
++        NAMESPACE glslang::
++        FILE "${CMAKE_CURRENT_BINARY_DIR}/glslang-config.cmake"
++    )
+ 
+     install(FILES ${HEADERS} ${SPVREMAP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SPIRV/)
  endif(ENABLE_GLSLANG_INSTALL)
 diff --git a/glslang/CMakeLists.txt b/glslang/CMakeLists.txt
-index 7a50ab67..b70345ea 100644
+index 7a50ab6..b70345e 100644
 --- a/glslang/CMakeLists.txt
 +++ b/glslang/CMakeLists.txt
 @@ -97,8 +97,19 @@ if(WIN32)
@@ -59,10 +75,10 @@ index 7a50ab67..b70345ea 100644
  
  if(ENABLE_GLSLANG_INSTALL)
 diff --git a/glslang/OSDependent/Unix/CMakeLists.txt b/glslang/OSDependent/Unix/CMakeLists.txt
-index 1bf49e12..bd02ca1e 100644
+index 1bf49e1..edd733c 100644
 --- a/glslang/OSDependent/Unix/CMakeLists.txt
 +++ b/glslang/OSDependent/Unix/CMakeLists.txt
-@@ -3,6 +3,17 @@ set_property(TARGET OSDependent PROPERTY FOLDER glslang)
+@@ -3,6 +3,12 @@ set_property(TARGET OSDependent PROPERTY FOLDER glslang)
  set_property(TARGET OSDependent PROPERTY POSITION_INDEPENDENT_CODE ON)
  
  if(ENABLE_GLSLANG_INSTALL)
@@ -76,17 +92,12 @@ index 1bf49e12..bd02ca1e 100644
 +           NAMESPACE glslang::
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/OSDependent-config.cmake"
 +    )
-+    install(
-+        EXPORT glslangConfig
-+        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
-+        NAMESPACE glslang::
-+    )
  endif(ENABLE_GLSLANG_INSTALL)
 diff --git a/glslang/OSDependent/Windows/CMakeLists.txt b/glslang/OSDependent/Windows/CMakeLists.txt
-index f257418a..ed2d208d 100644
+index f257418..cadd70d 100644
 --- a/glslang/OSDependent/Windows/CMakeLists.txt
 +++ b/glslang/OSDependent/Windows/CMakeLists.txt
-@@ -15,6 +15,17 @@ if(WIN32)
+@@ -15,6 +15,12 @@ if(WIN32)
  endif(WIN32)
  
  if(ENABLE_GLSLANG_INSTALL)
@@ -100,17 +111,12 @@ index f257418a..ed2d208d 100644
 +           NAMESPACE glslang::
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/OSDependent-config.cmake"
 +    )
-+    install(
-+        EXPORT glslangConfig
-+        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
-+        NAMESPACE glslang::
-+    )
  endif(ENABLE_GLSLANG_INSTALL)
 diff --git a/hlsl/CMakeLists.txt b/hlsl/CMakeLists.txt
-index 98dfad7c..1fe4a5cb 100755
+index 98dfad7..94d96a0 100755
 --- a/hlsl/CMakeLists.txt
 +++ b/hlsl/CMakeLists.txt
-@@ -26,6 +26,17 @@ if(WIN32)
+@@ -26,6 +26,12 @@ if(WIN32)
  endif(WIN32)
  
  if(ENABLE_GLSLANG_INSTALL)
@@ -124,34 +130,4 @@ index 98dfad7c..1fe4a5cb 100755
 +           NAMESPACE glslang::
 +           FILE "${CMAKE_CURRENT_BINARY_DIR}/HLSL-config.cmake"
 +    )
-+    install(
-+        EXPORT glslangConfig
-+        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
-+        NAMESPACE glslang::
-+    )
- endif(ENABLE_GLSLANG_INSTALL)
-diff --git a/SPIRV/CMakeLists.txt b/SPIRV/CMakeLists.txt
-index b6824192..f01d0f3b 100755
---- a/SPIRV/CMakeLists.txt
-+++ b/SPIRV/CMakeLists.txt
-@@ -64,8 +64,18 @@ if(WIN32)
- endif(WIN32)
-
- if(ENABLE_GLSLANG_INSTALL)
--    install(TARGETS SPIRV SPVRemapper
--            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    install(TARGETS SPIRV EXPORT glslangConfig
-+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+    )
-+    export(TARGETS SPIRV
-+        NAMESPACE glslang::
-+        FILE "${CMAKE_CURRENT_BINARY_DIR}/glslang-config.cmake"
-+    )
-+    install(EXPORT glslangConfig
-+        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/glslang"
-+        NAMESPACE glslang::
-+    )
-
-     install(FILES ${HEADERS} ${SPVREMAP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SPIRV/)
  endif(ENABLE_GLSLANG_INSTALL)
