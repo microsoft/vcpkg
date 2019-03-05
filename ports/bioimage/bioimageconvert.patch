@@ -175,3 +175,30 @@
 -mark_as_advanced(TIFF_INCLUDE_DIR TIFF_LIBRARY)
 \ No newline at end of file
 +mark_as_advanced(TIFF_INCLUDE_DIR TIFF_LIBRARY)
+--- libsrc/libbioimg/core_lib/xtypes.h
++++ libsrc/libbioimg/core_lib/xtypes.h
+@@ -52,7 +52,12 @@
+ typedef	short int16;
+ typedef	unsigned short uint16;
+ 
+-#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64) || defined(_MSVC)
++#if defined(__APPLE__)
++typedef int32_t int32;
++typedef long int64;
++typedef uint32_t uint32;
++typedef unsigned long uint64;
++#elif defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64) || defined(_MSVC)
+ typedef __int32 int32;
+ typedef __int64 int64;
+ typedef unsigned __int32 uint32;
+--- libsrc/libbioimg/formats_api/bim_image.h
++++ libsrc/libbioimg/formats_api/bim_image.h
+@@ -67,7 +67,7 @@
+ #endif //BIM_USE_EIGEN
+ 
+ #ifdef BIM_USE_OPENCV
+-#include <opencv2/core/core.hpp>
++namespace cv { class Mat; }
+ #endif //BIM_USE_OPENCV
+ 
+ #ifdef BIM_USE_NUMPY
