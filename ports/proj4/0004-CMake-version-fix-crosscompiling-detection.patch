@@ -1,0 +1,46 @@
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -10,6 +10,12 @@
+ 
+ file(RELATIVE_PATH PROJECT_ROOT_DIR ${INSTALL_CMAKE_DIR} ${CMAKE_INSTALL_PREFIX})
+ 
++if (CMAKE_CROSSCOMPILING)
++  set (CMAKE_CROSSCOMPILING_STR "ON")
++else ()
++  set (CMAKE_CROSSCOMPILING_STR "OFF")
++endif ()
++
+ string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
+ configure_file (project-config.cmake.in project-config.cmake @ONLY)
+ configure_file (project-config-version.cmake.in
+--- a/cmake/project-config-version.cmake.in
++++ b/cmake/project-config-version.cmake.in
+@@ -5,6 +5,12 @@
+ set (PACKAGE_VERSION_MINOR "@PROJ_VERSION_MINOR@")
+ set (PACKAGE_VERSION_PATCH "@PROJ_VERSION_PATCH@")
+ 
++if (CMAKE_CROSSCOMPILING)
++  set (CMAKE_CROSSCOMPILING_STR "ON")
++else ()
++  set (CMAKE_CROSSCOMPILING_STR "OFF")
++endif ()
++
+ if (NOT PACKAGE_FIND_NAME STREQUAL "@PROJECT_NAME@")
+   # Check package name (in particular, because of the way cmake finds
+   # package config files, the capitalization could easily be "wrong").
+@@ -22,7 +28,7 @@
+   # Reject if there's a mismatch in MSVC compiler versions
+   set (REASON "_MSC_VER = @MSVC_VERSION@")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)
+-elseif (NOT CMAKE_CROSSCOMPILING STREQUAL "@CMAKE_CROSSCOMPILING@")
++elseif (NOT CMAKE_CROSSCOMPILING_STR STREQUAL "@CMAKE_CROSSCOMPILING_STR@")
+   # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}
+   set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)
+@@ -46,3 +52,5 @@
+ if (PACKAGE_VERSION_UNSUITABLE)
+   set (PACKAGE_VERSION "${PACKAGE_VERSION} (${REASON})")
+ endif ()
++
++unset(CMAKE_CROSSCOMPILING_STR)
+\ No newline at end of file

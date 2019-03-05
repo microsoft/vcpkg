@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     ${CMAKE_CURRENT_LIST_DIR}/0001-CMake-add-detection-of-recent-visual-studio-versions.patch
     ${CMAKE_CURRENT_LIST_DIR}/0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
     ${CMAKE_CURRENT_LIST_DIR}/0003-CMake-configurable-cmake-config-install-location.patch
+    ${CMAKE_CURRENT_LIST_DIR}/0004-CMake-version-fix-crosscompiling-detection.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
