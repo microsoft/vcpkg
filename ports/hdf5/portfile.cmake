@@ -59,6 +59,12 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/hdf5/data/COPYING ${CURRENT_PACKAGES_D
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/hdf5)
 
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    ${CURRENT_PACKAGES_DIR}/share/hdf5
+    @ONLY
+)
+
 #Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
