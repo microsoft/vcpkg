@@ -8,6 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
+    set(HDF5_USE_STATIC_LIBRARIES ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -16,6 +20,7 @@ vcpkg_configure_cmake(
         -DHIGHFIVE_EXAMPLES=OFF
         -DUSE_BOOST=OFF
         -DHIGH_FIVE_DOCUMENTATION=OFF
+        -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
 )
 
 vcpkg_install_cmake()
