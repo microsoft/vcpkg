@@ -11,9 +11,11 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-# The file guiddef.h is part of the Windows SDK,
-# we then remove the local copy shipped with jxrlib
-file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Linux)
+  # The file guiddef.h is part of the Windows SDK,
+  # we then remove the local copy shipped with jxrlib
+  file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
