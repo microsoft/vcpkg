@@ -1,5 +1,5 @@
 diff --git a/source/cppfs/CMakeLists.txt b/source/cppfs/CMakeLists.txt
-index aa37eda..08c7190 100644
+index aa37eda..d29176a 100644
 --- a/source/cppfs/CMakeLists.txt
 +++ b/source/cppfs/CMakeLists.txt
 @@ -4,18 +4,18 @@
@@ -24,13 +24,17 @@ index aa37eda..08c7190 100644
  endif()
  
  
-@@ -208,8 +208,7 @@ if (OPTION_BUILD_SSH_BACKEND)
+@@ -207,10 +207,9 @@ target_link_libraries(${target}
+ if (OPTION_BUILD_SSH_BACKEND)
      target_link_libraries(${target}
          PRIVATE
-         ${OPENSSL_LIBRARIES}
+-        ${OPENSSL_LIBRARIES}
 -        ${LIBSSH2_LIBRARY}
 -        ${LIBCRYPTO_LIBRARY}
+-        ${ZLIB_LIBRARY}
++        Libssh2::libssh2
 +        OpenSSL::SSL OpenSSL::Crypto
-         ${ZLIB_LIBRARY}
++        ZLIB::ZLIB
      )
  
+     if("${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
