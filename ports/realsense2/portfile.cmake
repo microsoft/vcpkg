@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF development
     PATCHES
       "${CMAKE_CURRENT_LIST_DIR}/fix_libusb.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/fix_openni2.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LIBRARY_LINKAGE)
@@ -28,7 +29,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        #Ungrouped Entries
+        # Ungrouped Entries
         -DENFORCE_METADATA=ON
         # BUILD
         -DBUILD_EXAMPLES=${BUILD_EXAMPLES}
@@ -39,6 +40,8 @@ vcpkg_configure_cmake(
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
         -DBUILD_WITH_TM2=OFF
+        # OPENNI2
+        -DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2
     OPTIONS_DEBUG
         # BUILD
         -DBUILD_EXAMPLES=OFF
