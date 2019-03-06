@@ -16,16 +16,11 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("openblas currenly only supports dynamic library linkage")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.5
-    SHA512 91b3074eb922453bf843158b4281cde65db9e8bbdd7590e75e9e6cdcb486157f7973f2936f327bb3eb4f1702ce0ba51ae6729d8d4baf2d986c50771e8f696df0
+    REF 651ab01d2b552dd979120edd44cf0ccb0031bed1
+    SHA512 78b57a59b011fc310deed47c66e8c4343cd23bdcefe369ad19499099d28dc5ed9206d5f77f7771acedafdb7f936befc285172f77ff78cb0175a7091c82ec148b
     HEAD_REF develop
 )
 
