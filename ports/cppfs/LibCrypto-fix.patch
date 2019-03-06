@@ -1,3 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea9fd15..af63d1e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@
+ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+ 
+ # Include cmake modules
+-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
++# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+ include(GenerateExportHeader)
+ 
 diff --git a/source/cppfs/CMakeLists.txt b/source/cppfs/CMakeLists.txt
 index aa37eda..d29176a 100644
 --- a/source/cppfs/CMakeLists.txt
