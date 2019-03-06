@@ -14,6 +14,8 @@ vcpkg_from_github(
     REF 1.14.0
     SHA512 6dddddf5bd5834332a69add468578ad527e4d94fe85c9751ddf5fe9ad11a34918bdd9c994c49dd6ffc398333d0ac9752ac89aaef1293e2fe0a55524e303d415d
     HEAD_REF master
+    PATCHES
+        add_missing_include_path.patch
 )
 
 set(SUITESPARSE OFF)

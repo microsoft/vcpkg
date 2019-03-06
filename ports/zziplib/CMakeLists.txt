@@ -10,9 +10,21 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(MSVC)
-    set(CMAKE_DEBUG_POSTFIX "d")
-    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+  set(CMAKE_DEBUG_POSTFIX "d")
+  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+  add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+endif()
+
+if(UNIX)
+  message(STATUS "Running ${SHELL_EXECUTABLE} ./configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/")
+  add_custom_target(
+    zziplib_autotools
+    ${SHELL_EXECUTABLE} ./configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+  message(STATUS "Autotools should have finished their job")
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/x86_64-pc-linux-gnu/zzip)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/x86_64-pc-linux-gnu/)
 endif()
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
@@ -53,9 +65,12 @@ set(SRCS zzip/dir.c
 )
 
 add_library(zziplib ${SRCS} ${HEADERS})
+if(UNIX)
+  add_dependencies(zziplib zziplib_autotools)
+endif()
 
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(zziplib PRIVATE -DZZIPLIB_EXPORTS)
+  target_compile_definitions(zziplib PRIVATE -DZZIPLIB_EXPORTS)
 endif()
 
 target_link_libraries(zziplib ${ZLIB_LIBRARIES})
