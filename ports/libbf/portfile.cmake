@@ -19,5 +19,5 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libff)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libff/COPYING ${CURRENT_PACKAGES_DIR}/share/libff/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbf)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libbf/COPYING ${CURRENT_PACKAGES_DIR}/share/libbf/copyright)
