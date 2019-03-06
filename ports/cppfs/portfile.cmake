@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v1.2.0
     SHA512 2e831978dd87bd40d14e5b6f5089f3a962481d41959bfd62db543339d05e306315a1167c3bc06b372517357cc314f7d06ac19605f9a2d5b4edddc9a1f3fa8d03
     HEAD_REF master
+    PATCHES
+    	LibCrypto-fix.patch
 )
 
 set(SHARED_LIBS Off)
