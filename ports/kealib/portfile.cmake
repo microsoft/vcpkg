@@ -19,6 +19,10 @@ else()
     set(ENABLE_PARALLEL OFF)
 endif()
 
+if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
+    set(HDF5_USE_STATIC_LIBRARIES ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/trunk
     PREFER_NINJA
@@ -26,6 +30,7 @@ vcpkg_configure_cmake(
       -DHDF5_PREFER_PARALLEL=${ENABLE_PARALLEL}
       -DLIBKEA_WITH_GDAL=OFF
       -DDISABLE_TESTS=ON
+      -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
 )
 
 vcpkg_install_cmake()

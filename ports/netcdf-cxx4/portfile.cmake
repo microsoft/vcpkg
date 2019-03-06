@@ -6,6 +6,10 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
+if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
+    set(HDF5_USE_STATIC_LIBRARIES ON)
+endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(STATUS "Warning: DLLs not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
@@ -31,6 +35,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DNCXX_ENABLE_TESTS=OFF
         -DCMAKE_INSTALL_CMAKECONFIGDIR=share/netCDFCxx
+        -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
