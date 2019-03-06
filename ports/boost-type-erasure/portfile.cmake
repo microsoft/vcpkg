@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/type_erasure
-    REF boost-1.67.0
-    SHA512 45bcade387e21315ea94f69981531ca38c367d6e7e8bcc82e67b86360d4f0e6a786ff94935a10a7b2e6bed21c0847008bbfa70e8adc5f3704f4eafef54664d86
+    REF boost-1.69.0
+    SHA512 40445b1b5f3e3ce61c7d5d2bc0d5018b4ebe2ebbba4d05e941bfbc792a52b04f6dd0025b6502f105686dc55d74ccbc5f7ca61a96a36532ddb6879a9d8d2f6afd
     HEAD_REF master
 )
 

@@ -1,15 +1,31 @@
 [CmdletBinding()]
 param(
-    [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
-    [Parameter(Mandatory=$False)][string]$withVSPath = ""
+    $badParam,
+    [Parameter(Mandatory=$False)][switch]$disableMetrics = $false,
+    [Parameter(Mandatory=$False)][switch]$win64 = $false,
+    [Parameter(Mandatory=$False)][string]$withVSPath = "",
+    [Parameter(Mandatory=$False)][string]$withWinSDK = ""
 )
 Set-StrictMode -Version Latest
+# Powershell2-compatible way of forcing named-parameters
+if ($badParam)
+{
+    if ($disableMetrics -and $badParam -eq "1")
+    {
+        Write-Warning "'disableMetrics 1' is deprecated, please change to 'disableMetrics' (without '1')"
+    }
+    else
+    {
+        throw "Only named parameters are allowed"
+    }
+}
+
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
 function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Parameter(Mandatory=$true)]$propertyName)
 {
-    if ($object -eq $null)
+    if ($null -eq $object)
     {
         return $false
     }
@@ -20,12 +36,12 @@ function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Par
 function getProgramFiles32bit()
 {
     $out = ${env:PROGRAMFILES(X86)}
-    if ($out -eq $null)
+    if ($null -eq $out)
     {
         $out = ${env:PROGRAMFILES}
     }
 
-    if ($out -eq $null)
+    if ($null -eq $out)
     {
         throw "Could not find [Program Files 32-bit]"
     }
@@ -122,7 +138,7 @@ function getVisualStudioInstances()
 function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
 {
     $VisualStudioInstances = getVisualStudioInstances
-    if ($VisualStudioInstances -eq $null)
+    if ($null -eq $VisualStudioInstances)
     {
         throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
     }
@@ -144,6 +160,16 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
         }
 
         $majorVersion = $version.Substring(0,2);
+        if ($majorVersion -eq "16")
+        {
+            $VCFolder= "$path\VC\Tools\MSVC\"
+            if (Test-Path $VCFolder)
+            {
+                Write-Verbose "Picking: $instanceCandidate"
+                return "$path\MSBuild\Current\Bin\MSBuild.exe", "v142"
+            }
+        }
+
         if ($majorVersion -eq "15")
         {
             $VCFolder= "$path\VC\Tools\MSVC\"
@@ -166,10 +192,11 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
         }
     }
 
-    throw "Could not find MSBuild version with C++ support. VS2015 or VS2017 (with C++) needs to be installed."
+    throw "Could not find MSBuild version with C++ support. VS2015, VS2017, or VS2019 (with C++) needs to be installed."
 }
 function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = $False,
-                        [Parameter(Mandatory=$False)][switch]$DisableWin81SDK = $False)
+                        [Parameter(Mandatory=$False)][switch]$DisableWin81SDK = $False,
+                        [Parameter(Mandatory=$False)][string]$withWinSDK)
 {
     if ($DisableWin10SDK -and $DisableWin81SDK)
     {
@@ -183,7 +210,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 10 SDK
     function CheckWindows10SDK($path)
     {
-        if ($path -eq $null)
+        if ($null -eq $path)
         {
             return
         }
@@ -235,7 +262,7 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     # Windows 8.1 SDK
     function CheckWindows81SDK($path)
     {
-        if ($path -eq $null)
+        if ($null -eq $path)
         {
             return
         }
@@ -270,6 +297,19 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
     }
 
     # Selecting
+    if ($withWinSDK -ne "")
+    {
+        foreach ($instance in $validInstances)
+        {
+            if ($instance -eq $withWinSDK)
+            {
+                return $instance
+            }
+        }
+
+        throw "Could not find the requested Windows SDK version: $withWinSDK"
+    }
+
     foreach ($instance in $validInstances)
     {
         if (!$DisableWin10SDK -and $instance -match "10.")
@@ -289,15 +329,37 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
 $msbuildExeWithPlatformToolset = findAnyMSBuildWithCppPlatformToolset $withVSPath
 $msbuildExe = $msbuildExeWithPlatformToolset[0]
 $platformToolset = $msbuildExeWithPlatformToolset[1]
-$windowsSDK = getWindowsSDK
+$windowsSDK = getWindowsSDK -withWinSDK $withWinSDK
+
+$disableMetricsValue = "0"
+if ($disableMetrics)
+{
+    $disableMetricsValue = "1"
+}
+
+$platform = "x86"
+$vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
+
+if ($win64)
+{
+    $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
+    if (-not $architecture -like "*64*")
+    {
+        throw "Cannot build 64-bit on non-64-bit system"
+    }
+
+    $platform = "x64"
+    $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x64.release"
+}
 
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
-"`"/p:DISABLE_METRICS=$disableMetrics`"",
+"`"/p:DISABLE_METRICS=$disableMetricsValue`"",
 "/p:Configuration=Release",
-"/p:Platform=x86",
+"/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
+"/p:PreferredToolArchitecture=x64",
 "/verbosity:minimal",
 "/m",
 "/nologo",
@@ -334,7 +396,8 @@ if ($ec -ne 0)
 }
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
-Write-Verbose("Placing vcpkg.exe in the correct location")
+Write-Verbose "Placing vcpkg.exe in the correct location"
 
-Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
-Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
+Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
+Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe"
+Remove-Item "$vcpkgReleaseDir" -Force -Recurse -ErrorAction SilentlyContinue

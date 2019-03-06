@@ -1,6 +1,6 @@
 ## # vcpkg_build_msbuild
 ##
-## Build an msbuild-based project.
+## Build an msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
 ##
 ## ## Usage
 ## ```cmake
@@ -15,6 +15,7 @@
 ##     [OPTIONS </p:ZLIB_INCLUDE_PATH=X>...]
 ##     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
 ##     [OPTIONS_DEBUG </p:ZLIB_LIB=X>...]
+##     [USE_VCPKG_INTEGRATION]
 ## )
 ## ```
 ##
@@ -105,7 +106,11 @@ function(vcpkg_build_msbuild)
     endif()
 
     if(_csc_USE_VCPKG_INTEGRATION)
-        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets)
+        list(
+            APPEND _csc_OPTIONS
+            /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets
+            "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+        )
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

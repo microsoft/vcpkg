@@ -2,12 +2,13 @@ diff --git a/build.vc/mpir_debug_lib.props b/build.vc/mpir_debug_lib.props
 index b2fd57b..3937570 100644
 --- a/build.vc/mpir_debug_lib.props
 +++ b/build.vc/mpir_debug_lib.props
-@@ -9,7 +9,7 @@
+@@ -9,7 +9,8 @@
    <ItemDefinitionGroup>
      <ClCompile>
        <ObjectFileName>$(IntDir)dum\my\%(RelativeDir)</ObjectFileName>
 -      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 +      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
++      <DebugInformationFormat>OldStyle</DebugInformationFormat>
        <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
      </ClCompile>
      <Link>

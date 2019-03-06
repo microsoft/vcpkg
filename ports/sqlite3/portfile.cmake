@@ -1,14 +1,19 @@
 include(vcpkg_common_functions)
 
-set(SQLITE_VERSION 3230100)
-set(SQLITE_HASH 5784f4dea7f14d7dcf5dd07f0e111c8f0b64ff55c68b32a23fba7a36baf1f095c7a35573fc3b57b84822878218b78f9b0187c4e3f0439d4215471ee5f556eee1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-${SQLITE_VERSION})
+set(SQLITE_VERSION 3260000)
+set(SQLITE_HASH ba089abd16857a65fc6cf26558a0d3e6f20c278b8df451b357eea5154f8ccd5645c9cfdb30d0fd4fe64f19dd2f876a6cc4a28455b7b013770c2ce9a607171107)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2018/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 ${SQLITE_HASH})
-vcpkg_extract_source_archive(${ARCHIVE})
+    SHA512 ${SQLITE_HASH}
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${SQLITE_VERSION}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
@@ -27,14 +32,15 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/share/sqlite3/sqlite3Config-debug.cmake SQLITE3_DEBUG_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" SQLITE3_DEBUG_CONFIG "${SQLITE3_DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3Config-debug.cmake "${SQLITE3_DEBUG_CONFIG}")
-endif()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3-config.cmake
+    @ONLY
+)
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
 vcpkg_copy_pdbs()
