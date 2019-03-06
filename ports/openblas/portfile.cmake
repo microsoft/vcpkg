@@ -16,7 +16,7 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
+if(MSVC)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         message("openblas currenly only supports dynamic library linkage")
         set(VCPKG_LIBRARY_LINKAGE "dynamic")
