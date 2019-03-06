@@ -8,6 +8,9 @@ include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)
 include_directories(${CMAKE_SOURCE_DIR})
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
 add_definitions(-DNOCONTROLS -DTHREADED_AUDIO)
 
 # some c++ code just assumes memset is available

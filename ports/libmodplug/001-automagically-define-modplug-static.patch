@@ -1,7 +1,7 @@
-diff --git a/libmodplug/modplug.h b/libmodplug/modplug.h
+diff --git a/src/modplug.h b/src/modplug.h
 index 3ffbf9d..fd19ae5 100644
---- a/libmodplug/modplug.h
-+++ b/libmodplug/modplug.h
+--- a/src/modplug.h
++++ b/src/modplug.h
 @@ -11,6 +11,8 @@
  extern "C" {
  #endif
