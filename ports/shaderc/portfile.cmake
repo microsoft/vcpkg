@@ -36,7 +36,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*${CMAKE_EXECUTABLE_SUFFIX}")
 file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 #Safe to remove as libs are static

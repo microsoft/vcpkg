@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         0001-Fix-install-command.patch
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
+        0004-Fix-DLL-install.patch
 )
 
 vcpkg_configure_cmake(

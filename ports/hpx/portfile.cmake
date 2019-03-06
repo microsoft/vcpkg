@@ -8,10 +8,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.2.0
-    SHA512 caf2650381856db6a96fd4b120975d94d68d9bb19ada1d6cd076abe2d4aa1418e410167f774a881d95eacd0d46bbd5f90f16a4c77b4a2cf00e5b24ea17bfe670
+    REF 1.2.1
+    SHA512 46e9e36cbd9bec935b2a1efce8167c641de88aca8e4dd9c2e3269a1d82ab2965812b5483b6dff4465634f454757b19ad4f73ddcc5ddd73d6efbf28d0819f7dc7
     HEAD_REF master
-    PATCHES boost-1.69.patch
 )
 
 vcpkg_configure_cmake(

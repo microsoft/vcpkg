@@ -9,7 +9,7 @@ function(qt_modular_library NAME HASH)
     endif()
 
     set(MAJOR_MINOR 5.12)
-    set(FULL_VERSION ${MAJOR_MINOR}.0)
+    set(FULL_VERSION ${MAJOR_MINOR}.1)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE

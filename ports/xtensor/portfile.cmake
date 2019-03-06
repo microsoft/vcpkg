@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xtensor
-    REF ca0cfdbde852ee61a3ef20076e2733030f3d6479
-    SHA512 d960a3c1c3e6c9250c6bc5ed4e641486980a3ffa4179696eabb92fee50673901324cd2174b76cbd74ab07e6f3c175a26cb564b3087863602c3dce0a83a263da6
+    REF 0.19.3
+    SHA512 e3b0085115252441ef4ddf21ef48ca18c3872c24d7f94d2f7533fa8f4b00dff0b5613946296f9dd4d7db3381ff43b41dd2f1ae3857a409fabd439eade431aba2
     HEAD_REF master
 )
 
