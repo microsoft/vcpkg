@@ -19,4 +19,3 @@ index c2b81dc..a86d2d5 100644
        find_package (SZIP) # Legacy find
        if (SZIP_FOUND)
          set (LINK_LIBS ${LINK_LIBS} ${SZIP_LIBRARIES})
- 
