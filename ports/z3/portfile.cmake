@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON2_DIR}")
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
