@@ -8,6 +8,8 @@ else()
 endif()
 
 add_compile_options(/d2guard4 /Wv:18)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /guard:cf")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /guard:cf")
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /guard:cf")
 
 add_definitions(
