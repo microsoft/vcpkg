@@ -10,6 +10,10 @@ vcpkg_from_github(
     	LibCrypto-fix.patch
 )
 
+if(${TARGET_TRIPLET} MATCHES "uwp")
+	message(FATAL_ERROR "cppfs does not support uwp")
+endif()
+
 set(SHARED_LIBS Off)
 if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
 	set(SHARED_LIBS On)
@@ -18,6 +22,9 @@ endif()
 set(SSH_BACKEND OFF)
 if("ssh" IN_LIST FEATURES)
     set(SSH_BACKEND ON)
+    if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+		message(FATAL_ERROR "SSH backend of cppfs does not support arm64.")
+	endif()
 endif()
 
 vcpkg_configure_cmake(
