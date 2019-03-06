@@ -84,6 +84,26 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+
+# Copy additional include files not part of any libraries
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL")
+    file(COPY ${SOURCE_PATH}/Data/include DESTINATION ${CURRENT_PACKAGES_DIR})
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/MySQL")
+    file(COPY ${SOURCE_PATH}/Data/MySQL/include DESTINATION ${CURRENT_PACKAGES_DIR})
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/ODBC")
+    file(COPY ${SOURCE_PATH}/Data/ODBC/include DESTINATION ${CURRENT_PACKAGES_DIR})
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/PostgreSQL")
+    file(COPY ${SOURCE_PATH}/Data/PostgreSQL/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libpq)
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
+    file(COPY ${SOURCE_PATH}/Data/SQLite/include DESTINATION ${CURRENT_PACKAGES_DIR})
+endif()
+
+
 # Move apps to the tools folder
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpspc.exe")
@@ -97,6 +117,7 @@ else()
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/PocoDoc ${CURRENT_PACKAGES_DIR}/tools/PocoDoc)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tec ${CURRENT_PACKAGES_DIR}/tools/tec)
 endif()
+
 
 #
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
