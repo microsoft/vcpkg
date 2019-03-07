@@ -1,4 +1,4 @@
-if (MSVC)
+if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "" OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     message(FATAL_ERROR "libbf does not support MSVC")
 endif()
 
