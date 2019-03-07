@@ -46,7 +46,7 @@ function(vcpkg_test_cmake)
     # Run cmake config with a generated CMakeLists.txt
     set(LOGPREFIX "${CURRENT_BUILDTREES_DIR}/test-cmake-${TARGET_TRIPLET}")
     execute_process(
-      COMMAND ${CMAKE_COMMAND} .
+      COMMAND ${CMAKE_COMMAND} -G ${_VCPKG_CMAKE_GENERATOR} .
       OUTPUT_FILE "${LOGPREFIX}-out.log"
       ERROR_FILE "${LOGPREFIX}-err.log"
       RESULT_VARIABLE error_code
