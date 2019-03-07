@@ -10,6 +10,7 @@ vcpkg_from_github(
   REF z3-4.8.4
   SHA512 4660ba6ab33a6345b2e8396c332d4afcfc73eda66ceb2595a39f152df4d62a9ea0f349b0f9212389ba84ecba6bdae6ad9b62b376ba44dc4d9c74f80d7a818bf4
   HEAD_REF master
+  PATCHES fix_cmake_long_dir.patch
 )
 
 vcpkg_configure_cmake(
