@@ -13,6 +13,7 @@ vcpkg_from_bitbucket(
    HEAD_REF master
    PATCHES
       bioimageconvert.patch
+      static-openjpeg.patch
 )
 
 set(BIC_ENABLE_OPENCV OFF)

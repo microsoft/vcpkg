@@ -1,0 +1,13 @@
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -1163,7 +1163,9 @@
+     if(MSVC AND BUILD_SHARED_LIBS)
+         target_compile_definitions(openjpeg PRIVATE OPJ_EXPORTS)
+     endif()
+-
++    if(NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(openjpeg PRIVATE OPJ_STATIC)
++    endif()
+     set(OPENJPEG_LIBRARIES openjpeg)
+ elseif(LIBBIOIMAGE)
+     message(FATAL_ERROR "Automatic detection of system openjpeg library not implemented")
