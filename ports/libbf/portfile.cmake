@@ -1,3 +1,7 @@
+if (MSVC)
+    message(FATAL_ERROR "libbf does not support MSVC")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
