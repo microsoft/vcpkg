@@ -5,9 +5,9 @@ endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.5/hdf5-1.10.5)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.zip"
-    FILENAME "CMake-hdf5-1.10.5.zip"
-    SHA512 d799ae987d00f493a0a0a2c9f61beaa1a5a1dfd18509e310bd7eb2b3bb411d337fbff5f7f8cc58d0708ba2542d8831fec1ae1adc0f845b3d3579809ec7edc4e0
+    URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
+    FILENAME "CMake-hdf5-1.10.5.tar.gz"
+    SHA512  a25ea28d7a511f9184d97b5b8cd4c6d52dcdcad2bffd670e24a1c9a6f98b03108014a853553fa2b00d4be7523128b5fd6a4454545e3b17ff8c66fea16a09e962
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
