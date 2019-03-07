@@ -60,6 +60,10 @@ STRING(REPLACE "lib/zlib" [[$<$<CONFIG:Debug>:debug/>lib/zlib$<$<CONFIG:Debug>:d
 #write everything to file
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-targets.cmake "${HDF5_TARGETS_NEW}")
 
+#Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
