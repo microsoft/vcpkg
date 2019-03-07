@@ -55,7 +55,7 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-targets.cmake HDF5_TARGETS_DAT
 # Fix szip linkage
 #STRING(REPLACE LINK_ONLY:szip-static [[LINK_ONLY:${_IMPORT_PREFIX}/$<$<CONFIG:Debug>:debug/>lib/libszip$<$<CONFIG:Debug>:_D>.lib]] HDF5_TARGETS_NEW "${HDF5_TARGETS_DATA}")
 # Fix zlib linkage
-STRING(REPLACE "lib/zlib" [[$<$<CONFIG:Debug>:debug/>lib/zlib$<$<CONFIG:Debug>:d>]] HDF5_TARGETS_NEW "${HDF5_TARGETS_NEW}")
+STRING(REPLACE "lib/zlib" [[$<$<CONFIG:Debug>:debug/>lib/zlib$<$<CONFIG:Debug>:d>]] HDF5_TARGETS_NEW "${HDF5_TARGETS_DATA}")
 
 #write everything to file
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-targets.cmake "${HDF5_TARGETS_NEW}")
