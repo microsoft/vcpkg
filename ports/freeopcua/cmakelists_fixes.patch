@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index de03564..d2ce217 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,6 +6,8 @@ if( NOT CMAKE_BUILD_TYPE )
+ endif()
+ 
+ project(freeopcua)
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ option(BUILD_CLIENT "Build Client" ON)
+ option(BUILD_SERVER "Build Server" ON)
+@@ -60,23 +62,11 @@ function(generate_pkgconfig BASENAME)
+     endif()
+ endfunction(generate_pkgconfig)
+ if(MSVC)
+-    SET(STATIC_LIBRARY_CXX_FLAGS  /MDd CACHE STRING "")
+-    SET(EXECUTABLE_CXX_FLAGS /MDd  CACHE STRING "")
+-    SET(DYNAMIC_LIBRARY_CXX_FLAGS /MDd  CACHE STRING "")
+-    SET(D  /D)
+-
+-    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
+-    add_compile_options(/Zi /Od /EHsc /W4)
+-else(MSVC)
+-    set(CMAKE_CXX_FLAGS_DEBUG " -Wall -ggdb -o0 ${CMAKE_CXX_FLAGS_DEBUG}")
+-
+-    SET(STATIC_LIBRARY_CXX_FLAGS)
+-    SET(EXECUTABLE_CXX_FLAGS)
+-    SET(DYNAMIC_LIBRARY_CXX_FLAGS)
+-    SET(D -D)
+-    set(CMAKE_CXX_FLAGS " -std=c++11 -Wall -fPIC ${CMAKE_CXX_FLAGS} ")
+-    SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
+-    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
++    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
++    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++    add_definitions(-D_WIN32)
++    add_definitions(-D_WINDOWS)
++    add_definitions(-D_WIN32_WINNT=0x0600)
+ endif()
+ 
+ if(WIN32)
+@@ -572,7 +562,7 @@ if (BUILD_PYTHON)
+     add_subdirectory(python)
+ endif (BUILD_PYTHON)
+ 
+-install(EXPORT FreeOpcUa DESTINATION lib/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
++install(EXPORT FreeOpcUa DESTINATION share/freeopcua FILE FreeOpcUaConfig.cmake)
+ 
+ SET(CPACK_GENERATOR "DEB")
+ SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "FreeOpcUa")
