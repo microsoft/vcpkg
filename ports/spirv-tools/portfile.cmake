@@ -45,4 +45,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bi
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/spirv-tools)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/spirv-tools/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-tools/copyright)
 
-vcpkg_test_cmake(PACKAGE_NAME SPIRV-Tools)
+vcpkg_test_cmake(PACKAGE_NAME spirv-tools)
