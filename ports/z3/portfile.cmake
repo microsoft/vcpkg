@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  message(FATAL_ERROR "Z3 doesn't currently support ARM64")
+endif()
+
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
@@ -13,22 +17,33 @@ vcpkg_from_github(
   PATCHES fix_cmake_long_dir.patch
 )
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(BUILD_STATIC "-DBUILD_LIBZ3_SHARED=OFF")
+endif()
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
+  OPTIONS
+    ${BUILD_STATIC}
 )
 
 vcpkg_build_cmake()
 
 
 function(install_z3 SHORT_BUILDTYPE DEBUG_DIR)
-  # copy libz3.dll/pdb
-  file(GLOB DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/libz3.[dp]*)
-  file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}${DEBUG_DIR}/bin)
+  set(LIBS ".so" ".lib" ".dylib" ".a")
+  set(DLLS ".dll" ".pdb")
+  file(GLOB FILES ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/libz3.*)
 
-  # copy libz3.so/lib
-  file(GLOB LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/libz3.[ls]*)
-  file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}${DEBUG_DIR}/lib)
+  foreach (FILE in ${FILES})
+    get_filename_component(FILEXT ${FILE} EXT)
+    if ("${FILEXT}" IN_LIST LIBS)
+      file(INSTALL ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}${DEBUG_DIR}/lib)
+    elseif ("${FILEXT}" IN_LIST DLLS)
+      file(INSTALL ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}${DEBUG_DIR}/bin)
+    endif()
+  endforeach()
 endfunction()
 
 if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
