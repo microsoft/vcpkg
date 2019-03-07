@@ -237,10 +237,11 @@ macro(find_package name)
         endif()
     elseif("${_vcpkg_lowercase_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
         _find_package(gRPC ${ARGN})
-    elseif("${name}" STREQUAL "Qt5Core")
+    elseif("${name}" MATCHES "^Qt5[A-Z]")
         _find_package(${ARGV})
-        message("-- Intercepting Qt call: ${ARGV}")
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REGEX REPLACE "Qt5([A-Za-z]+)" "Qt5::\\1" _vcpkg_qt5lib "${name}")
+        get_target_property(_target_type ${_vcpkg_qt5lib} TYPE)
+        if("${_target_type}" STREQUAL "STATIC_LIBRARY")
             find_package(ZLIB)
             find_package(JPEG)
             find_package(PNG)
@@ -253,13 +254,14 @@ macro(find_package name)
             find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-16 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH)
             find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-16 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH)
 
-            set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
+            set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
                 ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype harfbuzz::harfbuzz sqlite3
                 ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
                 \$<\$<NOT:\$<CONFIG:DEBUG>>:${PCRE2_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${PCRE2_LIBRARY_DEBUG}>)
 
             if(MSVC)
-                set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib)
+                set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
+                    Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib)
             endif()
         endif()
     else()
