@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message(FATAL_ERROR "This portfile does not support Linux or OSX")
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "ANGLE currently only supports being built as a dynamic library")
     set(VCPKG_LIBRARY_LINKAGE dynamic)

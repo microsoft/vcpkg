@@ -18,3 +18,39 @@ index 7c769e147..08e7a663f 100644
          {
              return dpi;
          }
+diff --git a/src/common/mathutil.h b/src/common/mathutil.h
+index dcb7d8d62..774b80506 100644
+--- a/src/common/mathutil.h
++++ b/src/common/mathutil.h
+@@ -150,7 +150,7 @@ inline bool supportsSSE2()
+         return supports;
+     }
+
+-#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM)
++#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
+     {
+         int info[4];
+         __cpuid(info, 0);
+@@ -884,7 +884,7 @@ inline uint32_t BitfieldReverse(uint32_t value)
+
+ // Count the 1 bits.
+ #if defined(ANGLE_PLATFORM_WINDOWS)
+-#if defined(_M_ARM)
++#if defined(_M_ARM) || defined(_M_ARM64)
+ inline int BitCount(uint32_t bits)
+ {
+     bits = bits - ((bits >> 1) & 0x55555555);
+diff --git a/src/common/platform.h b/src/common/platform.h
+index 8287f5b2e..6de52b500 100644
+--- a/src/common/platform.h
++++ b/src/common/platform.h
+@@ -84,7 +84,7 @@
+ #   undef far
+ #endif
+
+-#if defined(_MSC_VER) && !defined(_M_ARM)
++#if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64)
+ #include <intrin.h>
+ #define ANGLE_USE_SSE
+ #elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+ 
