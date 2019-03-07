@@ -11,6 +11,8 @@ vcpkg_from_github(
         improve_compatibility_with_recent_boost.patch
         use_another_implementation_of_has_begin_end.patch
         uri_facade_win.patch
+        serverObj.patch
+        include_asio_first.patch
 )
 
 vcpkg_configure_cmake(
