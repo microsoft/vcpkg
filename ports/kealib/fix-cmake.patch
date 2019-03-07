@@ -24,12 +24,16 @@ index 464fb13..dc8e26f 100644
  
  IF(GDAL_INCLUDE_DIR AND GDAL_LIB_PATH)
      # by default, only build if paths are set
-@@ -65,6 +63,8 @@ ELSE()
+@@ -65,6 +63,12 @@ ELSE()
      set(LIBKEA_WITH_GDAL FALSE CACHE BOOL "Choose if .kea GDAL driver should be built")
  ENDIF()
  
 +find_package(hdf5 COMPONENTS CXX HL REQUIRED)
-+link_libraries(hdf5::hdf5_cpp-shared)
++if(${HDF5_USE_STATIC_LIBRARIES})
++  link_libraries(hdf5::hdf5_cpp-static)
++else()
++  link_libraries(hdf5::hdf5_cpp-shared)
++endif()
  ###############################################################################
  
  ###############################################################################
