@@ -45,7 +45,7 @@ if(WIN32)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/log2graph.exe)
 else()
   file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/octomap)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/octomap)
