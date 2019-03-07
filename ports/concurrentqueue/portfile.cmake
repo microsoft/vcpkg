@@ -12,4 +12,4 @@ vcpkg_from_github(
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/concurrentqueue RENAME copyright)
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/concurrentqueue)

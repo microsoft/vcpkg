@@ -293,6 +293,15 @@ endforeach()
 # them here shouldn't cause any problems.
 file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
 string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/lib/[^\\.]*\\.lib" "" VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
+
+# Remove unset of _IMPORT_PREFIX in VTKTargets.cmake
+STRING(REPLACE [[set(_IMPORT_PREFIX)]] 
+[[
+# VCPKG: The value of _IMPORT_PREFIX should not be unset.
+#set(_IMPORT_PREFIX)
+]]
+VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
+
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
 
 # Remove any remaining stray absolute references to the installed directory.

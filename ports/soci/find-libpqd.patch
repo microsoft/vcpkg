@@ -1,0 +1,30 @@
+diff --git a/src/cmake/modules/FindPostgreSQL.cmake b/src/cmake/modules/FindPostgreSQL.cmake
+index 8178418..6e15d5b 100644
+--- a/src/cmake/modules/FindPostgreSQL.cmake
++++ b/src/cmake/modules/FindPostgreSQL.cmake
+@@ -65,6 +65,25 @@ find_library(POSTGRESQL_LIBRARIES NAMES pq libpq
+   $ENV{ProgramFiles}/PostgreSQL/*/lib/ms
+   $ENV{SystemDrive}/PostgreSQL/*/lib/ms)
+
++find_library(POSTGRESQL_LIBRARIES_DEBUG NAMES pqd libpqd
++  PATHS
++  ${PG_CONFIG_LIBDIR}
++  /usr/lib
++  /usr/local/lib
++  /usr/lib/postgresql
++  /usr/lib64
++  /usr/local/lib64
++  /usr/lib64/postgresql
++  $ENV{ProgramFiles}/PostgreSQL/*/lib
++  $ENV{SystemDrive}/PostgreSQL/*/lib
++  $ENV{ProgramFiles}/PostgreSQL/*/lib/ms
++  $ENV{SystemDrive}/PostgreSQL/*/lib/ms)
++
++if(WIN32 AND POSTGRESQL_LIBRARIES AND POSTGRESQL_LIBRARIES_DEBUG)
++  set(POSTGRESQL_LIBRARIES optimized ${POSTGRESQL_LIBRARIES}
++                           debug ${POSTGRESQL_LIBRARIES_DEBUG})
++endif()
++
+ if(POSTGRESQL_INCLUDE_DIR AND POSTGRESQL_LIBRARIES)
+   set(POSTGRESQL_FOUND TRUE)
+ else()

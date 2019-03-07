@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 3a9fb27d0c376479f58ba2fc5be3579efa5f462776a7e725313b92413ce78f3ca60897e63b580c419eeaee2cd2101de2be1ee5af80a547ef433c6284a3053d45
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
+        "001-fix-cmake.patch"
+        "002-fix-macosx-build.patch"
 )
 
 vcpkg_configure_cmake(
