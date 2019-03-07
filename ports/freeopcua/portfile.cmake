@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES
         cmakelists_fixes.patch
         improve_compatibility_with_recent_boost.patch
+        use_another_implementation_of_has_begin_end.patch
+        uri_facade_win.patch
 )
 
 vcpkg_configure_cmake(
