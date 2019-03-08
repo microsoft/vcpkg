@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
     REF             1.4
-    SHA512          981c9c728c7888995880a97e8533fa31f41085ef57e1c61e53e555f329d20d4a882d9de724d9e93e3d009dc3fe0669fe4d1af403654a9373e4aab44c933628a3
+    SHA512          6154988fca025a196d68ca025ce95fd972ed8aed15475d4da9d4038a4a3f498b1e0a4f570ff250f3a45e97b79ac6a2a2fe08abe645a389d5f1a68fd89cc58021
     HEAD_REF        master
 )
 
