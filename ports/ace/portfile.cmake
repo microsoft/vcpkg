@@ -3,8 +3,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    set(MPC_STATIC_FLAG -static)
+    set(DLL_DECORATOR s)
 endif()
 include(vcpkg_common_functions)
 set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
@@ -40,7 +40,7 @@ file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_required_process(
-    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE}
+    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ace ${MPC_STATIC_FLAG}
     WORKING_DIRECTORY ${ACE_ROOT}
     LOGNAME mwc
 )
@@ -78,24 +78,28 @@ install_ace_headers_subdirectory(${SOURCE_PATH} "os_include/sys")
 function(install_ace_library SOURCE_PATH ACE_LIBRARY)
     set(LIB_PATH ${SOURCE_PATH}/../lib/)
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}d.dll
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            ${LIB_PATH}/${ACE_LIBRARY}d.dll
+        endif()
         ${LIB_PATH}/${ACE_LIBRARY}d_dll.pdb
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}.dll
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            ${LIB_PATH}/${ACE_LIBRARY}.dll
+        endif()
         ${LIB_PATH}/${ACE_LIBRARY}.pdb
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
 
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}d.lib
+        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
 
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}.lib
+        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 endfunction()
