@@ -168,6 +168,7 @@ target_link_libraries(libANGLE PRIVATE
     $<$<BOOL:${WINDOWS_STORE}>:angle::renderer::winrt>
     $<$<BOOL:${WINDOWS_DESKTOP}>:angle::renderer::win32>
     $<$<BOOL:${WINDOWS_DESKTOP}>:angle::renderer::opengl>
+    $<$<BOOL:${WINDOWS_DESKTOP}>:gdi32>
 )
 target_include_directories(libANGLE PRIVATE "src/third_party/khronos")
 target_compile_definitions(libANGLE
