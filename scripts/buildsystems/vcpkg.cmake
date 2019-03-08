@@ -181,6 +181,15 @@ function(add_library name)
     endif()
 endfunction()
 
+function(add_qt_library _target)
+    foreach(_lib IN LISTS ARGN)
+        find_library(${_lib}_LIBRARY_DEBUG NAMES ${_lib}d PATH_SUFFIXES plugins/platforms)
+        find_library(${_lib}_LIBRARY_RELEASE NAMES ${_lib} PATH_SUFFIXES plugins/platforms)
+        set_property(TARGET ${_target} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
+        \$<\$<NOT:\$<CONFIG:DEBUG>>:${${_lib}_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${${_lib}_LIBRARY_DEBUG}>)
+    endforeach()
+endfunction()
+
 macro(find_package name)
     string(TOLOWER "${name}" _vcpkg_lowercase_name)
     if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake")
@@ -237,7 +246,7 @@ macro(find_package name)
         endif()
     elseif("${_vcpkg_lowercase_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
         _find_package(gRPC ${ARGN})
-    elseif("${name}" MATCHES "^Qt5[A-Z]")
+    elseif("${name}" STREQUAL "Qt5Core")
         _find_package(${ARGV})
         string(REGEX REPLACE "Qt5([A-Za-z]+)" "Qt5::\\1" _vcpkg_qt5lib "${name}")
         get_target_property(_target_type ${_vcpkg_qt5lib} TYPE)
@@ -251,17 +260,24 @@ macro(find_package name)
             find_package(PostgreSQL MODULE REQUIRED)
             find_package(double-conversion CONFIG)
             find_package(OpenSSL)
-            find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-16 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH)
-            find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-16 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH)
 
             set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
                 ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype harfbuzz::harfbuzz sqlite3
-                ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
-                \$<\$<NOT:\$<CONFIG:DEBUG>>:${PCRE2_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${PCRE2_LIBRARY_DEBUG}>)
+                ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto  
+            )
+
+            add_qt_library(${_vcpkg_qt5lib} 
+                pcre2-16 
+                Qt5ThemeSupport
+                Qt5EventDispatcherSupport
+                Qt5PlatformCompositorSupport 
+                Qt5FontDatabaseSupport)
 
             if(MSVC)
                 set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-                    Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib)
+                    Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
+
+                add_qt_library(${_vcpkg_qt5lib} Qt5WindowsUIAutomationSupport qwindows qdirect2d)
             endif()
         endif()
     else()
