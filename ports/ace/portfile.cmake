@@ -77,22 +77,19 @@ install_ace_headers_subdirectory(${SOURCE_PATH} "os_include/sys")
 
 # Install the libraries
 function(install_ace_library SOURCE_PATH ACE_LIBRARY)
-    set(LIB_PATH ${SOURCE_PATH}/../lib/)
-    file(INSTALL
-        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(LIB_PATH ${SOURCE_PATH}/lib/)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        file(INSTALL
             ${LIB_PATH}/${ACE_LIBRARY}d.dll
-        endif()
-        ${LIB_PATH}/${ACE_LIBRARY}d_dll.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-
-    file(INSTALL
-        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            ${LIB_PATH}/${ACE_LIBRARY}d_dll.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+        file(INSTALL
             ${LIB_PATH}/${ACE_LIBRARY}.dll
-        endif()
-        ${LIB_PATH}/${ACE_LIBRARY}.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
+            ${LIB_PATH}/${ACE_LIBRARY}.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        )
+    endif()
 
     file(INSTALL
         ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d.lib
@@ -105,12 +102,12 @@ function(install_ace_library SOURCE_PATH ACE_LIBRARY)
     )
 endfunction()
 
-install_ace_library(${SOURCE_PATH} "ACE")
-install_ace_library(${SOURCE_PATH} "ACE_Compression")
-install_ace_library(${SOURCE_PATH} "ACE_ETCL")
-install_ace_library(${SOURCE_PATH} "ACE_Monitor_Control")
-install_ace_library(${SOURCE_PATH} "ACE_QoS")
-install_ace_library(${SOURCE_PATH} "ACE_RLECompression")
+install_ace_library(${ACE_ROOT} "ACE")
+install_ace_library(${ACE_ROOT} "ACE_Compression")
+install_ace_library(${ACE_ROOT} "ACE_ETCL")
+install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
+install_ace_library(${ACE_ROOT} "ACE_QoS")
+install_ace_library(${ACE_ROOT} "ACE_RLECompression")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/../COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
