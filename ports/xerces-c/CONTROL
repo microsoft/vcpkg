@@ -5,3 +5,7 @@ Description: Xerces-C++ is a XML parser, for parsing, generating, manipulating, 
 Feature: icu
 Description: ICU support
 Build-Depends: icu
+
+Feature: xmlch_wchar
+Description: XMLCh type uses wchar_t
+
