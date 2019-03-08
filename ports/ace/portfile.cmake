@@ -8,6 +8,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 include(vcpkg_common_functions)
 set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
+set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-src-6.5.4.zip"
