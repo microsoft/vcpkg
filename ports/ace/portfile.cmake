@@ -9,11 +9,15 @@ endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-6.5.4.zip"
-    FILENAME ACE-6.5.4.zip
-    SHA512 d18248f1fcea0e4993d5ba9c62ff99883d4eaecfb0b6b88062961723c0f30ac423c9f550ada98042cd7913d2586feb2f8d47b5779403017afaa89a622613d1ae
+    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-src-6.5.4.zip"
+    FILENAME ACE-src-6.5.4.zip
+    SHA512 e699b24aa65c44137b7bdbe3c045b6c8d76c43ff4c78a05efe6d0d7fd05acdd1166b74529cc4d7ba9440b6b29cce3aa2dcc97f574c94afc05b0fef18475d6ce3
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_PATH})
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -30,10 +34,18 @@ else()
 endif()
 
 # Add ace/config.h file
-# see http://www.dre.vanderbilt.edu/~schmidt/DOC_ROOT/ACE/ACE-INSTALL.html#win32
+# see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
+
+# Invoke mwc.pl to generate the necessary solution and project files
+vcpkg_execute_required_process(
+    COMMAND ${PERL} ${SOURCE_PATH}/bin/mwc.pl -type ${SOLUTION_TYPE}
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME mwc
+)
+
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/ace_${SOLUTION_TYPE}.sln
+    PROJECT_PATH ${SOURCE_PATH}/ace.sln
     PLATFORM ${MSBUILD_PLATFORM}
 )
 
