@@ -1,0 +1,53 @@
+diff --git a/physx/buildtools/presets/public/vc14win32.xml b/physx/buildtools/presets/public/vc14win32.xml
+index 047d4dbc..daa66197 100644
+--- a/physx/buildtools/presets/public/vc14win32.xml
++++ b/physx/buildtools/presets/public/vc14win32.xml
+@@ -5,7 +5,7 @@
+     <cmakeSwitch name="PX_BUILDSNIPPETS" value="True" comment="Generate the snippets" />
+     <cmakeSwitch name="PX_BUILDPUBLICSAMPLES" value="True" comment="Generate the samples projects" />
+     <cmakeSwitch name="PX_GENERATE_STATIC_LIBRARIES" value="False" comment="Generate static libraries" />
+-    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="True" comment="Use the statically linked windows CRT" />
++    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="False" comment="Use the statically linked windows CRT" />
+     <cmakeSwitch name="NV_USE_DEBUG_WINCRT" value="True" comment="Use the debug version of the CRT" />
+     <cmakeSwitch name="PX_FLOAT_POINT_PRECISE_MATH" value="False" comment="Float point precise math" />
+   </CMakeSwitches>
+diff --git a/physx/buildtools/presets/public/vc14win64.xml b/physx/buildtools/presets/public/vc14win64.xml
+index b0def6e3..a370a0a6 100644
+--- a/physx/buildtools/presets/public/vc14win64.xml
++++ b/physx/buildtools/presets/public/vc14win64.xml
+@@ -5,7 +5,7 @@
+     <cmakeSwitch name="PX_BUILDSNIPPETS" value="True" comment="Generate the snippets" />
+     <cmakeSwitch name="PX_BUILDPUBLICSAMPLES" value="True" comment="Generate the samples projects" />
+     <cmakeSwitch name="PX_GENERATE_STATIC_LIBRARIES" value="False" comment="Generate static libraries" />
+-    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="True" comment="Use the statically linked windows CRT" />
++    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="False" comment="Use the statically linked windows CRT" />
+     <cmakeSwitch name="NV_USE_DEBUG_WINCRT" value="True" comment="Use the debug version of the CRT" />
+     <cmakeSwitch name="PX_FLOAT_POINT_PRECISE_MATH" value="False" comment="Float point precise math" />
+   </CMakeSwitches>
+diff --git a/physx/buildtools/presets/public/vc15win32.xml b/physx/buildtools/presets/public/vc15win32.xml
+index f27ec199..58328e1a 100644
+--- a/physx/buildtools/presets/public/vc15win32.xml
++++ b/physx/buildtools/presets/public/vc15win32.xml
+@@ -5,7 +5,7 @@
+     <cmakeSwitch name="PX_BUILDSNIPPETS" value="True" comment="Generate the snippets" />
+     <cmakeSwitch name="PX_BUILDPUBLICSAMPLES" value="True" comment="Generate the samples projects" />
+     <cmakeSwitch name="PX_GENERATE_STATIC_LIBRARIES" value="False" comment="Generate static libraries" />
+-    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="True" comment="Use the statically linked windows CRT" />
++    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="False" comment="Use the statically linked windows CRT" />
+     <cmakeSwitch name="NV_USE_DEBUG_WINCRT" value="True" comment="Use the debug version of the CRT" />
+     <cmakeSwitch name="PX_FLOAT_POINT_PRECISE_MATH" value="False" comment="Float point precise math" />
+   </CMakeSwitches>
+diff --git a/physx/buildtools/presets/public/vc15win64.xml b/physx/buildtools/presets/public/vc15win64.xml
+index 7044205a..86cc0b75 100644
+--- a/physx/buildtools/presets/public/vc15win64.xml
++++ b/physx/buildtools/presets/public/vc15win64.xml
+@@ -5,7 +5,7 @@
+     <cmakeSwitch name="PX_BUILDSNIPPETS" value="True" comment="Generate the snippets" />
+     <cmakeSwitch name="PX_BUILDPUBLICSAMPLES" value="True" comment="Generate the samples projects" />
+     <cmakeSwitch name="PX_GENERATE_STATIC_LIBRARIES" value="False" comment="Generate static libraries" />
+-    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="True" comment="Use the statically linked windows CRT" />
++    <cmakeSwitch name="NV_USE_STATIC_WINCRT" value="False" comment="Use the statically linked windows CRT" />
+     <cmakeSwitch name="NV_USE_DEBUG_WINCRT" value="True" comment="Use the debug version of the CRT" />
+     <cmakeSwitch name="PX_FLOAT_POINT_PRECISE_MATH" value="False" comment="Float point precise math" />
+   </CMakeSwitches>
+   
