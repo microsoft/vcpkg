@@ -11,12 +11,17 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
+# Enable static build
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindSFML.cmake)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TGUI_SHARED_LIBS)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DTGUI_BUILD_GUI_BUILDER=OFF
         -DTGUI_MISC_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/share/tgui
+        -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
