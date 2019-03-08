@@ -113,6 +113,32 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
     )
+
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+configure_qt(
+    SOURCE_PATH ${SOURCE_PATH}
+    PLATFORM "macx-clang"
+    OPTIONS
+        ${CORE_OPTIONS}
+    OPTIONS_RELEASE
+        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
+        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
+        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
+        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
+        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
+        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
+    OPTIONS_DEBUG
+        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
+        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
+        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
+        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
+)
 endif()
 
 install_qt()
