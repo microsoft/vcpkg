@@ -1,10 +1,14 @@
 include(vcpkg_common_functions)
 
+# The tagged commit for release 1.4 was changed by the library's author.
+# The current commit for release 1.4 is 3f804ca0f9ec94e3c85e3c5cc00aecc577fb8aad
+# We use the commit's hash to avoid the tag changing again it in the future.
+set(VERSION_1_4_COMMIT 3f804ca0f9ec94e3c85e3c5cc00aecc577fb8aad)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF             1.4
-    SHA512          6154988fca025a196d68ca025ce95fd972ed8aed15475d4da9d4038a4a3f498b1e0a4f570ff250f3a45e97b79ac6a2a2fe08abe645a389d5f1a68fd89cc58021
+    REF             ${VERSION_1_4_COMMIT}
+    SHA512          a77d66a8d485a99278f15652d26f255653824c47bd3653233e89ddb6368bc3b45ab0a8049e504c5acc8cf051da582bf6b4d8461c8f7f57bf5a0b7dcaddc0afbb
     HEAD_REF        master
 )
 
