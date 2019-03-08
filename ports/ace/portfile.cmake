@@ -7,6 +7,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
+set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-src-6.5.4.zip"
@@ -39,8 +40,8 @@ file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_required_process(
-    COMMAND ${PERL} ${SOURCE_PATH}/bin/mwc.pl -type ${SOLUTION_TYPE}
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE}
+    WORKING_DIRECTORY ${ACE_ROOT}
     LOGNAME mwc
 )
 
