@@ -122,5 +122,5 @@ install_ace_library(${ACE_ROOT} "ACE_QoS")
 install_ace_library(${ACE_ROOT} "ACE_RLECompression")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/../COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
+file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
