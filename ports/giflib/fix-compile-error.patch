@@ -1,3 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e9b6a17..1fbfeee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,7 @@ set(GIFLIB_SOURCES
+     lib/quantize.c
+ )
+ 
++add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ add_library(gif ${GIFLIB_SOURCES})
+ if (BUILD_SHARED_LIBS)
+     set_property(TARGET gif PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
 diff --git a/lib/dgif_lib.c b/lib/dgif_lib.c
 index fddc0d2..7a6ab9c 100644
 --- a/lib/dgif_lib.c
@@ -73,15 +85,4 @@ index f30b61b..18dc4a2 100644
  
      GifFile->Private = (void *)Private;
      Private->FileHandle = FileHandle;
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e9b6a17..1fbfeee 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -17,6 +17,7 @@ set(GIFLIB_SOURCES
-     lib/quantize.c
- )
- 
-+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
- add_library(gif ${GIFLIB_SOURCES})
- if (BUILD_SHARED_LIBS)
-     set_property(TARGET gif PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
