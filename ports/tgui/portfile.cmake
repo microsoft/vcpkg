@@ -11,16 +11,25 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
+set(TGUI_SHARE_PATH "${CURRENT_PACKAGES_DIR}/share/tgui")
+set(TGUI_TOOLS_PATH "${CURRENT_PACKAGES_DIR}/tools/tgui")
+
 # Enable static build
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindSFML.cmake)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TGUI_SHARED_LIBS)
+file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" TGUI_SHARED_LIBS)
+
+# gui-builder
+set(BUILD_GUI_BUILDER OFF)
+if("tool" IN_LIST FEATURES)
+    set(BUILD_GUI_BUILDER ON)
+endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_NINJA
     OPTIONS
-        -DTGUI_BUILD_GUI_BUILDER=OFF
-        -DTGUI_MISC_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/share/tgui
+        -DTGUI_BUILD_GUI_BUILDER=${BUILD_GUI_BUILDER}
+        -DTGUI_MISC_INSTALL_PREFIX="${TGUI_SHARE_PATH}"
         -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
 )
 
@@ -28,7 +37,17 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TGUI)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(EXISTS "${TGUI_SHARE_PATH}/gui-builder/gui-builder.exe")
+    file(MAKE_DIRECTORY "${TGUI_TOOLS_PATH}")
+    file(RENAME "${TGUI_SHARE_PATH}/gui-builder/gui-builder.exe" "${TGUI_TOOLS_PATH}/gui-builder.exe")
+    # Need to copy `resources` and `themes` directories
+    file(COPY "${TGUI_SHARE_PATH}/gui-builder/resources" DESTINATION "${TGUI_TOOLS_PATH}")
+    file(COPY "${TGUI_SHARE_PATH}/gui-builder/themes" DESTINATION "${TGUI_TOOLS_PATH}")
+    file(REMOVE_RECURSE "${TGUI_SHARE_PATH}/gui-builder")
+    vcpkg_copy_tool_dependencies("${TGUI_TOOLS_PATH}")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tgui/license.txt ${CURRENT_PACKAGES_DIR}/share/tgui/copyright)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/tgui/license.txt" "${CURRENT_PACKAGES_DIR}/share/tgui/copyright")
