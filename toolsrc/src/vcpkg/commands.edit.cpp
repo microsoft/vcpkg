@@ -13,16 +13,37 @@ namespace vcpkg::Commands::Edit
         std::vector<fs::path> output;
 
 #if defined(_WIN32)
-        static const std::array<const char*, 3> REGKEYS = {
-            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
-            R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
-            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+        struct RegKey
+        {
+            HKEY root;
+            const char *subkey;
+        } REGKEYS[] = {
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)"
+            },
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)"
+            },
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)"
+            },
+            {
+                HKEY_CURRENT_USER,
+                R"(Software\Microsoft\Windows\CurrentVersion\Uninstall\{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1)"
+            },
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1)"
+            },
         };
 
         for (auto&& keypath : REGKEYS)
         {
             const Optional<std::string> code_installpath =
-                System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, "InstallLocation");
+                System::get_registry_string(keypath.root, keypath.subkey, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
                 const fs::path install_path = fs::path(*c);
@@ -157,6 +178,9 @@ namespace vcpkg::Commands::Edit
 #elif defined(__APPLE__)
         candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
         candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
+#elif defined(__linux__)
+        candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
+        candidate_paths.push_back(fs::path{"/usr/bin/code"});
 #endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });

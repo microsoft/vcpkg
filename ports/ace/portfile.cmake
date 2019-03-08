@@ -3,17 +3,23 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    set(MPC_STATIC_FLAG -static)
+    set(DLL_DECORATOR s)
 endif()
 include(vcpkg_common_functions)
+set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
+set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_3/ACE-6.5.3.zip"
-    FILENAME ACE-6.5.3.zip
-    SHA512 1c24c7a138b6580e0f2a71d3e797ed846a3c046854c19d10175198dc519b610b2ac684d6e0e3999705319304b6eee3f09405cb43ce48a869d2f1446342da469d
+    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-src-6.5.4.zip"
+    FILENAME ACE-src-6.5.4.zip
+    SHA512 e699b24aa65c44137b7bdbe3c045b6c8d76c43ff4c78a05efe6d0d7fd05acdd1166b74529cc4d7ba9440b6b29cce3aa2dcc97f574c94afc05b0fef18475d6ce3
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_PATH})
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -23,11 +29,25 @@ else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
+if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    set(SOLUTION_TYPE vs2017)
+else()
+    set(SOLUTION_TYPE vc14)
+endif()
+
 # Add ace/config.h file
-# see http://www.dre.vanderbilt.edu/~schmidt/DOC_ROOT/ACE/ACE-INSTALL.html#win32
+# see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
+
+# Invoke mwc.pl to generate the necessary solution and project files
+vcpkg_execute_required_process(
+    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ace ${MPC_STATIC_FLAG}
+    WORKING_DIRECTORY ${ACE_ROOT}
+    LOGNAME mwc
+)
+
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/ace_vc14.sln
+    PROJECT_PATH ${SOURCE_PATH}/ace.sln
     PLATFORM ${MSBUILD_PLATFORM}
 )
 
@@ -48,6 +68,7 @@ file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/)
 install_ace_headers_subdirectory(${SOURCE_PATH} "Compression")
 install_ace_headers_subdirectory(${SOURCE_PATH} "Compression/rle")
 install_ace_headers_subdirectory(${SOURCE_PATH} "ETCL")
+install_ace_headers_subdirectory(${SOURCE_PATH} "QoS")
 install_ace_headers_subdirectory(${SOURCE_PATH} "Monitor_Control")
 install_ace_headers_subdirectory(${SOURCE_PATH} "os_include")
 install_ace_headers_subdirectory(${SOURCE_PATH} "os_include/arpa")
@@ -57,37 +78,49 @@ install_ace_headers_subdirectory(${SOURCE_PATH} "os_include/sys")
 
 # Install the libraries
 function(install_ace_library SOURCE_PATH ACE_LIBRARY)
-    set(LIB_PATH ${SOURCE_PATH}/../lib/)
-    file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}d.dll
-        ${LIB_PATH}/${ACE_LIBRARY}d_dll.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
+    set(LIB_PATH ${SOURCE_PATH}/lib/)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        # Install the DLL files
+        file(INSTALL
+            ${LIB_PATH}/${ACE_LIBRARY}d.dll
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+        file(INSTALL
+            ${LIB_PATH}/${ACE_LIBRARY}.dll
+            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        )
 
-    file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}.dll
-        ${LIB_PATH}/${ACE_LIBRARY}.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
+        # Install the pdb files
+        file(INSTALL
+            ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d_dll.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+        file(INSTALL
+            ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        )
+    endif()
 
+    # Install the lib files
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}d.lib
+        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
 
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}.lib
+        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 endfunction()
 
-install_ace_library(${SOURCE_PATH} "ACE")
-install_ace_library(${SOURCE_PATH} "ACE_Compression")
-install_ace_library(${SOURCE_PATH} "ACE_ETCL")
-install_ace_library(${SOURCE_PATH} "ACE_Monitor_Control")
-install_ace_library(${SOURCE_PATH} "ACE_QoS")
-install_ace_library(${SOURCE_PATH} "ACE_RLECompression")
+install_ace_library(${ACE_ROOT} "ACE")
+install_ace_library(${ACE_ROOT} "ACE_Compression")
+install_ace_library(${ACE_ROOT} "ACE_ETCL")
+install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
+install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
+install_ace_library(${ACE_ROOT} "ACE_QoS")
+install_ace_library(${ACE_ROOT} "ACE_RLECompression")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/../COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
+file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
