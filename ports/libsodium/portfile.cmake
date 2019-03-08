@@ -8,6 +8,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt 
+    ${SOURCE_PATH}/CMakeLists.txt 
+    COPYONLY
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -39,3 +45,5 @@ configure_file(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright
     COPYONLY
 )
+
+vcpkg_test_cmake(PACKAGE_NAME unofficial-${PORT})
