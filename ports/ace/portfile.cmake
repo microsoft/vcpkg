@@ -78,8 +78,8 @@ install_ace_headers_subdirectory(${SOURCE_PATH} "os_include/sys")
 # Install the libraries
 function(install_ace_library SOURCE_PATH ACE_LIBRARY)
     set(LIB_PATH ${SOURCE_PATH}/lib/)
-    # Install the DLL only in case of a dynamic build
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        # Install the DLL files
         file(INSTALL
             ${LIB_PATH}/${ACE_LIBRARY}d.dll
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
@@ -88,17 +88,17 @@ function(install_ace_library SOURCE_PATH ACE_LIBRARY)
             ${LIB_PATH}/${ACE_LIBRARY}.dll
             DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         )
-    endif()
 
-    # Install the pdb files
-    file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d_dll.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-    file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
+        # Install the pdb files
+        file(INSTALL
+            ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d_dll.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+        file(INSTALL
+            ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        )
+    endif()
 
     # Install the lib files
     file(INSTALL
