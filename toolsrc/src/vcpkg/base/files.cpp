@@ -216,7 +216,7 @@ namespace vcpkg::Files
         {
             return fs::stdfs::copy_file(oldpath, newpath, opts, ec);
         }
-        virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
             return fs::stdfs::copy_symlink(oldpath, newpath, ec);
         }
