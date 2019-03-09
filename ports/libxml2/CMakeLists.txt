@@ -96,7 +96,7 @@ configure_file(include/libxml/xmlversion.h.in include/libxml/xmlversion.h)
 
 add_library(libxml2 ${SOURCES})
 if(INSTALL_HEADERS)
-    file(GLOB PUBLIC_HEADERS include/libxml/*.h ${CMAKE_CURRENT_BINARY_DIR}/include/libxml/version.h)
+    file(GLOB PUBLIC_HEADERS include/libxml/*.h ${CMAKE_CURRENT_BINARY_DIR}/include/libxml/xmlversion.h)
     list(FILTER PUBLIC_HEADERS EXCLUDE REGEX "xmlexports\\.h$")
     list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/xmlexports.h)
 
