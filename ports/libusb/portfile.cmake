@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF v1.0.22
     SHA512 b1fed66aafa82490889ee488832c6884a95d38ce7b28fb7c3234b9bce1f749455d7b91cde397a0abc25101410edb13ab2f9832c59aa7b0ea8c19ba2cf4c63b00
     HEAD_REF master
+    PATCHES
+      "${CMAKE_CURRENT_LIST_DIR}/fix_c2001.patch"
 )
 
 if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
