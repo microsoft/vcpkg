@@ -11,8 +11,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-set(TGUI_SHARE_PATH "${CURRENT_PACKAGES_DIR}/share/tgui")
-set(TGUI_TOOLS_PATH "${CURRENT_PACKAGES_DIR}/tools/tgui")
+set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
+set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
 
 # Enable static build
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
@@ -29,7 +29,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DTGUI_BUILD_GUI_BUILDER=${BUILD_GUI_BUILDER}
-        -DTGUI_MISC_INSTALL_PREFIX="${TGUI_SHARE_PATH}"
+        -DTGUI_MISC_INSTALL_PREFIX=${TGUI_SHARE_PATH}
         -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
 )
 
