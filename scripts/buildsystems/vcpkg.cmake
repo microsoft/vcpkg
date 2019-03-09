@@ -278,6 +278,11 @@ macro(find_package name)
                     Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
 
                 add_qt_library(${_vcpkg_qt5lib} Qt5WindowsUIAutomationSupport qwindows qdirect2d)
+            elseif(APPLE)
+            set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES           
+                    "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices" 
+                    "-weak_framework AppKit" "-weak_framework Security" "-weak_framework ApplicationServices" 
+                    "-weak_framework CoreFoundation" "-weak_framework SystemConfiguration")
             endif()
         endif()
     else()
