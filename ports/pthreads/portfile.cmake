@@ -41,12 +41,12 @@ endforeach()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads RENAME copyright)
 file(INSTALL 
-    ${CURRENT_PACKAGES_DIR}/lib/pthreadsVC2.lib
+    ${CURRENT_PACKAGES_DIR}/lib/pthreadVC2.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link
-    RENAME pthreads.lib
+    RENAME pthread.lib
 )
 file(INSTALL 
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pthreadsVC2d.lib
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVC2d.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link
-    RENAME pthreads.lib
+    RENAME pthread.lib
 )

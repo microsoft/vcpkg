@@ -13,14 +13,34 @@ vcpkg_extract_source_archive_ex(
 )
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+set(USE_MP3 OFF)
+if("mpg123" IN_LIST FEATURES)
+    set(USE_MP3 ON)
+endif()
+
+set(USE_FLAC OFF)
+if("libflac" IN_LIST FEATURES)
+    set(USE_FLAC ON)
+endif()
+
+set(USE_MOD OFF)
+if("libmodplug" IN_LIST FEATURES)
+    set(USE_MOD ON)
+endif()
+
+set(USE_OGGVORBIS OFF)
+if("libvorbis" IN_LIST FEATURES)
+    set(USE_OGGVORBIS ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSDL_MIXER_ENABLE_MP3=ON       # mpg123
-        -DSDL_MIXER_ENABLE_FLAC=ON      # libflac
-        -DSDL_MIXER_ENABLE_MOD=ON       # libmodplug
-        -DSDL_MIXER_ENABLE_OGGVORBIS=ON # libvorbis 
+        -DSDL_MIXER_ENABLE_MP3=${USE_MP3}             # mpg123
+        -DSDL_MIXER_ENABLE_FLAC=${USE_FLAC}           # libflac
+        -DSDL_MIXER_ENABLE_MOD=${USE_MOD}             # libmodplug
+        -DSDL_MIXER_ENABLE_OGGVORBIS=${USE_OGGVORBIS} # libvorbis 
     OPTIONS_DEBUG
         -DSDL_MIXER_SKIP_HEADERS=ON
 )

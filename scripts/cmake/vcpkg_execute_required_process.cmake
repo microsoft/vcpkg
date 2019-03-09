@@ -56,6 +56,7 @@ function(vcpkg_execute_required_process)
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
+            "  Error code: ${error_code}\n"
             "  See logs for more information:\n"
             ${STRINGIFIED_LOGS}
         )
