@@ -3,12 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/protobuf
-    REF v3.6.0.1
-    SHA512 63cd799d5d6edbb05a87bc07992271c5bdb9595366d698b4dc5476cc89dc278d1c43186b9e56340958aefea2ce23e15a9c3a550158414add868b56e789ceafe4
+    REF v3.6.1.3
+    SHA512 9eadb46c7daa19e612516958169bc90943b38b429a4b2cf2171b66b57f50a2f8a9b66cbf58bdd44517af414b78e0f3ab2e1361891dc60ecd098185da2638d37e
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
+        fix-uwp.patch
+        disable-lite.patch
+        version-rc-msvc.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -68,16 +69,22 @@ endfunction()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/include)
 
+if(CMAKE_HOST_WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
-    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${CMAKE_EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${CMAKE_EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
+    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake "${RELEASE_MODULE}")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(READ ${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake DEBUG_MODULE)
     string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${CMAKE_EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${CMAKE_EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "${DEBUG_MODULE}")
 endif()
 
@@ -99,10 +106,17 @@ if(CMAKE_HOST_WIN32)
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
     endif()
 else()
+    file(GLOB EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/protoc*)
+    foreach(E IN LISTS EXECUTABLES)
+        file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
+    endforeach()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc DESTINATION ${CURRENT_PACKAGES_DIR}/tools/protobuf
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
+endif()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libprotobuf-lite.lib)
+    message(FATAL_ERROR "Expected to not build the lite runtime because it contains some of the same symbols as the full runtime.")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

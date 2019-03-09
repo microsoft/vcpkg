@@ -1,7 +1,7 @@
 diff -Nuar a/nmake.opt b/nmake.opt
 --- a/nmake.opt	2018-05-04 09:05:46.000000000 +0200
 +++ b/nmake.opt	2018-05-11 22:58:39.387603800 +0200
-@@ -120,11 +120,21 @@
+@@ -124,11 +124,21 @@
  CXX_PDB_FLAGS=
  !ENDIF
  

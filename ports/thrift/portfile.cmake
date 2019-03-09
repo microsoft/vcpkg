@@ -15,8 +15,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
-    REF f12cacf56145e2c8f0d4429694fedf5453648089
-    SHA512 5efd089ea6bfd6c389cf0392412205d27379f54c4481197ffbb1d7494ee350a003f3896a62d4e5b6cfdf9240d356b27389da8ba7c089d7b0ea56c32a7485d973
+    REF 2ec93c8a2da2531755078ab6d5a65a96e26cf4c2
+    SHA512 6e6787e04ec963516be669511a18e128e5aff19bf33c70b37d9488b4abf42c20de75c8e72d60a81e679dea2faa8abe526deb71a6fc8ef7ba27216990be07c22c
     HEAD_REF master
 )
 
@@ -42,10 +42,10 @@ vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-if(EXES)
-    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/thrift)
-    file(REMOVE ${EXES})
+file(GLOB COMPILER "${CURRENT_PACKAGES_DIR}/bin/thrift*")
+if(COMPILER)
+    file(COPY ${COMPILER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/thrift)
+    file(REMOVE ${COMPILER})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/thrift)
 endif()
 

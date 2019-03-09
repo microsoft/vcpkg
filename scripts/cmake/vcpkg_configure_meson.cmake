@@ -39,7 +39,12 @@ function(vcpkg_configure_meson)
     vcpkg_find_acquire_program(MESON)
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+    if(CMAKE_HOST_WIN32)
+        set(_PATHSEP ";")
+    else()
+        set(_PATHSEP ":")
+    endif()
+    set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
 
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

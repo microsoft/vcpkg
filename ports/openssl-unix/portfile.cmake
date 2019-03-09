@@ -3,23 +3,24 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
 endif()
 
 include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2o)
-set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
+set(OPENSSL_VERSION 1.0.2q)
 
 vcpkg_find_acquire_program(PERL)
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 8a2c93657c85143e76785bb32ee836908c31a6f5f8db993fa9777acba6079e630cdddd03edbad65d1587199fc13a1507789eacf038b56eb99139c2091d9df7fd
+    SHA512 403e6cad42db3ba860c3fa4fa81c1b7b02f0b873259e5c19a7fc8e42de0854602555f1b1ca74f4e3a7737a4cbd3aac063061e628ec86534586500819fae7fec0
 )
 
-vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
-            ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
-            ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH MASTER_COPY_SOURCE_PATH
+    ARCHIVE ${OPENSSL_SOURCE_ARCHIVE}
+    REF ${OPENSSL_VERSION}
+    PATCHES
+        ConfigureIncludeQuotesFix.patch
+        STRINGIFYPatch.patch
+        EmbedSymbolsInStaticLibsZ7.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -59,3 +60,5 @@ file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_D
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl)
 endif()
+
+vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

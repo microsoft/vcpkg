@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
-    REF v1.21.0
-    SHA512 ab6b52f8bee1900953d9136e4d281f81ba9f14287760f7bfc8633289699cb9eeaab15d9146ed05b164631fcb3c2b5abcee8c10499d080a82a411bb1f02564c48
+    REF v1.25.0
+    SHA512 d1024f9193e2ad69cc670441b74ff7c63ca7d295e9a7a43c90da6781a39352687465bfe7e852d6e9085c21821bf8d11c10139c7229759fdce567d809c605acfd
     HEAD_REF v1.x
 )
 
@@ -18,7 +18,14 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libuv TARGET_PATH share/unofficial-libuv)
 vcpkg_copy_pdbs()
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/unofficial-libuv-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/unofficial-libuv/unofficial-libuv-config.cmake
+    @ONLY
+)
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/uv.h UV_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

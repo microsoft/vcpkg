@@ -24,8 +24,11 @@ namespace vcpkg::Checks
         metrics->flush();
 
 #if defined(_WIN32)
-        SetConsoleCP(GlobalState::g_init_console_cp);
-        SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
+        if (GlobalState::g_init_console_initialized)
+        {
+            SetConsoleCP(GlobalState::g_init_console_cp);
+            SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
+        }
 #endif
 
         auto elapsed_us = GlobalState::timer.lock()->microseconds();
@@ -46,12 +49,11 @@ namespace vcpkg::Checks
 #if defined(_WIN32)
     static BOOL ctrl_handler(DWORD fdw_ctrl_type)
     {
+        switch (fdw_ctrl_type)
         {
-            auto locked_metrics = Metrics::g_metrics.lock();
-            locked_metrics->track_property("CtrlHandler", std::to_string(fdw_ctrl_type));
-            locked_metrics->track_property("error", "CtrlHandler was fired.");
+            case CTRL_C_EVENT: GlobalState::g_ctrl_c_state.transition_handle_ctrl_c(); return TRUE;
+            default: return FALSE;
         }
-        cleanup_and_exit(EXIT_FAILURE);
     }
 
     void register_console_ctrl_handler()
