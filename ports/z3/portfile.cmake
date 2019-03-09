@@ -1,8 +1,12 @@
-include(vcpkg_common_functions)
-
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   message(FATAL_ERROR "Z3 doesn't currently support ARM64")
 endif()
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  message(FATAL_ERROR "Z3 doesn't currently support UWP")
+endif()
+
+include(vcpkg_common_functions)
 
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
