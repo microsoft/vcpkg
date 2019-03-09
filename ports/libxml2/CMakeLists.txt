@@ -24,7 +24,7 @@ else()
 endif()
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/xmlexports.h "${XMLEXPORTS_H}")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     configure_file(include/win32config.h config.h COPYONLY)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     configure_file("${PORT_DIR}/config.osx.h" config.h COPYONLY)
@@ -90,6 +90,11 @@ set(MODULE_EXTENSION ".so")
 set(WITH_ZLIB 1)
 set(WITH_LZMA 1)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(WITH_CATALOG 0)
+    set(WITH_MODULES 0)
+endif()
+
 message(STATUS "Generating xmlversion.h")
 
 configure_file(include/libxml/xmlversion.h.in include/libxml/xmlversion.h)
@@ -108,7 +113,7 @@ target_link_libraries(libxml2 PRIVATE
     ZLIB::ZLIB
     ${LIBLZMA_LIBRARIES}
 )
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     target_include_directories(libxml2 PRIVATE win32/vc10)
     target_link_libraries(libxml2 PRIVATE
         wsock32.lib
@@ -116,6 +121,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     )
     target_compile_definitions(libxml2 PRIVATE
         -DHAVE_WIN32_THREADS
+        _WINSOCK_DEPRECATED_NO_WARNINGS
     )
 endif()
 
