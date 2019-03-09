@@ -37,14 +37,24 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TGUI)
 vcpkg_copy_pdbs()
 
-if(EXISTS "${TGUI_SHARE_PATH}/gui-builder/gui-builder.exe")
-    file(MAKE_DIRECTORY "${TGUI_TOOLS_PATH}")
-    file(RENAME "${TGUI_SHARE_PATH}/gui-builder/gui-builder.exe" "${TGUI_TOOLS_PATH}/gui-builder.exe")
-    # Need to copy `resources` and `themes` directories
-    file(COPY "${TGUI_SHARE_PATH}/gui-builder/resources" DESTINATION "${TGUI_TOOLS_PATH}")
-    file(COPY "${TGUI_SHARE_PATH}/gui-builder/themes" DESTINATION "${TGUI_TOOLS_PATH}")
-    file(REMOVE_RECURSE "${TGUI_SHARE_PATH}/gui-builder")
-    vcpkg_copy_tool_dependencies("${TGUI_TOOLS_PATH}")
+if(BUILD_GUI_BUILDER)
+    set(EXECUTABLE_SUFFIX "")
+    if (WIN32)
+        set(EXECUTABLE_SUFFIX ".exe")
+    endif()
+
+    message(STATUS "Check for: ${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}")
+    if(EXISTS "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}")
+        file(MAKE_DIRECTORY "${TGUI_TOOLS_PATH}")
+        file(RENAME 
+            "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}" 
+            "${TGUI_TOOLS_PATH}/gui-builder${EXECUTABLE_SUFFIX}")
+        # Need to copy `resources` and `themes` directories
+        file(COPY "${TGUI_SHARE_PATH}/gui-builder/resources" DESTINATION "${TGUI_TOOLS_PATH}")
+        file(COPY "${TGUI_SHARE_PATH}/gui-builder/themes" DESTINATION "${TGUI_TOOLS_PATH}")
+        file(REMOVE_RECURSE "${TGUI_SHARE_PATH}/gui-builder")
+        vcpkg_copy_tool_dependencies("${TGUI_TOOLS_PATH}")
+    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
