@@ -271,7 +271,11 @@ macro(find_package name)
                 Qt5ThemeSupport
                 Qt5EventDispatcherSupport
                 Qt5PlatformCompositorSupport 
-                Qt5FontDatabaseSupport)
+                Qt5FontDatabaseSupport
+                Qt5GraphicsSupport
+                Qt5ClipboardSupport
+                Qt5AccessibilitySupport
+                )
 
             if(MSVC)
                 set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
@@ -282,7 +286,20 @@ macro(find_package name)
             set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES           
                     "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices" 
                     "-weak_framework AppKit" "-weak_framework Security" "-weak_framework ApplicationServices" 
-                    "-weak_framework CoreFoundation" "-weak_framework SystemConfiguration")
+                    "-weak_framework CoreFoundation" "-weak_framework SystemConfiguration"
+                    "-weak_framework Carbon"
+                    "-weak_framework QuartzCore"
+                    "-weak_framework CoreVideo"
+                    "-weak_framework Metal"
+                    "-weak_framework CoreText"
+                    "-weak_framework ApplicationServices"
+                    "-weak_framework CoreGraphics"
+                    "-weak_framework OpenGL"
+                    "-weak_framework AGL"
+                    "-weak_framework ImageIO" 
+                    "z" "m"
+                    cups)
+                add_qt_library(${_vcpkg_qt5lib} qcocoa)
             endif()
         endif()
     else()
