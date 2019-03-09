@@ -43,6 +43,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/002-build-msvc.patch
         ${CMAKE_CURRENT_LIST_DIR}/003-build-msvc.patch
         ${_PYTHON_PATCHES}
+        ${CMAKE_CURRENT_LIST_DIR}/007-fix-build-path.patch
 )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")

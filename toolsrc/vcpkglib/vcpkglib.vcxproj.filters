@@ -213,6 +213,9 @@
     <ClCompile Include="..\src\vcpkg\base\downloads.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h">

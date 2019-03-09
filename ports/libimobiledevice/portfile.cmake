@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO libimobiledevice-win32/libimobiledevice
     REF 1.2.1.215
     SHA512 192ac12eb4fdf518a934cb8061d4a40e48f483e969e34167f2a5346efac1d745e4041eff84d7175d106b1a3b3f806d5e69643daa1459e48e69bc9c38d722be3c
-    HEAD_REF master
+    HEAD_REF msvc-master
 )
 
 vcpkg_install_msbuild(

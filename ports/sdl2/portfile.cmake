@@ -3,21 +3,23 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
-    REF release-2.0.8
-    SHA512 5922dbeb14bb22991160251664b417d3f846867c18b5ecc1bd19c328ffd69b16252b7d45b9a317bafd1207fdb66d93a022dfb239e02447db9babd941956b6b37
+    REF release-2.0.9
+    SHA512 444c906c0baa720c86ca72d1b4cd66fdf6f516d5d2a9836169081a2997a5aebaaf9caa687ec060fa02292d79cfa4a62442333e00f90a0239edd1601529f6b056
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/export-symbols-only-in-shared-build.patch
-        ${CMAKE_CURRENT_LIST_DIR}/enable-winrt-cmake.patch
+        export-symbols-only-in-shared-build.patch
+        fix-x86-windows.patch
+        enable-winrt-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
+
+set(VULKAN_VIDEO OFF)
+if("vulkan" IN_LIST FEATURES)
+    set(VULKAN_VIDEO ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -25,7 +27,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
-        -DVIDEO_VULKAN=OFF
+        -DVIDEO_VULKAN=${VULKAN_VIDEO}
         -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DLIBC=ON
 )
@@ -75,5 +77,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     endforeach()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2 RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2)
+configure_file(${SOURCE_PATH}/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2/copyright COPYONLY)
 vcpkg_copy_pdbs()

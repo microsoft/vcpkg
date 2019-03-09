@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(WARNING "Dynamic not supported. Building static")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -13,28 +10,22 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SPIRV_HEADERS_PATH
-    REPO KhronosGroup/SPIRV-Headers
-    REF bd4c092be34081d88ec8342b1a4d9f77bcce4cac
-    SHA512 e0bc7b8ea73bef762eff60d83104ca93c70e06c7b6e66f73c931eb9ec51227e0b64c3169fcccbffa311acf714138300104dd5e51cdfc846ed7961debc1f9cceb
-    HEAD_REF master
-)
-
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSPIRV-Headers_SOURCE_DIR=${SPIRV_HEADERS_PATH}
+    OPTIONS
+        -DSPIRV-Headers_SOURCE_DIR=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}
+        -DSPIRV_WERROR=OFF
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*${CMAKE_EXECUTABLE_SUFFIX}")
 file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE ${EXES})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

@@ -62,6 +62,7 @@ target_link_libraries(aubio PUBLIC
     ${LIBLZMA_LIBRARIES}
     ws2_32.lib
     Secur32.lib
+	bcrypt.lib
 )
 
 if(BUILD_TOOLS)

@@ -245,7 +245,7 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::format(R"("%s" %s %s %s %s 2>&1)",
+        return Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
                                toolset.vcvarsall.u8string(),
                                Strings::join(" ", toolset.vcvarsall_options),
                                arch,
@@ -372,7 +372,8 @@ namespace vcpkg::Build
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
-                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"DOWNLOADS", paths.downloads},
                 {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
                 {"GIT", git_exe_path},
@@ -381,9 +382,15 @@ namespace vcpkg::Build
             });
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
-        if (!command.empty()) command.append(" && ");
+        if (!command.empty())
+        {
+#ifdef _WIN32
+            command.append(" & ");
+#else
+            command.append(" && ");
+#endif
+        }
         command.append(cmd_launch_cmake);
-
         const auto timer = Chrono::ElapsedTimer::create_started();
 
         const int return_code = System::cmd_execute_clean(command);
@@ -440,7 +447,7 @@ namespace vcpkg::Build
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
-                if (fs.is_directory(file) && file.filename() != "src")
+                if (fs.is_directory(file)) // Will only keep the logs
                 {
                     std::error_code ec;
                     fs.remove_all(file, ec);
@@ -462,16 +469,52 @@ namespace vcpkg::Build
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
 
-        std::vector<AbiEntry> abi_tag_entries;
+        std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
-        abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
+        // If there is an unusually large number of files in the port then
+        // something suspicious is going on.  Rather than hash all of them
+        // just mark the port as no-hash
+        const int max_port_file_count = 100;
 
-        abi_tag_entries.emplace_back(
-            AbiEntry{"portfile", vcpkg::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
-        abi_tag_entries.emplace_back(
-            AbiEntry{"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
+        // the order of recursive_directory_iterator is undefined so save the names to sort
+        std::vector<fs::path> port_files;
+        for (auto &port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
+        {
+            if (fs::is_regular_file(status(port_file)))
+            {
+                port_files.push_back(port_file);
+                if (port_files.size() > max_port_file_count)
+                {
+                    abi_tag_entries.emplace_back(AbiEntry{ "no_hash_max_portfile", "" });
+                    break;
+                }
+            }
+        }
+
+        if (port_files.size() <= max_port_file_count)
+        {
+            std::sort(port_files.begin(), port_files.end());
+
+            int counter = 0;
+            for (auto & port_file : port_files)
+            {
+                // When vcpkg takes a dependency on C++17 it can use fs::relative,
+                // which will give a stable ordering and better names in the key entry.
+                // this is not available in the filesystem TS so instead number the files for the key.
+                std::string key = Strings::format("file_%03d", counter++);
+                if (GlobalState::debugging)
+                {
+                    System::println("[DEBUG] mapping %s from %s", key, port_file.string());
+                }
+                abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1") });
+            }
+        }
+
+        abi_tag_entries.emplace_back(AbiEntry{
+            "vcpkg_fixup_cmake_targets",
+            vcpkg::Hash::get_file_hash(fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", "SHA1")});
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
@@ -497,7 +540,7 @@ namespace vcpkg::Build
         }
 
         auto abi_tag_entries_missing = abi_tag_entries;
-        Util::stable_keep_if(abi_tag_entries_missing, [](const AbiEntry& p) { return p.value.empty(); });
+        Util::erase_remove_if(abi_tag_entries_missing, [](const AbiEntry& p) { return !p.value.empty(); });
 
         if (abi_tag_entries_missing.empty())
         {
@@ -538,26 +581,32 @@ namespace vcpkg::Build
 #endif
     }
 
-    static void compress_archive(const VcpkgPaths& paths, const PackageSpec& spec, const fs::path& tmp_archive_path)
+    // Compress the source directory into the destination file.
+    static void compress_directory(const VcpkgPaths& paths, const fs::path& source, const fs::path& destination)
     {
         auto& fs = paths.get_filesystem();
 
         std::error_code ec;
 
-        fs.remove(tmp_archive_path, ec);
+        fs.remove(destination, ec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, !fs.exists(tmp_archive_path), "Could not remove file: %s", tmp_archive_path.u8string());
+            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", destination.u8string());
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_clean(Strings::format(R"("%s" a "%s" "%s\*" >nul)",
                                                   seven_zip_exe.u8string(),
-                                                  tmp_archive_path.u8string(),
-                                                  paths.package_dir(spec).u8string()));
+                                                  destination.u8string(),
+                                                  source.u8string()));
 #else
         System::cmd_execute_clean(Strings::format(
-            R"(cd '%s' && zip --quiet -r '%s' *)", paths.package_dir(spec).u8string(), tmp_archive_path.u8string()));
+            R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
 #endif
+    }
+
+    static void compress_archive(const VcpkgPaths& paths, const PackageSpec& spec, const fs::path& destination)
+    {
+        compress_directory(paths, paths.package_dir(spec), destination);
     }
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
@@ -575,8 +624,8 @@ namespace vcpkg::Build
         Util::sort_unique_erase(dep_pspecs);
 
         // Find all features that aren't installed. This mutates required_fspecs.
-        Util::unstable_keep_if(required_fspecs, [&](FeatureSpec const& fspec) {
-            return !status_db.is_installed(fspec) && fspec.name() != name;
+        Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
+            return status_db.is_installed(fspec) || fspec.name() == name;
         });
 
         if (!required_fspecs.empty())
@@ -670,9 +719,30 @@ namespace vcpkg::Build
             }
             else if (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED)
             {
-                // Build failed, so store tombstone archive
-                fs.create_directories(archive_tombstone_path.parent_path(), ec);
-                fs.write_contents(archive_tombstone_path, "", ec);
+                if (!fs.exists(archive_tombstone_path))
+                {
+                    // Build failed, store all failure logs in the tombstone.
+                    const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
+                    const auto tmp_log_path_destination = tmp_log_path / spec.name();
+                    const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
+                    fs.create_directories(tmp_log_path_destination, ec);
+
+                    for (auto &log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
+                    {
+                        if (log_file.path().extension() == ".log")
+                        {
+                            fs.copy_file(log_file.path(), tmp_log_path_destination / log_file.path().filename(), fs::stdfs::copy_options::none, ec);
+                        }
+                    }
+
+                    compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
+
+                    fs.create_directories(archive_tombstone_path.parent_path(), ec);
+                    fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
+
+                    // clean up temporary directory
+                    fs.remove_all(tmp_log_path, ec);
+                }
             }
 
             return result;

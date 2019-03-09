@@ -25,6 +25,12 @@ else()
     set(FREEGLUT_DYNAMIC OFF)
 endif()
 
+# Patch header
+file(READ ${SOURCE_PATH}/include/GL/freeglut_std.h FREEGLUT_STDH)
+string(REGEX REPLACE "\"freeglut[_a-z]+.lib\""
+                     "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
+file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -35,14 +41,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-# Patch header
-file(READ ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h FREEGLUT_STDH)
-string(REPLACE "pragma comment (lib, \"freeglut_staticd.lib\")"
-               "pragma comment (lib, \"freeglut.lib\")" FREEGLUT_STDH "${FREEGLUT_STDH}")
-string(REPLACE "pragma comment (lib, \"freeglutd.lib\")"
-               "pragma comment (lib, \"freeglut.lib\")" FREEGLUT_STDH "${FREEGLUT_STDH}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 # Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

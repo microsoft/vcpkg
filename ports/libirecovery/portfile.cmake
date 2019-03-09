@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO libimobiledevice-win32/libirecovery
     REF 1.0.25
     SHA512 0dd91d4fe3ded2bc1bbd91aea964e31e7f59bce18be01aa096e974f37dc1be281644d6c44e3f9b49470dd961e3df2e3ff8a09bcc6b803a959073e7d7d9a8d3e7
-    HEAD_REF master
+    HEAD_REF msvc-master
 )
 
 vcpkg_install_msbuild(

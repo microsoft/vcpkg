@@ -71,13 +71,25 @@ else()
     set(ENV{MSGFMT} "/bin/echo")
     set(ENV{GMSGFMT} "/bin/echo")
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/config/config.h")
+        string(TOUPPER UPPER_CONFIG "${CMAKE_BUILD_TYPE}")
+        set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+        set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+        if(BUILD_SHARED_LIBS)
+            set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+        else()
+            set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+        endif()
+
+        string(STRIP "${CXXFLAGS}" CXXFLAGS)
+        string(STRIP "${CFLAGS}"   CFLAGS)
+        string(STRIP "${LDFLAGS}"  LDFLAGS)
         execute_process(
             COMMAND "${CMAKE_SOURCE_DIR}/configure"
                 --disable-libelf
                 --disable-libmount
-                "CPPFLAGS=-I${PCRE_INCLUDE_DIR}"
-                "CFLAGS=-I${PCRE_INCLUDE_DIR}"
-                "LDFLAGS=-L${LIB_DIR}"
+                "CPPFLAGS=${CXXFLAGS}"
+                "CFLAGS=${CFLAGS}"
+                "LDFLAGS=${LDFLAGS}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
             RESULT_VARIABLE res
         )
