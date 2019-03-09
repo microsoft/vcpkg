@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
-    REF v2.2.1
-    SHA512 1bc0646862fabef1111c05403a7238965ce5661a6f53945a1b7c4faad33f039d2ea278de64190099a8ae4fd66487a070de59334a7f32e187060bbbc7e0c3060e
+    REF v2.2.4
+    SHA512 6bddf5c885ff92a3e373bcedc6574dfefe8be9ebb6176c6c96d475457466c76bfb982c6df4066cb0fbead4b867f87dbc4fbc1605c80852635016f614330ce041
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/aliastemplates.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

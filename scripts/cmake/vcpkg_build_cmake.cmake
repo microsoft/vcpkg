@@ -74,16 +74,21 @@ function(vcpkg_build_cmake)
                 set(CONFIG "Release")
             endif()
 
-            message(STATUS "Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
+            message(STATUS "Building ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
             set(LOGPREFIX "${CURRENT_BUILDTREES_DIR}/${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
             set(LOGS)
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(BUILDTYPE STREQUAL "debug")
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin;$ENV{PATH}")
+                if(CMAKE_HOST_WIN32)
+                    set(_PATHSEP ";")
                 else()
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin;$ENV{PATH}")
+                    set(_PATHSEP ":")
+                endif()
+                if(BUILDTYPE STREQUAL "debug")
+                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin${_PATHSEP}$ENV{PATH}")
+                else()
+                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
                 endif()
             endif()
             execute_process(
@@ -131,25 +136,31 @@ function(vcpkg_build_cmake)
                         OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
 
                     if (UNAME_R MATCHES "Microsoft")
-                        message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of (potential) wsl subsystem issue.")
-                        execute_process(
-                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS}
-                            OUTPUT_FILE "${LOGPREFIX}-out-1.log"
-                            ERROR_FILE "${LOGPREFIX}-err-1.log"
-                            RESULT_VARIABLE error_code
-                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+                        set(ITERATION 0)
+                        while (ITERATION LESS 10 AND out_contents MATCHES ": No such file or directory")
+                            MATH(EXPR ITERATION "${ITERATION}+1")
+                            message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of wsl subsystem issue. Iteration: ${ITERATION}")
+                            execute_process(
+                                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS}
+                                OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
+                                ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
+                                RESULT_VARIABLE error_code
+                                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
 
-                        if(error_code)
-                            file(READ "${LOGPREFIX}-out-1.log" out_contents)
-                            file(READ "${LOGPREFIX}-err-1.log" err_contents)
+                            if(error_code)
+                                file(READ "${LOGPREFIX}-out-${ITERATION}.log" out_contents)
+                                file(READ "${LOGPREFIX}-err-${ITERATION}.log" err_contents)
 
-                            if(out_contents)
-                                list(APPEND LOGS "${LOGPREFIX}-out-1.log")
+                                if(out_contents)
+                                    list(APPEND LOGS "${LOGPREFIX}-out-${ITERATION}.log")
+                                endif()
+                                if(err_contents)
+                                    list(APPEND LOGS "${LOGPREFIX}-err-${ITERATION}.log")
+                                endif()
+                            else()
+                                break()
                             endif()
-                            if(err_contents)
-                                list(APPEND LOGS "${LOGPREFIX}-err-1.log")
-                            endif()
-                        endif()
+                        endwhile()
                     endif()
                 endif()
 
@@ -168,7 +179,6 @@ function(vcpkg_build_cmake)
                         ${STRINGIFIED_LOGS})
                 endif()
             endif()
-            message(STATUS "Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} done")
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()

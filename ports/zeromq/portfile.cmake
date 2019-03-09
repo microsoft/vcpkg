@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF bb4fb32925c6465fd0f8e8cc89e5347bc79bc4bf
-    SHA512 73101b68d93fdf1eca1f83373fe4c946865978d32ca11692e9015a63af8d42ff2d2ff93c88c812f75c2d80596c986df59e62f8de3dc1a016ab24f91f518c24eb
+    REF 19b64709bbf9f119d66cdacb9c0e89e4becd9775
+    SHA512 7743097d6251764b911e586a9f857331b834b7223d6c3f2630fec71c310ba2927118410ab6c270c07d87329c15dd00fd89c843f20eb22d6c042d83b740c5e34e
     HEAD_REF master
 )
 
@@ -14,6 +14,12 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} \"-I${SOURCE_PATH}/builds/msvc\"")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} \"-I${SOURCE_PATH}/builds/msvc\"")
 
+if("sodium" IN_LIST FEATURES)
+    set(WITH_LIBSODIUM ON)
+else()
+    set(WITH_LIBSODIUM OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -22,6 +28,7 @@ vcpkg_configure_cmake(
         -DPOLLER=select
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
+        -DWITH_LIBSODIUM=${WITH_LIBSODIUM}
         -DWITH_PERF_TOOL=OFF
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
@@ -38,11 +45,19 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/ZeroMQ)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/ZeroMQ)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zmq.h
+        "defined ZMQ_STATIC"
+        "1 //defined ZMQ_STATIC"
+    )
+endif()
+
 file(READ ${CURRENT_PACKAGES_DIR}/share/zeromq/ZeroMQConfig.cmake _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(REPLACE "get_target_property(ZeroMQ_STATIC_LIBRARY libzmq-static LOCATION)" "add_library(libzmq-static INTERFACE IMPORTED)\nset_target_properties(libzmq-static PROPERTIES INTERFACE_LINK_LIBRARIES libzmq)" _contents "${_contents}")
     set(_contents "${_contents}\nset(ZeroMQ_STATIC_LIBRARY \${ZeroMQ_LIBRARY})\n")
 else()
+    string(REPLACE "get_target_property(ZeroMQ_INCLUDE_DIR libzmq INTERFACE_INCLUDE_DIRECTORIES)" "get_target_property(ZeroMQ_INCLUDE_DIR libzmq-static INTERFACE_INCLUDE_DIRECTORIES)" _contents "${_contents}")
     string(REPLACE "get_target_property(ZeroMQ_LIBRARY libzmq LOCATION)" "add_library(libzmq INTERFACE IMPORTED)\nset_target_properties(libzmq PROPERTIES INTERFACE_LINK_LIBRARIES libzmq-static)" _contents "${_contents}")
     set(_contents "${_contents}\nset(ZeroMQ_LIBRARY \${ZeroMQ_STATIC_LIBRARY})\n")
 

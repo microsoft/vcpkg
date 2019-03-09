@@ -1,13 +1,19 @@
 include(vcpkg_common_functions)
 
-set(X264_VERSION 152)
+set(X264_VERSION 157)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/x264
-    REF e9a5903edf8ca59ef20e6f4894c196f135af735e
-    SHA512 063da238264b33ab7ccf097c1f8a7d6b1bf1f0777b433ccbb6ab98090f050fa4d289eeff37b701b8fd7fb5ad460b7fa13d61b68b3f397bc78a8eaa50379e4878
+    REF 303c484ec828ed0d8bfe743500e70314d026c3bd
+    SHA512 faf210a3f9543028ed882c8348b243dd7ae6638e7b3ef43bec1326b717f23370f57c13d0ddb5e1ae94411088a2e33031a137b68ae9f64c18f8f33f601a0da54d
     HEAD_REF master
+)
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/uwp-cflags.patch
 )
 
 # Acquire tools
@@ -35,8 +41,16 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-shared")
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
+    endif()
 else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
 endif()
 
 set(CONFIGURE_OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
@@ -96,8 +110,10 @@ vcpkg_execute_required_process(
     LOGNAME "build-${TARGET_TRIPLET}-dbg")
 message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
+endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/lib/pkgconfig

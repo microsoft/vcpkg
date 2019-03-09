@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
@@ -12,16 +13,37 @@ namespace vcpkg::Commands::Edit
         std::vector<fs::path> output;
 
 #if defined(_WIN32)
-        static const std::array<const char*, 3> REGKEYS = {
-            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
-            R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
-            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+        struct RegKey
+        {
+            HKEY root;
+            const char *subkey;
+        } REGKEYS[] = {
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)"
+            },
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)"
+            },
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)"
+            },
+            {
+                HKEY_CURRENT_USER,
+                R"(Software\Microsoft\Windows\CurrentVersion\Uninstall\{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1)"
+            },
+            {
+                HKEY_LOCAL_MACHINE,
+                R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1)"
+            },
         };
 
         for (auto&& keypath : REGKEYS)
         {
             const Optional<std::string> code_installpath =
-                System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, "InstallLocation");
+                System::get_registry_string(keypath.root, keypath.subkey, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
                 const fs::path install_path = fs::path(*c);
@@ -52,23 +74,71 @@ namespace vcpkg::Commands::Edit
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string("edit zlib"),
         1,
-        1,
+        10,
         {EDIT_SWITCHES, {}},
         &valid_arguments,
     };
 
+    static std::vector<std::string> create_editor_arguments(const VcpkgPaths& paths,
+                                                            const ParsedArguments& options,
+                                                            const std::vector<std::string>& ports)
+    {
+        if (Util::Sets::contains(options.switches, OPTION_ALL))
+        {
+            const auto& fs = paths.get_filesystem();
+            auto packages = fs.get_files_non_recursive(paths.packages);
+
+            return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
+                const auto portpath = paths.ports / port_name;
+                const auto portfile = portpath / "portfile.cmake";
+                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                const auto pattern = port_name + "_";
+
+                std::string package_paths;
+                for (auto&& package : packages)
+                {
+                    if (Strings::case_insensitive_ascii_starts_with(package.filename().u8string(), pattern))
+                    {
+                        package_paths.append(Strings::format(" \"%s\"", package.u8string()));
+                    }
+                }
+
+                return Strings::format(R"###("%s" "%s" "%s"%s)###",
+                                       portpath.u8string(),
+                                       portfile.u8string(),
+                                       buildtrees_current_dir.u8string(),
+                                       package_paths);
+            });
+        }
+
+        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
+        {
+            return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
+                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                return Strings::format(R"###("%s")###", buildtrees_current_dir.u8string());
+            });
+        }
+
+        return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
+            const auto portpath = paths.ports / port_name;
+            const auto portfile = portpath / "portfile.cmake";
+            return Strings::format(R"###("%s" "%s")###", portpath.u8string(), portfile.u8string());
+        });
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
-        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
-
         auto& fs = paths.get_filesystem();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
-        const std::string port_name = args.command_arguments.at(0);
 
-        const fs::path portpath = paths.ports / port_name;
-        Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
+        const std::vector<std::string>& ports = args.command_arguments;
+        for (auto&& port_name : ports)
+        {
+            const fs::path portpath = paths.ports / port_name;
+            Checks::check_exit(
+                VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
+        }
 
         std::vector<fs::path> candidate_paths;
         auto maybe_editor_path = System::get_environment_variable("EDITOR");
@@ -76,6 +146,10 @@ namespace vcpkg::Commands::Edit
         {
             candidate_paths.emplace_back(*editor_path);
         }
+
+#ifdef _WIN32
+        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
 
         const auto& program_files = System::get_program_files_platform_bitness();
         if (const fs::path* pf = program_files.get())
@@ -91,8 +165,23 @@ namespace vcpkg::Commands::Edit
             candidate_paths.push_back(*pf / VS_CODE);
         }
 
+        const auto& app_data = System::get_environment_variable("APPDATA");
+        if (const auto* ad = app_data.get())
+        {
+            const fs::path default_base = fs::path{*ad}.parent_path() / "Local" / "Programs";
+            candidate_paths.push_back(default_base / VS_CODE_INSIDERS);
+            candidate_paths.push_back(default_base / VS_CODE);
+        }
+
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
+#elif defined(__APPLE__)
+        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
+        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
+#elif defined(__linux__)
+        candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
+        candidate_paths.push_back(fs::path{"/usr/bin/code"});
+#endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
@@ -107,29 +196,19 @@ namespace vcpkg::Commands::Edit
         }
 
         const fs::path env_editor = *it;
-        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
+        const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
+        const auto args_as_string = Strings::join(" ", arguments);
+        const auto cmd_line = Strings::format(R"("%s" %s -n)", env_editor.u8string(), args_as_string);
+
+        auto editor_exe = env_editor.filename().u8string();
+
+#ifdef _WIN32
+        if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            const auto buildtrees_current_dir = paths.buildtrees / port_name;
-
-            const auto cmd_line =
-                Strings::format(R"("%s" "%s" -n)", env_editor.u8string(), buildtrees_current_dir.u8string());
-            Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
+            System::cmd_execute_no_wait(cmd_line + " <NUL");
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
-
-        if (Util::Sets::contains(options.switches, OPTION_ALL))
-        {
-            const auto buildtrees_current_dir = paths.buildtrees / port_name;
-
-            const auto cmd_line = Strings::format(
-                R"("%s" "%s" "%s" -n)", env_editor.u8string(), portpath.u8string(), buildtrees_current_dir.u8string());
-            Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
-        }
-
-        const auto cmd_line = Strings::format(
-            R"("%s" "%s" "%s" -n)",
-            env_editor.u8string(),
-            portpath.u8string(),
-            (portpath / "portfile.cmake").u8string());
+#endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
     }
 }

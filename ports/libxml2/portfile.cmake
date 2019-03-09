@@ -19,7 +19,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxml2)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxml2)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libxml2/COPYING ${CURRENT_PACKAGES_DIR}/share/libxml2/copyright)
 
 vcpkg_copy_pdbs()

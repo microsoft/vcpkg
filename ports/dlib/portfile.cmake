@@ -8,9 +8,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.10
-    SHA512 88c5b41c12219e6166c6621b654b3869ca4a2af777a8fa55429b833b90b048e3e74ea7ad752d7440809b8171bbd38090cb24a29770391fc3a9d53f9a5fba3341
+    REF v19.16
+    SHA512 4e040ef88acff05e1a48e499b813c876b22ad3f989d076bdf19969d01036b62e51a0dff30b70046910ba31dfa1b1c2450a7fad41ae3142b7285ed74b8d584887
     HEAD_REF master
+    PATCHES
+        fix-mac-jpeg.patch
+        fix-sqlite3-fftw-linkage.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libjpeg)
@@ -40,6 +43,7 @@ vcpkg_configure_cmake(
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
+        -DCMAKE_DEBUG_POSTFIX=d	
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
@@ -62,20 +66,15 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_ne
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cudnn)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cuda)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cpp11)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_avx)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_sse4)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
 file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
 string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
 string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)
-string(REPLACE
-    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)"
-    _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h "${_contents}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)

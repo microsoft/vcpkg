@@ -2,16 +2,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/corrade
-    REF v2018.02
-    SHA512 8fe4998dc32586386b8fa2030941f3ace6d5e76aadcf7e20a620d276cc9247324e10eb58f2c2c9e84a1a9d9b336e6bdc788f9947c9e507a053d6fd2ffcd3d58e
+    REF v2019.01
+    SHA512 63468ee0a9362d92d61e2bc77fb8c3e455761894998393910f6bce4111b0ec74db8fe2a8658cec1292c5ceb26e57e005324b34f1ec343d4216abf3a955eaa97e
     HEAD_REF master
+    PATCHES fixC2666.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC 1)
-else()
-    set(BUILD_STATIC 0)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 # Handle features
 set(_COMPONENT_FLAGS "")
@@ -33,6 +30,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
+        -DDUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
         ${_COMPONENT_FLAGS}
 )
@@ -45,16 +43,20 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Install tools
 if("utility" IN_LIST FEATURES)
+    file(GLOB EXES
+        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc
+        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe
+    )
+
     # Drop a copy of tools
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe
-         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/corrade)
+    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/corrade)
 
     # Tools require dlls
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/corrade)
 
-    file(GLOB_RECURSE TO_REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/*.exe
-        ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+    file(GLOB TO_REMOVE
+        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc*
+        ${CURRENT_PACKAGES_DIR}/debug/bin/corrade-rc*)
     file(REMOVE ${TO_REMOVE})
 endif()
 
@@ -68,7 +70,7 @@ if(NOT FEATURES)
     # debug is completely empty, as include and share
     # have already been removed.
 
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # No dlls
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin

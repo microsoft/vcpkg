@@ -1,28 +1,30 @@
-#header-only library
 include(vcpkg_common_functions)
-
-# set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/range-v3-6eb5c831ffe12cd5cb96390dbe917ca1b248772d)
-# vcpkg_download_distfile(ARCHIVE
-#     URLS "https://github.com/ericniebler/range-v3/archive/6eb5c831ffe12cd5cb96390dbe917ca1b248772d.zip"
-#     FILENAME "range-v3-6eb5c831ffe12cd5cb96390dbe917ca1b248772d.zip"
-#     SHA512 2605af46c2c049f66dc982b1c4e506a8f115d47cc6c61a80f08921c667e52ad3097c485280ee43711c84b84a1490929e085b89cf9ad4c83b93222315210e92aa
-# )
-# vcpkg_download_distfile(DIFF
-#     URLS "https://github.com/Microsoft/Range-V3-VS2015/compare/fork_base...00ed689bac7a9dcd8601dbde382758675516799d.diff"
-#     FILENAME "range-v3-fork_base_to_00ed689bac7a9dcd8601dbde382758675516799d.diff"
-#     SHA512 6158cd9ee1f5957294a26dc780c881839e0bae8610688a618cd11d47df34d5e543fa09ac9a3b33d4a65af8eceae0a6a3055621206c291ef75f982e7915daf91a
-# )
-# vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Microsoft/Range-V3-VS2015
-    REF 423bcae5cf18948591361329784d3b12ef41711b
-    SHA512 c6756bc6b5131c4c0ffb96550fb40decf734fc8c30e3d51c5c2bf03aae4d7426de36e896a1abf0a200a49a3906d4b60c1cf52f43504554b64d89c91de3e92746
+    REPO ericniebler/range-v3
+    REF c0a1924a3f30bff8c86086849245b6e7ba79b4dd
+    SHA512 ce7ee4b268db98a21fc1210deb2bb79c6b18b1fc5ce7300d64c8b72b97979c9fb8137af910fe42711e3dc9c1405bbc1bc8a15f3223f9ef5ad8416950f4f1576e
     HEAD_REF master
 )
 
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DRANGE_V3_TESTS=OFF
+        -DRANGE_V3_EXAMPLES=OFF
+        -DRANGE_V3_PERF=OFF
+        -DRANGE_V3_HEADER_CHECKS=OFF
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/range-v3)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+
+vcpkg_copy_pdbs()
+
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3/copyright)
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
-vcpkg_copy_pdbs()

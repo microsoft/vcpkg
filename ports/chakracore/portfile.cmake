@@ -1,22 +1,16 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static linking of the CRT is not yet supported.")
-endif()
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "UWP is not currently supported.")
 endif()
 
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF v1.8.3
-    SHA512 4a5d6372cab51bb70911519fb9639d0cb6c456a966e2c90992f924ba36dcf741e32dbf18aea4419dc855f286da7e3edbfcc796bc90347858192c976298315785
+    REF v1.11.5
+    SHA512 502cf6a4370719c60648d1af370f9da54858df746fb851cb0d67588fef334757e89f8dbf7c097762b0b341d72fe6b511355fe84a2d37c22a114f58f4290d19ee
     HEAD_REF master
 )
 
@@ -30,9 +24,14 @@ set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(REMOVE_RECURSE ${BUILDTREE_PATH})
 file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
+set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
+
 vcpkg_build_msbuild(
     PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
-    OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/" "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
+    OPTIONS
+        "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
+        "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
+        "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
 )
 
 file(INSTALL
@@ -68,6 +67,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
         ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/chakracore)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/chakracore)
 endif()
 
 vcpkg_copy_pdbs()

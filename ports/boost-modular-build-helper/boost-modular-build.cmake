@@ -1,5 +1,5 @@
 function(boost_modular_build)
-    cmake_parse_arguments(_bm "" "SOURCE_PATH;REQUIREMENTS" "OPTIONS" ${ARGN})
+    cmake_parse_arguments(_bm "" "SOURCE_PATH;REQUIREMENTS;BOOST_CMAKE_FRAGMENT" "OPTIONS" ${ARGN})
 
     if(NOT DEFINED _bm_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_build.")
@@ -32,10 +32,6 @@ function(boost_modular_build)
 
     set(_bm_DIR ${CURRENT_INSTALLED_DIR}/share/boost-build)
 
-    if(EXISTS "${_bm_SOURCE_PATH}/Jamfile.v2")
-        file(REMOVE_RECURSE "${_bm_SOURCE_PATH}/Jamfile.v2")
-    endif()
-
     set(REQUIREMENTS ${_bm_REQUIREMENTS})
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -48,16 +44,10 @@ function(boost_modular_build)
         set(BOOST_LIB_DEBUG_SUFFIX .a)
     endif()
 
-    # boost thread superfluously builds has_atomic_flag_lockfree on windows.
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
         file(READ ${_bm_SOURCE_PATH}/build/Jamfile.v2 _contents)
-        string(REPLACE
-            "\n\nexe has_atomic_flag_lockfree"
-            "\n\nexplicit has_atomic_flag_lockfree ;\nexe has_atomic_flag_lockfree"
-            _contents
-            "${_contents}"
-        )
-        string(REPLACE "\nimport ../../config/checks/config : requires ;" "\n# import ../../config/checks/config : requires ;" _contents "${_contents}")
+        #string(REPLACE "import ../../predef/check/predef" "import predef/check/predef" _contents "${_contents}")
+        #string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
         string(REGEX REPLACE
             "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
             "/boost/\\1//\\2"
@@ -68,18 +58,18 @@ function(boost_modular_build)
         file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
     endif()
 
-    if(EXISTS "${_bm_SOURCE_PATH}/build/log-architecture.jam")
-        file(READ ${_bm_SOURCE_PATH}/build/log-architecture.jam _contents)
-        string(REPLACE
-            "\nproject.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ] ;"
-            "\n# project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ] ;"
-            _contents "${_contents}")
-        file(WRITE ${_bm_SOURCE_PATH}/build/log-architecture.jam "${_contents}")
-    endif()
-
     configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-config/checks")
+    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${_bm_SOURCE_PATH}/build/config")
+    # endif()
+    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-predef/check")
+    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${_bm_SOURCE_PATH}/build/predef")
+    # endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
+            set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+        endif()
         vcpkg_configure_cmake(
             SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA
@@ -87,8 +77,13 @@ function(boost_modular_build)
                 "-DB2_EXE=${B2_EXE}"
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                ${fragment_option}
         )
         vcpkg_install_cmake()
+
+        if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
+            message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
+        endif()
         return()
     endif()
 
@@ -169,6 +164,45 @@ function(boost_modular_build)
          -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}/lib"
     )
 
+    # Properly handle compiler and linker flags passed by VCPKG
+    if(VCPKG_CXX_FLAGS)
+        list(APPEND _bm_OPTIONS cxxflags="${VCPKG_CXX_FLAGS}")
+    endif()
+
+    if(VCPKG_CXX_FLAGS_RELEASE)
+        list(APPEND _bm_OPTIONS_REL cxxflags="${VCPKG_CXX_FLAGS_RELEASE}")
+    endif()
+
+    if(VCPKG_CXX_FLAGS_DEBUG)
+        list(APPEND _bm_OPTIONS_DBG cxxflags="${VCPKG_CXX_FLAGS_DEBUG}")
+    endif()
+
+
+    if(VCPKG_C_FLAGS)
+        list(APPEND _bm_OPTIONS cflags="${VCPKG_C_FLAGS}")
+    endif()
+
+    if(VCPKG_C_FLAGS_RELEASE)
+        list(APPEND _bm_OPTIONS_REL cflags="${VCPKG_C_FLAGS_RELEASE}")
+    endif()
+
+    if(VCPKG_C_FLAGS_DEBUG)
+        list(APPEND _bm_OPTIONS_DBG cflags="${VCPKG_C_FLAGS_DEBUG}")
+    endif()
+
+
+    if(VCPKG_LINKER_FLAGS)
+        list(APPEND _bm_OPTIONS linkflags="${VCPKG_LINKER_FLAGS}")
+    endif()
+
+    if(VCPKG_LINKER_FLAGS_RELEASE)
+        list(APPEND _bm_OPTIONS_REL linkflags="${VCPKG_LINKER_FLAGS_RELEASE}")
+    endif()
+
+    if(VCPKG_LINKER_FLAGS_DEBUG)
+        list(APPEND _bm_OPTIONS_DBG linkflags="${VCPKG_LINKER_FLAGS_DEBUG}")
+    endif()
+
 
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -194,7 +228,7 @@ function(boost_modular_build)
     file(TO_CMAKE_PATH "${_bm_DIR}/nothing.bat" NOTHING_BAT)
     set(TOOLSET_OPTIONS " <cxxflags>/EHsc <compileflags>-Zm800 <compileflags>-nologo")
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "v140")
             find_path(PATH_TO_CL cl.exe)
             find_path(PLATFORM_WINMD_DIR platform.winmd PATHS "${PATH_TO_CL}/../../../lib/x86/store/references" NO_DEFAULT_PATH)
             if(PLATFORM_WINMD_DIR MATCHES "NOTFOUND")
@@ -217,7 +251,7 @@ function(boost_modular_build)
     configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
     configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
 
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v141" OR VCPKG_PLATFORM_TOOLSET MATCHES "v142")
         list(APPEND _bm_OPTIONS toolset=msvc-14.1)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         list(APPEND _bm_OPTIONS toolset=msvc-14.0)
@@ -242,7 +276,7 @@ function(boost_modular_build)
                 ${_bm_OPTIONS_REL}
                 variant=release
                 debug-symbols=on
-            WORKING_DIRECTORY ${_bm_SOURCE_PATH}
+            WORKING_DIRECTORY ${_bm_SOURCE_PATH}/build
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
         message(STATUS "Building ${TARGET_TRIPLET}-rel done")
@@ -259,7 +293,7 @@ function(boost_modular_build)
                 ${_bm_OPTIONS}
                 ${_bm_OPTIONS_DBG}
                 variant=debug
-            WORKING_DIRECTORY ${_bm_SOURCE_PATH}
+            WORKING_DIRECTORY ${_bm_SOURCE_PATH}/build
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
         message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
@@ -308,13 +342,14 @@ function(boost_modular_build)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
         string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
+        string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_66" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_69" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do

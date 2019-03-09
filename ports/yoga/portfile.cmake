@@ -1,28 +1,16 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(WARNING "Dynamic not supported, building static")
-    set(VCPKG_LIBRARY_LINKAGE static)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds not supported yet.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF v1.8.0
-    SHA512 9af0e9e66ce223c99a9cab12721099ca40f85d2fa2a0e0a7d2bcff6d5acc5b6ca0edaaa53e49ec921bf78bb986070702cfe3271c4819147486dad6f6ee93e690
+    REF v1.13.0
+    SHA512 ca87c4526956ccb0693c4e1cdf825b2d9cfd97b20f6c11a06b3966c99903e06c0ca1013f9c72546bbf1d0f56b501f422dfb18dbcfee82ba340e18dcea80b3caf
     HEAD_REF master
 )
 
@@ -43,5 +31,4 @@ endif()
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/yoga RENAME copyright)

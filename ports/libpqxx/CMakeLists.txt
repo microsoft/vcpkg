@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(libpqxx VERSION 6.0.0 LANGUAGES CXX)
-set(CMAKE_DEBUG_POSTFIX "D")
 
-find_library(LIBPQD libpqd)
-find_library(LIBPQ libpq)
+set(CMAKE_DEBUG_POSTFIX "d")
+set(CMAKE_CXX_STANDARD 14)
+
+find_library(LIBPQD NAMES libpqd pqd)
+find_library(LIBPQ NAMES libpq pq)
 find_path(LIBPQ_FE_H libpq-fe.h)
 find_path(POSTGRES_EXT_H postgres_ext.h)
 

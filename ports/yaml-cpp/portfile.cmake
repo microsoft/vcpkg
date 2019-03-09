@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF yaml-cpp-0.6.2
     SHA512 fea8ce0a20a00cbc75023d1db442edfcd32d0ac57a3c41b32ec8d56f87cc1d85d7dd7a923ce662f5d3a315f91a736d6be0d649997acd190915c1d68cc93795e4
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-noexcept.patch
 )
 
 vcpkg_configure_cmake(

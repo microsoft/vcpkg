@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/intrusive
-    REF boost-1.66.0
-    SHA512 b61e88d38c9ee6cd174380c53fc3422f72824c895b3723c4ac7b3b3e0bd52d52fe40d349db5f8eff3b23413950ae872fa7634514ac072111614875922580c493
+    REF boost-1.69.0
+    SHA512 1f89c9d217934db8d5a3aa169a21deed59d0f50b49ac58258bbc1f8c539df7a03d6cac0cd8d1668e73747153599f24cac87c683b12e32d9cc5f7fda438ad1d66
     HEAD_REF master
 )
 

@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kgabis/parson
-    REF 387c5665f6b20faa535a7f782dcaa49390963366
-    SHA512 755d1351c2176ac75bb865e83cbbd3b8f6b3a5797cccd96e512e474100fbdaacb7d00eb857ebc4478aad40672baeafdecb5d87c26eaa16f43ef5559a0a56f431
+    REF 302fba9cbb31ffc523bf10a1ce705040194c289d
+    SHA512 ecc1594fe6e27b8919ccdaf3c7e082d0d47aa5e20aec52235762b9cab8e371adec5a1760f4ea36405bf97cfb587d2bcbd81221f97a9d39290673e2ce61f5a49f
     HEAD_REF master
 )
 

@@ -7,7 +7,8 @@ namespace vcpkg
     struct StringLiteral
     {
         template<int N>
-        constexpr StringLiteral(const char (&str)[N]) : m_size(N), m_cstr(str)
+        constexpr StringLiteral(const char (&str)[N])
+            : m_size(N - 1) /* -1 here accounts for the null byte at the end*/, m_cstr(str)
         {
         }
 

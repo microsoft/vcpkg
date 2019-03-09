@@ -41,7 +41,7 @@ file(COPY ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe DESTINATION ${CURRENT_PAC
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_info.exe)
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/ismrmrd-1.3.2/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ismrmrd/LICENSE ${CURRENT_PACKAGES_DIR}/share/ismrmrd/copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/ismrmrd)

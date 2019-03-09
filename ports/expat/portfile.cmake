@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF R_2_2_5
-    SHA512 61ce2a479521412e0c56c352106c4adfb61a6bedb883921aba3ebccc29311ddd192646ac2c51b41572728d4de6ab4cb60a1dbc71515d742a80a8b59d89ca74d6
+    REF R_2_2_6
+    SHA512 727fbd24041c9af71b32353448583a6d8b38ddf93b10c97510e847939c2ad2be9b40ff6e6e27b725bff277982c2fc96c75f19c4a3ac4a246133eb62870c963d8
     HEAD_REF master)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -43,3 +43,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     string(REPLACE "!defined(XML_STATIC)" "/* vcpkg static build !defined(XML_STATIC) */ 0" EXPAT_EXTERNAL_H "${EXPAT_EXTERNAL_H}")
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/expat_external.h "${EXPAT_EXTERNAL_H}")
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat)
