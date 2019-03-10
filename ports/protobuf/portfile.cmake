@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-uwp.patch
         disable-lite.patch
+        undef-strtoull.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")

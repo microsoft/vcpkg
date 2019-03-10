@@ -1,0 +1,13 @@
+diff --git a/src/google/protobuf/stubs/strutil.h b/src/google/protobuf/stubs/strutil.h
+index a9599cfe..790500d2 100644
+--- a/src/google/protobuf/stubs/strutil.h
++++ b/src/google/protobuf/stubs/strutil.h
+@@ -43,7 +43,7 @@
+ namespace google {
+ namespace protobuf {
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && _MSC_VER < 1800
+ #define strtoll  _strtoi64
+ #define strtoull _strtoui64
+ #elif defined(__DECCXX) && defined(__osf__)
