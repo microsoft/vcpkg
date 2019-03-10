@@ -44,14 +44,8 @@ QTLIB_NORMALIZED = r'$prefix/Frameworks/$qtlib.framework/Versions/$qtversion/$qt
 QTPLUGIN_NAME_REGEX = r'^(?:@executable_path)?/.*/[pP]lug[iI]ns/(.*)/(.*).dylib$'
 QTPLUGIN_NORMALIZED = r'$prefix/PlugIns/$plugintype/$pluginname.dylib'
 
-BREWLIB_REGEX = r'^/usr/local/.*/(.*)'
-BREWLIB_NORMALIZED = r'$prefix/Frameworks/$brewlib'
-
-LOADERPATH_REGEX = r'^@loader_path/(.*)'
+LOADERPATH_REGEX = r'^@[a-z_]+path/(.*)'
 LOADERPATH_NORMALIZED = r'$prefix/Frameworks/$loaderpathlib'
-
-RPATH_REGEX = r'^@rpath/(.*)'
-RPATH_NORMALIZED = r'$prefix/Frameworks/$rpathlib'
 
 
 class GlobalConfig(object):
@@ -114,28 +108,11 @@ def is_qt_lib(filename):
     return qtlib_name_rgx.match(filename) is not None
 
 
-def is_brew_lib(filename):
-    """
-    Checks if a given file is a brew library
-    Accepts absolute path as well as path containing @executable_path
-    """
-    qtlib_name_rgx = re.compile(BREWLIB_REGEX)
-    return qtlib_name_rgx.match(filename) is not None
-
-
 def is_loader_path_lib(filename):
     """
-    Checks if a given file is loaded via @loader_path
+    Checks if a given file is loaded via @loader_path or @rpath
     """
     qtlib_name_rgx = re.compile(LOADERPATH_REGEX)
-    return qtlib_name_rgx.match(filename) is not None
-
-
-def is_rpath_lib(filename):
-    """
-    Checks if a given file is loaded via @rpath
-    """
-    qtlib_name_rgx = re.compile(RPATH_REGEX)
     return qtlib_name_rgx.match(filename) is not None
 
 
@@ -226,44 +203,6 @@ def normalize_qtlib_name(filename):
     return qtlib, abspath, rpath
 
 
-def normalize_brew_name(filename):
-    """
-    input: a path to a brew library, as returned by otool, that can have this form :
-            - an absolute path /usr/local/lib/yyy
-    output:
-        a tuple (brewlib, abspath, rpath) where:
-            - brewlib is the name of the brew lib
-            - abspath is the absolute path of the qt lib inside the app bundle of exepath
-            - relpath is the correct rpath to a qt lib inside the app bundle
-    """
-    GlobalConfig.logger.debug('normalize_brew_name({0})'.format(filename))
-
-    brewlib_name_rgx = re.compile(BREWLIB_REGEX)
-    rgxret = brewlib_name_rgx.match(filename)
-    if not rgxret:
-        msg = 'couldn\'t normalize a brew lib filename: {0}'.format(filename)
-        GlobalConfig.logger.critical(msg)
-        raise Exception(msg)
-
-    # brewlib normalization settings
-    brewlib = rgxret.groups()[0]
-    templ = Template(BREWLIB_NORMALIZED)
-
-    # from brewlib, forge 2 path :
-    #  - absolute path of qt lib in bundle,
-    abspath = os.path.normpath(templ.safe_substitute(
-        prefix=os.path.dirname(GlobalConfig.exepath) + '/..',
-        brewlib=brewlib))
-
-    #  - and rpath containing @executable_path, relative to exepath
-    rpath = templ.safe_substitute(
-        prefix='@executable_path/..',
-        brewlib=brewlib)
-
-    GlobalConfig.logger.debug('\treturns({0})'.format((brewlib, abspath, rpath)))
-    return brewlib, abspath, rpath
-
-
 def normalize_loaderpath_name(filename):
     """
     input: a path to a loaderpath library, as returned by otool, that can have this form :
@@ -301,43 +240,6 @@ def normalize_loaderpath_name(filename):
     GlobalConfig.logger.debug('\treturns({0})'.format((loaderpathlib, abspath, rpath)))
     return loaderpathlib, abspath, rpath
 
-def normalize_rpath_name(filename):
-    """
-    input: a path to a loaderpath library, as returned by otool, that can have this form :
-            - an relative path @loaderpath/yyy
-    output:
-        a tuple (loaderpathlib, abspath, rpath) where:
-            - loaderpathlib is the name of the loaderpath lib
-            - abspath is the absolute path of the qt lib inside the app bundle of exepath
-            - relpath is the correct rpath to a qt lib inside the app bundle
-    """
-    GlobalConfig.logger.debug('normalize_loaderpath_name({0})'.format(filename))
-
-    rpath_name_rgx = re.compile(RPATH_REGEX)
-    rgxret = rpath_name_rgx.match(filename)
-    if not rgxret:
-        msg = 'couldn\'t normalize a rpath lib filename: {0}'.format(filename)
-        GlobalConfig.logger.critical(msg)
-        raise Exception(msg)
-
-    # loaderpath normalization settings
-    rpathlib = rgxret.groups()[0]
-    templ = Template(RPATH_NORMALIZED)
-
-    # from loaderpath, forge 2 path :
-    #  - absolute path of qt lib in bundle,
-    abspath = os.path.normpath(templ.safe_substitute(
-        prefix=os.path.dirname(GlobalConfig.exepath) + '/..',
-        rpathlib=rpathlib))
-
-    #  - and rpath containing @executable_path, relative to exepath
-    rpath = templ.safe_substitute(
-        prefix='@executable_path/..',
-        rpathlib=rpathlib)
-
-    GlobalConfig.logger.debug('\treturns({0})'.format((rpathlib, abspath, rpath)))
-    return rpathlib, abspath, rpath
-
 
 def fix_dependency(binary, dep):
     """
@@ -351,14 +253,8 @@ def fix_dependency(binary, dep):
         qtname, dep_abspath, dep_rpath = normalize_qtplugin_name(dep)
         qtnamesrc = os.path.join(GlobalConfig.qtpath, 'lib', '{0}.framework'.
                                  format(qtname), qtname)
-    elif is_brew_lib(dep):
-        qtname, dep_abspath, dep_rpath = normalize_brew_name(dep)
-        qtnamesrc = os.path.join('/usr/local/lib', qtname)
     elif is_loader_path_lib(dep):
         qtname, dep_abspath, dep_rpath = normalize_loaderpath_name(dep)
-        qtnamesrc = os.path.join('/usr/local/lib', qtname)
-    elif is_rpath_lib(dep):
-        qtname, dep_abspath, dep_rpath = normalize_rpath_name(dep)
         qtnamesrc = os.path.join(GlobalConfig.qtpath + '/lib', qtname)
     else:
         return True
