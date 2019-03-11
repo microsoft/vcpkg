@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-file(INSTALL ${SOURCE_PATH}/src DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/src/binn.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/binn)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
