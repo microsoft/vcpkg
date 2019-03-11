@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message("xalan-c currenly only supports dynamic library linkage")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
