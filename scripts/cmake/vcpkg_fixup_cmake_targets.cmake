@@ -29,7 +29,7 @@ function(vcpkg_fixup_cmake_targets)
     endif()
 
 
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(EXECUTABLE_SUFFIX "\\.exe")
     else()
         set(EXECUTABLE_SUFFIX)
