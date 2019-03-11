@@ -141,7 +141,11 @@ configure_qt(
 )
 endif()
 
-install_qt()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    install_qt(DISABLE_PARALLEL) # prevent race condition on Mac
+else()
+    install_qt()
+endif()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
