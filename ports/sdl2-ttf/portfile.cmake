@@ -1,12 +1,18 @@
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2_ttf-2.0.15)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz"
-    FILENAME "SDL2_ttf-2.0.15.tar.gz"
-    SHA512 30d685932c3dd6f2c94e2778357a5c502f0421374293d7102a64d92f9c7861229bf36bedf51c1a698b296a58c858ca442d97afb908b7df1592fc8d4f8ae8ddfd)
 
-vcpkg_extract_source_archive(${ARCHIVE})
+set(VERSION 2.0.15)
+
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${VERSION}.tar.gz"
+    FILENAME "SDL2_ttf-${VERSION}.tar.gz"
+    SHA512 30d685932c3dd6f2c94e2778357a5c502f0421374293d7102a64d92f9c7861229bf36bedf51c1a698b296a58c858ca442d97afb908b7df1592fc8d4f8ae8ddfd
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${VERSION}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
