@@ -10,7 +10,11 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: ./bootstrap-vcpkg
+- script: ls
+  displayName: List files
+
+steps:
+- script: ./bootstrap-vcpkg.sh
   displayName: 'Bootstrap vcpkg'
 
 - script: ./vcpkg install collada-dom
