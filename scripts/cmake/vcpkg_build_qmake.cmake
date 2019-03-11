@@ -12,10 +12,10 @@ function(vcpkg_build_qmake)
 
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}" /J ${NUMBER_OF_PROCESSORS})
+        set(INVOKE "${JOM}")
     else()
         find_program(MAKE make)
-        set(INVOKE "${MAKE}" -j${NUMBER_OF_PROCESSORS})
+        set(INVOKE "${MAKE}")
     endif()
 
     # Make sure that the linker finds the libraries used 
