@@ -10,10 +10,8 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- script: ./bootstrap-vcpkg
+  displayName: 'Bootstrap vcpkg'
 
-- script: |
-    ./bootstrap-vcpkg
-    vcpkg install collada-dom
-  displayName: 'Test collada-dom'
+- script: ./vcpkg install collada-dom
+  displayName: 'Install collada-dom'
