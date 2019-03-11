@@ -281,11 +281,7 @@ macro(find_package name)
                 Qt5ThemeSupport
                 Qt5EventDispatcherSupport
                 Qt5PlatformCompositorSupport 
-                Qt5FontDatabaseSupport
-                Qt5GraphicsSupport
-                Qt5ClipboardSupport
-                Qt5AccessibilitySupport
-                )
+                Qt5FontDatabaseSupport)
 
             if(MSVC)
                 set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
@@ -309,7 +305,11 @@ macro(find_package name)
                     "-weak_framework ImageIO" 
                     "z" "m"
                     cups)
-                add_qt_library(${_vcpkg_qt5lib} qcocoa)
+                add_qt_library(${_vcpkg_qt5lib} 
+                    Qt5GraphicsSupport
+                    Qt5ClipboardSupport
+                    Qt5AccessibilitySupport
+                    qcocoa)
             endif()
         endif()
     else()
