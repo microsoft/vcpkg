@@ -105,6 +105,36 @@ foreach(BOOST_CMAKE_FILE IN LISTS BOOST_CMAKE_FILES)
         "set(CMAKE_REQUIRED_LIBRARIES \$\{CMAKE_REQUIRED_LIBRARIES\} \$\{Boost_FILESYSTEM_LIBRARY_RELEASE\} \$\{Boost_SYSTEM_LIBRARY_RELEASE\})" 
         "set(CMAKE_REQUIRED_LIBRARIES \$\{CMAKE_REQUIRED_LIBRARIES\} Boost::filesystem Boost::system)"
         _contents "${_contents}")
+    string(REPLACE # disable Qt filesystem
+        "set(filesystem \"standard;boost;qt5\""
+        "set(filesystem \"standard;boost\""
+        _contents "${_contents}")
+    string(REPLACE
+        "set(BUILD_SHARED_LIBS \${BUILD_SHARED_LIBS_DEFAULT} CACHE BOOL \"Use shared libraries\")"
+        "option(BUILD_SHARED_LIBS \"Use shared libraries\" \${BUILD_SHARED_LIBS_DEFAULT})"
+        _contents "${_contents}")
+    string(REPLACE
+        "include(FilesystemChecks)"
+        "find_package(Boost 1.53 COMPONENTS filesystem)
+set(OME_HAVE_BOOST_FILESYSTEM TRUE)
+set(OME_FILESYSTEM TRUE)
+set(FILESYSTEM_LIBS Boost::filesystem)"
+        _contents "${_contents}")
+    string(REPLACE
+        "include(BoostChecks)"
+        "include(BoostChecks)
+set(OME_HAVE_BOOST_FILESYSTEM_ABSOLUTE TRUE)
+set(OME_HAVE_BOOST_FILESYSTEM_RELATIVE TRUE)
+set(OME_HAVE_BOOST_FILESYSTEM_CANONICAL TRUE)"
+        _contents "${_contents}")
+    string(REPLACE
+        "add_subdirectory(test)"
+        "#add_subdirectory(test)"
+        _contents "${_contents}")
+    string(REPLACE
+        "add_subdirectory(examples)"
+        "#add_subdirectory(examples)"
+        _contents "${_contents}")
     file(WRITE ${SOURCE_PATH}/${BOOST_CMAKE_FILE} "${_contents}")
 endforeach()
 
