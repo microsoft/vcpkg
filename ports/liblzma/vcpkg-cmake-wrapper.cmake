@@ -1,4 +1,3 @@
-message("-- liblzma wrapper: ${ARGS}")
 _find_package(${ARGS})
 
 find_library(LIBLZMA_LIBRARY_RELEASE 
@@ -11,7 +10,7 @@ find_library(LIBLZMA_LIBRARY_DEBUG
              NO_DEFAULT_PATH)
 
 if (LIBLZMA_LIBRARY_RELEASE)
-   message("-- resetting liblzma libraries: ${LIBLZMA_LIBRARY_RELEASE}")
-   set(LIBLZMA_LIBRARIES optimized ${LIBLZMA_LIBRARY_RELEASE} debug ${LIBLZMA_LIBRARY_DEBUG})
+   set(LIBLZMA_LIBRARIES
+      \$<\$<NOT:\$<CONFIG:DEBUG>>:${LIBLZMA_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${LIBLZMA_LIBRARY_DEBUG}>)
    set(LIBLZMA_LIBRARY ${LIBLZMA_LIBRARY_RELEASE})
 endif ()
