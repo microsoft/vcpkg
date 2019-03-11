@@ -34,7 +34,8 @@ function(vcpkg_test_cmake)
     if(_tc_GENERATOR)
       set(GENERATOR ${_tc_GENERATOR})
     else()
-      # vcpkg_configure_cmake defines _VCPKG_CMAKE_GENERATOR when called
+      # _VCPKG_CMAKE_GENERATOR is defined if vcpkg_configure_cmake() has been called
+      # if not, GENERATOR is undefined and will be handled later on
       set(GENERATOR ${_VCPKG_CMAKE_GENERATOR})
     endif()
 
