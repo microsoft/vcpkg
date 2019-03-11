@@ -157,11 +157,13 @@ function(add_executable name)
                         -OutVariable out
                 )
             elseif(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
-                add_custom_command(TARGET ${name} POST_BUILD
-                COMMAND python ${_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py
-                    $<TARGET_FILE:${name}>
-                    "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
-                )
+                if ("MACOSX_BUNDLE" IN_LIST ARGV)
+                    add_custom_command(TARGET ${name} POST_BUILD
+                    COMMAND python ${_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py
+                        $<TARGET_FILE:${name}>
+                        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                    )
+                endif()
             endif()
         endif()
         set_target_properties(${name} PROPERTIES VS_USER_PROPS do_not_import_user.props)
