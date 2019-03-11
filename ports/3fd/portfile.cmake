@@ -31,6 +31,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/remove-seekpos.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/DataException.patch"
 )
 
 # Copy the sources to ensure a clean, out-of-source build
