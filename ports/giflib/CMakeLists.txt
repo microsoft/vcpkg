@@ -17,6 +17,7 @@ set(GIFLIB_SOURCES
     lib/quantize.c
 )
 
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_library(gif ${GIFLIB_SOURCES})
 if (BUILD_SHARED_LIBS)
     set_property(TARGET gif PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
