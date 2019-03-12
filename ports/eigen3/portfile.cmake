@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eigenteam/eigen-git-mirror
-    REF 3.3.7
-    SHA512 270ab9b5c22e09aa0e70d1a26995523c5c21fb0f09da45c137c11ab4c7700fe2bdb2b343c1e063bea4be5ae61d2313ff29ebbcad519dc355a568792b4a6e9e48
+    REF 167613fde929de8dafbbb6bf7fe4385c2ecd5b39
+    SHA512 b932ca771dff21c4a0df6ff5b71e85df76b586265ce0127eb390dd2975f330a32cba8bc705edacc88f5efa972c7f34b94c3739c8b56d7319c0feaed2c666b14f
     HEAD_REF master
 )
 
