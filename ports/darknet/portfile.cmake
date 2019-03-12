@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO cenit/darknet
-  REF 7a8574ec5fb5d2ac98bcc90426f5c4ca21230b45
-  SHA512 244066cee9ca34168058bb49df9d6be7d9915e43513f522c605c33d682e3187329ad76945ea604be90290bd99ad54e98717e2b14712d14d9a1d5e908efdee89b
+  REPO AlexeyAB/darknet
+  REF dd27d67f58f563bb6bb2af7bb6374f8a59cebcde
+  SHA512 6821ba9cd5dc185759492deaa2d20ac1ce60778a8aec9c372c96887d9650f9a97a3b7a3a5860b70078f483e62224772ef1078ecb9c03b1b3bed230569cc7b919
   HEAD_REF dev/cenit/cmakeConfig
   PATCHES
     enable_standard_installation.patch
@@ -64,27 +64,26 @@ endif()
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/darknet${EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib${EXECUTABLE_SUFFIX})
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/darknet/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/darknet${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/darknet/darknet${EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/darknet/uselib${EXECUTABLE_SUFFIX})
-file(COPY ${SOURCE_PATH}/cfg DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
-file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/darknet)
-
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${EXECUTABLE_SUFFIX})
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${EXECUTABLE_SUFFIX})
 endif()
-
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/darknet/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/darknet${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/darknet/darknet${EXECUTABLE_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/darknet/uselib${EXECUTABLE_SUFFIX})
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/uselib_track${EXECUTABLE_SUFFIX})
   file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uselib_track${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/darknet/uselib_track${EXECUTABLE_SUFFIX})
 endif()
+file(COPY ${SOURCE_PATH}/cfg DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
+file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/darknet)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
+#use vcpkg_fixup_cmake_targets()?
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/darknet/DarknetTargets.cmake ${CURRENT_PACKAGES_DIR}/share/darknet/DarknetTargets.cmake)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
