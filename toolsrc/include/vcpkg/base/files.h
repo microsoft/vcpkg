@@ -10,7 +10,8 @@
 
 namespace fs
 {
-#if defined(_WIN32) || defined(__cpp_lib_filesystem)
+// VS2015 (_MSC_VER 1900) uses std::experimental::filesystem
+#if (defined(_MSC_VER) && _MSC_VER > 1900) || defined(__cpp_lib_filesystem)
     namespace stdfs = std::filesystem;
 #else
     namespace stdfs = std::experimental::filesystem;
