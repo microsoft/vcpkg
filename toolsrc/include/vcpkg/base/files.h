@@ -10,7 +10,7 @@
 
 namespace fs
 {
-#ifdef __cpp_lib_filesystem
+#if defined(_WIN32) || defined(__cpp_lib_filesystem)
     namespace stdfs = std::filesystem;
 #else
     namespace stdfs = std::experimental::filesystem;
