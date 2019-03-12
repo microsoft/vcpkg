@@ -5,9 +5,10 @@ vcpkg_from_github(
   REPO AlexeyAB/darknet
   REF dd27d67f58f563bb6bb2af7bb6374f8a59cebcde
   SHA512 6821ba9cd5dc185759492deaa2d20ac1ce60778a8aec9c372c96887d9650f9a97a3b7a3a5860b70078f483e62224772ef1078ecb9c03b1b3bed230569cc7b919
-  HEAD_REF dev/cenit/cmakeConfig
+  HEAD_REF master
   PATCHES
     enable_standard_installation.patch
+    dont_use_integrated_stb_lib.patch
 )
 
 set(ENABLE_CUDA OFF)
@@ -43,6 +44,8 @@ if("weights" IN_LIST FEATURES)
   )
 endif()
 
+file(REMOVE ${SOURCE_PATH}/src/stb_image.h)
+file(REMOVE ${SOURCE_PATH}/src/stb_image_write.h)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
