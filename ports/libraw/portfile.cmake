@@ -79,6 +79,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Rename cmake module into a config in order to allow more flexible lookup rules
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libraw/FindLibRaw.cmake ${CURRENT_PACKAGES_DIR}/share/libraw/LibRaw-config.cmake)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw)
+endif()
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libraw/COPYRIGHT ${CURRENT_PACKAGES_DIR}/share/libraw/copyright)
