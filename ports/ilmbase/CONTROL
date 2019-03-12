@@ -1,3 +1,4 @@
 Source: ilmbase
-Version: 2.2.1-1
-Description: Base libraries from ILM for OpenEXR
+Version: 2.3.0
+Build-Depends: openexr
+Description: empty package, linking to newer one

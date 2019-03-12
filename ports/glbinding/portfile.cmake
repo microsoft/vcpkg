@@ -22,10 +22,32 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding TARGET_PATH share/glbinding/cmake/glbinding)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding-aux TARGET_PATH share/glbinding/cmake/glbinding-aux)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake)
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/cmake/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/cmake/glbinding-aux/glbinding-aux-export.cmake)\nset(glbinding_FOUND TRUE)\n")
+# _IMPORT_PREFIX needs to go up one extra level in the directory tree.
+# These files should be modified.
+#     /share/glbinding/glbinding-export.cmake 
+#     /share/glbinding-aux/glbinding-aux-export.cmake
+file(GLOB_RECURSE TARGET_CMAKES "${CURRENT_PACKAGES_DIR}/*-export.cmake")
+foreach(TARGET_CMAKE IN LISTS TARGET_CMAKES)
+    file(READ ${TARGET_CMAKE} _contents)
+    string(REPLACE 
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+        _contents "${_contents}")
+    file(WRITE ${TARGET_CMAKE} "${_contents}")
+endforeach()
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/glbinding-aux/glbinding-aux-export.cmake)\nset(glbinding_FOUND TRUE)\n")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright

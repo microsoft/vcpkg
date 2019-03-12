@@ -1,4 +1,4 @@
 Source: freeimage
-Version: 3.18.0-2
+Version: 3.18.0-3
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff, openjpeg, libwebp, libraw, jxrlib, openexr
 Description: Support library for graphics image formats
