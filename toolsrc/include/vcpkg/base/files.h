@@ -2,7 +2,7 @@
 
 #include <vcpkg/base/expected.h>
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__cpp_lib_filesystem)
 #include <filesystem>
 #else
 #include <experimental/filesystem>
@@ -10,7 +10,11 @@
 
 namespace fs
 {
+#ifdef __cpp_lib_filesystem
+    namespace stdfs = std::filesystem;
+#else
     namespace stdfs = std::experimental::filesystem;
+#endif
 
     using stdfs::copy_options;
     using stdfs::file_status;
