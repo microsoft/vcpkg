@@ -163,7 +163,7 @@ endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf ${CMAKE_CURRENT_LIST_DIR}/qt_release.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 
-vcpkg_execute_required_process(
+vcpkg_execute_required_process( 
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
     LOGNAME fix-cmake
