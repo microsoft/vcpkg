@@ -1,17 +1,13 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GoogleCloudPlatform/google-cloud-cpp
-    REF v0.3.0
-    SHA512 90f876ebf4bea40c5bc12d2bd20d27b48202f951d57a68b657c07b7d468b2ac5a00e39a3a6fca48f92030d89ba7d9706eb52b3c8e734b392aee63632af042b5d
+    REF v0.7.0
+    SHA512 8e01096b569e78f74ee0015fa7f04729354f9001234acd098333c883247ede209582c929903460264f1155bfa0225837fd770f75ba021f8287cafa78e87e6975
     HEAD_REF master
-    PATCHES include-protobuf.patch
 )
 
 set(GOOGLEAPIS_VERSION 6a3277c0656219174ff7c345f31fb20a90b30b97)
@@ -29,8 +25,9 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=vcpkg
+        -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package
         -DGOOGLE_CLOUD_CPP_ENABLE_MACOS_OPENSSL_CHECK=OFF
+	-DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)

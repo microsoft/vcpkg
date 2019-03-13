@@ -1,4 +1,4 @@
 Source: sdl2-gfx
-Version: 1.0.3-3
+Version: 1.0.4
 Build-Depends: sdl2
 Description: Graphics primitives (line, circle, rectangle etc.) with AA support, rotozoomer and other drawing related support functions wrapped up in a C based add-on library for the Simple Direct Media (SDL) cross-platform API layer.

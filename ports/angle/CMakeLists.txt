@@ -45,13 +45,25 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 ##########
 # angle::common
 if(WINDOWS_ANY)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
 elseif(APPLE)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
 endif()
-file(GLOB ANGLE_COMMON_SOURCES "src/common/*.h" "src/common/*.inl" "src/common/*.cpp" "src/common/third_party/base/anglebase/*.h" "src/common/third_party/base/anglebase/*.cc" "src/common/third_party/base/anglebase/containers/*.h" "src/common/third_party/base/anglebase/numerics/*.h" "src/common/third_party/base/anglebase/numerics/*.cc" "src/common/third_party/xxhash/*.h" "src/common/third_party/xxhash/*.c" "src/common/third_party/smhasher/src/*.h" "src/common/third_party/smhasher/src/*.cpp")
+file(GLOB ANGLE_COMMON_SOURCES 
+	"src/common/*.h" 
+	"src/common/*.inl" 
+	"src/common/*.cpp" 
+	"src/common/third_party/base/anglebase/*.h" 
+	"src/common/third_party/base/anglebase/*.cc" 
+	"src/common/third_party/base/anglebase/containers/*.h" 
+	"src/common/third_party/base/anglebase/numerics/*.h" 
+	"src/common/third_party/base/anglebase/numerics/*.cc" 
+	"src/common/third_party/xxhash/*.h" 
+	"src/common/third_party/xxhash/*.c" 
+	"src/common/third_party/smhasher/src/*.h" 
+	"src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
@@ -225,6 +237,7 @@ elseif(WINDOWS_DESKTOP)
         angle::renderer::d3d
         angle::renderer::win32
         angle::renderer::opengl
+        gdi32
     )
 else()
     set(LIBANGLE_RENDERER_PLATFORM )
@@ -264,6 +277,7 @@ target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
         -DGL_GLEXT_PROTOTYPES
+        -DGL_API=
         -DGL_APICALL=
         -DEGLAPI=
         -DGL_API=

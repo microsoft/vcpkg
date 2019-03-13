@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/smart_ptr
-    REF boost-1.68.0
-    SHA512 5c791dd11d0b7d7662bfa936955dfbf9ff7e2e1993051a03997dbfee6b9b28e606ac94bad06a6eb112e8e089cf28721a4140761620a0c268ab8871d913e913d1
+    REF boost-1.69.0
+    SHA512 b11e39bde74287c2c9b24ea2c9509fb2f44714ee75e876e8c2c5754cf8c1c7a8f42570f7084393d031b4347abb1ac9715c779c19ecaf5917abb53e368c1e5868
     HEAD_REF master
 )
 

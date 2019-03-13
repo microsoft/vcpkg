@@ -2,8 +2,6 @@
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement are vital to its success!
 
-- [Installing and Using Packages Example: sqlite](examples/installing-and-using-packages.md)
-
 ### Examples
 
 - [Installing and Using Packages Example: sqlite](examples/installing-and-using-packages.md)
@@ -15,6 +13,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 - [Integration with build systems](users/integration.md)
 - [Triplet files](users/triplets.md)
+- [Configuration and Environment](users/config-environment.md)
 
 ### Maintainer help
 
@@ -24,6 +23,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 ### Specifications
 
 - [Export](specifications/export-command.md)
+- [Feature Packages](specifications/feature-packages.md)
 
 ### Blog posts
 - [Announcing a single C++ library manager for Linux, macOS and Windows: Vcpkg](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/)

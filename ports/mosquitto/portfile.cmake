@@ -22,6 +22,7 @@ vcpkg_apply_patches(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/win64-cmake.patch"
         "${CMAKE_CURRENT_LIST_DIR}/output_folders-cmake.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-dependence-pthreads.patch"
 )
 
 vcpkg_configure_cmake(

@@ -1,10 +1,10 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "2.3.2")
-set(GDAL_VERSION_PKG "232")
-set(GDAL_VERSION_LIB "203")
-set(GDAL_PACKAGE_SUM "9eb26be57657b1f1eaada4794859584d53bd58e0d504eb12ab97e9c60353d0a565dc894a89829ee50fc549cb7d069a75b7895c0dd4cea887e010671f63e945b8")
+set(GDAL_VERSION_STR "2.4.0")
+set(GDAL_VERSION_PKG "240")
+set(GDAL_VERSION_LIB "204")
+set(GDAL_PACKAGE_SUM "a8543425d7bdbb5ab94638a490fe5b62e37983fbb89e1eea98b0e31d5fa76b7568e7b633c90ac429c87a6c9e8d9e1358b48428f3885aac8d574d1f01e9631f7f")
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -250,8 +250,15 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
   endif()
 else()
-  file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-  file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
+
+  set(GDAL_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/gdal)
+  file(MAKE_DIRECTORY ${GDAL_TOOL_PATH})
+
+  file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+  file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
+  file(REMOVE_RECURSE ${GDAL_TOOLS})
+
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)

@@ -7,21 +7,29 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.9.0
-    SHA512 789d0948eee3af20eb922e09c14eb721f20fa041ca3c0cf57bd869718fc9919b45590bd72714efafdf19196f35abb6bdbe0a3972ca74fcc2af92c1f9ade8fa00
+    REF apache-arrow-0.11.1
+    SHA512 8a2de7e4b40666e4ea7818fac488549f1348e961e7cb6a4166ae4019976a574fd115dc1cabaf44bc1cbaabf15fb8e5133c8232b34fca250d8ff7c5b65c5407c8
     HEAD_REF master
 )
 
 set(CPP_SOURCE_PATH "${SOURCE_PATH}/cpp")
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${CPP_SOURCE_PATH}
     PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/all.patch"
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
+
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" IS_STATIC)
+
+if (IS_STATIC)
+    set(PARQUET_ARROW_LINKAGE static)
+else()
+    set(PARQUET_ARROW_LINKAGE shared)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CPP_SOURCE_PATH}
@@ -38,18 +46,28 @@ vcpkg_configure_cmake(
     -DBOOST_ROOT=${CURRENT_INSTALLED_DIR}
     -DGFLAGS_HOME=${CURRENT_INSTALLED_DIR}
     -DZLIB_HOME=${CURRENT_INSTALLED_DIR}
+    -DARROW_PARQUET=ON
     -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
     -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
+    -DBUILD_STATIC=${ARROW_BUILD_STATIC}
+    -DBUILD_SHARED=${ARROW_BUILD_SHARED}
+    -DPARQUET_ARROW_LINKAGE=${PARQUET_ARROW_LINKAGE}
+    -DDOUBLE_CONVERSION_HOME=${CURRENT_INSTALLED_DIR}
+    -DGLOG_HOME=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/lib/arrow.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow.lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib)
+vcpkg_copy_pdbs()
+
+if(WIN32)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/lib/arrow.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow.lib)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+    else()
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib)
+    endif()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/arrow RENAME copyright)
