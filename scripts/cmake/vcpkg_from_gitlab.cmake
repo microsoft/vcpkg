@@ -56,7 +56,11 @@
 ##
 ## This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 ##
-
+## ## Examples:
+## * [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
+## * [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
+## * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
+##
 function(vcpkg_from_gitlab)
     set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF)
     set(multipleValuesArgs PATCHES)
