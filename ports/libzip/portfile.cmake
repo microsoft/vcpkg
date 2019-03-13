@@ -5,6 +5,7 @@ vcpkg_from_github(
     REF rel-1-5-2
     SHA512 5ba765c5d4ab47dff24bfa5e73b798046126fcc88b29d5d9ce9d77d035499ae91d90cc526f1f73bbefa07b7b68ff6cf77e912e5793859f801caaf2061cb20aee
     HEAD_REF master
+	PATCHES avoid_computation_on_void_pointer.patch
 )
 
 # AES encryption
@@ -20,7 +21,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+   # PREFER_NINJA
         OPTIONS
             -DBUILD_DOC=OFF
             -DBUILD_EXAMPLES=OFF
