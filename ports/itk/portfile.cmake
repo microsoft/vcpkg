@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF d92873e33e8a54e933e445b92151191f02feab42
     SHA512 0e3ebd27571543e1c497377dd9576a9bb0711129be12131109fe9b3c8413655ad14ce4d9ac6e281bac83c57e6032b614bc9ff53ed357d831544ca52f41513b62
     HEAD_REF master
+    PATCHES hdf5_config_mode_find_package.patch
 )
 
 if ("vtk" IN_LIST FEATURES)
@@ -44,16 +45,18 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_PNG=ON
         -DITK_USE_SYSTEM_TIFF=ON
         -DITK_USE_SYSTEM_ZLIB=ON
+        # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
+
+        -DITK_SKIP_PATH_LENGTH_CHECKS=ON
 
         # I havn't tried Python wrapping in vcpkg
         #-DITK_WRAP_PYTHON=ON
         #-DITK_PYTHON_VERSION=3
 
-        # HDF5 must NOT be installed, otherwise it causes: ...\installed\x64-windows-static\include\H5Tpkg.h(25): fatal error C1189: #error:  "Do not include this file outside the H5T package!"
-        -DITK_USE_SYSTEM_HDF5=ON # if ON, causes: ...\buildtrees\itk\x64-windows-static-rel\Modules\ThirdParty\HDF5\src\itk_H5Cpp.h(25): fatal error C1083: Cannot open include file: 'H5Cpp.h': No such file or directory
-
+        -DITK_USE_SYSTEM_HDF5=ON
         -DModule_ITKVtkGlue=${ITKVtkGlue} # this option requires VTK to be a dependency in CONTROL file. VTK depends on HDF5!
+
         -DModule_IOSTL=ON # example how to turn on a non-default module
         -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         -DModule_RLEImage=ON # example how to turn on a remote module

@@ -30,6 +30,12 @@ vcpkg_extract_source_archive_ex(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" WITH_STATIC_LIB)
 
+if(zlib IN_LIST FEATURES)
+	set(WITH_ZLIB ON)
+else()
+	set(WITH_ZLIB OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -39,6 +45,7 @@ vcpkg_configure_cmake(
         -DWITH_TESTING=OFF
         -DWITH_NACL=OFF
         -DWITH_GSSAPI=OFF
+        -DWITH_ZLIB=${WITH_ZLIB}
 )
 
 vcpkg_install_cmake()
