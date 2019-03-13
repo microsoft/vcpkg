@@ -58,6 +58,11 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
 
+get_filename_component(CMAKE_DIR ${CMAKE_COMMAND} DIRECTORY)
+# If cmake is not installed then adding it to the end of the path
+# will allow generate_projects.bat to find the cmake used by vcpkg.
+vcpkg_add_to_path(${CMAKE_DIR})
+
 vcpkg_execute_required_process( 
 	COMMAND ${SOURCE_PATH}/physx/generate_projects.bat ${PRESET_FILE}
 	WORKING_DIRECTORY ${SOURCE_PATH}/physx
