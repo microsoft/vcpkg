@@ -83,10 +83,11 @@ set(BOOST_CMAKE_FILES
     ome-common/cmake/BoostChecks.cmake
     ome-common/cmake/FilesystemChecks.cmake
     ome-common/CMakeLists.txt
-    ome-files/cmake/BoostChecks.cmake
-    ome-model/CMakeLists.txt
     ome-model/cmake/BoostChecks.cmake
-    ome-model/CMakeLists.txt)
+    ome-model/CMakeLists.txt
+    ome-files/cmake/BoostChecks.cmake
+    ome-files/CMakeLists.txt
+    )
 
 # Install config files in share folder across platforms
 foreach(BOOST_CMAKE_FILE IN LISTS BOOST_CMAKE_FILES)
@@ -126,6 +127,14 @@ set(FILESYSTEM_LIBS Boost::filesystem)"
 set(OME_HAVE_BOOST_FILESYSTEM_ABSOLUTE TRUE)
 set(OME_HAVE_BOOST_FILESYSTEM_RELATIVE TRUE)
 set(OME_HAVE_BOOST_FILESYSTEM_CANONICAL TRUE)"
+        _contents "${_contents}")
+    string(REPLACE
+        "include(XercesChecks)"
+        "find_package(XercesC 3.0.0 REQUIRED)"
+        _contents "${_contents}")
+        string(REPLACE
+        "include(XalanChecks)"
+        "find_package(XalanC 1.10 REQUIRED)"
         _contents "${_contents}")
     string(REPLACE
         "add_subdirectory(test)"
