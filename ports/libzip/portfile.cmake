@@ -5,7 +5,6 @@ vcpkg_from_github(
     REF rel-1-5-2
     SHA512 5ba765c5d4ab47dff24bfa5e73b798046126fcc88b29d5d9ce9d77d035499ae91d90cc526f1f73bbefa07b7b68ff6cf77e912e5793859f801caaf2061cb20aee
     HEAD_REF master
-    PATCHES cmake_dont_build_more_than_needed.patch
 )
 
 # AES encryption
