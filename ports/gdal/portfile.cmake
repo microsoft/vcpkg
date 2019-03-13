@@ -250,8 +250,15 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
   endif()
 else()
-  file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-  file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
+
+  set(GDAL_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/gdal)
+  file(MAKE_DIRECTORY ${GDAL_TOOL_PATH})
+
+  file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+  file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
+  file(REMOVE_RECURSE ${GDAL_TOOLS})
+
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
