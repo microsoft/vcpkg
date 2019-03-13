@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         build.patch
         gflags.patch
+        fix-config-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -35,3 +36,4 @@ file(REMOVE_RECURSE
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/wangle RENAME copyright)
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/wangle)
