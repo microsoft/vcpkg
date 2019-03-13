@@ -21,15 +21,15 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-   # PREFER_NINJA
-        OPTIONS
-            -DBUILD_DOC=OFF
-            -DBUILD_EXAMPLES=OFF
-            -DBUILD_REGRESS=OFF
-            -DBUILD_TOOLS=OFF
-            # see https://github.com/nih-at/libzip/blob/rel-1-5-2/INSTALL.md
-            -DENABLE_OPENSSL=${USE_OPENSSL}
-            -DENABLE_BZIP2=${USE_BZIP2}
+    PREFER_NINJA
+    OPTIONS
+        -DBUILD_DOC=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_REGRESS=OFF
+        -DBUILD_TOOLS=OFF
+        # see https://github.com/nih-at/libzip/blob/rel-1-5-2/INSTALL.md
+        -DENABLE_OPENSSL=${USE_OPENSSL}
+        -DENABLE_BZIP2=${USE_BZIP2}
 )
 
 vcpkg_install_cmake()
