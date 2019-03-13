@@ -44,6 +44,7 @@ add_library(SDL2_image
     IMG_xpm.c
     IMG_xv.c
     IMG_xxx.c
+    IMG_WIC.c
     version.rc
     )
 
