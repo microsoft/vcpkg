@@ -1,0 +1,20 @@
+Source: darknet
+Version: 1.0.0
+Description: Darknet is an open source neural network framework written in C and CUDA. You only look once (YOLO) is a state-of-the-art, real-time object detection system, best example of darknet functionalities.
+Build-Depends: pthreads (windows), stb
+Default-Features: weights
+
+Feature: opencv
+Build-Depends: opencv
+Description: Build darknet with support for OpenCV
+
+Feature: cuda
+Build-Depends: cuda
+Description: Build darknet with support for CUDA
+
+Feature: weights
+Description: Download common weights from official websites, using vcpkg proxy-enabled functions
+
+Feature: opencv-cuda
+Build-Depends: darknet[cuda], opencv[cuda]
+Description: Build darknet with support for a CUDA-enabled OpenCV

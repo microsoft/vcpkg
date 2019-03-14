@@ -26,6 +26,7 @@ vcpkg_extract_source_archive_ex(
         only-one-flavor-threads.patch
         "${WINPATCH}"
         missing-includes.patch
+        fix-config-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" WITH_STATIC_LIB)
@@ -46,6 +47,7 @@ vcpkg_configure_cmake(
         -DWITH_NACL=OFF
         -DWITH_GSSAPI=OFF
         -DWITH_ZLIB=${WITH_ZLIB}
+        -DCMAKE_INSTALL_DIR=share/libssh
 )
 
 vcpkg_install_cmake()
@@ -69,7 +71,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/static ${CURRENT_PACKAGES_DIR}/d
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # The installed cmake config files are nonfunctional (0.7.5)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake ${CURRENT_PACKAGES_DIR}/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake ${CURRENT_PACKAGES_DIR}/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh RENAME copyright)
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh)
