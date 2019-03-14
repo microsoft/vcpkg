@@ -13,7 +13,9 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE} ${CURRENT_BUILDTREES_DIR}/src/glew)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
-)
+    OPTIONS
+        -DBUILD_UTILS=OFF
+    )
 
 vcpkg_install_cmake()
 
@@ -39,11 +41,6 @@ endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/glew32d.lib)
 endif()
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/glewinfo.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/visualinfo.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/glewinfo.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/visualinfo.exe)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
