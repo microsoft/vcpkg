@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         export-only-in-shared-build.patch
         0001_fix_osx_defined.patch
+		0002_steal-boxes-Fix-an-invalid-free.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
