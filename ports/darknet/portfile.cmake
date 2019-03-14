@@ -1,3 +1,11 @@
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  message(FATAL_ERROR "darknet does not support ARM")
+endif()
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  message(FATAL_ERROR "darknet does not support UWP")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
