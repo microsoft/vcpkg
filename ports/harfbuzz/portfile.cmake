@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-cmake-export.patch
         0002-fix-uwp-build.patch
+        0003-remove-broken-test.patch
 )
 
 SET(HB_HAVE_ICU "OFF")
