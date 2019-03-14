@@ -48,7 +48,6 @@ set(CORE_OPTIONS
     -system-libpng
     -system-freetype
     -system-pcre
-    -system-harfbuzz
     -system-doubleconversion
     -system-sqlite
     -no-fontconfig
@@ -71,6 +70,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         OPTIONS
             ${CORE_OPTIONS}
             -mp
+            -system-harfbuzz
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
@@ -94,6 +94,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PLATFORM "linux-g++"
         OPTIONS
             ${CORE_OPTIONS}
+            -system-harfbuzz
         OPTIONS_RELEASE
             "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
@@ -120,6 +121,7 @@ configure_qt(
     PLATFORM "macx-clang"
     OPTIONS
         ${CORE_OPTIONS}
+        -no-harfbuzz
     OPTIONS_RELEASE
         "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
         "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
@@ -163,7 +165,7 @@ endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf ${CMAKE_CURRENT_LIST_DIR}/qt_release.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 
-vcpkg_execute_required_process(
+vcpkg_execute_required_process( 
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
     LOGNAME fix-cmake

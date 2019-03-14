@@ -1,4 +1,4 @@
 Source: qt5-base
-Version: 5.12.1-2
+Version: 5.12.1-3
 Description: Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.
-Build-Depends: zlib, libjpeg-turbo, libpng, freetype, pcre2, harfbuzz, sqlite3, libpq, double-conversion, openssl
+Build-Depends: zlib, libjpeg-turbo, libpng, freetype, pcre2, harfbuzz (!osx), sqlite3, libpq, double-conversion, openssl
