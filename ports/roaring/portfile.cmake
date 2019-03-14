@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if (TARGET_TRIPLET MATCHES "^x86")
+    message(WARNING "The CRoaring authors recommend users of this lib against using a 32-bit build.")
+endif ()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RoaringBitmap/CRoaring
