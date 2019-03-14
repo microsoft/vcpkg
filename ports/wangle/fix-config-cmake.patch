@@ -1,0 +1,19 @@
+diff --git a/wangle/cmake/wangle-config.cmake.in b/wangle/cmake/wangle-config.cmake.in
+index e50af54..a16cdbb 100644
+--- a/wangle/cmake/wangle-config.cmake.in
++++ b/wangle/cmake/wangle-config.cmake.in
+@@ -12,7 +12,13 @@
+ @PACKAGE_INIT@
+ 
+ set_and_check(WANGLE_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+-set_and_check(WANGLE_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
++set_and_check(WANGLE_CMAKE_DIR "${PACKAGE_PREFIX_DIR}/share/wangle")
++
++find_package(folly REQUIRED)
++find_package(fizz REQUIRED)
++find_package(glog REQUIRED)
++find_package(threads REQUIRED)
++find_package(libevent REQUIRED)
+ 
+ if (NOT TARGET wangle::wangle)
+   include("${WANGLE_CMAKE_DIR}/wangle-targets.cmake")
