@@ -193,8 +193,16 @@ endfunction()
 
 function(add_qt_library _target)
     foreach(_lib IN LISTS ARGN)
-        find_library(${_lib}_LIBRARY_DEBUG NAMES ${_lib}d PATH_SUFFIXES plugins/platforms)
-        find_library(${_lib}_LIBRARY_RELEASE NAMES ${_lib} PATH_SUFFIXES plugins/platforms)
+        find_library(${_lib}_LIBRARY_DEBUG 
+            NAMES ${_lib} ${_lib}d ${_lib}_debug
+            PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib
+                  ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/plugins/platforms
+            NO_DEFAULT_PATH)
+        find_library(${_lib}_LIBRARY_RELEASE
+            NAMES ${_lib} lib${_lib}
+            PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
+            PATH_SUFFIXES plugins/platforms lib
+            NO_DEFAULT_PATH)
         set_property(TARGET ${_target} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
         \$<\$<NOT:\$<CONFIG:DEBUG>>:${${_lib}_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${${_lib}_LIBRARY_DEBUG}>)
     endforeach()
@@ -265,14 +273,13 @@ macro(find_package name)
             find_package(JPEG)
             find_package(PNG)
             find_package(Freetype)
-            find_package(harfbuzz CONFIG)
             find_package(sqlite3 CONFIG)
             find_package(PostgreSQL MODULE REQUIRED)
             find_package(double-conversion CONFIG)
             find_package(OpenSSL)
 
             set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-                ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype harfbuzz::harfbuzz sqlite3
+                ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3
                 ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto  
             )
 
@@ -284,7 +291,9 @@ macro(find_package name)
                 Qt5FontDatabaseSupport)
 
             if(MSVC)
+                find_package(harfbuzz CONFIG)
                 set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
+                    harfbuzz::harfbuzz
                     Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
 
                 add_qt_library(${_vcpkg_qt5lib} Qt5WindowsUIAutomationSupport qwindows qdirect2d)
