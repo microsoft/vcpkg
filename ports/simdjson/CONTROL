@@ -1,0 +1,3 @@
+Source: simdjson
+Version: 2019-03-09
+Description: A extremely fast JSON library that can parse gigabytes of JSON per second

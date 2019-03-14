@@ -2,10 +2,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF rel-1-5-1
-    SHA512 778f438f6354f030656baa5497b3154ad8fb764011d2a6925136f32e06dc0dcd1ed93fe05dbf7be619004a68cdabe5e34a83b988c1501ed67e9cfa4fa540350f
+    REF rel-1-5-2
+    SHA512 5ba765c5d4ab47dff24bfa5e73b798046126fcc88b29d5d9ce9d77d035499ae91d90cc526f1f73bbefa07b7b68ff6cf77e912e5793859f801caaf2061cb20aee
     HEAD_REF master
-    PATCHES cmake_dont_build_more_than_needed.patch
+	PATCHES avoid_computation_on_void_pointer.patch
 )
 
 # AES encryption
@@ -14,12 +14,22 @@ if("openssl" IN_LIST FEATURES)
     set(USE_OPENSSL ON)
 endif()
 
+set(USE_BZIP2 OFF)
+if("bzip2" IN_LIST FEATURES)
+    set(USE_BZIP2 ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-        OPTIONS
-            # see https://github.com/nih-at/libzip/blob/rel-1-5-1/INSTALL.md
-            -DENABLE_OPENSSL=${USE_OPENSSL}
+    OPTIONS
+        -DBUILD_DOC=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_REGRESS=OFF
+        -DBUILD_TOOLS=OFF
+        # see https://github.com/nih-at/libzip/blob/rel-1-5-2/INSTALL.md
+        -DENABLE_OPENSSL=${USE_OPENSSL}
+        -DENABLE_BZIP2=${USE_BZIP2}
 )
 
 vcpkg_install_cmake()
