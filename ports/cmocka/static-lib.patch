@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 00e568e..cb44b51 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -77,7 +77,11 @@ install(
+ 
+ # cmake config files
+ if (WIN32)
++    if (BUILD_SHARED_LIBS)
+     set(CMOCKA_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_IMPORT_LIBRARY_SUFFIX})
++    else()
++    set(CMOCKA_LIBRARY_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}${CMOCKA_STATIC_LIBRARY}${CMAKE_IMPORT_LIBRARY_SUFFIX})
++    endif()
+ else()
+     set(CMOCKA_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+ endif()

@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e44ef40..8555169 100644
+index 5684685..8555169 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -30,7 +30,7 @@ if (WIN32)
@@ -11,12 +11,8 @@ index e44ef40..8555169 100644
  add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
  
  target_include_directories(${CMOCKA_SHARED_LIBRARY}
-@@ -78,9 +78,11 @@ install(TARGETS
-             ${CMAKE_INSTALL_LIBDIR}
-         LIBRARY DESTINATION
-             ${CMAKE_INSTALL_LIBDIR}
-+        RUNTIME DESTINATION
-+            ${CMAKE_INSTALL_BINDIR}
+@@ -82,7 +82,7 @@ install(TARGETS
+             ${CMAKE_INSTALL_BINDIR}
          COMPONENT
              ${PROJECT_NAME})
 -
