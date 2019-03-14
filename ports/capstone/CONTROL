@@ -20,9 +20,6 @@ Description: Capstone disassembly support for M68k
 Feature: mips
 Description: Capstone disassembly support for MIPS
 
-Feature: osxkernel
-Description: Capstone disassembly support for OSX Kernel
-
 Feature: ppc
 Description: Capstone disassembly support for PowerPC
 
@@ -46,3 +43,6 @@ Description: Capstone disassembly support for XCore
 
 Feature: diet
 Description: Build Capstone in diet mode (reduced features for smaller size)
+
+Feature: osxkernel
+Description: Support for emedding Capstone into OSX Kernel extensions
