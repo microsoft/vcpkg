@@ -26,6 +26,7 @@ vcpkg_extract_source_archive_ex(
 
 #Since libiconv uses automake, make and configure, we use a custom CMake file
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-iconv-config.cmake DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -34,6 +35,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-iconv TARGET_PATH share/unofficial-iconv)
 
