@@ -1,14 +1,14 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpfr-3.1.6)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpfr-4.0.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mpfr.org/mpfr-3.1.6/mpfr-3.1.6.tar.xz"
-    FILENAME "mpfr-3.1.6.tar.xz"
-    SHA512 746ee74d5026f267f74ab352d850ed30ff627d530aa840c71b24793e44875f8503946bd7399905dea2b2dd5744326254d7889337fe94cfe58d03c4066e9d8054
+    URLS "http://www.mpfr.org/mpfr-4.0.1/mpfr-4.0.1.tar.xz"
+    FILENAME "mpfr-4.0.1.tar.xz"
+    SHA512 137ad68bc1e33a155edc1247fcdba27f999cf48ed526773136584090ddf2cfdfc9ea79fbf74ea1943b835b4b1ff29b05087114738c6ad3b485848540f30cac4f
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/gmp_printf.c DESTINATION ${SOURCE_PATH}/src)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/test_stdarg.c DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

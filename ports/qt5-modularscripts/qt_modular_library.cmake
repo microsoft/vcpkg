@@ -8,7 +8,7 @@ function(qt_modular_library NAME HASH)
         )
     endif()
 
-    set(MAJOR_MINOR 5.11)
+    set(MAJOR_MINOR 5.12)
     set(FULL_VERSION ${MAJOR_MINOR}.1)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
@@ -38,9 +38,14 @@ function(qt_modular_library NAME HASH)
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 
-    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
-    
+    if(WIN32)
+        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    else()
+        set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
+        set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
+    endif()
+
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
 

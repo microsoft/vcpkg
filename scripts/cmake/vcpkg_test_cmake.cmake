@@ -27,6 +27,11 @@ function(vcpkg_test_cmake)
       set(PACKAGE_TYPE CONFIG)
     endif()
 
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+      message(STATUS "Skipping CMake integration test due to v142 / CMake interaction issues")
+      return()
+    endif()
+
     message(STATUS "Performing CMake integration test")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-test)
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-test)

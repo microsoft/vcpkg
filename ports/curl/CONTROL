@@ -1,9 +1,8 @@
 Source: curl
-Version: 7.61.1-1
+Version: 7.61.1-2
 Build-Depends: zlib
 Description: A library for transferring data with URLs
 Default-Features: ssl
-# For WINSSL add set(CURL_USE_WINSSL ON) to your triplet file
 
 Feature: tool
 Description: Builds curl executable
@@ -16,9 +15,21 @@ Build-Depends: nghttp2, curl[ssl]
 Description: HTTP2 support
 
 Feature: ssl
-Build-Depends: openssl
-Description: SSL support
+Build-Depends: curl[openssl] (!windows), curl[winssl] (windows)
+Description: Default SSL backend
 
 Feature: ssh
 Build-Depends: libssh2, curl[non-http]
 Description: SSH support via libssh2
+
+# SSL backends
+Feature: openssl
+Build-Depends: openssl
+Description: SSL support (OpenSSL)
+
+Feature: winssl
+Description: SSL support (Secure Channel / "WinSSL")
+
+Feature: mbedtls
+Build-Depends: mbedtls
+Description: SSL support (mbedTLS)

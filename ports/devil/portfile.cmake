@@ -1,16 +1,15 @@
 include(vcpkg_common_functions)
 
-set(DEVIL_VERSION 1.8.0)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DentonW/DevIL
-    REF v${DEVIL_VERSION}
+    REF v1.8.0
     SHA512 4aed5e50a730ece8b1eb6b2f6204374c6fb6f5334cf7c880d84c0f79645ea7c6b5118f57a7868a487510fc59c452f51472b272215d4c852f265f58b5857e17c7
     HEAD_REF master
     PATCHES
         0001_fix-encoding.patch
         0002_fix-missing-mfc-includes.patch
+        0003_fix-openexr.patch
         enable-static.patch
 )
 
@@ -20,7 +19,7 @@ if("libpng" IN_LIST FEATURES)
 endif()
 
 set(IL_NO_TIF 1)
-if("libtiff" IN_LIST FEATURES)
+if("tiff" IN_LIST FEATURES)
     set(IL_NO_TIF 0)
 endif()
 

@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DCGAL_HEADER_ONLY=ON
         -DCGAL_INSTALL_CMAKE_DIR=share/cgal
         -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
 )
@@ -28,12 +29,11 @@ vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 else()
-    foreach(ROOT ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    foreach(ROOT ${CURRENT_PACKAGES_DIR}/bin)
         file(REMOVE
             ${ROOT}/cgal_create_CMakeLists
             ${ROOT}/cgal_create_cmake_script
@@ -45,7 +45,9 @@ endif()
 file(READ ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake _contents)
 string(REPLACE "CGAL_IGNORE_PRECONFIGURED_GMP" "1" _contents "${_contents}")
 string(REPLACE "CGAL_IGNORE_PRECONFIGURED_MPFR" "1" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "${_contents}")
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "include (\$\{CMAKE_CURRENT_LIST_DIR\}/../../share/cgal/CGALConfig.cmake)")
 
 file(COPY ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cgal/LICENSE ${CURRENT_PACKAGES_DIR}/share/cgal/copyright)

@@ -1,3 +1,6 @@
 Source: apr
-Version: 1.6.5
+Version: 1.6.5-1
 Description: The Apache Portable Runtime (APR) is a C library that forms a system portability layer that covers many operating systems.
+
+Feature: private-headers
+Description: Install non-standard files required for building Apache httpd

@@ -12,6 +12,7 @@ namespace vcpkg::VisualStudio
     static constexpr CStringView V_120 = "v120";
     static constexpr CStringView V_140 = "v140";
     static constexpr CStringView V_141 = "v141";
+    static constexpr CStringView V_142 = "v142";
 
     struct VisualStudioInstance
     {
@@ -130,9 +131,9 @@ namespace vcpkg::VisualStudio
         {
             // We want lexically_normal(), but it is not available
             // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash. Try both.
-            auto common7_tools = fs::path {*path_as_string};
-            append_if_has_cl(fs::path {*path_as_string}.parent_path().parent_path());
-            append_if_has_cl(fs::path {*path_as_string}.parent_path().parent_path().parent_path());
+            auto common7_tools = fs::path{*path_as_string};
+            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path());
+            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path().parent_path());
         }
 
         // VS2015 instance from Program Files
@@ -143,7 +144,7 @@ namespace vcpkg::VisualStudio
 
     std::vector<std::string> get_visual_studio_instances(const VcpkgPaths& paths)
     {
-        std::vector<VisualStudioInstance> sorted {get_visual_studio_instances_internal(paths)};
+        std::vector<VisualStudioInstance> sorted{get_visual_studio_instances_internal(paths)};
         std::sort(sorted.begin(), sorted.end(), VisualStudioInstance::preferred_first_comparator);
         return Util::fmap(sorted, [](const VisualStudioInstance& instance) { return instance.to_string(); });
     }
@@ -160,8 +161,8 @@ namespace vcpkg::VisualStudio
         std::vector<Toolset> found_toolsets;
         std::vector<Toolset> excluded_toolsets;
 
-        const SortedVector<VisualStudioInstance> sorted {get_visual_studio_instances_internal(paths),
-                                                         VisualStudioInstance::preferred_first_comparator};
+        const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances_internal(paths),
+                                                        VisualStudioInstance::preferred_first_comparator};
 
         const bool v140_is_available = Util::find_if(sorted, [&](const VisualStudioInstance& vs_instance) {
                                            return vs_instance.major_version() == "14";
@@ -170,7 +171,7 @@ namespace vcpkg::VisualStudio
         for (const VisualStudioInstance& vs_instance : sorted)
         {
             const std::string major_version = vs_instance.major_version();
-            if (major_version == "15")
+            if (major_version >= "15")
             {
                 const fs::path vc_dir = vs_instance.root_path / "VC";
 
@@ -202,8 +203,8 @@ namespace vcpkg::VisualStudio
                 // Locate the "best" MSVC toolchain version
                 const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
                 std::vector<fs::path> msvc_subdirectories = fs.get_files_non_recursive(msvc_path);
-                Util::unstable_keep_if(msvc_subdirectories,
-                                       [&fs](const fs::path& path) { return fs.is_directory(path); });
+                Util::erase_remove_if(msvc_subdirectories,
+                                      [&fs](const fs::path& path) { return !fs.is_directory(path); });
 
                 // Sort them so that latest comes first
                 std::sort(
@@ -213,35 +214,62 @@ namespace vcpkg::VisualStudio
 
                 for (const fs::path& subdir : msvc_subdirectories)
                 {
+                    auto toolset_version_full = subdir.filename().u8string();
+                    auto toolset_version_prefix = toolset_version_full.substr(0, 4);
+                    CStringView toolset_version;
+                    std::string vcvars_option;
+                    if (toolset_version_prefix.size() != 4)
+                    {
+                        // unknown toolset
+                        continue;
+                    }
+                    else if (toolset_version_prefix[3] == '1')
+                    {
+                        toolset_version = V_141;
+                        vcvars_option = "-vcvars_ver=14.1";
+                    }
+                    else if (toolset_version_prefix[3] == '2')
+                    {
+                        toolset_version = V_142;
+                        vcvars_option = "-vcvars_ver=14.2";
+                    }
+                    else
+                    {
+                        // unknown toolset minor version
+                        continue;
+                    }
                     const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        const Toolset v141_toolset {
-                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
+                        Toolset toolset{vs_instance.root_path,
+                                        dumpbin_path,
+                                        vcvarsall_bat,
+                                        {vcvars_option},
+                                        toolset_version,
+                                        supported_architectures};
 
                         const auto english_language_pack = dumpbin_path.parent_path() / "1033";
 
                         if (!fs.exists(english_language_pack))
                         {
-                            excluded_toolsets.push_back(v141_toolset);
-                            break;
+                            excluded_toolsets.push_back(std::move(toolset));
+                            continue;
                         }
 
-                        found_toolsets.push_back(v141_toolset);
+                        found_toolsets.push_back(std::move(toolset));
 
                         if (v140_is_available)
                         {
-                            const Toolset v140_toolset {vs_instance.root_path,
-                                                        dumpbin_path,
-                                                        vcvarsall_bat,
-                                                        {"-vcvars_ver=14.0"},
-                                                        V_140,
-                                                        supported_architectures};
-                            found_toolsets.push_back(v140_toolset);
+                            found_toolsets.push_back({vs_instance.root_path,
+                                                      dumpbin_path,
+                                                      vcvarsall_bat,
+                                                      {"-vcvars_ver=14.0"},
+                                                      V_140,
+                                                      supported_architectures});
                         }
 
-                        break;
+                        continue;
                     }
                 }
 

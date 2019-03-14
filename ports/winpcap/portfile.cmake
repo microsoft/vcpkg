@@ -40,6 +40,7 @@ vcpkg_extract_source_archive_ex(
         "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch"
         "${CURRENT_BUILDTREES_DIR}/src/wpcap.patch"
         "${CMAKE_CURRENT_LIST_DIR}/create_lib.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-create-lib-batch.patch"
 )
 
 file(
@@ -63,8 +64,14 @@ vcpkg_execute_required_process(
     LOGNAME upgrade-Packet-${TARGET_TRIPLET}
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CURRENT_PORT_DIR}/Packet.vcxproj DESTINATION ${SOURCE_PATH}/packetNtx/Dll/Project/)
+endif()
+
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.sln"
+    RELEASE_CONFIGURATION "Release"
+    DEBUG_CONFIGURATION "Debug"
     PLATFORM ${PLATFORM}
 )
 
@@ -84,6 +91,10 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH}/wpcap/PRJ
     LOGNAME upgrade-wpcap-${TARGET_TRIPLET}
 )
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CURRENT_PORT_DIR}/wpcap.vcxproj DESTINATION ${SOURCE_PATH}/wpcap/PRJ/)
+endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/wpcap/PRJ/wpcap.sln"
@@ -147,8 +158,8 @@ file(
 
 file(
     INSTALL
-        "${PCAP_LIBRARY_PATH}/Packet.lib"
-        "${PCAP_LIBRARY_PATH}/wpcap.lib"
+        "${PCAP_LIBRARY_PATH}/debug/Packet.lib"
+        "${PCAP_LIBRARY_PATH}/debug/wpcap.lib"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )

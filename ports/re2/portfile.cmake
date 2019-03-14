@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/re2
-    REF 89528a380a7e9722dbf7b5a817251049eab355fb
-    SHA512 7654a41ea42e816e7ecd80e554e6e5ab11e7d2f4d2c547a3083f990500668c74ae74870fe5a6390521b44edc2be8ce11d86a187600229e3d8b9d8b3114cfa4e8
+    REF 98ad734aae9996a6dd1aa1fec72e800d621acd51
+    SHA512 e28a6b3428ca2714a48194f82f9d6ea4c56b3d4bc776bf3b9402bc081ca8d667f37f4ce98cd89ed1077998f945f1eebee1f501a1acdcb1fb16e741643bc8d8ab
     HEAD_REF master
 )
 
@@ -14,6 +14,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/re2 RENAME copyright)

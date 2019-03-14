@@ -9,7 +9,14 @@
 
 function(vcpkg_build_qmake)
     cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
-    vcpkg_find_acquire_program(JOM)
+
+    if(CMAKE_HOST_WIN32)
+        vcpkg_find_acquire_program(JOM)
+        set(INVOKE "${JOM}")
+    else()
+        find_program(MAKE make)
+        set(INVOKE "${MAKE}")
+    endif()
 
     # Make sure that the linker finds the libraries used 
     set(ENV_PATH_BACKUP "$ENV{PATH}")
@@ -29,7 +36,7 @@ function(vcpkg_build_qmake)
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
         vcpkg_execute_required_process(
-            COMMAND ${JOM} ${TARGETS}
+            COMMAND ${INVOKE} ${TARGETS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
             LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
         )
@@ -51,7 +58,7 @@ function(vcpkg_build_qmake)
             file(READ "${DEBUG_MAKEFILE}" _contents)
             string(REPLACE "zlib.lib" "zlibd.lib" _contents "${_contents}")
             string(REPLACE "installed\\${TARGET_TRIPLET}\\lib" "installed\\${TARGET_TRIPLET}\\debug\\lib" _contents "${_contents}")
-            string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib qtmaind.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib\\manual-link qtmaind.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib" _contents "${_contents}")
+            string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib" "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib\\manual-link /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib shell32.lib" _contents "${_contents}")
             string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
             string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
             string(REPLACE "debug\\lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
@@ -72,7 +79,7 @@ function(vcpkg_build_qmake)
 
         foreach(RELEASE_MAKEFILE ${RELEASE_MAKEFILES})
             file(READ "${RELEASE_MAKEFILE}" _contents)
-            string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib qtmain.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib\\manual-link qtmain.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib" _contents "${_contents}")
+            string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib" "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib\\manual-link /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib shell32.lib" _contents "${_contents}")
             string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
             string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
             string(REPLACE "debug\\lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")

@@ -6,10 +6,27 @@ vcpkg_from_github(
     SHA512 8c597b37efe82c85e6d951f66cb0f818d2c12cb673914bc7b322bc0a9da676e6c02f221c9104fb06d1b4b02fed4e5a4fb872dd3370b9117f248c3b948faf4fb3
     HEAD_REF master
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/no-define-snprintf.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/find-libpqd.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOCI_STATIC)
+
+# Handle features
+set(_COMPONENT_FLAGS "")
+foreach(_feature IN LISTS ALL_FEATURES)
+    # Uppercase the feature name and replace "-" with "_"
+    string(TOUPPER "${_feature}" _FEATURE)
+    string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
+
+    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
+    # is in the list.
+    if(_feature IN_LIST FEATURES)
+        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
+    else()
+        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
+    endif()
+endforeach()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
@@ -21,14 +38,10 @@ vcpkg_configure_cmake(
         -DLIBDIR:STRING=lib
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
+        ${_COMPONENT_FLAGS}
 
-        -DWITH_SQLITE3=ON
-
-        -DWITH_BOOST=OFF
         -DWITH_MYSQL=OFF
-        -DWITH_ODBC=OFF
         -DWITH_ORACLE=OFF
-        -DWITH_POSTGRESQL=OFF
         -DWITH_FIREBIRD=OFF
         -DWITH_DB2=OFF
 )
