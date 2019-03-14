@@ -443,7 +443,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         System::print("Adding vcpkg completion entry to %s\n", bashrc_path.u8string());
         bashrc_content.push_back(Strings::format("source %s", completion_script_path.u8string()));
-        fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content));
+        fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content) + '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 #endif
