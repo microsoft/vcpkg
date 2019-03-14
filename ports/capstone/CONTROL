@@ -1,5 +1,5 @@
 Source: capstone
-Version: 4.0.1-e3d5a594
+Version: 4.0.1-120373dc
 Description: Multi-architecture disassembly framework
 
 Feature: arm
@@ -38,11 +38,11 @@ Description: Capstone disassembly support for TMS320C64X
 Feature: x86
 Description: Capstone disassembly support for x86
 
+Feature: x86_reduce
+Description: Capstone disassembly support for x86 without support for less used instructions
+
 Feature: xcore
 Description: Capstone disassembly support for XCore
 
 Feature: diet
 Description: Build Capstone in diet mode (reduced features for smaller size)
-
-Feature: x86_reduce
-Description: Disable support for less used x86 instructions

@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REF e3d5a594eb7e5fabcae4e30db80793e15e1ebace
+    REF 120373dc9789875ccbc968397219a86598a4351e
     REPO "aquynh/capstone"
-    SHA512 43b94bb5e8f63f62625444a203cc4bed8b3a445a2400efaae7e5e301c0beb6bad20594b8b1058f6ff0107760ccde82f48ec3e5fa0f30a74236c966eca2728967
+    SHA512 90961176ab68110b0fea08f11a5ed6997dcd92ceeec568978003bfd01e2170479256f137e4f91be5e22a9bdebbe1f436c2849bde1d4e0bbd0b781f8562b58059
     HEAD_REF v4
 )
 
