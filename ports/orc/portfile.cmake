@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/orc
-    REF 54e52eb011410ffeeb12a80fe95ca8ce103d289c
-    SHA512 003466cc5c45582f5a3cf8aac1e3466d9210ffcf2f29c0265c2be7d9d3774f85745f2523f6d789a58b440444a73cde5081e2290385eb21524c28054b2656f88e
+    REF bf5b7800930bfa030db83aba925d9d3b75852839
+    SHA512 42a1fd0fd2b8dec19a5019a42e3a85fe6d6cb2fe922d9bf7d47669a36801a9c65a1edccf01e08f0da8d01c79e329d8069d2b6200c4005d1bfe3628c598f24ee5
     HEAD_REF master
     PATCHES
       0003-dependencies-from-vcpkg.patch

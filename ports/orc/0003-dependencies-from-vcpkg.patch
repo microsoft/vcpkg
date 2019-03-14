@@ -1,8 +1,8 @@
 diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
-index 72d408d..75ea69f 100644
+index 235ced8..0042a88 100644
 --- a/c++/src/CMakeLists.txt
 +++ b/c++/src/CMakeLists.txt
-@@ -217,12 +217,13 @@ endif(BUILD_LIBHDFSPP)
+@@ -218,12 +218,13 @@ endif(BUILD_LIBHDFSPP)
  add_library (orc STATIC ${SOURCE_FILES})
  
  target_link_libraries (orc
@@ -23,10 +23,10 @@ index 72d408d..75ea69f 100644
  
  install(TARGETS orc DESTINATION lib)
 diff --git a/c++/test/CMakeLists.txt b/c++/test/CMakeLists.txt
-index 015814a..fa052dc 100644
+index db68578..709ad07 100644
 --- a/c++/test/CMakeLists.txt
 +++ b/c++/test/CMakeLists.txt
-@@ -48,10 +48,10 @@ add_executable (orc-test
+@@ -50,10 +50,10 @@ add_executable (orc-test
  
  target_link_libraries (orc-test
    orc
@@ -42,10 +42,10 @@ index 015814a..fa052dc 100644
  )
  
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index 9bf97de..78d301b 100644
+index 1a28b1a..89f57d8 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -56,8 +56,8 @@ endif ()
+@@ -59,8 +59,8 @@ endif ()
  # ----------------------------------------------------------------------
  # Snappy
  
@@ -56,7 +56,7 @@ index 9bf97de..78d301b 100644
    set(SNAPPY_VENDORED FALSE)
  else ()
    set(SNAPPY_HOME "${THIRDPARTY_DIR}/snappy_ep-install")
-@@ -75,10 +75,6 @@ else ()
+@@ -78,10 +78,6 @@ else ()
    set(SNAPPY_VENDORED TRUE)
  endif ()
  
@@ -67,16 +67,17 @@ index 9bf97de..78d301b 100644
  if (SNAPPY_VENDORED)
    add_dependencies (snappy snappy_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -90,7 +86,7 @@ endif ()
+@@ -93,7 +89,8 @@ endif ()
  # ----------------------------------------------------------------------
  # ZLIB
  
 -if (NOT "${ZLIB_HOME}" STREQUAL "")
++
 +if (NOT "${ZLIB_HOME}" STREQUAL "" OR 1)
    find_package (ZLIB REQUIRED)
    set(ZLIB_VENDORED FALSE)
  else ()
-@@ -117,10 +113,6 @@ else ()
+@@ -120,10 +117,6 @@ else ()
    set(ZLIB_VENDORED TRUE)
  endif ()
  
@@ -87,10 +88,11 @@ index 9bf97de..78d301b 100644
  if (ZLIB_VENDORED)
    add_dependencies (zlib zlib_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -132,8 +124,8 @@ endif ()
+@@ -134,9 +127,8 @@ endif ()
+ 
  # ----------------------------------------------------------------------
  # Zstd
- 
+-
 -if (NOT "${ZSTD_HOME}" STREQUAL "")
 -  find_package (zstd REQUIRED)
 +if (NOT "${ZSTD_HOME}" STREQUAL "" OR 1)
@@ -98,7 +100,7 @@ index 9bf97de..78d301b 100644
    set(ZSTD_VENDORED FALSE)
  else ()
    set(ZSTD_HOME "${THIRDPARTY_DIR}/zstd_ep-install")
-@@ -166,10 +158,6 @@ else ()
+@@ -169,10 +161,6 @@ else ()
    set(ZSTD_VENDORED TRUE)
  endif ()
  
@@ -109,10 +111,11 @@ index 9bf97de..78d301b 100644
  if (ZSTD_VENDORED)
    add_dependencies (zstd zstd_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -181,8 +169,8 @@ endif ()
+@@ -183,9 +171,8 @@ endif ()
+ 
  # ----------------------------------------------------------------------
  # LZ4
- 
+-
 -if (NOT "${LZ4_HOME}" STREQUAL "")
 -  find_package (LZ4 REQUIRED)
 +if (NOT "${LZ4_HOME}" STREQUAL "" OR 1)
@@ -120,7 +123,7 @@ index 9bf97de..78d301b 100644
    set(LZ4_VENDORED FALSE)
  else ()
    set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
-@@ -208,10 +196,6 @@ else ()
+@@ -211,10 +198,6 @@ else ()
    set(LZ4_VENDORED TRUE)
  endif ()
  
@@ -131,10 +134,11 @@ index 9bf97de..78d301b 100644
  if (LZ4_VENDORED)
    add_dependencies (lz4 lz4_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -285,8 +269,8 @@ endif ()
+@@ -287,9 +270,8 @@ endif ()
+ 
  # ----------------------------------------------------------------------
  # Protobuf
- 
+-
 -if (NOT "${PROTOBUF_HOME}" STREQUAL "")
 -  find_package (Protobuf REQUIRED)
 +if (NOT "${PROTOBUF_HOME}" STREQUAL "" OR 1)
@@ -142,7 +146,7 @@ index 9bf97de..78d301b 100644
    set(PROTOBUF_VENDORED FALSE)
  else ()
    set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
-@@ -322,14 +306,6 @@ else ()
+@@ -325,14 +307,6 @@ else ()
    set(PROTOBUF_VENDORED TRUE)
  endif ()
  
@@ -158,18 +162,18 @@ index 9bf97de..78d301b 100644
    add_dependencies (protoc protobuf_ep)
    add_dependencies (protobuf protobuf_ep)
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
-index 667fab4..7745fe0 100644
+index f5a53ca..15391bf 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
-@@ -49,7 +49,6 @@ add_executable (orc-metadata
+@@ -51,7 +51,6 @@ add_executable (orc-metadata
  
  target_link_libraries (orc-metadata
    orc
 -  protobuf
+   ${CMAKE_THREAD_LIBS_INIT}
    )
  
-  add_executable (orc-statistics
-@@ -88,4 +87,7 @@ install(TARGETS
+@@ -95,4 +94,7 @@ install(TARGETS
     orc-contents
     orc-metadata
     orc-statistics
