@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="cmake" os="windows">
-        <version>3.12.4</version>
-        <exeRelativePath>cmake-3.12.4-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-win32-x86.zip</url>
-        <sha512>ca7097c5917101c39d5fa5325cd256ad3aa616a7e5811915cb2869c24961dc133726015b3576908fbd0666f89c8e31886bed9cf6b532a3fe44681d5245bc25c7</sha512>
-        <archiveName>cmake-3.12.4-win32-x86.zip</archiveName>
+        <version>3.14.0</version>
+        <exeRelativePath>cmake-3.14.0-win32-x86\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-win32-x86.zip</url>
+        <sha512>9eb42917f9c5dc30ff86d8197497e4f8e2f4455b4c07841aa3dfb3283902d1ee</sha512>
+        <archiveName>cmake-3.14.0-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
         <version>3.12.4</version>

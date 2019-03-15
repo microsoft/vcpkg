@@ -110,16 +110,18 @@ function(vcpkg_configure_cmake)
         set(GENERATOR "Visual Studio 15 2017")
         set(ARCH "ARM64")
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-        if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-            set(VCPKG_CMAKE_SYSTEM_NAME Windows)
-        endif()
-        message(FATAL_ERROR
-"Unable to determine appropriate CMake MSBuild generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}.
-This is because CMake 3.12.4 does not currently have a 'Visual Studio 16 2019' option.
-This can be worked around by either:
-  1. Install Visual Studio 2017 Stable
-")
-    else()
+      set(GENERATOR "Visual Studio 16 2019")
+      if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+          set(ARCH "x86")
+      elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+          set(ARCH "x64")
+      elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+          set(ARCH "ARM")
+      elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+          set(ARCH "ARM64")
+      endif()
+    endif()
+    if(NOT GENERATOR)
         if(NOT VCPKG_CMAKE_SYSTEM_NAME)
             set(VCPKG_CMAKE_SYSTEM_NAME Windows)
         endif()
