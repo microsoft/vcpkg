@@ -4,7 +4,7 @@
         <version>3.14.0</version>
         <exeRelativePath>cmake-3.14.0-win32-x86\bin\cmake.exe</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-win32-x86.zip</url>
-        <sha512>9eb42917f9c5dc30ff86d8197497e4f8e2f4455b4c07841aa3dfb3283902d1ee</sha512>
+        <sha512>60eb6a0790883da4152a957bd1133405f620f4b7a073af3bea97695b3ef8c22c41d9b90e45815f2a896df5be0cd6dedb73a6df5f17a42761ca8f457c9f3b708c</sha512>
         <archiveName>cmake-3.14.0-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
