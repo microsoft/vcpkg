@@ -9,7 +9,14 @@
 
 function(vcpkg_build_qmake)
     cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
-    vcpkg_find_acquire_program(JOM)
+
+    if(CMAKE_HOST_WIN32)
+        vcpkg_find_acquire_program(JOM)
+        set(INVOKE "${JOM}")
+    else()
+        find_program(MAKE make)
+        set(INVOKE "${MAKE}")
+    endif()
 
     # Make sure that the linker finds the libraries used 
     set(ENV_PATH_BACKUP "$ENV{PATH}")
@@ -29,7 +36,7 @@ function(vcpkg_build_qmake)
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
         vcpkg_execute_required_process(
-            COMMAND ${JOM} ${TARGETS}
+            COMMAND ${INVOKE} ${TARGETS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
             LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
         )
