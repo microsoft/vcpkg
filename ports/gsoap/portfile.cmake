@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 set(GSOAP_VERSION 2.8)
-set(GSOAP_SUB_VERSION .78)
+set(GSOAP_SUB_VERSION .81)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsoap-${GSOAP_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ayera.dl.sourceforge.net/project/gsoap2/gsoap-${GSOAP_VERSION}/gsoap_${GSOAP_VERSION}${GSOAP_SUB_VERSION}.zip"
     FILENAME "gsoap_${GSOAP_VERSION}${GSOAP_SUB_VERSION}.zip"
-    SHA512 c115044d2662c2dd355c4756a974a0013b7213dd28c536aba179e53c19466279bfa34ce16b4426db5aa7a24d94c18e0ed7e7cdf05e799bf89f7b54031aa0874e
+    SHA512 f49a249f9d4d5c1d306897e4d11dfe797d4f31dee43a687f9efd4f035f14d996b4fc602b474c955602e491ec973113014a20b73b51e7282895ab94430f40f1b9
 )
 
 vcpkg_extract_source_archive_ex(
@@ -51,6 +51,9 @@ endif()
     
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOURCE_PATH}/gsoap/stdsoap2.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+# Handle import files
+file(COPY ${SOURCE_PATH}/gsoap/import DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsoap)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt ${SOURCE_PATH}/INSTALL.txt ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsoap)
