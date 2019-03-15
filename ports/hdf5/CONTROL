@@ -1,5 +1,5 @@
 Source: hdf5
-Version: 1.10.1-1
+Version: 1.10.5-1
 Description: HDF5 is a data model, library, and file format for storing and managing data
 Build-Depends: zlib, szip
 

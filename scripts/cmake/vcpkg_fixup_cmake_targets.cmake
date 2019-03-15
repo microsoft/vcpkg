@@ -6,6 +6,9 @@
 #
 #  Transform all references matching /bin/*.exe to /tools/<port>/*.exe
 #
+#  Fix ${_IMPORT_PREFIX} in auto generated targets to be one folder deeper. 
+#  Replace ${CURRENT_INSTALLED_DIR} with ${_IMPORT_PREFIX} in configs/targets.
+#
 #  ::
 #  vcpkg_fixup_cmake_targets([CONFIG_PATH <config_path>])
 #
@@ -126,32 +129,22 @@ function(vcpkg_fixup_cmake_targets)
         endforeach()
     endif()
 
-    file(GLOB_RECURSE MAIN_TARGETS "${RELEASE_SHARE}/*[Tt]argets.cmake")
-    foreach(MAIN_TARGET IN LISTS MAIN_TARGETS)
-        file(READ ${MAIN_TARGET} _contents)
+    #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs; 
+    #Since those can be renamed we have to check in every *.cmake
+    file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
+    foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
+        file(READ ${MAIN_CMAKE} _contents)
         string(REGEX REPLACE
             "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-            _contents "${_contents}")
-        string(REPLACE "${CURRENT_INSTALLED_DIR}" "_INVALID_ROOT_" _contents "${_contents}")
-        string(REGEX REPLACE "_INVALID_ROOT_/[^\";>]*" "" _contents "${_contents}")
-        string(REGEX REPLACE ";;+" ";" _contents "${_contents}")
-        string(REGEX REPLACE "\";\"" "\"\"" _contents "${_contents}")
-        file(WRITE ${MAIN_TARGET} "${_contents}")
-    endforeach()
-
-    file(GLOB_RECURSE MAIN_CONFIGS "${RELEASE_SHARE}/*[Cc]onfig.cmake")
-    foreach(MAIN_CONFIG IN LISTS MAIN_CONFIGS)
-        file(READ ${MAIN_CONFIG} _contents)
-        string(REGEX REPLACE
-            "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
-            "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-            _contents "${_contents}")
-        string(REGEX REPLACE
+            _contents "${_contents}") # see #1044 for details why this replacement is necessary. See #4782 why it must be a regex.
+         string(REGEX REPLACE
             "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
             "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
             _contents "${_contents}")
-        file(WRITE ${MAIN_CONFIG} "${_contents}")
+        #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
+        file(WRITE ${MAIN_CMAKE} "${_contents}")
     endforeach()
 
     # Remove /debug/<target_path>/ if it's empty.

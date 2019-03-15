@@ -6,13 +6,9 @@ vcpkg_from_github(
     REF v1.6.36
     SHA512 aeb00b48347c9e84d31995b3fe7e40580029734aa8103d774eee5745f5ca1fd1fd91a15f32d492277ab94346e4e7f731ee9bfea1783f930094f9f87eb3d9397d
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
-        ${CMAKE_CURRENT_LIST_DIR}/skip-install-symlink.patch
+        "use-abort-on-all-platforms.patch"
+        "skip-install-symlink.patch"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
