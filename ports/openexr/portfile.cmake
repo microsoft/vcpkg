@@ -13,6 +13,7 @@ vcpkg_from_github(
   REF v${OPENEXR_VERSION}
   SHA512 ${OPENEXR_HASH}
   HEAD_REF master
+  PATCHES "fix_install_ilmimf.patch"
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
