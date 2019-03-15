@@ -985,6 +985,11 @@ namespace vcpkg::Build
                 hash += "-";
                 hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "android.cmake", "SHA1");
             }
+            else if (pre_build_info.cmake_system_name.empty() || pre_build_info.cmake_system_name == "WindowsStore")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "windows.cmake", "SHA1");
+            }
 
             s_hash_cache.emplace(triplet_file_path, hash);
             return hash;
