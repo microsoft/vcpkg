@@ -24,6 +24,7 @@
 ## - MESON
 ## - NASM
 ## - NINJA
+## - NUGET
 ## - YASM
 ## - ARIA2 (Downloader)
 ##
@@ -130,6 +131,12 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
     set(ARCHIVE "ninja-1.8.2-win.zip")
     set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
+  elseif(VAR MATCHES "NUGET")
+    set(PROGNAME nuget)
+    set(PATHS "${DOWNLOADS}/tools/nuget")
+    set(BREW_PACKAGE_NAME "nuget")
+    set(URL "https://dist.nuget.org/win-x86-commandline/v4.8.1/nuget.exe")
+    set(HASH 42CB744338AF8DECC033A75BCE5B4C4DF28E102BAFC45F9A8BA86D7BC010F5B43EBACAE80D7B28C4F85AC900EEFC2A349620AE65F27F6CA1C21C53B63B92924B)
   elseif(VAR MATCHES "MESON")
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)

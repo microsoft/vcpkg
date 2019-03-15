@@ -15,10 +15,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "ANGLE currently only supports being built for desktop")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/angle
@@ -34,8 +30,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH ${SOURCE_PATH}    
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
     OPTIONS
         -D${ANGLE_CPU_BITNESS}=1
@@ -43,8 +38,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/angle ${CURRENT_PACKAGES_DIR}/share/unofficial-angle)
+#vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle)
+#file(RENAME ${CURRENT_PACKAGES_DIR}/share/angle ${CURRENT_PACKAGES_DIR}/share/unofficial-angle)
 
 vcpkg_copy_pdbs()
 
