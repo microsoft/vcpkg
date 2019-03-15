@@ -1,4 +1,10 @@
 include(vcpkg_common_functions)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message("fmt only supports static library linkage. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
@@ -14,7 +20,6 @@ vcpkg_configure_cmake(
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()
