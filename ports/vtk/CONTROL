@@ -1,5 +1,5 @@
 Source: vtk
-Version: 8.1.0-7
+Version: 8.2.0-1
 Description: Software system for 3D computer graphics, image processing, and visualization
 Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora
 

@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a5385ae..41514af 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,7 +75,10 @@ if(USE_INTEGRATED_LIBS)
+   include_directories(${CMAKE_CURRENT_LIST_DIR}/3rdparty/include)
+   set(PThreads_windows_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/3rdparty/include)
+   set(PThreads_windows_LIBRARY ${CMAKE_CURRENT_LIST_DIR}/3rdparty/lib/x64/pthreadVC2.lib)
++  set(STB_INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/3rdparty/include)
+   add_definitions(-D_TIMESPEC_DEFINED)
++else()
++  find_path(STB_INCLUDE_PATH NAMES stb.h "The directory where stb.h resides")
+ endif()
+ 
+ set(CMAKE_DEBUG_POSTFIX d)
+@@ -240,7 +243,7 @@ if(OpenCV_VERSION VERSION_GREATER "3.0" AND NOT SKIP_USELIB_TRACK)
+   add_executable(uselib_track ${CMAKE_CURRENT_LIST_DIR}/src/yolo_console_dll.cpp)
+   target_compile_definitions(uselib_track PRIVATE TRACK_OPTFLOW=1)
+   set_target_properties(uselib_track PROPERTIES LINKER_LANGUAGE CXX)
+-  target_include_directories(uselib_track PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
++  target_include_directories(uselib_track PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${STB_INCLUDE_PATH}>)
+   target_link_libraries(uselib_track PRIVATE ${OpenCV_LIBS})
+ endif()
+ 
+@@ -251,9 +254,9 @@ add_executable(darknet ${CMAKE_CURRENT_LIST_DIR}/src/darknet.c ${sources} ${head
+ set_source_files_properties(${CMAKE_CURRENT_LIST_DIR}/src/darknet.c PROPERTIES LANGUAGE CXX)
+ set_target_properties(darknet PROPERTIES LINKER_LANGUAGE CXX)
+ 
+-target_include_directories(darknet PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
+-target_include_directories(darklib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
+-target_include_directories(uselib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
++target_include_directories(darknet PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${STB_INCLUDE_PATH}>)
++target_include_directories(darklib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${STB_INCLUDE_PATH}>)
++target_include_directories(uselib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${STB_INCLUDE_PATH}>)
+ 
+ if(CUDNN_FOUND)
+   target_link_libraries(darknet PRIVATE CuDNN::CuDNN)
