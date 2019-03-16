@@ -36,17 +36,32 @@ function(vcpkg_test_cmake)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-test)
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-test)
 
+    #Generate Dummy source
+#    set(VCPKG_TEST_SOURCE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-test/CMakeIntegration.cpp)
+#    file(WRITE  ${VCPKG_TEST_SOURCE} "int main() \{\n")
+#    file(APPEND ${VCPKG_TEST_SOURCE} "return 0;}")
     # Generate test source CMakeLists.txt
     set(VCPKG_TEST_CMAKELIST ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-test/CMakeLists.txt)
     file(WRITE  ${VCPKG_TEST_CMAKELIST} "cmake_minimum_required(VERSION 3.10)\n")
     file(APPEND ${VCPKG_TEST_CMAKELIST} "set(CMAKE_PREFIX_PATH \"${CURRENT_PACKAGES_DIR};${CURRENT_INSTALLED_DIR}\")\n")
     file(APPEND ${VCPKG_TEST_CMAKELIST} "\n")
     file(APPEND ${VCPKG_TEST_CMAKELIST} "find_package(${_tc_PACKAGE_NAME} ${PACKAGE_TYPE} REQUIRED)\n")
+    #To properly test if the package is actually working haveway correctly we have to link all targets of a package to 
+    #a test executable and than actually build it. This will not discover if every symbol exported by the library is available/linked
+    #but it will doscover if all files which are linked by a target actual exist. Problem is: How to discover all targets?
+#    file(APPEND ${VCPKG_TEST_CMAKELIST} "add_executable(${_tc_PACKAGE_NAME}_exe ${VCPKG_TEST_SOURCE})\n")
+#    file(APPEND ${VCPKG_TEST_CMAKELIST} "target_link_libraries(${_tc_PACKAGE_NAME}_exe PRIVATE ${_tc_PACKAGE_NAME})\n")
+
+    if(DEFINED _VCPKG_CMAKE_GENERATOR)
+        set(VCPKG_CMAKE_TEST_GENERATOR "${_VCPKG_CMAKE_GENERATOR}")
+    else()
+        set(VCPKG_CMAKE_TEST_GENERATOR Ninja)
+    endif()
 
     # Run cmake config with a generated CMakeLists.txt
     set(LOGPREFIX "${CURRENT_BUILDTREES_DIR}/test-cmake-${TARGET_TRIPLET}")
     execute_process(
-      COMMAND ${CMAKE_COMMAND} .
+      COMMAND ${CMAKE_COMMAND} -G ${VCPKG_CMAKE_TEST_GENERATOR} .
       OUTPUT_FILE "${LOGPREFIX}-out.log"
       ERROR_FILE "${LOGPREFIX}-err.log"
       RESULT_VARIABLE error_code
