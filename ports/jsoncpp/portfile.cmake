@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
             -DBUILD_SHARED_LIBS:BOOL=${JSONCPP_DYNAMIC}
             -DJSONCPP_WITH_PKGCONFIG_SUPPORT:BOOL=OFF
             -DJSONCPP_WITH_TESTS:BOOL=OFF
+            -DDEBUG_LIBNAME_SUFFIX=d
 )
 
 vcpkg_install_cmake()
