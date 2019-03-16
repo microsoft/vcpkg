@@ -1,0 +1,23 @@
+diff --git i/ports/cpr/portfile.cmake w/ports/cpr/portfile.cmake
+index 281e0da4..85852ca7 100644
+--- i/ports/cpr/portfile.cmake
++++ w/ports/cpr/portfile.cmake
+@@ -12,13 +12,17 @@ vcpkg_apply_patches(
+     PATCHES ${CMAKE_CURRENT_LIST_DIR}/enable-install.patch
+ )
+ 
++if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
++    message("cpr only supports static library linkage. Building static.")
++    set(VCPKG_LIBRARY_LINKAGE static)
++endif()
++
+ vcpkg_configure_cmake(
+     SOURCE_PATH ${SOURCE_PATH}
+     PREFER_NINJA
+     OPTIONS 
+         -DBUILD_CPR_TESTS=OFF
+         -DUSE_SYSTEM_CURL=ON
+-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+     OPTIONS_DEBUG
+         -DDISABLE_INSTALL_HEADERS=ON
+ )
