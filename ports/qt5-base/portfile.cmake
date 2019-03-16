@@ -48,7 +48,6 @@ set(CORE_OPTIONS
     -system-libpng
     -system-freetype
     -system-pcre
-    -system-harfbuzz
     -system-doubleconversion
     -system-sqlite
     -no-fontconfig
@@ -71,6 +70,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         OPTIONS
             ${CORE_OPTIONS}
             -mp
+            -system-harfbuzz
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
@@ -94,6 +94,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PLATFORM "linux-g++"
         OPTIONS
             ${CORE_OPTIONS}
+            -system-harfbuzz
         OPTIONS_RELEASE
             "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
@@ -113,9 +114,40 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
     )
+
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+configure_qt(
+    SOURCE_PATH ${SOURCE_PATH}
+    PLATFORM "macx-clang"
+    OPTIONS
+        ${CORE_OPTIONS}
+        -no-harfbuzz
+    OPTIONS_RELEASE
+        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
+        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
+        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
+        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
+        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
+        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
+    OPTIONS_DEBUG
+        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
+        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
+        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
+        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
+)
 endif()
 
-install_qt()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    install_qt(DISABLE_PARALLEL) # prevent race condition on Mac
+else()
+    install_qt()
+endif()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
@@ -133,7 +165,7 @@ endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf ${CMAKE_CURRENT_LIST_DIR}/qt_release.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 
-vcpkg_execute_required_process(
+vcpkg_execute_required_process( 
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
     LOGNAME fix-cmake

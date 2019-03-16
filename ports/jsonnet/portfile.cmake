@@ -8,12 +8,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_execute_required_process(
-  COMMAND Powershell -Command "((Get-Content -Encoding Byte ${SOURCE_PATH}/stdlib/std.jsonnet) -join ',') + ',0' > ${SOURCE_PATH}/core/std.jsonnet.h"
-  WORKING_DIRECTORY ${SOURCE_PATH}
-  LOGNAME "std.jsonnet"
-)
-
+if (WIN32)
+  vcpkg_execute_required_process(
+    COMMAND Powershell -Command "((Get-Content -Encoding Byte ${SOURCE_PATH}/stdlib/std.jsonnet) -join ',') + ',0' > ${SOURCE_PATH}/core/std.jsonnet.h"
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME "std.jsonnet"
+  )
+else()
+  vcpkg_execute_required_process(
+    COMMAND bash -c "((od -v -Anone -t u1 ${SOURCE_PATH}/stdlib/std.jsonnet | tr ' ' '\\n' | grep -v '^$' | tr '\\n' ',' ) && echo '0') > ${SOURCE_PATH}/core/std.jsonnet.h"
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME "std.jsonnet"
+  )
+endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

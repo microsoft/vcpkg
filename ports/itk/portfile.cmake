@@ -55,7 +55,7 @@ vcpkg_configure_cmake(
         #-DITK_PYTHON_VERSION=3
 
         -DITK_USE_SYSTEM_HDF5=ON
-        -DModule_ITKVtkGlue=ON # this option requires VTK to be a dependency in CONTROL file. VTK depends on HDF5!
+        -DModule_ITKVtkGlue=${ITKVtkGlue} # this option requires VTK to be a dependency in CONTROL file. VTK depends on HDF5!
 
         -DModule_IOSTL=ON # example how to turn on a non-default module
         -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module

@@ -17,7 +17,7 @@ function(vcpkg_configure_qmake)
     cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS" ${ARGN})
 
     # Find qmake executable
-    find_program(QMAKE_COMMAND NAMES qmake.exe PATHS ${CURRENT_INSTALLED_DIR}/tools/qt5)
+    find_program(QMAKE_COMMAND NAMES qmake PATHS ${CURRENT_INSTALLED_DIR}/tools/qt5)
 
     if(NOT QMAKE_COMMAND)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
