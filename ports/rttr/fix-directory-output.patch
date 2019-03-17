@@ -7,7 +7,7 @@ index a718199..eab64c2 100644
  # here we specify the installation directory
  if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 -  set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install" CACHE PATH  "RTTR install prefix" FORCE)
-+  set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install" CACHE PATH  "RTTR install prefix")
++  #set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install" CACHE PATH  "RTTR install prefix")
  endif()
  
  # in order to group in visual studio the targets into solution filters
