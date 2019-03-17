@@ -87,6 +87,7 @@ else()
             COMMAND "${CMAKE_SOURCE_DIR}/configure"
                 --disable-libelf
                 --disable-libmount
+                --with-libiconv=no
                 "CPPFLAGS=${CXXFLAGS}"
                 "CFLAGS=${CFLAGS}"
                 "LDFLAGS=${LDFLAGS}"
