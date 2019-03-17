@@ -33,6 +33,7 @@ find_package(unofficial-iconv REQUIRED)
 find_path(FFI_INCLUDE_DIR ffi.h)
 find_library(FFI_LIBRARY NAMES ffi libffi)
 get_filename_component(LIB_DIR "${FFI_LIBRARY}" DIRECTORY)
+string(REPLACE "/debug" "" ${LIB_DIR} LIB_DIR)
 if(APPLE)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation)
     find_library(FOUNDATION_LIBRARY Foundation)
@@ -55,6 +56,7 @@ else()
     find_library(LIBRESOLV_LIBRARY NAMES resolv libresolv)
 endif()
 
+file(REMOVE "${CMAKE_BINARY_DIR}/config/config.h")
 #prepare config files
 if(WIN32)
     configure_file(config.h.win32 ${CMAKE_BINARY_DIR}/config/config.h COPYONLY)
@@ -87,7 +89,7 @@ else()
             COMMAND "${CMAKE_SOURCE_DIR}/configure"
                 --disable-libelf
                 --disable-libmount
-                --with-libiconv=no
+                --with-libiconv=gnu
                 "CPPFLAGS=${CXXFLAGS}"
                 "CFLAGS=${CFLAGS}"
                 "LDFLAGS=${LDFLAGS}"
