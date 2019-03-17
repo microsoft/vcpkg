@@ -10,7 +10,7 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rttrorg/rttr
-	REF v0.9.6
+    REF v0.9.6
     SHA512 5c94f037b319568d351ee6d25f1404adce00b40598dce4a331789d5357c059e50aae3894f90e60d37307b7e96f4672ae09d3798bbe47f796ef2044f1ac6f9e50
     HEAD_REF master
     PATCHES
@@ -21,8 +21,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-		-DBUILD_BENCHMARKS=OFF
-		-DBUILD_UNIT_TESTS=OFF
+        -DBUILD_BENCHMARKS=OFF
+        -DBUILD_UNIT_TESTS=OFF
 )
 
 vcpkg_install_cmake()
