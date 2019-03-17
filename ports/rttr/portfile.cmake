@@ -14,6 +14,7 @@ vcpkg_from_github(
     SHA512 5c94f037b319568d351ee6d25f1404adce00b40598dce4a331789d5357c059e50aae3894f90e60d37307b7e96f4672ae09d3798bbe47f796ef2044f1ac6f9e50
     HEAD_REF master
     PATCHES
+        fix-directory-output.patch
         remove-owner-read-perms.patch
 )
 
