@@ -5,8 +5,8 @@ if(LibXml2_FOUND)
     find_package(unofficial-iconv REQUIRED)
     set_property(TARGET LibXml2::LibXml2 APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
         unofficial::iconv::libcharset 
-        unofficial::iconv::libiconv
-        ${LIBLZMA_LIBRARIES} ${ZLIB_LIBRARIES})
+        unofficial::iconv::libiconv)
+    target_link_libraries(LibXml2::LibXml2 INTERFACE ${LIBLZMA_LIBRARIES} ${ZLIB_LIBRARIES}) # for VTK
     list(APPEND LIBXML2_LIBRARIES
         unofficial::iconv::libcharset 
         unofficial::iconv::libiconv
