@@ -1,14 +1,11 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/gocha/sf2cute/archive/v0.1.zip"
-    FILENAME "v0.1.zip"
-    SHA512 aa7e96e7b23b2050ea64ab41c56206fb37e1da62e76fdfb6c09148ee3f181ca71c3acec575837e79b1f541d8627c7a3095f211560b584d558267b3059a28f7e0
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO gocha/sf2cute
+    REF fcb6d1075f5bf47c4240f590ad83865276cbe69c
+    HEAD_REF master
+    SHA512 4664420eb7fc0c24b22e5ea72578519147c3f6852f4cc1f6144560915383d6cf389feefd186ec1aeccb1ee4b48745384868b3fca1d687dc7fe58b4850adcb754
 )
 
 file(COPY "${CURRENT_PORT_DIR}/cmake/sf2cute-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake/")
@@ -17,8 +14,6 @@ file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DSF2CUTE_BUILD_WITH_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()

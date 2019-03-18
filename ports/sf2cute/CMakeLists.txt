@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.8.2)
 
 project(sf2cute
     LANGUAGES C CXX
-    VERSION 0.1.0)
-
-option(SF2CUTE_BUILD_WITH_EXAMPLES "build the example executable" ON)
+    VERSION 0.2.0)
 
 #============================================================================
 # sf2cute library
@@ -53,16 +51,6 @@ target_compile_features(sf2cute PUBLIC cxx_std_14)
 add_library(sf2cute::sf2cute ALIAS sf2cute)
 
 #============================================================================
-# write_sf2 binary
-#============================================================================
-
-if (SF2CUTE_BUILD_WITH_EXAMPLES)
-    add_executable(write_sf2 PRIVATE ${CMAKE_CURRENT_LIST_DIR}/examples/write_sf2.cpp)
-    target_link_libraries(write_sf2 PRIVATE sf2cute)
-    add_executable(sf2cute::write_sf2 ALIAS write_sf2)
-endif()
-
-#============================================================================
 # Install and Export sf2cute
 #============================================================================
 
@@ -88,7 +76,7 @@ install(
     EXPORT sf2cute-targets
     FILE sf2cute-targets.cmake
     NAMESPACE sf2cute::
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/sf2cute
+    DESTINATION share/sf2cute
 )
 
 include(CMakePackageConfigHelpers)
@@ -109,5 +97,5 @@ install(
     FILES
         ${CMAKE_BINARY_DIR}/cmake/sf2cute-config.cmake
         ${CMAKE_BINARY_DIR}/cmake/sf2cute-config-version.cmake
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/sf2cute
+    DESTINATION share/sf2cute
 )
