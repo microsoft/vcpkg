@@ -115,6 +115,12 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    set(Module_vtkGUISupportMFC ON)
+else()
+    set(Module_vtkGUISupportMFC OFF)
+endif()
+
 # =============================================================================
 # Configure & Install
 if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
@@ -154,6 +160,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
+        -DModule_vtkGUISupportMFC=${Module_vtkGUISupportMFC}
         ${ADDITIONAL_OPTIONS}
 )
 
