@@ -5,6 +5,8 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
 
     # TODO: This should be replaced with a switch on VCPKG_TARGET_ARCHITECTURE once we know what linux systems "natively" define for each of the targets
     set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}" CACHE STRING "")
+    message("CMAKE_HOST_SYSTEM_PROCESSOR is ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    
 else()
     set(CMAKE_SYSTEM_PROCESSOR "x86_64" CACHE STRING "")
 endif()
