@@ -1,0 +1,23 @@
+diff --git a/CMakeLists - Kopie.txt b/CMakeLists.txt
+index 95bd537a..245acc8f 100644
+--- a/CMakeLists - Kopie.txt	
++++ b/CMakeLists.txt
+@@ -131,6 +131,7 @@ endif ()
+ 
+ include (CheckCCompilerFlag)
+ 
++#All those checks fail due to linkage errors so we directly set HAVE_<ARCH> in the PORTFILE! We assume the user knows what (s)he is doing!
+ if (ENABLE_SSE)
+   foreach (FLAG "-msse" "/arch:SSE")
+     unset (HAVE_SSE CACHE)
+@@ -176,8 +177,9 @@ if (ENABLE_AVX2)
+ endif ()
+ 
+ # AVX2 codelets require FMA support as well
++# AVX2 implicitly includes FMA using Visual Studio (also definition __FMA__ is not set)
+ if (ENABLE_AVX2)
+-  foreach (FLAG "-mfma" "/arch:FMA")
++  foreach (FLAG "-mfma" "/arch:AVX2")
+     unset (HAVE_FMA CACHE)
+     check_c_compiler_flag (${FLAG} HAVE_FMA)
+     if (HAVE_FMA)

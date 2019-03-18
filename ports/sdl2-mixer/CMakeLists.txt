@@ -45,6 +45,15 @@ if(SDL_MIXER_ENABLE_OGGVORBIS)
     list(APPEND SDL_MIXER_DEFINES MUSIC_OGG)
 endif()
 
+# Opus support
+if(SDL_MIXER_ENABLE_OPUS)
+    find_path(OPUS_INCLUDE_DIR opus/opusfile.h)
+    find_library(OPUSFILE_LIBRARY opusfile)
+    list(APPEND SDL_MIXER_INCLUDES ${OPUS_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_LIBRARIES ${OPUSFILE_LIBRARY})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_OPUS)
+endif()
+
 add_library(SDL2_mixer
     effect_position.c
     effect_stereoreverse.c
@@ -61,7 +70,7 @@ add_library(SDL2_mixer
     music_modplug.c
     music_mpg123.c
     music_ogg.c
-    music_smpeg.c
+    music_opus.c
     music_timidity.c
     music_wav.c
     version.rc)

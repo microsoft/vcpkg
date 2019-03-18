@@ -1,5 +1,5 @@
 Source: curl
-Version: 7.61.1-2
+Version: 7.61.1-3
 Build-Depends: zlib
 Description: A library for transferring data with URLs
 Default-Features: ssl
@@ -19,7 +19,7 @@ Build-Depends: curl[openssl] (!windows), curl[winssl] (windows)
 Description: Default SSL backend
 
 Feature: ssh
-Build-Depends: libssh2, curl[non-http]
+Build-Depends: curl[openssl], libssh2, curl[non-http]
 Description: SSH support via libssh2
 
 # SSL backends
