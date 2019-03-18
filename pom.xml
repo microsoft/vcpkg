@@ -55,8 +55,8 @@
 									<arg value="bzip2:x86-windows-static" />
 									<arg value="cpprestsdk:x64-windows-static" />
 									<arg value="cpprestsdk:x86-windows-static" />
-									<arg value="curl:x64-windows-static" />
-									<arg value="curl:x86-windows-static" />
+									<arg value="curl[non-http]:x64-windows-static" />
+									<arg value="curl[non-http]:x86-windows-static" />
 									<arg value="gtest:x64-windows-static" />
 									<arg value="gtest:x86-windows-static" />
 									<arg value="libssh2:x64-windows-static" />
