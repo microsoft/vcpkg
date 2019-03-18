@@ -56,7 +56,7 @@
 ## * [ms-gsl](https://github.com/Microsoft/vcpkg/blob/master/ports/ms-gsl/portfile.cmake)
 ## * [beast](https://github.com/Microsoft/vcpkg/blob/master/ports/beast/portfile.cmake)
 function(vcpkg_from_github)
-    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 HEAD_REF)
+    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 HEAD_REF GITHUB_URL TOKEN)
     set(multipleValuesArgs PATCHES)
     cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
@@ -74,6 +74,18 @@ function(vcpkg_from_github)
 
     if(NOT DEFINED _vdud_REF AND NOT DEFINED _vdud_HEAD_REF)
         message(FATAL_ERROR "At least one of REF and HEAD_REF must be specified.")
+    endif()
+
+    if(NOT DEFINED _vdud_GITHUB_URL)
+        set(GITHUB_URL https://github.com)
+        set(GITHUB_API_URL https://api.github.com)
+    else()
+        set(GITHUB_URL ${_vdud_GITHUB_URL})
+        set(GITHUB_API_URL ${_vdud_GITHUB_URL}/api/v3)
+    endif()
+
+    if(DEFINED _vdud_TOKEN)
+        set(HEADERS "HEADERS" "Authorization: token ${_vdud_TOKEN}")
     endif()
 
     string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdud_REPO})
@@ -106,9 +118,10 @@ function(vcpkg_from_github)
         string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
 
         vcpkg_download_distfile(ARCHIVE
-            URLS "https://github.com/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_REF}.tar.gz"
+            URLS "${GITHUB_URL}/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
             FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
+            ${HEADERS}
         )
 
         vcpkg_extract_source_archive_ex(
@@ -123,7 +136,7 @@ function(vcpkg_from_github)
     endif()
 
     # The following is for --head scenarios
-    set(URL "https://github.com/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_HEAD_REF}.tar.gz")
+    set(URL "${GITHUB_URL}/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_HEAD_REF}.tar.gz")
     string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
     set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
     set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
@@ -147,15 +160,17 @@ function(vcpkg_from_github)
 
         # Try to download the file and version information from github.
         vcpkg_download_distfile(ARCHIVE_VERSION
-            URLS "https://api.github.com/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
+            URLS "${GITHUB_API_URL}/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
             FILENAME ${downloaded_file_name}.version
             SKIP_SHA512
+            ${HEADERS}
         )
 
         vcpkg_download_distfile(ARCHIVE
             URLS ${URL}
             FILENAME ${downloaded_file_name}
             SKIP_SHA512
+            ${HEADERS}
         )
     endif()
 
