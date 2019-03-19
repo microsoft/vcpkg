@@ -54,6 +54,14 @@ set(HEADERS zzip/__debug.h
             zzip/write.h
             zzip/zzip.h
 )
+if(UNIX)
+  file(GLOB OTHER_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-pc-linux-gnu/zzip/*.h)
+  list(APPEND HEADERS ${OTHER_HEADERS})
+  file(GLOB OTHER_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-apple-darwin18.2.0/zzip/*.h)
+  list(APPEND HEADERS ${OTHER_HEADERS})
+else()
+  list(APPEND HEADERS zzip/_msvc.h)
+endif()
 
 # List the source files
 set(SRCS zzip/dir.c
