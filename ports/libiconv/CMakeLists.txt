@@ -50,9 +50,9 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-add_definitions(-DLIBDIR -D_CRT_SECURE_NO_WARNINGS -DNO_XMALLOC)
+add_definitions(-DLIBDIR -D_CRT_SECURE_NO_WARNINGS)
 
-add_library(libcharset libcharset/lib/localcharset.c libcharset/lib/relocatable.c)
+add_library(libcharset libcharset/lib/localcharset.c)
 target_include_directories(libcharset PUBLIC $<INSTALL_INTERFACE:include>)
 
 add_library(libiconv lib/iconv.c)

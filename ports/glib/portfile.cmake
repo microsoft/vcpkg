@@ -29,13 +29,6 @@ vcpkg_extract_source_archive_ex(
         use-libiconv-on-windows.patch
 )
 
-set(CONFIGURE_FILE ${SOURCE_PATH}/configure)
-file(READ ${CONFIGURE_FILE} _contents)
-string(REPLACE  
-       "libiconv_" "iconv_"
-       _contents "${_contents}")
-file(WRITE ${CONFIGURE_FILE} "${_contents}")
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
 file(REMOVE_RECURSE ${SOURCE_PATH}/glib/pcre)
