@@ -3,9 +3,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF releases/CGAL-4.13
-    SHA512 3a12d7f567487c282928a162a47737c41c22258556ca0083b9cf492fc8f0a7c334b491b14dbfd6a62e71feeeb1b4995769c13a604e0882548f21c41b996d4eaf
+    REF releases/CGAL-4.14-beta2
+    SHA512 edbc4d656ba3795a0d6ee4ec9cabc686bdd00c040475145923256010737b08c5287661c1099cb78538e9e23b2f0e50b286cd3a68e48651e559c131284457c263
     HEAD_REF master
+)
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES CGALConfig.cmake.patch
 )
 
 set(WITH_CGAL_Qt5  OFF)
@@ -42,11 +47,6 @@ else()
     endforeach()
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake _contents)
-string(REPLACE "CGAL_IGNORE_PRECONFIGURED_GMP" "1" _contents "${_contents}")
-string(REPLACE "CGAL_IGNORE_PRECONFIGURED_MPFR" "1" _contents "${_contents}")
-
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "include (\$\{CMAKE_CURRENT_LIST_DIR\}/../../share/cgal/CGALConfig.cmake)")
 
 file(COPY ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
@@ -60,3 +60,5 @@ file(
         ${SOURCE_PATH}/Installation/LICENSE.LGPL
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
 )
+
+vcpkg_test_cmake(PACKAGE_NAME CGAL)

@@ -1,0 +1,27 @@
+diff --git a/Installation/lib/cmake/CGAL/CGALConfig.cmake b/Installation/lib/cmake/CGAL/CGALConfig.cmake
+index 0cb7f0326bb..f3b6add50ce 100644
+--- a/Installation/lib/cmake/CGAL/CGALConfig.cmake
++++ b/Installation/lib/cmake/CGAL/CGALConfig.cmake
+@@ -19,6 +19,7 @@ function(cgal_detect_branch_build VAR_NAME)
+   endif()
+ endfunction()
+ 
++set(CGAL_FOUND FALSE)
+ cgal_detect_branch_build(BRANCH_BUILD)
+ if(BRANCH_BUILD)
+   set(CGAL_ROOT ${CGAL_CONFIG_DIR})
+@@ -44,8 +45,12 @@ if(BRANCH_BUILD)
+ else()
+   set(CGAL_ROOT ${CGAL_CONFIG_DIR})
+   get_filename_component(CGAL_ROOT "${CGAL_ROOT}" DIRECTORY)
+-  get_filename_component(CGAL_ROOT "${CGAL_ROOT}" DIRECTORY)
+-  get_filename_component(CGAL_ROOT "${CGAL_ROOT}" DIRECTORY)
++  if(NOT EXISTS ${CGAL_ROOT}/include/CGAL/config.h)
++    get_filename_component(CGAL_ROOT "${CGAL_ROOT}" DIRECTORY)
++  endif()
++  if(NOT EXISTS ${CGAL_ROOT}/include/CGAL/config.h)
++    get_filename_component(CGAL_ROOT "${CGAL_ROOT}" DIRECTORY)
++  endif()
+ 
+   # not BRANCH_BUILD: it can be an installed CGAL, or the tarball layout
+   if(EXISTS ${CGAL_CONFIG_DIR}/CGAL_add_test.cmake)
