@@ -1,4 +1,4 @@
 Source: rxqt
-Version:
+Version: latest
 Description: The Reactive Extensions for Qt. <https://github.com/tetsurom/rxqt>
 Build-Depends: rxcpp
