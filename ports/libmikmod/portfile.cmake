@@ -17,7 +17,13 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "libmikmod-3.3.11.1.tar.gz"
     SHA512 f2439e2b691613847cd0787dd4e050116683ce7b05c215b8afecde5c6add819ea6c18e678e258c0a80786bef463f406072de15127f64368f694287a5e8e1a9de
 )
+
 vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix-missing-dll.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
