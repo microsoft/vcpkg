@@ -17,6 +17,7 @@ vcpkg_from_github(
   PATCHES
     enable_standard_installation.patch
     dont_use_integrated_stb_lib.patch
+    fix_static_pthread_linking.patch
 )
 
 set(ENABLE_CUDA OFF)
