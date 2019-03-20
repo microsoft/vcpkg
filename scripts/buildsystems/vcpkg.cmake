@@ -269,9 +269,11 @@ macro(find_package name)
             find_package(PostgreSQL MODULE REQUIRED)
             find_package(double-conversion CONFIG)
             find_package(OpenSSL)
+            find_package(harfbuzz CONFIG)
+
 
             set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-                ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3
+                ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
                 ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto  
             )
 
@@ -283,9 +285,7 @@ macro(find_package name)
                 Qt5FontDatabaseSupport)
 
             if(MSVC)
-                find_package(harfbuzz CONFIG)
                 set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-                    harfbuzz::harfbuzz
                     Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
 
                 add_qt_library(${_vcpkg_qt5lib} Qt5WindowsUIAutomationSupport qwindows qdirect2d)
