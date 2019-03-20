@@ -22,11 +22,11 @@
         <archiveName>cmake-3.14.0-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
-        <version>3.14.0</version>
-        <exeRelativePath></exeRelativePath>
-        <url></url>
-        <sha512></sha512>
-        <archiveName></archiveName>
+        <version>3.12.4</version>
+        <exeRelativePath>cmake-3.12.4-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-Linux-x86_64.tar.gz</url>
+        <sha512>ee9eded0c72e06ef99554f09553d40842478700ca6f07319c28247f1d45301708c703c65ad617cf618833257bacc3b9f63a54b32288bfb619d38758669dcd20f</sha512>
+        <archiveName>cmake-3.12.4-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.20.0</version>
