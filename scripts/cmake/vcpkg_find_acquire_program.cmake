@@ -24,6 +24,7 @@
 ## - MESON
 ## - NASM
 ## - NINJA
+## - NUGET
 ## - YASM
 ## - ARIA2 (Downloader)
 ##
@@ -130,6 +131,12 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
     set(ARCHIVE "ninja-1.8.2-win.zip")
     set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
+  elseif(VAR MATCHES "NUGET")
+    set(PROGNAME nuget)
+    set(PATHS "${DOWNLOADS}/tools/nuget")
+    set(BREW_PACKAGE_NAME "nuget")
+    set(URL "https://dist.nuget.org/win-x86-commandline/v4.8.1/nuget.exe")
+    set(HASH 42CB744338AF8DECC033A75BCE5B4C4DF28E102BAFC45F9A8BA86D7BC010F5B43EBACAE80D7B28C4F85AC900EEFC2A349620AE65F27F6CA1C21C53B63B92924B)
   elseif(VAR MATCHES "MESON")
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)
@@ -140,10 +147,10 @@ function(vcpkg_find_acquire_program VAR)
     else()
       set(SCRIPTNAME meson)
     endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.47.1)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.47.1.zip")
-    set(ARCHIVE "meson-0.47.1.zip")
-    set(HASH 0f6462835583a51707bee82d852018cfcb7444c0dad95b2ba08814e500a5cfe3f731dc6c1fb73c765d1120ee2a2d6600e15d8d393bab1993e84bd4354b2e6855)
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.50.0)
+    set(URL "https://github.com/mesonbuild/meson/archive/0.50.0.zip")
+    set(ARCHIVE "meson-0.50.0.zip")
+    set(HASH 587cafe0cd551e3fb3507ecab904912dc3e053aa95c864b435526a20d52406536ba970a50be6c9f20d83314c5853aaefa102c5ca14623d0928b091a43e7b6d64)
   elseif(VAR MATCHES "FLEX")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME win_flex)
