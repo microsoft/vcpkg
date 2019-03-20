@@ -1,11 +1,11 @@
 diff --git a/modules/FindGLFW.cmake b/modules/FindGLFW.cmake
-index e831fdb2..b2dba97f 100644
+index 5e13798f7..d7cb12b03 100644
 --- a/modules/FindGLFW.cmake
 +++ b/modules/FindGLFW.cmake
-@@ -39,7 +39,7 @@
- #   DEALINGS IN THE SOFTWARE.
- #
+@@ -64,7 +64,7 @@ if(TARGET glfw)
+ endif()
  
+ # In case no config file was found, try manually finding the library.
 -find_library(GLFW_LIBRARY NAMES glfw glfw3)
 +find_library(GLFW_LIBRARY NAMES glfw glfw3 glfw3dll)
  

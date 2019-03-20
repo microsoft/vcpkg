@@ -89,16 +89,6 @@ function(install_ace_library SOURCE_PATH ACE_LIBRARY)
             ${LIB_PATH}/${ACE_LIBRARY}.dll
             DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         )
-
-        # Install the pdb files
-        file(INSTALL
-            ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d_dll.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
-        file(INSTALL
-            ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        )
     endif()
 
     # Install the lib files
@@ -124,3 +114,5 @@ install_ace_library(${ACE_ROOT} "ACE_RLECompression")
 # Handle copyright
 file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
+
+vcpkg_copy_pdbs()
