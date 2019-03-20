@@ -168,4 +168,7 @@ vcpkg_copy_pdbs()
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
+vcpkg_find_acquire_program(NINJA)
+get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
 vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)
