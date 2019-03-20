@@ -19,9 +19,10 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
     find_package(PostgreSQL MODULE REQUIRED)
     find_package(double-conversion CONFIG)
     find_package(OpenSSL)
+    find_package(harfbuzz CONFIG)
 
     set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-        ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3
+        ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
         ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto  
     )
 
@@ -33,9 +34,8 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
         Qt5FontDatabaseSupport)
 
     if(MSVC)
-       find_package(harfbuzz CONFIG)
        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-           harfbuzz::harfbuzz Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
+           Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
 
       add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
 
