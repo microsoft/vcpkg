@@ -6,10 +6,6 @@ vcpkg_from_github(
     REF releases/CGAL-4.14-beta2
     SHA512 edbc4d656ba3795a0d6ee4ec9cabc686bdd00c040475145923256010737b08c5287661c1099cb78538e9e23b2f0e50b286cd3a68e48651e559c131284457c263
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES CGALConfig.cmake.patch
 )
 
