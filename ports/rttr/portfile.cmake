@@ -28,7 +28,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/rttr/cmake)
 
 #Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rttr)
