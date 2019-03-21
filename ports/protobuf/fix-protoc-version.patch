@@ -1,0 +1,49 @@
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index 9a6fc8c8..c75e7a34 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -97,6 +97,9 @@
+ #ifdef PROTOBUF_MIN_HEADER_VERSION_FOR_PROTOC
+ #error PROTOBUF_MIN_HEADER_VERSION_FOR_PROTOC was previously defined
+ #endif
++#ifdef PROTOBUF_MIN_PROTOC_VERSION
++#error PROTOBUF_MIN_PROTOC_VERSION was previously defined
++#endif
+ #ifdef PROTOBUF_PREDICT_TRUE
+ #error PROTOBUF_PREDICT_TRUE was previously defined
+ #endif
+@@ -257,6 +260,7 @@
+ 
+ #define PROTOBUF_VERSION 3007000
+ #define PROTOBUF_MIN_HEADER_VERSION_FOR_PROTOC 3007000
++#define PROTOBUF_MIN_PROTOC_VERSION 3007000
+ #define PROTOBUF_VERSION_SUFFIX ""
+ 
+ // The minimum library version which works with the current version of the
+diff --git a/src/google/protobuf/port_undef.inc b/src/google/protobuf/port_undef.inc
+index b3177cdf..6106c7dd 100644
+--- a/src/google/protobuf/port_undef.inc
++++ b/src/google/protobuf/port_undef.inc
+@@ -50,6 +50,7 @@
+ #undef PROTOBUF_VERSION_SUFFIX
+ #undef PROTOBUF_FIELD_OFFSET
+ #undef PROTOBUF_MIN_HEADER_VERSION_FOR_PROTOC
++#undef PROTOBUF_MIN_PROTOC_VERSION
+ #undef PROTOBUF_PREDICT_TRUE
+ #undef PROTOBUF_PREDICT_FALSE
+ #undef PROTOBUF_LONGLONG
+diff --git a/src/google/protobuf/stubs/common.h b/src/google/protobuf/stubs/common.h
+index 43da789f..0b469c69 100644
+--- a/src/google/protobuf/stubs/common.h
++++ b/src/google/protobuf/stubs/common.h
+@@ -86,10 +86,6 @@ namespace internal {
+ // A suffix string for alpha, beta or rc releases. Empty for stable releases.
+ #define GOOGLE_PROTOBUF_VERSION_SUFFIX ""
+ 
+-// The minimum library version which works with the current version of the
+-// headers.
+-#define GOOGLE_PROTOBUF_MIN_LIBRARY_VERSION 3007000
+-
+ // The minimum header version which works with the current version of
+ // the library.  This constant should only be used by protoc's C++ code
+ // generator.

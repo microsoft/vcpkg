@@ -5,11 +5,11 @@ vcpkg_from_github(
     REPO google/protobuf
     REF ec3d94819dbb4d9ed5cd75c128daff4273beed1f
     SHA512 259d7ea558f4f8dd771266cddaafc69f24d483afbec7bc5cb5cc04e1b9aec35e9664d50b60d14c3f35b28b4cdad6b27bdc9ee703a088f22cc55827958485ac6b
-    HEAD_REF 3.7.x
+    HEAD_REF master
     PATCHES
         fix-uwp.patch
         disable-lite.patch
-        undef-strtoull.patch # TODO: Try to remove this patch next time
+        fix-protoc-version.patch # TODO: Try to remove this patch next time
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
