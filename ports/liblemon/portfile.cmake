@@ -21,7 +21,7 @@ vcpkg_extract_source_archive_ex(
         "cmake.patch"
         "fixup-targets.patch"
 )
-
+ 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

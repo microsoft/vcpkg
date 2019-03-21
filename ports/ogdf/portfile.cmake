@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
         -DOGDF_INSTALL_LIBRARY_DIR:STRING=lib
         -DOGDF_INSTALL_CMAKE_DIR:STRING=lib/cmake/OGDF
 )
-
+ 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OGDF)

@@ -9,15 +9,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
-vcpkg_from_github(
+vcpkg_from_github( 
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/angle
     REF ms-master
     SHA512 eecdb7012c0630b24fde540fb6a558f4ee5326fc1218773b779953d0fe0ef02da68ceb2577822cfc0374392a88b871201bfe291e3b85c3dd005edc83f84fec1f
-)
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch
+    PATCHES 
+        001-fix-uwp.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
