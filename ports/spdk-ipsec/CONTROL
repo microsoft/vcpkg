@@ -1,0 +1,4 @@
+Source: spdk-ipsec
+Version: custom SPDK mirror
+Description: SPDK mirror of ipsec. Intel(R) Multi-Buffer Crypto for IPsec Library
+

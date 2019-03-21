@@ -1,0 +1,4 @@
+Source: spdk-dpdk
+Version: custom SDPK mirror
+Description: SPDK mirror of DPDK. A set of libraries and drivers for fast packet processing
+
