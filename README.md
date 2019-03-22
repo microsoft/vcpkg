@@ -3,7 +3,8 @@
 ## Overview
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement is vital to its success!
-Vcpkg_vc-ltl help you build library with vc-ltl
+
+Vcpkg_vc-ltl helps you build library with vc-ltl
 For short description of available commands, run `vcpkg help`.
 
 ## Quick Start
