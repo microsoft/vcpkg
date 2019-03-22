@@ -11,6 +11,9 @@ vcpkg_from_github(
     REF v19.16
     SHA512 4e040ef88acff05e1a48e499b813c876b22ad3f989d076bdf19969d01036b62e51a0dff30b70046910ba31dfa1b1c2450a7fad41ae3142b7285ed74b8d584887
     HEAD_REF master
+    PATCHES
+        fix-mac-jpeg.patch
+        fix-sqlite3-fftw-linkage.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libjpeg)
@@ -40,6 +43,7 @@ vcpkg_configure_cmake(
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
+        -DCMAKE_DEBUG_POSTFIX=d	
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
@@ -71,13 +75,6 @@ file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
 string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
 string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h "${_contents}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)
-string(REPLACE
-    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)"
-    _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake "${_contents}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)

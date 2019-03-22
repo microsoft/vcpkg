@@ -1,4 +1,4 @@
 Source: gl3w
-Version: 8f7f459d
+Version: 99ed3211
 Description: Simple OpenGL core profile loading
 Build-Depends: opengl-registry

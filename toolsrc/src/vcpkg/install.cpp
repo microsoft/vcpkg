@@ -719,9 +719,9 @@ namespace vcpkg::Install
         return nullptr;
     }
 
-    std::string InstallSummary::xunit_result(const PackageSpec& spec, Chrono::ElapsedTime time, BuildResult code)
+    static std::string xunit_result(const PackageSpec& spec, Chrono::ElapsedTime time, BuildResult code)
     {
-        std::string inner_block;
+        std::string message_block;
         const char* result_string = "";
         switch (code)
         {
@@ -729,12 +729,12 @@ namespace vcpkg::Install
             case BuildResult::FILE_CONFLICTS:
             case BuildResult::BUILD_FAILED:
                 result_string = "Fail";
-                inner_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
+                message_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
                 break;
             case BuildResult::EXCLUDED:
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
                 result_string = "Skip";
-                inner_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
+                message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
                 break;
             case BuildResult::SUCCEEDED: result_string = "Pass"; break;
             default: Checks::exit_fail(VCPKG_LINE_INFO);
@@ -746,7 +746,7 @@ namespace vcpkg::Install
                                spec,
                                time.as<std::chrono::seconds>().count(),
                                result_string,
-                               inner_block);
+                               message_block);
     }
 
     std::string InstallSummary::xunit_results() const

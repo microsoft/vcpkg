@@ -33,6 +33,11 @@ Skip SHA512 hash check for file.
 
 This switch is only valid when building with the `--head` command line flag.
 
+### HEADERS
+A list of headers to append to the download request. This can be used for authentication during a download.
+
+Headers should be specified as "<header-name>: <header-value>".
+
 ## Notes
 The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downloading from GitHub projects.
 

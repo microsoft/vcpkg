@@ -212,6 +212,11 @@ if("eigen" IN_LIST FEATURES)
   set(WITH_EIGEN ON)
 endif()
 
+set(OPENCV_ENABLE_NONFREE OFF)
+if("nonfree" IN_LIST FEATURES)
+  set(OPENCV_ENABLE_NONFREE ON)
+endif()
+
 if(BUILD_opencv_contrib)
   vcpkg_from_github(
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
@@ -278,6 +283,7 @@ vcpkg_configure_cmake(
         # ENABLE
         -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
+        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
         # INSTALL
         -DINSTALL_FORCE_UNIX_PATHS=ON
         -DINSTALL_LICENSE=OFF
@@ -287,7 +293,7 @@ vcpkg_configure_cmake(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
-        -DWITH_CUBLAS=OFF
+        -DWITH_CUBLAS=${WITH_CUDA}
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_EIGEN=${WITH_EIGEN}
         -DWITH_FFMPEG=${WITH_FFMPEG}
