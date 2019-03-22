@@ -45,10 +45,10 @@ namespace vcpkg::PostBuildLint
             {"msvcp100d.dll", R"(msvcp100d\.dll)"},
             {"msvcp110.dll", R"(msvcp110\.dll)"},
             {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-            {"msvcp60.dll", R"(msvcp60\.dll)"},
-            {"msvcp60.dll", R"(msvcp60\.dll)"},
+            //{"msvcp60.dll", R"(msvcp60\.dll)"},
+            //{"msvcp60.dll", R"(msvcp60\.dll)"},
 
-            {"msvcrt.dll", R"(msvcrt\.dll)"},
+            //{"msvcrt.dll", R"(msvcrt\.dll)"},
             {"msvcr100.dll", R"(msvcr100\.dll)"},
             {"msvcr100d.dll", R"(msvcr100d\.dll)"},
             {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
@@ -673,7 +673,15 @@ namespace vcpkg::PostBuildLint
             const auto cmd_line = Strings::format(R"("%s" /dependents "%s")", dumpbin_exe.u8string(), dll.u8string());
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
-
+			std::regex system_crt_regex(R"((?:msvcp60\.dll)|(?:msvcrt\.dll))", std::regex_constants::icase);
+			std::smatch sys_crt_result;
+			std::string::const_iterator iterStart = ec_data.output.begin();
+			std::string::const_iterator iterEnd = ec_data.output.end();
+			while (regex_search(iterStart, iterEnd, sys_crt_result, system_crt_regex))
+			{
+				System::println(System::Color::success, "Detected " + sys_crt_result.str() +" in the library");
+				iterStart = sys_crt_result[0].second;
+			}
             for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts(pre_build_info.platform_toolset))
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
