@@ -1,0 +1,15 @@
+diff --git a/CMake/windows_config.cmake b/CMake/windows_config.cmake
+index afde45c7..e1d87d22 100644
+--- a/CMake/windows_config.cmake
++++ b/CMake/windows_config.cmake
+@@ -38,7 +38,9 @@ macro(os_set_flags)
+         add_definitions(-DNOMINMAX)
+     endif()
+ 
+-    include(CMake/external_libusb.cmake)
++    if(BUILD_WITH_TM2)
++        include(CMake/external_libusb.cmake)
++    endif()
+ endmacro()
+ 
+ macro(os_target_config)

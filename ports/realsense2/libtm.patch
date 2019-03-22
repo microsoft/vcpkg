@@ -1,0 +1,214 @@
+diff --git a/third-party/libtm/resources/CMakeLists.txt b/third-party/libtm/resources/CMakeLists.txt
+index 5d6ee17d..f7ae6ce5 100644
+--- a/third-party/libtm/resources/CMakeLists.txt
++++ b/third-party/libtm/resources/CMakeLists.txt
+@@ -46,7 +46,7 @@ function(from_hex HEX DEC)
+ 
+         string(LENGTH "${HEX}" _strlen)
+     endwhile()
+-    
++
+     set(${DEC} ${_res} PARENT_SCOPE)
+ endfunction()
+ 
+@@ -109,24 +109,25 @@ if(FW_VERSION)
+         file(REMOVE ${FW_OUTPUT_FILE_TMP})
+         message(STATUS "  Converting FW version ${FW_VERSION} from target.mvcmd to ${FW_OUTPUT_FILE}")
+ 
+-        # Create empty output file
+-        file(WRITE ${FW_OUTPUT_FILE_TMP} "")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "/*******************************************************************************\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "INTEL CORPORATION PROPRIETARY INFORMATION\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "Copyright(c) 2017 Intel Corporation. All Rights Reserved.\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "*******************************************************************************/\n\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "#ifndef target_h\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "#define target_h\n\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "#define FW_VERSION \"${FW_VERSION}\"\n\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "static uint32_t target_hex []  = {\n")
+-    
++        # Covert binary to header-compatible content
+         bin2h(${LIBTM_RESOURCES_DIR}/target.mvcmd 0 fw_ready_buffer)
+ 
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "${fw_ready_buffer}\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "};\n")
+-        file(APPEND ${FW_OUTPUT_FILE_TMP} "#endif\n")
+-
+-        # Checking if current FW is identical to downloaded FW, and remove new one to avoid libtm recompilation    
++        # Create empty output file
++        file(WRITE ${FW_OUTPUT_FILE_TMP}
++             "/*******************************************************************************\n
++              INTEL CORPORATION PROPRIETARY INFORMATION\n
++              Copyright(c) 2017 Intel Corporation. All Rights Reserved.\n
++              *******************************************************************************/\n\n
++              #ifndef target_h\n
++              #define target_h\n\n
++              #define FW_VERSION \"${FW_VERSION}\"\n\n
++              static uint32_t target_hex []  = {\n
++              ${fw_ready_buffer}\n
++              };\n
++              #endif\n"
++        )
++
++        # Checking if current FW is identical to downloaded FW, and remove new one to avoid libtm recompilation
+         if(EXISTS "${FW_OUTPUT_FILE}")
+             # message(STATUS "Local file ${FW_OUTPUT_FILE} already exists, comparing with downloaded FW file")
+             execute_process( COMMAND ${CMAKE_COMMAND} -E compare_files "${FW_OUTPUT_FILE}" "${FW_OUTPUT_FILE_TMP}" RESULT_VARIABLE compare_result OUTPUT_QUIET ERROR_QUIET)
+@@ -151,7 +152,7 @@ if(FW_VERSION)
+             message(STATUS "  Already created ${FW_OUTPUT_FILE}")
+         endif()
+     endif()
+-endif(FW_VERSION) 
++endif(FW_VERSION)
+ 
+ 
+ if(CENTRAL_APP_VERSION)
+@@ -159,7 +160,7 @@ if(CENTRAL_APP_VERSION)
+ 
+     if (FW_SOURCE MATCHES "Remote")
+         file(REMOVE ${LIBTM_RESOURCES_DIR}/central_app.bin)
+-        message(STATUS "- Downloading Central App ${CENTRAL_APP_VERSION} from ${CENTRAL_APP_ARTIFACTORY_DIR}/${CENTRAL_APP_VERSION}/central_app-${CENTRAL_APP_VERSION}.bin")   
++        message(STATUS "- Downloading Central App ${CENTRAL_APP_VERSION} from ${CENTRAL_APP_ARTIFACTORY_DIR}/${CENTRAL_APP_VERSION}/central_app-${CENTRAL_APP_VERSION}.bin")
+         file(DOWNLOAD "${CENTRAL_APP_ARTIFACTORY_DIR}/${CENTRAL_APP_VERSION}/central_app-${CENTRAL_APP_VERSION}.bin" "${LIBTM_RESOURCES_DIR}/central_app.bin" TIMEOUT 60 STATUS status LOG log)
+         # message(STATUS "Downloading Central App ${CENTRAL_APP_VERSION} completed - status ${status}")
+         list (FIND status "\"No error\"" _index)
+@@ -173,7 +174,7 @@ if(CENTRAL_APP_VERSION)
+             message(STATUS "- Downloading Central App ${CENTRAL_APP_VERSION} skipped")
+         endif()
+     endif()
+-        
++
+     if (FW_SOURCE MATCHES "Remote" OR FW_SOURCE MATCHES "Local")
+         file(REMOVE ${CENTRAL_APP_OUTPUT_FILE_TMP})
+         message(STATUS "  Converting Central App version ${CENTRAL_APP_VERSION} from central_app.bin to ${CENTRAL_APP_OUTPUT_FILE}")
+@@ -190,7 +191,7 @@ if(CENTRAL_APP_VERSION)
+         #         uint32 file_format_version; // defines the format of both header and data
+         #         uint32 version_size;
+         #         uint8 version[]
+-        # Data: 
++        # Data:
+         #         uint8 data[];
+ 
+         # Read 1 byte of file_format_version and abort if not supported
+@@ -222,9 +223,9 @@ if(CENTRAL_APP_VERSION)
+         endif()
+ 
+         # Check if internal central FW version is compatible with file name
+-        if (NOT ${central_app_version_major} EQUAL ${central_app_major_version} OR 
+-            NOT ${central_app_version_minor} EQUAL ${central_app_minor_version} OR 
+-            NOT ${central_app_version_patch} EQUAL ${central_app_patch_version} OR 
++        if (NOT ${central_app_version_major} EQUAL ${central_app_major_version} OR
++            NOT ${central_app_version_minor} EQUAL ${central_app_minor_version} OR
++            NOT ${central_app_version_patch} EQUAL ${central_app_patch_version} OR
+             NOT ${central_app_version_build} EQUAL ${central_app_build_version})
+             message(FATAL_ERROR "  Wrong Central FW version (${central_app_version_major}.${central_app_version_minor}.${central_app_version_patch}.${central_app_version_build}) VS (${central_app_major_version}.${central_app_minor_version}.${central_app_patch_version}.${central_app_build_version})")
+         endif()
+@@ -236,27 +237,27 @@ if(CENTRAL_APP_VERSION)
+         # message(STATUS "- version_size        = ${central_app_version_size}")
+         # message(STATUS "- version             = ${central_app_version_major}.${central_app_version_minor}.${central_app_version_patch}.${central_app_version_build}")
+ 
+-        # Create empty output file
+-        file(WRITE ${CENTRAL_APP_OUTPUT_FILE_TMP} "")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "/*******************************************************************************\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "INTEL CORPORATION PROPRIETARY INFORMATION\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "Copyright(c) 2017 Intel Corporation. All Rights Reserved.\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "*******************************************************************************/\n\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "#ifndef CentralAppFw_h\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "#define CentralAppFw_h\n\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "#define CENTRAL_APP_VERSION \"${CENTRAL_APP_VERSION}\"\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "#define CENTRAL_APP_SIZE ${central_app_data_size}\n\n")
+-
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "namespace CentralAppFw {\n\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "const int Version[] = { ${central_app_major_version}, ${central_app_minor_version}, ${central_app_patch_version}, ${central_app_build_version} };\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "const uint32_t Buffer []  = {\n")
+-
++        # Covert binary to header-compatible content
+         bin2h(${LIBTM_RESOURCES_DIR}/central_app.bin ${central_app_header_size} central_app_ready_buffer)
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "${central_app_ready_buffer}\n")
+ 
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "};\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "}\n")
+-        file(APPEND ${CENTRAL_APP_OUTPUT_FILE_TMP} "#endif\n")
++        # Create empty output file
++        file(WRITE ${CENTRAL_APP_OUTPUT_FILE_TMP}
++             "/*******************************************************************************\n
++              INTEL CORPORATION PROPRIETARY INFORMATION\n
++              Copyright(c) 2017 Intel Corporation. All Rights Reserved.\n
++              *******************************************************************************/\n\n
++              #ifndef CentralAppFw_h\n
++              #define CentralAppFw_h\n\n
++              #define CENTRAL_APP_VERSION \"${CENTRAL_APP_VERSION}\"\n
++              #define CENTRAL_APP_SIZE ${central_app_data_size}\n\n
++              namespace CentralAppFw {\n\n
++              const int Version[] = { ${central_app_major_version}, ${central_app_minor_version}, ${central_app_patch_version}, ${central_app_build_version} };\n
++              const uint32_t Buffer []  = {\n
++              ${central_app_ready_buffer}\n
++              };\n
++              }\n
++              #endif\n"
++        )
+ 
+         # Checking if current central APP is identical to downloaded central APP, and remove new one to avoid libtm recompilation
+         if(EXISTS "${CENTRAL_APP_OUTPUT_FILE}")
+@@ -284,7 +285,7 @@ if(CENTRAL_APP_VERSION)
+         endif()
+     endif()
+ 
+-endif(CENTRAL_APP_VERSION) 
++endif(CENTRAL_APP_VERSION)
+ 
+ 
+ if(CENTRAL_BL_VERSION)
+@@ -316,26 +317,26 @@ if(CENTRAL_BL_VERSION)
+         STRING(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" central_bl_patch_version "${CENTRAL_BL_VERSION}")
+         STRING(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" central_bl_build_version "${CENTRAL_BL_VERSION}")
+ 
+-        # Create empty output file
+-        file(WRITE ${CENTRAL_BL_OUTPUT_FILE_TMP} "")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "/*******************************************************************************\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "INTEL CORPORATION PROPRIETARY INFORMATION\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "Copyright(c) 2017 Intel Corporation. All Rights Reserved.\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "*******************************************************************************/\n\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "#ifndef CentralBlFw_h\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "#define CentralBlFw_h\n\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "#define CENTRAL_BL_VERSION \"${CENTRAL_BL_VERSION}\"\n\n")
+-    
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "namespace CentralBlFw {\n\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "const int Version[] = { ${central_bl_major_version}, ${central_bl_minor_version}, ${central_bl_patch_version}, ${central_bl_build_version} };\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "const uint32_t Buffer []  = {\n")
+-    
++        # Covert binary to header-compatible content
+         bin2h(${LIBTM_RESOURCES_DIR}/central_bl.bin 3 central_bl_ready_buffer)
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "${central_bl_ready_buffer}\n")
+ 
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "};\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "}\n")
+-        file(APPEND ${CENTRAL_BL_OUTPUT_FILE_TMP} "#endif\n")
++        # Create empty output file
++        file(WRITE ${CENTRAL_BL_OUTPUT_FILE_TMP}
++             "/*******************************************************************************\n
++              INTEL CORPORATION PROPRIETARY INFORMATION\n
++              Copyright(c) 2017 Intel Corporation. All Rights Reserved.\n
++              *******************************************************************************/\n\n
++              #ifndef CentralBlFw_h\n
++              #define CentralBlFw_h\n\n
++              #define CENTRAL_BL_VERSION \"${CENTRAL_BL_VERSION}\"\n\n
++              namespace CentralBlFw {\n\n
++              const int Version[] = { ${central_bl_major_version}, ${central_bl_minor_version}, ${central_bl_patch_version}, ${central_bl_build_version} };\n
++              const uint32_t Buffer []  = {\n
++              ${central_bl_ready_buffer}\n
++              };\n
++              }\n
++              #endif\n"
++        )
+ 
+         # Checking if current central BL is identical to downloaded central BL, and remove new one to avoid libtm recompilation
+         if(EXISTS "${CENTRAL_BL_OUTPUT_FILE}")
+@@ -363,7 +364,7 @@ if(CENTRAL_BL_VERSION)
+         endif()
+     endif()
+ 
+-endif(CENTRAL_BL_VERSION) 
++endif(CENTRAL_BL_VERSION)
+ 
+ 
+ # Update versions.log & remote_versions.log file
