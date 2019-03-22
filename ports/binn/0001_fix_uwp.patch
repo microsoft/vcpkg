@@ -1,5 +1,5 @@
 diff --git a/src/binn.c b/src/binn.c
-index ef32f35..f26a14b 100644
+index ef32f35..3b6b14a 100644
 --- a/src/binn.c
 +++ b/src/binn.c
 @@ -142,8 +142,8 @@ BINN_PRIVATE void copy_be64(u64 *pdest, u64 *psource) {
@@ -60,17 +60,17 @@ index ef32f35..f26a14b 100644
      value->vdouble = value->vfloat;
    case BINN_DOUBLE:
 -    sprintf(buf, "%g", value->vdouble);
-+    sprintf_s(buf, "%g", value->vdouble);
++    sprintf_s(buf, sizeof buf, "%g", value->vdouble);
      goto loc_convert_value;
    case BINN_STRING:
      return (char*) value->ptr;
    case BINN_BOOL:
      if (value->vbool)
 -      strcpy(buf, "true");
-+      strcpy_s(buf, "true");
++      strcpy_s(buf, sizeof buf, "true");
      else
 -      strcpy(buf, "false");
-+      strcpy_s(buf, "false");
++      strcpy_s(buf, sizeof buf, "false");
      goto loc_convert_value;
    }
  
