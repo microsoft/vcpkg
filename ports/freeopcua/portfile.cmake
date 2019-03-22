@@ -27,8 +27,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
-#file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/freeopcua/freeopcuaConfig-debug.cmake ${CURRENT_PACKAGES_DIR}/share/freeopcua/freeopcuaConfig-debug.cmake)
-#file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/freeopcua/freeopcuaConfig.cmake ${CURRENT_PACKAGES_DIR}/share/freeopcua/freeopcuaConfig.cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
