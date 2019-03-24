@@ -28,6 +28,21 @@ function(install_qt)
     set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
     set(_path "$ENV{PATH}")
 
+	message(STATUS "Package ${TARGET_TRIPLET}-rel")
+    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin;${_path}")
+	#
+    vcpkg_execute_required_process(
+        COMMAND cmd /c "../../../scripts/VC-LTL helper for nmake.cmd" && ${INVOKE}
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+    vcpkg_execute_required_process(
+        COMMAND ${INVOKE} install
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME package-${TARGET_TRIPLET}-rel
+    )
+    message(STATUS "Package ${TARGET_TRIPLET}-rel done")
+	
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
     set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/debug/bin;${_path}")
     vcpkg_execute_required_process(
@@ -42,19 +57,7 @@ function(install_qt)
     )
     message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
     
-    message(STATUS "Package ${TARGET_TRIPLET}-rel")
-    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin;${_path}")
-    vcpkg_execute_required_process(
-        COMMAND ${INVOKE}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${INVOKE} install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME package-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Package ${TARGET_TRIPLET}-rel done")
+
     
     set(ENV{PATH} "${_path}")
     

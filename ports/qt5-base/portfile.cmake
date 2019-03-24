@@ -27,14 +27,16 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-gui-configure-json.patch
 )
-
+file(READ ${SOURCE_PATH}/mkspecs/common/msvc-desktop.conf DESKTOP_CONF_CONTEXT)
+string(REGEX REPLACE " +-MD([ \n\r\t]+)" " -MT\\1" DESKTOP_CONF_CONTEXT ${DESKTOP_CONF_CONTEXT})
+file(WRITE "${SOURCE_PATH}/mkspecs/common/msvc-desktop.conf" ${DESKTOP_CONF_CONTEXT})
+message(STATUS "Replace -MD to -MT in ${SOURCE_PATH}/mkspecs/common/msvc-desktop.conf")
 # Remove vendored dependencies to ensure they are not picked up by the build
 foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
 endforeach()
-
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
