@@ -1,0 +1,36 @@
+diff --git a/src/shared/winutils/utils.cpp b/src/shared/winutils/utils.cpp
+index 00a2054..02636c1 100644
+--- a/src/shared/winutils/utils.cpp
++++ b/src/shared/winutils/utils.cpp
+@@ -799,9 +799,15 @@ static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &de
+         } else if (lib.startsWith(QLatin1String("VCRUNTIME"), Qt::CaseInsensitive)) {
+             pos = 9;
+         }
+-        if (pos && lib.at(pos).isDigit()) {
+-            for (++pos; lib.at(pos).isDigit(); ++pos)
+-                ;
++        if (pos) {
++            int iDotPos = 0;
++            for (int i = pos; i != lib.length(); ++i){
++                if (lib.at(i) == QLatin1Char('.'))
++                    iDotPos = i;
++            }
++            if (!iDotPos)
++                return NoMsvcRuntime;
++            pos = iDotPos - 1;
+             return lib.at(pos).toLower() == QLatin1Char('d')
+                 ? MsvcDebugRuntime : MsvcReleaseRuntime;
+         }
+diff --git a/src/windeployqt/windeployqt.pro b/src/windeployqt/windeployqt.pro
+index fb12a12..d579484 100644
+--- a/src/windeployqt/windeployqt.pro
++++ b/src/windeployqt/windeployqt.pro
+@@ -1,7 +1,7 @@
+ option(host_build)
+ QT = core-private
+ DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII QT_NO_FOREACH
+-
++include("../../../../../../scripts/VC-LTL helper for qmake.pri")
+ include(../shared/winutils/winutils.pri)
+ SOURCES += main.cpp
+ 

@@ -35,11 +35,20 @@ function(vcpkg_build_qmake)
 
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
-        vcpkg_execute_required_process(
-            COMMAND ${INVOKE} ${TARGETS}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
-            LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
-        )
+		#message(FATAL_ERROR ${TARGETS})
+		if(${LOG_SUFFIX} STREQUAL dbg)
+			vcpkg_execute_required_process(
+				COMMAND ${INVOKE} ${TARGETS}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
+				LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
+			)
+		else()
+			vcpkg_execute_required_process(
+				COMMAND "../../../scripts/VC-LTL helper for nmake.cmd" && ${INVOKE} ${TARGETS}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
+				LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
+			)
+		endif()
     endfunction()
 
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings

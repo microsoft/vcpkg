@@ -33,6 +33,8 @@ function(vcpkg_configure_qmake)
     configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf)
 
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+
+
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(
         COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release ${_csc_OPTIONS} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
