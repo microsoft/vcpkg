@@ -91,7 +91,7 @@ function(vcpkg_build_cmake)
                     set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
                 endif()
             endif()
-            execute_process(
+			execute_process(
                 COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
                 OUTPUT_FILE "${LOGPREFIX}-out.log"
                 ERROR_FILE "${LOGPREFIX}-err.log"

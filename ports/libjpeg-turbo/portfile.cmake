@@ -48,6 +48,11 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
+file(READ ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja JPEG_BUILD_CONTEXT)
+message(STATUS "Fix jpeg lib from /MD to /MT")
+string(REGEX REPLACE " +/MD +" " /MT " JPEG_BUILD_CONTEXT ${JPEG_BUILD_CONTEXT})
+file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ${JPEG_BUILD_CONTEXT})
+
 vcpkg_install_cmake()
 
 # Rename libraries for static builds
