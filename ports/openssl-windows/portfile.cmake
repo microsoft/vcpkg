@@ -87,20 +87,23 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
     # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
     make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
+	message(STATUS "Replace /MD to /MT")
+	file(READ ${SOURCE_PATH_RELEASE}\\${OPENSSL_MAKEFILE} OPENSSL_MAKEFILE_CONTENT)
+	string(REGEX REPLACE " +/MD +" " /MT " OPENSSL_MAKEFILE_CONTENT_FIXED ${OPENSSL_MAKEFILE_CONTENT})
+	file(WRITE ${SOURCE_PATH_RELEASE}\\${OPENSSL_MAKEFILE} ${OPENSSL_MAKEFILE_CONTENT_FIXED})
     execute_process(
-        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+        COMMAND cmd /c "..\\..\\..\\..\\scripts\\VC-LTL helper for nmake.cmd" && ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
         ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install
+        COMMAND cmd /c "..\\..\\..\\..\\scripts\\VC-LTL helper for nmake.cmd" && nmake -f ${OPENSSL_MAKEFILE} install
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
     message(STATUS "Build ${TARGET_TRIPLET}-rel done")
 endif()
-
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
