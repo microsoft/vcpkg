@@ -8,7 +8,7 @@ find_package(Freetype REQUIRED)
 add_library(SDL2_ttf SDL_ttf.c version.rc)
 
 set_target_properties(SDL2_ttf PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
-target_include_directories(SDL2_ttf PRIVATE ${SDL_INCLUDE_DIR}/SDL2 ${FREETYPE_INCLUDE_DIR_ft2build})
+target_include_directories(SDL2_ttf PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
 target_link_libraries(SDL2_ttf ${SDL_LIBRARY} Freetype::Freetype)
 
 install(TARGETS SDL2_ttf
