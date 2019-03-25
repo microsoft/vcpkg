@@ -3,8 +3,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(MPC_STATIC_FLAG -static)
+  if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(DLL_DECORATOR s)
+  endif()
+  set(MPC_STATIC_FLAG -static)
 endif()
 include(vcpkg_common_functions)
 set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
@@ -29,27 +31,54 @@ else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
-if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-    set(SOLUTION_TYPE vs2017)
-else()
-    set(SOLUTION_TYPE vc14)
-endif()
-
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
-file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(LIB_RELEASE_SUFFIX .lib)
+  set(LIB_DEBUG_SUFFIX d.lib)
+  if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    set(SOLUTION_TYPE vs2017)
+  else()
+    set(SOLUTION_TYPE vc14)
+  endif()
+  file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(DLL_DECORATOR)
+  set(LIB_RELEASE_SUFFIX .a)
+  set(LIB_DEBUG_SUFFIX .a)
+  set(LIB_PREFIX lib)
+  set(SOLUTION_TYPE gnuace)
+  file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)include/makeinclude/platform_linux.GNU")
+endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_required_process(
     COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ace ${MPC_STATIC_FLAG}
     WORKING_DIRECTORY ${ACE_ROOT}
-    LOGNAME mwc
+    LOGNAME -${TARGET_TRIPLET}
 )
 
-vcpkg_build_msbuild(
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/ace.sln
     PLATFORM ${MSBUILD_PLATFORM}
-)
+  )
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  FIND_PROGRAM(MAKE make)
+  IF (NOT MAKE)
+    MESSAGE(FATAL_ERROR "MAKE not found")
+  ENDIF ()
+  vcpkg_execute_required_process(
+    COMMAND make
+    WORKING_DIRECTORY ${ACE_ROOT}/ace
+    LOGNAME make-${TARGET_TRIPLET}
+  )
+endif()
 
 # ACE itself does not define an install target, so it is not clear which
 # headers are public and which not. For the moment we install everything
@@ -93,12 +122,12 @@ function(install_ace_library SOURCE_PATH ACE_LIBRARY)
 
     # Install the lib files
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}d.lib
+        ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
 
     file(INSTALL
-        ${LIB_PATH}/${ACE_LIBRARY}${DLL_DECORATOR}.lib
+        ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 endfunction()
@@ -108,7 +137,9 @@ install_ace_library(${ACE_ROOT} "ACE_Compression")
 install_ace_library(${ACE_ROOT} "ACE_ETCL")
 install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
 install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
-install_ace_library(${ACE_ROOT} "ACE_QoS")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  install_ace_library(${ACE_ROOT} "ACE_QoS")
+endif()
 install_ace_library(${ACE_ROOT} "ACE_RLECompression")
 
 # Handle copyright
