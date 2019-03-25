@@ -3,7 +3,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     set(DLL_DECORATOR s)
   endif()
   set(MPC_STATIC_FLAG -static)
@@ -33,7 +33,7 @@ endif()
 
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   set(LIB_RELEASE_SUFFIX .lib)
   set(LIB_DEBUG_SUFFIX d.lib)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
@@ -61,7 +61,7 @@ vcpkg_execute_required_process(
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/ace.sln
     PLATFORM ${MSBUILD_PLATFORM}
@@ -137,7 +137,7 @@ install_ace_library(${ACE_ROOT} "ACE_Compression")
 install_ace_library(${ACE_ROOT} "ACE_ETCL")
 install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
 install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   install_ace_library(${ACE_ROOT} "ACE_QoS")
 endif()
 install_ace_library(${ACE_ROOT} "ACE_RLECompression")
