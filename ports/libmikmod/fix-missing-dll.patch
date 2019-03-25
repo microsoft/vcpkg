@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 53a174e..ec7f81f 100644
+index 53a174e..696b712 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -856,11 +856,13 @@ INSTALL(
+@@ -856,11 +856,25 @@ INSTALL(
      ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
  )
  
@@ -17,7 +17,19 @@ index 53a174e..ec7f81f 100644
 +#    DESTINATION "bin"
 +#)
 +
-+INSTALL(FILES "${CMAKE_BINARY_DIR}/mikmod.dll" DESTINATION "bin")
++IF(WIN32)
++    SET(LIB_SUFFIX_USED ".dll")
++ELSEIF(UNIX)
++    SET(LIB_SUFFIX_USED ".so")
++ELSEIF(APPLE)
++    SET(LIB_SUFFIX_USED ".dylib")
++ELSE()
++    SET(LIB_SUFFIX_USED)
++ENDIF()
++
++IF(NOT ENABLE_STATIC)
++    INSTALL(FILES "${CMAKE_BINARY_DIR}/mikmod${LIB_SUFFIX_USED}" DESTINATION "bin")
++ENDIF()
  
  INSTALL(
      FILES
