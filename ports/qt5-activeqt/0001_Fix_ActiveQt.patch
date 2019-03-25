@@ -1,0 +1,12 @@
+diff --git a/src/tools/idc/idc.pro b/src/tools/idc/idc.pro
+index 7f9a8d4..bbfebe8 100644
+--- a/src/tools/idc/idc.pro
++++ b/src/tools/idc/idc.pro
+@@ -1,6 +1,6 @@
+ option(host_build)
+ CONFIG += force_bootstrap
+ SOURCES = main.cpp
+-
++include("../../../../../../../scripts/VC-LTL helper for qmake.pri")
+ QMAKE_TARGET_DESCRIPTION = "Active Qt Interface Description Compiler"
+ load(qt_tool)

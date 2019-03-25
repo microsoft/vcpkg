@@ -35,7 +35,6 @@ function(vcpkg_build_qmake)
 
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
-		#message(FATAL_ERROR ${TARGETS})
 		if(${LOG_SUFFIX} STREQUAL dbg)
 			vcpkg_execute_required_process(
 				COMMAND ${INVOKE} ${TARGETS}
