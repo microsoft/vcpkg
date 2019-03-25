@@ -1,0 +1,13 @@
+diff --git a/stun/usages/bind.c b/stun/usages/bind.c
+index c5b09ab..58ef882 100644
+--- a/stun/usages/bind.c
++++ b/stun/usages/bind.c
+@@ -340,7 +340,7 @@ static void stun_trans_deinit (StunTransport *tr)
+ 
+ static int stun_err_dequeue (int fd)
+ {
+-#ifdef MSG_ERRQUEUE
++#if (defined(MSG_ERRQUEUE) && !defined(_WIN32))
+   struct msghdr hdr;
+   int saved_errno = errno, ret;
+ 
