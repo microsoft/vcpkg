@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(SDL2_TTF C)
+project(SDL2_ttf C)
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
@@ -10,9 +10,16 @@ set_target_properties(SDL2_ttf PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_link_libraries(SDL2_ttf SDL2::SDL2main Freetype::Freetype)
 
 install(TARGETS SDL2_ttf
+    EXPORT SDL2_ttf
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
+
+INSTALL(EXPORT SDL2_ttf
+    DESTINATION "share/sdl2-ttf"
+    FILE sdl2-ttf-config.cmake
+    NAMESPACE SDL2::
+)
 
 if(NOT DEFINED SDL_TTF_SKIP_HEADERS)
     install(FILES SDL_ttf.h DESTINATION include/SDL2)
