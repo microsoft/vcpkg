@@ -7,7 +7,12 @@ find_package(Freetype REQUIRED)
 add_library(SDL2_ttf SDL_ttf.c version.rc)
 
 set_target_properties(SDL2_ttf PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
-target_link_libraries(SDL2_ttf SDL2::SDL2main Freetype::Freetype)
+
+if (TARGET SDL2::SDL2)	
+    target_link_libraries(SDL2_ttf SDL2::SDL2 Freetype::Freetype)	
+else()	
+    target_link_libraries(SDL2_ttf SDL2::SDL2-static Freetype::Freetype)	
+endif()
 
 install(TARGETS SDL2_ttf
     EXPORT SDL2_ttf
