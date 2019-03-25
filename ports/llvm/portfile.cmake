@@ -46,6 +46,7 @@ vcpkg_configure_cmake(
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        -DLLVM_PARALLEL_LINK_JOBS=1
 )
 
 vcpkg_install_cmake()
