@@ -58,7 +58,7 @@ endif()
 vcpkg_execute_required_process(
     COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ace ${MPC_STATIC_FLAG}
     WORKING_DIRECTORY ${ACE_ROOT}
-    LOGNAME -${TARGET_TRIPLET}
+    LOGNAME mwc-${TARGET_TRIPLET}
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
