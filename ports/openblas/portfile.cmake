@@ -22,11 +22,9 @@ vcpkg_from_github(
     REF 651ab01d2b552dd979120edd44cf0ccb0031bed1
     SHA512 78b57a59b011fc310deed47c66e8c4343cd23bdcefe369ad19499099d28dc5ed9206d5f77f7771acedafdb7f936befc285172f77ff78cb0175a7091c82ec148b
     HEAD_REF develop
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/uwp.patch"
+    PATCHES 
+        uwp.patch
+        fix-space-path.patch
 )
 
 find_program(GIT NAMES git git.cmd)

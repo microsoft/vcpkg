@@ -1,0 +1,4 @@
+Source: kd-soap
+Version: 1.7.0
+Description: A Qt-based client-side and server-side SOAP component http://www.kdab.com/products/kd-soap
+Build-Depends: qt5-base

@@ -29,9 +29,9 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/lapack.def DESTINATION ${SOURCE_PATH}/SRC)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
+    PATCHES
         use-other-blas-and-install-include.patch
-        include-f2c-in-static-build.patch
+        fix-lack-library.patch
 )
 
 vcpkg_configure_cmake(

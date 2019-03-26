@@ -2,6 +2,8 @@ include(vcpkg_common_functions)
 
 set(LIBTIFF_VERSION 4.0.10)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/libtiff/tiff-${LIBTIFF_VERSION}.tar.gz"
     FILENAME "tiff-${LIBTIFF_VERSION}.tar.gz"
