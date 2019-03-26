@@ -3,17 +3,25 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gocha/sf2cute
-    REF fcb6d1075f5bf47c4240f590ad83865276cbe69c
+    REF v0.2
     HEAD_REF master
-    SHA512 4664420eb7fc0c24b22e5ea72578519147c3f6852f4cc1f6144560915383d6cf389feefd186ec1aeccb1ee4b48745384868b3fca1d687dc7fe58b4850adcb754
+    SHA512 721762556c392a134500fa110ec849a60d1285a57e4e8d9cacb6281bed02f5658a14694efcccb8248719558b45db89da5ad53c56990bb9c263a9760fe0d99b8f
 )
 
-file(COPY "${CURRENT_PORT_DIR}/cmake/sf2cute-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake/")
-file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+set(BUILD_EXAMPLE OFF)
+
+if("example" IN_LIST FEATURES)
+    set(BUILD_EXAMPLE ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS_DEBUG
+        -DSF2CUTE_EXAMPLES_INSTALL_DIR=tools/sf2cute
+    OPTIONS_RELEASE
+        -DSF2CUTE_INSTALL_EXAMPLES=${BUILD_EXAMPLE}
+        -DSF2CUTE_EXAMPLES_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/sf2cute
 )
 
 vcpkg_install_cmake()
@@ -26,6 +34,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/sf2cute)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute RENAME copyright)
+
+if(BUILD_EXAMPLE)
+  vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/sf2cute)
+endif()
 
 # Post-build test for cmake libraries
 vcpkg_test_cmake(PACKAGE_NAME sf2cute)
