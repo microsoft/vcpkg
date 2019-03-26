@@ -10,6 +10,7 @@ vcpkg_from_github(
         export-symbols-only-in-shared-build.patch
         fix-x86-windows.patch
         enable-winrt-cmake.patch
+        SDL-2.0.9-bug-4391-fix.patch # See: https://bugzilla.libsdl.org/show_bug.cgi?id=4391 # Can be removed once SDL 2.0.10 is released
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
