@@ -32,6 +32,7 @@ vcpkg_from_github(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/remove-seekpos.patch"
         "${CMAKE_CURRENT_LIST_DIR}/DataException.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/RapidXML.patch"
 )
 
 # Copy the sources to ensure a clean, out-of-source build
