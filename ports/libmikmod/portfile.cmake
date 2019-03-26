@@ -11,7 +11,7 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libmikmod-3.3.11.1)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/mikmod/libmikmod/3.3.11.1/libmikmod-3.3.11.1.tar.gz"
     FILENAME "libmikmod-3.3.11.1.tar.gz"
