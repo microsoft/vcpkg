@@ -1,5 +1,13 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message("${PORT} currently requires the following tools from the system package manager:\n    python-six\n\nThis can be installed on Ubuntu systems via apt-get install python-six python3-six (depending on your current python default interpreter)")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
