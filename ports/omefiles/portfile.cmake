@@ -24,13 +24,34 @@ vcpkg_download_distfile(OME_MODEL
     SHA512 060ffd73120363df85d836d334044c042f86b2a6d683358f96a23d4e45c1bac0293fba05b1d958fc990dc0f1421cacb658a79e5f032644895003065697a0ce01
 )
 
-
 vcpkg_download_distfile(OME_FILES
     URLS https://gitlab.com/codelibre/ome-files-cpp/-/archive/${OME_FILES_REF}/ome-files-cpp-${OME_FILES_REF}.tar.gz
     FILENAME "ome-files.tar.gz"
     SHA512 b986afa608d057a2790945875144ef3528c328c870938b12dccce3f8a1cca89d072f162ba436f39b7406b4d2cb898e4db11b914a5f697a7a0d1a5c412c0bc290
 )
 
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
+
+vcpkg_download_distfile(
+    SIX_ZIP 
+    URLS https://github.com/benjaminp/six/archive/1.12.0.zip
+    FILENAME six.zip
+    SHA512 598182e439f3dca7d0464531cfa15805feaed67e09e6f793d355c70c0d9048834bcbbb96f26352697d9f54981546e1416ebab6c9dec5d5e24ab04d7a73dc78c7
+     )
+
+vcpkg_find_acquire_program(7Z)
+vcpkg_execute_required_process(
+    COMMAND ${7Z} x -aoa ${SIX_ZIP} 
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+    LOGNAME unpack-six
+)
+
+vcpkg_execute_required_process(
+    COMMAND ${PYTHON2} setup.py install --user
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/six-1.12.0/
+    LOGNAME install-six
+)
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH OME_COMMON_SOURCE
     ARCHIVE ${OME_COMMON}
@@ -174,6 +195,7 @@ vcpkg_configure_cmake(
        -Drelocatable-install:BOOL=ON
        -Dsphinx:BOOL=OFF
        -DCMAKE_CXX_STANDARD=14
+       -DPYTHON_EXECUTABLE="${PYTHON2}"
 )
 
 vcpkg_install_cmake()
