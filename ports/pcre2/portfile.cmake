@@ -1,6 +1,6 @@
 set(PCRE2_VERSION 10.30)
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre2-${PCRE2_VERSION})
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.pcre.org/pub/pcre/pcre2-${PCRE2_VERSION}.zip" "https://sourceforge.net/projects/pcre/files/pcre2/${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.zip/download"
     FILENAME "pcre2-${PCRE2_VERSION}.zip"
