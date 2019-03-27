@@ -1,9 +1,7 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message("Octomap does not currently support building purely static. Building dynamic instead.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OctoMap/octomap
@@ -17,7 +15,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_OCTOVIS_SUBPROJECT=OFF
         -DBUILD_DYNAMICETD3D_SUBPROJECT=OFF
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()

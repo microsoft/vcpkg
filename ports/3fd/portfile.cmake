@@ -12,10 +12,7 @@ else()
 endif()
 
 # Check library linkage:
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("3FD only supports static library linkage. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Check CRT linkage:
 if (VCPKG_CRT_LINKAGE STREQUAL "static")

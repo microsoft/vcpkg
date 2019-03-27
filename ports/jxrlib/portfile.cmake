@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
 vcpkg_from_github(
@@ -17,7 +20,6 @@ file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS:BOOL=ON
 )
 
 vcpkg_install_cmake()

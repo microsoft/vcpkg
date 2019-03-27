@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(pixman VERSION 0.34.0 LANGUAGES C)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_DEBUG_POSTFIX "d")
 
 if(UNIX)

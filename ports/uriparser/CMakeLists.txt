@@ -9,8 +9,6 @@ include_directories(include)
 
 file(GLOB SRC src/*.c)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_library(uriparser ${SRC})
 
 install(

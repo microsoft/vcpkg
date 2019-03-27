@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO librsync/librsync
@@ -14,7 +16,6 @@ vcpkg_configure_cmake(
     OPTIONS -DBUILD_RDIFF:BOOL=OFF
             -DENABLE_COMPRESSION:BOOL=OFF
             -DENABLE_TRACE:BOOL=OFF
-            -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS:BOOL=ON
 )
 
 vcpkg_install_cmake()

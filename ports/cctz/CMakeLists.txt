@@ -4,7 +4,6 @@ project(cctz CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     option(INSTALL_HEADERS "Install header files" ON)

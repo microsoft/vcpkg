@@ -1,37 +1,31 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SUITESPARSE_VER SuiteSparse-5.1.2)  #if you change the version, becarefull of changing the SHA512 checksum accordingly
+set(SUITESPARSE_VER SuiteSparse-5.4.0)  #if you change the version, becarefull of changing the SHA512 checksum accordingly
 set(SUITESPARSEWIN_VER 1.4.0)
 set(SUITESPARSEWIN_PATH ${CURRENT_BUILDTREES_DIR}/src/suitesparse-metis-for-windows-${SUITESPARSEWIN_VER})
 set(SUITESPARSE_PATH ${SUITESPARSEWIN_PATH}/Suitesparse)
 
-#download suitesparse libary
 vcpkg_download_distfile(SUITESPARSE
     URLS "http://faculty.cse.tamu.edu/davis/SuiteSparse/${SUITESPARSE_VER}.tar.gz"
     FILENAME "${SUITESPARSE_VER}.tar.gz"
-    SHA512 38c7f9847cf161390f73de39ed3d9fd07f7bcec2d6d4e6f141af6a015826215843db9f2e16ca255eeb233c593ffc19ffa04816aa5b6ba200b55b9472ac33ba85
+    SHA512 8328bcc2ef5eb03febf91b9c71159f091ff405c1ba7522e53714120fcf857ceab2d2ecf8bf9a2e1fc45e1a934665a341e3a47f954f87b59934f4fce6164775d6
 )
 
-#download suitesparse-metis-for-windows scripts, suitesparse does not have CMake build system, jlblancoc has made one for it
-vcpkg_download_distfile(SUITESPARSEWIN
-    URLS  "https://github.com/jlblancoc/suitesparse-metis-for-windows/archive/v${SUITESPARSEWIN_VER}.zip"
-    FILENAME "suitesparse-metis-for-windows-${SUITESPARSEWIN_VER}.zip"
-    SHA512 2859d534200ab9b76fca1530eae5de2f9328aa867c727dbc83a96c6f16e1f87e70123fb2decbb84531d75dac58b6f0ce7323e48c57aeede324fd9a1f77ba74c6
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${SUITESPARSE}
+    PATCHES
+        fix-install-suitesparse.patch
 )
 
-#extract suitesparse-metis-for-windows first and merge with suitesparse library
-vcpkg_extract_source_archive(${SUITESPARSEWIN})
-vcpkg_extract_source_archive(${SUITESPARSE} ${SUITESPARSEWIN_PATH})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SUITESPARSEWIN_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-install-suitesparse.patch"
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/remove-debug-postfix.patch"
+vcpkg_from_github(
+  OUT_SOURCE_PATH SUITESPARSEWIN_SOURCE_PATH
+  REPO jlblancoc/suitesparse-metis-for-windows
+  REF ${SUITESPARSEWIN_VER}
+  SHA512 2859d534200ab9b76fca1530eae5de2f9328aa867c727dbc83a96c6f16e1f87e70123fb2decbb84531d75dac58b6f0ce7323e48c57aeede324fd9a1f77ba74c6
+  HEAD_REF master
 )
 
 set(USE_VCPKG_METIS OFF)
@@ -39,21 +33,30 @@ if("metis" IN_LIST FEATURES)
     set(USE_VCPKG_METIS ON)
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(LIB_EXT a)
+    set(LIB_PREFIX lib)
+else()
+    set(LIB_EXT lib)
+    set(LIB_PREFIX)
+endif()
+
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SUITESPARSEWIN_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_METIS=OFF #Disable the option to build metis from source
         -DUSE_VCPKG_METIS=${USE_VCPKG_METIS} #Force using vcpckg metis library
         -DMETIS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
-        -DLIB_POSTFIX=
         -DSUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS=ON
-        -DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/lib/openblas.lib
-        -DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/lib/lapack.lib
      OPTIONS_DEBUG
         -DSUITESPARSE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
+        -DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/debug/lib/${LIB_PREFIX}openblas_d.${LIB_EXT}
+        -DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/debug/lib/${LIB_PREFIX}lapack.${LIB_EXT}
      OPTIONS_RELEASE
         -DSUITESPARSE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
+        -DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/lib/${LIB_PREFIX}openblas.${LIB_EXT}
+        -DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/lib/${LIB_PREFIX}lapack.${LIB_EXT}
 )
 
 vcpkg_install_cmake()

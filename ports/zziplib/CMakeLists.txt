@@ -15,8 +15,6 @@ if(MSVC)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-
 # List the header files
 set(HEADERS zzip/__debug.h
             zzip/__dirent.h

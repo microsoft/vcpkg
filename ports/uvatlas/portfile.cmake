@@ -1,15 +1,15 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 if (VCPKG_CRT_LINKAGE STREQUAL static)
     message(FATAL_ERROR "UVAtlas does not currently support static crt linkage")
 endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "UVAtlas only supports Windows Desktop")
 endif()
 
-include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/UVAtlas-sept2016)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Microsoft/UVAtlas/archive/sept2016.tar.gz"

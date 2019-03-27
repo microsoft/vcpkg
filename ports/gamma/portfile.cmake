@@ -1,10 +1,10 @@
-# Instead of official release, base on commit hash for now.
-set(GAMMA_RELEASE_TAG "cc442ad0c5da369966cd937a96925c7b9a04e9e5")
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Gamma-${GAMMA_RELEASE_TAG})
 
+set(GAMMA_RELEASE_TAG "cc442ad0c5da369966cd937a96925c7b9a04e9e5")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/LancePutnam/Gamma/archive/cc442ad0c5da369966cd937a96925c7b9a04e9e5.zip"
     FILENAME "gamma-${GAMMA_RELEASE_TAG}.zip"

@@ -14,10 +14,8 @@ vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_LIBS "ON")
 	set(WANT_STATIC "OFF")
 else()
-    set(BUILD_SHARED_LIBS "OFF")
 	set(WANT_STATIC "ON")
 endif()
 
@@ -28,7 +26,6 @@ vcpkg_configure_cmake(
         -DMSVC=ON
         -DWANT_PLAYER=OFF
         -DWANT_STATIC=${WANT_STATIC}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()

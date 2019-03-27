@@ -3,14 +3,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 endif()
 
 if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
-    # Undefined VCPKG_CMAKE_SYSTEM_NAME means Windows
     message(FATAL_ERROR "Error: CapnProto only build on Windows for now. See #5630 and #5635")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Building DLLs not supported. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 include(vcpkg_common_functions)
 vcpkg_from_github(

@@ -32,9 +32,6 @@ else()
     set(ENABLE_CPP OFF)
 endif()
 
-#Note: HDF5 Builds by default static as well as shared libraries set BUILD_SHARED_LIBS to OFF to only get static libraries
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
@@ -43,7 +40,6 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_BUILD_TOOLS=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DHDF5_BUILD_CPP_LIB=${ENABLE_CPP}
         -DHDF5_ENABLE_PARALLEL=${ENABLE_PARALLEL}
         -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
@@ -60,7 +56,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/hdf5/data/COPYING ${CURRENT_PACKAGES_D
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/hdf5)
 
-#Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best 
+#Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

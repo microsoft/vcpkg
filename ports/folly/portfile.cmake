@@ -1,13 +1,10 @@
+include(vcpkg_common_functions)
+
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Required to run build/generate_escape_tables.py et al.
 vcpkg_find_acquire_program(PYTHON3)
@@ -80,7 +77,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
 # We substitute with generator expressions so that the right libraries are linked for debug and release.
 set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
 FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
-STRING(REPLACE 
+STRING(REPLACE
 [[
 "Threads::Threads;Iphlpapi.lib;Ws2_32.lib;${_IMPORT_PREFIX}/lib/boost_context-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_chrono-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_date_time-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_filesystem-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_program_options-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_regex-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_system-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_thread-vc140-mt.lib;${_IMPORT_PREFIX}/lib/boost_atomic-vc140-mt.lib;${_IMPORT_PREFIX}/lib/double-conversion.lib;${_IMPORT_PREFIX}/lib/ssleay32.lib;${_IMPORT_PREFIX}/lib/libeay32.lib;${_IMPORT_PREFIX}/lib/zlib.lib;gflags;glog::glog;event"
 ]]
