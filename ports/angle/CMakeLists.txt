@@ -19,9 +19,11 @@ else()
 endif()
 
 if(WINDOWS_ANY)
-    add_compile_options(/d2guard4 /Wv:18 /guard:cf)
+    add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive)
 else()
-    add_compile_options(-std=c++17 -fPIC)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
 if (APPLE)
