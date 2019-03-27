@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF b2884129bf6db53cb102137d81e7176e893c5e5f
-    SHA512 5d66d3c1a09b4f62b7bba6395a473c30c7e1d0f61d07eb96a6c2e35837409c0dd71d5a64e45772ad90c112c3997ad8acdfdbb60b1e01c9245b8bb1793ff8e134
+    REF 906736bd453e95ccf03b318d3d07cb7884285161
+    SHA512 8ac62262d46e7acbb0e5b2e964292ec17e1687bb162b8cec666e5b67acbe3449f093a0b1c03737e9951cb88248ed890805ffd57df6eae21220488620da833c57
     HEAD_REF master
 )
 
@@ -68,8 +68,11 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets() # combines release and debug build configurations
 
+file(RENAME ${CURRENT_PACKAGES_DIR}/vcl_compiler_detection.h ${CURRENT_PACKAGES_DIR}/include/ITK-5.0/vcl_compiler_detection.h)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/vcl_compiler_detection.h)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/itk)
