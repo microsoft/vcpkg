@@ -146,16 +146,9 @@ add_library(lzma
     src/liblzma/simple/x86.c)
 
 install(TARGETS lzma
-#        EXPORT LibLZMATargets
-        RUNTIME DESTINATION bin
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib)
-
-#install(EXPORT LibLZMATargets
-#        FILE LibLZMATargets.cmake
-#        NAMESPACE LibLZMA::
-#        DESTINATION share/LibLZMA
-#       )
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib)
 
 if(NOT LIBLZMA_SKIP_HEADERS)
     install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma DESTINATION include)

@@ -75,11 +75,7 @@ endif()
 
 install(
     EXPORT unofficial-iconv-targets
-    FILE unofficial-iconv-targets.cmake
+    FILE unofficial-iconv-config.cmake
     NAMESPACE unofficial::iconv::
     DESTINATION share/unofficial-iconv
-)
-
-install(FILES unofficial-iconv-config.cmake
-        DESTINATION share/unofficial-iconv
 )
