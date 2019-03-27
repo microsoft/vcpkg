@@ -3,10 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF releases/CGAL-4.14-beta2
-    SHA512 edbc4d656ba3795a0d6ee4ec9cabc686bdd00c040475145923256010737b08c5287661c1099cb78538e9e23b2f0e50b286cd3a68e48651e559c131284457c263
+    REF releases/CGAL-4.14-beta3
+    SHA512 9aa8ee18ef76e1827b4d70561a6ed2f492d6da8aa3fd1a0b1662c858b17167876ad6200f6ab1049945f62885319c1ee253298948f46e76320b9d020465aaeae6
     HEAD_REF master
-    PATCHES CGALConfig.cmake.patch
 )
 
 set(WITH_CGAL_Qt5  OFF)
