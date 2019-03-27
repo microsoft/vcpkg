@@ -2,15 +2,13 @@ include(vcpkg_common_functions)
 
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://nice.freedesktop.org/releases/libnice-0.1.13.tar.gz"
-    FILENAME "libnice-0.1.13.tar.gz"
-    SHA512 c9bb81e8cd0b4e3673dba07ce08a16dd8821831339b44f1006510cdc09f9ae4c6eb7d43230711a2509867acb8d7df71821c411830dbf71c5a5d7e802f14a32c1
+    URLS "https://nice.freedesktop.org/releases/libnice-0.1.15.tar.gz"
+    FILENAME "libnice-0.1.15.tar.gz"
+    SHA512 60a8bcca06c0ab300dfabbf13e45aeac2085d553c420c5cc4d2fdeb46b449b2b9c9aee8015b0662c16bd1cecf5a49824b7e24951a8a0b66a87074cb00a619c0c
 )
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES
-        fix-build_in_windows.patch
    )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
