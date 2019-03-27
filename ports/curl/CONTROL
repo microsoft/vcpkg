@@ -33,3 +33,6 @@ Description: SSL support (Secure Channel / "WinSSL")
 Feature: mbedtls
 Build-Depends: mbedtls
 Description: SSL support (mbedTLS)
+
+Feature: darwinssl
+Description: SSL support (darwinssl)
