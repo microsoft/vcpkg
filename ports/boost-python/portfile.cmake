@@ -12,10 +12,10 @@ vcpkg_from_github(
 )
 
 # Find Python. Can't use find_package here, but we already know where everything is
-file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/python[0-9.]*")
+file(GLOB PYTHON_INCLUDES "${CURRENT_INSTALLED_DIR}/include/python[0-9.]*")
 set(PYTHONLIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
 set(PYTHONLIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib")
-string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION "${PYTHON_INCLUDE_PATH}")
+string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION "${PYTHON_INCLUDES}")
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
