@@ -3,12 +3,16 @@ set(_VCPKG_LINUX_TOOLCHAIN 1)
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_CROSSCOMPILING OFF CACHE BOOL "")
 
-    # TODO: This should be replaced with a switch on VCPKG_TARGET_ARCHITECTURE once we know what linux systems "natively" define for each of the targets
-    set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}" CACHE STRING "")
-    message("CMAKE_HOST_SYSTEM_PROCESSOR is ${CMAKE_HOST_SYSTEM_PROCESSOR}")
-    
+    if (NOT CMAKE_SYSTEM_PROCESSOR)
+        # TODO: This should be replaced with a switch on VCPKG_TARGET_ARCHITECTURE once we know what linux systems "natively" define for each of the targets
+        set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}" CACHE STRING "")
+        message("CMAKE_HOST_SYSTEM_PROCESSOR is ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    endif()
 else()
-    set(CMAKE_SYSTEM_PROCESSOR "x86_64" CACHE STRING "")
+    if (NOT CMAKE_SYSTEM_PROCESSOR)
+        set(CMAKE_SYSTEM_PROCESSOR "x86_64" CACHE STRING "")
+        message("CMAKE_HOST_SYSTEM_PROCESSOR defaulted to x86_64")
+    endif()
 endif()
 set(CMAKE_SYSTEM_NAME Linux CACHE STRING "")
 
