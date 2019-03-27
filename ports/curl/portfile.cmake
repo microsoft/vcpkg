@@ -43,6 +43,9 @@ endif()
 set(USE_DARWINSSL OFF)
 set(DARWINSSL_OPTIONS)
 if("darwinssl" IN_LIST FEATURES)
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        message(FATAL_ERROR "darwinssl is not supported on non-Apple platforms")
+    endif()
     set(USE_DARWINSSL ON)
     set(DARWINSSL_OPTIONS
         -DCURL_CA_PATH=none
