@@ -15,15 +15,21 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-cmakelists.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-utilities.patch"
+        fix-cmakelists.patch
+        fix-utilities.patch
+        fix-static-build.patch
 )
 
+if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(BUILD_STATIC_LIBRARY OFF)
+else()
+    set(BUILD_STATIC_LIBRARY ON)
+endif()
 vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DGIT_FOUND=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+    OPTIONS -DGIT_FOUND=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON -Dwithout-export=${BUILD_STATIC_LIBRARY}
 )
 
 vcpkg_install_cmake()
