@@ -9,7 +9,20 @@ vcpkg_from_github(
     PATCHES
         0001-fix-cmake-export.patch
         0002-fix-uwp-build.patch
+        0003-remove-broken-test.patch
+        # This patch is required for propagating the full list of static dependencies from freetype
+        find-package-freetype-2.patch
+        # This patch is required for propagating the full list of dependencies from glib
+        glib-cmake.patch
 )
+
+file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
+if("${_contents}" MATCHES "include \\(FindFreetype\\)")
+    message(FATAL_ERROR "Harfbuzz's cmake must not directly include() FindFreetype.")
+endif()
+if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
+    message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
+endif()
 
 SET(HB_HAVE_ICU "OFF")
 if("icu" IN_LIST FEATURES)

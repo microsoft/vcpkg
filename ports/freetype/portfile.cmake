@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
         -DFT_WITH_BZIP2=ON
         -DFT_WITH_PNG=ON
         -DFT_WITH_HARFBUZZ=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
 )
 
 vcpkg_install_cmake()

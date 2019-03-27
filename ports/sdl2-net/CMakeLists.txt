@@ -13,12 +13,22 @@ add_library(SDL2_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c version.rc)
 set_target_properties(SDL2_net PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_compile_definitions(SDL2_net PRIVATE _WINSOCK_DEPRECATED_NO_WARNINGS)
 target_include_directories(SDL2_net PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
-target_link_libraries(SDL2_net ${SDL_LIBRARY} ws2_32 iphlpapi)
+
+if (WIN32)
+    target_link_libraries(SDL2_net ${SDL_LIBRARY} ws2_32 iphlpapi)
+endif()
 
 install(TARGETS SDL2_net
+    EXPORT SDL2_net
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
+
+install(EXPORT SDL2_net
+    DESTINATION "share/sdl2-net"
+    FILE sdl2-net-config.cmake
+    NAMESPACE SDL2::
+)
 
 if(NOT DEFINED SDL_NET_SKIP_HEADERS)
     install(FILES SDL_net.h DESTINATION include/SDL2)

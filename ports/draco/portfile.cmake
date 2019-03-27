@@ -23,6 +23,8 @@ vcpkg_from_github(
     REF 1.3.3
     SHA512 80ed5a623046822f5bb26b2454c8ee8cc93ffe9eb3012e8461cefdfc577b26d69a92ea0f0c5e14f5f48c1ef99f9a7263b01710df376792e74358ae14e49c3897
     HEAD_REF master
+    PATCHES
+        fix-compile-error-uwp.patch
 )
 
 vcpkg_configure_cmake(
