@@ -5,6 +5,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Xalan-c's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
 
 set(XALANC_VERSION 1.11)
 

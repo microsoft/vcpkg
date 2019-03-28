@@ -178,6 +178,19 @@ namespace vcpkg::System
             L"ANDROID_NDK_HOME",
         };
 
+        const Optional<std::string> keep_vars = System::get_environment_variable("VCPKG_KEEP_ENV_VARS");
+        const auto k = keep_vars.get();
+
+        if (k && !k->empty())
+        {
+            auto vars = Strings::split(*k, ";");
+
+            for (auto&& var : vars)
+            {
+                env_wstrings.push_back(Strings::to_utf16(var.c_str()));
+            }
+        }
+
         std::wstring env_cstr;
 
         for (auto&& env_wstring : env_wstrings)
