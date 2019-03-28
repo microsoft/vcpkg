@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (NOT (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
     message(FATAL_ERROR "libuuid currently only supports uinx platforms.")
 endif()
 
