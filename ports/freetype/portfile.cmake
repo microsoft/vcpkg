@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-	vcpkg_extract_source_archive_ex(
+    vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${FT_VERSION}
@@ -17,9 +17,9 @@ if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
         0004-Fix-DLL-install.patch
-	)
+    )
 else()
-	vcpkg_extract_source_archive_ex(
+    vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${FT_VERSION}
@@ -28,8 +28,8 @@ else()
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
         0004-Fix-DLL-install.patch
-		0005-Fix-DLL-EXPORTS.patch
-	)
+        0005-Fix-DLL-EXPORTS.patch
+    )
 endif()
 
 vcpkg_configure_cmake(
