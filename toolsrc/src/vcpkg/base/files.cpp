@@ -71,18 +71,42 @@ namespace vcpkg::Files
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
                                                   const std::string& filename) const override
         {
-            static const fs::path UNIX_ROOT = "/";
             fs::path current_dir = starting_dir;
-            for (; !current_dir.empty() && current_dir != UNIX_ROOT; current_dir = current_dir.parent_path())
+            if (exists(current_dir / filename))
             {
+                return current_dir;
+            }
+
+            int counter = 10000;
+            for (;;)
+            {
+                // This is a workaround for VS2015's experimental filesystem implementation
+                if (!current_dir.has_relative_path())
+                {
+                    current_dir.clear();
+                    return current_dir;
+                }
+
+                auto parent = current_dir.parent_path();
+                if (parent == current_dir)
+                {
+                    current_dir.clear();
+                    return current_dir;
+                }
+
+                current_dir = std::move(parent);
+
                 const fs::path candidate = current_dir / filename;
                 if (exists(candidate))
                 {
                     return current_dir;
                 }
-            }
 
-            return fs::path();
+                --counter;
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   counter > 0,
+                                   "infinite loop encountered while trying to find_file_recursively_up()");
+            }
         }
 
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const override

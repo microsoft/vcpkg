@@ -12,6 +12,13 @@
 
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Ompl's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 set(OMPL_VERSION 1.4.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/ompl/ompl/archive/${OMPL_VERSION}.zip"
