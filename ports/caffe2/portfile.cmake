@@ -16,7 +16,8 @@ vcpkg_from_github(
     SHA512 505a8540b0c28329c4e2ce443ac8e198c1ee613eb6b932927ee9d04c8afdc95081f3c4581408b7097d567840427b31f6d7626ea80f27e56532f2f2e6acd87023
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/msvc-fixes.patch
+        msvc-fixes.patch
+        fix-space.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
