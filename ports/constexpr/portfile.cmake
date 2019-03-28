@@ -1,12 +1,13 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/constexpr-a98b1db39c909e0130d21d3910d4faf97035a625)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/elbeno/constexpr/archive/a98b1db39c909e0130d21d3910d4faf97035a625.zip"
-    FILENAME "constexpr-a98b1db39c909e0130d21d3910d4faf97035a625.zip"
-    SHA512 847e09f9df30cb5fbd8aa280679ff359d73c9e9454ffe3090f66975a15665080629e9a664d057f039b17430d42b5e5f5f3f92831e73c15024060991090209c2e
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO elbeno/constexpr
+    REF a98b1db39c909e0130d21d3910d4faf97035a625
+    SHA512 8802ee43b510ea1f0c00949eecd84eb2bf3ac721802e6bc6755db9e6e2742d8b97fef427eca7d4d9a282c60a18ca10401386022eac995bd22624f45e3fc2c370
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE)

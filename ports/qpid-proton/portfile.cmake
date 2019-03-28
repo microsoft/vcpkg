@@ -1,13 +1,6 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("qpid-proton does not support static linkage. Building dynamically.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "qpid-proton does not support static CRT linkage.")
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 # Use this throughout rather than literal string
 set(QPID_PROTON_VERSION 0.24.0)

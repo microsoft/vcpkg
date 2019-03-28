@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ANGLE_CPU_BITNESS ANGLE_IS_32_BIT_CPU)
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -8,11 +10,6 @@ elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(ANGLE_CPU_BITNESS ANGLE_IS_32_BIT_CPU)
 else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "ANGLE currently only supports being built as a dynamic library")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
 vcpkg_from_github(
@@ -30,7 +27,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}    
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
     OPTIONS
         -D${ANGLE_CPU_BITNESS}=1
