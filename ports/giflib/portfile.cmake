@@ -13,7 +13,9 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GIFLIB_VERSION}
-    PATCHES msvc-guard-unistd-h.patch
+    PATCHES
+        msvc-guard-unistd-h.patch
+        fix-compile-error.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
