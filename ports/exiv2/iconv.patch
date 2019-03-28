@@ -12,7 +12,7 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 91469b6..4c51068 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -208,14 +208,11 @@
+@@ -208,14 +208,14 @@
  endif()
  
  if( EXIV2_ENABLE_NLS )
@@ -26,6 +26,9 @@ index 91469b6..4c51068 100644
 -if( ICONV_FOUND )
 -    target_link_libraries( exiv2lib PRIVATE Iconv::Iconv )
 -endif()
++if(NOT TARGET unofficial::iconv::libiconv)
++    find_package(unofficial-iconv CONFIG)
++endif()
 +target_link_libraries( exiv2lib PRIVATE unofficial::iconv::libiconv )
  
  
