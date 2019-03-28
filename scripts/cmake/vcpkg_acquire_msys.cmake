@@ -69,7 +69,6 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   endif()
 
   set(PATH_TO_ROOT ${TOOLPATH}/${TOOLSUBPATH})
-
   if(NOT EXISTS "${TOOLPATH}/${STAMP}")
 
     message(STATUS "Acquiring MSYS2...")
@@ -95,6 +94,13 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     )
     file(WRITE "${TOOLPATH}/${STAMP}" "0")
     message(STATUS "Acquiring MSYS2... OK")
+
+    # Remove database lock
+    SET(DB_LOCK_PATH ${PATH_TO_ROOT}/var/lib/pacman/db.lck)
+    if (EXISTS "${DB_LOCK_PATH}")
+      message(STATUS "${DB_LOCK_PATH} exists --- deleting it")
+      file(REMOVE "${DB_LOCK_PATH}")
+    endif()
   endif()
 
   if(_am_PACKAGES)

@@ -10,13 +10,14 @@ if (${SOURCE_PATH} MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF 4.1
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
-        ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
+        create-lib-libraries.patch
+        detect-openssl.patch
+        configure_opencv.patch
 )
 
 vcpkg_find_acquire_program(YASM)

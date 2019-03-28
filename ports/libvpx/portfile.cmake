@@ -8,7 +8,7 @@ include(vcpkg_common_functions)
 set(LIBVPX_VERSION 1.7.0)
 set(LIBVPX_HASH 8b3b766b550f8d86907628d7ed88035f9a2612aac21542e0fd5ad35b905eb82cbe1be02a1a24afce7a3bcc4766f62611971f72724761996b392136c40a1e7ff0)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libvpx-${LIBVPX_VERSION})
+# set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libvpx-${LIBVPX_VERSION})
 
 string(REGEX REPLACE "\\\\" "/" SOURCE_PATH_UNIX ${SOURCE_PATH})
 string(REGEX REPLACE "\\\\" "/" CURRENT_PACKAGES_DIR_UNIX ${CURRENT_PACKAGES_DIR})
@@ -18,9 +18,11 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "libvpx-${LIBVPX_VERSION}.tar.gz"
     SHA512 ${LIBVPX_HASH}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_find_acquire_program(YASM)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${LIBVPX_VERSION}
+)
 vcpkg_find_acquire_program(PERL)
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)

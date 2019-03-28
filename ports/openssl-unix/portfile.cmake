@@ -3,6 +3,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
 endif()
 
 include(vcpkg_common_functions)
+
 set(OPENSSL_VERSION 1.0.2q)
 
 vcpkg_find_acquire_program(PERL)

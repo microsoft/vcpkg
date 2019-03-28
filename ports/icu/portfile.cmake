@@ -15,11 +15,12 @@ vcpkg_download_distfile(
     FILENAME "icu4c-${VERSION2}-src.tgz"
     SHA512 4c37691246db802e4bae0c8c5f6ac1dac64c5753b607e539c5c1c36e361fcd9dd81bd1d3b5416c2960153b83700ccdb356412847d0506ab7782ae626ac0ffb94
 )
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION})
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
-            ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH 
+    ARCHIVE ${ARCHIVE} 
+    PATCHES 
+        disable-escapestr-tool.patch
+        remove-MD-from-configure.patch 
 )
 
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
