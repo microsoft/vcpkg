@@ -11,13 +11,14 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "PDAL-${PDAL_VERSION_STR}-src.tar.gz"
     SHA512 e3e63bb05930c1a28c4f46c7edfaa8e9ea20484f1888d845b660a29a76f1dd1daea3db30a98607be0c2eeb86930ec8bfd0965d5d7d84b07a4fe4cb4512da9b09
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-win32_compiler_options.cmake.patch
-        ${CMAKE_CURRENT_LIST_DIR}/no-source-dir-writes.patch
+        0001-win32_compiler_options.cmake.patch
+        0002-no-source-dir-writes.patch
+        0003-fix-copy-vendor.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
