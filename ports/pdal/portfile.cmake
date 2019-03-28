@@ -2,7 +2,6 @@
 #
 # NOTE: update the version string for new PDAL release
 set(PDAL_VERSION_STR "1.7.1")
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/PDAL-${PDAL_VERSION_STR}-src)
 
 include(vcpkg_common_functions)
 
