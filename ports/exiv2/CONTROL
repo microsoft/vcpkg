@@ -1,4 +1,7 @@
 Source: exiv2
-Version: 2018-11-08
-Build-Depends: zlib, expat, libiconv
+Version: 0.27
+Build-Depends: zlib, expat, libiconv, gettext
 Description: Image metadata library and tools http://www.exiv2.org
+
+Feature: unicode
+Description: Compile with unicode support on windows
