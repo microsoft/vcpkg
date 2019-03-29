@@ -192,23 +192,6 @@ function(add_library name)
     endif()
 endfunction()
 
-function(add_qt_library _target)
-    foreach(_lib IN LISTS ARGN)
-        find_library(${_lib}_LIBRARY_DEBUG 
-            NAMES ${_lib} ${_lib}d ${_lib}_debug
-            PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib
-                  ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/plugins/platforms
-            NO_DEFAULT_PATH)
-        find_library(${_lib}_LIBRARY_RELEASE
-            NAMES ${_lib} lib${_lib}
-            PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
-            PATH_SUFFIXES plugins/platforms lib
-            NO_DEFAULT_PATH)
-        set_property(TARGET ${_target} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-        \$<\$<NOT:\$<CONFIG:DEBUG>>:${${_lib}_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${${_lib}_LIBRARY_DEBUG}>)
-    endforeach()
-endfunction()
-
 macro(find_package name)
     string(TOLOWER "${name}" _vcpkg_lowercase_name)
     if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${_vcpkg_lowercase_name}/vcpkg-cmake-wrapper.cmake")
@@ -256,63 +239,6 @@ macro(find_package name)
         endif()
     elseif("${_vcpkg_lowercase_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
         _find_package(gRPC ${ARGN})
-    elseif("${name}" STREQUAL "Qt5Core")
-        _find_package(${ARGV})
-        string(REGEX REPLACE "Qt5([A-Za-z]+)" "Qt5::\\1" _vcpkg_qt5lib "${name}")
-        get_target_property(_target_type ${_vcpkg_qt5lib} TYPE)
-        if("${_target_type}" STREQUAL "STATIC_LIBRARY")
-            find_package(ZLIB)
-            find_package(JPEG)
-            find_package(PNG)
-            find_package(Freetype)
-            find_package(sqlite3 CONFIG)
-            find_package(PostgreSQL MODULE REQUIRED)
-            find_package(double-conversion CONFIG)
-            find_package(OpenSSL)
-            find_package(harfbuzz CONFIG)
-
-
-            set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-                ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
-                ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto  
-            )
-
-            add_qt_library(${_vcpkg_qt5lib} 
-                pcre2-16 
-                Qt5ThemeSupport
-                Qt5EventDispatcherSupport
-                Qt5PlatformCompositorSupport 
-                Qt5FontDatabaseSupport)
-
-            if(MSVC)
-                set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-                    Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib)
-
-                add_qt_library(${_vcpkg_qt5lib} Qt5WindowsUIAutomationSupport qwindows qdirect2d)
-            elseif(APPLE)
-            set_property(TARGET ${_vcpkg_qt5lib} APPEND PROPERTY INTERFACE_LINK_LIBRARIES           
-                    "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices" 
-                    "-weak_framework AppKit" "-weak_framework Security" "-weak_framework ApplicationServices" 
-                    "-weak_framework CoreFoundation" "-weak_framework SystemConfiguration"
-                    "-weak_framework Carbon"
-                    "-weak_framework QuartzCore"
-                    "-weak_framework CoreVideo"
-                    "-weak_framework Metal"
-                    "-weak_framework CoreText"
-                    "-weak_framework ApplicationServices"
-                    "-weak_framework CoreGraphics"
-                    "-weak_framework OpenGL"
-                    "-weak_framework AGL"
-                    "-weak_framework ImageIO" 
-                    "z" "m"
-                    cups)
-                add_qt_library(${_vcpkg_qt5lib} 
-                    Qt5GraphicsSupport
-                    Qt5ClipboardSupport
-                    Qt5AccessibilitySupport
-                    qcocoa)
-            endif()
-        endif()
     else()
         _find_package(${ARGV})
     endif()
