@@ -12,6 +12,27 @@ set(OME_COMMON_REF e9c630f7e9615ba7b0044bd1237d1ee3dd39ebb8)
 set(OME_MODEL_REF 3dfdd63a12f0c2dbe3b89d7f5fbd2f90acf3ac47)
 set(OME_FILES_REF 6a74d4f9a3595de7c0f450b33117b82bb949e636)
 
+# Download and install python and the `six` python package
+vcpkg_find_acquire_program(PYTHON2)
+vcpkg_find_acquire_program(7Z)
+vcpkg_download_distfile(
+    SIX_ZIP 
+    URLS https://github.com/benjaminp/six/archive/1.12.0.zip
+    FILENAME six.zip
+    SHA512 598182e439f3dca7d0464531cfa15805feaed67e09e6f793d355c70c0d9048834bcbbb96f26352697d9f54981546e1416ebab6c9dec5d5e24ab04d7a73dc78c7
+)
+vcpkg_execute_required_process(
+    COMMAND ${7Z} x -aoa ${SIX_ZIP} 
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+    LOGNAME unpack-six
+)
+vcpkg_execute_required_process(
+    COMMAND ${PYTHON2} setup.py install --user
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/six-1.12.0/
+    LOGNAME install-six
+)
+
+# Download and unpack the ome-files sources
 vcpkg_download_distfile(OME_COMMON
     URLS https://gitlab.com/codelibre/ome-common-cpp/-/archive/${OME_COMMON_REF}/ome-common-cpp-${OME_COMMON_REF}.tar.gz
     FILENAME "ome-common.tar.gz"
@@ -30,28 +51,6 @@ vcpkg_download_distfile(OME_FILES
     SHA512 b986afa608d057a2790945875144ef3528c328c870938b12dccce3f8a1cca89d072f162ba436f39b7406b4d2cb898e4db11b914a5f697a7a0d1a5c412c0bc290
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
-
-vcpkg_download_distfile(
-    SIX_ZIP 
-    URLS https://github.com/benjaminp/six/archive/1.12.0.zip
-    FILENAME six.zip
-    SHA512 598182e439f3dca7d0464531cfa15805feaed67e09e6f793d355c70c0d9048834bcbbb96f26352697d9f54981546e1416ebab6c9dec5d5e24ab04d7a73dc78c7
-     )
-
-vcpkg_find_acquire_program(7Z)
-vcpkg_execute_required_process(
-    COMMAND ${7Z} x -aoa ${SIX_ZIP} 
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME unpack-six
-)
-
-vcpkg_execute_required_process(
-    COMMAND ${PYTHON2} setup.py install --user
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/six-1.12.0/
-    LOGNAME install-six
-)
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH OME_COMMON_SOURCE
     ARCHIVE ${OME_COMMON}
@@ -72,6 +71,7 @@ vcpkg_extract_source_archive_ex(
     REF ome-files
 )
 
+# Delete any old copies
 file(REMOVE_RECURSE ${SOURCE_PATH})
 file(MAKE_DIRECTORY ${SOURCE_PATH})
 
@@ -100,37 +100,15 @@ foreach(CMAKELIST IN LISTS CMAKELIST_FOLDERS)
     file(WRITE ${CMAKELIST} "${_contents}")
 endforeach()
 
-set(BOOST_CMAKE_FILES 
-    ome-common/cmake/BoostChecks.cmake
-    ome-common/cmake/FilesystemChecks.cmake
-    ome-common/CMakeLists.txt
-    ome-model/cmake/BoostChecks.cmake
-    ome-model/CMakeLists.txt
-    ome-files/cmake/BoostChecks.cmake
-    ome-files/CMakeLists.txt
-    )
+set(CMAKE_FILES 
+        ome-common/CMakeLists.txt
+        ome-model/CMakeLists.txt
+        ome-files/CMakeLists.txt)
 
-# Install config files in share folder across platforms
-foreach(BOOST_CMAKE_FILE IN LISTS BOOST_CMAKE_FILES)
-    message("Patching: ${SOURCE_PATH}/${BOOST_CMAKE_FILE}")
-    file(READ ${SOURCE_PATH}/${BOOST_CMAKE_FILE} _contents)
-    string(REPLACE  
-         "set(CMAKE_REQUIRED_DEFINITIONS \$\{CMAKE_REQUIRED_DEFINITIONS\} -DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)" ""
-        _contents "${_contents}")   
-    string(REPLACE  
-         "set(Boost_USE_STATIC_LIBS OFF)" ""
-        _contents "${_contents}")
-    string(REPLACE
-        "add_definitions(-DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)" ""
-        _contents "${_contents}")
-    string(REPLACE
-        "set(CMAKE_REQUIRED_LIBRARIES \$\{CMAKE_REQUIRED_LIBRARIES\} \$\{Boost_FILESYSTEM_LIBRARY_RELEASE\} \$\{Boost_SYSTEM_LIBRARY_RELEASE\})" 
-        "set(CMAKE_REQUIRED_LIBRARIES \$\{CMAKE_REQUIRED_LIBRARIES\} Boost::filesystem Boost::system)"
-        _contents "${_contents}")
-    string(REPLACE # disable Qt filesystem
-        "set(filesystem \"standard;boost;qt5\""
-        "set(filesystem \"standard;boost\""
-        _contents "${_contents}")
+# Patch various checks to force use of boost, xalan-c and xerces-c, skipping problematic tests
+foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
+    message("Patching: ${SOURCE_PATH}/${CMAKE_FILE}")
+    file(READ ${SOURCE_PATH}/${CMAKE_FILE} _contents)
     string(REPLACE
         "set(BUILD_SHARED_LIBS \${BUILD_SHARED_LIBS_DEFAULT} CACHE BOOL \"Use shared libraries\")"
         "option(BUILD_SHARED_LIBS \"Use shared libraries\" \${BUILD_SHARED_LIBS_DEFAULT})"
@@ -165,7 +143,7 @@ set(OME_HAVE_BOOST_FILESYSTEM_CANONICAL TRUE)"
         "add_subdirectory(examples)"
         "#add_subdirectory(examples)"
         _contents "${_contents}")
-    file(WRITE ${SOURCE_PATH}/${BOOST_CMAKE_FILE} "${_contents}")
+    file(WRITE ${SOURCE_PATH}/${CMAKE_FILE} "${_contents}")
 endforeach()
 
 set(LOG_FILE ${SOURCE_PATH}/ome-common/lib/ome/common/log.h)
@@ -177,7 +155,7 @@ file(WRITE ${LOG_FILE} "${_contents}")
 
 file(REMOVE ${SOURCE_PATH}/ome-files/cmake/FindTIFF.cmake)
 
-
+# Install CMakeLists file
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}  
     PATCHES cmakelists.patch
