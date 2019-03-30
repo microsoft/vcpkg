@@ -24,14 +24,6 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil TARGET_PATH share/unofficial-abseil)
 
-file(GLOB_RECURSE HEADERS ${CURRENT_PACKAGES_DIR}/include/*)
-foreach(FILE ${HEADERS})
-    file(READ "${FILE}" _contents)
-    string(REPLACE "std::min(" "(std::min)(" _contents "${_contents}")
-    string(REPLACE "std::max(" "(std::max)(" _contents "${_contents}")
-    file(WRITE "${FILE}" "${_contents}")
-endforeach()
-
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/abseil RENAME copyright)
