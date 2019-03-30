@@ -2,6 +2,8 @@ include(vcpkg_common_functions)
 
 set(LIBTIFF_VERSION 4.0.10)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/libtiff/tiff-${LIBTIFF_VERSION}.tar.gz"
     FILENAME "tiff-${LIBTIFF_VERSION}.tar.gz"
@@ -15,6 +17,7 @@ vcpkg_extract_source_archive_ex(
         add-component-options.patch
         fix-cxx-shared-libs.patch
         crt-secure-no-deprecate.patch
+        fix-stddef.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -31,6 +34,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
+        -Dwebp=OFF
         -Dzstd=OFF
         ${TIFF_CXX_TARGET}
 )

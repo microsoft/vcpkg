@@ -10,12 +10,23 @@ vcpkg_from_github(
     REF v1.3.2
     SHA512 eb806f71c4b183105b3270d658a68195e009c0f7ca37f54f76d650a4d5c83c44d26b5f12a4c47c608aae9990cd04f1204b0c57e6438ca34a271fd54880133106
     HEAD_REF master
+	PATCHES
+		# Makes optional hdf5 dependency explicit
+		optional_hdf5_dependency.patch
 )
+
+if ("dataset" IN_LIST FEATURES)
+    set(ENABLE_DATASET ON)
+else()
+    set(ENABLE_DATASET OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DUSE_SYSTEM_PUGIXML=ON
+    OPTIONS 
+		-DUSE_SYSTEM_PUGIXML=ON
+		-DUSE_HDF5_DATASET_SUPPORT=${ENABLE_DATASET}
 )
 
 vcpkg_install_cmake()

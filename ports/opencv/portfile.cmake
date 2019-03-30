@@ -145,6 +145,11 @@ if("ipp" IN_LIST FEATURES)
   endif()
 endif()
 
+set(WITH_TBB OFF)
+if("tbb" IN_LIST FEATURES)
+  set(WITH_TBB ON)
+endif()
+
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ON)
@@ -205,6 +210,11 @@ endif()
 set(WITH_EIGEN OFF)
 if("eigen" IN_LIST FEATURES)
   set(WITH_EIGEN ON)
+endif()
+
+set(OPENCV_ENABLE_NONFREE OFF)
+if("nonfree" IN_LIST FEATURES)
+  set(OPENCV_ENABLE_NONFREE ON)
 endif()
 
 if(BUILD_opencv_contrib)
@@ -273,6 +283,7 @@ vcpkg_configure_cmake(
         # ENABLE
         -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
+        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
         # INSTALL
         -DINSTALL_FORCE_UNIX_PATHS=ON
         -DINSTALL_LICENSE=OFF
@@ -282,7 +293,7 @@ vcpkg_configure_cmake(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
-        -DWITH_CUBLAS=OFF
+        -DWITH_CUBLAS=${WITH_CUDA}
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_EIGEN=${WITH_EIGEN}
         -DWITH_FFMPEG=${WITH_FFMPEG}
@@ -299,6 +310,7 @@ vcpkg_configure_cmake(
         -DWITH_PNG=${WITH_PNG}
         -DWITH_PROTOBUF=${WITH_PROTOBUF}
         -DWITH_QT=${WITH_QT}
+        -DWITH_TBB=${WITH_TBB}
         -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}

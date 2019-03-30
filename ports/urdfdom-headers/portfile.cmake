@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
-    REF 1.0.0
-    SHA512 b1f63c1a13f062c987d6be4fcea5eea903577a710d44fdce077722b70d72eb65a265131beac1fdeba576bde189ebf51ac0eb19b2b06a34b0f9fb9dcbd437291a
+    REF 1.0.2
+    SHA512 902cf18b3ccc62dd5d732707e9ca2b8698f3307b8005d3858fcdd0e9585d580bbe5d2ec77c8c8bfa7b8776b870844368a8ec93b0f8a8d71420cf5015a99b8867
     HEAD_REF master
   )
 
@@ -15,10 +15,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake" TARGET_PATH share/urdfdom_headers)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/urdfdom_headers/cmake" TARGET_PATH share/urdfdom_headers)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers)
+endif()
 
 # The config files for this project use underscore
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
 

@@ -30,7 +30,7 @@ namespace vcpkg::System
         static constexpr const uint32_t buff_size = 1024 * 32;
         uint32_t size = buff_size;
         char buf[buff_size] = {};
-        bool result = _NSGetExecutablePath(buf, &size);
+        int result = _NSGetExecutablePath(buf, &size);
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
         std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
@@ -74,6 +74,10 @@ namespace vcpkg::System
         return CPUArchitecture::X64;
 #elif defined(__x86__) || defined(_M_X86)
         return CPUArchitecture::X86;
+#elif defined(__arm__) || defined(_M_ARM)
+        return CPUArchitecture::ARM;
+#elif defined(__aarch64__) || defined(_M_ARM64)
+        return CPUArchitecture::ARM64;
 #else
 #error "Unknown host architecture"
 #endif
@@ -173,6 +177,19 @@ namespace vcpkg::System
             // Enable targeted Android NDK
             L"ANDROID_NDK_HOME",
         };
+
+        const Optional<std::string> keep_vars = System::get_environment_variable("VCPKG_KEEP_ENV_VARS");
+        const auto k = keep_vars.get();
+
+        if (k && !k->empty())
+        {
+            auto vars = Strings::split(*k, ";");
+
+            for (auto&& var : vars)
+            {
+                env_wstrings.push_back(Strings::to_utf16(var.c_str()));
+            }
+        }
 
         std::wstring env_cstr;
 

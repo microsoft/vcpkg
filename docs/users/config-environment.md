@@ -26,7 +26,7 @@ This environment variable can be set to the full path of an executable to be use
 This environment variable can be set to a directory to use as the root of the vcpkg instance. Note that mixing vcpkg
 repo versions and executable versions can cause issues.
 
-#### VCPKG_DEFAULT_VS_PATH
+#### VCPKG_VISUAL_STUDIO_PATH
 
 This environment variable can be set to the full path to a Visual Studio instance on the machine. This Visual Studio instance
 will be used if the triplet does not override it via the [`VCPKG_VISUAL_STUDIO_PATH` triplet setting](triplets.md#VCPKG_VISUAL_STUDIO_PATH).
@@ -40,3 +40,10 @@ This environment variable can be set to a triplet name which will be used for un
 #### VCPKG_FORCE_SYSTEM_BINARIES
 
 This environment variable, if set, suppresses the downloading of CMake and Ninja and forces the use of the system binaries.
+
+### VCPKG_KEEP_ENV_VARS
+
+This environment variable can be set to a list of environment variables, separated by `;`, which will be propagated to
+the build environment.
+
+Example: `FOO_SDK_DIR;BAR_SDK_DIR`

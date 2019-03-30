@@ -52,11 +52,13 @@ namespace vcpkg
         static constexpr StringLiteral OS_STRING = "osx";
 #elif defined(__linux__)
         static constexpr StringLiteral OS_STRING = "linux";
+#elif defined(__FreeBSD__)
+        static constexpr StringLiteral OS_STRING = "freebsd";
 #else
         return std::string("operating system is unknown");
 #endif
 
-#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
+#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
         static const std::regex XML_VERSION_REGEX {R"###(<tools[\s]+version="([^"]+)">)###"};
@@ -362,7 +364,7 @@ Type 'NuGet help <command>' for help on a specific command.
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {2, 7, 4}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
 #if defined(_WIN32)
             const auto& program_files = System::get_program_files_platform_bitness();
@@ -401,7 +403,7 @@ git version 2.17.1.windows.2
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");

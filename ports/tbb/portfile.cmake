@@ -1,15 +1,18 @@
 include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message("tbb only supports dynamic library linkage")
+        set(VCPKG_LIBRARY_LINKAGE "dynamic")
+    endif()
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2018_U6
-    SHA512 efcd020a24fa41e07ff9232098cecce42ceec5882849bc30edc29ead1694fcc8820a0defb307e0a065c1db1d649a731e13d8cb6fd6f927b4bd3bdc46de0d1709
-    HEAD_REF tbb_2018
+    REF 2019_U4
+    SHA512 f8ba92663c822e36f68f2b1837aa66d4fc285abe8c0c9b501f6cc31d3186d39b193588e49988e488beb9d400a1c3aa3fe72580f428e7ceca3581e649f28ae59e
+    HEAD_REF tbb_2019
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -84,3 +87,4 @@ file(COPY ${SOURCE_PATH}/LICENSE ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${C
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb/copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME TBB)
+#
