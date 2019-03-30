@@ -1,14 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-4.1)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2"
     FILENAME "ffmpeg-4.1.tar.bz2"
     SHA512 ccf6d07268dc47e08ca619eb182a003face2a8ee73ec1a28157330dd7de1df88939def1fc1c7e6b6ac7b59752cdad84657d589b2fafb73e14e5ef03fb6e33417
 )
-
-if (${SOURCE_PATH} MATCHES " ")
-    message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
-endif()
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,6 +15,10 @@ vcpkg_extract_source_archive_ex(
         detect-openssl.patch
         configure_opencv.patch
 )
+
+if (${SOURCE_PATH} MATCHES " ")
+    message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
+endif()
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
