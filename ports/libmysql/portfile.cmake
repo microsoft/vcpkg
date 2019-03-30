@@ -48,6 +48,7 @@ vcpkg_configure_cmake(
         -DWITH_LZMA=system
         -DWITH_LZ4=system
         -DWITH_ZLIB=system
+        -DWITH_RE2=system
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
