@@ -50,6 +50,7 @@ set(CORE_OPTIONS
     -system-pcre
     -system-doubleconversion
     -system-sqlite
+    -system-harfbuzz
     -no-fontconfig
     -nomake examples
     -nomake tests
@@ -70,7 +71,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         OPTIONS
             ${CORE_OPTIONS}
             -mp
-            -system-harfbuzz
             -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
@@ -94,7 +94,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PLATFORM "linux-g++"
         OPTIONS
             ${CORE_OPTIONS}
-            -system-harfbuzz
         OPTIONS_RELEASE
             "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
@@ -121,7 +120,6 @@ configure_qt(
     PLATFORM "macx-clang"
     OPTIONS
         ${CORE_OPTIONS}
-        -no-harfbuzz
     OPTIONS_RELEASE
         "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
         "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
@@ -131,6 +129,7 @@ configure_qt(
         "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
         "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
         "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
+        "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/lib/libharfbuzz.a -framework ApplicationServices"
     OPTIONS_DEBUG
         "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
         "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
@@ -140,6 +139,7 @@ configure_qt(
         "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
         "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
         "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
+        "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libharfbuzz.a -framework ApplicationServices"
 )
 endif()
 
@@ -217,6 +217,8 @@ endforeach()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 # 
