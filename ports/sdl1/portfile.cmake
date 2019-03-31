@@ -2,6 +2,11 @@ include(vcpkg_common_functions)
 
 # vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(STATUS "Static CRT linkage is not supported")
+    set(VCPKG_CRT_LINKAGE dynamic)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
