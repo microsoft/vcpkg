@@ -14,7 +14,7 @@ message("VERSION: ${VERSION}")
 message("SODIUM_LIBRARY_VERSION_MAJOR: ${SODIUM_LIBRARY_VERSION_MAJOR}")
 message("SODIUM_LIBRARY_VERSION_MINOR: ${SODIUM_LIBRARY_VERSION_MINOR}")
 
-project(libsodium VERSION ${VERSION} LANGUAGES C)
+project(libsodium VERSION ${VERSION} LANGUAGES C ASM)
 
 include(CheckCSourceCompiles)
 include(CheckFunctionExists)
@@ -50,7 +50,16 @@ file(GLOB sodium_headers
     ${CMAKE_BINARY_DIR}/sodium/version.h
 )
 
-file(GLOB_RECURSE sodium_sources ${PROJECT_SOURCE_DIR}/src/libsodium/*.c)
+if (UNIX)
+    file(GLOB_RECURSE sodium_sources
+        ${PROJECT_SOURCE_DIR}/src/libsodium/*.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/*.S # HAVE_AVX_ASM
+    )
+else ()
+    file(GLOB_RECURSE sodium_sources
+        ${PROJECT_SOURCE_DIR}/src/libsodium/*.c
+    ) 
+endif ()
 
 if (MSVC)
     enable_language(RC)
@@ -695,3 +704,4 @@ install(EXPORT ${PROJECT_NAME}-config
 # https://stackoverflow.com/questions/29901352/appending-to-cmake-c-flags
 # https://stackoverflow.com/questions/986426/what-do-stdc-limit-macros-and-stdc-constant-macros-mean
 # https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
+# https://stackoverflow.com/questions/15132185/mixing-c-and-assembly-sources-and-build-with-cmake
