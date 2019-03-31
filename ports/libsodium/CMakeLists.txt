@@ -18,6 +18,7 @@ project(libsodium VERSION ${VERSION} LANGUAGES C ASM)
 
 include(CheckCSourceCompiles)
 include(CheckFunctionExists)
+include(CheckIncludeFile)
 include(CTest)
 include(GNUInstallDirs)
 include(TestBigEndian)
@@ -179,6 +180,11 @@ else ()
                 -Wno-unknown-warning-option
                 -Wshorten-64-to-32
         )
+    endif ()
+
+    check_include_file(sys/mman.h HAVE_SYS_MMAN_H)
+    if (HAVE_SYS_MMAN_H)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_SYS_MMAN_H)
     endif ()
 
     sodium_check_func(arc4random HAVE_SAFE_ARC4RANDOM)
@@ -705,3 +711,4 @@ install(EXPORT ${PROJECT_NAME}-config
 # https://stackoverflow.com/questions/986426/what-do-stdc-limit-macros-and-stdc-constant-macros-mean
 # https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
 # https://stackoverflow.com/questions/15132185/mixing-c-and-assembly-sources-and-build-with-cmake
+# https://stackoverflow.com/questions/647892/how-to-check-header-files-and-library-functions-in-cmake-like-it-is-done-in-auto
