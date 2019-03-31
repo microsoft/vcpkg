@@ -63,8 +63,13 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRA
 
 # Setup geos libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+else()
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
+endif()
 
 # Setup expat libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
