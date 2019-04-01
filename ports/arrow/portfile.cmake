@@ -7,18 +7,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.11.1
-    SHA512 8a2de7e4b40666e4ea7818fac488549f1348e961e7cb6a4166ae4019976a574fd115dc1cabaf44bc1cbaabf15fb8e5133c8232b34fca250d8ff7c5b65c5407c8
+    REF apache-arrow-0.13.0
+    SHA512 bbb14d11abf267a6902c7c9e0215ba7c5284f07482be2de42707145265d2809c89c2d4d8f8b918fdb8c33a5ecbd650875b987a1a694cdf653e766822be67a47d
     HEAD_REF master
 )
 
 set(CPP_SOURCE_PATH "${SOURCE_PATH}/cpp")
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CPP_SOURCE_PATH}
-    PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/all.patch"
-)
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
@@ -35,6 +29,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${CPP_SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+    -DARROW_DEPENDENCY_SOURCE=SYSTEM
     -DARROW_BUILD_TESTS=off
     -DRAPIDJSON_HOME=${CURRENT_INSTALLED_DIR}
     -DFLATBUFFERS_HOME=${CURRENT_INSTALLED_DIR}
@@ -54,6 +49,8 @@ vcpkg_configure_cmake(
     -DPARQUET_ARROW_LINKAGE=${PARQUET_ARROW_LINKAGE}
     -DDOUBLE_CONVERSION_HOME=${CURRENT_INSTALLED_DIR}
     -DGLOG_HOME=${CURRENT_INSTALLED_DIR}
+    -DARROW_BOOST_USE_SHARED=off
+    -DARROW_USE_STATIC_CRT=on
 )
 
 vcpkg_install_cmake()
@@ -69,6 +66,15 @@ if(WIN32)
         file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib)
     endif()
 endif()
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/arrow/cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/arrow/arrowConfig.cmake ${CURRENT_PACKAGES_DIR}/share/arrow/cmake/arrowConfig.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/arrow/arrowConfigVersion.cmake ${CURRENT_PACKAGES_DIR}/share/arrow/cmake/arrowConfigVersion.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/arrow/arrowTargets-release.cmake ${CURRENT_PACKAGES_DIR}/share/arrow/cmake/arrowTargets-release.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/arrow/arrowTargets.cmake ${CURRENT_PACKAGES_DIR}/share/arrow/cmake/arrowTargets.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/arrow/arrowTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/arrow/cmake/arrowTargets-debug.cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/arrow RENAME copyright)
 
