@@ -14,11 +14,12 @@ message("VERSION: ${VERSION}")
 message("SODIUM_LIBRARY_VERSION_MAJOR: ${SODIUM_LIBRARY_VERSION_MAJOR}")
 message("SODIUM_LIBRARY_VERSION_MINOR: ${SODIUM_LIBRARY_VERSION_MINOR}")
 
-project(libsodium VERSION ${VERSION} LANGUAGES C ASM)
+project(sodium VERSION ${VERSION} LANGUAGES C ASM)
 
 include(CheckCSourceCompiles)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
+include(CMakePackageConfigHelpers)
 include(CTest)
 include(GNUInstallDirs)
 include(TestBigEndian)
@@ -73,6 +74,12 @@ endif ()
 add_library(${PROJECT_NAME}
     ${sodium_headers}
     ${sodium_sources}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+        PREFIX ""
+        OUTPUT_NAME "lib${PROJECT_NAME}"
 )
 
 test_big_endian(IS_BIG_ENDIAN)
@@ -684,15 +691,38 @@ install(FILES ${CMAKE_BINARY_DIR}/sodium/version.h
 )
 
 install(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}-config
+    EXPORT ${PROJECT_NAME}-targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-install(EXPORT ${PROJECT_NAME}-config
-    FILE unofficial-${PROJECT_NAME}-config.cmake
+install(EXPORT ${PROJECT_NAME}-targets
+    FILE unofficial-${PROJECT_NAME}Targets.cmake
     NAMESPACE unofficial-${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-${PROJECT_NAME}
+)
+
+set(TARGET_NAME unofficial-${PROJECT_NAME}::${PROJECT_NAME})
+
+configure_package_config_file(
+    ${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+unset(TARGET_NAME)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}Config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-${PROJECT_NAME}
 )
 
@@ -712,3 +742,4 @@ install(EXPORT ${PROJECT_NAME}-config
 # https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
 # https://stackoverflow.com/questions/15132185/mixing-c-and-assembly-sources-and-build-with-cmake
 # https://stackoverflow.com/questions/647892/how-to-check-header-files-and-library-functions-in-cmake-like-it-is-done-in-auto
+# https://stackoverflow.com/questions/31038963/how-do-you-rename-a-library-filename-in-cmake

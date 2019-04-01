@@ -1,0 +1,65 @@
+# sodium cmake module
+# This module sets the following variables in your project:
+#
+#   sodium_FOUND - true if sodium found on the system
+#   sodium_INCLUDE_DIR - the directory containing sodium headers
+#   sodium_LIBRARY_DEBUG
+#   sodium_LIBRARY_RELEASE
+#   sodium_LIBRARIES
+#   sodium_VERSION
+#
+
+include(FindPackageHandleStandardArgs)
+
+@PACKAGE_INIT@
+
+if (NOT TARGET @TARGET_NAME@)
+    include("${CMAKE_CURRENT_LIST_DIR}/unofficial-@PROJECT_NAME@Targets.cmake")
+
+    set(@PROJECT_NAME@_VERSION @VERSION@)
+
+    get_target_property(@PROJECT_NAME@_INCLUDE_DIR @TARGET_NAME@ INTERFACE_INCLUDE_DIRECTORIES)
+
+    get_target_property(@PROJECT_NAME@_LIBRARY_DEBUG @TARGET_NAME@ IMPORTED_IMPLIB_DEBUG)
+    if (@PROJECT_NAME@_LIBRARY_DEBUG MATCHES ".*-NOTFOUND")
+        get_target_property(@PROJECT_NAME@_LIBRARY_DEBUG @TARGET_NAME@ IMPORTED_LOCATION_DEBUG)
+    else ()
+        get_target_property(@PROJECT_NAME@_DLL_DEBUG @TARGET_NAME@ IMPORTED_LOCATION_DEBUG)
+    endif ()
+
+    get_target_property(@PROJECT_NAME@_LIBRARY_RELEASE @TARGET_NAME@ IMPORTED_IMPLIB_RELEASE)
+    if (@PROJECT_NAME@_LIBRARY_RELEASE MATCHES ".*-NOTFOUND")
+        get_target_property(@PROJECT_NAME@_LIBRARY_RELEASE @TARGET_NAME@ IMPORTED_LOCATION_RELEASE)
+    else ()
+        get_target_property(@PROJECT_NAME@_DLL_RELEASE @TARGET_NAME@ IMPORTED_LOCATION_RELEASE)
+    endif ()
+    
+    set(@PROJECT_NAME@_LIBRARIES
+        debug ${@PROJECT_NAME@_LIBRARY_DEBUG}
+        optimized ${@PROJECT_NAME@_LIBRARY_RELEASE}
+    )
+endif ()
+
+find_package_handle_standard_args(
+    @PROJECT_NAME@
+    REQUIRED_VARS
+        @PROJECT_NAME@_INCLUDE_DIR
+        @PROJECT_NAME@_LIBRARIES
+    VERSION_VAR
+        @PROJECT_NAME@_VERSION
+)
+
+mark_as_advanced(@PROJECT_NAME@_INCLUDE_DIR)
+mark_as_advanced(@PROJECT_NAME@_LIBRARY_DEBUG)
+mark_as_advanced(@PROJECT_NAME@_LIBRARY_RELEASE)
+
+if (WIN32)
+    mark_as_advanced(@PROJECT_NAME@_DLL_DEBUG)
+    mark_as_advanced(@PROJECT_NAME@_DLL_RELEASE)
+endif()
+
+
+# References:
+# https://github.com/jedisct1/libsodium/blob/master/contrib/Findsodium.cmake
+# https://github.com/QuantStack/xeus/blob/master/xeusConfig.cmake.in
+# https://github.com/zeromq/libzmq/blob/master/builds/cmake/ZeroMQConfig.cmake.in

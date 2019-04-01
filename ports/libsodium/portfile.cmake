@@ -9,8 +9,14 @@ vcpkg_from_github(
 )
 
 configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt 
-    ${SOURCE_PATH}/CMakeLists.txt 
+    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+    ${SOURCE_PATH}/CMakeLists.txt
+    COPYONLY
+)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/sodiumConfig.cmake.in
+    ${SOURCE_PATH}/sodiumConfig.cmake.in
     COPYONLY
 )
 
@@ -26,8 +32,8 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(
-    CONFIG_PATH lib/cmake/unofficial-${PORT}
-    TARGET_PATH share/unofficial-${PORT}
+    CONFIG_PATH lib/cmake/unofficial-sodium
+    TARGET_PATH share/unofficial-sodium
 )
 
 file(REMOVE_RECURSE
@@ -48,4 +54,4 @@ configure_file(
     COPYONLY
 )
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-${PORT})
+#vcpkg_test_cmake(PACKAGE_NAME unofficial-sodium)
