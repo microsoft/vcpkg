@@ -18,6 +18,7 @@ vcpkg_extract_source_archive_ex(
         fix-cxx-shared-libs.patch
         crt-secure-no-deprecate.patch
         fix-stddef.patch
+        support-large-ifds.patch
         additional-exports.patch
 )
 

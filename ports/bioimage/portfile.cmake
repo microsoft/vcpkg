@@ -8,8 +8,8 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
    OUT_SOURCE_PATH SOURCE_PATH
    REPO dimin/bioimageconvert
-   REF 1af5a8097263db05bf45a81206b37448308d550d
-   SHA512 b209dedfcfcbebb49ddeb6d712cd0249bd179d87654d907c1778402dd79a595243a11188b1e9f4446486cf90b27e0afe39c4e4b44cfc0f82d6084d84b2e1514c
+   REF v2.5.2
+   SHA512 73d4675ff652bd296e626f0475760ea5ce4b60efa32ce35172faf182bdda90aab62ae019eaccbaf864cae99ed6fea0977891a926ec4519e5205ea21f10d1d006
    HEAD_REF master
    PATCHES
       bioimageconvert.patch

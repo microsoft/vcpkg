@@ -1,0 +1,201 @@
+diff --git a/libtiff/tif_dir.c b/libtiff/tif_dir.c
+index 6f0b48798bdeee91729c10e1fbcf9786234be5f3..a0ab9d87afe0bae730219772f5ed036681d2baf1 100644
+--- a/libtiff/tif_dir.c
++++ b/libtiff/tif_dir.c
+@@ -1564,12 +1564,12 @@ TIFFAdvanceDirectory(TIFF* tif, uint64* nextdir, uint64* off)
+ /*
+  * Count the number of directories in a file.
+  */
+-uint16
+-TIFFNumberOfDirectories(TIFF* tif)
++uint64
++TIFFNumberOfDirectories64(TIFF* tif)
+ {
+-	static const char module[] = "TIFFNumberOfDirectories";
++	static const char module[] = "TIFFNumberOfDirectories64";
+ 	uint64 nextdir;
+-	uint16 n;
++	uint64 n;
+ 	if (!(tif->tif_flags&TIFF_BIGTIFF))
+ 		nextdir = tif->tif_header.classic.tiff_diroff;
+ 	else
+@@ -1577,29 +1577,45 @@ TIFFNumberOfDirectories(TIFF* tif)
+ 	n = 0;
+ 	while (nextdir != 0 && TIFFAdvanceDirectory(tif, &nextdir, NULL))
+         {
+-                if (n != 65535) {
++                if (n != 500000) {
+                         ++n;
+                 }
+ 		else
+                 {
+                         TIFFErrorExt(tif->tif_clientdata, module,
+-                                     "Directory count exceeded 65535 limit,"
++                                     "Directory count exceeded 500000 limit,"
+                                      " giving up on counting.");
+-                        return (65535);
++                        return (500000);
+                 }
+         }
+ 	return (n);
+ }
+ 
++uint16
++TIFFNumberOfDirectories(TIFF* tif)
++{
++    static const char module[] = "TIFFNumberOfDirectories";
++    uint64 n;
++
++    n = TIFFNumberOfDirectories64(tif);
++    if (n > 65535) {
++        TIFFErrorExt(tif->tif_clientdata, module,
++            "Directory count exceeded 65535 limit,"
++            " try using TIFFNumberOfDirectories64 for increased limit.");
++        return (65535);
++    }
++    return ((uint16)n);
++}
++
+ /*
+  * Set the n-th directory as the current directory.
+  * NB: Directories are numbered starting at 0.
+  */
+ int
+-TIFFSetDirectory(TIFF* tif, uint16 dirn)
++TIFFSetDirectory64(TIFF* tif, uint64 dirn)
+ {
+ 	uint64 nextdir;
+-	uint16 n;
++	uint64 n;
+ 
+ 	if (!(tif->tif_flags&TIFF_BIGTIFF))
+ 		nextdir = tif->tif_header.classic.tiff_diroff;
+@@ -1623,6 +1639,12 @@ TIFFSetDirectory(TIFF* tif, uint16 dirn)
+ 	return (TIFFReadDirectory(tif));
+ }
+ 
++int
++TIFFSetDirectory(TIFF* tif, uint16 dirn)
++{
++    return TIFFSetDirectory64(tif, (uint64)dirn);
++}
++
+ /*
+  * Set the current directory to be the directory
+  * located at the specified file offset.  This interface
+diff --git a/libtiff/tif_dirread.c b/libtiff/tif_dirread.c
+index e80a3b13e8995b52c84217335af12a7ed09843fa..87c734b49d45c5e70382f216d972e0e0d38a642a 100644
+--- a/libtiff/tif_dirread.c
++++ b/libtiff/tif_dirread.c
+@@ -4584,13 +4584,13 @@ MissingRequired(TIFF* tif, const char* tagname)
+ static int
+ TIFFCheckDirOffset(TIFF* tif, uint64 diroff)
+ {
+-	uint16 n;
++	uint64 n;
+ 
+ 	if (diroff == 0)			/* no more directories */
+ 		return 0;
+-	if (tif->tif_dirnumber == 65535) {
++	if (tif->tif_dirnumber == (uint64) -1) {
+ 	    TIFFErrorExt(tif->tif_clientdata, "TIFFCheckDirOffset",
+-			 "Cannot handle more than 65535 TIFF directories");
++			 "Cannot handle more than 2^64-1 of TIFF directories");
+ 	    return 0;
+ 	}
+ 
+@@ -4612,8 +4612,8 @@ TIFFCheckDirOffset(TIFF* tif, uint64 diroff)
+ 		    tif->tif_dirnumber, 2 * sizeof(uint64), "for IFD list");
+ 		if (!new_dirlist)
+ 			return 0;
+-		if( tif->tif_dirnumber >= 32768 )
+-		    tif->tif_dirlistsize = 65535;
++		if( tif->tif_dirnumber >= ((uint64)-1)/2)
++		    tif->tif_dirlistsize = (uint64)-1;
+ 		else
+ 		    tif->tif_dirlistsize = 2 * tif->tif_dirnumber;
+ 		tif->tif_dirlist = new_dirlist;
+diff --git a/libtiff/tif_open.c b/libtiff/tif_open.c
+index c574c452aaa2fb8bc71afd8b7ffe8f15c8f5fc3b..037659d4ef9bdee1d210202037dd212b825e4c5c 100644
+--- a/libtiff/tif_open.c
++++ b/libtiff/tif_open.c
+@@ -123,7 +123,7 @@ TIFFClientOpen(
+ 	tif->tif_name = (char *)tif + sizeof (TIFF);
+ 	strcpy(tif->tif_name, name);
+ 	tif->tif_mode = m &~ (O_CREAT|O_TRUNC);
+-	tif->tif_curdir = (uint16) -1;		/* non-existent directory */
++	tif->tif_curdir = (uint64) -1;		/* non-existent directory */
+ 	tif->tif_curoff = 0;
+ 	tif->tif_curstrip = (uint32) -1;	/* invalid strip */
+ 	tif->tif_row = (uint32) -1;		/* read/write pre-increment */
+@@ -590,10 +590,23 @@ TIFFCurrentRow(TIFF* tif)
+ /*
+  * Return index of the current directory.
+  */
++uint64
++TIFFCurrentDirectory64(TIFF* tif)
++{
++	return (tif->tif_curdir);
++}
++
+ uint16
+ TIFFCurrentDirectory(TIFF* tif)
+ {
+-	return (tif->tif_curdir);
++    static const char module[] = "TIFFCurrentDirectory";
++    if (tif->tif_curdir > 65535) {
++        TIFFErrorExt(tif->tif_clientdata, module,
++            "Directory count exceeded 65535 limit,"
++            " try using TIFFCurrentDirectory64 for increased limit.");
++        return (65535);
++    }
++    return ((uint16)tif->tif_curdir);
+ }
+ 
+ /*
+diff --git a/libtiff/tiffio.h b/libtiff/tiffio.h
+index 670cd426c9cb01ec608a7df86160477b0281592c..2cfd4f65c5c3da40d3614358b530b593ae43c195 100644
+--- a/libtiff/tiffio.h
++++ b/libtiff/tiffio.h
+@@ -388,7 +388,9 @@ extern TIFFMapFileProc TIFFGetMapFileProc(TIFF*);
+ extern TIFFUnmapFileProc TIFFGetUnmapFileProc(TIFF*);
+ extern uint32 TIFFCurrentRow(TIFF*);
+ extern uint16 TIFFCurrentDirectory(TIFF*);
++extern uint64 TIFFCurrentDirectory64(TIFF*);
+ extern uint16 TIFFNumberOfDirectories(TIFF*);
++extern uint64 TIFFNumberOfDirectories64(TIFF*);
+ extern uint64 TIFFCurrentDirOffset(TIFF*);
+ extern uint32 TIFFCurrentStrip(TIFF*);
+ extern uint32 TIFFCurrentTile(TIFF* tif);
+@@ -402,6 +404,7 @@ extern int TIFFCreateCustomDirectory(TIFF*,const TIFFFieldArray*);
+ extern int TIFFCreateEXIFDirectory(TIFF*);
+ extern int TIFFLastDirectory(TIFF*);
+ extern int TIFFSetDirectory(TIFF*, uint16);
++extern int TIFFSetDirectory64(TIFF*, uint64);
+ extern int TIFFSetSubDirectory(TIFF*, uint64);
+ extern int TIFFUnlinkDirectory(TIFF*, uint16);
+ extern int TIFFSetField(TIFF*, uint32, ...);
+diff --git a/libtiff/tiffiop.h b/libtiff/tiffiop.h
+index 2fe75565f8e4cf91ad8efaa03921884c1201faf7..b44c85c564591ad06b8c7d239a91d9268bc1b42e 100644
+--- a/libtiff/tiffiop.h
++++ b/libtiff/tiffiop.h
+@@ -129,8 +129,8 @@ struct tiff {
+ 	uint64               tif_diroff;       /* file offset of current directory */
+ 	uint64               tif_nextdiroff;   /* file offset of following directory */
+ 	uint64*              tif_dirlist;      /* list of offsets to already seen directories to prevent IFD looping */
+-	uint16               tif_dirlistsize;  /* number of entries in offset list */
+-	uint16               tif_dirnumber;    /* number of already seen directories */
++	uint64               tif_dirlistsize;  /* number of entries in offset list */
++	uint64               tif_dirnumber;    /* number of already seen directories */
+ 	TIFFDirectory        tif_dir;          /* internal rep of current directory */
+ 	TIFFDirectory        tif_customdir;    /* custom IFDs are separated from the main ones */
+ 	union {
+@@ -140,7 +140,7 @@ struct tiff {
+ 	} tif_header;
+ 	uint16               tif_header_size;  /* file's header block and its length */
+ 	uint32               tif_row;          /* current scanline */
+-	uint16               tif_curdir;       /* current directory (index) */
++	uint64               tif_curdir;       /* current directory (index) */
+ 	uint32               tif_curstrip;     /* current strip for read/write */
+ 	uint64               tif_curoff;       /* current offset for read/write */
+ 	uint64               tif_dataoff;      /* current offset for writing dir */
