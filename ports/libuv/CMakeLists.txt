@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(libuv C)
 
+find_package(Threads REQUIRED)
+
 file(GLOB UV_SOURCES_COMMON src/*.c)
 
 file(GLOB UV_SOURCES_UNIX
@@ -60,6 +62,7 @@ else() # Assume some Linux variant
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_UNIX} ${UV_SOURCES_LINUX})
 endif()
 
+target_link_libraries(libuv PRIVATE Threads::Threads)
 target_include_directories(libuv PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 set_target_properties(libuv PROPERTIES DEFINE_SYMBOL BUILDING_UV_SHARED)
 
