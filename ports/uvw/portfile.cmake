@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/uvw
-    REF v1.11.2_libuv-v1.23
-    SHA512 0125233645351b94acb1b42f1632365a60892c64f00b27f04ae76fa523c4ee32c9910f0fcfb160b15269bfb0b5ae0c0f8b46d83a1ca9f9fc661b75eecb7a04d3
+    REF v1.15.0_libuv-v1.27
+    SHA512 acf1f1bdbc34ec5d040514ca08c99ee05b5bbb112828a4acf5f4c50e1910d2c74864a0793d4087b7a4a0704dd2ba1a973f65cee032fffea9247009be9cd0243c
 )
 
 file(INSTALL
