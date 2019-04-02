@@ -11,7 +11,6 @@ vcpkg_from_github(
     SHA512 e568c3c3fd10a688b4d2491987998b1e133e54853fbf94a238a0cc3955dfd4d68bedf79a0e30bb5f30e8dd3c2bf41999d7c8658571b7dca9a4058140258ca314
     HEAD_REF master
     PATCHES
-        pplx-do-while.patch
         # on osx use the uuid.h that is part of the osx sdk
         builtin-uuid-osx.patch
 )
