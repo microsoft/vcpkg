@@ -1,7 +1,15 @@
 cmake_minimum_required(VERSION 3.3)
+
+if(DEFINED ENV{VCPKG_ALLOW_APPLE_CLANG} AND NOT DEFINED VCPKG_ALLOW_APPLE_CLANG)
+    set(VCPKG_ALLOW_APPLE_CLANG $ENV{VCPKG_ALLOW_APPLE_CLANG} CACHE BOOL "Option for allowing apple clang")
+	message(STATUS "VCPKG_ALLOW_APPLE_CLANG found in enviroment variable")
+	message(STATUS "Set VCPKG_ALLOW_APPLE_CLANG to ${VCPKG_ALLOW_APPLE_CLANG}")
+endif()
+
 project(vcpkg C CXX)
 
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
+OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
 
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)

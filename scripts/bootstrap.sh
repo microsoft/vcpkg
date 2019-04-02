@@ -2,12 +2,15 @@
 
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
+vcpkgAllowAppleClang=false
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
         vcpkgDisableMetrics="ON"
     elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
         vcpkgUseSystem=true
+	elif [ "$var" = "-allowAppleClang" -o "$var" = "--allowAppleClang" ]; then
+	    vcpkgAllowAppleClang=true
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -15,6 +18,7 @@ do
         echo "    -help                Display usage help"
         echo "    -disableMetrics      Do not build metrics reporting into the executable"
         echo "    -useSystemBinaries   Force use of the system utilities for building vcpkg"
+		echo "    -allowAppleClang     Set VCPKG_ALLOW_APPLE_CLANG to build vcpkg in apple with clang anyway"
         exit 1
     else
         echo "Unknown argument $var. Use '-help' for help."
@@ -234,7 +238,12 @@ buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics")
+if $vcpkgAllowAppleClang; then
+    (cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=ON")
+else
+    (cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics")
+fi
+
 (cd "$buildDir" && "$cmakeExe" --build .)
 
 rm -rf "$vcpkgRootDir/vcpkg"
