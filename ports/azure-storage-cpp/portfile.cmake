@@ -22,6 +22,7 @@ vcpkg_configure_cmake(
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
+        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/include
 )
 
 vcpkg_install_cmake()
