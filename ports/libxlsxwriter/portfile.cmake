@@ -25,8 +25,8 @@ vcpkg_extract_source_archive_ex(
     # REF 1.0.0
     # (Optional) Read the docs for how to generate patches at: 
     # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
-    # PATCHES
-    #   001_port_fixes.patch
+    PATCHES
+       "libxlsxwriter_fix_installation_paths.patch"
     #   002_more_port_fixes.patch
 )
 
@@ -42,6 +42,9 @@ vcpkg_install_cmake()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxlsxwriter RENAME copyright)
+
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME libxlsxwriter)
