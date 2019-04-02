@@ -137,6 +137,7 @@ if(WIN32)
     else()
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
+    endif()
 endif()
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
