@@ -21,8 +21,33 @@ string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" IS_STATIC)
 
 if (IS_STATIC)
     set(PARQUET_ARROW_LINKAGE static)
+    set(BOOST_USE_SHARED off)
+    set(USE_STATIC_CRT on)
 else()
     set(PARQUET_ARROW_LINKAGE shared)
+    set(BOOST_USE_SHARED on)
+    set(USE_STATIC_CRT off)
+endif()
+
+# Some dependencies get 'd' added to their name for debug builds. The convention should be that the names are the same,
+# and vcpkg looks in the debug lib as a higher priority for debug builds. So I believe these dependencies are wrong.
+# If that's the case, we have three options:
+# 1) Fix the dependencies. This will break stuff.
+# 2) Add to this port FindX.cmake files to override the behaviour.
+# 3) Let's copy files around.
+# Last option seems like the least worst.
+if (NOT IS_STATIC)
+    # Only do this for non-static builds because if we're static, linking doesn't happen yet so we can kick the can
+    # down the road.
+    
+    # file(COPY ...) only lets you specify a directory to copy to, so if you want to copy you can't change the name.
+    # Sneakily get round this by copying to tmp with the same name and then renaming it.
+    file(COPY ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib DESTINATION ${CURRENT_INSTALLED_DIR}/debug/lib/tmp)
+    file(RENAME ${CURRENT_INSTALLED_DIR}/debug/lib/tmp/zlibd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/zlib.lib)
+    file(COPY ${CURRENT_INSTALLED_DIR}/debug/lib/zstdd.lib DESTINATION ${CURRENT_INSTALLED_DIR}/debug/lib/tmp)
+    file(RENAME ${CURRENT_INSTALLED_DIR}/debug/lib/tmp/zstdd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/zstd.lib)
+    file(COPY ${CURRENT_INSTALLED_DIR}/debug/lib/thriftmdd.lib DESTINATION ${CURRENT_INSTALLED_DIR}/debug/lib/tmp)
+    file(RENAME ${CURRENT_INSTALLED_DIR}/debug/lib/tmp/thriftmdd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/thriftmd.lib)
 endif()
 
 vcpkg_configure_cmake(
@@ -49,8 +74,8 @@ vcpkg_configure_cmake(
     -DPARQUET_ARROW_LINKAGE=${PARQUET_ARROW_LINKAGE}
     -DDOUBLE_CONVERSION_HOME=${CURRENT_INSTALLED_DIR}
     -DGLOG_HOME=${CURRENT_INSTALLED_DIR}
-    -DARROW_BOOST_USE_SHARED=off
-    -DARROW_USE_STATIC_CRT=on
+    -DARROW_BOOST_USE_SHARED=${BOOST_USE_SHARED}
+    -DARROW_USE_STATIC_CRT=${USE_STATIC_CRT}
 )
 
 vcpkg_install_cmake()
