@@ -1,4 +1,3 @@
-message("FOOFOOFOOFOOFOOFOOFOOFOOFOOFOOFOOFOOFOOFOO")
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/kealib-1.4.7)
 vcpkg_download_distfile(ARCHIVE
@@ -25,7 +24,6 @@ if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
     set(HDF5_USE_STATIC_LIBRARIES ON)
 endif()
 
-message("BARBARBARBARBARBARBARBARBARBARBARBARBARBAR")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/trunk
     PREFER_NINJA
@@ -36,9 +34,6 @@ vcpkg_configure_cmake(
       -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
 )
 
-
-message("hdf5-static - ${HDF5_INCLUDE_DIRS}")
-
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
@@ -48,5 +43,3 @@ file(INSTALL ${SOURCE_PATH}/trunk/python/LICENSE.txt DESTINATION ${CURRENT_PACKA
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
-
-message("BAZBAZBAZBAZBAZBAZBAZBAZ")
