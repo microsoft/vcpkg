@@ -22,6 +22,7 @@ vcpkg_apply_patches(
         config-pkg-location.patch
         transitive-hdf5.patch
         fix_curl_linkage.patch
+        find-szip.patch
 )
 
 vcpkg_configure_cmake(
@@ -36,6 +37,7 @@ vcpkg_configure_cmake(
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DConfigPackageLocation=share/netcdf
+        -DHAVE_SNPRINTF=ON
 
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
