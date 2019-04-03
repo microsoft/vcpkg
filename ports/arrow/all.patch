@@ -1,0 +1,131 @@
+diff --git a/cmake_modules/FindLz4.cmake b/cmake_modules/FindLz4.cmake
+index 3606f5c..1d18b7c 100644
+--- a/cmake_modules/FindLz4.cmake
++++ b/cmake_modules/FindLz4.cmake
+@@ -19,24 +19,26 @@ if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
+   set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
+ endif()
+ 
+-set(LZ4_STATIC_LIB_SUFFIX "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(LZ4_LIB_NAME_DEBUG_SUFFIX d)
++endif()
+ 
+-set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_STATIC_LIB_SUFFIX})
++set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_MSVC_STATIC_LIB_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
+ 
+ pkg_check_modules(LZ4_PC liblz4)
+ if(LZ4_PC_FOUND)
+   set(LZ4_INCLUDE_DIR "${LZ4_PC_INCLUDEDIR}")
+ 
+   list(APPEND LZ4_PC_LIBRARY_DIRS "${LZ4_PC_LIBDIR}")
+-  find_library(LZ4_LIB lz4
++  find_library(LZ4_LIB lz4${LZ4_LIB_NAME_DEBUG_SUFFIX}
+                PATHS ${LZ4_PC_LIBRARY_DIRS}
+                NO_DEFAULT_PATH
+                PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
+ elseif(LZ4_ROOT)
+   find_library(
+     LZ4_LIB
+-    NAMES lz4 ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
++          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}"
+     PATHS ${LZ4_ROOT} "${LZ4_ROOT}/Library"
+     PATH_SUFFIXES "lib64" "lib" "bin"
+     NO_DEFAULT_PATH)
+@@ -48,8 +50,8 @@ elseif(LZ4_ROOT)
+ else()
+   find_library(
+     LZ4_LIB
+-    NAMES lz4 ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
++          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}"
+     PATH_SUFFIXES "lib64" "lib" "bin")
+   find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES "include")
+ endif()
+diff --git a/cmake_modules/FindThrift.cmake b/cmake_modules/FindThrift.cmake
+index a4decf7..0f66267 100644
+--- a/cmake_modules/FindThrift.cmake
++++ b/cmake_modules/FindThrift.cmake
+@@ -65,6 +65,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
+   set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
+ endif()
+ 
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(THRIFT_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
+ pkg_check_modules(THRIFT_PC thrift)
+ 
+ # THRIFT-4760: The pkgconfig files are currently only installed when using autotools.
+@@ -74,7 +78,7 @@ if(THRIFT_PC_FOUND)
+ 
+   list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
+ 
+-  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
++  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
+                PATHS ${THRIFT_PC_LIBRARY_DIRS}
+                NO_DEFAULT_PATH)
+   find_program(THRIFT_COMPILER thrift
+@@ -82,7 +86,7 @@ if(THRIFT_PC_FOUND)
+                NO_DEFAULT_PATH
+                PATH_SUFFIXES "bin")
+ else()
+-  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
++  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
+                HINTS ${Thrift_ROOT}
+                PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib")
+   find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h
+diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
+index 17b58a3..fa2ab05 100644
+--- a/cmake_modules/FindZSTD.cmake
++++ b/cmake_modules/FindZSTD.cmake
+@@ -19,7 +19,11 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+ endif()
+ 
+-set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
++set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+ 
+ pkg_check_modules(ZSTD_PC libzstd)
+@@ -27,18 +31,15 @@ if(ZSTD_PC_FOUND)
+   set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
+ 
+   list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
+-  find_library(ZSTD_LIB zstd
++  find_library(ZSTD_LIB zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}
+                PATHS ${ZSTD_PC_LIBRARY_DIRS}
+                NO_DEFAULT_PATH
+                PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
+ elseif(ZSTD_ROOT)
+   message(STATUS "Using ZSTD_ROOT: ${ZSTD_ROOT}")
+   find_library(ZSTD_LIB
+-               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+-                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
+-               PATHS ${ZSTD_ROOT} "${ZSTD_ROOT}/Library"
+-               PATH_SUFFIXES "lib64" "lib" "bin"
+-               NO_DEFAULT_PATH)
++               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
++                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+   find_path(ZSTD_INCLUDE_DIR
+             NAMES zstd.h
+             PATHS ${ZSTD_ROOT} "${ZSTD_ROOT}/Library"
+@@ -46,9 +47,8 @@ elseif(ZSTD_ROOT)
+             PATH_SUFFIXES "include")
+ else()
+   find_library(ZSTD_LIB
+-               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+-                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
+-               PATH_SUFFIXES "lib64" "lib" "bin")
++               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
++                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+   find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES "include")
+ endif()
+ 
