@@ -1,0 +1,4 @@
+Source: cli
+Version: 2019-03-21
+Description: A library for interactive command line interfaces in modern C++
+Build-Depends: boost-asio

@@ -11,10 +11,6 @@
 #
 
 include(vcpkg_common_functions)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building will not support load data through plugins.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
@@ -22,15 +18,26 @@ vcpkg_from_github(
 	REF OpenSceneGraph-3.6.2
 	SHA512 6949dd4dea9dcffe4228086b72eafdb253bf1403b3b7a70a4727848c3cde23ad0270f41b1c3e2bdbfd410ec067ecce2052a5d26c61b032b6d46ce84b8c931bfb
 	HEAD_REF master
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/collada.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/static.patch"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(OSG_DYNAMIC OFF)
+else()
+    set(OSG_DYNAMIC ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     # PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DOSG_USE_UTF8_FILENAME=ON
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+        -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
+        -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
+        -DBUILD_OSG_EXAMPLES=ON
+        -DBUILD_OSG_APPLICATIONS=ON
 )
 
 vcpkg_install_cmake()
@@ -57,3 +64,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.2/)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/osg)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/osg/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/osg/copyright)
+
+#Cleanup
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()

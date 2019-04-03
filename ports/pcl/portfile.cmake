@@ -3,19 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.8.1
-    SHA512 9e7c87fb750a176712f08d215a906012c9e8174b687bbc8c08fa65de083b4468951bd8017b10409015d5eff0fc343885d2aae5c340346118b1a251af7bdd5cd7
+    REF pcl-1.9.1
+    SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
     HEAD_REF master
-    PATCHES cmakelists.patch
-            config.patch
-            config_install.patch
+    PATCHES pcl_utils.patch
+            pcl_config.patch
             find_flann.patch
-            find_qhull.patch
-            find_openni2.patch
-            find_cuda.patch
-            vs2017-15.4-workaround.patch
-            boost_uuid_random_generator_compat.patch
-            uuid-detail-sha1.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -57,6 +50,7 @@ vcpkg_configure_cmake(
         # PCL
         -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
+        -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         # WITH
         -DWITH_CUDA=${WITH_CUDA}

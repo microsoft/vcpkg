@@ -5,6 +5,7 @@ vcpkg_from_github(
     REF d84867ebf9f3de6afd661d2cdaff102457fbc371
     SHA512 789579dd52c1056ae90a4ce5360c26ba92cadae5341a3901c4159afe624129a1f628fa6412952a398e048b0e5040c93f7ed5b4e4bc620a22d897098298fe2a99
     HEAD_REF master
+    PATCHES fix-build-fail.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBHPDF_STATIC)

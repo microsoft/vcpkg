@@ -1,5 +1,12 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Alembic's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Alembic does not support static linkage. Building dynamically.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
@@ -8,8 +15,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.8
-    SHA512 bc36e30d1aecd67da16247365a973c462e9716309d090fefe36f625c8d2ab2d517fe8ac694a9188cd6eeb623a3217f59f461c82fcfec43d0a60a07381526983a
+    REF 1.7.10
+    SHA512 e98ffaedb98dbc5c53fe9703d3063bb118d32c83c47e3af04c8fc96237034b02fe0fc2c628ca82bdd0e0ef17d9375f4f48e0022ce33380b9ad91970539611ced
     HEAD_REF master
 )
 

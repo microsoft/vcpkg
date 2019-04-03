@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF v2.3.0
-    SHA512 bc145f9823b1e4bc03f13da9b9af986d6cc151b1edfc01384c4e90bcf0488f867ec2bdc39733f263c7ddda526645dd11a7c6051c73eb8657bc4442b448732242
+    REF 9f41c21e35b04d7d65dcb0aff4c962f6e5f2cbc3
+    SHA512 62a4803e61cf9e876c09cc68be07d4bfa31f291d3ced23e092347bf43b48086b3ba7862fc454082f42263d9ec0c260e8ba58da5c0c461ebff9c871209784e2a7
     HEAD_REF master
 )
 

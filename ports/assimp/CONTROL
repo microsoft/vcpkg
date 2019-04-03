@@ -1,4 +1,4 @@
 Source: assimp
-Version: 4.1.0-2
+Version: 4.1.0-3
 Description: The Open Asset import library
-Build-Depends: zlib
+Build-Depends: zlib, rapidjson

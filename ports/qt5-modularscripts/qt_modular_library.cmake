@@ -1,6 +1,6 @@
 set(_qt5base_port_dir "${CMAKE_CURRENT_LIST_DIR}")
 
-function(qt_modular_library NAME HASH)
+function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
     string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
     if(BUILDTREES_PATH_LENGTH GREATER 45)
         message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
@@ -8,25 +8,25 @@ function(qt_modular_library NAME HASH)
         )
     endif()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        message(FATAL_ERROR "Qt5 doesn't currently support static builds. Please use a dynamic triplet instead.")
-    endif()
+    set(MAJOR_MINOR 5.12)
+    set(FULL_VERSION ${MAJOR_MINOR}.1)
+    set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
-    set(SRCDIR_NAME "${NAME}-5.9.2")
-    set(ARCHIVE_NAME "${NAME}-opensource-src-5.9.2")
-    set(ARCHIVE_EXTENSION ".tar.xz")
-
-    set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "http://download.qt.io/official_releases/qt/5.9/5.9.2/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
-        FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
+        URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+        FILENAME ${ARCHIVE_NAME}
         SHA512 ${HASH}
     )
-    vcpkg_extract_source_archive(${ARCHIVE_FILE})
-    if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
-        file(RENAME ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME} ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
-    endif()
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE "${ARCHIVE_FILE}"
+        REF ${FULL_VERSION}
+    )
 
+    set(${TARGET_SOURCE_PATH} ${SOURCE_PATH} PARENT_SCOPE)
+endfunction()
+
+function(qt_modular_build_library SOURCE_PATH)
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
     set(ENV{_CL_} "/utf-8")
 
@@ -42,9 +42,14 @@ function(qt_modular_library NAME HASH)
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 
-    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
-    
+    if(WIN32)
+        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    else()
+        set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
+        set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
+    endif()
+
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
 
@@ -61,9 +66,11 @@ function(qt_modular_library NAME HASH)
 
     file(GLOB_RECURSE MAKEFILES ${DEBUG_DIR}/*Makefile* ${RELEASE_DIR}/*Makefile*)
 
-    #Set the correct install directory to packages
     foreach(MAKEFILE ${MAKEFILES})
-        vcpkg_replace_string(${MAKEFILE} "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}")
+        file(READ "${MAKEFILE}" _contents)
+        #Set the correct install directory to packages
+        string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
+        file(WRITE "${MAKEFILE}" "${_contents}")
     endforeach()
 
     #Install the module files
@@ -136,5 +143,9 @@ function(qt_modular_library NAME HASH)
         set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
     endif()
     file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+endfunction()
 
+function(qt_modular_library NAME HASH)
+    qt_modular_fetch_library(${NAME} ${HASH} TARGET_SOURCE_PATH)
+    qt_modular_build_library(${TARGET_SOURCE_PATH})
 endfunction()

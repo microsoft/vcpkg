@@ -15,7 +15,14 @@ if ($copiedFilesLog)
 # Note: this function signature is depended upon by the qtdeploy.ps1 script introduced in 5.7.1-7
 function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$targetBinaryName) {
     if (Test-Path "$targetBinaryDir\$targetBinaryName") {
-        Write-Verbose "  ${targetBinaryName}: already present"
+        $sourceModTime = (Get-Item $SourceDir\$targetBinaryName).LastWriteTime
+        $destModTime = (Get-Item $targetBinaryDir\$targetBinaryName).LastWriteTime
+        if ($destModTime -lt $sourceModTime) {
+            Write-Verbose "  ${targetBinaryName}: Updating $SourceDir\$targetBinaryName"
+            Copy-Item "$SourceDir\$targetBinaryName" $targetBinaryDir
+        } else {
+            Write-Verbose "  ${targetBinaryName}: already present"
+        }
     }
     else {
         Write-Verbose "  ${targetBinaryName}: Copying $SourceDir\$targetBinaryName"
@@ -62,7 +69,7 @@ function resolve([string]$targetBinary) {
         $g_searched.Set_Item($_, $true)
         if (Test-Path "$installedDir\$_") {
             deployBinary $baseTargetBinaryDir $installedDir "$_"
-            if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $targetBinaryDir "$g_install_root\plugins" "$_" }
+            if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $baseTargetBinaryDir "$g_install_root\plugins" "$_" }
             if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
             if (Test-Path function:\deployPluginsIfMagnum) {
                 if ($g_is_debug) {

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.10.5
-    SHA512 7942185e0e1cd5080b57737887f44c12e706cfb6428e55762dcbad2fd2c557f25bd26abe25b6abd9769ab6c0cea564541e7e95dcaff53e609124dda065fa41be
+    REF v2.10.12
+    SHA512 a0839c11f71271464632095c1b91bd555220d1c87c4e7637d8424a51739e5abcd91e9257d1171d06470427ba48defd2be12bb34f5352c9590219b9f54292e3a8
     HEAD_REF master
 )
 
@@ -16,6 +16,16 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
 endif()
 
+set(CPPREST_EXCLUDE_WEBSOCKETS ON)
+if("websockets" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_WEBSOCKETS OFF)
+endif()
+
+set(CPPREST_EXCLUDE_BROTLI ON)
+if ("brotli" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_BROTLI OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Release
     PREFER_NINJA
@@ -23,7 +33,7 @@ vcpkg_configure_cmake(
         ${OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-        -DCPPREST_EXCLUDE_WEBSOCKETS=OFF
+        -DCPPREST_EXCLUDE_WEBSOCKETS=${CPPREST_EXCLUDE_WEBSOCKETS}
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
     OPTIONS_DEBUG
@@ -32,11 +42,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
 
 vcpkg_copy_pdbs()
-

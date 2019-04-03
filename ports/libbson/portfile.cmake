@@ -1,16 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libbson-1.9.2)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/libbson/archive/1.9.2.tar.gz"
-    FILENAME "libbson-1.9.2.tar.gz"
-    SHA512 a05f1e8fbabb34e847692397e2e41fc5923ddd18dba861e5ab8a31acdf6738e13ab719eae8f9f8563f08fc43aab5c8d1f53cb6a47c38c96e132fa4a62a48d2bf
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mongodb/libbson
+    REF 1.9.5
+    SHA512 14bc75989baac550f42939ea161fa7872b950e5b669dc8f19e897f0783b04e0212e5e722b3fcdf946308b9a68bc066502ed8238dad92e342e5f49b8b2cc8f484
+    HEAD_REF master
+    PATCHES fix-uwp.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -45,24 +41,32 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib
-        ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib)
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/lib/libbson-static-1.0.a
+            ${CURRENT_PACKAGES_DIR}/lib/libbson-1.0.a)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/debug/lib/libbson-static-1.0.a
+            ${CURRENT_PACKAGES_DIR}/debug/lib/libbson-1.0.a)
+    else()
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib
+            ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib
+            ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib)
+    endif()
 
     # drop the __declspec(dllimport) when building static
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/static.patch
+        PATCHES static.patch
     )
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson RENAME copyright)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/libbson/copyright COPYONLY)
 file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -71,6 +75,7 @@ else()
     set(PORT_POSTFIX "1.0")
 endif()
 
+# Create cmake files for _both_ find_package(libbson) and find_package(libbson-static-1.0)/find_package(libbson-1.0)
 file(READ ${CURRENT_PACKAGES_DIR}/share/libbson/libbson-${PORT_POSTFIX}-config.cmake LIBBSON_CONFIG_CMAKE)
 string(REPLACE "/include/libbson-1.0" "/include" LIBBSON_CONFIG_CMAKE "${LIBBSON_CONFIG_CMAKE}")
 string(REPLACE "bson-static-1.0" "bson-1.0" LIBBSON_CONFIG_CMAKE "${LIBBSON_CONFIG_CMAKE}")
