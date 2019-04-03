@@ -1,5 +1,5 @@
 diff --git a/src/binn.c b/src/binn.c
-index ef32f35..3b6b14a 100644
+index ef32f35..d12d473 100644
 --- a/src/binn.c
 +++ b/src/binn.c
 @@ -142,8 +142,8 @@ BINN_PRIVATE void copy_be64(u64 *pdest, u64 *psource) {
@@ -22,7 +22,15 @@ index ef32f35..3b6b14a 100644
          if (keylen == len) {
            p += len;
            return p;
-@@ -3147,15 +3147,15 @@ BINN_PRIVATE BOOL is_bool_str(char *str, BOOL *pbool) {
+@@ -1582,6 +1582,7 @@ BINN_PRIVATE BOOL binn_read_pair(int expected_type, void *ptr, int pos, int *pid
+   base = p;
+   plimit = p + size - 1;
+   p += header_size;
++  key = 0;
+ 
+   for (i = 0; i < count; i++) {
+     switch (type) {
+@@ -3147,15 +3148,15 @@ BINN_PRIVATE BOOL is_bool_str(char *str, BOOL *pbool) {
  
    if (str == NULL || pbool == NULL) return FALSE;
  
@@ -46,7 +54,7 @@ index ef32f35..3b6b14a 100644
  
    if (is_integer(str)) {
      vint = atoi64(str);
-@@ -3333,7 +3333,7 @@ char * APIENTRY binn_get_str(binn *value) {
+@@ -3333,7 +3334,7 @@ char * APIENTRY binn_get_str(binn *value) {
  
    if (type_family(value->type) == BINN_FAMILY_INT) {
      if (copy_int_value(value->ptr, &vint, value->type, BINN_INT64) == FALSE) return NULL;
@@ -55,7 +63,7 @@ index ef32f35..3b6b14a 100644
      goto loc_convert_value;
    }
  
-@@ -3341,15 +3341,15 @@ char * APIENTRY binn_get_str(binn *value) {
+@@ -3341,15 +3342,15 @@ char * APIENTRY binn_get_str(binn *value) {
    case BINN_FLOAT:
      value->vdouble = value->vfloat;
    case BINN_DOUBLE:
@@ -74,7 +82,7 @@ index ef32f35..3b6b14a 100644
      goto loc_convert_value;
    }
  
-@@ -3358,7 +3358,7 @@ char * APIENTRY binn_get_str(binn *value) {
+@@ -3358,7 +3359,7 @@ char * APIENTRY binn_get_str(binn *value) {
  loc_convert_value:
  
    //value->vint64 = 0;
