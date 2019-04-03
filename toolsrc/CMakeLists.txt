@@ -42,7 +42,18 @@ add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
 target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg PRIVATE include)
 
-if(GCC)
+if(CLANG)
+    include(CheckCXXSourceCompiles)
+    check_cxx_source_compiles("#include <iostream>
+                               int main() { return __GLIBCXX__; }" USES_LIBSTDCXX)
+    check_cxx_source_compiles("#include <iostream>
+                               int main() { return _LIBCPP_VERSION; }" USES_LIBCXX)
+    if ( NOT USES_LIBSTDCXX AND NOT USES_LIBCXX )
+        message(FATAL_ERROR "Can't find which C++ runtime is in use")
+    endif()
+endif()
+
+if(GCC OR (CLANG AND USES_LIBSTDCXX))
     target_link_libraries(vcpkg PRIVATE stdc++fs)
 elseif(CLANG)
     target_link_libraries(vcpkg PRIVATE c++experimental)

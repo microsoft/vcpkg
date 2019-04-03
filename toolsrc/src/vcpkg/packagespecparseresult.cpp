@@ -19,7 +19,7 @@ namespace vcpkg
         }
     }
 
-    void Strings::details::append_internal(std::string& out, PackageSpecParseResult p)
+    void to_string(std::string& out, PackageSpecParseResult p)
     {
         out.append(vcpkg::to_string(p).c_str());
     }

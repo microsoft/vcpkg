@@ -5,6 +5,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/metrics.h>
+#include <vcpkg/packagespec.h>
 
 namespace vcpkg
 {

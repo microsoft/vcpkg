@@ -15,10 +15,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake" TARGET_PATH share/urdfdom_headers)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/urdfdom_headers/cmake" TARGET_PATH share/urdfdom_headers)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers)
+endif()
 
 # The config files for this project use underscore
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
 

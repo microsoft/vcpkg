@@ -13,4 +13,4 @@ file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/r
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/rapidxml/license.txt ${CURRENT_PACKAGES_DIR}/share/rapidxml/copyright)
 
 # Copy the header files
-file(INSTALL ${SOURCE_PATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hpp")
+file(INSTALL ${SOURCE_PATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/rapidxml FILES_MATCHING PATTERN "*.hpp")

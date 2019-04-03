@@ -37,10 +37,16 @@ namespace vcpkg::Strings::details
     inline void append_internal(std::string& into, const char* v) { into.append(v); }
     inline void append_internal(std::string& into, const std::string& s) { into.append(s); }
 
-    template<class T, class = decltype(std::declval<T&>().to_string(std::declval<std::string&>()))>
+    template<class T, class = decltype(std::declval<const T&>().to_string(std::declval<std::string&>()))>
     void append_internal(std::string& into, const T& t)
     {
         t.to_string(into);
+    }
+
+    template<class T, class=void, class = decltype(to_string(std::declval<std::string&>(), std::declval<const T&>()))>
+    void append_internal(std::string& into, const T& t)
+    {
+        to_string(into, t);
     }
 }
 

@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include <vcpkg/base/system.print.h>
 
 namespace vcpkg::System

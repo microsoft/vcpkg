@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea9fd15..c62c6fd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,7 +124,7 @@ endif()
+ if((UNIX AND SYSTEM_DIR_INSTALL) OR OPTION_FORCE_SYSTEM_DIR_INSTALL)
+     # Install into the system (/usr/bin or /usr/local/bin)
+     set(INSTALL_ROOT      "share/${project}")       # /usr/[local]/share/<project>
+-    set(INSTALL_CMAKE     "share/${project}/cmake") # /usr/[local]/share/<project>/cmake
++    set(INSTALL_CMAKE     "share/${project}")       # /usr/[local]/share/<project>
+     set(INSTALL_EXAMPLES  "share/${project}")       # /usr/[local]/share/<project>
+     set(INSTALL_DATA      "share/${project}")       # /usr/[local]/share/<project>
+     set(INSTALL_BIN       "bin")                    # /usr/[local]/bin
+@@ -183,7 +183,7 @@ add_subdirectory(deploy)
+ install(FILES "${PROJECT_BINARY_DIR}/VERSION" DESTINATION ${INSTALL_ROOT} COMPONENT runtime)
+ 
+ # Install cmake find script for the project
+-install(FILES ${META_PROJECT_NAME}-config.cmake DESTINATION ${INSTALL_ROOT} COMPONENT dev)
++# install(FILES ${META_PROJECT_NAME}-config.cmake DESTINATION ${INSTALL_ROOT} COMPONENT dev)
+ 
+ # Install the project meta files
+ install(FILES AUTHORS   DESTINATION ${INSTALL_ROOT} COMPONENT runtime)
+diff --git a/source/cppfs/CMakeLists.txt b/source/cppfs/CMakeLists.txt
+index aa37eda..e8a59e0 100644
+--- a/source/cppfs/CMakeLists.txt
++++ b/source/cppfs/CMakeLists.txt
+@@ -283,7 +283,7 @@ perform_health_checks(
+ 
+ # Library
+ install(TARGETS ${target}
+-    EXPORT  "${target}-export"            COMPONENT dev
++    EXPORT  "${target}-config"            COMPONENT dev
+     RUNTIME DESTINATION ${INSTALL_BIN}    COMPONENT runtime
+     LIBRARY DESTINATION ${INSTALL_SHARED} COMPONENT runtime
+     ARCHIVE DESTINATION ${INSTALL_LIB}    COMPONENT dev
+@@ -302,8 +302,8 @@ install(DIRECTORY
+ )
+ 
+ # CMake config
+-install(EXPORT ${target}-export
++install(EXPORT ${target}-config
+     NAMESPACE   ${META_PROJECT_NAME}::
+-    DESTINATION ${INSTALL_CMAKE}/${target}
++    DESTINATION ${INSTALL_CMAKE}
+     COMPONENT   dev
+ )

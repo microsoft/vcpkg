@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/vorbis
-    REF 112d3bd0aaacad51305e1464d4b381dabad0e88b
-    SHA512 df20e072a5e024ca2b8fc0e2890bb8968c0c948a833149a6026d2eaf6ab57b88b6d00d0bfb3b8bfcf879c7875e7cfacb8c6bf454bfc083b41d76132c567ff7ae
+    REF 9eadeccdc4247127d91ac70555074239f5ce3529
+    SHA512 26d6826eba57fd47ebf426ba5a0c961c87ff62e2bb4185190e4985de9ac49aa493f77a1bd01d3d0757eb89a8494ba7de3a506f76bf5c8942ac1de3f75746a301
     HEAD_REF master
     PATCHES
         0001-Dont-export-vorbisenc-functions.patch

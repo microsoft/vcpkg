@@ -52,13 +52,17 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     # because otherwise libraries that build on top of libraw have to choose.
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/raw.lib ${CURRENT_PACKAGES_DIR}/debug/lib/rawd.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/raw_r.lib ${CURRENT_PACKAGES_DIR}/lib/raw.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/raw_rd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/rawd.lib)
+    if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/raw_rd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/rawd.lib)
+    endif()
 
     # Cleanup
     file(GLOB RELEASE_EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(REMOVE ${RELEASE_EXECUTABLES})
-    file(GLOB DEBUG_EXECUTABLES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${DEBUG_EXECUTABLES})
+    if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB DEBUG_EXECUTABLES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+        file(REMOVE ${DEBUG_EXECUTABLES})
+    endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -74,6 +78,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Rename cmake module into a config in order to allow more flexible lookup rules
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libraw/FindLibRaw.cmake ${CURRENT_PACKAGES_DIR}/share/libraw/LibRaw-config.cmake)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw)

@@ -6,12 +6,8 @@ vcpkg_from_github(
     REF 1.0.17
     SHA512 faf6ab57d113b6b1614b51390823a646f059018327b6f493e9e918a908652d0932a75a1a6683032b7a3869f516f387d67acdf944568387feddff7b2f5b6e77d6
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/disable-tests.patch
+        "disable-tests.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
