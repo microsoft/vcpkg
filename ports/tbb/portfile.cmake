@@ -59,6 +59,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     set(TBB_DEFAULT_COMPONENTS tbb tbbmalloc tbbmalloc_proxy)
 endif()
+
 file(READ "${SOURCE_PATH}/include/tbb/tbb_stddef.h" _tbb_stddef)
 string(REGEX REPLACE ".*#define TBB_VERSION_MAJOR ([0-9]+).*" "\\1" _tbb_ver_major "${_tbb_stddef}")
 string(REGEX REPLACE ".*#define TBB_VERSION_MINOR ([0-9]+).*" "\\1" _tbb_ver_minor "${_tbb_stddef}")
