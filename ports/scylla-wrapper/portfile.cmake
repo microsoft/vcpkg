@@ -1,5 +1,8 @@
 include(vcpkg_common_functions)
 
+# scylla_wrapper_dll supplies a DllMain
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cypherpunk/scylla_wrapper_dll
@@ -9,12 +12,17 @@ vcpkg_from_bitbucket(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(REMOVE
+    ${SOURCE_PATH}/scylla_wrapper_dll/distorm.h
+    ${SOURCE_PATH}/scylla_wrapper_dll/distorm_x64.lib
+    ${SOURCE_PATH}/scylla_wrapper_dll/distorm_x86.lib
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG 
-    -DDISABLE_INSTALL_HEADERS=ON
+        -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
