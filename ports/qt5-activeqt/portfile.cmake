@@ -4,4 +4,4 @@ include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmak
 
 qt_modular_library(qtactiveqt ff2871a7c0fa2674354f8bbd32196d8b2af34212e09e0f8c1df23182353959464dfb8c96800e45dae380f239082f62ed6f1904e72dc93e43141edb4f2606edd9)
 
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-activeqt/platforminputcontexts)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-activeqt/plugins/platforminputcontexts)

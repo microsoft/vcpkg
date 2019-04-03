@@ -30,7 +30,7 @@
     </tool>
     <tool name="git" os="windows">
         <version>2.20.0</version>
-        <exeRelativePath>cmd\git.exe</exeRelativePath>
+        <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
         <url>https://github.com/git-for-windows/git/releases/download/v2.20.0.windows.1/PortableGit-2.20.0-32-bit.7z.exe</url>
         <sha512>81647a87df9fde0945ef597cb1cafd8f5f42859da89e9b1db55222a261407bc16bdcc0cf1e86e315697f0981832fe10fc02845cad4b4c82ea64bbd218aec6a49</sha512>
         <archiveName>PortableGit-2.20.0-32-bit.7z.exe</archiveName>

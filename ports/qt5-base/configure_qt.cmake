@@ -35,8 +35,8 @@ function(configure_qt)
             -hostbindir ${CURRENT_PACKAGES_DIR}/debug/tools/qt5
             -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
             -datadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
-            -plugindir ${CURRENT_PACKAGES_DIR}/debug/plugins
-            -qmldir ${CURRENT_PACKAGES_DIR}/debug/qml
+            -plugindir ${CURRENT_INSTALLED_DIR}/debug/plugins
+            -qmldir ${CURRENT_INSTALLED_DIR}/debug/qml
             -headerdir ${CURRENT_PACKAGES_DIR}/include
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/debug/lib
@@ -54,10 +54,10 @@ function(configure_qt)
             -prefix ${CURRENT_INSTALLED_DIR}
             -extprefix ${CURRENT_PACKAGES_DIR}
             -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5
-            -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5
-            -datadir ${CURRENT_PACKAGES_DIR}/share/qt5
-            -plugindir ${CURRENT_PACKAGES_DIR}/plugins
-            -qmldir ${CURRENT_PACKAGES_DIR}/qml
+            -archdatadir ${CURRENT_INSTALLED_DIR}/share/qt5
+            -datadir ${CURRENT_INSTALLED_DIR}/share/qt5
+            -plugindir ${CURRENT_INSTALLED_DIR}/plugins
+            -qmldir ${CURRENT_INSTALLED_DIR}/qml
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/lib
             -platform ${_csc_PLATFORM}
