@@ -1,0 +1,4 @@
+Source: librdkafka
+Version: 0.11.6
+Build-Depends: openssl, zlib
+Description: C library implementation of the Apache Kafka protocol, containing both Producer and Consumer support.
