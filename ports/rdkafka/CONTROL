@@ -1,4 +1,20 @@
 Source: rdkafka
 Version: v1.0.0
 Description: The Apache Kafka C/C++ library 
-Build-Depends: openssl, zlib, zstd
+Default-Features: ssl
+
+Feature: lz4
+Description: Enable external LZ4 library support 
+Build-Depends: lz4
+
+Feature: ssl
+Description: Build with OpenSSL
+Build-Depends: openssl
+
+Feature: zlib
+Description: Build with zlib
+Build-Depends: zlib
+
+Feature: zstd
+Description: Build with zstd
+Build-Depends: zstd

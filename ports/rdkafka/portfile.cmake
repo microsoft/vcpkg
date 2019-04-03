@@ -10,6 +10,30 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
+if("lz4" IN_LIST FEATURES)
+    set(ENABLE_LZ4_EXT ON)
+else()
+    set(ENABLE_LZ4_EXT OFF)
+endif()
+
+if("ssl" IN_LIST FEATURES)
+    set(WITH_SSL ON)
+else()
+    set(WITH_SSL OFF)
+endif()
+
+if("zlib" IN_LIST FEATURES)
+    set(WITH_ZLIB ON)
+else()
+    set(WITH_ZLIB OFF)
+endif()
+
+if("zstd" IN_LIST FEATURES)
+    set(WITH_ZSTD ON)
+else()
+    set(WITH_ZSTD OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -17,14 +41,20 @@ vcpkg_configure_cmake(
         -DRDKAFKA_BUILD_STATIC=${RDKAFKA_BUILD_STATIC}
         -DRDKAFKA_BUILD_EXAMPLES=OFF
         -DRDKAFKA_BUILD_TESTS=OFF
+        -DENABLE_LZ4_EXT=${ENABLE_LZ4_EXT}
+        -DWITH_SSL=${WITH_SSL}
+        -DWITH_ZLIB=${WITH_ZLIB}
+        -DWITH_ZSTD=${WITH_ZSTD}
     OPTIONS_DEBUG
         -DENABLE_DEVEL=ON
         -DENABLE_REFCNT_DEBUG=ON
         -DENABLE_SHAREDPTR_DEBUG=ON
+        -DWITHOUT_OPTIMIZATION=ON
     OPTIONS_RELEASE
         -DENABLE_DEVEL=OFF
         -DENABLE_REFCNT_DEBUG=OFF
         -DENABLE_SHAREDPTR_DEBUG=OFF
+        -DWITHOUT_OPTIMIZATION=OFF
 )
 
 vcpkg_install_cmake()
