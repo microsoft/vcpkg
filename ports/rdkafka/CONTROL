@@ -1,4 +1,4 @@
 Source: rdkafka
-Version: v1.0.0-RC8-test-deps13
+Version: v1.0.0
 Description: The Apache Kafka C/C++ library 
 Build-Depends: openssl, zlib, zstd

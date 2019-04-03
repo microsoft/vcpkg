@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF v1.0.0-RC8-test-deps13
-    SHA512 08c48494eb2412335d0729ee831375da7ab21c7a9f00710f50f99d7fdac40b2520ece70d55919b6944372d852bd7b7d08166ca5c7557922d41df6ca2b6e2cf81
+    REF v1.0.0
+    SHA512 15ac1e4c9042debf8d4df602ccdc5eccae3a37b305be24d724fcaffc3d1d0aafa708fc8e29d6af51f51ed6c7daf74b3041b8b9b0444e6702cd73479c8078859a
     HEAD_REF master
 )
 
