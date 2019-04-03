@@ -641,8 +641,6 @@ target_include_directories(${PROJECT_NAME}
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-enable_testing()
-
 if (BUILD_TESTING)
     file(GLOB sodium_test_sources ${PROJECT_SOURCE_DIR}/test/default/*.c)
 
