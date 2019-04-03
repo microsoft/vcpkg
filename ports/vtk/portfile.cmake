@@ -43,7 +43,7 @@ vcpkg_from_github(
     REPO Kitware/VTK
     REF "v${VTK_LONG_VERSION}"
     SHA512 fd1d9c2872baa6eca7f8105b0057b56ec554e9d5eaf25985302e7fc032bdce72255d79e3f5f16ca50504151bda49cb3a148272ba32e0f410b4bdb70959b8f3f4
-    HEAD_REF "master"
+    HEAD_REF master
     PATCHES
         fix-find-lz4.patch
         fix_ogg_linkage.patch
