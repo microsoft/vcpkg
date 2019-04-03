@@ -17,10 +17,9 @@ vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     SHA512 403e6cad42db3ba860c3fa4fa81c1b7b02f0b873259e5c19a7fc8e42de0854602555f1b1ca74f4e3a7737a4cbd3aac063061e628ec86534586500819fae7fec0
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${OPENSSL_SOURCE_ARCHIVE}
-    REF 1.0.2
+vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
+vcpkg_apply_patches(
+    SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
     PATCHES 
         ConfigureIncludeQuotesFix.patch
         STRINGIFYPatch.patch
