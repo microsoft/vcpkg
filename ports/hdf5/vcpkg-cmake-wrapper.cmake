@@ -1,0 +1,11 @@
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.3)
+    if(NOT "CONFIG" IN_LIST ARGS AND NOT "NO_MODULE" IN_LIST ARGS AND "HDF5" IN_LIST ARGS)
+        # The caller hasn't said "CONFIG", so they want the built-in FindHDF5.cmake behavior. Set configurations macros to ensure the built-in script finds us.
+        if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+            set(HDF5_USE_STATIC_LIBRARIES ON)
+        else()
+            set(HDF5_USE_STATIC_LIBRARIES OFF)
+        endif()
+    endif()
+endif()
+_find_package(${ARGS})
