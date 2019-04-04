@@ -51,6 +51,7 @@ vcpkg_configure_cmake(
     -DARROW_BOOST_USE_SHARED=${BOOST_USE_SHARED}
     -DARROW_USE_STATIC_CRT=${USE_STATIC_CRT}
     -DARROW_GFLAGS_USE_SHARED=off
+    -DARROW_JEMALLOC=off
 )
 
 vcpkg_install_cmake()
