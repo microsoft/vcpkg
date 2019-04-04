@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aebd4c4b..be74c4da 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,7 @@ if (ENABLE_MSAN AND ENABLE_ASAN)
+     MESSAGE(WARNING "Compiling with both AddressSanitizer and MemorySanitizer is not recommended")
+ endif()
+ 
+-add_subdirectory(src release)
++add_subdirectory(src)
+ 
+ if (${BUILD_EXAMPLES})
+   add_subdirectory(examples)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c65a4996..a8422510 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -188,6 +188,13 @@ if(SHARED)
+       PUBLIC ${GRAPHICS}
+   )
+ 
++  target_compile_definitions(raylib
++      PRIVATE
++          $<BUILD_INTERFACE:BUILD_LIBTYPE_SHARED>
++      INTERFACE
++          $<INSTALL_INTERFACE:USE_LIBTYPE_SHARED>
++  )
++
+   set(PKG_CONFIG_LIBS_EXTRA "")
+ 
+   set_property(TARGET raylib PROPERTY POSITION_INDEPENDENT_CODE ON)
+@@ -214,7 +221,9 @@ if(SHARED)
+   if (WIN32)
+     install(
+       TARGETS raylib
+-      RUNTIME DESTINATION "lib"
++      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+       PUBLIC_HEADER DESTINATION "include"
+     )
+   else()

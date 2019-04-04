@@ -1,0 +1,25 @@
+diff --git a/cmake/raylib-config.cmake b/cmake/raylib-config.cmake
+index e2e5e9ae..5f711c64 100644
+--- a/cmake/raylib-config.cmake
++++ b/cmake/raylib-config.cmake
+@@ -16,9 +16,11 @@ if (raylib_USE_STATIC_LIBS)
+     set(XPREFIX ${XPREFIX}_STATIC)
+ endif()
+ 
++if (NOT MSVC)
+ find_package(PkgConfig)
+ pkg_check_modules(${XPREFIX} REQUIRED raylib)
+ set(raylib_DEFINITIONS ${${XPREFIX}_CFLAGS})
++endif ()
+ 
+ find_path(raylib_INCLUDE_DIR
+     NAMES raylib.h
+@@ -26,7 +28,7 @@ find_path(raylib_INCLUDE_DIR
+ )
+ 
+ find_library(raylib_LIBRARY
+-    NAMES raylib
++    NAMES raylib raylib_static
+     HINTS ${${XPREFIX}_LIBRARY_DIRS}
+ )
+ 
