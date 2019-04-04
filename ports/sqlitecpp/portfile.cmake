@@ -23,6 +23,7 @@ vcpkg_configure_cmake(
         -DSQLITECPP_RUN_CPPCHECK=OFF
         -DSQLITECPP_INTERNAL_SQLITE=OFF
         -DSQLITE_ENABLE_COLUMN_METADATA=OFF
+        -DSQLITECPP_INTERNAL_SQLITE=OFF
 )
 
 vcpkg_install_cmake()
