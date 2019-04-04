@@ -122,3 +122,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-1.0.pc $
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-static-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-static-1.0.pc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libbson-1.0.dll ${CURRENT_PACKAGES_DIR}/bin/libbson-1.0.dll)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libbson-1.0.pdb ${CURRENT_PACKAGES_DIR}/bin/libbson-1.0.pdb)
