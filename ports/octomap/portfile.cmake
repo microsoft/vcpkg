@@ -46,10 +46,15 @@ else()
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/octomap)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+# file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+# file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/octomap/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/octomap)
