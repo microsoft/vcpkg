@@ -1,0 +1,4 @@
+Source: g3log
+Version: 2019-03-23
+Description: Asynchronous logger with Dynamic Sinks
+Build-Depends:
