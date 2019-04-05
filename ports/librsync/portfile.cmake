@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v2.0.2
     SHA512 5d2bc1d62b37e9ed7416203615d0a0e3c05c4c884b5da63eda10dd5c985845b500331bce226e4d45676729382c85b41528282e25d491afda31ba434ac0fefad7
     HEAD_REF master
+    PATCHES
+        001-enable-static-libs.patch
 )
 
 vcpkg_configure_cmake(
