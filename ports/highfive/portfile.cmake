@@ -28,7 +28,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/HighFive/CMake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-if(NOT WIN32)
+if(NOT WIN32 AND NOT APPLE)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/HighFive)
 endif()
 
