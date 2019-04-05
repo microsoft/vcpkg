@@ -36,7 +36,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake/")
+if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+else()
+  vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/fcl")
+endif()
+
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/fcl/fclConfig.cmake FCL_CONFIG)
 string(REPLACE "unset(_expectedTargets)"
