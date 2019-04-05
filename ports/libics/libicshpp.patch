@@ -1,0 +1,10 @@
+--- support/cpp_interface/libics.hpp
++++ support/cpp_interface/libics.hpp
+@@ -40,6 +40,7 @@
+ #include <string>
+ #include <utility>
+ #include <vector>
++#include <cstddef>
+ 
+ #if defined(__WIN32__) && !defined(WIN32)
+ #  define WIN32

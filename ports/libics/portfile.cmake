@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmakelists.patch
+        libicshpp.patch
 )
 
 vcpkg_configure_cmake(
