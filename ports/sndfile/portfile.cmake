@@ -33,7 +33,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
++if(WIN32)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SndFile)
+endif()
 
 vcpkg_copy_pdbs()
 
