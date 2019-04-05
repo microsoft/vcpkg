@@ -54,8 +54,8 @@ install_if_exists(${RELEASE_DIR} ${CURRENT_PACKAGES_DIR}/lib g3logger.lib)
 install_if_exists(${DEBUG_DIR} ${CURRENT_PACKAGES_DIR}/debug/bin g3logger.dll)
 install_if_exists(${RELEASE_DIR} ${CURRENT_PACKAGES_DIR}/bin g3logger.dll)
 
-install_if_exists(${DEBUG_DIR} ${CURRENT_PACKAGES_DIR}/debug/lib g3logger.a)
-install_if_exists(${RELEASE_DIR} ${CURRENT_PACKAGES_DIR}/lib g3logger.a)
+install_if_exists(${DEBUG_DIR} ${CURRENT_PACKAGES_DIR}/debug/lib libg3logger.a)
+install_if_exists(${RELEASE_DIR} ${CURRENT_PACKAGES_DIR}/lib libg3logger.a)
 
 vcpkg_copy_pdbs()
 
@@ -63,6 +63,11 @@ configure_file(
     ${SOURCE_PATH}/cmake/g3loggerConfig.cmake
     ${CURRENT_PACKAGES_DIR}/share/g3logger/g3loggerConfig.cmake
     COPYONLY
+)
+
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/g3logger
 )
 
 # Install usage
