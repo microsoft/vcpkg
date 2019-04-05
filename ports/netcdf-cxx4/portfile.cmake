@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-cxx4
     REF v4.3.0
-    SHA512 c0ae933446c5bb019ab90c097787cefe15a0161b6b768e0251e9e0b21c92ca8d42d98babcbe07b81b8db08cd1e9fba7befb853611a76debfdfba0aee4fb4b0bc
+    SHA512 8e77333c979513721209e6b3fde31c298e18a45d7ea08123056e8120469eb8c4024d71289fab2b9182ee19ee7b6ad22bd133525bef048a497ede4aa2e9017465
     HEAD_REF master
     PATCHES
         install-destination.patch
