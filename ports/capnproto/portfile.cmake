@@ -6,9 +6,10 @@ if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "Error: CapnProto only build on Windows for now. See #5630 and #5635")
 endif()
 
+include(vcpkg_common_functions)
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO capnproto/capnproto
