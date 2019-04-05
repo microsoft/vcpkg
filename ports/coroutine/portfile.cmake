@@ -35,7 +35,7 @@ file(
     RENAME      copyright
 )
 
-if(WIN32 AND DLL_LINKAGE)
+if(WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(INSTALL        ${CURRENT_PACKAGES_DIR}/debug/lib/coroutine.dll
          DESTINATION    ${CURRENT_PACKAGES_DIR}/debug/bin
     )
@@ -49,6 +49,3 @@ endif()
 # removed duplicates in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# unset used variables
-unset(DLL_LINKAGE)
