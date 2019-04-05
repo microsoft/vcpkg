@@ -1,0 +1,5 @@
+The package @PORT@:@TARGET_TRIPLET@ provides CMake targets:
+
+    find_package(g3logger CONFIG REQUIRED)
+    target_include_directories(main PRIVATE ${G3LOG_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${G3LOG_LIBRARIES})
