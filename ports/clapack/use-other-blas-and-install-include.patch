@@ -7,7 +7,7 @@ index 320ccc6..8c53def 100644
  include(CTest)
  
 +# BLAS_LIBRARIES
-+find_package(BLAS REQUIRED)
++find_package(OpenBLAS REQUIRED)
 +
  if(WIN32 AND NOT CYGWIN)
    set(SECOND_SRC  ${CLAPACK_SOURCE_DIR}/INSTALL/winsecond.c)
@@ -20,7 +20,8 @@ index 320ccc6..8c53def 100644
 +
 +# add_subdirectory(BLAS)
  add_subdirectory(SRC)
- add_subdirectory(TESTING)
+-add_subdirectory(TESTING)
++# add_subdirectory(TESTING)
  set(CLAPACK_VERSION 3.2.1)
 @@ -27,8 +31,13 @@ set(CPACK_PACKAGE_VERSION_MAJOR 3)
  set(CPACK_PACKAGE_VERSION_MINOR 2)
@@ -86,7 +87,7 @@ index ac4cce3..0548c8d 100644
 +endif(BUILD_SHARED_LIBS AND MSVC)
 +
 +
-+target_link_libraries(lapack ${BLAS_LIBRARIES} f2c)
++target_link_libraries(lapack OpenBLAS::OpenBLAS f2c)
 +
 +install(TARGETS lapack 
 +        RUNTIME DESTINATION bin
