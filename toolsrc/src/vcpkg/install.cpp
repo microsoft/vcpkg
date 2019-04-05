@@ -616,6 +616,7 @@ namespace vcpkg::Install
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
+            clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
