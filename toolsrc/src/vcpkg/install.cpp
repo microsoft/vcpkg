@@ -334,6 +334,14 @@ namespace vcpkg::Install
                 fs.remove_all(package_dir, ec);
             }
 
+            if (action.build_options.clean_downloads == Build::CleanDownloads::YES)
+            {
+                auto& fs = paths.get_filesystem();
+                const fs::path download_dir = paths.downloads;
+                std::error_code ec;
+                fs.remove_all(download_dir, ec);
+            }
+
             return {code, std::move(bcf)};
         }
 
