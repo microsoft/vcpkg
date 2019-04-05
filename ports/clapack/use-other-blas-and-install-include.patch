@@ -38,20 +38,23 @@ index 320ccc6..8c53def 100644
 +#   ${CLAPACK_BINARY_DIR}/clapack-config.cmake @ONLY)
 +
 +install(FILES 
-+          ${CMAKE_CURRENT_LIST_DIR}/include/clapack.h
-+          ${CMAKE_CURRENT_LIST_DIR}/include/f2c.h 
++          ${CMAKE_CURRENT_LIST_DIR}/INCLUDE/clapack.h
++          ${CMAKE_CURRENT_LIST_DIR}/INCLUDE/f2c.h 
 +        DESTINATION include)
 \ No newline at end of file
 diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
 index 43d7b3f..2bdbd05 100644
 --- a/F2CLIBS/libf2c/CMakeLists.txt
 +++ b/F2CLIBS/libf2c/CMakeLists.txt
-@@ -58,5 +58,5 @@ if(WIN32)
+@@ -58,5 +58,8 @@ if(WIN32)
  endif()
  include_directories(${CLAPACK_SOURCE_DIR}/F2CLIBS/libf2c)
  include_directories(${CLAPACK_BINARY_DIR}/F2CLIBS/libf2c)
 -add_library(f2c ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
 +add_library(f2c STATIC ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
++if(UNIX AND NOT APPLE)
++   target_link_libraries(f2c PUBLIC m)
++endif()
  set_property(TARGET f2c PROPERTY PREFIX lib)
 diff --git a/INCLUDE/clapack.h b/INCLUDE/clapack.h
 index d22da98..5ef0a5b 100644

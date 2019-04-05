@@ -31,7 +31,6 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         use-other-blas-and-install-include.patch
-        fix-lack-library.patch
 )
 
 vcpkg_configure_cmake(
