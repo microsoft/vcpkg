@@ -339,7 +339,9 @@ namespace vcpkg::Install
                 auto& fs = paths.get_filesystem();
                 const fs::path download_dir = paths.downloads;
                 std::error_code ec;
-                fs.remove_all(download_dir, ec);
+                for(auto& p: fs.get_files_non_recursive(download_dir))
+                    if (!fs.is_directory(p))
+                        fs.remove(p);
             }
 
             return {code, std::move(bcf)};
