@@ -25,7 +25,7 @@ vcpkg_install_cmake()
 if (WIN32)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else ()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ebml)
 endif ()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
