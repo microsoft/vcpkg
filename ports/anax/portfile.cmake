@@ -8,12 +8,13 @@ vcpkg_from_github(
     REF v2.1.0
     SHA512 b573733b5f9634bf8cfc5b0715074f9a8ee29ecb48dc981d9371254a1f6ff8afbbb9ba6aa0877d53e518e5486ecc398a6d331fb9b5dbfd17d8707679216e11a3
     HEAD_REF master
-    PATCHES
+    PATCHES 
         Add-bin-output.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
 )
 
 vcpkg_install_cmake()

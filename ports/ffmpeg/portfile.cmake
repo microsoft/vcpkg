@@ -23,12 +23,22 @@ vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
-else()
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+if (WIN32)
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
+    else()
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+    endif()
 endif()
-set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+
+if (WIN32)
+  set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+  set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
+else()
+  set(BASH bash)
+  set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
+endif()
+
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 
@@ -122,18 +132,20 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
-    set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
-else()
-    set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
-    set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
+if(WIN32)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
+    else()
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
+    endif()
 endif()
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
         "${SOURCE_PATH}" # SOURCE DIR
         "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
@@ -145,7 +157,7 @@ vcpkg_execute_required_process(
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
         "${SOURCE_PATH}" # SOURCE DIR
         "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
