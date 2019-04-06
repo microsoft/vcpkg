@@ -1,0 +1,185 @@
+diff --git a/Build.cmake b/Build.cmake
+index 8babd68..064b1a9 100644
+--- a/Build.cmake
++++ b/Build.cmake
+@@ -77,8 +77,14 @@
+ # require here some proxy for c++14 standard to avoid problems TARGET_PROPERTY CXX_STANDARD
+ TARGET_COMPILE_FEATURES(${G3LOG_LIBRARY} PUBLIC cxx_variable_templates)
+ 
+- 
+-TARGET_INCLUDE_DIRECTORIES(${G3LOG_LIBRARY} PUBLIC ${LOG_SRC} "${CMAKE_CURRENT_BINARY_DIR}/include")
++TARGET_INCLUDE_DIRECTORIES(${G3LOG_LIBRARY}
++   PRIVATE
++      $<BUILD_INTERFACE:${LOG_SRC}>
++      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
++   INTERFACE
++      $<INSTALL_INTERFACE:include>
++)
++
+ SET(ACTIVE_CPP0xx_DIR "Release")
+ 
+ # find corresponding thread lib (e.g. whether -lpthread is needed or not)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d1e2f23..0f059e5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -167,9 +167,9 @@ message( STATUS "Software Version: ${VERSION}" )
+ 
+ 
+ 
+-IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
++IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    # ==========================================================================
+-   #        Only tested on Ubuntu, CentOS and OSX.
++   #        Only tested on Ubuntu, CentOS, OSX and Windows.
+    #        For OSX you can also install an older version using 'brew install'
+    #
+    # ==========================================================================
+diff --git a/CPackLists.txt b/CPackLists.txt
+index 7a89ad0..173ab32 100644
+--- a/CPackLists.txt
++++ b/CPackLists.txt
+@@ -23,8 +23,8 @@ IF(NOT MINGW)
+    ENDIF()
+ ENDIF()
+ 
+-SET(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output dir for libraries")
+-SET(CMAKE_INSTALL_HEADERDIR include CACHE PATH "Output dir for headers")
++INCLUDE(CMakePackageConfigHelpers)
++INCLUDE(GNUInstallDirs)
+ 
+ SET(CPACK_PACKAGE_NAME g3log)
+ SET(CPACK_PACKAGE_VERSION_MAJOR ${MAJOR_VERSION})
+@@ -41,30 +41,45 @@ SET(CMAKE_INSTALL_HEADERDIR ${CMAKE_INSTALL_HEADERDIR}/g3log)
+ 
+ IF(NOT MINGW)
+    INSTALL( TARGETS g3logger
++               EXPORT g3logger-targets
+                ARCHIVE DESTINATION ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
+                LIBRARY DESTINATION ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
++               RUNTIME DESTINATION ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
+                COMPONENT libraries)
+ 
+    INSTALL( FILES ${HEADER_FILES}
+-               DESTINATION ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_HEADERDIR}
++               DESTINATION ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/g3log
+                COMPONENT headers)
+-
+-   INSTALL( FILES ${PROJECT_SOURCE_DIR}/cmake/g3loggerConfig.cmake
+-               DESTINATION ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/cmake/g3logger)
+ ELSE()
+    INSTALL( TARGETS g3logger
++               EXPORT g3logger-targets
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++               RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+                COMPONENT libraries)
+ 
+    INSTALL( FILES ${HEADER_FILES}
+-               DESTINATION ${CMAKE_INSTALL_HEADERDIR}
++               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/g3log
+                COMPONENT headers)
+-
+-   INSTALL( FILES ${PROJECT_SOURCE_DIR}/cmake/g3loggerConfig.cmake
+-               DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/g3logger)
+ ENDIF()
+ 
++INSTALL(
++   EXPORT g3logger-targets
++   FILE g3loggerTargets.cmake
++   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/g3logger
++)
++
++CONFIGURE_PACKAGE_CONFIG_FILE(
++   ${PROJECT_SOURCE_DIR}/cmake/g3loggerConfig.cmake
++   ${CMAKE_CURRENT_BINARY_DIR}/g3loggerConfig.cmake
++   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/g3logger
++)
++
++install(
++    FILES ${CMAKE_CURRENT_BINARY_DIR}/g3loggerConfig.cmake
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/g3logger
++)
++
+ SET(CPACK_COMPONENTS_ALL libraries headers)
+ SET(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "G3Log libraries")
+ SET(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "G3Log C++ headers")
+diff --git a/cmake/g3loggerConfig.cmake b/cmake/g3loggerConfig.cmake
+index 490be31..d9b0e75 100644
+--- a/cmake/g3loggerConfig.cmake
++++ b/cmake/g3loggerConfig.cmake
+@@ -16,42 +16,41 @@
+ # * ``G3LOG_FOUND`` -- check if the lib was found without using the newer ``if(TARGET g3logger)...``
+ 
+ include(FindPackageHandleStandardArgs)
+-find_path(G3LOG_INCLUDE_DIR 
+-    NAMES
+-         g3log/active.hpp
+-         g3log/atomicbool.hpp
+-         g3log/crashhandler.hpp
+-         g3log/filesink.hpp
+-         g3log/future.hpp
+-         g3log/g3log.hpp
+-         g3log/generated_definitions.hpp
+-         g3log/logcapture.hpp
+-         g3log/loglevels.hpp
+-         g3log/logmessage.hpp
+-         g3log/logworker.hpp
+-         g3log/moveoncopy.hpp
+-         g3log/shared_queue.hpp
+-         g3log/sinkhandle.hpp
+-         g3log/sink.hpp
+-         g3log/sinkwrapper.hpp
+-         g3log/stacktrace_windows.hpp
+-         g3log/stlpatch_future.hpp
+-         g3log/time.hpp
+-    PATHS        
+-        ENV G3LOG
+-)
+-find_library(G3LOG_LIBRARY
+-            NAMES libg3logger g3logger )
+-find_package_handle_standard_args(g3logger
++
++@PACKAGE_INIT@
++
++if (NOT TARGET g3logger)
++  include("${CMAKE_CURRENT_LIST_DIR}/g3loggerTargets.cmake")
++
++  get_target_property(G3LOG_INCLUDE_DIR g3logger INTERFACE_INCLUDE_DIRECTORIES)
++
++  get_target_property(G3LOG_LIBRARY_DEBUG g3logger IMPORTED_IMPLIB_DEBUG)
++  if (G3LOG_LIBRARY_DEBUG MATCHES ".*-NOTFOUND")
++    get_target_property(G3LOG_LIBRARY_DEBUG g3logger IMPORTED_LOCATION_DEBUG)
++  endif ()
++
++  get_target_property(G3LOG_LIBRARY_RELEASE g3logger IMPORTED_IMPLIB_RELEASE)
++  if (G3LOG_LIBRARY_RELEASE MATCHES ".*-NOTFOUND")
++    get_target_property(G3LOG_LIBRARY_RELEASE g3logger IMPORTED_LOCATION_RELEASE)
++  endif ()
++
++  if (NOT G3LOG_LIBRARY_DEBUG MATCHES ".*-NOTFOUND" AND
++      NOT G3LOG_LIBRARY_RELEASE MATCHES ".*-NOTFOUND")
++    set(G3LOG_LIBRARY
++      debug ${G3LOG_LIBRARY_DEBUG}
++      optimized ${G3LOG_LIBRARY_RELEASE}
++    )
++  elseif (NOT G3LOG_LIBRARY_DEBUG MATCHES ".*-NOTFOUND")
++    set(G3LOG_LIBRARY ${G3LOG_LIBRARY_DEBUG})
++  elseif (NOT G3LOG_LIBRARY_RELEASE MATCHES ".*-NOTFOUND")
++    set(G3LOG_LIBRARY ${G3LOG_LIBRARY_RELEASE})  
++  endif ()
++endif ()
++
++find_package_handle_standard_args(G3LOG
+             REQUIRED_VARS G3LOG_INCLUDE_DIR G3LOG_LIBRARY)
+ mark_as_advanced(G3LOG_INCLUDE_DIR G3LOG_LIBRARY)
+ set(G3LOG_LIBRARIES ${G3LOG_LIBRARY})
+ set(G3LOG_INCLUDE_DIRS ${G3LOG_INCLUDE_DIR})
+ 
+-add_library(g3logger SHARED IMPORTED)
+ find_package(Threads REQUIRED)
+-set_target_properties(g3logger PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES "${G3LOG_INCLUDE_DIRS}"
+-    IMPORTED_LOCATION "${G3LOG_LIBRARY}"
+-    IMPORTED_LINK_INTERFACE_LIBRARIES Threads::Threads
+-    )
