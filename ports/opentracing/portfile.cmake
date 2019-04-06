@@ -1,7 +1,16 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "Error: UWP build is not supported.")
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_DYNAMIC_LOADING ON)
+	set( LOCAL_OPTIONS
+		-DBUILD_STATIC_LIBS=OFF
+	)
+else()
+    message("Static building is only possible when compiling static and dynamic versions at the same time. Enabling both.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
 vcpkg_from_github(
@@ -14,6 +23,9 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+	OPTIONS
+		${OPTIONS}
+		${LOCAL_OPTIONS}
 )
 
 vcpkg_install_cmake()
