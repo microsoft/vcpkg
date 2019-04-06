@@ -35,23 +35,25 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/OpenTracing")
 vcpkg_copy_pdbs()
 
 # Move DLLs to /bin
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/lib/opentracing.dll ${CURRENT_PACKAGES_DIR}/bin/opentracing.dll)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+		file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/lib/opentracing.dll ${CURRENT_PACKAGES_DIR}/bin/opentracing.dll)
 
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/opentracing.dll ${CURRENT_PACKAGES_DIR}/debug/bin/opentracing.dll)
+		file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/opentracing.dll ${CURRENT_PACKAGES_DIR}/debug/bin/opentracing.dll)
 
-	# Fix targets
-	file(READ ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-release.cmake RELEASE_CONFIG)
-	string(REPLACE "\${_IMPORT_PREFIX}/lib/opentracing.dll"
+		# Fix targets
+		file(READ ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-release.cmake RELEASE_CONFIG)
+		string(REPLACE "\${_IMPORT_PREFIX}/lib/opentracing.dll"
 				"\${_IMPORT_PREFIX}/bin/opentracing.dll" RELEASE_CONFIG ${RELEASE_CONFIG})
-	file(WRITE ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-release.cmake "${RELEASE_CONFIG}")
+		file(WRITE ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-release.cmake "${RELEASE_CONFIG}")
 
-	file(READ ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-debug.cmake DEBUG_CONFIG)
-	string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/opentracing.dll"
+		file(READ ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-debug.cmake DEBUG_CONFIG)
+		string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/opentracing.dll"
 				"\${_IMPORT_PREFIX}/debug/bin/opentracing.dll" DEBUG_CONFIG ${DEBUG_CONFIG})
-	file(WRITE ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-debug.cmake "${DEBUG_CONFIG}")
+		file(WRITE ${CURRENT_PACKAGES_DIR}/share/opentracing/OpenTracingTargets-debug.cmake "${DEBUG_CONFIG}")
+	endif()
 endif()
 
 # Handle copyright
