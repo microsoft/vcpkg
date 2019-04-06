@@ -16,7 +16,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DTIDY_CONSOLE_SHARED=${BUILD_SHARED_LIB}
+        -DBUILD_SHARED_LIB=OFF
+        -DTIDY_CONSOLE_SHARED=OFF
 )
 
 vcpkg_install_cmake()
