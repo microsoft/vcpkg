@@ -65,7 +65,13 @@ endforeach(FORMAT)
 
 # SDL
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+   set(SDL_LIBRARY SDL2::SDL2-static)
+else()
+    set(SDL_LIBRARY SDL2::SDL2)
+endif()
 
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)

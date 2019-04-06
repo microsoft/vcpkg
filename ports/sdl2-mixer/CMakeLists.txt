@@ -2,8 +2,15 @@ cmake_minimum_required(VERSION 3.1)
 project(SDL2_MIXER C)
 
 find_path(SDL_INCLUDE_DIR SDL.h PATH_SUFFIXES SDL2)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 set(SDL_MIXER_INCLUDES ${SDL_INCLUDE_DIR})
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+   set(SDL_LIBRARY SDL2::SDL2-static)
+else()
+    set(SDL_LIBRARY SDL2::SDL2)
+endif()
+
 set(SDL_MIXER_LIBRARIES ${SDL_LIBRARY})
 
 # builtin formats
