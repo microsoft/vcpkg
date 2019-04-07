@@ -43,6 +43,7 @@ vcpkg_configure_cmake(
         -DRDKAFKA_BUILD_TESTS=OFF
         -DENABLE_LZ4_EXT=${ENABLE_LZ4_EXT}
         -DWITH_SSL=${WITH_SSL}
+        -DWITH_BUNDLED_SSL=OFF
         -DWITH_ZLIB=${WITH_ZLIB}
         -DWITH_ZSTD=${WITH_ZSTD}
     OPTIONS_DEBUG
@@ -61,7 +62,10 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(
+    CONFIG_PATH lib/cmake/RdKafka
+    TARGET_PATH share/rdkafka
+)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
