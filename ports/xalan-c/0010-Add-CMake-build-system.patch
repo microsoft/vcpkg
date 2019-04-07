@@ -1205,9 +1205,9 @@ index 00000000..dea230fd
 +endif()
 +
 +# Note ICU support is broken.
-+if(ICU_FOUND)
-+  list(APPEND msgloaders icu-broken)
-+endif()
++#if(ICU_FOUND)
++#  list(APPEND msgloaders icu-broken)
++#endif()
 +
 +string(REPLACE ";" "|" msgloader_help "${msgloaders}")
 +list(GET msgloaders 0 xerces_msgloader_default)
