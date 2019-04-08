@@ -1127,7 +1127,7 @@ index 00000000..40e884b5
 +
 +# Determine if ICU is available
 +
-+find_package(ICU COMPONENTS uc data i18n)
++find_package(ICU 60 COMPONENTS uc data i18n)
 diff --git a/cmake/XalanLFS.cmake b/cmake/XalanLFS.cmake
 new file mode 100644
 index 00000000..8835d934
