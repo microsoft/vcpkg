@@ -13,9 +13,9 @@ set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
 set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_4/ACE-src-6.5.4.zip"
-    FILENAME ACE-src-6.5.4.zip
-    SHA512 e699b24aa65c44137b7bdbe3c045b6c8d76c43ff4c78a05efe6d0d7fd05acdd1166b74529cc4d7ba9440b6b29cce3aa2dcc97f574c94afc05b0fef18475d6ce3
+    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_5/ACE-src-6.5.5.zip"
+    FILENAME ACE-src-6.5.5.zip
+    SHA512 65696e6f2776fd9c015adb78a92f1c87edacde62ff11f20f88c416d4420a6fc6e5176412c5f93262d06e67b89717499f8108f68582f70fea6ce05466c53415e9
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
