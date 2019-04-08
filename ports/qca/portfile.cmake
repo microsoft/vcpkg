@@ -33,12 +33,12 @@ message(STATUS "Importing certstore")
 file(REMOVE ${SOURCE_PATH}/certs/rootcerts.pem)
 # Using file(DOWNLOAD) to use https
 file(DOWNLOAD https://raw.githubusercontent.com/mozilla/gecko-dev/master/security/nss/lib/ckfw/builtins/certdata.txt
-    ${CMAKE_CURRENT_LIST_DIR}/certdata.txt
+    ${CURRENT_BUILDTREES_DIR}/cert/certdata.txt
     TLS_VERIFY ON
 )
 vcpkg_execute_required_process(
     COMMAND ${PERL} ${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl -n ${SOURCE_PATH}/certs/rootcerts.pem
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/cert
     LOGNAME ca-bundle
 )
 message(STATUS "Importing certstore done")

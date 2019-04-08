@@ -37,13 +37,22 @@ endif()
 foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
-        PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
-    )
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+      vcpkg_apply_patches(
+          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
+          PATCHES
+          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+      )
+    else()
+      vcpkg_apply_patches(
+          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
+          PATCHES
+          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+      )
+    endif()
 endforeach()
+
 
 find_program(NMAKE nmake REQUIRED)
 
