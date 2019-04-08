@@ -30,6 +30,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/exiv2/cmake")
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/exiv2/exiv2Config.cmake ${CURRENT_PACKAGES_DIR}/share/exiv2/Exiv2Config.cmake)
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
