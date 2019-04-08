@@ -1,6 +1,6 @@
 _find_package(${ARGS})
 if(LibXml2_FOUND)
-    find_package(LibLZMA)
+    find_package(LibLZMA CONFIG)
     find_package(ZLIB)
 
     list(APPEND LIBXML2_LIBRARIES ${LIBLZMA_LIBRARIES} ${ZLIB_LIBRARIES})

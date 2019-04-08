@@ -16,7 +16,7 @@ find_library(SIGCPP_LIBRARY NAMES sigc sigc-2.0)
 find_library(FFI_LIBRARY NAMES ffi libffi)
 find_library(PCRE_LIBRARY NAMES pcre libpcre)
 find_package(LibXml2 REQUIRED)
-find_package(LibLZMA REQUIRED)
+find_package(LibLZMA CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
 if(APPLE)

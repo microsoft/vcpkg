@@ -1,11 +1,17 @@
 cmake_minimum_required(VERSION 3.0)
-project(liblzma)
+project(LibLZMA)
 
 add_definitions(-DHAVE_CONFIG_H)
 if(BUILD_SHARED_LIBS)
     add_definitions(-DLIBLZMADLL_EXPORTS)
     add_definitions(-DDLL_EXPORT)
 endif()
+
+set(INSTALL_BIN_DIR      "bin"                CACHE PATH   "Path where exe and dll will be installed")
+set(INSTALL_LIB_DIR      "lib"                CACHE PATH   "Path where lib will be installed")
+set(INSTALL_INCLUDE_DIR  "include"            CACHE PATH   "Path where headers will be installed")
+set(INSTALL_CMAKE_DIR    "share/LibLZMA"      CACHE PATH   "Path where cmake configs will be installed")
+set(CMAKE_DEBUG_POSTFIX  "d"                  CACHE STRING "Append a suffix to debug libraries")
 
 if(NOT MSVC)
     add_definitions(-DHAVE_VISIBILITY=1)
@@ -60,17 +66,8 @@ else()
 #define SIZEOF_SIZE_T (sizeof(size_t))
 """)
 endif()
-include_directories(src/liblzma/common)
-include_directories(src/common)
-include_directories(src/liblzma/api)
-include_directories(src/liblzma/check)
-include_directories(src/liblzma/delta)
-include_directories(src/liblzma/lz)
-include_directories(src/liblzma/lzma)
-include_directories(src/liblzma/rangecoder)
-include_directories(src/liblzma/simple)
 
-add_library(lzma
+add_library(LZMA
     src/common/tuklib_cpucores.c
     src/common/tuklib_physmem.c
     src/liblzma/check/check.c
@@ -143,14 +140,34 @@ add_library(lzma
     src/liblzma/simple/simple_decoder.c
     src/liblzma/simple/simple_encoder.c
     src/liblzma/simple/sparc.c
-    src/liblzma/simple/x86.c)
+    src/liblzma/simple/x86.c
+)
 
-install(TARGETS lzma
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib)
+target_include_directories(LZMA PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/common>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/common>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/check>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/delta>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/lz>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/rangecoder>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/simple>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/lzma>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/api>
+)
 
-if(NOT LIBLZMA_SKIP_HEADERS)
-    install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma DESTINATION include)
-    install(FILES ${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h DESTINATION include)
-endif()
+set_target_properties(LZMA PROPERTIES PUBLIC_HEADER
+"${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/base.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/bcj.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/block.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/check.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/container.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/delta.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/filter.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/hardware.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index_hash.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/lzma12.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/stream_flags.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/version.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/vli.h"
+)
+
+install(TARGETS LZMA EXPORT LibLZMATargets
+    RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
+    ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
+    LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
+)
+
+install(EXPORT LibLZMATargets
+  FILE LibLZMAConfig.cmake
+  NAMESPACE LZMA::
+  DESTINATION "${INSTALL_CMAKE_DIR}"
+)

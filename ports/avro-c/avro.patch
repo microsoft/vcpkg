@@ -17,7 +17,7 @@ diff -ur a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
 -find_package(PkgConfig)
 -pkg_check_modules(LZMA liblzma)
 -if (LZMA_FOUND)
-+find_package(LIBLZMA)
++find_package(LIBLZMA CONFIG)
 +if (LIBLZMA_FOUND)
      set(LZMA_PKG liblzma)
      add_definitions(-DLZMA_CODEC)

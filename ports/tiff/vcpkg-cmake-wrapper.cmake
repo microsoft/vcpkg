@@ -1,6 +1,6 @@
 _find_package(${ARGS})
 
-find_package(LibLZMA)
+find_package(LibLZMA CONFIG)
 find_package(JPEG)
 find_package(ZLIB)
 if(TARGET TIFF::TIFF)

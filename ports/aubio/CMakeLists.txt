@@ -38,7 +38,7 @@ find_library(FLAC_LIB flac)
 find_library(VORBIS_LIB vorbis)
 find_library(VORBISENC_LIB vorbisenc)
 find_package(BZip2 REQUIRED)
-find_package(LibLZMA REQUIRED)
+find_package(LibLZMA CONFIG REQUIRED)
 
 include_directories(src ${LIBSNDFILE_H} ${LIBLZMA_INCLUDE_DIRS})
 

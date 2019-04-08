@@ -7,7 +7,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 find_package(ZLIB REQUIRED)
-find_package(LibLZMA REQUIRED)
+find_package(LibLZMA CONFIG REQUIRED)
 find_package(unofficial-iconv REQUIRED)
 
 file(GLOB SOURCES *.c)
