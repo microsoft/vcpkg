@@ -14,7 +14,7 @@ set(OME_FILES_REF 6a74d4f9a3595de7c0f450b33117b82bb949e636)
 
 # Download and install python and the `six` python package
 vcpkg_find_acquire_program(PYTHON2)
-message(STATUS "Using python at: ${PYTHON2}")
+get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
 
 vcpkg_find_acquire_program(7Z)
 vcpkg_download_distfile(
@@ -29,7 +29,7 @@ vcpkg_execute_required_process(
     LOGNAME unpack-six
 )
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON2} setup.py install --user
+    COMMAND ${PYTHON2} setup.py install --user --prefix=
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/six-1.12.0/
     LOGNAME install-six
 )
@@ -165,6 +165,7 @@ vcpkg_apply_patches(
 
 vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
 vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/debug/bin)
+vcpkg_add_to_path(${PYTHON2_EXE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -175,7 +176,7 @@ vcpkg_configure_cmake(
        -Drelocatable-install:BOOL=ON
        -Dsphinx:BOOL=OFF
        -DCMAKE_CXX_STANDARD=14
-       -DPYTHON_EXECUTABLE="${PYTHON2}"
+       #-DPYTHON_EXECUTABLE="${PYTHON2}"
 )
 
 vcpkg_install_cmake()
