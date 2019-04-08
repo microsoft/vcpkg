@@ -1,4 +1,4 @@
 Source: omefiles
 Version: 0.1.0
 Description: OME Files is a C++ library for reading and writing data using the open and standard OME-TIFF file format using the OME data model
-Build-Depends: boost, hdf5, libpng, tiff, xerces-c, xalan-c
+Build-Depends: boost-filesystem, boost-log, boost-system, boost-units, boost-regex, boost-math, boost-lexical-cast, boost-iostreams, boost-algorithm, boost-format, boost-range, boost-optional, boost-uuid, boost-multi-array, boost-type-traits, boost-preprocessor, boost-geometry, boost-program-options, boost-mpl, boost-multi-index, boost-graph, boost-tuple, hdf5, libpng, tiff, xerces-c, xalan-c
