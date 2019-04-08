@@ -14,6 +14,8 @@ set(OME_FILES_REF 6a74d4f9a3595de7c0f450b33117b82bb949e636)
 
 # Download and install python and the `six` python package
 vcpkg_find_acquire_program(PYTHON2)
+message(STATUS "Using python at: ${PYTHON2}")
+
 vcpkg_find_acquire_program(7Z)
 vcpkg_download_distfile(
     SIX_ZIP 
