@@ -443,18 +443,6 @@ namespace vcpkg::Dependencies
                     Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS);
                 }
 
-                if (!cluster.installed.get() && !Util::Sets::contains(prevent_default_features, cluster.spec.name()))
-                {
-                    // Add the default features of this package if it was not previously installed and it isn't being
-                    // suppressed.
-                    auto res = mark_plus("", cluster, graph, graph_plan, prevent_default_features);
-
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       res == MarkPlusResult::SUCCESS,
-                                       "Error: Unable to satisfy default dependencies of %s",
-                                       cluster.spec);
-                }
-
                 for (auto&& depend : it_build_edges->second)
                 {
                     auto& depend_cluster = graph.get(depend.spec());
