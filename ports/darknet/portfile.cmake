@@ -11,12 +11,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF dd27d67f58f563bb6bb2af7bb6374f8a59cebcde
-  SHA512 6821ba9cd5dc185759492deaa2d20ac1ce60778a8aec9c372c96887d9650f9a97a3b7a3a5860b70078f483e62224772ef1078ecb9c03b1b3bed230569cc7b919
+  REF 1cd332e4cac001ffcc12a24c72640fe02b69a8a0
+  SHA512 313018d51747b40244d3a828dce8deb35f900a6be1198f0f1af5647f3889ead7f1ac78cdc4223cfe85d279ca21000df1c8feac02e703e5b91af939e26e4d5571
   HEAD_REF master
-  PATCHES
-    enable_standard_installation.patch
-    dont_use_integrated_stb_lib.patch
+  PATCHES 
+    fix_cmakelists.patch
 )
 
 set(ENABLE_CUDA OFF)
@@ -52,8 +51,8 @@ if("weights" IN_LIST FEATURES)
   )
 endif()
 
-file(REMOVE ${SOURCE_PATH}/src/stb_image.h)
-file(REMOVE ${SOURCE_PATH}/src/stb_image_write.h)
+#make sure we don't use any integrated pre-built library
+file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -92,8 +91,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-#use vcpkg_fixup_cmake_targets()?
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/darknet/DarknetTargets.cmake ${CURRENT_PACKAGES_DIR}/share/darknet/DarknetTargets.cmake)
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

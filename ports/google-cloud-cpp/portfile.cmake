@@ -5,21 +5,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GoogleCloudPlatform/google-cloud-cpp
-    REF v0.7.0
-    SHA512 8e01096b569e78f74ee0015fa7f04729354f9001234acd098333c883247ede209582c929903460264f1155bfa0225837fd770f75ba021f8287cafa78e87e6975
+    REF v0.8.0
+    SHA512 cdb527169c7badab395eb38ba554022a364a99b9cb32705bf69a9613cee74acc1e2402e00ffdcb740467e85603e617f73b01e557afeb1f2786872f8d60f3a75a
     HEAD_REF master
 )
-
-set(GOOGLEAPIS_VERSION 6a3277c0656219174ff7c345f31fb20a90b30b97)
-vcpkg_download_distfile(GOOGLEAPIS
-    URLS "https://github.com/google/googleapis/archive/${GOOGLEAPIS_VERSION}.zip"
-    FILENAME "googleapis-${GOOGLEAPIS_VERSION}.zip"
-    SHA512 809b7cf0429df9867c8ab558857785e9d7d70aea033c6d588b60d29d2754001e9aea5fcdd8cae22fad8145226375bedbd1516d86af7d1e9731fffea331995ad9
-)
-
-file(REMOVE_RECURSE ${SOURCE_PATH}/third_party)
-vcpkg_extract_source_archive(${GOOGLEAPIS} ${SOURCE_PATH}/third_party)
-file(RENAME ${SOURCE_PATH}/third_party/googleapis-${GOOGLEAPIS_VERSION} ${SOURCE_PATH}/third_party/googleapis)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -35,6 +24,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/google-cloud-cpp RENAME copyright)
 
 vcpkg_copy_pdbs()

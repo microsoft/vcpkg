@@ -6,11 +6,8 @@ vcpkg_from_github(
     REF v5.2.4
     SHA512 fce7dc65e77a9b89dbdd6192cb37efc39e3f2cf343f79b54d2dfcd845025dab0e1d5b0f59c264eab04e5cbaf914eeb4818d14cdaac3ae0c1c5de24418656a4b7
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/v5.2.3-b3437cea7b
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/enable-uwp-builds.patch"
+    PATCHES
+        enable-uwp-builds.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
