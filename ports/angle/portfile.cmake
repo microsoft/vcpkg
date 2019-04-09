@@ -17,10 +17,8 @@ vcpkg_from_github(
     REPO google/angle
     REF chromium/3672
     SHA512 dd6a05f0f1f4544b8646c41ffcb4d5e3b41f5261771ada47889345a24d4e55e6370df55a26c354a7073efcde307644cec6c6064ea6fe498ed6b52c3017249f81
-)
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch
+    PATCHES 
+        001-fix-uwp.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -28,6 +26,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
     OPTIONS
         -D${ANGLE_CPU_BITNESS}=1
@@ -35,8 +34,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-#vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle)
-#file(RENAME ${CURRENT_PACKAGES_DIR}/share/angle ${CURRENT_PACKAGES_DIR}/share/unofficial-angle)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/unofficial-angle)
 
 vcpkg_copy_pdbs()
 
