@@ -4,3 +4,7 @@ elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../../lib/libpng16${CMAKE_SHARED_LIBRAR
     set(PNG_LIBRARY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/../../lib/libpng16${CMAKE_SHARED_LIBRARY_SUFFIX}" CACHE FILEPATH "")
 endif()
 _find_package(${ARGS})
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND PNG_LIBRARIES m)
+    target_link_libraries(PNG::PNG INTERFACE m)
+endif()
