@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2019_U5
-    SHA512 227b12e3864fbb922ddbc99700bf94d7d8897d62e2056bf3beb608efacf3ca785dd416b94ad65b421b6c9fc11caff688147b5fbe400c51e98678cee5dc04f274
+    REF 2019_U4
+    SHA512 f8ba92663c822e36f68f2b1837aa66d4fc285abe8c0c9b501f6cc31d3186d39b193588e49988e488beb9d400a1c3aa3fe72580f428e7ceca3581e649f28ae59e
     HEAD_REF tbb_2019
 )
 
@@ -25,7 +25,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
     vcpkg_install_cmake()
 
-    # Settings for TBBConfigInternal.cmake.in
+    # Settings for TBBConfigForSource.cmake.in
     set(TBB_LIB_EXT a)
     set(TBB_LIB_PREFIX lib)
 else()
@@ -43,7 +43,7 @@ else()
         RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
         DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
     )
-    # Settings for TBBConfigInternal.cmake.in
+    # Settings for TBBConfigForSource.cmake.in
     set(TBB_LIB_EXT lib)
     set(TBB_LIB_PREFIX)
 endif()
@@ -53,7 +53,7 @@ file(COPY
   ${SOURCE_PATH}/include/serial
   DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Settings for TBBConfigInternal.cmake.in
+# Settings for TBBConfigForSource.cmake.in
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(TBB_DEFAULT_COMPONENTS tbb tbbmalloc)
 else()
@@ -69,7 +69,7 @@ set(TBB_RELEASE_DIR "\${_tbb_root}/lib")
 set(TBB_DEBUG_DIR "\${_tbb_root}/debug/lib")
 
 configure_file(
-    ${SOURCE_PATH}/cmake/templates/TBBConfigInternal.cmake.in
+    ${SOURCE_PATH}/cmake/templates/TBBConfigForSource.cmake.in
     ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake
     @ONLY
 )
@@ -77,18 +77,6 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake _contents)
 string(REPLACE
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)\nget_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
-    _contents
-    "${_contents}"
-)
-string(REPLACE
-    "set(_tbb_release_lib \"/\${_tbb_component}.lib\")"
-    "set(_tbb_release_lib \"\${_tbb_root}/lib/\${_tbb_component}.lib\")"
-    _contents
-    "${_contents}"
-)
-string(REPLACE
-    "set(_tbb_debug_lib \"/\${_tbb_component}_debug.lib\")"
-    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/\${_tbb_component}_debug.lib\")"
     _contents
     "${_contents}"
 )
