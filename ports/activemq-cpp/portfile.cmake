@@ -12,12 +12,11 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "activemq-cpp-library-${VERSION}-src.tar.bz2"
     SHA512 83692d3dfd5ecf557fc88d204a03bf169ce6180bcff27be41b09409b8f7793368ffbeed42d98ef6374c6b6b477d9beb8a4a9ac584df9e56725ec59ceceaa6ae2  
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/FunctionLevelLinkingOn.diff
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/FunctionLevelLinkingOn.diff
 )
 
 set(RELEASE_CONF "ReleaseDLL")
