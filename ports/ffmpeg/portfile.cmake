@@ -24,7 +24,6 @@ get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
 if (WIN32)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -32,6 +31,8 @@ if (WIN32)
     else()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
     endif()
+    
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 else()
     set(ENV{PATH} "$ENV{PATH}:${YASM_EXE_PATH}")
     set(BASH /bin/bash)
