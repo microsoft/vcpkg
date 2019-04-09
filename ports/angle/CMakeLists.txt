@@ -6,11 +6,6 @@ if(WIN32 AND NOT WINDOWS_STORE)
 else()
     set(WINDOWS_DESKTOP 0)
 endif()
-if (WINDOWS_DESKTOP OR WINDOWS_STORE)
-    set(WINDOWS_ANY 1)
-else()
-    set(WINDOWS_ANY 0)
-endif()
 
 if(UNIX AND NOT APPLE)
     set(LINUX 1)
@@ -18,7 +13,7 @@ else()
     set(LINUX 0)
 endif()
 
-if(WINDOWS_ANY)
+if(MSVC)
     add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive)
 else()
     set(CMAKE_CXX_STANDARD 17)
@@ -46,7 +41,7 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
 # angle::common
-if(WINDOWS_ANY)
+if(WIN32)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
@@ -152,7 +147,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
 endif()
 
 # D3D Renderers
-if(WINDOWS_ANY)
+if(WIN32)
     ## All D3D Sources
     file(GLOB_RECURSE LIBANGLE_D3D_SOURCES
         "src/libANGLE/renderer/d3d/*.cpp"
@@ -197,7 +192,7 @@ if(WINDOWS_ANY)
 endif()
 
 ## Core libANGLE library
-if(WINDOWS_ANY)
+if(WIN32)
     set(LIBANGLE_SOURCES_PLATFORM
         "src/third_party/systeminfo/SystemInfo.cpp"
     )
@@ -296,7 +291,7 @@ add_library(libEGL
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>")
-target_include_directories(libEGL PUBLIC "${CMAKE_CURRENT_LIST_DIR}/include")
+target_include_directories(libEGL PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 
 
 SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
@@ -309,7 +304,7 @@ install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
     ARCHIVE DESTINATION lib
 )
 
-#install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(
@@ -322,4 +317,3 @@ if(NOT DISABLE_INSTALL_HEADERS)
         PATTERN "export.h" EXCLUDE
     )
 endif()
-
