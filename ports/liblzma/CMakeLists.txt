@@ -22,7 +22,7 @@ if(WIN32)
 else()
     include_directories(${CMAKE_CURRENT_BINARY_DIR})
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h
-    """
+    "
 #define TUKLIB_SYMBOL_PREFIX lzma_
 #define ASSUME_RAM 128
 #define HAVE_CHECK_CRC32 1
@@ -64,7 +64,7 @@ else()
 #define PACKAGE_NAME \"XZ Utils\"
 #define PACKAGE_URL \"http://tukaani.org/xz/\"
 #define SIZEOF_SIZE_T (sizeof(size_t))
-""")
+")
 endif()
 
 add_library(LZMA
@@ -156,14 +156,18 @@ target_include_directories(LZMA PUBLIC
 )
 
 set_target_properties(LZMA PROPERTIES PUBLIC_HEADER
-"${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/base.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/bcj.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/block.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/check.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/container.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/delta.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/filter.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/hardware.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index_hash.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/lzma12.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/stream_flags.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/version.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/vli.h"
+"${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/base.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/bcj.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/block.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/check.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/container.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/delta.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/filter.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/hardware.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index_hash.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/lzma12.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/stream_flags.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/version.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/vli.h"
 )
 
 install(TARGETS LZMA EXPORT LibLZMATargets
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
     ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
+    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/lzma"
+)
+
+install(FILES "${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h"
+    DESTINATION "${INSTALL_INCLUDE_DIR}"
 )
 
 install(EXPORT LibLZMATargets
