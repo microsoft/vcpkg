@@ -117,6 +117,8 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
     )
 endif()
 
+set(CMAKE_FIND_FRAMEWORK LAST)
+
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
 set(CMAKE_SYSTEM_IGNORE_PATH
     "${_programfiles}/OpenSSL"
