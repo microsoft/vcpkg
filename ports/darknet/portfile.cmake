@@ -14,7 +14,7 @@ vcpkg_from_github(
   REF 1cd332e4cac001ffcc12a24c72640fe02b69a8a0
   SHA512 313018d51747b40244d3a828dce8deb35f900a6be1198f0f1af5647f3889ead7f1ac78cdc4223cfe85d279ca21000df1c8feac02e703e5b91af939e26e4d5571
   HEAD_REF master
-  PATCHES
+  PATCHES 
     fix_cmakelists.patch
 )
 

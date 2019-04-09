@@ -1,8 +1,7 @@
 Source: libwebp
-Version: 1.0.2-1
+Version: 1.0.2-2
 Description: Lossy compression of digital photographic images.
 Build-Depends: opengl
-Default-Features: all
 
 Feature: all
 Description: enable all webp features

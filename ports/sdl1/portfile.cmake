@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
@@ -16,6 +14,14 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL.vcxproj DESTINATION ${SOURCE_PATH}/Visua
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDLmain.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain )
 
 configure_file(${SOURCE_PATH}/include/SDL_config.h.default ${SOURCE_PATH}/include/SDL_config.h COPYONLY)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/static-build.patch
+    )
+endif()
 
 # This text file gets copied as a library, and included as one in the package 
 file(REMOVE_RECURSE ${SOURCE_PATH}/src/hermes/COPYING.LIB)
