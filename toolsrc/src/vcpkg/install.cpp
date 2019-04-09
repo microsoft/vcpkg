@@ -19,8 +19,6 @@ namespace vcpkg::Install
 {
     using namespace Dependencies;
 
-    using file_pack = std::pair<std::string, std::string>;
-
     InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
                                                  const std::string& destination_subdirectory,
                                                  const fs::path& listfile)
@@ -141,12 +139,18 @@ namespace vcpkg::Install
         fs.write_lines(listfile, output);
     }
 
-    static std::vector<file_pack> extract_files_in_triplet(
-        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files,
-        const Triplet& triplet,
-        const size_t remove_chars = 0)
+    static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
     {
-        std::vector<file_pack> output;
+        for (std::string& s : *strings)
+        {
+            s.erase(0, n);
+        }
+    };
+
+    static std::vector<std::string> extract_files_in_triplet(
+        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
+    {
+        std::vector<std::string> output;
         for (const StatusParagraphAndAssociatedFiles& t : pgh_and_files)
         {
             if (t.pgh.package.spec.triplet() != triplet)
@@ -154,16 +158,10 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string name = t.pgh.package.displayname();
-
-            for (const std::string &file : t.files)
-            {
-                output.emplace_back(file_pack{std::string(file, remove_chars), name});
-            }
+            Util::Vectors::concatenate(&output, t.files);
         }
 
-        std::sort(output.begin(), output.end(),
-                  [](const file_pack &lhs, const file_pack &rhs) { return lhs.first < rhs.first; });
+        std::sort(output.begin(), output.end());
         return output;
     }
 
@@ -173,21 +171,22 @@ namespace vcpkg::Install
         const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path) {
-            return std::move(std::string(path.generic_string(), package_remove_char_count));
+            std::string as_string = path.generic_string();
+            as_string.erase(0, package_remove_char_count);
+            return std::move(as_string);
         });
 
         return SortedVector<std::string>(std::move(package_files));
     }
 
-    static SortedVector<file_pack> build_list_of_installed_files(
-        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files,
-        const Triplet& triplet)
+    static SortedVector<std::string> build_list_of_installed_files(
+        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
     {
+        std::vector<std::string> installed_files = extract_files_in_triplet(pgh_and_files, triplet);
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
-        std::vector<file_pack> installed_files =
-            extract_files_in_triplet(pgh_and_files, triplet, installed_remove_char_count);
+        remove_first_n_chars(&installed_files, installed_remove_char_count);
 
-        return SortedVector<file_pack>(std::move(installed_files));
+        return SortedVector<std::string>(std::move(installed_files));
     }
 
     InstallResult install_package(const VcpkgPaths& paths, const BinaryControlFile& bcf, StatusParagraphs* status_db)
@@ -198,58 +197,26 @@ namespace vcpkg::Install
 
         const SortedVector<std::string> package_files =
             build_list_of_package_files(paths.get_filesystem(), package_dir);
-        const SortedVector<file_pack> installed_files =
-            build_list_of_installed_files(pgh_and_files, triplet);
+        const SortedVector<std::string> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
 
-        struct intersection_compare
-        {
-            bool operator()(const std::string &lhs, const file_pack &rhs) { return lhs < rhs.first; }
-            bool operator()(const file_pack &lhs, const std::string &rhs) { return lhs.first < rhs; }
-        };
-
-        std::vector<file_pack> intersection;
-
-        std::set_intersection(installed_files.begin(),
-                              installed_files.end(),
-                              package_files.begin(),
+        std::vector<std::string> intersection;
+        std::set_intersection(package_files.begin(),
                               package_files.end(),
-                              std::back_inserter(intersection),
-                              intersection_compare());
-
-        std::sort(intersection.begin(), intersection.end(),
-                  [](const file_pack &lhs, const file_pack &rhs)
-                  {
-                      return lhs.second < rhs.second;
-                  });
+                              installed_files.begin(),
+                              installed_files.end(),
+                              std::back_inserter(intersection));
 
         if (!intersection.empty())
         {
             const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
 
             System::println(System::Color::error,
-                            "The following files are already installed in %s by and are in conflict with %s\n",
+                            "The following files are already installed in %s and are in conflict with %s",
                             triplet_install_path.generic_string(),
                             bcf.core_paragraph.spec);
-
-            auto i = intersection.begin();
-            while (i != intersection.end()) {
-                System::printf("%s:\n    ", i->second);
-                auto next = std::find_if(i, intersection.end(),
-                                         [i](const auto &val)
-                                         {
-                                             return i->second != val.second;
-                                         });
-
-                System::print2(Strings::join("\n    ", i, next,
-                                             [](const file_pack &file)
-                                             {
-                                                 return file.first;
-                                             }));
-                System::println();
-
-                i = next;
-            }
-
+            System::print("\n    ");
+            System::println(Strings::join("\n    ", intersection));
+            System::println();
             return InstallResult::FILE_CONFLICTS;
         }
 
