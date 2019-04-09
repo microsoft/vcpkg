@@ -79,6 +79,18 @@ string(REPLACE
     _contents
     "${_contents}"
 )
+string(REPLACE
+    "set(_tbb_release_lib \"/\${_tbb_component}.lib\")"
+    "set(_tbb_release_lib \"\${_tbb_root}/lib/\${_tbb_component}.lib\")"
+    _contents
+    "${_contents}"
+)
+string(REPLACE
+    "set(_tbb_debug_lib \"/\${_tbb_component}_debug.lib\")"
+    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/\${_tbb_component}_debug.lib\")"
+    _contents
+    "${_contents}"
+)
 string(REPLACE "SHARED IMPORTED)" "UNKNOWN IMPORTED)" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake "${_contents}")
 
