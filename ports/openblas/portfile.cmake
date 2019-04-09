@@ -73,11 +73,15 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
+        OPTIONS 
+            -DBUILD_WITHOUT_LAPACK=ON)
 else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DNOFORTRAN=ON)
+        OPTIONS 
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64 
+            -DNOFORTRAN=ON
+            -DBUILD_WITHOUT_LAPACK=ON)
 endif()
 
 
