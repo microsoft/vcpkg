@@ -1,0 +1,11 @@
+--- a/dlib/cmake_utils/find_blas.cmake
++++ b/dlib/cmake_utils/find_blas.cmake
+@@ -183,7 +183,7 @@
+    if (NOT blas_found)
+       find_library(cblas_lib openblas PATHS ${extra_paths})
+       if (cblas_lib)
+-         set(blas_libraries ${cblas_lib})
++         set(blas_libraries ${cblas_lib} pthread)
+          set(blas_found 1)
+          message(STATUS "Found OpenBLAS library")
+          set(CMAKE_REQUIRED_LIBRARIES ${blas_libraries})
