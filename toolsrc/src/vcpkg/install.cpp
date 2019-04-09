@@ -209,14 +209,11 @@ namespace vcpkg::Install
         if (!intersection.empty())
         {
             const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
-
-            System::println(System::Color::error,
-                            "The following files are already installed in %s and are in conflict with %s",
-                            triplet_install_path.generic_string(),
-                            bcf.core_paragraph.spec);
-            System::print("\n    ");
-            System::println(Strings::join("\n    ", intersection));
-            System::println();
+            System::printf(System::Color::error,
+                           "The following files are already installed in %s and are in conflict with %s\n",
+                           triplet_install_path.generic_string(),
+                           bcf.core_paragraph.spec);
+            System::print2("\n    ", Strings::join("\n    ", intersection), "\n\n");
             return InstallResult::FILE_CONFLICTS;
         }
 
