@@ -10,32 +10,40 @@ vcpkg_from_github(
     REF v2.0.3
     SHA512 6ad189f6f9291cbd7eb7227113302fd0c204018611bb37bf4acd7f6b0eb2a75837dac8fb9fba441a0d76e6f1dbad62e4750a6645f65de31611b089f6922bad26
     HEAD_REF master
-    PATCHES
-        duk_config.h.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
+if(CMAKE_HOST_WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
 
-if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON2_DIR}")
+if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
         vcpkg_download_distfile(GET_PIP
             URLS "https://bootstrap.pypa.io/get-pip.py"
-            FILENAME "tools/python/python3/get-pip.py"
+            FILENAME "tools/python/python2/get-pip.py"
             SHA512 fdbcef1037dca7cc914e2304af657ebd08239cd18c3e79786dc25c8ea39957674e012d7ea8ae2c99006e4b61d3a5e24669ac5771dc186697fd9fdb40b6cc07ae
         )
-        execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON3_DIR}/get-pip.py)
+        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
     endif()
-    execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install yaml)
+    execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
 else()
-    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX} yaml)
+    execute_process(COMMAND ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX} pyyaml)
 endif()
 
+execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)
 
-execute_process(COMMAND ${PYTHON3} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        duk_config.h.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
