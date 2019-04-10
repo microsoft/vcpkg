@@ -1,0 +1,3 @@
+Source: libnyquist
+Version: 0.0.1
+Description: Cross platform C++11 library for decoding audio (mp3, wav, ogg, opus, flac, etc) 
