@@ -38,7 +38,7 @@ file(INSTALL
 vcpkg_download_distfile(uvatlastool
     URLS "https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe"
     FILENAME "uvatlastool.exe"
-    SHA512 ${HASH}
+    SHA512 2583ba8179d0a58fb85d871368b17571e36242436b5a5dbaf6f99ec2f2ee09f4e11e8f922b29563da3cb3b5bacdb771036c84d5b94f405c7988bfe5f2881c3df
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
