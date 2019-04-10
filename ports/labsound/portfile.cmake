@@ -45,6 +45,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# example delete https://github.com/SethMMorton/NPSpec/blob/master/distclean.cmake
 FILE(GLOB_RECURSE DELETE_FILES_WAV ${CURRENT_PACKAGES_DIR}/libwavpack*)
 FILE(GLOB_RECURSE DELETE_FILES_OPU ${CURRENT_PACKAGES_DIR}/libopus*)
 FILE(GLOB_RECURSE DELETE_FILES_NYQ ${CURRENT_PACKAGES_DIR}/libnyquist*)
