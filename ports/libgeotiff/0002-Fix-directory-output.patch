@@ -13,8 +13,10 @@ index 47a2b00..b41f2fa 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -10,8 +10,8 @@ if (NOT WIN32)
-   set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
-   set (PROJECT_ROOT_DIR "../../..")
+-  set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
+-  set (PROJECT_ROOT_DIR "../../..")
++  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME}")
++  set (PROJECT_ROOT_DIR "../..")
  else ()
 -  set (INSTALL_CMAKE_DIR "cmake")
 -  set (PROJECT_ROOT_DIR "..")
