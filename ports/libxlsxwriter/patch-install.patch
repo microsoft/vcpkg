@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fe566fe..753600e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -312,19 +312,6 @@ if(MSVC)
+     else()
+         set(MSVC_FOLDER_PREFIX Win32)
+     endif()
+-
+-    install(TARGETS ${PROJECT_NAME}
+-        LIBRARY DESTINATION "lib/${MSVC_FOLDER_PREFIX}/\${CMAKE_INSTALL_CONFIG_NAME}"
+-        ARCHIVE DESTINATION "lib/${MSVC_FOLDER_PREFIX}/\${CMAKE_INSTALL_CONFIG_NAME}"
+-        RUNTIME DESTINATION "bin/${MSVC_FOLDER_PREFIX}/\${CMAKE_INSTALL_CONFIG_NAME}"
+-    )
+-    if (NOT BUILD_SHARED_LIBS)
+-        install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pdb
+-            DESTINATION "lib/${MSVC_FOLDER_PREFIX}/\${CMAKE_INSTALL_CONFIG_NAME}"
+-        )
+-    endif()
+-
+-else(MSVC)
+     install(TARGETS ${PROJECT_NAME}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
