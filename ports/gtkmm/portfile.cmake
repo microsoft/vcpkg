@@ -4,9 +4,10 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
+include(vcpkg_common_functions)
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gtkmm-3.22.2)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/gtkmm/3.22/gtkmm-3.22.2.tar.xz"

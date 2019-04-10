@@ -20,7 +20,7 @@ vcpkg_from_github(
     PATCHES
         find-gflags.patch
         no-werror.patch
-        find-double-conversion.patch
+        # find-double-conversion.patch
 )
 
 file(COPY

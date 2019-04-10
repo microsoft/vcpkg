@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message("${PORT} currently requires the following tools from the system package manager:\n    python-yaml\n\nThis can be installed on Ubuntu systems via apt-get install python-yaml python3-yaml (depending on your current python default interpreter)")
+    message("${PORT} currently requires the following tools from the system package manager:\n    python-yaml\n\nThis can be installed on Ubuntu systems via apt-get install python-yaml PYTHON2-yaml (depending on your current python default interpreter)")
 endif()
 
 vcpkg_from_github(
@@ -14,6 +14,7 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+<<<<<<< Updated upstream
 if(CMAKE_HOST_WIN32)
     set(EXECUTABLE_SUFFIX ".exe")
 else()
@@ -25,6 +26,14 @@ get_filename_component(PYTHON2_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
+=======
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON2_DIR}")
+
+if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
+    if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
+>>>>>>> Stashed changes
         vcpkg_download_distfile(GET_PIP
             URLS "https://bootstrap.pypa.io/get-pip.py"
             FILENAME "tools/python/python2/get-pip.py"
@@ -39,11 +48,15 @@ endif()
 
 execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)
 
+<<<<<<< Updated upstream
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         duk_config.h.patch
 )
+=======
+execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)
+>>>>>>> Stashed changes
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

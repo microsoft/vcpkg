@@ -14,6 +14,9 @@ add_library(duktape ${DUKTAPE_SOURCES} ${DUKTAPE_HEADERS})
 set_target_properties("duktape" PROPERTIES PUBLIC_HEADER "${DUKTAPE_HEADERS}")
 
 install(TARGETS duktape
+        EXPORT duktape-targets
         ARCHIVE DESTINATION "lib"
         RUNTIME DESTINATION "bin"
         PUBLIC_HEADER DESTINATION "include")
+
+install(EXPORT duktape-targets DESTINATION share/duktape/)
