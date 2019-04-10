@@ -1,0 +1,81 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+jobs:
+- job: Build
+  timeoutInMinutes: 360
+
+  strategy:
+    matrix:
+      linux:
+        imageName: 'ubuntu-16.04'
+        CXX: '/usr/bin/clang++'
+        CC: '/usr/bin/clang'
+        buildPlatform: 'linux'
+      mac:
+        imageName: 'macos-10.13'
+        DEVELOPER_DIR: '/Applications/Xcode_10.1.app'
+        VCPKG_ALLOW_APPLE_CLANG: true
+        buildPlatform: 'osx'
+
+      windows:
+        imageName: 'vs2017-win2016'
+        buildPlatform: 'windows'
+
+  variables:
+    VCPKG_ROOT: '$(Build.SourcesDirectory)'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/flimfit-env-$(buildPlatform).7z'
+
+  pool:
+    vmImage: $(imageName)
+
+  steps:
+
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6'
+        architecture: 'x64'
+
+      
+    - script: brew install gcc p7zip
+      displayName: 'Install brew dependencies'
+      condition: eq(variables['buildPlatform'],'osx')
+
+
+    - script: python build-flimfit-env.py
+      displayName: 'Build vcpkg ports'
+
+    - task: CopyFiles@2
+      condition: always() 
+      inputs:
+        contents: 'buildtrees/**/*.log'
+        targetFolder: logs
+      
+    - task: PublishBuildArtifacts@1
+      condition: always() 
+      inputs:
+        pathtoPublish: logs
+        artifactName: vcpkg-logs-$(buildPlatform)
+
+    - task: PublishPipelineArtifact@0
+      inputs:
+        targetPath: '$(Build.SourcesDirectory)'
+        artifactName: 'flimfit-env-$(buildPlatform).zip'
+
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)'
+        archiveType: '7z'
+        archiveFile: $(archiveFile)
+
+    - task: GithubRelease@0
+      displayName: 'Create GitHub Release'
+      inputs:
+        githubConnection: seanwarren
+        repositoryName: seanwarren/flimfit-env
+        assets: $(archiveFile)

@@ -1,0 +1,30 @@
+{
+   "default_triplet": {
+      "Windows": "x64-windows-static",
+      "Darwin":  "x64-osx",
+      "Linux":   "x64-linux"   
+   },
+
+   "ports" :
+   [
+      "qt5-serialport",
+      "boost",
+      "dlib",
+      "opencv",
+      "fftw3",
+      "omefiles",
+      "bioimage[opencv]",
+      "libics",
+      "hdf5",
+      "boost-random",
+      "boost-serialization",
+      "boost-align",
+      "boost-interprocess",
+      "boost-bind",
+      "boost-function",
+      "boost-math",
+      "boost-accumulators",
+      "boost-filesystem",
+      "boost-property-tree"
+   ]
+}
