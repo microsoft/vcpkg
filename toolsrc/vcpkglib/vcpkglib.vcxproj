@@ -210,11 +210,11 @@
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
-    <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
-    <ClCompile Include="..\src\vcpkg\base\stringrange.cpp" />
     <ClCompile Include="..\src\vcpkg\base\strings.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />

@@ -43,9 +43,9 @@ namespace vcpkg
 
     bool operator!=(const Triplet& left, const Triplet& right) { return !(left == right); }
 
-    Triplet Triplet::from_canonical_name(const std::string& triplet_as_string)
+    Triplet Triplet::from_canonical_name(std::string&& triplet_as_string)
     {
-        std::string s(Strings::ascii_to_lowercase(triplet_as_string));
+        std::string s(Strings::ascii_to_lowercase(std::move(triplet_as_string)));
         const auto p = g_triplet_instances.emplace(std::move(s));
         return &*p.first;
     }
@@ -53,5 +53,6 @@ namespace vcpkg
     const std::string& Triplet::canonical_name() const { return this->m_instance->value; }
 
     const std::string& Triplet::to_string() const { return this->canonical_name(); }
+    void Triplet::to_string(std::string& out) const { out.append(this->canonical_name()); }
     size_t Triplet::hash_code() const { return m_instance->hash; }
 }

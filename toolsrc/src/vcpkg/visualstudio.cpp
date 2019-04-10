@@ -3,7 +3,9 @@
 #if defined(_WIN32)
 
 #include <vcpkg/base/sortedvector.h>
-#include <vcpkg/base/stringrange.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/visualstudio.h>
 
@@ -90,11 +92,11 @@ namespace vcpkg::VisualStudio
                                code_and_output.output);
 
             const auto instance_entries =
-                StringRange::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
-            for (const StringRange& instance : instance_entries)
+                StringView::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+            for (const StringView& instance : instance_entries)
             {
                 auto maybe_is_prerelease =
-                    StringRange::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+                    StringView::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
 
                 VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
                 if (const auto p = maybe_is_prerelease.get())
@@ -109,9 +111,9 @@ namespace vcpkg::VisualStudio
                 }
 
                 instances.emplace_back(
-                    StringRange::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
+                    StringView::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
                         .to_string(),
-                    StringRange::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
+                    StringView::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
                         .to_string(),
                     release_type);
             }
@@ -326,23 +328,23 @@ namespace vcpkg::VisualStudio
 
         if (!excluded_toolsets.empty())
         {
-            System::println(
+            System::print2(
                 System::Color::warning,
-                "Warning: The following VS instances are excluded because the English language pack is unavailable.");
+                "Warning: The following VS instances are excluded because the English language pack is unavailable.\n");
             for (const Toolset& toolset : excluded_toolsets)
             {
-                System::println("    %s", toolset.visual_studio_root_path.u8string());
+                System::print2("    ", toolset.visual_studio_root_path.u8string(), '\n');
             }
-            System::println(System::Color::warning, "Please install the English language pack.");
+            System::print2(System::Color::warning, "Please install the English language pack.\n");
         }
 
         if (found_toolsets.empty())
         {
-            System::println(System::Color::error, "Could not locate a complete toolset.");
-            System::println("The following paths were examined:");
+            System::print2(System::Color::error, "Could not locate a complete toolset.\n");
+            System::print2("The following paths were examined:\n");
             for (const fs::path& path : paths_examined)
             {
-                System::println("    %s", path.u8string());
+                System::print2("    ", path.u8string(), '\n');
             }
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

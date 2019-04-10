@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
@@ -14,9 +15,9 @@ namespace vcpkg::Downloads
 {
 #if defined(_WIN32)
     static void winhttp_download_file(Files::Filesystem& fs,
-                                      CStringView target_file_path,
-                                      CStringView hostname,
-                                      CStringView url_path)
+                                      ZStringView target_file_path,
+                                      StringView hostname,
+                                      StringView url_path)
     {
         // Make sure the directories are present, otherwise fopen_s fails
         const auto dir = fs::path(target_file_path.c_str()).parent_path();
@@ -163,7 +164,7 @@ namespace vcpkg::Downloads
         std::string hostname(url_no_proto.begin(), path_begin);
         std::string path(path_begin, url_no_proto.end());
 
-        winhttp_download_file(fs, download_path_part.c_str(), hostname, path);
+        winhttp_download_file(fs, download_path_part, hostname, path);
 #else
         const auto code = System::cmd_execute(
             Strings::format(R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));

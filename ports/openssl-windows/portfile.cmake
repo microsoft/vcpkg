@@ -6,7 +6,7 @@ include(vcpkg_common_functions)
 set(OPENSSL_VERSION 1.0.2q)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
-vcpkg_find_acquire_program(PERL)
+vcpkg_find_acquire_program(PERL) 
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
@@ -20,10 +20,11 @@ vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
-            ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
-            ${CMAKE_CURRENT_LIST_DIR}/EnableWinARM32.patch
-            ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
+    PATCHES 
+        ConfigureIncludeQuotesFix.patch
+        STRINGIFYPatch.patch
+        EnableWinARM32.patch
+        EmbedSymbolsInStaticLibsZ7.patch
 )
 
 vcpkg_find_acquire_program(NASM)
