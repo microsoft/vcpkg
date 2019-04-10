@@ -21,22 +21,22 @@ vcpkg_apply_patches(
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
 if (WIN32)
+    set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
+
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
     else()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
     endif()
-endif()
-
-if (WIN32)
-  set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-  set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
+    
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 else()
-  set(BASH bash)
-  set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
+    set(ENV{PATH} "$ENV{PATH}:${YASM_EXE_PATH}")
+    set(BASH /bin/bash)
+    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
 endif()
 
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")

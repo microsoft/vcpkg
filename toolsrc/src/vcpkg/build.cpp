@@ -479,13 +479,13 @@ namespace vcpkg::Build
         const int max_port_file_count = 100;
 
         // the order of recursive_directory_iterator is undefined so save the names to sort
-        std::vector<fs::path> hashed_files;
+        std::vector<fs::path> port_files;
         for (auto &port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
             if (fs::is_regular_file(status(port_file)))
             {
-                hashed_files.push_back(port_file);
-                if (hashed_files.size() > max_port_file_count)
+                port_files.push_back(port_file);
+                if (port_files.size() > max_port_file_count)
                 {
                     abi_tag_entries.emplace_back(AbiEntry{ "no_hash_max_portfile", "" });
                     break;
@@ -493,20 +493,12 @@ namespace vcpkg::Build
             }
         }
 
-        if (hashed_files.size() <= max_port_file_count)
+        if (port_files.size() <= max_port_file_count)
         {
-            for (auto &script_file : fs::stdfs::recursive_directory_iterator(paths.scripts))
-            {
-                if (fs::is_regular_file(status(script_file)))
-                {
-                    hashed_files.push_back(script_file);
-                }
-            }
-
-            std::sort(hashed_files.begin(), hashed_files.end());
+            std::sort(port_files.begin(), port_files.end());
 
             int counter = 0;
-            for (auto & hashed_file : hashed_files)
+            for (auto & port_file : port_files)
             {
                 // When vcpkg takes a dependency on C++17 it can use fs::relative,
                 // which will give a stable ordering and better names in the key entry.
@@ -516,13 +508,13 @@ namespace vcpkg::Build
                 {
                     System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
                 }
-                abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, hashed_file, "SHA1") });
+                abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1") });
             }
         }
 
         abi_tag_entries.emplace_back(AbiEntry{
-            "vcpkg",
-            vcpkg::Hash::get_file_hash(fs, paths.scripts / "buildsystems" / "vcpkg.cmake", "SHA1")});
+            "vcpkg_fixup_cmake_targets",
+            vcpkg::Hash::get_file_hash(fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", "SHA1")});
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
