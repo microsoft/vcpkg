@@ -514,7 +514,7 @@ namespace vcpkg::Build
                 std::string key = Strings::format("file_%03d", counter++);
                 if (GlobalState::debugging)
                 {
-                    System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
+                    System::print2("[DEBUG] mapping ", key, " from ", hashed_file.u8string(), "\n");
                 }
                 abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, hashed_file, "SHA1") });
             }
