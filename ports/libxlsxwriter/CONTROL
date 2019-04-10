@@ -1,0 +1,3 @@
+Source: libxlsxwriter
+Version: 0.8.6
+Description: A C library for creating Excel XLSX files
