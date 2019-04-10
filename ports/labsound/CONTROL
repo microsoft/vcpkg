@@ -1,0 +1,3 @@
+Source: labsound
+Version: 0.12.0
+Description: LabSound is a C++ graph-based audio engine. LabSound originated as a fork of WebKit's WebAudio implementation, as used in Google's Chrome and Apple's Safari.
