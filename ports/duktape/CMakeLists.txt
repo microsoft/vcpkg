@@ -19,4 +19,3 @@ install(TARGETS duktape
         RUNTIME DESTINATION "bin"
         PUBLIC_HEADER DESTINATION "include")
 
-install(EXPORT duktape-targets DESTINATION share/duktape/)
