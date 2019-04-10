@@ -16,9 +16,9 @@ else()
 endif()
 
 if ("mpi" IN_LIST FEATURES)
-    set(VTK_WITH_MPI                     ON )
+    set(VTK_Group_MPI ON)
 else()
-    set(VTK_WITH_MPI                     OFF )
+    set(VTK_Group_MPI OFF)
 endif()
 
 if ("python" IN_LIST FEATURES)
@@ -28,15 +28,9 @@ else()
 endif()
 
 if("openvr" IN_LIST FEATURES)
-    set(VTK_WITH_OPENVR                  ON)
+    set(Module_vtkRenderingOpenVR ON)
 else()
-    set(VTK_WITH_OPENVR                  OFF)
-endif()
-
-if("libharu" IN_LIST FEATURES)
-    set(VTK_WITH_LIBHARU                  ON)
-else()
-    set(VTK_WITH_LIBHARU                  OFF)
+    set(Module_vtkRenderingOpenVR OFF)
 endif()
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
@@ -46,14 +40,16 @@ set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`
 # Clone & patch
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "Kitware/VTK"
+    REPO Kitware/VTK
     REF "v${VTK_LONG_VERSION}"
     SHA512 fd1d9c2872baa6eca7f8105b0057b56ec554e9d5eaf25985302e7fc032bdce72255d79e3f5f16ca50504151bda49cb3a148272ba32e0f410b4bdb70959b8f3f4
-    HEAD_REF "master"
+    HEAD_REF master
     PATCHES
         fix-find-lz4.patch
         fix_ogg_linkage.patch
+        fix-pugixml-link.patch
 )
+
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
 # since they do not detect the debug libraries correctly.
 # The default files distributed with CMake (>= 3.9) should be superior by all means.
@@ -73,28 +69,10 @@ if(VTK_WITH_QT)
     )
 endif()
 
-if(VTK_WITH_MPI)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_Group_MPI=ON
-    )
-endif()
-
 if(VTK_WITH_PYTHON)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
-    )
-endif()
-
-if(VTK_WITH_OPENVR)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DModule_vtkRenderingOpenVR=ON
-    )
-endif()
-
-if(VTK_WITH_LIBHARU)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_USE_SYSTEM_LIBHARU=ON
     )
 endif()
 
@@ -123,44 +101,31 @@ endif()
 
 # =============================================================================
 # Configure & Install
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
-    set(HDF5_USE_STATIC_LIBRARIES ON)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
-        -DHAVE_SNPRINTF=ON
-        -DVTK_Group_Imaging=ON
-        -DVTK_Group_Views=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DVTK_USE_SYSTEM_EXPAT=ON
-        -DVTK_USE_SYSTEM_FREETYPE=ON
-        # -DVTK_USE_SYSTEM_GL2PS=ON
-        -DVTK_USE_SYSTEM_JPEG=ON
-        -DVTK_USE_SYSTEM_GLEW=ON
-        -DVTK_USE_SYSTEM_HDF5=ON
-        -DVTK_USE_SYSTEM_JSONCPP=ON
-        -DVTK_USE_SYSTEM_LIBPROJ=ON
-        -DVTK_USE_SYSTEM_LIBXML2=ON
-        -DVTK_USE_SYSTEM_LZ4=ON
-        # -DVTK_USE_SYSTEM_NETCDF=ON
-        # -DVTK_USE_SYSTEM_NETCDFCPP=ON
-        -DVTK_USE_SYSTEM_OGG=ON
-        -DVTK_USE_SYSTEM_THEORA=ON
-        -DVTK_USE_SYSTEM_PNG=ON
-        -DVTK_USE_SYSTEM_TIFF=ON
-        -DVTK_USE_SYSTEM_ZLIB=ON
         -DVTK_INSTALL_INCLUDE_DIR=include
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
+
+        # We set all libraries to "system" and explicitly list the ones that should use embedded copies
+        -DVTK_USE_SYSTEM_LIBRARIES=ON
+        -DVTK_USE_SYSTEM_GL2PS=OFF
+
+        # Select modules / groups to install
+        -DVTK_Group_Imaging=ON
+        -DVTK_Group_Views=ON
         -DModule_vtkGUISupportMFC=${Module_vtkGUISupportMFC}
+        -DModule_vtkRenderingOpenVR=${Module_vtkRenderingOpenVR}
+        -DVTK_Group_MPI=${VTK_Group_MPI}
+
         ${ADDITIONAL_OPTIONS}
 )
 
@@ -286,7 +251,7 @@ if(VTK_WITH_ALL_MODULES)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

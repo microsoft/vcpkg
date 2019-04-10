@@ -11,8 +11,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 1cd332e4cac001ffcc12a24c72640fe02b69a8a0
-  SHA512 313018d51747b40244d3a828dce8deb35f900a6be1198f0f1af5647f3889ead7f1ac78cdc4223cfe85d279ca21000df1c8feac02e703e5b91af939e26e4d5571
+  REF 1cad888641804b1ddddf03ad316aa3a6e9e679ad
+  SHA512 8d7fc673bc318fd606f7c9de04291cd0fe5c3b8f8d2076e719a6c35fe226a45c10a3f65c38be5476a72b34ac7a31c8f9e1b5ea15d061eddcdda38357bc2a8bca
   HEAD_REF master
   PATCHES
     fix_cmakelists.patch
@@ -26,6 +26,11 @@ endif()
 set(ENABLE_OPENCV OFF)
 if("opencv" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
+endif()
+
+if("opencv-cuda" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+  set(ENABLE_CUDA ON)
 endif()
 
 if("weights" IN_LIST FEATURES)
