@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
@@ -142,7 +142,7 @@ namespace vcpkg::Commands::DependInfo
         }
         else
         {
-            System::println(System::Color::warning, "package '%s' does not exist", requested_package);
+            System::print2(System::Color::warning, "package '", requested_package, "' does not exist\n");
         }
     }
 
@@ -168,7 +168,7 @@ namespace vcpkg::Commands::DependInfo
         if (!options.switches.empty())
         {
             const std::string graph_as_string = create_graph_as_string(options.switches, source_control_files);
-            System::println(graph_as_string);
+            System::print2(graph_as_string, '\n');
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
@@ -176,7 +176,7 @@ namespace vcpkg::Commands::DependInfo
         {
             const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
             const auto s = Strings::join(", ", source_paragraph.depends, [](const Dependency& d) { return d.name(); });
-            System::println("%s: %s", source_paragraph.name, s);
+            System::print2(source_paragraph.name, ": ", s, "\n");
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

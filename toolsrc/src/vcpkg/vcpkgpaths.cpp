@@ -152,7 +152,7 @@ namespace vcpkg
         const std::vector<Toolset>& vs_toolsets =
             this->toolsets.get_lazy([this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
 
-        std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
+        std::vector<const Toolset*> candidates = Util::fmap(vs_toolsets, [](auto&& x) { return &x; });
         const auto tsv = prebuildinfo.platform_toolset.get();
         auto vsp = prebuildinfo.visual_studio_path.get();
         if (!vsp && !default_vs_path.empty())

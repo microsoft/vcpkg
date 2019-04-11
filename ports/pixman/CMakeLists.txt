@@ -56,6 +56,10 @@ target_compile_definitions(pixman-1
         USE_SSE2
 )
 
+if(UNIX AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    target_compile_options(pixman-1 PRIVATE -msse2)
+endif()
+
 # pixman produces a lot of warnings which are disabled here because they otherwise fill up the log files
 if(MSVC)
     target_compile_options(pixman-1 PRIVATE "/wd4244" "/wd4146" "/wd4996") #  PUBLIC "/D_CRT_SECURE_NO_WARNINGS"

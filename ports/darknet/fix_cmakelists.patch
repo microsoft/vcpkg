@@ -1,18 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6a5076a..52d19a3 100644
+index acd6ca0..0e7de91 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -25,8 +25,7 @@ enable_language(CXX)
+@@ -28,8 +28,7 @@ enable_language(CXX)
  set(CMAKE_CXX_STANDARD 11)
  set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/" ${CMAKE_MODULE_PATH})
  
 -set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Install prefix" FORCE)
 -set(INSTALL_BIN_DIR      "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Path where exe and dll will be installed" FORCE)
-+set(INSTALL_BIN_DIR      "bin"                       CACHE PATH "Path where exe and dll will be installed" FORCE)
++set(INSTALL_BIN_DIR      "bin"                       CACHE PATH "Path where exe and dll will be installed")
  set(INSTALL_LIB_DIR      "lib"                       CACHE PATH "Path where lib will be installed")
  set(INSTALL_INCLUDE_DIR  "include"                   CACHE PATH "Path where headers will be installed")
  set(INSTALL_CMAKE_DIR    "share/darknet"             CACHE PATH "Path where cmake configs will be installed")
-@@ -76,7 +75,6 @@ if(USE_INTEGRATED_LIBS)
+@@ -79,7 +78,6 @@ if(USE_INTEGRATED_LIBS)
    set(PThreads_windows_DIR ${CMAKE_CURRENT_LIST_DIR}/3rdparty/pthreads CACHE PATH "Path where pthreads for windows can be located")
    add_definitions(-D_TIMESPEC_DEFINED)
  endif()
@@ -20,30 +20,3 @@ index 6a5076a..52d19a3 100644
  
  set(CMAKE_DEBUG_POSTFIX d)
  add_definitions(-DUSE_CMAKE_LIBS)
-@@ -323,21 +321,19 @@ endif()
- 
- set_target_properties(darklib PROPERTIES PUBLIC_HEADER "${exported_headers};${CMAKE_CURRENT_LIST_DIR}/include/yolo_v2_class.hpp")
- 
--install(TARGETS darklib uselib darknet EXPORT DarknetTargets
-+install(TARGETS darklib EXPORT DarknetTargets
-   RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
-   LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-   ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
-   PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
-   COMPONENT dev
- )
-+install(TARGETS uselib darknet
-+  DESTINATION "${INSTALL_BIN_DIR}"
-+)
- if(OpenCV_VERSION VERSION_GREATER "3.0" AND NOT SKIP_USELIB_TRACK)
-   install(TARGETS uselib_track
--    EXPORT DarknetTargets
--    RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
--    LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
--    ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
--    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
--    COMPONENT dev
-+    DESTINATION "${INSTALL_BIN_DIR}"
-   )
- endif()
- 
