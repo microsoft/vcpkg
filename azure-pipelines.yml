@@ -62,10 +62,10 @@ jobs:
         pathtoPublish: logs
         artifactName: vcpkg-logs-$(buildPlatform)
 
-    - task: PublishPipelineArtifact@0
+    - task: PublishBuildArtifacts@1
       inputs:
-        targetPath: '$(Build.SourcesDirectory)'
-        artifactName: 'flimfit-env-$(buildPlatform).zip'
+        pathtoPublish: '$(Build.SourcesDirectory)'
+        artifactName: 'flimfit-env-$(buildPlatform)'
 
     - task: ArchiveFiles@2
       inputs:
@@ -77,5 +77,5 @@ jobs:
       displayName: 'Create GitHub Release'
       inputs:
         githubConnection: seanwarren
-        repositoryName: seanwarren/flimfit-env
+        repositoryName: seanwarren/vcpkg
         assets: $(archiveFile)
