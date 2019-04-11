@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
@@ -14,14 +14,14 @@ namespace vcpkg::Commands::List
     {
         if (full_desc)
         {
-            System::println("%-50s %-16s %s", pgh.package.displayname(), pgh.package.version, pgh.package.description);
+            System::printf("%-50s %-16s %s\n", pgh.package.displayname(), pgh.package.version, pgh.package.description);
         }
         else
         {
-            System::println("%-50s %-16s %s",
-                            vcpkg::shorten_text(pgh.package.displayname(), 50),
-                            vcpkg::shorten_text(pgh.package.version, 16),
-                            vcpkg::shorten_text(pgh.package.description, 51));
+            System::printf("%-50s %-16s %s\n",
+                           vcpkg::shorten_text(pgh.package.displayname(), 50),
+                           vcpkg::shorten_text(pgh.package.version, 16),
+                           vcpkg::shorten_text(pgh.package.description, 51));
         }
     }
 
@@ -48,7 +48,7 @@ namespace vcpkg::Commands::List
 
         if (installed_ipv.empty())
         {
-            System::println("No packages are installed. Did you mean `search`?");
+            System::print2("No packages are installed. Did you mean `search`?\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
@@ -63,11 +63,13 @@ namespace vcpkg::Commands::List
                       return lhs->package.displayname() < rhs->package.displayname();
                   });
 
+        const auto enable_fulldesc = Util::Sets::contains(options.switches, OPTION_FULLDESC.to_string());
+
         if (args.command_arguments.empty())
         {
             for (const StatusParagraph* status_paragraph : installed_packages)
             {
-                do_print(*status_paragraph, Util::Sets::contains(options.switches, OPTION_FULLDESC));
+                do_print(*status_paragraph, enable_fulldesc);
             }
         }
         else
@@ -81,7 +83,7 @@ namespace vcpkg::Commands::List
                     continue;
                 }
 
-                do_print(*status_paragraph, Util::Sets::contains(options.switches, OPTION_FULLDESC));
+                do_print(*status_paragraph, enable_fulldesc);
             }
         }
 

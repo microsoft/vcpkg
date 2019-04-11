@@ -1,7 +1,8 @@
 #include "pch.h"
 
+#include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 

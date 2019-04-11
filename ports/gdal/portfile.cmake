@@ -37,13 +37,22 @@ endif()
 foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
-        PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
-    )
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+      vcpkg_apply_patches(
+          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
+          PATCHES
+          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+      )
+    else()
+      vcpkg_apply_patches(
+          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
+          PATCHES
+          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+      )
+    endif()
 endforeach()
+
 
 find_program(NMAKE nmake REQUIRED)
 
@@ -63,8 +72,13 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRA
 
 # Setup geos libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+else()
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
+endif()
 
 # Setup expat libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
@@ -200,7 +214,7 @@ list(APPEND NMAKE_OPTIONS_DBG
 )
 if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Static Build does not like PG_LIB
-    list(APPEND NMAKE_OPTIONS_REL PG_LIB=${PGSQL_LIBRARY_DBG})
+    list(APPEND NMAKE_OPTIONS_DBG PG_LIB=${PGSQL_LIBRARY_DBG})
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

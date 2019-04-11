@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/paragraphparseresult.h>
@@ -286,11 +287,11 @@ namespace vcpkg::Paragraphs
             {
                 for (auto&& error : results.errors)
                 {
-                    System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
+                    System::print2(
+                        System::Color::warning, "Warning: an error occurred while parsing '", error->name, "'\n");
                 }
-                System::println(System::Color::warning,
-                                "Use '--debug' to get more information about the parse failures.\n");
+                System::print2(System::Color::warning,
+                               "Use '--debug' to get more information about the parse failures.\n\n");
             }
         }
         return std::move(results.paragraphs);
