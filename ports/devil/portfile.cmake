@@ -61,6 +61,7 @@ set(IL_USE_DXTC_SQUISH 0)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/DevIL
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DIL_NO_PNG=${IL_NO_PNG}
         -DIL_NO_TIF=${IL_NO_TIF}
