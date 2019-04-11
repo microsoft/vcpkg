@@ -23,8 +23,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE} 
     NO_REMOVE_ONE_LEVEL
     REF v1.15
-    PATCHES
-        fix-install.patch
+    PATCH
+        fix-export-symbols.patch
 )
 
 vcpkg_configure_cmake(
