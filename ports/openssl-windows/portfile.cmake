@@ -25,6 +25,7 @@ vcpkg_apply_patches(
         STRINGIFYPatch.patch
         EnableWinARM32.patch
         EmbedSymbolsInStaticLibsZ7.patch
+        EnableWinARM64.patch
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -47,6 +48,13 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPENSSL_ARCH VC-WIN64A)
     set(OPENSSL_DO "ms\\do_win64a.bat")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(OPENSSL_ARCH VC-WIN32)
+    set(OPENSSL_DO "ms\\do_ms.bat")
+    set(CONFIGURE_COMMAND ${CONFIGURE_COMMAND}
+        no-asm
+        -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
+    )
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(OPENSSL_ARCH VC-WIN32)
     set(OPENSSL_DO "ms\\do_ms.bat")
     set(CONFIGURE_COMMAND ${CONFIGURE_COMMAND}
