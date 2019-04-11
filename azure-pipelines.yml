@@ -29,7 +29,7 @@ jobs:
 
   variables:
     VCPKG_ROOT: '$(Build.SourcesDirectory)'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/flimfit-env-$(buildPlatform).7z'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/flimfit-env-$(buildPlatform).zip'
 
   pool:
     vmImage: $(imageName)
@@ -62,16 +62,16 @@ jobs:
         pathtoPublish: logs
         artifactName: vcpkg-logs-$(buildPlatform)
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: '$(Build.SourcesDirectory)'
-        artifactName: 'flimfit-env-$(buildPlatform)'
-
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)'
-        archiveType: '7z'
-        archiveFile: $(archiveFile)
+        archiveType: 'zip'
+        archiveFile: '$(archiveFile)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(archiveFile)'
+        artifactName: 'flimfit-env-$(buildPlatform)'
 
     - task: GithubRelease@0
       displayName: 'Create GitHub Release'
