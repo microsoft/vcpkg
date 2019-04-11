@@ -11,8 +11,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 1cad888641804b1ddddf03ad316aa3a6e9e679ad
-  SHA512 8d7fc673bc318fd606f7c9de04291cd0fe5c3b8f8d2076e719a6c35fe226a45c10a3f65c38be5476a72b34ac7a31c8f9e1b5ea15d061eddcdda38357bc2a8bca
+  REF 8c970498a296ed129ffef7d872ccc25d42d1afda
+  SHA512 70dda24656469b8a61a645533ac227b644d365c7d5f4dbc93077a3f46563dd45ae88c563fb1c8f8d02a2021760aba24bea35d81f0f307975d051d0f9bfe92265
   HEAD_REF master
   PATCHES
     fix_cmakelists.patch
@@ -76,7 +76,6 @@ else()
   set(EXECUTABLE_SUFFIX "")
 endif()
 
-
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/darknet${EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib${EXECUTABLE_SUFFIX})
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${EXECUTABLE_SUFFIX})
@@ -97,6 +96,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_fixup_cmake_targets()
+
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindStb.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

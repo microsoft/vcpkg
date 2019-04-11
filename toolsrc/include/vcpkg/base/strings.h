@@ -112,12 +112,10 @@ namespace vcpkg::Strings
     bool ends_with(StringView s, StringView pattern);
     bool starts_with(StringView s, StringView pattern);
 
-    template<class Container, class Transformer>
-    std::string join(const char* delimiter, const Container& v, Transformer transformer)
+    template<class InputIterator, class Transformer>
+    std::string join(const char* delimiter, InputIterator begin, InputIterator end,
+                     Transformer transformer)
     {
-        const auto begin = v.begin();
-        const auto end = v.end();
-
         if (begin == end)
         {
             return std::string();
@@ -133,6 +131,24 @@ namespace vcpkg::Strings
 
         return output;
     }
+
+    template<class Container, class Transformer>
+    std::string join(const char* delimiter, const Container& v, Transformer transformer)
+    {
+        const auto begin = v.begin();
+        const auto end = v.end();
+
+        return join(delimiter, begin, end, transformer);
+    }
+
+    template<class InputIterator>
+    std::string join(const char* delimiter, InputIterator begin, InputIterator end)
+    {
+        using Element = decltype(*begin);
+        return join(delimiter, begin, end,
+                    [](const Element& x) -> const Element& { return x; });
+    }
+
     template<class Container>
     std::string join(const char* delimiter, const Container& v)
     {
