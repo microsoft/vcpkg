@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
 
-if(DEFINED ENV{VCPKG_ALLOW_APPLE_CLANG} AND NOT DEFINED VCPKG_ALLOW_APPLE_CLANG)
-    set(VCPKG_ALLOW_APPLE_CLANG $ENV{VCPKG_ALLOW_APPLE_CLANG} CACHE BOOL "Option for allowing apple clang")
-	message(STATUS "VCPKG_ALLOW_APPLE_CLANG found in enviroment variable")
-	message(STATUS "Set VCPKG_ALLOW_APPLE_CLANG to ${VCPKG_ALLOW_APPLE_CLANG}")
-endif()
-
 project(vcpkg C CXX)
 
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
@@ -19,7 +13,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
 "Building the vcpkg tool requires support for the C++ Filesystem TS.
 Apple clang versions 9 and below do not have support for it.
 Please install gcc6 or newer from homebrew (brew install gcc6).
-If you would like to try anyway, set VCPKG_ALLOW_APPLE_CLANG.")
+If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
     else()
         set(CLANG 1)
     endif()
