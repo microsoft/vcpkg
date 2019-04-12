@@ -11,9 +11,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/glog
-    REF v0.3.5
+    REF v0.4.0
     SHA512 a54a3b8b4b7660d7558ba5168c659bc3c8323c30908a4f6a4bbc6f9cd899350f3243aabc720daebfdeb799b276b51ba1eaa1a0f83149c4e1a038d552ada1ed72
     HEAD_REF master
+    PATCHES
+       glog_disable_debug_postfix.patch
 )
 
 vcpkg_configure_cmake(
