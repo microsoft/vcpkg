@@ -26,7 +26,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/openssl
     REF OpenSSL_1_0_2q_WinRT
-    SHA512 828ddeb10b7d04155df64cb38f3d8b8109ff01494fed7f6c1063673e45414c1c309379e8bbe72478bd0fbae649d6749877c20b1b4a91db136a0853745f4da6b6
+    SHA512 a5deb38d8ac3d2dc5cfcefca74ef1b6bb913fb2a205163e26100f8714b567768e2699948d6a2ec3ebdbf8c72bfbf8ccfe0e574a1d20a2a736b64e9d69ca9b719
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
