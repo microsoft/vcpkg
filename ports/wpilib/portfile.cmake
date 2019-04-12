@@ -1,0 +1,62 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO wpilibsuite/allwpilib
+    REF v2019.4.1
+    SHA512 8a79e55cd5f3aaf60eb8c0a952d33c82b5e5c997e72d7ad1cf3a99165a0057dfc5d3fc742d7dcefc7a1d3031bfc185b107968545159d7d5177a601df85df271e
+    HEAD_REF master
+    PATCHES
+      0006-Fix-GUID-comparison-creating-weird-symbol.patch
+)
+
+set(WITHOUT_JAVA ON)
+set(WITHOUT_CSCORE ON)
+set(WITHOUT_ALLWPILIB ON)
+
+if ("cameraserver" IN_LIST FEATURES)
+  set(WITHOUT_CSCORE OFF)
+endif()
+
+if ("allwpilib" IN_LIST FEATURES)
+  set(WITHOUT_ALLWPILIB OFF)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+
+    OPTIONS
+      -DWITHOUT_JAVA=${WITHOUT_JAVA}
+      -DWITHOUT_CSCORE=${WITHOUT_CSCORE}
+      -DWITHOUT_ALLWPILIB=${WITHOUT_ALLWPILIB}
+      -DFLAT_INSTALL_HEADERS=ON
+)
+vcpkg_install_cmake()
+
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/ntcore/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/wpiutil/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+if (NOT WITHOUT_ALLWPILIB)
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/wpilibc/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/hal/gen/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/hal/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/gen)
+endif()
+if (NOT WITHOUT_CSCORE)
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/cameraserver/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/include/cscore/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+endif()
+
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/bin FILES_MATCHING PATTERN "*.dll")
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin FILES_MATCHING PATTERN "*.dll")
+
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/bin FILES_MATCHING PATTERN "*.pdb")
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin FILES_MATCHING PATTERN "*.pdb")
+
+file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "*.lib")
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib FILES_MATCHING PATTERN "*.lib")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/wpilib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/wpilib)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wpilib RENAME copyright)
