@@ -6,6 +6,9 @@
 trigger:
 - master
 
+pr:
+- master
+
 jobs:
 - job: Build
   timeoutInMinutes: 360
