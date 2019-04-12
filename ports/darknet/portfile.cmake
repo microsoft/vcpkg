@@ -11,8 +11,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 1cd332e4cac001ffcc12a24c72640fe02b69a8a0
-  SHA512 313018d51747b40244d3a828dce8deb35f900a6be1198f0f1af5647f3889ead7f1ac78cdc4223cfe85d279ca21000df1c8feac02e703e5b91af939e26e4d5571
+  REF 8c970498a296ed129ffef7d872ccc25d42d1afda
+  SHA512 70dda24656469b8a61a645533ac227b644d365c7d5f4dbc93077a3f46563dd45ae88c563fb1c8f8d02a2021760aba24bea35d81f0f307975d051d0f9bfe92265
   HEAD_REF master
   PATCHES
     fix_cmakelists.patch
@@ -26,6 +26,11 @@ endif()
 set(ENABLE_OPENCV OFF)
 if("opencv" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
+endif()
+
+if("opencv-cuda" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+  set(ENABLE_CUDA ON)
 endif()
 
 if("weights" IN_LIST FEATURES)
@@ -71,7 +76,6 @@ else()
   set(EXECUTABLE_SUFFIX "")
 endif()
 
-
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/darknet${EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib${EXECUTABLE_SUFFIX})
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/uselib_track${EXECUTABLE_SUFFIX})
@@ -92,6 +96,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_fixup_cmake_targets()
+
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindStb.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
