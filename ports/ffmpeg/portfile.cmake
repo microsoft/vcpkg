@@ -1,23 +1,26 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-4.1)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2"
     FILENAME "ffmpeg-4.1.tar.bz2"
     SHA512 ccf6d07268dc47e08ca619eb182a003face2a8ee73ec1a28157330dd7de1df88939def1fc1c7e6b6ac7b59752cdad84657d589b2fafb73e14e5ef03fb6e33417
 )
 
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        create-lib-libraries.patch
+        detect-openssl.patch
+        configure_opencv.patch
+        fix_windowsinclude-in-ffmpegexe-1.patch
+        fix_windowsinclude-in-ffmpegexe-2.patch
+        fix_windowsinclude-in-ffmpegexe-3.patch
+)
+
 if (${SOURCE_PATH} MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
-
-vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
-        ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
-)
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
@@ -46,7 +49,7 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --disable-ffmpeg")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 
 if("nonfree" IN_LIST FEATURES)
@@ -61,6 +64,12 @@ if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
+endif()
+
+if("ffmpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffmpeg")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffmpeg")
 endif()
 
 if("ffplay" IN_LIST FEATURES)
