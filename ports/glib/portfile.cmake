@@ -6,7 +6,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 endif()
 
 # Glib relies on DllMain on Windows
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+endif()
 
 set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE

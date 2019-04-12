@@ -6,7 +6,6 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     message(FATAL_ERROR "Caffe2 cannot be built for the x86 architecture")
 endif()
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO caffe2/caffe2
