@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
     cmake.patch
     simon-speck.patch
+    missing-flags.patch
 )
 
 vcpkg_from_github(
