@@ -47,9 +47,10 @@ namespace vcpkg::Help
         nullptr,
     };
 
-    static constexpr std::array<Topic, 12> topics = {{
+    static constexpr std::array<Topic, 13> topics = {{
         {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
         {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
+        {"depend-info", command_topic_fn<Commands::DependInfo::COMMAND_STRUCTURE>},
         {"env", command_topic_fn<Commands::Env::COMMAND_STRUCTURE>},
         {"export", command_topic_fn<Export::COMMAND_STRUCTURE>},
         {"help", command_topic_fn<Help::COMMAND_STRUCTURE>},
