@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 # vcpkg_from_git uses git archive to generate the hash, 
-# depending on what system or git settings this runs with it can result in a different hash
+# depending on what system or git settings this runs with it will result in a different hash
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(FDLIBM_HASH 825dcbbb88e3ebda6d928e1794da58d5135d37e36551c12de7eeab58a67adc4f5629c65d6afde567daeb489c287302116b2a5bbdb16693a3b068bbe16b250cf7)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
