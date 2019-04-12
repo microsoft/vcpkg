@@ -10,9 +10,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2019_U3
-    SHA512 b6eaaea95658c4d49e6894811eb9ca38541820462bf1b606db16ca697af4329a94627d8ae01a73f2b07567280865b3ea92ca0ce091fa95dd3551cebbdd35976d
-    HEAD_REF tbb_2018
+    REF 2019_U5
+    SHA512 227b12e3864fbb922ddbc99700bf94d7d8897d62e2056bf3beb608efacf3ca785dd416b94ad65b421b6c9fc11caff688147b5fbe400c51e98678cee5dc04f274
+    HEAD_REF tbb_2019
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -25,7 +25,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
     vcpkg_install_cmake()
 
-    # Settings for TBBConfigForSource.cmake.in
+    # Settings for TBBConfigInternal.cmake.in
     set(TBB_LIB_EXT a)
     set(TBB_LIB_PREFIX lib)
 else()
@@ -43,7 +43,7 @@ else()
         RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
         DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
     )
-    # Settings for TBBConfigForSource.cmake.in
+    # Settings for TBBConfigInternal.cmake.in
     set(TBB_LIB_EXT lib)
     set(TBB_LIB_PREFIX)
 endif()
@@ -53,12 +53,13 @@ file(COPY
   ${SOURCE_PATH}/include/serial
   DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Settings for TBBConfigForSource.cmake.in
+# Settings for TBBConfigInternal.cmake.in
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(TBB_DEFAULT_COMPONENTS tbb tbbmalloc)
 else()
     set(TBB_DEFAULT_COMPONENTS tbb tbbmalloc tbbmalloc_proxy)
 endif()
+
 file(READ "${SOURCE_PATH}/include/tbb/tbb_stddef.h" _tbb_stddef)
 string(REGEX REPLACE ".*#define TBB_VERSION_MAJOR ([0-9]+).*" "\\1" _tbb_ver_major "${_tbb_stddef}")
 string(REGEX REPLACE ".*#define TBB_VERSION_MINOR ([0-9]+).*" "\\1" _tbb_ver_minor "${_tbb_stddef}")
@@ -68,7 +69,7 @@ set(TBB_RELEASE_DIR "\${_tbb_root}/lib")
 set(TBB_DEBUG_DIR "\${_tbb_root}/debug/lib")
 
 configure_file(
-    ${SOURCE_PATH}/cmake/templates/TBBConfigForSource.cmake.in
+    ${SOURCE_PATH}/cmake/templates/TBBConfigInternal.cmake.in
     ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake
     @ONLY
 )
@@ -76,6 +77,18 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake _contents)
 string(REPLACE
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)\nget_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
+    _contents
+    "${_contents}"
+)
+string(REPLACE
+    "set(_tbb_release_lib \"/\${_tbb_component}.lib\")"
+    "set(_tbb_release_lib \"\${_tbb_root}/lib/\${_tbb_component}.lib\")"
+    _contents
+    "${_contents}"
+)
+string(REPLACE
+    "set(_tbb_debug_lib \"/\${_tbb_component}_debug.lib\")"
+    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/\${_tbb_component}_debug.lib\")"
     _contents
     "${_contents}"
 )
@@ -87,3 +100,4 @@ file(COPY ${SOURCE_PATH}/LICENSE ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${C
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb/copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME TBB)
+#

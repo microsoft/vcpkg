@@ -1,6 +1,6 @@
 ## # vcpkg_install_msbuild
 ##
-## Build and install an msbuild-based project. This replaces `vcpkg_build_msbuild()`.
+## Build and install a msbuild-based project. This replaces `vcpkg_build_msbuild()`.
 ##
 ## ## Usage
 ## ```cmake

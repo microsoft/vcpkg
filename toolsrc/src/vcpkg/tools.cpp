@@ -8,9 +8,10 @@
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
-#include <vcpkg/base/stringrange.h>
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg
@@ -87,15 +88,15 @@ namespace vcpkg
         }
 
         const std::string tool_data =
-            StringRange::find_exactly_one_enclosed(XML, match_tool_entry[0], "</tool>").to_string();
+            StringView::find_exactly_one_enclosed(XML, match_tool_entry[0], "</tool>").to_string();
         const std::string version_as_string =
-            StringRange::find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
+            StringView::find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
         const std::string exe_relative_path =
-            StringRange::find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>").to_string();
-        const std::string url = StringRange::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+            StringView::find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>").to_string();
+        const std::string url = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
         const std::string sha512 =
-            StringRange::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
-        auto archive_name = StringRange::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
+            StringView::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
+        auto archive_name = StringView::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
 
         const Optional<std::array<int, 3>> version = parse_version_string(version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -172,16 +173,16 @@ namespace vcpkg
                            tool_name,
                            version_as_string,
                            tool_name);
-        System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
-                        tool_name,
-                        version_as_string,
-                        tool_name,
-                        version_as_string);
+        System::printf("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...\n",
+                       tool_name,
+                       version_as_string,
+                       tool_name,
+                       version_as_string);
         auto& fs = paths.get_filesystem();
         if (!fs.exists(tool_data.download_path))
         {
-            System::println("Downloading %s...", tool_name);
-            System::println("  %s -> %s", tool_data.url, tool_data.download_path.string());
+            System::print2("Downloading ", tool_name, "...\n");
+            System::print2("  ", tool_data.url, " -> ", tool_data.download_path.u8string(), "\n");
             Downloads::download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
         }
         else
@@ -191,7 +192,7 @@ namespace vcpkg
 
         if (tool_data.is_archive)
         {
-            System::println("Extracting %s...", tool_name);
+            System::print2("Extracting ", tool_name, "...\n");
             Archives::extract_archive(paths, tool_data.download_path, tool_data.tool_dir_path);
         }
         else
@@ -286,7 +287,7 @@ cmake version 3.10.2
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
                 */
-            return StringRange::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string();
+            return StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string();
         }
     };
 
@@ -352,7 +353,7 @@ Type 'NuGet help <command>' for help on a specific command.
 
 [[[List of available commands follows]]]
                 */
-            return StringRange::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string();
+            return StringView::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string();
         }
     };
 
@@ -364,7 +365,7 @@ Type 'NuGet help <command>' for help on a specific command.
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {2, 7, 4}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
 #if defined(_WIN32)
             const auto& program_files = System::get_program_files_platform_bitness();
@@ -403,7 +404,7 @@ git version 2.17.1.windows.2
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");

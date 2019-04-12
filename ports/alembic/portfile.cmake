@@ -1,5 +1,12 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Alembic's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Alembic does not support static linkage. Building dynamically.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)

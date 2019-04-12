@@ -1,19 +1,23 @@
 include(vcpkg_common_functions)
 
+if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
+    message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead. If it is critical, create an issue at the repo: github.com/luncliff/coroutine")
+endif()
+
+# changed to 1.4.1
+set(VERSION_1_4_COMMIT 8399236a4adf1cb49ef51133fb887027e3d77141)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF             1.4
-    SHA512          981c9c728c7888995880a97e8533fa31f41085ef57e1c61e53e555f329d20d4a882d9de724d9e93e3d009dc3fe0669fe4d1af403654a9373e4aab44c933628a3
+    REF             ${VERSION_1_4_COMMIT}
+    SHA512          35adf0aa3a923b869e02d1e33987f6c9922f90918e84feaf5a41e46334b7555db75f55c6dd797f74112010ef5e682ee6f5fbf58be84af88a8f8f084f3d6dac05
     HEAD_REF        master
 )
 
-if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
-    message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead or contact maintainer")
-endif()
-
 # package: 'ms-gsl'
-message(STATUS "Using Guideline Support Library at ${CURRENT_INSTALLED_DIR}/include")
+set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include 
+    CACHE PATH "path to include C++ core guideline support library" FORCE)
+message(STATUS "Using ms-gsl at ${GSL_INCLUDE_DIR}")
 
 set(DLL_LINKAGE false)
 if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
@@ -25,8 +29,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        # package: 'ms-gsl'
-        -DGSL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DGSL_INCLUDE_DIR=${GSL_INCLUDE_DIR}
         -DTEST_DISABLED=True
         -DBUILD_SHARED_LIBS=${DLL_LINKAGE}
 )

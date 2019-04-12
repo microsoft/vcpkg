@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a063556..68e559e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,6 +11,8 @@ set(APPLICATION_VERSION_MINOR "7")
+ set(APPLICATION_VERSION_PATCH "6")
+ 
+ set(APPLICATION_VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}")
++set(CMAKE_INSTALL_DIR lib/cmake/libssh CACHE STRING
++    "The subdirectory where CMake package config files should be installed")
+ 
+ # SOVERSION scheme: CURRENT.AGE.REVISION
+ #   If there was an incompatible interface change:
+@@ -114,14 +116,29 @@ endif (UNIX)
+ set(LIBSSH_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}ssh${CMAKE_SHARED_LIBRARY_SUFFIX})
+ set(LIBSSH_THREADS_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}ssh${CMAKE_SHARED_LIBRARY_SUFFIX})
+ 
+-configure_file(${PROJECT_NAME}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake @ONLY)
+-configure_file(${PROJECT_NAME}-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake @ONLY)
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++  ${PROJECT_NAME}-config.cmake.in
++  ${PROJECT_NAME}-config.cmake
++  INSTALL_DESTINATION ${CMAKE_INSTALL_DIR}
++  PATH_VARS
++    INCLUDE_INSTALL_DIR
++    CMAKE_INSTALL_DIR
++)
++configure_package_config_file(
++  ${PROJECT_NAME}-config-version.cmake.in
++  ${PROJECT_NAME}-config-version.cmake
++  INSTALL_DESTINATION ${CMAKE_INSTALL_DIR}
++  PATH_VARS
++    INCLUDE_INSTALL_DIR
++    CMAKE_INSTALL_DIR
++)
+ install(
+     FILES
+         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+     DESTINATION
+-        ${CMAKE_INSTALL_DIR}/${PROJECT_NAME}
++        ${CMAKE_INSTALL_DIR}
+     COMPONENT
+         devel
+ )
+diff --git a/libssh-config.cmake.in b/libssh-config.cmake.in
+index fa9cecf..b17fdbd 100644
+--- a/libssh-config.cmake.in
++++ b/libssh-config.cmake.in
+@@ -1,13 +1,22 @@
+ get_filename_component(LIBSSH_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
++get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
+ 
+ if (EXISTS "${LIBSSH_CMAKE_DIR}/CMakeCache.txt")
+     # In build tree
+     include(${LIBSSH_CMAKE_DIR}/libssh-build-tree-settings.cmake)
+ else()
+-    set(LIBSSH_INCLUDE_DIR @INCLUDE_INSTALL_DIR@)
++    set(LIBSSH_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/include/")
++    set(LIBSSH_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include/")
+ endif()
+ 
+-set(LIBSSH_LIBRARY @LIB_INSTALL_DIR@/@LIBSSH_LIBRARY_NAME@)
+-set(LIBSSH_LIBRARIES @LIB_INSTALL_DIR@/@LIBSSH_LIBRARY_NAME@)
++if(CMAKE_BUILD_TYPE STREQUAL "Release")
++    set(LIBSSH_LIBRARY "${PACKAGE_PREFIX_DIR}/lib/ssh.lib")
++    set(LIBSSH_LIBRARIES "${PACKAGE_PREFIX_DIR}/lib/ssh.lib")
+ 
+-set(LIBSSH_THREADS_LIBRARY @LIB_INSTALL_DIR@/@LIBSSH_THREADS_LIBRARY_NAME@)
++    set(LIBSSH_THREADS_LIBRARY "${PACKAGE_PREFIX_DIR}/lib/ssh.lib")
++elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(LIBSSH_LIBRARY "${PACKAGE_PREFIX_DIR}/debug/lib/ssh.lib")
++    set(LIBSSH_LIBRARIES "${PACKAGE_PREFIX_DIR}/debug/lib/ssh.lib")
++
++    set(LIBSSH_THREADS_LIBRARY "${PACKAGE_PREFIX_DIR}/debug/lib/ssh.lib")
++endif()

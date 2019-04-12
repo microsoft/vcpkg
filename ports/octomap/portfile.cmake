@@ -14,6 +14,7 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_OCTOVIS_SUBPROJECT=OFF
         -DBUILD_DYNAMICETD3D_SUBPROJECT=OFF
@@ -25,23 +26,28 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/octomap)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/binvox2bt.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/binvox2bt.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/bt2vrml.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/bt2vrml.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/compare_octrees.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/compare_octrees.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/convert_octree.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/convert_octree.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/edit_octree.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/edit_octree.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/eval_octree_accuracy.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/eval_octree_accuracy.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/graph2tree.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/graph2tree.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/log2graph.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/log2graph.exe)
+if(WIN32)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/binvox2bt.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/binvox2bt.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/bt2vrml.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/bt2vrml.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/compare_octrees.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/compare_octrees.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/convert_octree.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/convert_octree.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/edit_octree.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/edit_octree.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/eval_octree_accuracy.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/eval_octree_accuracy.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/graph2tree.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/graph2tree.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin/log2graph.exe ${CURRENT_PACKAGES_DIR}/tools/octomap/log2graph.exe)
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/binvox2bt.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/bt2vrml.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/compare_octrees.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/convert_octree.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/edit_octree.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/eval_octree_accuracy.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/graph2tree.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/log2graph.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/binvox2bt.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/bt2vrml.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/compare_octrees.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/convert_octree.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/edit_octree.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/eval_octree_accuracy.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/graph2tree.exe)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/log2graph.exe)
+else()
+  file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/octomap)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/octomap)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
