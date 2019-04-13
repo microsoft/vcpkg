@@ -1,11 +1,5 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(ADDITIONAL_PATCH "auto-define-lzma-api-static.patch")
-else()
-    set(ADDITIONAL_PATCH "")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xz-mirror/xz
@@ -14,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         enable-uwp-builds.patch
-        ${ADDITIONAL_PATCH}
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -26,7 +19,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/liblzma TARGET_PATH share/liblzma)
+vcpkg_fixup_cmake_targets()
 
 file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
 "

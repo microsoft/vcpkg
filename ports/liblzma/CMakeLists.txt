@@ -1,26 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(LibLZMA)
 
-add_definitions(-DHAVE_CONFIG_H)
-if(BUILD_SHARED_LIBS)
-    add_definitions(-DLIBLZMADLL_EXPORTS)
-    add_definitions(-DDLL_EXPORT)
-endif()
-
 set(INSTALL_BIN_DIR      "bin"                CACHE PATH   "Path where exe and dll will be installed")
 set(INSTALL_LIB_DIR      "lib"                CACHE PATH   "Path where lib will be installed")
 set(INSTALL_INCLUDE_DIR  "include"            CACHE PATH   "Path where headers will be installed")
-set(INSTALL_CMAKE_DIR    "share/LibLZMA"      CACHE PATH   "Path where cmake configs will be installed")
+set(INSTALL_CMAKE_DIR    "share/liblzma"      CACHE PATH   "Path where cmake configs will be installed")
 set(CMAKE_DEBUG_POSTFIX  "d"                  CACHE STRING "Append a suffix to debug libraries")
 
-if(NOT MSVC)
-    add_definitions(-DHAVE_VISIBILITY=1)
-endif()
-
-if(WIN32)
-    include_directories(windows/vs2017)
-else()
-    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+if(NOT WIN32)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h
     "
 #define TUKLIB_SYMBOL_PREFIX lzma_
@@ -143,7 +130,21 @@ add_library(LZMA
     src/liblzma/simple/x86.c
 )
 
+if(MSVC)
+    target_include_directories(LZMA PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/windows/vs2017>)
+else()
+    target_compile_definitions(LZMA PRIVATE -DHAVE_VISIBILITY=1)
+endif()
+
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(LZMA PRIVATE -DLIBLZMADLL_EXPORTS -DDLL_EXPORT)
+else()
+    target_compile_definitions(LZMA PUBLIC -DLZMA_API_STATIC)
+endif()
+target_compile_definitions(LZMA PUBLIC -DHAVE_CONFIG_H)
+
 target_include_directories(LZMA PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/check>
@@ -153,6 +154,7 @@ target_include_directories(LZMA PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/simple>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/lzma>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/api>
+    $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}/lzma>
 )
 
 set_target_properties(LZMA PROPERTIES PUBLIC_HEADER
@@ -171,7 +173,7 @@ install(FILES "${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h"
 )
 
 install(EXPORT LibLZMATargets
-  FILE LibLZMAConfig.cmake
-  NAMESPACE LZMA::
-  DESTINATION "${INSTALL_CMAKE_DIR}"
+    FILE LibLZMAConfig.cmake
+    NAMESPACE LZMA::
+    DESTINATION "${INSTALL_CMAKE_DIR}"
 )
