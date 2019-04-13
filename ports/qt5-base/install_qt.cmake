@@ -25,11 +25,11 @@ function(install_qt)
     endif()
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-    set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
+    vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
     set(_path "$ENV{PATH}")
 
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
-    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/debug/bin;${_path}")
+    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
     vcpkg_execute_required_process(
         COMMAND ${INVOKE}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
@@ -43,7 +43,8 @@ function(install_qt)
     message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
     
     message(STATUS "Package ${TARGET_TRIPLET}-rel")
-    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin;${_path}")
+    set(ENV{PATH} "${_path}")
+    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
     vcpkg_execute_required_process(
         COMMAND ${INVOKE}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
