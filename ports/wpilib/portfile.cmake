@@ -2,12 +2,10 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO wpilibsuite/allwpilib
-    REF v2019.4.1
-    SHA512 8a79e55cd5f3aaf60eb8c0a952d33c82b5e5c997e72d7ad1cf3a99165a0057dfc5d3fc742d7dcefc7a1d3031bfc185b107968545159d7d5177a601df85df271e
-    HEAD_REF master
-    PATCHES
-      0006-Fix-GUID-comparison-creating-weird-symbol.patch
+    REPO thadhouse/allwpilib
+    REF v2019.42.42
+    SHA512 fd8d1030bffe67912c09e6dd9aedd71be10a5994aae9d371eb7a0b0faa67bc2743a16d9c31a4472f933819d3d109c676d506df7ca6df46ca68ec92290d3a8a47
+    HEAD_REF vcpkgrelease
 )
 
 set(WITHOUT_JAVA ON)
@@ -30,7 +28,7 @@ vcpkg_configure_cmake(
       -DWITHOUT_JAVA=${WITHOUT_JAVA}
       -DWITHOUT_CSCORE=${WITHOUT_CSCORE}
       -DWITHOUT_ALLWPILIB=${WITHOUT_ALLWPILIB}
-      -DFLAT_INSTALL_HEADERS=ON
+      -DUSE_VCPKG_LIBUV=ON
 )
 vcpkg_install_cmake()
 
@@ -56,7 +54,6 @@ file(COPY ${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/ DESTINATION ${CURRENT_PACKAG
 file(COPY ${CURRENT_PACKAGES_DIR}/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "*.lib")
 file(COPY ${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib FILES_MATCHING PATTERN "*.lib")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/wpilib)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/wpilib)
+vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wpilib RENAME copyright)
