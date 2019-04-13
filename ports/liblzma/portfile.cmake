@@ -1,8 +1,7 @@
 include(vcpkg_common_functions)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    #set(ADDITIONAL_PATCH "auto-define-lzma-api-static.patch")
-    set(ADDITIONAL_PATCH "")
+    set(ADDITIONAL_PATCH "auto-define-lzma-api-static.patch")
 else()
     set(ADDITIONAL_PATCH "")
 endif()
@@ -27,9 +26,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/LibLZMA TARGET_PATH share/LibLZMA)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/liblzma TARGET_PATH share/liblzma)
 
-    file(APPEND ${CURRENT_PACKAGES_DIR}/share/LibLZMA/LibLZMAConfig.cmake
+file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 find_path(LibLZMA_INCLUDE_DIR
@@ -79,5 +78,5 @@ set(LIBLZMA_FOUND TRUE)
 ")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/LibLZMA)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/LibLZMA/COPYING ${CURRENT_PACKAGES_DIR}/share/LibLZMA/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/liblzma/COPYING ${CURRENT_PACKAGES_DIR}/share/liblzma/copyright)
