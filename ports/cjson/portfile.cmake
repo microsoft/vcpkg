@@ -39,7 +39,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cJSON)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
