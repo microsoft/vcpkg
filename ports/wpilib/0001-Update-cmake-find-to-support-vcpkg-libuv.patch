@@ -1,30 +1,31 @@
-From b560407ca2228da9f3c10f457800314a49336466 Mon Sep 17 00:00:00 2001
+From 090e7210fcb8ba91268a21f174a26a66762bbaee Mon Sep 17 00:00:00 2001
 From: Thad House <thadhouse1@gmail.com>
 Date: Sat, 13 Apr 2019 22:04:31 -0700
 Subject: [PATCH] Update cmake find to support vcpkg libuv
 
 ---
- CMakeLists.txt                            | 18 ++++++++++++++----
- cameraserver/CMakeLists.txt               |  3 ++-
- cameraserver/cameraserver-config.cmake    |  8 --------
- cameraserver/cameraserver-config.cmake.in |  9 +++++++++
- cscore/CMakeLists.txt                     |  3 ++-
- cscore/cscore-config.cmake                |  6 ------
- cscore/cscore-config.cmake.in             |  6 ++++++
- hal/CMakeLists.txt                        |  3 ++-
- hal/hal-config.cmake                      |  5 -----
- hal/hal-config.cmake.in                   |  5 +++++
- ntcore/CMakeLists.txt                     |  3 ++-
- ntcore/ntcore-config.cmake                |  5 -----
- ntcore/ntcore-config.cmake.in             |  5 +++++
- wpilib-config.cmake.in                    |  6 ++++--
- wpilibc/CMakeLists.txt                    |  3 ++-
- wpilibc/wpilibc-config.cmake              | 10 ----------
- wpilibc/wpilibc-config.cmake.in           |  9 +++++++++
- wpiutil/CMakeLists.txt                    |  3 ++-
+ CMakeLists.txt                            | 34 +++++++++++++++++++----
+ cameraserver/CMakeLists.txt               |  5 ++--
+ cameraserver/cameraserver-config.cmake    |  8 ------
+ cameraserver/cameraserver-config.cmake.in |  9 ++++++
+ cscore/CMakeLists.txt                     |  5 ++--
+ cscore/cscore-config.cmake                |  6 ----
+ cscore/cscore-config.cmake.in             |  6 ++++
+ hal/CMakeLists.txt                        |  5 ++--
+ hal/hal-config.cmake                      |  5 ----
+ hal/hal-config.cmake.in                   |  5 ++++
+ ntcore/CMakeLists.txt                     |  5 ++--
+ ntcore/ntcore-config.cmake                |  5 ----
+ ntcore/ntcore-config.cmake.in             |  5 ++++
+ wpilib-config.cmake.in                    |  6 ++--
+ wpilibc/CMakeLists.txt                    |  5 ++--
+ wpilibc/wpilibc-config.cmake              | 10 -------
+ wpilibc/wpilibc-config.cmake.in           |  9 ++++++
+ wpilibj/CMakeLists.txt                    |  2 +-
+ wpiutil/CMakeLists.txt                    |  5 ++--
  wpiutil/wpiutil-config.cmake              |  2 --
- wpiutil/wpiutil-config.cmake.in           |  7 +++++++
- 20 files changed, 71 insertions(+), 48 deletions(-)
+ wpiutil/wpiutil-config.cmake.in           |  7 +++++
+ 21 files changed, 93 insertions(+), 56 deletions(-)
  delete mode 100644 cameraserver/cameraserver-config.cmake
  create mode 100644 cameraserver/cameraserver-config.cmake.in
  delete mode 100644 cscore/cscore-config.cmake
@@ -39,10 +40,25 @@ Subject: [PATCH] Update cmake find to support vcpkg libuv
  create mode 100644 wpiutil/wpiutil-config.cmake.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a5b89d9ac..f4e348e56 100644
+index a5b89d9ac..a8f82f95e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -72,20 +72,30 @@ else()
+@@ -51,6 +51,7 @@ option(WITHOUT_ALLWPILIB "Don't build allwpilib (removes OpenCV requirement)" ON
+ option(USE_EXTERNAL_HAL "Use a separately built HAL" OFF)
+ set(EXTERNAL_HAL_FILE "" CACHE FILEPATH "Location to look for an external HAL CMake File")
+ option(USE_VCPKG_LIBUV "Use vcpkg libuv" OFF)
++option(FLAT_INSTALL_WPILIB "Use a flat install directory" OFF)
+
+ if (NOT WITHOUT_JAVA AND NOT BUILD_SHARED_LIBS)
+     message(FATAL_ERROR "
+@@ -66,26 +67,49 @@ set( main_lib_dest wpilib/lib )
+ set( java_lib_dest wpilib/java )
+ set( jni_lib_dest wpilib/jni )
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (wpilib_config_dir ${wpilib_dest})
+ else()
      set (wpilib_config_dir share/wpilib)
  endif()
 
@@ -50,8 +66,21 @@ index a5b89d9ac..f4e348e56 100644
 +set (LIBUV_VCPKG_REPLACE "find_package(unofficial-libuv CONFIG)")
 +endif()
 +
++if (FLAT_INSTALL_WPILIB)
 +set(WPIUTIL_DEP_REPLACE "include($\{SELF_DIR\}/wpiutil-config.cmake)")
 +set(NTCORE_DEP_REPLACE "include($\{SELF_DIR\}/ntcore-config.cmake)")
++set(CSCORE_DEP_REPLACE_IMPL "include(\${SELF_DIR}/cscore-config.cmake)")
++set(CAMERASERVER_DEP_REPLACE_IMPL "include(\${SELF_DIR}/cameraserver-config.cmake)")
++set(HAL_DEP_REPLACE_IMPL "include(\${SELF_DIR}/hal-config.cmake)")
++set(WPILIBC_DEP_REPLACE_IMPL "include(\${SELF_DIR}/wpilibc-config.cmake)")
++else()
++set(WPIUTIL_DEP_REPLACE "find_dependency(wpiutil)")
++set(NTCORE_DEP_REPLACE "find_dependency(ntcore)")
++set(CSCORE_DEP_REPLACE_IMPL "find_dependency(cscore)")
++set(CAMERASERVER_DEP_REPLACE_IMPL "find_dependency(cameraserver)")
++set(HAL_DEP_REPLACE_IMPL "find_dependency(hal)")
++set(WPILIBC_DEP_REPLACE_IMPL "find_dependency(wpilibc)")
++endif()
 +
 +set(FILENAME_DEP_REPLACE "get_filename_component(SELF_DIR \"$\{CMAKE_CURRENT_LIST_FILE\}\" PATH)")
 +set(SELF_DIR "$\{SELF_DIR\}")
@@ -60,15 +89,15 @@ index a5b89d9ac..f4e348e56 100644
  add_subdirectory(ntcore)
 
  if (NOT WITHOUT_CSCORE)
-+    set (CSCORE_DEP_REPLACE "include(\${SELF_DIR}/wpiutil-config.cmake)")
-+    set (CAMERASERVER_DEP_REPLACE "include(\${SELF_DIR}/wpiutil-config.cmake)")
++    set(CSCORE_DEP_REPLACE ${CSCORE_DEP_REPLACE_IMPL})
++    set(CAMERASERVER_DEP_REPLACE ${CAMERASERVER_DEP_REPLACE_IMPL})
      add_subdirectory(cscore)
      add_subdirectory(cameraserver)
 -    set (CSCORE_DEP_REPLACE "find_dependency(cscore)")
 -    set (CAMERASERVER_DEP_REPLACE "find_dependency(cameraserver)")
      if (NOT WITHOUT_ALLWPILIB)
-+        set (HAL_DEP_REPLACE "include(\${SELF_DIR}/hal-config.cmake)")
-+        set (WPILIBC_DEP_REPLACE "include(\${SELF_DIR}/wpilibc-config.cmake)")
++        set(HAL_DEP_REPLACE ${HAL_DEP_REPLACE_IMPL})
++        set(WPILIBC_DEP_REPLACE ${WPILIBC_DEP_REPLACE_IMPL})
          add_subdirectory(hal)
          add_subdirectory(wpilibj)
          add_subdirectory(wpilibc)
@@ -78,10 +107,17 @@ index a5b89d9ac..f4e348e56 100644
  endif()
 
 diff --git a/cameraserver/CMakeLists.txt b/cameraserver/CMakeLists.txt
-index a3a74607a..75a45ce69 100644
+index a3a74607a..1a75ae48d 100644
 --- a/cameraserver/CMakeLists.txt
 +++ b/cameraserver/CMakeLists.txt
-@@ -49,7 +49,8 @@ else()
+@@ -43,13 +43,14 @@ if (NOT WITHOUT_JAVA AND MSVC)
+     install(TARGETS cameraserver RUNTIME DESTINATION "${jni_lib_dest}" COMPONENT Runtime)
+ endif()
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (cameraserver_config_dir ${wpilib_dest})
+ else()
      set (cameraserver_config_dir share/cameraserver)
  endif()
 
@@ -121,10 +157,17 @@ index 000000000..0c71fc58c
 +include(${SELF_DIR}/cameraserver.cmake)
 +
 diff --git a/cscore/CMakeLists.txt b/cscore/CMakeLists.txt
-index 52bcb54a2..f6675e29c 100644
+index 52bcb54a2..805b3a583 100644
 --- a/cscore/CMakeLists.txt
 +++ b/cscore/CMakeLists.txt
-@@ -42,7 +42,8 @@ else()
+@@ -36,13 +36,14 @@ set_property(TARGET cscore PROPERTY FOLDER "libraries")
+ install(TARGETS cscore EXPORT cscore DESTINATION "${main_lib_dest}")
+ install(DIRECTORY src/main/native/include/ DESTINATION "${include_dest}/cscore")
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (cscore_config_dir ${wpilib_dest})
+ else()
      set (cscore_config_dir share/cscore)
  endif()
 
@@ -159,10 +202,17 @@ index 000000000..7894fbaec
 +
 +include(${SELF_DIR}/cscore.cmake)
 diff --git a/hal/CMakeLists.txt b/hal/CMakeLists.txt
-index e52d90ff0..3e338faec 100644
+index e52d90ff0..7394495db 100644
 --- a/hal/CMakeLists.txt
 +++ b/hal/CMakeLists.txt
-@@ -61,7 +61,8 @@ else()
+@@ -55,13 +55,14 @@ install(TARGETS hal EXPORT hal DESTINATION "${main_lib_dest}")
+ install(DIRECTORY src/main/native/include/ DESTINATION "${include_dest}/hal")
+ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/gen DESTINATION "${include_dest}/hal")
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (hal_config_dir ${wpilib_dest})
+ else()
      set (hal_config_dir share/hal)
  endif()
 
@@ -195,10 +245,17 @@ index 000000000..ae5533c27
 +
 +include(${SELF_DIR}/hal.cmake)
 diff --git a/ntcore/CMakeLists.txt b/ntcore/CMakeLists.txt
-index 47e226401..aaf6159b2 100644
+index 47e226401..1c00da138 100644
 --- a/ntcore/CMakeLists.txt
 +++ b/ntcore/CMakeLists.txt
-@@ -22,7 +22,8 @@ else()
+@@ -16,13 +16,14 @@ set_property(TARGET ntcore PROPERTY FOLDER "libraries")
+ install(TARGETS ntcore EXPORT ntcore DESTINATION "${main_lib_dest}")
+ install(DIRECTORY src/main/native/include/ DESTINATION "${include_dest}/ntcore")
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (ntcore_config_dir ${wpilib_dest})
+ else()
      set (ntcore_config_dir share/ntcore)
  endif()
 
@@ -248,10 +305,17 @@ index 445db82d7..2c15dfe09 100644
  @CAMERASERVER_DEP_REPLACE@
  @HAL_DEP_REPLACE@
 diff --git a/wpilibc/CMakeLists.txt b/wpilibc/CMakeLists.txt
-index da3587188..e04d3df3f 100644
+index da3587188..7b131838b 100644
 --- a/wpilibc/CMakeLists.txt
 +++ b/wpilibc/CMakeLists.txt
-@@ -26,5 +26,6 @@ else()
+@@ -20,11 +20,12 @@ set_property(TARGET wpilibc PROPERTY FOLDER "libraries")
+ install(TARGETS wpilibc EXPORT wpilibc DESTINATION "${main_lib_dest}")
+ install(DIRECTORY src/main/native/include/ DESTINATION "${include_dest}/wpilibc")
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (wpilibc_config_dir ${wpilib_dest})
+ else()
      set (wpilibc_config_dir share/wpilibc)
  endif()
 
@@ -290,11 +354,31 @@ index 000000000..4332c550e
 +@HAL_DEP_REPLACE@
 +
 +include(${SELF_DIR}/wpilibc.cmake)
+diff --git a/wpilibj/CMakeLists.txt b/wpilibj/CMakeLists.txt
+index 61fb558fa..964fa0cc1 100644
+--- a/wpilibj/CMakeLists.txt
++++ b/wpilibj/CMakeLists.txt
+@@ -23,7 +23,7 @@ if (NOT WITHOUT_JAVA)
+
+     set_property(TARGET wpilibj_jar PROPERTY FOLDER "java")
+
+-    if (MSVC)
++    if (MSVC OR FLAT_INSTALL_WPILIB)
+         set (wpilibj_config_dir ${wpilib_dest})
+     else()
+         set (wpilibj_config_dir share/wpilibj)
 diff --git a/wpiutil/CMakeLists.txt b/wpiutil/CMakeLists.txt
-index bcc0bcf5b..653ab141d 100644
+index bcc0bcf5b..de66a9671 100644
 --- a/wpiutil/CMakeLists.txt
 +++ b/wpiutil/CMakeLists.txt
-@@ -130,7 +130,8 @@ else()
+@@ -124,13 +124,14 @@ if (NOT WITHOUT_JAVA AND MSVC)
+     install(TARGETS wpiutil RUNTIME DESTINATION "${jni_lib_dest}" COMPONENT Runtime)
+ endif()
+
+-if (MSVC)
++if (MSVC OR FLAT_INSTALL_WPILIB)
+     set (wpiutil_config_dir ${wpilib_dest})
+ else()
      set (wpiutil_config_dir share/wpiutil)
  endif()
 
