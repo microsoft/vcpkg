@@ -17,6 +17,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(FATAL_ERROR "Package only supports linux platform.")
 endif()
 
+message(
+"libpcap currently requires the following libraries from the system package manager:
+    flex
+    libbison-dev
+
+These can be installed on Ubuntu systems via sudo apt install flex libbison-dev"
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(SHARED_STATIC --enable-static --disable-shared)
 else()
