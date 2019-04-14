@@ -37,6 +37,14 @@ else()
         set(_VCPKG_TARGET_TRIPLET_ARCH arm)
     elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017$")
         set(_VCPKG_TARGET_TRIPLET_ARCH x86)
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019 Win64$")
+        set(_VCPKG_TARGET_TRIPLET_ARCH x64)
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019 Win32$")
+        set(_VCPKG_TARGET_TRIPLET_ARCH x86)
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019 ARM$")
+        set(_VCPKG_TARGET_TRIPLET_ARCH arm)
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019$")
+        set(_VCPKG_TARGET_TRIPLET_ARCH x64)
     else()
         find_program(_VCPKG_CL cl)
         if(_VCPKG_CL MATCHES "amd64/cl.exe$" OR _VCPKG_CL MATCHES "x64/cl.exe$")
@@ -95,7 +103,7 @@ if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_I
     message(WARNING "There are no libraries installed for the Vcpkg triplet ${VCPKG_TARGET_TRIPLET}.")
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths. 
+if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
     list(APPEND CMAKE_PREFIX_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
     )
