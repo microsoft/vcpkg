@@ -1,0 +1,330 @@
+From b560407ca2228da9f3c10f457800314a49336466 Mon Sep 17 00:00:00 2001
+From: Thad House <thadhouse1@gmail.com>
+Date: Sat, 13 Apr 2019 22:04:31 -0700
+Subject: [PATCH] Update cmake find to support vcpkg libuv
+
+---
+ CMakeLists.txt                            | 18 ++++++++++++++----
+ cameraserver/CMakeLists.txt               |  3 ++-
+ cameraserver/cameraserver-config.cmake    |  8 --------
+ cameraserver/cameraserver-config.cmake.in |  9 +++++++++
+ cscore/CMakeLists.txt                     |  3 ++-
+ cscore/cscore-config.cmake                |  6 ------
+ cscore/cscore-config.cmake.in             |  6 ++++++
+ hal/CMakeLists.txt                        |  3 ++-
+ hal/hal-config.cmake                      |  5 -----
+ hal/hal-config.cmake.in                   |  5 +++++
+ ntcore/CMakeLists.txt                     |  3 ++-
+ ntcore/ntcore-config.cmake                |  5 -----
+ ntcore/ntcore-config.cmake.in             |  5 +++++
+ wpilib-config.cmake.in                    |  6 ++++--
+ wpilibc/CMakeLists.txt                    |  3 ++-
+ wpilibc/wpilibc-config.cmake              | 10 ----------
+ wpilibc/wpilibc-config.cmake.in           |  9 +++++++++
+ wpiutil/CMakeLists.txt                    |  3 ++-
+ wpiutil/wpiutil-config.cmake              |  2 --
+ wpiutil/wpiutil-config.cmake.in           |  7 +++++++
+ 20 files changed, 71 insertions(+), 48 deletions(-)
+ delete mode 100644 cameraserver/cameraserver-config.cmake
+ create mode 100644 cameraserver/cameraserver-config.cmake.in
+ delete mode 100644 cscore/cscore-config.cmake
+ create mode 100644 cscore/cscore-config.cmake.in
+ delete mode 100644 hal/hal-config.cmake
+ create mode 100644 hal/hal-config.cmake.in
+ delete mode 100644 ntcore/ntcore-config.cmake
+ create mode 100644 ntcore/ntcore-config.cmake.in
+ delete mode 100644 wpilibc/wpilibc-config.cmake
+ create mode 100644 wpilibc/wpilibc-config.cmake.in
+ delete mode 100644 wpiutil/wpiutil-config.cmake
+ create mode 100644 wpiutil/wpiutil-config.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a5b89d9ac..f4e348e56 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,20 +72,30 @@ else()
+     set (wpilib_config_dir share/wpilib)
+ endif()
+
++if (USE_VCPKG_LIBUV)
++set (LIBUV_VCPKG_REPLACE "find_package(unofficial-libuv CONFIG)")
++endif()
++
++set(WPIUTIL_DEP_REPLACE "include($\{SELF_DIR\}/wpiutil-config.cmake)")
++set(NTCORE_DEP_REPLACE "include($\{SELF_DIR\}/ntcore-config.cmake)")
++
++set(FILENAME_DEP_REPLACE "get_filename_component(SELF_DIR \"$\{CMAKE_CURRENT_LIST_FILE\}\" PATH)")
++set(SELF_DIR "$\{SELF_DIR\}")
++
+ add_subdirectory(wpiutil)
+ add_subdirectory(ntcore)
+
+ if (NOT WITHOUT_CSCORE)
++    set (CSCORE_DEP_REPLACE "include(\${SELF_DIR}/wpiutil-config.cmake)")
++    set (CAMERASERVER_DEP_REPLACE "include(\${SELF_DIR}/wpiutil-config.cmake)")
+     add_subdirectory(cscore)
+     add_subdirectory(cameraserver)
+-    set (CSCORE_DEP_REPLACE "find_dependency(cscore)")
+-    set (CAMERASERVER_DEP_REPLACE "find_dependency(cameraserver)")
+     if (NOT WITHOUT_ALLWPILIB)
++        set (HAL_DEP_REPLACE "include(\${SELF_DIR}/hal-config.cmake)")
++        set (WPILIBC_DEP_REPLACE "include(\${SELF_DIR}/wpilibc-config.cmake)")
+         add_subdirectory(hal)
+         add_subdirectory(wpilibj)
+         add_subdirectory(wpilibc)
+-        set (HAL_DEP_REPLACE "find_dependency(hal)")
+-        set (WPILIBC_DEP_REPLACE "find_dependency(wpilibc)")
+     endif()
+ endif()
+
+diff --git a/cameraserver/CMakeLists.txt b/cameraserver/CMakeLists.txt
+index a3a74607a..75a45ce69 100644
+--- a/cameraserver/CMakeLists.txt
++++ b/cameraserver/CMakeLists.txt
+@@ -49,7 +49,8 @@ else()
+     set (cameraserver_config_dir share/cameraserver)
+ endif()
+
+-install(FILES cameraserver-config.cmake DESTINATION ${cameraserver_config_dir})
++configure_file(cameraserver-config.cmake.in ${CMAKE_BINARY_DIR}/cameraserver-config.cmake )
++install(FILES ${CMAKE_BINARY_DIR}/cameraserver-config.cmake DESTINATION ${cameraserver_config_dir})
+ install(EXPORT cameraserver DESTINATION ${cameraserver_config_dir})
+
+ file(GLOB multiCameraServer_src multiCameraServer/src/main/native/cpp/*.cpp)
+diff --git a/cameraserver/cameraserver-config.cmake b/cameraserver/cameraserver-config.cmake
+deleted file mode 100644
+index 2c2b1cc33..000000000
+--- a/cameraserver/cameraserver-config.cmake
++++ /dev/null
+@@ -1,8 +0,0 @@
+-include(CMakeFindDependencyMacro)
+-find_dependency(wpiutil)
+-find_dependency(ntcore)
+-find_dependency(cscore)
+-find_dependency(OpenCV)
+-
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-include(${SELF_DIR}/cameraserver.cmake)
+diff --git a/cameraserver/cameraserver-config.cmake.in b/cameraserver/cameraserver-config.cmake.in
+new file mode 100644
+index 000000000..0c71fc58c
+--- /dev/null
++++ b/cameraserver/cameraserver-config.cmake.in
+@@ -0,0 +1,9 @@
++include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
++@WPIUTIL_DEP_REPLACE@
++@NTCORE_DEP_REPLACE@
++@CSCORE_DEP_REPLACE@
++find_dependency(OpenCV)
++
++include(${SELF_DIR}/cameraserver.cmake)
++
+diff --git a/cscore/CMakeLists.txt b/cscore/CMakeLists.txt
+index 52bcb54a2..f6675e29c 100644
+--- a/cscore/CMakeLists.txt
++++ b/cscore/CMakeLists.txt
+@@ -42,7 +42,8 @@ else()
+     set (cscore_config_dir share/cscore)
+ endif()
+
+-install(FILES cscore-config.cmake DESTINATION ${cscore_config_dir})
++configure_file(cscore-config.cmake.in ${CMAKE_BINARY_DIR}/cscore-config.cmake )
++install(FILES ${CMAKE_BINARY_DIR}/cscore-config.cmake DESTINATION ${cscore_config_dir})
+ install(EXPORT cscore DESTINATION ${cscore_config_dir})
+
+ SUBDIR_LIST(cscore_examples "${CMAKE_CURRENT_SOURCE_DIR}/examples")
+diff --git a/cscore/cscore-config.cmake b/cscore/cscore-config.cmake
+deleted file mode 100644
+index 790633b87..000000000
+--- a/cscore/cscore-config.cmake
++++ /dev/null
+@@ -1,6 +0,0 @@
+-include(CMakeFindDependencyMacro)
+-find_dependency(wpiutil)
+-find_dependency(OpenCV)
+-
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-include(${SELF_DIR}/cscore.cmake)
+diff --git a/cscore/cscore-config.cmake.in b/cscore/cscore-config.cmake.in
+new file mode 100644
+index 000000000..7894fbaec
+--- /dev/null
++++ b/cscore/cscore-config.cmake.in
+@@ -0,0 +1,6 @@
++include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
++@WPIUTIL_DEP_REPLACE@
++find_dependency(OpenCV)
++
++include(${SELF_DIR}/cscore.cmake)
+diff --git a/hal/CMakeLists.txt b/hal/CMakeLists.txt
+index e52d90ff0..3e338faec 100644
+--- a/hal/CMakeLists.txt
++++ b/hal/CMakeLists.txt
+@@ -61,7 +61,8 @@ else()
+     set (hal_config_dir share/hal)
+ endif()
+
+-install(FILES hal-config.cmake DESTINATION ${hal_config_dir})
++configure_file(hal-config.cmake.in ${CMAKE_BINARY_DIR}/hal-config.cmake )
++install(FILES ${CMAKE_BINARY_DIR}/hal-config.cmake DESTINATION ${hal_config_dir})
+ install(EXPORT hal DESTINATION ${hal_config_dir})
+
+ # Java bindings
+diff --git a/hal/hal-config.cmake b/hal/hal-config.cmake
+deleted file mode 100644
+index 97a574ebf..000000000
+--- a/hal/hal-config.cmake
++++ /dev/null
+@@ -1,5 +0,0 @@
+-include(CMakeFindDependencyMacro)
+-find_dependency(wpiutil)
+-
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-include(${SELF_DIR}/hal.cmake)
+diff --git a/hal/hal-config.cmake.in b/hal/hal-config.cmake.in
+new file mode 100644
+index 000000000..ae5533c27
+--- /dev/null
++++ b/hal/hal-config.cmake.in
+@@ -0,0 +1,5 @@
++include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
++@WPIUTIL_DEP_REPLACE@
++
++include(${SELF_DIR}/hal.cmake)
+diff --git a/ntcore/CMakeLists.txt b/ntcore/CMakeLists.txt
+index 47e226401..aaf6159b2 100644
+--- a/ntcore/CMakeLists.txt
++++ b/ntcore/CMakeLists.txt
+@@ -22,7 +22,8 @@ else()
+     set (ntcore_config_dir share/ntcore)
+ endif()
+
+-install(FILES ntcore-config.cmake DESTINATION ${ntcore_config_dir})
++configure_file(ntcore-config.cmake.in ${CMAKE_BINARY_DIR}/ntcore-config.cmake )
++install(FILES ${CMAKE_BINARY_DIR}/ntcore-config.cmake DESTINATION ${ntcore_config_dir})
+ install(EXPORT ntcore DESTINATION ${ntcore_config_dir})
+
+ # Java bindings
+diff --git a/ntcore/ntcore-config.cmake b/ntcore/ntcore-config.cmake
+deleted file mode 100644
+index 6be1dda4a..000000000
+--- a/ntcore/ntcore-config.cmake
++++ /dev/null
+@@ -1,5 +0,0 @@
+-include(CMakeFindDependencyMacro)
+-find_dependency(wpiutil)
+-
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-include(${SELF_DIR}/ntcore.cmake)
+diff --git a/ntcore/ntcore-config.cmake.in b/ntcore/ntcore-config.cmake.in
+new file mode 100644
+index 000000000..1e950e90c
+--- /dev/null
++++ b/ntcore/ntcore-config.cmake.in
+@@ -0,0 +1,5 @@
++include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
++@WPIUTIL_DEP_REPLACE@
++
++include(${SELF_DIR}/ntcore.cmake)
+diff --git a/wpilib-config.cmake.in b/wpilib-config.cmake.in
+index 445db82d7..2c15dfe09 100644
+--- a/wpilib-config.cmake.in
++++ b/wpilib-config.cmake.in
+@@ -1,8 +1,10 @@
+ include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_dependency(Threads)
+-find_dependency(wpiutil)
+-find_dependency(ntcore)
++@LIBUV_VCPKG_REPLACE@
++@WPIUTIL_DEP_REPLACE@
++@NTCORE_DEP_REPLACE@
+ @CSCORE_DEP_REPLACE@
+ @CAMERASERVER_DEP_REPLACE@
+ @HAL_DEP_REPLACE@
+diff --git a/wpilibc/CMakeLists.txt b/wpilibc/CMakeLists.txt
+index da3587188..e04d3df3f 100644
+--- a/wpilibc/CMakeLists.txt
++++ b/wpilibc/CMakeLists.txt
+@@ -26,5 +26,6 @@ else()
+     set (wpilibc_config_dir share/wpilibc)
+ endif()
+
+-install(FILES wpilibc-config.cmake DESTINATION ${wpilibc_config_dir})
++configure_file(wpilibc-config.cmake.in ${CMAKE_BINARY_DIR}/wpilibc-config.cmake )
++install(FILES ${CMAKE_BINARY_DIR}/wpilibc-config.cmake DESTINATION ${wpilibc_config_dir})
+ install(EXPORT wpilibc DESTINATION ${wpilibc_config_dir})
+diff --git a/wpilibc/wpilibc-config.cmake b/wpilibc/wpilibc-config.cmake
+deleted file mode 100644
+index 86f077c71..000000000
+--- a/wpilibc/wpilibc-config.cmake
++++ /dev/null
+@@ -1,10 +0,0 @@
+-include(CMakeFindDependencyMacro)
+-find_dependency(wpiutil)
+-find_dependency(ntcore)
+-find_dependency(cscore)
+-find_dependency(cameraserver)
+-find_dependency(hal)
+-find_dependency(OpenCV)
+-
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-include(${SELF_DIR}/wpilibc.cmake)
+diff --git a/wpilibc/wpilibc-config.cmake.in b/wpilibc/wpilibc-config.cmake.in
+new file mode 100644
+index 000000000..4332c550e
+--- /dev/null
++++ b/wpilibc/wpilibc-config.cmake.in
+@@ -0,0 +1,9 @@
++include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
++@WPIUTIL_DEP_REPLACE@
++@NTCORE_DEP_REPLACE@
++@CSCORE_DEP_REPLACE@
++@CAMERASERVER_DEP_REPLACE@
++@HAL_DEP_REPLACE@
++
++include(${SELF_DIR}/wpilibc.cmake)
+diff --git a/wpiutil/CMakeLists.txt b/wpiutil/CMakeLists.txt
+index bcc0bcf5b..653ab141d 100644
+--- a/wpiutil/CMakeLists.txt
++++ b/wpiutil/CMakeLists.txt
+@@ -130,7 +130,8 @@ else()
+     set (wpiutil_config_dir share/wpiutil)
+ endif()
+
+-install(FILES wpiutil-config.cmake DESTINATION ${wpiutil_config_dir})
++configure_file(wpiutil-config.cmake.in ${CMAKE_BINARY_DIR}/wpiutil-config.cmake )
++install(FILES ${CMAKE_BINARY_DIR}/wpiutil-config.cmake DESTINATION ${wpiutil_config_dir})
+ install(EXPORT wpiutil DESTINATION ${wpiutil_config_dir})
+
+ SUBDIR_LIST(wpiutil_examples "${CMAKE_CURRENT_SOURCE_DIR}/examples")
+diff --git a/wpiutil/wpiutil-config.cmake b/wpiutil/wpiutil-config.cmake
+deleted file mode 100644
+index 91d01a77c..000000000
+--- a/wpiutil/wpiutil-config.cmake
++++ /dev/null
+@@ -1,2 +0,0 @@
+-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-include(${SELF_DIR}/wpiutil.cmake)
+diff --git a/wpiutil/wpiutil-config.cmake.in b/wpiutil/wpiutil-config.cmake.in
+new file mode 100644
+index 000000000..5d71bc192
+--- /dev/null
++++ b/wpiutil/wpiutil-config.cmake.in
+@@ -0,0 +1,7 @@
++include(CMakeFindDependencyMacro)
++@FILENAME_DEP_REPLACE@
++set(THREADS_PREFER_PTHREAD_FLAG ON)
++find_dependency(Threads)
++@LIBUV_VCPKG_REPLACE@
++
++include(${SELF_DIR}/wpiutil.cmake)
+--
+2.18.0.windows.1
+
