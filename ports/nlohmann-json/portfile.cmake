@@ -50,4 +50,4 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/nlohmann-json RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/nlohmann_json RENAME copyright)
