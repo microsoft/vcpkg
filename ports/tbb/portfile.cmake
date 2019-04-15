@@ -81,13 +81,13 @@ string(REPLACE
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_release_lib \"/lib\${_tbb_component}.${TBB_LIB_EXT}\")"
+    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
     "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
     _contents
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_debug_lib \"/lib\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
+    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
     "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
     _contents
     "${_contents}"
