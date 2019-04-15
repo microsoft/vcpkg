@@ -1,7 +1,6 @@
 include(vcpkg_common_functions)
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    # Although this port would build on osx it is already part of the Apple SDK and should not be used
+if (NOT ((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")))
     message(FATAL_ERROR "libuuid currently only supports unix platforms.")
 endif()
 
