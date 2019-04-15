@@ -11,6 +11,12 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(FATAL_ERROR "Package only supports linux platform.")
 endif()
 
+message(
+"numactl currently requires the following libraries from the system package manager:
+    autoconf
+These can be installed on Ubuntu systems via sudo apt install autoconf"
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(SHARED_STATIC --enable-static --disable-shared)
 else()
