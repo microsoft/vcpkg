@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 d81e05703b77109cace4460f8053cf4524d8372ee9185b3ba7d8713ca40e9fd16735b4e46cd8526bf61b8af9a4bdf9eb854505a25d02289227cf216660b12713
     HEAD_REF master
 	PATCHES
-		cmake-libcurl-target.patch # Not needed _after_ v0.8.0
+		cmake-libcurl-target.patch # Should not be needed for v0.9.0+ / once googleapis/google-cloud-cpp@3284e34 is included
 		cmake-libcurl-find-config.patch
 )
 
