@@ -1,8 +1,9 @@
-From 090e7210fcb8ba91268a21f174a26a66762bbaee Mon Sep 17 00:00:00 2001
+From 1cc701c3620b24440fdd7ad95683dca09e575008 Mon Sep 17 00:00:00 2001
 From: Thad House <thadhouse1@gmail.com>
 Date: Sat, 13 Apr 2019 22:04:31 -0700
 Subject: [PATCH] Update cmake find to support vcpkg libuv
 
+Fix install on MSVC
 ---
  CMakeLists.txt                            | 34 +++++++++++++++++++----
  cameraserver/CMakeLists.txt               |  5 ++--
@@ -40,7 +41,7 @@ Subject: [PATCH] Update cmake find to support vcpkg libuv
  create mode 100644 wpiutil/wpiutil-config.cmake.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a5b89d9ac..a8f82f95e 100644
+index a5b89d9ac..20557d78e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -51,6 +51,7 @@ option(WITHOUT_ALLWPILIB "Don't build allwpilib (removes OpenCV requirement)" ON
@@ -66,7 +67,7 @@ index a5b89d9ac..a8f82f95e 100644
 +set (LIBUV_VCPKG_REPLACE "find_package(unofficial-libuv CONFIG)")
 +endif()
 +
-+if (FLAT_INSTALL_WPILIB)
++if (MSVC OR FLAT_INSTALL_WPILIB)
 +set(WPIUTIL_DEP_REPLACE "include($\{SELF_DIR\}/wpiutil-config.cmake)")
 +set(NTCORE_DEP_REPLACE "include($\{SELF_DIR\}/ntcore-config.cmake)")
 +set(CSCORE_DEP_REPLACE_IMPL "include(\${SELF_DIR}/cscore-config.cmake)")
