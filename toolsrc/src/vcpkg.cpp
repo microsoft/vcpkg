@@ -388,4 +388,6 @@ int main(const int argc, const char* const* const argv)
 #endif
     }
     fflush(stdout);
+
+    Checks::exit_fail(VCPKG_LINE_INFO);
 }
