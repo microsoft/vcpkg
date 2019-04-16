@@ -1,12 +1,14 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO conradsnicta/armadillo-code
-    REF 57f4c21280c4fad813062177477c88f26bb4d20d
-    SHA512 1fcbbd59e99a57bf6dd939c1d01f9e84e19dd036e713511f6dd31bd583676db65cd33939cb7f6eea7ac6c0b9c24e7e8ea601c23c01f4e09b4bb8fa58822f361a
-    HEAD_REF X.100.x
+    REF f00d3225b1c005775044369723f31cecc3cd6569
+    SHA512 ca3574edf5de8c752867403c3856ed9569fbed2ce9729585cae59be5751493c2e71121319b0a812e2ea56baada6b6f62fbc84ce6f1efb362347e5fd4141ccf1b
+    HEAD_REF 9.400.x
 )
 
 vcpkg_configure_cmake(
@@ -17,13 +19,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/Armadillo/CMake TARGET_PATH share/armadillo)
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo/CMake)
-
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/ArmadilloConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/Armadillo)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/Armadillo RENAME copyright)
