@@ -4,6 +4,8 @@
 #include <vcpkg/packagespecparseresult.h>
 #include <vcpkg/triplet.h>
 
+#include <unordered_set>
+
 namespace vcpkg
 {
     struct ParsedSpecifier
@@ -103,7 +105,18 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
-        static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
+        FullPackageSpec() = default;
+
+        template<class InputIt>
+        FullPackageSpec(const PackageSpec &spec,
+                InputIt begin,
+                InputIt end) :
+            package_spec(spec),
+            features(begin, end)
+        {}
+
+        template<class T>
+        static std::unordered_set<FeatureSpec> to_feature_specs(const T& specs);
 
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
                                                                               const Triplet& default_triplet);
@@ -145,4 +158,65 @@ namespace std
     {
         bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const { return left == right; }
     };
+
+    template<>
+    struct hash<vcpkg::FeatureSpec>
+    {
+        size_t operator()(const vcpkg::FeatureSpec &value) const
+        {
+            size_t hash = 17;
+            hash = hash * 31 + std::hash<vcpkg::PackageSpec>()(value.spec());
+            hash = hash * 31 + std::hash<std::string>()(value.feature());
+
+            return hash;
+        }
+    };
+
+    template<>
+    struct equal_to<vcpkg::FeatureSpec>
+    {
+        bool operator()(const vcpkg::FeatureSpec &left, const vcpkg::FeatureSpec &right) const {
+            return left.spec() == right.spec() && left.feature() == right.feature();
+        }
+    };
+
+    template<>
+    struct hash<vcpkg::FullPackageSpec>
+    {
+        size_t operator()(const vcpkg::FullPackageSpec &value) const
+        {
+            size_t hash = 17;
+            hash = hash * 31 + std::hash<vcpkg::PackageSpec>()(value.package_spec);
+            for (const std::string &feature : value.features)
+            {
+                hash = hash * 31 + std::hash<std::string>()(feature);
+            }
+            return hash;
+        }
+    };
+
+    template<>
+    struct equal_to<vcpkg::FullPackageSpec>
+    {
+        bool operator()(const vcpkg::FullPackageSpec &left, const vcpkg::FullPackageSpec &right) const {
+            return left.package_spec == right.package_spec && left.features == right.features;
+        }
+    };
+}
+
+namespace vcpkg
+{
+    template<class T>
+    std::unordered_set<FeatureSpec> FullPackageSpec::to_feature_specs(const T &specs)
+    {
+        std::unordered_set<FeatureSpec> ret;
+        for (auto&& spec : specs)
+        {
+            ret.emplace(spec.package_spec, "");
+            for (auto&& feature : spec.features)
+                ret.emplace(spec.package_spec, feature);
+        }
+
+        return ret;
+    }
 }
