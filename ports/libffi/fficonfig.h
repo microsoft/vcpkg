@@ -23,12 +23,12 @@
 #define HAVE_SYS_TYPES_H 1
 #define LT_OBJDIR ".libs/"
 #define PACKAGE "libffi"
-#define PACKAGE_BUGREPORT "http://github.com/atgreen/libffi/issues"
+#define PACKAGE_BUGREPORT "http://github.com/libffi/libffi/issues"
 #define PACKAGE_NAME "libffi"
-#define PACKAGE_STRING "libffi 3.1"
+#define PACKAGE_STRING "libffi 3.3-rc0"
 #define PACKAGE_TARNAME "libffi"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "3.1"
+#define PACKAGE_VERSION "3.3-rc0"
 #define SIZEOF_DOUBLE 8
 #define SIZEOF_LONG_DOUBLE 8
 #ifndef _WIN64

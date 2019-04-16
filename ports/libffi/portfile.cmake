@@ -1,19 +1,15 @@
 include(vcpkg_common_functions)
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    message(FATAL_ERROR "Architecture not supported")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+# Hopefully both PR will be merged soon
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libffi/libffi
-    REF v3.1
-    SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
+    REPO driver1998/libffi
+    REF d4004617c88b706524188046d15720cb9bfa2eec
+    SHA512 e4e4f3c09cd8d5112291137e0f00ab8ec276dd8283eaca5519320d96fe00e81d2799b5ff2020b5869fe97df82d0a4783ebd136dfbea77b8c0e0424a0fe20aba3
     HEAD_REF master
     PATCHES
-        export-global-data.patch
+        fix-defines.patch
+        fix-arm64-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
