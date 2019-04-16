@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Source: directxtk
 Version: nov2018-1
 Description: A collection of helper classes for writing DirectX 11.x code in C++.
+=======
+Source: directxtk
+Version: feb2019
+Description: A collection of helper classes for writing DirectX 11.x code in C++.
+>>>>>>> 5ab041409b82d4621697d8181fbcee8cb3a337f4
