@@ -9,7 +9,7 @@ if(NOT CMAKE_SYSTEM_PROCESSOR)
 endif()
 
 # config variables for ffi.h.in
-set(VERSION 3.1)
+set(VERSION 3.3-rc0)
 
 set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386)
 
@@ -21,6 +21,10 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "ARM")
     set(TARGET ARM)
 elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_FREEBSD)
+elseif(VCPKG_TARGET_TRIPLET MATCHES "arm-windows")
+    set(TARGET ARM_WIN32)
+elseif(VCPKG_TARGET_TRIPLET MATCHES "arm64-windows")
+    set(TARGET ARM64_WIN64)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_WIN32)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -42,36 +46,66 @@ set(FFI_EXEC_TRAMPOLINE_TABLE 0)
 # mimic layout of original buildsystem
 configure_file(include/ffi.h.in ${CMAKE_BINARY_DIR}/include/ffi.h)
 file(COPY ${FFI_CONFIG_FILE} DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+
+if (${TARGET} STREQUAL "ARM64_WIN64")
+    file(COPY src/aarch64/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+elseif (${TARGET} STREQUAL "ARM_WIN32")
+    file(COPY src/arm/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+else()
+    file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+endif()
 
 include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(include)
 
-add_definitions(-DHAVE_CONFIG_H)
-add_definitions(-DFFI_BUILDING)
+if(BUILD_SHARED_LIBS)
+    if(WIN32)
+        add_definitions(-DFFI_BUILDING_DLL)
+    endif()
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
-set(FFI_SOURCES
-    src/x86/ffi.c
-    src/closures.c
-    src/java_raw_api.c
-    src/prep_cif.c
-    src/raw_api.c
-    src/types.c)
+if (${TARGET} STREQUAL "ARM64_WIN64")
+    set(FFI_SOURCES
+        src/aarch64/ffi.c
+        src/closures.c
+        src/prep_cif.c
+        src/types.c)
+elseif(${TARGET} STREQUAL "ARM_WIN32")
+    set(FFI_SOURCES
+        src/arm/ffi.c
+        src/closures.c
+        src/prep_cif.c
+        src/types.c)
+else()
+    set(FFI_SOURCES
+        src/x86/ffi.c
+        src/x86/ffiw64.c
+        src/closures.c
+        src/prep_cif.c
+        src/types.c
+        src/java_raw_api.c
+        src/raw_api.c)
+endif()
 
 macro(add_assembly ASMFILE)
     get_filename_component(ASMFILE_FULL "${ASMFILE}" ABSOLUTE)
     if(MSVC)
-        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-            set(ARCH_ASSEMBLER ml /safeseh)
+        if (${TARGET} STREQUAL "ARM64_WIN64")
+            set(ARCH_ASSEMBLER armasm64)
+        elseif (${TARGET} STREQUAL "ARM_WIN32")
+            set(ARCH_ASSEMBLER armasm)
+        elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+            set(ARCH_ASSEMBLER ml /safeseh /c /Zi)
         else()
-            set(ARCH_ASSEMBLER ml64)
+            set(ARCH_ASSEMBLER ml64 /c /Zi)
         endif()
 
         get_filename_component(ARCH_ASM_NAME "${ASMFILE_FULL}" NAME_WE)
 
         execute_process(
-            COMMAND ${CMAKE_C_COMPILER} /nologo /EP /I. /Iinclude ${ASMFILE_FULL}
+            COMMAND ${CMAKE_C_COMPILER} /nologo /EP /I. /Iinclude /I${CMAKE_CURRENT_SOURCE_DIR}/include ${ASMFILE_FULL}
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             OUTPUT_FILE ${ARCH_ASM_NAME}.asm
         )
@@ -81,7 +115,7 @@ macro(add_assembly ASMFILE)
         # (even though it didn't report any errors and correctly generated object file)
         # which in turn causes MSBUILD to stop.
         execute_process(
-            COMMAND ${ARCH_ASSEMBLER} /c /Zi ${ARCH_ASM_NAME}.asm
+            COMMAND ${ARCH_ASSEMBLER} ${ARCH_ASM_NAME}.asm
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         )
 
@@ -103,9 +137,13 @@ elseif(${TARGET} STREQUAL "X86_64")
     add_assembly(src/x86/unix64.S)
     add_assembly(src/x86/sysv.S)
 elseif(${TARGET} STREQUAL "X86_WIN32")
-    add_assembly(src/x86/win32.S)
+    add_assembly(src/x86/sysv_intel.S)
 elseif(${TARGET} STREQUAL "X86_WIN64")
-    add_assembly(src/x86/win64.S)
+    add_assembly(src/x86/win64_intel.S)
+elseif(${TARGET} STREQUAL "ARM_WIN32")
+    add_assembly(src/arm/sysv_msvc_arm32.S)
+elseif(${TARGET} STREQUAL "ARM64_WIN64")
+    add_assembly(src/aarch64/win64_armasm.S)
 elseif(${TARGET} STREQUAL "X86_DARWIN")
     list(APPEND FFI_SOURCES src/x86/ffi64.c)
     add_assembly(src/x86/darwin.S)
