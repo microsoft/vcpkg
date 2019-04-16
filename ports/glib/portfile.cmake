@@ -27,6 +27,8 @@ vcpkg_extract_source_archive_ex(
     REF ${GLIB_VERSION}
     PATCHES
         use-libiconv-on-windows.patch
+        arm64-defines.patch
+        fix-arm-builds.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
