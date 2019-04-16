@@ -58,7 +58,7 @@ endif()
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
     target_link_libraries(vcpkg PRIVATE stdc++fs)
 elseif(CLANG)
-    target_link_libraries(vcpkg PRIVATE c++experimental)
+    target_link_libraries(vcpkg PRIVATE c++fs)
 endif()
 
 if(MSVC)
