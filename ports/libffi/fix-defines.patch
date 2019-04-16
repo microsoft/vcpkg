@@ -1,0 +1,26 @@
+diff --git a/src/x86/ffi.c b/src/x86/ffi.c
+index c6c7d2b..883cc4a 100644
+--- a/src/x86/ffi.c
++++ b/src/x86/ffi.c
+@@ -29,7 +29,7 @@
+    DEALINGS IN THE SOFTWARE.
+    ----------------------------------------------------------------------- */
+ 
+-#ifdef __i386__
++#if defined(__i386__) || defined(_M_IX86)
+ #include <ffi.h>
+ #include <ffi_common.h>
+ #include <stdint.h>
+diff --git a/src/x86/ffiw64.c b/src/x86/ffiw64.c
+index ca4d3ca..b68f69c 100644
+--- a/src/x86/ffiw64.c
++++ b/src/x86/ffiw64.c
+@@ -25,7 +25,7 @@
+    DEALINGS IN THE SOFTWARE.
+    ----------------------------------------------------------------------- */
+ 
+-#ifdef __x86_64__
++#if defined(__x86_64__) || defined(_M_AMD64)
+ #include <ffi.h>
+ #include <ffi_common.h>
+ #include <stdlib.h>

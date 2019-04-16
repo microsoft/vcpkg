@@ -1,0 +1,14 @@
+diff --git a/include/ffi.h.in b/include/ffi.h.in
+index f6b4024..6d4fc5c 100644
+--- a/include/ffi.h.in
++++ b/include/ffi.h.in
+@@ -227,6 +227,9 @@ typedef struct {
+   ffi_type *rtype;
+   unsigned bytes;
+   unsigned flags;
++#ifdef _M_ARM64
++  unsigned isVariadic;
++#endif
+ #ifdef FFI_EXTRA_CIF_FIELDS
+   FFI_EXTRA_CIF_FIELDS;
+ #endif
