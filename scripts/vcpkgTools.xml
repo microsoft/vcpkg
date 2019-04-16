@@ -29,11 +29,11 @@
         <archiveName>cmake-3.12.4-FreeBSD-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.20.0</version>
+        <version>2.21.0-1</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.20.0.windows.1/PortableGit-2.20.0-32-bit.7z.exe</url>
-        <sha512>81647a87df9fde0945ef597cb1cafd8f5f42859da89e9b1db55222a261407bc16bdcc0cf1e86e315697f0981832fe10fc02845cad4b4c82ea64bbd218aec6a49</sha512>
-        <archiveName>PortableGit-2.20.0-32-bit.7z.exe</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/PortableGit-2.21.0-32-bit.7z.exe</url>
+        <sha512>d5600fc35e91cfa84e3547e38a9da9798cf0a53810cc35ac9a0dee671c4ef0e9fbcbe3eda9c790f8db4eafce7ce58d7a168d28938a66cdcca000bf5a7f5267c1</sha512>
+        <archiveName>PortableGit-2.21.0-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>

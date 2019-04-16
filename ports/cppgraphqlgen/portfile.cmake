@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2.1.0
     SHA512 6fdeade25fc5c4af18d0288b80044a94cc9dcba9eed1640ec2cce06741b874f027930761964ed72073a25e083c0cf2fb828b9cf9732099c8a4f185776b1e1b8a
     HEAD_REF master
+    PATCHES
+    bigobj.patch
 )
 
 vcpkg_configure_cmake(

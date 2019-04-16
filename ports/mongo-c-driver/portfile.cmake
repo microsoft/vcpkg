@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF 1.9.5
-    SHA512 bee584c83bb317802eb855fececc98f2013d7c3134f063c3146521ab535c8a89c2dfe89ccfa6ebbe2d7c64edec0e53105ead361da83b885c7778b40e4801de62
+    REF 1.13.0
+    SHA512 d2f5b04b3d2dbdeba4547ec1fe8a0da7bad5214de92fff480ef0ff7d97ea45d5e6347c11c249867d4905b1dd81b76c7cfbb9094a58df586dae881955ee246907
     HEAD_REF master
     PATCHES fix-uwp.patch
 )
@@ -25,6 +25,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DENABLE_MONGOC=ON
+        -DENABLE_BSON=ON
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_SSL=${ENABLE_SSL}
@@ -38,6 +40,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-1.0")
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # This rename is needed because the official examples expect to use #include <mongoc.h>
 # See Microsoft/vcpkg#904
@@ -114,3 +117,10 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFI
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config-version.cmake ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/mongo-c-driver-config-version.cmake)
 
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-1.0.pc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-static-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-static-1.0.pc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libbson-1.0.dll ${CURRENT_PACKAGES_DIR}/bin/libbson-1.0.dll)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libbson-1.0.pdb ${CURRENT_PACKAGES_DIR}/bin/libbson-1.0.pdb)
