@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF vcpkgrelease
     PATCHES
       0001-Update-cmake-find-to-support-vcpkg-libuv.patch
+      0001-Fix-Gray-to-BGR-conversion-in-CameraServer.patch
 )
 
 set(WITHOUT_JAVA ON)
