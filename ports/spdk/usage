@@ -7,8 +7,8 @@ Add following to build examples/nvme/perf/perf.c
 
     ADD_EXECUTABLE(SPDKTest perf.c)
 
-    TARGET_LINK_DIRECTORIES(DPDKTest PRIVATE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/spdk)
-    TARGET_LINK_LIBRARIES(DPDKTest PRIVATE
+    TARGET_LINK_DIRECTORIES(SPDKTest PRIVATE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/spdk)
+    TARGET_LINK_LIBRARIES(SPDKTest PRIVATE
                           SPDK::spdk_app_rpc
                           SPDK::spdk_bdev
                           SPDK::spdk_bdev_null
@@ -32,9 +32,7 @@ Add following to build examples/nvme/perf/perf.c
                           SPDK::spdk_util
                           SPDK::spdk_log
                           SPDK::spdk_env_dpdk
-
                           SPDK::dpdk
-
                           numa
                           rdmacm
                           uuid
