@@ -21,7 +21,7 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
     find_package(OpenSSL)
     find_package(harfbuzz CONFIG)
 
-    target_link_libraries(Qt5::Core INTERFACE
+    set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
         ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
         ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
     )
@@ -34,13 +34,13 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
         Qt5FontDatabaseSupport)
 
     if(MSVC)
-       target_link_libraries(Qt5::Core INTERFACE
+       set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
            Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib Imm32.lib)
 
       add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
 
     elseif(APPLE)
-       target_link_libraries(Qt5::Core INTERFACE
+       set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
             "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices"
             "-weak_framework AppKit" "-weak_framework Security" "-weak_framework ApplicationServices"
             "-weak_framework CoreFoundation" "-weak_framework SystemConfiguration"
