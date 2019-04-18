@@ -18,7 +18,7 @@ set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 51494d8947ae16ab7aee22aca156035718f5a700737547de59b4d61d3919c00f4de858111c8928a66c0385604623d847d231892d964d53924a8c97b6e2bedf25
+    SHA512 1dab927573eb22b1ae772de3a418f7d3999ea78d6e667a7f2494390dd1f0981ea93f4f892cb6e124ac18812c780ee71da3021b485c61eaf1ef2234a5c12b7fe2
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
