@@ -119,6 +119,9 @@ endif()
 if(NOT WIN32)
     target_link_libraries(libintl PRIVATE Threads::Threads)
 endif()
+if (WIN32)
+    target_link_libraries(libintl PRIVATE Advapi32.lib)
+endif()
 
 install(TARGETS libintl
   EXPORT unofficial-gettext-targets
