@@ -29,7 +29,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_WIN32)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(TARGET X86_WIN64)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin"  AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_DARWIN)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(TARGET X86_64)
@@ -66,27 +66,37 @@ if(BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
+set(FFI_SOURCES
+    src/closures.c
+    src/prep_cif.c
+    src/types.c)
+
 if (${TARGET} STREQUAL "ARM64_WIN64")
-    set(FFI_SOURCES
-        src/aarch64/ffi.c
-        src/closures.c
-        src/prep_cif.c
-        src/types.c)
+    set(FFI_SOURCES 
+        ${FFI_SOURCES}
+        src/aarch64/ffi.c)
 elseif(${TARGET} STREQUAL "ARM_WIN32")
     set(FFI_SOURCES
-        src/arm/ffi.c
-        src/closures.c
-        src/prep_cif.c
-        src/types.c)
+        ${FFI_SOURCES}
+        src/arm/ffi.c)
 else()
     set(FFI_SOURCES
-        src/x86/ffi.c
-        src/x86/ffiw64.c
-        src/closures.c
-        src/prep_cif.c
-        src/types.c
+        ${FFI_SOURCES}
         src/java_raw_api.c
         src/raw_api.c)
+    if(${TARGET} STREQUAL "X86_WIN32" OR ${TARGET} STREQUAL "X86_DARWIN" OR ${TARGET} STREQUAL "X86")
+        set(FFI_SOURCES
+            ${FFI_SOURCES}
+            src/x86/ffi.c)
+    elseif(${TARGET} STREQUAL "X86_WIN64")
+        set(FFI_SOURCES
+            ${FFI_SOURCES}
+            src/x86/ffiw64.c)
+    elseif(${TARGET} STREQUAL "X86_64")
+        set(FFI_SOURCES
+            ${FFI_SOURCES}
+            src/x86/ffi64.c)
+    endif()
 endif()
 
 macro(add_assembly ASMFILE)
@@ -129,13 +139,11 @@ if(${TARGET} STREQUAL "X86")
     set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m32")
 endif()
 
-if(${TARGET} STREQUAL "X86")
+if(${TARGET} STREQUAL "X86" OR ${TARGET} STREQUAL "X86_DARWIN")
     add_assembly(src/x86/sysv.S)
-    add_assembly(src/x86/win32.S)
 elseif(${TARGET} STREQUAL "X86_64")
     list(APPEND FFI_SOURCES src/x86/ffi64.c)
     add_assembly(src/x86/unix64.S)
-    add_assembly(src/x86/sysv.S)
 elseif(${TARGET} STREQUAL "X86_WIN32")
     add_assembly(src/x86/sysv_intel.S)
 elseif(${TARGET} STREQUAL "X86_WIN64")
@@ -144,10 +152,6 @@ elseif(${TARGET} STREQUAL "ARM_WIN32")
     add_assembly(src/arm/sysv_msvc_arm32.S)
 elseif(${TARGET} STREQUAL "ARM64_WIN64")
     add_assembly(src/aarch64/win64_armasm.S)
-elseif(${TARGET} STREQUAL "X86_DARWIN")
-    list(APPEND FFI_SOURCES src/x86/ffi64.c)
-    add_assembly(src/x86/darwin.S)
-    add_assembly(src/x86/darwin64.S)
 else()
     message(FATAL_ERROR "Target not implemented")
 endif()

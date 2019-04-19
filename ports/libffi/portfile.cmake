@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         fix-defines.patch
         fix-arm64-build.patch
+        fix-linux-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
