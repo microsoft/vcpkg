@@ -59,7 +59,7 @@ namespace vcpkg::Export
     {
         return Strings::format(R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Condition="Exists('%s')" Project="%s" />
+  <Import Condition="Exists('$(MSBuildThisFileDirectory)%s')" Project="$(MSBuildThisFileDirectory)%s" />
 </Project>
 )###",
                                target_path,
