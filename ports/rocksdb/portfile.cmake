@@ -11,6 +11,7 @@ vcpkg_from_github(
     0002-only-build-one-flavor.patch
     0003-zlib-findpackage.patch
     0004-use-find-package.patch
+    0005-static-linking-in-linux.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")
