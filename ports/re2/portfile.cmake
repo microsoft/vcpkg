@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/re2
-    REF def664c3046d6c1f2e643e0d64baf43c432e25c6
-    SHA512 0a71650948c04ff4514248674fee2d0510a9fff934e14a52c81bba1177b9667af52dd506755a146604dc2691748f826487e46425ee75d5ca97d774ccb2dc828c
+    REF 653f9e2a6a17bcdf8dba2b3f8671aa8880efca29
+    SHA512 2411904082662c60e05c97d3a0de6e5d9f9654a8703e4e520eba1018a3542670db81f2b78ff9ee3267bb9c1b24e4c6a9b5b35b0f62836198ac152acb4b37c744
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/re2 TARGET_PATH share/re2)
 
 vcpkg_copy_pdbs()
 
