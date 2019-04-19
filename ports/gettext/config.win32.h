@@ -624,12 +624,7 @@
 
 /* Define to unsigned long or unsigned long long if <stdint.h> and
    <inttypes.h> don't define. */
-/* #ifdef _WIN64
-#define uintmax_t unsigned __int64
-#elif _WIN32
-#define uintmax_t unsigned __int32
-#endif
-*/
+/* #undef uintmax_t */
 
 #define __libc_lock_t                   gl_lock_t
 #define __libc_lock_define              gl_lock_define
