@@ -23,6 +23,8 @@ vcpkg_from_github(
     PATCHES
         find-gflags.patch
         no-werror.patch
+        missing-include-atomic.patch
+        boost-1.70.patch
 )
 
 file(COPY
