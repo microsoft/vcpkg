@@ -26,6 +26,12 @@ else()
     set(BUILD_SHARED OFF)
 endif()
 
+if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+    set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
+else()
+    set(OPTION_USE_GL)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -35,6 +41,7 @@ vcpkg_configure_cmake(
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=${BUILD_SHARED}
+        ${OPTION_USE_GL}
 )
 
 vcpkg_install_cmake()
