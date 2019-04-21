@@ -13,9 +13,9 @@ vcpkg_configure_cmake(
     OPTIONS
         -DPEGTL_BUILD_TESTS=OFF
         -DPEGTL_BUILD_EXAMPLES=OFF
-        -DPEGTL_INSTALL_INCLUDE_DIR="include/pegtl-2"
-        -DPEGTL_INSTALL_DOC_DIR="share/pegtl-2"
-        -DPEGTL_INSTALL_CMAKE_DIR="share/pegtl-2/cmake"
+        -DPEGTL_INSTALL_INCLUDE_DIR=include/pegtl-2
+        -DPEGTL_INSTALL_DOC_DIR=share/pegtl-2
+        -DPEGTL_INSTALL_CMAKE_DIR=share/pegtl-2/cmake
 )
 
 vcpkg_install_cmake()
