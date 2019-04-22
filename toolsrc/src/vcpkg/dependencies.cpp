@@ -165,14 +165,31 @@ namespace vcpkg::Dependencies
     {
     }
 
+    InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
+                                         const SourceControlFile& scf,
+                                         const std::set<std::string>& features,
+                                         const RequestType& request_type,
+                                         std::vector<PackageSpec>&& dependencies,
+                                         const Build::BuildPackageOptions& build_options)
+        : spec(spec)
+        , source_control_file(scf)
+        , plan_type(InstallPlanType::BUILD_AND_INSTALL)
+        , request_type(request_type)
+        , build_options(build_options)
+        , feature_list(features)
+        , computed_dependencies(std::move(dependencies))
+    {
+    }
+
     InstallPlanAction::InstallPlanAction(InstalledPackageView&& ipv,
                                          const std::set<std::string>& features,
-                                         const RequestType& request_type)
+                                         const RequestType& request_type,
+                                         const Build::BuildPackageOptions& build_options)
         : spec(ipv.spec())
         , installed_package(std::move(ipv))
         , plan_type(InstallPlanType::ALREADY_INSTALLED)
         , request_type(request_type)
-        , build_options{}
+        , build_options(build_options)
         , feature_list(features)
         , computed_dependencies(installed_package.get()->dependencies())
     {
@@ -607,41 +624,6 @@ namespace vcpkg::Dependencies
         }
     }
 
-    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const CreateInstallPlanOptions& options)
-    {
-        std::unordered_set<std::string> prevent_default_features;
-        for (auto&& spec : specs)
-        {
-            // When "core" is explicitly listed, default features should not be installed.
-            if (spec.feature() == "core") prevent_default_features.insert(spec.name());
-        }
-
-        PackageGraph pgraph(provider, status_db);
-        for (auto&& spec : specs)
-        {
-            // If preventing default features, ignore the automatically generated "" references
-            if (spec.feature().empty() && Util::Sets::contains(prevent_default_features, spec.name())) continue;
-            pgraph.install(spec, prevent_default_features);
-        }
-
-        return pgraph.serialize(options);
-    }
-
-    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
-    /// <param name="map">Map of all source control files in the current environment.</param>
-    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
-    /// <param name="status_db">Status of installed packages in the current environment.</param>
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db)
-    {
-        MapPortFileProvider provider(map);
-        return create_feature_install_plan(provider, specs, status_db);
-    }
-
     /// <param name="prevent_default_features">
     /// List of package names for which default features should not be installed instead of the core package (e.g. if
     /// the user is currently installing specific features of that package).
@@ -671,15 +653,16 @@ namespace vcpkg::Dependencies
         mark_minus(spec_cluster, *m_graph, *m_graph_plan, {});
     }
 
-    std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& options) const
+    std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& install_options,
+                                                   const Build::BuildPackageOptions& build_options) const
     {
         auto remove_vertex_list = m_graph_plan->remove_graph.vertex_list();
         auto remove_toposort =
-            Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph, options.randomizer);
+            Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph, install_options.randomizer);
 
         auto insert_vertex_list = m_graph_plan->install_graph.vertex_list();
         auto insert_toposort =
-            Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph, options.randomizer);
+            Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph, install_options.randomizer);
 
         std::vector<AnyAction> plan;
 
@@ -709,6 +692,7 @@ namespace vcpkg::Dependencies
                     p_cluster->to_install_features,
                     p_cluster->request_type,
                     std::move(dep_specs),
+                    build_options,
                 });
             }
             else
@@ -720,6 +704,7 @@ namespace vcpkg::Dependencies
                     InstalledPackageView{installed.ipv},
                     installed.original_features,
                     p_cluster->request_type,
+                    build_options,
                 });
             }
         }

@@ -59,18 +59,6 @@ namespace vcpkg
         return f_specs;
     }
 
-    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<FullPackageSpec>& specs)
-    {
-        std::vector<FeatureSpec> ret;
-        for (auto&& spec : specs)
-        {
-            ret.emplace_back(spec.package_spec, "");
-            for (auto&& feature : spec.features)
-                ret.emplace_back(spec.package_spec, feature);
-        }
-        return ret;
-    }
-
     ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,
                                                                                     const Triplet& default_triplet)
     {
