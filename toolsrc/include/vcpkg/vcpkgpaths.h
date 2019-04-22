@@ -72,7 +72,6 @@ namespace vcpkg
         fs::path buildsystems_msbuild_targets;
         fs::path buildsystems_vcpkg_cmake;
 
-
         fs::path vcpkg_dir;
         fs::path vcpkg_dir_status_file;
         fs::path vcpkg_dir_info;
