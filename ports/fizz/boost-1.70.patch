@@ -1,0 +1,24 @@
+diff --git a/fizz/server/ServerProtocol.cpp b/fizz/server/ServerProtocol.cpp
+index 97920b7..b606f15 100644
+--- a/fizz/server/ServerProtocol.cpp
++++ b/fizz/server/ServerProtocol.cpp
+@@ -202,8 +202,8 @@ AsyncActions processEvent(const State& state, Param param) {
+         state.state(), event)(state, std::move(param));
+ 
+     return folly::variant_match(
+-        actions,
+-        [&state](folly::Future<Actions>& futureActions) -> AsyncActions {
++        std::move(actions),
++        [&state](folly::Future<Actions>&& futureActions) -> AsyncActions {
+           return std::move(futureActions)
+               .onError([&state](folly::exception_wrapper ew) {
+                 auto ex = ew.get_exception<FizzException>();
+@@ -217,7 +217,7 @@ AsyncActions processEvent(const State& state, Param param) {
+                     AlertDescription::unexpected_message);
+               });
+         },
+-        [](Actions& immediateActions) -> AsyncActions {
++        [](Actions&& immediateActions) -> AsyncActions {
+           return std::move(immediateActions);
+         });
+   } catch (const FizzException& e) {

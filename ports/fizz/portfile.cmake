@@ -5,10 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF v2019.01.14.00
-    SHA512 9182e5e6eb795842fdc536adaae9aeae7ddd17a34776bda303015dbac95c95a1ceb42ea77c3b69c1018a9ea33bbd469fd23955ac7efcc2bfcc84e899c89b5981
+    REF v2019.04.15.00
+    SHA512 41962aa2276fddf9076ed3070540ab4e5c3e5eed7617a777aef73826015743d02f6b167427242a37f21c7adc37d3f574a033577d4663ff7284e6eff4632ace45
     HEAD_REF master
-    PATCHES depend-zlib.patch
 )
 
 # Prefer installed config files
@@ -23,6 +22,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS=OFF
+        -DBUILD_EXAMPLES=OFF
         -DINCLUDE_INSTALL_DIR:STRING=include
 )
 
@@ -32,7 +32,10 @@ vcpkg_copy_pdbs()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)
 string(REPLACE "lib/cmake/fizz" "share/fizz" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake
+"include(CMakeFindDependencyMacro)
+find_dependency(folly CONFIG)
+${_contents}")
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
