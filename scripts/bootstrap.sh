@@ -1,5 +1,20 @@
 #!/bin/sh
 
+# Find .vcpkg-root, which indicates the root of this repo
+vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
+while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
+    vcpkgRootDir="$(dirname "$vcpkgRootDir")"
+done
+
+# Enable using this entry point on windows from git bash by redirecting to the .bat file.
+unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
+if [ "$unixName" = "MINGW_NT" ]; then
+  vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
+  cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat" || exit 1
+  exit 0
+fi
+
+# Argument parsing
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgAllowAppleClang=OFF
@@ -24,12 +39,6 @@ do
         echo "Unknown argument $var. Use '-help' for help."
         exit 1
     fi
-done
-
-# Find vcpkg-root
-vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
-while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
-    vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
