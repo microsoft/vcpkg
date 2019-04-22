@@ -68,6 +68,7 @@ namespace vcpkg
         paths.tools = paths.downloads / "tools";
         paths.buildsystems = paths.scripts / "buildsystems";
         paths.buildsystems_msbuild_targets = paths.buildsystems / "msbuild" / "vcpkg.targets";
+        paths.buildsystems_vcpkg_cmake = paths.buildsystems / "vcpkg.cmake";
 
         paths.vcpkg_dir = paths.installed / "vcpkg";
         paths.vcpkg_dir_status_file = paths.vcpkg_dir / "status";
@@ -75,6 +76,7 @@ namespace vcpkg
         paths.vcpkg_dir_updates = paths.vcpkg_dir / "updates";
 
         paths.ports_cmake = paths.scripts / "ports.cmake";
+        paths.scripts_cmake = paths.scripts / "cmake";
 
         return paths;
     }

@@ -495,7 +495,7 @@ namespace vcpkg::Build
 
         if (hashed_files.size() <= max_port_file_count)
         {
-            for (auto &script_file : fs::stdfs::recursive_directory_iterator(paths.scripts))
+            for (auto &script_file : fs::stdfs::recursive_directory_iterator(paths.scripts_cmake))
             {
                 if (fs::is_regular_file(status(script_file)))
                 {
@@ -522,7 +522,7 @@ namespace vcpkg::Build
 
         abi_tag_entries.emplace_back(AbiEntry{
             "vcpkg",
-            vcpkg::Hash::get_file_hash(fs, paths.scripts / "buildsystems" / "vcpkg.cmake", "SHA1")});
+            vcpkg::Hash::get_file_hash(fs, paths.buildsystems_vcpkg_cmake, "SHA1")});
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 

@@ -70,6 +70,8 @@ namespace vcpkg
         fs::path tools;
         fs::path buildsystems;
         fs::path buildsystems_msbuild_targets;
+        fs::path buildsystems_vcpkg_cmake;
+
 
         fs::path vcpkg_dir;
         fs::path vcpkg_dir_status_file;
@@ -77,6 +79,7 @@ namespace vcpkg
         fs::path vcpkg_dir_updates;
 
         fs::path ports_cmake;
+        fs::path scripts_cmake;
 
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
