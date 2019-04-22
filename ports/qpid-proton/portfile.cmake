@@ -16,9 +16,11 @@ vcpkg_from_github(
 )
 
 # Run cmake configure step
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-                      OPTIONS
-                          -DPYTHON_EXECUTABLE=${PYTHON2})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS 
+        -DPYTHON_EXECUTABLE=${PYTHON2}
+)
 
 # Run cmake install step
 vcpkg_install_cmake()

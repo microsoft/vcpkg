@@ -3,11 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --library-type=static)
 
-set(BDE_VERSION       3.2.0.0)
+set(BDE_VERSION 3.2.0.0)
 set(BDE_TOOLS_VERSION 1.x)
 
 # Paths used in build
-set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bde-${BDE_VERSION})
+set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bde-${BDE_VERSION})
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bde-${BDE_VERSION})
 
 # Acquire Python 2 and add it to PATH

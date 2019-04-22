@@ -42,7 +42,7 @@ execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-di
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        duk_config.h.patch
+        duk_config.h.patch 
 )
 
 vcpkg_configure_cmake(
