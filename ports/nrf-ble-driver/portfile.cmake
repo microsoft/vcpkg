@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+message(
+"nrf-ble-driver currently requires the following libraries from the system package manager:
+    libudev-dev
+These can be installed on Ubuntu systems via sudo apt install libudev-dev"
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NordicSemiconductor/pc-ble-driver
