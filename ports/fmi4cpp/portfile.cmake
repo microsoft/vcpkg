@@ -38,7 +38,7 @@ vcpkg_configure_cmake(
         -DFMI4CPP_BUILD_TESTS=OFF
         -DFMI4CPP_BUILD_EXAMPLES=OFF
         -DFMI4CPP_WITH_CURL=${WITH_CURL}
-	    -DFMI4CPP_WITH_ODEINT=${WITH_ODEINT}
+	-DFMI4CPP_WITH_ODEINT=${WITH_ODEINT}
 )
 
 vcpkg_install_cmake()
