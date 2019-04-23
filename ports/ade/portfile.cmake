@@ -13,7 +13,7 @@ vcpkg_configure_cmake(
   PREFER_NINJA
   OPTIONS_DEBUG
     -DCMAKE_DEBUG_POSTFIX=d
-  )
+)
 
 vcpkg_install_cmake()
 
