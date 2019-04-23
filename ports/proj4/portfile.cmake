@@ -1,4 +1,6 @@
 include(vcpkg_common_functions)
+
+set(PROJ4_VER "4_9")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/proj-4.9.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/proj/proj-4.9.3.zip"
@@ -61,10 +63,12 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets.cmake "${_contents}
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/proj_4_9.lib  ${CURRENT_PACKAGES_DIR}/lib/proj.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/proj_${PROJ4_VER}.dll ${CURRENT_PACKAGES_DIR}/bin/proj.dll)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/proj_${PROJ4_VER}.lib  ${CURRENT_PACKAGES_DIR}/lib/proj.lib)
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/proj_4_9_d.lib  ${CURRENT_PACKAGES_DIR}/debug/lib/projd.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/proj_${PROJ4_VER}_d.dll ${CURRENT_PACKAGES_DIR}/debug/bin/projd.dll)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/proj_${PROJ4_VER}_d.lib  ${CURRENT_PACKAGES_DIR}/debug/lib/projd.lib)
     endif()
 endif()
 
