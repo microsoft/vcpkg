@@ -18,6 +18,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DEMBREE_ISPC_SUPPORT=OFF
