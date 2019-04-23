@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if (NOT ((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")))
+    message(FATAL_ERROR "libuuid currently only supports unix platforms.")
+endif()
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libuuid-1.0.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://sourceforge.net/projects/libuuid/files/libuuid-1.0.3.tar.gz"
