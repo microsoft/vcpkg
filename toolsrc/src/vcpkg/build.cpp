@@ -129,11 +129,6 @@ namespace vcpkg::Build::Command
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::move(first_arg), default_triplet, COMMAND_STRUCTURE.example_text);
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        if (!spec.features.empty() && !GlobalState::feature_packages)
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-        }
         perform_and_exit_ex(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }

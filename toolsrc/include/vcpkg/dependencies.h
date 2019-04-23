@@ -25,8 +25,8 @@ namespace vcpkg::Dependencies
     };
 
     std::string to_output_string(RequestType request_type,
-                                 const CStringView s,
-                                 const Build::BuildPackageOptions& options);
+        const CStringView s,
+        const Build::BuildPackageOptions& options);
     std::string to_output_string(RequestType request_type, const CStringView s);
 
     enum class InstallPlanType
@@ -44,14 +44,14 @@ namespace vcpkg::Dependencies
         InstallPlanAction() noexcept;
 
         InstallPlanAction(InstalledPackageView&& spghs,
-                          const std::set<std::string>& features,
-                          const RequestType& request_type);
+            const std::set<std::string>& features,
+            const RequestType& request_type);
 
         InstallPlanAction(const PackageSpec& spec,
-                          const SourceControlFile& scf,
-                          const std::set<std::string>& features,
-                          const RequestType& request_type,
-                          std::vector<PackageSpec>&& dependencies);
+            const SourceControlFile& scf,
+            const std::set<std::string>& features,
+            const RequestType& request_type,
+            std::vector<PackageSpec>&& dependencies);
 
         std::string displayname() const;
 
@@ -111,8 +111,8 @@ namespace vcpkg::Dependencies
 
         ExportPlanAction() noexcept;
         ExportPlanAction(const PackageSpec& spec,
-                         InstalledPackageView&& installed_package,
-                         const RequestType& request_type);
+            InstalledPackageView&& installed_package,
+            const RequestType& request_type);
 
         ExportPlanAction(const PackageSpec& spec, const RequestType& request_type);
 
@@ -165,8 +165,9 @@ namespace vcpkg::Dependencies
         ~PackageGraph();
 
         void install(const FeatureSpec& spec,
-                     const std::unordered_set<std::string>& prevent_default_features = {}) const;
-        void upgrade(const PackageSpec& spec) const;
+            const std::unordered_set<std::string>& prevent_default_features = {});
+        void upgrade(const PackageSpec& spec);
+        void remove(const PackageSpec& spec);
 
         std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
 
@@ -176,23 +177,23 @@ namespace vcpkg::Dependencies
     };
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
-                                                     const StatusParagraphs& status_db);
+        const StatusParagraphs& status_db);
 
     std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
-                                                     const StatusParagraphs& status_db);
+        const StatusParagraphs& status_db);
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+        const std::vector<FeatureSpec>& specs,
+        const StatusParagraphs& status_db);
 
     /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
     /// <param name="provider">Contains the ports of the current environment.</param>
     /// <param name="specs">Feature specifications to resolve dependencies for.</param>
     /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const CreateInstallPlanOptions& options = {});
+        const std::vector<FeatureSpec>& specs,
+        const StatusParagraphs& status_db,
+        const CreateInstallPlanOptions& options = {});
 
     void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive = true);
 }

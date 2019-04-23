@@ -8,7 +8,6 @@ namespace vcpkg
     Util::LockGuarded<std::string> GlobalState::g_surveydate;
 
     std::atomic<bool> GlobalState::debugging(false);
-    std::atomic<bool> GlobalState::feature_packages(true);
     std::atomic<bool> GlobalState::g_binary_caching(false);
 
     std::atomic<int> GlobalState::g_init_console_cp(0);

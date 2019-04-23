@@ -27,7 +27,7 @@ namespace vcpkg
         return spghs;
     }
 
-    Optional<InstalledPackageView> StatusParagraphs::find_all_installed(const PackageSpec& spec) const
+    Optional<InstalledPackageView> StatusParagraphs::get_installed_package_view(const PackageSpec& spec) const
     {
         InstalledPackageView ipv;
         for (auto&& p : *this)

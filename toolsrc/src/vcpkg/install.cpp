@@ -22,8 +22,8 @@ namespace vcpkg::Install
     using file_pack = std::pair<std::string, std::string>;
 
     InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
-                                                 const std::string& destination_subdirectory,
-                                                 const fs::path& listfile)
+        const std::string& destination_subdirectory,
+        const fs::path& listfile)
     {
         InstallDir dirs;
         dirs.m_destination = destination_root / destination_subdirectory;
@@ -39,8 +39,8 @@ namespace vcpkg::Install
     const fs::path& InstallDir::listfile() const { return this->m_listfile; }
 
     void install_files_and_write_listfile(Files::Filesystem& fs,
-                                          const fs::path& source_dir,
-                                          const InstallDir& destination_dir)
+        const fs::path& source_dir,
+        const InstallDir& destination_dir)
     {
         std::vector<std::string> output;
         std::error_code ec;
@@ -73,7 +73,7 @@ namespace vcpkg::Install
 
             const std::string filename = file.filename().u8string();
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
-                                                Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
+                Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
                 // Do not copy the control file
                 continue;
@@ -84,55 +84,55 @@ namespace vcpkg::Install
 
             switch (status.type())
             {
-                case fs::file_type::directory:
+            case fs::file_type::directory:
+            {
+                fs.create_directory(target, ec);
+                if (ec)
                 {
-                    fs.create_directory(target, ec);
-                    if (ec)
-                    {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
-                    }
+                    System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                }
 
-                    // Trailing backslash for directories
-                    output.push_back(Strings::format(R"(%s/%s/)", destination_subdirectory, suffix));
-                    break;
-                }
-                case fs::file_type::regular:
+                // Trailing backslash for directories
+                output.push_back(Strings::format(R"(%s/%s/)", destination_subdirectory, suffix));
+                break;
+            }
+            case fs::file_type::regular:
+            {
+                if (fs.exists(target))
                 {
-                    if (fs.exists(target))
-                    {
-                        System::print2(System::Color::warning,
-                                       "File ",
-                                       target.u8string(),
-                                       " was already present and will be overwritten\n");
-                    }
-                    fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
-                    if (ec)
-                    {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
-                    }
-                    output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
-                    break;
+                    System::print2(System::Color::warning,
+                        "File ",
+                        target.u8string(),
+                        " was already present and will be overwritten\n");
                 }
-                case fs::file_type::symlink:
+                fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
+                if (ec)
                 {
-                    if (fs.exists(target))
-                    {
-                        System::print2(System::Color::warning,
-                                       "File ",
-                                       target.u8string(),
-                                       " was already present and will be overwritten\n");
-                    }
-                    fs.copy_symlink(file, target, ec);
-                    if (ec)
-                    {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
-                    }
-                    output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
-                    break;
+                    System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
                 }
-                default:
-                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", file.u8string());
-                    break;
+                output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
+                break;
+            }
+            case fs::file_type::symlink:
+            {
+                if (fs.exists(target))
+                {
+                    System::print2(System::Color::warning,
+                        "File ",
+                        target.u8string(),
+                        " was already present and will be overwritten\n");
+                }
+                fs.copy_symlink(file, target, ec);
+                if (ec)
+                {
+                    System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                }
+                output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
+                break;
+            }
+            default:
+                System::printf(System::Color::error, "failed: %s: cannot handle file type\n", file.u8string());
+                break;
             }
         }
 
@@ -158,23 +158,23 @@ namespace vcpkg::Install
 
             for (const std::string &file : t.files)
             {
-                output.emplace_back(file_pack{std::string(file, remove_chars), name});
+                output.emplace_back(file_pack{ std::string(file, remove_chars), name });
             }
         }
 
         std::sort(output.begin(), output.end(),
-                  [](const file_pack &lhs, const file_pack &rhs) { return lhs.first < rhs.first; });
+            [](const file_pack &lhs, const file_pack &rhs) { return lhs.first < rhs.first; });
         return output;
     }
 
     static SortedVector<std::string> build_list_of_package_files(const Files::Filesystem& fs,
-                                                                 const fs::path& package_dir)
+        const fs::path& package_dir)
     {
         const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path) {
             return std::move(std::string(path.generic_string(), package_remove_char_count));
-        });
+            });
 
         return SortedVector<std::string>(std::move(package_files));
     }
@@ -210,40 +210,40 @@ namespace vcpkg::Install
         std::vector<file_pack> intersection;
 
         std::set_intersection(installed_files.begin(),
-                              installed_files.end(),
-                              package_files.begin(),
-                              package_files.end(),
-                              std::back_inserter(intersection),
-                              intersection_compare());
+            installed_files.end(),
+            package_files.begin(),
+            package_files.end(),
+            std::back_inserter(intersection),
+            intersection_compare());
 
         std::sort(intersection.begin(), intersection.end(),
-                  [](const file_pack &lhs, const file_pack &rhs)
-                  {
-                      return lhs.second < rhs.second;
-                  });
+            [](const file_pack &lhs, const file_pack &rhs)
+            {
+                return lhs.second < rhs.second;
+            });
 
         if (!intersection.empty())
         {
             const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
             System::printf(System::Color::error,
-                           "The following files are already installed in %s and are in conflict with %s\n\n",
-                           triplet_install_path.generic_string(),
-                           bcf.core_paragraph.spec);
+                "The following files are already installed in %s and are in conflict with %s\n\n",
+                triplet_install_path.generic_string(),
+                bcf.core_paragraph.spec);
 
             auto i = intersection.begin();
             while (i != intersection.end()) {
                 System::print2("Installed by ", i->second, "\n    ");
                 auto next = std::find_if(i, intersection.end(),
-                                         [i](const auto &val)
-                                         {
-                                             return i->second != val.second;
-                                         });
+                    [i](const auto &val)
+                    {
+                        return i->second != val.second;
+                    });
 
                 System::print2(Strings::join("\n    ", i, next,
-                                             [](const file_pack &file)
-                                             {
-                                                 return file.first;
-                                             }));
+                    [](const file_pack &file)
+                    {
+                        return file.first;
+                    }));
                 System::print2("\n\n");
 
                 i = next;
@@ -297,13 +297,12 @@ namespace vcpkg::Install
     using Build::ExtendedBuildResult;
 
     ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                    const InstallPlanAction& action,
-                                                    StatusParagraphs& status_db)
+        const InstallPlanAction& action,
+        StatusParagraphs& status_db)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
-        const std::string display_name_with_features =
-            GlobalState::feature_packages ? action.displayname() : display_name;
+        const std::string display_name_with_features = action.displayname();
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
         const bool use_head_version = Util::Enum::to_bool(action.build_options.use_head_version);
@@ -312,8 +311,8 @@ namespace vcpkg::Install
         {
             if (use_head_version && is_user_requested)
                 System::printf(System::Color::warning,
-                               "Package %s is already installed -- not building from HEAD\n",
-                               display_name);
+                    "Package %s is already installed -- not building from HEAD\n",
+                    display_name);
             else
                 System::printf(System::Color::success, "Package %s is already installed\n", display_name);
             return BuildResult::SUCCEEDED;
@@ -324,11 +323,11 @@ namespace vcpkg::Install
             const auto install_result = install_package(paths, bcf, &status_db);
             switch (install_result)
             {
-                case InstallResult::SUCCESS:
-                    System::printf(System::Color::success, "Installing package %s... done\n", name);
-                    return BuildResult::SUCCEEDED;
-                case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
-                default: Checks::unreachable(VCPKG_LINE_INFO);
+            case InstallResult::SUCCESS:
+                System::printf(System::Color::success, "Installing package %s... done\n", name);
+                return BuildResult::SUCCEEDED;
+            case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         };
 
@@ -340,11 +339,11 @@ namespace vcpkg::Install
                 System::printf("Building package %s...\n", display_name_with_features);
 
             auto result = [&]() -> Build::ExtendedBuildResult {
-                const Build::BuildPackageConfig build_config{action.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                const Build::BuildPackageConfig build_config{ action.source_control_file.value_or_exit(VCPKG_LINE_INFO),
                                                              action.spec.triplet(),
                                                              paths.port_dir(action.spec),
                                                              action.build_options,
-                                                             action.feature_list};
+                                                             action.feature_list };
                 return Build::build_package(paths, build_config, status_db);
             }();
 
@@ -368,7 +367,7 @@ namespace vcpkg::Install
                 fs.remove_all(package_dir, ec);
             }
 
-            return {code, std::move(bcf)};
+            return { code, std::move(bcf) };
         }
 
         if (plan_type == InstallPlanType::EXCLUDED)
@@ -408,9 +407,9 @@ namespace vcpkg::Install
     }
 
     InstallSummary perform(const std::vector<AnyAction>& action_plan,
-                           const KeepGoing keep_going,
-                           const VcpkgPaths& paths,
-                           StatusParagraphs& status_db)
+        const KeepGoing keep_going,
+        const VcpkgPaths& paths,
+        StatusParagraphs& status_db)
     {
         std::vector<SpecSummary> results;
 
@@ -454,7 +453,7 @@ namespace vcpkg::Install
             System::printf("Elapsed time for package %s: %s\n", display_name, results.back().timing);
         }
 
-        return InstallSummary{std::move(results), timer.to_string()};
+        return InstallSummary{ std::move(results), timer.to_string() };
     }
 
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
@@ -465,24 +464,24 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
 
-    static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = { {
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
-    }};
-    static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
+    } };
+    static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = { {
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
-    }};
+    } };
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
         auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
 
         return Util::fmap(sources_and_errors.paragraphs,
-                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+            [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -570,27 +569,27 @@ namespace vcpkg::Install
                         System::printf("    find_package(%s CONFIG REQUIRED)\n", library_target_pair.first);
 
                     std::sort(library_target_pair.second.begin(),
-                              library_target_pair.second.end(),
-                              [](const std::string& l, const std::string& r) {
-                                  if (l.size() < r.size()) return true;
-                                  if (l.size() > r.size()) return false;
-                                  return l < r;
-                              });
+                        library_target_pair.second.end(),
+                        [](const std::string& l, const std::string& r) {
+                            if (l.size() < r.size()) return true;
+                            if (l.size() > r.size()) return false;
+                            return l < r;
+                        });
 
                     if (library_target_pair.second.size() <= 4)
                     {
                         System::printf("    target_link_libraries(main PRIVATE %s)\n\n",
-                                       Strings::join(" ", library_target_pair.second));
+                            Strings::join(" ", library_target_pair.second));
                     }
                     else
                     {
                         auto omitted = library_target_pair.second.size() - 4;
                         library_target_pair.second.erase(library_target_pair.second.begin() + 4,
-                                                         library_target_pair.second.end());
+                            library_target_pair.second.end());
                         System::printf("    # Note: %zd target(s) were omitted.\n"
-                                       "    target_link_libraries(main PRIVATE %s)\n\n",
-                                       omitted,
-                                       Strings::join(" ", library_target_pair.second));
+                            "    target_link_libraries(main PRIVATE %s)\n\n",
+                            omitted,
+                            Strings::join(" ", library_target_pair.second));
                     }
                 }
             }
@@ -610,16 +609,11 @@ namespace vcpkg::Install
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
             return Input::check_and_get_full_package_spec(
                 std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
+            });
 
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.package_spec.triplet(), paths);
-            if (!spec.features.empty() && !GlobalState::feature_packages)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-            }
         }
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
@@ -645,29 +639,11 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
-        std::unordered_map<std::string, SourceControlFile> scf_map;
-        for (auto&& port : all_ports)
-            scf_map[port->core_paragraph->name] = std::move(*port);
-        MapPortFileProvider provider(scf_map);
+        Dependencies::PathsPortFileProvider provider(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFiles from this map
         std::vector<AnyAction> action_plan =
             create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
-
-        if (!GlobalState::feature_packages)
-        {
-            for (auto&& action : action_plan)
-            {
-                if (action.remove_action.has_value())
-                {
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "The installation plan requires feature packages support. Please re-run the "
-                        "command with --featurepackages.");
-                }
-            }
-        }
 
         for (auto&& action : action_plan)
         {
@@ -689,7 +665,7 @@ namespace vcpkg::Install
             else if (auto raction = action.remove_action.get())
                 return "R$" + raction->spec.to_string();
             Checks::unreachable(VCPKG_LINE_INFO);
-        });
+            });
 
         Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
@@ -736,7 +712,7 @@ namespace vcpkg::Install
     }
 
     SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action)
-        : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, action(action)
+        : spec(spec), build_result{ BuildResult::NULLVALUE, nullptr }, action(action)
     {
     }
 
@@ -760,29 +736,29 @@ namespace vcpkg::Install
         const char* result_string = "";
         switch (code)
         {
-            case BuildResult::POST_BUILD_CHECKS_FAILED:
-            case BuildResult::FILE_CONFLICTS:
-            case BuildResult::BUILD_FAILED:
-                result_string = "Fail";
-                message_block =
-                    Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
-                break;
-            case BuildResult::EXCLUDED:
-            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
-                result_string = "Skip";
-                message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
-                break;
-            case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+        case BuildResult::POST_BUILD_CHECKS_FAILED:
+        case BuildResult::FILE_CONFLICTS:
+        case BuildResult::BUILD_FAILED:
+            result_string = "Fail";
+            message_block =
+                Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
+            break;
+        case BuildResult::EXCLUDED:
+        case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+            result_string = "Skip";
+            message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
+            break;
+        case BuildResult::SUCCEEDED: result_string = "Pass"; break;
+        default: Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
-                               "\n",
-                               spec,
-                               spec,
-                               time.as<std::chrono::seconds>().count(),
-                               result_string,
-                               message_block);
+            "\n",
+            spec,
+            spec,
+            time.as<std::chrono::seconds>().count(),
+            result_string,
+            message_block);
     }
 
     std::string InstallSummary::xunit_results() const

@@ -23,6 +23,7 @@ namespace vcpkg::Commands
             {"build", &Build::Command::perform_and_exit},
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},
+            {"set-installed", &SetInstalled::perform_and_exit},
             {"export", &Export::perform_and_exit},
         };
         return t;
