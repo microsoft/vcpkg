@@ -82,6 +82,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
 set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
 FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
 STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 FILE(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake _contents)
 FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
