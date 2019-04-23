@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v5.18.3
-  SHA512 5f8c9e66dd7d7f1071dbbdd0442519df403f92876f9ed120b6a89788446cabf86275866a8ea273ab6fcb9d62cc7f3dc4d5b1684aa39c3956eea47b5b93938d54
+  REF v6.0.1
+  SHA512 ce44baa407ea692b1e4c6ca76578d14f7f15df81e7687f17d6ac19e1f9bcb81fa1d0cc921fe0b137f960d95c85aba219c2a981365635531206d0cf1cf1cfe473
   HEAD_REF master
   PATCHES
     0001-disable-gtest.patch
