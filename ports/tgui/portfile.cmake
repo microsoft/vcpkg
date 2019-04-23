@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/texus/TGUI/archive/v0.8.4.tar.gz"
-    FILENAME "tgui-0.8.4.zip"
-    SHA512 52d38419a1650cbde517a5022e3b719b9fb4c3b336533c35aa839757f929b56e477d397d735170ba8be434afedc4c00bfcd4898d97da66015776b5f22bb04ea0
+    URLS "https://github.com/texus/TGUI/archive/v0.8.5.tar.gz"
+    FILENAME "tgui-0.8.5.zip"
+    SHA512 36d8c29f246ca4d79d791f0368441762de0609d5cc0e507520ae0648ed3dc0bf47891582f283de241892bf9810f4d5049df46f566916d0bfffc383319d953002
 )
 
 vcpkg_extract_source_archive_ex(
