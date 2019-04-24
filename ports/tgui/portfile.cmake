@@ -1,14 +1,11 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/texus/TGUI/archive/v0.8.5.tar.gz"
-    FILENAME "tgui-0.8.5.zip"
-    SHA512 36d8c29f246ca4d79d791f0368441762de0609d5cc0e507520ae0648ed3dc0bf47891582f283de241892bf9810f4d5049df46f566916d0bfffc383319d953002
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO texus/TGUI
+    REF v0.8.5
+    SHA512 36d8c29f246ca4d79d791f0368441762de0609d5cc0e507520ae0648ed3dc0bf47891582f283de241892bf9810f4d5049df46f566916d0bfffc383319d953002
+    HEAD_REF 0.8
 )
 
 set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
@@ -58,6 +55,7 @@ if(BUILD_GUI_BUILDER)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/nanosvg")
 
 # Handle copyright
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/tgui/license.txt" "${CURRENT_PACKAGES_DIR}/share/tgui/copyright")
