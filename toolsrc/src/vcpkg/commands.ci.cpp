@@ -255,11 +255,12 @@ namespace vcpkg::Commands::CI
         }
 
         //Remove any unnecessary ports from the build plan.
+        using action_itr = decltype(action_plan)::iterator;
         results.action_plan =
-            {std::move_iterator(action_plan.begin()),
+            {std::move_iterator<action_itr>(action_plan.begin()),
                 action_plan.size() > max_install_count ? 
-                    std::move_iterator(action_plan.begin()) + max_install_count :
-                    std::move_iterator(action_plan.end())};
+                    std::move_iterator<action_itr>(action_plan.begin()) + max_install_count :
+                    std::move_iterator<action_itr>(action_plan.end())};
 
         auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -314,8 +315,8 @@ namespace vcpkg::Commands::CI
                 else
                 {
                     //There are no known missing dependencies
-                    if (const InstalledPackageView *ipv = install_action->installed_package.get();
-                            ipv && ipv->core && !ipv->core->package.abi.empty())
+                    const InstalledPackageView *ipv = install_action->installed_package.get();
+                    if (ipv && ipv->core && !ipv->core->package.abi.empty())
                     {
                         //If port is already installed check if the abi tag
                         //is already computed.
@@ -527,11 +528,11 @@ namespace vcpkg::Commands::CI
                 }
 
                 // Adding results for ports that were not built because they have known states
-                for (auto&& [spec, result] : split_specs.known)
+                for (const std::pair<PackageSpec, Build::BuildResult>& known : split_specs.known)
                 {
                     xunitTestResults.add_test_results(
-                        spec.to_string(),
-                        result,
+                        known.first.to_string(),
+                        known.second,
                         Chrono::ElapsedTime{},
                         "");
                 }
