@@ -6,12 +6,7 @@ if (MSVC)
 endif()
 
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY_RELEASE NAMES SDL2)
-find_library(SDL_LIBRARY_DEBUG NAMES SDL2d)
-SET(SDL_LIBRARY
-  debug ${SDL_LIBRARY_DEBUG}
-  optimized ${SDL_LIBRARY_RELEASE}
-  )
+find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 
 add_library(SDL2_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c version.rc)
 
