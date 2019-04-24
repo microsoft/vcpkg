@@ -16,7 +16,10 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    set(CMAKE_CROSSCOMPILING OFF)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
