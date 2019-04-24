@@ -283,10 +283,12 @@ namespace vcpkg::Commands::Integrate
 
             if (!rc2 || ec)
             {
-                System::println(System::Color::error,
-                                "Error: Failed to copy file: %s -> %s",
-                                appdata_src_path2.string(),
-                                appdata_dst_path2.string());
+                System::print2(System::Color::error,
+                                "Error: Failed to copy file: ",
+                                appdata_src_path2.u8string(),
+                                " -> ",
+                                appdata_dst_path2.u8string(),
+								"\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }
