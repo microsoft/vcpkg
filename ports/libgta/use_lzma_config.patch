@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8e0307..10ccf18 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ endif()
+ # Main target: libgta
+ find_package(ZLIB REQUIRED)
+ find_package(BZip2 REQUIRED)
+-find_package(LibLZMA REQUIRED)
++find_package(LibLZMA CONFIG REQUIRED)
+ configure_file("${CMAKE_SOURCE_DIR}/src/gta/gta_version.h.in" "${CMAKE_BINARY_DIR}/src/gta/gta_version.h" @ONLY)
+ include_directories("${ZLIB_INCLUDE_DIRS}" "${BZIP2_INCLUDE_DIR}" "${LIBLZMA_INCLUDE_DIRS}"
+   "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/src")
