@@ -362,24 +362,31 @@ namespace vcpkg::Build
         }
 
         const Toolset& toolset = paths.get_toolset(pre_build_info);
+
+        std::vector<System::CMakeVariable> variables {
+            {"CMD", "BUILD"},
+            {"PORT", config.scf.core_paragraph->name},
+            {"CURRENT_PORT_DIR", config.port_dir},
+            {"TARGET_TRIPLET", spec.triplet().canonical_name()},
+            {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+            {"VCPKG_USE_HEAD_VERSION",
+            Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+            {"DOWNLOADS", paths.downloads},
+            {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+            {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
+            {"FEATURES", Strings::join(";", config.feature_list)},
+            {"ALL_FEATURES", all_features},
+        };
+
+        if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+        {
+            variables.push_back({"GIT", git_exe_path});
+        }
+
         const std::string cmd_launch_cmake = System::make_cmake_cmd(
             cmake_exe_path,
             paths.ports_cmake,
-            {
-                {"CMD", "BUILD"},
-                {"PORT", config.scf.core_paragraph->name},
-                {"CURRENT_PORT_DIR", config.port_dir},
-                {"TARGET_TRIPLET", spec.triplet().canonical_name()},
-                {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                {"VCPKG_USE_HEAD_VERSION",
-                Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"DOWNLOADS", paths.downloads},
-                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
-                {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
-                {"GIT", git_exe_path},
-                {"FEATURES", Strings::join(";", config.feature_list)},
-                {"ALL_FEATURES", all_features},
-            });
+            variables);
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
         if (!command.empty())
