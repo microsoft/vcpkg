@@ -292,8 +292,9 @@ namespace vcpkg::Commands::CI
                 else if (std::any_of(install_action->computed_dependencies.begin(),
                             install_action->computed_dependencies.end(),
                             [&](const PackageSpec &spec) {
-                        if (auto known_result = results.known.find(spec);
-                            known_result != results.known.end())
+                        auto known_result = results.known.find(spec);
+
+                        if (known_result != results.known.end())
                         {
                             switch (known_result->second)
                             {
@@ -346,7 +347,8 @@ namespace vcpkg::Commands::CI
                             Util::fmap(install_action->computed_dependencies,
                                 [&](const PackageSpec &spec) -> Build::AbiEntry
                                 {
-                                    if (auto it = abi_tag_map.find(spec); it != abi_tag_map.end())
+                                    auto it = abi_tag_map.find(spec);
+                                    if (it != abi_tag_map.end())
                                     {
                                         //We've already computed the abi tag.
                                         return {spec.name(), it->second};
