@@ -388,4 +388,7 @@ int main(const int argc, const char* const* const argv)
 #endif
     }
     fflush(stdout);
+
+    //It is expected that one of the sub-commands will exit cleanly before we get here.
+    Checks::exit_fail(VCPKG_LINE_INFO);
 }
