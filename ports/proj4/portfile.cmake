@@ -1,6 +1,5 @@
 include(vcpkg_common_functions)
 
-set(PROJ4_VER "4_9")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/proj-4.9.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/proj/proj-4.9.3.zip"
