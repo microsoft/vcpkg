@@ -107,10 +107,23 @@ endif()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl.exe")
+# the native CMAKE_EXECUTABLE_SUFFIX does not work in portfiles, so emulate it
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") # Windows
+	set(EXECUTABLE_SUFFIX ".exe")
+else()
+	set(EXECUTABLE_SUFFIX "")
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/curl")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/curl.exe ${CURRENT_PACKAGES_DIR}/tools/curl/curl.exe)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/curl/curl${EXECUTABLE_SUFFIX}")
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/curl)
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/curl-target-release.cmake" RELEASE_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/bin/curl${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/curl/curl${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/curl-target-release.cmake" "${RELEASE_MODULE}")
+    endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -118,14 +131,26 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Drop debug suffix, as FindCURL.cmake does not look for it
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib")
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+        # Fixup libcurl-target-debug.cmake to match
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" DEBUG_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" "${DEBUG_MODULE}")
     endif()
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib")
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
+        # Fixup libcurl-target-release.cmake to match
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-release.cmake" RELEASE_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/lib/libcurl_imp.lib" "\${_IMPORT_PREFIX}/lib/libcurl.lib" RELEASE_MODULE "${RELEASE_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-release.cmake" "${RELEASE_MODULE}")
     endif()
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib")
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+        # Fixup libcurl-target-debug.cmake to match
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" DEBUG_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d_imp.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" "${DEBUG_MODULE}")
     endif()
 endif()
 

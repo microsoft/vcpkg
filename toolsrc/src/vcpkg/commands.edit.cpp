@@ -1,7 +1,8 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
@@ -16,7 +17,7 @@ namespace vcpkg::Commands::Edit
         struct RegKey
         {
             HKEY root;
-            const char *subkey;
+            StringLiteral subkey;
         } REGKEYS[] = {
             {
                 HKEY_LOCAL_MACHINE,
@@ -46,7 +47,7 @@ namespace vcpkg::Commands::Edit
                 System::get_registry_string(keypath.root, keypath.subkey, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
-                const fs::path install_path = fs::path(*c);
+                const fs::path install_path = fs::u8path(*c);
                 output.push_back(install_path / "Code - Insiders.exe");
                 output.push_back(install_path / "Code.exe");
             }
@@ -186,12 +187,12 @@ namespace vcpkg::Commands::Edit
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
         {
-            System::println(
+            System::print2(
                 System::Color::error,
-                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.");
-            System::println("The following paths were examined:");
+                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.\n");
+            System::print2("The following paths were examined:\n");
             Files::print_paths(candidate_paths);
-            System::println("You can also set the environmental variable EDITOR to your editor of choice.");
+            System::print2("You can also set the environmental variable EDITOR to your editor of choice.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
