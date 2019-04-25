@@ -7,14 +7,14 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "proj-4.9.3.zip"
     SHA512 c9703008cd1f75fe1239b180158e560b9b88ae2ffd900b72923c716908eb86d1abbc4230647af5e3131f8c34481bdc66b03826d669620161ffcfbe67801cb631
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}/
-    PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/0001-CMake-add-detection-of-recent-visual-studio-versions.patch
-    ${CMAKE_CURRENT_LIST_DIR}/0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
-    ${CMAKE_CURRENT_LIST_DIR}/0003-CMake-configurable-cmake-config-install-location.patch
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES    
+        0001-CMake-add-detection-of-recent-visual-studio-versions.patch
+        0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
+        0003-CMake-configurable-cmake-config-install-location.patch
+        0004-CMake-fix-output-name.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -40,37 +40,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/proj4)
-
-# Rename library and adapt cmake configuration
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(READ ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-release.cmake _contents)
-    string(REPLACE "proj_4_9.lib" "proj.lib" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-release.cmake "${_contents}")
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-debug.cmake _contents)
-    string(REPLACE "proj_4_9_d.lib" "projd.lib" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets-debug.cmake "${_contents}")
-endif()
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets.cmake _contents)
-string(REPLACE "set(_IMPORT_PREFIX \"${CURRENT_PACKAGES_DIR}\")"
-    "set(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\")\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-    _contents "${_contents}"
-)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj4/proj4-targets.cmake "${_contents}")
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/proj_${PROJ4_VER}.dll ${CURRENT_PACKAGES_DIR}/bin/proj.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/proj_${PROJ4_VER}.lib  ${CURRENT_PACKAGES_DIR}/lib/proj.lib)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/proj_${PROJ4_VER}_d.dll ${CURRENT_PACKAGES_DIR}/debug/bin/projd.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/proj_${PROJ4_VER}_d.lib  ${CURRENT_PACKAGES_DIR}/debug/lib/projd.lib)
-    endif()
-endif()
 
 # Remove duplicate headers installed from debug build
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

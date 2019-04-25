@@ -1,0 +1,13 @@
+diff --git a/src/lib_proj.cmake b/src/lib_proj.cmake
+index a90cdac..b9cf21a 100644
+--- a/src/lib_proj.cmake
++++ b/src/lib_proj.cmake
+@@ -277,7 +277,7 @@ if(WIN32)
+   set_target_properties(${PROJ_CORE_TARGET}
+     PROPERTIES
+     VERSION "${${PROJECT_INTERN_NAME}_BUILD_VERSION}"
+-    OUTPUT_NAME "${PROJ_CORE_TARGET_OUTPUT_NAME}"
++    OUTPUT_NAME "${PROJ_CORE_TARGET}"
+     CLEAN_DIRECT_OUTPUT 1)
+ elseif(BUILD_FRAMEWORKS_AND_BUNDLE)
+   set_target_properties(${PROJ_CORE_TARGET}
