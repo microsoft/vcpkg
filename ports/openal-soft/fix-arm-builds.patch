@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 39b80250..e2a1ed76 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1409,6 +1409,7 @@ ELSE()
+         ELSEIF(CMAKE_COMPILER_IS_GNUCC)
+             SET(SUBSYS_FLAG ${SUBSYS_FLAG} "-mwindows")
+         ENDIF()
++        SET(COMMON_LIB ${COMMON_LIB} shell32 ole32)
+     ENDIF()
+ 
+     IF(WIN32 AND ALSOFT_BUILD_ROUTER)
+diff --git a/native-tools/CMakeLists.txt b/native-tools/CMakeLists.txt
+index 5e816bba..16f3be12 100644
+--- a/native-tools/CMakeLists.txt
++++ b/native-tools/CMakeLists.txt
+@@ -24,6 +24,11 @@ set_target_properties(bsincgen PROPERTIES OUTPUT_NAME bsincgen)
+ set_target_properties(bsincgen PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}")
+ set_target_properties(bsincgen PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}")
+ target_compile_definitions(bsincgen PRIVATE ${CPP_DEFS})
++set(BSINCGEN_LIB )
+ if(HAVE_LIBM)
+-    target_link_libraries(bsincgen m)
++    set(BSINCGEN_LIB ${BSINCGEN_LIB} m)
+ endif(HAVE_LIBM)
++if(WIN32)
++    set(BSINCGEN_LIB ${BSINCGEN_LIB} shell32)
++endif()
++target_link_libraries(bsincgen ${BSINCGEN_LIB})
+\ No newline at end of file
