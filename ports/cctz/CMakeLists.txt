@@ -11,6 +11,8 @@ else()
     option(INSTALL_HEADERS "Install header files" OFF)
 endif()
 
+find_package(benchmark CONFIG REQUIRED)
+
 file(GLOB SOURCES src/*.cc)
 list(FILTER SOURCES EXCLUDE REGEX "_test.cc$|benchmarks|_tool.cc$")
 
@@ -18,6 +20,7 @@ file(GLOB HEADERS include/cctz/*.h)
 
 add_library(cctz ${SOURCES})
 target_include_directories(cctz PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_link_libraries(cctz PRIVATE benchmark::benchmark benchmark::benchmark_main)
 
 if(INSTALL_HEADERS)
     install(FILES ${HEADERS} DESTINATION "include/cctz")
