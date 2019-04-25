@@ -1,0 +1,15 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index eca9a8a..fc8605e 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -80,6 +80,10 @@ if(NOT BUILD_SHARED_LIBS)
+     set_target_properties(${LIB_NAME} PROPERTIES INTERFACE_COMPILE_DEFINITIONS CURL_STATICLIB)
+ endif()
+ 
++string(TOUPPER ${CMAKE_SYSTEM_NAME} HOST_OS)
++if (${HOST_OS} STREQUAL "WINDOWSSTORE")
++  add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS)
++endif()
+ target_link_libraries(${LIB_NAME} ${CURL_LIBS})
+ 
+ if(WIN32)
