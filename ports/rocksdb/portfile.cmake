@@ -3,14 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v5.17.2
-  SHA512 c9f9bff747d0d2c97f8adb71d6a3bd5dc206c2fc567a47d0400abac61fec7f2a386d16cda5447bcf592cca006fd6d4c5ae1a68d122e2e2a03d3ebcc002dae147
+  REF v6.0.1
+  SHA512 ce44baa407ea692b1e4c6ca76578d14f7f15df81e7687f17d6ac19e1f9bcb81fa1d0cc921fe0b137f960d95c85aba219c2a981365635531206d0cf1cf1cfe473
   HEAD_REF master
   PATCHES
     0001-disable-gtest.patch
     0002-only-build-one-flavor.patch
     0003-zlib-findpackage.patch
     0004-use-find-package.patch
+    0005-static-linking-in-linux.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")

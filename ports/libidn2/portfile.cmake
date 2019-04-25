@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(IDN2_VERSION 2.0.5)
-set(IDN2_FILENAME libidn2-${IDN2_VERSION}.tar.gz)
+set(IDN2_VERSION 2.1.1)
+set(IDN2_FILENAME libidn2-${IDN2_VERSION}a.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 9d040d60de40316788825d8720d509d5b8a82287415e09e17792c2f32fad99ca77f43e55888b9484db69426eaa0ece59e9671eee9cc46411afbdb0f81af31a79
+    SHA512 404a739e33d324f700ac8e8119de3feef0de778bbb11be09049cb64eab447cd101883f6d489cca1e88c230f58bcaf9758fe102e571b6501450aa750ec2a4a9c6
 )
 
 vcpkg_extract_source_archive_ex(

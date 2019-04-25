@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE} ${CURRENT_BUILDTREES_DIR}/src/glew)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_UTILS=OFF
     )
