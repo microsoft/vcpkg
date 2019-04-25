@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(FATAL_ERROR "aws-lambda-cpp currently only supports Linux and Mac platforms")
 endif()
 
