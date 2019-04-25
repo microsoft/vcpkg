@@ -11,3 +11,16 @@ index a90cdac..b9cf21a 100644
      CLEAN_DIRECT_OUTPUT 1)
  elseif(BUILD_FRAMEWORKS_AND_BUNDLE)
    set_target_properties(${PROJ_CORE_TARGET}
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 72b85a2..48c8602 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -77,7 +77,7 @@ endif ()
+ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+   # For multi-config systems and for Visual Studio, the debug version of
+   # the library has _d appended.
+-  set (CMAKE_DEBUG_POSTFIX _d)
++  set (CMAKE_DEBUG_POSTFIX d)
+ endif ()
+ 
+ option(PROJ4_TESTS "Enable build of collection of PROJ4 tests" ON)
