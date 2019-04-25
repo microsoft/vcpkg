@@ -18,6 +18,7 @@ vcpkg_from_github(
     PATCHES
         fix-hdf5link.patch
         bypass-findhdf5.patch
+        fix-C1083.patch
 )
 
 vcpkg_configure_cmake(
