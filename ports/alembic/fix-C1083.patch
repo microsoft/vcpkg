@@ -1,0 +1,49 @@
+diff --git a/lib/Alembic/Abc/Foundation.h b/lib/Alembic/Abc/Foundation.h
+index 9760c49..fbab6a0 100644
+--- a/lib/Alembic/Abc/Foundation.h
++++ b/lib/Alembic/Abc/Foundation.h
+@@ -40,11 +40,11 @@
+ #include <Alembic/AbcCoreAbstract/All.h>
+ #include <Alembic/Util/All.h>
+ 
+-#include <ImathVec.h>
+-#include <ImathBox.h>
+-#include <ImathMatrix.h>
+-#include <ImathQuat.h>
+-#include <ImathColor.h>
++#include <OpenEXR/ImathVec.h>
++#include <OpenEXR/ImathBox.h>
++#include <OpenEXR/ImathMatrix.h>
++#include <OpenEXR/ImathQuat.h>
++#include <OpenEXR/ImathColor.h>
+ 
+ #include <iostream>
+ #include <string>
+diff --git a/lib/Alembic/AbcGeom/Foundation.h b/lib/Alembic/AbcGeom/Foundation.h
+index 301efc3..2bb0f6b 100644
+--- a/lib/Alembic/AbcGeom/Foundation.h
++++ b/lib/Alembic/AbcGeom/Foundation.h
+@@ -39,8 +39,8 @@
+ 
+ #include <Alembic/Abc/All.h>
+ 
+-#include <ImathMatrixAlgo.h>
+-#include <ImathEuler.h>
++#include <OpenEXR/ImathMatrixAlgo.h>
++#include <OpenEXR/ImathEuler.h>
+ 
+ 
+ namespace Alembic {
+diff --git a/lib/Alembic/Util/Foundation.h b/lib/Alembic/Util/Foundation.h
+index d7f40dd..a41bb97 100644
+--- a/lib/Alembic/Util/Foundation.h
++++ b/lib/Alembic/Util/Foundation.h
+@@ -63,7 +63,7 @@
+ 
+ #include <memory>
+ 
+-#include <half.h>
++#include <OpenEXR/half.h>
+ 
+ #include <iomanip>
+ #include <iostream>

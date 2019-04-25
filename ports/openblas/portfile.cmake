@@ -21,6 +21,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         message("openblas currenly only supports dynamic library linkage")
         set(VCPKG_LIBRARY_LINKAGE "dynamic")
     endif()
+    set(CMAKE_CROSSCOMPILING OFF)
 endif()
 
 vcpkg_from_github(
