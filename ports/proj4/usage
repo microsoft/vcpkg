@@ -1,0 +1,4 @@
+The package proj4 is compatible with built-in CMake targets:
+
+    find_package(proj4 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE proj)
