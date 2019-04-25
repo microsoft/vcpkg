@@ -1,6 +1,8 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
+include(vcpkg_common_functions)
+
 set(GDAL_VERSION_STR "2.4.1")
 set(GDAL_VERSION_PKG "241")
 set(GDAL_VERSION_LIB "204")

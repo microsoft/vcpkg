@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
 # The current Live555 version from http://www.live555.com/liveMedia/public/live.2019.03.06
 set(LIVE_VERSION 2019.03.06)
