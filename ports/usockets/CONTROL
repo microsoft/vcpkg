@@ -1,4 +1,4 @@
 Source: usockets
 Version: 0.1.2
 Build-Depends:libuv, zlib
-Description: Highly scalable cross-platform WebSocket & HTTP library for C++11 and Node.js
+Description: Miniscule cross-platform eventing, networking & crypto for async applications

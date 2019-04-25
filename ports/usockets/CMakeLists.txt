@@ -3,6 +3,7 @@ project(uSockets C CXX)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
+# When enable feature openssl, it failed with LNK2019 unresolved symbol BIO_get_data, BIO_meth_free, BIO_meth_new, it's disabled now.
 if (CMAKE_USE_OPENSSL)
     find_package(OpenSSL REQUIRED)
     set(USE_OPENSSL "-DUSE_OPENSSL -DLIBUS_USE_OPENSSL")
