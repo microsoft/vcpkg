@@ -327,11 +327,11 @@ namespace vcpkg::Commands::CI
                     b_will_build = true;
                 }
 
-                System::println("%40s: %1s %8s: %s", p->spec, (b_will_build ? "*" : " "), state, abi);
+                System::printf("%40s: %1s %8s: %s\n", p->spec, (b_will_build ? "*" : " "), state, abi);
             }
         }
 
-        System::print("Time to determine pass/fail: %s\n", timer.elapsed().to_string());
+        System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
 
         return ret;
     }
@@ -340,7 +340,7 @@ namespace vcpkg::Commands::CI
     {
         if (!GlobalState::g_binary_caching)
         {
-            System::println(System::Color::warning, "Warning: Running ci without binary caching!");
+            System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -356,11 +356,8 @@ namespace vcpkg::Commands::CI
         const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const auto purge_tombstones = Util::Sets::contains(options.switches, OPTION_PURGE_TOMBSTONES);
 
-        std::vector<Triplet> triplets;
-        for (const std::string& triplet : args.command_arguments)
-        {
-            triplets.push_back(Triplet::from_canonical_name(triplet));
-        }
+        std::vector<Triplet> triplets = Util::fmap(
+            args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
 
         if (triplets.empty())
         {
@@ -491,8 +488,8 @@ namespace vcpkg::Commands::CI
 
         for (auto&& result : results)
         {
-            System::println("\nTriplet: %s", result.triplet);
-            System::println("Total elapsed time: %s", result.summary.total_elapsed_time);
+            System::print2("\nTriplet: ", result.triplet, "\n");
+            System::print2("Total elapsed time: ", result.summary.total_elapsed_time, "\n");
             result.summary.print();
         }
 

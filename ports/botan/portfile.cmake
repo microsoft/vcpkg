@@ -10,7 +10,34 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(JOM)
+set(NUMBER_OF_PROCESSORS "1")
+if(DEFINED ENV{NUMBER_OF_PROCESSORS})
+    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
+else()
+    if(APPLE)
+        set(job_count_command sysctl -n hw.physicalcpu)
+    else()
+        set(job_count_command nproc)
+    endif()
+    execute_process( 
+            COMMAND ${job_count_command}
+            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
+        )
+    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    if(NOT NUMBER_OF_PROCESSORS)
+        set(NUMBER_OF_PROCESSORS "1")
+    endif()
+endif()
+
+if(CMAKE_HOST_WIN32)
+    vcpkg_find_acquire_program(JOM)
+    set(build_tool "${JOM}" /J ${NUMBER_OF_PROCESSORS})
+else()
+    find_program(MAKE make)
+    set(build_tool "${MAKE}" -j${NUMBER_OF_PROCESSORS})
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
@@ -57,26 +84,28 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     endif()
     make_directory(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
+    set(configure_arguments --cpu=${BOTAN_FLAG_CPU}
+                            ${BOTAN_FLAG_SHARED}
+                            ${BOTAN_FLAG_STATIC}
+                            ${BOTAN_FLAG_DEBUGMODE}
+                            "--distribution-info=vcpkg ${TARGET_TRIPLET}"
+                            --prefix=${BOTAN_FLAG_PREFIX}
+                            --link-method=copy)
+    if(CMAKE_HOST_WIN32)
+        list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+    endif()    
+
     vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py"
-            --cc=msvc
-            --cpu=${BOTAN_FLAG_CPU}
-            ${BOTAN_FLAG_SHARED}
-            ${BOTAN_FLAG_STATIC}
-            ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX}
-            ${BOTAN_FLAG_DEBUGMODE}
-            "--distribution-info=vcpkg ${TARGET_TRIPLET}"
-            --prefix=${BOTAN_FLAG_PREFIX}
-            --link-method=copy
+        COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" ${configure_arguments}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME configure-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     vcpkg_execute_required_process(
-        COMMAND ${JOM}
+        COMMAND ${build_tool}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
-        LOGNAME jom-build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+        LOGNAME build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
@@ -87,7 +116,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND CMAKE_HOST_WIN32)
         file(RENAME ${BOTAN_FLAG_PREFIX}/lib/botan${BOTAN_DEBUG_SUFFIX}.dll ${BOTAN_FLAG_PREFIX}/bin/botan${BOTAN_DEBUG_SUFFIX}.dll)
     endif()
 
@@ -98,8 +127,13 @@ BOTAN_BUILD(rel)
 BOTAN_BUILD(dbg)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/botan)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/botan-cli.exe ${CURRENT_PACKAGES_DIR}/tools/botan/botan-cli.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/botan-cli.exe)
+
+set(cli_exe_name "botan")
+if(CMAKE_HOST_WIN32)
+    set(cli_exe_name "botan-cli.exe")
+endif()
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${cli_exe_name} ${CURRENT_PACKAGES_DIR}/tools/botan/${cli_exe_name})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${cli_exe_name})
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/botan-2/botan ${CURRENT_PACKAGES_DIR}/include/botan)
 
