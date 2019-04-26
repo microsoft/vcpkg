@@ -5,7 +5,8 @@ vcpkg_from_github(
     REPO stlab/libraries
     REF v1.4.1
     SHA512 e9da6f2c570397842f5e73a681f49c5a77977fda430ec730eed6f19d04161172829b7f1adcafd416f0a3f35ea8717ca14e9b935b5ec8fa423e4951c3ba961c7a
-    HEAD_REF develop
+    HEAD_REF develop    
+    PATCHES dont-require-testing.patch
 )
 
 vcpkg_configure_cmake(
