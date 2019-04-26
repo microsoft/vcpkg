@@ -16,8 +16,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Move installed CMake files to correct directories
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/bitsery)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/bitsery ${CURRENT_PACKAGES_DIR}/share/bitsery/cmake)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/bitsery ${CURRENT_PACKAGES_DIR}/share/bitsery)
 
 # Delete redundant and empty directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
