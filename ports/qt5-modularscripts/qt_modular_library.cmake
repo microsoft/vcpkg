@@ -1,6 +1,6 @@
 set(_qt5base_port_dir "${CMAKE_CURRENT_LIST_DIR}")
 
-function(qt_modular_library NAME HASH)
+function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
     string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
     if(BUILDTREES_PATH_LENGTH GREATER 45)
         message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
@@ -23,12 +23,20 @@ function(qt_modular_library NAME HASH)
         REF ${FULL_VERSION}
     )
 
+    set(${TARGET_SOURCE_PATH} ${SOURCE_PATH} PARENT_SCOPE)
+endfunction()
+
+function(qt_modular_build_library SOURCE_PATH)
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
     set(ENV{_CL_} "/utf-8")
 
     #Store build paths
-    set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    endif()
 
     #Find Python and add it to the path
     vcpkg_find_acquire_program(PYTHON2)
@@ -38,8 +46,13 @@ function(qt_modular_library NAME HASH)
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 
-    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    if(WIN32)
+        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    else()
+        set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
+        set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
+    endif()
 
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
@@ -77,8 +90,12 @@ function(qt_modular_library NAME HASH)
     endif()
 
     file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    endif()
     foreach(PRL_FILE IN LISTS PRL_FILES)
         file(READ "${PRL_FILE}" _contents)
         string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
@@ -134,5 +151,9 @@ function(qt_modular_library NAME HASH)
         set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
     endif()
     file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+endfunction()
 
+function(qt_modular_library NAME HASH)
+    qt_modular_fetch_library(${NAME} ${HASH} TARGET_SOURCE_PATH)
+    qt_modular_build_library(${TARGET_SOURCE_PATH})
 endfunction()

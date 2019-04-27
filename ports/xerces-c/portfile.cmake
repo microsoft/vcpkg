@@ -13,6 +13,9 @@ set(DISABLE_ICU ON)
 if("icu" IN_LIST FEATURES)
     set(DISABLE_ICU OFF)
 endif()
+if ("xmlch_wchar" IN_LIST FEATURES)
+    set(XMLCHTYPE -Dxmlch-type=wchar_t)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,6 +25,7 @@ vcpkg_configure_cmake(
         -DDISABLE_DOC=ON
         -DDISABLE_SAMPLES=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_ICU=${DISABLE_ICU}
+        ${XMLCHTYPE}
 )
 
 vcpkg_install_cmake()
@@ -40,6 +44,12 @@ string(REPLACE
     "${_contents}"
 )
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfigInternal.cmake "${_contents}")
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    ${CURRENT_PACKAGES_DIR}/share/xercesc
+    @ONLY
+)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

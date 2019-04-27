@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mongodb/libbson
-    REF 1.9.5
-    SHA512 14bc75989baac550f42939ea161fa7872b950e5b669dc8f19e897f0783b04e0212e5e722b3fcdf946308b9a68bc066502ed8238dad92e342e5f49b8b2cc8f484
+    REPO mongodb/mongo-c-driver
+    REF 1.13.0
+    SHA512 d2f5b04b3d2dbdeba4547ec1fe8a0da7bad5214de92fff480ef0ff7d97ea45d5e6347c11c249867d4905b1dd81b76c7cfbb9094a58df586dae881955ee246907
     HEAD_REF master
     PATCHES fix-uwp.patch
 )
@@ -19,7 +19,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DENABLE_MONGOC=OFF
+        -DENABLE_BSON=ON
         -DENABLE_TESTS=OFF
+        -DENABLE_EXAMPLES=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
 )
 
@@ -29,6 +32,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libbson-1.0")
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 
 # This rename is needed because the official examples expect to use #include <bson.h>
 # See Microsoft/vcpkg#904

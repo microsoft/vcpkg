@@ -1,19 +1,17 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "2.4.0")
-set(GDAL_VERSION_PKG "240")
+set(GDAL_VERSION_STR "2.4.1")
+set(GDAL_VERSION_PKG "241")
 set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "a8543425d7bdbb5ab94638a490fe5b62e37983fbb89e1eea98b0e31d5fa76b7568e7b633c90ac429c87a6c9e8d9e1358b48428f3885aac8d574d1f01e9631f7f")
+set(GDAL_PACKAGE_SUM "edb9679ee6788334cf18971c803615ac9b1c72bc0c96af8fd4852cb7e8f58e9c4f3d9cb66406bc8654419612e1a7e9d0e62f361712215f4a50120f646bb0a738")
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "GDAL's nmake buildsystem does not support building static libraries")
-elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "GDAL's nmake buildsystem does not support static crt linkage")
+    list(APPEND NMAKE_OPTIONS "DLLBUILD=0")
 endif()
 
 include(vcpkg_common_functions)
@@ -39,12 +37,22 @@ endif()
 foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
-        PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-    )
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+      vcpkg_apply_patches(
+          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
+          PATCHES
+          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+      )
+    else()
+      vcpkg_apply_patches(
+          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
+          PATCHES
+          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+      )
+    endif()
 endforeach()
+
 
 find_program(NMAKE nmake REQUIRED)
 
@@ -64,8 +72,13 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRA
 
 # Setup geos libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+else()
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
+endif()
 
 # Setup expat libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
@@ -155,6 +168,7 @@ endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
+    list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
 else()
     # Enables PDBs for release and debug builds
     list(APPEND NMAKE_OPTIONS WITH_PDB=1)
@@ -175,11 +189,14 @@ list(APPEND NMAKE_OPTIONS_REL
     EXPAT_LIB=${EXPAT_LIBRARY_REL}
     "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
     SQLITE_LIB=${SQLITE_LIBRARY_REL}
-    PG_LIB=${PGSQL_LIBRARY_REL}
     OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
     WEBP_LIBS=${WEBP_LIBRARY_REL}
     LIBXML2_LIB=${XML2_LIBRARY_REL}
 )
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Static Build does not like PG_LIB
+    list(APPEND NMAKE_OPTIONS_REL PG_LIB=${PGSQL_LIBRARY_REL})
+endif()
 
 list(APPEND NMAKE_OPTIONS_DBG
     ${NMAKE_OPTIONS}
@@ -190,12 +207,15 @@ list(APPEND NMAKE_OPTIONS_DBG
     EXPAT_LIB=${EXPAT_LIBRARY_DBG}
     "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
     SQLITE_LIB=${SQLITE_LIBRARY_DBG}
-    PG_LIB=${PGSQL_LIBRARY_DBG}
     OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
     WEBP_LIBS=${WEBP_LIBRARY_DBG}
     LIBXML2_LIB=${XML2_LIBRARY_DBG}
     DEBUG=1
 )
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Static Build does not like PG_LIB
+    list(APPEND NMAKE_OPTIONS_DBG PG_LIB=${PGSQL_LIBRARY_DBG})
+endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   ################
@@ -226,7 +246,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 message(STATUS "Packaging ${TARGET_TRIPLET}")
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
+
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
+endif()
 
 vcpkg_execute_required_process(
   COMMAND ${NMAKE} -f makefile.vc
@@ -249,9 +272,17 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
   endif()
+
 else()
-  file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-  file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
+
+  set(GDAL_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/gdal)
+  file(MAKE_DIRECTORY ${GDAL_TOOL_PATH})
+
+  file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+  file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
+  file(REMOVE_RECURSE ${GDAL_TOOLS})
+
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)

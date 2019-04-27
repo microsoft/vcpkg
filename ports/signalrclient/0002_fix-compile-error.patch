@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 91c2300..2439fec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,8 @@ if(NOT WIN32)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -L -lcpprest")
+ endif()
+ 
++find_package(OpenSSL REQUIRED)
++
+ set(CPPREST_INCLUDE_DIR "" CACHE FILEPATH "Path to casablanca include dir")
+ 
+ include_directories (
+@@ -22,6 +24,7 @@ if(NOT DISABLE_TESTS)
+ 	add_subdirectory(test)
+ endif()
+ 
++
+ if(BUILD_SHARED_LIBS)
+ 	install(FILES include/signalrclient/_exports.h DESTINATION include/signalrclient)
+ else()
+diff --git a/src/signalrclient/CMakeLists.txt b/src/signalrclient/CMakeLists.txt
+index db141eb..c4306d8 100644
+--- a/src/signalrclient/CMakeLists.txt
++++ b/src/signalrclient/CMakeLists.txt
+@@ -32,7 +32,7 @@ add_definitions(-DUNICODE -D_UNICODE)
+ 
+ add_library (signalrclient ${SOURCES})
+ 
+-target_link_libraries(signalrclient ${CPPREST_SO})
++target_link_libraries(signalrclient ${CPPREST_SO} OpenSSL::SSL OpenSSL::Crypto)
+ 
+ install(
+   TARGETS signalrclient

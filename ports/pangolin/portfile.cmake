@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF v0.5
     SHA512 7ebeec108f33f1aa8b1ad08e3ca128a837b22d33e3fc580021f981784043b023a1bf563bbfa8b51d46863db770b336d24fc84ee3d836b85e0da1848281b2a5b2
     HEAD_REF master
-	PATCHES deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
+	PATCHES 
+        deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
+        fix-includepath-error.patch # include path has one more ../
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
@@ -55,4 +57,5 @@ file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/p
 
 # Put the license file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/Pangolin/)
+file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/Pangolin/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/Pangolin/LICENCE ${CURRENT_PACKAGES_DIR}/share/Pangolin/copyright)
