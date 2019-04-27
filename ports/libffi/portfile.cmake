@@ -4,13 +4,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO driver1998/libffi
-    REF d4004617c88b706524188046d15720cb9bfa2eec
-    SHA512 e4e4f3c09cd8d5112291137e0f00ab8ec276dd8283eaca5519320d96fe00e81d2799b5ff2020b5869fe97df82d0a4783ebd136dfbea77b8c0e0424a0fe20aba3
+    REF bb00e92da36faa6e2182592336d6b5ef0a4f7b3c
+    SHA512 1ac2a3d8aa680a9ca9d004ab23de2d950a455d3df703ec4d53a4294878659be9be46eea5564a1060615dc52d3296f73bcfa237b1107b08c81341bc79623cb86d
     HEAD_REF master
     PATCHES
         fix-defines.patch
-        fix-arm64-build.patch
-        fix-linux-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
