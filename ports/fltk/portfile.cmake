@@ -17,7 +17,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.4-1
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/add-link-libraries.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
