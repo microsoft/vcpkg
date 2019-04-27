@@ -12,17 +12,47 @@ vcpkg_from_github(
 
 file(COPY ${SOURCE_PATH}/webview.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/include/webview.h
+set(WEBVIEW_GTK "0")
+set(WEBVIEW_WINAPI "0")
+set(WEBVIEW_COCOA "0")
+
+if(WIN32)
+    set(WEBVIEW_WINAPI "1")
+elseif(UNIX)
+    if(APPLE)
+        set(WEBVIEW_COCOA "1")
+    else()
+        set(WEBVIEW_GTK "1")
+    endif()
+endif()
+
+file(READ ${CURRENT_PACKAGES_DIR}/include/webview.h _contents)
+string(REPLACE
     "#ifdef WEBVIEW_STATIC"
     "#if 1 // #ifdef WEBVIEW_STATIC"
+    _contents "${_contents}"
 )
-
-vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/include/webview.h
+string(REPLACE
     "#ifdef WEBVIEW_IMPLEMENTATION"
     "#if 1 // #ifdef WEBVIEW_IMPLEMENTATION"
+    _contents "${_contents}"
 )
+string(REPLACE
+    "defined(WEBVIEW_GTK)"
+    "${WEBVIEW_GTK} // defined(WEBVIEW_GTK)"
+    _contents "${_contents}"
+)
+string(REPLACE
+    "defined(WEBVIEW_WINAPI)"
+    "${WEBVIEW_WINAPI} // defined(WEBVIEW_WINAPI)"
+    _contents "${_contents}"
+)
+string(REPLACE
+    "defined(WEBVIEW_COCOA)"
+    "${WEBVIEW_COCOA} // defined(WEBVIEW_COCOA)"
+    _contents "${_contents}"
+)
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/webview.h "${_contents}")
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
