@@ -1,3 +1,4 @@
+# https://github.com/raysan5/raylib/issues/388
 if(TARGET_TRIPLET MATCHES "^arm" OR TARGET_TRIPLET MATCHES "uwp$")
     message(FATAL_ERROR "raylib doesn't support ARM or UWP.")
 endif()
