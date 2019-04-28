@@ -3,7 +3,7 @@ project(uSockets C CXX)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
-# When enable feature openssl, it failed with LNK2019 unresolved symbol BIO_get_data, BIO_meth_free, BIO_meth_new, it's disabled now.
+# To enable this feature, OpenSSL 1.1+ is required and is currently disabled due to issue 4267
 if (CMAKE_USE_OPENSSL)
     find_package(OpenSSL REQUIRED)
     set(USE_OPENSSL "-DUSE_OPENSSL -DLIBUS_USE_OPENSSL")
@@ -13,17 +13,17 @@ else()
     set(NOT_USE_OPENSSL "-DLIBUS_NO_SSL")
 endif()
 
-find_package(ZLIB REQUIRED)
+find_package(unofficial-libuv CONFIG REQUIRED)
 find_path(LIBUV_INCLUDE_DIR uv.h)
 find_library(LIBUV_LIBRARY NAMES libuv)
-include_directories("${CMAKE_CURRENT_LIST_DIR}/src")
+include_directories(APPEND "${CMAKE_CURRENT_LIST_DIR}/src")
 
 file(GLOB SOURCES src/*.c src/eventing/*.c)
 
 add_library(uSockets ${SOURCES})
 target_compile_definitions(uSockets PRIVATE ${NOT_USE_OPENSSL} ${USE_OPENSSL})
-target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIRS} )
-target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES} ${LIBUV_LIBRARY})
+target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${LIBUV_INCLUDE_DIR} )
+target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY})
 
 install(TARGETS uSockets
     RUNTIME DESTINATION bin
