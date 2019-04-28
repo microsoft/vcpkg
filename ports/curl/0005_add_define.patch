@@ -1,3 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38b7b7d..73d323e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1150,7 +1150,11 @@ endfunction()
+ 
+ include(GNUInstallDirs)
+ 
+-set(CURL_INSTALL_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
++IF(WIN32)
++  set(CURL_INSTALL_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
++ELSE()
++  set(CURL_INSTALL_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/../share/cmake/${PROJECT_NAME})
++ENDIF()
+ set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+ set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+ set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index eca9a8a..fc8605e 100644
 --- a/lib/CMakeLists.txt
