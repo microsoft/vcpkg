@@ -35,7 +35,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DENABLE_ASAN=ON
         -DENABLE_UBSAN=ON
-        -DENABLE_MSAN=ON
+        -DENABLE_MSAN=OFF
     OPTIONS_RELEASE
         -DENABLE_ASAN=OFF
         -DENABLE_UBSAN=OFF
