@@ -24,8 +24,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE_FILE}"
     REF ${FULL_VERSION}
-    PATCHES
-        fix-gui-configure-json.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
