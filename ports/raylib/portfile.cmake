@@ -3,15 +3,17 @@ if(TARGET_TRIPLET MATCHES "^arm" OR TARGET_TRIPLET MATCHES "uwp$")
     message(FATAL_ERROR "raylib doesn't support ARM or UWP.")
 endif()
 
-message(
-"raylib currently requires the following libraries from the system package manager:
+if(UNIX)
+    message(
+    "raylib currently requires the following libraries from the system package manager:
     libgl1-mesa-dev
     libx11-dev
     libxcursor-dev
     libxinerama-dev
     libxrandr-dev
 These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev libx11-dev libxcursor-dev libxinerama-dev libxrandr-dev"
-)
+    )
+endif()
 
 include(vcpkg_common_functions)
 
