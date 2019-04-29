@@ -6,7 +6,8 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -81,19 +82,18 @@ namespace vcpkg::Build::Command
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
-        System::println("Elapsed time for package %s: %s", spec.to_string(), build_timer.to_string());
+        System::print2("Elapsed time for package ", spec, ": ", build_timer, '\n');
 
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
-            System::println(System::Color::error,
-                            "The build command requires all dependencies to be already installed.");
-            System::println("The following dependencies are missing:");
-            System::println();
+            System::print2(System::Color::error,
+                           "The build command requires all dependencies to be already installed.\n");
+            System::print2("The following dependencies are missing:\n\n");
             for (const auto& p : result.unmet_dependencies)
             {
-                System::println("    %s", p);
+                System::print2("    ", p, '\n');
             }
-            System::println();
+            System::print2('\n');
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -101,8 +101,8 @@ namespace vcpkg::Build::Command
 
         if (result.code != BuildResult::SUCCEEDED)
         {
-            System::println(System::Color::error, Build::create_error_message(result.code, spec));
-            System::println(Build::create_user_troubleshooting_message(spec));
+            System::print2(System::Color::error, Build::create_error_message(result.code, spec), '\n');
+            System::print2(Build::create_user_troubleshooting_message(spec), '\n');
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -125,9 +125,9 @@ namespace vcpkg::Build::Command
     {
         // Build only takes a single package and all dependencies must already be installed
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
-        const std::string command_argument = args.command_arguments.at(0);
-        const FullPackageSpec spec =
-            Input::check_and_get_full_package_spec(command_argument, default_triplet, COMMAND_STRUCTURE.example_text);
+        std::string first_arg = args.command_arguments.at(0);
+        const FullPackageSpec spec = Input::check_and_get_full_package_spec(
+            std::move(first_arg), default_triplet, COMMAND_STRUCTURE.example_text);
         Input::check_triplet(spec.package_spec.triplet(), paths);
         if (!spec.features.empty() && !GlobalState::feature_packages)
         {
@@ -362,24 +362,31 @@ namespace vcpkg::Build
         }
 
         const Toolset& toolset = paths.get_toolset(pre_build_info);
+
+        std::vector<System::CMakeVariable> variables {
+            {"CMD", "BUILD"},
+            {"PORT", config.scf.core_paragraph->name},
+            {"CURRENT_PORT_DIR", config.port_dir},
+            {"TARGET_TRIPLET", spec.triplet().canonical_name()},
+            {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+            {"VCPKG_USE_HEAD_VERSION",
+            Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+            {"DOWNLOADS", paths.downloads},
+            {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+            {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
+            {"FEATURES", Strings::join(";", config.feature_list)},
+            {"ALL_FEATURES", all_features},
+        };
+
+        if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+        {
+            variables.push_back({"GIT", git_exe_path});
+        }
+
         const std::string cmd_launch_cmake = System::make_cmake_cmd(
             cmake_exe_path,
             paths.ports_cmake,
-            {
-                {"CMD", "BUILD"},
-                {"PORT", config.scf.core_paragraph->name},
-                {"CURRENT_PORT_DIR", config.port_dir},
-                {"TARGET_TRIPLET", spec.triplet().canonical_name()},
-                {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                {"VCPKG_USE_HEAD_VERSION",
-                Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"DOWNLOADS", paths.downloads},
-                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
-                {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
-                {"GIT", git_exe_path},
-                {"FEATURES", Strings::join(";", config.feature_list)},
-                {"ALL_FEATURES", all_features},
-            });
+            variables);
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
         if (!command.empty())
@@ -506,7 +513,7 @@ namespace vcpkg::Build
                 std::string key = Strings::format("file_%03d", counter++);
                 if (GlobalState::debugging)
                 {
-                    System::println("[DEBUG] mapping %s from %s", key, port_file.string());
+                    System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
                 }
                 abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1") });
             }
@@ -531,12 +538,12 @@ namespace vcpkg::Build
 
         if (GlobalState::debugging)
         {
-            System::println("[DEBUG] <abientries>");
+            System::print2("[DEBUG] <abientries>\n");
             for (auto&& entry : abi_tag_entries)
             {
-                System::println("[DEBUG] %s|%s", entry.key, entry.value);
+                System::print2("[DEBUG] ", entry.key, "|", entry.value, "\n");
             }
-            System::println("[DEBUG] </abientries>");
+            System::print2("[DEBUG] </abientries>\n");
         }
 
         auto abi_tag_entries_missing = abi_tag_entries;
@@ -552,9 +559,10 @@ namespace vcpkg::Build
             return AbiTagAndFile{Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
         }
 
-        System::println(
-            "Warning: binary caching disabled because abi keys are missing values:\n%s",
-            Strings::join("", abi_tag_entries_missing, [](const AbiEntry& e) { return "    " + e.key + "\n"; }));
+        System::print2(
+            "Warning: binary caching disabled because abi keys are missing values:\n",
+            Strings::join("", abi_tag_entries_missing, [](const AbiEntry& e) { return "    " + e.key + "\n"; }),
+            "\n");
 
         return nullopt;
     }
@@ -594,10 +602,8 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_clean(Strings::format(R"("%s" a "%s" "%s\*" >nul)",
-                                                  seven_zip_exe.u8string(),
-                                                  destination.u8string(),
-                                                  source.u8string()));
+        System::cmd_execute_clean(Strings::format(
+            R"("%s" a "%s" "%s\*" >nul)", seven_zip_exe.u8string(), destination.u8string(), source.u8string()));
 #else
         System::cmd_execute_clean(Strings::format(
             R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
@@ -664,7 +670,7 @@ namespace vcpkg::Build
 
             if (fs.exists(archive_path))
             {
-                System::println("Using cached binary package: %s", archive_path.u8string());
+                System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
 
                 decompress_archive(paths, spec, archive_path);
 
@@ -678,17 +684,17 @@ namespace vcpkg::Build
             {
                 if (config.build_package_options.fail_on_tombstone == FailOnTombstone::YES)
                 {
-                    System::println("Found failure tombstone: %s", archive_tombstone_path.u8string());
+                    System::print2("Found failure tombstone: ", archive_tombstone_path.u8string(), "\n");
                     return BuildResult::BUILD_FAILED;
                 }
                 else
                 {
-                    System::println(
-                        System::Color::warning, "Found failure tombstone: %s", archive_tombstone_path.u8string());
+                    System::print2(
+                        System::Color::warning, "Found failure tombstone: ", archive_tombstone_path.u8string(), "\n");
                 }
             }
 
-            System::println("Could not locate cached archive: %s", archive_path.u8string());
+            System::print2("Could not locate cached archive: ", archive_path.u8string(), "\n");
 
             ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
                 paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
@@ -709,13 +715,13 @@ namespace vcpkg::Build
                 fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
                 if (ec)
                 {
-                    System::println(System::Color::warning,
-                                    "Failed to store binary cache %s: %s",
-                                    archive_path.u8string(),
-                                    ec.message());
+                    System::printf(System::Color::warning,
+                                   "Failed to store binary cache %s: %s\n",
+                                   archive_path.u8string(),
+                                   ec.message());
                 }
                 else
-                    System::println("Stored binary cache: %s", archive_path.u8string());
+                    System::printf("Stored binary cache: %s\n", archive_path.u8string());
             }
             else if (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED)
             {
@@ -731,7 +737,10 @@ namespace vcpkg::Build
                     {
                         if (log_file.path().extension() == ".log")
                         {
-                            fs.copy_file(log_file.path(), tmp_log_path_destination / log_file.path().filename(), fs::stdfs::copy_options::none, ec);
+                            fs.copy_file(log_file.path(),
+                                         tmp_log_path_destination / log_file.path().filename(),
+                                         fs::stdfs::copy_options::none,
+                                         ec);
                         }
                     }
 
