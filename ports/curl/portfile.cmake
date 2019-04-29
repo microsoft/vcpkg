@@ -40,6 +40,19 @@ if("mbedtls" IN_LIST FEATURES)
     set(USE_MBEDTLS ON)
 endif()
 
+set(USE_DARWINSSL OFF)
+set(DARWINSSL_OPTIONS)
+if("darwinssl" IN_LIST FEATURES)
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        message(FATAL_ERROR "darwinssl is not supported on non-Apple platforms")
+    endif()
+    set(USE_DARWINSSL ON)
+    set(DARWINSSL_OPTIONS
+        -DCURL_CA_PATH=none
+    )
+endif()
+
+
 # SSH
 set(USE_LIBSSH2 OFF)
 if("ssh" IN_LIST FEATURES)
@@ -79,6 +92,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
+        ${DARWINSSL_OPTIONS}
         ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
@@ -87,6 +101,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
         -DCMAKE_USE_MBEDTLS=${USE_MBEDTLS}
+        -DCMAKE_USE_DARWINSSL=${USE_DARWINSSL}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
     OPTIONS_RELEASE
