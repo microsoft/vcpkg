@@ -17,13 +17,21 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.4-1
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/add-link-libraries.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(BUILD_SHARED ON)
 else()
     set(BUILD_SHARED OFF)
+endif()
+
+if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+    set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
+else()
+    set(OPTION_USE_GL)
 endif()
 
 vcpkg_configure_cmake(
@@ -35,6 +43,7 @@ vcpkg_configure_cmake(
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=${BUILD_SHARED}
+        ${OPTION_USE_GL}
 )
 
 vcpkg_install_cmake()
