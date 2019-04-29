@@ -6,13 +6,10 @@ vcpkg_from_github(
     REF v10.4.0
     SHA512 8a82074bd219bbedbe56c2187afe74a55a252b0654a675c64d1f75e62353b0874e7b405d9f677fadb297e955d11aea50a07e8f5f3546be3c4ddab76fe356a51e 
     HEAD_REF master
+    PATCHES
+        cmake_fix.patch
+        fix-build-error-in-windows.patch
 )
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake_fix.patch
-)
-
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
@@ -25,14 +22,17 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED}
         -DCMAKE_ENABLE_EXPORT=OFF
+        -DENABLE_V10_COMPATIBILITY=ON
+        -DMOOS_POCO_DLL=${BUILD_SHARED}
+        -DFoundation_EXPORTS=ON
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/MOOS")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/MOOSDB")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/MOOSDB" OR (WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/MOOSDB ${CURRENT_PACKAGES_DIR}/tools/MOOS/MOOSDB)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/atm ${CURRENT_PACKAGES_DIR}/tools/MOOS/atm)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/gtm ${CURRENT_PACKAGES_DIR}/tools/MOOS/gtm)
@@ -56,5 +56,3 @@ file(COPY
 file(RENAME
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/GPLCore.txt
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
-
