@@ -17,32 +17,20 @@ index 7b1a903..c7f7b50 100644
  add_executable(${EXECNAME} ${SRCS})
  target_link_libraries(${EXECNAME} MOOS)
  
-diff --git a/Core/libMOOS/CMakeLists.txt b/Core/libMOOS/CMakeLists.txt
-index 50c2f0a..e316121 100644
---- a/Core/libMOOS/CMakeLists.txt
-+++ b/Core/libMOOS/CMakeLists.txt
-@@ -152,9 +152,15 @@ elseif(WIN32)
-         comctl32
-         ws2_32   # to support IPv6
-     )
--
-+    
-     # XP does not support IPv6. Therefore MOOS only supports Vista and later.
-     target_compile_definitions(MOOS PUBLIC _WIN32_WINNT=0x600)
-+    if (${MOOS_POCO_DLL})
-+        target_compile_definitions(MOOS PUBLIC MOOS_POCO_DLL)
-+    endif()
-+    if (${Foundation_EXPORTS})
-+        target_compile_definitions(MOOS PUBLIC Foundation_EXPORTS)
-+    endif()
- endif()
+diff --git a/Core/MOOSDB/testing/CMakeLists.txt b/Core/MOOSDB/testing/CMakeLists.txt
+index 8642b1a..f00e0d8 100644
+--- a/Core/MOOSDB/testing/CMakeLists.txt
++++ b/Core/MOOSDB/testing/CMakeLists.txt
+@@ -16,7 +16,11 @@ add_executable(capture_test CaptureTest.cpp)
+ target_link_libraries(capture_test MOOS)
  
- #do we want to disable host name lookups?
-@@ -202,6 +208,7 @@ install(
- # install libraries
- install(TARGETS MOOS
-   EXPORT MOOS
-+  RUNTIME DESTINATION bin
-   LIBRARY DESTINATION lib
-   ARCHIVE DESTINATION lib
- )
+ add_executable(cmp2sock cmp2sock.cpp)
+-target_link_libraries(cmp2sock MOOS)
++if (WIN32)
++    target_link_libraries(cmp2sock MOOS Ws2_32 wsock32 comctl32)
++else()
++    target_link_libraries(cmp2sock MOOS)
++endif()
+ 
+ add_executable(reg_test RegisterTest.cpp)
+ target_link_libraries(reg_test MOOS)
