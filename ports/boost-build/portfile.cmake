@@ -14,6 +14,9 @@ vcpkg_from_github(
     REF boost-1.69.0
     SHA512 e8d89e75c83a08bab29f52b5100fccf1d2ddf492a532ae4cb8121a5f49819aebb8157d1a1fd7d514bd8a0fe444e5ebb1103b10c8579d5c234ab81110d9c334a8
     HEAD_REF master
+	PATCHES
+	    # Add the support of arm64-windows
+        arm64msvc.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
