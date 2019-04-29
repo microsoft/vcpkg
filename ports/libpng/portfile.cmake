@@ -18,17 +18,23 @@ else()
     set(PNG_SHARED_LIBS OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
+set(configure_options
         -DPNG_STATIC=${PNG_STATIC_LIBS}
         -DPNG_SHARED=${PNG_SHARED_LIBS}
         -DPNG_TESTS=OFF
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=ON
-        -DSKIP_INSTALL_SYMLINK=ON
+        -DSKIP_INSTALL_SYMLINK=ON)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL iOS)
+    list(APPEND configure_options -DPNG_HARDWARE_OPTIMIZATIONS=OFF)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${configure_options}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )

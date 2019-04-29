@@ -12,18 +12,24 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-space.patch
             fix-arm64-config.patch)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
+set(configure_options
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
-        -DPCRE2_SUPPORT_JIT=ON
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL iOS)
+    list(APPEND configure_options -DPCRE2_SUPPORT_JIT=OFF)
+else()
+    list(APPEND configure_options -DPCRE2_SUPPORT_JIT=ON)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${configure_options})
 vcpkg_install_cmake()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/pcre2.h PCRE2_H)
