@@ -16,7 +16,7 @@ index 4a3e492..f7e22a5 100644
 
  # TODO NOCOMMIT
 -#find_package(sqlite3)
-+find_package(sqlite3 REQUIRED)
++find_package(sqlite3 CONFIG)
 +target_link_libraries(SQLiteCpp PRIVATE sqlite3)
  #if(sqlite3_VERSION VERSION_LESS "3.19")
  #    set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")

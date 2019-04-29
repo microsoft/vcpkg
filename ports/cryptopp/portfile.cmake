@@ -11,13 +11,14 @@ vcpkg_from_github(
   PATCHES
     cmake.patch
     simon-speck.patch
+    missing-flags.patch
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_8_0_0
-  SHA512 e3240882748f5306442a3feca5b0718c6ee20a44596f522c6c3ae35e0c81d56412b5b223b2bcf2eb74a8ce4c08a73b4c25f4d005417bdc68f9309708cc5c5ddb
+  REF CRYPTOPP_8_1_0
+  SHA512 2b09b30c53a8f95a9c3204a48867174c70a1e97171854122f4d8454b25d5af9b94cab2c210dd9857c7db66df881849183e82b6155b80bfef6e69dac8efd2ea9a
   HEAD_REF master
   PATCHES patch.patch
 )
