@@ -19,31 +19,30 @@ set( jsonnet_sources
   core/static_analysis.cpp
   core/string_utils.cpp
   core/vm.cpp
+  third_party/md5/md5.cpp
 )
 
 include_directories(third_party/md5 include cpp core stdlib)
 
-add_library(md5 STATIC third_party/md5/md5.cpp)
+add_library(jsonnet ${jsonnet_sources})
+target_link_libraries(jsonnet)
 
-add_library(libjsonnet ${jsonnet_sources})
-target_link_libraries(libjsonnet md5)
-
-add_library(libjsonnet++ cpp/libjsonnet++.cpp)
-target_link_libraries(libjsonnet++ libjsonnet)
-
-add_executable(jsonnet cmd/jsonnet.cpp)
-target_link_libraries(jsonnet libjsonnet)
-
+add_library(jsonnet++ cpp/libjsonnet++.cpp)
+target_link_libraries(jsonnet++ jsonnet)
+ 
+add_executable(jsonnet-bin cmd/jsonnet.cpp)
+target_link_libraries(jsonnet-bin jsonnet)
+set_target_properties(jsonnet-bin PROPERTIES OUTPUT_NAME jsonnet)
 
 install(
-  TARGETS libjsonnet libjsonnet++
+  TARGETS jsonnet jsonnet++
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 if(NOT DISABLE_INSTALL_TOOLS)
   install (
-    TARGETS jsonnet
+    TARGETS jsonnet-bin
     RUNTIME DESTINATION tools/jsonnet
   )
 endif()
