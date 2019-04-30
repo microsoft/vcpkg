@@ -9,9 +9,9 @@ find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_package(SDL2 CONFIG REQUIRED)
 
 if (BUILD_SHARED_LIBS)
-   set(SDL_LIBRARY SDL2::SDL2-static)
-else()
     set(SDL_LIBRARY SDL2::SDL2)
+else()
+    set(SDL_LIBRARY SDL2::SDL2-static)
 endif()
 
 add_library(SDL2_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c version.rc)
