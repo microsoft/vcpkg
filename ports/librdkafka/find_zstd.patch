@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 76e92b70..38b7d5a9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,8 +55,8 @@ endif()
+ # }
+ 
+ # ZSTD {
+-find_library (ZSTD zstd)
+-if(ZSTD)
++find_package(Zstd)
++if(ZSTD_FOUND)
+   set(with_zstd_default ON)
+ else()
+   set(with_zstd_default OFF)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index aecb3917..52ba9fa4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -169,8 +169,6 @@ if(WITH_ZLIB)
+ endif()
+ 
+ if(WITH_ZSTD)
+-  find_library (ZSTD_LIBRARY zstd)
+-  find_path (ZSTD_INCLUDE_DIR NAMES zstd.h)
+   target_link_libraries(rdkafka PUBLIC ${ZSTD_LIBRARY})
+   target_include_directories(rdkafka PUBLIC ${ZSTD_INCLUDE_DIR})
+   message(STATUS "Found ZSTD: ${ZSTD_LIBRARY}")

@@ -1,5 +1,5 @@
 Source: librdkafka
-Version: 2019-04-16
+Version: 2019-04-30
 Description: The Apache Kafka C/C++ library 
 Default-Features: ssl
 

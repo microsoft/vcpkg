@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF 384565a66b85efdce413d2e22f60e72f1b7d739a
-    SHA512 c6ba0f6246465526c3ecd7c23bf24466863a0fbe6c34eb7d89a6ee2d7b28a4e5daba0d85e3d5774f7c65c7b4e8c9c829a458f83f7540d480fed931c7fbffd5d2
+    REF 9b3fce7b882b43302fb983d0e0e555225e672f92
+    SHA512 7edda198fb10a3a005fe4f47af55940051cdb7a350b8f06e7186e70ee9f3b44c7468134f42867303184a807a274507e4fa5b2f7997cd2fd5876993de04949140
     HEAD_REF master
+    PATCHES
+        find_zstd.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
@@ -33,6 +35,11 @@ if("zstd" IN_LIST FEATURES)
 else()
     set(WITH_ZSTD OFF)
 endif()
+
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/FindZstd.cmake
+    DESTINATION ${SOURCE_PATH}/packaging/cmake/Modules
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -65,6 +72,19 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(
     CONFIG_PATH lib/cmake/RdKafka
     TARGET_PATH share/rdkafka
+)
+
+if(ENABLE_LZ4_EXT)
+    vcpkg_replace_string(
+        ${CURRENT_PACKAGES_DIR}/share/rdkafka/RdKafkaConfig.cmake
+        "find_dependency(LZ4)"
+        "include(\"\${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake\")\n  find_dependency(LZ4)"
+    )
+endif()
+
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/FindZstd.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/rdkafka
 )
 
 file(REMOVE_RECURSE
