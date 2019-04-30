@@ -6,9 +6,9 @@ find_package(SDL2 CONFIG REQUIRED)
 set(SDL_MIXER_INCLUDES ${SDL_INCLUDE_DIR})
 
 if (BUILD_SHARED_LIBS)
-   set(SDL_LIBRARY SDL2::SDL2-static)
-else()
     set(SDL_LIBRARY SDL2::SDL2)
+else()
+    set(SDL_LIBRARY SDL2::SDL2-static)
 endif()
 
 set(SDL_MIXER_LIBRARIES ${SDL_LIBRARY})
