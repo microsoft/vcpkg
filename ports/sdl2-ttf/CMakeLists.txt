@@ -6,9 +6,9 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
 
 if (BUILD_SHARED_LIBS)
-   set(SDL_LIBRARY SDL2::SDL2-static)
-else()
     set(SDL_LIBRARY SDL2::SDL2)
+else()
+    set(SDL_LIBRARY SDL2::SDL2-static)
 endif()
 
 add_library(SDL2_ttf SDL_ttf.c version.rc)
