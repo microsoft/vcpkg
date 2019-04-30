@@ -5,10 +5,6 @@ Build-Depends: boost-property-tree, libzip[openssl]
 
 Feature: curl
 Build-Depends: curl
-Description: Allows loading FMUs from URLs
-
-Feature: curl
-Build-Depends: curl
 Description: Allows loading FMUs from URL
 
 Feature: odeint
