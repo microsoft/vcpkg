@@ -21,6 +21,11 @@ include_directories(APPEND "${CMAKE_CURRENT_LIST_DIR}/src")
 file(GLOB SOURCES src/*.c src/eventing/*.c)
 
 add_library(uSockets ${SOURCES})
+
+if (${LIBUS_USE_LIBUV})
+  target_compile_definitions(uSockets PRIVATE -DLIBUS_USE_LIBUV)
+endif()
+
 target_compile_definitions(uSockets PRIVATE ${NOT_USE_OPENSSL} ${USE_OPENSSL})
 target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${LIBUV_INCLUDE_DIR} )
 target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY})

@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+IF (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+   set(USE_LIBUV ON)
+EndIF ()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uSockets
@@ -17,6 +21,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS 
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+        -DLIBUS_USE_LIBUV=${USE_LIBUV}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
 )
