@@ -303,6 +303,10 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
+!triplets/arm64-ios.cmake
+!triplets/arm-ios.cmake
+!triplets/x64-ios.cmake
+!triplets/x86-ios.cmake
 *.exe
 *.zip
 
