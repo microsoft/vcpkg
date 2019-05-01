@@ -5,17 +5,11 @@ find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
 
-if (BUILD_SHARED_LIBS)
-    set(SDL_LIBRARY SDL2::SDL2)
-else()
-    set(SDL_LIBRARY SDL2::SDL2-static)
-endif()
-
 add_library(SDL2_ttf SDL_ttf.c version.rc)
 
 set_target_properties(SDL2_ttf PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_include_directories(SDL2_ttf PRIVATE ${SDL_INCLUDE_DIR}/SDL2 ${FREETYPE_INCLUDE_DIRS})
-target_link_libraries(SDL2_ttf ${SDL_LIBRARY} ${FREETYPE_LIBRARIES})
+target_link_libraries(SDL2_ttf SDL2:SDL2 ${FREETYPE_LIBRARIES})
 
 install(TARGETS SDL2_ttf
     EXPORT SDL2_ttf

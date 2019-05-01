@@ -4,12 +4,6 @@ project(SDL2_GFX C)
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_package(SDL2 CONFIG REQUIRED)
 
-if (BUILD_SHARED_LIBS)
-    set(SDL_LIBRARY SDL2::SDL2)
-else()
-    set(SDL_LIBRARY SDL2::SDL2-static)
-endif()
-
 # builtin formats
 set(SDL_GFX_DEFINES WIN32)
 if(BUILD_SHARED_LIBS)
@@ -24,7 +18,7 @@ add_library(SDL2_gfx
 
 target_compile_definitions(SDL2_gfx PRIVATE ${SDL_GFX_DEFINES})
 target_include_directories(SDL2_gfx PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
-target_link_libraries(SDL2_gfx PRIVATE ${SDL_LIBRARY})
+target_link_libraries(SDL2_gfx PRIVATE SDL2::SDL2)
 
 install(TARGETS SDL2_gfx
     RUNTIME DESTINATION bin
