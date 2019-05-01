@@ -50,7 +50,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction(InstalledPackageView&& spghs,
                           const std::set<std::string>& features,
                           const RequestType& request_type,
-                          const Build::BuildPackageOptions&);
+                          const Build::BuildPackageOptions& build_options);
 
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& scf,
@@ -63,7 +63,7 @@ namespace vcpkg::Dependencies
                           const std::set<std::string>& features,
                           const RequestType& request_type,
                           std::vector<PackageSpec>&& dependencies,
-                          const Build::BuildPackageOptions&);
+                          const Build::BuildPackageOptions& build_options);
 
         std::string displayname() const;
 

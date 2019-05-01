@@ -4,8 +4,6 @@
 #include <vcpkg/packagespecparseresult.h>
 #include <vcpkg/triplet.h>
 
-#include <unordered_set>
-
 namespace vcpkg
 {
     struct ParsedSpecifier

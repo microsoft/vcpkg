@@ -59,7 +59,7 @@ namespace vcpkg
         return f_specs;
     }
 
-    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<FullPackageSpec> &specs)
+    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<FullPackageSpec>& specs)
     {
         std::vector<FeatureSpec> ret;
         for (auto&& spec : specs)
@@ -68,7 +68,6 @@ namespace vcpkg
             for (auto&& feature : spec.features)
                 ret.emplace_back(spec.package_spec, feature);
         }
-
         return ret;
     }
 
