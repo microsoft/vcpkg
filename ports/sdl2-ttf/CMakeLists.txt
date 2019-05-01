@@ -28,5 +28,5 @@ if(NOT DEFINED SDL_TTF_SKIP_HEADERS)
 endif()
 
 message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
+message(STATUS "  " SDL2::SDL2)
 message(STATUS "  " ${FREETYPE_LIBRARIES})
