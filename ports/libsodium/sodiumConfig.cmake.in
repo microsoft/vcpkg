@@ -10,6 +10,7 @@
 #
 
 include(FindPackageHandleStandardArgs)
+include(SelectLibraryConfigurations)
 
 @PACKAGE_INIT@
 
@@ -33,11 +34,8 @@ if (NOT TARGET @TARGET_NAME@)
     else ()
         get_target_property(@PROJECT_NAME@_DLL_RELEASE @TARGET_NAME@ IMPORTED_LOCATION_RELEASE)
     endif ()
-    
-    set(@PROJECT_NAME@_LIBRARIES
-        debug ${@PROJECT_NAME@_LIBRARY_DEBUG}
-        optimized ${@PROJECT_NAME@_LIBRARY_RELEASE}
-    )
+
+    select_library_configurations(@PROJECT_NAME@)
 endif ()
 
 find_package_handle_standard_args(
@@ -50,8 +48,6 @@ find_package_handle_standard_args(
 )
 
 mark_as_advanced(@PROJECT_NAME@_INCLUDE_DIR)
-mark_as_advanced(@PROJECT_NAME@_LIBRARY_DEBUG)
-mark_as_advanced(@PROJECT_NAME@_LIBRARY_RELEASE)
 
 if (WIN32)
     mark_as_advanced(@PROJECT_NAME@_DLL_DEBUG)
