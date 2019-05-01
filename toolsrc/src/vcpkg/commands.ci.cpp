@@ -209,18 +209,17 @@ namespace vcpkg::Commands::CI
     {
         std::unordered_map<PackageSpec, Build::BuildResult> known;
         std::vector<Dependencies::AnyAction> action_plan;
-        std::unordered_set<FullPackageSpec> unknown;
     };
 
     static CIPortsResults find_unknown_ports_for_ci(
-        const VcpkgPaths &paths,
-        const std::set<std::string> &exclusions,
-        const std::vector<FeatureSpec> &feature_specs,
+        const VcpkgPaths& paths,
+        const std::set<std::string>& exclusions,
+        const std::vector<FeatureSpec>& feature_specs,
         const bool purge_tombstones,
-        const Dependencies::CreateInstallPlanOptions &install_options,
-        const Dependencies::PortFileProvider &provider,
-        const StatusParagraphs &status_db,
-        int max_install_count)
+        const Dependencies::CreateInstallPlanOptions& install_options,
+        const Dependencies::PortFileProvider& provider,
+        const StatusParagraphs& status_db,
+        const Optional<unsigned>& max_install_count)
     {
         CIPortsResults results;
 
@@ -239,8 +238,9 @@ namespace vcpkg::Commands::CI
         vcpkg::Cache<Triplet, Build::PreBuildInfo> pre_build_info_cache;
 
         std::unordered_map<PackageSpec, std::string> abi_tag_map;
+        std::vector<FullPackageSpec> unknown;
 
-        //Create pgraph and serialize based on all the port + features we want to install
+        //Create pgraph and serialize based on all the ports + features
         auto action_plan =
             Dependencies::create_feature_install_plan(
                     provider,
@@ -248,18 +248,6 @@ namespace vcpkg::Commands::CI
                     status_db,
                     install_options,
                     build_options);
-
-        if (max_install_count == -1)
-        {
-            max_install_count = action_plan.size();
-        }
-
-        //Remove any unnecessary ports from the build plan.
-        results.action_plan =
-            {std::move_iterator(action_plan.begin()),
-                action_plan.size() > max_install_count ? 
-                    std::move_iterator(action_plan.begin()) + max_install_count :
-                    std::move_iterator(action_plan.end())};
 
         auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -273,13 +261,13 @@ namespace vcpkg::Commands::CI
         }
 
         //For each computed action
-        for (const Dependencies::AnyAction &action : results.action_plan)
+        for (const Dependencies::AnyAction& action : action_plan)
         {
             bool will_build = false;
             std::string state;
             std::string abi;
 
-            if (const InstallPlanAction *install_action = action.install_action.get())
+            if (const InstallPlanAction* install_action = action.install_action.get())
             {
                 //The computed action is actually an installation action
                 if (Util::Sets::contains(exclusions, install_action->spec.name()))
@@ -290,9 +278,9 @@ namespace vcpkg::Commands::CI
                 }
                 else if (std::any_of(install_action->computed_dependencies.begin(),
                             install_action->computed_dependencies.end(),
-                            [&](const PackageSpec &spec) {
-                        if (auto known_result = results.known.find(spec);
-                            known_result != results.known.end())
+                            [&](const PackageSpec& spec) {
+                        auto known_result = results.known.find(spec);
+                        if (known_result != results.known.end())
                         {
                             switch (known_result->second)
                             {
@@ -314,27 +302,27 @@ namespace vcpkg::Commands::CI
                 else
                 {
                     //There are no known missing dependencies
-                    if (const InstalledPackageView *ipv = install_action->installed_package.get();
-                            ipv && ipv->core && !ipv->core->package.abi.empty())
+                    const InstalledPackageView* ipv = install_action->installed_package.get();
+                    if (ipv && ipv->core && !ipv->core->package.abi.empty())
                     {
                         //If port is already installed check if the abi tag
                         //is already computed.
                         abi = ipv->core->package.abi;
                         abi_tag_map.emplace(install_action->spec, ipv->core->package.abi);
                     }
-                    else if (const SourceControlFile *scf = install_action->source_control_file.get())
+                    else if (const SourceControlFile* scf = install_action->source_control_file.get())
                     {
                         //Calculate the abi tag
                         const Triplet triplet = install_action->spec.triplet();
                         const Build::BuildPackageConfig build_config {
                             *scf,
-                                triplet,
-                                paths.port_dir(install_action->spec),
-                                build_options,
-                                install_action->feature_list};
+                            triplet,
+                            paths.port_dir(install_action->spec),
+                            build_options,
+                            install_action->feature_list};
 
                         const Build::PreBuildInfo &pre_build_info = pre_build_info_cache.get_lazy(
-                                triplet, [&](){ return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
+                            triplet, [&](){ return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
 
                         //Find the stored abi_tag for each of the dependencies.
                         //We should always be able to find the tags but if not
@@ -343,9 +331,10 @@ namespace vcpkg::Commands::CI
                         //matter what.
                         const std::vector<Build::AbiEntry> dependency_abis =
                             Util::fmap(install_action->computed_dependencies,
-                                [&](const PackageSpec &spec) -> Build::AbiEntry
+                                [&](const PackageSpec& spec) -> Build::AbiEntry
                                 {
-                                    if (auto it = abi_tag_map.find(spec); it != abi_tag_map.end())
+                                    auto it = abi_tag_map.find(spec); 
+                                    if (it != abi_tag_map.end())
                                     {
                                         //We've already computed the abi tag.
                                         return {spec.name(), it->second};
@@ -360,7 +349,7 @@ namespace vcpkg::Commands::CI
                         Optional<Build::AbiTagAndFile> maybe_tag_and_file =
                             Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis); 
 
-                        if (const Build::AbiTagAndFile *tag_and_file = maybe_tag_and_file.get())
+                        if (const Build::AbiTagAndFile* tag_and_file = maybe_tag_and_file.get())
                         {
                             abi = tag_and_file->tag;
                             abi_tag_map.emplace(install_action->spec, abi);
@@ -390,7 +379,7 @@ namespace vcpkg::Commands::CI
                         //We actually need to build this port.
                         state = "build";
                         will_build = true;
-                        results.unknown.emplace(
+                        unknown.emplace_back(
                                 install_action->spec,
                                 install_action->feature_list.begin(),
                                 install_action->feature_list.end());
@@ -404,6 +393,34 @@ namespace vcpkg::Commands::CI
                             abi);
                 }
             }
+        }
+
+        //Create pgraph and serialize based on all the port we actually need to
+        //build.
+        action_plan =
+            Dependencies::create_feature_install_plan(
+                    provider,
+                    FullPackageSpec::to_feature_specs(unknown),
+                    status_db,
+                    install_options,
+                    build_options);
+
+        if (max_install_count.has_value())
+        {
+            using plan_itr = decltype(action_plan)::iterator;
+            unsigned max_install_count_val =
+                max_install_count.value_or_exit(VCPKG_LINE_INFO);
+            //Remove any unnecessary ports from the build plan based on --count
+            //parameter.
+            results.action_plan =
+                {std::move_iterator<plan_itr>(action_plan.begin()),
+                action_plan.size() > max_install_count_val ? 
+                    std::move_iterator<plan_itr>(action_plan.begin()) + max_install_count_val :
+                    std::move_iterator<plan_itr>(action_plan.end())};
+        }
+        else
+        {
+            results.action_plan = std::move(action_plan);
         }
 
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
@@ -428,11 +445,11 @@ namespace vcpkg::Commands::CI
             exclusions_set.insert(exclusions.begin(), exclusions.end());
         }
 
-        int max_install_count = -1;
+        Optional<unsigned> max_install_count;
         auto it_count = options.settings.find(OPTION_COUNT);
         if (it_count != options.settings.end())
         {
-            max_install_count = std::stoi(it_count->second);
+            max_install_count = Optional<unsigned>(std::stoul(it_count->second));
         }
 
         const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
@@ -527,11 +544,12 @@ namespace vcpkg::Commands::CI
                 }
 
                 // Adding results for ports that were not built because they have known states
-                for (auto&& [spec, result] : split_specs.known)
+                for (const std::pair<PackageSpec, Build::BuildResult>& known : split_specs.known)
                 {
+                    System::print2("Here's a known spec");
                     xunitTestResults.add_test_results(
-                        spec.to_string(),
-                        result,
+                        known.first.to_string(),
+                        known.second,
                         Chrono::ElapsedTime{},
                         "");
                 }
