@@ -624,6 +624,42 @@ namespace vcpkg::Dependencies
         }
     }
 
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
+                                                       const std::vector<FeatureSpec>& specs,
+                                                       const StatusParagraphs& status_db)
+    {
+        MapPortFileProvider provider(map);
+        return create_feature_install_plan(provider, specs, status_db);
+    }
+
+    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
+    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
+                                                       const std::vector<FeatureSpec>& specs,
+                                                       const StatusParagraphs& status_db,
+                                                       const CreateInstallPlanOptions& install_options,
+                                                       const Build::BuildPackageOptions& build_options)
+    {
+        std::unordered_set<std::string> prevent_default_features;
+        for (auto&& spec : specs)
+        {
+            // When "core" is explicitly listed, default features should not be installed.
+            if (spec.feature() == "core") prevent_default_features.insert(spec.name());
+        }
+
+        PackageGraph pgraph(provider, status_db);
+        for (auto&& spec : specs)
+        {
+            // If preventing default features, ignore the automatically generated "" references
+            if (spec.feature().empty() && Util::Sets::contains(prevent_default_features, spec.name())) continue;
+            pgraph.install(spec, prevent_default_features);
+        }
+
+        return pgraph.serialize(install_options, build_options);
+    }
+
     /// <param name="prevent_default_features">
     /// List of package names for which default features should not be installed instead of the core package (e.g. if
     /// the user is currently installing specific features of that package).

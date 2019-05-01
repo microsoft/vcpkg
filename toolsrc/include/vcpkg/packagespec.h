@@ -115,8 +115,7 @@ namespace vcpkg
             features(begin, end)
         {}
 
-        template<class T>
-        static std::unordered_set<FeatureSpec> to_feature_specs(const T& specs);
+        static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
 
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
                                                                               const Triplet& default_triplet);
@@ -202,21 +201,4 @@ namespace std
             return left.package_spec == right.package_spec && left.features == right.features;
         }
     };
-}
-
-namespace vcpkg
-{
-    template<class T>
-    std::unordered_set<FeatureSpec> FullPackageSpec::to_feature_specs(const T &specs)
-    {
-        std::unordered_set<FeatureSpec> ret;
-        for (auto&& spec : specs)
-        {
-            ret.emplace(spec.package_spec, "");
-            for (auto&& feature : spec.features)
-                ret.emplace(spec.package_spec, feature);
-        }
-
-        return ret;
-    }
 }
