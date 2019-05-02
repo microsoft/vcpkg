@@ -16,14 +16,6 @@ if(MSVC)
 endif()
 
 if(UNIX)
-  message(STATUS "Running ${SHELL_EXECUTABLE} ./configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/")
-  add_custom_target(
-    zziplib_autotools
-    ${SHELL_EXECUTABLE} ./configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-  message(STATUS "Autotools should have finished their job")
-
   # Find autotools output
   set(ZZLIB_AUTOOLS_INCLUDE_DIRS)
   file(GLOB CHILDREN RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/*")
@@ -81,9 +73,6 @@ set(SRCS zzip/dir.c
 )
 
 add_library(zziplib ${SRCS} ${HEADERS})
-if(UNIX)
-  add_dependencies(zziplib zziplib_autotools)
-endif()
 
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(zziplib PRIVATE -DZZIPLIB_EXPORTS)
