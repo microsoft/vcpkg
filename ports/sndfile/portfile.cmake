@@ -22,6 +22,10 @@ else()
     set(SNDFILE_WITH_EXTERNAL_LIBS OFF)
 endif()
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_EXE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
