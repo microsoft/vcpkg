@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/ensmallen
-    REF ensmallen-1.14.0
-    SHA512 a0b3660a0d01f5bc79fe302f08161a0b4d16fa006cc1d95cf24e046d2a4ab48de49b7644023837ed93426b982fbd0861d6c2774c0a80f4d2392ce494291ff70a
+    REF ensmallen-1.14.2
+    SHA512 8aa8d00d80579c619e417d8fbc17c78c867f916161e3c412c3af24c1b7b9816c9e6faee981931e1591a45db0c797a081d45f1dfc3ea396a610ee2da55232b265
     HEAD_REF master
 	PATCHES
 		disable_tests.patch

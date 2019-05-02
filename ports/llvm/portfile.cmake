@@ -46,6 +46,7 @@ vcpkg_configure_cmake(
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        -DLLVM_PARALLEL_LINK_JOBS=1
 )
 
 vcpkg_install_cmake()
@@ -62,9 +63,29 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE ${DEBUG_EXE})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clang TARGET_PATH share/clang)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/llvm)
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-release.cmake RELEASE_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/tools/llvm" RELEASE_MODULE "${RELEASE_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-release.cmake "${RELEASE_MODULE}")
+
+    file(READ ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake RELEASE_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/tools/llvm" RELEASE_MODULE "${RELEASE_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake "${RELEASE_MODULE}")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-debug.cmake DEBUG_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin" "\${_IMPORT_PREFIX}/tools/llvm" DEBUG_MODULE "${DEBUG_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-debug.cmake "${DEBUG_MODULE}")
+
+    file(READ ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake DEBUG_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin" "\${_IMPORT_PREFIX}/tools/llvm" DEBUG_MODULE "${DEBUG_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake "${DEBUG_MODULE}")
+endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

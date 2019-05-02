@@ -3,9 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stlab/libraries
-    REF v1.3.3
-    SHA512 2c0eec5638b40f8285cc3b0d756df619b53ba44421c47713aaf45196100765a31a6aea3c5bedba4fcc44494b74e3f0a919271601e717e7f274fe15beb93f8889
-    HEAD_REF master
+    REF v1.4.1
+    SHA512 e9da6f2c570397842f5e73a681f49c5a77977fda430ec730eed6f19d04161172829b7f1adcafd416f0a3f35ea8717ca14e9b935b5ec8fa423e4951c3ba961c7a
+    HEAD_REF develop    
+    PATCHES dont-require-testing.patch
 )
 
 vcpkg_configure_cmake(

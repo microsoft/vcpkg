@@ -86,8 +86,12 @@ function(qt_modular_build_library SOURCE_PATH)
     endif()
 
     file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    endif()
     foreach(PRL_FILE IN LISTS PRL_FILES)
         file(READ "${PRL_FILE}" _contents)
         string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
@@ -106,7 +110,9 @@ function(qt_modular_build_library SOURCE_PATH)
 
     #Move release and debug dlls to the correct directory
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})    
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/tools/qt5 ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
     endif()
 
@@ -126,9 +132,13 @@ function(qt_modular_build_library SOURCE_PATH)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    endif()
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
 
     #Find the relevant license file and install it
     if(EXISTS "${SOURCE_PATH}/LICENSE.LGPLv3")
