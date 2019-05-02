@@ -23,10 +23,18 @@ if(UNIX)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
   message(STATUS "Autotools should have finished their job")
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/x86_64-pc-linux-gnu/zzip)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/x86_64-pc-linux-gnu)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/x86_64-apple-darwin18.2.0/zzip)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/x86_64-apple-darwin18.2.0)
+
+  # Find autotools output
+  set(ZZLIB_AUTOOLS_INCLUDE_DIRS)
+  file(GLOB CHILDREN RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/*")
+  foreach(CHILD ${CHILDREN})
+    string(REGEX MATCH "x86_64*" ZZLIB_AUTOOLS_OUTPUT_FOLDER "${CHILD}")
+    if (ZZLIB_AUTOOLS_OUTPUT_FOLDER)
+      set(ZZLIB_AUTOOLS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/${CHILD})
+      include_directories(${ZZLIB_AUTOOLS_INCLUDE_DIRS})
+      include_directories(${ZZLIB_AUTOOLS_INCLUDE_DIRS}/zzip)
+    endif()
+  endforeach()
 endif()
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
@@ -55,9 +63,7 @@ set(HEADERS zzip/__debug.h
             zzip/zzip.h
 )
 if(UNIX)
-  file(GLOB OTHER_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-pc-linux-gnu/zzip/*.h)
-  list(APPEND HEADERS ${OTHER_HEADERS})
-  file(GLOB OTHER_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/x86_64-apple-darwin18.2.0/zzip/*.h)
+  file(GLOB OTHER_HEADERS ${ZZLIB_AUTOOLS_INCLUDE_DIRS}/zzip/*.h)
   list(APPEND HEADERS ${OTHER_HEADERS})
 else()
   list(APPEND HEADERS zzip/_msvc.h)
