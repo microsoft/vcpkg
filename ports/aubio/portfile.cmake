@@ -1,9 +1,12 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aubio-3c230fae309e9ea3298783368dd71bae6172359a)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aubio/aubio
-    REF 0.4.8 
+    REF 0.4.8
     SHA512 0422ec9ceb645dd5cdb1ca8b17f552edf9197dbf9c929ca75aacfb89f092c02db8b6d2b8aec567ddc1df5b310770de77cd941b45ed74700c3d3584924f39b576
     HEAD_REF master
 )

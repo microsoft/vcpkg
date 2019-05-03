@@ -1,7 +1,6 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("live555 cannot currently be built dynamically. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
 if(NOT VCPKG_USE_HEAD_VERSION)
     # Live555 only makes the latest releases available for download on their site
