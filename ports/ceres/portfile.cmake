@@ -1,7 +1,7 @@
 set(MSVC_USE_STATIC_CRT_VALUE OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        message(FATAL_ERROR "Ceres does not currently support mixing static CRT and dynamic library linkage")
+        message(FATAL_ERROR "${PORT} does not currently support mixing static CRT and dynamic library linkage")
     endif()
     set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()

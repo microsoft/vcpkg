@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    message(FATAL_ERROR "${PORT} does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 set(KINECTSDK10_VERSION "v1.8")
@@ -49,7 +49,7 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(ARCHITECTURE amd64)
 else()
-    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    message(FATAL_ERROR "${PORT} does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 file(

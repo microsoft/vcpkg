@@ -1,1 +1,7 @@
-* -text
+*.cmake   text eol=lf
+*.vcproj  text eol=crlf
+*.vcxproj text eol=crlf
+*.sh      text eol=lf
+CONTROL   text eol=lf
+*.patch   -text
+*         -text
