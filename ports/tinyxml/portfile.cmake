@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz"
     FILENAME "tinyxml_2_6_2.tar.gz"
@@ -28,3 +30,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyxml RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/tinyxml-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyxml)

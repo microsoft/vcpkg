@@ -14,9 +14,19 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if("private-headers" IN_LIST FEATURES)
+    set(INSTALL_PRIVATE_H ON)
+else()
+    set(INSTALL_PRIVATE_H OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DINSTALL_PDB=OFF -DMIN_WINDOWS_VER=Windows7 -DAPR_HAVE_IPV6=ON
+    OPTIONS
+        -DINSTALL_PDB=OFF
+        -DMIN_WINDOWS_VER=Windows7
+        -DAPR_HAVE_IPV6=ON
+        -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1

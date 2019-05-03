@@ -1,13 +1,10 @@
+include(vcpkg_common_functions)
+
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Required to run build/generate_escape_tables.py et al.
 vcpkg_find_acquire_program(PYTHON3)
@@ -17,12 +14,13 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.12.10.00
-    SHA512 d571c08f764a7670b8313336d52c02190d001085385ce92073823887fe435945a821f623b8009e846435e3461bed2dbc58427bd3960a90469461d38386bb76b9
+    REF v2019.01.28.00
+    SHA512 cdd32d863bd98b31332fbcb25a548407857ffd8e611fb5d243821f43fcf240cb796fb4520dddec5537f398c10492e1ecb03de22f7ec0384b98411e9906f40d09
     HEAD_REF master
     PATCHES
         find-gflags.patch
         no-werror.patch
+        # find-double-conversion.patch
 )
 
 file(COPY
@@ -75,6 +73,16 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
+
+# Release folly-targets.cmake does not link to the right libraries in debug mode.
+# We substitute with generator expressions so that the right libraries are linked for debug and release.
+set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
+FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
+string(REPLACE "\${_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
+string(REPLACE "\${_IMPORT_PREFIX}/lib/ssleay32.lib;\${_IMPORT_PREFIX}/lib/libeay32.lib" "ZLIB::ZLIB" _contents "${_contents}")
+string(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
+FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

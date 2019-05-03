@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mandreyel/mio
-    REF 365a80c9acaab2a7d23a40a3add7071f9b739f85
-    SHA512 a134dde60e6ada796bffc795563e3c4d4d4f3abd07ef3da7c15472951bf3f13d9fd37a05de71cd662ec5ff6e7048cfb1e7af76a35259c0ff58a53df792a6640e
+    REF cafa31360fee8866be89b4c602d8b9a7a18dbf5e
+    SHA512 21a5e6c6b90b9ac39bfe7fef59b6dc9c6dc3516b850de5897df63672e81e22abea7bdd7e363e8206dcb72697af797af2501b1c14480bbb8a9284f28c70ca9d67
     HEAD_REF master
 )
 

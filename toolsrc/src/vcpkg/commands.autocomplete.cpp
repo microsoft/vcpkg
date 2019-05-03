@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Autocomplete
                                                             std::vector<std::string>&& results)
     {
         const SortedVector<std::string> sorted_results(results);
-        System::println(Strings::join("\n", sorted_results));
+        System::print2(Strings::join("\n", sorted_results), '\n');
 
         Checks::exit_success(line_info);
     }
@@ -137,7 +137,7 @@ namespace vcpkg::Commands::Autocomplete
                 if (is_option)
                 {
                     results = Util::fmap(command.structure.options.switches,
-                                         [](const CommandSwitch& s) -> std::string { return s.name; });
+                                         [](const CommandSwitch& s) -> std::string { return s.name.to_string(); });
 
                     auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
                     results.insert(results.end(), settings.begin(), settings.end());

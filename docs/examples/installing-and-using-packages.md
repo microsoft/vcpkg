@@ -89,7 +89,8 @@ To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 <a name="cmake"></a>
 #### CMake (Toolchain File)
 
-The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
+The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as:  
+`-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
 
 If you are using CMake through Open Folder with Visual Studio 2017 you can define `CMAKE_TOOLCHAIN_FILE` by adding a "variables" section to each of your `CMakeSettings.json` configurations:
 
@@ -109,6 +110,7 @@ If you are using CMake through Open Folder with Visual Studio 2017 you can defin
   }]
 }
 ```
+*Note: It might be necessary to delete the CMake cache folder of each modified configuration, to force a full regeneration. In the `CMake` menu, under `Cache (<configuration name>)` you'll find `Delete Cache Folders`.*
 
 Now let's make a simple CMake project with a main file.
 ```cmake

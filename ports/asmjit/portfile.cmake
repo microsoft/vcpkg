@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO asmjit/asmjit
-  REF 3092065f148d951df281d3f0f1b4922e580b3930
-  SHA512 4557bcbbe5b49e2303cfccc2ef9acdb59281a13fe9efe28ac49711736dd45db856f9f67aa9ebcf841e631fc83b8b7e14eee08e3a56d6f982fcc24e23b70b7cc5
+  REF fc251c914e77cd079e58982cdab00a47539d7fc5
+  SHA512 3db4ed97ded545994ab2e75df5bb027832c3b7adf44bdabfb89a98af4cc51f5e48d4a353b9e99f205702258dfcec70257d6d6c08db78cec941019b3f8a48232a
   HEAD_REF master
 )
 

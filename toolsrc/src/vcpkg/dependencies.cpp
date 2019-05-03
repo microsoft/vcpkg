@@ -354,7 +354,7 @@ namespace vcpkg::Dependencies
 
         auto installed_ports = get_installed_ports(status_db);
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set});
+        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
     }
 
     std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
@@ -396,7 +396,7 @@ namespace vcpkg::Dependencies
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<ExportPlanAction> toposort =
-            Graphs::topological_sort(specs, ExportAdjacencyProvider{status_db, specs_as_set});
+            Graphs::topological_sort(specs, ExportAdjacencyProvider{status_db, specs_as_set}, {});
         return toposort;
     }
 
@@ -580,9 +580,10 @@ namespace vcpkg::Dependencies
                 auto res = follow_plus_dependencies(f, cluster, graph, graph_plan, prevent_default_features);
                 if (res != MarkPlusResult::SUCCESS)
                 {
-                    System::println(System::Color::warning,
-                                    "Warning: could not reinstall feature %s",
-                                    FeatureSpec{cluster.spec, f});
+                    System::print2(System::Color::warning,
+                                   "Warning: could not reinstall feature ",
+                                   FeatureSpec{cluster.spec, f},
+                                   "\n");
                 }
             }
 
@@ -596,22 +597,20 @@ namespace vcpkg::Dependencies
                     auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
                     if (res != MarkPlusResult::SUCCESS)
                     {
-                        System::println(System::Color::warning,
-                                        "Warning: could not install new default feature %s",
-                                        FeatureSpec{cluster.spec, default_feature});
+                        System::print2(System::Color::warning,
+                                       "Warning: could not install new default feature ",
+                                       FeatureSpec{cluster.spec, default_feature},
+                                       "\n");
                     }
                 }
             }
         }
     }
 
-    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
-    /// <param name="provider">Contains the ports of the current environment.</param>
-    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
-    /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db)
+                                                       const StatusParagraphs& status_db,
+                                                       const CreateInstallPlanOptions& options)
     {
         std::unordered_set<std::string> prevent_default_features;
         for (auto&& spec : specs)
@@ -628,7 +627,7 @@ namespace vcpkg::Dependencies
             pgraph.install(spec, prevent_default_features);
         }
 
-        return pgraph.serialize();
+        return pgraph.serialize(options);
     }
 
     /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
@@ -672,13 +671,15 @@ namespace vcpkg::Dependencies
         mark_minus(spec_cluster, *m_graph, *m_graph_plan, {});
     }
 
-    std::vector<AnyAction> PackageGraph::serialize() const
+    std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& options) const
     {
         auto remove_vertex_list = m_graph_plan->remove_graph.vertex_list();
-        auto remove_toposort = Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph);
+        auto remove_toposort =
+            Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph, options.randomizer);
 
         auto insert_vertex_list = m_graph_plan->install_graph.vertex_list();
-        auto insert_toposort = Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph);
+        auto insert_toposort =
+            Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph, options.randomizer);
 
         std::vector<AnyAction> plan;
 
@@ -838,40 +839,42 @@ namespace vcpkg::Dependencies
 
         if (!excluded.empty())
         {
-            System::println("The following packages are excluded:\n%s", actions_to_output_string(excluded));
+            System::print2("The following packages are excluded:\n", actions_to_output_string(excluded), '\n');
         }
 
         if (!already_installed_plans.empty())
         {
-            System::println("The following packages are already installed:\n%s",
-                            actions_to_output_string(already_installed_plans));
+            System::print2("The following packages are already installed:\n",
+                           actions_to_output_string(already_installed_plans),
+                           '\n');
         }
 
         if (!rebuilt_plans.empty())
         {
-            System::println("The following packages will be rebuilt:\n%s", actions_to_output_string(rebuilt_plans));
+            System::print2("The following packages will be rebuilt:\n", actions_to_output_string(rebuilt_plans), '\n');
         }
 
         if (!new_plans.empty())
         {
-            System::println("The following packages will be built and installed:\n%s",
-                            actions_to_output_string(new_plans));
+            System::print2(
+                "The following packages will be built and installed:\n", actions_to_output_string(new_plans), '\n');
         }
 
         if (!only_install_plans.empty())
         {
-            System::println("The following packages will be directly installed:\n%s",
-                            actions_to_output_string(only_install_plans));
+            System::print2("The following packages will be directly installed:\n",
+                           actions_to_output_string(only_install_plans),
+                           '\n');
         }
 
         if (has_non_user_requested_packages)
-            System::println("Additional packages (*) will be modified to complete this operation.");
+            System::print2("Additional packages (*) will be modified to complete this operation.\n");
 
         if (!remove_plans.empty() && !is_recursive)
         {
-            System::println(System::Color::warning,
-                            "If you are sure you want to rebuild the above packages, run the command with the "
-                            "--recurse option");
+            System::print2(System::Color::warning,
+                           "If you are sure you want to rebuild the above packages, run the command with the "
+                           "--recurse option\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }

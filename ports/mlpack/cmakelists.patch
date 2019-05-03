@@ -1,0 +1,42 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -284,7 +284,7 @@
+ # script Armadillo uses to find these.
+ if (WIN32)
+   find_library(LAPACK_LIBRARY
+-      NAMES lapack liblapack lapack_win32_MT lapack_win32
++      NAMES clapack lapack liblapack lapack_win32_MT lapack_win32
+       PATHS "C:/Program Files/Armadillo"
+       PATH_SUFFIXES "examples/lib_win32/")
+ 
+@@ -293,7 +293,7 @@
+   endif ()
+ 
+   find_library(BLAS_LIBRARY
+-      NAMES blas libblas blas_win32_MT blas_win32
++      NAMES openblas blas libblas blas_win32_MT blas_win32
+       PATHS "C:/Program Files/Armadillo"
+       PATH_SUFFIXES "examples/lib_win32/")
+ 
+@@ -392,19 +392,11 @@
+     REQUIRED
+ )
+ 
+-link_directories(${Boost_LIBRARY_DIRS})
+-
+-# In Visual Studio, automatic linking is performed, so we don't need to worry
+-# about it.  Clear the list of libraries to link against and let Visual Studio
+-# handle it.
+-if (MSVC)
+-  link_directories(${Boost_LIBRARY_DIRS})
+-  set(Boost_LIBRARIES "")
+-endif ()
++link_directories(${Boost_LIBRARIES})
+ 
+ set(MLPACK_INCLUDE_DIRS ${MLPACK_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+ set(MLPACK_LIBRARIES ${MLPACK_LIBRARIES} ${Boost_LIBRARIES})
+-set(MLPACK_LIBRARY_DIRS ${MLPACK_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
++set(MLPACK_LIBRARY_DIRS ${MLPACK_LIBRARY_DIRS} ${Boost_LIBRARIES})
+ 
+ # For Boost testing framework (will have no effect on non-testing executables).
+ # This specifies to Boost that we are dynamically linking to the Boost test

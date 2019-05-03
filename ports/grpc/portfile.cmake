@@ -11,10 +11,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.17.1
-    SHA512 45ba731fd4d1bc3cf590511e53ea6a73de6970f4bb379eb0ef90d550cdc13358f673ead8c6877c02c71dccdba914ad4765c58e173e0dd7895b5d25ebbad38e8e
+    REF v1.19.1
+    SHA512  4bb127d946fc16887fd4cf75215f0bc9f6d17dbd36fc4f1b191a64914f96c49dddb41f1b6c72fd24ea0a40f242b4398248f32fcb1fe9a764367be1c2edda9142
     HEAD_REF master
-    PATCHES fix-uwp.patch
+    PATCHES 
+        00001-fix-uwp.patch
+        00002-static-linking-in-linux.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -29,6 +31,12 @@ else()
     set(gRPC_MSVC_STATIC_RUNTIME OFF)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(gRPC_STATIC_LINKING ON)
+else()
+    set(gRPC_STATIC_LINKING OFF)
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(cares_CARES_PROVIDER OFF)
 else()
@@ -41,6 +49,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
+        -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
         -DgRPC_MSVC_STATIC_RUNTIME=${gRPC_MSVC_STATIC_RUNTIME}
         -DgRPC_ZLIB_PROVIDER=package
         -DgRPC_SSL_PROVIDER=package

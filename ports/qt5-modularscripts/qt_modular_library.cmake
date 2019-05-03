@@ -1,6 +1,6 @@
 set(_qt5base_port_dir "${CMAKE_CURRENT_LIST_DIR}")
 
-function(qt_modular_library NAME HASH)
+function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
     string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
     if(BUILDTREES_PATH_LENGTH GREATER 45)
         message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
@@ -8,8 +8,8 @@ function(qt_modular_library NAME HASH)
         )
     endif()
 
-    set(MAJOR_MINOR 5.11)
-    set(FULL_VERSION ${MAJOR_MINOR}.2)
+    set(MAJOR_MINOR 5.12)
+    set(FULL_VERSION ${MAJOR_MINOR}.1)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
@@ -23,6 +23,10 @@ function(qt_modular_library NAME HASH)
         REF ${FULL_VERSION}
     )
 
+    set(${TARGET_SOURCE_PATH} ${SOURCE_PATH} PARENT_SCOPE)
+endfunction()
+
+function(qt_modular_build_library SOURCE_PATH)
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
     set(ENV{_CL_} "/utf-8")
 
@@ -38,9 +42,14 @@ function(qt_modular_library NAME HASH)
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 
-    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
-    
+    if(WIN32)
+        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    else()
+        set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
+        set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
+    endif()
+
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
 
@@ -77,8 +86,12 @@ function(qt_modular_library NAME HASH)
     endif()
 
     file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    endif()
     foreach(PRL_FILE IN LISTS PRL_FILES)
         file(READ "${PRL_FILE}" _contents)
         string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
@@ -97,7 +110,9 @@ function(qt_modular_library NAME HASH)
 
     #Move release and debug dlls to the correct directory
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})    
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/tools/qt5 ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
     endif()
 
@@ -117,9 +132,13 @@ function(qt_modular_library NAME HASH)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    endif()
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
 
     #Find the relevant license file and install it
     if(EXISTS "${SOURCE_PATH}/LICENSE.LGPLv3")
@@ -134,5 +153,9 @@ function(qt_modular_library NAME HASH)
         set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
     endif()
     file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+endfunction()
 
+function(qt_modular_library NAME HASH)
+    qt_modular_fetch_library(${NAME} ${HASH} TARGET_SOURCE_PATH)
+    qt_modular_build_library(${TARGET_SOURCE_PATH})
 endfunction()

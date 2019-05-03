@@ -3,7 +3,9 @@
 #if defined(_WIN32)
 
 #include <vcpkg/base/sortedvector.h>
-#include <vcpkg/base/stringrange.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/visualstudio.h>
 
@@ -12,6 +14,7 @@ namespace vcpkg::VisualStudio
     static constexpr CStringView V_120 = "v120";
     static constexpr CStringView V_140 = "v140";
     static constexpr CStringView V_141 = "v141";
+    static constexpr CStringView V_142 = "v142";
 
     struct VisualStudioInstance
     {
@@ -89,11 +92,11 @@ namespace vcpkg::VisualStudio
                                code_and_output.output);
 
             const auto instance_entries =
-                StringRange::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
-            for (const StringRange& instance : instance_entries)
+                StringView::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+            for (const StringView& instance : instance_entries)
             {
                 auto maybe_is_prerelease =
-                    StringRange::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+                    StringView::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
 
                 VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
                 if (const auto p = maybe_is_prerelease.get())
@@ -108,9 +111,9 @@ namespace vcpkg::VisualStudio
                 }
 
                 instances.emplace_back(
-                    StringRange::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
+                    StringView::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
                         .to_string(),
-                    StringRange::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
+                    StringView::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
                         .to_string(),
                     release_type);
             }
@@ -213,35 +216,62 @@ namespace vcpkg::VisualStudio
 
                 for (const fs::path& subdir : msvc_subdirectories)
                 {
+                    auto toolset_version_full = subdir.filename().u8string();
+                    auto toolset_version_prefix = toolset_version_full.substr(0, 4);
+                    CStringView toolset_version;
+                    std::string vcvars_option;
+                    if (toolset_version_prefix.size() != 4)
+                    {
+                        // unknown toolset
+                        continue;
+                    }
+                    else if (toolset_version_prefix[3] == '1')
+                    {
+                        toolset_version = V_141;
+                        vcvars_option = "-vcvars_ver=14.1";
+                    }
+                    else if (toolset_version_prefix[3] == '2')
+                    {
+                        toolset_version = V_142;
+                        vcvars_option = "-vcvars_ver=14.2";
+                    }
+                    else
+                    {
+                        // unknown toolset minor version
+                        continue;
+                    }
                     const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        const Toolset v141_toolset{
-                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
+                        Toolset toolset{vs_instance.root_path,
+                                        dumpbin_path,
+                                        vcvarsall_bat,
+                                        {vcvars_option},
+                                        toolset_version,
+                                        supported_architectures};
 
                         const auto english_language_pack = dumpbin_path.parent_path() / "1033";
 
                         if (!fs.exists(english_language_pack))
                         {
-                            excluded_toolsets.push_back(v141_toolset);
-                            break;
+                            excluded_toolsets.push_back(std::move(toolset));
+                            continue;
                         }
 
-                        found_toolsets.push_back(v141_toolset);
+                        found_toolsets.push_back(std::move(toolset));
 
                         if (v140_is_available)
                         {
-                            const Toolset v140_toolset{vs_instance.root_path,
-                                                       dumpbin_path,
-                                                       vcvarsall_bat,
-                                                       {"-vcvars_ver=14.0"},
-                                                       V_140,
-                                                       supported_architectures};
-                            found_toolsets.push_back(v140_toolset);
+                            found_toolsets.push_back({vs_instance.root_path,
+                                                      dumpbin_path,
+                                                      vcvarsall_bat,
+                                                      {"-vcvars_ver=14.0"},
+                                                      V_140,
+                                                      supported_architectures});
                         }
 
-                        break;
+                        continue;
                     }
                 }
 
@@ -298,23 +328,23 @@ namespace vcpkg::VisualStudio
 
         if (!excluded_toolsets.empty())
         {
-            System::println(
+            System::print2(
                 System::Color::warning,
-                "Warning: The following VS instances are excluded because the English language pack is unavailable.");
+                "Warning: The following VS instances are excluded because the English language pack is unavailable.\n");
             for (const Toolset& toolset : excluded_toolsets)
             {
-                System::println("    %s", toolset.visual_studio_root_path.u8string());
+                System::print2("    ", toolset.visual_studio_root_path.u8string(), '\n');
             }
-            System::println(System::Color::warning, "Please install the English language pack.");
+            System::print2(System::Color::warning, "Please install the English language pack.\n");
         }
 
         if (found_toolsets.empty())
         {
-            System::println(System::Color::error, "Could not locate a complete toolset.");
-            System::println("The following paths were examined:");
+            System::print2(System::Color::error, "Could not locate a complete toolset.\n");
+            System::print2("The following paths were examined:\n");
             for (const fs::path& path : paths_examined)
             {
-                System::println("    %s", path.u8string());
+                System::print2("    ", path.u8string(), '\n');
             }
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
