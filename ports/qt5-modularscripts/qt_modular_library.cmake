@@ -31,12 +31,8 @@ function(qt_modular_build_library SOURCE_PATH)
     set(ENV{_CL_} "/utf-8")
 
     #Store build paths
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-    endif()
+    set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
     #Find Python and add it to the path
     vcpkg_find_acquire_program(PYTHON2)
@@ -114,7 +110,9 @@ function(qt_modular_build_library SOURCE_PATH)
 
     #Move release and debug dlls to the correct directory
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})    
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/tools/qt5 ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
     endif()
 
@@ -134,9 +132,13 @@ function(qt_modular_build_library SOURCE_PATH)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    endif()
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
 
     #Find the relevant license file and install it
     if(EXISTS "${SOURCE_PATH}/LICENSE.LGPLv3")
