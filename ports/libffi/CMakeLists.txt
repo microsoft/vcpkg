@@ -50,12 +50,6 @@ include_directories(include)
 
 add_definitions(-DHAVE_CONFIG_H)
 add_definitions(-DFFI_BUILDING)
-if(BUILD_SHARED_LIBS)
-    if(WIN32)
-        add_definitions(-DFFI_EXPORT_DATA)
-    endif()
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
 
 set(FFI_SOURCES
     src/x86/ffi.c

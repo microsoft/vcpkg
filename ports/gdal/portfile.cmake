@@ -1,20 +1,16 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "2.4.0")
-set(GDAL_VERSION_PKG "240")
+include(vcpkg_common_functions)
+
+set(GDAL_VERSION_STR "2.4.1")
+set(GDAL_VERSION_PKG "241")
 set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "a8543425d7bdbb5ab94638a490fe5b62e37983fbb89e1eea98b0e31d5fa76b7568e7b633c90ac429c87a6c9e8d9e1358b48428f3885aac8d574d1f01e9631f7f")
+set(GDAL_PACKAGE_SUM "edb9679ee6788334cf18971c803615ac9b1c72bc0c96af8fd4852cb7e8f58e9c4f3d9cb66406bc8654419612e1a7e9d0e62f361712215f4a50120f646bb0a738")
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
 endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND NMAKE_OPTIONS "DLLBUILD=0")
-endif()
-
-include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"

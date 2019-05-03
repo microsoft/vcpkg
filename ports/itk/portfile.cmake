@@ -50,7 +50,7 @@ vcpkg_configure_cmake(
 
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
 
-        # I havn't tried Python wrapping in vcpkg
+        # I haven't tried Python wrapping in vcpkg
         #-DITK_WRAP_PYTHON=ON
         #-DITK_PYTHON_VERSION=3
 
