@@ -37,10 +37,17 @@ if(URIPARSER_BUILD_TOOLS)
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/uriparse${EXECUTABLE_SUFFIX}
-    )
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE
+            ${CURRENT_PACKAGES_DIR}/bin
+            ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+    else()
+        file(REMOVE
+            ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
+            ${CURRENT_PACKAGES_DIR}/debug/bin/uriparse${EXECUTABLE_SUFFIX}
+        )
+    endif()
 endif()
 
 set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
