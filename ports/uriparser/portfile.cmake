@@ -3,25 +3,60 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF uriparser-0.9.2
-    SHA512 58c1c473b33a2a5ffa2b3eb02f527de0efea228d84e2189b764515c3b884b73f36bb8baf143b719cd43006ef23f116cd7b2368bf828fe3e5b839c674daf5ea3f
+    REF uriparser-0.9.3
+    SHA512 5740e2405566c17c4467a677d83596d86398b64778ad2b5234e9390d8ab817d1b5231988d120b1d19b099788e38814825a438beed991e49b242b8a5de8c51d03
 )
+
+if("tool" IN_LIST FEATURES)
+    set(URIPARSER_BUILD_TOOLS ON)
+else()
+    set(URIPARSER_BUILD_TOOLS OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS
-		-DURIPARSER_BUILD_DOCS=OFF
-		-DURIPARSER_BUILD_TESTS=OFF
-		-DURIPARSER_BUILD_TOOLS=OFF
+    OPTIONS
+        -DURIPARSER_BUILD_DOCS=OFF
+        -DURIPARSER_BUILD_TESTS=OFF
+        -DURIPARSER_BUILD_TOOLS=${URIPARSER_BUILD_TOOLS}
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/uriparser-0.9.2")
+
 vcpkg_copy_pdbs()
+
+if(URIPARSER_BUILD_TOOLS)
+    if(CMAKE_HOST_WIN32)
+        set(EXECUTABLE_SUFFIX ".exe")
+    else()
+        set(EXECUTABLE_SUFFIX "")
+    endif()
+
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
+        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
+    file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
+        ${CURRENT_PACKAGES_DIR}/debug/bin/uriparse${EXECUTABLE_SUFFIX}
+    )
+endif()
+
+set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
+file(STRINGS
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h"
+    _package_version_define REGEX "${_package_version_re}"
+)
+string(REGEX REPLACE "${_package_version_re}" "\\1" _package_version ${_package_version_define})
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT}-${_package_version})
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/uriparser RENAME copyright)
 
 # Remove duplicate info
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+# CMake integration test
+vcpkg_test_cmake(PACKAGE_NAME ${PORT})
