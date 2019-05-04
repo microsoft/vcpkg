@@ -58,6 +58,12 @@ jobs:
       inputs:
         contents: 'buildtrees/**/*.log'
         targetFolder: logs
+
+    - task: CopyFiles@2
+      condition: always() 
+      inputs:
+        contents: '$(Build.SourcesDirectory)'
+        targetFolder: '$(Source.ArtifactStagingDirectory)/vcpkg'
       
     - task: PublishBuildArtifacts@1
       condition: always() 
@@ -67,7 +73,7 @@ jobs:
 
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)'
+        rootFolderOrFile: '$(Source.ArtifactStagingDirectory)/vcpkg'
         archiveType: 'zip'
         archiveFile: '$(archiveFile)'
 
