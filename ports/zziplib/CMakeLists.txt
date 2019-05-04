@@ -29,8 +29,6 @@ if(UNIX)
   endforeach()
 endif()
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-
 # List the header files
 set(HEADERS zzip/__debug.h
             zzip/__dirent.h

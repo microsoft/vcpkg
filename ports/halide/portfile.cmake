@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(TARGET_ARCHITECTURE 32)
