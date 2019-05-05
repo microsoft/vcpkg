@@ -59,6 +59,14 @@ string(REGEX REPLACE "${_package_version_re}" "\\1" _package_version ${_package_
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT}-${_package_version})
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(
+        ${CURRENT_PACKAGES_DIR}/include/uriparser/UriBase.h
+        "defined(URI_STATIC_BUILD)"
+        "1 // defined(URI_STATIC_BUILD)"
+    )
+endif()
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/uriparser RENAME copyright)
 
 # Remove duplicate info
