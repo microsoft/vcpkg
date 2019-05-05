@@ -5,6 +5,7 @@ vcpkg_from_github(
     REPO uriparser/uriparser
     REF uriparser-0.9.3
     SHA512 5740e2405566c17c4467a677d83596d86398b64778ad2b5234e9390d8ab817d1b5231988d120b1d19b099788e38814825a438beed991e49b242b8a5de8c51d03
+    HEAD_REF master
 )
 
 if("tool" IN_LIST FEATURES)
