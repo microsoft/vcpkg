@@ -1,9 +1,7 @@
-# ATK uses DllMain
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "ATK only supports dynamic library and crt linkage")
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+
 set(ATK_VERSION 2.24.0)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/atk-${ATK_VERSION})
 vcpkg_download_distfile(ARCHIVE

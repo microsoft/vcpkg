@@ -1,21 +1,52 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/duktape-2.0.3)
-set(CMAKE_PATH ${CMAKE_CURRENT_LIST_DIR})
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/svaarala/duktape/releases/download/v2.0.3/duktape-2.0.3.tar.xz"
-    FILENAME "duktape-2.0.3.tar.xz"
-    SHA512 ba21731242d953d82c677e1205e3596e270e6d57156a0bca8068fc3b6a35996af69bcfac979b871a7e3eab31f28a06cb99078f0b3eaac54be9c5899f57f4100e
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message("${PORT} currently requires the following tools from the system package manager:\n    python-yaml\n\nThis can be installed on Ubuntu systems via apt-get install python-yaml PYTHON2-yaml (depending on your current python default interpreter)")
+endif() 
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO svaarala/duktape
+    REF v2.0.3
+    SHA512 6ad189f6f9291cbd7eb7227113302fd0c204018611bb37bf4acd7f6b0eb2a75837dac8fb9fba441a0d76e6f1dbad62e4750a6645f65de31611b089f6922bad26
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+if(CMAKE_HOST_WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
+
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON2_DIR}")
+if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
+    if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
+        vcpkg_download_distfile(GET_PIP
+            URLS "https://bootstrap.pypa.io/get-pip.py"
+            FILENAME "tools/python/python2/get-pip.py"
+            SHA512 fdbcef1037dca7cc914e2304af657ebd08239cd18c3e79786dc25c8ea39957674e012d7ea8ae2c99006e4b61d3a5e24669ac5771dc186697fd9fdb40b6cc07ae
+        )
+        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
+    endif()
+    execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
+else()
+    execute_process(COMMAND ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX} pyyaml)
+endif()
+
+execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/duk_config.h.patch"
+    PATCHES
+        duk_config.h.patch 
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CMAKE_PATH}
-    OPTIONS -DSOURCE_PATH=${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
 )
 
 vcpkg_install_cmake()

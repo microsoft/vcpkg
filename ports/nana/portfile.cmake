@@ -1,13 +1,11 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(WARNING "You will need to install Xorg dependencies to use nana:\napt install libx11-dev libxft-dev\n")
 endif()
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cnjinhao/nana

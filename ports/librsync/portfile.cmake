@@ -1,11 +1,15 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO librsync/librsync
     REF v2.0.2
     SHA512 5d2bc1d62b37e9ed7416203615d0a0e3c05c4c884b5da63eda10dd5c985845b500331bce226e4d45676729382c85b41528282e25d491afda31ba434ac0fefad7
     HEAD_REF master
+    PATCHES
+        001-enable-static-libs.patch
 )
 
 vcpkg_configure_cmake(
@@ -14,7 +18,6 @@ vcpkg_configure_cmake(
     OPTIONS -DBUILD_RDIFF:BOOL=OFF
             -DENABLE_COMPRESSION:BOOL=OFF
             -DENABLE_TRACE:BOOL=OFF
-            -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS:BOOL=ON
 )
 
 vcpkg_install_cmake()

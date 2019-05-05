@@ -15,11 +15,6 @@ if(${TARGET_TRIPLET} MATCHES "uwp")
     message(FATAL_ERROR "cppfs does not support uwp")
 endif()
 
-set(SHARED_LIBS Off)
-if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-    set(SHARED_LIBS On)
-endif()
-
 set(SSH_BACKEND OFF)
 if("ssh" IN_LIST FEATURES)
     set(SSH_BACKEND ON)
@@ -31,10 +26,9 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DOPTION_BUILD_SSH_BACKEND=${SSH_BACKEND}
         -DOPTION_BUILD_TESTS=Off
-        -DBUILD_SHARED_LIBS=${SHARED_LIBS}
         -DOPTION_FORCE_SYSTEM_DIR_INSTALL=On
 )
 
