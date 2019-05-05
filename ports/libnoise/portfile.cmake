@@ -10,16 +10,17 @@
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
 
+#set (VCPKG_LIBRARY_LINKAGE dynamic)
 include(vcpkg_common_functions)
 #vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # don't use shared libs
 set( LIBNOISE_VERSION "1.0.0" )
-set( LIBNOISE_COMMIT "032caf6572707e3e3acd5e6a899a315d9ad78d8c" )
+set( LIBNOISE_COMMIT "d7e68784a2b24c632868506780eba336ede74ecd" )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO qknight/libnoise
+    REPO RobertHue/libnoise
     REF ${LIBNOISE_COMMIT}
-    SHA512 2418c4197e40ed120d386711e4890b80894acb67645a19b51e51ac5c94d5863e5c04fd72da9e3ca32a604d57417936045c3c2aa674c618db942d52d549d5adaf
+    SHA512 8c4d654acb4ae3d90ee62ebdf0447f876022dcb887ebfad88f39b09d29183a58e6fc1b1f1d03edff804975c8befcc6eda33c44797495285aae338c2e869a14d7
     HEAD_REF master
 )
 
