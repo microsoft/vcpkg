@@ -1,0 +1,75 @@
+diff --git a/gdl/gdl-dock-item-button-image.c b/gdl/gdl-dock-item-button-image.c
+index 7d52f15..ba3a1bf 100644
+--- a/gdl/gdl-dock-item-button-image.c
++++ b/gdl/gdl-dock-item-button-image.c
+@@ -22,6 +22,10 @@
+ 
+ #include <math.h>
+ 
++#ifndef M_PI
++#define M_PI 3.14159265358979323846
++#endif
++
+ /**
+  * SECTION:gdl-dock-item-button-image
+  * @title: GdlDockItemButtonImage
+diff --git a/gdl/gdl-dock-object.c b/gdl/gdl-dock-object.c
+index daa2c7f..f45d15c 100644
+--- a/gdl/gdl-dock-object.c
++++ b/gdl/gdl-dock-object.c
+@@ -1481,9 +1481,9 @@ static void
+ gdl_dock_object_register_init (void)
+ {
+ #ifdef GDL_DISABLE_DEPRECATED
+-    const size_t n_default = 4;
++	#define n_default 4
+ #else
+-    const size_t n_default = 5;
++	#define n_default 5
+ #endif
+     guint i = 0;
+     struct DockRegisterItem default_items[n_default];
+@@ -1510,6 +1510,8 @@ gdl_dock_object_register_init (void)
+ 
+     for (i = 0; i < n_default; i++)
+         g_array_append_val (dock_register, default_items[i]);
++
++#undef n_default
+ }
+ 
+ /**
+diff --git a/gdl/gdl-dock-object.h b/gdl/gdl-dock-object.h
+index a244768..c362b64 100644
+--- a/gdl/gdl-dock-object.h
++++ b/gdl/gdl-dock-object.h
+@@ -377,6 +377,21 @@ GType                 gdl_dock_object_set_type_for_nick (const gchar *nick,
+  *
+  * Output a debugging message for the corresponding dock object.
+  */
++#ifdef _MSC_VER
++#define GDL_TRACE_OBJECT(object, format, ...) \
++    G_STMT_START {                            \
++    g_log (G_LOG_DOMAIN,                      \
++	   G_LOG_LEVEL_DEBUG,                 \
++           "%s:%d (%s) %s [%p %d%s:%d]: " format, \
++	   __FILE__,                          \
++	   __LINE__,                          \
++	   __PRETTY_FUNCTION__,               \
++           G_OBJECT_TYPE_NAME (object), object, \
++           G_OBJECT (object)->ref_count, \
++           (GTK_IS_OBJECT (object) && g_object_is_floating (object)) ? "(float)" : "", \
++           GDL_IS_DOCK_OBJECT (object) ? gdl_dock_object_is_frozen (GDL_DOCK_OBJECT (object)) : -1, \
++	   __VA_ARGS__); } G_STMT_END
++#else
+ #define GDL_TRACE_OBJECT(object, format, args...) \
+     G_STMT_START {                            \
+     g_log (G_LOG_DOMAIN,                      \
+@@ -390,7 +405,7 @@ GType                 gdl_dock_object_set_type_for_nick (const gchar *nick,
+            (GTK_IS_OBJECT (object) && g_object_is_floating (object)) ? "(float)" : "", \
+            GDL_IS_DOCK_OBJECT (object) ? gdl_dock_object_is_frozen (GDL_DOCK_OBJECT (object)) : -1, \
+ 	   ##args); } G_STMT_END
+-
++#endif
+ 
+ 
+ G_END_DECLS

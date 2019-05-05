@@ -1,0 +1,467 @@
+commit c4c06254dbf7ceffd36c174f951c14aea4f8dc6f
+Author: Norbert Nemec <Norbert@Nemec-online.de>
+Date:   Sun May 5 19:29:07 2019 +0200
+
+    _GDL_EXTERN
+
+diff --git a/gdl/gdl-dock-bar.h b/gdl/gdl-dock-bar.h
+index d01fc17..146ffec 100644
+--- a/gdl/gdl-dock-bar.h
++++ b/gdl/gdl-dock-bar.h
+@@ -73,16 +73,22 @@ struct _GdlDockBarClass {
+     GtkBoxClass parent_class;
+ };
+ 
++_GDL_EXTERN
+ GType           gdl_dock_bar_get_type       (void);
+ 
++_GDL_EXTERN
+ GtkWidget      *gdl_dock_bar_new            (GObject           *master);
+ 
++_GDL_EXTERN
+ void            gdl_dock_bar_set_style      (GdlDockBar        *dockbar,
+                                              GdlDockBarStyle    style);
++_GDL_EXTERN
+ GdlDockBarStyle gdl_dock_bar_get_style      (GdlDockBar        *dockbar);
+ 
+ #ifndef GDL_DISABLE_DEPRECATED
++_GDL_EXTERN
+ GtkOrientation gdl_dock_bar_get_orientation (GdlDockBar        *dockbar) G_GNUC_DEPRECATED_FOR(gtk_orientable_get_orientation);
++_GDL_EXTERN
+ void           gdl_dock_bar_set_orientation (GdlDockBar        *dockbar,
+                                              GtkOrientation     orientation) G_GNUC_DEPRECATED_FOR(gtk_orientable_set_orientation);
+ #endif
+diff --git a/gdl/gdl-dock-item-grip.h b/gdl/gdl-dock-item-grip.h
+index 48b088a..e7f150c 100644
+--- a/gdl/gdl-dock-item-grip.h
++++ b/gdl/gdl-dock-item-grip.h
+@@ -59,16 +59,23 @@ struct _GdlDockItemGripClass {
+     GtkContainerClass parent_class;
+ };
+ 
++_GDL_EXTERN
+ GType      gdl_dock_item_grip_get_type    (void);
++_GDL_EXTERN
+ GtkWidget *gdl_dock_item_grip_new         (GdlDockItem *item);
++_GDL_EXTERN
+ void       gdl_dock_item_grip_set_label   (GdlDockItemGrip *grip,
+                                            GtkWidget *label);
++_GDL_EXTERN
+ void       gdl_dock_item_grip_hide_handle (GdlDockItemGrip *grip);
++_GDL_EXTERN
+ void       gdl_dock_item_grip_show_handle (GdlDockItemGrip *grip);
+ 
++_GDL_EXTERN
+ void       gdl_dock_item_grip_set_cursor  (GdlDockItemGrip *grip,
+                                            gboolean in_drag);
+ 
++_GDL_EXTERN
+ gboolean   gdl_dock_item_grip_has_event   (GdlDockItemGrip *grip,
+                                            GdkEvent *event);
+ 
+diff --git a/gdl/gdl-dock-item.h b/gdl/gdl-dock-item.h
+index aa1c277..039bebc 100644
+--- a/gdl/gdl-dock-item.h
++++ b/gdl/gdl-dock-item.h
+@@ -273,82 +273,116 @@ struct _GdlDockItemClass {
+ 
+ /* public interface */
+ 
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_item_new                   (const gchar         *name,
+                                                     const gchar         *long_name,
+                                                     GdlDockItemBehavior  behavior);
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_item_new_with_stock        (const gchar         *name,
+                                                     const gchar         *long_name,
+                                                     const gchar         *stock_id,
+                                                     GdlDockItemBehavior  behavior);
+ 
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_item_new_with_pixbuf_icon  (const gchar      *name,
+                                                     const gchar      *long_name,
+                                                     const GdkPixbuf  *pixbuf_icon,
+                                                     GdlDockItemBehavior  behavior);
+ 
++_GDL_EXTERN
+ GType          gdl_dock_item_get_type              (void);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_dock_to               (GdlDockItem      *item,
+                                                     GdlDockItem      *target,
+                                                     GdlDockPlacement  position,
+                                                     gint              docking_param);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_set_orientation       (GdlDockItem      *item,
+                                                     GtkOrientation    orientation);
++_GDL_EXTERN
+ GtkOrientation gdl_dock_item_get_orientation       (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_set_behavior_flags    (GdlDockItem      *item,
+                                                     GdlDockItemBehavior behavior,
+                                                     gboolean clear);
++_GDL_EXTERN
+ void           gdl_dock_item_unset_behavior_flags  (GdlDockItem      *item,
+                                                     GdlDockItemBehavior behavior);
++_GDL_EXTERN
+ GdlDockItemBehavior gdl_dock_item_get_behavior_flags (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_item_get_tablabel          (GdlDockItem      *item);
++_GDL_EXTERN
+ void           gdl_dock_item_set_tablabel          (GdlDockItem      *item,
+                                                     GtkWidget        *tablabel);
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_item_get_grip              (GdlDockItem      *item);
++_GDL_EXTERN
+ void           gdl_dock_item_hide_grip             (GdlDockItem      *item);
++_GDL_EXTERN
+ void           gdl_dock_item_show_grip             (GdlDockItem      *item);
++_GDL_EXTERN
+ void           gdl_dock_item_notify_selected       (GdlDockItem      *item);
++_GDL_EXTERN
+ void           gdl_dock_item_notify_deselected     (GdlDockItem      *item);
+ 
+ /* bind and unbind items to a dock */
++_GDL_EXTERN
+ void           gdl_dock_item_bind                  (GdlDockItem      *item,
+                                                     GtkWidget        *dock);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_unbind                (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_hide_item             (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_iconify_item          (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_show_item             (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_lock                  (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_unlock                (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_set_default_position  (GdlDockItem      *item,
+                                                     GdlDockObject    *reference);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_preferred_size        (GdlDockItem      *item,
+                                                     GtkRequisition   *req);
++_GDL_EXTERN
+ void           gdl_dock_item_get_drag_area         (GdlDockItem    *item,
+                                                     GdkRectangle   *rect);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_item_or_child_has_focus    (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_item_is_placeholder        (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_item_is_closed             (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_item_is_iconified          (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_set_child             (GdlDockItem      *item,
+                                                     GtkWidget        *child);
++_GDL_EXTERN
+ GtkWidget*     gdl_dock_item_get_child             (GdlDockItem      *item);
+ 
++_GDL_EXTERN
+ void           gdl_dock_item_class_set_has_grip    (GdlDockItemClass *item_class,
+                                                     gboolean         has_grip);
+ 
+diff --git a/gdl/gdl-dock-layout.h b/gdl/gdl-dock-layout.h
+index 83b9a13..05ec11b 100644
+--- a/gdl/gdl-dock-layout.h
++++ b/gdl/gdl-dock-layout.h
+@@ -66,35 +66,47 @@ struct _GdlDockLayoutClass {
+ 
+ /* public interface */
+ 
++_GDL_EXTERN
+ GType            gdl_dock_layout_get_type       (void);
+ 
++_GDL_EXTERN
+ GdlDockLayout   *gdl_dock_layout_new            (GObject       *master);
+ 
++_GDL_EXTERN
+ void             gdl_dock_layout_set_master     (GdlDockLayout *layout,
+                                                  GObject       *master);
++_GDL_EXTERN
+ GObject         *gdl_dock_layout_get_master     (GdlDockLayout *layout);
+ 
++_GDL_EXTERN
+ gboolean         gdl_dock_layout_load_layout    (GdlDockLayout *layout,
+                                                  const gchar   *name);
+ 
++_GDL_EXTERN
+ void             gdl_dock_layout_save_layout    (GdlDockLayout *layout,
+                                                  const gchar   *name);
+ 
++_GDL_EXTERN
+ void             gdl_dock_layout_delete_layout  (GdlDockLayout *layout,
+                                                  const gchar   *name);
+ 
++_GDL_EXTERN
+ GList           *gdl_dock_layout_get_layouts    (GdlDockLayout *layout,
+                                                  gboolean       include_default);
+ 
++_GDL_EXTERN
+ gboolean         gdl_dock_layout_load_from_file (GdlDockLayout *layout,
+                                                  const gchar   *filename);
+ 
++_GDL_EXTERN
+ gboolean         gdl_dock_layout_save_to_file   (GdlDockLayout *layout,
+                                                  const gchar   *filename);
+ 
++_GDL_EXTERN
+ gboolean         gdl_dock_layout_is_dirty       (GdlDockLayout *layout);
+ 
+ #ifndef GDL_DISABLE_DEPRECATED
++_GDL_EXTERN
+ void             gdl_dock_layout_attach         (GdlDockLayout *layout,
+                                                  GdlDockMaster *master);
+ #endif
+diff --git a/gdl/gdl-dock-master.h b/gdl/gdl-dock-master.h
+index 6b0ef0b..aea72b6 100644
+--- a/gdl/gdl-dock-master.h
++++ b/gdl/gdl-dock-master.h
+@@ -93,28 +93,37 @@ struct _GdlDockMasterClass {
+ 
+ /* public interface */
+ 
++_GDL_EXTERN
+ GType          gdl_dock_master_get_type         (void);
+ 
++_GDL_EXTERN
+ void           gdl_dock_master_add              (GdlDockMaster *master,
+                                                  GdlDockObject *object);
++_GDL_EXTERN
+ void           gdl_dock_master_remove           (GdlDockMaster *master,
+                                                  GdlDockObject *object);
++_GDL_EXTERN
+ void           gdl_dock_master_foreach          (GdlDockMaster *master,
+                                                  GFunc          function,
+                                                  gpointer       user_data);
+ 
++_GDL_EXTERN
+ void           gdl_dock_master_foreach_toplevel (GdlDockMaster *master,
+                                                  gboolean       include_controller,
+                                                  GFunc          function,
+                                                  gpointer       user_data);
+ 
++_GDL_EXTERN
+ GdlDockObject *gdl_dock_master_get_object       (GdlDockMaster *master,
+                                                  const gchar   *nick_name);
+ 
++_GDL_EXTERN
+ GdlDockObject *gdl_dock_master_get_controller   (GdlDockMaster *master);
++_GDL_EXTERN
+ void           gdl_dock_master_set_controller   (GdlDockMaster *master,
+                                                  GdlDockObject *new_controller);
+ 
++_GDL_EXTERN
+ gchar         *gdl_dock_master_get_dock_name    (GdlDockMaster *master);
+ 
+ G_END_DECLS
+diff --git a/gdl/gdl-dock-object.h b/gdl/gdl-dock-object.h
+index c362b64..cc92bb1 100644
+--- a/gdl/gdl-dock-object.h
++++ b/gdl/gdl-dock-object.h
+@@ -28,6 +28,10 @@
+ 
+ G_BEGIN_DECLS
+ 
++#ifndef _GDL_EXTERN
++#define _GDL_EXTERN __declspec(dllexport)
++#endif
++
+ /* standard macros */
+ #define GDL_TYPE_DOCK_OBJECT             (gdl_dock_object_get_type ())
+ #define GDL_DOCK_OBJECT(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GDL_TYPE_DOCK_OBJECT, GdlDockObject))
+@@ -289,65 +293,95 @@ struct _GdlDockObjectClass {
+ 
+ /* public interface */
+ 
++_GDL_EXTERN
+ GType          gdl_dock_object_get_type          (void);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_object_is_compound       (GdlDockObject    *object);
+ 
++_GDL_EXTERN
+ void           gdl_dock_object_detach            (GdlDockObject    *object,
+                                                   gboolean          recursive);
+ 
++_GDL_EXTERN
+ GdlDockObject *gdl_dock_object_get_parent_object (GdlDockObject    *object);
+ 
++_GDL_EXTERN
+ void           gdl_dock_object_freeze            (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_thaw              (GdlDockObject    *object);
++_GDL_EXTERN
+ gboolean       gdl_dock_object_is_frozen          (GdlDockObject    *object);
+ 
++_GDL_EXTERN
+ void           gdl_dock_object_reduce            (GdlDockObject    *object);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_object_dock_request      (GdlDockObject    *object,
+                                                   gint              x,
+                                                   gint              y,
+                                                   GdlDockRequest   *request);
++_GDL_EXTERN
+ void           gdl_dock_object_dock              (GdlDockObject    *object,
+                                                   GdlDockObject    *requestor,
+                                                   GdlDockPlacement  position,
+                                                   GValue           *other_data);
+ 
++_GDL_EXTERN
+ void           gdl_dock_object_bind              (GdlDockObject    *object,
+                                                   GObject          *master);
++_GDL_EXTERN
+ void           gdl_dock_object_unbind            (GdlDockObject    *object);
++_GDL_EXTERN
+ gboolean       gdl_dock_object_is_bound          (GdlDockObject    *object);
++_GDL_EXTERN
+ GObject       *gdl_dock_object_get_master        (GdlDockObject    *object);
++_GDL_EXTERN
+ GdlDockObject *gdl_dock_object_get_controller    (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_layout_changed_notify (GdlDockObject *object);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_object_reorder           (GdlDockObject    *object,
+                                                   GdlDockObject    *child,
+                                                   GdlDockPlacement  new_position,
+                                                   GValue           *other_data);
+ 
++_GDL_EXTERN
+ void           gdl_dock_object_present           (GdlDockObject    *object,
+                                                   GdlDockObject    *child);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_object_child_placement   (GdlDockObject    *object,
+                                                   GdlDockObject    *child,
+                                                   GdlDockPlacement *placement);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_object_is_closed         (GdlDockObject    *object);
+ 
++_GDL_EXTERN
+ gboolean       gdl_dock_object_is_automatic      (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_set_manual        (GdlDockObject    *object);
+ 
++_GDL_EXTERN
+ const gchar   *gdl_dock_object_get_name          (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_set_name          (GdlDockObject    *object,
+                                                   const gchar      *name);
++_GDL_EXTERN
+ const gchar   *gdl_dock_object_get_long_name     (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_set_long_name     (GdlDockObject    *object,
+                                                   const gchar      *name);
++_GDL_EXTERN
+ const gchar   *gdl_dock_object_get_stock_id      (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_set_stock_id      (GdlDockObject    *object,
+                                                   const gchar      *stock_id);
++_GDL_EXTERN
+ GdkPixbuf     *gdl_dock_object_get_pixbuf        (GdlDockObject    *object);
++_GDL_EXTERN
+ void           gdl_dock_object_set_pixbuf        (GdlDockObject    *object,
+                                                   GdkPixbuf        *icon);
+ 
+@@ -359,11 +393,15 @@ void           gdl_dock_object_set_pixbuf        (GdlDockObject    *object,
+    (i.e. those that are needed for layout rebuilding) */
+ #define GDL_TYPE_DOCK_PARAM   (gdl_dock_param_get_type ())
+ 
++_GDL_EXTERN
+ GType gdl_dock_param_get_type (void);
+ 
+ /* functions for setting/retrieving nick names for serializing GdlDockObject types */
++_GDL_EXTERN
+ const gchar          *gdl_dock_object_nick_from_type    (GType        type);
++_GDL_EXTERN
+ GType                 gdl_dock_object_type_from_nick    (const gchar *nick);
++_GDL_EXTERN
+ GType                 gdl_dock_object_set_type_for_nick (const gchar *nick,
+                                                          GType        type);
+ 
+diff --git a/gdl/gdl-dock.h b/gdl/gdl-dock.h
+index b0047bb..b127d27 100644
+--- a/gdl/gdl-dock.h
++++ b/gdl/gdl-dock.h
+@@ -72,17 +72,22 @@ struct _GdlDockClass {
+ 
+ /* public interface */
+ 
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_new               (void);
+ 
++_GDL_EXTERN
+ GtkWidget     *gdl_dock_new_from          (GdlDock          *original,
+                                            gboolean          floating);
+ 
++_GDL_EXTERN
+ GType          gdl_dock_get_type          (void);
+ 
++_GDL_EXTERN
+ void           gdl_dock_add_item          (GdlDock          *dock,
+                                            GdlDockItem      *item,
+                                            GdlDockPlacement  placement);
+ 
++_GDL_EXTERN
+ void           gdl_dock_add_floating_item (GdlDock        *dock,
+                                            GdlDockItem    *item,
+                                            gint            x,
+@@ -90,26 +95,36 @@ void           gdl_dock_add_floating_item (GdlDock        *dock,
+                                            gint            width,
+                                            gint            height);
+ 
++_GDL_EXTERN
+ GdlDockItem   *gdl_dock_get_item_by_name  (GdlDock     *dock,
+                                            const gchar *name);
+ 
++_GDL_EXTERN
+ GList         *gdl_dock_get_named_items   (GdlDock    *dock);
+ 
++_GDL_EXTERN
+ GdlDock       *gdl_dock_object_get_toplevel (GdlDockObject *object);
++_GDL_EXTERN
+ GdlDockObject *gdl_dock_get_root            (GdlDock       *dock);
+ 
++_GDL_EXTERN
+ void           gdl_dock_show_preview        (GdlDock       *dock,
+                                              GdkRectangle  *rect);
++_GDL_EXTERN
+ void           gdl_dock_hide_preview        (GdlDock       *dock);
+ 
++_GDL_EXTERN
+ void           gdl_dock_set_skip_taskbar    (GdlDock       *dock,
+                                              gboolean       skip);
+ #ifndef GDL_DISABLE_DEPRECATED
++_GDL_EXTERN
+ GdlDockPlaceholder *gdl_dock_get_placeholder_by_name (GdlDock     *dock,
+                                                       const gchar *name);
+ 
++_GDL_EXTERN
+ void           gdl_dock_xor_rect            (GdlDock       *dock,
+                                              GdkRectangle  *rect) G_GNUC_DEPRECATED_FOR(gdl_dock_show_preview);
++_GDL_EXTERN
+ void           gdl_dock_xor_rect_hide        (GdlDock       *dock) G_GNUC_DEPRECATED_FOR(gdl_dock_hide_preview);
+ #endif
+ 

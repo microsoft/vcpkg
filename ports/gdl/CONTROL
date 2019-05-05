@@ -1,0 +1,4 @@
+Source: gdl
+Version: 3.28.0
+Description: gdl (Gnome Docking Library) provides docking features for gtk+.
+Build-Depends: glib, gdk-pixbuf, gettext, gtk, cairo, libxml2
