@@ -1,5 +1,5 @@
 Source: cppfs
-Version: 1.2.0
+Version: 1.2.0-1
 Description: Cross-platform C++ file system library supporting multiple backends
 
 Feature: ssh

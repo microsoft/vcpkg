@@ -1,14 +1,6 @@
 include(vcpkg_common_functions)
 
-# NOTE: SoundTouch has a static c++ version too, but entirely different headers, api, etc
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Refusing to build DLL with static CRT linkage.")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "WindowsStore not supported")

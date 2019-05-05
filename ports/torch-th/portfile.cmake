@@ -1,11 +1,6 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  message(FATAL_ERROR "scintilla only supports dynamic linkage")
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-  message(FATAL_ERROR "scintilla only supports dynamic crt")
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

@@ -1,12 +1,7 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(OPTIONS -DSHARED=OFF)
 
 set(METIS_VERSION 5.1.0)
 
@@ -28,16 +23,9 @@ vcpkg_extract_source_archive_ex(
         fix-gklib-vs14-math.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(OPTIONS -DSHARED=ON -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
-else()
-  set(OPTIONS -DSHARED=OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        ${OPTIONS}
+    OPTIONS ${OPTIONS}
 )
 
 vcpkg_install_cmake()

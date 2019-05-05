@@ -1,12 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Static CRT linkage is not supported")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported")
