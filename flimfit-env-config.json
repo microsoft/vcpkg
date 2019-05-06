@@ -5,7 +5,12 @@
       "Linux":   "x64-linux"   
    },
 
-   "ports" :
+   "ports" : 
+   [
+      "dlib"
+   ],
+
+   "other-ports" :
    [
       "qt5-serialport",
       "boost",

@@ -57,20 +57,19 @@ jobs:
       condition: always() 
       inputs:
         contents: 'buildtrees/**/*.log'
-        targetFolder: logs
+        targetFolder: $(Source.ArtifactStagingDirectory)/logs
 
-    - task: CopyFiles@2
-      condition: always() 
-      inputs:
-        contents: '$(Build.SourcesDirectory)'
-        targetFolder: '$(Source.ArtifactStagingDirectory)/vcpkg'
-      
     - task: PublishBuildArtifacts@1
       condition: always() 
       inputs:
-        pathtoPublish: logs
+        pathtoPublish: $(Source.ArtifactStagingDirectory)/logs
         artifactName: vcpkg-logs-$(buildPlatform)
 
+    - task: CopyFiles@2
+      inputs:
+        contents: '**'
+        targetFolder: '$(Source.ArtifactStagingDirectory)/vcpkg'
+      
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Source.ArtifactStagingDirectory)/vcpkg'
