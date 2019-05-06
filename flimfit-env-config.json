@@ -7,7 +7,7 @@
 
    "ports" : 
    [
-      "dlib"
+      "libics"
    ],
 
    "other-ports" :
