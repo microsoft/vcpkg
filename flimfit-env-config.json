@@ -5,12 +5,7 @@
       "Linux":   "x64-linux"   
    },
 
-   "ports" : 
-   [
-      "libics"
-   ],
-
-   "other-ports" :
+   "ports" :
    [
       "qt5-serialport",
       "boost",
