@@ -6,3 +6,7 @@ Build-Depends: proj, libpng, geos, sqlite3, curl, expat, libpq, openjpeg, libweb
 Feature: mysql-libmariadb
 Build-Depends: libmariadb
 Description: Add mysql support using libmariadb
+
+Feature: libspatialite
+Build-Depends: libspatialite
+Description: Create or update SpatiaLite databases using libspatialite
