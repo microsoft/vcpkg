@@ -1,5 +1,5 @@
 diff --git a/CMake/FindLibSSH2.cmake b/CMake/FindLibSSH2.cmake
-index 84822dba7..0d6219425 100644
+index 84822db..0d62194 100644
 --- a/CMake/FindLibSSH2.cmake
 +++ b/CMake/FindLibSSH2.cmake
 @@ -12,7 +12,7 @@ endif()
@@ -12,17 +12,33 @@ index 84822dba7..0d6219425 100644
  
  if(LIBSSH2_INCLUDE_DIR)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e6dbb73f1..1e2ff138e 100644
+index edb1cec..579eef4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1144,7 +1144,9 @@ function(TRANSFORM_MAKEFILE_INC INPUT_FILE OUTPUT_FILE)
+@@ -1147,7 +1147,7 @@ endfunction()
  
- endfunction()
+ include(GNUInstallDirs)
  
--if(WIN32 AND NOT CYGWIN)
-+if(MSVC)
-+  set(CURL_INSTALL_CMAKE_DIR share/curl)
-+elseif(WIN32 AND NOT CYGWIN)
-   set(CURL_INSTALL_CMAKE_DIR CMake)
- else()
-   set(CURL_INSTALL_CMAKE_DIR lib/cmake/curl)
+-set(CURL_INSTALL_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
++set(CURL_INSTALL_CMAKE_DIR share/curl)
+ set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+ set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+ set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+@@ -1295,7 +1295,7 @@ install(FILES "${CURL_BINARY_DIR}/curl-config"
+ configure_file("${CURL_SOURCE_DIR}/libcurl.pc.in"
+                "${CURL_BINARY_DIR}/libcurl.pc" @ONLY)
+ install(FILES "${CURL_BINARY_DIR}/libcurl.pc"
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++        DESTINATION ${CURL_INSTALL_CMAKE_DIR}/pkgconfig)
+ 
+ # install headers
+ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/curl"
+@@ -1320,7 +1320,7 @@ configure_package_config_file(CMake/curl-config.cmake.in
+ install(
+         EXPORT "${TARGETS_EXPORT_NAME}"
+         NAMESPACE "${PROJECT_NAME}::"
+-        DESTINATION ${CURL_INSTALL_CMAKE_DIR}
++        DESTINATION share/curl
+ )
+ 
+ install(
