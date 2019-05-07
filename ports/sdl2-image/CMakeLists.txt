@@ -65,18 +65,13 @@ endforeach(FORMAT)
 
 # SDL
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY_RELEASE NAMES SDL2)
-find_library(SDL_LIBRARY_DEBUG NAMES SDL2d)
-SET(SDL_LIBRARY
-  debug ${SDL_LIBRARY_DEBUG}
-  optimized ${SDL_LIBRARY_RELEASE}
-  )
+find_package(SDL2 CONFIG REQUIRED)
 
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)
 include_directories(${CMAKE_SOURCE_DIR})
 
-target_link_libraries(SDL2_image ${SDL_LIBRARY})
+target_link_libraries(SDL2_image SDL2::SDL2)
 
 # external dependencies
 foreach(DEPENDENCY IN LISTS DEPENDENCIES)
@@ -123,7 +118,7 @@ install(EXPORT SDL2_image
 
 
 message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
+message(STATUS "  " SDL2::SDL2)
 foreach(DEPENDENCY ${DEPENDENCIES})
     if(${DEPENDENCY}_FOUND)
         message(STATUS "  " ${DEPENDENCY})

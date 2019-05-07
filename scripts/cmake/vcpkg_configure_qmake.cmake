@@ -43,7 +43,7 @@ function(vcpkg_configure_qmake)
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_debug.conf ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf)
 
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")

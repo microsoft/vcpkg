@@ -3,8 +3,6 @@ project(libxmlpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-
 find_path(GLIBMM_INCLUDE_DIR NAMES glibmm.h)
 find_library(GLIBMM_LIBRARY NAMES glibmm)
 find_library(GIOMM_LIBRARY NAMES giomm)
