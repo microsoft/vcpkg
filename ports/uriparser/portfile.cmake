@@ -20,6 +20,9 @@ vcpkg_configure_cmake(
     OPTIONS
         -DURIPARSER_BUILD_DOCS=OFF
         -DURIPARSER_BUILD_TESTS=OFF
+    OPTIONS_DEBUG
+        -DURIPARSER_BUILD_TOOLS=OFF
+    OPTIONS_RELEASE
         -DURIPARSER_BUILD_TOOLS=${URIPARSER_BUILD_TOOLS}
 )
 
@@ -39,15 +42,9 @@ if(URIPARSER_BUILD_TOOLS)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE
-            ${CURRENT_PACKAGES_DIR}/bin
-            ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     else()
-        file(REMOVE
-            ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/uriparse${EXECUTABLE_SUFFIX}
-        )
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX})
     endif()
 endif()
 
