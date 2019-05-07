@@ -1,0 +1,12 @@
+diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
+index 2bdbd05..ca1473f 100644
+--- a/F2CLIBS/libf2c/CMakeLists.txt
++++ b/F2CLIBS/libf2c/CMakeLists.txt
+@@ -59,4 +59,7 @@ endif()
+ include_directories(${CLAPACK_SOURCE_DIR}/F2CLIBS/libf2c)
+ include_directories(${CLAPACK_BINARY_DIR}/F2CLIBS/libf2c)
+ add_library(f2c STATIC ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
++if(UNIX)
++  target_link_libraries(f2c m)
++endif()
+ set_property(TARGET f2c PROPERTY PREFIX lib)

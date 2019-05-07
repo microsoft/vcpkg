@@ -12,6 +12,7 @@ vcpkg_from_github(
         build.patch
         fix-config-cmake.patch
 )
+# message(FATAL_ERROR "patch")
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/wangle"

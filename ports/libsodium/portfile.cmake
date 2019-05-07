@@ -8,39 +8,50 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+    ${SOURCE_PATH}/CMakeLists.txt
+    COPYONLY
+)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/sodiumConfig.cmake.in
+    ${SOURCE_PATH}/sodiumConfig.cmake.in
+    COPYONLY
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/sodium TARGET_PATH share/sodium)
-
-file(COPY
-    ${SOURCE_PATH}/src/libsodium/include/sodium.h
-    ${SOURCE_PATH}/src/libsodium/include/sodium
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-file(COPY
-    ${SOURCE_PATH}/builds/msvc/version.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/sodium
-)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/sodium/export.h _contents)
-    string(REPLACE "#ifdef SODIUM_STATIC" "#if 1 //#ifdef SODIUM_STATIC" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sodium/export.h "${_contents}")
-endif ()
-
 vcpkg_copy_pdbs()
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsodium
-    RENAME copyright
+vcpkg_fixup_cmake_targets(
+    CONFIG_PATH lib/cmake/unofficial-sodium
+    TARGET_PATH share/unofficial-sodium
 )
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        ${CURRENT_PACKAGES_DIR}/include/sodium/export.h
+        "#ifdef SODIUM_STATIC"
+        "#if 1 //#ifdef SODIUM_STATIC"
+    )
+endif ()
+
+configure_file(
+    ${SOURCE_PATH}/LICENSE
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright
+    COPYONLY
+)
+
+#vcpkg_test_cmake(PACKAGE_NAME unofficial-sodium)

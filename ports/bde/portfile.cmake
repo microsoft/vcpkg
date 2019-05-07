@@ -1,9 +1,13 @@
 include(vcpkg_common_functions)
-set(BDE_VERSION       3.2.0.0)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --library-type=static)
+
+set(BDE_VERSION 3.2.0.0)
 set(BDE_TOOLS_VERSION 1.x)
 
 # Paths used in build
-set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bde-${BDE_VERSION})
+set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bde-${BDE_VERSION})
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bde-${BDE_VERSION})
 
 # Acquire Python 2 and add it to PATH
@@ -46,7 +50,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
 else()
     set(WAF_COMMAND waf.bat)
 endif()
-set(CONFIGURE_COMMON_ARGS --use-flat-include-dir)
+set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --use-flat-include-dir)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --abi-bits=32)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -54,17 +58,8 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --library-type=static)
-else()
-    message(FATAL_ERROR "Unsupported library linkage: ${VCPKG_LIBRARY_LINKAGE}")
-endif()
 if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    if(VCPKG_CRT_LINKAGE STREQUAL static)
-        set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=static)
-    else()
-        set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=dynamic)
-    endif()
+    set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=static)
 endif()
 
 # Configure debug

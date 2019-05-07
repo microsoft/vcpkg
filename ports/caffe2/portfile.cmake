@@ -1,13 +1,10 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     message(FATAL_ERROR "Caffe2 cannot be built for the x86 architecture")
 endif()
-
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -36,7 +33,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    -DBUILD_SHARED_LIBS=OFF
     # Set to ON to use python
     -DBUILD_PYTHON=OFF
     -DUSE_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
