@@ -3,11 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO septag/sx
-    REF 161d7d77a3bdcc8a55846e2dd1791773888fce24
-    SHA512 198476793c921d8859f5f5b9ffe8915a7bc4b1d9d518e6772b3d90ccd03a7f5debe5bde32d7d5164f64a0beda53c5dcd06849814e7df447bccb93aa13bbca8b0
+    REF b70567a52636f9ecfdb904c586a957a806efc990
+    SHA512 8945476b428418d3c7845afd831503f43fd44672a9b3506576c5baf50f55739327275a8be97a323f3ae146f84b76bbe266ac7b5df1b85cb05a826ed5e30b9547
     HEAD_REF master
-    PATCHES
-        win32-sharedlib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SX_SHARED_LIB)
@@ -23,9 +21,9 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sx TARGET_PATH share/sx)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/sx/config.h
         "define SX_CONFIG_SHARED_LIB 0"
         "define SX_CONFIG_SHARED_LIB 1"
@@ -38,4 +36,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 # CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+vcpkg_test_cmake(PACKAGE_NAME sx)
