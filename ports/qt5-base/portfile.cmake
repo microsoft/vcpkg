@@ -215,10 +215,14 @@ foreach(PRL_FILE IN LISTS PRL_FILES)
     file(WRITE "${PRL_FILE}" "${_contents}")
 endforeach()
 
+if((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux"))
+    # Make uic executable
+    execute_process(COMMAND chmod +x ${CURRENT_PACKAGES_DIR}/tools/qt5/uic)
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-# 
