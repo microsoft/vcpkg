@@ -37,7 +37,7 @@ if(URIPARSER_BUILD_TOOLS)
         set(EXECUTABLE_SUFFIX "")
     endif()
 
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
