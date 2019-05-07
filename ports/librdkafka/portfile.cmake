@@ -3,43 +3,25 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF 9b3fce7b882b43302fb983d0e0e555225e672f92
-    SHA512 7edda198fb10a3a005fe4f47af55940051cdb7a350b8f06e7186e70ee9f3b44c7468134f42867303184a807a274507e4fa5b2f7997cd2fd5876993de04949140
+    REF 1f3203c8b647d865dffeb76c2af82ea34ca9b746
+    SHA512 7e0a48142acfa886daaeec98bc304f41de1270075215ccc90e5a8dcd2c11222179ed6c68a353dae55fe8a47f8080e15f05d2ac0a86fa74a2103119a286257cba
     HEAD_REF master
-    PATCHES
-        find_zstd.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
-if("lz4" IN_LIST FEATURES)
-    set(ENABLE_LZ4_EXT ON)
-else()
-    set(ENABLE_LZ4_EXT OFF)
-endif()
+macro(check_feature _feature_name _var)
+    if("${_feature_name}" IN_LIST FEATURES)
+        set(${_var} ON)
+    else()
+        set(${_var} OFF)
+    endif()
+endmacro()
 
-if("ssl" IN_LIST FEATURES)
-    set(WITH_SSL ON)
-else()
-    set(WITH_SSL OFF)
-endif()
-
-if("zlib" IN_LIST FEATURES)
-    set(WITH_ZLIB ON)
-else()
-    set(WITH_ZLIB OFF)
-endif()
-
-if("zstd" IN_LIST FEATURES)
-    set(WITH_ZSTD ON)
-else()
-    set(WITH_ZSTD OFF)
-endif()
-
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/FindZstd.cmake
-    DESTINATION ${SOURCE_PATH}/packaging/cmake/Modules
-)
+check_feature(lz4 ENABLE_LZ4_EXT)
+check_feature(ssl WITH_SSL)
+check_feature(zlib WITH_ZLIB)
+check_feature(zstd WITH_ZSTD)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -82,11 +64,6 @@ if(ENABLE_LZ4_EXT)
     )
 endif()
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/FindZstd.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/rdkafka
-)
-
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
@@ -103,7 +80,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSES.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+
+# Install usage
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
 # CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+vcpkg_test_cmake(PACKAGE_NAME RdKafka)
