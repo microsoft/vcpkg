@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.13)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  message(FATAL_ERROR "${PORT} does not support ARM")
+endif()
+
 include(vcpkg_common_functions)
 
 set(LIBRESSL_VERSION 2.9.1)
