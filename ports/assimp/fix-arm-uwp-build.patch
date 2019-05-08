@@ -1,0 +1,24 @@
+diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
+index 37ad34b..2659cea 100644
+--- a/code/CMakeLists.txt
++++ b/code/CMakeLists.txt
+@@ -937,6 +937,10 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+ 
+ TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES} ${IRRXML_LIBRARY} )
+ 
++if (WIN32)
++  TARGET_LINK_LIBRARIES(assimp advapi32)
++endif()
++
+ if(ASSIMP_ANDROID_JNIIOSYSTEM)
+   set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
+   add_subdirectory(../${ASSIMP_ANDROID_JNIIOSYSTEM_PATH}/ ../${ASSIMP_ANDROID_JNIIOSYSTEM_PATH}/)
+@@ -972,7 +976,7 @@ if( MSVC )
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "WindowsStore")
+-    set(WindowsStore TRUE)
++    target_compile_definitions(assimp PUBLIC WindowsStore)
+ endif()
+ SET_TARGET_PROPERTIES( assimp PROPERTIES
+   VERSION ${ASSIMP_VERSION}
