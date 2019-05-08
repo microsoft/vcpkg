@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
-    REF v3.0.0
-    SHA512 2ac076dd49011234f4431ffe67fcba84a1ca9042ec5fc4dfc8aed2ed16bec5f499fa7aa666e5630796afc266ce76741d931cca333534b55fdc477e25a9189d33
+    REF v2.8.9
+    SHA512 3c80503de6df8fe2589849ae9334d11e3cb033701450e1d7ea2781d122d1c8c1fc205fefc358d0ad1b9c5199c838e1c7c1bb34949da1c73cc8ae174b72e7e70c
     HEAD_REF master
     PATCHES find-openjpeg.patch
 )

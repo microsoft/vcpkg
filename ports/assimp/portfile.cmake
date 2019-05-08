@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
-    REF v.5.0.0.rc1
-    SHA512 715784e017c41d201646b8fb761fc12434084ded020553eeeb9c87113b3b7efbe33f948f8d560b5f272d79fc6c3e49ce95f8ac4c230ff4b14988e49f2d2be9f5
+    REF v4.1.0
+    SHA512 5f1292de873ae16c9921d1d44f2871474d74c0ddfd76cc928a7d9b3e03aa6eca4cc72af0513da20a86d09c55d48646e610fd4a4f2b05364f08ad09cf27cbc67a
     HEAD_REF master
     PATCHES
         dont-overwrite-prefix-path.patch
