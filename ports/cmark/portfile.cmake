@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # Note: fails due to missing cmark_export.h -- fix should be to always generate the correct export header.
-    message(FATAL_ERROR "cmark does not currently support static library linkage")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

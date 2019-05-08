@@ -1,9 +1,6 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported by libvpx yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(LIBVPX_VERSION 1.7.0)
 set(LIBVPX_HASH 8b3b766b550f8d86907628d7ed88035f9a2612aac21542e0fd5ad35b905eb82cbe1be02a1a24afce7a3bcc4766f62611971f72724761996b392136c40a1e7ff0)

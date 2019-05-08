@@ -1,4 +1,4 @@
 Source: glibmm
-Version: 2.52.1-7
+Version: 2.52.1-8
 Description: This is glibmm, a C++ API for parts of glib that are useful for C++. See http://www.gtkmm.org.
 Build-Depends: zlib, pcre, libffi, gettext, libiconv, glib, libsigcpp

@@ -4,11 +4,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Abseil currently only supports being built for desktop")
 endif()
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 540e2537b92cd4abfae6ceddfe24304345461f32
-    SHA512 3cabab23ad159592562a30531052bb18c66fce75f93f84a6de17a7488b7d6651f645950c1adb8dfbacc651f2bc0db82c316de132baab38e3ef95ea5b5a0eb6d2
+    REF d902eb869bcfacc1bad14933ed9af4bed006d481
+    SHA512 660a6cc6250460b6d76e0fd3a0193bf41e69bf6a95361d2f0562b00cf4cb4a36fe0b07e1172faba190743d1b3a3dc96b834a080cdaded3cbdea2fc0392094cde
     HEAD_REF master
     PATCHES fix-usage-lnk-error.patch
 )

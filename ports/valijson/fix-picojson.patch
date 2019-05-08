@@ -1,0 +1,26 @@
+diff --git a/include/valijson/adapters/picojson_adapter.hpp b/include/valijson/adapters/picojson_adapter.hpp
+index b6d17c9..6d04c52 100644
+--- a/include/valijson/adapters/picojson_adapter.hpp
++++ b/include/valijson/adapters/picojson_adapter.hpp
+@@ -29,7 +29,7 @@
+ 
+ #include <string>
+ 
+-#include <picojson.h>
++#include <picojson/picojson.h>
+ 
+ #include <valijson/adapters/adapter.hpp>
+ #include <valijson/adapters/basic_adapter.hpp>
+diff --git a/include/valijson/utils/picojson_utils.hpp b/include/valijson/utils/picojson_utils.hpp
+index 2ca4d46..b983648 100644
+--- a/include/valijson/utils/picojson_utils.hpp
++++ b/include/valijson/utils/picojson_utils.hpp
+@@ -4,7 +4,7 @@
+ 
+ #include <iostream>
+ 
+-#include <picojson.h>
++#include <picojson/picojson.h>
+ 
+ #include <valijson/utils/file_utils.hpp>
+ 

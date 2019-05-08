@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libxmp-lite-4.4.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://sourceforge.net/projects/xmp/files/libxmp/4.4.1/libxmp-lite-4.4.1.tar.gz"

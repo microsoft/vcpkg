@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(PIXMAN_VERSION 0.38.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz"
