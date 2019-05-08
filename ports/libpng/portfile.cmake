@@ -7,8 +7,7 @@ vcpkg_from_github(
     SHA512 ccb3705c23b2724e86d072e2ac8cfc380f41fadfd6977a248d588a8ad57b6abe0e4155e525243011f245e98d9b7afbe2e8cc7fd4ff7d82fcefb40c0f48f88918
     HEAD_REF master
     PATCHES
-        "use-abort-on-all-platforms.patch"
-        "skip-install-symlink.patch"
+        use-abort-on-all-platforms.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -45,14 +44,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endif()
 endif()
 
-# Remove CMake config files as they are incorrectly generated and everyone uses built-in FindPNG anyway.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libpng ${CURRENT_PACKAGES_DIR}/debug/lib/libpng)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng TARGET_PATH share/libpng)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
+
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpng/LICENSE ${CURRENT_PACKAGES_DIR}/share/libpng/copyright)
 
 vcpkg_copy_pdbs()
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/png)
