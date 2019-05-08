@@ -1,7 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT
-    VCPKG_CMAKE_SYSTEM_NAME)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
