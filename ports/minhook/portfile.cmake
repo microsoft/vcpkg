@@ -4,6 +4,16 @@ endif()
 
 include(vcpkg_common_functions)
 
+if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    set(BUILD_ARCH "Win32")
+    set(OUTPUT_DIR "Win32")
+elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+    set(BUILD_ARCH "x64")
+    set(OUTPUT_DIR "Win64")
+else()
+    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 # Download files to enable CMake support for minhook - Adds CMakeLists.txt and minhook-config.cmake.in
 vcpkg_download_distfile(
     CMAKE_SUPPORT_PATCH
@@ -22,17 +32,6 @@ vcpkg_from_github(
         "${CMAKE_SUPPORT_PATCH}"
         install-destination.patch
 )
-
-if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-    set(BUILD_ARCH "Win32")
-    set(OUTPUT_DIR "Win32")
-elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-    set(BUILD_ARCH "x64")
-    set(OUTPUT_DIR "Win64")
-else()
-    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
