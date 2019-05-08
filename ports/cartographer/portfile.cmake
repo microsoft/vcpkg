@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googlecartographer/cartographer
@@ -15,11 +17,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF 
-        -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF 
-        -Dgtest_disable_pthreads=ON 
+        -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF
+        -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF
+        -Dgtest_disable_pthreads=ON
         -DCMAKE_USE_PTHREADS_INIT=OFF
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
     OPTIONS_DEBUG
         -DFORCE_DEBUG_BUILD=True
 )

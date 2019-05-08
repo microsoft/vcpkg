@@ -14,15 +14,9 @@ vcpkg_from_github(
 )
 
 # package: 'ms-gsl'
-set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include 
+set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include
     CACHE PATH "path to include C++ core guideline support library" FORCE)
 message(STATUS "Using ms-gsl at ${GSL_INCLUDE_DIR}")
-
-set(DLL_LINKAGE false)
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
-    message(STATUS "Using DLL linkage")
-    set(DLL_LINKAGE true)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -30,7 +24,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DGSL_INCLUDE_DIR=${GSL_INCLUDE_DIR}
         -DTEST_DISABLED=True
-        -DBUILD_SHARED_LIBS=${DLL_LINKAGE}
 )
 
 vcpkg_install_cmake()
@@ -44,6 +37,3 @@ file(
 # removed duplicates in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# unset used variables
-unset(DLL_LINKAGE)

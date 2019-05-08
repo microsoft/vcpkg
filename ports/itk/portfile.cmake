@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF 906736bd453e95ccf03b318d3d07cb7884285161
     SHA512 8ac62262d46e7acbb0e5b2e964292ec17e1687bb162b8cec666e5b67acbe3449f093a0b1c03737e9951cb88248ed890805ffd57df6eae21220488620da833c57
     HEAD_REF master
+    PATCHES fix_conflict_with_openjp2_pc.patch
 )
 
 if ("vtk" IN_LIST FEATURES)
@@ -50,7 +51,7 @@ vcpkg_configure_cmake(
 
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
 
-        # I havn't tried Python wrapping in vcpkg
+        # I haven't tried Python wrapping in vcpkg
         #-DITK_WRAP_PYTHON=ON
         #-DITK_PYTHON_VERSION=3
 
@@ -60,6 +61,7 @@ vcpkg_configure_cmake(
         -DModule_IOSTL=ON # example how to turn on a non-default module
         -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         -DModule_RLEImage=ON # example how to turn on a remote module
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON #Use port openjpeg instead of own third-party
         ${ADDITIONAL_OPTIONS}
 )
 
