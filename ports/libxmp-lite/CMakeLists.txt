@@ -39,8 +39,6 @@ else()
     option(INSTALL_HEADERS "Install header files" ON)
 endif()
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_library(libxmp-lite ${SOURCES})
 target_compile_definitions(libxmp-lite PRIVATE
             LIBXMP_CORE_PLAYER=1
