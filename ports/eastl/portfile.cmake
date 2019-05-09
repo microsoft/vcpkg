@@ -9,6 +9,7 @@ vcpkg_from_github(
     REF 3.13.05
     SHA512 2364554339203c972f10d58ebe8f14fb221a40451f4cd2c3c5acd6891e8580c1a0a5d4ba592c91349d3feca50d9880648bb37358820a1c9552dde3f7af400a82
     HEAD_REF master
+    PATCHES fixchar8_t.patch
 )
 
 vcpkg_configure_cmake(
