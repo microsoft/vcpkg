@@ -141,7 +141,7 @@ endif()
 
 target_link_libraries(libpq PRIVATE OpenSSL::SSL)
 if(WIN32)
-    target_link_libraries(libpq PRIVATE ws2_32 secur32 advapi32 shell32)
+    target_link_libraries(libpq PRIVATE ws2_32 secur32 advapi32 shell32 crypt32)
 endif()
 target_include_directories(libpq PRIVATE src/include src/port ${CMAKE_CURRENT_BINARY_DIR}/include)
 set_target_properties(libpq PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
