@@ -5,12 +5,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
-    REF v2019.01.07.00
-    SHA512 1b4771d92b45fd5e9622985321cfd608510ea13d2f4cb03a4842c52d7253a1b460f825746a315ef0df3b2e37e56abddb5b493b80d383ba327fdbf7294bae193e
+    REF v2019.05.06.00
+    SHA512 59067bf4f349d06458c163b23e8ec71abe868ab7b870792461f3b8ac7d8bb4d0944c7962415ee8c871b430b0a1e1a4577f5710ef6502448a6b52bab7d48d3b91
     HEAD_REF master
     PATCHES
         build.patch
-        gflags.patch
         fix-config-cmake.patch
 )
 # message(FATAL_ERROR "patch")

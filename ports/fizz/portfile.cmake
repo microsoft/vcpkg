@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF v2019.01.14.00
-    SHA512 9182e5e6eb795842fdc536adaae9aeae7ddd17a34776bda303015dbac95c95a1ceb42ea77c3b69c1018a9ea33bbd469fd23955ac7efcc2bfcc84e899c89b5981
+    REF v2019.05.06.00
+    SHA512 c2f832e1f402eef86d9066d7c59a7801d7f1ede904b70005526b2be6cb554cc4b530b5a05575c9511953f5458108e3380b12e0a4a9b05ec14000d7b83d468ca8
     HEAD_REF master
     PATCHES depend-zlib.patch
 )
