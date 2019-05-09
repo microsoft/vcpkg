@@ -1,6 +1,10 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_SHARED ON)
+else()
+    set(BUILD_SHARED OFF)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,6 +18,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DBUILD_CODEC:BOOL=OFF
+            -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED}
             -DOPENJPEG_INSTALL_PACKAGE_DIR=share/openjpeg
             -DOPENJPEG_INSTALL_INCLUDE_DIR=include
 )
