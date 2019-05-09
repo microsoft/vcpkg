@@ -1,12 +1,56 @@
 #!/bin/sh
 
-# Find vcpkg-root
+# Find .vcpkg-root, which indicates the root of this repo
 vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
 while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
     vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
-downloadsDir="$vcpkgRootDir/downloads"
+# Enable using this entry point on windows from git bash by redirecting to the .bat file.
+unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
+if [ "$unixName" = "MINGW_NT" ]; then
+  vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
+  cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat" || exit 1
+  exit 0
+fi
+
+# Argument parsing
+vcpkgDisableMetrics="OFF"
+vcpkgUseSystem=false
+vcpkgAllowAppleClang=OFF
+for var in "$@"
+do
+    if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
+        vcpkgDisableMetrics="ON"
+    elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
+        vcpkgUseSystem=true
+    elif [ "$var" = "-allowAppleClang" -o "$var" = "--allowAppleClang" ]; then
+        vcpkgAllowAppleClang=ON
+    elif [ "$var" = "-help" -o "$var" = "--help" ]; then
+        echo "Usage: ./bootstrap-vcpkg.sh [options]"
+        echo
+        echo "Options:"
+        echo "    -help                Display usage help"
+        echo "    -disableMetrics      Do not build metrics reporting into the executable"
+        echo "    -useSystemBinaries   Force use of the system utilities for building vcpkg"
+        echo "    -allowAppleClang     Set VCPKG_ALLOW_APPLE_CLANG to build vcpkg in apple with clang anyway"
+        exit 1
+    else
+        echo "Unknown argument $var. Use '-help' for help."
+        exit 1
+    fi
+done
+
+if [ -z ${VCPKG_DOWNLOADS+x} ]; then
+    downloadsDir="$vcpkgRootDir/downloads"
+else
+    downloadsDir="$VCPKG_DOWNLOADS"
+    if [ ! -d "$VCPKG_DOWNLOADS" ]; then
+        echo "VCPKG_DOWNLOADS was set to '$VCPKG_DOWNLOADS', but that was not a directory."
+        exit 1
+    fi
+
+fi
 
 extractStringBetweenDelimiters()
 {
@@ -47,7 +91,7 @@ vcpkgCheckEqualFileHash()
         echo "        File path: [ $downloadPath ]"
         echo "    Expected hash: [ $sha512 ]"
         echo "      Actual hash: [ $actualHash ]"
-        exit
+        exit 1
     fi
 }
 
@@ -92,6 +136,8 @@ fetchTool()
         os="linux"
     elif [ "$UNAME" = "Darwin" ]; then
         os="osx"
+    elif [ "$UNAME" = "FreeBSD" ]; then
+        os="freebsd"
     else
         echo "Unknown uname: $UNAME"
         return 1
@@ -170,9 +216,14 @@ selectCXX()
     gccversion="$(extractStringBetweenDelimiters "$gccversion" "gcc version " ".")"
     if [ "$gccversion" -lt "6" ]; then
         echo "CXX ($CXX) is too old; please install a newer compiler such as g++-7."
-        echo "sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
-        echo "sudo apt-get update -y"
-        echo "sudo apt-get install g++-7 -y"
+        echo "On Ubuntu try the following:"
+        echo "  sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
+        echo "  sudo apt-get update -y"
+        echo "  sudo apt-get install g++-7 -y"
+        echo "On CentOS try the following:"
+        echo "  sudo yum install centos-release-scl"
+        echo "  sudo yum install devtoolset-7"
+        echo "  scl enable devtoolset-7 bash"
         return 1
     fi
 
@@ -181,8 +232,14 @@ selectCXX()
 
 # Preparation
 UNAME="$(uname)"
-fetchTool "cmake" "$UNAME" cmakeExe || exit 1
-fetchTool "ninja" "$UNAME" ninjaExe || exit 1
+
+if $vcpkgUseSystem; then
+    cmakeExe="cmake"
+    ninjaExe="ninja"
+else
+    fetchTool "cmake" "$UNAME" cmakeExe || exit 1
+    fetchTool "ninja" "$UNAME" ninjaExe || exit 1
+fi
 selectCXX CXX || exit 1
 
 # Do the build
@@ -190,8 +247,8 @@ buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe")
-(cd "$buildDir" && "$cmakeExe" --build .)
+(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"

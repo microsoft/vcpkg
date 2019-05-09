@@ -1,4 +1,4 @@
 Source: sdl2-net
-Version: 2.0.1-4
+Version: 2.0.1-6
 Description: Networking library for SDL
 Build-Depends: sdl2

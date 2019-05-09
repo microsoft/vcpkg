@@ -6,7 +6,6 @@ add_definitions(-DNOMINMAX -DWIN32_LEAN_AND_MEAN)
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     option(INSTALL_HEADERS "Install header files" ON)
@@ -16,9 +15,8 @@ endif()
 
 function(add_sublibrary LIB)
     file(GLOB_RECURSE SOURCES "absl/${LIB}/*.cc")
-    list(FILTER SOURCES EXCLUDE REGEX "_test(ing)?(_.+)?.cc$|_nonprod.cc$|test_util.cc$")
-    file(GLOB HEADERS "absl/${LIB}/*.h" "absl/${LIB}/*.inc")
-    file(GLOB INTERNAL_HEADERS "absl/${LIB}/internal/*.h")
+    list(FILTER SOURCES EXCLUDE REGEX "_test(ing)?(_.+)?.cc$|_nonprod.cc$|test_util.cc$|_benchmark.cc$")
+    file(GLOB_RECURSE HEADERS "absl/${LIB}/*.h" "absl/${LIB}/*.inc")
 
     if(SOURCES)
         if("STATIC" IN_LIST ARGN)
@@ -33,7 +31,6 @@ function(add_sublibrary LIB)
         target_include_directories(${LIB} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
     endif()
 
-
     install(TARGETS ${LIB} EXPORT unofficial-abseil-targets
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
@@ -42,10 +39,11 @@ function(add_sublibrary LIB)
 
     if(INSTALL_HEADERS)
         if(HEADERS)
-            install(FILES ${HEADERS} DESTINATION "include/absl/${LIB}")
-        endif()
-        if(INTERNAL_HEADERS)
-            install(FILES ${INTERNAL_HEADERS} DESTINATION "include/absl/${LIB}/internal")
+            foreach(file IN LISTS HEADERS)
+                get_filename_component(dir ${file} DIRECTORY)
+                file(RELATIVE_PATH rel_dir ${CMAKE_SOURCE_DIR}/absl/${LIB} ${dir})
+                install(FILES ${file} DESTINATION "include/absl/${LIB}/${rel_dir}")
+            endforeach()
         endif()
     endif()
 endfunction()
@@ -61,8 +59,9 @@ endfunction()
 
 add_sublibrary(algorithm)
 add_sublibrary(base)
-add_sublibrary(container)
+add_sublibrary(container STATIC)
 add_sublibrary(debugging)
+add_sublibrary(hash)
 add_sublibrary(memory)
 add_sublibrary(meta)
 add_sublibrary(numeric)
@@ -74,8 +73,9 @@ add_sublibrary(types)
 add_sublibrary(utility)
 
 target_link_public_libraries(algorithm base meta)
-target_link_public_libraries(container algorithm base memory)
+target_link_public_libraries(container algorithm base memory time)
 target_link_public_libraries(debugging base)
+target_link_public_libraries(hash base)
 target_link_public_libraries(memory meta)
 target_link_public_libraries(meta base)
 target_link_public_libraries(numeric base)
@@ -84,9 +84,6 @@ target_link_public_libraries(types base utility meta algorithm strings)
 target_link_public_libraries(utility base meta)
 target_link_public_libraries(time base numeric)
 target_link_public_libraries(synchronization base time)
-
-find_package(unofficial-cctz REQUIRED)
-target_link_libraries(time PUBLIC unofficial::cctz)
 
 install(
     EXPORT unofficial-abseil-targets

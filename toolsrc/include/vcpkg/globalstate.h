@@ -4,6 +4,7 @@
 #include <vcpkg/base/util.h>
 
 #include <atomic>
+#include <string>
 
 namespace vcpkg
 {
@@ -18,5 +19,6 @@ namespace vcpkg
 
         static std::atomic<int> g_init_console_cp;
         static std::atomic<int> g_init_console_output_cp;
+        static std::atomic<bool> g_init_console_initialized;
     };
 }

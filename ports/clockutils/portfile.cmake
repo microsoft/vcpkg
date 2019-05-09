@@ -1,12 +1,14 @@
 include(vcpkg_common_functions)
-set(VERSION 3651f232c27074c4ceead169e223edf5f00247c5)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/clockUtils-${VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ClockworkOrigins/clockUtils/archive/${VERSION}.tar.gz"
-    FILENAME "clockUtils-${VERSION}.tar.gz"
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ClockworkOrigins/clockUtils
+    REF 3651f232c27074c4ceead169e223edf5f00247c5
     SHA512 ddb70cae9ced25de77a2df1854dac15e58a77347042ba3ee9c691f85f49edbc6539c84929a7477d429fb9161ba24c57d24d767793b8b1180216d5ddfc5d3ed6a
+    HEAD_REF dev-1.2
+    PATCHES
+        "${CURRENT_PORT_DIR}/fix-warningC4643.patch"
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     SET(SHARED_FLAG ON)

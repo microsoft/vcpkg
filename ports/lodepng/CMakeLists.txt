@@ -5,18 +5,13 @@ if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
-
 include_directories(".")
 
 add_library(lodepng  lodepng.cpp lodepng_util.cpp)
 
-add_executable(pngdetail pngdetail.cpp)
+# add_executable(pngdetail pngdetail.cpp)
 
-target_link_libraries(pngdetail lodepng)
+# target_link_libraries(pngdetail lodepng)
 
 install(
   TARGETS lodepng
@@ -25,12 +20,12 @@ install(
   ARCHIVE DESTINATION lib
 )
 
-if(NOT DISABLE_INSTALL_TOOLS)
-  install (
-    TARGETS pngdetail
-    RUNTIME DESTINATION tools/lodepng
-  )
-endif()
+# if(NOT DISABLE_INSTALL_TOOLS)
+#   install (
+#     TARGETS pngdetail
+#     RUNTIME DESTINATION tools/lodepng
+#   )
+# endif()
 
 if(NOT DDISABLE_INSTALL_EXAMPLES)
   install(DIRECTORY examples  DESTINATION share/lodepng/)

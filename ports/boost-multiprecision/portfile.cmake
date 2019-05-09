@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/multiprecision
-    REF boost-1.67.0
-    SHA512 a2481ad9856ab5024d86097967f187596f18eada71effa51313fb72b02809f5177582fe13bfa5db647f31b5a667b209bf044bc0598385408494c0f6284d0c8a2
+    REF boost-1.69.0
+    SHA512 845a8e5aea10627fb9412ccd4aea4aa8315db00dd07d3b432a6574e6bf0d68574a69e98ae26591ebb47f45d98df9bea3b2392552ec23de8d18f068288a6b24c3
     HEAD_REF master
 )
 

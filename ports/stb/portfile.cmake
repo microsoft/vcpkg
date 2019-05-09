@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nothings/stb
-    REF e6afb9cbae4064da8c3e69af3ff5c4629579c1d2
-    SHA512 232ef301d4d6c82c7c5f0e4234b9160cc815f3b6bcc35d341cdf8738646f2f0887ee9838680699f4c9f4274b1390036b2c4fb3ebc2d663af8ff888114dc9f04b
+    REF 1034f5e5c4809ea0a7f4387e0cd37c5184de3cdd
+    SHA512 efc3deedd687615a6706b0d315ded8d76edb28fcd6726531956fde9bba81cc62f25df0a1f998b56e16ab0c62989687c7d5b58875789470c2bf7fd457b1ff6535
     HEAD_REF master
 )
 

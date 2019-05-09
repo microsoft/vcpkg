@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/callable_traits
-    REF boost-1.67.0
-    SHA512 5a6dedd5b8c4f57d4e896dbd963927459a42cc2488dd09628b5cc484327d21b32d7f5f2d976a55b4a62783faa4688b6f020983030bfc1f4307acf7f66b179fbc
+    REF boost-1.69.0
+    SHA512 0bdff6650b996b640b5853c540dab0a22cb6da13182512bfc34608d9bbb8f99ecd01b018106f91b827e5c9c2a9a7c7373128c85f4b533f472c81efab4eef45eb
     HEAD_REF master
 )
 

@@ -1,0 +1,18 @@
+diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
+index ca1473f..fa54e94 100644
+--- a/F2CLIBS/libf2c/CMakeLists.txt
++++ b/F2CLIBS/libf2c/CMakeLists.txt
+@@ -63,3 +63,13 @@ if(UNIX)
+   target_link_libraries(f2c m)
+ endif()
+ set_property(TARGET f2c PROPERTY PREFIX lib)
++install(TARGETS f2c
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
++
++install(TARGETS arithchk
++        RUNTIME DESTINATION tools
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
++

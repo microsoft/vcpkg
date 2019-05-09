@@ -4,6 +4,9 @@ project(glib C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
+if(MSVC)
+    add_compile_options(/utf-8)
+endif()
 set(GLIB_DLL_SUFFIX 2)
 set(GLIB_LIB_SUFFIX 2.0)
 
@@ -71,13 +74,25 @@ else()
     set(ENV{MSGFMT} "/bin/echo")
     set(ENV{GMSGFMT} "/bin/echo")
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/config/config.h")
+        string(TOUPPER UPPER_CONFIG "${CMAKE_BUILD_TYPE}")
+        set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+        set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+        if(BUILD_SHARED_LIBS)
+            set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+        else()
+            set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+        endif()
+
+        string(STRIP "${CXXFLAGS}" CXXFLAGS)
+        string(STRIP "${CFLAGS}"   CFLAGS)
+        string(STRIP "${LDFLAGS}"  LDFLAGS)
         execute_process(
             COMMAND "${CMAKE_SOURCE_DIR}/configure"
                 --disable-libelf
                 --disable-libmount
-                "CPPFLAGS=-I${PCRE_INCLUDE_DIR}"
-                "CFLAGS=-I${PCRE_INCLUDE_DIR}"
-                "LDFLAGS=-L${LIB_DIR}"
+                "CPPFLAGS=${CXXFLAGS}"
+                "CFLAGS=${CFLAGS}"
+                "LDFLAGS=${LDFLAGS}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
             RESULT_VARIABLE res
         )
@@ -119,14 +134,14 @@ target_compile_definitions(glib PRIVATE GLIB_COMPILATION G_LOG_DOMAIN="GLib" LIB
 target_link_libraries(glib PRIVATE ${PCRE_LIBRARY} unofficial::iconv::libiconv unofficial::iconv::libcharset ${LIBINTL_LIBRARY})
 if(WIN32)
     target_compile_definitions(glib PRIVATE USE_SYSTEM_PCRE)
-    target_link_libraries(glib PRIVATE ws2_32 winmm)
+    target_link_libraries(glib PRIVATE ws2_32 winmm advapi32 ole32 shell32)
 else()
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
     target_link_libraries(glib PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 endif()
 target_include_directories(glib PRIVATE ${PCRE_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
-target_include_directories(glib PUBLIC ${LIBINTL_INCLUDE_DIR})
+target_include_directories(glib PUBLIC $<BUILD_INTERFACE:${LIBINTL_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS glib)
 if(NOT GLIB_SKIP_HEADERS)
     install(FILES glib/glib.h glib/glib-object.h ${CMAKE_BINARY_DIR}/config/glib/glibconfig.h DESTINATION include)
@@ -151,7 +166,7 @@ extract_vcproj_sources(win32/vs14/gobject.vcxproj GOBJECT_SOURCES)
 add_library(gobject ${GOBJECT_SOURCES})
 target_compile_definitions(gobject PRIVATE GOBJECT_COMPILATION G_LOG_DOMAIN="GLib-GObject")
 target_link_libraries(gobject PRIVATE gthread glib ${FFI_LIBRARY})
-target_include_directories(gobject PRIVATE ${FFI_INCLUDE_DIR})
+target_include_directories(gobject PRIVATE ${FFI_INCLUDE_DIR} PUBLIC $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS gobject)
 if(NOT GLIB_SKIP_HEADERS)
     file(GLOB GOBJECT_HEADERS gobject/*.h gobject/gobjectnotifyqueue.c)
@@ -164,7 +179,7 @@ add_library(gmodule gmodule/gmodule.c)
 target_compile_definitions(gmodule PRIVATE G_LOG_DOMAIN="GModule")
 target_link_libraries(gmodule PRIVATE glib ${LIBINTL_LIBRARY})
 target_include_directories(gmodule PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gmodule>)
-target_include_directories(gmodule PRIVATE ${LIBINTL_INCLUDE_DIR})
+target_include_directories(gmodule PRIVATE ${LIBINTL_INCLUDE_DIR} PUBLIC $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS gmodule)
 if(NOT GLIB_SKIP_HEADERS)
     install(FILES gmodule/gmodule.h DESTINATION include)
@@ -232,9 +247,9 @@ endif()
 add_library(gio ${GIO_SOURCES})
 target_compile_definitions(gio PRIVATE GIO_COMPILATION G_LOG_DOMAIN="GLib-GIO")
 target_link_libraries(gio PRIVATE glib gmodule gobject ZLIB::ZLIB ${LIBRESOLV_LIBRARY} ${LIBINTL_LIBRARY})
-target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gio>)
+target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gio> $<INSTALL_INTERFACE:include/gio>)
 if(WIN32)
-    target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi)
+    target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi advapi32 shell32)
 elseif(APPLE)
     target_link_libraries(gio PRIVATE xdgmime kqueue)
 else()
@@ -250,7 +265,11 @@ endforeach()
 
 macro(add_glib_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
-    target_link_libraries(${TOOL_NAME} glib ${LIBINTL_LIBRARY})
+    if(WIN32)
+        target_link_libraries(${TOOL_NAME} glib ${LIBINTL_LIBRARY} shell32)
+    else()
+        target_link_libraries(${TOOL_NAME} glib ${LIBINTL_LIBRARY})
+    endif()
     target_compile_definitions(${TOOL_NAME} PRIVATE GLIB_COMPILATION)
     list(APPEND GLIB_TOOLS ${TOOL_NAME})
 endmacro()
@@ -297,7 +316,28 @@ if(NOT GLIB_SKIP_TOOLS)
     install(TARGETS ${GLIB_TOOLS} RUNTIME DESTINATION tools/glib)
 endif()
 
-install(TARGETS ${GLIB_TARGETS} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
+install(
+    TARGETS ${GLIB_TARGETS}
+    EXPORT glib
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+install(
+    EXPORT glib
+    NAMESPACE unofficial::glib::
+    FILE unofficial-glib-targets.cmake
+    DESTINATION share/unofficial-glib
+)
+configure_file(
+    cmake/unofficial-glib-config.in.cmake
+    cmake/unofficial-glib-config.cmake
+    @ONLY
+)
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-glib-config.cmake
+    DESTINATION share/unofficial-glib
+)
 
 message(STATUS "Link-time dependencies:")
 message(STATUS "  " ${ZLIB_LIBRARIES})
