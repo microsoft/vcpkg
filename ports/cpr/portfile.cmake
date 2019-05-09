@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO whoshuu/cpr
@@ -16,7 +18,6 @@ vcpkg_configure_cmake(
     OPTIONS 
         -DBUILD_CPR_TESTS=OFF
         -DUSE_SYSTEM_CURL=ON
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
 )

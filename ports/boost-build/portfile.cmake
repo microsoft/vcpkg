@@ -11,21 +11,24 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
-    REF boost-1.66.0
-    SHA512 db94eefa0c2fe410cfdf7599102670377a069d52a7c8d4181f6209e3e65860e9d92f86ec5994e402b8a773a47a4ad5c074acf9763eabbe293266af19380e7ca9
+    REF boost-1.69.0
+    SHA512 e8d89e75c83a08bab29f52b5100fccf1d2ddf492a532ae4cb8121a5f49819aebb8157d1a1fd7d514bd8a0fe444e5ebb1103b10c8579d5c234ab81110d9c334a8
     HEAD_REF master
+	PATCHES
+	    # Add the support of arm64-windows
+        arm64msvc.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.66.0/LICENSE_1_0.txt"
+    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.69.0/LICENSE_1_0.txt"
     FILENAME "boost_LICENSE_1_0.txt"
     SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
 )
 
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
-    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.66.0/boostcpp.jam"
-    FILENAME "boost-1.66.0-boostcpp.jam"
-    SHA512 ef2ae1d6a53a7f93654950e2e8e679da6b0359f02baafc03db970801634c1f5d4229633b5b6d74ad96a306e6efe3429d436669dc165b1fa655917e0ec74714e4
+    URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.69.0/boostcpp.jam"
+    FILENAME "boost-1.69.0-boostcpp.jam"
+    SHA512 1d05142f33b86a342674513cd5890b78601b0b3824540588f2c9e4c1fea43fadaa94f4a99495614445d3930861470fbfb8ad8c94b8bddf6a24ee65661a9bddc9
 )
 
 file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build RENAME copyright)

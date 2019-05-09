@@ -3,18 +3,27 @@ project(leveldb C CXX)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
-add_definitions(
-	-DWIN32
-	-D_CRT_NONSTDC_NO_DEPRECATE
-	-D_SCL_SECURE_NO_WARNINGS
-	-D_CRT_SECURE_NO_WARNINGS
-	-DNOMINMAX
-	-DLEVELDB_ATOMIC_PRESENT
-	-DLEVELDB_PLATFORM_WINDOWS
-)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(libleveldb
-	db/builder.cc
+IF (MSVC)
+add_definitions(
+       -DWIN32
+       -D_CRT_NONSTDC_NO_DEPRECATE
+       -D_SCL_SECURE_NO_WARNINGS
+       -D_CRT_SECURE_NO_WARNINGS
+       -DNOMINMAX
+       -DLEVELDB_PLATFORM_WINDOWS
+       -DLEVELDB_ATOMIC_PRESENT
+)
+else ()
+add_definitions(
+       -DLEVELDB_PLATFORM_POSIX
+       -DLEVELDB_ATOMIC_PRESENT
+)
+endif()
+set(SRCS
+    db/builder.cc
     db/c.cc
     db/dbformat.cc
     db/db_impl.cc
@@ -31,7 +40,6 @@ add_library(libleveldb
     db/write_batch.cc
     helpers/memenv/memenv.cc
     port/port_posix_sse.cc
-    port/port_win.cc
     table/block.cc
     table/block_builder.cc
     table/filter_block.cc
@@ -48,8 +56,6 @@ add_library(libleveldb
     util/comparator.cc
     util/crc32c.cc
     util/env.cc
-    util/env_posix.cc
-    util/env_win.cc
     util/filter_policy.cc
     util/hash.cc
     util/histogram.cc
@@ -58,11 +64,22 @@ add_library(libleveldb
     util/status.cc
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} include)
+if (MSVC)
+set(SRCS ${SRCS} port/port_win.cc util/env_win.cc)
+else ()
+set(SRCS ${SRCS} port/port_posix.cc util/env_posix.cc)
+ENDIF()
 
-target_link_libraries(libleveldb PUBLIC Iphlpapi.lib Shlwapi.lib)
+add_library(leveldb ${SRCS})
 
-install(TARGETS libleveldb
+target_include_directories(leveldb
+    PUBLIC include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_link_libraries(leveldb PUBLIC Iphlpapi.lib Shlwapi.lib)
+
+install(TARGETS leveldb
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib

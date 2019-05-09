@@ -1,6 +1,4 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SignalR-Client-Cpp-1.0.0-beta1)
-
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,18 +6,15 @@ vcpkg_from_github(
     REF 1.0.0-beta1
     SHA512 b38f6f946f1499080071949cbcf574405118f9acfb469441e5b5b0df3e5f0d277a83b30e0d613dc5e54732b9071e3273dac1ee65129f994d5a60eef0e45bdf6c
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
+        0001_cmake.patch
+        0002_fix-compile-error.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
-        -DCPPREST_SO=${CURRENT_INSTALLED_DIR}/debug/lib/cpprest_2_10.lib
+        -DCPPREST_SO=${CURRENT_INSTALLED_DIR}/debug/lib/cpprest_2_10d.lib
     OPTIONS_RELEASE
         -DCPPREST_SO=${CURRENT_INSTALLED_DIR}/lib/cpprest_2_10.lib
     OPTIONS

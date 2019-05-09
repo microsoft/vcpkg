@@ -1,21 +1,10 @@
-# UWP Not Support
+include(vcpkg_common_functions)
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
-# Static Build Not Support
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-# Static CRT linkage not supported
-if (VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Warning: Static CRT linkage is not supported.")
-endif()
-
-# Download Source Code
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenNI/OpenNI2

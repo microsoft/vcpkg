@@ -17,4 +17,6 @@ namespace vcpkg
 
         void try_write_data(Files::Filesystem& fs) const;
     };
+
+    fs::path get_user_dir();
 }

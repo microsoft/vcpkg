@@ -1,10 +1,17 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Aws-sdk-cpp's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.4.24
-    SHA512 bda259caeeb909884128268f0dfe3ca58ce665be2a0304302f1fd09c4217cbcd34c20119009123aeb80377dfe5144b72cbd98d2acbdc9ffa729c09e380751bf2
+    REF 1.7.98
+    SHA512 5527f43a9cd6f98afbd09115d9447402768b2ebb83b829e0a7d2bd5393c92d794ca8ed8f7a8a55c52be11540ef5dd80a1a81e85304ba0bc4d053b940c54805eb
     HEAD_REF master
 )
 
@@ -14,8 +21,11 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-# This handles escaping the list
-string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+if(CMAKE_HOST_WIN32)
+    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+else()
+    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -26,6 +36,7 @@ vcpkg_configure_cmake(
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         "-DBUILD_ONLY=${BUILD_ONLY}"
+        -DBUILD_DEPS=OFF
 )
 
 vcpkg_install_cmake()

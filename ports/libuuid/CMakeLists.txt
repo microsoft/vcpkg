@@ -24,7 +24,7 @@ add_executable(test_uuid test_uuid.c)
 target_link_libraries(test_uuid uuid)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    install(FILES uuid.h DESTINATION include)
+    install(FILES uuid.h DESTINATION include/uuid)
 endif()
 
 install(

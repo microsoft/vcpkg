@@ -1,0 +1,19 @@
+diff --git a/OpenEXR/IlmImf/CMakeLists.txt b/OpenEXR/IlmImf/CMakeLists.txt
+index e1a8740..d31cf68 100644
+--- a/OpenEXR/IlmImf/CMakeLists.txt
++++ b/OpenEXR/IlmImf/CMakeLists.txt
+@@ -2,14 +2,6 @@
+ 
+ SET(CMAKE_INCLUDE_CURRENT_DIR 1)
+ 
+-IF (WIN32)
+-  SET(RUNTIME_DIR ${OPENEXR_PACKAGE_PREFIX}/bin)
+-  SET(WORKING_DIR ${RUNTIME_DIR})
+-ELSE ()
+-  SET(RUNTIME_DIR ${OPENEXR_PACKAGE_PREFIX}/lib)
+-  SET(WORKING_DIR .)
+-ENDIF ()
+-
+ SET(BUILD_B44EXPLOGTABLE OFF)
+ IF (NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/b44ExpLogTable.h")
+   SET(BUILD_B44EXPLOGTABLE ON)

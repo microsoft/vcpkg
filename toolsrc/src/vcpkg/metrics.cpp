@@ -5,8 +5,9 @@
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
@@ -219,6 +220,8 @@ namespace vcpkg::Metrics
                                    "OSX",
 #elif defined(__linux__)
                                    "Linux",
+#elif defined(__FreeBSD__)
+                                   "FreeBSD",
 #elif defined(__unix__)
                                    "Unix",
 #else
@@ -245,12 +248,6 @@ namespace vcpkg::Metrics
 
     bool get_compiled_metrics_enabled() { return DISABLE_METRICS == 0; }
 
-    static fs::path get_vcpkg_root()
-    {
-        return Files::get_real_filesystem().find_file_recursively_up(
-            fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
-    }
-
     std::string get_MAC_user()
     {
 #if defined(_WIN32)
@@ -264,17 +261,10 @@ namespace vcpkg::Metrics
 
         while (next != last)
         {
-            auto match = *next;
+            const auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                const std::string matchstr = match[0];
-                const System::PowershellParameter value("Value", matchstr);
-                auto hash_result = System::powershell_execute_and_capture_output(
-                    "SHA256Hash", get_vcpkg_root() / "scripts" / "SHA256Hash.ps1", {value});
-                Util::erase_remove_if(hash_result,
-                                      [](char ch) { return !(ch >= 'A' && ch <= 'F') && !(ch >= '0' && ch <= '9'); });
-                hash_result = Strings::ascii_to_lowercase(hash_result);
-                return hash_result;
+                return vcpkg::Hash::get_string_hash(match[0], "SHA256");
             }
             ++next;
         }
@@ -450,13 +440,14 @@ namespace vcpkg::Metrics
         const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
+        System::cmd_execute_no_wait(cmd_line);
 #else
         auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
         const std::string cmd_line = Strings::format(
             R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,
             escaped_path);
-#endif
         System::cmd_execute_clean(cmd_line);
+#endif
     }
 }

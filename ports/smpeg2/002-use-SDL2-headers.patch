@@ -1,0 +1,229 @@
+diff --git a/MPEG.cpp b/MPEG.cpp
+index 1645965..9d44166 100644
+--- a/MPEG.cpp
++++ b/MPEG.cpp
+@@ -1,4 +1,4 @@
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ #include "MPEG.h"
+ 
+diff --git a/MPEG.h b/MPEG.h
+index ca04260..d0b0d55 100644
+--- a/MPEG.h
++++ b/MPEG.h
+@@ -28,7 +28,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ #include "MPEGerror.h"
+ #include "MPEGstream.h"
+diff --git a/MPEGaction.h b/MPEGaction.h
+index f9da3a3..ea0b94f 100644
+--- a/MPEGaction.h
++++ b/MPEGaction.h
+@@ -24,7 +24,7 @@
+ #ifndef _MPEGACTION_H_
+ #define _MPEGACTION_H_
+ 
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ #include "MPEGframe.h"
+ 
+ typedef enum {
+diff --git a/MPEGaudio.h b/MPEGaudio.h
+index 3f315d2..2ec4377 100644
+--- a/MPEGaudio.h
++++ b/MPEGaudio.h
+@@ -24,7 +24,7 @@
+ #ifndef _MPEGAUDIO_H_
+ #define _MPEGAUDIO_H_
+ 
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ #include "MPEGerror.h"
+ #include "MPEGaction.h"
+ 
+diff --git a/MPEGlist.h b/MPEGlist.h
+index 3a58a5f..fe0dbac 100644
+--- a/MPEGlist.h
++++ b/MPEGlist.h
+@@ -6,7 +6,7 @@
+ #ifndef _MPEGLIST_H_
+ #define _MPEGLIST_H_
+ 
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ class MPEGlist {
+ public:
+diff --git a/MPEGring.cpp b/MPEGring.cpp
+index 6d9dabb..0350d54 100644
+--- a/MPEGring.cpp
++++ b/MPEGring.cpp
+@@ -23,7 +23,7 @@
+ #include <assert.h>
+ #include <string.h>
+ 
+-#include "SDL_timer.h"
++#include "SDL2/SDL_timer.h"
+ 
+ #include "MPEGring.h"
+ 
+diff --git a/MPEGring.h b/MPEGring.h
+index 89172ac..550fbcc 100644
+--- a/MPEGring.h
++++ b/MPEGring.h
+@@ -24,8 +24,8 @@
+ #ifndef _MPEGRING_H
+ #define _MPEGRING_H
+ 
+-#include "SDL_types.h"
+-#include "SDL_thread.h"
++#include "SDL2/SDL_types.h"
++#include "SDL2/SDL_thread.h"
+ 
+ class MPEG_ring {
+ public:
+diff --git a/MPEGstream.h b/MPEGstream.h
+index b96c631..50e0c3a 100644
+--- a/MPEGstream.h
++++ b/MPEGstream.h
+@@ -22,7 +22,7 @@
+ #ifndef _MPEGSTREAM_H_
+ #define _MPEGSTREAM_H_
+ 
+-#include "SDL_types.h"
++#include "SDL2/SDL_types.h"
+ #include "MPEGerror.h"
+ #include "MPEGvideo.h"
+ #include "MPEGaudio.h"
+diff --git a/MPEGsystem.h b/MPEGsystem.h
+index 823b679..28454b3 100644
+--- a/MPEGsystem.h
++++ b/MPEGsystem.h
+@@ -6,8 +6,8 @@
+ #define _MPEGSYSTEM_H_
+ #define USE_SYSTEM_TIMESTAMP
+ 
+-#include "SDL.h"
+-#include "SDL_thread.h"
++#include "SDL2/SDL.h"
++#include "SDL2/SDL_thread.h"
+ #include "MPEGerror.h"
+ 
+ class MPEGstream;
+diff --git a/MPEGvideo.h b/MPEGvideo.h
+index 12da092..9f1ed43 100644
+--- a/MPEGvideo.h
++++ b/MPEGvideo.h
+@@ -24,8 +24,8 @@
+ #ifndef _MPEGVIDEO_H_
+ #define _MPEGVIDEO_H_
+ 
+-#include "SDL.h"
+-#include "SDL_thread.h"
++#include "SDL2/SDL.h"
++#include "SDL2/SDL_thread.h"
+ #include "MPEGerror.h"
+ #include "MPEGaction.h"
+ 
+diff --git a/README.SDL_mixer b/README.SDL_mixer
+index c01b575..5cacc4f 100644
+--- a/README.SDL_mixer
++++ b/README.SDL_mixer
+@@ -5,7 +5,7 @@ You can have the SDL mixer library mix audio from a movie by hooking into
+ the SDL mixer music hooks:
+ 
+ #include "smpeg.h"
+-#include "SDL_mixer.h"
++#include "SDL2/SDL_mixer.h"
+ 
+         .. set up the mixer audio ...
+ 
+diff --git a/acinclude/sdl2.m4 b/acinclude/sdl2.m4
+index 93bc4b0..776ad42 100644
+--- a/acinclude/sdl2.m4
++++ b/acinclude/sdl2.m4
+@@ -84,7 +84,7 @@ dnl
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ char*
+ my_strdup (char *str)
+@@ -167,7 +167,7 @@ int main (int argc, char *argv[])
+           LIBS="$LIBS $SDL_LIBS"
+           AC_TRY_LINK([
+ #include <stdio.h>
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ int main(int argc, char *argv[])
+ { return 0; }
+diff --git a/configure b/configure
+index 4ac7e60..ee1d934 100644
+--- a/configure
++++ b/configure
+@@ -15270,7 +15270,7 @@ else
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ char*
+ my_strdup (char *str)
+@@ -15367,7 +15367,7 @@ $as_echo "no" >&6; }
+ /* end confdefs.h.  */
+ 
+ #include <stdio.h>
+-#include "SDL.h"
++#include "SDL2/SDL.h"
+ 
+ int main(int argc, char *argv[])
+ { return 0; }
+diff --git a/video/gdith.cpp b/video/gdith.cpp
+index c56da96..53ba388 100644
+--- a/video/gdith.cpp
++++ b/video/gdith.cpp
+@@ -52,7 +52,7 @@
+ #include "video.h"
+ #include "proto.h"
+ #include "dither.h"
+-#include "SDL_timer.h"
++#include "SDL2/SDL_timer.h"
+ 
+ #ifdef __STDC__
+ #include <stdlib.h>
+diff --git a/video/readfile.cpp b/video/readfile.cpp
+index eb71194..a19e66d 100644
+--- a/video/readfile.cpp
++++ b/video/readfile.cpp
+@@ -56,7 +56,7 @@
+ #include <string.h>
+ #include <signal.h>
+ 
+-#include "SDL_endian.h"
++#include "SDL2/SDL_endian.h"
+ #include "video.h"
+ #include "proto.h"
+ #include "util.h"
+diff --git a/video/video.h b/video/video.h
+index 96de89b..a35095b 100644
+--- a/video/video.h
++++ b/video/video.h
+@@ -400,7 +400,7 @@ extern unsigned int cacheMiss[8][8];
+ #define __SCO__ 1
+ #endif
+ 
+-#include "SDL_endian.h"
++#include "SDL2/SDL_endian.h"
+ #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+ #ifdef LITTLE_ENDIAN_ARCHITECTURE
+ #undef LITTLE_ENDIAN_ARCHITECTURE

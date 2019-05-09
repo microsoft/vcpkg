@@ -7,7 +7,10 @@ set(SRCS
   Import/Vlpp.cpp
   Import/VlppWorkflow.cpp
   Import/VlppWorkflowCompiler.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
 
 # Create and configure the target
 add_library(Vlpp ${SRCS})

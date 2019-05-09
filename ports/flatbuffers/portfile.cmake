@@ -1,58 +1,49 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Building DLLs not supported. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v1.8.0
-    SHA512 8f6c84caa6456418fc751ea9de456dd37378b3239d1a41d2205140e7b19a5b8b2e342a22dc8d7fdd0c36878455e9d7401cc6438d3b771f7875e8fcfe7bbd52f1
+    REF v1.10.0
+    SHA512 b8382c8e9a45d6aca83270e93704b9ef2938e4ef9bb5165edbd8f286329e86353037ad6e54a99fd3d70b0c893d06cfd8766e00f05497e69be4b9e6c0506133d2
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/ignore_use_of_cmake_toolchain_file.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
 )
 
+set(OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(APPEND OPTIONS -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
 endif()
 
-set(OPTIONS)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND OPTIONS -DFLATBUFFERS_BUILD_SHAREDLIB=ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DFLATBUFFERS_BUILD_TESTS=OFF
         -DFLATBUFFERS_BUILD_GRPCTEST=OFF
         ${OPTIONS}
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flatbuffers")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc.exe)
+file(GLOB flatc_path ${CURRENT_PACKAGES_DIR}/bin/flatc*)
+if(flatc_path)
     make_directory(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc.exe)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/flatbuffers.dll)
-    make_directory(${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flatbuffers.dll ${CURRENT_PACKAGES_DIR}/bin/flatbuffers.dll)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers.dll)
-    make_directory(${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers.dll ${CURRENT_PACKAGES_DIR}/debug/bin/flatbuffers.dll)
+    get_filename_component(flatc_executable ${flatc_path} NAME)
+    file(
+        RENAME
+        ${flatc_path}
+        ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
+    )
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/flatbuffers)

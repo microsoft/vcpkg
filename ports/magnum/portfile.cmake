@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF v2018.02
-    SHA512 aeb0cab91ae0a7cca79c15ce98d9b2f8d46f5bc11bb90718e59188bf233154fb51668e0241112b65103f40e675736d74c86a2e5ccffcb698780ccedb1b3fb8bd
+    REF v2019.01
+    SHA512 1edce0a38af90bd456a827b073d30d470a13b47797d62ba22001643be7519722c6886498a63be5e2ee65b8649a7eb2c217bbe2cd36ab4f4523d91aaee573ffd5
     HEAD_REF master
 )
 
@@ -53,25 +53,31 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Drop a copy of tools
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    set(EXE_SUFFIX .exe)
+else()
+    set(EXE_SUFFIX)
+endif()
+
 if(distancefieldconverter IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 if(fontconverter IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 if(al-info IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-al-info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-al-info${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 if(magnuminfo IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-info${EXE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 
 # Tools require dlls
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/magnum)
 
 file(GLOB_RECURSE TO_REMOVE
-   ${CURRENT_PACKAGES_DIR}/bin/*.exe
-   ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+   ${CURRENT_PACKAGES_DIR}/bin/*${EXE_SUFFIX}
+   ${CURRENT_PACKAGES_DIR}/debug/bin/*${EXE_SUFFIX})
 if(TO_REMOVE)
     file(REMOVE ${TO_REMOVE})
 endif()
@@ -79,7 +85,7 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
    # move plugin libs to conventional place
@@ -90,10 +96,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
    file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
-   # remove headers and libs for plugins
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/MagnumPlugins)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+   file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/magnum)
+   file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
 endif()
 
 # Handle copyright

@@ -1,130 +1,297 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52081c4..e1e13b5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -804,6 +804,9 @@ if(ARROW_USE_GLOG)
+   list(APPEND ARROW_LINK_LIBS GLOG::glog)
+   list(APPEND ARROW_STATIC_LINK_LIBS GLOG::glog)
+   list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS GLOG::glog)
++  if(ARROW_NEED_GFLAGS)
++    list(APPEND ARROW_STATIC_LINK_LIBS gflags::gflags)
++  endif()
+   add_definitions("-DARROW_USE_GLOG")
+ endif()
+ 
 diff --git a/cmake_modules/FindBrotli.cmake b/cmake_modules/FindBrotli.cmake
-index f2e714c..2e475dc 100644
+index e1429a2..6dee036 100644
 --- a/cmake_modules/FindBrotli.cmake
 +++ b/cmake_modules/FindBrotli.cmake
-@@ -65,16 +65,13 @@ if (BROTLI_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR BROTLI_LIBRARIES))
-   set(BROTLI_FOUND TRUE)
-   get_filename_component( BROTLI_LIBS ${BROTLI_LIBRARY_ENC} PATH )
-   set(BROTLI_LIB_NAME brotli)
--  if (MSVC AND NOT BROTLI_MSVC_STATIC_LIB_SUFFIX)
--    set(BROTLI_MSVC_STATIC_LIB_SUFFIX _static)
--  endif()
-   set(BROTLI_STATIC_LIB
--      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${BROTLI_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
--      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${BROTLI_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
--      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${BROTLI_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_STATIC_LIBRARY_ENC ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${BROTLI_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_STATIC_LIBRARY_DEC ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${BROTLI_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
--  set(BROTLI_STATIC_LIBRARY_COMMON ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${BROTLI_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
-+      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${CMAKE_STATIC_LIBRARY_SUFFIX}
-+      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${CMAKE_STATIC_LIBRARY_SUFFIX}
-+      ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(BROTLI_STATIC_LIBRARY_ENC ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(BROTLI_STATIC_LIBRARY_DEC ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(BROTLI_STATIC_LIBRARY_COMMON ${BROTLI_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${BROTLI_LIB_NAME}common${CMAKE_STATIC_LIBRARY_SUFFIX})
-   set(BROTLI_SHARED_LIB
-       ${BROTLI_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${BROTLI_LIB_NAME}enc${CMAKE_SHARED_LIBRARY_SUFFIX}
-       ${BROTLI_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${BROTLI_LIB_NAME}dec${CMAKE_SHARED_LIBRARY_SUFFIX}
-diff --git a/cmake_modules/FindFlatbuffers.cmake b/cmake_modules/FindFlatbuffers.cmake
-index 804f479..ff9bde1 100644
---- a/cmake_modules/FindFlatbuffers.cmake
-+++ b/cmake_modules/FindFlatbuffers.cmake
-@@ -53,6 +53,7 @@ endif ()
+@@ -18,6 +18,7 @@
+ #  find_package(Brotli)
  
- find_program(FLATBUFFERS_COMPILER flatc
-   "${FLATBUFFERS_HOME}/bin"
-+  "${FLATBUFFERS_HOME}/tools"
-   /usr/local/bin
-   /usr/bin
-   NO_DEFAULT_PATH
+ pkg_check_modules(BROTLI_PC libbrotlicommon libbrotlienc libbrotlidec)
++
+ if(BROTLI_PC_FOUND)
+   set(BROTLI_INCLUDE_DIR "${BROTLI_PC_libbrotlicommon_INCLUDEDIR}")
+ 
+@@ -25,80 +26,16 @@ if(BROTLI_PC_FOUND)
+   list(APPEND BROTLI_PC_LIBRARY_DIRS "${BROTLI_PC_libbrotlicommon_LIBDIR}")
+   list(APPEND BROTLI_PC_LIBRARY_DIRS "${BROTLI_PC_libbrotlienc_LIBDIR}")
+   list(APPEND BROTLI_PC_LIBRARY_DIRS "${BROTLI_PC_libbrotlidec_LIBDIR}")
+-
+-  find_library(BROTLI_COMMON_LIBRARY brotlicommon
+-               PATHS ${BROTLI_PC_LIBRARY_DIRS}
+-               NO_DEFAULT_PATH)
+-  find_library(BROTLI_ENC_LIBRARY brotlienc
+-               PATHS ${BROTLI_PC_LIBRARY_DIRS}
+-               NO_DEFAULT_PATH)
+-  find_library(BROTLI_DEC_LIBRARY brotlidec
+-               PATHS ${BROTLI_PC_LIBRARY_DIRS}
+-               NO_DEFAULT_PATH)
+ elseif(BROTLI_ROOT)
+-  find_library(
+-    BROTLI_COMMON_LIBRARY
+-    NAMES brotlicommon
+-          ${CMAKE_SHARED_LIBRARY_PREFIX}brotlicommon${CMAKE_SHARED_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon-static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon_static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    PATHS ${BROTLI_ROOT} "${BROTLI_ROOT}/Library"
+-    PATH_SUFFIXES "lib64" "lib" "bin"
+-    NO_DEFAULT_PATH)
+-  find_library(
+-    BROTLI_ENC_LIBRARY
+-    NAMES brotlienc
+-          ${CMAKE_SHARED_LIBRARY_PREFIX}brotlienc${CMAKE_SHARED_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc-static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc_static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    PATHS ${BROTLI_ROOT} "${BROTLI_ROOT}/Library"
+-    PATH_SUFFIXES "lib64" "lib" "bin"
+-    NO_DEFAULT_PATH)
+-  find_library(
+-    BROTLI_DEC_LIBRARY
+-    NAMES brotlidec
+-          ${CMAKE_SHARED_LIBRARY_PREFIX}brotlidec${CMAKE_SHARED_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec-static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec_static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    PATHS ${BROTLI_ROOT} "${BROTLI_ROOT}/Library"
+-    PATH_SUFFIXES "lib64" "lib" "bin"
+-    NO_DEFAULT_PATH)
+-  find_path(BROTLI_INCLUDE_DIR
+-            NAMES brotli/decode.h
+-            PATHS ${BROTLI_ROOT} "${BROTLI_ROOT}/Library"
+-            NO_DEFAULT_PATH
+-            PATH_SUFFIXES "include")
++  find_path(BROTLI_INCLUDE_DIR NAMES brotli/decode.h PATH_SUFFIXES "include")
+ else()
+-  find_library(
+-    BROTLI_COMMON_LIBRARY
+-    NAMES brotlicommon
+-          ${CMAKE_SHARED_LIBRARY_PREFIX}brotlicommon${CMAKE_SHARED_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon-static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlicommon_static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    PATH_SUFFIXES "lib64" "lib" "bin")
+-  find_library(
+-    BROTLI_ENC_LIBRARY
+-    NAMES brotlienc
+-          ${CMAKE_SHARED_LIBRARY_PREFIX}brotlienc${CMAKE_SHARED_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc-static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlienc_static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    PATH_SUFFIXES "lib64" "lib" "bin")
+-  find_library(
+-    BROTLI_DEC_LIBRARY
+-    NAMES brotlidec
+-          ${CMAKE_SHARED_LIBRARY_PREFIX}brotlidec${CMAKE_SHARED_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec-static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-          ${CMAKE_STATIC_LIBRARY_PREFIX}brotlidec_static${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    PATH_SUFFIXES "lib64" "lib" "bin")
+   find_path(BROTLI_INCLUDE_DIR NAMES brotli/decode.h PATH_SUFFIXES "include")
+ endif()
+ 
++find_library(BROTLI_COMMON_LIBRARY NAMES brotlicommon brotlicommon-static libbrotlicommon libbrotlicommon-static)
++find_library(BROTLI_ENC_LIBRARY NAMES libbrotlienc libbrotlienc-static brotlienc brotlienc-static)
++find_library(BROTLI_DEC_LIBRARY NAMES brotlidec libbrotlidec libbrotlidec-static brotlidec brotlidec-static)
++
+ find_package_handle_standard_args(Brotli
+                                   REQUIRED_VARS
+                                   BROTLI_COMMON_LIBRARY
 diff --git a/cmake_modules/FindLz4.cmake b/cmake_modules/FindLz4.cmake
-index 07707cf..9cbf67d 100644
+index 3606f5c..1d18b7c 100644
 --- a/cmake_modules/FindLz4.cmake
 +++ b/cmake_modules/FindLz4.cmake
-@@ -29,15 +29,7 @@ elseif ( Lz4_HOME )
-     list( APPEND _lz4_roots ${Lz4_HOME} )
+@@ -19,24 +19,26 @@ if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
+   set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
  endif()
  
--if (MSVC AND NOT LZ4_MSVC_STATIC_LIB_SUFFIX)
--  set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
--endif()
--
--set(LZ4_STATIC_LIB_SUFFIX
--  "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--set(LZ4_STATIC_LIB_NAME
--  ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_STATIC_LIB_SUFFIX})
-+set(LZ4_STATIC_LIB_NAME lz4)
+-set(LZ4_STATIC_LIB_SUFFIX "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(LZ4_LIB_NAME_DEBUG_SUFFIX d)
++endif()
  
- find_path(LZ4_INCLUDE_DIR NAMES lz4.h
-   PATHS ${_lz4_roots}
-diff --git a/cmake_modules/FindSnappy.cmake b/cmake_modules/FindSnappy.cmake
-index 867963c..8a432db 100644
---- a/cmake_modules/FindSnappy.cmake
-+++ b/cmake_modules/FindSnappy.cmake
-@@ -55,7 +55,7 @@ if (SNAPPY_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR SNAPPY_LIBRARIES))
-   set(SNAPPY_HEADER_NAME snappy.h)
-   set(SNAPPY_HEADER ${SNAPPY_INCLUDE_DIR}/${SNAPPY_HEADER_NAME})
-   set(SNAPPY_LIB_NAME snappy)
--  set(SNAPPY_STATIC_LIB ${SNAPPY_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(SNAPPY_STATIC_LIB ${SNAPPY_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX})
-   set(SNAPPY_SHARED_LIB ${SNAPPY_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${SNAPPY_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
- else ()
-   set(SNAPPY_FOUND FALSE)
-diff --git a/cmake_modules/FindZLIB.cmake b/cmake_modules/FindZLIB.cmake
-index 78b84f2..eb09001 100644
---- a/cmake_modules/FindZLIB.cmake
-+++ b/cmake_modules/FindZLIB.cmake
-@@ -62,11 +62,11 @@ if (ZLIB_INCLUDE_DIR AND (PARQUET_MINIMAL_DEPENDENCY OR ZLIB_LIBRARIES))
-   set(ZLIB_LIB_NAME z)
-   if (MSVC)
-     if (NOT ZLIB_MSVC_STATIC_LIB_SUFFIX)
--      set(ZLIB_MSVC_STATIC_LIB_SUFFIX libstatic)
-+      set(ZLIB_MSVC_STATIC_LIB_SUFFIX lib)
-     endif()
-     set(ZLIB_MSVC_SHARED_LIB_SUFFIX lib)
-   endif()
--  set(ZLIB_STATIC_LIB ${ZLIB_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${ZLIB_LIB_NAME}${ZLIB_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(ZLIB_STATIC_LIB ${ZLIB_LIBS}/${CMAKE_STATIC_LIBRARY_PREFIX}${ZLIB_LIB_NAME}${ZLIB_MSVC_SHARED_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
-   set(ZLIB_SHARED_LIB ${ZLIB_LIBS}/${CMAKE_SHARED_LIBRARY_PREFIX}${ZLIB_LIB_NAME}${ZLIB_MSVC_SHARED_LIB_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX})
- else ()
-   set(ZLIB_FOUND FALSE)
+-set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_STATIC_LIB_SUFFIX})
++set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_MSVC_STATIC_LIB_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
+ 
+ pkg_check_modules(LZ4_PC liblz4)
+ if(LZ4_PC_FOUND)
+   set(LZ4_INCLUDE_DIR "${LZ4_PC_INCLUDEDIR}")
+ 
+   list(APPEND LZ4_PC_LIBRARY_DIRS "${LZ4_PC_LIBDIR}")
+-  find_library(LZ4_LIB lz4
++  find_library(LZ4_LIB lz4${LZ4_LIB_NAME_DEBUG_SUFFIX}
+                PATHS ${LZ4_PC_LIBRARY_DIRS}
+                NO_DEFAULT_PATH
+                PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
+ elseif(LZ4_ROOT)
+   find_library(
+     LZ4_LIB
+-    NAMES lz4 ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
++          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}"
+     PATHS ${LZ4_ROOT} "${LZ4_ROOT}/Library"
+     PATH_SUFFIXES "lib64" "lib" "bin"
+     NO_DEFAULT_PATH)
+@@ -48,8 +50,8 @@ elseif(LZ4_ROOT)
+ else()
+   find_library(
+     LZ4_LIB
+-    NAMES lz4 ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
+-          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
++    NAMES lz4${LZ4_LIB_NAME_DEBUG_SUFFIX} ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME}
++          "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}${LZ4_LIB_NAME_DEBUG_SUFFIX}"
+     PATH_SUFFIXES "lib64" "lib" "bin")
+   find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES "include")
+ endif()
+diff --git a/cmake_modules/FindThrift.cmake b/cmake_modules/FindThrift.cmake
+index a4decf7..78ec7c8 100644
+--- a/cmake_modules/FindThrift.cmake
++++ b/cmake_modules/FindThrift.cmake
+@@ -65,6 +65,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
+   set(THRIFT_MSVC_STATIC_LIB_SUFFIX md)
+ endif()
+ 
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(THRIFT_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
+ pkg_check_modules(THRIFT_PC thrift)
+ 
+ # THRIFT-4760: The pkgconfig files are currently only installed when using autotools.
+@@ -74,15 +78,13 @@ if(THRIFT_PC_FOUND)
+ 
+   list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
+ 
+-  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
+-               PATHS ${THRIFT_PC_LIBRARY_DIRS}
+-               NO_DEFAULT_PATH)
++  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
++               PATHS ${THRIFT_PC_LIBRARY_DIRS})
+   find_program(THRIFT_COMPILER thrift
+                HINTS ${THRIFT_PC_PREFIX}
+-               NO_DEFAULT_PATH
+                PATH_SUFFIXES "bin")
+ else()
+-  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
++  find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}
+                HINTS ${Thrift_ROOT}
+                PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib")
+   find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h
 diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
-index 02a0c39..73c61b5 100644
+index 17b58a3..fa2ab05 100644
 --- a/cmake_modules/FindZSTD.cmake
 +++ b/cmake_modules/FindZSTD.cmake
-@@ -29,21 +29,11 @@ elseif ( ZStd_HOME )
-     list( APPEND _zstd_roots ${ZStd_HOME} )
+@@ -19,7 +19,11 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
  endif()
  
--if (MSVC AND NOT ZSTD_MSVC_STATIC_LIB_SUFFIX)
--  set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
--endif()
--
--set(ZSTD_STATIC_LIB_SUFFIX
--  "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--
--set(ZSTD_STATIC_LIB_NAME
--  ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
--
- find_path(ZSTD_INCLUDE_DIR NAMES zstd.h
-   PATHS ${_zstd_roots}
-   NO_DEFAULT_PATH
-   PATH_SUFFIXES "include" )
--find_library(ZSTD_STATIC_LIB NAMES ${ZSTD_STATIC_LIB_NAME} lib${ZSTD_STATIC_LIB_NAME}
-+find_library(ZSTD_STATIC_LIB NAMES libzstd libzstd_static zstd zstd_static
-   PATHS ${_zstd_roots}
-   NO_DEFAULT_PATH
-   PATH_SUFFIXES "lib" )
+-set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
++set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+ 
+ pkg_check_modules(ZSTD_PC libzstd)
+@@ -27,18 +31,15 @@ if(ZSTD_PC_FOUND)
+   set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
+ 
+   list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
+-  find_library(ZSTD_LIB zstd
++  find_library(ZSTD_LIB zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}
+                PATHS ${ZSTD_PC_LIBRARY_DIRS}
+                NO_DEFAULT_PATH
+                PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
+ elseif(ZSTD_ROOT)
+   message(STATUS "Using ZSTD_ROOT: ${ZSTD_ROOT}")
+   find_library(ZSTD_LIB
+-               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+-                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
+-               PATHS ${ZSTD_ROOT} "${ZSTD_ROOT}/Library"
+-               PATH_SUFFIXES "lib64" "lib" "bin"
+-               NO_DEFAULT_PATH)
++               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
++                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+   find_path(ZSTD_INCLUDE_DIR
+             NAMES zstd.h
+             PATHS ${ZSTD_ROOT} "${ZSTD_ROOT}/Library"
+@@ -46,9 +47,8 @@ elseif(ZSTD_ROOT)
+             PATH_SUFFIXES "include")
+ else()
+   find_library(ZSTD_LIB
+-               NAMES zstd "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+-                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${CMAKE_SHARED_LIBRARY_SUFFIX}"
+-               PATH_SUFFIXES "lib64" "lib" "bin")
++               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
++                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+   find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES "include")
+ endif()
+ 
+diff --git a/cmake_modules/FindgflagsAlt.cmake b/cmake_modules/FindgflagsAlt.cmake
+index a9b8684..fdb815a 100644
+--- a/cmake_modules/FindgflagsAlt.cmake
++++ b/cmake_modules/FindgflagsAlt.cmake
+@@ -15,18 +15,13 @@
+ # specific language governing permissions and limitations
+ # under the License.
+ 
+-if(gflags_ROOT)
+-  find_library(gflags_LIB NAMES gflags PATHS ${gflags_ROOT} NO_DEFAULT_PATH)
+-  find_path(GFLAGS_INCLUDE_DIR
+-            NAMES gflags/gflags.h
+-            PATHS ${gflags_ROOT}
+-            NO_DEFAULT_PATH
+-            PATH_SUFFIXES "include")
+-else()
+-  find_library(gflags_LIB NAMES gflags)
+-  find_path(GFLAGS_INCLUDE_DIR NAMES gflags/gflags.h PATH_SUFFIXES "include")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(GFLAGS_LIB_NAME_DEBUG_SUFFIX _debug)
+ endif()
+ 
++find_library(gflags_LIB NAMES gflags${GFLAGS_LIB_NAME_DEBUG_SUFFIX} gflags_static${GFLAGS_LIB_NAME_DEBUG_SUFFIX})
++find_path(GFLAGS_INCLUDE_DIR NAMES gflags/gflags.h PATH_SUFFIXES "include")
++
+ find_package_handle_standard_args(gflagsAlt REQUIRED_VARS gflags_LIB GFLAGS_INCLUDE_DIR)
+ 
+ if(gflagsAlt_FOUND)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index a888e92..0fe3629 100644
+index bdb122b..58c123e 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -119,6 +119,7 @@ endif()
- set(Boost_DEBUG TRUE)
- set(Boost_USE_MULTITHREADED ON)
- set(Boost_ADDITIONAL_VERSIONS
-+  "1.65.0" "1.65"  
-   "1.64.0" "1.64"
-   "1.63.0" "1.63"
-   "1.62.0" "1.61"
+@@ -923,10 +923,7 @@ if(ARROW_NEED_GFLAGS)
+   elseif(gflags_SOURCE STREQUAL "SYSTEM")
+     # gflagsConfig.cmake is not installed on Ubuntu/Debian
+     # TODO: Make a bug report upstream
+-    find_package(gflags)
+-    if(NOT gflags_FOUND)
+-      find_package(gflagsAlt REQUIRED)
+-    endif()
++    find_package(gflagsAlt REQUIRED)
+   endif()
+   # TODO: Don't use global includes but rather target_include_directories
+   include_directories(SYSTEM ${GFLAGS_INCLUDE_DIR})
+@@ -1558,7 +1555,7 @@ if(ARROW_WITH_FLATBUFFERS)
+   elseif(Flatbuffers_SOURCE STREQUAL "BUNDLED")
+     build_flatbuffers()
+   elseif(Flatbuffers_SOURCE STREQUAL "SYSTEM")
+-    find_package(Flatbuffers QUIET)
++    #find_package(Flatbuffers QUIET) - disabled because on vcpkg this looks in the wrong place for the fb compiler and causes an error
+     if(NOT Flatbuffers_FOUND)
+       find_package(FlatbuffersAlt REQUIRED)
+     endif()

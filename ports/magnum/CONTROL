@@ -1,42 +1,58 @@
 Source: magnum
-Version: 2018.02-1
-Build-Depends: corrade[pluginmanager], corrade[utility]
+Version: 2019.01-1
+Build-Depends: corrade[utility]
 Description: C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
-Default-Features: debugtools, meshtools, primitives, scenegraph, shaders, shapes, text, texturetools, sdl2application, windowlesswglapplication
+Default-Features: anyimageimporter, anyaudioimporter, anyimageconverter, anysceneimporter, debugtools, gl, meshtools, primitives, scenegraph, shaders, text, texturetools, trade, sdl2application
 
-Feature: sdl2application
-Description: Sdl2Application library
-Build-Depends: sdl2
+Feature: al-info
+Description: magnum-al-info utility
+Build-Depends: magnum[audio]
 
-Feature: glfwapplication
-Description: GlfwApplication library
-Build-Depends: glfw3
+Feature: anyimageimporter
+Description: AnyImageImporter plugin
+Build-Depends: magnum[trade]
 
-Feature: glutapplication
-Description: GlutApplication library
-Build-Depends: freeglut
+Feature: anyaudioimporter
+Description: AnyAudioImporter plugin
+Build-Depends: magnum[audio], corrade[pluginmanager]
+
+Feature: anyimageconverter
+Description: AnyImageConverter plugin
+Build-Depends: magnum[trade]
+
+Feature: anysceneimporter
+Description: AnySceneImporter plugin
+Build-Depends: magnum[trade]
 
 Feature: audio
 Description: Audio library
 Build-Depends: openal-soft
 
-Feature: magnuminfo
-Description: magnum-info utility
-
-Feature: fontconverter
-Description: magnum-fontconverter utility
-Build-Depends: magnum[text]
+Feature: debugtools
+Description: DebugTools library
 
 Feature: distancefieldconverter
 Description: magnum-distancefieldconverter utility
-Build-Depends: magnum[texturetools]
+Build-Depends: magnum[texturetools], magnum[gl]
+
+Feature: fontconverter
+Description: magnum-fontconverter utility
+Build-Depends: magnum[text], magnum[gl]
+
+Feature: gl
+Description: GL library
+
+Feature: gl-info
+Description: gl-info utility
+Build-Depends: magnum[gl]
+
+Feature: glfwapplication
+Description: GlfwApplication library
+Build-Depends: glfw3
 
 Feature: imageconverter
 Description: magnum-imageconverter utility
-
-Feature: wavaudioimporter
-Description: WavAudioImporter plugin
-Build-Depends: magnum[audio]
+Build-Depends: magnum[trade]
 
 Feature: magnumfont
 Description: MagnumFont plugin
@@ -46,50 +62,60 @@ Feature: magnumfontconverter
 Description: MagnumFontConverter plugin
 Build-Depends: magnum[text], magnum[tgaimageconverter]
 
+Feature: meshtools
+Description: MeshTools library
+Build-Depends: magnum[trade]
+
 Feature: objimporter
 Description: ObjImporter plugin
+Build-Depends: magnum[trade]
 
 Feature: tgaimageconverter
 Description: TgaImageConverter plugin
+Build-Depends: magnum[trade]
 
-Feature: tgaimporter
-Description: TgaImporter plugin
-
-Feature: debugtools
-Description: DebugTools library
-
-Feature: meshtools
-Description: MeshTools library
+Feature: opengltester
+Description: OpenGLTester library
+Build-Depends: corrade[testsuite], magnum[gl]
 
 Feature: primitives
 Description: Primitives library
+Build-Depends: magnum[trade]
 
-Feature: shapes
-Description: Shapes library
+Feature: sdl2application
+Description: Sdl2Application library
+Build-Depends: sdl2
 
 Feature: scenegraph
 Description: SceneGraph library
 
 Feature: shaders
 Description: Shaders library
+Build-Depends: magnum[gl]
 
 Feature: text
 Description: Text library
-Build-Depends: magnum[texturetools]
+Build-Depends: magnum[texturetools], magnum[gl], corrade[pluginmanager]
 
 Feature: texturetools
 Description: TextureTools library
 
-Feature: al-info
-Description: magnum-al-info utility
+Feature: tgaimporter
+Description: TgaImporter plugin
+Build-Depends: magnum[trade]
+
+Feature: trade
+Description: Trade library
+Build-Depends: corrade[pluginmanager]
+
+Feature: wavaudioimporter
+Description: WavAudioImporter plugin
 Build-Depends: magnum[audio]
 
 Feature: windowlesswglapplication
 Description: WindowlessWglApplication library
+Build-Depends: magnum[gl]
 
 Feature: wglcontext
 Description: WglContext library
-
-Feature: opengltester
-Description: OpenGLTester library
-Build-Depends: corrade[testsuite]
+Build-Depends: magnum[gl]

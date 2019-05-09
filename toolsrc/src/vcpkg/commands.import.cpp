@@ -103,7 +103,7 @@ namespace vcpkg::Commands::Import
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const fs::path control_file_path(args.command_arguments[0]);
         const fs::path include_directory(args.command_arguments[1]);
@@ -114,7 +114,7 @@ namespace vcpkg::Commands::Import
         Checks::check_exit(VCPKG_LINE_INFO,
                            pghs.get() != nullptr,
                            "Invalid control file %s for package",
-                           control_file_path.generic_string());
+                           control_file_path.generic_u8string());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(*pghs.get());

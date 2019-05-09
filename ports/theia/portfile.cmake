@@ -1,9 +1,11 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if(VCPKG_TARGET_ARCHIECTURE STREQUAL "x86")
+    message(FATAL_ERROR "theia requires ceres[suitesparse] which depends on suitesparse which depends on openblas which is unavailable on x86.")
 endif()
 
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,6 +22,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix-vlfeat-static.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-glog-error.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-suitesparse.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-oiio.patch
 )
 
 vcpkg_configure_cmake(

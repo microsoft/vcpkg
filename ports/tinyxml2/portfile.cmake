@@ -3,21 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leethomason/tinyxml2
-    REF 6.0.0
-    SHA512 30c68f491830187738b01ca5db1a96e7b4907cf8fa09a533c90ea084ab5e73f798dff6305cfc4edccc8989926e91c0482677bb5796799113c839dbd0528c8ad5
+    REF 7.0.1
+    SHA512 623cd7eff542d20b434a67111ac98110101c95a18767318bf906e5e56d8cc25622269f740f50477fe907a4c52d875b614cb6167f4760d42ab18dc55b9d4bf380
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(BUILD_STATIC_LIBS 1)
-else()
-  set(BUILD_STATIC_LIBS 0)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-      -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
 )
 
 vcpkg_install_cmake()
@@ -31,7 +23,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY
   ${SOURCE_PATH}/readme.md
-  ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
   DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyxml2
 )
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyxml2/readme.md ${CURRENT_PACKAGES_DIR}/share/tinyxml2/copyright)

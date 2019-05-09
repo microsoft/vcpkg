@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/paragraphparseresult.h>
@@ -253,6 +254,10 @@ namespace vcpkg::Paragraphs
         LoadResults ret;
         auto port_dirs = fs.get_files_non_recursive(ports_dir);
         Util::sort(port_dirs);
+        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
+            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
+        });
+
         for (auto&& path : port_dirs)
         {
             auto maybe_spgh = try_load_port(fs, path);
@@ -282,11 +287,11 @@ namespace vcpkg::Paragraphs
             {
                 for (auto&& error : results.errors)
                 {
-                    System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
+                    System::print2(
+                        System::Color::warning, "Warning: an error occurred while parsing '", error->name, "'\n");
                 }
-                System::println(System::Color::warning,
-                                "Use '--debug' to get more information about the parse failures.\n");
+                System::print2(System::Color::warning,
+                               "Use '--debug' to get more information about the parse failures.\n\n");
             }
         }
         return std::move(results.paragraphs);

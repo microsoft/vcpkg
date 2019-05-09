@@ -39,7 +39,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/qrencoded.dll)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/libqrencode-4.0.0/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libqrencode)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libqrencode)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libqrencode/COPYING ${CURRENT_PACKAGES_DIR}/share/libqrencode/copyright)
 
 vcpkg_copy_pdbs()

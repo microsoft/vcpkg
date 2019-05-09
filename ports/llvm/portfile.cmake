@@ -7,23 +7,23 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-5.0.1.src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-7.0.0.src)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz"
-    FILENAME "llvm-5.0.1.src.tar.xz"
-    SHA512 bee1d45fca15ce725b1f2b1339b13eb6f750a3a321cfd099075477ec25835a8ca55b5366172c4aad46592dfd8afe372349ecf264f581463d017f9cee2d63c1cb
+    URLS "http://releases.llvm.org/7.0.0/llvm-7.0.0.src.tar.xz"
+    FILENAME "llvm-7.0.0.src.tar.xz"
+    SHA512 bdc9b851c158b17e1bbeb7ac5ae49821bfb1251a3826fe8a3932cd1a43f9fb0d620c3de67150c1d9297bf0b86fa917e75978da29c3f751b277866dc90395abec
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_download_distfile(CLANG_ARCHIVE
-    URLS "http://releases.llvm.org/5.0.1/cfe-5.0.1.src.tar.xz"
-    FILENAME "cfe-5.0.1.src.tar.xz"
-    SHA512 6619177a2ff9934fe8b15d6aa229abb8e34d0b1a75228d9efba9393daf71d6419a7256de57b31e2f9f829f71f842118556f996e86ee076f1e0a7cd394dfd31a2
+    URLS "http://releases.llvm.org/7.0.0/cfe-7.0.0.src.tar.xz"
+    FILENAME "cfe-7.0.0.src.tar.xz"
+    SHA512 17a658032a0160c57d4dc23cb45a1516a897e0e2ba4ebff29472e471feca04c5b68cff351cdf231b42aab0cff587b84fe11b921d1ca7194a90e6485913d62cb7
 )
 vcpkg_extract_source_archive(${CLANG_ARCHIVE} ${SOURCE_PATH}/tools)
 
 if(NOT EXISTS ${SOURCE_PATH}/tools/clang)
-  file(RENAME ${SOURCE_PATH}/tools/cfe-5.0.1.src ${SOURCE_PATH}/tools/clang)
+  file(RENAME ${SOURCE_PATH}/tools/cfe-7.0.0.src ${SOURCE_PATH}/tools/clang)
 endif()
 
 vcpkg_apply_patches(
@@ -46,20 +46,46 @@ vcpkg_configure_cmake(
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        -DLLVM_PARALLEL_LINK_JOBS=1
 )
 
 vcpkg_install_cmake()
 
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
-file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
-file(REMOVE ${EXE})
-file(REMOVE ${DEBUG_EXE})
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
+    file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
+    file(REMOVE ${EXE})
+endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clang TARGET_PATH share/clang)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+    file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
+    file(REMOVE ${DEBUG_EXE})
+endif()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/llvm)
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-release.cmake RELEASE_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/tools/llvm" RELEASE_MODULE "${RELEASE_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-release.cmake "${RELEASE_MODULE}")
+
+    file(READ ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake RELEASE_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/tools/llvm" RELEASE_MODULE "${RELEASE_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-release.cmake "${RELEASE_MODULE}")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-debug.cmake DEBUG_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin" "\${_IMPORT_PREFIX}/tools/llvm" DEBUG_MODULE "${DEBUG_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/clang/ClangTargets-debug.cmake "${DEBUG_MODULE}")
+
+    file(READ ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake DEBUG_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin" "\${_IMPORT_PREFIX}/tools/llvm" DEBUG_MODULE "${DEBUG_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake "${DEBUG_MODULE}")
+endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
@@ -70,6 +96,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/bin
     ${CURRENT_PACKAGES_DIR}/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
+    ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs
 )
 
 # Remove one empty include subdirectory if it is indeed empty

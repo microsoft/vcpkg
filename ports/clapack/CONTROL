@@ -1,4 +1,4 @@
 Source: clapack
-Version: 3.2.1-1
+Version: 3.2.1-4
 Description: CLAPACK (f2c'ed version of LAPACK)
-Build-Depends: openblas
+Build-Depends: openblas (!osx)

@@ -1,12 +1,31 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
+#if defined(__linux__)
+#include <fcntl.h>
+#include <sys/sendfile.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
 
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
+
+    void Filesystem::write_contents(const fs::path& file_path, const std::string& data)
+    {
+        std::error_code ec;
+        write_contents(file_path, data, ec);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
+    }
 
     struct RealFilesystem final : Filesystem
     {
@@ -22,9 +41,9 @@ namespace vcpkg::Files
             auto length = file_stream.tellg();
             file_stream.seekg(0, file_stream.beg);
 
-            if (length > SIZE_MAX)
+            if (length == std::streampos(-1))
             {
-                return std::make_error_code(std::errc::file_too_large);
+                return std::make_error_code(std::errc::io_error);
             }
 
             std::string output;
@@ -56,16 +75,41 @@ namespace vcpkg::Files
                                                   const std::string& filename) const override
         {
             fs::path current_dir = starting_dir;
-            for (; !current_dir.empty(); current_dir = current_dir.parent_path())
+            if (exists(current_dir / filename))
             {
+                return current_dir;
+            }
+
+            int counter = 10000;
+            for (;;)
+            {
+                // This is a workaround for VS2015's experimental filesystem implementation
+                if (!current_dir.has_relative_path())
+                {
+                    current_dir.clear();
+                    return current_dir;
+                }
+
+                auto parent = current_dir.parent_path();
+                if (parent == current_dir)
+                {
+                    current_dir.clear();
+                    return current_dir;
+                }
+
+                current_dir = std::move(parent);
+
                 const fs::path candidate = current_dir / filename;
                 if (exists(candidate))
                 {
-                    break;
+                    return current_dir;
                 }
-            }
 
-            return current_dir;
+                --counter;
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   counter > 0,
+                                   "infinite loop encountered while trying to find_file_recursively_up()");
+            }
         }
 
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const override
@@ -116,6 +160,42 @@ namespace vcpkg::Files
         {
             fs::stdfs::rename(oldpath, newpath);
         }
+        virtual void rename_or_copy(const fs::path& oldpath,
+                                    const fs::path& newpath,
+                                    StringLiteral temp_suffix,
+                                    std::error_code& ec) override
+        {
+            this->rename(oldpath, newpath, ec);
+#if defined(__linux__)
+            if (ec)
+            {
+                auto dst = newpath;
+                dst.replace_filename(dst.filename() + temp_suffix.c_str());
+
+                int i_fd = open(oldpath.c_str(), O_RDONLY);
+                if (i_fd == -1) return;
+
+                int o_fd = creat(dst.c_str(), 0664);
+                if (o_fd == -1)
+                {
+                    close(i_fd);
+                    return;
+                }
+
+                off_t bytes = 0;
+                struct stat info = {0};
+                fstat(i_fd, &info);
+                auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
+                close(i_fd);
+                close(o_fd);
+                if (written_bytes == -1) return;
+
+                this->rename(dst, newpath, ec);
+                if (ec) return;
+                this->remove(oldpath, ec);
+            }
+#endif
+        }
         virtual bool remove(const fs::path& path) override { return fs::stdfs::remove(path); }
         virtual bool remove(const fs::path& path, std::error_code& ec) override { return fs::stdfs::remove(path, ec); }
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) override
@@ -132,10 +212,11 @@ namespace vcpkg::Files
 
             if (this->exists(path))
             {
-                System::println(System::Color::warning,
-                                "Some files in %s were unable to be removed. Close any editors operating in this "
-                                "directory and retry.",
-                                path.string());
+                System::print2(
+                    System::Color::warning,
+                    "Some files in ",
+                    path.u8string(),
+                    " were unable to be removed. Close any editors operating in this directory and retry.\n");
             }
 
             return out;
@@ -163,10 +244,18 @@ namespace vcpkg::Files
         {
             return fs::stdfs::copy_file(oldpath, newpath, opts, ec);
         }
+        virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
+        {
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+        }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
         {
             return fs::stdfs::status(path, ec);
+        }
+        virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const override
+        {
+            return fs::stdfs::symlink_status(path, ec);
         }
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {
@@ -185,13 +274,50 @@ namespace vcpkg::Files
                 return;
             }
 
-            auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
-            fclose(f);
-
-            if (count != data.size())
+            if (f != nullptr)
             {
-                ec = std::make_error_code(std::errc::no_space_on_device);
+                auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
+                fclose(f);
+
+                if (count != data.size())
+                {
+                    ec = std::make_error_code(std::errc::no_space_on_device);
+                }
             }
+        }
+
+        virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
+        {
+#if defined(_WIN32)
+            static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
+
+            std::vector<fs::path> ret;
+            for (auto&& path : paths)
+            {
+                auto base = path + "/" + name;
+                for (auto&& ext : EXTS)
+                {
+                    auto p = fs::u8path(base + ext.c_str());
+                    if (Util::find(ret, p) == ret.end() && this->exists(p))
+                    {
+                        ret.push_back(p);
+                        Debug::print("Found path: ", p.u8string(), '\n');
+                    }
+                }
+            }
+
+            return ret;
+#else
+            const std::string cmd = Strings::concat("which ", name);
+            auto out = System::cmd_execute_and_capture_output(cmd);
+            if (out.exit_code != 0)
+            {
+                return {};
+            }
+
+            return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
+#endif
         }
     };
 
@@ -208,27 +334,12 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths)
     {
-        System::println();
+        std::string message = "\n";
         for (const fs::path& p : paths)
         {
-            System::println("    %s", p.generic_string());
+            Strings::append(message, "    ", p.generic_string(), '\n');
         }
-        System::println();
-    }
-
-    std::vector<fs::path> find_from_PATH(const std::string& name)
-    {
-#if defined(_WIN32)
-        const std::string cmd = Strings::format("where.exe %s", name);
-#else
-        const std::string cmd = Strings::format("which %s", name);
-#endif
-        auto out = System::cmd_execute_and_capture_output(cmd);
-        if (out.exit_code != 0)
-        {
-            return {};
-        }
-
-        return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
+        message.push_back('\n');
+        System::print2(message);
     }
 }

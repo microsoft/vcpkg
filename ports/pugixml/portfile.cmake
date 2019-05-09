@@ -1,32 +1,33 @@
+# Common Ambient Variables:
+#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
+#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
+#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
+#   PORT                      = current port name (zlib, etc)
+#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
+#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
+#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
+#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
+#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
+#
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pugixml-1.8)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/zeux/pugixml/releases/download/v1.8.1/pugixml-1.8.1.zip"
-    FILENAME "pugixml-1.8.1.zip"
-    SHA512 683fe224a9bcac032d78cb44d03915a3766d2faa588f3a8486b5719f26eeba3e17d447edf70e1907f51f8649ffb4607b6badd1365e4c15cf24279bf577dc853e
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-	)
-else()
-	vcpkg_apply_patches(
-		SOURCE_PATH ${SOURCE_PATH}
-		PATCHES
-			${CMAKE_CURRENT_LIST_DIR}/pugixmlapi.patch
-	)
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-		OPTIONS
-			-DBUILD_DEFINES="PUGIXML_API=__declspec\(dllexport\)"
-	)
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO zeux/pugixml
+    REF v1.9
+    SHA512 f97941941d98a1a056087edc0dde6376bf2cc12ce4523b67a2f2ec5ae0895c2a2e55da32fcca6a997f1a0d918c5f39564167da0a07ce0d7da92880ad8631c31e
+    HEAD_REF master
+)
+
+vcpkg_configure_cmake(
+	SOURCE_PATH ${SOURCE_PATH}
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/pugixml")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# Handle copyright
 file(INSTALL ${SOURCE_PATH}/readme.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pugixml RENAME copyright)

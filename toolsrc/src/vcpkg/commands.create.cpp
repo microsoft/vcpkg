@@ -1,7 +1,8 @@
 #include "pch.h"
 
+#include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 
@@ -18,11 +19,11 @@ namespace vcpkg::Commands::Create
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 
-        const fs::path& cmake_exe = paths.get_cmake_exe();
+        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
         std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
 
