@@ -1,0 +1,3 @@
+Source: cppmicroservices
+Version: 4.0.0-pre1
+Description: An OSGi-like C++ dynamic module system and service registry
