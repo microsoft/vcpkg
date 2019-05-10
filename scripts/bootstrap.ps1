@@ -359,7 +359,7 @@ $arguments = (
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
-"/p:PreferredToolArchitecture=x64",
+"/p:PreferredToolArchitecture=$platform",
 "/verbosity:minimal",
 "/m",
 "/nologo",
