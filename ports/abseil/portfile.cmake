@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF cd86d0d20ab167c33b23d3875db68d1d4bad3a3b
-    SHA512 88e3edf395a11bdcd09d831dee3fad14a556761aafbc207e09ce17865e0663d9039a7d7954c95576270f7207cd00176b2ea107c61c6a059a5627c6fe062a66b5
+    REF aa468ad75539619b47979911297efbb629c52e44
+    SHA512 4254d8599103d8f06b03f60a0386eba07f314184217d0bca404d41fc0bd0a8df287fe6d07158d10cde096af3097aff2ecc1a5e8f7c3046ecf956b5fde709ad1d
     HEAD_REF master
     PATCHES fix-usage-lnk-error.patch
 )
