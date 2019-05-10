@@ -15,6 +15,18 @@ if(VCPKG_TOOLCHAIN)
     return()
 endif()
 
+if(NOT DEFINED CMAKE_BUILD_TYPE) 
+#If the build type is not defined we are generating with a multi config generator
+#Thus we should map common configurations correctly (If they have not been set)
+    message(STATUS "VCPKG: Multi configuration generator detected! Mapping MinSizeRel and RelWithDebInfo to Release")
+    if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
+        set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release)
+    endif()
+    if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
+        set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
+    endif()
+endif()
+
 if(VCPKG_TARGET_TRIPLET)
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
     set(_VCPKG_TARGET_TRIPLET_ARCH x86)
