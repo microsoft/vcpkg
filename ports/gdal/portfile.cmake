@@ -96,7 +96,7 @@ if (WIN32) # Build in WINDOWS
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
 if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib")
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib" CURL_LIBRARY_REL)
-elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl-imp.lib")
+elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib")
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib" CURL_LIBRARY_REL)
 endif()
 if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d.lib")
