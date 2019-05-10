@@ -13,7 +13,6 @@ set(INSTALL_INCLUDE_DIR  "include"                   CACHE PATH "Path where head
 set(INSTALL_CMAKE_DIR    "share/lz4"                 CACHE PATH "Path where cmake configs will be installed")
 
 file(GLOB LZ4_HEADERS lib/*.h)
-message(STATUS "${LZ4_HEADERS}")
 
 add_library(lz4
     ${LZ4_HEADERS}
