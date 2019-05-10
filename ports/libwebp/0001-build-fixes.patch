@@ -2,13 +2,15 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 499ddce..895fda9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -159,6 +159,10 @@ add_definitions(-DHAVE_CONFIG_H)
+@@ -159,6 +159,12 @@ add_definitions(-DHAVE_CONFIG_H)
  if(MSVC)
    # avoid security warnings for e.g., fopen() used in the examples.
    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 +  add_definitions(-DWEBP_HAVE_JUST_SDL_H)
 +  if(BUILD_SHARED_LIBS)
 +    add_definitions(-DWEBP_EXTERN=__declspec\(dllexport\))
++  else()
++    add_definitions(-DFREEGLUT_STATIC)
 +  endif()
  else()
    add_definitions(-Wall)
