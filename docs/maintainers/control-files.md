@@ -30,9 +30,13 @@ Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5
 #### Source
 The name of the port.
 
-When adding new ports be aware that the name may conflict with other projects that are not a part of vcpkg.  To avoid conflicts verify the name on a service like [Repology][repology].  For example `json` conflicts with too many other projects so you should add a scope to the name such as `taocpp-json` to make it unique.
+When adding new ports be aware that the name may conflict with other projects that are not a part of vcpkg.  For example `json` conflicts with too many other projects so you should add a scope to the name such as `taocpp-json` to make it unique.  Verify there are no conflicts on a search engine as well as on other package collections.
 
-[repology]: https://repology.org/projects/
+Package collections to check for conflicts:
+
++ [Repology](https://repology.org/projects/)
++ [Debian packages](https://www.debian.org/distrib/packages)
++ [Packages search](https://pkgs.org/)
 
 #### Version
 The port version.
