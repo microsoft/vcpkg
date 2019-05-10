@@ -15,9 +15,9 @@ if(VCPKG_TOOLCHAIN)
     return()
 endif()
 
-if(NOT DEFINED CMAKE_BUILD_TYPE) 
-#If the build type is not defined we are generating with a multi config generator
-#Thus we should map common configurations correctly (If they have not been set)
+if(DEFINED CMAKE_CONFIGURATION_TYPES)
+#Generating with a multi config generator
+#Thus we should map common configurations correctly (If they have not been set manually)
     message(STATUS "VCPKG: Multi configuration generator detected! Mapping MinSizeRel and RelWithDebInfo to Release")
     if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
         set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release)
