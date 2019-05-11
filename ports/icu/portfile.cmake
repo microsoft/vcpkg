@@ -209,3 +209,9 @@ vcpkg_copy_pdbs()
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)
+
+# Deal with a stale process created by MSYS
+vcpkg_execute_required_process(
+	COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
+	WORKING_DIRECTORY ${SOURCE_PATH}
+)
