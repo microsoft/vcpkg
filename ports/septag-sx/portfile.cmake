@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(TARGET_TRIPLET MATCHES "(uwp|arm)")
+    message(FATAL_ERROR "septag-sx doesn't support ${TARGET_TRIPLET} currently.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO septag/sx
