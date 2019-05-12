@@ -1,6 +1,10 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
+# VCPKG toolchain options. 
+option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
+mark_as_advanced(VCPKG_VERBOSE)
+
 # This is a backport of CMAKE_TRY_COMPILE_PLATFORM_VARIABLES to cmake 3.0
 get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
 if( _CMAKE_IN_TRY_COMPILE )
@@ -15,15 +19,21 @@ if(VCPKG_TOOLCHAIN)
     return()
 endif()
 
-if(DEFINED CMAKE_CONFIGURATION_TYPES)
-#Generating with a multi config generator
-#Thus we should map common configurations correctly (If they have not been set manually)
-    message(STATUS "VCPKG: Multi configuration generator detected! Mapping MinSizeRel and RelWithDebInfo correctly!")
+if(DEFINED CMAKE_CONFIGURATION_TYPES) #Generating with a multi config generator
+    #If CMake does not have a mapping for MinSizeRel and RelWithDebInfo in imported targets
+    #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES.
+    #By default this is the debug configuration which is wrong. 
     if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
         set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
+        if(VCPKG_VERBOSE)
+            message(STATUS "VCPKG-Info (Line: ${CMAKE_CURRENT_LIST_LINE}): CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
+        endif()
     endif()
     if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
         set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
+        if(VCPKG_VERBOSE)
+            message(STATUS "VCPKG-Info (Line: ${CMAKE_CURRENT_LIST_LINE}): CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
+        endif()
     endif()
 endif()
 
