@@ -141,36 +141,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}")
     endif()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-    # Drop debug suffix, as FindCURL.cmake does not look for it
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
-        # Fixup libcurl-target-debug.cmake to match
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" DEBUG_MODULE)
-        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" "${DEBUG_MODULE}")
-    endif()
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
-        # Fixup libcurl-target-release.cmake to match
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-release.cmake" RELEASE_MODULE)
-        string(REPLACE "\${_IMPORT_PREFIX}/lib/libcurl_imp.lib" "\${_IMPORT_PREFIX}/lib/libcurl.lib" RELEASE_MODULE "${RELEASE_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-release.cmake" "${RELEASE_MODULE}")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
-        # Fixup libcurl-target-debug.cmake to match
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" DEBUG_MODULE)
-        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d_imp.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" "${DEBUG_MODULE}")
-    endif()
-endif()
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
