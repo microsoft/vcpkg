@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(SUITESPARSE_VER SuiteSparse-5.4.0)
 set(SUITESPARSEWIN_VER 1.4.0)
 set(SUITESPARSEWIN_PATH ${CURRENT_BUILDTREES_DIR}/src/suitesparse-metis-for-windows-${SUITESPARSEWIN_VER})
-set(SUITESPARSE_PATH ${SUITESPARSEWIN_PATH}/Suitesparse)
+set(SUITESPARSE_PATH ${SUITESPARSEWIN_PATH}/SuiteSparse)
 
 vcpkg_download_distfile(SUITESPARSE
     URLS "http://faculty.cse.tamu.edu/davis/SuiteSparse/${SUITESPARSE_VER}.tar.gz"
