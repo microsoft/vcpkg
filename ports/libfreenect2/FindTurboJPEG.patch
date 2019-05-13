@@ -1,0 +1,59 @@
+diff --git a/cmake_modules/FindTurboJPEG.cmake b/cmake_modules/FindTurboJPEG.cmake
+index 55f73071..9ffec1d2 100644
+--- a/cmake_modules/FindTurboJPEG.cmake
++++ b/cmake_modules/FindTurboJPEG.cmake
+@@ -22,7 +22,7 @@ FIND_PATH(TurboJPEG_INCLUDE_DIRS
+ #Library names:
+ # debian sid,strech: libturbojpeg0
+ # debian/ubuntu else: libturbojpeg1-dev #provided by libjpeg-turbo8-dev (ubuntu)
+-FIND_LIBRARY(TurboJPEG_LIBRARIES
++FIND_LIBRARY(TurboJPEG_LIBRARIES_RELEASE
+   NAMES libturbojpeg.so.1 libturbojpeg.so.0 turbojpeg
+   DOC "Found TurboJPEG library path"
+   PATHS
+@@ -37,9 +37,25 @@ FIND_LIBRARY(TurboJPEG_LIBRARIES
+     lib
+     lib64
+ )
++FIND_LIBRARY(TurboJPEG_LIBRARIES_DEBUG
++  NAMES libturbojpegd.so.1 libturbojpegd.so.0 turbojpegd
++  DOC "Found TurboJPEG library path"
++  PATHS
++    "${DEPENDS_DIR}/libjpeg_turbo"
++    "${DEPENDS_DIR}/libjpeg-turbo64"
++    "/usr/local/opt/jpeg-turbo" # homebrew
++    "/opt/local" # macports
++    "C:/libjpeg-turbo64"
++    "/opt/libjpeg-turbo"
++    ENV TurboJPEG_ROOT
++  PATH_SUFFIXES
++    lib
++    lib64
++)
++set(TurboJPEG_LIBRARIES "debug;${TurboJPEG_LIBRARIES_DEBUG};optimized;${TurboJPEG_LIBRARIES_RELEASE}")
+ 
+ IF(WIN32)
+-FIND_FILE(TurboJPEG_DLL
++FIND_FILE(TurboJPEG_DLL_RELEASE
+   turbojpeg.dll
+   DOC "Found TurboJPEG DLL path"
+   PATHS
+@@ -50,6 +66,18 @@ FIND_FILE(TurboJPEG_DLL
+   PATH_SUFFIXES
+     bin
+ )
++FIND_FILE(TurboJPEG_DLL_DEBUG
++  NAMES turbojpegd.dll
++  DOC "Found TurboJPEG DLL path"
++  PATHS
++    "${DEPENDS_DIR}/libjpeg_turbo"
++    "${DEPENDS_DIR}/libjpeg-turbo64"
++    "C:/libjpeg-turbo64"
++    ENV TurboJPEG_ROOT
++  PATH_SUFFIXES
++    bin
++)
++set(TurboJPEG_DLL "\$<\$<CONFIG:DEBUG>:${TurboJPEG_DLL_DEBUG}>; \$<\$<NOT:\$<CONFIG:DEBUG>>:${TurboJPEG_DLL_RELEASE}>")
+ ENDIF()
+ 
+ IF(TurboJPEG_INCLUDE_DIRS AND TurboJPEG_LIBRARIES)
