@@ -32,7 +32,7 @@ option(INSTALL_HEADERS "Install the development headers" ON)
 set(REAL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 
 # Add a debug postfix
-set(CMAKE_DEBUG_POSTFIX "d")
+#set(CMAKE_DEBUG_POSTFIX "d")
 
 # List the public header files
 set(PUBLIC_HEADERS ${REAL_SOURCE_DIR}/FreeImage.h)
