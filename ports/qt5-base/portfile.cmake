@@ -81,7 +81,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
-            PSQL_LIBS="-llibpqd"
+            PSQL_LIBS="-llibpq"
             PCRE2_LIBS="-lpcre2-16d"
             FREETYPE_LIBS="-lfreetyped"
     )
