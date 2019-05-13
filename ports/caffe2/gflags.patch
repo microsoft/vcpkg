@@ -1,0 +1,27 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 3465b7e8..813567e8 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -76,7 +76,7 @@ endif()
+ # ---[ Google-gflags
+ if(USE_GFLAGS)
+   include("cmake/External/gflags.cmake")
+-  if(GFLAGS_FOUND)
++  if(GFlags_FOUND)
+     set(CAFFE2_USE_GFLAGS 1)
+     caffe2_include_directories(${GFLAGS_INCLUDE_DIRS})
+     list(APPEND Caffe2_DEPENDENCY_LIBS ${GFLAGS_LIBRARIES})
+
+diff --git a/cmake/External/gflags.cmake b/cmake/External/gflags.cmake
+index 3465b7e8..813567e8 100644
+--- a/cmake/External/gflags.cmake
++++ b/cmake/External/gflags.cmake
+@@ -3,7 +3,7 @@ if (NOT __GFLAGS_INCLUDED) # guard against multiple includes
+ 
+   # try the system-wide glog first
+   find_package(GFlags)
+-  if (GFLAGS_FOUND)
++  if (GFlags_FOUND)
+     # Great, we will use gflags.
+     message(STATUS "Found system gflags install.")
+   else()

@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         msvc-fixes.patch
         fix-space.patch
+        gflags.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -28,6 +29,9 @@ if(CMAKE_HOST_WIN32)
 else()
     set(EXECUTABLE_SUFFIX "")
 endif()
+
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindGFlags.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindLMDB.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
