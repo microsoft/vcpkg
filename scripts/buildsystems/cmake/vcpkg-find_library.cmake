@@ -1,0 +1,40 @@
+function(find_library _vcpkg_lib_var)
+    set(_vcpkg_list_vars "${ARGV}")
+    set(options NAMES_PER_DIR)
+    set(oneValueArgs "")
+    set(multiValueArgs NAMES)
+    cmake_parse_arguments(_vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    #if(${ARGV1} MATCHES NAMES)
+        #Should help resolve issues finding libraries in the correct directroy
+        #and is related to how CMAKE_PREFIX_PATH is set in vcpkg.cmake to always
+        #include release and debug paths in a certain order
+        #THis needs another approach probably https://cmake.org/cmake/help/latest/command/cmake_parse_arguments.html
+        # if(NOT "${ARGV}" MATCHES "NAMES_PER_DIR")
+        #    list(INSERT _vcpkg_list_vars 3 NAMES_PER_DIR) #this insert must be conditional
+        #endif()
+    #endif()
+    message(STATUS "VCPKG-find_library-vars:${_vcpkg_list_vars}!")
+    _find_library(${_vcpkg_list_vars})
+    if(x${${_vcpkg_lib_var}})
+        message(STATUS "VCPKG-find_library: ${_vcpkg_lib_var}:${${_vcpkg_lib_var}}")
+        if("${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+            if("${_vcpkg_lib_var}" MATCHES "_DEBUG")
+                if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
+                    message(WARNING "VCPKG-Warning-find_library: ${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory!")
+                endif()
+            elseif("${_vcpkg_lib_var}" MATCHES "_RELEASE")
+                if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+                    message(WARNING "VCPKG-Warning-find_library: ${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to release directory!")
+                endif()
+            else() #these are the cases we probably need to correct!
+                #Extract names of the library
+                if(${ARGV1} MATCHES NAMES)
+                    set(_vcpkg_lib_names ${ARGV2})
+                else()
+                    set(_vcpkg_lib_names ${ARGV1})
+                endif()
+            endif()
+        endif()
+        message(STATUS "VCPKG-find_library: ${_vcpkg_lib_var} was not found!")
+    endif()
+endfunction()
