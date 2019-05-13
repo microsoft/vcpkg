@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_61_1
-    SHA512 09fa3c87f8d516eabe3241247a5094c32ee0481961cf85bf78ecb13acdf23bb2ec82f113d2660271d22742c79e76d73fb122730fa28e34c7f5477c05a4a6534c
+    REF curl-7_64_1
+    SHA512 bfaed8c65e82cb27a68e259516c8395cf10a67b62bb7e9d44803bde450f6017116fb3da8db716a172e140324831a63b4046a355810d86ba6577ebda3883a3625
     HEAD_REF master
     PATCHES
         0001_cmake.patch
@@ -135,20 +135,42 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}")
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/curl)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/curl-target-release.cmake" RELEASE_MODULE)
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-release.cmake" RELEASE_MODULE)
         string(REPLACE "\${_IMPORT_PREFIX}/bin/curl${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/curl/curl${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/curl-target-release.cmake" "${RELEASE_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-release.cmake" "${RELEASE_MODULE}")
+    endif()
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    # Drop debug suffix, as FindCURL.cmake does not look for it
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+        # Fixup libcurl-target-debug.cmake to match
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" DEBUG_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" "${DEBUG_MODULE}")
+    endif()
+else()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
+        # Fixup libcurl-target-release.cmake to match
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-release.cmake" RELEASE_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/lib/libcurl_imp.lib" "\${_IMPORT_PREFIX}/lib/libcurl.lib" RELEASE_MODULE "${RELEASE_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-release.cmake" "${RELEASE_MODULE}")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+        # Fixup libcurl-target-debug.cmake to match
+        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" DEBUG_MODULE)
+        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d_imp.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/CURLTargets-debug.cmake" "${DEBUG_MODULE}")
     endif()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
