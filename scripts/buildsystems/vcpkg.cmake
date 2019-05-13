@@ -130,7 +130,8 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
 endif()
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
-file(TO_CMAKE_PATH "$ENV{PROGRAMFILES(x86)}" _programfiles_x86)
+set(_PROGRAMFILESX86 "PROGRAMFILES(x86)")
+file(TO_CMAKE_PATH "$ENV{${_PROGRAMFILESX86}}" _programfiles_x86)
 set(CMAKE_SYSTEM_IGNORE_PATH
     "${_programfiles}/OpenSSL"
     "${_programfiles}/OpenSSL-Win32"
