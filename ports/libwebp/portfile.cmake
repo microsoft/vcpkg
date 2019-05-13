@@ -54,7 +54,6 @@ vcpkg_configure_cmake(
     -DWEBP_NEAR_LOSSLESS:BOOL=${WEBP_NEAR_LOSSLESS}
     -DWEBP_ENABLE_SWAP_16BIT_CSP:BOOL=OFF
   OPTIONS_DEBUG
-    -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
