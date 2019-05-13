@@ -1,0 +1,30 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index 0c95883f..5a256f72 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -42,7 +42,7 @@ endif()
+ find_package(Boost REQUIRED COMPONENTS system thread filesystem regex context)
+ find_package(OpenSSL REQUIRED)
+ find_package(Glog REQUIRED)
+-find_package(DoubleConversion REQUIRED)
++find_package(double-conversion REQUIRED)
+ find_package(Threads REQUIRED)
+ if (UNIX AND NOT APPLE)
+   find_package(Librt)
+@@ -199,7 +199,6 @@ target_include_directories(
+   PRIVATE
+     ${GLOG_INCLUDE_DIRS}
+     ${FIZZ_INCLUDE_DIRECTORIES}
+-    ${DOUBLE_CONVERSION_INCLUDE_DIRS}
+ )
+ 
+ 
+@@ -216,7 +215,7 @@ target_link_libraries(fizz
+   PRIVATE
+     ${GLOG_LIBRARIES}
+     ${FIZZ_LINK_LIBRARIES}
+-    ${DOUBLE_CONVERSION_LIBRARIES}
++    double-conversion::double-conversion
+     ${CMAKE_DL_LIBS}
+     ${LIBRT_LIBRARIES})
+ 
