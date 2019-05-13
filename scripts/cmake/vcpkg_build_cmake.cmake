@@ -97,6 +97,7 @@ function(vcpkg_build_cmake)
                 ERROR_FILE "${LOGPREFIX}-err.log"
                 RESULT_VARIABLE error_code
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+            vcpkg_check_build_output(LOGFILES "${LOGPREFIX}-out.log")
             if(error_code)
                 file(READ "${LOGPREFIX}-out.log" out_contents)
                 file(READ "${LOGPREFIX}-err.log" err_contents)

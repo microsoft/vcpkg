@@ -11,8 +11,9 @@ function(vcpkg_build_qmake)
     cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
 
     if(CMAKE_HOST_WIN32)
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}")
+        #vcpkg_find_acquire_program(JOM)
+        set(ENV{CL} /MP)
+        set(INVOKE "nmake")
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}")
@@ -59,7 +60,8 @@ function(vcpkg_build_qmake)
         set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;${ENV_PATH_BACKUP}")
         if(NOT _csc_SKIP_MAKEFILES)
             run_jom(qmake_all makefiles dbg)
-
+            vcpkg_check_build_output(LOGFILES package-makefiles-${TARGET_TRIPLET}-dbg-out.log)
+            
             #Store debug makefiles path
             file(GLOB_RECURSE DEBUG_MAKEFILES ${DEBUG_DIR}/*Makefile*)
 
@@ -78,12 +80,14 @@ function(vcpkg_build_qmake)
         endif()
 
         run_jom("${_csc_DEBUG_TARGETS}" ${_csc_BUILD_LOGNAME} dbg)
+        vcpkg_check_build_output(LOGFILES package-${_csc_BUILD_LOGNAME}-${TARGET_TRIPLET}-dbg-out.log)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;${ENV_PATH_BACKUP}")
         if(NOT _csc_SKIP_MAKEFILES)
             run_jom(qmake_all makefiles rel)
+            vcpkg_check_build_output(LOGFILES package-makefiles-${TARGET_TRIPLET}-rel-out.log)
 
             #Store release makefile path
             file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
@@ -101,6 +105,8 @@ function(vcpkg_build_qmake)
         endif()
 
         run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} rel)
+        vcpkg_check_build_output(LOGFILES package-${_csc_BUILD_LOGNAME}-${TARGET_TRIPLET}-rel-out.log)
+
     endif()
     
     # Restore the original value of ENV{PATH}
