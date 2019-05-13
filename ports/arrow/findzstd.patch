@@ -1,0 +1,17 @@
+diff --git a/cmake_modules/FindZSTD.cmake b/cmake_modules/FindZSTD.cmake
+index 21b4981e..51c39e24 100644
+--- a/cmake_modules/FindZSTD.cmake
++++ b/cmake_modules/FindZSTD.cmake
+@@ -19,9 +19,9 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+ endif()
+ 
+-if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
+-  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
+-endif()
++#if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++#  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
++#endif()
+ 
+ set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
