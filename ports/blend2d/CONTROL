@@ -1,0 +1,10 @@
+Source: blend2d
+Version: beta_2019-04-30
+Description: Beta 2D Vector Graphics Powered by a JIT Compiler
+Default-Features: jit, logging
+
+Feature: jit
+Description: asmjit is used to jit compile pipelines
+
+Feature: logging
+Description: enables logging
