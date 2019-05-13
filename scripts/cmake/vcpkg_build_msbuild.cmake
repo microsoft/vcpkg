@@ -124,7 +124,7 @@ function(vcpkg_build_msbuild)
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
-        vcpkg_check_build_output(LOGFILES "build-${TARGET_TRIPLET}-rel-out.log")
+        vcpkg_check_build_output(LOGFILES "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -138,6 +138,6 @@ function(vcpkg_build_msbuild)
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
-        vcpkg_check_build_output(LOGFILES "build-${TARGET_TRIPLET}-dbg-out.log")
+        vcpkg_check_build_output(LOGFILES "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-out.log")
     endif()
 endfunction()
