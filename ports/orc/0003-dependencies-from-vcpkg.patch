@@ -119,7 +119,7 @@ index 1a28b1a..89f57d8 100644
 -if (NOT "${LZ4_HOME}" STREQUAL "")
 -  find_package (LZ4 REQUIRED)
 +if (NOT "${LZ4_HOME}" STREQUAL "" OR 1)
-+  find_library(LZ4_STATIC_LIB NAMES lz4d lz4)
++  find_library(LZ4_STATIC_LIB NAMES lz4 lz4)
    set(LZ4_VENDORED FALSE)
  else ()
    set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
