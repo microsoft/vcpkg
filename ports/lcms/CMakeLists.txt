@@ -33,7 +33,7 @@ set(SRCS
 "src/cmssm.c"
 )
 
-set(CMAKE_DEBUG_POSTFIX d)
+#set(CMAKE_DEBUG_POSTFIX d)
 
 add_definitions(-DUNICODE -D_UNICODE)
 
