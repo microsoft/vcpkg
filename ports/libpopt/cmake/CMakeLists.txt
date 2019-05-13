@@ -3,7 +3,7 @@ project(popt VERSION 1.16 LANGUAGES C)
 
 set(PACKAGE "popt")
 set(POPT_SYSCONFDIR "C:\\\\")
-set(CMAKE_DEBUG_POSTFIX "d")
+#set(CMAKE_DEBUG_POSTFIX "d")
 
 file(GLOB SOURCES "popt.c"
                   "poptconfig.c"
