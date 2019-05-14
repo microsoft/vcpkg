@@ -11,7 +11,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" G3_SHARED_LIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" G3_SHARED_RUNTIME)
 
-set(VERSION 586)
+# https://github.com/KjellKod/g3log#prerequisites
+set(VERSION "1.3.2-95")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
