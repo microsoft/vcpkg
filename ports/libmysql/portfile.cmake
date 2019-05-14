@@ -10,8 +10,8 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT CMAKE_SYSTEM_NAME OR CMAKE_S
     message(FATAL_ERROR "Oracle has dropped support in libmysql for 32-bit Windows.")
 endif()
 
-if (UNIX)
-    message(WARNING "libmysql needs ncurses on LINUX, please install nucrses first. On Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.")
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(WARNING "libmysql needs ncurses on LINUX, please install ncurses first.\nOn Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.")
 endif()
 
 include(vcpkg_common_functions)
