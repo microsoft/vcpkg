@@ -23,7 +23,11 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
+if(WIN32 AND NOT CYGWIN)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
+else()
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cppnetlib)
+endif()
 
 vcpkg_copy_pdbs()
 
