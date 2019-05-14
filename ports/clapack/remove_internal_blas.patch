@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 320ccc6..3567e41 100755
+index 320ccc6..284e9d3 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -32,13 +32,13 @@ index 320ccc6..3567e41 100755
 -set(CPACK_PACKAGE_VERSION_PATCH 1)
 -include(CPack)
 -export(TARGETS f2c blas lapack FILE clapack-targets.cmake)
-+export(TARGETS f2c lapack FILE clapack-targets.cmake)
++export(TARGETS f2c lapack FILE ${CMAKE_INSTALL_PREFIX}/share/clapack/clapack-targets.cmake)
  configure_file(${CLAPACK_SOURCE_DIR}/clapack-config-version.cmake.in
 -  ${CLAPACK_BINARY_DIR}/clapack-config-version.cmake @ONLY)
-+	${CMAKE_INSTALL_PREFIX}/share/clapack/lapack-config-version.cmake @ONLY)
++	${CMAKE_INSTALL_PREFIX}/share/clapack/clapack-config-version.cmake @ONLY)
  configure_file(${CLAPACK_SOURCE_DIR}/clapack-config.cmake.in
 -  ${CLAPACK_BINARY_DIR}/clapack-config.cmake @ONLY)
-+	${CMAKE_INSTALL_PREFIX}/share/clapack/lapack-config.cmake @ONLY)
++	${CMAKE_INSTALL_PREFIX}/share/clapack/clapack-config.cmake @ONLY)
 +install(FILES
 +        ${CMAKE_CURRENT_LIST_DIR}/include/clapack.h
 +        ${CMAKE_CURRENT_LIST_DIR}/include/f2c.h
@@ -75,3 +75,10 @@ index ac4cce3..07dc8c7 100755
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib)
  
+diff --git a/clapack-config.cmake.in b/clapack-config.cmake.in
+index cd19f1d..597f474 100755
+--- a/clapack-config.cmake.in
++++ b/clapack-config.cmake.in
+@@ -1 +1 @@
+-include("@CLAPACK_BINARY_DIR@/clapack-targets.cmake")
++include("@CLAPACK_BINARY_DIR@/clapack-targets.cmake")

@@ -1,0 +1,46 @@
+include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
+include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
+
+if(UNIX)
+  find_library(ADDITIONAL_LAPACK_LIBRARY m)
+endif()
+
+if(NOT F2C_LIBRARY)
+    find_library(F2C_LIBRARY_RELEASE NAMES libf2c)
+    find_library(F2C_LIBRARY_DEBUG NAMES libf2cd)
+    select_library_configurations(F2C)
+endif()
+
+if(NOT LAPACK_LIBRARY)
+    find_library(LAPACK_LIBRARY_RELEASE NAMES lapack)
+    find_library(LAPACK_LIBRARY_DEBUG NAMES lapackd)
+    select_library_configurations(LAPACK)
+endif()
+
+list(APPEND LAPACK_LIBRARY ${F2C_LIBRARY})
+list(APPEND LAPACK_LIBRARY ${ADDITIONAL_LAPACK_LIBRARY})
+
+set(F2C_LIBRARIES "${F2C_LIBRARY}" CACHE STRING "" FORCE)
+set(LAPACK_LIBRARIES "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
+set(CLAPACK_LIBRARY "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
+set(CLAPACK_LIBRARIES "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
+
+if(NOT F2C_INCLUDE_DIR)
+  find_path(F2C_INCLUDE_DIR NAMES f2c.h)
+endif()
+
+if(NOT LAPACK_INCLUDE_DIR)
+  find_path(LAPACK_INCLUDE_DIR NAMES clapack.h)
+endif()
+
+list(APPEND LAPACK_INCLUDE_DIR ${F2C_INCLUDE_DIR})
+set(LAPACK_INCLUDE_DIRS "${LAPACK_INCLUDE_DIR}" CACHE PATH "" FORCE)
+set(CLAPACK_INCLUDE_DIR "${LAPACK_INCLUDE_DIR}" CACHE PATH "" FORCE)
+set(CLAPACK_INCLUDE_DIRS "${LAPACK_INCLUDE_DIR}" CACHE PATH "" FORCE)
+
+#check_symbol_exists(cheev_ clapack.h HAVE_CHEEV_)
+#check_symbol_exists(cheev clapack.h HAVE_CHEEV)
+
+set(CLAPACK_FOUND TRUE CACHE BOOL "" FORCE)
+set(LAPACK_FOUND TRUE CACHE BOOL "" FORCE)
+set(F2C_FOUND TRUE CACHE BOOL "" FORCE)

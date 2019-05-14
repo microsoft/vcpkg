@@ -18,11 +18,21 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
+  OPTIONS
+    -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/clapack TARGET_PATH share/lapack)
+
+#TODO: fix the exported targets, since they are broken.
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/clapack)
+
+#we install a cmake wrapper since the official FindLAPACK module does not accept clapack as a valid library, unfortunately...
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
+
+#we also intercept any call to FindCLAPACK redirecting it to our FindLAPACK
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper-clapack.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/clapack RENAME vcpkg-cmake-wrapper.cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
