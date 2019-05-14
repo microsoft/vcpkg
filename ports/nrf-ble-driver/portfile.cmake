@@ -14,6 +14,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+find_program(GIT NAMES git git.cmd)
+get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
+vcpkg_add_to_path("${GIT_EXE_PATH}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
