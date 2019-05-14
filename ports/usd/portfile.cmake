@@ -44,9 +44,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(
-    RENAME
-        ${SOURCE_PATH}/LICENSE.txt
-        ${CURRENT_PACKAGES_DIR}/share/usd/copyright)
+    COPY ${SOURCE_PATH}/LICENSE.txt
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/usd/copyright)
 
 # Move all dlls to bin
 file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll)
