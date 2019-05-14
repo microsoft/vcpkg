@@ -3,11 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KjellKod/g3log
-    REF 9c5e7f3bcbe2c18984a7de7351da2451b23e45ed
-    SHA512 3d989ec76e95a2a6863bd301bf00600b42d3fcf8ab2963385d79008bf3ec2621daa37638d17543736eaddf30d06979b24ae31ce0a37fe5eb842e14a15c1341b2
+    REF 376c417ad170228fa6d1b9994a6e07a2ac143a51
+    SHA512 fd442b895f0be2489d2be099b1faca5c964f1a3880e3867726efb5f5a17192fbf2c2d60cf118e1b68bea73cf328f0b16c0265ec0f0c0fbbb1f62f68a994f5b86
     HEAD_REF master
-    PATCHES
-        fix-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" G3_SHARED_LIB)
@@ -32,11 +30,6 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g3logger TARGET_PATH share/g3logger)
-
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/g3logger
-)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
