@@ -8,23 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable_warnings_as_error.patch"
-)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/glm")
-
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Put the license file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/manual.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/glm/)
