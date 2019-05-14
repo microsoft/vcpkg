@@ -14,8 +14,6 @@ vcpkg_download_distfile(SUITESPARSE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${SUITESPARSE}
-    PATCHES
-        fix-install-suitesparse.patch
 )
 
 vcpkg_from_github(
@@ -25,7 +23,7 @@ vcpkg_from_github(
     SHA512 35a2563d6e33ebe8157f8d023167abd8d2512e2a627b8dbea798c59afefc56b8f01c7d10553529b03a7b4759e200ca82bb26ebce5cefce6983ffb057a8622162
     HEAD_REF master
     PATCHES
-        lapack_module.patch
+        suitesparse.patch
 )
 
 # Copy suitesparse sources.
@@ -40,6 +38,7 @@ message(STATUS "Copying SuiteSparse source files... done")
 set(USE_VCPKG_METIS OFF)
 if("metis" IN_LIST FEATURES)
     set(USE_VCPKG_METIS ON)
+    set(ADDITIONAL_BUILD_OPTIONS "-DMETIS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -54,18 +53,13 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SUITESPARSEWIN_SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_METIS=OFF #Disable the option to build metis from source
-        -DUSE_VCPKG_METIS=${USE_VCPKG_METIS} #Force using vcpckg metis library
-        -DMETIS_SOURCE_DIR="${CURRENT_INSTALLED_DIR}"
-        -DSUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS=ON
+        -DBUILD_METIS=OFF
+        -DUSE_VCPKG_METIS=${USE_VCPKG_METIS}
+        ${ADDITIONAL_BUILD_OPTIONS}
      OPTIONS_DEBUG
         -DSUITESPARSE_INSTALL_PREFIX="${CURRENT_PACKAGES_DIR}/debug"
-        -DSUITESPARSE_CUSTOM_BLAS_LIB="${CURRENT_INSTALLED_DIR}/debug/lib/${LIB_PREFIX}openblas_d.${LIB_EXT}"
-        -DSUITESPARSE_CUSTOM_LAPACK_LIB="${CURRENT_INSTALLED_DIR}/debug/lib/${LIB_PREFIX}lapack.${LIB_EXT}"
      OPTIONS_RELEASE
         -DSUITESPARSE_INSTALL_PREFIX="${CURRENT_PACKAGES_DIR}"
-        -DSUITESPARSE_CUSTOM_BLAS_LIB="${CURRENT_INSTALLED_DIR}/lib/${LIB_PREFIX}openblas.${LIB_EXT}"
-        -DSUITESPARSE_CUSTOM_LAPACK_LIB="${CURRENT_INSTALLED_DIR}/lib/${LIB_PREFIX}lapack.${LIB_EXT}"
 )
 
 vcpkg_install_cmake()
