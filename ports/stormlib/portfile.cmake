@@ -17,10 +17,8 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -STORM_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
-set(STORM_BUILD_TESTS OFF)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/stormlib RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
