@@ -13,8 +13,8 @@ endif()
 
 message(
 "numactl currently requires the following libraries from the system package manager:
-    autoconf
-These can be installed on Ubuntu systems via sudo apt install autoconf"
+    autoconf libtool
+These can be installed on Ubuntu systems via sudo apt install autoconf libtool"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
