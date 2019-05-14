@@ -19,11 +19,13 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_from_github(
-  OUT_SOURCE_PATH SUITESPARSEWIN_SOURCE_PATH
-  REPO jlblancoc/suitesparse-metis-for-windows
-  REF v${SUITESPARSEWIN_VER}
-  SHA512 35a2563d6e33ebe8157f8d023167abd8d2512e2a627b8dbea798c59afefc56b8f01c7d10553529b03a7b4759e200ca82bb26ebce5cefce6983ffb057a8622162
-  HEAD_REF master
+    OUT_SOURCE_PATH SUITESPARSEWIN_SOURCE_PATH
+    REPO jlblancoc/suitesparse-metis-for-windows
+    REF v${SUITESPARSEWIN_VER}
+    SHA512 35a2563d6e33ebe8157f8d023167abd8d2512e2a627b8dbea798c59afefc56b8f01c7d10553529b03a7b4759e200ca82bb26ebce5cefce6983ffb057a8622162
+    HEAD_REF master
+    PATCHES
+        lapack_module.patch
 )
 
 # Copy suitesparse sources.

@@ -17,10 +17,15 @@ vcpkg_from_github(
     PATCHES
         0001_add_missing_include_path.patch
         0002_cmakelists_fixes.patch
-        0003_remove_unnecessary_cmake_modules.patch
-        0004_use_glog_target.patch
-        0005_fix_exported_ceres_config.patch
+        0003_use_glog_target.patch
+        0004_fix_exported_ceres_config.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
+#file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
+#file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
 
 set(SUITESPARSE OFF)
 if("suitesparse" IN_LIST FEATURES)

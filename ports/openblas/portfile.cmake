@@ -72,7 +72,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
+        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON
         "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
@@ -87,6 +87,7 @@ endif()
 
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
 
 # openblas do not make the config file , so I manually made this
 # but I think in most case, libraries will not include these files, they define their own used function prototypes
