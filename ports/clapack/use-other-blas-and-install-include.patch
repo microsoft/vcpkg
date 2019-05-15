@@ -52,7 +52,7 @@ index 43d7b3f..2bdbd05 100644
  include_directories(${CLAPACK_SOURCE_DIR}/F2CLIBS/libf2c)
  include_directories(${CLAPACK_BINARY_DIR}/F2CLIBS/libf2c)
 -add_library(f2c ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
-+add_library(f2c STATIC ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
++add_library(f2c OBJECT ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
 +if(UNIX AND NOT APPLE)
 +   target_link_libraries(f2c PUBLIC m)
 +endif()
@@ -81,13 +81,13 @@ index ac4cce3..0548c8d 100644
 -add_library(lapack ${ALLOBJ} ${ALLXOBJ})
 -target_link_libraries(lapack blas)
 +if(BUILD_SHARED_LIBS AND MSVC)
-+  add_library(lapack SHARED ${ALLOBJ} ${ALLXOBJ} ${CMAKE_CURRENT_LIST_DIR}/lapack.def)
++  add_library(lapack SHARED ${ALLOBJ} ${ALLXOBJ} ${CMAKE_CURRENT_LIST_DIR}/lapack.def $<TARGET_OBJECTS:f2c>)
 +else()
-+  add_library(lapack ${ALLOBJ} ${ALLXOBJ})
++  add_library(lapack ${ALLOBJ} ${ALLXOBJ} $<TARGET_OBJECTS:f2c>)
 +endif(BUILD_SHARED_LIBS AND MSVC)
 +
 +
-+target_link_libraries(lapack OpenBLAS::OpenBLAS f2c)
++target_link_libraries(lapack OpenBLAS::OpenBLAS)
 +
 +install(TARGETS lapack 
 +        RUNTIME DESTINATION bin
