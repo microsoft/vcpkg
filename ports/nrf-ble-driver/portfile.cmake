@@ -15,6 +15,7 @@ vcpkg_from_github(
 )
 
 find_program(GIT NAMES git git.cmd)
+message(STATUS "HEREHEREHEREHEREHERE GIT path is: ${GIT}")
 get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
 vcpkg_add_to_path("${GIT_EXE_PATH}")
 
