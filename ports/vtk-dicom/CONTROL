@@ -5,4 +5,4 @@ Build-Depends: vtk, zlib
 
 Feature: gdcm
 Description: Use gdcm for decompressing DICOM files.
-Build-Depends: gdcm2
+Build-Depends: gdcm
