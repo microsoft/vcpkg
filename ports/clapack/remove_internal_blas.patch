@@ -7,7 +7,7 @@ index 320ccc6..284e9d3 100755
  project(CLAPACK C)
 -enable_testing()
 -include(CTest)
-+find_package(OpenBLAS REQUIRED)
++find_package(BLAS REQUIRED)
  
  if(WIN32 AND NOT CYGWIN)
    set(SECOND_SRC  ${CLAPACK_SOURCE_DIR}/INSTALL/winsecond.c)

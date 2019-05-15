@@ -6,8 +6,8 @@ if(UNIX)
 endif()
 
 if(NOT F2C_LIBRARY)
-    find_library(F2C_LIBRARY_RELEASE NAMES libf2c)
-    find_library(F2C_LIBRARY_DEBUG NAMES libf2cd)
+    find_library(F2C_LIBRARY_RELEASE NAMES f2c)
+    find_library(F2C_LIBRARY_DEBUG NAMES f2cd)
     select_library_configurations(F2C)
 endif()
 
@@ -46,4 +46,5 @@ if(LAPACK_LIBRARIES AND F2C_LIBRARIES AND LAPACK_INCLUDE_DIRS AND F2C_INCLUDE_DI
   set(CLAPACK_FOUND TRUE CACHE BOOL "" FORCE)
   set(LAPACK_FOUND TRUE CACHE BOOL "" FORCE)
   set(F2C_FOUND TRUE CACHE BOOL "" FORCE)
+  message(STATUS "Found LAPACK (include: ${LAPACK_INCLUDE_DIRS}, libs: ${LAPACK_LIBRARIES})")
 endif()
