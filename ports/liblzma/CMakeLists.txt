@@ -3,7 +3,7 @@ project(LibLZMA)
 
 set(INSTALL_BIN_DIR      "bin"                CACHE PATH   "Path where exe and dll will be installed")
 set(INSTALL_LIB_DIR      "lib"                CACHE PATH   "Path where lib will be installed")
-set(INSTALL_INCLUDE_DIR  "include/lzma"       CACHE PATH   "Path where headers will be installed")
+set(INSTALL_INCLUDE_DIR  "include"            CACHE PATH   "Path where headers will be installed")
 set(INSTALL_CMAKE_DIR    "share/liblzma"      CACHE PATH   "Path where cmake configs will be installed")
 set(CMAKE_DEBUG_POSTFIX  "d"                  CACHE STRING "Append a suffix to debug libraries")
 
@@ -156,7 +156,6 @@ target_include_directories(LZMA PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/lzma>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/api>
     $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}/lzma>
 )
 
 set_target_properties(LZMA PROPERTIES PUBLIC_HEADER
@@ -167,7 +166,7 @@ install(TARGETS LZMA EXPORT LibLZMATargets
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
     ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
+    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/lzma"
 )
 
 install(FILES "${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h"
