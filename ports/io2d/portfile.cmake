@@ -24,6 +24,10 @@ if ("${SOURCE_PATH}" STREQUAL "")
 endif()
 
 # Configure the library, using CMake
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    set(IO2D_DEFAULT_OPTION "-DIO2D_DEFAULT=COREGRAPHICS_MAC")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -31,6 +35,7 @@ vcpkg_configure_cmake(
         -DIO2D_WITHOUT_SAMPLES=1
         -DIO2D_WITHOUT_TESTS=1
         -DCMAKE_INSTALL_INCLUDEDIR:STRING=include
+        ${IO2D_DEFAULT_OPTION}
 )
 
 # Build + install the library, using CMake
@@ -42,14 +47,16 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/io2d)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake ${CURRENT_PACKAGES_DIR}/share/io2d/io2dTargets.cmake)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake "
-include(CMakeFindDependencyMacro)
-find_dependency(unofficial-cairo CONFIG)
-find_dependency(unofficial-graphicsmagick CONFIG)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake ${CURRENT_PACKAGES_DIR}/share/io2d/io2dTargets.cmake)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake "
+    include(CMakeFindDependencyMacro)
+    find_dependency(unofficial-cairo CONFIG)
+    find_dependency(unofficial-graphicsmagick CONFIG)
 
-include(\${CMAKE_CURRENT_LIST_DIR}/io2dTargets.cmake)
-")
+    include(\${CMAKE_CURRENT_LIST_DIR}/io2dTargets.cmake)
+    ")
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/io2d RENAME copyright)
 
