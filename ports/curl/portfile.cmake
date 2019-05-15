@@ -113,8 +113,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/curl)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/curl)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/CURL)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
 endif()
