@@ -7,8 +7,9 @@ vcpkg_from_github(
     SHA512 b13c5d7bc27218eff8a8c4ce89a964b4920b1d3946e4843e60be965d77ec205845750a82bf654a7c2c772bf3a24f6ff5706881b24ff12115f2525c8134b6d0b9
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize-addendum.patch"
+        uwp-createfile-getfilesize.patch
+        uwp-createfile-getfilesize-addendum.patch
+        fix-install-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CRT_LIB_STATIC)
@@ -33,8 +34,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-
 # Fix applied for 6830c421899e32f8d413a903a21a9b6cf384d369
 file(READ "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" _contents)
 string(REPLACE "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/lib\"" "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\"" _contents "${_contents}")
@@ -42,9 +41,9 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" "$
 
 vcpkg_copy_pdbs()
 
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/libsndfile/LibSndFileTargets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsndfile)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc/libsndfile ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 
 if(BUILD_EXECUTABLES)
