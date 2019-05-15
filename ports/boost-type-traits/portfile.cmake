@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         msvc-arm.patch
-        msvc-arm-2.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
