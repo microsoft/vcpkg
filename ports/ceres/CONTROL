@@ -4,7 +4,7 @@ Build-Depends: glog, eigen3
 Description: non-linear optimization package
 
 Feature: lapack
-Build-Depends: clapack
+Build-Depends: clapack (!osx)
 Description: Use Lapack in Ceres
 
 Feature: suitesparse
