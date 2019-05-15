@@ -14,8 +14,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Ensure that git is found within CMakeLists.txt by appending vcpkg's git executable dirpath to $PATH.
+# Git should always be available as it is downloaded during the bootstrap phase.
+# Append instead of prepend to $PATH to honor the user's git executable as a general rule.
 find_program(GIT NAMES git git.cmd)
-message(STATUS "HEREHEREHEREHEREHERE GIT path is: ${GIT}")
 get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
 vcpkg_add_to_path("${GIT_EXE_PATH}")
 
