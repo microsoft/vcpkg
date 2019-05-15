@@ -41,14 +41,6 @@ if("metis" IN_LIST FEATURES)
     set(ADDITIONAL_BUILD_OPTIONS "-DMETIS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(LIB_EXT a)
-    set(LIB_PREFIX lib)
-else()
-    set(LIB_EXT lib)
-    set(LIB_PREFIX)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SUITESPARSEWIN_SOURCE_PATH}
     PREFER_NINJA
