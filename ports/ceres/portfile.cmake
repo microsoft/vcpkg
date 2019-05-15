@@ -69,7 +69,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH "lib${LIB_SUFFIX}/cmake/Ceres")
@@ -78,7 +78,7 @@ endif()
 vcpkg_copy_pdbs()
 
 # Changes target search path
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_TARGETS)
   string(REPLACE "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../"
                  "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../" CERES_TARGETS "${CERES_TARGETS}")
