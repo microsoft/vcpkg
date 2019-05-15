@@ -34,6 +34,17 @@ if(MSVC)
     set(LIB_RC libpff/libpff.rc)
 endif()
 
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+# Add CMake find_package() integration
+set(PROJECT_TARGET_NAME "unofficial-${PROJECT_NAME}")
+set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+set(PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/generated/${PROJECT_TARGET_NAME}Config.cmake")
+set(TARGETS_EXPORT_NAME "${PROJECT_TARGET_NAME}Targets")
+set(NAMESPACE "unofficial-libpff::")
+
 # Source files
 file(GLOB LIB_SRC lib*/*.c)
 
@@ -50,9 +61,21 @@ target_include_directories(${PROJECT_NAME} PRIVATE ./libfguid ./libfmapi ./libfv
 target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
 
 install(TARGETS ${PROJECT_NAME}
+        EXPORT ${TARGETS_EXPORT_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+        ARCHIVE DESTINATION lib
+        INCLUDES DESTINATION include)
 
 install(FILES ${LIB_INST_HEADERS} DESTINATION include/libpff)
 install(FILES include/libpff.h DESTINATION include)
+
+
+# Generate and install unofficial-libpffConfig.cmake
+configure_package_config_file("Config.cmake.in" "${PROJECT_CONFIG}" INSTALL_DESTINATION "${CONFIG_INSTALL_DIR}")
+install(FILES "${PROJECT_CONFIG}" DESTINATION "${CONFIG_INSTALL_DIR}")
+
+# Generate and install unofficial-libpffTargets*.cmake
+install(EXPORT ${TARGETS_EXPORT_NAME}
+        NAMESPACE ${NAMESPACE}
+        DESTINATION "${CONFIG_INSTALL_DIR}")
