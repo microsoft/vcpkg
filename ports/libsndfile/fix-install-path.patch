@@ -22,10 +22,10 @@ index cc35414..d629adf 100644
  	doc/octave.html
  	doc/tutorial.html)
 -install (FILES ${html_DATA} DESTINATION ${CMAKE_INSTALL_DOCDIR})
-+install (FILES ${html_DATA} DESTINATION ${CMAKE_INSTALL_DATADIR}/libsndfile)
++#install (FILES ${html_DATA} DESTINATION ${CMAKE_INSTALL_DATADIR}/libsndfile)
  
 -install (FILES ${CMAKE_CURRENT_BINARY_DIR}/sndfile.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/sndfile.pc DESTINATION share/libsndfile/pkgconfig)
++#install (FILES ${CMAKE_CURRENT_BINARY_DIR}/sndfile.pc DESTINATION share/libsndfile/pkgconfig)
  
  #
  # Testing
