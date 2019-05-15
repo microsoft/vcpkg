@@ -17,7 +17,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/glibmm-api-variant.patch
+    PATCHES 
+        ${CMAKE_CURRENT_LIST_DIR}/glibmm-api-variant.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-define-glibmmconfig.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
