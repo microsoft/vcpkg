@@ -66,6 +66,9 @@ if(WIN32)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     list(APPEND pg_port_src
         src/port/strlcpy.c
+        src/port/inet_aton.c
+        src/port/inet_net_ntop.c
+        src/port/getpeereid.c
     )
 endif()
 
@@ -130,10 +133,15 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(libpq ${pg_port_src} ${pg_backend_src} ${pg_libpq_src})
+
 target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -D_CRT_SECURE_NO_WARNINGS)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_definitions(libpq PRIVATE -D_GNU_SOURCE)
+endif()
+
 target_link_libraries(libpq PRIVATE OpenSSL::SSL)
 if(WIN32)
-    target_link_libraries(libpq PRIVATE ws2_32 secur32 advapi32 shell32)
+    target_link_libraries(libpq PRIVATE ws2_32 secur32 advapi32 shell32 crypt32)
 endif()
 target_include_directories(libpq PRIVATE src/include src/port ${CMAKE_CURRENT_BINARY_DIR}/include)
 set_target_properties(libpq PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)

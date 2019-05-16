@@ -8,15 +8,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         LibCrypto-fix.patch
+        cmake-export-fix.patch
 )
 
 if(${TARGET_TRIPLET} MATCHES "uwp")
     message(FATAL_ERROR "cppfs does not support uwp")
-endif()
-
-set(SHARED_LIBS Off)
-if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-    set(SHARED_LIBS On)
 endif()
 
 set(SSH_BACKEND OFF)
@@ -30,15 +26,16 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DOPTION_BUILD_SSH_BACKEND=${SSH_BACKEND}
         -DOPTION_BUILD_TESTS=Off
-        -DBUILD_SHARED_LIBS=${SHARED_LIBS}
         -DOPTION_FORCE_SYSTEM_DIR_INSTALL=On
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

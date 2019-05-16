@@ -24,3 +24,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmodbus RENAME copyright)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

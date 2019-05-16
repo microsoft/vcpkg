@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34ae7c7..dd35281 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,5 @@
+ cmake_minimum_required(VERSION 3.0)
+-project(linq)
+-
+-enable_testing()
++project(linq CXX)
+ 
+ find_package(Boost)
+ 
+@@ -37,6 +35,10 @@ install(FILES
+ install(FILES linq.h DESTINATION include)
+ install(DIRECTORY linq DESTINATION include)
+ 
+-add_executable(linq-test test.cpp)
+-target_link_libraries(linq-test linq ${Boost_test_LIBRARY_RELEASE})
+-add_test(NAME linq-test COMMAND linq-test)
++include(CTest)
++
++if (BUILD_TESTING)
++    add_executable(linq-test test.cpp)
++    target_link_libraries(linq-test linq ${Boost_test_LIBRARY_RELEASE})
++    add_test(NAME linq-test COMMAND linq-test)
++endif (BUILD_TESTING)

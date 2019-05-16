@@ -1,7 +1,10 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #if defined(__linux__)
@@ -71,18 +74,42 @@ namespace vcpkg::Files
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
                                                   const std::string& filename) const override
         {
-            static const fs::path UNIX_ROOT = "/";
             fs::path current_dir = starting_dir;
-            for (; !current_dir.empty() && current_dir != UNIX_ROOT; current_dir = current_dir.parent_path())
+            if (exists(current_dir / filename))
             {
+                return current_dir;
+            }
+
+            int counter = 10000;
+            for (;;)
+            {
+                // This is a workaround for VS2015's experimental filesystem implementation
+                if (!current_dir.has_relative_path())
+                {
+                    current_dir.clear();
+                    return current_dir;
+                }
+
+                auto parent = current_dir.parent_path();
+                if (parent == current_dir)
+                {
+                    current_dir.clear();
+                    return current_dir;
+                }
+
+                current_dir = std::move(parent);
+
                 const fs::path candidate = current_dir / filename;
                 if (exists(candidate))
                 {
                     return current_dir;
                 }
-            }
 
-            return fs::path();
+                --counter;
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   counter > 0,
+                                   "infinite loop encountered while trying to find_file_recursively_up()");
+            }
         }
 
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const override
@@ -185,10 +212,11 @@ namespace vcpkg::Files
 
             if (this->exists(path))
             {
-                System::println(System::Color::warning,
-                                "Some files in %s were unable to be removed. Close any editors operating in this "
-                                "directory and retry.",
-                                path.string());
+                System::print2(
+                    System::Color::warning,
+                    "Some files in ",
+                    path.u8string(),
+                    " were unable to be removed. Close any editors operating in this directory and retry.\n");
             }
 
             return out;
@@ -274,14 +302,14 @@ namespace vcpkg::Files
                     if (Util::find(ret, p) == ret.end() && this->exists(p))
                     {
                         ret.push_back(p);
-                        Debug::println("Found path: %s", p.u8string());
+                        Debug::print("Found path: ", p.u8string(), '\n');
                     }
                 }
             }
 
             return ret;
 #else
-            const std::string cmd = Strings::format("which %s", name);
+            const std::string cmd = Strings::concat("which ", name);
             auto out = System::cmd_execute_and_capture_output(cmd);
             if (out.exit_code != 0)
             {
@@ -306,11 +334,12 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths)
     {
-        System::println();
+        std::string message = "\n";
         for (const fs::path& p : paths)
         {
-            System::println("    %s", p.generic_string());
+            Strings::append(message, "    ", p.generic_string(), '\n');
         }
-        System::println();
+        message.push_back('\n');
+        System::print2(message);
     }
 }

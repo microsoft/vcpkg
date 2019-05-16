@@ -16,22 +16,20 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("openblas currenly only supports dynamic library linkage")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    set(CMAKE_CROSSCOMPILING OFF)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.5
-    SHA512 91b3074eb922453bf843158b4281cde65db9e8bbdd7590e75e9e6cdcb486157f7973f2936f327bb3eb4f1702ce0ba51ae6729d8d4baf2d986c50771e8f696df0
+    REF v0.3.6
+    SHA512 1ad980176a51f70d8b0b2d158da8c01f30f77b7cf385b24a6340d3c5feb1513bd04b9390487d05cc9557db7dc5f7c135b1688dec9f17ebef35dba884ef7ddee9
     HEAD_REF develop
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/uwp.patch"
+    PATCHES
+        uwp.patch
+        fix-space-path.patch
 )
 
 find_program(GIT NAMES git git.cmd)

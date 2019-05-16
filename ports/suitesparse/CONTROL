@@ -1,6 +1,6 @@
 Source: suitesparse
-Version: 5.1.2
-Build-Depends: clapack
+Version: 5.1.2-2
+Build-Depends: clapack (!osx)
 Description: algebra library
 
 Feature: metis

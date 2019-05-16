@@ -1,9 +1,10 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/chrono.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
-#include <vcpkg/globalstate.h>
-#include <vcpkg/metrics.h>
+#include <vcpkg/base/system.process.h>
 
 #include <ctime>
 
@@ -17,9 +18,73 @@
 
 #pragma comment(lib, "Advapi32")
 
-namespace vcpkg::System
+using namespace vcpkg::System;
+
+namespace vcpkg
 {
-    fs::path get_exe_path_of_current_process()
+#if defined(_WIN32)
+    namespace
+    {
+        struct CtrlCStateMachine
+        {
+            CtrlCStateMachine() : m_state(CtrlCState::normal) {}
+
+            void transition_to_spawn_process() noexcept
+            {
+                auto expected = CtrlCState::normal;
+                auto transitioned = m_state.compare_exchange_strong(expected, CtrlCState::blocked_on_child);
+                if (!transitioned)
+                {
+                    // Ctrl-C was hit and is asynchronously executing on another thread
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+            }
+            void transition_from_spawn_process() noexcept
+            {
+                auto expected = CtrlCState::blocked_on_child;
+                auto transitioned = m_state.compare_exchange_strong(expected, CtrlCState::normal);
+                if (!transitioned)
+                {
+                    // Ctrl-C was hit while blocked on the child process, so exit immediately
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+            }
+            void transition_handle_ctrl_c() noexcept
+            {
+                auto prev_state = m_state.exchange(CtrlCState::exit_requested);
+
+                if (prev_state == CtrlCState::normal)
+                {
+                    // Not currently blocked on a child process and Ctrl-C has not been hit.
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+                else if (prev_state == CtrlCState::exit_requested)
+                {
+                    // Ctrl-C was hit previously?
+                }
+                else
+                {
+                    // We are currently blocked on a child process. Upon return, transition_from_spawn_process() will be
+                    // called and exit.
+                }
+            }
+
+        private:
+            enum class CtrlCState
+            {
+                normal,
+                blocked_on_child,
+                exit_requested,
+            };
+
+            std::atomic<CtrlCState> m_state;
+        };
+
+        static CtrlCStateMachine g_ctrl_c_state;
+    }
+#endif
+
+    fs::path System::get_exe_path_of_current_process()
     {
 #if defined(_WIN32)
         wchar_t buf[_MAX_PATH];
@@ -51,7 +116,7 @@ namespace vcpkg::System
 #endif
     }
 
-    Optional<CPUArchitecture> to_cpu_architecture(const CStringView& arch)
+    Optional<CPUArchitecture> System::to_cpu_architecture(StringView arch)
     {
         if (Strings::case_insensitive_ascii_equals(arch, "x86")) return CPUArchitecture::X86;
         if (Strings::case_insensitive_ascii_equals(arch, "x64")) return CPUArchitecture::X64;
@@ -61,7 +126,7 @@ namespace vcpkg::System
         return nullopt;
     }
 
-    CPUArchitecture get_host_processor()
+    CPUArchitecture System::get_host_processor()
     {
 #if defined(_WIN32)
         auto w6432 = get_environment_variable("PROCESSOR_ARCHITEW6432");
@@ -84,7 +149,7 @@ namespace vcpkg::System
 #endif
     }
 
-    std::vector<CPUArchitecture> get_supported_host_architectures()
+    std::vector<CPUArchitecture> System::get_supported_host_architectures()
     {
         std::vector<CPUArchitecture> supported_architectures;
         supported_architectures.push_back(get_host_processor());
@@ -98,20 +163,20 @@ namespace vcpkg::System
         return supported_architectures;
     }
 
-    CMakeVariable::CMakeVariable(const CStringView varname, const char* varvalue)
+    System::CMakeVariable::CMakeVariable(const StringView varname, const char* varvalue)
         : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
     {
     }
-    CMakeVariable::CMakeVariable(const CStringView varname, const std::string& varvalue)
+    System::CMakeVariable::CMakeVariable(const StringView varname, const std::string& varvalue)
         : CMakeVariable(varname, varvalue.c_str())
     {
     }
-    CMakeVariable::CMakeVariable(const CStringView varname, const fs::path& path)
+    System::CMakeVariable::CMakeVariable(const StringView varname, const fs::path& path)
         : CMakeVariable(varname, path.generic_u8string())
     {
     }
 
-    std::string make_cmake_cmd(const fs::path& cmake_exe,
+    std::string System::make_cmake_cmd(const fs::path& cmake_exe,
                                const fs::path& cmake_script,
                                const std::vector<CMakeVariable>& pass_variables)
     {
@@ -168,8 +233,13 @@ namespace vcpkg::System
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
             L"https_proxy",
-            // Enables find_package(CUDA) in CMake
+            // Enables find_package(CUDA) and enable_language(CUDA) in CMake
             L"CUDA_PATH",
+            L"CUDA_PATH_V9_0",
+            L"CUDA_PATH_V9_1",
+            L"CUDA_PATH_V10_0",
+            L"CUDA_PATH_V10_1",
+            L"CUDA_TOOLKIT_ROOT_DIR",
             // Environmental variable generated automatically by CUDA after installation
             L"NVCUDASAMPLES_ROOT",
             // Enables find_package(Vulkan) in CMake. Environmental variable generated by Vulkan SDK installer
@@ -177,6 +247,19 @@ namespace vcpkg::System
             // Enable targeted Android NDK
             L"ANDROID_NDK_HOME",
         };
+
+        const Optional<std::string> keep_vars = System::get_environment_variable("VCPKG_KEEP_ENV_VARS");
+        const auto k = keep_vars.get();
+
+        if (k && !k->empty())
+        {
+            auto vars = Strings::split(*k, ";");
+
+            for (auto&& var : vars)
+            {
+                env_wstrings.push_back(Strings::to_utf16(var));
+            }
+        }
 
         std::wstring env_cstr;
 
@@ -215,13 +298,11 @@ namespace vcpkg::System
 #if defined(_WIN32)
     /// <param name="maybe_environment">If non-null, an environment block to use for the new process. If null, the new
     /// process will inherit the current environment.</param>
-    static void windows_create_process(const CStringView cmd_line,
-                                       const wchar_t* maybe_environment,
-                                       DWORD dwCreationFlags,
-                                       PROCESS_INFORMATION* process_info) noexcept
+    static void windows_create_process(const StringView cmd_line,
+                                       const wchar_t* environment_block,
+                                       PROCESS_INFORMATION& process_info,
+                                       DWORD dwCreationFlags) noexcept
     {
-        Checks::check_exit(VCPKG_LINE_INFO, process_info != nullptr);
-
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
         startup_info.cb = sizeof(STARTUPINFOW);
@@ -231,41 +312,40 @@ namespace vcpkg::System
 
         // Wrapping the command in a single set of quotes causes cmd.exe to correctly execute
         const std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
-        Debug::println("CreateProcessW(%s)", actual_cmd_line);
+        Debug::print("CreateProcessW(", actual_cmd_line, ")\n");
         bool succeeded = TRUE == CreateProcessW(nullptr,
                                                 Strings::to_utf16(actual_cmd_line).data(),
                                                 nullptr,
                                                 nullptr,
                                                 FALSE,
                                                 IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT | dwCreationFlags,
-                                                (void*)maybe_environment,
+                                                (void*)environment_block,
                                                 nullptr,
                                                 &startup_info,
-                                                process_info);
+                                                &process_info);
 
         Checks::check_exit(VCPKG_LINE_INFO, succeeded, "Process creation failed with error code: %lu", GetLastError());
     }
 #endif
 
 #if defined(_WIN32)
-    void cmd_execute_no_wait(const CStringView cmd_line) noexcept
+    void System::cmd_execute_no_wait(StringView cmd_line)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
         PROCESS_INFORMATION process_info;
         memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 
-        windows_create_process(cmd_line, nullptr, DETACHED_PROCESS, &process_info);
+        windows_create_process(cmd_line, nullptr, process_info, DETACHED_PROCESS);
 
         CloseHandle(process_info.hThread);
         CloseHandle(process_info.hProcess);
 
-        Debug::println("CreateProcessW() took %d us", static_cast<int>(timer.microseconds()));
+        Debug::print("CreateProcessW() took ", static_cast<int>(timer.microseconds()), " us\n");
     }
 #endif
 
-    int cmd_execute_clean(const CStringView cmd_line,
-                          const std::unordered_map<std::string, std::string>& extra_env) noexcept
+    int System::cmd_execute_clean(const ZStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
@@ -273,14 +353,14 @@ namespace vcpkg::System
         PROCESS_INFORMATION process_info;
         memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 
-        GlobalState::g_ctrl_c_state.transition_to_spawn_process();
+        g_ctrl_c_state.transition_to_spawn_process();
         auto clean_env = compute_clean_environment(extra_env);
-        windows_create_process(cmd_line, clean_env.c_str(), NULL, &process_info);
+        windows_create_process(cmd_line, clean_env.data(), process_info, NULL);
 
         CloseHandle(process_info.hThread);
 
         const DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
-        GlobalState::g_ctrl_c_state.transition_from_spawn_process();
+        g_ctrl_c_state.transition_from_spawn_process();
         Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
 
         DWORD exit_code = 0;
@@ -288,56 +368,56 @@ namespace vcpkg::System
 
         CloseHandle(process_info.hProcess);
 
-        Debug::println("CreateProcessW() returned %lu after %d us", exit_code, static_cast<int>(timer.microseconds()));
-
+        Debug::print(
+            "CreateProcessW() returned ", exit_code, " after ", static_cast<int>(timer.microseconds()), " us\n");
         return static_cast<int>(exit_code);
 #else
-        Debug::println("system(%s)", cmd_line.c_str());
+        Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
         int rc = system(cmd_line.c_str());
-        Debug::println("system() returned %d after %d us", rc, static_cast<int>(timer.microseconds()));
+        Debug::print("system() returned ", rc, " after ", static_cast<int>(timer.microseconds()), " us\n");
         return rc;
 #endif
     }
 
-    int cmd_execute(const CStringView cmd_line) noexcept
+    int System::cmd_execute(const ZStringView cmd_line)
     {
         // Flush stdout before launching external process
         fflush(nullptr);
 
 #if defined(_WIN32)
         // We are wrap the command line in quotes to cause cmd.exe to correctly process it
-        const std::string& actual_cmd_line = Strings::format(R"###("%s")###", cmd_line);
-        Debug::println("_wsystem(%s)", actual_cmd_line);
-        GlobalState::g_ctrl_c_state.transition_to_spawn_process();
+        auto actual_cmd_line = Strings::concat('"', cmd_line, '"');
+        Debug::print("_wsystem(", actual_cmd_line, ")\n");
+        g_ctrl_c_state.transition_to_spawn_process();
         const int exit_code = _wsystem(Strings::to_utf16(actual_cmd_line).c_str());
-        GlobalState::g_ctrl_c_state.transition_from_spawn_process();
-        Debug::println("_wsystem() returned %d", exit_code);
+        g_ctrl_c_state.transition_from_spawn_process();
+        Debug::print("_wsystem() returned ", exit_code, '\n');
 #else
-        Debug::println("_system(%s)", cmd_line);
+        Debug::print("_system(", cmd_line, ")\n");
         const int exit_code = system(cmd_line.c_str());
-        Debug::println("_system() returned %d", exit_code);
+        Debug::print("_system() returned ", exit_code, '\n');
 #endif
         return exit_code;
     }
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line) noexcept
+    ExitCodeAndOutput System::cmd_execute_and_capture_output(const ZStringView cmd_line)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
 #if defined(_WIN32)
         const auto actual_cmd_line = Strings::format(R"###("%s 2>&1")###", cmd_line);
 
-        Debug::println("_wpopen(%s)", actual_cmd_line);
+        Debug::print("_wpopen(", actual_cmd_line, ")\n");
         std::wstring output;
         wchar_t buf[1024];
-        GlobalState::g_ctrl_c_state.transition_to_spawn_process();
+        g_ctrl_c_state.transition_to_spawn_process();
         // Flush stdout before launching external process
         fflush(stdout);
         const auto pipe = _wpopen(Strings::to_utf16(actual_cmd_line).c_str(), L"r");
         if (pipe == nullptr)
         {
-            GlobalState::g_ctrl_c_state.transition_from_spawn_process();
+            g_ctrl_c_state.transition_from_spawn_process();
             return {1, Strings::to_utf8(output.c_str())};
         }
         while (fgetws(buf, 1024, pipe))
@@ -346,12 +426,12 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
-            GlobalState::g_ctrl_c_state.transition_from_spawn_process();
+            g_ctrl_c_state.transition_from_spawn_process();
             return {1, Strings::to_utf8(output.c_str())};
         }
 
         const auto ec = _pclose(pipe);
-        GlobalState::g_ctrl_c_state.transition_from_spawn_process();
+        g_ctrl_c_state.transition_from_spawn_process();
 
         // On Win7, output from powershell calls contain a utf-8 byte order mark in the utf-16 stream, so we strip it
         // out if it is present. 0xEF,0xBB,0xBF is the UTF-8 byte-order mark
@@ -361,13 +441,16 @@ namespace vcpkg::System
             output.erase(0, 3);
         }
 
-        Debug::println("_pclose() returned %d after %8d us", ec, static_cast<int>(timer.microseconds()));
-
+        Debug::print("_pclose() returned ",
+                     ec,
+                     " after ",
+                     Strings::format("%8d", static_cast<int>(timer.microseconds())),
+                     " us\n");
         return {ec, Strings::to_utf8(output.c_str())};
 #else
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
 
-        Debug::println("popen(%s)", actual_cmd_line);
+        Debug::print("popen(", actual_cmd_line, ")\n");
         std::string output;
         char buf[1024];
         // Flush stdout before launching external process
@@ -388,46 +471,13 @@ namespace vcpkg::System
 
         const auto ec = pclose(pipe);
 
-        Debug::println("_pclose() returned %d after %8d us", ec, (int)timer.microseconds());
+        Debug::print("_pclose() returned ", ec, " after ", Strings::format("%8d", (int)timer.microseconds()), " us\n");
 
         return {ec, output};
 #endif
     }
 
-    void println() { putchar('\n'); }
-
-    void print(const CStringView message) { fputs(message.c_str(), stdout); }
-
-    void println(const CStringView message)
-    {
-        print(message);
-        println();
-    }
-
-    void print(const Color c, const CStringView message)
-    {
-#if defined(_WIN32)
-        const HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-        CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info {};
-        GetConsoleScreenBufferInfo(console_handle, &console_screen_buffer_info);
-        const auto original_color = console_screen_buffer_info.wAttributes;
-
-        SetConsoleTextAttribute(console_handle, static_cast<WORD>(c) | (original_color & 0xF0));
-        print(message);
-        SetConsoleTextAttribute(console_handle, original_color);
-#else
-        print(message);
-#endif
-    }
-
-    void println(const Color c, const CStringView message)
-    {
-        print(c, message);
-        println();
-    }
-
-    Optional<std::string> get_environment_variable(const CStringView varname) noexcept
+    Optional<std::string> System::get_environment_variable(ZStringView varname) noexcept
     {
 #if defined(_WIN32)
         const auto w_varname = Strings::to_utf16(varname);
@@ -454,37 +504,34 @@ namespace vcpkg::System
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
     }
 
-    Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)
+    Optional<std::string> System::get_registry_string(void* base_hkey, StringView sub_key, StringView valuename)
     {
         HKEY k = nullptr;
         const LSTATUS ec =
             RegOpenKeyExW(reinterpret_cast<HKEY>(base_hkey), Strings::to_utf16(sub_key).c_str(), NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
+        auto w_valuename = Strings::to_utf16(valuename);
+
         DWORD dw_buffer_size = 0;
         DWORD dw_type = 0;
-        auto rc =
-            RegQueryValueExW(k, Strings::to_utf16(valuename).c_str(), nullptr, &dw_type, nullptr, &dw_buffer_size);
+        auto rc = RegQueryValueExW(k, w_valuename.c_str(), nullptr, &dw_type, nullptr, &dw_buffer_size);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size == 0 ||
             dw_buffer_size % sizeof(wchar_t) != 0)
             return nullopt;
         std::wstring ret;
         ret.resize(dw_buffer_size / sizeof(wchar_t));
 
-        rc = RegQueryValueExW(k,
-                              Strings::to_utf16(valuename).c_str(),
-                              nullptr,
-                              &dw_type,
-                              reinterpret_cast<LPBYTE>(ret.data()),
-                              &dw_buffer_size);
+        rc = RegQueryValueExW(
+            k, w_valuename.c_str(), nullptr, &dw_type, reinterpret_cast<LPBYTE>(ret.data()), &dw_buffer_size);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size != sizeof(wchar_t) * ret.size())
             return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
-        return Strings::to_utf8(ret.c_str());
+        return Strings::to_utf8(ret);
     }
 #else
-    Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)
+    Optional<std::string> System::get_registry_string(void* base_hkey, StringView sub_key, StringView valuename)
     {
         return nullopt;
     }
@@ -505,7 +552,7 @@ namespace vcpkg::System
         return PATH;
     }
 
-    const Optional<fs::path>& get_program_files_32_bit()
+    const Optional<fs::path>& System::get_program_files_32_bit()
     {
         static const auto PATH = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("ProgramFiles(x86)");
@@ -518,7 +565,7 @@ namespace vcpkg::System
         return PATH;
     }
 
-    const Optional<fs::path>& get_program_files_platform_bitness()
+    const Optional<fs::path>& System::get_program_files_platform_bitness()
     {
         static const auto PATH = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("ProgramW6432");
@@ -530,23 +577,27 @@ namespace vcpkg::System
         }();
         return PATH;
     }
+
+#if defined(_WIN32)
+    static BOOL ctrl_handler(DWORD fdw_ctrl_type)
+    {
+        switch (fdw_ctrl_type)
+        {
+            case CTRL_C_EVENT: g_ctrl_c_state.transition_handle_ctrl_c(); return TRUE;
+            default: return FALSE;
+        }
+    }
+
+    void System::register_console_ctrl_handler()
+    {
+        SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
+    }
+#else
+    void System::register_console_ctrl_handler() {}
+#endif
 }
 
 namespace vcpkg::Debug
 {
-    void println(const CStringView message)
-    {
-        if (GlobalState::debugging)
-        {
-            System::println("[DEBUG] %s", message);
-        }
-    }
-
-    void println(const System::Color c, const CStringView message)
-    {
-        if (GlobalState::debugging)
-        {
-            System::println(c, "[DEBUG] %s", message);
-        }
-    }
+    std::atomic<bool> g_debugging(false);
 }

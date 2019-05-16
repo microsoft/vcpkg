@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("dlib only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-mac-jpeg.patch
         fix-sqlite3-fftw-linkage.patch
+        force_finding_packages.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libjpeg)
@@ -32,7 +30,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
+    PREFER_NINJA
     OPTIONS
         -DDLIB_LINK_WITH_SQLITE3=ON
         -DDLIB_USE_FFTW=ON
@@ -43,7 +41,7 @@ vcpkg_configure_cmake(
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
-        -DCMAKE_DEBUG_POSTFIX=d	
+        -DCMAKE_DEBUG_POSTFIX=d
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON
@@ -61,7 +59,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/all)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/appveyor)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/test)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis) 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_neon)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cudnn)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cuda)
@@ -78,5 +76,5 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h "${_contents}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/dlib/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/dlib/COPYRIGHT)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/dlib/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/dlib/copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
