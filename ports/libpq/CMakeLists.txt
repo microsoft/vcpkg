@@ -43,24 +43,24 @@ set(pg_port_src
     src/port/pgstrcasecmp.c
     src/port/pqsignal.c
     src/port/thread.c
-    src/port/crypt.c
     src/port/noblock.c
     src/port/chklocale.c
     src/port/snprintf.c
-    src/port/dirmod.c
-    src/port/pgsleep.c
-    src/port/open.c
-    src/port/system.c
 )
 if(WIN32)
     list(APPEND pg_port_src
         src/port/dirent.c
+        src/port/dirmod.c
+        src/port/crypt.c
         src/port/inet_aton.c
         src/port/inet_net_ntop.c
+        src/port/open.c
+        src/port/pgsleep.c
         src/port/win32error.c
         src/port/win32setlocale.c
         src/port/getaddrinfo.c
         src/port/strlcpy.c
+        src/port/system.c
     )
     include_directories(src/include/port/win32 src/include/port/win32_msvc)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -78,13 +78,6 @@ set(pg_backend_src
     src/backend/utils/mb/wchar.c
     src/backend/utils/mb/encnames.c
 )
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    list(APPEND pg_backend_src
-        src/backend/port/dynloader/linux.c
-        src/backend/port/sysv_sema.c
-        src/backend/port/sysv_shmem.c
-    )
-endif()
 if(NOT WIN32)
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/utils/errcodes.h
@@ -145,6 +138,27 @@ if(WIN32)
 endif()
 target_include_directories(libpq PRIVATE src/include src/port ${CMAKE_CURRENT_BINARY_DIR}/include)
 set_target_properties(libpq PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+if(BUILD_SHARED_LIBS AND (CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux"))
+    file(STRINGS src/interfaces/libpq/exports.txt LIB_EXPORTS REGEX "^[^\#].*")
+    string(REGEX REPLACE "[\t ]+[0-9]+" "" LIB_EXPORTS "${LIB_EXPORTS}")
+    set(_exports_list "${CMAKE_CURRENT_SOURCE_DIR}/src/interfaces/libpq/exports.list")
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        string(REPLACE ";" "\n_" _symbols "${LIB_EXPORTS}")
+        set(_export_flag_name -exported_symbols_list)
+        set(_link_flags "${_link_flags} -Wl,-dead_strip_dylibs")
+    else() # Linux
+        set(_symbols "{ global: ${LIB_EXPORTS}; local: *; };")
+        set(_export_flag_name --version-script)
+        set(_link_flags "${_link_flags} -Wl,--as-needed")
+    endif()
+
+    file(WRITE ${_exports_list} "${_symbols}\n")
+    set(_link_flags "${_link_flags} -Wl,${_export_flag_name},${_exports_list}")
+
+    set_target_properties(libpq PROPERTIES LINK_FLAGS "${_link_flags}")
+endif()
 
 install(TARGETS libpq
     ARCHIVE DESTINATION lib

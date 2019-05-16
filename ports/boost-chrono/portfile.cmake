@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF boost-1.69.0
     SHA512 7de2282c65b4c25086f99602fcb4dc21b0470f327d1d8db530387754cd5710588ea196e0382b64df8c2160274d7d229ebf307d37cd7d0052b1beb182ac9dc641
     HEAD_REF master
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Add-boost-install-to-build-Jamfile.patch"
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)

@@ -4,7 +4,10 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*)
 file(COPY ${SOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 include(${CMAKE_CURRENT_BINARY_DIR}/src/cmake/TBBBuild.cmake REQUIRED)
-tbb_build(TBB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/src MAKE_ARGS extra_inc=big_iron.inc)
+if(NOT BUILD_SHARED_LIBS)
+    set(TBB_STATIC_INCLUDE extra_inc=big_iron.inc)
+endif()
+tbb_build(TBB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/src MAKE_ARGS ${TBB_STATIC_INCLUDE})
 
 set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/tbb_cmake_build/tbb_cmake_build_subdir)
 if(CMAKE_BUILD_TYPE STREQUAL "Release")

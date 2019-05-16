@@ -76,8 +76,17 @@ file(WRITE "${BUILDDIR}/Configure" "${_contents}")
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
+    file(STRINGS "${BUILDDIR}/crypto/opensslv.h" shlib_version_str
+        REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
+    string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
+        SHLIB_VERSION_STRING "${shlib_version_str}")
+    unset(shlib_version_str)
+    set(INSTALL_LIBS "${BUILDDIR}/libssl.so.${SHLIB_VERSION_STRING}"
+        "${BUILDDIR}/libcrypto.so.${SHLIB_VERSION_STRING}"
+        "${BUILDDIR}/libssl.so" "${BUILDDIR}/libcrypto.so")
 else()
     set(SHARED no-shared)
+    set(INSTALL_LIBS "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a")
 endif()
 
 if(CMAKE_HOST_WIN32)
@@ -130,10 +139,10 @@ add_custom_target(build_libs ALL
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS depend
-    BYPRODUCTS "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
+    BYPRODUCTS ${INSTALL_LIBS}
 )
 
 install(
-    FILES "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
+    FILES ${INSTALL_LIBS}
     DESTINATION lib
 )

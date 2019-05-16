@@ -1,0 +1,21 @@
+From 94189352d9d537f7ef70d56845e622b461e7fd24 Mon Sep 17 00:00:00 2001
+From: Peter Dimov <pdimov@pdimov.com>
+Date: Fri, 5 Oct 2018 17:35:10 +0300
+Subject: [PATCH] Add boost-install to build/Jamfile
+
+---
+ build/Jamfile.v2 | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/Jamfile.v2 b/build/Jamfile.v2
+index bd9608c..3bd0356 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -114,3 +114,4 @@ lib boost_chrono
+     <link>static:<define>BOOST_All_STATIC_LINK=1 # tell source we're building static lib's
+     ;
+ 
++boost-install boost_chrono ;
+-- 
+2.20.1.windows.1
+
