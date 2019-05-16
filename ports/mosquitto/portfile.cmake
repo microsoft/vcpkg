@@ -1,13 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("mosquitto only supports dynamic linkage")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "mosquitto does not support static CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -34,7 +27,7 @@ vcpkg_configure_cmake(
         -DWITH_TLS=ON
         -DWITH_TLS_PSK=ON
         -DWITH_THREADING=ON
-        -DDOCUMENTATION=OFF 
+        -DDOCUMENTATION=OFF
     OPTIONS_RELEASE
         -DENABLE_DEBUG=OFF
     OPTIONS_DEBUG

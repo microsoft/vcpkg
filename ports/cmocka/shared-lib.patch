@@ -1,0 +1,22 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5684685..8555169 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -30,7 +30,7 @@ if (WIN32)
+         cmocka.def
+     )
+ endif (WIN32)
+-
++if (BUILD_SHARED_LIBS)
+ add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
+ 
+ target_include_directories(${CMOCKA_SHARED_LIBRARY}
+@@ -82,7 +82,7 @@ install(TARGETS
+             ${CMAKE_INSTALL_BINDIR}
+         COMPONENT
+             ${PROJECT_NAME})
+-
++endif (BUILD_SHARED_LIBS)
+ if (BUILD_STATIC_LIB)
+     add_library(${CMOCKA_STATIC_LIBRARY} STATIC ${cmocka_SRCS})
+ 

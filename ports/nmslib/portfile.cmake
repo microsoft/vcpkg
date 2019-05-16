@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "nmslib only supports static linkage. Building statically.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -39,7 +36,7 @@ vcpkg_copy_pdbs()
 set(SUBFOLDERS factory method space)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/nmslib)
 foreach(SUBFOLER ${SUBFOLDERS})
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/nmslib/${SUBFOLER}) 
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/nmslib/${SUBFOLER})
 endforeach()
 
 file(GLOB HEADERS ${CURRENT_PACKAGES_DIR}/include/*.h ${CURRENT_PACKAGES_DIR}/include/*/*.h)
@@ -50,7 +47,7 @@ foreach(HEADER ${HEADERS})
 endforeach(HEADER ${HEADERS})
 
 foreach(SUBFOLER ${SUBFOLDERS})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/${SUBFOLER}/) 
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/${SUBFOLER}/)
 endforeach()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

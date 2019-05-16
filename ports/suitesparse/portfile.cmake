@@ -1,14 +1,11 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(SUITESPARSE_VER SuiteSparse-5.1.2)  #if you change the version, becarefull of changing the SHA512 checksum accordingly
 set(SUITESPARSEWIN_VER 1.4.0)
 set(SUITESPARSEWIN_PATH ${CURRENT_BUILDTREES_DIR}/src/suitesparse-metis-for-windows-${SUITESPARSEWIN_VER})
-set(SUITESPARSE_PATH ${SUITESPARSEWIN_PATH}/Suitesparse)
+set(SUITESPARSE_PATH ${SUITESPARSEWIN_PATH}/SuiteSparse)
 
 #download suitesparse libary
 vcpkg_download_distfile(SUITESPARSE
@@ -30,8 +27,8 @@ vcpkg_extract_source_archive(${SUITESPARSE} ${SUITESPARSEWIN_PATH})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SUITESPARSEWIN_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-install-suitesparse.patch"
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/remove-debug-postfix.patch"
+    PATCHES
+        remove-debug-postfix.patch
 )
 
 set(USE_VCPKG_METIS OFF)
@@ -39,21 +36,37 @@ if("metis" IN_LIST FEATURES)
     set(USE_VCPKG_METIS ON)
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(LIB_EXT a)
+    set(LIB_PREFIX lib)
+else()
+    set(LIB_EXT lib)
+    set(LIB_PREFIX)
+endif()
+
+if(WIN32)
+  set(ENABLE_CUSTOM_BLAS_LAPACK_PATHS "-DSUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS=ON")
+  set(SUITESPARSE_CUSTOM_BLAS_PATH "-DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/lib/openblas.lib")
+  set(SUITESPARSE_CUSTOM_LAPACK_PATH "-DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/lib/lapack.lib")
+endif()
+
+message(STATUS "Use CMakeLists.txt in ${SUITESPARSEWIN_PATH}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SUITESPARSEWIN_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_METIS=OFF #Disable the option to build metis from source
-        -DUSE_VCPKG_METIS=${USE_VCPKG_METIS} #Force using vcpckg metis library
+        -DBUILD_METIS=OFF
+        -DUSE_VCPKG_METIS=${USE_VCPKG_METIS}
         -DMETIS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
-        -DLIB_POSTFIX=
         -DSUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS=ON
-        -DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/lib/openblas.lib
-        -DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/lib/lapack.lib
      OPTIONS_DEBUG
         -DSUITESPARSE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
+        -DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/debug/lib/${LIB_PREFIX}openblas_d.${LIB_EXT}
+        -DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/debug/lib/${LIB_PREFIX}lapack.${LIB_EXT}
      OPTIONS_RELEASE
         -DSUITESPARSE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
+        -DSUITESPARSE_CUSTOM_BLAS_LIB=${CURRENT_INSTALLED_DIR}/lib/${LIB_PREFIX}openblas.${LIB_EXT}
+        -DSUITESPARSE_CUSTOM_LAPACK_LIB=${CURRENT_INSTALLED_DIR}/lib/${LIB_PREFIX}lapack.${LIB_EXT}
 )
 
 vcpkg_install_cmake()

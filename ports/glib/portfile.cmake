@@ -1,20 +1,15 @@
- # Glib uses winapi functions not available in WindowsStore
+include(vcpkg_common_functions)
+
+# Glib uses winapi functions not available in WindowsStore
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
 # Glib relies on DllMain on Windows
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message("Glib relies on DllMain and therefore cannot be built statically")
-        set(VCPKG_LIBRARY_LINKAGE "dynamic")
-    endif()
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Glib only supports dynamic library and crt linkage")
-    endif()
+if (NOT VCPKG_CMAKE_SYSTEM_NAME)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
-include(vcpkg_common_functions)
 set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
@@ -27,6 +22,8 @@ vcpkg_extract_source_archive_ex(
     REF ${GLIB_VERSION}
     PATCHES
         use-libiconv-on-windows.patch
+        arm64-defines.patch
+        fix-arm-builds.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -53,4 +50,3 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/glib)
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/glib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glib/COPYING ${CURRENT_PACKAGES_DIR}/share/glib/copyright)
-

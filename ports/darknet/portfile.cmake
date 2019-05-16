@@ -11,12 +11,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF dd27d67f58f563bb6bb2af7bb6374f8a59cebcde
-  SHA512 6821ba9cd5dc185759492deaa2d20ac1ce60778a8aec9c372c96887d9650f9a97a3b7a3a5860b70078f483e62224772ef1078ecb9c03b1b3bed230569cc7b919
+  REF 8c970498a296ed129ffef7d872ccc25d42d1afda
+  SHA512 70dda24656469b8a61a645533ac227b644d365c7d5f4dbc93077a3f46563dd45ae88c563fb1c8f8d02a2021760aba24bea35d81f0f307975d051d0f9bfe92265
   HEAD_REF master
   PATCHES
-    enable_standard_installation.patch
-    dont_use_integrated_stb_lib.patch
+    fix_cmakelists.patch
 )
 
 set(ENABLE_CUDA OFF)
@@ -27,6 +26,11 @@ endif()
 set(ENABLE_OPENCV OFF)
 if("opencv" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
+endif()
+
+if("opencv-cuda" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+  set(ENABLE_CUDA ON)
 endif()
 
 if("weights" IN_LIST FEATURES)
@@ -52,12 +56,11 @@ if("weights" IN_LIST FEATURES)
   )
 endif()
 
-file(REMOVE ${SOURCE_PATH}/src/stb_image.h)
-file(REMOVE ${SOURCE_PATH}/src/stb_image_write.h)
+#make sure we don't use any integrated pre-built library
+file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS
     -DENABLE_CUDA=${ENABLE_CUDA}
     -DENABLE_OPENCV=${ENABLE_OPENCV}
@@ -71,7 +74,6 @@ if(CMAKE_HOST_WIN32)
 else()
   set(EXECUTABLE_SUFFIX "")
 endif()
-
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/darknet${EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/uselib${EXECUTABLE_SUFFIX})
@@ -92,8 +94,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-#use vcpkg_fixup_cmake_targets()?
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/darknet/DarknetTargets.cmake ${CURRENT_PACKAGES_DIR}/share/darknet/DarknetTargets.cmake)
+vcpkg_fixup_cmake_targets()
+
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
+file(COPY ${SOURCE_PATH}/cmake/Modules/FindStb.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
