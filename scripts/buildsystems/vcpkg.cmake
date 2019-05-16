@@ -22,7 +22,7 @@ if(NOT VCPKG_TARGET_TRIPLET)
     include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-default_triplet.cmake)
     vcpkg_msg(WARNING toolchain "Target triplet not specified! Default is: ${VCPKG_TARGET_TRIPLET}! If you want to change it please delete the cache and rerun CMake with -DVCPKG_TARGET_TRIPLET=<triplet>" ALWAYS)
     #Cleaning the cache is required so that cmake actually reruns find_ calls; Should probably be made a FATAL_ERROR instead. 
-endif
+endif()
 
 if(NOT DEFINED _VCPKG_ROOT_DIR)
     # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
