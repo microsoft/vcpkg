@@ -130,6 +130,8 @@ else() #Release build: Put Release paths before Debug paths. Debug Paths are req
 endif()
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
+set(_PROGRAMFILESX86 "PROGRAMFILES(x86)")
+file(TO_CMAKE_PATH "$ENV{${_PROGRAMFILESX86}}" _programfiles_x86)
 set(CMAKE_SYSTEM_IGNORE_PATH
     "${_programfiles}/OpenSSL"
     "${_programfiles}/OpenSSL-Win32"
@@ -138,6 +140,13 @@ set(CMAKE_SYSTEM_IGNORE_PATH
     "${_programfiles}/OpenSSL-Win64/lib/VC"
     "${_programfiles}/OpenSSL-Win32/lib/VC/static"
     "${_programfiles}/OpenSSL-Win64/lib/VC/static"
+    "${_programfiles_x86}/OpenSSL"
+    "${_programfiles_x86}/OpenSSL-Win32"
+    "${_programfiles_x86}/OpenSSL-Win64"
+    "${_programfiles_x86}/OpenSSL-Win32/lib/VC"
+    "${_programfiles_x86}/OpenSSL-Win64/lib/VC"
+    "${_programfiles_x86}/OpenSSL-Win32/lib/VC/static"
+    "${_programfiles_x86}/OpenSSL-Win64/lib/VC/static"
     "C:/OpenSSL/"
     "C:/OpenSSL-Win32/"
     "C:/OpenSSL-Win64/"

@@ -1,6 +1,8 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.8)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 # This can be removed in the next source code update
 if(EXISTS "${SOURCE_PATH}/CMakeLists.txt")
     file(READ "${SOURCE_PATH}/CMakeLists.txt" _contents)
