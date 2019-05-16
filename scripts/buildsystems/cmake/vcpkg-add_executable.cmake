@@ -1,3 +1,4 @@
+option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 function(add_executable name)
     _add_executable(${ARGV})
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
