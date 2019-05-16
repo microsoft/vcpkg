@@ -3,6 +3,10 @@ project(libcroco C)
 
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(LibXml2 REQUIRED)
+if(NOT WIN32)
+    find_package(Threads REQUIRED)
+    find_package(unofficial-iconv REQUIRED)
+endif()
 find_path(GLIB_INCLUDE_DIR glib.h)
 
 file(GLOB SOURCES
@@ -124,7 +128,10 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake "
 include(CMakeFindDependencyMacro)
 find_dependency(unofficial-glib CONFIG)
 find_dependency(LibXml2)
-
+if(NOT WIN32)
+    find_dependency(Threads)
+    find_dependency(unofficial-iconv)
+endif()
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-libcroco-targets.cmake)
 ")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake DESTINATION share/unofficial-libcroco)
