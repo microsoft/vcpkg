@@ -11,17 +11,19 @@ vcpkg_from_github(
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Configuring zziplib")
     vcpkg_execute_required_process(
-        COMMAND "./configure"
+        COMMAND "./configure" --prefix=${CURRENT_INSTALLED_DIR} --with-zlib
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "autotools-config-${TARGET_TRIPLET}"
     )
 endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/__config.h DESTINATION ${SOURCE_PATH}/zzip)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DZLIB_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
 )
 
 vcpkg_install_cmake()
