@@ -54,6 +54,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
+    
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
