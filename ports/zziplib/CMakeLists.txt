@@ -29,13 +29,14 @@ if(UNIX)
   endforeach()
 endif()
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h.in" "${CMAKE_CURRENT_LIST_DIR}/zzip/config.h")
 # List the header files
 set(HEADERS zzip/__debug.h
             zzip/__dirent.h
             zzip/__fnmatch.h
             zzip/__hints.h
             zzip/__mmap.h
-            zzip/__config.h
+            zzip/config.h
             zzip/_msvc.h
             zzip/autoconf.h
             zzip/conf.h
