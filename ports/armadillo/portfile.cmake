@@ -11,21 +11,11 @@ vcpkg_from_gitlab(
     HEAD_REF 9.400.x
 )
 
-if (WIN32)
-  set(LIBRARY_SUFFIX ".lib")
-elseif (UNIX)
-  set(LIBRARY_SUFFIX ".a")
-else()
-  message(FATAL_ERROR "Unsupport platform: ${VCPKG_CMAKE_SYSTEM_NAME}")
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DDETECT_HDF5=false
-        -DBLAS_LIBRARY:FILEPATH=${CURRENT_INSTALLED_DIR}/lib/openblas${LIBRARY_SUFFIX}
-        -DLAPACK_LIBRARY:FILEPATH=${CURRENT_INSTALLED_DIR}/lib/openblas${LIBRARY_SUFFIX}
 )
 
 vcpkg_install_cmake()
