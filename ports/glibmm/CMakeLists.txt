@@ -40,6 +40,11 @@ if(APPLE)
   link_libraries(${COREFOUNDATION_LIBRARY} ${CORESERVICES_LIBRARY} ${FOUNDATION_LIBRARY})
 endif()
 
+# A hacky solution for building Windows DLLs from sources ported from Linux.
+# The cleaner approach would be to manually add __declspec(dllexport) to all public symbols in the header files or
+# construct a .def file.
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 if(BUILD_SHARED_LIBS)
     add_definitions(-DGLIBMM_DLL -DGIOMM_DLL)
 else()

@@ -5,7 +5,10 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+# This library itself would would as static library, but it is used by gtkmm, atkmm & pangomm which are all set to ONLY_DYNAMIC LIBRARY
+# Having multiple dynamic libaries linking the same static library causes multiple copies of its static data to be present in the executable
+# leading to confusing and hard-to-debug runtime effects.
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glibmm-2.52.1)
 vcpkg_download_distfile(ARCHIVE
