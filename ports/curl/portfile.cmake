@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_61_1
-    SHA512 09fa3c87f8d516eabe3241247a5094c32ee0481961cf85bf78ecb13acdf23bb2ec82f113d2660271d22742c79e76d73fb122730fa28e34c7f5477c05a4a6534c
+    REF curl-7_64_1
+    SHA512 bfaed8c65e82cb27a68e259516c8395cf10a67b62bb7e9d44803bde450f6017116fb3da8db716a172e140324831a63b4046a355810d86ba6577ebda3883a3625
     HEAD_REF master
     PATCHES
         0001_cmake.patch
@@ -113,8 +113,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/curl)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/curl)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/CURL)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
 else()
