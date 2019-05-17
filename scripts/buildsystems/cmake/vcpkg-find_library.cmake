@@ -84,7 +84,7 @@ function(find_library _vcpkg_lib_var)
                                                           Check library debug/release naming!: NAMES: ${_vcpkg_find_lib_NAMES}")
                 else()
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} before ${${_vcpkg_lib_var}}")
-                    string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" "${_vcpkg_lib_var}" "${${_vcpkg_lib_var}}")
+                    string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" ${_vcpkg_lib_var} "${${_vcpkg_lib_var}}")
                     set(_vcpkg_lib_var ${_vcpkg_lib_var} PARENT_SCOPE) #Need to promote change to parant scope
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
                 endif()
