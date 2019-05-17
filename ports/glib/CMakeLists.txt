@@ -25,11 +25,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # zlib
 find_package(ZLIB REQUIRED)
 # pcre
-find_path(PCRE_INCLUDE_DIR pcre.h)
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(PCRE_SUFFIX d)
-endif()
-find_library(PCRE_LIBRARY NAMES pcre${PCRE_SUFFIX} pcre)
+find_package(PCRE REQUIRED)
 # libiconv
 find_package(unofficial-iconv REQUIRED)
 # libffi
