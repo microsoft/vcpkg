@@ -15,8 +15,7 @@
 #endif
 #if defined(__linux__)
 #include <sys/sendfile.h>
-#endif
-#if defined(__APPLE__)
+#elif defined(__APPLE__)
 #include <sys/uio.h>
 #include <sys/socket.h>
 #endif
@@ -189,9 +188,13 @@ namespace vcpkg::Files
                 }
 
                 off_t bytes = 0;
+#if defined(__linux__)
                 struct stat info = {0};
                 fstat(i_fd, &info);
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
+#elif defined(__APPLE__)
+                auto written_bytes = sendfile(i_fd, o_fd, bytes, 0, NULL, 0);
+#endif
                 close(i_fd);
                 close(o_fd);
                 if (written_bytes == -1) return;
