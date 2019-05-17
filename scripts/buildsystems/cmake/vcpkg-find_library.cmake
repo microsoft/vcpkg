@@ -26,6 +26,7 @@ function(find_library _vcpkg_lib_var)
                        PATHS
                        PATH_SUFFIXES)
     cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}")
+    #cmake_parse_arguments(_vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if(NOT DEFINED _vcpkg_find_lib_NAMES)
         set(_vcpkg_find_lib_NAMES ${ARGV1})
         set(_insert_offset 1)
@@ -65,22 +66,26 @@ function(find_library _vcpkg_lib_var)
             if("${_vcpkg_lib_var}" MATCHES "_DEBUG")
                 if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
                     #This probably means that the find module assumes a wrong name for the debug library
-                    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory! \
-                                                          Check library debug naming! NAMES: ${_vcpkg_find_lib_NAMES}")
+                    cmake_policy(POP)
+                    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory! Check library debug naming! NAMES: ${_vcpkg_find_lib_NAMES}")
                 endif()
             elseif("${_vcpkg_lib_var}" MATCHES "_RELEASE")
                 if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
-                    #This probably means that the find module assumes a wrong name for the release library
-                    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to release directory! \
-                                                          Check library release naming!: NAMES: ${_vcpkg_find_lib_NAMES}")
+                    #This probably means that debug name = release name so we search only in the release lib path!
+                    vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to release directory! This probably means that debug name = release name!: NAMES: ${_vcpkg_find_lib_NAMES}")
+                    _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH) 
+                    set(_vcpkg_lib_var _tmp_${_vcpkg_lib_var} PARENT_SCOPE) #Cannot be directly set since CMake will CACHE the previous result
+                    vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
                 endif()
             else() #these are the cases we probably need to correct!
                 if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/")
+                    cmake_policy(POP)
                     vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory as expected! \
                                                           Check library debug/release naming!: NAMES: ${_vcpkg_find_lib_NAMES}")
                 else()
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} before ${${_vcpkg_lib_var}}")
                     string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" "${_vcpkg_lib_var}" "${${_vcpkg_lib_var}}")
+                    set(_vcpkg_lib_var ${_vcpkg_lib_var} PARENT_SCOPE) #Need to promote change to parant scope
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
                 endif()
             endif()
