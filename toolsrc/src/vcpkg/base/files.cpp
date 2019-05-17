@@ -9,10 +9,16 @@
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
-#include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#endif
+#if defined(__linux__)
+#include <sys/sendfile.h>
+#endif
+#if defined(__APPLE__)
+#include <sys/uio.h>
+#include <sys/socket.h>
 #endif
 
 namespace vcpkg::Files
