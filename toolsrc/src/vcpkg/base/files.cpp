@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
 #endif
 #if defined(__linux__)
 #include <sys/sendfile.h>
@@ -198,7 +199,11 @@ namespace vcpkg::Files
 #endif
                 close(i_fd);
                 close(o_fd);
-                if (written_bytes == -1) return;
+                if (written_bytes == -1)
+                {
+                    System::print2(strerror(errno));
+                    return;
+                }
 
                 this->rename(dst, newpath, ec);
                 if (ec) return;
