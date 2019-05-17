@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(glm LANGUAGES CXX)
 
+include(GNUInstallDirs)
+
 add_library(glm INTERFACE)
 target_include_directories(glm INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
-include(GNUInstallDirs)
 
 install(
     TARGETS glm EXPORT glm-config
