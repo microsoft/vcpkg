@@ -32,7 +32,6 @@ vcpkg_configure_cmake(
     OPTIONS -DGIT_REVISION=${FREERDP_VERSION}
             ${FREERDP_CRT_LINKAGE})
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
