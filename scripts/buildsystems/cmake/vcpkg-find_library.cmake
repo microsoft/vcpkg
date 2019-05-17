@@ -70,22 +70,38 @@ function(find_library _vcpkg_lib_var)
                     vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory! Check library debug naming! NAMES: ${_vcpkg_find_lib_NAMES}")
                 endif()
             elseif("${_vcpkg_lib_var}" MATCHES "_RELEASE")
-                if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+                if("${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
                     #This probably means that debug name = release name so we search only in the release lib path!
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to release directory! This probably means that debug name = release name!: NAMES: ${_vcpkg_find_lib_NAMES}")
-                    _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH) 
-                    set(_vcpkg_lib_var _tmp_${_vcpkg_lib_var} PARENT_SCOPE) #Cannot be directly set since CMake will CACHE the previous result
+                    if(NOT DEFINED _vcpkg_find_lib_PATH_SUFFIXES)
+                        set(_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+                    else()
+                        
+                        list(FILTER _vcpkg_find_lib_PATH_SUFFIXES EXCLUDE REGEX "[Dd][Ee][Bb][Uu][Gg]/")
+                        foreach(_path_suffix ${_vcpkg_find_lib_PATH_SUFFIXES})
+                            list(APPEND _path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/${_path_suffix}")
+                            list(APPEND _path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/${_path_suffix}")
+                        endforeach()
+                    endif()
+                     vcpkg_msg(STATUS "find_library" "Searching for release library with paths: ${_path_search_list}")
+                    _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
+                                  PATHS ${_path_search_list} NO_DEFAULT_PATH) 
+                    #if("${_tmp_${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib") # check if we are still 
+                    #    cmake_policy(POP)
+                    #    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}")
+                    #endif()
+                    set(${_vcpkg_lib_var} _tmp_${_vcpkg_lib_var} PARENT_SCOPE) #Cannot be directly set since CMake will CACHE the previous result
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
                 endif()
             else() #these are the cases we probably need to correct!
-                if(NOT "${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/")
+                if("${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/")
                     cmake_policy(POP)
                     vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory as expected! \
                                                           Check library debug/release naming!: NAMES: ${_vcpkg_find_lib_NAMES}")
                 else()
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} before ${${_vcpkg_lib_var}}")
                     string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" ${_vcpkg_lib_var} "${${_vcpkg_lib_var}}")
-                    set(_vcpkg_lib_var ${_vcpkg_lib_var} PARENT_SCOPE) #Need to promote change to parant scope
+                    set(${_vcpkg_lib_var} "${${_vcpkg_lib_var}}" PARENT_SCOPE) #Need to promote change to parant scope
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
                 endif()
             endif()
