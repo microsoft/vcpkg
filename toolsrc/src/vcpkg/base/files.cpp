@@ -198,6 +198,9 @@ namespace vcpkg::Files
                 if (written_bytes == -1)
                 {
                     ec.assign(errno, std::generic_category());
+                    close(i_fd);
+                    close(o_fd);
+
                     return;
                 }
 
