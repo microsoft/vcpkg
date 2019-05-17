@@ -193,7 +193,8 @@ namespace vcpkg::Files
                 fstat(i_fd, &info);
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
-                auto written_bytes = sendfile(i_fd, o_fd, bytes, 0, NULL, 0);
+                off_t offset = 0;
+                auto written_bytes = sendfile(i_fd, o_fd, offset, &bytes, NULL, 0);
 #endif
                 close(i_fd);
                 close(o_fd);
