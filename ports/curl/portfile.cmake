@@ -117,6 +117,8 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/curl)
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/curl)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
+else()
+    message(FATAL_ERROR "Could not locate the curl config files")
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
