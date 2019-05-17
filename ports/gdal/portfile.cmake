@@ -123,7 +123,7 @@ if (WIN32) # Build in WINDOWS
   # Setup WebP libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" WEBP_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/webp.lib" WEBP_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/webpd.lib" WEBP_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/webp.lib" WEBP_LIBRARY_DBG)
   
   # Setup libxml2 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" XML2_INCLUDE_DIR)
