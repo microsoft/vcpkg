@@ -62,6 +62,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 
+file(COPY        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+     DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre
+)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre/copyright)
