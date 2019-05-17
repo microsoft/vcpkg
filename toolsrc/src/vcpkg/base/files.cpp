@@ -17,8 +17,7 @@
 #if defined(__linux__)
 #include <sys/sendfile.h>
 #elif defined(__APPLE__)
-#include <sys/uio.h>
-#include <sys/socket.h>
+#include <copyfile.h>
 #endif
 
 namespace vcpkg::Files
@@ -188,22 +187,22 @@ namespace vcpkg::Files
                     return;
                 }
 
-                off_t bytes = 0;
 #if defined(__linux__)
+                off_t bytes = 0;
                 struct stat info = {0};
                 fstat(i_fd, &info);
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
-                off_t offset = 0;
-                auto written_bytes = sendfile(i_fd, o_fd, offset, &bytes, NULL, 0);
+                auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
 #endif
-                close(i_fd);
-                close(o_fd);
                 if (written_bytes == -1)
                 {
-                    System::print2(strerror(errno));
+                    ec.assign(errno, std::generic_category());
                     return;
                 }
+
+                close(i_fd);
+                close(o_fd);
 
                 this->rename(dst, newpath, ec);
                 if (ec) return;
