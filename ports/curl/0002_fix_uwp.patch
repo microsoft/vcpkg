@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index edb1cec..e7b4c68 100644
+index 38b7b7d..5b3d33e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -894,7 +894,9 @@ check_symbol_exists(setsockopt     "${CURL_INCLUDES}" HAVE_SETSOCKOPT)
+@@ -897,7 +897,9 @@ check_symbol_exists(setsockopt     "${CURL_INCLUDES}" HAVE_SETSOCKOPT)
  check_function_exists(mach_absolute_time HAVE_MACH_ABSOLUTE_TIME)
  
  # symbol exists in win32, but function does not.
@@ -38,19 +38,21 @@ index 8337c72..41867b2 100644
    }
    else {
 diff --git a/lib/curl_ntlm_core.c b/lib/curl_ntlm_core.c
-index e7060eb..55e3738 100644
+index e7060eb..9cd76f7 100644
 --- a/lib/curl_ntlm_core.c
 +++ b/lib/curl_ntlm_core.c
-@@ -726,10 +726,10 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
+@@ -726,10 +726,11 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
  
    /* Calculate the timestamp */
  #ifdef DEBUGBUILD
 -  char *force_timestamp = getenv("CURL_FORCETIME");
+-  if(force_timestamp)
 +  char *force_timestamp = curl_getenv("CURL_FORCETIME");
-   if(force_timestamp)
++  if(force_timestamp) {
      tw = CURL_OFF_T_C(11644473600) * 10000000;
 -  else
 +    free(force_timestamp);
++  }
  #endif
      tw = ((curl_off_t)time(NULL) + CURL_OFF_T_C(11644473600)) * 10000000;
  
