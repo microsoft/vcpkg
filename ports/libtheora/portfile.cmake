@@ -31,7 +31,6 @@ vcpkg_configure_cmake(
         -DUSE_X86=${THEORA_X86_OPT}
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
