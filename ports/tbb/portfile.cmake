@@ -23,7 +23,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     vcpkg_install_cmake()
 
     # Settings for TBBConfigInternal.cmake.in
-    set(TBB_LIB_EXT a)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(TBB_LIB_EXT a)
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(TBB_LIB_EXT dylib)
+    else()
+        set(TBB_LIB_EXT so.2)
+    endif()
     set(TBB_LIB_PREFIX lib)
 else()
     if (VCPKG_CRT_LINKAGE STREQUAL static)
