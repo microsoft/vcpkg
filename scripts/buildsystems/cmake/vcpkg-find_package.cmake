@@ -58,16 +58,19 @@ macro(find_package name)
         #Filtering for variables which are probably library variables for the package.
         set(_pkg_filter_rgx "^(${_pkg_names_rgx})([^_]*_)+(LIBRAR|LIBS)")
         list(FILTER _pkg_all_vars INCLUDE REGEX ${_pkg_filter_rgx})
-        #message(STATUS "VCPKG-find_package: all-filtered-library-vars: ${_pkg_all_vars}") # Good for debugging the second regex
+        message(STATUS "VCPKG-find_package: all-filtered-library-vars: ${_pkg_all_vars}") # Good for debugging the second regex
 
         list(FILTER _pkg_all_vars EXCLUDE REGEX "(_RELEASE|_DEBUG)")# Excluding debug and releas libraries from fixing (they should be handled by find_library.)
         
         if(DEFINED VCPKG_BUILD_TYPE OR "${_pkg_all_vars}" MATCHES "_CONFIG")
-            message(STATUS "VCPKG-find_package: VCPKG_BUILD_TYPE or CONFIG found. Skipping loop to fix package variables. The config should be correct.")
+            message(STATUS "VCPKG-find_package: VCPKG_BUILD_TYPE or CONFIG found. Skipping loop to fix package variables. The config should hopefully be correct.")
         else()
             foreach(_pkg_var ${_pkg_all_vars})
                 message(STATUS "VCPKG-find_package: Value of ${_pkg_var}: ${${_pkg_var}}")
-                if(NOT "x${${_pkg_var}}" MATCHES "(optimized;|[Cc][Oo][Nn][Ff][Ii][Gg]:[Rr][Ee][Ll][Ee][Aa][Ss][Ee])" AND NOT "x${${_pkg_var}}" MATCHES "(debug;|[Cc][Oo][Nn][Ff][Ii][Gg]:[Dd][Ee][Bb][Uu][Gg])" AND "x${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+                if(NOT "${${_pkg_var}}"      MATCHES "(optimized;|[Cc][Oo][Nn][Ff][Ii][Gg]:[Rr][Ee][Ll][Ee][Aa][Ss][Ee])" 
+                   AND NOT "${${_pkg_var}}"  MATCHES "(debug;|[Cc][Oo][Nn][Ff][Ii][Gg]:[Dd][Ee][Bb][Uu][Gg])" 
+                   AND ("${${_pkg_var}}"     MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" 
+                         OR "${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib"))
                     # optimized,debug or generator expression not found within the package variable. Need to probably fix the variable to generate correct targets!
                     set(_pkg_var_new "${${_pkg_var}}")
                     if("x${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # No need to guard from generator expression; already done above. 
