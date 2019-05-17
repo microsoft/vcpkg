@@ -7,7 +7,7 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
 #include <sys/sendfile.h>
 #include <sys/stat.h>
