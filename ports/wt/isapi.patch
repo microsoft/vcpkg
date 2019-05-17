@@ -1,0 +1,13 @@
+diff --git a/src/isapi/IsapiRequest.h b/src/isapi/IsapiRequest.h
+index 6c788e24..f415cb02 100644
+--- a/src/isapi/IsapiRequest.h	
++++ b/src/isapi/IsapiRequest.h
+@@ -1,5 +1,8 @@
+ #include "WebRequest.h"
+ #include <sstream>
++#ifdef WT_WITH_SSL
++#include <winsock2.h>
++#endif
+ #include <httpext.h>
+ 
+ namespace Wt {

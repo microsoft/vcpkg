@@ -9,7 +9,9 @@ vcpkg_from_github(
     PATCHES
         0002-link-glew.patch
         0003-disable-boost-autolink.patch
-        0004-link-ssl.patch
+        openssl.patch
+        isapi.patch
+        sqlite.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
