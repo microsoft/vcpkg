@@ -6,7 +6,7 @@ index 3839e22..91720a9 100644
  
  add_definitions(-DPB_FIELD_32BIT)
  
-+if (gRPC_STATIC_LINKING)
++if (gRPC_STATIC_LINKING AND NOT _gRPC_PLATFORM_WINDOWS)
 +  # Force to static link
 +  set(CMAKE_EXE_LINKER_FLAGS "-Bstatic")
 +endif()
