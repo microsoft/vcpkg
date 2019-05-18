@@ -1,0 +1,3 @@
+list(REMOVE_ITEM ARGS "CONFIG")
+list(REMOVE_ITEM ARGS "NO_MODULE")
+_find_package(${ARGS} CONFIG)
