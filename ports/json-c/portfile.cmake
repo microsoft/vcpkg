@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 3e81b4abe359c8128bb2b4127f4e8c8c057fb004
     SHA512 a2cd6d71d72d0dcacf2056466f3f414df180aacc9c2ee93b85f047683a88671590089535d7cecf71ef1bf0844b5ab35535e64022854d2fbc7f82d889aefcd730
     HEAD_REF master
+    PATCHES
+        export-cmake-module.patch
 )
 
 vcpkg_configure_cmake(
@@ -14,6 +16,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 vcpkg_copy_pdbs()
 
