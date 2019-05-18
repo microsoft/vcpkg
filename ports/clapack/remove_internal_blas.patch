@@ -40,8 +40,8 @@ index 320ccc6..284e9d3 100755
 -  ${CLAPACK_BINARY_DIR}/clapack-config.cmake @ONLY)
 +	${CMAKE_INSTALL_PREFIX}/share/clapack/clapack-config.cmake @ONLY)
 +install(FILES
-+        ${CMAKE_CURRENT_LIST_DIR}/include/clapack.h
-+        ${CMAKE_CURRENT_LIST_DIR}/include/f2c.h
++        ${CMAKE_CURRENT_LIST_DIR}/INCLUDE/clapack.h
++        ${CMAKE_CURRENT_LIST_DIR}/INCLUDE/f2c.h
 +        DESTINATION include)
 +
 diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt

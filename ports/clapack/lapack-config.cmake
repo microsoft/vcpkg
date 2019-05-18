@@ -74,8 +74,8 @@ if(UNIX)
 endif()
 
 if(NOT F2C_LIBRARY)
-    find_library(F2C_LIBRARY_RELEASE NAMES f2c)
-    find_library(F2C_LIBRARY_DEBUG NAMES f2cd)
+    find_library(F2C_LIBRARY_RELEASE NAMES f2c libf2c)
+    find_library(F2C_LIBRARY_DEBUG NAMES f2cd libf2cd)
     select_library_configurations(F2C)
 endif()
 
