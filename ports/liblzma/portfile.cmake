@@ -55,15 +55,15 @@ if(LIBLZMA_INCLUDE_DIR AND EXISTS \"\${LIBLZMA_INCLUDE_DIR}/lzma/version.h\")
     unset(LIBLZMA_HEADER_CONTENTS)
 endif()
 
-# We're using new code known now as XZ, even library still been called LZMA
-# it can be found in http://tukaani.org/xz/
-# Avoid using old codebase
-if (LIBLZMA_LIBRARY)
-   include(\${CMAKE_ROOT}/Modules/CheckLibraryExists.cmake)
-   CHECK_LIBRARY_EXISTS(\${LibLZMA_LIBRARY_RELEASE} lzma_auto_decoder \"\" LIBLZMA_HAS_AUTO_DECODER)
-   CHECK_LIBRARY_EXISTS(\${LibLZMA_LIBRARY_RELEASE} lzma_easy_encoder \"\" LIBLZMA_HAS_EASY_ENCODER)
-   CHECK_LIBRARY_EXISTS(\${LibLZMA_LIBRARY_RELEASE} lzma_lzma_preset \"\" LIBLZMA_HAS_LZMA_PRESET)
-endif ()
+## We're using new code known now as XZ, even library still been called LZMA
+## it can be found in http://tukaani.org/xz/
+## Avoid using old codebase
+#if (LIBLZMA_LIBRARY)
+#   include(\${CMAKE_ROOT}/Modules/CheckLibraryExists.cmake)
+#   CHECK_LIBRARY_EXISTS(\${LibLZMA_LIBRARY_RELEASE} lzma_auto_decoder \"\" LIBLZMA_HAS_AUTO_DECODER)
+#   CHECK_LIBRARY_EXISTS(\${LibLZMA_LIBRARY_RELEASE} lzma_easy_encoder \"\" LIBLZMA_HAS_EASY_ENCODER)
+#   CHECK_LIBRARY_EXISTS(\${LibLZMA_LIBRARY_RELEASE} lzma_lzma_preset \"\" LIBLZMA_HAS_LZMA_PRESET)
+#endif ()
 
 set(LibLZMA_FOUND TRUE CACHE BOOL \"\")
 set(LZMA_FOUND TRUE CACHE BOOL \"\")
@@ -71,6 +71,7 @@ set(LIBLZMA_FOUND TRUE CACHE BOOL \"\")
 ")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/liblzma/COPYING ${CURRENT_PACKAGES_DIR}/share/liblzma/copyright)
+
+file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma RENAME copyright)
