@@ -38,7 +38,7 @@ index 6fadb59..6a9c5b7 100755
  
  # Add 3rd party libraries, as user code might include our .HPP implementations
 -list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} ${FLANN_LIBRARIES} ${VTK_LIBRARIES})
-+list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} flann::flann_cpp_s ${VTK_LIBRARIES})
++list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} flann::flann_cpp ${VTK_LIBRARIES})
  
  find_package_handle_standard_args(PCL DEFAULT_MSG PCL_LIBRARIES PCL_INCLUDE_DIRS)
  mark_as_advanced(PCL_LIBRARIES PCL_INCLUDE_DIRS PCL_LIBRARY_DIRS)
@@ -65,13 +65,13 @@ index 9693792..dcd4373 100755
    add_executable(build_tree build_tree.cpp)
    target_link_libraries(build_tree ${PCL_LIBRARIES} ${Boost_LIBRARIES}
 -                                 ${FLANN_LIBRARIES} ${HDF5_hdf5_LIBRARY})
-+                                 flann::flann_cpp_s ${HDF5_hdf5_LIBRARY})
++                                 flann::flann_cpp ${HDF5_hdf5_LIBRARY})
  
    add_executable(nearest_neighbors nearest_neighbors.cpp)
 -  target_link_libraries(nearest_neighbors ${PCL_LIBRARIES} 
 -                                        ${Boost_LIBRARIES} ${FLANN_LIBRARIES} ${HDF5_hdf5_LIBRARY} 
 +  target_link_libraries(nearest_neighbors ${PCL_LIBRARIES}
-+                                        ${Boost_LIBRARIES} flann::flann_cpp_s ${HDF5_hdf5_LIBRARY}
++                                        ${Boost_LIBRARIES} flann::flann_cpp ${HDF5_hdf5_LIBRARY}
                                          )
  endif(HDF5_FOUND)
 diff --git a/kdtree/CMakeLists.txt b/kdtree/CMakeLists.txt
@@ -105,7 +105,7 @@ index 311dffc..1a7712f 100755
      include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
      PCL_ADD_LIBRARY("${LIB_NAME}" "${SUBSYS_NAME}" ${srcs} ${incs} ${impl_incs})
 -    target_link_libraries("${LIB_NAME}" pcl_common ${FLANN_LIBRARIES})
-+    target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp_s)
++    target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp)
      set(EXT_DEPS flann)
      PCL_MAKE_PKGCONFIG("${LIB_NAME}" "${SUBSYS_NAME}" "${SUBSYS_DESC}"
                         "${SUBSYS_DEPS}" "${EXT_DEPS}" "" "" "")
@@ -123,7 +123,7 @@ index cd82a0e..1d15241 100755
      include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
      PCL_ADD_LIBRARY("${LIB_NAME}" "${SUBSYS_NAME}" ${srcs} ${incs} ${impl_incs})
 -    target_link_libraries("${LIB_NAME}" pcl_common ${FLANN_LIBRARIES} pcl_octree pcl_kdtree)
-+    target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp_s pcl_octree pcl_kdtree)
++    target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp pcl_octree pcl_kdtree)
      list(APPEND EXT_DEPS flann)
      PCL_MAKE_PKGCONFIG("${LIB_NAME}" "${SUBSYS_NAME}" "${SUBSYS_DESC}" "${SUBSYS_DEPS}" "" "" "" "")
  
@@ -149,7 +149,7 @@ index cedb0cb..4b37c73 100755
      PCL_ADD_TEST(features_narf test_narf
                   FILES test_narf.cpp
 -                 LINK_WITH pcl_gtest pcl_features ${FLANN_LIBRARIES})
-+                 LINK_WITH pcl_gtest pcl_features flann::flann_cpp_s)
++                 LINK_WITH pcl_gtest pcl_features flann::flann_cpp)
      PCL_ADD_TEST(a_ii_normals_test test_ii_normals
                   FILES test_ii_normals.cpp
                   LINK_WITH pcl_gtest pcl_io pcl_features
