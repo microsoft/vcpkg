@@ -38,5 +38,5 @@ endif()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
 
 # Handle copyright
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lua)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lua/copyright)
 vcpkg_copy_pdbs()
