@@ -10,47 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY
-    ${SOURCE_PATH}/accumulate.hpp
-    ${SOURCE_PATH}/chain.hpp
-    ${SOURCE_PATH}/chunked.hpp
-    ${SOURCE_PATH}/combinations.hpp
-    ${SOURCE_PATH}/combinations_with_replacement.hpp
-    ${SOURCE_PATH}/compress.hpp
-    ${SOURCE_PATH}/count.hpp
-    ${SOURCE_PATH}/cycle.hpp
-    ${SOURCE_PATH}/dropwhile.hpp
-    ${SOURCE_PATH}/enumerate.hpp
-    ${SOURCE_PATH}/filter.hpp
-    ${SOURCE_PATH}/filterfalse.hpp
-    ${SOURCE_PATH}/groupby.hpp
-    ${SOURCE_PATH}/imap.hpp
-    ${SOURCE_PATH}/itertools.hpp
-    ${SOURCE_PATH}/permutations.hpp
-    ${SOURCE_PATH}/powerset.hpp
-    ${SOURCE_PATH}/product.hpp
-    ${SOURCE_PATH}/range.hpp
-    ${SOURCE_PATH}/repeat.hpp
-    ${SOURCE_PATH}/reversed.hpp
-    ${SOURCE_PATH}/slice.hpp
-    ${SOURCE_PATH}/sliding_window.hpp
-    ${SOURCE_PATH}/sorted.hpp
-    ${SOURCE_PATH}/starmap.hpp
-    ${SOURCE_PATH}/takewhile.hpp
-    ${SOURCE_PATH}/unique_everseen.hpp
-    ${SOURCE_PATH}/unique_justseen.hpp
-    ${SOURCE_PATH}/zip.hpp
-    ${SOURCE_PATH}/zip_longest.hpp
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+file(GLOB INCLUDE_FILES ${SOURCE_PATH}/*.hpp)
+file(GLOB INCLUDE_INTERNAL_FILES ${SOURCE_PATH}/internal/*.hpp)
 
-file(COPY
-    ${SOURCE_PATH}/internal/iter_tuples.hpp
-    ${SOURCE_PATH}/internal/iterator_wrapper.hpp
-    ${SOURCE_PATH}/internal/iteratoriterator.hpp
-    ${SOURCE_PATH}/internal/iterbase.hpp
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/internal
-)
+file(COPY ${INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(COPY ${INCLUDE_INTERNAL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/internal)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
