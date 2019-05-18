@@ -9,9 +9,6 @@
 
 PROJECT ( lua )
 
-IF( NOT WIN32 )
-    message( FATAL_ERROR "Written for window only" )
-ENDIF()
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
@@ -33,19 +30,36 @@ src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/
 
 IF (COMPILE_AS_CPP)
     SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA} src/lua.c src/luac.c PROPERTIES LANGUAGE CXX)
+ELSE ()
+    SET (CMAKE_C_STANDARD 99)
 ENDIF ()
 
 # append headers to sources to make them show up in MSVC GUI
 LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
 
-# remove warnings
-ADD_DEFINITIONS (-D_CRT_SECURE_NO_WARNINGS )
+IF (WIN32)
+    # remove warnings
+    ADD_DEFINITIONS (-D_CRT_SECURE_NO_WARNINGS )
+ENDIF ()
 
 #DLL
 ADD_LIBRARY ( lua ${SRC_LIBLUA} )
 
-IF (BUILD_SHARED_LIBS)
+IF (BUILD_SHARED_LIBS AND WIN32)
     TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_BUILD_AS_DLL )
+ENDIF ()
+
+IF (UNIX)
+    ADD_DEFINITIONS (-DLUA_USE_POSIX)
+    IF (APPLE)
+        TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_USE_DLOPEN)
+    ELSE ()
+        FIND_LIBRARY (LIB_DLOPEN NAMES dl)
+        IF (LIB_DLOPEN)
+            TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_USE_DLOPEN)
+            TARGET_LINK_LIBRARIES (lua ${LIB_DLOPEN})
+        ENDIF ()
+    ENDIF ()
 ENDIF ()
 
 INSTALL ( TARGETS lua
@@ -59,6 +73,13 @@ IF (NOT DEFINED SKIP_INSTALL_TOOLS)
     ADD_EXECUTABLE ( luai src/lua.c )  # interpreter
     TARGET_LINK_LIBRARIES ( luai lua )
     SET_TARGET_PROPERTIES ( luai PROPERTIES OUTPUT_NAME lua PDB_NAME luai )
+    IF (UNIX)
+        FIND_LIBRARY (LIB_READLINE NAMES readline edit)
+        IF (LIB_READLINE)
+            TARGET_COMPILE_DEFINITIONS (luai PUBLIC -DLUA_USE_READLINE)
+            TARGET_LINK_LIBRARIES(luai ${LIB_READLINE})
+        ENDIF ()
+    ENDIF ()
     INSTALL ( TARGETS luai luac RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools/lua )
 ENDIF ()
 
