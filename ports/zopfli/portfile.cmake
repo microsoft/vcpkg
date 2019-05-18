@@ -45,6 +45,19 @@ endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Zopfli)
 
+# vcpkg_fixup_cmake_targets can not handles this on UNIX currently.
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR
+   VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-debug.cmake
+        "\"\${_IMPORT_PREFIX}/debug/bin/zopfli\""
+        "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""
+    )
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/zopfli/ZopfliConfig-release.cmake
+        "\"\${_IMPORT_PREFIX}/bin/zopfli\""
+        "\"\${_IMPORT_PREFIX}/tools/zopfli/zopfli\""
+    )
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
