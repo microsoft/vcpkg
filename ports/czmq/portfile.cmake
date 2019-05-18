@@ -3,14 +3,27 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/czmq
-    REF d89e7e21086f7c8c93fe54a3bdce8c1c2804920d
-    SHA512 fe986482c2d9e0983595df604d3a0f6788c1329b3413b0e3be5df4aff83585bab1df5865ea8c91a1c1f8ebf923752b4f4ec6729dc712e104e3f87f6513300fd0
+    REF 4abe4cf94240df559281f317b1795c82764a37ee
+    SHA512 9267c85b81b686d33e325805f76560b7d163c6fbcb2ce3ac26b965afe0b923814a3fdd528544b9a21539fc568918a188df14f7072ce001891ee3136e3505a814
     HEAD_REF master
     PATCHES
         fix-cmake.patch
-        find-libzmq.patch
-        find-libcurl.patch
+        fix-dependencies.patch
 )
+
+foreach(_cmake_module
+    Findlibcurl.cmake
+    Findlibmicrohttpd.cmake
+    Findlibzmq.cmake
+    Findlz4.cmake
+    Finduuid.cmake
+)
+    configure_file(
+        ${CMAKE_CURRENT_LIST_DIR}/${_cmake_module}
+        ${SOURCE_PATH}/${_cmake_module}
+        COPYONLY
+    )
+endforeach()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -21,36 +34,56 @@ else()
     set(ENABLE_DRAFTS OFF)
 endif()
 
+if("httpd" IN_LIST FEATURES)
+    set(CZMQ_WITH_LIBMICROHTTPD ON)
+else()
+    set(CZMQ_WITH_LIBMICROHTTPD OFF)
+endif()
+
 if("tool" IN_LIST FEATURES)
     set(BUILD_TOOLS ON)
 else()
     set(BUILD_TOOLS OFF)
 endif()
 
+if("uuid" IN_LIST FEATURES AND
+   VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(CZMQ_WITH_UUID ON)
+else()
+    set(CZMQ_WITH_UUID OFF)
+endif()
+
 set(_ADDITIONAL_LIB_FLAGS "")
-foreach(_feature "curl" "uuid" "lz4")
+foreach(_feature "curl" "lz4")
     string(TOUPPER "${_feature}" _FEATURE)
     
     if(_feature IN_LIST FEATURES)
-        list(APPEND _ADDITIONAL_LIB_FLAGS "-DBUILD_WITH_${_FEATURE}=ON")
+        list(APPEND _ADDITIONAL_LIB_FLAGS "-DCZMQ_WITH_${_FEATURE}=ON")
     else()
-        list(APPEND _ADDITIONAL_LIB_FLAGS "-DBUILD_WITH_${_FEATURE}=OFF")
+        list(APPEND _ADDITIONAL_LIB_FLAGS "-DCZMQ_WITH_${_FEATURE}=OFF")
     endif()
 endforeach()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
+    OPTIONS_RELEASE
+        -DBUILD_TOOLS=${BUILD_TOOLS}
     OPTIONS
         -DCZMQ_BUILD_SHARED=${BUILD_SHARED}
         -DCZMQ_BUILD_STATIC=${BUILD_STATIC}
         -DENABLE_DRAFTS=${ENABLE_DRAFTS}
         -DBUILD_TESTING=OFF
-        -DBUILD_TOOLS=${BUILD_TOOLS}
+        -DCZMQ_WITH_LIBMICROHTTPD=${CZMQ_WITH_LIBMICROHTTPD}
+        -DCZMQ_WITH_UUID=${CZMQ_WITH_UUID}
         ${_ADDITIONAL_LIB_FLAGS}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
     vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
@@ -59,6 +92,11 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/${PORT})
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
 endif()
 
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
+
 if(CMAKE_HOST_WIN32)
     set(EXECUTABLE_SUFFIX ".exe")
 else()
@@ -66,7 +104,7 @@ else()
 endif()
 
 if (BUILD_TOOLS)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX}
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
@@ -80,29 +118,18 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/czmqConfig.cmake _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    string(CONCAT _contents
-        "${_contents}\n"
-        "add_library(czmq INTERFACE IMPORTED)\n"
-        "set_target_properties(czmq PROPERTIES INTERFACE_LINK_LIBRARIES czmq-static)\n")
-
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
-    string(CONCAT _contents
-        "${_contents}\n"
-        "add_library(czmq-static INTERFACE IMPORTED)\n"
-        "set_target_properties(czmq-static PROPERTIES INTERFACE_LINK_LIBRARIES czmq)\n")
-
     file(REMOVE
         ${CURRENT_PACKAGES_DIR}/debug/bin/zmakecert${EXECUTABLE_SUFFIX}
         ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX})
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/czmqConfig.cmake "${_contents}")
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-vcpkg_copy_pdbs()
+# CMake integration test
+vcpkg_test_cmake(PACKAGE_NAME ${PORT})

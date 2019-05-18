@@ -1,5 +1,5 @@
 Source: czmq
-Version: 2018-12-15
+Version: 2019-05-17
 Build-Depends: zeromq
 Description: High-level C binding for ZeroMQ
 
@@ -17,6 +17,10 @@ Feature: lz4
 Description: Build with lz4
 Build-Depends: lz4
 
+Feature: httpd
+Description: Build with HTTP server support (libmicrohttpd)
+Build-Depends: libmicrohttpd
+
 Feature: uuid
 Description: Build with libuuid
-Build-Depends: libuuid
+Build-Depends: libuuid (!windows&!uwp&!osx)
