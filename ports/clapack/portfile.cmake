@@ -35,7 +35,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/clapack)
 
 #we install a cmake wrapper since the official FindLAPACK module in cmake does find clapack easily, unfortunately...
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/lapack-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
