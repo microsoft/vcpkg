@@ -26,7 +26,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 

@@ -302,8 +302,7 @@ namespace vcpkg::Install
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
-        const std::string display_name_with_features =
-            GlobalState::feature_packages ? action.displayname() : display_name;
+        const std::string display_name_with_features = action.displayname();
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
         const bool use_head_version = Util::Enum::to_bool(action.build_options.use_head_version);
@@ -615,11 +614,6 @@ namespace vcpkg::Install
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.package_spec.triplet(), paths);
-            if (!spec.features.empty() && !GlobalState::feature_packages)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-            }
         }
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
@@ -654,20 +648,6 @@ namespace vcpkg::Install
         // Note: action_plan will hold raw pointers to SourceControlFiles from this map
         std::vector<AnyAction> action_plan =
             create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
-
-        if (!GlobalState::feature_packages)
-        {
-            for (auto&& action : action_plan)
-            {
-                if (action.remove_action.has_value())
-                {
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "The installation plan requires feature packages support. Please re-run the "
-                        "command with --featurepackages.");
-                }
-            }
-        }
 
         for (auto&& action : action_plan)
         {
