@@ -15,7 +15,6 @@ vcpkg_extract_source_archive_ex(
         configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
-        fix_windowsinclude-in-ffmpegexe-3.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -29,7 +28,7 @@ if (WIN32)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
     else()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
@@ -109,22 +108,23 @@ endif()
 #     set(OPTIONS "${OPTIONS} --disable-bzip2")
 # endif()
 
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(OPTIONS "${OPTIONS} --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
+    vcpkg_find_acquire_program(GASPREPROCESSOR)
+    foreach(GAS_PATH ${GASPREPROCESSOR})
+        get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH};${GAS_ITEM_PATH}")
+    endforeach(GAS_PATH)
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+else()
+    message(FATAL_ERROR "Unsupported architecture")
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
-    set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
+    set(OPTIONS "${OPTIONS} --disable-programs")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
-
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        vcpkg_find_acquire_program(GASPREPROCESSOR)
-        foreach(GAS_PATH ${GASPREPROCESSOR})
-            get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH};${GAS_ITEM_PATH}")
-        endforeach(GAS_PATH)
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    else()
-        message(FATAL_ERROR "Unsupported architecture")
-    endif()
 endif()
 
 set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
@@ -179,6 +179,8 @@ file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/de
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(LIB_MACHINE_ARG /machine:ARM)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(LIB_MACHINE_ARG /machine:ARM64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(LIB_MACHINE_ARG /machine:x86)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
