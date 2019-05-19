@@ -28,7 +28,6 @@ vcpkg_extract_source_archive_ex(
     # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch
-	disable_cmake_settings.patch
 )
 
 vcpkg_configure_cmake(
@@ -37,8 +36,8 @@ vcpkg_configure_cmake(
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
+	OPTIONS -DBUILD_TESTS=OFF -DWITH_OPENMP=OFF -DWITH_LSR_BINDINGS=OFF
 )
-
 
 vcpkg_install_cmake()
 
