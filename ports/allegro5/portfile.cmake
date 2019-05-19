@@ -14,8 +14,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liballeg/allegro5
-    REF 5.2.4.0
-    SHA512 46a7c7b65ffb49ae5c81e5a33d850b4ae94b59135fc9b15174ffe86133445ff328c623c2c48298d3f631cc6310d51f4f3f07b8b952ecbd360755001292cbda8b
+    REF 5.2.5.0
+    SHA512 9b97a46f0fd146c3958a5f8333822665ae06b984b3dbedc1356afdac8fe3248203347cb08b30ebda049a7320948c7844e9d00dc055c317836c2557b5bfc2ab04
     HEAD_REF master
 )
 

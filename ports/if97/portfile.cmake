@@ -1,11 +1,10 @@
 include(vcpkg_common_functions)
-set(PORT_VERSION 2.1.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/IF97
-    REF v${PORT_VERSION}
-    SHA512 f8cde0538af395d8d82998bd71f28d89cd5c6fcfdf16410b0630a0f8b59ec86ff8a748b05681e65cbece051db5be6b960b6ea4fc8bce83b4309f46896083164a
+    REF v2.1.2
+    SHA512 a7625fcc1ca0763df5b4cf5be741babbaefc09022940b4fc5ee1c05121751282c18ebd87ae58e1eee9bdb46dab5ae6fb4ed9a31fc2c53dc6de5cbd243fa4c8e9
     HEAD_REF master
 )
 
