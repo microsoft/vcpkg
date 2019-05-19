@@ -40,7 +40,9 @@ vcpkg_configure_cmake(
             -DPCRE_SUPPORT_LIBREADLINE=OFF
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    OPTIONS_DEBUG 
+            -DCMAKE_DEBUG_POSTFIX=d #Need to set it since too many packages try to find the debug version that way (EXAMPLE osg, FindCOLLADA)
+            -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
