@@ -14,6 +14,7 @@ endif()
 if(WIN32)
     include_directories(windows/vs2017)
 else()
+    find_package(Threads REQUIRED)
     include_directories(${CMAKE_CURRENT_BINARY_DIR})
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h
     """
@@ -144,6 +145,9 @@ add_library(lzma
     src/liblzma/simple/simple_encoder.c
     src/liblzma/simple/sparc.c
     src/liblzma/simple/x86.c)
+if(CMAKE_USE_PTHREADS_INIT)
+    target_link_libraries(lzma PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 install(TARGETS lzma
     RUNTIME DESTINATION bin
