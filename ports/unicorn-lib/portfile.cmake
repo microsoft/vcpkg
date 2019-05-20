@@ -15,10 +15,13 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS_DEBUG
         -DUNICORN_LIB_SKIP_HEADERS=ON
+        -DINSTALLED_LIB_PATH=${CURRENT_INSTALLED_DIR}/lib
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/unicorn-lib RENAME copyright)

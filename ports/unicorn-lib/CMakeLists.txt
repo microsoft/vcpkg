@@ -6,6 +6,8 @@ option(UNICORN_LIB_SKIP_HEADERS "If the headers installation is skipped or not."
 
 find_path(RS_CORE_LIB_INCLUDE_DIR rs-core/common.hpp)
 #find_library(RW_UTILITIES_LIBRARY NAMES rw_utilities)
+find_library(ZLIB_LIBRARY NAMES zlib HINTS ${INSTALLED_LIB_PATH})
+find_library(PCRE2_LIBRARY NAMES pcre2-8 HINTS ${INSTALLED_LIB_PATH})
 
 file(GLOB_RECURSE UNICORN_LIB_SOURCES ${PROJECT_SOURCE_DIR}/unicorn/*.cpp)
 foreach(ITR ${UNICORN_LIB_SOURCES})
@@ -24,7 +26,14 @@ target_compile_definitions(
 	PRIVATE -DUNICODE -D_UNICODE _CRT_SECURE_NO_WARNINGS
 )
 
+target_link_libraries(unicorn-lib ${PCRE2_LIBRARY})
+target_link_libraries(unicorn-lib ${ZLIB_LIBRARY})
+
 if(NOT UNICORN_LIB_SKIP_HEADERS)
 	install(DIRECTORY ${PROJECT_SOURCE_DIR}/unicorn DESTINATION include FILES_MATCHING PATTERN "*.hpp")
 endif()
-install(TARGETS unicorn-lib DESTINATION lib)
+install(TARGETS unicorn-lib
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+       )
