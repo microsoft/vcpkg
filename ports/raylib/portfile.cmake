@@ -3,7 +3,7 @@ if(TARGET_TRIPLET MATCHES "^arm" OR TARGET_TRIPLET MATCHES "uwp$")
     message(FATAL_ERROR "raylib doesn't support ARM or UWP.")
 endif()
 
-if(UNIX)
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(
     "raylib currently requires the following libraries from the system package manager:
     libgl1-mesa-dev
