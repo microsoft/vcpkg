@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/beast
-    REF boost-1.69.0
-    SHA512 bb6e3763f610abc1fa621f03e8f3e82b4c8e8643bf41eba5353c65d8bf3e84b10161a108148459f1dd8786204d7a3783e0c00caf88233f977b3e3ce93d7f0495
+    REF boost-1.70.0
+    SHA512 7f0c36d80f26b47b902bf78e066dfa3b1fd5ef5e5088c00d2aabef16805531b993efa94a25d84e8d1321c41fc021d46da25cb3ffe49fa42ae67813af333f453d
     HEAD_REF master
 )
 

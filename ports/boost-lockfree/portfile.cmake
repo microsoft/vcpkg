@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/lockfree
-    REF boost-1.69.0
-    SHA512 e0ea8c20973512d173bb1ef15c5e8b7f946b346ebcc2040283945d0db663a8afd61b854290670cc3d281be516c787af7eb2dbc310b20aaca610ba38888062eef
+    REF boost-1.70.0
+    SHA512 565539cffb0b688b02cb86b750fb9854e0d0f7a34c5dca859d5965ccee8512c5e6db493e8f7bcdf3c58b3ec2730852ad79089e7717183f358b07c0c743186c5f
     HEAD_REF master
 )
 

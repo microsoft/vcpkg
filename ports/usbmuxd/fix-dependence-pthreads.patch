@@ -7,7 +7,7 @@ index d1d8a4d..086e8a4 100644
        <SubSystem>Console</SubSystem>
        <GenerateDebugInformation>true</GenerateDebugInformation>
 -      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadsVC2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -16,7 +16,7 @@ index d1d8a4d..086e8a4 100644
        <SubSystem>Console</SubSystem>
        <GenerateDebugInformation>true</GenerateDebugInformation>
 -      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadsVC2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -25,7 +25,7 @@ index d1d8a4d..086e8a4 100644
        <OptimizeReferences>true</OptimizeReferences>
        <GenerateDebugInformation>true</GenerateDebugInformation>
 -      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadsVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC3.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -34,7 +34,7 @@ index d1d8a4d..086e8a4 100644
        <OptimizeReferences>true</OptimizeReferences>
        <GenerateDebugInformation>true</GenerateDebugInformation>
 -      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadsVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>ws2_32.lib;libusb-1.0.lib;libusb0.lib;pthreadVC3.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
