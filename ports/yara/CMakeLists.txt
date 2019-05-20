@@ -7,8 +7,8 @@ endif()
 
 
 find_package(OpenSSL REQUIRED)
-find_path(JANSSON_INCLUDE_DIR NAMES jansson.h)
-find_library(JANSSON_LIBRARY NAMES jansson)
+find_package(JANSSON REQUIRED)
+set(JANSSON_LIBRARY jansson)
 
 
 include_directories(
