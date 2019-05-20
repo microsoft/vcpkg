@@ -11,6 +11,8 @@ vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
   REF ${MATHGL_VERSION}
+  PATCHES
+    type_fix.patch
 )
 
 set(enable-hdf5 OFF)
@@ -87,8 +89,15 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mathgl TARGET_PATH share/mathgl)
-#vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mathgl2 TARGET_PATH share/mathgl2)
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/mathgl)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake)
+  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake)
+else()
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mathgl TARGET_PATH share/mathgl)
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 #somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
