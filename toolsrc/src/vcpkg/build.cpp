@@ -521,7 +521,7 @@ namespace vcpkg::Build
         }
 
         abi_tag_entries.emplace_back(AbiEntry{
-            "vcpkg",
+            "vcpkg.cmake",
             vcpkg::Hash::get_file_hash(fs, paths.buildsystems_vcpkg_cmake, "SHA1")});
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
