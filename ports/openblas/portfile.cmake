@@ -38,6 +38,9 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
+set(COMMON_OPTIONS
+    -DBUILD_WITHOUT_LAPACK=ON)
+
 # for UWP version, must build non uwp first for helper
 # binaries.
 if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
@@ -51,7 +54,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DTARGET=NEHALEM
     )
 
     # add just built path to environment for gen_config_h.exe,
@@ -67,17 +72,24 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
-        "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
+        OPTIONS 
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DVS_WINRT_COMPONENT=TRUE
+            "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
+        OPTIONS
+            ${COMMON_OPTIONS})
 else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DNOFORTRAN=ON)
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DNOFORTRAN=ON)
 endif()
 
 
