@@ -40,10 +40,6 @@ function(install_qt)
 
     vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
-
-    message(STATUS "PATH: $ENV{PATH}")
-
-
     set(_path "$ENV{PATH}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
