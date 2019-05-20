@@ -25,22 +25,21 @@ function(install_qt)
     endif()
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-    vcpkg_find_acquire_program(FLEX)
-    get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
-    #    vcpkg_find_acquire_program(BISON)
-    #get_filename_component(BISON_EXE_PATH ${BISON} DIRECTORY)
-
-    file(COPY ${FLEX} DESTINATION "${FLEX_EXE_PATH}/bin" )
-    file(COPY "${FLEX_EXE_PATH}/win_bison.exe" DESTINATION "${FLEX_EXE_PATH}/bin" )
-    file(RENAME "${FLEX_EXE_PATH}/bin/win_bison.exe" "${FLEX_EXE_PATH}/bin/bison.exe")
-    file(RENAME "${FLEX_EXE_PATH}/bin/win_flex.exe" "${FLEX_EXE_PATH}/bin/flex.exe")
-    file(COPY "${FLEX_EXE_PATH}/bin/flex.exe" DESTINATION "${FLEX_EXE_PATH}" )
-    file(COPY "${FLEX_EXE_PATH}/bin/bison.exe" DESTINATION "${FLEX_EXE_PATH}" )
-    vcpkg_add_to_path("${FLEX_EXE_PATH}")
-
     vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
-    set(_path "$ENV{PATH}")
+    # flex and bison for ANGLE library
+    vcpkg_find_acquire_program(FLEX)
+    get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
+    get_filename_component(FLEX_DIR ${FLEX_EXE_PATH} NAME)
+
+    file(COPY ${FLEX_EXE_PATH} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools" )
+    set(FLEX_TEMP "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools/${FLEX_DIR}")
+    message(STATUS "FLEX_TEMP: ${FLEX_TEMP}")
+    file(RENAME "${FLEX_TEMP}/win_bison.exe" "${FLEX_TEMP}/bison.exe")
+    file(RENAME "${FLEX_TEMP}/win_flex.exe" "${FLEX_TEMP}/flex.exe")
+    vcpkg_add_to_path("${FLEX_TEMP}")
+
+   set(_path "$ENV{PATH}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Package ${TARGET_TRIPLET}-dbg")
