@@ -83,7 +83,7 @@ function(find_library _vcpkg_lib_var)
                             list(APPEND _path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/${_path_suffix}")
                         endforeach()
                     endif()
-                     vcpkg_msg(STATUS "find_library" "Searching for release library with paths: ${_path_search_list}")
+                    vcpkg_msg(STATUS "find_library" "Searching for release library with paths: ${_path_search_list}")
                     _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
                                   PATHS ${_path_search_list} NO_DEFAULT_PATH) 
                     #if("${_tmp_${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib") # check if we are still 
