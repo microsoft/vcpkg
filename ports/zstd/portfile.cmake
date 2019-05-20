@@ -40,7 +40,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME) AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     foreach(HEADER zdict.h zstd.h zstd_errors.h)
         file(READ ${CURRENT_PACKAGES_DIR}/include/${HEADER} HEADER_CONTENTS)
         string(REPLACE "defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)" "1" HEADER_CONTENTS "${HEADER_CONTENTS}")
