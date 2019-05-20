@@ -21,10 +21,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sentencepiece.lib ${CURRENT_PACKAGES_DIR}/debug/lib/sentencepieced.lib)
    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sentencepiece_train.lib ${CURRENT_PACKAGES_DIR}/debug/lib/sentencepiece_traind.lib)
 endif()
