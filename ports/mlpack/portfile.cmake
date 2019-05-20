@@ -10,8 +10,6 @@ vcpkg_from_github(
         cmakelists.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MLPACK_SHARED_LIBS)
-
 file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindACML.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindACMLMP.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindARPACK.cmake)
@@ -34,7 +32,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_TESTS=${BUILD_TOOLS}
         -DBUILD_CLI_EXECUTABLES=${BUILD_TOOLS}
-        -DBUILD_SHARED_LIBS=${MLPACK_SHARED_LIBS}
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
