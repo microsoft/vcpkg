@@ -1,5 +1,14 @@
-function(set_target_properties _vcpkg_target_name)
+function(set_target_properties)
+    set(_vcpkg_target_name ${ARGV0})
+    vcpkg_msg(STATUS "set_target_properties" "${ARGV}")
+    message("ARGC=\"${ARGC}\"")
+    message("ARGN=\"${ARGN}\"")
+    message("ARGV=\"${ARGV}\"")
+    list(TRANSFORM "${ARGV}" REPLACE "" "\${_tmp_EMPTY}" OUTPUT_VARIABLE _tmp_args)
     _set_target_properties(${ARGV})
+    if(NOT "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_LOCATION_RELEASE|IMPORTED_LOCATION_DEBUG")
+        return() # early abort to not generate too much noise. We are only interested in the above cases
+    endif()
     get_target_property(_vcpkg_target_imported ${_vcpkg_target_name} IMPORTED)
     if(_vcpkg_target_imported)
         vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} is an IMPORTED target. Checking import location (if available)!")
@@ -33,6 +42,10 @@ function(set_target_properties _vcpkg_target_name)
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION Contains generator expression inserted by vcpkg. Fixing locations.")
                 string(REPLACE "$<$<CONFIG:DEBUG>:debug/>lib/" "lib/"       _vcpkg_target_imp_loc_rel_tmp "${_vcpkg_target_imp_loc}")
                 string(REPLACE "$<$<CONFIG:DEBUG>:debug/>lib/" "debug/lib/" _vcpkg_target_imp_loc_dbg_tmp "${_vcpkg_target_imp_loc}")
+                foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
+                    string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "" _vcpkg_target_imp_loc_rel_tmp "${_vcpkg_target_imp_loc_rel_tmp}")
+                    string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "${_vcpkg_debug_suffix}" _vcpkg_target_imp_loc_dbg_tmp "${_vcpkg_target_imp_loc_dbg_tmp}")
+                endforeach()
                 _set_target_properties(${_vcpkg_target_name} 
                                         PROPERTIES 
                                             IMPORTED_LOCATION_RELEASE "${_vcpkg_target_imp_loc_rel_tmp}"

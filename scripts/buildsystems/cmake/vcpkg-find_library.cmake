@@ -6,6 +6,10 @@
 option(VCPKG_ONLY_VCPKG_LIBS "Disallows find_library calls to search outside of the vcpkg directory" OFF)
 mark_as_advanced(VCPKG_ONLY_VCPKG_LIBS)
 
+#Setup common debug suffix used by ports;
+set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;_d;_debug")
+mark_as_advanced(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES)
+
 function(find_library _vcpkg_lib_var)
     cmake_policy(PUSH)
     cmake_policy(SET CMP0054 NEW)
@@ -60,7 +64,6 @@ function(find_library _vcpkg_lib_var)
                         set(_vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
                         list(APPEND _vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link")
                     else()
-                        
                         list(FILTER _vcpkg_find_lib_PATH_SUFFIXES EXCLUDE REGEX "[Dd][Ee][Bb][Uu][Gg]/")
                         foreach(_vcpkg_path_prefix ${_vcpkg_path_search_list})
                             foreach(_path_suffix ${_vcpkg_find_lib_PATH_SUFFIXES})
@@ -70,6 +73,7 @@ function(find_library _vcpkg_lib_var)
                         endforeach()
                     endif()
                     vcpkg_msg(STATUS "find_library" "Searching for release library with paths: ${_path_search_list}")
+                    unset(_tmp_${_vcpkg_lib_var})
                     _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
                                   PATHS ${_path_search_list} NO_DEFAULT_PATH) 
                     #if("${_tmp_${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib") # check if we are still 
@@ -79,15 +83,58 @@ function(find_library _vcpkg_lib_var)
                     set(${_vcpkg_lib_var} "${_tmp_${_vcpkg_lib_var}}" PARENT_SCOPE) #Cannot be directly set since CMake will CACHE the previous result
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
                 endif()
-            else() #these are the cases we probably need to correct!
-                if("${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/")
-                    
-                    if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/debug")
-                        #TODO: add a search for _d and d suffixed libraries
-                        cmake_policy(POP)
-                        vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory as expected! \
-                                                                Check library debug/release naming!: NAMES: ${_vcpkg_find_lib_NAMES}" ALWAYS)
-                    endif()
+            else() #these are the cases we need to correct!
+                if("${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # the and makes sure that debug was actually build
+                    #TODO: add a search for _d and d suffixed libraries for ports that did not get the memo of #6014. If not succesful -> FATAL_ERROR
+                    vcpkg_msg(WARNING "find_library" " ${_vcpkg_lib_var} not pointing to expected debug path. Trying to find library with common debug suffixes!")
+                    foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
+                        foreach(_vcpkg_lib_name ${_vcpkg_find_lib_NAMES})
+                            list(APPEND _vcpkg_debug_lib_names_${_vcpkg_debug_suffix} "${_vcpkg_lib_name}${_vcpkg_debug_suffix}")
+                        endforeach()
+                        string(REGEX REPLACE "${_vcpkg_find_lib_NAMES};NAMES_PER_DIR" "${_vcpkg_debug_lib_names_${_vcpkg_debug_suffix}};NAMES_PER_DIR" _vcpkg_list_vars_debug "${_vcpkg_list_vars}") 
+                        # We added NAMES_PER_DIR; This is a guard to not change the variable name in the list (first entry)
+                        string(REGEX REPLACE "^${_vcpkg_lib_var}" "${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}" _vcpkg_list_vars_debug "${_vcpkg_list_vars_debug}") #New variable name
+                        vcpkg_msg(STATUS "find_library" "Debug call vars: ${_vcpkg_list_vars_debug}")
+                        _find_library(${_vcpkg_list_vars_debug})
+                        vcpkg_msg(STATUS "find_library" "Debug var ${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}: ${${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}}")
+                        if("${${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
+                            #found the debug library!
+                            #release path is in: ${_vcpkg_lib_var}
+                            #debug path is in: _tmp_${_vcpkg_lib_var}
+                            #To create the generator expressions we first need to know the original library name!
+                            unset(_vcpkg_lib_found_name)
+                            unset(_vcpkg_lib_found_name_index)
+                            foreach(_vcpkg_lib_name ${_vcpkg_find_lib_NAMES})
+                                vcpkg_msg(STATUS "find_library" "Name ${_vcpkg_lib_name} searched in ${${_vcpkg_lib_var}}")
+                                string(FIND "${${_vcpkg_lib_var}}" "${_vcpkg_lib_name}" _vcpkg_lib_found_name_index)
+                                #vcpkg_msg(STATUS "find_library" "INDEX: ${_vcpkg_lib_found_name_index} searched in ${${_vcpkg_lib_var}}")
+                                if(NOT ${_vcpkg_lib_found_name_index} EQUAL -1)
+                                     vcpkg_msg(STATUS "find_library" "Name ${_vcpkg_lib_name} found in ${${_vcpkg_lib_var}}")
+                                    set(_vcpkg_lib_found_name "${_vcpkg_lib_name}")
+                                    break()
+                                else()
+                                    vcpkg_msg(STATUS "find_library" "Name ${_vcpkg_lib_name} not found in ${${_vcpkg_lib_var}}")
+                                endif()
+                            endforeach()
+                            if("${${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}}" MATCHES "${_vcpkg_lib_found_name}")
+                                vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} before ${${_vcpkg_lib_var}}")
+                                string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" ${_vcpkg_lib_var} "${${_vcpkg_lib_var}}")
+                                string(REGEX REPLACE "${_vcpkg_lib_found_name}" "${_vcpkg_lib_found_name}\$<\$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" ${_vcpkg_lib_var} "${${_vcpkg_lib_var}}")
+                                vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} after ${${_vcpkg_lib_var}}")
+                                cmake_policy(POP)
+                                return()
+                            else()
+                                #Logically this should never trigger expect the port does something really strange in the naming of debug builds (like using a totally different name)!
+                                vcpkg_msg(WARNING "find_library" "${_vcpkg_lib_found_name} not found in ${${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}}. Check library name!")
+                            endif()
+                        endif()
+                    endforeach()
+                    #if(NOT ${${_vcpkg_lib_var}} MATCHES "<CONFIG:DEBUG>:debug/") #Death case. Means ${_vcpkg_lib_var} was not changed by us and still points to release directory
+                    #Nothing found -> so configure should die
+                    cmake_policy(POP)
+                    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} does not point to debug directory as expected! \
+                                                            Check library debug/release naming!: NAMES: ${_vcpkg_find_lib_NAMES}" ALWAYS)
+                    #endif()
                 else()
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_lib_var} before ${${_vcpkg_lib_var}}")
                     string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" ${_vcpkg_lib_var} "${${_vcpkg_lib_var}}")
