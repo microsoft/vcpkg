@@ -43,6 +43,7 @@ if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_I
     vcpkg_msg(WARNING toolchain "There are no libraries installed for the vcpkg triplet ${VCPKG_TARGET_TRIPLET}." ALWAYS)
 endif()
 
+include(CMakeDependentOption)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-setup_cmake_paths.cmake)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-add_executable.cmake)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-add_library.cmake)

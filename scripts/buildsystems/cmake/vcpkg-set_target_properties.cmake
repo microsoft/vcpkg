@@ -1,25 +1,31 @@
-function(set_target_properties)
-    #set(_vcpkg_target_name ${ARGV0})
-    #set(_vcpkg_target_args ${ARGV})
-    vcpkg_msg(STATUS "set_target_properties" "Arguments: ${ARGV}")
+option(VCPKG_ENABLE_SET_TARGET_PROPERTIES "Enables override of the cmake function set_target_properties." ON)
+mark_as_advanced(VCPKG_ENABLE_SET_TARGET_PROPERTIES)
+CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE "Tells VCPKG to use _set_target_properties instead of set_target_properties." OFF "NOT VCPKG_ENABLE_SET_TARGET_PROPERTIES" OFF)
+mark_as_advanced(VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
+
+function(vcpkg_set_target_properties)
     list(FIND ARGV PROPERTIES _vcpkg_properties_pos)
-    vcpkg_msg(STATUS "set_target_properties" "PROPERTIES pos: ${_vcpkg_properties_pos}")
     list(SUBLIST ARGV 0 ${_vcpkg_properties_pos} _vcpkg_target_sublist)
-    vcpkg_msg(STATUS "set_target_properties" "Targets: ${_vcpkg_target_sublist}")
-    set(_vcpkg_target_args_index ${_vcpkg_properties_pos})
-    math(EXPR _vcpkg_target_index_key "${_vcpkg_target_args_index}+1")
+    math(EXPR _vcpkg_target_args_index "${_vcpkg_target_args_index}+1")
+    vcpkg_msg(STATUS "set_target_properties" "ARGS: ${ARGV}")
+    vcpkg_msg(STATUS "set_target_properties" "PROPERTIES Index: ${_vcpkg_properties_pos}")
+    vcpkg_msg(STATUS "set_target_properties" "TARGETS: ${_vcpkg_target_sublist}")
     while("${_vcpkg_target_index_key}" LESS "${ARGC}")
-        #vcpkg_msg(STATUS "set_target_properties" "Key: ARGV${_vcpkg_target_index_key}: ${ARGV${_vcpkg_target_index_key}}")
         math(EXPR _vcpkg_target_args_index_val "${_vcpkg_target_index_key}+1")
-        #vcpkg_msg(STATUS "set_target_properties" "Value: ARGV${_vcpkg_target_args_index_val}: ${ARGV${_vcpkg_target_args_index_val}}")
-        #since sometimes properties are empty we have to pass them one by one. PROPERTIES are Key Value pairs after the keyword PROPERTIES
-        _set_target_properties(${_vcpkg_target_sublist} PROPERTIES "${ARGV${_vcpkg_target_args_index}}" "${ARGV${_vcpkg_target_args_index_val}}")
+        vcpkg_msg(STATUS "set_target_properties" "Property: ARGV${_vcpkg_target_index_key}: ${ARGV${_vcpkg_target_index_key}}")
+        vcpkg_msg(STATUS "set_target_properties" "Value: ARGV${_vcpkg_target_args_index_val}: ${ARGV${_vcpkg_target_args_index_val}}")
+        if(VCPKG_ENABLE_SET_TARGET_PROPERTIES OR VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
+            _set_target_properties(${_vcpkg_target_sublist} PROPERTIES "${ARGV${_vcpkg_target_args_index}}" "${ARGV${_vcpkg_target_args_index_val}}")
+        else()
+            set_target_properties(${_vcpkg_target_sublist} PROPERTIES "${ARGV${_vcpkg_target_args_index}}" "${ARGV${_vcpkg_target_args_index_val}}")
+        endif()
         math(EXPR _vcpkg_target_index_key "${_vcpkg_target_args_index_val}+1")
     endwhile()
-    #_set_target_properties(${ARGV})
+
     if(NOT "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_LOCATION_RELEASE|IMPORTED_LOCATION_DEBUG")
         return() # early abort to not generate too much noise. We are only interested in the above cases
     endif()
+
     get_target_property(_vcpkg_target_imported ${_vcpkg_target_name} IMPORTED)
     if(_vcpkg_target_imported)
         vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} is an IMPORTED target. Checking import location (if available)!")
@@ -57,18 +63,52 @@ function(set_target_properties)
                     string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "" _vcpkg_target_imp_loc_rel_tmp "${_vcpkg_target_imp_loc_rel_tmp}")
                     string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "${_vcpkg_debug_suffix}" _vcpkg_target_imp_loc_dbg_tmp "${_vcpkg_target_imp_loc_dbg_tmp}")
                 endforeach()
-                _set_target_properties(${_vcpkg_target_name} 
+                if(VCPKG_ENABLE_SET_TARGET_PROPERTIES OR VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
+                    _set_target_properties(${_vcpkg_target_name} 
                                         PROPERTIES 
                                             IMPORTED_LOCATION_RELEASE "${_vcpkg_target_imp_loc_rel_tmp}"
                                             IMPORTED_LOCATION_DEBUG "${_vcpkg_target_imp_loc_dbg_tmp}"
                                             IMPORTED_LOCATION "${_vcpkg_target_imp_loc_rel_tmp}")
+                else()
+                    set_target_properties(${_vcpkg_target_name} 
+                                        PROPERTIES 
+                                            IMPORTED_LOCATION_RELEASE "${_vcpkg_target_imp_loc_rel_tmp}"
+                                            IMPORTED_LOCATION_DEBUG "${_vcpkg_target_imp_loc_dbg_tmp}"
+                                            IMPORTED_LOCATION "${_vcpkg_target_imp_loc_rel_tmp}")
+                endif()
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_RELEASE set to: ${_vcpkg_target_imp_loc_rel_tmp}")
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_DEBUG set to: ${_vcpkg_target_imp_loc_dbg_tmp}")
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION set to: ${_vcpkg_target_imp_loc_rel_tmp}")
             else()
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION does not contain generator expression generated by vcpkg-find_library!")
             endif()
-             # We cannot have generator expressions in general here. Need to move the location to to correct variables
         endif()
     endif()
 endfunction()
+
+if(VCPKG_ENABLE_SET_TARGET_PROPERTIES)
+    function(set_target_properties)
+        if(DEFINED _vcpkg_set_target_properties_guard)
+            vcpkg_msg(FATAL_ERROR "set_target_properties" "INFINIT LOOP DETECT. Did you supply your own set_target_properties override? \n \
+                                    If yes: please set VCPKG_ENABLE_SET_TARGET_PROPERTIES off and call vcpkg_set_target_properties if you want to have vcpkg corrected behavior. \n \
+                                    If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
+        else()
+            set(_vcpkg_set_target_properties_guard ON)
+        endif()
+
+        list(FIND ARGV PROPERTIES _vcpkg_properties_pos)
+        list(SUBLIST ARGV 0 ${_vcpkg_properties_pos} _vcpkg_target_sublist)
+        math(EXPR _vcpkg_target_args_index "${_vcpkg_target_args_index}+1")
+        vcpkg_msg(STATUS "set_target_properties" "ARGS: ${ARGV}")
+        vcpkg_msg(STATUS "set_target_properties" "PROPERTIES Index: ${_vcpkg_properties_pos}")
+        vcpkg_msg(STATUS "set_target_properties" "TARGETS: ${_vcpkg_target_sublist}")
+        while("${_vcpkg_target_index_key}" LESS "${ARGC}")
+            math(EXPR _vcpkg_target_args_index_val "${_vcpkg_target_index_key}+1")
+            vcpkg_msg(STATUS "set_target_properties" "Property: ARGV${_vcpkg_target_index_key}: ${ARGV${_vcpkg_target_index_key}}")
+            vcpkg_set_target_properties(${_vcpkg_target_sublist} PROPERTIES "${ARGV${_vcpkg_target_args_index}}" "${ARGV${_vcpkg_target_args_index_val}}")
+            math(EXPR _vcpkg_target_index_key "${_vcpkg_target_args_index_val}+1")
+        endwhile()
+
+        unset(_vcpkg_set_target_properties_guard)
+    endfunction()
+endif()

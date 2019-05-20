@@ -3,14 +3,20 @@
 # In a multi configuration generator vcpkg there can only be one CMAKE_PREFIX_PATH so we have to correct all find_library calls
 # If the library variable is called either _RELEASE or _DEBUG there must be a way to distingush between debug/release version of a library by name (so no change required here)
 
+#NOt used Yet
 option(VCPKG_ONLY_VCPKG_LIBS "Disallows find_library calls to search outside of the vcpkg directory" OFF)
 mark_as_advanced(VCPKG_ONLY_VCPKG_LIBS)
+
+option(VCPKG_ENABLE_FIND_LIBRARY "Enables override of the cmake function find_library." ON)
+mark_as_advanced(VCPKG_ENABLE_FIND_LIBRARY)
+CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE "Tells VCPKG to use _find_library instead of find_library." OFF "NOT VCPKG_ENABLE_FIND_LIBRARY" OFF)
+mark_as_advanced(VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
 
 #Setup common debug suffix used by ports;
 set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;_d;_debug")
 mark_as_advanced(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES)
 
-function(find_library _vcpkg_lib_var)
+function(vcpkg_find_library _vcpkg_lib_var)
     cmake_policy(PUSH)
     cmake_policy(SET CMP0054 NEW)
     set(_vcpkg_list_vars "${ARGV}")
@@ -30,7 +36,6 @@ function(find_library _vcpkg_lib_var)
                        PATHS
                        PATH_SUFFIXES)
     cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}")
-    #cmake_parse_arguments(_vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if(NOT DEFINED _vcpkg_find_lib_NAMES)
         set(_vcpkg_find_lib_NAMES ${ARGV1})
         set(_insert_offset 1)
@@ -44,7 +49,11 @@ function(find_library _vcpkg_lib_var)
         vcpkg_msg(STATUS "find_library" "Added NAMES_PER_DIR to find_library call at position ${_vcpkg_find_lib_NAMES_LENGTH}!")
     endif()
     vcpkg_msg(STATUS "find_library-vars" "${_vcpkg_list_vars}")
-    _find_library(${_vcpkg_list_vars})
+    if(VCPKG_ENABLE_FIND_LIBRARY OR VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
+        _find_library(${_vcpkg_list_vars})
+    else()
+        find_library(${_vcpkg_list_vars})
+    endif()
     if(NOT "${${_vcpkg_lib_var}}" MATCHES "NOTFOUND") #Library was found
         message(STATUS "VCPKG-find_library: ${_vcpkg_lib_var}:${${_vcpkg_lib_var}}")
         if("${${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}") 
@@ -74,8 +83,13 @@ function(find_library _vcpkg_lib_var)
                     endif()
                     vcpkg_msg(STATUS "find_library" "Searching for release library with paths: ${_path_search_list}")
                     unset(_tmp_${_vcpkg_lib_var})
-                    _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
-                                  PATHS ${_path_search_list} NO_DEFAULT_PATH) 
+                    if(VCPKG_ENABLE_FIND_LIBRARY OR VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
+                        _find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
+                                        PATHS ${_path_search_list} NO_DEFAULT_PATH)
+                    else()
+                        find_library(_tmp_${_vcpkg_lib_var} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
+                                        PATHS ${_path_search_list} NO_DEFAULT_PATH)
+                    endif()
                     #if("${_tmp_${_vcpkg_lib_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib") # check if we are still 
                     #    cmake_policy(POP)
                     #    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_lib_var}:${${_vcpkg_lib_var}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}")
@@ -95,7 +109,11 @@ function(find_library _vcpkg_lib_var)
                         # We added NAMES_PER_DIR; This is a guard to not change the variable name in the list (first entry)
                         string(REGEX REPLACE "^${_vcpkg_lib_var}" "${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}" _vcpkg_list_vars_debug "${_vcpkg_list_vars_debug}") #New variable name
                         vcpkg_msg(STATUS "find_library" "Debug call vars: ${_vcpkg_list_vars_debug}")
-                        _find_library(${_vcpkg_list_vars_debug})
+                        if(VCPKG_ENABLE_FIND_LIBRARY OR VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
+                            _find_library(${_vcpkg_list_vars_debug})
+                        else()
+                            find_library(${_vcpkg_list_vars_debug})
+                        endif()
                         vcpkg_msg(STATUS "find_library" "Debug var ${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}: ${${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}}")
                         if("${${_vcpkg_lib_var}_suffix_${_vcpkg_debug_suffix}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
                             #found the debug library!
@@ -148,3 +166,17 @@ function(find_library _vcpkg_lib_var)
     endif()
     cmake_policy(POP)
 endfunction()
+
+if(VCPKG_ENABLE_FIND_LIBRARY)
+    function(find_library name)
+        if(DEFINED _vcpkg_find_library_guard_${name})
+            vcpkg_msg(FATAL_ERROR "find_library" "INFINIT LOOP DETECT. Did you supply your own find_library override? \n \
+                                    If yes: please set VCPKG_ENABLE_FIND_LIBRARY off and call vcpkg_find_library if you want to have vcpkg corrected behavior. \n \
+                                    If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
+        else()
+            set(_vcpkg_find_library_guard_${name} ON)
+        endif()
+        vcpkg_find_library(${ARGV})
+        unset(_vcpkg_find_library_guard_${name})
+    endfunction()
+endif(VCPKG_ENABLE_FIND_LIBRARY)
