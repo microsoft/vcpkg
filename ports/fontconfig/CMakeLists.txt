@@ -44,16 +44,15 @@ else()
 endif()
 
 target_include_directories(fontconfig PRIVATE .
-    ${FC_INCLUDE_DIR}/alias ${EXPAT_INCLUDE_DIRS})
+    ${FC_INCLUDE_DIR}/alias
+    ${EXPAT_INCLUDE_DIR})
 if(WIN32)
     target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/win32)
 else()
     target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/unix)
 endif()
 
-#There is a strange behavior in CMake that if a target sets IMPORTED_LINK_INTERFACE_LANGUAGES to "C" the IMPORTED_LOCATION cannot contain a generator expression. 
-#Thats why EXPAT here is not linked via the target but directly with the libraries.
-target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype ${EXPAT_LIBRARIES})
+target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype EXPAT::EXPAT)
 
 install(TARGETS fontconfig
     EXPORT fontconfig-targets
