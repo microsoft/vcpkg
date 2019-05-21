@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
-message(
-"nrf-ble-driver currently requires the following libraries from the system package manager:
-    libudev-dev
-These can be installed on Ubuntu systems via sudo apt install libudev-dev"
-)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(
+    "nrf-ble-driver currently requires the following libraries from the system package manager:
+        libudev-dev
+    These can be installed on Ubuntu systems via sudo apt install libudev-dev"
+    )
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
