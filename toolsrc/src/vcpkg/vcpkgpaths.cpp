@@ -63,7 +63,31 @@ namespace vcpkg
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
-        paths.scripts = paths.root / "scripts";
+
+        const auto overriddenScriptsPath = System::get_environment_variable("VCPKG_SCRIPTS");
+        if (auto osp = overriddenScriptsPath.get())
+        {
+            auto asPath = fs::u8path(*osp);
+            if (!fs::stdfs::is_directory(asPath))
+            {
+                Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_SCRIPTS override directory.");
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO,
+                    "Invalid scripts override directory: %s; "
+                    "create that directory or unset VCPKG_SCRIPTS to use the default scripts location.",
+                    asPath.u8string());
+            }
+
+            paths.scripts = fs::stdfs::canonical(std::move(asPath), ec);
+            if (ec)
+            {
+                return ec;
+            }
+        }
+        else
+        {
+            paths.scripts = paths.root / "scripts";
+        }
 
         paths.tools = paths.downloads / "tools";
         paths.buildsystems = paths.scripts / "buildsystems";
