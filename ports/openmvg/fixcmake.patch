@@ -218,7 +218,7 @@ index 654bebd..5264bfc 100644
 -    ${PROJECT_BINARY_DIR}/third_party/lemon)
 -  set(LEMON_LIBRARY openMVG_lemon)
 -endif()
-+find_package(Lemon REQUIRED)
++find_package(LEMON REQUIRED)
  
  # ==============================================================================
  # OpenCV
