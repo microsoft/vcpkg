@@ -1,0 +1,7 @@
+Source: xsimd
+Version: 7.2.2
+Description: Modern, portable C++ wrappers for SIMD intrinsics
+
+Feature: xcomplex
+Description: xtl complex support
+Build-Depends: xtl

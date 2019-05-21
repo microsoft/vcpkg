@@ -2,22 +2,36 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO behdad/harfbuzz
-    REF 1.8.2
-    SHA512 83a5126f17e57b05c36779f91ea9c2454731d7e6f514fce134ae5e652972a8231723773e0e0f64bfe8588f8cfcf2e041031a3328ee3102d440b2ac427aa1d764
+    REPO harfbuzz/harfbuzz
+    REF 2.4.0
+    SHA512 dd3a5caec689cffdd887bd3ca646ceaee804a0501d1d4ad1e9d9d48d9e4a87a02b76a9aa354dc69528b7d2a17c2431fce67c1681c72ad8246c2f5a1be498d52a
     HEAD_REF master
+    PATCHES
+        0001-fix-cmake-export.patch
+        0002-fix-uwp-build.patch
+        0003-remove-broken-test.patch
+        # This patch is required for propagating the full list of static dependencies from freetype
+        find-package-freetype-2.patch
+        # This patch is required for propagating the full list of dependencies from glib
+        glib-cmake.patch
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
-)
+file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
+if("${_contents}" MATCHES "include \\(FindFreetype\\)")
+    message(FATAL_ERROR "Harfbuzz's cmake must not directly include() FindFreetype.")
+endif()
+if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
+    message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
+endif()
 
 SET(HB_HAVE_ICU "OFF")
 if("icu" IN_LIST FEATURES)
     SET(HB_HAVE_ICU "ON")
+endif()
+
+SET(HB_HAVE_GRAPHITE2 "OFF")
+if("graphite2" IN_LIST FEATURES)
+    SET(HB_HAVE_GRAPHITE2 "ON")
 endif()
 
 ## Unicode callbacks
@@ -47,13 +61,17 @@ vcpkg_configure_cmake(
         -DHB_BUILTIN_UCDN=${BUILTIN_UCDN}
         -DHB_HAVE_ICU=${HB_HAVE_ICU}
         -DHB_HAVE_GLIB=${HAVE_GLIB}
+        -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
+        -DHB_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/harfbuzz TARGET_PATH share/harfbuzz)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/harfbuzz/COPYING ${CURRENT_PACKAGES_DIR}/share/harfbuzz/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
+
+vcpkg_test_cmake(PACKAGE_NAME harfbuzz)

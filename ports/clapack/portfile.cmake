@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -22,23 +10,28 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "clapack-3.2.1.tgz"
     SHA512 cf19c710291ddff3f6ead7d86bdfdeaebca21291d9df094bf0a8ef599546b007757fb2dbb19b56511bb53ef7456eac0c73973b9627bf4d02982c856124428b49
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-# apply patch can not add file
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/lapack.def DESTINATION ${SOURCE_PATH}/SRC)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-other-blas-and-install-include.patch"
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH SOURCE_PATH
+  ARCHIVE ${ARCHIVE}
+  PATCHES
+    use-other-blas-and-install-include.patch
+    link-to-math-lib.patch
 )
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch"
+    )
+endif()
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/lapack.def DESTINATION ${SOURCE_PATH}/SRC)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-
-    # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()

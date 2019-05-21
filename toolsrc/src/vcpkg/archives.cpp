@@ -2,13 +2,18 @@
 
 #include <vcpkg/archives.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/base/system.process.h>
 
 namespace vcpkg::Archives
 {
     void extract_archive(const VcpkgPaths& paths, const fs::path& archive, const fs::path& to_path)
     {
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path to_path_partial = to_path.u8string() + ".partial";
+        const fs::path to_path_partial = to_path.u8string() + ".partial"
+#if defined(_WIN32)
+                                         + "." + std::to_string(GetCurrentProcessId())
+#endif
+            ;
 
         std::error_code ec;
         fs.remove_all(to_path, ec);

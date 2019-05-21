@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 3.05.01
-    SHA512 a49c20c98386684cd89582e57b772811204fad8e5ff18214fb0da109f73629c70845054985e31e8deeb49107fbcf56e546aff661f08eb5dd60fbf83dbe976e81
+    REF 4.0.0
+    SHA512 69e57d4ba1fc43d212fd0fff69a2b5d48a3b37cfee7054fdc083cbb7e04d92317609a32e457229661d70ce8d9b16c9d25e81bfc3861db660dd2c8f292202d447
     HEAD_REF master
 )
 

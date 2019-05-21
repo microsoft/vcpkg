@@ -1,7 +1,8 @@
 #include "pch.h"
 
 #include <vcpkg/base/chrono.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/userconfig.h>
@@ -45,15 +46,15 @@ namespace vcpkg::Commands::Contact
 
 #if defined(_WIN32)
             System::cmd_execute("start https://aka.ms/NPS_vcpkg");
-            System::println("Default browser launched to https://aka.ms/NPS_vcpkg; thank you for your feedback!");
+            System::print2("Default browser launched to https://aka.ms/NPS_vcpkg; thank you for your feedback!\n");
 #else
-            System::println(
-                "Please navigate to https://aka.ms/NPS_vcpkg in your preferred browser. Thank you for your feedback!");
+            System::print2("Please navigate to https://aka.ms/NPS_vcpkg in your preferred browser. Thank you for your "
+                           "feedback!\n");
 #endif
         }
         else
         {
-            System::println("Send an email to %s with any feedback.", email());
+            System::print2("Send an email to ", email(), " with any feedback.\n");
         }
         Checks::exit_success(VCPKG_LINE_INFO);
     }

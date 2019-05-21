@@ -1,10 +1,17 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Aws-sdk-cpp's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.4.82
-    SHA512 df6775c6f8f109900742fb92ce24b522fff04e8fe3e22ba858ade1dc5854ef5bf746cc2a491b5239b84e33ba0314ddbeffa892f7ecb548bcc2d3f53c0ffb9492
+    REF 1.7.100
+    SHA512 543eee9c0367131756b274ab9f8f42e3c889f3f54c5f0b7cd6fa68cab5fd009ba9cb87f8029a81d260b1ea2adfb7c3b3ab07a989054e2480e47b41c15887f0f8
     HEAD_REF master
 )
 
@@ -29,6 +36,7 @@ vcpkg_configure_cmake(
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         "-DBUILD_ONLY=${BUILD_ONLY}"
+        -DBUILD_DEPS=OFF
 )
 
 vcpkg_install_cmake()

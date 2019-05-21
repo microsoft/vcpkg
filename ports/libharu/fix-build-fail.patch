@@ -1,0 +1,21 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9d2a604..be8e964 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -79,11 +79,11 @@ if(LIBHPDF_STATIC)
+     LIBRARY DESTINATION lib
+     RUNTIME DESTINATION bin
+   )
+-  if(WIN32 AND NOT CYGWIN)
+-		foreach(addlib ${ADDITIONAL_LIBRARIES})
+-			install(FILES ${addlib} DESTINATION lib)
+-		endforeach(addlib)
+-  endif(WIN32 AND NOT CYGWIN)
++  #if(WIN32 AND NOT CYGWIN)
++		#foreach(addlib ${ADDITIONAL_LIBRARIES})
++			#install(FILES ${addlib} DESTINATION lib)
++		#endforeach(addlib)
++  #endif(WIN32 AND NOT CYGWIN)
+ endif(LIBHPDF_STATIC)
+ if(LIBHPDF_SHARED)
+   add_library(${LIBHPDF_NAME} SHARED ${LIBHPDF_SRCS})

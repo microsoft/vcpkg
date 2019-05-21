@@ -10,6 +10,7 @@ vcpkg_from_github(
     [REF <v2.0.0>]
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
+    [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
 
@@ -23,7 +24,7 @@ This should be set to `SOURCE_PATH` by convention.
 The organization or user and repository on GitHub.
 
 ### REF
-A stable git commit-ish (ideally a tag) that will not change contents. **This should not be a branch.**
+A stable git commit-ish (ideally a tag or commit) that will not change contents. **This should not be a branch.**
 
 For repositories without official releases, this can be set to the full commit id of the current latest master.
 
@@ -38,6 +39,11 @@ This is most easily determined by first setting it to `1`, then trying to build 
 The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
 
 For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
+
+### PATCHES
+A list of patches to be applied to the extracted sources.
+
+Relative paths are based on the port directory.
 
 ## Notes:
 At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.

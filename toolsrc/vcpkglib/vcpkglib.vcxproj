@@ -55,20 +55,23 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(SolutionDir)msbuild.x86.debug\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)msbuild.x86.debug\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)msbuild.x86.release\</OutDir>
+    <IntDir>$(SolutionDir)msbuild.x86.release\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(SolutionDir)msbuild.x64.debug\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)msbuild.x64.debug\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(SolutionDir)msbuild.x64.release\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)msbuild.x64.release\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -207,11 +210,11 @@
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
-    <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
-    <ClCompile Include="..\src\vcpkg\base\stringrange.cpp" />
     <ClCompile Include="..\src\vcpkg\base\strings.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />
@@ -233,6 +236,7 @@
     <ClCompile Include="..\src\vcpkg\commands.search.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.version.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp" />
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />

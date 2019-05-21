@@ -1,0 +1,30 @@
+diff --git a/opencv-cli/src/main.cpp b/opencv-cli/src/main.cpp
+index 63b6fd3..430dda6 100755
+--- a/opencv-cli/src/main.cpp
++++ b/opencv-cli/src/main.cpp
+@@ -135,14 +135,14 @@ int main(int argc, char** argv) {
+ 
+     }
+ 
+-    if (!videoCapture.set(CV_CAP_PROP_FRAME_WIDTH, captureWidth)) {
++    if (!videoCapture.set(cv::CAP_PROP_FRAME_WIDTH, captureWidth)) {
+ 
+         // Log
+         cerr << "Failed to set frame width: " << captureWidth << " (ignoring)" << endl;
+ 
+     }
+ 
+-    if (!videoCapture.set(CV_CAP_PROP_FRAME_HEIGHT, captureHeight)) {
++    if (!videoCapture.set(cv::CAP_PROP_FRAME_HEIGHT, captureHeight)) {
+ 
+         // Log
+         cerr << "Failed to set frame height: " << captureHeight << " (ignoring)" << endl;
+@@ -166,7 +166,7 @@ int main(int argc, char** argv) {
+         if (result) {
+ 
+             // Convert to grayscale
+-            cvtColor(image, grey, CV_BGR2GRAY);
++            cvtColor(image, grey, cv::COLOR_BGR2GRAY);
+ 
+             try {
+ 

@@ -7,11 +7,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v5.0.0
-    SHA512 730d082b4bf4ef73ee8aa5f8c87927149e4c2b65fc58dc9609f992ab8fcdd7e9fdbc4b77fbc46378ebd575196477dee7943db5d43724591d505aba511fe3052a
+    REF v6.1.0
+    SHA512 bc6a1da6287301b5bb5c31694d508c46447b71043d5b94a90ffe79b6dc045bc111ed0bcf3a7840e096ddc3ef6badbeef7fb905242e272a9f82f483d849a43e61
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/pplx-do-while.patch
+        # on osx use the uuid.h that is part of the osx sdk
+        builtin-uuid-osx.patch
 )
 
 vcpkg_configure_cmake(
@@ -20,6 +21,7 @@ vcpkg_configure_cmake(
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
+        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/include
 )
 
 vcpkg_install_cmake()

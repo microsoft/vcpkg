@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF v2.2.3
-    SHA512 d065d5797045ce85f576977f78cbdc77a1e8ab820e164aafd91d305aa10a29f7f306734d484714ec05078858457d0a17a57a6246166da3c8f3c708a23a2adc46
+    REF v2.7.2
+    SHA512 ac58cb3b676c73a361a494492e7b1f1b85cba7d08feb2d09b2269109a89b66aa37efead6b0a9fca64678f42a3395a3b02b6d461b4cb35310451ce849a79d04ae
     HEAD_REF master
 )
 
@@ -22,9 +22,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Catch2 TARGET_PATH share/catch2)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/catch/catch.hpp)
+if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/catch2/catch.hpp)
     message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
 endif()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/catch.hpp "#include <catch/catch.hpp>")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/catch.hpp "#include <catch2/catch.hpp>")
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/catch2 RENAME copyright)
