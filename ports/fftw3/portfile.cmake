@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.fftw.org/fftw-3.3.8.tar.gz"
     FILENAME "fftw-3.3.8.tar.gz"
@@ -73,6 +71,8 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE ENABLE_DEFAULT_PRECISION)
             -D${PRECISION}=ON
             -DENABLE_OPENMP=${ENABLE_OPENMP}
             -DENABLE_THREADS=${HAVE_THREADS}
+            -DWITH_COMBINED_THREADS=${HAVE_THREADS}
+            -DBUILD_TESTS=OFF
         )
     else()
         vcpkg_configure_cmake(
@@ -87,10 +87,14 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE ENABLE_DEFAULT_PRECISION)
             -DHAVE_AVX2=${HAVE_AVX2}
             -DHAVE_FMA=${HAVE_FMA}
             -DENABLE_THREADS=${HAVE_THREADS}
+            -DWITH_COMBINED_THREADS=${HAVE_THREADS}
+            -DBUILD_TESTS=OFF
         )
     endif()
 
     vcpkg_install_cmake()
+
+    vcpkg_copy_pdbs()
 
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/${${PRECISION}_CMAKE})
 endforeach()
@@ -106,8 +110,6 @@ file(WRITE ${SOURCE_PATH}/include/fftw3.h "${_contents}")
 # Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fftw3)
