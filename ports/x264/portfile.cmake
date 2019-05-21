@@ -8,16 +8,18 @@ vcpkg_from_github(
     REF 303c484ec828ed0d8bfe743500e70314d026c3bd
     SHA512 faf210a3f9543028ed882c8348b243dd7ae6638e7b3ef43bec1326b717f23370f57c13d0ddb5e1ae94411088a2e33031a137b68ae9f64c18f8f33f601a0da54d
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/uwp-cflags.patch
+    PATCHES 
+        "uwp-cflags.patch"
 )
 
 # Acquire tools
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+endif()
 
 # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
 string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
@@ -27,7 +29,11 @@ set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
 #file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
 
-set(CONFIGURE_OPTIONS "--host=i686-pc-mingw32 --enable-strip --disable-lavf --disable-swscale --disable-asm --disable-avs --disable-ffms --disable-gpac --disable-lsmash")
+set(CONFIGURE_OPTIONS "--host=i686-pc-mingw32 --enable-strip --disable-lavf --disable-swscale --disable-avs --disable-ffms --disable-gpac --disable-lsmash")
+
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-asm")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-shared")

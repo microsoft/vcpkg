@@ -1,5 +1,5 @@
 Source: opencv
-Version: 3.4.1
+Version: 3.4.3-7
 Build-Depends: zlib
 Description: computer vision library
 Default-Features: opengl, jpeg, png, tiff, eigen, flann
@@ -37,6 +37,10 @@ Description: prebuilt ffmpeg support for opencv
 Feature: ipp
 Description: Enable Intel Integrated Performance Primitives
 
+Feature: tbb
+Build-Depends: tbb
+Description: Enable Intel Threading Building Blocks
+
 Feature: qt
 Build-Depends: qt5
 Description: Qt GUI support for opencv
@@ -46,7 +50,7 @@ Build-Depends: vtk
 Description: vtk support for opencv
 
 Feature: gdcm
-Build-Depends: gdcm2
+Build-Depends: gdcm
 Description: GDCM support for opencv
 
 Feature: webp
@@ -76,3 +80,6 @@ Description: JPEG 2000 support for opencv
 Feature: eigen
 Build-Depends: eigen3
 Description: Eigen support for opencv
+
+Feature: nonfree
+Description: allow nonfree and unredistributable libraries

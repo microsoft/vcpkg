@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Owns
             {
                 if (file.find(file_substr) != std::string::npos)
                 {
-                    System::println("%s: %s", pgh.package.displayname(), file);
+                    System::print2(pgh.package.displayname(), ": ", file, '\n');
                 }
             }
         }

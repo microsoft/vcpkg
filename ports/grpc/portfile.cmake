@@ -1,6 +1,8 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 # This snippet is a workaround for users who are upgrading from an extremely old version of this
 # port, which cloned directly into `src\`
@@ -11,13 +13,17 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.14.1
-    SHA512 f0e4fe9777ebc3316a85cb581edad19fef785cdcd2859b1dc54bf7407aa2ba804718973661595e318ea62463620f30ca828e5d7638798cca154af5e1d456ed1e
+    REF v1.20.1
+    SHA512 e0dd0318d2b4ec07e0eafffa218938d91b1440c5053a557460ea7fceaab3d76f0cccc1d595abe7de9fa79f068b71cfbc5a28a3b688bc9c1e2737086928149583
     HEAD_REF master
-    PATCHES fix-uwp.patch
+    PATCHES 
+        00001-fix-uwp.patch
+        00002-static-linking-in-linux.patch
+        00003-undef-base64-macro.patch
+        00004-link-gdi32-on-windows.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(gRPC_BUILD_CODEGEN OFF)
 else()
     set(gRPC_BUILD_CODEGEN ON)
@@ -27,6 +33,12 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(gRPC_MSVC_STATIC_RUNTIME ON)
 else()
     set(gRPC_MSVC_STATIC_RUNTIME OFF)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(gRPC_STATIC_LINKING ON)
+else()
+    set(gRPC_STATIC_LINKING OFF)
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -41,6 +53,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
+        -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
         -DgRPC_MSVC_STATIC_RUNTIME=${gRPC_MSVC_STATIC_RUNTIME}
         -DgRPC_ZLIB_PROVIDER=package
         -DgRPC_SSL_PROVIDER=package
@@ -81,3 +94,4 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
+##

@@ -113,8 +113,13 @@ namespace vcpkg::Chrono
     }
 
     std::string ElapsedTime::to_string() const { return format_time_userfriendly(as<std::chrono::nanoseconds>()); }
+    void ElapsedTime::to_string(std::string& into) const
+    {
+        into += format_time_userfriendly(as<std::chrono::nanoseconds>());
+    }
 
     std::string ElapsedTimer::to_string() const { return elapsed().to_string(); }
+    void ElapsedTimer::to_string(std::string& into) const { return elapsed().to_string(into); }
 
     Optional<CTime> CTime::get_current_date_time()
     {

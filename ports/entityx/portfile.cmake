@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF 1.2.0
     SHA512 682aa302cb4495666aab2c0b39a286f88cb28046bc8b2deb603402105e15e4b9692e32807077abc3f465e42a4e0f34a7e69169bc74fc5579a5c3d0e17b02fdb8
     HEAD_REF master
-    PATCHES fix-cmake.patch
+    PATCHES
+        fix-cmake.patch
+        enable-std14.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,6 +18,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DENTITYX_BUILD_TESTING=false
+        -DENTITYX_BUILD_SHARED=0
 )
 
 vcpkg_install_cmake()

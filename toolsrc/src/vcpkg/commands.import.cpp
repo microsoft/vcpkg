@@ -114,7 +114,7 @@ namespace vcpkg::Commands::Import
         Checks::check_exit(VCPKG_LINE_INFO,
                            pghs.get() != nullptr,
                            "Invalid control file %s for package",
-                           control_file_path.generic_string());
+                           control_file_path.generic_u8string());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(*pghs.get());

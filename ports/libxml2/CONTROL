@@ -1,4 +1,4 @@
 Source: libxml2
-Version: 2.9.4-5
+Version: 2.9.9-4
 Description: Libxml2 is the XML C parser and toolkit developed for the Gnome project (but usable outside of the Gnome platform)
 Build-Depends: zlib, libiconv, liblzma

@@ -1,9 +1,7 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  message(WARNING "Building static")
-  set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO VirusTotal/yara

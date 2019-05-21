@@ -1,15 +1,12 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rougier/freetype-gl
-    REF 7a290ac372d2bd94137a9fed6b2f5a6ac4360ec2
-    SHA512 bcdd34b7cee1ebe01ae83211e7b772742f9740aa713298f6fb72e7076f5fecdb3aea12f67a5fe04e8606d9533a0ceef7c1152368643dc51a7339b0e5dd307afa
+    REF a91a3dda326ceaf66b7279bf64ba07014d3f81b8
+    SHA512 8e04573dfb400e14e2c1d3a2cd851a66f8218ccfdaa4f701ed9369d7f040d7028582e72af9b236af42d9d3c6c128014670e8ae0261c6f4770affd1aea1454b1e
     HEAD_REF master
     PATCHES 0001-Use-external-Glew-and-Freetype.patch
 )
