@@ -92,7 +92,7 @@ endfunction()
 if(VCPKG_ENABLE_SET_TARGET_PROPERTIES)
     function(set_target_properties)
         if(DEFINED _vcpkg_set_target_properties_guard)
-            vcpkg_msg(FATAL_ERROR "set_target_properties" "INFINIT LOOP DETECT. Did you supply your own set_target_properties override? \n \
+            vcpkg_msg(FATAL_ERROR "set_target_properties" "INFINIT LOOP DETECT. Guard _vcpkg_set_target_properties_guard. Did you supply your own set_target_properties override? \n \
                                     If yes: please set VCPKG_ENABLE_SET_TARGET_PROPERTIES off and call vcpkg_set_target_properties if you want to have vcpkg corrected behavior. \n \
                                     If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
         else()

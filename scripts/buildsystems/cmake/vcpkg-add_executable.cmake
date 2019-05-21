@@ -41,7 +41,7 @@ endfunction()
 if(VCPKG_ENABLE_ADD_EXECUTABLE)
     function(add_executable name)
         if(DEFINED _vcpkg_add_executable_guard)
-            vcpkg_msg(FATAL_ERROR "add_executable" "INFINIT LOOP DETECT. Did you supply your own add_executable override? \n \
+            vcpkg_msg(FATAL_ERROR "add_executable" "INFINIT LOOP DETECT. Guard _vcpkg_add_executable_guard. Did you supply your own add_executable override? \n \
                                     If yes: please set VCPKG_ENABLE_ADD_EXECUTABLE off and call vcpkg_add_executable if you want to have vcpkg corrected behavior. You might also want to check VCPKG_ADD_EXECUTABLE_EXTERNAL_OVERRIDE\n \
                                     If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
         else()

@@ -166,14 +166,14 @@ endmacro()
 
 if(VCPKG_ENABLE_FIND_PACKAGE)
     macro(find_package name)
-        if(DEFINED _vcpkg_find_package_guard_${name})
-            vcpkg_msg(FATAL_ERROR "find_package" "INFINIT LOOP DETECT. Did you supply your own find_package override? \n \
+        if(DEFINED _vcpkg_find_package_guard_${name}${ARGC})
+            vcpkg_msg(FATAL_ERROR "find_package" "INFINIT LOOP DETECT. Guard _vcpkg_find_package_guard_${name}${ARGC}. Did you supply your own find_package override? \n \
                                     If yes: please set VCPKG_ENABLE_FIND_PACKAGE off and call vcpkg_find_package if you want to have vcpkg corrected behavior. \n \
                                     If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
         else()
-            set(_vcpkg_find_package_guard_${name} ON)
+            set(_vcpkg_find_package_guard_${name}${ARGC} ON)
         endif()
         vcpkg_find_package(${ARGV})
-        unset(_vcpkg_find_package_guard_${name})
+        unset(_vcpkg_find_package_guard_${name}${ARGC})
     endmacro()
 endif()

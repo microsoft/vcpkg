@@ -30,7 +30,7 @@ endfunction()
 if(VCPKG_ENABLE_ADD_LIBRARY)
     function(add_library name)
         if(DEFINED _vcpkg_add_library_guard)
-            vcpkg_msg(FATAL_ERROR "add_library" "INFINIT LOOP DETECT. Did you supply your own add_library override? \n \
+            vcpkg_msg(FATAL_ERROR "add_library" "INFINIT LOOP DETECT. Guard _vcpkg_add_library_guard. Did you supply your own add_library override? \n \
                                     If yes: please set VCPKG_ENABLE_ADD_LIBRARY off and call vcpkg_add_library if you want to have vcpkg corrected behavior. \n \
                                     If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
         else()
