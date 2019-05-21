@@ -14,6 +14,8 @@ vcpkg_from_github(
     REF v4.1.0
     SHA512 f8a995826caf4022f68b149d0f3619d1d656e3960a927eda29c634bf06cad8341c95a5b51ec7e50b28814f5332a4800faf88eb5b4e8ebec153f9cad05b3a703e
     HEAD_REF master
+    PATCHES
+        001-arm64-support.patch
 )
 
 # Ensure that git is found within CMakeLists.txt by appending vcpkg's git executable dirpath to $PATH.
