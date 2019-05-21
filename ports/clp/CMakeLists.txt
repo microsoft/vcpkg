@@ -8,17 +8,33 @@ set(PROJECT_VERSION_MINOR 16)
 set(PROJECT_VERSION_PATCH 11)
 
 set(CMAKE_CXX_STANDARD 14)
+
+# Introduce variables: * CMAKE_INSTALL_LIBDIR * CMAKE_INSTALL_BINDIR
+include(GNUInstallDirs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+set(INSTALL_BIN_DIR      "bin"                    CACHE PATH "Path where exe and dll will be installed")
+set(INSTALL_LIB_DIR      "lib"                    CACHE PATH "Path where lib will be installed")
+set(INSTALL_INCLUDE_DIR  "include"                CACHE PATH "Path where headers will be installed")
+set(INSTALL_CMAKE_DIR    "share/${PROJECT_NAME}"  CACHE PATH "Path where cmake configs will be installed")
+
+# Make relative paths absolute (needed later on)
+foreach(p LIB BIN INCLUDE CMAKE)
+  set(var INSTALL_${p}_DIR)
+  if(NOT IS_ABSOLUTE "${${var}}")
+    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  endif()
+endforeach()
 
 if(MSVC)
   set(
     CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} /bigobj /MP /wd4996 /wd4819 /wd4251 /wd4267 /wd4244 /wd4275"
     )
-endif(MSVC)
+endif()
+
 if(APPLE)
   set(
     CMAKE_CXX_FLAGS
@@ -26,23 +42,12 @@ if(APPLE)
     )
   set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9"
       CACHE STRING "Minimum OS X deployment version")
-endif(APPLE)
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-# options
-option(BUILD_SHARED_LIBS "" ON)
-
-#
-# Introduce variables: * CMAKE_INSTALL_LIBDIR * CMAKE_INSTALL_BINDIR
-include(GNUInstallDirs)
+endif()
 
 # Include module with fuction 'write_basic_package_version_file'
 include(CMakePackageConfigHelpers)
 
-# Layout. This works for all platforms: * <prefix>/lib*/cmake/<PROJECT-NAME> *
-# <prefix>/lib*/ * <prefix>/include/
-set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+set(config_install_dir "${INSTALL_CMAKE_DIR}")
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 # Configuration
 set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
@@ -53,10 +58,6 @@ set(namespace "Coin::")
 # Packages
 find_package(CoinUtils REQUIRED)
 find_package(Osi REQUIRED)
-
-# Add sources
-include_directories(Clp/src/)
-include_directories(Clp/src/OsiClp)
 
 file(GLOB CLP_SOURCES
           Clp/src/*.hpp
@@ -82,12 +83,17 @@ list(REMOVE_ITEM CLP_SOURCES ${CLP_REMOVE})
 add_library(${PROJECT_NAME} ${CLP_SOURCES})
 
 target_include_directories(${PROJECT_NAME}
-                           PUBLIC $<INSTALL_INTERFACE:include/coin>)
-target_compile_definitions(${PROJECT_NAME}
                            PUBLIC
-                           -DHAVE_CMATH
-                           -D_CRT_SECURE_NO_WARNINGS
-                           -DCOIN_HAS_CLP)
+                           $<INSTALL_INTERFACE:include/coin>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Clp/src/>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Clp/src/OsiClp>)
+
+if(MSVC)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
+target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CMATH)
+target_compile_definitions(${PROJECT_NAME} PUBLIC COIN_HAS_CLP)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE Coin::CoinUtils Coin::Osi)
 
 install(TARGETS ${PROJECT_NAME}
@@ -114,26 +120,18 @@ install(DIRECTORY Clp/src/OsiClp/
         PATTERN "config_default.h"
         EXCLUDE)
 
-#
-# Install Libraries
-#
-# Configure '<PROJECT-NAME>ConfigVersion.cmake' Use: * PROJECT_VERSION
 write_basic_package_version_file("${version_config}"
                                  COMPATIBILITY SameMajorVersion)
 
 # Configure '<PROJECT-NAME>Config.cmake' Use variables: * TARGETS_EXPORT_NAME *
-# PROJECT_NAME
 configure_package_config_file("Config.cmake.in"
                               "${project_config}"
                               INSTALL_DESTINATION
                               "${config_install_dir}")
 
-# Config * <prefix>/lib/cmake/Foo/FooConfig.cmake *
-# <prefix>/lib/cmake/Foo/FooConfigVersion.cmake
 install(FILES "${project_config}" "${version_config}"
         DESTINATION "${config_install_dir}")
 
-# Config * <prefix>/lib/cmake/Foo/FooTargets.cmake
 install(EXPORT "${TARGETS_EXPORT_NAME}"
         NAMESPACE "${namespace}"
         DESTINATION "${config_install_dir}")
