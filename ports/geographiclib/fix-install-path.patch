@@ -1,0 +1,113 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 200043d..e3ed546 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -15,11 +15,11 @@ configure_file (project-config-version.cmake.in
+   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
+ export (TARGETS
+   ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
+-  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
++  FILE "share/${PROJECT_NAME_LOWER}/${PROJECT_NAME_LOWER}-targets.cmake")
+ export (TARGETS
+   ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
+   NAMESPACE ${PROJECT_NAME}::
+-  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
++  FILE "share/${PROJECT_NAME_LOWER}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
+ 
+ # geographiclib-config.cmake for the install tree.  It's installed in
+ # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
+@@ -43,26 +43,26 @@ configure_file (project-config-version.cmake.in
+   project-config-version.cmake @ONLY)
+ install (FILES
+   "${CMAKE_CURRENT_BINARY_DIR}/project-config.cmake"
+-  DESTINATION "${INSTALL_CMAKE_DIR}"
++  DESTINATION share/${PROJECT_NAME_LOWER}
+   RENAME "${PROJECT_NAME_LOWER}-config.cmake")
+ install (FILES
+   "${CMAKE_CURRENT_BINARY_DIR}/project-config-version.cmake"
+-  DESTINATION "${INSTALL_CMAKE_DIR}"
++  DESTINATION share/${PROJECT_NAME_LOWER}
+   RENAME "${PROJECT_NAME_LOWER}-config-version.cmake")
+ # Make information about the cmake targets (the library and the tools)
+ # available.
+ install (EXPORT targets
+   FILE ${PROJECT_NAME_LOWER}-targets.cmake
+-  DESTINATION "${INSTALL_CMAKE_DIR}")
++  DESTINATION share/${PROJECT_NAME_LOWER})
+ install (EXPORT targets
+   NAMESPACE ${PROJECT_NAME}::
+   FILE ${PROJECT_NAME_LOWER}-namespace-targets.cmake
+-  DESTINATION "${INSTALL_CMAKE_DIR}")
++  DESTINATION share/${PROJECT_NAME_LOWER})
+ 
+ if (MSVC AND PACKAGE_DEBUG_LIBS)
+   install (FILES
+     "${PROJECT_BINARY_DIR}/cmake/CMakeFiles/Export/cmake/${PROJECT_NAME_LOWER}-targets-debug.cmake"
+-    DESTINATION "${INSTALL_CMAKE_DIR}" CONFIGURATIONS Release)
++    DESTINATION share/${PROJECT_NAME_LOWER} CONFIGURATIONS Release)
+ endif ()
+ 
+ # Support for pkgconfig/geographiclib.pc
+@@ -77,4 +77,4 @@ set (PACKAGE_VERSION "${PROJECT_VERSION}")
+ configure_file (project.pc.in geographiclib.pc @ONLY)
+ install (FILES
+   "${CMAKE_CURRENT_BINARY_DIR}/geographiclib.pc"
+-  DESTINATION "lib${LIB_SUFFIX}/pkgconfig")
++  DESTINATION "share/${PROJECT_NAME_LOWER}/pkgconfig")
+diff --git a/include/GeographicLib/CMakeLists.txt b/include/GeographicLib/CMakeLists.txt
+index 892f3d0..3c234fc 100644
+--- a/include/GeographicLib/CMakeLists.txt
++++ b/include/GeographicLib/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ # Install the header files including the generated Config.h (which is in
+ # the build tree).
+ file (GLOB HEADERS [A-Za-z]*.hpp)
+-install (FILES ${HEADERS} DESTINATION include/GeographicLib)
++install (FILES ${HEADERS} DESTINATION include/geographicLib)
+ install (FILES ${CMAKE_CURRENT_BINARY_DIR}/Config.h
+-  DESTINATION include/GeographicLib)
++  DESTINATION include/geographicLib)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 33e7993..890a471 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -77,14 +77,14 @@ install (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
+   # versions of cmake (2.8.12 and later?).  So comment out for now.
+   # INCLUDES DESTINATION include
+   RUNTIME DESTINATION bin
+-  LIBRARY DESTINATION lib${LIB_SUFFIX}
+-  ARCHIVE DESTINATION lib${LIB_SUFFIX})
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib)
+ 
+ if (MSVC AND PACKAGE_DEBUG_LIBS)
+   if (GEOGRAPHICLIB_SHARED_LIB)
+     install (FILES
+       "${PROJECT_BINARY_DIR}/lib/Debug/${LIBNAME}${CMAKE_DEBUG_POSTFIX}-i.lib"
+-      DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Release)
++      DESTINATION lib CONFIGURATIONS Release)
+     install (PROGRAMS
+       "${PROJECT_BINARY_DIR}/bin/Debug/${LIBNAME}${CMAKE_DEBUG_POSTFIX}.dll"
+       DESTINATION bin CONFIGURATIONS Release)
+@@ -92,7 +92,7 @@ if (MSVC AND PACKAGE_DEBUG_LIBS)
+   if (GEOGRAPHICLIB_STATIC_LIB)
+     install (FILES
+       "${PROJECT_BINARY_DIR}/lib/Debug/${LIBNAME}${CMAKE_DEBUG_POSTFIX}.lib"
+-      DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Release)
++      DESTINATION lib CONFIGURATIONS Release)
+   endif ()
+ endif ()
+ 
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index b56c9e0..b331dea 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -51,7 +51,7 @@ if (NOT WIN32)
+       COMMAND ${CMAKE_COMMAND} -E
+         copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}
+       DEPENDS ${SCRIPT}.sh)
+-    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
++    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION tools/${PROJECT_NAME_LOWER}/scripts)
+   endforeach ()
+   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
+ endif ()
