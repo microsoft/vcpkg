@@ -75,22 +75,23 @@ macro(vcpkg_find_package name)
         list(FILTER _pkg_all_vars INCLUDE REGEX ${_pkg_filter_rgx})
         #message(STATUS "VCPKG-all-package-defined-vars: ${_pkg_all_vars}") # Good for debugging the regex
         foreach(_pkg_var ${_pkg_all_vars})
-            message(STATUS "VCPKG-find_package value of ${_pkg_var}: ${${_pkg_var}}") #Helpfull to debug package related issues. 
+            vcpkg_msg(STATUS "find_package" "Value of ${_pkg_var}: ${${_pkg_var}}")
         endforeach()
         
         #Fixing Libraries paths.
         #Filtering for variables which are probably library variables for the package.
         set(_pkg_filter_rgx "^(${_pkg_names_rgx})([^_]*_)+(LIBRAR|LIBS)")
         list(FILTER _pkg_all_vars INCLUDE REGEX ${_pkg_filter_rgx})
-        message(STATUS "VCPKG-find_package: all-filtered-library-vars: ${_pkg_all_vars}") # Good for debugging the second regex
+        vcpkg_msg(STATUS "find_package" "Filtered-libraries-vars: ${_pkg_all_vars}")
 
         list(FILTER _pkg_all_vars EXCLUDE REGEX "(_RELEASE|_DEBUG)")# Excluding debug and releas libraries from fixing (they should be handled by find_library.)
         
         if(DEFINED VCPKG_BUILD_TYPE OR "${_pkg_all_vars}" MATCHES "_CONFIG")
-            message(STATUS "VCPKG-find_package: VCPKG_BUILD_TYPE or CONFIG found. Skipping loop to fix package variables. The config should hopefully be correct.")
+            vcpkg_msg(STATUS "find_package" "VCPKG_BUILD_TYPE or CONFIG found. Skipping loop to fix package variables.")
         else()
+            #Since everthing is fixed by find_library the fix here shouldn't be required
             foreach(_pkg_var ${_pkg_all_vars})
-                message(STATUS "VCPKG-find_package: Value of ${_pkg_var}: ${${_pkg_var}}")
+                vcpkg_msg(STATUS "find_package" "Filtered: Value of ${_pkg_var}: ${${_pkg_var}}")
                 if(NOT "${${_pkg_var}}"      MATCHES "(optimized;|[Cc][Oo][Nn][Ff][Ii][Gg]:[Rr][Ee][Ll][Ee][Aa][Ss][Ee])" 
                    AND NOT "${${_pkg_var}}"  MATCHES "(debug;|[Cc][Oo][Nn][Ff][Ii][Gg]:[Dd][Ee][Bb][Uu][Gg])" 
                    AND ("${${_pkg_var}}"     MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" 
@@ -100,23 +101,22 @@ macro(vcpkg_find_package name)
                     if("x${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # No need to guard from generator expression; already done above. 
                         # Debug Path found
                         if(CMAKE_BUILD_TYPE MATCHES "^Release$") 
-                            message(WARNING "VCPKG-Warning-find_package: Found debug paths in release build in variable ${_pkg_var}! Path: ${${_pkg_var}}")
+                            vcpkg_msg(WARNING "find_package-fix" "Found debug paths in release build in variable ${_pkg_var}! Path: ${${_pkg_var}}")
                         endif()
                         string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" _pkg_var_new "${_pkg_var_new}")
                     else()
                         # Release Path found
                         if(CMAKE_BUILD_TYPE MATCHES "^Debug$")
-                            message(WARNING "VCPKG-Warning-find_package: Found release paths in debug build in variable ${_pkg_var}! Path: ${${_pkg_var}}")
+                            vcpkg_msg(WARNING "find_package-fix" "Found release paths in debug build in variable ${_pkg_var}! Path: ${${_pkg_var}}")
                         endif()
-                        set(_pkg_var_new "x${${_pkg_var}}")
                         string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" _pkg_var_new "${_pkg_var_new}")
                     endif()
-                    message(STATUS "VCPKG-find_package: Replacing ${_pkg_var}: ${${_pkg_var}}")
+                    vcpkg_msg(STATUS "find_package-fix" "Replacing ${_pkg_var}: ${${_pkg_var}}")
                     set(${_pkg_var} "${_pkg_var_new}")
-                    message(STATUS "VCPKG-find_package: with ${_pkg_var}: ${${_pkg_var}}")
-                else()
-                    if(NOT "${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/" OR "${${_pkg_var}}" STREQUAL "")
-                        message(STATUS "VCPKG-find_package: ${_pkg_var} does not contain absolute path or is empty! Check: ${${_pkg_var}}")
+                    vcpkg_msg(STATUS "find_package-fix" "with ${_pkg_var}: ${${_pkg_var}}")
+                #else()
+                    #if(NOT "${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/" OR "${${_pkg_var}}" STREQUAL "")
+                    #    message(STATUS "VCPKG-find_package: ${_pkg_var} does not contain absolute path or is empty! Check: ${${_pkg_var}}")
                     #else()
                     #    message(STATUS "VCPKG-find_package: ${_pkg_var} contains seperate debug and release libraries. Checking correctness of variables!") 
                     #    #check the optimized/debug values for correctness.
@@ -156,7 +156,7 @@ macro(vcpkg_find_package name)
                     #        #set(${_pkg_var} "${_pkg_var_new}")
                     #        message(STATUS "VCPKG-find_package: To ${${_pkg_var_new}}")
                     #    endif()
-                    endif()
+                    #endif()
                 endif()
             endforeach()
         endif()
