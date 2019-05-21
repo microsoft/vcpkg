@@ -73,7 +73,7 @@ macro(vcpkg_find_package name)
         STRING(REPLACE "*" "\\*" _pkg_names_rgx "${_pkg_names_rgx}")
         set(_pkg_filter_rgx "^(${_pkg_names_rgx})([^_]*_)+")
         list(FILTER _pkg_all_vars INCLUDE REGEX ${_pkg_filter_rgx})
-        #message(STATUS "VCPKG-all-package-defined-vars: ${_pkg_all_vars}") # Good for debugging the regex
+        vcpkg_msg(STATUS "find_package" " All vars defined after find_package call: ${_pkg_all_vars}") # Good for debugging the regex
         foreach(_pkg_var ${_pkg_all_vars})
             vcpkg_msg(STATUS "find_package" "Value of ${_pkg_var}: ${${_pkg_var}}")
         endforeach()
