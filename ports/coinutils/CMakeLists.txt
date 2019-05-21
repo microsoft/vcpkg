@@ -9,18 +9,13 @@ set(PROJECT_VERSION_PATCH 14)
 
 set(CMAKE_CXX_STANDARD 14)
 
-# Introduce variables: * CMAKE_INSTALL_LIBDIR * CMAKE_INSTALL_BINDIR
-include(GNUInstallDirs)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
-
-set(INSTALL_BIN_DIR      "bin"                    CACHE PATH "Path where exe and dll will be installed")
-set(INSTALL_LIB_DIR      "lib"                    CACHE PATH "Path where lib will be installed")
-set(INSTALL_INCLUDE_DIR  "include"                CACHE PATH "Path where headers will be installed")
-set(INSTALL_CMAKE_DIR    "share/${PROJECT_NAME}"  CACHE PATH "Path where cmake configs will be installed")
+set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
+set(INSTALL_LIB_DIR      "lib"                      CACHE PATH "Path where lib will be installed")
+set(INSTALL_INCLUDE_DIR  "include/Coin"             CACHE PATH "Path where headers will be installed")
+set(INSTALL_CMAKE_DIR    "share/${PROJECT_NAME}"    CACHE PATH "Path where cmake configs will be installed")
 
 # Make relative paths absolute (needed later on)
+set(RELATIVE_INSTALL_INCLUDE_DIR ${INSTALL_INCLUDE_DIR})
 foreach(p LIB BIN INCLUDE CMAKE)
   set(var INSTALL_${p}_DIR)
   if(NOT IS_ABSOLUTE "${${var}}")
@@ -44,9 +39,6 @@ if(APPLE)
       CACHE STRING "Minimum OS X deployment version")
 endif()
 
-# Include module with fuction 'write_basic_package_version_file'
-include(CMakePackageConfigHelpers)
-
 include(CheckIncludeFileCXX)
 include(CheckIncludeFile)
 check_include_file_cxx("cmath"    HAVE_CMATH)
@@ -55,14 +47,6 @@ if(NOT HAVE_CMATH OR NOT HAVE_CFLOAT)
     message(FATAL_ERROR "Missing necessary include files, like cmath or cfloat")
 endif()
 
-set(config_install_dir "${INSTALL_CMAKE_DIR}")
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-# Configuration
-set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
-set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
-set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-set(namespace "Coin::")
-
 file(GLOB UTILS_SOURCES
           CoinUtils/src/*.hpp
           CoinUtils/src/*.cpp
@@ -70,40 +54,42 @@ file(GLOB UTILS_SOURCES
 
 add_library(${PROJECT_NAME} ${UTILS_SOURCES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include/coin> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CoinUtils/src>)
+target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CoinUtils/src>)
 
 if(MSVC)
   target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CMATH HAVE_CFLOAT)
 
-install(TARGETS ${PROJECT_NAME}
-        EXPORT "${TARGETS_EXPORT_NAME}"
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES
-        DESTINATION include)
-
 install(DIRECTORY CoinUtils/src/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/coin
+        DESTINATION ${INSTALL_INCLUDE_DIR}
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp")
 
-# Configure '<PROJECT-NAME>ConfigVersion.cmake' Use: * PROJECT_VERSION
+install(TARGETS ${PROJECT_NAME}
+        EXPORT "${PROJECT_NAME}Targets"
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+include(CMakePackageConfigHelpers)
+
+set(version_config "${CMAKE_CURRENT_BINARY_DIR}/temp/${PROJECT_NAME}ConfigVersion.cmake")
+set(project_config "${CMAKE_CURRENT_BINARY_DIR}/temp/${PROJECT_NAME}Config.cmake")
+set(namespace "Coin::")
+
 write_basic_package_version_file("${version_config}"
                                  COMPATIBILITY SameMajorVersion)
 
-# Configure '<PROJECT-NAME>Config.cmake' Use variables: * TARGETS_EXPORT_NAME * PROJECT_NAME
 configure_package_config_file("Config.cmake.in"
                               "${project_config}"
                               INSTALL_DESTINATION
-                              "${config_install_dir}")
+                              "${INSTALL_CMAKE_DIR}")
 
 install(FILES "${project_config}" "${version_config}"
-        DESTINATION "${config_install_dir}")
+        DESTINATION "${INSTALL_CMAKE_DIR}")
 
-install(EXPORT "${TARGETS_EXPORT_NAME}"
+install(EXPORT "${PROJECT_NAME}Targets"
         NAMESPACE "${namespace}"
-        DESTINATION "${config_install_dir}")
+        DESTINATION "${INSTALL_CMAKE_DIR}")
