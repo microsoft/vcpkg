@@ -9,6 +9,7 @@ vcpkg_from_github(
   PATCHES
          remove_compiler_options.patch
          fix-install-path.patch
+         fix-static-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
