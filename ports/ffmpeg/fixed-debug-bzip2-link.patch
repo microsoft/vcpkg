@@ -1,0 +1,33 @@
+diff -urN a/configure b/configure
+--- a/configure	2018-09-08 20:53:33.556275600 +0800
++++ b/configure	2018-09-08 20:55:46.238584400 +0800
+@@ -4753,6 +4753,8 @@
+ enable $subarch
+ enabled spic && enable_weak pic
+ 
++bzlib_name=bz2
++
+ # OS specific
+ case $target_os in
+     aix)
+@@ -4914,6 +4916,11 @@
+         objformat="win32"
+         ranlib=:
+         enable dos_paths
++        if [ -z "${extra_cflags##*-MDd*}" ] || [ -z "${extra_cflags##*-MTd*}" ]; then
++            bzlib_name=bz2d
++        else
++            bzlib_name=bz2
++        fi
+         ;;
+     cygwin*)
+         target_os=cygwin
+@@ -5734,7 +5741,7 @@
+     check_builtin sem_timedwait semaphore.h "sem_t *s; sem_init(s,0,0); sem_timedwait(s,0); sem_destroy(s)"
+ 
+ disabled  zlib || check_lib  zlib.h      zlibVersion    -lz    || disable  zlib
+-disabled bzlib || check_lib bzlib.h BZ2_bzlibVersion    -lbz2  || disable bzlib
++disabled bzlib || check_lib bzlib.h BZ2_bzlibVersion    -l$bzlib_name  || disable bzlib
+ disabled  lzma || check_lib  lzma.h lzma_version_number -llzma || disable lzma
+ 
+ check_lib math.h sin -lm && LIBM="-lm"
