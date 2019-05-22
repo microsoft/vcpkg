@@ -62,6 +62,14 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVC3.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVCE3.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVSE3.lib")
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pthreadVC3d.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pthreadVCE3d.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pthreadVSE3d.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVC3.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVCE3.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVSE3.lib")
+
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libpthreadVC3.lib")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libpthreadVCE3.lib")
@@ -69,6 +77,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVC3d.lib")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVCE3d.lib")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVSE3d.lib")
+
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
