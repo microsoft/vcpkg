@@ -1,0 +1,110 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04c45e1..375a8cd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,10 +27,11 @@ PROJECT(gc)
+ 
+ INCLUDE(CTest)
+ 
+-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
++CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+ 
+ ADD_DEFINITIONS("-D_CRT_SECURE_NO_DEPRECATE
+-                 -DALL_INTERIOR_POINTERS -DNO_EXECUTE_PERMISSION")
++                 -DALL_INTERIOR_POINTERS 
++                 -DNO_EXECUTE_PERMISSION")
+ 
+ IF(APPLE)
+     IF("${CMAKE_OSX_ARCHITECTURES}" STREQUAL "")
+@@ -45,8 +46,8 @@ ENDIF(APPLE)
+ 
+ #LIBGC
+ 
+-INCLUDE_DIRECTORIES(include)
+-INCLUDE_DIRECTORIES(libatomic_ops/src)
++# INCLUDE_DIRECTORIES(include)
++# INCLUDE_DIRECTORIES(libatomic_ops/src)
+ 
+ SET(SRC alloc.c reclaim.c allchblk.c misc.c mach_dep.c os_dep.c
+         mark_rts.c headers.c mark.c obj_map.c blacklst.c finalize.c
+@@ -237,25 +238,58 @@ IF(enable_checksums)
+     SET(SRC ${SRC} checksums.c)
+ ENDIF(enable_checksums)
+ 
+-ADD_LIBRARY(          gc-lib   STATIC      ${SRC})
+-SET_TARGET_PROPERTIES(gc-lib   PROPERTIES
+-                      COMPILE_DEFINITIONS GC_NOT_DLL)
+-#TODO TARGET_LINK_LIBRARIES(...  ...  ${LIBS})
+-
+-ADD_LIBRARY(          gcmt-lib STATIC      ${SRC})
+-SET_TARGET_PROPERTIES(gcmt-lib PROPERTIES
+-                      COMPILE_DEFINITIONS GC_NOT_DLL)
+-
+-ADD_LIBRARY(          gcmt-dll  SHARED     ${SRC})
+-
+-IF(WIN32)
+-  ADD_EXECUTABLE(cord cord/cordbscs.c cord/cordxtra.c
+-                 cord/tests/de.c cord/tests/de_win.c)
+-  SET_TARGET_PROPERTIES(cord PROPERTIES WIN32_EXECUTABLE TRUE)
+-  SET_TARGET_PROPERTIES(cord    PROPERTIES
+-                      COMPILE_DEFINITIONS GC_NOT_DLL)
+-  TARGET_LINK_LIBRARIES(cord gc-lib)
+-  TARGET_LINK_LIBRARIES(cord gdi32)
+-ENDIF(WIN32)
+-
+-ADD_SUBDIRECTORY(tests)
++if (NOT BUILD_SHARED_LIBS)
++    add_library(gc-lib ${SRC})
++    target_compile_definitions(gc-lib PRIVATE GC_NOT_DLL)
++    target_include_directories(gc-lib  
++        PUBLIC     
++            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++            $<INSTALL_INTERFACE:include>
++    )
++    set(BDWGC_TARGETS gc-lib)
++else()
++    add_library(gcmt-dll ${SRC})
++    target_compile_definitions(gcmt-dll PRIVATE CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS)
++    target_include_directories(gcmt-dll  
++        PUBLIC     
++            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++            $<INSTALL_INTERFACE:include>
++    )
++    set(BDWGC_TARGETS gcmt-dll)
++endif()
++
++# Install library
++install(
++    TARGETS ${BDWGC_TARGETS}
++    LIBRARY DESTINATION lib 
++    ARCHIVE DESTINATION lib
++    RUNTIME DESTINATION bin 
++    INCLUDES DESTINATION include
++)
++
++if(NOT BDWGC_SKIP_HEADERS)
++    file(GLOB BDWGC_HEADERS "include/*.h")
++    install(FILES ${BDWGC_HEADERS} DESTINATION include/bdwgc)
++endif()
++
++# Install tools
++if (WIN32 AND BDWGC_INSTALL_TOOLS)
++    add_executable(cord 
++                   cord/cordbscs.c 
++                   cord/cordxtra.c
++                   cord/tests/de.c
++                   cord/tests/de_win.c)
++    set_target_properties(cord PROPERTIES WIN32_EXECUTABLE TRUE)
++    target_compile_definitions(cord PRIVATE GC_NOT_DLL)
++
++    target_link_libraries(cord PRIVATE ${BDWGC_TARGETS} gdi32)
++    target_include_directories(cord
++        PUBLIC     
++            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    )
++
++    install(
++        TARGETS cord 
++        DESTINATION tools/cord 
++    )
++endif()

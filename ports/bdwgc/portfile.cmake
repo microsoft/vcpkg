@@ -7,45 +7,25 @@ vcpkg_from_github(
     REF ${BDWGC_VERSION}
     SHA512 f3c178c9cab9d9df9ecdad5ac5661c916518d29b0eaca24efe569cb757c386c118ad4389851107597d99ff1bbe99b46383cce73dfd01be983196aa57c9626a4a
     HEAD_REF master
+    PATCHES
+        001-install-libraries.patch 
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS_RELEASE
+        -DBDWGC_INSTALL_TOOLS=ON
+    OPTIONS_DEBUG 
+        -DBDWGC_SKIP_HEADERS=ON 
+        -DBDWGC_INSTALL_TOOLS=OFF
 )
 
-vcpkg_build_cmake()
-
-# install files
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(SHARED_LIB_SUFFIX ".dll")
-    set(STATIC_LIB_SUFFIX ".lib")
-else()
-    set(SHARED_LIB_SUFFIX)
-    set(STATIC_LIB_SUFFIX)
-endif()
-
-# LIB
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    set(LIBNAME "gcmt-lib${STATIC_LIB_SUFFIX}")
-else()
-    set(LIBNAME "gcmt-dll${STATIC_LIB_SUFFIX}")
-endif()
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${LIBNAME}" DESTINATION ${CURRENT_PACKAGES_DIR}/lib RENAME gc${STATIC_LIB_SUFFIX})
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${LIBNAME}" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME gc${STATIC_LIB_SUFFIX})
-    
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gcmt-dll${SHARED_LIB_SUFFIX}" DESTINATION ${CURRENT_PACKAGES_DIR}/bin RENAME gc${SHARED_LIB_SUFFIX})
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gcmt-dll${SHARED_LIB_SUFFIX}" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin RENAME gc${SHARED_LIB_SUFFIX})
-    endif()
-endif()
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
+
+vcpkg_copy_tool_dependencies(TOOL_DIR "tools/cord")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/README.QUICK DESTINATION ${CURRENT_PACKAGES_DIR}/share/bdwgc RENAME copyright)
