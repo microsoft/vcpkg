@@ -23,6 +23,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DARROW_DEPENDENCY_SOURCE=SYSTEM
+        -Duriparser_SOURCE=SYSTEM
         -DARROW_BUILD_TESTS=off
         -DARROW_PARQUET=ON
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
