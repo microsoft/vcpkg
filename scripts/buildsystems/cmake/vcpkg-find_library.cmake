@@ -91,11 +91,17 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                         find_library(_tmp_${_vcpkg_find_library_imp_output} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
                                         PATHS ${_vcpkg_path_search_list} NO_DEFAULT_PATH)
                     endif()
+                    vcpkg_msg(STATUS "find_library" "_tmp_${_vcpkg_find_library_imp_output} is set to ${_tmp_${_vcpkg_find_library_imp_output}}")
+                    if(${_tmp_${_vcpkg_find_library_imp_output}} MATCHES "NOTFOUND")
+                        vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}")
+                    endif()
                     #if("${_tmp_${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib") # check if we are still 
                     #    cmake_policy(POP)
                     #    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}")
                     #endif()
-                    set(${_vcpkg_find_library_imp_output} "${_tmp_${_vcpkg_find_library_imp_output}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
+                    vcpkg_msg(STATUS "find_library" "NORMAL VARIABLE")
+                    set(${_vcpkg_find_library_imp_output} ${_tmp_${_vcpkg_find_library_imp_output}})
+                    set(${_vcpkg_find_library_imp_output} ${${_vcpkg_find_library_imp_output}} PARENT_SCOPE) #Propagate the variable into the parent scope!
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} after ${${_vcpkg_find_library_imp_output}}")
                 endif()
             else() #these are the cases we need to correct!
@@ -128,7 +134,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                                 string(FIND "${${_vcpkg_find_library_imp_output}}" "${_vcpkg_lib_name}" _vcpkg_lib_found_name_index)
                                 #vcpkg_msg(STATUS "find_library" "INDEX: ${_vcpkg_lib_found_name_index} searched in ${${_vcpkg_find_library_imp_output}}")
                                 if(NOT ${_vcpkg_lib_found_name_index} EQUAL -1)
-                                     vcpkg_msg(STATUS "find_library" "Name ${_vcpkg_lib_name} found in ${${_vcpkg_find_library_imp_output}}")
+                                    vcpkg_msg(STATUS "find_library" "Name ${_vcpkg_lib_name} found in ${${_vcpkg_find_library_imp_output}}")
                                     set(_vcpkg_lib_found_name "${_vcpkg_lib_name}")
                                     break()
                                 else()
@@ -157,7 +163,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                 else()
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} before ${${_vcpkg_find_library_imp_output}}")
                     string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" ${_vcpkg_find_library_imp_output} "${${_vcpkg_find_library_imp_output}}")
-                    set(${_vcpkg_find_library_imp_output} "${${_vcpkg_find_library_imp_output}}" PARENT_SCOPE) #Need to promote change to parant scope
+                    set(${_vcpkg_find_library_imp_output} "${${_vcpkg_find_library_imp_output}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} after ${${_vcpkg_find_library_imp_output}}")
                 endif()
             endif()
@@ -180,7 +186,13 @@ if(VCPKG_ENABLE_FIND_LIBRARY)
         #vcpkg_msg(STATUS "find_library" "${ARGV}")
         #vcpkg_msg(STATUS "find_library" "${_vcpkg_find_lib_vars}")
         vcpkg_find_library(${_vcpkg_find_library_var_name} ${ARGN})
-        set(${_vcpkg_find_library_var_name} ${${_vcpkg_find_library_var_name}} PARENT_SCOPE) #Propagting the varibale upwards
+        if(DEFINED $CACHE{${_vcpkg_find_library_var_name}})
+            vcpkg_msg(STATUS "find_library" "CACHE VARIABLE")
+            set(${_vcpkg_find_library_var_name} "${${_vcpkg_find_library_var_name}}" CACHE INTERNAL) #Propagate the variable into the parent scope!
+        else()
+            vcpkg_msg(STATUS "find_library" "NORMAL VARIABLE")
+            set(${_vcpkg_find_library_var_name} "${${_vcpkg_find_library_var_name}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
+        endif()
         unset(_vcpkg_find_library_guard_${_vcpkg_find_library_var_name})
     endfunction()
 endif(VCPKG_ENABLE_FIND_LIBRARY)
