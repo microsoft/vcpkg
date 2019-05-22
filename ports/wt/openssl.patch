@@ -1,0 +1,150 @@
+diff --git a/cmake/WtFindSsl.txt b/cmake/WtFindSsl.txt
+index 7472d06a..feae475d 100644
+--- a/cmake/WtFindSsl.txt	
++++ b/cmake/WtFindSsl.txt
+@@ -13,139 +13,10 @@
+ # Mac OS X: The system OpenSSL is deprecated since 10.7 (replaced by Common
+ # Crypto). As such, it is rarely updated and is a security risk. You should
+ # install a recent OpenSSL using either macports or brew.
+-IF(APPLE)
+-  FIND_PATH(SSL_INCLUDE_DIRS
+-      openssl/ssl.h
+-    PATHS
+-      ${SSL_PREFIX}/include/
+-      /usr/include/
+-      /usr/local/include/
+-    NO_DEFAULT_PATH
+-  )
+-ELSE(APPLE)
+-  FIND_PATH(SSL_INCLUDE_DIRS
+-      openssl/ssl.h
+-    PATHS
+-      ${SSL_PREFIX}/include/
+-      /usr/include/
+-      /usr/local/include/
+-      c:/openssl/include/
+-  )
+-ENDIF(APPLE)
+-
+-IF(WIN32)
+-  IF(NOT SSL_LIB_NAMES)
+-    SET(SSL_LIB_NAMES ssleay32MD ssleay32)
+-  ENDIF(NOT SSL_LIB_NAMES)
+-  IF(NOT SSL_LIB_TOO_NAMES)
+-    SET(SSL_LIB_TOO_NAMES libeay32MD libeay32)
+-  ENDIF(NOT SSL_LIB_TOO_NAMES)
+-  MESSAGE("Looking for ssl: ${SSL_LIB_NAMES}, ${SSL_LIB_TOO_NAMES}")
+-  FOREACH(l ${SSL_LIB_NAMES})
+-    LIST(APPEND SSL_LIB_DEBUG_NAMES "${l}d")
+-  ENDFOREACH()
+-  FOREACH(l ${SSL_LIB_TOO_NAMES})
+-    LIST(APPEND SSL_LIB_TOO_DEBUG_NAMES "${l}d")
+-  ENDFOREACH()
+-
+-  FIND_LIBRARY(SSL_LIB_RELEASE
+-    NAMES
+-      ${SSL_LIB_NAMES}
+-    PATHS
+-      /usr/lib
+-      /usr/local/lib
+-      ${SSL_PREFIX}/lib
+-      ${SSL_PREFIX}/lib/VC
+-      c:/openssl/lib/VC
+-  )
+-
+-  FIND_LIBRARY(SSL_LIB_DEBUG
+-    NAMES
+-      ${SSL_LIB_DEBUG_NAMES}
+-    PATHS
+-      /usr/lib
+-      /usr/local/lib
+-      ${SSL_PREFIX}/lib
+-      ${SSL_PREFIX}/lib/VC
+-      c:/openssl/lib/VC
+-  )
+-
+-  FIND_LIBRARY(SSL_TOO_LIB_RELEASE
+-    NAMES
+-      ${SSL_LIB_TOO_NAMES}
+-    PATHS
+-      ${SSL_PREFIX}/lib
+-      ${SSL_PREFIX}/lib/VC
+-      c:/openssl/lib/VC
+-  )
+-
+-  FIND_LIBRARY(SSL_TOO_LIB_DEBUG
+-    NAMES
+-      ${SSL_LIB_TOO_DEBUG_NAMES}
+-    PATHS
+-      ${SSL_PREFIX}/lib
+-      ${SSL_PREFIX}/lib/VC
+-      c:/openssl/lib/VC
+-  )
+-
+-# We require both release and debug versions of the SSL libs. People who
+-# really know what they are doing, may edit this file to relax this requirement.
+-  IF(SSL_INCLUDE_DIRS
+-      AND SSL_LIB_RELEASE
+-      AND SSL_LIB_DEBUG
+-      AND SSL_TOO_LIB_RELEASE
+-      AND SSL_TOO_LIB_DEBUG)
+-      SET(SSL_FOUND true)
+-      SET(SSL_LIBRARIES
+-          optimized ${SSL_LIB_RELEASE} debug ${SSL_LIB_DEBUG}
+-          optimized ${SSL_TOO_LIB_RELEASE} debug ${SSL_TOO_LIB_DEBUG})
+-  ELSE(SSL_INCLUDE_DIRS
+-      AND SSL_LIB_RELEASE
+-      AND SSL_LIB_DEBUG
+-      AND SSL_TOO_LIB_RELEASE
+-      AND SSL_TOO_LIB_DEBUG)
+-      SET(SSL_FOUND false)
+-  ENDIF(SSL_INCLUDE_DIRS
+-      AND SSL_LIB_RELEASE
+-      AND SSL_LIB_DEBUG
+-      AND SSL_TOO_LIB_RELEASE
+-      AND SSL_TOO_LIB_DEBUG)
+-ELSEIF(APPLE)
+-  FIND_LIBRARY(SSL_LIB
+-    NAMES
+-      ssl
+-    PATHS
+-      ${SSL_PREFIX}/lib
+-      ${SSL_PREFIX}/lib/VC
+-      /usr/lib
+-      /usr/local/lib
+-    NO_DEFAULT_PATH
+-  )
+-ELSE (WIN32)
+-  FIND_LIBRARY(SSL_LIB
+-    NAMES
+-      ssl
+-    PATHS
+-      ${SSL_PREFIX}/lib
+-      ${SSL_PREFIX}/lib/VC
+-      /usr/lib
+-      /usr/local/lib
+-  )
+-ENDIF (WIN32)
+-
+-IF(SSL_LIB
+-    AND SSL_INCLUDE_DIRS)
+-  IF(WIN32)
+-    IF(SSL_TOO_LIB)
+-      SET(SSL_FOUND true)
+-      SET(SSL_LIBRARIES ${SSL_LIB} ${SSL_TOO_LIB} crypt32)
+-    ELSE(SSL_TOO_LIB)
+-      SET(SSL_FOUND false)
+-    ENDIF(SSL_TOO_LIB)
+-  ELSE(WIN32)
+-    SET(SSL_FOUND true)
+-    SET(SSL_LIBRARIES ${SSL_LIB} -lcrypto)
+-  ENDIF(WIN32)
+-ENDIF(SSL_LIB
+-    AND SSL_INCLUDE_DIRS)
++find_package(OpenSSL COMPONENTS SSL Crypto)
+ 
++if(OPENSSL_FOUND)
++    set(SSL_FOUND TRUE)
++    set(SSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
++    set(SSL_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIR})
++endif()
