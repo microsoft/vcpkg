@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
-    REF 6.4.3
-    SHA512  d2d54adf4f498cba0ec20bb37b7a32d18b25e298d81b1884aecb3edec99beca6a10683478e6ca02953ace0b20d335a87b926bf77cbe3cb40822cf12649ea65c5
+    REF 6.4.4
+    SHA512 a168dbc7af210c711fa9f0f6e20d9d3abea167d412a642f591b104a109f11f4c262a27b6919340d405400a58baf7bcc663f7d3ec1b4ecd03f0a4b6c2960b5099
     HEAD_REF master
 	PATCHES
 		fix-deprecated-bug.patch
