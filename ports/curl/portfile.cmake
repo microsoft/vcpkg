@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_64_1
-    SHA512 bfaed8c65e82cb27a68e259516c8395cf10a67b62bb7e9d44803bde450f6017116fb3da8db716a172e140324831a63b4046a355810d86ba6577ebda3883a3625
+    REF curl-7_65_0
+    SHA512 436b6b42654c1db2b3f69df410a7f28401a50faf18e74f328a93585c147541e697664b0e9e7df03239fd76c797c1bb4f435f4c668a6b0ad28bdd67e17f786491
     HEAD_REF master
     PATCHES
         0001_cmake.patch
@@ -83,10 +83,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     )
 endif()
 
-vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -104,6 +100,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_DARWINSSL=${USE_DARWINSSL}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_RELEASE
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
     OPTIONS_DEBUG
