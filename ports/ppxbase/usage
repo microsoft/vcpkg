@@ -1,0 +1,5 @@
+The package ppxbase is compatible with built-in CMake targets:
+
+    find_package(ppxbase REQUIRED)
+    target_link_libraries(main PRIVATE ${PPXBASE_LIBRARIES})
+    target_include_directories(main PRIVATE ${PPXBASE_INCLUDE_DIRS})

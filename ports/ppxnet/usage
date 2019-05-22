@@ -1,0 +1,5 @@
+The package ppxnet is compatible with built-in CMake targets:
+
+    find_package(ppxnet REQUIRED)
+    target_link_libraries(main PRIVATE ${PPXNET_LIBRARIES})
+    target_include_directories(main PRIVATE ${PPXNET_INCLUDE_DIRS})
