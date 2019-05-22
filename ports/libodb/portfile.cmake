@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
-vcpkg_build_cmake()
+
 vcpkg_install_cmake()
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_libodbConfig-debug.cmake LIBODB_DEBUG_TARGETS)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")

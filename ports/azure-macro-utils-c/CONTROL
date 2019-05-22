@@ -1,0 +1,5 @@
+Source: azure-macro-utils-c
+Version: 2019-04-11-1
+Description: A library of macros for the Azure IoT SDK Suite
+Build-Depends: 
+

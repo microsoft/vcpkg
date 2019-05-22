@@ -15,14 +15,15 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF 8c331e8552f754bb6e0502486ceee698625eb468
-        SHA512 cc6f34e04f237bb5e8e5445e033eefab00373d53a4847ab6089c9b8eb400ab87ced6905f1c78ea7d0da3e9a56145e86a58d2f226fcf38f08659330a33d68f82e
+        REF b386a10688e9f74c4627cedb9c35a40525c963d1
+        SHA512 5bb609bf5dda810b38cc34d5e43fb8a4b67cd417c86da8d17508f0d2f87b858647af402214fdce967df5917a58e036454b17d8c67a1331276f36c39a75cf135c
         HEAD_REF master
         PATCHES improve-external-deps.patch
     )
 endif()
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
+file(COPY ${SOURCE_PATH}/configs/azure_iot_sdksFunctions.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmake/azure_iot_sdks/)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

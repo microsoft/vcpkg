@@ -25,8 +25,8 @@ set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/openssl
-    REF OpenSSL_1_0_2q_WinRT
-    SHA512 a5deb38d8ac3d2dc5cfcefca74ef1b6bb913fb2a205163e26100f8714b567768e2699948d6a2ec3ebdbf8c72bfbf8ccfe0e574a1d20a2a736b64e9d69ca9b719
+    REF OpenSSL_1_0_2r_WinRT
+    SHA512 3045693fca4b042b69675f6164d8cc82106582cf31081d65a0adbd528f04e77fa48b3761f3be7bdf8ab962a093b28fec0ae6d7da02058f2b049f79b784c39c2e
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
