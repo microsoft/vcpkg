@@ -43,7 +43,7 @@ function(vcpkg_set_target_properties)
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_LOCATION_RELEASE: ${_vcpkg_target_imp_loc_rel}. Checking for correct vcpkg path!")
                 if("${_vcpkg_target_imp_loc_rel}" MATCHES "/debug/")
                     #This is the death case. If we reach this line the linkage of the target will be wrong!
-                    #This also fails for executables which is a nice feature and makes sure only release tools are used by vcpkg
+                    #This also fails for executables within the debug directory which is a nice feature and makes sure only release tools are used by vcpkg
                     vcpkg_msg(FATAL_ERROR "set_target_properties" "Property IMPORTED_LOCATION_RELEASE: ${_vcpkg_target_imp_loc_rel}. Not set to vcpkg release library dir!" ALWAYS)
                 else()
                     vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_RELEASE is correct: ${_vcpkg_target_imp_loc_rel}.")
