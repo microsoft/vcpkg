@@ -1,6 +1,8 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 # This snippet is a workaround for users who are upgrading from an extremely old version of this
 # port, which cloned directly into `src\`
