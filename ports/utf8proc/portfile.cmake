@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JuliaLang/utf8proc
-    REF v2.1.0
-    SHA512 72b7f377fa6a62018d3eeab8723a27e25db3d1f794ae0bf21fff62ec1a7439bec52e7c93d2a00c218de6ff518097fb4a7a87c56e61ba8c98e689aa8f7171c812)
+    REF v2.4.0
+    SHA512 2bbd056b488cd30faca26618389d8af84edc39ade9b705e147b676bf39eee65b40239d01c32c46dfc2a289d79e869ed1bb3c347365603dcaab2f69e34427441a)
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch)

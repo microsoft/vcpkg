@@ -531,7 +531,9 @@ namespace vcpkg::Install
                         while (next != last)
                         {
                             auto match = *next;
-                            library_targets[find_package_name].push_back(match[1]);
+                            auto& targets = library_targets[find_package_name];
+                            if (std::find(targets.cbegin(), targets.cend(), match[1]) == targets.cend())
+                                targets.push_back(match[1]);
                             ++next;
                         }
                     }
