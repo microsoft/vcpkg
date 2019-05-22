@@ -1,10 +1,9 @@
 include(vcpkg_common_functions)
-set(BDWGC_VERSION v8.0.4)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ivmai/bdwgc
-    REF ${BDWGC_VERSION}
+    REF v8.0.4
     SHA512 f3c178c9cab9d9df9ecdad5ac5661c916518d29b0eaca24efe569cb757c386c118ad4389851107597d99ff1bbe99b46383cce73dfd01be983196aa57c9626a4a
     HEAD_REF master
     PATCHES

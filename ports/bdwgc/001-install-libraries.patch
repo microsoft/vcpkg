@@ -37,7 +37,7 @@ index 04c45e1..61a7565 100644
 +if (NOT BUILD_SHARED_LIBS)
 +    target_compile_definitions(gc PRIVATE GC_NOT_DLL)
 +else()
-+    target_compile_definitions(gc PRIVATE CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS)
++    target_compile_definitions(gc PRIVATE GC_DLL)
 +endif()
 +
 +# Install library
