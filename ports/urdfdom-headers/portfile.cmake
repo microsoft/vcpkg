@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
-    REF 1.0.2
-    SHA512 902cf18b3ccc62dd5d732707e9ca2b8698f3307b8005d3858fcdd0e9585d580bbe5d2ec77c8c8bfa7b8776b870844368a8ec93b0f8a8d71420cf5015a99b8867
+    REF 1.0.3
+    SHA512 44b1ca9724a9ccd5d2ad51f61d36de19b9a893955ad5c3ecfa2356f6468a0ac140b8cd6fa2aa18c163b0fa8ba87e834358369d2470cd3dee474408113a30b7a0
     HEAD_REF master
   )
 
