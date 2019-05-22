@@ -23,7 +23,7 @@ function(vcpkg_set_target_properties)
         math(EXPR _vcpkg_target_index_key "${_vcpkg_target_args_index_val}+1")
     endwhile()
 
-    if(NOT "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_LOCATION_RELEASE|IMPORTED_LOCATION_DEBUG")
+    if(NOT "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_LOCATION_RELEASE|IMPORTED_LOCATION_DEBUG|IMPORTED_IMPLIB|IMPORTED_IMPLIB_RELEASE|IMPORTED_IMPLIB_DEBUG")
         return() # early abort to not generate too much noise. We are only interested in the above cases
     endif()
 
@@ -31,40 +31,69 @@ function(vcpkg_set_target_properties)
     get_target_property(_vcpkg_target_imported ${_vcpkg_target_name} IMPORTED)
         if(_vcpkg_target_imported)
             vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} is an IMPORTED target. Checking import location (if available)!")
+            # TODO: Check if IMPORTED_IMPLIB must also be checked? Needs to point to lib for DLL targets
             get_target_property(_vcpkg_target_imp_loc ${_vcpkg_target_name} IMPORTED_LOCATION)
             get_target_property(_vcpkg_target_imp_loc_rel ${_vcpkg_target_name} IMPORTED_LOCATION_RELEASE)
             get_target_property(_vcpkg_target_imp_loc_dbg ${_vcpkg_target_name} IMPORTED_LOCATION_DEBUG)
+            get_target_property(_vcpkg_target_implib_loc ${_vcpkg_target_name} IMPORTED_IMPLIB)
+            get_target_property(_vcpkg_target_implib_loc_rel ${_vcpkg_target_name} IMPORTED_IMPLIB_RELEASE)
+            get_target_property(_vcpkg_target_implib_loc_dbg ${_vcpkg_target_name} IMPORTED_IMPLIB_DEBUG)
             # Release location
             if(_vcpkg_target_imp_loc_rel AND "${_vcpkg_target_imp_loc_rel}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_LOCATION_RELEASE: ${_vcpkg_target_imp_loc_rel}. Checking for correct vcpkg path!")
-                if("${_vcpkg_target_imp_loc_rel}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")
+                if("${_vcpkg_target_imp_loc_rel}" MATCHES "/debug/")
                     #This is the death case. If we reach this line the linkage of the target will be wrong!
-                    vcpkg_msg(FATAL_ERROR "set_target_properties" "Property IMPORTED_LOCATION_DEBUG: ${_vcpkg_target_imp_loc_rel}. Not set to vcpkg release library dir!" ALWAYS)
+                    vcpkg_msg(FATAL_ERROR "set_target_properties" "Property IMPORTED_LOCATION_RELEASE: ${_vcpkg_target_imp_loc_rel}. Not set to vcpkg release library dir!" ALWAYS)
                 else()
                     vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_RELEASE is correct: ${_vcpkg_target_imp_loc_rel}.")
                 endif()
             endif()
+            # IMPLIB
+            if(_vcpkg_target_implib_loc_rel AND "${_vcpkg_target_implib_loc_rel}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+                vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_IMPLIB_RELEASE: ${_vcpkg_target_implib_loc_rel}. Checking for correct vcpkg path!")
+                if("${_vcpkg_target_implib_loc_rel}" MATCHES "/debug/")
+                    #This is the death case. If we reach this line the linkage of the target will be wrong!
+                    vcpkg_msg(FATAL_ERROR "set_target_properties" "Property IMPORTED_IMPLIB_RELEASE: ${_vcpkg_target_implib_loc_rel}. Not set to vcpkg release library dir!" ALWAYS)
+                else()
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_IMPLIB_RELEASE is correct: ${_vcpkg_target_implib_loc_rel}.")
+                endif()
+            endif()
+            
             # Debug location
             if(_vcpkg_target_imp_loc_dbg AND "${_vcpkg_target_imp_loc_dbg}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_LOCATION_DEBUG: ${_vcpkg_target_imp_loc_dbg}. Checking for correct vcpkg path!")
-                if(NOT "${_vcpkg_target_imp_loc_dbg}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")
+                if(NOT "${_vcpkg_target_imp_loc_dbg}" MATCHES "/debug/")
                     #This is the death case. If we reach this line the linkage of the target will be wrong!
                     vcpkg_msg(FATAL_ERROR "set_target_properties" "Property IMPORTED_LOCATION_DEBUG: ${_vcpkg_target_imp_loc_dbg}. Not set to vcpkg debug library dir!" ALWAYS)
                 else()
                     vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_DEBUG is correct: ${_vcpkg_target_imp_loc_dbg}.")
                 endif()
             endif()
+            # IMPLIB
+            if(_vcpkg_target_implib_loc_dbg AND "${_vcpkg_target_implib_loc_dbg}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+                vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_IMPLIB_DEBUG: ${_vcpkg_target_implib_loc_dbg}. Checking for correct vcpkg path!")
+                if(NOT "${_vcpkg_target_implib_loc_dbg}" MATCHES "/debug/")
+                    #This is the death case. If we reach this line the linkage of the target will be wrong!
+                    vcpkg_msg(FATAL_ERROR "set_target_properties" "Property IMPORTED_IMPLIB_DEBUG: ${_vcpkg_target_implib_loc_dbg}. Not set to vcpkg release library dir!" ALWAYS)
+                else()
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_IMPLIB_DEBUG is correct: ${_vcpkg_target_implib_loc_rel}.")
+                endif()
+            endif()
+            
             # General import location. Here we assume changes made by find_library to the library name 
             if(_vcpkg_target_imp_loc AND "${_vcpkg_target_imp_loc}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
                  vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_LOCATION: ${_vcpkg_target_imp_loc}. Checking for generator expression!")
                 if("${_vcpkg_target_imp_loc}" MATCHES "\\$<\\$<CONFIG:DEBUG>:debug/>") # This generator expressions was added by vcpkgs find_library call
                     vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION Contains generator expression inserted by vcpkg. Fixing locations.")
+                    # IMPORTED_LOCATION either points to a lib (static library) or a dll/so (shared lib)
                     string(REPLACE "$<$<CONFIG:DEBUG>:debug/>lib/" "lib/"       _vcpkg_target_imp_loc_rel_tmp "${_vcpkg_target_imp_loc}")
                     string(REPLACE "$<$<CONFIG:DEBUG>:debug/>lib/" "debug/lib/" _vcpkg_target_imp_loc_dbg_tmp "${_vcpkg_target_imp_loc}")
+                    string(REPLACE "$<$<CONFIG:DEBUG>:debug/>bin/" "bin/"       _vcpkg_target_imp_loc_rel_tmp "${_vcpkg_target_imp_loc}")
+                    string(REPLACE "$<$<CONFIG:DEBUG>:debug/>bin/" "debug/bin/" _vcpkg_target_imp_loc_dbg_tmp "${_vcpkg_target_imp_loc}")
                     foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
                         string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "" _vcpkg_target_imp_loc_rel_tmp "${_vcpkg_target_imp_loc_rel_tmp}")
                         string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "${_vcpkg_debug_suffix}" _vcpkg_target_imp_loc_dbg_tmp "${_vcpkg_target_imp_loc_dbg_tmp}")
-                    endforeach()
+                    endforeach()                    
                     if(VCPKG_ENABLE_SET_TARGET_PROPERTIES OR VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
                         _set_target_properties(${_vcpkg_target_name} 
                                             PROPERTIES 
@@ -85,6 +114,39 @@ function(vcpkg_set_target_properties)
                     vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION does not contain generator expression generated by vcpkg-find_library!")
                 endif()
             endif()
+            #IMPLIB
+            if(_vcpkg_target_implib_loc AND "${_vcpkg_target_implib_loc}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+                 vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} has property IMPORTED_LOCATION: ${_vcpkg_target_implib_loc}. Checking for generator expression!")
+                if("${_vcpkg_target_implib_loc}" MATCHES "\\$<\\$<CONFIG:DEBUG>:debug/>") # This generator expressions was added by vcpkgs find_library call
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION Contains generator expression inserted by vcpkg. Fixing locations.")
+                    # IMPORTED_LOCATION either points to a lib (static library) or a dll/so (shared lib)
+                    string(REPLACE "$<$<CONFIG:DEBUG>:debug/>lib/" "lib/"       _vcpkg_target_implib_loc_rel_tmp "${_vcpkg_target_implib_loc}")
+                    string(REPLACE "$<$<CONFIG:DEBUG>:debug/>lib/" "debug/lib/" _vcpkg_target_implib_loc_dbg_tmp "${_vcpkg_target_implib_loc}")
+                    foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
+                        string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "" _vcpkg_target_implib_loc_rel_tmp "${_vcpkg_target_implib_loc_rel_tmp}")
+                        string(REPLACE "$<$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" "${_vcpkg_debug_suffix}" _vcpkg_target_implib_loc_dbg_tmp "${_vcpkg_target_implib_loc_dbg_tmp}")
+                    endforeach()                    
+                    if(VCPKG_ENABLE_SET_TARGET_PROPERTIES OR VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
+                        _set_target_properties(${_vcpkg_target_name} 
+                                            PROPERTIES 
+                                                IMPORTED_IMPLIB_RELEASE "${_vcpkg_target_implib_loc_rel_tmp}"
+                                                IMPORTED_IMPLIB_DEBUG "${_vcpkg_target_implib_loc_dbg_tmp}"
+                                                IMPORTED_IMPLIB "${_vcpkg_target_implib_loc_rel_tmp}")
+                    else()
+                        set_target_properties(${_vcpkg_target_name} 
+                                            PROPERTIES 
+                                                IMPORTED_IMPLIB_RELEASE "${_vcpkg_target_implib_loc_rel_tmp}"
+                                                IMPORTED_IMPLIB_DEBUG "${_vcpkg_target_implib_loc_dbg_tmp}"
+                                                IMPORTED_IMPLIB "${_vcpkg_target_implib_loc_rel_tmp}")
+                    endif()
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_RELEASE set to: ${_vcpkg_target_implib_loc_rel_tmp}")
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION_DEBUG set to: ${_vcpkg_target_implib_loc_dbg_tmp}")
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION set to: ${_vcpkg_target_implib_loc_rel_tmp}")
+                else()
+                    vcpkg_msg(STATUS "set_target_properties" "${_vcpkg_target_name} IMPORTED_LOCATION does not contain generator expression generated by vcpkg-find_library!")
+                endif()
+            endif()
+            
         endif()
     endforeach()
 endfunction()
