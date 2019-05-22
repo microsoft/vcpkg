@@ -7,12 +7,17 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
-#include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
+#endif
+#if defined(__linux__)
+#include <sys/sendfile.h>
+#elif defined(__APPLE__)
+#include <copyfile.h>
 #endif
 
 namespace vcpkg::Files
@@ -166,7 +171,7 @@ namespace vcpkg::Files
                                     std::error_code& ec) override
         {
             this->rename(oldpath, newpath, ec);
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
             if (ec)
             {
                 auto dst = newpath;
@@ -182,13 +187,25 @@ namespace vcpkg::Files
                     return;
                 }
 
+#if defined(__linux__)
                 off_t bytes = 0;
                 struct stat info = {0};
                 fstat(i_fd, &info);
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
+#elif defined(__APPLE__)
+                auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
+#endif
+                if (written_bytes == -1)
+                {
+                    ec.assign(errno, std::generic_category());
+                    close(i_fd);
+                    close(o_fd);
+
+                    return;
+                }
+
                 close(i_fd);
                 close(o_fd);
-                if (written_bytes == -1) return;
 
                 this->rename(dst, newpath, ec);
                 if (ec) return;

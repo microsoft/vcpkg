@@ -20,6 +20,11 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(CMAKE_MODULE_PATH)
 
+set(BUILD_opencv_world OFF)
+if("world" IN_LIST FEATURES)
+  set(BUILD_opencv_world ON)
+endif()
+
 set(BUILD_opencv_dnn OFF)
 set(WITH_PROTOBUF OFF)
 if("dnn" IN_LIST FEATURES)
@@ -274,6 +279,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
+        -DBUILD_opencv_world=${BUILD_opencv_world}
         # PROTOBUF
         -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
         -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}

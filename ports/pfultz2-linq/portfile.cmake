@@ -5,11 +5,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pfultz2/Linq
-    REF 51e45d25faa95f945d0bf515f214feed4401e542
-    SHA512 128973f79f1cc1f63b5ad4501cc3247352559de382c2ab2fc8fb2df90f8926e373db3469414a2e3816f27fb606c1139a25e94b4e5203201e7ab0320b4b004b4d
+    REF 7ff0a73fed52be5e11df3d79128ce7b11f430af2
+    SHA512 6768e28bf17568436b4c3fed18f6b1edbe048b871ebee25580419b805498beb0800e473ecdc5acc0f9f89bec47d16fd3806018ce6395bdf14a8e2975cde9381f
     HEAD_REF master
-    PATCHES
-        fix-cmake.patch
 )
 
 vcpkg_configure_cmake(

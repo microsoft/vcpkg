@@ -68,7 +68,6 @@ vcpkg_configure_cmake(
             -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 

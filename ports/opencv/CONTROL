@@ -81,5 +81,8 @@ Feature: eigen
 Build-Depends: eigen3
 Description: Eigen support for opencv
 
+Feature: world
+Description: Compile to a single package support for opencv
+
 Feature: nonfree
 Description: allow nonfree and unredistributable libraries

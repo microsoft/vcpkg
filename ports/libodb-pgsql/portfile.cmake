@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
-vcpkg_build_cmake()
+
 vcpkg_install_cmake()
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_pgsqlConfig-debug.cmake LIBODB_DEBUG_TARGETS)
