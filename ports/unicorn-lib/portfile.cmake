@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  message("unicorn-lib is a static library, now build with static.")
+  set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/unicorn-lib
@@ -15,7 +20,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS_DEBUG
         -DUNICORN_LIB_SKIP_HEADERS=ON
-        -DINSTALLED_LIB_PATH=${CURRENT_INSTALLED_DIR}/lib
 )
 
 vcpkg_install_cmake()

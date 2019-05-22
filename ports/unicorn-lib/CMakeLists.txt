@@ -26,8 +26,8 @@ target_compile_definitions(
 	PRIVATE -DUNICODE -D_UNICODE _CRT_SECURE_NO_WARNINGS
 )
 
-target_link_libraries(unicorn-lib ${PCRE2_LIBRARY})
-target_link_libraries(unicorn-lib ${ZLIB_LIBRARY})
+target_link_libraries(unicorn-lib PUBLIC ${PCRE2_LIBRARY})
+target_link_libraries(unicorn-lib PUBLIC ${ZLIB_LIBRARY})
 
 if(NOT UNICORN_LIB_SKIP_HEADERS)
 	install(DIRECTORY ${PROJECT_SOURCE_DIR}/unicorn DESTINATION include FILES_MATCHING PATTERN "*.hpp")
