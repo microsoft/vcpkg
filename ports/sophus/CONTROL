@@ -1,4 +1,4 @@
 Source: sophus
-Version: 1.0.0-1
+Version: 1.0.0-2
 Build-Depends: eigen3, ceres, suitesparse
 Description: Lie group library for C++
