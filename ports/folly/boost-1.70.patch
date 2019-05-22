@@ -1,0 +1,23 @@
+diff --git a/folly/portability/PThread.cpp b/folly/portability/PThread.cpp
+index d75e012..03019f3 100644
+--- a/folly/portability/PThread.cpp
++++ b/folly/portability/PThread.cpp
+@@ -18,6 +18,9 @@
+ 
+ #if !FOLLY_HAVE_PTHREAD && _WIN32
+ #include <boost/thread/tss.hpp> // @manual
++#include <boost/thread/exceptions.hpp>
++#include <boost/shared_ptr.hpp>
++#include <boost/thread/thread_only.hpp>
+ 
+ #include <errno.h>
+ 
+@@ -684,7 +687,7 @@ int pthread_setspecific(pthread_key_t key, const void* value) {
+     // function, which we don't want to do.
+     boost::detail::set_tss_data(
+         realKey,
+-        boost::shared_ptr<boost::detail::tss_cleanup_function>(),
++        0,0,
+         const_cast<void*>(value),
+         false);
+     return 0;

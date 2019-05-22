@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xsimd
-    REF 7.1.3
-    SHA512 9f0e2babee9a3a80e16440466277bd635a26197f80cdf806312f7e1cc616db59062887566d50b4cdebe3c3ba4d60155b477684177607428aee53e1d5a95de926
+    REF 7.2.2
+    SHA512 76e98b8f12e5e388108858e5aef687a976a4c4614de9d9d6c854a6edb2ddda92c6b941a466a0b4d933c6d049c89937edfc23bbd8850b81c6293f40f8dc5bbe87
     HEAD_REF master
 )
 

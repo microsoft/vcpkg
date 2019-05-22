@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.9)
 project(libdisasm C)
 
 set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(SRCS
   ia32_implicit.c

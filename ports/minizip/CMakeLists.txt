@@ -36,10 +36,6 @@ if(WIN32)
   list(APPEND HEADERS ${MIN_SRC}/iowin32.h)
 endif()
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 add_library(minizip ${SRC})
 
 target_link_libraries(minizip PRIVATE ZLIB::ZLIB)

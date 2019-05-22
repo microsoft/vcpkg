@@ -16,18 +16,13 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("openblas currenly only supports dynamic library linkage")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.5
-    SHA512 91b3074eb922453bf843158b4281cde65db9e8bbdd7590e75e9e6cdcb486157f7973f2936f327bb3eb4f1702ce0ba51ae6729d8d4baf2d986c50771e8f696df0
+    REF v0.3.6
+    SHA512 1ad980176a51f70d8b0b2d158da8c01f30f77b7cf385b24a6340d3c5feb1513bd04b9390487d05cc9557db7dc5f7c135b1688dec9f17ebef35dba884ef7ddee9
     HEAD_REF develop
-    PATCHES 
+    PATCHES
         uwp.patch
         fix-space-path.patch
 )
@@ -43,6 +38,9 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
+set(COMMON_OPTIONS
+    -DBUILD_WITHOUT_LAPACK=ON)
+
 # for UWP version, must build non uwp first for helper
 # binaries.
 if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
@@ -56,7 +54,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DTARGET=NEHALEM
     )
 
     # add just built path to environment for gen_config_h.exe,
@@ -72,17 +72,24 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
-        "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
+        OPTIONS 
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DVS_WINRT_COMPONENT=TRUE
+            "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
+        OPTIONS
+            ${COMMON_OPTIONS})
 else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DNOFORTRAN=ON)
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DNOFORTRAN=ON)
 endif()
 
 

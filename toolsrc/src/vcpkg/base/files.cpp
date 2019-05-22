@@ -1,15 +1,23 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
-#include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
+#endif
+#if defined(__linux__)
+#include <sys/sendfile.h>
+#elif defined(__APPLE__)
+#include <copyfile.h>
 #endif
 
 namespace vcpkg::Files
@@ -163,7 +171,7 @@ namespace vcpkg::Files
                                     std::error_code& ec) override
         {
             this->rename(oldpath, newpath, ec);
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
             if (ec)
             {
                 auto dst = newpath;
@@ -179,13 +187,25 @@ namespace vcpkg::Files
                     return;
                 }
 
+#if defined(__linux__)
                 off_t bytes = 0;
                 struct stat info = {0};
                 fstat(i_fd, &info);
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
+#elif defined(__APPLE__)
+                auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
+#endif
+                if (written_bytes == -1)
+                {
+                    ec.assign(errno, std::generic_category());
+                    close(i_fd);
+                    close(o_fd);
+
+                    return;
+                }
+
                 close(i_fd);
                 close(o_fd);
-                if (written_bytes == -1) return;
 
                 this->rename(dst, newpath, ec);
                 if (ec) return;
@@ -209,10 +229,11 @@ namespace vcpkg::Files
 
             if (this->exists(path))
             {
-                System::println(System::Color::warning,
-                                "Some files in %s were unable to be removed. Close any editors operating in this "
-                                "directory and retry.",
-                                path.string());
+                System::print2(
+                    System::Color::warning,
+                    "Some files in ",
+                    path.u8string(),
+                    " were unable to be removed. Close any editors operating in this directory and retry.\n");
             }
 
             return out;
@@ -298,14 +319,14 @@ namespace vcpkg::Files
                     if (Util::find(ret, p) == ret.end() && this->exists(p))
                     {
                         ret.push_back(p);
-                        Debug::println("Found path: %s", p.u8string());
+                        Debug::print("Found path: ", p.u8string(), '\n');
                     }
                 }
             }
 
             return ret;
 #else
-            const std::string cmd = Strings::format("which %s", name);
+            const std::string cmd = Strings::concat("which ", name);
             auto out = System::cmd_execute_and_capture_output(cmd);
             if (out.exit_code != 0)
             {
@@ -330,11 +351,12 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths)
     {
-        System::println();
+        std::string message = "\n";
         for (const fs::path& p : paths)
         {
-            System::println("    %s", p.generic_string());
+            Strings::append(message, "    ", p.generic_string(), '\n');
         }
-        System::println();
+        message.push_back('\n');
+        System::print2(message);
     }
 }

@@ -1,0 +1,8 @@
+Source: sndfile
+Version: 1.0.29-cebfdf2-1
+Description: Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo
+Default-Features: external-libs
+
+Feature: external-libs
+Description: Support Ogg Vorbis and FLAC audio files
+Build-Depends: libogg, libflac, libvorbis

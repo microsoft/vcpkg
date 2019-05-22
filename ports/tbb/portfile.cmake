@@ -1,17 +1,14 @@
 include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message("tbb only supports dynamic library linkage")
-        set(VCPKG_LIBRARY_LINKAGE "dynamic")
-    endif()
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2019_U4
-    SHA512 f8ba92663c822e36f68f2b1837aa66d4fc285abe8c0c9b501f6cc31d3186d39b193588e49988e488beb9d400a1c3aa3fe72580f428e7ceca3581e649f28ae59e
+    REF 2019_U6
+    SHA512 6513d30a498f507cb3e9a06746e430a8bc829de0d204b15d7a79f79c5e7565e59bb0b459c8ca4946293ecb25e2ce11d25cfc7f311e91c7e67342eceb31000d07
     HEAD_REF tbb_2019
 )
 
@@ -25,7 +22,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
     vcpkg_install_cmake()
 
-    # Settings for TBBConfigForSource.cmake.in
+    # Settings for TBBConfigInternal.cmake.in
     set(TBB_LIB_EXT a)
     set(TBB_LIB_PREFIX lib)
 else()
@@ -43,7 +40,7 @@ else()
         RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
         DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
     )
-    # Settings for TBBConfigForSource.cmake.in
+    # Settings for TBBConfigInternal.cmake.in
     set(TBB_LIB_EXT lib)
     set(TBB_LIB_PREFIX)
 endif()
@@ -53,7 +50,7 @@ file(COPY
   ${SOURCE_PATH}/include/serial
   DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Settings for TBBConfigForSource.cmake.in
+# Settings for TBBConfigInternal.cmake.in
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(TBB_DEFAULT_COMPONENTS tbb tbbmalloc)
 else()
@@ -69,7 +66,7 @@ set(TBB_RELEASE_DIR "\${_tbb_root}/lib")
 set(TBB_DEBUG_DIR "\${_tbb_root}/debug/lib")
 
 configure_file(
-    ${SOURCE_PATH}/cmake/templates/TBBConfigForSource.cmake.in
+    ${SOURCE_PATH}/cmake/templates/TBBConfigInternal.cmake.in
     ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake
     @ONLY
 )
@@ -77,6 +74,18 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake _contents)
 string(REPLACE
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)\nget_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
+    _contents
+    "${_contents}"
+)
+string(REPLACE
+    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
+    "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
+    _contents
+    "${_contents}"
+)
+string(REPLACE
+    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
+    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
     _contents
     "${_contents}"
 )

@@ -50,7 +50,7 @@ Build-Depends: vtk
 Description: vtk support for opencv
 
 Feature: gdcm
-Build-Depends: gdcm2
+Build-Depends: gdcm
 Description: GDCM support for opencv
 
 Feature: webp
@@ -80,6 +80,9 @@ Description: JPEG 2000 support for opencv
 Feature: eigen
 Build-Depends: eigen3
 Description: Eigen support for opencv
+
+Feature: world
+Description: Compile to a single package support for opencv
 
 Feature: nonfree
 Description: allow nonfree and unredistributable libraries
