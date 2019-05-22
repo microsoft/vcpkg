@@ -23,7 +23,7 @@ function(vcpkg_set_target_properties)
         math(EXPR _vcpkg_target_index_key "${_vcpkg_target_args_index_val}+1")
     endwhile()
 
-    if(NOT "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_LOCATION_RELEASE|IMPORTED_LOCATION_DEBUG|IMPORTED_IMPLIB|IMPORTED_IMPLIB_RELEASE|IMPORTED_IMPLIB_DEBUG")
+    if(NOT "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_IMPLIB") # Also matches IMPORTED_LOCATION_RELEASE|IMPORTED_LOCATION_DEBUG|IMPORTED_IMPLIB_RELEASE|IMPORTED_IMPLIB_DEBUG
         return() # early abort to not generate too much noise. We are only interested in the above cases
     endif()
 
