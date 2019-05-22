@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         0001-Dont-export-vorbisenc-functions.patch
         0002-Allow-deprecated-functions.patch
+        ogg.patch
 )
 
 vcpkg_configure_cmake(
