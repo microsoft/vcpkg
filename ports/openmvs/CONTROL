@@ -1,0 +1,4 @@
+Source: openmvs
+Version: 0.9
+Description: OpenMVS: open Multi-View Stereo reconstruction library
+Build-Depends: zlib, boost, eigen3, ceres, opencv, cgal, glew, glfw3, vcglib

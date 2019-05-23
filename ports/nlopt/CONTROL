@@ -1,3 +1,3 @@
 Source: nlopt
-Version: 2.4.2-1226c127
+Version: 2.6.1
 Description: a library for nonlinear local and global optimization, for functions with and without gradient information.

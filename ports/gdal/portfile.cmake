@@ -94,8 +94,16 @@ if (WIN32) # Build in WINDOWS
   
   # Setup curl libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib" CURL_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl.lib" CURL_LIBRARY_DBG)
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib" CURL_LIBRARY_REL)
+  elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib" CURL_LIBRARY_REL)
+  endif()
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d.lib")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d.lib" CURL_LIBRARY_DBG)
+  elseif(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d_imp.lib")
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d_imp.lib" CURL_LIBRARY_DBG)
+  endif()
   
   # Setup sqlite3 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)
@@ -270,7 +278,7 @@ if (WIN32) # Build in WINDOWS
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
   endif()
-  
+
   vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc
     "${NMAKE_OPTIONS_REL}"
