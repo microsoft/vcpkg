@@ -250,5 +250,3 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURR
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_apply_patches(SOURCE_PATH ${CURRENT_PACKAGES_DIR} PATCHES Qt5GuiConfigExtras.patch)
-#
