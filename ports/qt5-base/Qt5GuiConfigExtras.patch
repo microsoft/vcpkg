@@ -1,6 +1,6 @@
-diff --git a/share/cmake/Qt5Gui/Qt5GuiConfigExtras - Kopie.cmake b/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
+diff --git a/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake b/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
 index c9c4dccb..461cb2ae 100644
---- a/share/cmake/Qt5Gui/Qt5GuiConfigExtras - Kopie.cmake	
+--- a/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake	
 +++ b/share/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
 @@ -17,12 +17,13 @@ macro(_qt5gui_find_extra_libs Name Libs LibDir IncDirs)
          string(REGEX REPLACE [^_A-Za-z0-9] _ _cmake_lib_name ${_libFile})
