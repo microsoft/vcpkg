@@ -40,14 +40,14 @@ if("mbedtls" IN_LIST FEATURES)
     set(USE_MBEDTLS ON)
 endif()
 
-set(USE_DARWINSSL OFF)
-set(DARWINSSL_OPTIONS)
-if("darwinssl" IN_LIST FEATURES)
+set(USE_SECTRANSP OFF)
+set(SECTRANSP_OPTIONS)
+if("sectransp" IN_LIST FEATURES)
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        message(FATAL_ERROR "darwinssl is not supported on non-Apple platforms")
+        message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
     endif()
-    set(USE_DARWINSSL ON)
-    set(DARWINSSL_OPTIONS
+    set(USE_SECTRANSP ON)
+    set(SECTRANSP_OPTIONS
         -DCURL_CA_PATH=none
     )
 endif()
@@ -97,7 +97,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
         -DCMAKE_USE_MBEDTLS=${USE_MBEDTLS}
-        -DCMAKE_USE_DARWINSSL=${USE_DARWINSSL}
+        -DCMAKE_USE_SECTRANSP=${USE_SECTRANSP}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
