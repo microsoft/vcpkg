@@ -1,0 +1,23 @@
+--- a/src/hb-coretext.cc
++++ b/src/hb-coretext.cc
+@@ -1059,20 +1059,6 @@
+       buffer->len += num_glyphs;
+     }
+ 
+-    /* Mac OS 10.6 doesn't have kCTTypesetterOptionForcedEmbeddingLevel,
+-     * or if it does, it doesn't respect it.  So we get runs with wrong
+-     * directions.  As such, disable the assert...  It wouldn't crash, but
+-     * cursoring will be off...
+-     *
+-     * https://crbug.com/419769
+-     */
+-    if (false)
+-    {
+-      /* Make sure all runs had the expected direction. */
+-      bool backward = HB_DIRECTION_IS_BACKWARD (buffer->props.direction);
+-      assert (bool (status_and & kCTRunStatusRightToLeft) == backward);
+-      assert (bool (status_or  & kCTRunStatusRightToLeft) == backward);
+-    }
+ 
+     buffer->clear_positions ();
+ 

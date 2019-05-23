@@ -1,13 +1,10 @@
+include(vcpkg_common_functions)
+
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Required to run build/generate_escape_tables.py et al.
 vcpkg_find_acquire_program(PYTHON3)
@@ -17,12 +14,13 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.07.30.00
-    SHA512 38e7b713572d4af0a6453d001eddc32c74b4ec100158300c0a3a61a88ec546b449f1973c2b624273da4278173782aa71695d981dba3c8f423f5b76ed1375d286
+    REF v2019.05.13.00
+    SHA512 5dfeef0c2845b15e32a29119921d65e349a7ae9bcfa25c406d42d8df1614d2542153cd0ad8d0cf22592045b24272375a7839af91579d6be685cb8a3512586689
     HEAD_REF master
     PATCHES
-        find-gflags.patch
-        no-werror.patch
+        missing-include-atomic.patch
+        boost-1.70.patch
+        reorder-glog-gflags.patch
 )
 
 file(COPY
@@ -75,6 +73,22 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
+
+# Release folly-targets.cmake does not link to the right libraries in debug mode.
+# We substitute with generator expressions so that the right libraries are linked for debug and release.
+set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
+FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
+string(REPLACE "\${_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
+FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
+FILE(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake _contents)
+FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
+"include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(glog CONFIG)
+${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

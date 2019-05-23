@@ -15,13 +15,17 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 f1311458634695eb6ba307ebfd492e3b260e7beb06db1c5c46df58c339756be4006322cdc4e42d055bf5b2ad14ce4656ddcafcc4e16c282034db8a77d255c3eb
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY
+  ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+  ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
+  DESTINATION ${SOURCE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
-vcpkg_build_cmake()
+
 vcpkg_install_cmake()
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_libodbConfig-debug.cmake LIBODB_DEBUG_TARGETS)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")

@@ -1,0 +1,60 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO blend2d/blend2d
+  REF 69141350b5a654f328c8529ae301aa1e6bad5342
+  SHA512 d9bdd234f443c0ef8793dba1a76cc567bab3f9cf32d835d9e285f7ad946a56e0bc03eab30f61bbce51318e18a74ecfcfc965ac94e1ff6cef21e9b3ccc6a42120
+  HEAD_REF master
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_BUILD_STATIC)
+
+if(NOT ("jit" IN_LIST FEATURES))
+  set(BLEND2D_BUILD_NO_JIT TRUE)
+endif()
+if(NOT ("logging" IN_LIST FEATURES))
+  set(BLEND2D_BUILD_NO_LOGGING TRUE)
+endif()
+
+
+if(NOT BLEND2D_BUILD_NO_JIT)
+  vcpkg_from_github(
+    OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
+    REPO asmjit/asmjit
+    REF f4e685cef003c40ad0d348d0c9eb2a1fe63d8521
+    SHA512 77981fc32e746fc88f5707b4a8e8557283261b2657248f0d4900f47bd500de4efe47619a53f32413ea3c6f116e084cac6fdb48b6b92d75e824585d94c785d2b1
+    HEAD_REF next-wip
+  )
+
+  file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/asmjit)
+
+  get_filename_component(ASMJIT_SOURCE_DIR_NAME ${ASMJIT_SOURCE_PATH} NAME)
+  file(COPY ${ASMJIT_SOURCE_PATH} DESTINATION ${SOURCE_PATH}/3rdparty)
+  file(RENAME ${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME} ${SOURCE_PATH}/3rdparty/asmjit)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DBLEND2D_BUILD_STATIC=${BLEND2D_BUILD_STATIC}
+        -DBLEND2D_BUILD_NO_JIT=${BLEND2D_BUILD_NO_JIT}
+        -DBLEND2D_BUILD_NO_LOGGING=${BLEND2D_BUILD_NO_LOGGING}
+)
+
+
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+
+if(BLEND2D_BUILD_STATIC)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/blend2d RENAME copyright)

@@ -1,8 +1,7 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pqp-1.3/PQP_v1.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://gamma.cs.unc.edu/software/downloads/SSV/pqp-1.3.tar.gz"

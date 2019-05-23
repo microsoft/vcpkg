@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
     [REF <v10.7.3>]
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
+    [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
 
@@ -45,10 +46,20 @@ The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
 
 For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
 
+### PATCHES
+A list of patches to be applied to the extracted sources.
+
+Relative paths are based on the port directory.
+
 ## Notes:
 At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
 
 This exports the `VCPKG_HEAD_VERSION` variable during head builds.
+
+## Examples:
+* [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
+* [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
+* [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 
 
 ## Source

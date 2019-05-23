@@ -1,0 +1,14 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index 0c95883..52585aa 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -86,6 +86,9 @@ else()
+   list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
+ endif()
+ 
++find_package(ZLIB REQUIRED)
++list(APPEND FIZZ_SHINY_DEPENDENCIES ZLIB::ZLIB)
++
+ set(FIZZ_HEADER_DIRS
+   base
+   client

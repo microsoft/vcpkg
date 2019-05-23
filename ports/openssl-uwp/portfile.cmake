@@ -1,7 +1,6 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-    message("Static building not supported yet")
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "This portfile only supports UWP")
@@ -17,27 +16,21 @@ else ()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
-include(vcpkg_common_functions)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-OpenSSL_1_0_2l_WinRT)
-
 vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/openssl/archive/OpenSSL_1_0_2l_WinRT.zip"
-    FILENAME "openssl-microsoft-1.0.2l_WinRT.zip"
-    SHA512 238b3daad7f1a2486e09d47e6d1bd4b0aa8e8a896358c6dfe11a77c2654da1b29d3c7612f9d200d5be5a020f33d96fe39cd75b99aa35aa4129feb756f7f98ee8
-)
-
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/openssl
+    REF OpenSSL_1_0_2r_WinRT
+    SHA512 3045693fca4b042b69675f6164d8cc82106582cf31081d65a0adbd528f04e77fa48b3761f3be7bdf8ab962a093b28fec0ae6d7da02058f2b049f79b784c39c2e
+    HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-configure-unicode.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
@@ -88,3 +81,5 @@ file(INSTALL
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libaiff-5.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/aifftools/files/libaiff/LibAiff%205.0/libaiff-5.0-release.tar.gz"

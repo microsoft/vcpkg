@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DanBloomberg/leptonica
-    REF 1.74.4
-    SHA512 3b9d0be937883f733f72cbdf0b624ec245d9256a8b4622997f437d309efd7ad9695ad1cbe2224d543eb3ef8c44833567b3cc9a95e9a774ef9046b7acaf0ae744
+    REF 1.76.0
+    SHA512 0d7575dc38d1e656a228ef30412a2cbb908b9c7c8636e4e96f4a7dc0429c04709316b8ad04893285ab430c1b2063d71537fc5b989a0f9dbdbec488713e1bab1f
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-cmakelists.patch

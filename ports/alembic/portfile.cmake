@@ -1,23 +1,24 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Alembic does not support static linkage. Building dynamically.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+    message(WARNING "Alembic's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
 endif()
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.8
-    SHA512 bc36e30d1aecd67da16247365a973c462e9716309d090fefe36f625c8d2ab2d517fe8ac694a9188cd6eeb623a3217f59f461c82fcfec43d0a60a07381526983a
+    REF 1.7.11
+    SHA512 94b9c218a2fe6e2e24205aff4a2f6bab784851c2aa15592fb60ea91f0e8038b0c0656a118f3a5cba0d3de8917dd90b74d0e2d1c4ac034b9ee3f5d0741d9f6b70
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/fix-hdf5link.patch
-    ${CMAKE_CURRENT_LIST_DIR}/bypass-findhdf5.patch
+        fix-hdf5link.patch
+        bypass-findhdf5.patch
+        fix-C1083.patch
 )
 
 vcpkg_configure_cmake(

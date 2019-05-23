@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 # OpenCL C headers
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -57,9 +59,9 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/do-not-enforce-dynamic-library.patch"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND (NOT VCPKG_CMAKE_SYSTEM_NAME)) # Empty when Windows
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_configure_cmake(

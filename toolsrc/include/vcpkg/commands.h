@@ -55,6 +55,7 @@ namespace vcpkg::Commands
 
     namespace DependInfo
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
@@ -117,6 +118,12 @@ namespace vcpkg::Commands
         extern const CommandStructure COMMAND_STRUCTURE;
         const std::string& email();
         void perform_and_exit(const VcpkgCmdArguments& args);
+    }
+
+    namespace X_VSInstances
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Hash

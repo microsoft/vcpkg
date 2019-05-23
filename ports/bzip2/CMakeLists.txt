@@ -5,7 +5,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     add_definitions(-DBZ_DEBUG) # enable extra assertions
 endif()
 
-set(LIBBZ2_SOURCES
+set(BZ2_SOURCES
     blocksort.c
     huffman.c
     crctable.c
@@ -14,12 +14,13 @@ set(LIBBZ2_SOURCES
     decompress.c
     bzlib.c)
 
-add_library(libbz2 ${LIBBZ2_SOURCES})
-set_target_properties(libbz2 PROPERTIES
-    ARCHIVE_OUTPUT_NAME bz2 # required for FindBzip2 to work
-    DEBUG_POSTFIX d)
+add_library(bz2 ${BZ2_SOURCES})
+set_target_properties(bz2 PROPERTIES
+    DEBUG_POSTFIX d
+    VERSION 1.0.6
+    SOVERSION 1.0)
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(libbz2 PRIVATE -DBZ_BUILD_DLL)
+    target_compile_definitions(bz2 PRIVATE -DBZ_BUILD_DLL)
 endif()
 
 if(MSVC)
@@ -28,15 +29,15 @@ if(MSVC)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
-install(TARGETS libbz2
+install(TARGETS bz2
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
 if(NOT BZIP2_SKIP_TOOLS)
-    add_executable(bzip2 bzip2.c ${LIBBZ2_SOURCES})
-    add_executable(bzip2recover bzip2recover.c ${LIBBZ2_SOURCES})
-    install(TARGETS bzip2 bzip2recover DESTINATION tools)
+    add_executable(bzip2 bzip2.c ${BZ2_SOURCES})
+    add_executable(bzip2recover bzip2recover.c ${BZ2_SOURCES})
+    install(TARGETS bzip2 bzip2recover DESTINATION tools/bzip2)
 endif()
 
 if(NOT BZIP2_SKIP_HEADERS)

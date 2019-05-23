@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/metrics.h>
@@ -60,15 +60,15 @@ namespace vcpkg::Commands::Version
             {
                 if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
                 {
-                    System::println(System::Color::warning,
-                                    "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
-                                    ".\\bootstrap-vcpkg.bat to update.",
-                                    maj2,
-                                    min2,
-                                    rev2,
-                                    maj1,
-                                    min1,
-                                    rev1);
+                    System::printf(System::Color::warning,
+                                   "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
+                                   ".\\bootstrap-vcpkg.bat to update.\n",
+                                   maj2,
+                                   min2,
+                                   rev2,
+                                   maj1,
+                                   min1,
+                                   rev1);
                 }
             }
         }
@@ -85,10 +85,11 @@ namespace vcpkg::Commands::Version
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
-        System::println("Vcpkg package management program version %s\n"
-                        "\n"
-                        "See LICENSE.txt for license information.",
-                        version());
+        System::print2("Vcpkg package management program version ",
+                       version(),
+                       "\n"
+                       "\n"
+                       "See LICENSE.txt for license information.\n");
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

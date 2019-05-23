@@ -1,42 +1,55 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2"
-    FILENAME "ffmpeg-3.3.3.tar.bz2"
-    SHA512 1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
+    URLS "http://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2"
+    FILENAME "ffmpeg-4.1.tar.bz2"
+    SHA512 ccf6d07268dc47e08ca619eb182a003face2a8ee73ec1a28157330dd7de1df88939def1fc1c7e6b6ac7b59752cdad84657d589b2fafb73e14e5ef03fb6e33417
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        create-lib-libraries.patch
+        detect-openssl.patch
+        configure_opencv.patch
+        fix_windowsinclude-in-ffmpegexe-1.patch
+        fix_windowsinclude-in-ffmpegexe-2.patch
+        fix_windowsinclude-in-ffmpegexe-3.patch
+        fixed-debug-bzip2-link.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
-        ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
-)
-
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
+if (WIN32)
+    set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
+
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
+    else()
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+    endif()
+    
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 else()
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+    set(ENV{PATH} "$ENV{PATH}:${YASM_EXE_PATH}")
+    set(BASH /bin/bash)
+    set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
 endif()
-set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 
 set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --disable-ffmpeg")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 
 if("nonfree" IN_LIST FEATURES)
@@ -53,16 +66,16 @@ else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
 endif()
 
+if("ffmpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffmpeg")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffmpeg")
+endif()
+
 if("ffplay" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffplay")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffplay")
-endif()
-
-if("ffserver" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffserver")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffserver")
 endif()
 
 if("ffprobe" IN_LIST FEATURES)
@@ -89,12 +102,11 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
-# bzip2's debug library is named "bz2d", which isn't found by ffmpeg
-# if("bzip2" IN_LIST FEATURES)
-#     set(OPTIONS "${OPTIONS} --enable-bzip2")
-# else()
-#     set(OPTIONS "${OPTIONS} --disable-bzip2")
-# endif()
+if("bzip2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-bzlib")
+else()
+    set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
@@ -128,18 +140,23 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
-    set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
-else()
-    set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
-    set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
+if(WIN32)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
+    else()
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
+    endif()
 endif()
 
+set(ENV_LIB "$ENV{LIB}")
+
+set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${ENV_LIB}")
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
         "${SOURCE_PATH}" # SOURCE DIR
         "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
@@ -148,10 +165,11 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
+set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/debug/lib;${ENV_LIB}")
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
         "${SOURCE_PATH}" # SOURCE DIR
         "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR

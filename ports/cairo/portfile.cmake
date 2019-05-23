@@ -1,25 +1,18 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(CAIRO_VERSION 1.15.8)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cairo-${CAIRO_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://cairographics.org/snapshots/cairo-${CAIRO_VERSION}.tar.xz"
-    FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
-    SHA512 5af1eebf432201dae0efaa5b6766b151d8273ea00dae48e104d56477005b4d423d64b5d11c512736a4cb076632fb2a572ec35becd922825a68d933bb5ff96ca1
-)
-vcpkg_extract_source_archive(${ARCHIVE})
+set(CAIRO_VERSION 1.16.0)
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/export-only-in-shared-build.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0001_fix_osx_defined.patch"
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz"
+    FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
+    SHA512 9eb27c4cf01c0b8b56f2e15e651f6d4e52c99d0005875546405b64f1132aed12fbf84727273f493d84056a13105e065009d89e94a8bfaf2be2649e232b82377f
+)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${CAIRO_VERSION}
+    PATCHES
+        export-only-in-shared-build.patch
+        0001_fix_osx_defined.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
@@ -31,6 +24,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cairo TARGET_PATH share/unofficial-cairo)
 
 # Copy the appropriate header files.
 foreach(FILE
@@ -64,3 +59,5 @@ file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cairo/COPYING ${CURRENT_PACKAGES_DIR}/share/cairo/copyright)
 
 vcpkg_copy_pdbs()
+
+vcpkg_test_cmake(PACKAGE_NAME unofficial-cairo)
