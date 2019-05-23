@@ -208,7 +208,7 @@ endfunction()
 if(VCPKG_ENABLE_FIND_LIBRARY)
     function(find_library _vcpkg_find_library_var_name)
         if(DEFINED _vcpkg_find_library_guard_${_vcpkg_find_library_var_name})
-            vcpkg_msg(FATAL_ERROR "find_library" "INFINIT LOOP DETECT. Guard _vcpkg_find_library_guard_${_vcpkg_find_library_var_name}. Did you supply your own find_library override? \n \
+            vcpkg_msg(FATAL_ERROR "find_library" "INFINIT LOOP DETECTED. Guard _vcpkg_find_library_guard_${_vcpkg_find_library_var_name}. Did you supply your own find_library override? \n \
                                     If yes: please set VCPKG_ENABLE_FIND_LIBRARY off and call vcpkg_find_library if you want to have vcpkg corrected behavior. \n \
                                     If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
         else()
