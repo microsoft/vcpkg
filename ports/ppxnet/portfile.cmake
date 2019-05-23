@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/ppxnet
-    REF v1.0
-    SHA512 1
+    REF v1.6
+    SHA512 403742cd72daa4fd3426596095ae7bfc4b39fb9eea1ace1f8afd42228cbdf276fc68921e671b2595c62502265dd30ee8d5471656fb2465c0f132d1df9f8c0bdd
     HEAD_REF master
 )
 
@@ -22,9 +22,17 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TESTS=OFF
+	OPTIONS_RELEASE
+	OPTIONS_DEBUG
 )
 
 vcpkg_install_cmake()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/ppxnet)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ppxnet)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/ppxnet)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/ppxnet)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ppxnet RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
