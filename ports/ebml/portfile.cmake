@@ -20,7 +20,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ebml)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/EBML)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
