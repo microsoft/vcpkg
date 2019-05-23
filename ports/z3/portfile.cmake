@@ -35,10 +35,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/z3 TARGET_PATH share/z3)
 vcpkg_copy_pdbs()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/z3/Z3Targets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/z3)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/z3 RENAME copyright)
