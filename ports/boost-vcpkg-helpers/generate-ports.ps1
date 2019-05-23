@@ -22,9 +22,13 @@ function TransformReference()
         # thread only works on x86-based processors
         "$library (!arm)"
     }
-    elseif ($library -match "iostreams|filesystem|context|stacktrace|coroutine`$|locale|test|wave|log`$")
+    elseif ($library -match "iostreams|filesystem|context|stacktrace|locale|test|wave|log`$")
     {
         "$library (!uwp)"
+    }
+    elseif ($library -match "coroutine`$")
+    {
+        "$library (!arm&!uwp)"
     }
     else
     {
@@ -46,12 +50,12 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "python" -or $Name -eq "asio" -or $Name -eq "mpi")
+    if ($Name -eq "python" -or $Name -eq "mpi")
     {
         $versionsuffix = "-1"
     }
 
-    if ($Name -eq "test")
+    if ($Name -eq "test" -or $Name -eq "asio")
     {
         $versionsuffix = "-2"
     }
