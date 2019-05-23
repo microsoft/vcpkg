@@ -49,7 +49,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
     file(WRITE ${TARGET_CMAKE} "${_contents}")
 endforeach()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/glbinding-aux/glbinding-aux-export.cmake)\nset(glbinding_FOUND TRUE)\n")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/glbinding-aux/glbinding-aux-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/KHRplatform/KHRplatform-export.cmake)\nset(glbinding_FOUND TRUE)\n")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
