@@ -65,9 +65,9 @@ vcpkg_configure_cmake(
             -DENABLE_FREETYPE=${ENABLE_FREETYPE}
             -DENABLE_WEBP=${ENABLE_WEBP}
             -DENABLE_FONTCONFIG=${ENABLE_FONTCONFIG}
+            -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
