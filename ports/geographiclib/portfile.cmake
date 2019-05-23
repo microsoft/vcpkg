@@ -22,7 +22,6 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
            remove-tools-and-fix-version.patch
-           fix-install-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -46,13 +45,14 @@ else()
 endif()
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/geographiclib)
 vcpkg_copy_pdbs()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/geographiclib/geographiclib-namespace-targets-debug.cmake
-          ${CURRENT_PACKAGES_DIR}/debug/share/geographiclib/geographiclib-targets-debug.cmake
-          DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib)
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/pkgconfig DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/00README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib RENAME readme)
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib RENAME copyright)
