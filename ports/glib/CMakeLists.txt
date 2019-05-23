@@ -22,6 +22,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # find dependencies
 
+if(NOT WIN32)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+endif()
+
 # zlib
 find_package(ZLIB REQUIRED)
 # pcre
@@ -31,7 +36,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
 endif()
 find_library(PCRE_LIBRARY NAMES pcre${PCRE_SUFFIX} pcre)
 # libiconv
-find_package(unofficial-iconv REQUIRED)
+find_package(unofficial-iconv CONFIG REQUIRED)
 # libffi
 find_path(FFI_INCLUDE_DIR ffi.h)
 find_library(FFI_LIBRARY NAMES ffi libffi)
@@ -43,14 +48,7 @@ if(APPLE)
     link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY})
 endif()
 
-if(WIN32 OR APPLE)
-    # libintl(gettext)
-    find_path(LIBINTL_INCLUDE_DIR libintl.h)
-    find_library(LIBINTL_LIBRARY NAMES intl libintl)
-else()
-    set(LIBINTL_INCLUDE_DIR)
-    set(LIBINTL_LIBRARY)
-endif()
+find_package(unofficial-gettext CONFIG REQUIRED)
 
 if(WIN32)
     set(LIBRESOLV_LIBRARY)
@@ -78,9 +76,9 @@ else()
         set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
         set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
         if(BUILD_SHARED_LIBS)
-            set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+            set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR} ${CMAKE_THREAD_LIBS_INIT}")
         else()
-            set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+            set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR} ${CMAKE_THREAD_LIBS_INIT}")
         endif()
 
         string(STRIP "${CXXFLAGS}" CXXFLAGS)
@@ -90,9 +88,11 @@ else()
             COMMAND "${CMAKE_SOURCE_DIR}/configure"
                 --disable-libelf
                 --disable-libmount
+                --with-libiconv=gnu
                 "CPPFLAGS=${CXXFLAGS}"
                 "CFLAGS=${CFLAGS}"
                 "LDFLAGS=${LDFLAGS}"
+                "LIBS=-lintl -liconv -lcharset"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
             RESULT_VARIABLE res
         )
@@ -131,13 +131,11 @@ if(NOT WIN32)
 endif()
 add_library(glib ${GLIB_SOURCES})
 target_compile_definitions(glib PRIVATE GLIB_COMPILATION G_LOG_DOMAIN="GLib" LIBDIR="")
-target_link_libraries(glib PRIVATE ${PCRE_LIBRARY} unofficial::iconv::libiconv unofficial::iconv::libcharset ${LIBINTL_LIBRARY})
+target_link_libraries(glib PRIVATE ${PCRE_LIBRARY} unofficial::gettext::libintl unofficial::iconv::libiconv unofficial::iconv::libcharset)
 if(WIN32)
     target_compile_definitions(glib PRIVATE USE_SYSTEM_PCRE)
     target_link_libraries(glib PRIVATE ws2_32 winmm advapi32 ole32 shell32)
 else()
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-    find_package(Threads REQUIRED)
     target_link_libraries(glib PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 endif()
 target_include_directories(glib PRIVATE ${PCRE_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
@@ -246,7 +244,7 @@ if(NOT GLIB_SKIP_HEADERS)
 endif()
 add_library(gio ${GIO_SOURCES})
 target_compile_definitions(gio PRIVATE GIO_COMPILATION G_LOG_DOMAIN="GLib-GIO")
-target_link_libraries(gio PRIVATE glib gmodule gobject ZLIB::ZLIB ${LIBRESOLV_LIBRARY} ${LIBINTL_LIBRARY})
+target_link_libraries(gio PRIVATE glib gmodule gobject ZLIB::ZLIB ${LIBRESOLV_LIBRARY} unofficial::gettext::libintl unofficial::iconv::libiconv unofficial::iconv::libcharset)
 target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gio> $<INSTALL_INTERFACE:include/gio>)
 if(WIN32)
     target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi advapi32 shell32)
@@ -266,9 +264,9 @@ endforeach()
 macro(add_glib_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
     if(WIN32)
-        target_link_libraries(${TOOL_NAME} glib ${LIBINTL_LIBRARY} shell32)
+        target_link_libraries(${TOOL_NAME} glib unofficial::gettext::libintl unofficial::iconv::libiconv unofficial::iconv::libcharset shell32)
     else()
-        target_link_libraries(${TOOL_NAME} glib ${LIBINTL_LIBRARY})
+        target_link_libraries(${TOOL_NAME} glib unofficial::gettext::libintl unofficial::iconv::libiconv unofficial::iconv::libcharset)
     endif()
     target_compile_definitions(${TOOL_NAME} PRIVATE GLIB_COMPILATION)
     list(APPEND GLIB_TOOLS ${TOOL_NAME})
@@ -276,7 +274,7 @@ endmacro()
 
 macro(add_gio_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
-    target_link_libraries(${TOOL_NAME} PRIVATE glib gio gobject gmodule ${LIBINTL_LIBRARY})
+    target_link_libraries(${TOOL_NAME} PRIVATE glib gio gobject gmodule unofficial::gettext::libintl unofficial::iconv::libiconv unofficial::iconv::libcharset)
     target_include_directories(${TOOL_NAME} PRIVATE gmodule gio)
     target_compile_definitions(${TOOL_NAME} PRIVATE GIO_COMPILATION)
     list(APPEND GLIB_TOOLS ${TOOL_NAME})
