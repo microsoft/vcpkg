@@ -43,7 +43,7 @@ endif()
 set(USE_SECTRANSP OFF)
 set(SECTRANSP_OPTIONS)
 if("sectransp" IN_LIST FEATURES)
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
         message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
     endif()
     set(USE_SECTRANSP ON)
@@ -88,7 +88,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
-        ${DARWINSSL_OPTIONS}
+        ${SECTRANSP_OPTIONS}
         ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
