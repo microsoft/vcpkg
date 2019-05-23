@@ -21,11 +21,7 @@ vcpkg_from_github(
         missing-include-atomic.patch
         boost-1.70.patch
         reorder-glog-gflags.patch
-#        find-gflags.patch
-        no-werror.patch
         folly-config.patch
-        folly-deps.patch
-        # find-double-conversion.patch
 )
 
 file(COPY
