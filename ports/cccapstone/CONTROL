@@ -1,4 +1,4 @@
 Source: cccapstone
-Version: 9b4128ee1153e78288a1b5433e2c06a0d47a4c4e
+Version: 9b4128ee1153e78288a1b5433e2c06a0d47a4c4e-1
 Description: c++ bindings for capstone disasembly framework
 Build-Depends: capstone
