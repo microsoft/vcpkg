@@ -20,6 +20,7 @@ vcpkg_extract_source_archive_ex(
         0005-Control-shared-library-build-with-option.patch
         0006-Fix-utility-link-error.patch
         0007-Fix-install-path.patch
+        geotiff-config.patch
 )
 
 # Delete FindPROJ4.cmake
@@ -38,6 +39,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+if(WIN32)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgeotiff ${CURRENT_PACKAGES_DIR}/share/geotiff) # move configs to expected location
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/GeoTIFF)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgeotiff ${CURRENT_PACKAGES_DIR}/share/geotiff) # move configs to expected location
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF TARGET_PATH share/libgeotiff)
 
