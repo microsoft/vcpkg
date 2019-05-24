@@ -30,6 +30,8 @@ if("libraw" IN_LIST FEATURES)
     set(USE_LIBRAW ON)
 endif()
 
+file(COPY ${CURRENT_INSTALLED_DIR}/share/OpenEXR/FindOpenEXR.cmake DESTINATION ${SOURCE_PATH}/src/cmake/modules)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
