@@ -9,6 +9,7 @@ string(REGEX REPLACE "^.*define OPENEXR_VERSION_MAJOR ([0-9]+).*$" "\\1" OpenEXR
 string(REGEX REPLACE "^.*define OPENEXR_VERSION_MINOR ([0-9]+).*$" "\\1" OpenEXR_VERSION_MINOR "${OPENEXR_CONFIG_H}")
 set(OpenEXR_LIB_SUFFIX "${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}")
 Set(OpenEXR_VERSION "${OpenEXR_VERSION_MAJOR}.${OpenEXR_VERSION_MINOR}")
+set(OPENEXR_VERSION "${OpenEXR_VERSION}")
 
 include(SelectLibraryConfigurations)
 
