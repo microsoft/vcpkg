@@ -8,10 +8,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c
-    REF v3.0.2
-    SHA512 a5086ff149b1ca0e1b652013475c5f3793824416a60ec35018b6dcd502bd38b50fa040271ff8d308520dadecc9601671fccf67046fcda2425f1d7c59e1c6c52f
+    REF v3.0.10
+    SHA512 43f89ead531d1b2f6ede943486bf39f606124762309c294b0f3e185937aef7439cb345103fc065e7940ed64c01ca1bf16940cd2fb0d80da60f39009c3b5a910b
     HEAD_REF master
-    PATCHES md.patch
+    PATCHES
+            md.patch
+            disable-test-build.patch
 )
 
 vcpkg_configure_cmake(

@@ -15,6 +15,8 @@ vcpkg_extract_source_archive_ex(
         configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
+        fix_windowsinclude-in-ffmpegexe-3.patch
+        fixed-debug-bzip2-link.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -42,7 +44,6 @@ else()
 endif()
 
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 
 set(_csc_PROJECT_PATH ffmpeg)
 
@@ -101,12 +102,11 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
-# bzip2's debug library is named "bz2d", which isn't found by ffmpeg
-# if("bzip2" IN_LIST FEATURES)
-#     set(OPTIONS "${OPTIONS} --enable-bzip2")
-# else()
-#     set(OPTIONS "${OPTIONS} --disable-bzip2")
-# endif()
+if("bzip2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-bzlib")
+else()
+    set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
 
 set(OPTIONS_CROSS "")
 
@@ -155,6 +155,9 @@ if(WIN32)
     endif()
 endif()
 
+set(ENV_LIB "$ENV{LIB}")
+
+set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${ENV_LIB}")
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 vcpkg_execute_required_process(
@@ -167,6 +170,7 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
+set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/debug/lib;${ENV_LIB}")
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process(

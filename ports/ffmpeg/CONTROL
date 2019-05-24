@@ -23,6 +23,10 @@ Feature: lzma
 Build-Depends: liblzma
 Description: lzma support in ffmpeg
 
+Feature: bzip2
+Build-Depends: bzip2
+Description: bzip2 support in ffmpeg
+
 Feature: x264
 Build-Depends: x264, ffmpeg[gpl]
 Description: x264 support in ffmpeg
