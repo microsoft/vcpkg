@@ -1,8 +1,35 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 04c45e1..61a7565 100644
+index 04c45e1..1ef4dfe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -237,25 +237,50 @@ IF(enable_checksums)
+@@ -30,7 +30,8 @@ INCLUDE(CTest)
+ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+ 
+ ADD_DEFINITIONS("-D_CRT_SECURE_NO_DEPRECATE
+-                 -DALL_INTERIOR_POINTERS -DNO_EXECUTE_PERMISSION")
++                 -DALL_INTERIOR_POINTERS 
++                 -DNO_EXECUTE_PERMISSION")
+ 
+ IF(APPLE)
+     IF("${CMAKE_OSX_ARCHITECTURES}" STREQUAL "")
+@@ -38,16 +39,6 @@ IF(APPLE)
+     ENDIF()
+ ENDIF(APPLE)
+ 
+-#LIBATOMIC #TODO
+-#ADD_LIBRARY(atomic_ops STATIC )
+-#SET_TARGET_PROPERTIES(atomic_ops PROPERTIES COMPILE_FLAGS -DNO_DEBUGGING)
+-
+-
+-#LIBGC
+-
+-INCLUDE_DIRECTORIES(include)
+-INCLUDE_DIRECTORIES(libatomic_ops/src)
+-
+ SET(SRC alloc.c reclaim.c allchblk.c misc.c mach_dep.c os_dep.c
+         mark_rts.c headers.c mark.c obj_map.c blacklst.c finalize.c
+         new_hblk.c dbg_mlc.c malloc.c dyn_load.c typd_mlc.c ptr_chck.c
+@@ -237,25 +228,54 @@ IF(enable_checksums)
      SET(SRC ${SRC} checksums.c)
  ENDIF(enable_checksums)
  
@@ -49,9 +76,13 @@ index 04c45e1..61a7565 100644
 +    INCLUDES DESTINATION include
 +)
 +
++# Install headers
 +if (NOT BDWGC_SKIP_HEADERS)
 +    file(GLOB BDWGC_HEADERS "include/*.h")
-+    install(FILES ${BDWGC_HEADERS} DESTINATION include/bdwgc)
++    install(FILES ${BDWGC_HEADERS} DESTINATION include/gc)
++
++    file(GLOB BDWGC_EXTRA_HEADERS "include/extra/*.h")
++    install(FILES ${BDWGC_EXTRA_HEADERS} DESTINATION include)
 +endif()
 +
 +# Install tools

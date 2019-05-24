@@ -13,18 +13,15 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_RELEASE
+    OPTIONS 
         -DBDWGC_INSTALL_TOOLS=OFF
     OPTIONS_DEBUG 
         -DBDWGC_SKIP_HEADERS=ON 
-        -DBDWGC_INSTALL_TOOLS=OFF
 )
 
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
-
-vcpkg_copy_tool_dependencies(TOOL_DIR "tools/cord")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/README.QUICK DESTINATION ${CURRENT_PACKAGES_DIR}/share/bdwgc RENAME copyright)
