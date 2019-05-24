@@ -8,6 +8,7 @@ file(STRINGS "${OpenEXR_INCLUDE_DIRS}/OpenEXR/OpenEXRConfig.h" OPENEXR_CONFIG_H)
 string(REGEX REPLACE "^.*define OPENEXR_VERSION_MAJOR ([0-9]+).*$" "\\1" OpenEXR_VERSION_MAJOR "${OPENEXR_CONFIG_H}")
 string(REGEX REPLACE "^.*define OPENEXR_VERSION_MINOR ([0-9]+).*$" "\\1" OpenEXR_VERSION_MINOR "${OPENEXR_CONFIG_H}")
 set(OpenEXR_LIB_SUFFIX "${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}")
+Set(OpenEXR_VERSION "${OpenEXR_VERSION_MAJOR}.${OpenEXR_VERSION_MINOR}")
 
 include(SelectLibraryConfigurations)
 
@@ -49,7 +50,7 @@ endif()
 
 if(NOT OpenEXR_IEXMATH_LIBRARY)
   find_library(OpenEXR_IEXMATH_LIBRARY_RELEASE NAMES IexMath-${OpenEXR_LIB_SUFFIX})
-  find_library(OpenEXR_IEXMATH_LIBRARY_DEBUG NAMES IexMath-${OpenEXR_LIB_SUFFIX}d)
+  find_library(OpenEXR_IEXMATH_LIBRARY_DEBUG NAMES IexMath-${OpenEXR_LIB_SUFFIX}_d)
   select_library_configurations(OpenEXR_IEXMATH)
 endif()
 
