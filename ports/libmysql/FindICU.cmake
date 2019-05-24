@@ -240,7 +240,7 @@ function(_ICU_FIND)
       DOC "ICU ${component} library (debug)"
       NO_PACKAGE_ROOT_PATH
       )
-    include(${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake)
+    include(SelectLibraryConfigurations)
     select_library_configurations(ICU_${component_upcase})
     mark_as_advanced("${component_cache_release}" "${component_cache_debug}")
     if(${component_cache})
@@ -320,7 +320,7 @@ endfunction()
 
 _ICU_FIND()
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(ICU
                                   FOUND_VAR ICU_FOUND
                                   REQUIRED_VARS ICU_INCLUDE_DIR
