@@ -14,36 +14,16 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-    )
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
 
-    vcpkg_install_cmake()
+vcpkg_install_cmake()
 
-    # Settings for TBBConfigInternal.cmake.in
-    set(TBB_LIB_EXT a)
-    set(TBB_LIB_PREFIX lib)
-else()
-    if (VCPKG_CRT_LINKAGE STREQUAL static)
-        set(RELEASE_CONFIGURATION Release-MT)
-        set(DEBUG_CONFIGURATION Debug-MT)
-    else()
-        set(RELEASE_CONFIGURATION Release)
-        set(DEBUG_CONFIGURATION Debug)
-    endif()
-
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH build/vs2013/makefile.sln
-        RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
-        DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
-    )
-    # Settings for TBBConfigInternal.cmake.in
-    set(TBB_LIB_EXT lib)
-    set(TBB_LIB_PREFIX)
-endif()
+# Settings for TBBConfigInternal.cmake.in
+set(TBB_LIB_EXT a)
+set(TBB_LIB_PREFIX lib)
 
 file(COPY
   ${SOURCE_PATH}/include/tbb
