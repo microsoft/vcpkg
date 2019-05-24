@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 b21be356806125ab8bdb74de41eef2c56714cfd2003065be362d9fab7e177a07675e95a13ed6d7fbd3dc38502194000b0e378ff6c43c7d54a0234ada0df881eb
     HEAD_REF master
     PATCHES
-        fix-arm-msvc-build
+        fix-arm-msvc-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
