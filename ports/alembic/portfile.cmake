@@ -12,8 +12,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.10
-    SHA512 e98ffaedb98dbc5c53fe9703d3063bb118d32c83c47e3af04c8fc96237034b02fe0fc2c628ca82bdd0e0ef17d9375f4f48e0022ce33380b9ad91970539611ced
+    REF 1.7.11
+    SHA512 94b9c218a2fe6e2e24205aff4a2f6bab784851c2aa15592fb60ea91f0e8038b0c0656a118f3a5cba0d3de8917dd90b74d0e2d1c4ac034b9ee3f5d0741d9f6b70
     HEAD_REF master
     PATCHES
         fix-hdf5link.patch
