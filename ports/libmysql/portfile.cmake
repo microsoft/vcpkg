@@ -27,6 +27,8 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/system-libs.patch
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindICU.cmake" DESTINATION "${SOURCE_PATH}/cmake") # Cmakes FindICU Module is missing NAMES in the find_library calls
+
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)
 
 set(STACK_DIRECTION)
