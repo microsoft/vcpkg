@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  message("unicorn-lib is a static library, now build with static.")
+  set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/unicorn-lib
@@ -19,6 +24,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/unicorn-lib RENAME copyright)

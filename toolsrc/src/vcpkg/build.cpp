@@ -70,6 +70,7 @@ namespace vcpkg::Build::Command
             Build::AllowDownloads::YES,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
