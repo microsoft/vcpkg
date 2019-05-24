@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 845ddf0..e10285c 100644
+index 845ddf0..9ccb9b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -181,9 +181,7 @@ foreach(flag ${test_flags})
@@ -13,7 +13,7 @@ index 845ddf0..e10285c 100644
  
  option(ld-version-script "Enable linker version script" ON)
  # Check if LD supports linker scripts.
-@@ -601,12 +599,13 @@ check_include_file(OpenGL/gl.h HAVE_OPENGL_GL_H)
+@@ -601,12 +599,15 @@ check_include_file(OpenGL/gl.h HAVE_OPENGL_GL_H)
  check_include_file(OpenGL/glu.h HAVE_OPENGL_GLU_H)
  
  # Win32 IO
@@ -22,8 +22,10 @@ index 845ddf0..e10285c 100644
 -  set(win32_io TRUE)
 +set(USE_WIN32_FILEIO FALSE CACHE BOOL "")
 +if(MSVC)
-+  set(USE_WIN32_FILEIO TRUE CACHE BOOL "" FORCE)
-+  add_definitions(-DUSE_WIN32_FILEIO)
++  if (NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")  #on UWP we use the unix I/O api
++    set(USE_WIN32_FILEIO TRUE CACHE BOOL "" FORCE)
++    add_definitions(-DUSE_WIN32_FILEIO)
++  endif()
 +  add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS /wd4996)
  endif()
  
@@ -31,7 +33,7 @@ index 845ddf0..e10285c 100644
  
  # Orthogonal features
  
-@@ -708,16 +707,28 @@ endif()
+@@ -708,16 +709,28 @@ endif()
  
  #report_values(TIFF_INCLUDES TIFF_LIBRARY_DEPS)
  
