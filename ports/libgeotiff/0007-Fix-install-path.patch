@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 409c34f..692704d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -298,7 +298,7 @@ SET(GEOTIFF_MAN_PAGES
+ 
+ #    ${PROJECT_BINARY_DIR}/geotiff_version.h
+ 
+-IF(WIN32)
++IF(0)
+     SET(DEFAULT_LIB_SUBDIR lib)
+     SET(DEFAULT_DATA_SUBDIR .)
+     SET(DEFAULT_INCLUDE_SUBDIR include)
+@@ -313,6 +313,7 @@ ELSE()
+     SET(DEFAULT_BIN_SUBDIR bin)
+     SET(DEFAULT_LIB_SUBDIR lib)
+     SET(DEFAULT_DATA_SUBDIR share)
++    SET(DEFAULT_TOOLS_SUBDIR tools)
+     SET(DEFAULT_INCLUDE_SUBDIR include)
+ ENDIF()
+ 
+@@ -326,20 +327,23 @@ SET(GEOTIFF_INCLUDE_SUBDIR ${DEFAULT_INCLUDE_SUBDIR} CACHE STRING
+     "Subdirectory where header files will be installed")
+ SET(GEOTIFF_DATA_SUBDIR ${DEFAULT_DATA_SUBDIR} CACHE STRING
+     "Subdirectory where data will be installed")
++SET(GEOTIFF_TOOLS_SUBDIR ${DEFAULT_TOOLS_SUBDIR} CACHE STRING
++    "Subdirectory where data will be installed")
+ 
+ # Mark *_SUBDIR variables as advanced and dedicated to use by power-users only.
+-MARK_AS_ADVANCED(GEOTIFF_BIN_SUBDIR GEOTIFF_LIB_SUBDIR GEOTIFF_INCLUDE_SUBDIR GEOTIFF_DATA_SUBDIR)
++MARK_AS_ADVANCED(GEOTIFF_BIN_SUBDIR GEOTIFF_LIB_SUBDIR GEOTIFF_INCLUDE_SUBDIR GEOTIFF_DATA_SUBDIR GEOTIFF_TOOLS_SUBDIR)
+ 
+ # Full paths for the installation
+ SET(GEOTIFF_BIN_DIR ${GEOTIFF_BIN_SUBDIR})
+ SET(GEOTIFF_LIB_DIR ${GEOTIFF_LIB_SUBDIR})
+ SET(GEOTIFF_INCLUDE_DIR ${GEOTIFF_INCLUDE_SUBDIR})
+ SET(GEOTIFF_DATA_DIR ${GEOTIFF_DATA_SUBDIR})
++SET(GEOTIFF_TOOLS_DIR ${GEOTIFF_TOOLS_SUBDIR})
+ 
+ # Install doc files
+ INSTALL(FILES
+     AUTHORS ChangeLog COPYING INSTALL LICENSE README README_BIN README.WIN
+-    DESTINATION doc)
++    DESTINATION share/libgeotiff)
+ #    DESTINATION ${GEOTIFF_DATA_DIR}/doc)
+ 
+ # Install CSV data files
+diff --git a/bin/CMakeLists.txt b/bin/CMakeLists.txt
+index 6c6cc21..6bfc3b9 100644
+--- a/bin/CMakeLists.txt
++++ b/bin/CMakeLists.txt
+@@ -35,6 +35,6 @@ MESSAGE(STATUS "Adding GeoTIFF utilities to build - done: ${GEOTIFF_UTILITIES}")
+ # Targets installation
+ 
+ INSTALL(TARGETS ${GEOTIFF_UTILITIES}
+-    RUNTIME DESTINATION ${GEOTIFF_BIN_DIR}
++    RUNTIME DESTINATION ${GEOTIFF_TOOLS_DIR}
+     LIBRARY DESTINATION ${GEOTIFF_LIB_DIR}
+     ARCHIVE DESTINATION ${GEOTIFF_LIB_DIR})

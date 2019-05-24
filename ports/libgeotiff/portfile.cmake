@@ -19,6 +19,7 @@ vcpkg_extract_source_archive_ex(
         0004-Fix-libxtiff-installation.patch
         0005-Control-shared-library-build-with-option.patch
         0006-Fix-utility-link-error.patch
+        0007-Fix-install-path.patch
 )
 
 # Delete FindPROJ4.cmake
@@ -38,29 +39,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/libgeotiff/copyright COPYONLY)
-
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*)
-else()
-    file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-endif()
-
-file(COPY ${GEOTIFF_UTILS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
-
-file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-
-# Move and cleanup doc files
-file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/share/libgeotiff/doc) 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc) 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF TARGET_PATH share/libgeotiff)
 
 vcpkg_copy_pdbs()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/libgeotiff/*.exe ${CURRENT_PACKAGES_DIR}/debug/tools/libgeotiff/*.exe)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgeotiff/COPYING ${CURRENT_PACKAGES_DIR}/share/libgeotiff/copyright)
