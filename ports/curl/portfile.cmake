@@ -40,6 +40,19 @@ if("mbedtls" IN_LIST FEATURES)
     set(USE_MBEDTLS ON)
 endif()
 
+set(USE_DARWINSSL OFF)
+set(DARWINSSL_OPTIONS)
+if("darwinssl" IN_LIST FEATURES)
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        message(FATAL_ERROR "darwinssl is not supported on non-Apple platforms")
+    endif()
+    set(USE_DARWINSSL ON)
+    set(DARWINSSL_OPTIONS
+        -DCURL_CA_PATH=none
+    )
+endif()
+
+
 # SSH
 set(USE_LIBSSH2 OFF)
 if("ssh" IN_LIST FEATURES)
@@ -79,6 +92,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
+        ${DARWINSSL_OPTIONS}
         ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
@@ -87,6 +101,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
         -DCMAKE_USE_MBEDTLS=${USE_MBEDTLS}
+        -DCMAKE_USE_DARWINSSL=${USE_DARWINSSL}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
     OPTIONS_RELEASE
@@ -126,36 +141,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}")
     endif()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-    # Drop debug suffix, as FindCURL.cmake does not look for it
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
-        # Fixup libcurl-target-debug.cmake to match
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" DEBUG_MODULE)
-        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" "${DEBUG_MODULE}")
-    endif()
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
-        # Fixup libcurl-target-release.cmake to match
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-release.cmake" RELEASE_MODULE)
-        string(REPLACE "\${_IMPORT_PREFIX}/lib/libcurl_imp.lib" "\${_IMPORT_PREFIX}/lib/libcurl.lib" RELEASE_MODULE "${RELEASE_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-release.cmake" "${RELEASE_MODULE}")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
-        # Fixup libcurl-target-debug.cmake to match
-        file(READ "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" DEBUG_MODULE)
-        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/libcurl-d_imp.lib" "\${_IMPORT_PREFIX}/debug/lib/libcurl.lib" DEBUG_MODULE "${DEBUG_MODULE}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/share/curl/libcurl-target-debug.cmake" "${DEBUG_MODULE}")
-    endif()
-endif()
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

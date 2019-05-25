@@ -1,19 +1,17 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(VCPKG_TARGET_ARCHIECTURE STREQUAL "x86")
     message(FATAL_ERROR "theia requires ceres[suitesparse] which depends on suitesparse which depends on openblas which is unavailable on x86.")
 endif()
 
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sweeneychris/TheiaSfM
-    REF d15154a6c30ea48e7d135be126e2936802e476ad
-    SHA512 aaf6e9737d04499f0ffd453952380f2e1aa3aab2a75487d6806bfab60aa972719d7349730eab3d1b37088e99cf6c9076ae1cdea276f48532698226c69ac48977
+    REF v0.8
+    SHA512 2f620389c415badec36f4b44be0378fc62761dd6b2ee4cd7033b13573c372f098e248553575fb2cceb757b1ca00e86a11c67e03b6077e0a4b0f8797065746312
     HEAD_REF master
 )
 

@@ -16,7 +16,7 @@ index 3c8edd3..5c861d2 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <LargeAddressAware>true</LargeAddressAware>
 -      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;..\..\..\mpfr\dll\$(IntDir)mpfr.lib;..\..\..\pthreads\dll\$(IntDir)pthreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC3.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>postbuild $(IntDir) DLL
@@ -34,7 +34,7 @@ index 3c8edd3..5c861d2 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <LargeAddressAware>true</LargeAddressAware>
 -      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;..\..\..\mpfr\dll\$(IntDir)mpfr.lib;..\..\..\pthreads\dll\$(IntDir)pthreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC3.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>postbuild $(IntDir) DLL
@@ -52,7 +52,7 @@ index 3c8edd3..5c861d2 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <LargeAddressAware>true</LargeAddressAware>
 -      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;..\..\..\mpfr\dll\$(IntDir)mpfr.lib;..\..\..\pthreads\dll\$(IntDir)pthreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC3.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>postbuild $(IntDir) DLL
@@ -70,7 +70,7 @@ index 3c8edd3..5c861d2 100644
        <GenerateDebugInformation>true</GenerateDebugInformation>
        <LargeAddressAware>true</LargeAddressAware>
 -      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;..\..\..\mpfr\dll\$(IntDir)mpfr.lib;..\..\..\pthreads\dll\$(IntDir)pthreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>@NATIVE_INSTALLED_DIR@\lib\mpir.lib;@NATIVE_INSTALLED_DIR@\lib\mpfr.lib;@NATIVE_INSTALLED_DIR@\lib\pthreadVC3.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>postbuild $(IntDir) DLL

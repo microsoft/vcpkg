@@ -2,18 +2,15 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF v1.4.1
-    SHA512 e9d71b4679cb4e4d755f7bb4101e131b37e209b6aebd0853e0c63eb11c42b75faa5da4ff8c265149808a475f3a1cfb140c5b49f877acfda908a4bb7add983aae
+    REF v1.5
+    SHA512 a57122340c4f9a8e434ec70098916aef7c49d5d8312a30e4753f54bacc1099b146698b66c12f9ef116f7cadc93c604809a905c0e259aecf63aa2553390a1b609
     HEAD_REF master
 )
 

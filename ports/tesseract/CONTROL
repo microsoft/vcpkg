@@ -1,4 +1,4 @@
 Source: tesseract
-Version: 4.0.0
+Version: 4.0.0-1
 Description: An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.
 Build-Depends: leptonica, icu

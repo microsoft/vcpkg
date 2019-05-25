@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/argtable2-13)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz"
@@ -17,8 +20,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        # Due to missing dllexport flags we export all symbols
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE
         -DCMAKE_DEBUG_POSTFIX=d
 )
 

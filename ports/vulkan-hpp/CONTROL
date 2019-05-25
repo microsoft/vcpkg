@@ -1,0 +1,4 @@
+Source: vulkan-hpp
+Version: 2019-05-11
+Description: Header only C++ bindings for the Vulkan C API
+Build-Depends: vulkan

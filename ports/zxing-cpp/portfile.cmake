@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF 5aad4744a3763d814df98a18886979893e638274
     SHA512 a079ad47171224de4469e76bf0779b6ebc9c6dfb3604bd5dbf5e6e5f321d9e6255f689daa749855f8400023602f1773214013c006442e9b32dd4b8146c888c02
     HEAD_REF master
+    PATCHES
+      0001-opencv4-compat.patch
 )
 
 vcpkg_configure_cmake(

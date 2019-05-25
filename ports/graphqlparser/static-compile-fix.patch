@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 56741c2..313308a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -142,8 +142,11 @@ if (UNIX)
+ elseif(WIN32)
+   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphqlparser.lib
+ 	DESTINATION lib)
++  # do not install pdb when static compilation.
++  if (BUILD_SHARED_LIBS)
+   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphqlparser.pdb
+ 	DESTINATION bin)
++  endif()
+ endif()
+ 
+ IF (test)

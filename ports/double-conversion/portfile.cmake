@@ -1,18 +1,18 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/double-conversion
-    REF 3.1.0
-    SHA512 ba797a7203bc7eb8ba697dc758a3341578f0405b5ab42fbd5a22d9fac09d11dd8cb5ed9ff9ff369e8ae9397ec74c04c62fca29d1bc469c6d2ea1a84a6dff9188
+    REF v3.1.4
+    SHA512 715a34ace2ff74b79d80a8c003c16cfbf958ebc92264e28cc572e1a12a786e1df9678abb46f032c2be387495e1a3d02957b12fa4a245ec6cfe19ca637519ac3c
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=True
 )
 
 vcpkg_install_cmake()
