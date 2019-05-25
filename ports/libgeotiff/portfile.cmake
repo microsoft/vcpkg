@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     REF ${LIBGEOTIFF_VERSION}
     PATCHES
         cmakelists.patch
+        geotiff-config.patch
 )
 
 # Delete FindPROJ4.cmake
