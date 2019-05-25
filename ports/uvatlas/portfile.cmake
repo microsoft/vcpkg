@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF sept2016
-    SHA512 326af26c151620cd5082daf3913cf3fbe7bca7d1aaf5cc44cacff54319ffe79b728c24519187c3f9393a846430d0fb9493ffe9473f87d220f5c9ae7dab73f69f
+    REF 8e619f3e5edbbc6796d8a8c42a9268375eb5c842
+    SHA512 98256e423c750155a69f26ef9d60d1bbdd753c938e1f68a3c188bf66fc8c5fbb12cf63258f9aeaab31bb765f6958cbafe992fa3167b9f70c8595e0d8cf992ebb
     HEAD_REF master
 )
 

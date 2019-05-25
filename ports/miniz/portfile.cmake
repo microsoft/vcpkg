@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO richgel999/miniz
-    REF 2.0.8
-    SHA512 84b480df8bff63422d8c36cef3741f9b9f3dce13babf4de6cb4d575209978ad849357cc72bcf31ee8b6c5da6853ed2e5eddbbe16fecd689afd7028e834abf7e9
+    REF a4264837ae37384b1d7a205a6732db322f0f3769
+    SHA512 e0aba16afdf230d1e54d0a9cedd336b0b158b02744839f0547e14ee47a97fc1a6668f3a181bd46e969b01b158af18dc8ed3c0a4210b3b620242338a2788806b3
     HEAD_REF master
     PATCHES
     	CMakeLists-targets.patch

@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wdas/ptex
-    REF v2.1.28
-    SHA512 ddce3c79f14d196e550c1e8a5b371482f88190cd667a2e2aa84601de1639f7cabb8571c1b3a49b48df46ce550d27088a00a67b1403c3bfec2ed73437c3dca3e8
+    REF f4e1dfa2dcab88295c7026d5441c3190e3b5f71d
+    SHA512 dbc557dc5e1761204ee3483af9bf4ff1504cbd7955e0405dc27a51f7182e2445e41db086b2792c2491aa2cbaddc74e523170a4b3d25e44d332123d5b7081f4b9
     HEAD_REF master)
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}

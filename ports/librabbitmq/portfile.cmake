@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO alanxz/rabbitmq-c
-  REF v0.9.0
-  SHA512 a63fe267a3ec112a5e9456a03066132b91f897181947fba18ea3efb14ca0a69996d7dfaecda61a0dd360e03a4e56569e70592e1674b75d20b937a118e1acfc64
+  REF 58ade1a2a3b486d2c211ea24899b5e99231c7af4
+  SHA512 e32d2e780af1ab295d7f9a82d5f3e1b892c04f23b39e221db40c9b6ce6f132cdab2ae27626fa8e97971bd4dcad19cb714b38c6e2c56c56f97e1edfc1d8e11ff9
   HEAD_REF master
   PATCHES
 	fix-uwpwarning.patch

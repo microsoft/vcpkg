@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yaml/libyaml
-    REF 0.2.1
-    SHA512 8b91738183a6d81c2c0381b4279cff9d8f811dac643ce5e08aa869058f5653ad8a2d9d8f9e563b26ad75b617b80b10ccb32753984a50ed684529a90bdd248bff
+    REF d407f6b1cccbf83ee182144f39689babcb220bd6
+    SHA512 0728c89ba43af3cdec22bccaf18c9ad7b07e13cdebed9d8919e2c62cf90bb5e23d2c746fd250320b2827dfcd9f1ce442d3bf8a3fe18b61f9a8d1d7770561e610
     HEAD_REF master
     PATCHES 0001-fix-version.patch
 )

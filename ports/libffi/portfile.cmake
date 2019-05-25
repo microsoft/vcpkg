@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF v3.1
-    SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
+    REF 5b5c82cb284accfe280852db2db1fb54badb43b4
+    SHA512 e947ff66a9f3bc77c05dd2d4b7c6edc1c607374922879d0099bbef144a16c612eb283f6d067ed6c7e1ee39f98c8be0d41856e91234d810218fc7ae439d73d10f
     HEAD_REF master
     PATCHES
         export-global-data.patch

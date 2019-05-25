@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cbeck88/strict-variant
-    REF 5ab330edcb5e3eea67fbedf8ac89648e5bc1e9a1
-    SHA512 c80e5cd7cff389174447f5825af57ddea079956b2a4cb89337479e02289e89df19713ff031e914bdff2c823e8d2518311a1118701ae4e173f6557c770e553cd0
+    REF 70cb9469b78028d72da1409d631d72a75ed7d498
+    SHA512 d1cd2ece2b5b099344f307fea5103c5136eae0b4dd3b30957a1bb7ed8c60d372ddcc721681475c35f17f50ad897b8f6019e381b50ebf7b19a82276de2c6033e1
     HEAD_REF master
 )
 

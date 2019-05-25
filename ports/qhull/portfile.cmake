@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qhull/qhull
-    REF v7.2.1 # Qhull 2015.2
-    SHA512 8f5177ea45f82fa28f13e95105497e7e29086d7301e1cb8d3860fff09ebf8d0f01cfcb0f044c422f0ac0ba94b845bba223232e5eeb613bf671f65a569b8766d0
+    REF 1215f97a9f3397d708a0636cd390ca766d7ae438
+    SHA512 d11872f462a18d09ce81986f15148e123f3b5fad9b1b5c3e6521a764f777a74321538e264e3e3e0bb11dbf8284efeb84c9a5413edd77fe4d39ea900a27c19648
     HEAD_REF master
 )
 if(${TARGET_TRIPLET} STREQUAL "x64-windows-static") 

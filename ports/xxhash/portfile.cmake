@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Cyan4973/xxHash
-    REF v0.6.4
-    SHA512 6c914bac5092dfd01349c8223c382d3c13ba1b22e08300ce86ea9663a9a934f930debdeb71c14365ec57d72b95088a4354da92dfb7fcf7d07ec01c0f4fb70ca7
+    REF 810f9d209b65cc523c159ca96fddd614d890a5e2
+    SHA512 2d7a06a5cabc945ac841df4451a744f0a666e4afcce77f5eea70bd68547ac46ebf776dd0e3645ef0204c7ff1dea3f5ff8228a8d9894dae0077f865ffdc123c66
     HEAD_REF dev)
 
 vcpkg_configure_cmake(

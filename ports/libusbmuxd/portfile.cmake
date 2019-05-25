@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libusbmuxd
-    REF 1.0.109
-    SHA512 104205ebcac96765f4bf0b42dbe5df084be4f87fc64454b4e02049fbd18caf9282d070f8949935977eda76fba68b6a909571afea58d4ad4091f02d0e6b7a08e0
+    REF a4422aa65f3635d99c3b80fad18f093ef3c5f653
+    SHA512 887ab95ecb75927fc5731eead98a61cd996daa70794833a05cf8d168359d95df3def94098c02f6db6e0c304f65ee772f9fe0fdc65b7f96d0bd8e53faa2ae7b17
     HEAD_REF msvc-master
     PATCHES dllexport.patch
 )

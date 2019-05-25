@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF v1.11.3
-    SHA512 af52821022ab6148e64fdf183b1aa4607b101c7d0edc20d2ccc909f50eed218d7a283fa3b58260fd41cd3f324ecafad8c5137c66e05786580b043240551b2c42 
+    REF c14f8847f743f4dc1b3abc947b1725c87d8b10ce
+    SHA512 8df74f9d0e97bab0a3a9db8cb101935bcd46c1382ee7fcf82cb16191c66430f32bb34947ce63be9e668cdc8e3c89d945306f3e1509d86d5380827bc583397cb9 
     HEAD_REF master
     PATCHES
         001-cmake-install-dir.patch

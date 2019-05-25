@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankheckenbach/ftgl
-    REF 2.3.1
-    SHA512 4c3c92e79371aa9048a0de6c27bd008036be19fe6179bce472f36ced359026aaeaa5b63c83f90ffc1d425dd2e587479efc700dc1082c2ed0189d16ea87838c9a
+    REF 483639219095ad080538e07ceb5996de901d4e74
+    SHA512 5a0d05dbb32952e5aa81d2537d604192ca19710cd57289ae056acc5e3ae6d403d7f0ffc8cf6c1aada6c3c23a8df4a8d0eabb81433036ade810bca1894fdfde54
     HEAD_REF master
     PATCHES "0001-fix-building-DLL-on-Windows.patch"
 )

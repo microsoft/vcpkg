@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO artyom-beilis/cppcms
-    REF v1.1.0
-	SHA512 cfc77f28ddee05b8a350fff1dbd7c09adcf008b8662d4f977b203dee50b5fadae97df499a655ebb48263a7448e0bdca514c8ac52ea805bf33e48612dabaa69f4
+    REF b72b19915794d1af63c9a9e9bea58e20a4ad93d4
+	SHA512 ed212a8ae18d8a356f3bb9e64f2108a8f1209ff0d7ebf57bd1ef6e8e766fe47d00833a012e19b80db6a07732b3785689d6f4d01546b8053bdfcec0463e0a128c
 )
 
 vcpkg_find_acquire_program(PYTHON2)

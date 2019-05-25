@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svi-opensource/libics
-    REF 8d8d2dbe72450cbaf88080b6c0e24a7a4a58009e 
-    SHA512 739668b4d51ddb67d50ed1d41bd6965b90b5e4eafc7ec19e2f1d668f48af6e237f6a1872673e3fec5888efe94c2b321295c4de9502aba1f677fc6d0e0399c141
+    REF b9532b738ad7f17569dfcaae74eb53d3c2959394
+    SHA512 e75a40036b69d9066c128c396ea19a53079525e47d4661eb6465f07dbaebc2357b32a5806d9cf739fb1b8b132e29b9aefd351e15e6fd883213e5a15cbe55e971
     HEAD_REF master
     PATCHES
         cmakelists.patch

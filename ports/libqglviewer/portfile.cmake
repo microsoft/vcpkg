@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GillesDebunne/libQGLViewer
-    REF 28a23f14997dc2e08990b884c07075b48979cac7
-    SHA512 58058543e07857f8b1480301b72f789290eee2d65382bee29773bcc1e3f45cedcee33b762bdb870b6cae8a0daab38ebdecde40e2f02720cf0f6fcf10f2007f25
+    REF 781d914c003466b342b45d19266a9613fc0e7e0e
+    SHA512 e234c41f6f9ac4c318904ace7c48a5dd953f4be0fa52b7434130ee1b0944ccd4a00cb5f1264556f44e3451adf905faaf7c422ab705c9a9bf58dd924ae69cd880
     HEAD_REF master
     PATCHES "use-default-config-on-all-platforms.patch"
 )

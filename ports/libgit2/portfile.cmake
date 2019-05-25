@@ -8,8 +8,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v0.28.1
-    SHA512 5a1bc5c6af6ad25cb8b2c446e75a774d2a615d4999ec3223d681c7b120d83e7cecd94f1ca549bac0802f5324e27e73cc5a6483ad410636c2f06f098b30b1b647
+    REF b3e1a56ebb2b9291e82dc027ba9cbcfc3ead54d3
+    SHA512 0879c162e2e1dc00eadfbda22cd1f9d3a95b4ec2b653c108983f37c2f695140882de4d50d7cbc04ced247125a4e9fe6df16130e1267891aecdb2411d920db5c6
     HEAD_REF master
 )
 
