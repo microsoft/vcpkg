@@ -165,15 +165,18 @@ macro(vcpkg_find_package name)
 endmacro()
 
 if(VCPKG_ENABLE_FIND_PACKAGE)
+    # Must be a macro since we do not know which variables are being set and thus cannot propagte them into PARENT_SCOPE from a function. 
     macro(find_package name)
-        if(DEFINED _vcpkg_find_package_guard_${name}${ARGC})
-            vcpkg_msg(FATAL_ERROR "find_package" "INFINIT LOOP DETECT. Guard _vcpkg_find_package_guard_${name}${ARGC}. Did you supply your own find_package override? \n \
-                                    If yes: please set VCPKG_ENABLE_FIND_PACKAGE off and call vcpkg_find_package if you want to have vcpkg corrected behavior. \n \
-                                    If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
-        else()
-            set(_vcpkg_find_package_guard_${name}${ARGC} ON)
-        endif()
+        # Cannot use the loop protection in find_package because a module might want to also call find_package but with other parameters. 
+        # Using only the parameter count is thus not enough to make sure that the guard is correct. Needs additional some kind of hash dependent on the parameterlist to be correct. 
+        #if(DEFINED _vcpkg_find_package_guard_${name}${ARGC})
+        #    vcpkg_msg(FATAL_ERROR "find_package" "INFINIT LOOP DETECTED. Guard _vcpkg_find_package_guard_${name}${ARGC}. Did you supply your own find_package override? \n \
+        #                            If yes: please set VCPKG_ENABLE_FIND_PACKAGE off and call vcpkg_find_package if you want to have vcpkg corrected behavior. \n \
+        #                            If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
+        #else()
+        #    set(_vcpkg_find_package_guard_${name}${ARGC} ON)
+        #endif()
         vcpkg_find_package(${ARGV})
-        unset(_vcpkg_find_package_guard_${name}${ARGC})
+        #unset(_vcpkg_find_package_guard_${name}${ARGC})
     endmacro()
 endif()
