@@ -1,5 +1,5 @@
 Source: azure-c-shared-utility
-Version: 2019-03-18-1
+Version: 2019-05-16
 Description: Azure C SDKs common code
 Build-Depends: curl (linux), openssl (linux), azure-macro-utils-c, umock-c
 
