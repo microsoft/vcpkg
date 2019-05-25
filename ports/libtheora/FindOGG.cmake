@@ -1,6 +1,6 @@
 find_path(OGG_INCLUDE_DIR NAMES ogg/ogg.h)
 
-find_library(OGG_LIBRARY NAMES ogg)
+find_library(OGG_LIBRARY NAMES ogg libogg)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(OGG DEFAULT_MSG OGG_LIBRARY OGG_INCLUDE_DIR)

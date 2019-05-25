@@ -107,7 +107,7 @@ if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_I
     message(WARNING "There are no libraries installed for the Vcpkg triplet ${VCPKG_TARGET_TRIPLET}.")
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
+if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
     list(APPEND CMAKE_PREFIX_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
     )
@@ -169,6 +169,7 @@ function(add_executable name)
     _add_executable(${ARGV})
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
+    list(FIND ARGV "MACOSX_BUNDLE" MACOSX_BUNDLE_IDX)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         if(VCPKG_APPLOCAL_DEPS)    
             if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
@@ -179,7 +180,7 @@ function(add_executable name)
                         -OutVariable out
                 )
             elseif(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
-                if ("MACOSX_BUNDLE" IN_LIST ARGV)
+                if (NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET ${name} POST_BUILD
                     COMMAND python ${_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py
                         $<TARGET_FILE:${name}>
