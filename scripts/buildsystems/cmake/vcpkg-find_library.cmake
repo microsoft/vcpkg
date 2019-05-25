@@ -112,6 +112,8 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                             list(APPEND _vcpkg_debug_lib_names_${_vcpkg_debug_suffix} "${_vcpkg_lib_name}${_vcpkg_debug_suffix}")
                         endforeach()
                         string(REGEX REPLACE "${_vcpkg_find_lib_NAMES};NAMES_PER_DIR" "${_vcpkg_debug_lib_names_${_vcpkg_debug_suffix}};NAMES_PER_DIR" _vcpkg_list_vars_debug "${_vcpkg_list_vars}") 
+                        string(REGEX REPLACE "/lib" "/debug/lib" _vcpkg_list_vars_debug "${_vcpkg_list_vars_debug}") 
+                        string(REGEX REPLACE "/bin" "/debug/bin" _vcpkg_list_vars_debug "${_vcpkg_list_vars_debug}") 
                         # We added NAMES_PER_DIR; This is a guard to not change the variable name in the list (first entry)
                         string(REGEX REPLACE "^${_vcpkg_find_library_imp_output}" "${_vcpkg_find_library_imp_output}_suffix_${_vcpkg_debug_suffix}" _vcpkg_list_vars_debug "${_vcpkg_list_vars_debug}") #New variable name
                         vcpkg_msg(STATUS "find_library" "Debug call vars: ${_vcpkg_list_vars_debug}")
