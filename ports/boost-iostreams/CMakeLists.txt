@@ -5,7 +5,7 @@ if(BUILD_SHARED_LIBS)
     add_definitions(-DBOOST_IOSTREAMS_DYN_LINK=1)
 endif()
 add_definitions(
-    -DBOOST_ALL_NO_LIB=1
+    -DBOOST_ALL_NO_LIB=1 
     -DBOOST_IOSTREAMS_USE_DEPRECATED
 )
 include_directories(include)
@@ -26,11 +26,11 @@ target_link_libraries(boost_iostreams PRIVATE ZLIB::ZLIB)
 find_package(BZip2 REQUIRED)
 target_link_libraries(boost_iostreams PRIVATE BZip2::BZip2)
 
-find_package(LibLZMA CONFIG REQUIRED)
+find_package(LibLZMA REQUIRED)
 target_include_directories(boost_iostreams PRIVATE ${LIBLZMA_INCLUDE_DIRS})
 target_link_libraries(boost_iostreams PRIVATE ${LIBLZMA_LIBRARIES})
 
-find_library(ZSTD_LIBRARY NAMES zstdd zstd_staticd zstd zstd_static)
+find_library(ZSTD_LIBRARY NAMES zstdd zstd_staticd zstd zstd_static NAMES_PER_DIR)
 target_link_libraries(boost_iostreams PRIVATE ${ZSTD_LIBRARY})
 
 install(TARGETS boost_iostreams
