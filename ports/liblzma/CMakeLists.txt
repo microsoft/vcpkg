@@ -54,7 +54,7 @@ if(NOT WIN32)
 ")
 endif()
 
-add_library(LZMA
+add_library(LibLZMA
     src/common/tuklib_cpucores.c
     src/common/tuklib_physmem.c
     src/liblzma/check/check.c
@@ -131,20 +131,20 @@ add_library(LZMA
 )
 
 if(MSVC)
-    target_include_directories(LZMA PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/windows/vs2017>)
+    target_include_directories(LibLZMA PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/windows/vs2017>)
 else()
-    target_compile_definitions(LZMA PRIVATE -DHAVE_VISIBILITY=1)
+    target_compile_definitions(LibLZMA PRIVATE -DHAVE_VISIBILITY=1)
 endif()
 
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(LZMA PRIVATE -DDLL_EXPORT)
-    target_compile_definitions(LZMA PUBLIC -DLIBLZMADLL_EXPORTS)
+    target_compile_definitions(LibLZMA PRIVATE -DDLL_EXPORT)
+    target_compile_definitions(LibLZMA PUBLIC -DLIBLZMADLL_EXPORTS)
 else()
-    target_compile_definitions(LZMA PUBLIC -DLZMA_API_STATIC)
+    target_compile_definitions(LibLZMA PUBLIC -DLZMA_API_STATIC)
 endif()
-target_compile_definitions(LZMA PUBLIC -DHAVE_CONFIG_H)
+target_compile_definitions(LibLZMA PUBLIC -DHAVE_CONFIG_H)
 
-target_include_directories(LZMA PUBLIC
+target_include_directories(LibLZMA PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/liblzma/common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/common>
@@ -158,11 +158,13 @@ target_include_directories(LZMA PUBLIC
     $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
 )
 
-set_target_properties(LZMA PROPERTIES PUBLIC_HEADER
+set_target_properties(LibLZMA PROPERTIES OUTPUT_NAME "lzma")
+
+set_target_properties(LibLZMA PROPERTIES PUBLIC_HEADER
 "${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/base.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/bcj.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/block.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/check.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/container.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/delta.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/filter.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/hardware.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/index_hash.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/lzma12.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/stream_flags.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/version.h;${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma/vli.h"
 )
 
-install(TARGETS LZMA EXPORT LibLZMATargets
+install(TARGETS LibLZMA EXPORT LibLZMATargets
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
     ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
@@ -175,6 +177,6 @@ install(FILES "${PROJECT_SOURCE_DIR}/src/liblzma/api/lzma.h"
 
 install(EXPORT LibLZMATargets
     FILE LibLZMAConfig.cmake
-    NAMESPACE LZMA::
+    NAMESPACE LibLZMA::
     DESTINATION "${INSTALL_CMAKE_DIR}"
 )

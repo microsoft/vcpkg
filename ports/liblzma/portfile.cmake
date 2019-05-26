@@ -29,8 +29,8 @@ find_path(LibLZMA_INCLUDE_DIR
     PATH_SUFFIXES lzma
 )
 if(NOT LibLZMA_LIBRARY)
-    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA PATHS \${_IMPORT_PREFIX}/lib/)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAD LZMAd PATHS \${_IMPORT_PREFIX}/debug/lib/)
+    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/lib/)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd PATHS \${_IMPORT_PREFIX}/debug/lib/)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
