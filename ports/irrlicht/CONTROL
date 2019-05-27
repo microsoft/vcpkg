@@ -1,5 +1,5 @@
 Source: irrlicht
-Version: 1.8.4-1
+Version: 1.8.4
 Description: Irrlicht lightning fast 3d engine
 Build-Depends: zlib, libpng, bzip2, libjpeg-turbo
 
