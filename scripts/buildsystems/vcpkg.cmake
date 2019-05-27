@@ -49,6 +49,7 @@ include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-add_executable.cmake)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-add_library.cmake)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-find_package.cmake)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-find_library.cmake)
+include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-set_property.cmake)
 include(${_VCPKG_TOOLCHAIN_DIR}/cmake/vcpkg-set_target_properties.cmake)
 
 set(VCPKG_TOOLCHAIN ON)
