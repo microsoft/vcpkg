@@ -11,6 +11,7 @@ vcpkg_from_github(
         0002-add-custom-options.patch
         0003-build-only-necessary-targets.patch
         0004-add-necessary-head.patch
+        blosc.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)

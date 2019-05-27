@@ -1,5 +1,5 @@
 Source: suitesparse
-Version: 5.1.2-1
+Version: 5.1.2-2
 Build-Depends: clapack (!osx)
 Description: algebra library
 

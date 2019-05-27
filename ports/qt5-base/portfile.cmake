@@ -12,20 +12,18 @@ include(configure_qt)
 include(install_qt)
 
 set(MAJOR_MINOR 5.12)
-set(FULL_VERSION ${MAJOR_MINOR}.1)
+set(FULL_VERSION ${MAJOR_MINOR}.3)
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 51494d8947ae16ab7aee22aca156035718f5a700737547de59b4d61d3919c00f4de858111c8928a66c0385604623d847d231892d964d53924a8c97b6e2bedf25
+    SHA512 1dab927573eb22b1ae772de3a418f7d3999ea78d6e667a7f2494390dd1f0981ea93f4f892cb6e124ac18812c780ee71da3021b485c61eaf1ef2234a5c12b7fe2
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE_FILE}"
     REF ${FULL_VERSION}
-    PATCHES
-        fix-gui-configure-json.patch
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -71,7 +69,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         OPTIONS
             ${CORE_OPTIONS}
             -mp
-            -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+            -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
@@ -171,7 +169,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 endif()
 
-vcpkg_execute_required_process( 
+vcpkg_execute_required_process(
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
     LOGNAME fix-cmake
@@ -251,4 +249,4 @@ endif()
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-# 
+#

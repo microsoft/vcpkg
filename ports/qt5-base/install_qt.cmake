@@ -26,7 +26,21 @@ function(install_qt)
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
     vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
-    set(_path "$ENV{PATH}")
+
+    if (CMAKE_HOST_WIN32)
+	# flex and bison for ANGLE library
+	vcpkg_find_acquire_program(FLEX)
+	get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
+	get_filename_component(FLEX_DIR ${FLEX_EXE_PATH} NAME)
+
+	file(COPY ${FLEX_EXE_PATH} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools" )
+	set(FLEX_TEMP "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools/${FLEX_DIR}")
+	file(RENAME "${FLEX_TEMP}/win_bison.exe" "${FLEX_TEMP}/bison.exe")
+	file(RENAME "${FLEX_TEMP}/win_flex.exe" "${FLEX_TEMP}/flex.exe")
+	vcpkg_add_to_path("${FLEX_TEMP}")
+   endif()
+
+   set(_path "$ENV{PATH}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Package ${TARGET_TRIPLET}-dbg")

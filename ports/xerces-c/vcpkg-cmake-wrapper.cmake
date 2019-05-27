@@ -6,4 +6,3 @@ if (APPLE)
       list(APPEND XercesC_LIBRARIES "-framework CoreServices" "-framework CoreFoundation" curl)
    endif()
 endif()
-

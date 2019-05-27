@@ -5,8 +5,8 @@ include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmak
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qt/qtmqtt
-    REF v5.12.1
-    SHA512 c6f4000a032caaf5224ca6fe2442f22eddc26e3e53cc101885c717b706156cada716e45ff92d267928b87e1e5ceae5e81694f4b7c289d9836e75f27fd012de42
+    REF cf41d84738f0ed0c779f75db94d413ad938fb901
+    SHA512 e9a818999e4befb0b945d609a1ee28a3e2d7e3b6d8c12ab82ae827fdb8f6bf5e8b82114c1850438d634fa24c9ac608ebae1d461385bd4e088f8cabf7eec0182c
     HEAD_REF dev
 )
 

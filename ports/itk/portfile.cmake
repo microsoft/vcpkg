@@ -1,5 +1,12 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 50 AND CMAKE_HOST_WIN32)
+    message(WARNING "ITKs buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
@@ -14,14 +21,6 @@ if ("vtk" IN_LIST FEATURES)
 else()
     set(ITKVtkGlue OFF)
 endif()
-
-# directory path length needs to be shorter than 50 characters
-set(ITK_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/ITK)
-if(EXISTS ${ITK_BUILD_DIR})
-  file(REMOVE_RECURSE ${ITK_BUILD_DIR})
-endif()
-file(RENAME ${SOURCE_PATH} ${ITK_BUILD_DIR})
-set(SOURCE_PATH "${ITK_BUILD_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/circular_buffer
-    REF boost-1.69.0
-    SHA512 2340ef5d04dff2be8dc6aadd697dd11992c86fcf84da4ea48cac17992b85ebd8f11b26e3772d77110db1ea7b81076c5c29647e8c13a17bbe47063ea1b511f809
+    REF boost-1.70.0
+    SHA512 c4aef9b30ed93000c663acb7536df6d7269be4e3a0c431daa2f5a0397505bc487c90259b0a24bb0145bf9c07fdecd8fbaa53ceca589f39a3b29f087d07f98113
     HEAD_REF master
 )
 

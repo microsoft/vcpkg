@@ -28,6 +28,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
     set(IS_WIN32 ON)
 endif()
 
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindOpenSSL.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindZLIB.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
