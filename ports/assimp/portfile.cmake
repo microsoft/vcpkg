@@ -26,14 +26,7 @@ vcpkg_configure_cmake(
             -DASSIMP_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             -DASSIMP_INSTALL_PDB=OFF
-            -DZLIB_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
-            -DZLIB_FOUND=1
-    OPTIONS_RELEASE
-            -DZLIB_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/zlib.lib
-            -DZLIB_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/zlib.lib
-    OPTIONS_DEBUG
-            -DZLIB_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib
-            -DZLIB_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib
+            -DZLIB_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
