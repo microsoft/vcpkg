@@ -4,6 +4,8 @@ CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_SET_PROPERTY_EXTERNAL_OVERRIDE "Tells VCPKG 
 mark_as_advanced(VCPKG_ENABLE_SET_PROPERTY_EXTERNAL_OVERRIDE)
 
 function(vcpkg_set_property _vcpkg_set_property_mode_impl)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0054 NEW)
     if("${_vcpkg_set_property_mode_impl}" MATCHES "TARGET" AND "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_IMPLIB")
         cmake_parse_arguments(PARSE_ARGV 0 _vcpkg_set_property "APPEND;APPEND_STRING" "" "TARGET;PROPERTY")
         
@@ -24,6 +26,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
                     if("${_vcpkg_target_imp_loc_rel}" MATCHES "/debug/")
                         #This is the death case. If we reach this line the linkage of the target will be wrong!
                         #This also fails for executables within the debug directory which is a nice feature and makes sure only release tools are used by vcpkg
+                        cmake_policy(POP)
                         vcpkg_msg(FATAL_ERROR "set_property" "Property IMPORTED_LOCATION_RELEASE: ${_vcpkg_target_imp_loc_rel}. Not set to vcpkg release library dir!" ALWAYS)
                     else()
                         vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} IMPORTED_LOCATION_RELEASE is correct: ${_vcpkg_target_imp_loc_rel}.")
@@ -34,6 +37,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
                     vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} has property IMPORTED_IMPLIB_RELEASE: ${_vcpkg_target_implib_loc_rel}. Checking for correct vcpkg path!")
                     if("${_vcpkg_target_implib_loc_rel}" MATCHES "/debug/")
                         #This is the death case. If we reach this line the linkage of the target will be wrong!
+                        cmake_policy(POP)
                         vcpkg_msg(FATAL_ERROR "set_property" "Property IMPORTED_IMPLIB_RELEASE: ${_vcpkg_target_implib_loc_rel}. Not set to vcpkg release library dir!" ALWAYS)
                     else()
                         vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} IMPORTED_IMPLIB_RELEASE is correct: ${_vcpkg_target_implib_loc_rel}.")
@@ -48,6 +52,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
                             vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} IMPORTED_LOCATION_DEBUG is an execuable: ${_vcpkg_target_imp_loc_dbg}. VCPKG will use release tools for performance reasons.")
                         else()
                             #This is the death case. If we reach this line the linkage of the target will be wrong!
+                            cmake_policy(POP)
                             vcpkg_msg(FATAL_ERROR "set_property" "Property IMPORTED_LOCATION_DEBUG: ${_vcpkg_target_imp_loc_dbg}. Not set to vcpkg debug library dir!" ALWAYS)
                         endif()
                     else()
@@ -59,6 +64,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
                     vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} has property IMPORTED_IMPLIB_DEBUG: ${_vcpkg_target_implib_loc_dbg}. Checking for correct vcpkg path!")
                     if(NOT "${_vcpkg_target_implib_loc_dbg}" MATCHES "/debug/")
                         #This is the death case. If we reach this line the linkage of the target will be wrong!
+                        cmake_policy(POP)
                         vcpkg_msg(FATAL_ERROR "set_property" "Property IMPORTED_IMPLIB_DEBUG: ${_vcpkg_target_implib_loc_dbg}. Not set to vcpkg release library dir!" ALWAYS)
                     else()
                         vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} IMPORTED_IMPLIB_DEBUG is correct: ${_vcpkg_target_implib_loc_rel}.")
@@ -133,6 +139,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
             set_property(${ARGV})
         endif()
     endif()
+    cmake_policy(POP)
 endfunction()
 
 if(VCPKG_ENABLE_SET_PROPERTY)
