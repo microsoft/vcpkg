@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         dont-overwrite-prefix-path.patch
         uninitialized-variable.patch
+        remove-useless-path.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
@@ -26,7 +27,6 @@ vcpkg_configure_cmake(
             -DASSIMP_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             -DASSIMP_INSTALL_PDB=OFF
-            -DZLIB_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
