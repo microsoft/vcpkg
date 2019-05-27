@@ -100,7 +100,7 @@ macro(vcpkg_find_package name)
                     # The only thing this thing should still fix is "<packagename>_LIBRAR(Y|IES)_DIRS?" All other variables should be fixed by find_library!
                     # Most of the times the "DIRS?" variable is set by a find_path call to an include file and then the relativ path "../lib" is added. 
                     set(_pkg_var_new "${${_pkg_var}}")
-                    if("x${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # No need to guard from generator expression; already done above. 
+                    if("${${_pkg_var}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # No need to guard from generator expression; already done above. 
                         # Debug Path found
                         if(CMAKE_BUILD_TYPE MATCHES "^[Rr][Ee][Ll][Ee][Aa][Ss][Ee]$") 
                             vcpkg_msg(WARNING "find_package-fix" "Found debug paths in release build in variable ${_pkg_var}! Path: ${${_pkg_var}}")
