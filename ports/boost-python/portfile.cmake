@@ -8,11 +8,15 @@ vcpkg_from_github(
     REF boost-1.70.0
     SHA512 0e540f68713460c64f195f56af1cbd00ae4fa98adc91a83a0c1fdb7e60950cf282cab02b772f06e7c268c3cd294566d6abfa1d1aa545c687a256d6863870f72d
     HEAD_REF master
-    PATCHES unwind-type.patch
 )
 
+set(PYTHON_DIR_NAME "python3\.*")
+if("python2" IN_LIST FEATURES)
+    set(PYTHON_DIR_NAME "python2\.*")
+endif() 
+
 # Find Python. Can't use find_package here, but we already know where everything is
-file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/python[0-9.]*")
+file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/${PYTHON_DIR_NAME}")
 set(PYTHONLIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
 set(PYTHONLIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib")
 string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION "${PYTHON_INCLUDE_PATH}")
