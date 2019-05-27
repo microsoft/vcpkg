@@ -1,7 +1,7 @@
 option(VCPKG_ENABLE_SET_TARGET_PROPERTIES "Enables override of the cmake function set_target_properties." ON)
 mark_as_advanced(VCPKG_ENABLE_SET_TARGET_PROPERTIES)
-CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE "Tells VCPKG to use _set_target_properties instead of set_target_properties." OFF "NOT VCPKG_ENABLE_SET_TARGET_PROPERTIES" OFF)
-mark_as_advanced(VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
+#CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE "Tells VCPKG to use _set_target_properties instead of set_target_properties." OFF "NOT VCPKG_ENABLE_SET_TARGET_PROPERTIES" OFF)
+#mark_as_advanced(VCPKG_ENABLE_SET_TARGET_PROPERTIES_EXTERNAL_OVERRIDE)
 
 function(vcpkg_set_target_properties)
     list(FIND ARGV PROPERTIES _vcpkg_properties_pos)
