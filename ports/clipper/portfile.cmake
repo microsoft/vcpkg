@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/polyclipping/files/clipper_ver6.4.2.zip/download"
     FILENAME "clipper_ver6.4.2.zip"
