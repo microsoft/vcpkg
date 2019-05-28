@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankheckenbach/ftgl
     REF 483639219095ad080538e07ceb5996de901d4e74
-    SHA512 5a0d05dbb32952e5aa81d2537d604192ca19710cd57289ae056acc5e3ae6d403d7f0ffc8cf6c1aada6c3c23a8df4a8d0eabb81433036ade810bca1894fdfde54
+    SHA512 d5bf95db8db6a5c9f710bd274cb9bb82e3e67569e8f3ec55b36e068636a09252e6f191e36d8279e61b5d12408c065ce51829fc38d4d7afe5bda724752d2f084f
     HEAD_REF master
     PATCHES "0001-fix-building-DLL-on-Windows.patch"
 )

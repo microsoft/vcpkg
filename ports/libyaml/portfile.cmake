@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yaml/libyaml
     REF d407f6b1cccbf83ee182144f39689babcb220bd6
-    SHA512 0728c89ba43af3cdec22bccaf18c9ad7b07e13cdebed9d8919e2c62cf90bb5e23d2c746fd250320b2827dfcd9f1ce442d3bf8a3fe18b61f9a8d1d7770561e610
+    SHA512 284182af48b8f7cfa7893e1f830076784e2f9eee9bed5e5aef30ca3e2ab08410c10f19f67e5c10d11e59306685f577adaf08c3698792b8d6a0f53122e7ae1876
     HEAD_REF master
     PATCHES 0001-fix-version.patch
 )

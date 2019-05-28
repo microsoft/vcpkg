@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
     REF 5b5c82cb284accfe280852db2db1fb54badb43b4
-    SHA512 e947ff66a9f3bc77c05dd2d4b7c6edc1c607374922879d0099bbef144a16c612eb283f6d067ed6c7e1ee39f98c8be0d41856e91234d810218fc7ae439d73d10f
+    SHA512 1b13605eefef88b1d138351b620204dc0c1a66fe861e5f78b247b84cec1d0567ad796b82a40e96ee0c46f7fc2ec73fce7899e21147fe2aea5c6de8b7dc45fd14
     HEAD_REF master
     PATCHES
         export-global-data.patch

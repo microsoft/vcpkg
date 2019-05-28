@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO castano/nvidia-texture-tools
     REF 5f6424778ebcb949cbed32ae9fa1466b598bfd0a
-    SHA512 3e6fef5977ca29daa7dc97afe11d61de57a8556c9caf30902db8c5c167d9c38f736bcb62eebdaaf7558299b39975bc269d41ab980c813b67dd1fc85064c853c9
+    SHA512 b9c97888ad942a1235d068335bf339e284555a0d0be22e284a62d9f73b646a531934bacf1415a3cc73ba7a5a8b83065a7e3edde3e28b06eb94109bec77adb0c5
     HEAD_REF master
     PATCHES
         001-define-value-for-HAVE_UNISTD_H-in-mac-os.patch

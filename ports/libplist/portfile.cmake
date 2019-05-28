@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libplist
     REF f279ef534ab5adeb81f063dee5e8a8fc3ca6d3ab
-    SHA512 51cd9337f7112e339b64737cfb83825d99d5c6a3ead876ea59c1cf2e71ff9bc7968142f1a07983b80141411470c2df365cfb6e2dea71c25678d8eaf5867f3478
+    SHA512 52001a46935693e3ac5f0b8c3d13d9bf51c5f34189f6f006bd697d7e965f402460060708c4fb54ed43f49a217ac442fcb8dca252fcbccd3e6a154b6c9a8c2104
     HEAD_REF msvc-master
     PATCHES dllexport.patch
 )

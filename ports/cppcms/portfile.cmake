@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO artyom-beilis/cppcms
     REF b72b19915794d1af63c9a9e9bea58e20a4ad93d4
-	SHA512 ed212a8ae18d8a356f3bb9e64f2108a8f1209ff0d7ebf57bd1ef6e8e766fe47d00833a012e19b80db6a07732b3785689d6f4d01546b8053bdfcec0463e0a128c
+	SHA512 e99d34d14fbde22be725ac2c0bec069fb584e45c66767af75efaf454ca61a7a5e57434bf86109f910884c72202b8cf98fe16505e7d3d30d9218abd4d8b27d5df
 )
 
 vcpkg_find_acquire_program(PYTHON2)
