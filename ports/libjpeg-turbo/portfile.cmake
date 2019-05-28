@@ -34,6 +34,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DCMAKE_DEBUG_POSTFIX=d
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_EXECUTABLES=OFF
@@ -44,23 +45,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-# Rename libraries for static builds
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-    endif()
-else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-    endif()
-endif()
 
 file(COPY
     ${SOURCE_PATH}/LICENSE.md
