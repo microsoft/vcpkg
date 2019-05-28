@@ -66,8 +66,86 @@ endif()
 set(VCPKG_RELEASE_LIBDIR "${CURRENT_INSTALLED_DIR}/lib")
 set(VCPKG_DEBUG_LIBDIR "${CURRENT_INSTALLED_DIR}/debug/lib")
 
+if(WIN32)
+    set(CMAKE_FIND_LIBRARY_PREFIXES "")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".so;.a")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".dylib;.so;.a")
+endif()
+find_library(LIBJPEG_LIBS_RELEASE   NAMES jpeg${JPEG_STATIC_POSTFIX}   PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(LIBJPEG_LIBS_DEBUG     NAMES jpeg${JPEG_STATIC_POSTFIX}d  PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(ZLIB_LIBS_RELEASE      NAMES zlib z                       PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(ZLIB_LIBS_DEBUG        NAMES zlibd zd                     PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(LIBPNG_LIBS_RELEASE    NAMES png16 libpng16               PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(LIBPNG_LIBS_DEBUG      NAMES png16d libpng16d             PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(PSQL_LIBS_RELEASE      NAMES pq libpq                     PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(PSQL_LIBS_DEBUG        NAMES pqd libpqd                   PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(PCRE2_LIBS_RELEASE     NAMES pcre2-16                     PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(PCRE2_LIBS_DEBUG       NAMES pcre2-16d                    PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(FREETYPE_LIBS_RELEASE  NAMES freetype                     PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(FREETYPE_LIBS_DEBUG    NAMES freetyped                    PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(HARFBUZZ_LIBS_RELEASE  NAMES harfbuzz                     PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(HARFBUZZ_LIBS_DEBUG    NAMES harfbuzz                     PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH)
+find_library(OPENSSL_RELEASE        NAMES ssl ssleay32                 PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(OPENSSL_DEBUG          NAMES ssl ssleay32                 PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH) # will also need d in future
+find_library(OPENSSL_CRYPTO_RELEASE NAMES crypto libeay32              PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(OPENSSL_CRYPTO_DEBUG   NAMES crypto libeay32              PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH) # will also need d in future
+find_library(SQLITE_LIBS_RELEASE    NAMES sqlite3                      PATHS "${VCPKG_RELEASE_LIBDIR}" NO_DEFAULT_PATH)
+find_library(SQLITE_LIBS_DEBUG      NAMES sqlite3                      PATHS "${VCPKG_DEBUG_LIBDIR}"   NO_DEFAULT_PATH) 
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(QT5Deps
+    REQUIRED_VARS 
+    LIBJPEG_LIBS_RELEASE LIBJPEG_LIBS_DEBUG 
+    ZLIB_LIBS_RELEASE ZLIB_LIBS_DEBUG
+    LIBPNG_LIBS_RELEASE LIBPNG_LIBS_DEBUG
+    PSQL_LIBS_RELEASE PSQL_LIBS_DEBUG
+    PCRE2_LIBS_RELEASE PCRE2_LIBS_DEBUG
+    FREETYPE_LIBS_RELEASE FREETYPE_LIBS_DEBUG
+    HARFBUZZ_LIBS_RELEASE HARFBUZZ_LIBS_DEBUG
+    OPENSSL_RELEASE OPENSSL_DEBUG
+    OPENSSL_CRYPTO_RELEASE OPENSSL_CRYPTO_DEBUG
+    SQLITE_LIBS_RELEASE SQLITE_LIBS_DEBUG
+    )
+if(NOT QT5Deps_FOUND)
+    message(FATAL_ERROR Not all dependencies found!)
+endif()
+
+if(NOT WIN32)
+
+    set(PSQL_LIBS_RELEASE "${PSQL_LIBS_RELEASE} ${OPENSSL_RELEASE} ${OPENSSL_CRYPTO_RELEASE} -ldl -lpthread")
+    set(PSQL_LIBS_DEBUG "${PSQL_LIBS_DEBUG} ${OPENSSL_DEBUG} ${OPENSSL_CRYPTO_DEBUG} -ldl -lpthread")
+
+    set(SQLITE_LIBS_RELEASE "${SQLITE_LIBS_RELEASE} -ldl -lpthread")
+    set(SQLITE_LIBS_DEBUG "${SQLITE_LIBS_DEBUG} -ldl -lpthread")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(HARFBUZZ_LIBS_RELEASE "${HARFBUZZ_LIBS_RELEASE} -framework ApplicationServices")
+        set(HARFBUZZ_LIBS_DEBUG "${HARFBUZZ_LIBS_DEBUG} -framework ApplicationServices")
+    endif()
+endif()
+
 set(QT_OPTIONS_RELEASE)
 set(QT_OPTIONS_DEBUG)
+list(APPEND QT_OPTIONS_RELEASE
+        ZLIB_LIBS="${ZLIB_LIBS_RELEASE}"
+        LIBPNG_LIBS="${LIBPNG_LIBS_RELEASE}"
+        LIBJPEG_LIBS="${LIBJPEG_LIBS_RELEASE}"
+        PSQL_LIBS="${PSQL_LIBS_RELEASE}"
+        PCRE2_LIBS="${PCRE2_LIBS_RELEASE}"
+        FREETYPE_LIBS="${FREETYPE_LIBS_RELEASE}"
+        )
+list(APPEND QT_OPTIONS_DEBUG
+        ZLIB_LIBS="${ZLIB_LIBS_DEBUG}"
+        LIBPNG_LIBS="${LIBPNG_LIBS_DEBUG}"
+        LIBJPEG_LIBS="${LIBJPEG_LIBS_DEBUG}"
+        PSQL_LIBS="${PSQL_LIBS_DEBUG}"
+        PCRE2_LIBS="${PCRE2_LIBS_DEBUG}"
+        FREETYPE_LIBS="${FREETYPE_LIBS_DEBUG}"
+        )
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(PLATFORM "win32-msvc")
     list(APPEND CORE_OPTIONS
@@ -75,51 +153,33 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         )
     list(APPEND QT_OPTIONS_RELEASE
-            LIBJPEG_LIBS="-ljpeg${JPEG_STATIC_POSTFIX}"
-            ZLIB_LIBS="-lzlib"
-            LIBPNG_LIBS="-llibpng16"
-            PSQL_LIBS="-llibpq"
-            PCRE2_LIBS="-lpcre2-16"
-            FREETYPE_LIBS="-lfreetype"
+            ZLIB_LIBS="${ZLIB_LIBS_RELEASE}"
+            LIBPNG_LIBS="${LIBPNG_LIBS_RELEASE}"
         )
     list(APPEND QT_OPTIONS_DEBUG
-            LIBJPEG_LIBS="-ljpeg${JPEG_STATIC_POSTFIX}d"
-            ZLIB_LIBS="-lzlibd"
-            LIBPNG_LIBS="-llibpng16d"
-            PSQL_LIBS="-llibpqd"
-            PCRE2_LIBS="-lpcre2-16d"
-            FREETYPE_LIBS="-lfreetyped"
+            ZLIB_LIBS="${ZLIB_LIBS_DEBUG}"
+            LIBPNG_LIBS="${LIBPNG_LIBS_DEBUG}"
         )
-else
+else()
     list(APPEND QT_OPTIONS_RELEASE
-            "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}.a"
-            "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
-            "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libz.a"
-            "ZLIB_LIBS=${VCPKG_RELEASE_LIBDIR}/libz.a"
-            "LIBPNG_LIBS=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
-            "FREETYPE_LIBS=${VCPKG_RELEASE_LIBDIR}/libfreetype.a"
-            "PSQL_LIBS=${VCPKG_RELEASE_LIBDIR}/libpq.a ${VCPKG_RELEASE_LIBDIR}/libssl.a ${VCPKG_RELEASE_LIBDIR}/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${VCPKG_RELEASE_LIBDIR}/libsqlite3.a -ldl -lpthread"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_LIBS_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${ZLIB_LIBS_RELEASE}"
+            "SQLITE_LIBS=${SQLITE_LIBS_RELEASE}"
         )
     list(APPEND QT_OPTIONS_DEBUG
-            "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}d.a"
-            "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
-            "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libz.a"
-            "ZLIB_LIBS=${VCPKG_DEBUG_LIBDIR}/libz.a"
-            "LIBPNG_LIBS=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
-            "FREETYPE_LIBS=${VCPKG_DEBUG_LIBDIR}/libfreetyped.a"
-            "PSQL_LIBS=${VCPKG_DEBUG_LIBDIR}/libpqd.a ${VCPKG_DEBUG_LIBDIR}/libssl.a ${VCPKG_DEBUG_LIBDIR}/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${VCPKG_DEBUG_LIBDIR}/libsqlite3.a -ldl -lpthread"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_LIBS_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${ZLIB_LIBS_DEBUG}"
+            "SQLITE_LIBS=${SQLITE_LIBS_DEBUG}"
         )
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         set(PLATFORM "linux-g++")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(PLATFORM "macx-clang")
         list(APPEND QT_OPTIONS_RELEASE
-                "HARFBUZZ_LIBS=${VCPKG_RELEASE_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
+                "HARFBUZZ_LIBS=${HARFBUZZ_LIBS_RELEASE}"
             )
         list(APPEND QT_OPTIONS_DEBUG 
-                "HARFBUZZ_LIBS=${VCPKG_DEBUG_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
+                "HARFBUZZ_LIBS=${HARFBUZZ_LIBS_DEBUG}"
             )
     endif()
 endif()
