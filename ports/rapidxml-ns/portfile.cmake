@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO svgpp/rapidxml_ns
-  REF 04674e33e3bbfeee05875a29a36734667c0f3cfd
-  SHA512 c82d55ca7ec358427f811689604ba02582de9d7f57d0caa3a96e2c36b9f3751e9acefc6f84348e6c619dacca31880f279bf9d9959f8eff251f3d3276c836bcd2
+  REF v1.13.2
+  SHA512 72cdd7e728471e8903ce64470f5172abe7f2300d4d115b3a27b4d4ffb3c20e59aefb9b23c535e37baa3f53c9125aa2932d6fa9ba24e658151e1c9b12f959523a
   HEAD_REF master
 )
 

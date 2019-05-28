@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_61_1
-    SHA512 09fa3c87f8d516eabe3241247a5094c32ee0481961cf85bf78ecb13acdf23bb2ec82f113d2660271d22742c79e76d73fb122730fa28e34c7f5477c05a4a6534c
+    REF curl-7_65_0
+    SHA512 436b6b42654c1db2b3f69df410a7f28401a50faf18e74f328a93585c147541e697664b0e9e7df03239fd76c797c1bb4f435f4c668a6b0ad28bdd67e17f786491
     HEAD_REF master
     PATCHES
         0001_cmake.patch
@@ -40,14 +40,14 @@ if("mbedtls" IN_LIST FEATURES)
     set(USE_MBEDTLS ON)
 endif()
 
-set(USE_DARWINSSL OFF)
-set(DARWINSSL_OPTIONS)
-if("darwinssl" IN_LIST FEATURES)
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        message(FATAL_ERROR "darwinssl is not supported on non-Apple platforms")
+set(USE_SECTRANSP OFF)
+set(SECTRANSP_OPTIONS)
+if("sectransp" IN_LIST FEATURES)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
+        message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
     endif()
-    set(USE_DARWINSSL ON)
-    set(DARWINSSL_OPTIONS
+    set(USE_SECTRANSP ON)
+    set(SECTRANSP_OPTIONS
         -DCURL_CA_PATH=none
     )
 endif()
@@ -83,16 +83,12 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     )
 endif()
 
-vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
-        ${DARWINSSL_OPTIONS}
+        ${SECTRANSP_OPTIONS}
         ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
@@ -101,9 +97,10 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
         -DCMAKE_USE_MBEDTLS=${USE_MBEDTLS}
-        -DCMAKE_USE_DARWINSSL=${USE_DARWINSSL}
+        -DCMAKE_USE_SECTRANSP=${USE_SECTRANSP}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_RELEASE
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
     OPTIONS_DEBUG
@@ -113,8 +110,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/curl)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/curl)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/CURL)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
 else()
