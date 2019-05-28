@@ -3,11 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF dc85ffc8068c18dfdf118666b4c78de1c7ac640b
-    SHA512 b21be356806125ab8bdb74de41eef2c56714cfd2003065be362d9fab7e177a07675e95a13ed6d7fbd3dc38502194000b0e378ff6c43c7d54a0234ada0df881eb
+    REF 0d525ba1252074732aac575f88f04831f2656b8f
+    SHA512 f86d2a150b7c835b7de1a524d02a93ee3fcf4ff4f5f5b52fd49d6802bcb22f9829e562e8faef0842af7b4617aa49925622366f8290ada824be2602bf728dbdf0
     HEAD_REF master
-    PATCHES
-        fix-arm-msvc-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
@@ -31,7 +29,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DRDKAFKA_BUILD_STATIC=${RDKAFKA_BUILD_STATIC}
         -DRDKAFKA_BUILD_EXAMPLES=OFF
-        -DRDKAFKA_BUILD_TESTS=ON
+        -DRDKAFKA_BUILD_TESTS=OFF
         -DENABLE_LZ4_EXT=${ENABLE_LZ4_EXT}
         -DWITH_SSL=${WITH_SSL}
         -DWITH_BUNDLED_SSL=OFF
