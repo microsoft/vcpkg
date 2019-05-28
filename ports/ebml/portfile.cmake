@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.3.8
-    SHA512 8af11f8ff22be1c72170eec97de813c4206c65795a320a86dd111794dc5b05c279d9455b87919b239762055d93704eec87cb023c53cf769da83ee22dbb49cc04
+    REF release-1.3.9
+    SHA512 3ae22ed491024b276edde9237df0e41a8e5a4e142ec6783c77d5286d7825fb59be62f336d07f7042baac8fc7ac004ad7cc4605754c5801d65547449ea04c287f
     HEAD_REF master
 )
 
