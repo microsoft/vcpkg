@@ -46,12 +46,12 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "python" -or $Name -eq "asio" -or $Name -eq "mpi")
+    if ($Name -eq "asio" -or $Name -eq "mpi")
     {
         $versionsuffix = "-1"
     }
 
-    if ($Name -eq "test")
+    if ($Name -eq "python" -or $Name -eq "test")
     {
         $versionsuffix = "-2"
     }
@@ -71,6 +71,15 @@ function Generate()
             "Feature: icu"
             "Description: ICU backend for Boost.Locale"
             "Build-Depends: icu"
+        )
+    }
+    if ($Name -eq "python")
+    {
+        $controlLines += @(
+            ""
+            "Feature: python2"
+            "Description: Python2 support in Boost.Python"
+            "Build-Depends: python2"
         )
     }
     if ($Name -eq "regex")

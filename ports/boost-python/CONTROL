@@ -5,5 +5,5 @@ Build-Depends: boost-bind, boost-compatibility, boost-config, boost-conversion, 
 Description: Boost python module
 
 Feature: python2
+Description: Python2 support in Boost.Python
 Build-Depends: python2
-Description: python2 support in boost-python 

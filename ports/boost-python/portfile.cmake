@@ -10,12 +10,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Find Python. Can't use find_package here, but we already know where everything is
 set(PYTHON_DIR_NAME "python3\.*")
 if("python2" IN_LIST FEATURES)
     set(PYTHON_DIR_NAME "python2\.*")
 endif() 
-
-# Find Python. Can't use find_package here, but we already know where everything is
 file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/${PYTHON_DIR_NAME}")
 set(PYTHONLIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
 set(PYTHONLIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib")
