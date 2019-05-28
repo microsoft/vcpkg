@@ -66,39 +66,32 @@ endif()
 set(VCPKG_RELEASE_LIBDIR "${CURRENT_INSTALLED_DIR}/lib")
 set(VCPKG_DEBUG_LIBDIR "${CURRENT_INSTALLED_DIR}/debug/lib")
 
+set(QT_OPTIONS_RELEASE)
+set(QT_OPTIONS_DEBUG)
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(PLATFORM "win32-msvc")
-
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        PLATFORM ${PLATFORM}
-        OPTIONS
-            ${CORE_OPTIONS}
+    list(APPEND CORE_OPTIONS
             -mp
             -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-        OPTIONS_RELEASE
+        )
+    list(APPEND QT_OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg${JPEG_STATIC_POSTFIX}"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
             PSQL_LIBS="-llibpq"
             PCRE2_LIBS="-lpcre2-16"
             FREETYPE_LIBS="-lfreetype"
-        OPTIONS_DEBUG
+        )
+    list(APPEND QT_OPTIONS_DEBUG
             LIBJPEG_LIBS="-ljpeg${JPEG_STATIC_POSTFIX}d"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
             PCRE2_LIBS="-lpcre2-16d"
             FREETYPE_LIBS="-lfreetyped"
-    )
-
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        PLATFORM "linux-g++"
-        OPTIONS
-            ${CORE_OPTIONS}
-        OPTIONS_RELEASE
+        )
+else
+    list(APPEND QT_OPTIONS_RELEASE
             "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}.a"
             "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
             "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libz.a"
@@ -107,7 +100,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "FREETYPE_LIBS=${VCPKG_RELEASE_LIBDIR}/libfreetype.a"
             "PSQL_LIBS=${VCPKG_RELEASE_LIBDIR}/libpq.a ${VCPKG_RELEASE_LIBDIR}/libssl.a ${VCPKG_RELEASE_LIBDIR}/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${VCPKG_RELEASE_LIBDIR}/libsqlite3.a -ldl -lpthread"
-        OPTIONS_DEBUG
+        )
+    list(APPEND QT_OPTIONS_DEBUG
             "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}d.a"
             "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
             "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libz.a"
@@ -116,36 +110,30 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "FREETYPE_LIBS=${VCPKG_DEBUG_LIBDIR}/libfreetyped.a"
             "PSQL_LIBS=${VCPKG_DEBUG_LIBDIR}/libpqd.a ${VCPKG_DEBUG_LIBDIR}/libssl.a ${VCPKG_DEBUG_LIBDIR}/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${VCPKG_DEBUG_LIBDIR}/libsqlite3.a -ldl -lpthread"
-    )
+        )
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        set(PLATFORM "linux-g++")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(PLATFORM "macx-clang")
+        list(APPEND QT_OPTIONS_RELEASE
+                "HARFBUZZ_LIBS=${VCPKG_RELEASE_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
+            )
+        list(APPEND QT_OPTIONS_DEBUG 
+                "HARFBUZZ_LIBS=${VCPKG_DEBUG_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
+            )
+    endif()
+endif()
 
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 configure_qt(
     SOURCE_PATH ${SOURCE_PATH}
-    PLATFORM "macx-clang"
+    PLATFORM ${PLATFORM}
     OPTIONS
         ${CORE_OPTIONS}
     OPTIONS_RELEASE
-        "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}.a"
-        "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
-        "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libz.a"
-        "ZLIB_LIBS=${VCPKG_RELEASE_LIBDIR}/libz.a"
-        "LIBPNG_LIBS=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
-        "FREETYPE_LIBS=${VCPKG_RELEASE_LIBDIR}/libfreetype.a"
-        "PSQL_LIBS=${VCPKG_RELEASE_LIBDIR}/libpq.a ${VCPKG_RELEASE_LIBDIR}/libssl.a ${VCPKG_RELEASE_LIBDIR}/libcrypto.a -ldl -lpthread"
-        "SQLITE_LIBS=${VCPKG_RELEASE_LIBDIR}/libsqlite3.a -ldl -lpthread"
-        "HARFBUZZ_LIBS=${VCPKG_RELEASE_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
+        ${QT_OPTIONS_RELEASE}
     OPTIONS_DEBUG
-        "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}d.a"
-        "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
-        "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libz.a"
-        "ZLIB_LIBS=${VCPKG_DEBUG_LIBDIR}/libz.a"
-        "LIBPNG_LIBS=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
-        "FREETYPE_LIBS=${VCPKG_DEBUG_LIBDIR}/libfreetyped.a"
-        "PSQL_LIBS=${VCPKG_DEBUG_LIBDIR}/libpqd.a ${VCPKG_DEBUG_LIBDIR}/libssl.a ${VCPKG_DEBUG_LIBDIR}/libcrypto.a -ldl -lpthread"
-        "SQLITE_LIBS=${VCPKG_DEBUG_LIBDIR}/libsqlite3.a -ldl -lpthread"
-        "HARFBUZZ_LIBS=${VCPKG_DEBUG_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
-)
-endif()
+        ${QT_OPTIONS_DEBUG}
+    )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     install_qt(DISABLE_PARALLEL) # prevent race condition on Mac
