@@ -58,7 +58,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND CORE_OPTIONS
         -static
     )
+    set(JPEG_STATIC_POSTFIX "-static")
+else()
+    set(JPEG_STATIC_POSTFIX "")
 endif()
+
+set(VCPKG_RELEASE_LIBDIR "${CURRENT_INSTALLED_DIR}/lib")
+set(VCPKG_DEBUG_LIBDIR "${CURRENT_INSTALLED_DIR}/debug/lib")
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(PLATFORM "win32-msvc")
@@ -71,14 +77,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             -mp
             -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
-            LIBJPEG_LIBS="-ljpeg"
+            LIBJPEG_LIBS="-ljpeg${JPEG_STATIC_POSTFIX}"
             ZLIB_LIBS="-lzlib"
             LIBPNG_LIBS="-llibpng16"
             PSQL_LIBS="-llibpq"
             PCRE2_LIBS="-lpcre2-16"
             FREETYPE_LIBS="-lfreetype"
         OPTIONS_DEBUG
-            LIBJPEG_LIBS="-ljpegd"
+            LIBJPEG_LIBS="-ljpeg${JPEG_STATIC_POSTFIX}d"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
@@ -93,23 +99,23 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         OPTIONS
             ${CORE_OPTIONS}
         OPTIONS_RELEASE
-            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
+            "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}.a"
+            "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
+            "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libz.a"
+            "ZLIB_LIBS=${VCPKG_RELEASE_LIBDIR}/libz.a"
+            "LIBPNG_LIBS=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
+            "FREETYPE_LIBS=${VCPKG_RELEASE_LIBDIR}/libfreetype.a"
+            "PSQL_LIBS=${VCPKG_RELEASE_LIBDIR}/libpq.a ${VCPKG_RELEASE_LIBDIR}/libssl.a ${VCPKG_RELEASE_LIBDIR}/libcrypto.a -ldl -lpthread"
+            "SQLITE_LIBS=${VCPKG_RELEASE_LIBDIR}/libsqlite3.a -ldl -lpthread"
         OPTIONS_DEBUG
-            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
+            "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}d.a"
+            "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
+            "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libz.a"
+            "ZLIB_LIBS=${VCPKG_DEBUG_LIBDIR}/libz.a"
+            "LIBPNG_LIBS=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
+            "FREETYPE_LIBS=${VCPKG_DEBUG_LIBDIR}/libfreetyped.a"
+            "PSQL_LIBS=${VCPKG_DEBUG_LIBDIR}/libpqd.a ${VCPKG_DEBUG_LIBDIR}/libssl.a ${VCPKG_DEBUG_LIBDIR}/libcrypto.a -ldl -lpthread"
+            "SQLITE_LIBS=${VCPKG_DEBUG_LIBDIR}/libsqlite3.a -ldl -lpthread"
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -119,25 +125,25 @@ configure_qt(
     OPTIONS
         ${CORE_OPTIONS}
     OPTIONS_RELEASE
-        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
-        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
-        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
-        "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/lib/libharfbuzz.a -framework ApplicationServices"
+        "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg-${JPEG_STATIC_POSTFIX}.a"
+        "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
+        "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libz.a"
+        "ZLIB_LIBS=${VCPKG_RELEASE_LIBDIR}/libz.a"
+        "LIBPNG_LIBS=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
+        "FREETYPE_LIBS=${VCPKG_RELEASE_LIBDIR}/libfreetype.a"
+        "PSQL_LIBS=${VCPKG_RELEASE_LIBDIR}/libpq.a ${VCPKG_RELEASE_LIBDIR}/libssl.a ${VCPKG_RELEASE_LIBDIR}/libcrypto.a -ldl -lpthread"
+        "SQLITE_LIBS=${VCPKG_RELEASE_LIBDIR}/libsqlite3.a -ldl -lpthread"
+        "HARFBUZZ_LIBS=${VCPKG_RELEASE_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
     OPTIONS_DEBUG
-        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
-        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
-        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
-        "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libharfbuzz.a -framework ApplicationServices"
+        "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg-${JPEG_STATIC_POSTFIX}d.a"
+        "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
+        "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libz.a"
+        "ZLIB_LIBS=${VCPKG_DEBUG_LIBDIR}/libz.a"
+        "LIBPNG_LIBS=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
+        "FREETYPE_LIBS=${VCPKG_DEBUG_LIBDIR}/libfreetyped.a"
+        "PSQL_LIBS=${VCPKG_DEBUG_LIBDIR}/libpqd.a ${VCPKG_DEBUG_LIBDIR}/libssl.a ${VCPKG_DEBUG_LIBDIR}/libcrypto.a -ldl -lpthread"
+        "SQLITE_LIBS=${VCPKG_DEBUG_LIBDIR}/libsqlite3.a -ldl -lpthread"
+        "HARFBUZZ_LIBS=${VCPKG_DEBUG_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
 )
 endif()
 
@@ -223,10 +229,10 @@ endif()
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    file(TO_CMAKE_PATH "${VCPKG_RELEASE_LIBDIR}" CMAKE_RELEASE_LIB_PATH)
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    file(TO_CMAKE_PATH "${VCPKG_DEBUG_LIBDIR}" CMAKE_DEBUG_LIB_PATH)
 endif()
 foreach(PRL_FILE IN LISTS PRL_FILES)
     file(READ "${PRL_FILE}" _contents)
