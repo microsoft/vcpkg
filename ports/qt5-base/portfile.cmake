@@ -125,7 +125,7 @@ configure_qt(
     OPTIONS
         ${CORE_OPTIONS}
     OPTIONS_RELEASE
-        "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg-${JPEG_STATIC_POSTFIX}.a"
+        "LIBJPEG_LIBS=${VCPKG_RELEASE_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}.a"
         "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libpng16.a"
         "QMAKE_LIBS_PRIVATE+=${VCPKG_RELEASE_LIBDIR}/libz.a"
         "ZLIB_LIBS=${VCPKG_RELEASE_LIBDIR}/libz.a"
@@ -135,7 +135,7 @@ configure_qt(
         "SQLITE_LIBS=${VCPKG_RELEASE_LIBDIR}/libsqlite3.a -ldl -lpthread"
         "HARFBUZZ_LIBS=${VCPKG_RELEASE_LIBDIR}/libharfbuzz.a -framework ApplicationServices"
     OPTIONS_DEBUG
-        "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg-${JPEG_STATIC_POSTFIX}d.a"
+        "LIBJPEG_LIBS=${VCPKG_DEBUG_LIBDIR}/libjpeg${JPEG_STATIC_POSTFIX}d.a"
         "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libpng16d.a"
         "QMAKE_LIBS_PRIVATE+=${VCPKG_DEBUG_LIBDIR}/libz.a"
         "ZLIB_LIBS=${VCPKG_DEBUG_LIBDIR}/libz.a"
