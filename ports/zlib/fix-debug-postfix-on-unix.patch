@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df05f5d..01a672e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -201,6 +201,8 @@ if(NOT CYGWIN)
+ endif()
+ 
+ if(UNIX)
++    # Set postfix with debug
++   set_target_properties(zlib zlibstatic PROPERTIES DEBUG_POSTFIX "d")
+     # On unix-like platforms the library is almost always called libz
+    set_target_properties(zlib zlibstatic PROPERTIES OUTPUT_NAME z)
+    if(NOT APPLE)

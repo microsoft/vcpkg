@@ -13,7 +13,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE_FILE}
     REF ${VERSION}
     PATCHES
-        "cmake_dont_build_more_than_needed.patch"
+        cmake_dont_build_more_than_needed.patch
+        fix-debug-postfix-on-unix.patch
 )
 
 # This is generated during the cmake build
