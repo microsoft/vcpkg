@@ -11,8 +11,9 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${PODOFO_VERSION}
     PATCHES 
-        "unique_ptr.patch"
-        "002-HAVE_UNISTD_H.patch"
+        unique_ptr.patch
+        002-HAVE_UNISTD_H.patch
+        fix_dependencies.patch
 )
 
 set(PODOFO_NO_FONTMANAGER ON)
@@ -29,7 +30,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
 endif()
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindOpenSSL.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLIBCRYPTO.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindZLIB.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLIBJPEG.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
