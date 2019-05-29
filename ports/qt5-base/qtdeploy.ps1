@@ -49,6 +49,11 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             deployBinary "$targetBinaryDir" "$binDir" "libeay32.dll"
             deployBinary "$targetBinaryDir" "$binDir" "ssleay32.dll"
         }
+        if (Test-Path "$binDir\libeay32d.dll")
+        {
+            deployBinary "$targetBinaryDir" "$binDir" "libeay32d.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "ssleay32d.dll"
+        }
     } elseif ($targetBinaryName -match "Qt5Sqld?.dll") {
         deployPlugins "sqldrivers"
     } elseif ($targetBinaryName -match "Qt5Multimediad?.dll") {
