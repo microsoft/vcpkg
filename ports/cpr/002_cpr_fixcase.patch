@@ -1,0 +1,13 @@
+diff --git a/cpr/error.cpp b/cpr/error.cpp
+index 713cb10..4143f93 100644
+--- a/cpr/error.cpp
++++ b/cpr/error.cpp
+@@ -38,8 +38,6 @@ ErrorCode Error::getErrorCodeForCurlError(std::int32_t curl_code) {
+             return ErrorCode::SSL_LOCAL_CERTIFICATE_ERROR;
+         case CURLE_SSL_CIPHER:
+             return ErrorCode::GENERIC_SSL_ERROR;
+-        case CURLE_SSL_CACERT:
+-            return ErrorCode::SSL_CACERT_ERROR;
+         case CURLE_USE_SSL_FAILED:
+             return ErrorCode::GENERIC_SSL_ERROR;
+         case CURLE_SSL_ENGINE_INITFAILED:

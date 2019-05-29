@@ -33,6 +33,7 @@ foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
         DESTINATION ${SOURCE_PATH}/cmake/modules/
     )
 endforeach()
+
 # NOTE: CMake native BUILD_SHARED_LIBS option will be set by vcpkg_configure_cmake
 # TODO: Remove this as soon as PDAL switches to use BUILD_SHARED_LIBS
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

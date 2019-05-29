@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
+        002_cpr_fixcase.patch
 )
 
 vcpkg_configure_cmake(
