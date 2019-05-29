@@ -21,14 +21,10 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
-
-# Deploy custom CMake modules to enforce expected dependencies look-up
-foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF)
-    file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/${_module}.cmake
-        DESTINATION ${SOURCE_PATH}/cmake/modules/
-    )
-endforeach()
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindGDAL.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindGEOS.cmake")
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/cmake/modules/)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGEOS.cmake DESTINATION ${SOURCE_PATH}/cmake/modules/)
 
 # NOTE: CMake native BUILD_SHARED_LIBS option will be set by vcpkg_configure_cmake
 # TODO: Remove this as soon as PDAL switches to use BUILD_SHARED_LIBS

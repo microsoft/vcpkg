@@ -394,6 +394,14 @@ string(REPLACE "${CURRENT_INSTALLED_DIR}"
                "\${_VCPKG_INSTALLED_DIR}/\${VCPKG_TARGET_TRIPLET}" OPENCV_MODULES "${OPENCV_MODULES}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)
+                 find_package(TIFF REQUIRED)" OPENCV_MODULES "${OPENCV_MODULES}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
