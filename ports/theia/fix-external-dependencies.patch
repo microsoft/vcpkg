@@ -1,10 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9c1b150..8091593 100644
+index 9c1b150..5810156 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -130,69 +130,45 @@ endif ()
+@@ -129,70 +129,27 @@ endif ()
+ 
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
  # FindGflags.cmake)
++message("-- Check for Google Flags")
  find_package(Gflags REQUIRED)
 -if (GFLAGS_FOUND)
 -  message("-- Found Google Flags: ${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
@@ -12,54 +14,44 @@ index 9c1b150..8091593 100644
 -else (GFLAGS_FOUND)
 -  message(FATAL_ERROR "Can't find Google FLAGS.")
 -endif (GFLAGS_FOUND)
-+if (GFLAGS_TARGET)
-+  message("-- Found Google Flags target: ${GFLAGS_TARGET} in namespace: ${GFLAGS_TARGET_NAMESPACE}::")
-+  add_definitions(-DTHEIA_GFLAGS_NAMESPACE=${GFLAGS_TARGET_NAMESPACE})
-+endif ()
  
  # Google Logging
  message("-- Check for Google Log")
  find_package(Glog REQUIRED)
- if (GLOG_FOUND)
-   message("-- Found Google Logging: ${GLOG_INCLUDE_DIRS}")
+-if (GLOG_FOUND)
+-  message("-- Found Google Logging: ${GLOG_INCLUDE_DIRS}")
 -else (GLOG_FOUND)
 -  message(FATAL_ERROR "Can't find Google Logging. Please set GLOG_INCLUDE_DIR & "
 -    "GLOG_LIBRARY")
 -endif (GLOG_FOUND)
-+endif ()
 +
 +# Flann
 +message("-- Check for Flann")
 +find_package(Flann REQUIRED)
-+if (FLANN_FOUND)
-+  message("-- Found Flann: ${FLANN_INCLUDE_DIRS}")
-+endif ()
  
  # Ceres
  message("-- Check for Ceres")
  find_package(Ceres REQUIRED SuiteSparse)
- if (CERES_FOUND)
-   message("-- Found Ceres: ${CERES_INCLUDE_DIRS}")
+-if (CERES_FOUND)
+-  message("-- Found Ceres: ${CERES_INCLUDE_DIRS}")
 -else (CERES_FOUND)
 -  message(FATAL_ERROR "Can't find Ceres. Please set CERES_INCLUDE_DIR & "
 -    "CERES_LIBRARY")
 -endif (CERES_FOUND)
-+endif ()
  
  # OpenImageIO
  message("-- Check for OpenImageIO")
  find_package(OpenImageIO REQUIRED)
- if (OPENIMAGEIO_FOUND)
-   message("-- Found OpenImageIO: ${OPENIMAGEIO_INCLUDE_DIRS}")
+-if (OPENIMAGEIO_FOUND)
+-  message("-- Found OpenImageIO: ${OPENIMAGEIO_INCLUDE_DIRS}")
 -else (OPENIMAGEIO_FOUND)
 -  message(FATAL_ERROR "Can't find OpenImageIO. Please set OPENIMAGEIO_INCLUDE_DIR & "
 -    "OPENIMAGEIO_LIBRARY")
 -endif (OPENIMAGEIO_FOUND)
-+endif ()
  
  # Suitesparse
  find_package(SuiteSparse REQUIRED)
- if (SUITESPARSE_FOUND)
+-if (SUITESPARSE_FOUND)
 -  # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
 -  # Ubuntu 13.10 cannot be used to link shared libraries.
 -  if (BUILD_SHARED_LIBS AND
@@ -76,19 +68,17 @@ index 9c1b150..8091593 100644
 -  endif (BUILD_SHARED_LIBS AND
 -    SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
 -  message("-- Found SuiteSparse ${SUITESPARSE_VERSION}")
-+  message("-- Found SuiteSparse v${SUITESPARSE_VERSION}")
-   add_definitions(-DTHEIA_SUITESPARSE_VERSION="${SUITESPARSE_VERSION}")
+-  add_definitions(-DTHEIA_SUITESPARSE_VERSION="${SUITESPARSE_VERSION}")
 -else (SUITESPARSE_FOUND)
 -  # Disable use of SuiteSparse if it cannot be found and continue.
 -  message(FATAL ERROR "Can't find SuiteSparse. This library is required "
 -    "for bundle adjustment and for solving convex optimization problems. "
 -    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
 -endif (SUITESPARSE_FOUND)
-+endif ()
  
  include_directories(
    include
-@@ -225,24 +201,19 @@ include_directories(
+@@ -225,24 +182,19 @@ include_directories(
    libraries/spectra
    ${akaze_SOURCE_DIR}
    ${akaze_INCLUDE_DIR}
@@ -116,7 +106,7 @@ index 9c1b150..8091593 100644
  
  if (BUILD_DOCUMENTATION)
    message("-- Documentation building is enabled")
-@@ -260,7 +231,13 @@ install(FILES ${THEIA_HDRS} DESTINATION include/theia)
+@@ -260,7 +212,13 @@ install(FILES ${THEIA_HDRS} DESTINATION include/theia)
  file(GLOB_RECURSE THEIA_INTERNAL_HDRS ${CMAKE_SOURCE_DIR}/src/theia/*.h)
  install(DIRECTORY src/theia/ DESTINATION include/theia FILES_MATCHING PATTERN "*.h")
  
@@ -131,7 +121,7 @@ index 9c1b150..8091593 100644
  
  # Add an uninstall target to remove all installed files.
  configure_file("${CMAKE_SOURCE_DIR}/cmake/uninstall.cmake.in"
-@@ -272,17 +249,10 @@ add_custom_target(uninstall
+@@ -272,17 +230,10 @@ add_custom_target(uninstall
  
  # Set up install directories. INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -153,7 +143,7 @@ index 9c1b150..8091593 100644
  
  # This "exports" all targets which have been put into the export set
  # "TheiaExport". This means that CMake generates a file with the given
-@@ -319,9 +289,5 @@ configure_file("${CMAKE_SOURCE_DIR}/cmake/TheiaConfigVersion.cmake.in"
+@@ -319,9 +270,5 @@ configure_file("${CMAKE_SOURCE_DIR}/cmake/TheiaConfigVersion.cmake.in"
  # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
                "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
@@ -165,19 +155,102 @@ index 9c1b150..8091593 100644
 +              "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
                DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
-index a3ea187..1f2f1a5 100644
+index a3ea187..7e9d912 100644
 --- a/cmake/TheiaConfig.cmake.in
 +++ b/cmake/TheiaConfig.cmake.in
-@@ -207,22 +207,28 @@ endif (NOT TARGET theia AND NOT Theia_BINARY_DIR)
+@@ -124,14 +124,7 @@ list(APPEND CERES_INCLUDE_DIR_HINTS @CERES_INCLUDE_DIR@)
+ get_filename_component(THEIA_BUILD_CERES_LIBRARY_DIR @CERES_LIBRARIES@ PATH)
+ list(APPEND CERES_LIBRARY_DIR_HINTS ${THEIA_BUILD_CERES_LIBRARY_DIR})
+ # Search quietly s/t we control the timing of the error message if not found.
+-find_package(Ceres QUIET)
+-if (CERES_FOUND)
+-  message(STATUS "Found required Theia dependency: "
+-    "Ceres in ${CERES_INCLUDE_DIRS}")
+-else (CERES_FOUND)
+-  theia_report_not_found("Missing required Theia "
+-    "dependency: Ceres, please set CERES_INCLUDE_DIR.")
+-endif (CERES_FOUND)
++find_package(Ceres REQUIRED)
+ list(APPEND THEIA_INCLUDE_DIRS ${CERES_INCLUDE_DIRS})
+ 
+ # Glog.
+@@ -140,64 +133,19 @@ list(APPEND GLOG_INCLUDE_DIR_HINTS @GLOG_INCLUDE_DIR@)
+ get_filename_component(THEIA_BUILD_GLOG_LIBRARY_DIR @GLOG_LIBRARY@ PATH)
+ list(APPEND GLOG_LIBRARY_DIR_HINTS ${THEIA_BUILD_GLOG_LIBRARY_DIR})
+ # Search quietly s/t we control the timing of the error message if not found.
+-find_package(Glog QUIET)
+-if (GLOG_FOUND)
+-  message(STATUS "Found required Theia dependency: "
+-    "Glog in ${GLOG_INCLUDE_DIRS}")
+-else (GLOG_FOUND)
+-  theia_report_not_found("Missing required Theia "
+-    "dependency: Glog, please set GLOG_INCLUDE_DIR.")
+-endif (GLOG_FOUND)
++find_package(Glog REQUIRED)
+ list(APPEND THEIA_INCLUDE_DIRS ${GLOG_INCLUDE_DIRS})
+ 
+ # GFlags. The namespace patch is borrow from Ceres Solver (see license in
+ # FindGflags.cmake)
+-find_package(Gflags QUIET)
+-if (GFLAGS_FOUND)
+-  message(STATUS "Found required Theia dependency: Google Flags in "
+-    "${GFLAGS_INCLUDE_DIRS} in namespace: ${GFLAGS_NAMESPACE}")
+-  add_definitions(-DTHEIA_GFLAGS_NAMESPACE=${GFLAGS_NAMESPACE})
+-else (GFLAGS_FOUND)
+-  theia_report_not_found("Missing required Theia dependency: Google Flags, please set "
+-    "GFLAGS_INCLUDE_DIR.")
+-endif (GFLAGS_FOUND)
++find_package(Gflags REQUIRED)
+ list(APPEND THEIA_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIRS})
+ 
+ # OpenImageIO
+-find_package(OpenImageIO QUIET)
+-if (OPENIMAGEIO_FOUND)
+-  message(STATUS "Found Theia dependency: OpenImageIO in ${OPENIMAGEIO_INCLUDE_DIRS}")
+-else (OPENIMAGEIO_FOUND)
+-  theia_report_not_found("Missing required Theia dependency: OpenImageIO. Please set "
+-    "OPENIMAGEIO_INCLUDE_DIR & OPENIMAGEIO_LIBRARY")
+-endif (OPENIMAGEIO_FOUND)
++find_package(OpenImageIO REQUIRED)
+ list(APPEND THEIA_INCLUDE_DIRS ${OPENIMAGEIO_INCLUDE_DIRS})
+ 
+-find_package(SuiteSparse QUIET)
+-if (SUITESPARSE_FOUND)
+-  # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
+-  # Ubuntu 13.10 cannot be used to link shared libraries.
+-  if (BUILD_SHARED_LIBS AND
+-      SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
+-    theia_report_not_found("You are attempting to build Theia as a shared "
+-      "library on Ubuntu using a system package install of SuiteSparse "
+-      "3.4.0. This package is broken and does not support the "
+-      "construction of shared libraries (you can still build Theia as "
+-      "a static library).  If you wish to build a shared version of Theia "
+-      "you should uninstall the system install of SuiteSparse "
+-      "(libsuitesparse-dev) and perform a source install of SuiteSparse "
+-      "(we recommend that you use the latest version), "
+-      "see http://theia-solver.org/building.html for more information.")
+-  endif (BUILD_SHARED_LIBS AND
+-    SUITESPARSE_IS_BROKEN_SHARED_LINKING_UBUNTU_SYSTEM_VERSION)
+-  message("-- Found SuiteSparse ${SUITESPARSE_VERSION}")
+-  add_definitions(-DTHEIA_SUITESPARSE_VERSION="${SUITESPARSE_VERSION}")
+-else (SUITESPARSE_FOUND)
+-  # Disable use of SuiteSparse if it cannot be found and continue.
+-  theia_report_not_found("Can't find SuiteSparse. This library is required "
+-    "for bundle adjustment and for solving convex optimization problems. "
+-    "Please set SUITESPARSE_INCLUDE_DIR & SUITESPARSE_LIBRARY")
+-endif (SUITESPARSE_FOUND)
++find_package(SuiteSparse REQUIRED)
+ list(APPEND THEIA_INCLUDE_DIRS ${SUITESPARSE_INCLUDE_DIRS})
+ 
+ # Import exported Theia targets.
+@@ -207,22 +155,24 @@ endif (NOT TARGET theia AND NOT Theia_BINARY_DIR)
  # Set the expected XX_LIBRARIES variable for FindPackage().
  set(THEIA_LIBRARIES theia)
  
 +find_package(cereal REQUIRED)
-+message(STATUS "Found required Theia dependency: Cereal")
 +list(APPEND THEIA_LIBRARIES cereal)
 +
 +find_package(Flann REQUIRED)
-+message(STATUS "Found required Theia dependency: Flann")
 +list(APPEND THEIA_INCLUDE_DIRS ${FLANN_INCLUDE_DIR})
 +list(APPEND THEIA_LIBRARIES ${FLANN_LIBRARY})
 +
@@ -189,8 +262,8 @@ index a3ea187..1f2f1a5 100644
 -  ${THEIA_INTERNAL_LIB_PREFIX}/cereal
 -  ${THEIA_INTERNAL_LIB_PREFIX}/cereal/include
 -  ${THEIA_INTERNAL_LIB_PREFIX}/flann
-   ${THEIA_INTERNAL_LIB_PREFIX}/gtest
-   ${THEIA_INTERNAL_LIB_PREFIX}/gtest/include
+-  ${THEIA_INTERNAL_LIB_PREFIX}/gtest
+-  ${THEIA_INTERNAL_LIB_PREFIX}/gtest/include
    ${THEIA_INTERNAL_LIB_PREFIX}/optimo
    ${THEIA_INTERNAL_LIB_PREFIX}/spectra
    ${THEIA_INTERNAL_LIB_PREFIX}/statx
@@ -226,6 +299,81 @@ index 84f3829..f88d75a 100644
 -add_subdirectory(visual_sfm)
 \ No newline at end of file
 +add_subdirectory(visual_sfm)
+diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
+index 23b9e49..726f101 100644
+--- a/libraries/statx/CMakeLists.txt
++++ b/libraries/statx/CMakeLists.txt
+@@ -103,7 +103,11 @@ if(STATX_WITH_CERES)
+   endif(CERES_FOUND)
+ 
+   # BLAS
+-  find_package(BLAS REQUIRED)
++  if(UNIX AND NOT APPLE)
++    find_package(OpenBLAS REQUIRED)
++  else()
++    find_package(BLAS REQUIRED)
++  endif()
+ 
+   # LAPACK
+   find_package(LAPACK REQUIRED)
+diff --git a/libraries/vlfeat/CMakeLists.txt b/libraries/vlfeat/CMakeLists.txt
+index 7f4ffc7..15bca12 100644
+--- a/libraries/vlfeat/CMakeLists.txt
++++ b/libraries/vlfeat/CMakeLists.txt
+@@ -18,14 +18,19 @@ set(vl_sources
+   vl/random.c
+   vl/sift.c
+   vl/vlad.c)
++
+ set_source_files_properties(${vl_sources} PROPERTIES LANGUAGE C)
+ 
++add_library(vlfeat ${vl_sources})
++
+ if (MSVC)
+-  add_definitions(-DVL_BUILD_DLL)
+-  add_definitions(-DVL_DISABLE_SSE2)
++  if(BUILD_SHARED_LIBS)
++    target_compile_definitions(vlfeat PRIVATE VL_BUILD_DLL)
++    target_compile_definitions(vlfeat INTERFACE BUILD_DLL)
++  endif()
++  target_compile_definitions(vlfeat PUBLIC VL_DISABLE_SSE2)
+ endif (MSVC)
+ 
+-add_library(vlfeat SHARED ${vl_sources})
+ install(TARGETS vlfeat
+   EXPORT  TheiaExport
+   RUNTIME DESTINATION bin
+diff --git a/libraries/vlfeat/vl/host.h b/libraries/vlfeat/vl/host.h
+index 293fe1f..95da68e 100644
+--- a/libraries/vlfeat/vl/host.h
++++ b/libraries/vlfeat/vl/host.h
+@@ -314,18 +314,24 @@ defined(__DOXYGEN__)
+ #  define VL_INLINE static __inline
+ #  define snprintf _snprintf
+ #  define isnan _isnan
+-#  ifdef VL_BUILD_DLL
++#  if defined(VL_BUILD_DLL)
+ #    ifdef __cplusplus
+ #      define VL_EXPORT extern "C" __declspec(dllexport)
+ #    else
+ #      define VL_EXPORT extern __declspec(dllexport)
+ #    endif
+-#  else
++#  elif defined(VL_DLL)
+ #    ifdef __cplusplus
+ #      define VL_EXPORT extern "C" __declspec(dllimport)
+ #    else
+ #      define VL_EXPORT extern __declspec(dllimport)
+ #    endif
++#  else
++#    ifdef __cplusplus
++#      define VL_EXPORT extern "C"
++#    else
++#      define VL_EXPORT extern
++#    endif
+ #  endif
+ #endif
+ 
 diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
 index 6830f71..768586d 100644
 --- a/src/theia/CMakeLists.txt
