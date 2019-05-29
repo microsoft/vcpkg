@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libmatroska
-    REF release-1.5.1
-    SHA512 6cb5ff4920ac9920fe4c0bca30b486c8b744661a553da1b7912e5b0b3370814bcf14640472b00c1e87138510cc4feca55555e1cb133c67bc60dc463b9dd615db
+    REF release-1.5.2
+    SHA512  5e819d611455efb1dd49ea26b6b124899b1f6ba07b4af93b2f3437ffe7c2c0089a922ef894a7c8612faddadeea75142d0604ee54e6c5822439dc8c65008e119b
     HEAD_REF master
 )
 
