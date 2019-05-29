@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         "cmake.patch"
         "fixup-targets.patch"
+	"preflow_git.patch"
 )
 
 vcpkg_configure_cmake(
