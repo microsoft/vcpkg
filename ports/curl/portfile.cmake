@@ -11,6 +11,7 @@ vcpkg_from_github(
         0002_fix_uwp.patch
         0003_fix_libraries.patch
         0004_nghttp2_staticlib.patch
+        0005_remove_imp_suffix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -140,17 +141,23 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}")
     endif()
 endif()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib OR EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib)
+    # Because vcpkg only ever installs one or the other, there is no need to have the libraries be different names.
+    # Using the same name improves compatibility, because downstream projects can always rely on "libcurl.lib"
+    message(FATAL_ERROR "Curl's import library should be consistent with the static library name.")
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
 endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
 else()
     string(REPLACE "#ifdef CURL_STATICLIB" "#if 0" CURL_H "${CURL_H}")
