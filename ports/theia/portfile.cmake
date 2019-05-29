@@ -14,13 +14,14 @@ vcpkg_from_github(
     SHA512 2f620389c415badec36f4b44be0378fc62761dd6b2ee4cd7033b13573c372f098e248553575fb2cceb757b1ca00e86a11c67e03b6077e0a4b0f8797065746312
     HEAD_REF master
     PATCHES
-        fix-cmakelists.patch
+        fix-external-dependencies.patch
         fix-vlfeat-static.patch
-        fix-glog-error.patch
-        fix-find-suitesparse.patch
         fix-oiio.patch
-        disable_applications.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
