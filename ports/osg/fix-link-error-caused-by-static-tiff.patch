@@ -1,0 +1,15 @@
+diff --git a/src/osgPlugins/tiff/CMakeLists.txt b/src/osgPlugins/tiff/CMakeLists.txt
+index fc945d6..6fd2b9c 100644
+--- a/src/osgPlugins/tiff/CMakeLists.txt
++++ b/src/osgPlugins/tiff/CMakeLists.txt
+@@ -2,7 +2,9 @@ INCLUDE_DIRECTORIES( ${TIFF_INCLUDE_DIR} )
+ 
+ SET(TARGET_SRC ReaderWriterTIFF.cpp )
+ 
+-SET(TARGET_LIBRARIES_VARS TIFF_LIBRARY)
++# set JPEG_LIBRARY and LIBLZMA_LIBRARIES as target libraries to solve the link error
++# caused by static tiff library
++SET(TARGET_LIBRARIES_VARS TIFF_LIBRARY JPEG_LIBRARY LIBLZMA_LIBRARIES)
+ 
+ #### end var setup  ###
+ SETUP_PLUGIN(tiff)

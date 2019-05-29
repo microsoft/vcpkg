@@ -10,6 +10,7 @@ vcpkg_from_github(
 	HEAD_REF master
     PATCHES
         collada.patch
+        fix-link-error-caused-by-static-tiff.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
