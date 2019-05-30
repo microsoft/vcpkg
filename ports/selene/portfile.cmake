@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v0.3.1
     SHA512 7bc57ebe9e2442da2716eb5c1af11f8d610b0b09fe96e3122d1028575732b6045a987c499bbf7de53003edd627b8809d86c80ea4975fc2264a1c61d5891a46c3
     HEAD_REF master
+    PATCHES
+        disable_x86_intrinsics_on_arm.patch
 )
 
 vcpkg_configure_cmake(
