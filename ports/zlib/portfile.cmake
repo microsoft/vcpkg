@@ -14,7 +14,6 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         cmake_dont_build_more_than_needed.patch
-        fix-debug-postfix-on-unix.patch # Setting cmake_debug_postfix doesn't work here, so use patch
 )
 
 # This is generated during the cmake build
@@ -26,6 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
         -DSKIP_BUILD_EXAMPLES=ON
+        -DCMAKE_DEBUG_POSTFIX="d"
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
