@@ -20,6 +20,7 @@ vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERS
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
             ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
+            ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
 )
 
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
@@ -94,8 +95,8 @@ else()
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
-        set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
+        set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi -FS ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+        set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi -FS ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
         set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
@@ -110,8 +111,8 @@ else()
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
-        set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
+        set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -FS -RTC1 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+        set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -FS -RTC1 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
         set(ENV{LDFLAGS} "-DEBUG")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
