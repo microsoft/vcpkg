@@ -300,7 +300,7 @@ index 84f3829..f88d75a 100644
 \ No newline at end of file
 +add_subdirectory(visual_sfm)
 diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
-index 23b9e49..726f101 100644
+index 23b9e49..af236a3 100644
 --- a/libraries/statx/CMakeLists.txt
 +++ b/libraries/statx/CMakeLists.txt
 @@ -103,7 +103,11 @@ if(STATX_WITH_CERES)
@@ -316,6 +316,14 @@ index 23b9e49..726f101 100644
  
    # LAPACK
    find_package(LAPACK REQUIRED)
+@@ -129,7 +133,6 @@ set(XGAMMA_FILES ${XGAMMA_FUNCS}/asa121.cpp ${XGAMMA_FUNCS}/asa103.cpp)
+ 
+ # Setting CXX FLAGS appropriately. The code below was inspired from
+ # Google CERES and modified for this library.
+-set (CMAKE_BUILD_TYPE Release)
+ set (STATX_CXX_FLAGS)
+ 
+ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 diff --git a/libraries/vlfeat/CMakeLists.txt b/libraries/vlfeat/CMakeLists.txt
 index 7f4ffc7..15bca12 100644
 --- a/libraries/vlfeat/CMakeLists.txt
@@ -344,12 +352,14 @@ index 7f4ffc7..15bca12 100644
    EXPORT  TheiaExport
    RUNTIME DESTINATION bin
 diff --git a/libraries/vlfeat/vl/host.h b/libraries/vlfeat/vl/host.h
-index 293fe1f..95da68e 100644
+index 293fe1f..0ea3d42 100644
 --- a/libraries/vlfeat/vl/host.h
 +++ b/libraries/vlfeat/vl/host.h
-@@ -314,18 +314,24 @@ defined(__DOXYGEN__)
+@@ -312,27 +312,31 @@ defined(__DOXYGEN__)
+ #if defined(VL_COMPILER_MSC) & ! defined(__DOXYGEN__)
+ #  define VL_UNUSED
  #  define VL_INLINE static __inline
- #  define snprintf _snprintf
+-#  define snprintf _snprintf
  #  define isnan _isnan
 -#  ifdef VL_BUILD_DLL
 +#  if defined(VL_BUILD_DLL)
@@ -374,6 +384,13 @@ index 293fe1f..95da68e 100644
  #  endif
  #endif
  
+ #if defined(VL_COMPILER_LCC) & ! defined(__DOXYGEN__)
+ #  define VL_UNUSED
+ #  define VL_INLINE static __inline
+-#  define snprintf _snprintf
+ #  define isnan _isnan
+ VL_INLINE float fabsf(float x) { return (float) fabs((double) x) ; }
+ #  ifdef VL_BUILD_DLL
 diff --git a/src/theia/CMakeLists.txt b/src/theia/CMakeLists.txt
 index 6830f71..768586d 100644
 --- a/src/theia/CMakeLists.txt
