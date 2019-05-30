@@ -110,7 +110,7 @@ index 654bebd..ab7dd90 100644
 -else()
 -  set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
 -endif()
-+find_package(eigen3 REQUIRED)
++find_package(Eigen3 REQUIRED)
 +set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
  
  # ==============================================================================
