@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 654bebd..5264bfc 100644
+index 654bebd..ab7dd90 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -17,27 +17,16 @@ endif()
@@ -222,7 +222,7 @@ index 654bebd..5264bfc 100644
  
  # ==============================================================================
  # OpenCV
-@@ -369,12 +270,7 @@ endif()
+@@ -369,14 +270,13 @@ endif()
  # - only external and enabled only if OpenMVG_USE_OPENCV is set to ON
  # ==============================================================================
  if (OpenMVG_USE_OPENCV)
@@ -235,8 +235,14 @@ index 654bebd..5264bfc 100644
 +  find_package( OpenCV REQUIRED )
  endif()
  
++# ==============================================================================
++# Suitesparse
++# ==============================================================================
++find_package(Suitesparse REQUIRED)
  
-@@ -469,67 +365,67 @@ message("** Use OpenCV SIFT features: " ${OpenMVG_USE_OCVSIFT})
+ # ==============================================================================
+ # Third-party libraries:
+@@ -469,67 +369,67 @@ message("** Use OpenCV SIFT features: " ${OpenMVG_USE_OCVSIFT})
  
  message("\n")
  
