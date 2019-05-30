@@ -16,7 +16,6 @@ vcpkg_extract_source_archive_ex(
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
         fix_windowsinclude-in-ffmpegexe-3.patch
-        fixed-debug-bzip2-link.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -26,8 +25,15 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR (NOT VCPKG_CMAKE_SYSTEM_NAME))
+    set(SEP ";")
+else()
+    set(SEP ":")
+endif()
+
 if (WIN32)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -43,7 +49,11 @@ else()
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
 endif()
 
-set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
+if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
+else()
+    set(ENV{CPATH} "${CURRENT_INSTALLED_DIR}/include${SEP}$ENV{CPATH}")
+endif()
 
 set(_csc_PROJECT_PATH ffmpeg)
 
@@ -150,9 +160,14 @@ if(WIN32)
     endif()
 endif()
 
-set(ENV_LIB "$ENV{LIB}")
+if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(ENV_LIB "$ENV{LIB}")
+    set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${ENV_LIB}")
+else()
+    set(ENV_LIBRARY_PATH "$ENV{LIBRARY_PATH}")
+    set(ENV{LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIBRARY_PATH}")
+endif()
 
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${ENV_LIB}")
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 vcpkg_execute_required_process(
@@ -165,7 +180,12 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/debug/lib;${ENV_LIB}")
+if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/debug/lib;${ENV_LIB}")
+else()
+    set(ENV{LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIBRARY_PATH}")
+endif()
+
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process(
