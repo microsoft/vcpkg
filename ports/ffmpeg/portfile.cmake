@@ -31,6 +31,14 @@ else()
     set(SEP ":")
 endif()
 
+if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(INCLUDE_VAR "INCLUDE")
+    set(LIB_PATH_VAR "LIB")
+else()
+    set(INCLUDE_VAR "CPATH")
+    set(LIB_PATH_VAR "LIBRARY_PATH")
+endif()
+
 if (WIN32)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
@@ -49,11 +57,7 @@ else()
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
 endif()
 
-if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-else()
-    set(ENV{CPATH} "${CURRENT_INSTALLED_DIR}/include${SEP}$ENV{CPATH}")
-endif()
+set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${SEP}$ENV{${INCLUDE_VAR}}")
 
 set(_csc_PROJECT_PATH ffmpeg)
 
@@ -160,13 +164,8 @@ if(WIN32)
     endif()
 endif()
 
-if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(ENV_LIB "$ENV{LIB}")
-    set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${ENV_LIB}")
-else()
-    set(ENV_LIBRARY_PATH "$ENV{LIBRARY_PATH}")
-    set(ENV{LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIBRARY_PATH}")
-endif()
+set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
@@ -180,11 +179,7 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
-if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/debug/lib;${ENV_LIB}")
-else()
-    set(ENV{LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIBRARY_PATH}")
-endif()
+set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
