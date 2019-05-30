@@ -595,6 +595,17 @@ namespace vcpkg
 #else
     void System::register_console_ctrl_handler() {}
 #endif
+
+    int System::get_num_logical_cores()
+    {
+        int num_cores = std::thread::hardware_concurrency();
+        if (!num_cores)
+        {
+            num_cores = 1;
+        }
+
+        return num_cores;
+    }
 }
 
 namespace vcpkg::Debug

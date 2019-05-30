@@ -373,6 +373,7 @@ namespace vcpkg::Build
             {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
+            {"VCPKG_NUM_LOGICAL_CORES", std::to_string(System::get_num_logical_cores())},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
