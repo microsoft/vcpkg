@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO alanxz/rabbitmq-c
-  REF v0.8.0
-  SHA512 54e1c98a6b0eb7de848c9fac13dcde6455a6f71acee9e62a96c171f0e3e1cf860a70837f07b633d1a55b1ffd3d33ed7186b52495fa4c6e755b69a7e728eb9f1a
+  REF v0.9.0
+  SHA512 a63fe267a3ec112a5e9456a03066132b91f897181947fba18ea3efb14ca0a69996d7dfaecda61a0dd360e03a4e56569e70592e1674b75d20b937a118e1acfc64
   HEAD_REF master
+  PATCHES
+	fix-uwpwarning.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -15,8 +17,6 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
     -DBUILD_EXAMPLES=OFF
-    -DBUILD_SHARED_LIBS=${BUILD_SHARED}
-    -DBUILD_STATIC_LIBS=${BUILD_STATIC}
     -DBUILD_TESTS=OFF
     -DBUILD_TOOLS=OFF
 )

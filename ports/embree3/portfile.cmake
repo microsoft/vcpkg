@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF v3.2.0
-    SHA512 296617251e4a9a95a5ceec10ce8f23daf180a8a61fd78bc5782dca7d5b15bddaa0b6f352e47d657a366ef9176a730ef2edc42451fbad8071c5ce8fbfb4515e51
+    REF v3.5.2
+    SHA512 f00403c8bc76428088a38990117245b5b11ac90a2df21fa12c2d5c2e8af45fb3708abb705c612e0d9d7b0cfe4edb51c8b9630b60081b39fcb4370f31ee37acc7
     HEAD_REF master
 )
 
@@ -18,6 +18,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DEMBREE_ISPC_SUPPORT=OFF

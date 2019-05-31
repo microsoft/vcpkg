@@ -17,6 +17,8 @@ vcpkg_from_github(
         static_pcre.patch
         # Fix source path of PDF
         unbundled_pdf.patch
+        # Add the support of arm64-windows
+        arm64_pcre.patch
 )
 
 # define Poco linkage type

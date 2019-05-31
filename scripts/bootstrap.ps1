@@ -339,10 +339,9 @@ if ($disableMetrics)
 
 $platform = "x86"
 $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
-
+$architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
 if ($win64)
 {
-    $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
     if (-not $architecture -like "*64*")
     {
         throw "Cannot build 64-bit on non-64-bit system"
@@ -352,6 +351,15 @@ if ($win64)
     $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x64.release"
 }
 
+if ($architecture -like "*64*")
+{
+    $PreferredToolArchitecture = "x64"
+}
+else
+{
+    $PreferredToolArchitecture = "x86"
+}
+
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
@@ -359,7 +367,7 @@ $arguments = (
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
-"/p:PreferredToolArchitecture=x64",
+"/p:PreferredToolArchitecture=$PreferredToolArchitecture",
 "/verbosity:minimal",
 "/m",
 "/nologo",

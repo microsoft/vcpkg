@@ -28,8 +28,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EMCECS/ecs-object-client-windows-cpp
-    REF v1.0.3.1
-    SHA512 0bed2a0296dcb0ea952734feb44a9f35b01d1c6e08dc132cc2d006003df21e5e1a3070ab44f5c9e6986b230c292d62f695f7a06700e7ef8d50efc87f92d5814f
+    REF v1.0.6.1
+    SHA512 4b16b9ce1dbc9f541fe95a40c10678cd2b0192acc94bc3d57e58fbdf37964af84cdc901686555aad1f58d133632b1ad6f57976a5ac71aed1fce2fb44a2d0f8d3
     HEAD_REF master
     PATCHES NoLibSyms.patch
 )

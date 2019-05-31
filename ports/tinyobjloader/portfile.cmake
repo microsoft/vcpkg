@@ -1,9 +1,6 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
-    message("tinyobjloader doesn't support dynamic linkage on Windows. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

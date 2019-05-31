@@ -1,17 +1,14 @@
 include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message("tbb only supports dynamic library linkage")
-        set(VCPKG_LIBRARY_LINKAGE "dynamic")
-    endif()
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2019_U5
-    SHA512 227b12e3864fbb922ddbc99700bf94d7d8897d62e2056bf3beb608efacf3ca785dd416b94ad65b421b6c9fc11caff688147b5fbe400c51e98678cee5dc04f274
+    REF 2019_U6
+    SHA512 6513d30a498f507cb3e9a06746e430a8bc829de0d204b15d7a79f79c5e7565e59bb0b459c8ca4946293ecb25e2ce11d25cfc7f311e91c7e67342eceb31000d07
     HEAD_REF tbb_2019
 )
 
@@ -81,14 +78,14 @@ string(REPLACE
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_release_lib \"/\${_tbb_component}.lib\")"
-    "set(_tbb_release_lib \"\${_tbb_root}/lib/\${_tbb_component}.lib\")"
+    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
+    "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
     _contents
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_debug_lib \"/\${_tbb_component}_debug.lib\")"
-    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/\${_tbb_component}_debug.lib\")"
+    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
+    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
     _contents
     "${_contents}"
 )

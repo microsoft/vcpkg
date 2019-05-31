@@ -30,7 +30,7 @@ find_package(LibLZMA REQUIRED)
 target_include_directories(boost_iostreams PRIVATE ${LIBLZMA_INCLUDE_DIRS})
 target_link_libraries(boost_iostreams PRIVATE ${LIBLZMA_LIBRARIES})
 
-find_library(ZSTD_LIBRARY NAMES zstdd zstd_staticd zstd zstd_static)
+find_library(ZSTD_LIBRARY NAMES zstdd zstd_staticd zstd zstd_static NAMES_PER_DIR)
 target_link_libraries(boost_iostreams PRIVATE ${ZSTD_LIBRARY})
 
 install(TARGETS boost_iostreams

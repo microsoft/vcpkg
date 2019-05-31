@@ -1,6 +1,6 @@
 # Copyright Mathieu Malaterre <malat@debian.org>
 # BSD (Same as jxrlib)
-# Based on https://jxrlib.codeplex.com/discussions/440294 
+# Based on https://jxrlib.codeplex.com/discussions/440294
 # and modified for vcpkg packaging
 cmake_minimum_required(VERSION 2.8)
 project(jxrlib C)
@@ -17,6 +17,10 @@ macro(JXR_MAKE_OBJ SET_NAME)
     list(APPEND OBJ_${SET_NAME} ${DIR_${SET_NAME}}/${src})
   endforeach()
 endmacro()
+
+if(NOT MSVC)
+  add_definitions(-D__ANSI__)
+endif()
 
 include(TestBigEndian)
 test_big_endian(ISBIGENDIAN)

@@ -1,0 +1,3 @@
+Source: jwt-cpp
+Version: 2019-05-07
+Description: A header only library for creating and validating json web tokens in c++

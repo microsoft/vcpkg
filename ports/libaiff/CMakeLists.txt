@@ -10,10 +10,6 @@ if(MSVC)
   add_compile_options(/W4 -D_CRT_SECURE_NO_WARNINGS -DHAVE_INTTYPES_H -DHAVE_STDINT_H  -DHAVE_STRING_H -DHAVE_STDLIB_H)
 endif()
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 include_directories(.)
 
 add_library(libaiff ${SRC})
