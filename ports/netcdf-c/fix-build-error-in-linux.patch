@@ -1,0 +1,42 @@
+diff --git a/include/ncconfigure.h b/include/ncconfigure.h
+index 5bd5639..c9440fd 100644
+--- a/include/ncconfigure.h
++++ b/include/ncconfigure.h
+@@ -25,7 +25,7 @@ missing functions should be
+ defined and missing types defined.
+ */
+ 
+-#ifdef _MSC_VER
++#ifdef _WIN32
+ #ifndef HAVE_SSIZE_T
+ #include <basetsd.h>
+ typedef SSIZE_T ssize_t;
+@@ -38,13 +38,28 @@ typedef SSIZE_T ssize_t;
+ #ifndef _WIN32
+ #if __STDC__ == 1 /*supposed to be same as -ansi flag */
+ 
++/* WARNING: in some systems, these functions may be defined as macros, so check */
++#ifndef strdup
+ extern char* strdup(const char*);
++#endif
++#ifndef strlcat
+ extern size_t strlcat(char*,const char*,size_t);
++#endif
++#ifndef snprintf
+ extern int snprintf(char*, size_t, const char*, ...);
++#endif
++#ifndef strcasecmp
+ extern int strcasecmp(const char*, const char*);
++#endif
++#ifndef strtoll
+ extern long long int strtoll(const char*, char**, int);
++#endif
++#ifndef strtoull
+ extern unsigned long long int strtoull(const char*, char**, int);
++#endif
++#ifndef fileno
+ extern int fileno(FILE*);
++#endif
+ 
+ #endif /*STDC*/
+ #endif /*!WIN32*/
