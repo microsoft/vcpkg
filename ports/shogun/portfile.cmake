@@ -8,11 +8,8 @@ vcpkg_from_github(
     REF shogun_6.1.3
     SHA512 11aeed456b13720099ca820ab9742c90ce4af2dc049602a425f8c44d2fa155327c7f1d3af2ec840666f600a91e75902d914ffe784d76ed35810da4f3a5815673
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+    PATCHES
+       cmake.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
