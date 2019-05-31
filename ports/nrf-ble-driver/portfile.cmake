@@ -1,18 +1,18 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(
-    "nrf-ble-driver currently requires the following libraries from the system package manager:
-        libudev-dev
-    These can be installed on Ubuntu systems via sudo apt install libudev-dev"
+"${PORT} currently requires the following libraries from the system package manager:
+    libudev-dev
+These can be installed on Ubuntu systems via sudo apt install libudev-dev"
     )
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NordicSemiconductor/pc-ble-driver
-    REF v4.1.0
-    SHA512 f8a995826caf4022f68b149d0f3619d1d656e3960a927eda29c634bf06cad8341c95a5b51ec7e50b28814f5332a4800faf88eb5b4e8ebec153f9cad05b3a703e
+    REF v4.1.1
+    SHA512 bb1853993b3f37836a8f7402e5c0452e8423c3a1c6e651cf353025022a32e16c72f06e2266e283c72fa7ddb0da7cf8cecb875a7a7762565599f2908c4858ce8e
     HEAD_REF master
     PATCHES
         001-arm64-support.patch
