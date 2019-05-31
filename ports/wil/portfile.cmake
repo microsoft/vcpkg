@@ -1,0 +1,13 @@
+#header-only library
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/wil
+    REF 43613517258fbd94182e195b1a4887420ed74b31
+    SHA512 cf15c8571d81b837b2ce4083d7e70d738698ff5ef99a7e99daa96618463281fc8e6642f1703d3b96de7208f7720ecf4108f6ed09b33d2980c2b609dc70fd4653
+    HEAD_REF master
+)
+
+file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/wil RENAME copyright)

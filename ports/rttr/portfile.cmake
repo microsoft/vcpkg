@@ -1,12 +1,7 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("Rttr only supports dynamic library linkage")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Rttr only supports dynamic library linkage, so cannot be built with static CRT")
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rttrorg/rttr
@@ -28,9 +23,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(UNIX)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	vcpkg_fixup_cmake_targets(CONFIG_PATH share/rttr/cmake)
-elseif(WIN32)
+elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
 	message(FATAL_ERROR "RTTR does not support this platform")

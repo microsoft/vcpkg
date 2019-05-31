@@ -1,5 +1,5 @@
 Source: xtensor
-Version: 0.19.3
+Version: 0.20.7
 Description: C++ tensors with broadcasting and lazy computing
 Build-Depends: nlohmann-json, xtl
 

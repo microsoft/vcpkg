@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF c15b178a44b99ed3ff7fd953837fb97f6314abb7
     SHA512 037c44f29e80b5ec57046606b4672088917d469e9d2254e3e15253e170026cf0fe17e4f79a4b01df22fe7032708ca87354b1560d9880d4d165cdef869c3c6081
     HEAD_REF master
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Deduce-reference-in-boost-fusion-for_each.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0002-Find-PostgreSQL-debug-library.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)

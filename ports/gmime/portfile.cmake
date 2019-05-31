@@ -4,14 +4,18 @@ set(LIB_NAME gmime)
 set(LIB_VERSION 3.2.3)
 
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.xz)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/gmime/3.2/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
     SHA512 abaf9059baf0c045d5b62757953ee2fa0779462eb32142bb41be40c376fc7ac2b3e4a56fd66177fbbe1dca35c6168a251542b14a844125c2cfcc9a99888179b4
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${LIB_VERSION}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

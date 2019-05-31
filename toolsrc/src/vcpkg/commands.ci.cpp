@@ -230,6 +230,7 @@ namespace vcpkg::Commands::CI
             Build::AllowDownloads::YES,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
@@ -478,6 +479,17 @@ namespace vcpkg::Commands::CI
 
             std::random_device e;
         } randomizer_instance;
+      
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+            Build::CleanPackages::YES,
+            Build::CleanDownloads::NO,
+            Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::YES,
+        };
 
         if (Util::Sets::contains(options.switches, OPTION_RANDOMIZE))
         {

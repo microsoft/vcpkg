@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Dynamic linkage not supported. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(VERSION 1.3.1)
 
@@ -41,6 +38,7 @@ file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblemon/)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblemon)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 # Handle copyright

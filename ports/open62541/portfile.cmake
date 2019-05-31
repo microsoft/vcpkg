@@ -37,7 +37,7 @@ if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
         vcpkg_download_distfile(GET_PIP
             URLS "https://bootstrap.pypa.io/get-pip.py"
             FILENAME "tools/python/python3/get-pip.py"
-            SHA512 fdbcef1037dca7cc914e2304af657ebd08239cd18c3e79786dc25c8ea39957674e012d7ea8ae2c99006e4b61d3a5e24669ac5771dc186697fd9fdb40b6cc07ae
+            SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad
         )
         execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON3_DIR}/get-pip.py)
     endif()
