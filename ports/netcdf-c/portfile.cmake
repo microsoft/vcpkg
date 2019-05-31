@@ -10,7 +10,7 @@ vcpkg_from_github(
         no-install-deps.patch
         config-pkg-location.patch
         transitive-hdf5.patch
-        fix-build-error-in-linux.patch
+        fix-build-error-in-linux.patch # Wait for update and remove this patch.
 )
 
 vcpkg_configure_cmake(
