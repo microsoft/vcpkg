@@ -4,9 +4,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO "SRombauts/SQLiteCpp"
-    REF 453baa10f1ee05ba498a01c70f7424f044281678
+    REF 09dd10886c560ab5af41cfe694567f34c88cd101
     HEAD_REF master
-    SHA512 fecaa5ae02a76ded414b36eeb58c33775847faeea78eb0e1920ae15aeaf7dca3dbbca59405bf61fa10252180a7a69c4fed050361fa519ad745c377fd1c28efeb
+    SHA512 d0a440e2e96fca9aac7fe73d46bb6508825a82547dca1e9c93d8c3ca46878fa137e7a2a7a865bcfa641d0236e26307a3342d55fc83578552a37eec7565642d91
 )
 
 vcpkg_apply_patches(

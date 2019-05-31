@@ -6,7 +6,7 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO 01org/tbb
+    REPO intel/tbb
     REF 4233fef583b4f8cbf9f781311717600feaaa0694
     SHA512 6eb239f16e0ecacb825264869aafad7fb39aa1b1f8a3c03c92344c4255d1c1a34ca0a47a366c471fd2da808f3be14262c7e2305294677f2f490c1a48f6f76ec3
     HEAD_REF tbb_2019

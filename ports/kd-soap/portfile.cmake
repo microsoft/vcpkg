@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDSoap
-    REF 857c6a1395ac0c1cf531addb5bfdfbb9052eaa6c
-    SHA512 e118f2083887d1b5d613d793e87ec23a570a8a749ef7f4de65582998b735979b4c389a939169a893d735bdf110dc84a4cca5ee38146e4009be715902f6323bb9
+    REF 7585cce5cb516f64ae89a962c3856fb456bd50f2
+    SHA512 6e2b9e39e2c23fdf0434d4d9bd1e852dde1fc0afa51ad2db889bdcd5c4a6f444b8e1d88bb00b9a5adda9af41b9662cb34fdf2a749f2e5481d472dd56f9bada6f
     HEAD_REF master
 )
 vcpkg_apply_patches(

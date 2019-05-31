@@ -4,7 +4,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO searchivarius/nmslib
+    REPO nmslib/nmslib
     REF 1eda05dccd5ed34df50a243dfc64c5e9187388f8
     SHA512 e4518c8dd84867bd0ac5dbc5d3b57d8053d1f73588fc0cf1d7c91cc4819f22dc7888d6be587691ebc1fd12b67de16de63b5e0a24847b6f7b49b57d1e6b457ebd
     HEAD_REF master

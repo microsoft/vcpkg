@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF 7d8f9623cd1a2afbff1420d39872409628883cd6
-    SHA512 a93d786501a352d2ed54d097d0f6392cd78f6f6e9ce776e80638c5aa8207fdd91ab747a6094763bfe9874ead3c73a3565c2162f01ca7ee56e12c5421b0809b7f
+    REF 9e7e8cbe9f675123dd41b7c62868acad39188cae
+    SHA512 7f756ea634a892560cae8770f21ad194c9fabb94330b7820e53e0897a40e2b02702329f2eb5f1fc078d53e51830d83ee405a97c0958fd47737d3a6b2da5ee7cb
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/ignore_use_of_cmake_toolchain_file.patch

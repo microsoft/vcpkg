@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO akheron/jansson
-  REF f92e15deddb703ded3c74d7e86b00d261d1d16eb
-  SHA512 fd14d531bafd1905038d82aa41b0e71917adad66508cf3f83f560f744da8f114d1d2abb3a0262ead07fbf13206d889a61f59c2b86eac4c8f46d926c79a04b66e
+  REF 71c4e8ec215afa225ac20eed269a14963cd37b50
+  SHA512 cdb955996768d6c7ed15b9f1bb7ddf4905f881c4e604d9e7a863f42c513eaaa9fb8799dacfa392424fbf725aac125d4716e10c44c3415449b5c5edd38a87b290
   HEAD_REF master
 )
 

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF a0d015e07cc242d575735a6ab6584bd58199abd3
-    SHA512 a525db5853779b5ca57833c5bdb692c95d2fd4b02ddc001696ecb4b2a9949da951d1a955b5a23bf33c22e84823e40dc73083158e6d4bb97160f58ce151feb830
+    REF bebbac41a027f0910cb2422c1b17b999b175c9ac
+    SHA512 45959c9eadffc5de1f82ffab25697a2d419c24066c0d7a8ece43068a984fecf9b07efcc0644b64f37d6a0d3888ece0279b229856af774ca506c3197c8c045db6
     HEAD_REF master
     PATCHES fix-uwp.patch
 )

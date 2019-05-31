@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF 110989e284666c3d1123a8f91840578dc2464bea
-    SHA512 7eecd62ab3124147f0abce482699dfdc43610703959d4a3f667c8ce12a6ecacf836a863d146f3cc7d5220b4aa05adf70a0d4dc6fa8e87bac215565badc96acff
+    REF 3e12e7006a5881136414be54216a35bbacb55baa
+    SHA512 9796429f8750faffc87e44052455740d1a560883e83c3ed9614d1c7ae9cc1ae22a360b572d9bb1c5ec62ca12ac81d3aa0b8dbaffff3e4ad4c2f85077ed04a10b
     HEAD_REF master
     PATCHES fix_conflict_with_openjp2_pc.patch
 )
