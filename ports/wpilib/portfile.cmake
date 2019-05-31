@@ -2,13 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO thadhouse/allwpilib
-    REF v2019.42.42
+    REPO wpilibsuite/allwpilib
+    REF 221011494d202770ad275c88cd7380119505e65d
     SHA512 fd8d1030bffe67912c09e6dd9aedd71be10a5994aae9d371eb7a0b0faa67bc2743a16d9c31a4472f933819d3d109c676d506df7ca6df46ca68ec92290d3a8a47
-    HEAD_REF vcpkgrelease
-    PATCHES
-      0001-Update-cmake-find-to-support-vcpkg-libuv.patch
-      0001-Fix-Gray-to-BGR-conversion-in-CameraServer.patch
 )
 
 set(WITHOUT_JAVA ON)
