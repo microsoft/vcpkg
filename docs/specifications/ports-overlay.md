@@ -143,8 +143,22 @@ No effort is made to compare version numbers inside the `portfile.cmake` files, 
 
 ## 4. Proposed User experience
 
-### TBD
+### i. User wants to use an older version of a port.
 
-## 5. Technical model
+Developer Alice and her team use `vcpkg` to acquire **OpenCV**. She has contributed many patches to add features to the **OpenCV 3** port in `vckpg`. One day, she notices that PR #5169 to update OpenCV and several other libraries that her team also uses has been merged. 
 
-### TBD
+Unfortunately, updating her project to use the latest OpenCV is not an option. But, the updates to libraries `suitesparse`, `theia`, `flann`, `lz4`, and `lzma` are of interest to her team. Also, Alice prefers to keep her changes to the OpenCV port under source control, and that is no longer possible by using `vcpkg`'s upstream repository.
+
+Alice creates a private GitHub repository and checks in the set of ports that she wants to preserve. Then provides her teammates with the link to clone her private ports repository.
+
+She adds the versions of packages `opencv`, `openexr`, and `openimageio` before PR #5169 to her private repository.
+
+Alice and her teammates are now able to use: 
+
+```
+vcpkg install opencv flann --additional-ports=/src/custom-ports/
+``` 
+
+and install the version of `opencv` they require and the new improved version of `flann`.
+
+
