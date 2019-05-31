@@ -1,13 +1,14 @@
 include(vcpkg_common_functions)
 
+# https://github.com/json-c/json-c/issues/488
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF 3e81b4abe359c8128bb2b4127f4e8c8c057fb004
-    SHA512 a2cd6d71d72d0dcacf2056466f3f414df180aacc9c2ee93b85f047683a88671590089535d7cecf71ef1bf0844b5ab35535e64022854d2fbc7f82d889aefcd730
+    REF 2b1903cc6941fb87db7526680829486f27fb1073
+    SHA512 0ee71a0c2f75f5114b65f06ef921ac7a66173d66592fa880336896de64f3a325b251028b35396184cd7c3ffd15db3826bed83200fa80f4d11607fdf758138bf9
     HEAD_REF master
-    PATCHES
-        export-cmake-module.patch
 )
 
 vcpkg_configure_cmake(
