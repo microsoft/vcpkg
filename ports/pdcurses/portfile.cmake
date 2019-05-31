@@ -73,7 +73,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 file(
-    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h ${SOURCE_PATH}/term.h
+    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h 
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)

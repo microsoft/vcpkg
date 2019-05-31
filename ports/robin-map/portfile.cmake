@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/tsl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/include/tsl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE

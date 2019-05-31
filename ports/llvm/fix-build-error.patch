@@ -1,0 +1,16 @@
+diff --git a/tools/clang/tools/libclang/CMakeLists.txt b/tools/clang/tools/libclang/CMakeLists.txt
+index e539c83..09c1ea3 100644
+--- a/tools/clang/tools/libclang/CMakeLists.txt
++++ b/tools/clang/tools/libclang/CMakeLists.txt
+@@ -56,10 +56,7 @@ if (TARGET clangTidyPlugin)
+   endif()
+ endif ()
+ 
+-find_library(DL_LIBRARY_PATH dl)
+-if (DL_LIBRARY_PATH)
+-  list(APPEND LIBS dl)
+-endif()
++list(APPEND LIBS "${DL_LIBRARY_PATH}")
+ 
+ option(LIBCLANG_BUILD_STATIC
+   "Build libclang as a static library (in addition to a shared one)" OFF)
