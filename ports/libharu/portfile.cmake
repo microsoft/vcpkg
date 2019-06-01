@@ -20,21 +20,25 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBHPDF_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" LIBHPDF_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DLIBHPDF_STATIC=${LIBHPDF_STATIC}
-        -DLIBHPDF_SHARED=${LIBHPDF_SHARED}
+        -DLIBHPDF_SHARED=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libhpdfs.lib ${CURRENT_PACKAGES_DIR}/lib/libhpdf.lib)
        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfsd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfd.lib)
+    else()
+       file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libhpdfs.a ${CURRENT_PACKAGES_DIR}/lib/libhpdf.a)
+       file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfs.a ${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfd.a)
+    endif()
 endif()
 
 file(REMOVE_RECURSE
