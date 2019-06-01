@@ -1,5 +1,5 @@
 Source: czmq
-Version: 2019-05-17
+Version: 2019-05-29
 Build-Depends: zeromq
 Description: High-level C binding for ZeroMQ
 

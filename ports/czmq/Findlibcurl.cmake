@@ -25,6 +25,7 @@ find_package_handle_standard_args(
 # CURL dependencies
 # https://github.com/Microsoft/vcpkg/issues/4312
 # https://github.com/microsoft/vcpkg/commit/ee325d14276e7bd7961e94e58293b02d6e9e92da
+# https://github.com/microsoft/vcpkg/pull/6698
 if (LIBCURL_FOUND)
     find_package(OpenSSL REQUIRED)
     find_package(ZLIB REQUIRED)
