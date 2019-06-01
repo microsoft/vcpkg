@@ -1,0 +1,42 @@
+diff --git a/src/lib/third_party/numerics/CMakeLists.txt b/src/lib/third_party/numerics/CMakeLists.txt
+index 5b197d8..a52ddd5 100755
+--- a/src/lib/third_party/numerics/CMakeLists.txt
++++ b/src/lib/third_party/numerics/CMakeLists.txt
+@@ -11,10 +11,10 @@ endif()
+ include_directories(${GEOGRAM_SOURCE_DIR}/src/lib/third_party/numerics/INCLUDE)
+ 
+ set(LAPACK_lapack_WORKS TRUE)
+-find_package(BLAS REQUIRED)
++find_package(OpenBLAS REQUIRED)
+ find_package(LAPACK REQUIRED)
+ aux_source_directories(SOURCES "Source Files" .)
+-aux_source_directories(SOURCES "Source Files\\LIBF2C" LIBF2C)
++#aux_source_directories(SOURCES "Source Files\\LIBF2C" LIBF2C)
+ # aux_source_directories(SOURCES "Source Files\\CBLAS" CBLAS)
+ # aux_source_directories(SOURCES "Source Files\\CLAPACK" CLAPACK)
+ aux_source_directories(SOURCES "Source Files\\SUPERLU" SUPERLU)
+@@ -22,10 +22,7 @@ aux_source_directories(SOURCES "Source Files\\ARPACK" ARPACK)
+ aux_source_directories(SOURCES "Source Files\\ARPACK_UTIL" ARPACK_UTIL)
+ 
+ add_library(geogram_num_3rdparty ${SOURCES})
+-target_link_libraries(geogram_num_3rdparty ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+-if(UNIX)
+-    target_link_libraries(geogram_num_3rdparty m)
+-endif()
++target_link_libraries(geogram_num_3rdparty ${LAPACK_LIBRARIES})
+ 
+ set_target_properties(geogram_num_3rdparty PROPERTIES
+                       VERSION ${VORPALINE_VERSION}
+diff --git a/src/lib/third_party/numerics/SUPERLU/CMakeLists.txt b/src/lib/third_party/numerics/SUPERLU/CMakeLists.txt
+index bd70af2..5640d45 100755
+--- a/src/lib/third_party/numerics/SUPERLU/CMakeLists.txt
++++ b/src/lib/third_party/numerics/SUPERLU/CMakeLists.txt
+@@ -228,7 +228,7 @@ endif()
+ 
+ add_library(superlu ${sources} ${HEADERS})
+ 
+-target_link_libraries(superlu ${BLAS_LIB} m)
++target_link_libraries(superlu ${LAPACK_LIBRARIES})
+ set_target_properties(superlu PROPERTIES
+   VERSION ${PROJECT_VERSION} SOVERSION ${VERSION_MAJOR}
+   )

@@ -10,7 +10,7 @@ install(TARGETS visit_struct
 install(EXPORT visit_struct-targets
     FILE visit_struct-config.cmake
     NAMESPACE visit_struct::
-    DESTINATION share/visit-struct)
+    DESTINATION share/visit_struct)
 
 install(DIRECTORY
     include/visit_struct

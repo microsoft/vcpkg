@@ -1,0 +1,1008 @@
+diff --git a/src/lib/third_party/numerics/ARPACK/arpack_cnames.h b/src/lib/third_party/numerics/ARPACK/arpack_cnames.h
+new file mode 100644
+index 0000000..e6f2c48
+--- /dev/null
++++ b/src/lib/third_party/numerics/ARPACK/arpack_cnames.h
+@@ -0,0 +1,105 @@
++#ifndef __ARPACK_CNAMES
++#define __ARPACK_CNAMES
++
++/*
++ * These defines set up the naming scheme required to have a fortran 77
++ * routine call a C routine 
++ * for following Fortran to C interface:
++ *           FORTRAN CALL               C DECLARATION
++ *           call dgemm(...)           void dgemm(...)
++ */
++/* BLAS */
++#define sswap_    sswap
++#define saxpy_    saxpy
++#define sasum_    sasum
++#define isamax_   isamax
++#define scopy_    scopy
++#define sscal_    sscal
++#define sger_     sger
++#define snrm2_    snrm2
++#define ssymv_    ssymv
++#define sdot_     sdot
++#define saxpy_    saxpy
++#define ssyr2_    ssyr2
++#define srot_     srot
++#define sgemv_    sgemv
++#define strsv_    strsv
++#define sgemm_    sgemm
++#define strsm_    strsm
++
++#define dswap_    dswap
++#define daxpy_    daxpy
++#define dasum_    dasum
++#define idamax_   idamax
++#define dcopy_    dcopy
++#define dscal_    dscal
++#define dger_     dger
++#define dnrm2_    dnrm2
++#define dsymv_    dsymv
++#define ddot_     ddot
++#define dsyr2_    dsyr2
++#define drot_     drot
++#define dgemv_    dgemv
++#define dtrsv_    dtrsv
++#define dgemm_    dgemm
++#define dtrsm_    dtrsm
++
++#define cswap_    cswap
++#define caxpy_    caxpy
++#define scasum_   scasum
++#define icamax_   icamax
++#define ccopy_    ccopy
++#define cscal_    cscal
++#define scnrm2_   scnrm2
++#define cgemv_    cgemv
++#define ctrsv_    ctrsv
++#define cgemm_    cgemm
++#define ctrsm_    ctrsm
++#define cgerc_    cgerc
++#define chemv_    chemv
++#define cher2_    cher2
++
++#define zswap_    zswap
++#define zaxpy_    zaxpy
++#define dzasum_   dzasum
++#define izamax_   izamax
++#define zcopy_    zcopy
++#define zscal_    zscal
++#define dznrm2_   dznrm2
++#define zgemv_    zgemv
++#define ztrsv_    ztrsv
++#define zgemm_    zgemm
++#define ztrsm_    ztrsm
++#define zgerc_    zgerc
++#define zhemv_    zhemv
++#define zher2_    zher2
++
++/* LAPACK */
++#define dlacon_   dlacon
++#define slacon_   slacon
++#define icmax1_   icmax1
++#define scsum1_   scsum1
++#define clacon_   clacon
++#define dzsum1_   dzsum1
++#define izmax1_   izmax1
++#define zlacon_   zlacon
++
++/* Fortran interface */
++#define c_bridge_dgssv_ c_bridge_dgssv
++#define c_fortran_sgssv_ c_fortran_sgssv
++#define c_fortran_dgssv_ c_fortran_dgssv
++#define c_fortran_cgssv_ c_fortran_cgssv
++#define c_fortran_zgssv_ c_fortran_zgssv
++
++#define cdotc_ cdotc
++#define csscal_ csscal
++#define zdscal_ zdscal
++#define zdotc_ zdotc
++#define ctrmm_ ctrmm
++#define dtrmm_ dtrmm
++#define strmm_ strmm
++#define ztrmm_ ztrmm
++#define cgeru_ cgeru
++#define zgeru_ zgeru
++
++#endif /* __ARPACK_CNAMES */
+diff --git a/src/lib/third_party/numerics/ARPACK/cgetv0.c b/src/lib/third_party/numerics/ARPACK/cgetv0.c
+index 48e8677..871d7b0 100755
+--- a/src/lib/third_party/numerics/ARPACK/cgetv0.c
++++ b/src/lib/third_party/numerics/ARPACK/cgetv0.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cnaitr.c b/src/lib/third_party/numerics/ARPACK/cnaitr.c
+index ee9318b..693f399 100755
+--- a/src/lib/third_party/numerics/ARPACK/cnaitr.c
++++ b/src/lib/third_party/numerics/ARPACK/cnaitr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cnapps.c b/src/lib/third_party/numerics/ARPACK/cnapps.c
+index 0c4a6a2..4929fc1 100755
+--- a/src/lib/third_party/numerics/ARPACK/cnapps.c
++++ b/src/lib/third_party/numerics/ARPACK/cnapps.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cnaup2.c b/src/lib/third_party/numerics/ARPACK/cnaup2.c
+index 8322446..2d98e4b 100755
+--- a/src/lib/third_party/numerics/ARPACK/cnaup2.c
++++ b/src/lib/third_party/numerics/ARPACK/cnaup2.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cnaupd.c b/src/lib/third_party/numerics/ARPACK/cnaupd.c
+index e51f72e..4fe5dca 100755
+--- a/src/lib/third_party/numerics/ARPACK/cnaupd.c
++++ b/src/lib/third_party/numerics/ARPACK/cnaupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cneigh.c b/src/lib/third_party/numerics/ARPACK/cneigh.c
+index d96bebd..adfa279 100755
+--- a/src/lib/third_party/numerics/ARPACK/cneigh.c
++++ b/src/lib/third_party/numerics/ARPACK/cneigh.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cneupd.c b/src/lib/third_party/numerics/ARPACK/cneupd.c
+index 6a839e7..35fc426 100755
+--- a/src/lib/third_party/numerics/ARPACK/cneupd.c
++++ b/src/lib/third_party/numerics/ARPACK/cneupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/cngets.c b/src/lib/third_party/numerics/ARPACK/cngets.c
+index 9788d00..663406f 100755
+--- a/src/lib/third_party/numerics/ARPACK/cngets.c
++++ b/src/lib/third_party/numerics/ARPACK/cngets.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/csortc.c b/src/lib/third_party/numerics/ARPACK/csortc.c
+index 8c6cedb..0d330fe 100755
+--- a/src/lib/third_party/numerics/ARPACK/csortc.c
++++ b/src/lib/third_party/numerics/ARPACK/csortc.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* \BeginDoc */
+ 
+ /* \Name: csortc */
+diff --git a/src/lib/third_party/numerics/ARPACK/cstatn.c b/src/lib/third_party/numerics/ARPACK/cstatn.c
+index 6fcde6d..4eb47dc 100755
+--- a/src/lib/third_party/numerics/ARPACK/cstatn.c
++++ b/src/lib/third_party/numerics/ARPACK/cstatn.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dgetv0.c b/src/lib/third_party/numerics/ARPACK/dgetv0.c
+index 0f4c2bb..2206708 100755
+--- a/src/lib/third_party/numerics/ARPACK/dgetv0.c
++++ b/src/lib/third_party/numerics/ARPACK/dgetv0.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dlaqrb.c b/src/lib/third_party/numerics/ARPACK/dlaqrb.c
+index baa4f12..d4275a7 100755
+--- a/src/lib/third_party/numerics/ARPACK/dlaqrb.c
++++ b/src/lib/third_party/numerics/ARPACK/dlaqrb.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Table of constant values */
+ 
+ static integer c__1 = 1;
+diff --git a/src/lib/third_party/numerics/ARPACK/dnaitr.c b/src/lib/third_party/numerics/ARPACK/dnaitr.c
+index 8fffe7f..74eca38 100755
+--- a/src/lib/third_party/numerics/ARPACK/dnaitr.c
++++ b/src/lib/third_party/numerics/ARPACK/dnaitr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dnapps.c b/src/lib/third_party/numerics/ARPACK/dnapps.c
+index 67dac36..b0083a1 100755
+--- a/src/lib/third_party/numerics/ARPACK/dnapps.c
++++ b/src/lib/third_party/numerics/ARPACK/dnapps.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dnaup2.c b/src/lib/third_party/numerics/ARPACK/dnaup2.c
+index 28dabb6..8b48f33 100755
+--- a/src/lib/third_party/numerics/ARPACK/dnaup2.c
++++ b/src/lib/third_party/numerics/ARPACK/dnaup2.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dnaupd.c b/src/lib/third_party/numerics/ARPACK/dnaupd.c
+index e20298c..dcfaf47 100755
+--- a/src/lib/third_party/numerics/ARPACK/dnaupd.c
++++ b/src/lib/third_party/numerics/ARPACK/dnaupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "protos.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dnconv.c b/src/lib/third_party/numerics/ARPACK/dnconv.c
+index e2324b7..aa0bf91 100755
+--- a/src/lib/third_party/numerics/ARPACK/dnconv.c
++++ b/src/lib/third_party/numerics/ARPACK/dnconv.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dneigh.c b/src/lib/third_party/numerics/ARPACK/dneigh.c
+index b7057eb..94e3680 100755
+--- a/src/lib/third_party/numerics/ARPACK/dneigh.c
++++ b/src/lib/third_party/numerics/ARPACK/dneigh.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dneupd.c b/src/lib/third_party/numerics/ARPACK/dneupd.c
+index 141255d..067041b 100755
+--- a/src/lib/third_party/numerics/ARPACK/dneupd.c
++++ b/src/lib/third_party/numerics/ARPACK/dneupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "protos.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dngets.c b/src/lib/third_party/numerics/ARPACK/dngets.c
+index 9b0ee73..e39848f 100755
+--- a/src/lib/third_party/numerics/ARPACK/dngets.c
++++ b/src/lib/third_party/numerics/ARPACK/dngets.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsaitr.c b/src/lib/third_party/numerics/ARPACK/dsaitr.c
+index 2f3df52..89a597a 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsaitr.c
++++ b/src/lib/third_party/numerics/ARPACK/dsaitr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsapps.c b/src/lib/third_party/numerics/ARPACK/dsapps.c
+index e87b27d..4a320c9 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsapps.c
++++ b/src/lib/third_party/numerics/ARPACK/dsapps.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsaup2.c b/src/lib/third_party/numerics/ARPACK/dsaup2.c
+index e5f224f..b93e80b 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsaup2.c
++++ b/src/lib/third_party/numerics/ARPACK/dsaup2.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsaupd.c b/src/lib/third_party/numerics/ARPACK/dsaupd.c
+index a9e456f..d20ebe2 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsaupd.c
++++ b/src/lib/third_party/numerics/ARPACK/dsaupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "protos.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsconv.c b/src/lib/third_party/numerics/ARPACK/dsconv.c
+index 843ac29..25e3b8f 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsconv.c
++++ b/src/lib/third_party/numerics/ARPACK/dsconv.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dseigt.c b/src/lib/third_party/numerics/ARPACK/dseigt.c
+index c7e975b..ba74d2f 100755
+--- a/src/lib/third_party/numerics/ARPACK/dseigt.c
++++ b/src/lib/third_party/numerics/ARPACK/dseigt.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsesrt.c b/src/lib/third_party/numerics/ARPACK/dsesrt.c
+index 1bf99ee..8a2030f 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsesrt.c
++++ b/src/lib/third_party/numerics/ARPACK/dsesrt.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Table of constant values */
+ 
+ static integer c__1 = 1;
+diff --git a/src/lib/third_party/numerics/ARPACK/dseupd.c b/src/lib/third_party/numerics/ARPACK/dseupd.c
+index 9b81477..065e4d8 100755
+--- a/src/lib/third_party/numerics/ARPACK/dseupd.c
++++ b/src/lib/third_party/numerics/ARPACK/dseupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "protos.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsgets.c b/src/lib/third_party/numerics/ARPACK/dsgets.c
+index 7983ec8..19a33d9 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsgets.c
++++ b/src/lib/third_party/numerics/ARPACK/dsgets.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dsortc.c b/src/lib/third_party/numerics/ARPACK/dsortc.c
+index 2170fcc..131ae2f 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsortc.c
++++ b/src/lib/third_party/numerics/ARPACK/dsortc.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* ----------------------------------------------------------------------- */
+ /* \BeginDoc */
+ 
+diff --git a/src/lib/third_party/numerics/ARPACK/dsortr.c b/src/lib/third_party/numerics/ARPACK/dsortr.c
+index 5f8dca8..335d9a9 100755
+--- a/src/lib/third_party/numerics/ARPACK/dsortr.c
++++ b/src/lib/third_party/numerics/ARPACK/dsortr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* ----------------------------------------------------------------------- */
+ /* \BeginDoc */
+ 
+diff --git a/src/lib/third_party/numerics/ARPACK/dstatn.c b/src/lib/third_party/numerics/ARPACK/dstatn.c
+index 50c15f2..1909d6d 100755
+--- a/src/lib/third_party/numerics/ARPACK/dstatn.c
++++ b/src/lib/third_party/numerics/ARPACK/dstatn.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dstats.c b/src/lib/third_party/numerics/ARPACK/dstats.c
+index 4341eea..02f4024 100755
+--- a/src/lib/third_party/numerics/ARPACK/dstats.c
++++ b/src/lib/third_party/numerics/ARPACK/dstats.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/dstqrb.c b/src/lib/third_party/numerics/ARPACK/dstqrb.c
+index 2a10880..c25f44d 100755
+--- a/src/lib/third_party/numerics/ARPACK/dstqrb.c
++++ b/src/lib/third_party/numerics/ARPACK/dstqrb.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Table of constant values */
+ 
+ static integer c__0 = 0;
+diff --git a/src/lib/third_party/numerics/ARPACK/protos.h b/src/lib/third_party/numerics/ARPACK/protos.h
+index 2e87fe7..09a89fc 100755
+--- a/src/lib/third_party/numerics/ARPACK/protos.h
++++ b/src/lib/third_party/numerics/ARPACK/protos.h
+@@ -8,7 +8,7 @@
+ 
+ #include <third_party/numerics/linkage.h>
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ int NUMERICS_API dnaupd_(
+     integer *ido, char *bmat, integer *n, char *
+     which, integer *nev, doublereal *tol, doublereal *resid, integer *ncv,
+diff --git a/src/lib/third_party/numerics/ARPACK/sgetv0.c b/src/lib/third_party/numerics/ARPACK/sgetv0.c
+index 206122a..314252f 100755
+--- a/src/lib/third_party/numerics/ARPACK/sgetv0.c
++++ b/src/lib/third_party/numerics/ARPACK/sgetv0.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/slaqrb.c b/src/lib/third_party/numerics/ARPACK/slaqrb.c
+index 335faa2..12cc92a 100755
+--- a/src/lib/third_party/numerics/ARPACK/slaqrb.c
++++ b/src/lib/third_party/numerics/ARPACK/slaqrb.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Table of constant values */
+ 
+ static integer c__1 = 1;
+diff --git a/src/lib/third_party/numerics/ARPACK/snaitr.c b/src/lib/third_party/numerics/ARPACK/snaitr.c
+index 5e24f6c..f3bc2fa 100755
+--- a/src/lib/third_party/numerics/ARPACK/snaitr.c
++++ b/src/lib/third_party/numerics/ARPACK/snaitr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/snapps.c b/src/lib/third_party/numerics/ARPACK/snapps.c
+index 37470fc..9ae03e4 100755
+--- a/src/lib/third_party/numerics/ARPACK/snapps.c
++++ b/src/lib/third_party/numerics/ARPACK/snapps.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/snaup2.c b/src/lib/third_party/numerics/ARPACK/snaup2.c
+index 4028150..f893a8e 100755
+--- a/src/lib/third_party/numerics/ARPACK/snaup2.c
++++ b/src/lib/third_party/numerics/ARPACK/snaup2.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/snaupd.c b/src/lib/third_party/numerics/ARPACK/snaupd.c
+index 88118f0..66fac19 100755
+--- a/src/lib/third_party/numerics/ARPACK/snaupd.c
++++ b/src/lib/third_party/numerics/ARPACK/snaupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/snconv.c b/src/lib/third_party/numerics/ARPACK/snconv.c
+index 4984455..cb42561 100755
+--- a/src/lib/third_party/numerics/ARPACK/snconv.c
++++ b/src/lib/third_party/numerics/ARPACK/snconv.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/sneigh.c b/src/lib/third_party/numerics/ARPACK/sneigh.c
+index 4ff7d7a..a8b3ffc 100755
+--- a/src/lib/third_party/numerics/ARPACK/sneigh.c
++++ b/src/lib/third_party/numerics/ARPACK/sneigh.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/sneupd.c b/src/lib/third_party/numerics/ARPACK/sneupd.c
+index e2a7205..430f033 100755
+--- a/src/lib/third_party/numerics/ARPACK/sneupd.c
++++ b/src/lib/third_party/numerics/ARPACK/sneupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/sngets.c b/src/lib/third_party/numerics/ARPACK/sngets.c
+index 5a13f94..1c34e92 100755
+--- a/src/lib/third_party/numerics/ARPACK/sngets.c
++++ b/src/lib/third_party/numerics/ARPACK/sngets.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssaitr.c b/src/lib/third_party/numerics/ARPACK/ssaitr.c
+index 65a61f6..98fbb1c 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssaitr.c
++++ b/src/lib/third_party/numerics/ARPACK/ssaitr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssapps.c b/src/lib/third_party/numerics/ARPACK/ssapps.c
+index 9537c2f..b979fb1 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssapps.c
++++ b/src/lib/third_party/numerics/ARPACK/ssapps.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssaup2.c b/src/lib/third_party/numerics/ARPACK/ssaup2.c
+index a5123dc..59e08aa 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssaup2.c
++++ b/src/lib/third_party/numerics/ARPACK/ssaup2.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssaupd.c b/src/lib/third_party/numerics/ARPACK/ssaupd.c
+index 5898148..32ba0b0 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssaupd.c
++++ b/src/lib/third_party/numerics/ARPACK/ssaupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssconv.c b/src/lib/third_party/numerics/ARPACK/ssconv.c
+index 0e1c9c2..90faa50 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssconv.c
++++ b/src/lib/third_party/numerics/ARPACK/ssconv.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/sseigt.c b/src/lib/third_party/numerics/ARPACK/sseigt.c
+index 6b9e407..6652b74 100755
+--- a/src/lib/third_party/numerics/ARPACK/sseigt.c
++++ b/src/lib/third_party/numerics/ARPACK/sseigt.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssesrt.c b/src/lib/third_party/numerics/ARPACK/ssesrt.c
+index 9287d6a..d6bcd6d 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssesrt.c
++++ b/src/lib/third_party/numerics/ARPACK/ssesrt.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Table of constant values */
+ 
+ static integer c__1 = 1;
+diff --git a/src/lib/third_party/numerics/ARPACK/sseupd.c b/src/lib/third_party/numerics/ARPACK/sseupd.c
+index 163df3a..b0e825f 100755
+--- a/src/lib/third_party/numerics/ARPACK/sseupd.c
++++ b/src/lib/third_party/numerics/ARPACK/sseupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssgets.c b/src/lib/third_party/numerics/ARPACK/ssgets.c
+index 244f2ab..52127c2 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssgets.c
++++ b/src/lib/third_party/numerics/ARPACK/ssgets.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/ssortc.c b/src/lib/third_party/numerics/ARPACK/ssortc.c
+index aa836f7..38b5fbd 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssortc.c
++++ b/src/lib/third_party/numerics/ARPACK/ssortc.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* ----------------------------------------------------------------------- */
+ /* \BeginDoc */
+ 
+diff --git a/src/lib/third_party/numerics/ARPACK/ssortr.c b/src/lib/third_party/numerics/ARPACK/ssortr.c
+index e48fb1c..88db423 100755
+--- a/src/lib/third_party/numerics/ARPACK/ssortr.c
++++ b/src/lib/third_party/numerics/ARPACK/ssortr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* ----------------------------------------------------------------------- */
+ /* \BeginDoc */
+ 
+diff --git a/src/lib/third_party/numerics/ARPACK/sstatn.c b/src/lib/third_party/numerics/ARPACK/sstatn.c
+index fc899df..26d49b9 100755
+--- a/src/lib/third_party/numerics/ARPACK/sstatn.c
++++ b/src/lib/third_party/numerics/ARPACK/sstatn.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/sstats.c b/src/lib/third_party/numerics/ARPACK/sstats.c
+index 6601d2e..61577e2 100755
+--- a/src/lib/third_party/numerics/ARPACK/sstats.c
++++ b/src/lib/third_party/numerics/ARPACK/sstats.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/sstqrb.c b/src/lib/third_party/numerics/ARPACK/sstqrb.c
+index 4c7bf91..2a416e2 100755
+--- a/src/lib/third_party/numerics/ARPACK/sstqrb.c
++++ b/src/lib/third_party/numerics/ARPACK/sstqrb.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Table of constant values */
+ 
+ static integer c__0 = 0;
+diff --git a/src/lib/third_party/numerics/ARPACK/zgetv0.c b/src/lib/third_party/numerics/ARPACK/zgetv0.c
+index 96d3c48..d868c1f 100755
+--- a/src/lib/third_party/numerics/ARPACK/zgetv0.c
++++ b/src/lib/third_party/numerics/ARPACK/zgetv0.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/znaitr.c b/src/lib/third_party/numerics/ARPACK/znaitr.c
+index 2ce6b9c..c8cf0f6 100755
+--- a/src/lib/third_party/numerics/ARPACK/znaitr.c
++++ b/src/lib/third_party/numerics/ARPACK/znaitr.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/znapps.c b/src/lib/third_party/numerics/ARPACK/znapps.c
+index 732aed0..30f46e6 100755
+--- a/src/lib/third_party/numerics/ARPACK/znapps.c
++++ b/src/lib/third_party/numerics/ARPACK/znapps.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/znaup2.c b/src/lib/third_party/numerics/ARPACK/znaup2.c
+index b7caa42..7164775 100755
+--- a/src/lib/third_party/numerics/ARPACK/znaup2.c
++++ b/src/lib/third_party/numerics/ARPACK/znaup2.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/znaupd.c b/src/lib/third_party/numerics/ARPACK/znaupd.c
+index ed251ee..f960959 100755
+--- a/src/lib/third_party/numerics/ARPACK/znaupd.c
++++ b/src/lib/third_party/numerics/ARPACK/znaupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/zneigh.c b/src/lib/third_party/numerics/ARPACK/zneigh.c
+index 4157ab3..4ee3c1e 100755
+--- a/src/lib/third_party/numerics/ARPACK/zneigh.c
++++ b/src/lib/third_party/numerics/ARPACK/zneigh.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/zneupd.c b/src/lib/third_party/numerics/ARPACK/zneupd.c
+index 3f684f4..3ef32c1 100755
+--- a/src/lib/third_party/numerics/ARPACK/zneupd.c
++++ b/src/lib/third_party/numerics/ARPACK/zneupd.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/zngets.c b/src/lib/third_party/numerics/ARPACK/zngets.c
+index a2e461b..97bbebd 100755
+--- a/src/lib/third_party/numerics/ARPACK/zngets.c
++++ b/src/lib/third_party/numerics/ARPACK/zngets.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {
+diff --git a/src/lib/third_party/numerics/ARPACK/zsortc.c b/src/lib/third_party/numerics/ARPACK/zsortc.c
+index a35748c..38dbc42 100755
+--- a/src/lib/third_party/numerics/ARPACK/zsortc.c
++++ b/src/lib/third_party/numerics/ARPACK/zsortc.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* \BeginDoc */
+ 
+ /* \Name: zsortc */
+diff --git a/src/lib/third_party/numerics/ARPACK/zstatn.c b/src/lib/third_party/numerics/ARPACK/zstatn.c
+index d433e97..5a8bd1e 100755
+--- a/src/lib/third_party/numerics/ARPACK/zstatn.c
++++ b/src/lib/third_party/numerics/ARPACK/zstatn.c
+@@ -11,7 +11,7 @@
+ */
+ 
+ #include "f2c.h"
+-
++#include "arpack_cnames.h"
+ /* Common Block Declarations */
+ 
+ struct {

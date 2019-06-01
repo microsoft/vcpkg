@@ -12,7 +12,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         uwp.patch
-        fix-space-path.patch
+        fix_space_path.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -26,8 +26,7 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
-set(COMMON_OPTIONS
-    -DBUILD_WITHOUT_LAPACK=ON)
+set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
@@ -60,7 +59,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS 
+        OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
             -DVS_WINRT_COMPONENT=TRUE
@@ -84,20 +83,18 @@ endif()
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
 #maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
-
-# openblas do not make the config file , so I manually made this
-# but I think in most case, libraries will not include these files, they define their own used function prototypes
-# this is only to quite vcpkg
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/openblas_common.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
-string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
-
-# openblas is BSD
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+## openblas do not make the config file , so I manually made this
+## but I think in most case, libraries will not include these files, they define their own used function prototypes
+## this is only to quite vcpkg
+#file(COPY ${CMAKE_CURRENT_LIST_DIR}/openblas_common.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+#
+#file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
+#string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
+#file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
+
+# openblas is BSD
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas RENAME copyright)

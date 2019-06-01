@@ -66,6 +66,7 @@
 include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
 include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
+include(${CMAKE_ROOT}/Modules/CMakeFindDependencyMacro.cmake)
 
 set(CLAPACK_VERSION "3.2.1")
 
@@ -74,30 +75,36 @@ if(UNIX)
 endif()
 
 if(NOT F2C_LIBRARY)
-    find_library(F2C_LIBRARY_RELEASE NAMES f2c libf2c)
-    find_library(F2C_LIBRARY_DEBUG NAMES f2cd libf2cd)
-    list(APPEND F2C_LIBRARY_RELEASE ${ADDITIONAL_LAPACK_LIBRARY})
-    list(APPEND F2C_LIBRARY_DEBUG ${ADDITIONAL_LAPACK_LIBRARY})
-    select_library_configurations(F2C)
+  find_library(F2C_LIBRARY_RELEASE NAMES f2c libf2c)
+  find_library(F2C_LIBRARY_DEBUG NAMES f2cd libf2cd)
+  list(APPEND F2C_LIBRARY_RELEASE ${ADDITIONAL_LAPACK_LIBRARY})
+  list(APPEND F2C_LIBRARY_DEBUG ${ADDITIONAL_LAPACK_LIBRARY})
+  select_library_configurations(F2C)
 endif()
-
-find_package(BLAS)
 
 if(NOT LAPACK_LIBRARY)
-    find_library(LAPACK_LIBRARY_RELEASE NAMES lapack)
-    find_library(LAPACK_LIBRARY_DEBUG NAMES lapackd)
-    list(APPEND LAPACK_LIBRARY_RELEASE ${F2C_LIBRARY_RELEASE})
-    list(APPEND LAPACK_LIBRARY_DEBUG ${F2C_LIBRARY_DEBUG})
-    select_library_configurations(LAPACK)
+  find_library(LAPACK_LIBRARY_RELEASE NAMES lapack)
+  find_library(LAPACK_LIBRARY_DEBUG NAMES lapackd)
+  list(APPEND LAPACK_LIBRARY_RELEASE ${F2C_LIBRARY_RELEASE})
+  list(APPEND LAPACK_LIBRARY_DEBUG ${F2C_LIBRARY_DEBUG})
+
+  if(UNIX AND NOT APPLE)
+    find_dependency(OpenBLAS)
+    get_property(_loc TARGET OpenBLAS::OpenBLAS PROPERTY LOCATION_RELEASE)
+    set(LAPACK_BLAS_LIBRARY_RELEASE ${_loc})
+    get_property(_loc TARGET OpenBLAS::OpenBLAS PROPERTY LOCATION_DEBUG)
+    set(LAPACK_BLAS_LIBRARY_DEBUG ${_loc})
+    list(APPEND LAPACK_LIBRARY_RELEASE ${LAPACK_BLAS_LIBRARY_RELEASE})
+    list(APPEND LAPACK_LIBRARY_DEBUG ${LAPACK_BLAS_LIBRARY_DEBUG})
+    select_library_configurations(LAPACK_BLAS)
+  else()
+    find_dependency(BLAS)
+    set(LAPACK_LIBRARY_RELEASE ${BLAS_LIBRARIES})
+    set(LAPACK_LIBRARY_DEBUG ${BLAS_LIBRARIES})
+  endif()
+
+  select_library_configurations(LAPACK)
 endif()
-
-list(APPEND LAPACK_LIBRARY ${BLAS_LIBRARIES})
-
-set(F2C_LIBRARIES "${F2C_LIBRARY}" CACHE STRING "" FORCE)
-set(LAPACK_VERSION "${CLAPACK_VERSION}" CACHE STRING "" FORCE)
-set(LAPACK_LIBRARIES "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
-set(CLAPACK_LIBRARY "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
-set(CLAPACK_LIBRARIES "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
 
 if(NOT F2C_INCLUDE_DIR)
   find_path(F2C_INCLUDE_DIR NAMES f2c.h)
@@ -120,19 +127,13 @@ if(WIN32)
   string( REPLACE ".lib" ".dll" F2C_LIBRARY_DEBUG_DLL      "${F2C_LIBRARY_DEBUG}" )
 endif()
 
-find_package_handle_standard_args(CLAPACK DEFAULT_MSG CLAPACK_LIBRARY CLAPACK_INCLUDE_DIR)
-mark_as_advanced(CLAPACK_INCLUDE_DIR CLAPACK_LIBRARY)
-
-find_package_handle_standard_args(LAPACK  DEFAULT_MSG LAPACK_LIBRARY LAPACK_INCLUDE_DIR)
-mark_as_advanced(LAPACK_INCLUDE_DIR LAPACK_LIBRARY)
-
-find_package_handle_standard_args(F2C     DEFAULT_MSG F2C_LIBRARY F2C_INCLUDE_DIR)
-mark_as_advanced(F2C_INCLUDE_DIR F2C_LIBRARY)
-
 #TARGETS
 if( CLAPACK_FOUND AND NOT TARGET clapack::clapack )
   if( EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}" )
     add_library( clapack::clapack      SHARED IMPORTED )
+    if(TARGET OpenBLAS::OpenBLAS)
+      add_dependencies(clapack::clapack OpenBLAS::OpenBLAS)
+    endif()
     set_target_properties( clapack::clapack PROPERTIES
       IMPORTED_LOCATION_RELEASE         "${LAPACK_LIBRARY_RELEASE_DLL}"
       IMPORTED_IMPLIB                   "${LAPACK_LIBRARY_RELEASE}"
@@ -147,6 +148,9 @@ if( CLAPACK_FOUND AND NOT TARGET clapack::clapack )
     endif()
   else()
     add_library( clapack::clapack      UNKNOWN IMPORTED )
+    if(TARGET OpenBLAS::OpenBLAS)
+      add_dependencies(clapack::clapack OpenBLAS::OpenBLAS)
+    endif()
     set_target_properties( clapack::clapack PROPERTIES
       IMPORTED_LOCATION_RELEASE         "${LAPACK_LIBRARY_RELEASE}"
       INTERFACE_INCLUDE_DIRECTORIES     "${LAPACK_INCLUDE_DIR}"
@@ -163,6 +167,9 @@ endif()
 if( CLAPACK_FOUND AND NOT TARGET lapack )
   if( EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}" )
     add_library( lapack      SHARED IMPORTED )
+    if(TARGET OpenBLAS::OpenBLAS)
+      add_dependencies(lapack OpenBLAS::OpenBLAS)
+    endif()
     set_target_properties( lapack PROPERTIES
       IMPORTED_LOCATION_RELEASE         "${LAPACK_LIBRARY_RELEASE_DLL}"
       IMPORTED_IMPLIB                   "${LAPACK_LIBRARY_RELEASE}"
@@ -177,6 +184,9 @@ if( CLAPACK_FOUND AND NOT TARGET lapack )
     endif()
   else()
     add_library( lapack      UNKNOWN IMPORTED )
+    if(TARGET OpenBLAS::OpenBLAS)
+      add_dependencies(lapack OpenBLAS::OpenBLAS)
+    endif()
     set_target_properties( lapack PROPERTIES
       IMPORTED_LOCATION_RELEASE         "${LAPACK_LIBRARY_RELEASE}"
       INTERFACE_INCLUDE_DIRECTORIES     "${LAPACK_INCLUDE_DIR}"
@@ -190,9 +200,26 @@ if( CLAPACK_FOUND AND NOT TARGET lapack )
   endif()
 endif()
 
+
+set(LAPACK_BLAS_LIBRARY "${LAPACK_BLAS_LIBRARY}" CACHE STRING "" FORCE)
+set(F2C_LIBRARIES "${F2C_LIBRARY}" CACHE STRING "" FORCE)
+set(LAPACK_VERSION "${CLAPACK_VERSION}" CACHE STRING "" FORCE)
+set(LAPACK_LIBRARIES "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
+set(CLAPACK_LIBRARY "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
+set(CLAPACK_LIBRARIES "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
+
 set(LAPACK_LIBRARY "${LAPACK_LIBRARY}" CACHE STRING "" FORCE)
 set(F2C_LIBRARY "${F2C_LIBRARY}" CACHE STRING "" FORCE)
 set(LAPACK_LIBRARY_RELEASE "${LAPACK_LIBRARY_RELEASE}" CACHE STRING "" FORCE)
 set(LAPACK_LIBRARY_DEBUG "${LAPACK_LIBRARY_DEBUG}" CACHE STRING "" FORCE)
 set(F2C_LIBRARY_RELEASE "${F2C_LIBRARY_RELEASE}" CACHE STRING "" FORCE)
 set(F2C_LIBRARY_DEBUG "${F2C_LIBRARY_DEBUG}" CACHE STRING "" FORCE)
+
+find_package_handle_standard_args(CLAPACK DEFAULT_MSG CLAPACK_LIBRARY CLAPACK_INCLUDE_DIR)
+mark_as_advanced(CLAPACK_INCLUDE_DIR CLAPACK_LIBRARY)
+
+find_package_handle_standard_args(LAPACK  DEFAULT_MSG LAPACK_LIBRARY LAPACK_INCLUDE_DIR)
+mark_as_advanced(LAPACK_INCLUDE_DIR LAPACK_LIBRARY)
+
+find_package_handle_standard_args(F2C     DEFAULT_MSG F2C_LIBRARY F2C_INCLUDE_DIR)
+mark_as_advanced(F2C_INCLUDE_DIR F2C_LIBRARY)

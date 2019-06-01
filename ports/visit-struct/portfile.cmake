@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/visit_struct TARGET_PATH share/visit_struct)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 

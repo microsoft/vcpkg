@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c729d95..2b15e31 100644
+index 414ac8e..4f2a166 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -10,3 +10,16 @@ index c729d95..2b15e31 100644
  
  if(WIN32 AND NOT CYGWIN)
    set(SECOND_SRC  ${CLAPACK_SOURCE_DIR}/INSTALL/winsecond.c)
+diff --git a/SRC/CMakeLists.txt b/SRC/CMakeLists.txt
+index 07dc8c7..990a500 100644
+--- a/SRC/CMakeLists.txt
++++ b/SRC/CMakeLists.txt
+@@ -376,7 +376,7 @@ if(BUILD_COMPLEX16)
+   set(ALLOBJ  ${ZLASRC} ${ALLAUX} ${DZLAUX})
+ endif()
+ add_library(lapack ${ALLOBJ} ${ALLXOBJ})
+-target_link_libraries(lapack ${BLAS_LIBRARIES} f2c)
++target_link_libraries(lapack ${OpenBLAS_LIBRARIES} f2c)
+ install(TARGETS lapack
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
