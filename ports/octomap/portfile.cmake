@@ -49,8 +49,7 @@ else()
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/octomap)
-
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

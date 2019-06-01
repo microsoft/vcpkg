@@ -26,7 +26,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_REGTEST=OFF
         -DBUILD_TESTING=OFF
@@ -41,8 +41,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/libsndfile)
+vcpkg_fixup_cmake_targets()
 
 # Fix applied for 6830c421899e32f8d413a903a21a9b6cf384d369
 file(READ "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" _contents)

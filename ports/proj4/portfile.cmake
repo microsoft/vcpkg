@@ -34,7 +34,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/proj4)
+vcpkg_fixup_cmake_targets()
 
 # Rename library and adapt cmake configuration
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

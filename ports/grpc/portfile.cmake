@@ -16,7 +16,7 @@ vcpkg_from_github(
     REF v1.20.1
     SHA512 e0dd0318d2b4ec07e0eafffa218938d91b1440c5053a557460ea7fceaab3d76f0cccc1d595abe7de9fa79f068b71cfbc5a28a3b688bc9c1e2737086928149583
     HEAD_REF master
-    PATCHES 
+    PATCHES
         00001-fix-uwp.patch
         00002-static-linking-in-linux.patch
         00003-undef-base64-macro.patch
@@ -72,7 +72,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 

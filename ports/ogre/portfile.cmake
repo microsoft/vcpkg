@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
     REF v1.11.3
-    SHA512 af52821022ab6148e64fdf183b1aa4607b101c7d0edc20d2ccc909f50eed218d7a283fa3b58260fd41cd3f324ecafad8c5137c66e05786580b043240551b2c42 
+    SHA512 af52821022ab6148e64fdf183b1aa4607b101c7d0edc20d2ccc909f50eed218d7a283fa3b58260fd41cd3f324ecafad8c5137c66e05786580b043240551b2c42
     HEAD_REF master
     PATCHES
         001-cmake-install-dir.patch
@@ -70,12 +70,10 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-# Remove unwanted files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ogre)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(GLOB REL_CFGS ${CURRENT_PACKAGES_DIR}/bin/*.cfg)
 file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
