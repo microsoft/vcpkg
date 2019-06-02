@@ -27,14 +27,21 @@ find_package_handle_standard_args(
 # https://github.com/microsoft/vcpkg/commit/ee325d14276e7bd7961e94e58293b02d6e9e92da
 # https://github.com/microsoft/vcpkg/pull/6698
 if (LIBCURL_FOUND)
-    find_package(OpenSSL REQUIRED)
-    find_package(ZLIB REQUIRED)
+    find_package(OpenSSL QUIET)
+    find_package(ZLIB QUIET)
 
-    list(APPEND LIBCURL_LIBRARIES
-        OpenSSL::SSL
-        OpenSSL::Crypto
-        ZLIB::ZLIB    
-    )
+    if (OPENSSL_FOUND)
+        list(APPEND LIBCURL_LIBRARIES
+            OpenSSL::SSL
+            OpenSSL::Crypto  
+        )
+    endif ()
+
+    if (ZLIB_FOUND)
+        list(APPEND LIBCURL_LIBRARIES
+            ZLIB::ZLIB    
+        )
+    endif ()
 
     if (WIN32)
         list(APPEND LIBCURL_LIBRARIES
