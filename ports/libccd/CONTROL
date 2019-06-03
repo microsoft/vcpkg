@@ -1,0 +1,4 @@
+Source: libccd
+Version: 2.1
+Build-Depends: 
+Description: libccd is library for a collision detection between two convex shapes.

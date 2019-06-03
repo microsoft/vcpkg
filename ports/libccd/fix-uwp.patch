@@ -1,0 +1,12 @@
+diff --git a/src/polytope.c b/src/polytope.c
+index e594832..9d7b63b 100644
+--- a/src/polytope.c
++++ b/src/polytope.c
+@@ -15,6 +15,7 @@
+  *  See the License for more information.
+  */
+ 
++#define _CRT_SECURE_NO_WARNINGS
+ #include <stdio.h>
+ #include <float.h>
+ #include "polytope.h"
