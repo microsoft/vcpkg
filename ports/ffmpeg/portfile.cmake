@@ -27,14 +27,11 @@ get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR (NOT VCPKG_CMAKE_SYSTEM_NAME))
     set(SEP ";")
-else()
-    set(SEP ":")
-endif()
-
-if($CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
     set(LIB_PATH_VAR "LIB")
 else()
+    set(SEP ":")
     set(INCLUDE_VAR "CPATH")
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
