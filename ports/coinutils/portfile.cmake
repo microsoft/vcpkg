@@ -19,10 +19,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/CoinUtils")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")  #on case-sensitive filesystems, it's necessary to rename and make it lowercase
+  vcpkg_fixup_cmake_targets(CONFIG_PATH share/CoinUtils)
+else()
+  vcpkg_fixup_cmake_targets()
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/coinutils RENAME copyright)

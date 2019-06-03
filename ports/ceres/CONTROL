@@ -1,11 +1,10 @@
 Source: ceres
 Version: 1.14.0-4
-# eigen is always required by CMake, even if it isn't used.
 Build-Depends: glog, eigen3
 Description: non-linear optimization package
 
 Feature: lapack
-Build-Depends: clapack
+Build-Depends: clapack (!osx)
 Description: Use Lapack in Ceres
 
 Feature: suitesparse

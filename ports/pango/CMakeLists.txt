@@ -11,6 +11,11 @@ else()
   configure_file(./config.h.unix ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 endif()
 
+if (WIN32)
+  # Set utf-8 charset to avoid compile error C2001
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+endif()
+
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(. ./pango ${CMAKE_CURRENT_BINARY_DIR})
 

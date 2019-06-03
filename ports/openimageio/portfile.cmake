@@ -7,10 +7,9 @@ vcpkg_from_github(
     SHA512 a919341df7d9625a869cad266d8434881b63a47f3da8daccf4bbab6675d45bd121ff780dd911a7447450fee44cd7bdd42d73aec59a99b667d6d98e79682db2c7
     HEAD_REF master
     PATCHES
-        # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
-        #             since libraw port installs 'raw_r' library as 'raw'
         fix_libraw.patch
         use-webp.patch
+        remove_wrong_dependency.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
