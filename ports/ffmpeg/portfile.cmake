@@ -25,7 +25,7 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR (NOT VCPKG_CMAKE_SYSTEM_NAME))
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(SEP ";")
     #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
