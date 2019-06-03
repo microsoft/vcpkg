@@ -46,7 +46,7 @@ if (WIN32)
     else()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
     endif()
-    
+
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 else()
     set(ENV{PATH} "$ENV{PATH}:${YASM_EXE_PATH}")
@@ -151,7 +151,7 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")

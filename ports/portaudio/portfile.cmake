@@ -33,7 +33,7 @@ vcpkg_install_cmake()
 
 # Remove static builds from dynamic builds and otherwise
 # Remove x86 and x64 from resulting files
-if (WIN32)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 	if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		file (REMOVE ${CURRENT_PACKAGES_DIR}/lib/portaudio_static_${VCPKG_TARGET_ARCHITECTURE}.lib)
 		file (REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/portaudio_static_${VCPKG_TARGET_ARCHITECTURE}.lib)

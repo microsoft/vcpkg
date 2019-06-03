@@ -14,7 +14,7 @@ vcpkg_from_github(
 	001-enable-msvc.patch
 )
 
-if (WIN32)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   vcpkg_execute_required_process(
     COMMAND Powershell -Command "((Get-Content -Encoding Byte \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' > \"${SOURCE_PATH}/core/std.jsonnet.h\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
