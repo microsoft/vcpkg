@@ -9,7 +9,8 @@ vcpkg_from_github(
     SHA512 9f47a79a2040ff3da885f54d143a7c44712f8a08650fca1d2be21199a7103364a35e28a1832708c2b7752b11c95bf0755ae6c922afc35ee8ae639da7a6ac03b0
     HEAD_REF master
 	PATCHES
-        "${CURRENT_PORT_DIR}/Fix-error-C2169.patch"
+        Fix-error-C2169.patch
+        remove_opj_defines.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
