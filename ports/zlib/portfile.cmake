@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
         -DSKIP_BUILD_EXAMPLES=ON
-        -DCMAKE_DEBUG_POSTFIX="d"
+        -DCMAKE_DEBUG_POSTFIX=d
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
