@@ -7,7 +7,7 @@ index a03ef142e..2d06a2937 100644
  endforeach(_dir)
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(GeoTIFF 1.3.0)
++find_dependency(GeoTIFF)
  include("${CMAKE_CURRENT_LIST_DIR}/PDALTargets.cmake")
  
  if (WIN32)
