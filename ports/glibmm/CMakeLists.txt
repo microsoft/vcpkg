@@ -40,9 +40,9 @@ if(APPLE)
   link_libraries(${COREFOUNDATION_LIBRARY} ${CORESERVICES_LIBRARY} ${FOUNDATION_LIBRARY})
 endif()
 
-# A hacky solution for building Windows DLLs from sources ported from Linux.
-# The cleaner approach would be to manually add __declspec(dllexport) to all public symbols in the header files or
-# construct a .def file.
+# Activate workaround for exporting all symbols from Windows DLLs to mimic the 
+# behavior on Linux, where dynamic libraries always export all symbols.
+# The same approach was already used by the upstream MSVC build (see MSVC_NMake/gendef/gendef.cc)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 if(BUILD_SHARED_LIBS)
