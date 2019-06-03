@@ -51,6 +51,25 @@ namespace vcpkg::Commands::Upgrade
             return Input::check_and_get_package_spec(std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
         });
 
+        bool recovery_found = false;
+        std::ifstream file("upgrade.list");
+        if (file)
+        {
+            std::string str;
+            PackageSpec spec;
+            while (std::getline(file, str))
+            {
+                spec = Input::check_and_get_package_spec(std::move(str), default_triplet, COMMAND_STRUCTURE.example_text);
+                auto it = status_db.find_installed(spec);
+                if (it == status_db.end())
+                {
+                    graph.install(FeatureSpec(spec, ""));
+                    recovery_found = true;
+                }
+
+            }
+        }
+
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.triplet(), paths);
@@ -63,8 +82,28 @@ namespace vcpkg::Commands::Upgrade
 
             if (outdated_packages.empty())
             {
-                System::print2("All installed packages are up-to-date with the local portfiles.\n");
-                Checks::exit_success(VCPKG_LINE_INFO);
+                if (!recovery_found)
+                {
+                    System::print2("All installed packages are up-to-date with the local portfiles.\n");
+                    Checks::exit_success(VCPKG_LINE_INFO);
+                }
+            }
+            else
+            {
+                std::ofstream file("upgrade.list", std::ios_base::app);
+                bool bad_write = !file;
+                if (!bad_write)
+                {
+                    for (auto&& outdated_package : outdated_packages)
+                        file << outdated_package.spec.to_string() << std::endl;
+                    if (file.bad())
+                        bad_write = true;
+                }
+                if (bad_write)
+                {
+                    System::print2(System::Color::error, "Cannot save upgrade.list\n");
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
             }
 
             for (auto&& outdated_package : outdated_packages)
@@ -183,6 +222,8 @@ namespace vcpkg::Commands::Upgrade
         const Install::InstallSummary summary = Install::perform(plan, keep_going, paths, status_db);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
+
+        remove("upgrade.list");
 
         if (keep_going == KeepGoing::YES)
         {
