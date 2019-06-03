@@ -34,6 +34,11 @@ vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+if (NOT EXISTS "${CURRENT_INSTALLED_DIR}/include/xxhash.h")
+  message(STATUS "xxhash.h not found. installing xxhash.h.")
+  file(INSTALL ${SOURCE_PATH}/lib/xxhash.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+endif()
+
 file(COPY ${SOURCE_PATH}/lib/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/lz4)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/lz4/LICENSE ${CURRENT_PACKAGES_DIR}/share/lz4/copyright)
 
