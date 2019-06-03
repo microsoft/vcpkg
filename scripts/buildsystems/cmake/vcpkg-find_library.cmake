@@ -35,7 +35,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                        HINTS
                        PATHS
                        PATH_SUFFIXES)
-    cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}")
     #cmake_parse_arguments(_vcpkg_find_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if(NOT DEFINED _vcpkg_find_lib_NAMES)
         set(_vcpkg_find_lib_NAMES ${ARGV1})
@@ -45,8 +45,12 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
     endif()
     if(NOT _vcpkg_find_lib_NAMES_PER_DIR) #Insert NAMES_PER_DIR if not set!
         list(LENGTH _vcpkg_find_lib_NAMES _vcpkg_find_lib_NAMES_LENGTH)
-        math(EXPR _insert_pos "${_vcpkg_find_lib_NAMES_LENGTH}+${_insert_offset}" OUTPUT_FORMAT DECIMAL)
-        list(INSERT _vcpkg_list_vars ${_insert_pos} NAMES_PER_DIR)
+        if(_vcpkg_find_lib_NAMES_LENGTH GREATER 0)
+            math(EXPR _insert_pos "${_vcpkg_find_lib_NAMES_LENGTH}+${_insert_offset}" OUTPUT_FORMAT DECIMAL)
+            list(INSERT _vcpkg_list_vars ${_insert_pos} NAMES_PER_DIR)
+        else() # Logic programming error! (Treat it like an assert!)
+            vcpkg_msg(FATAL_ERROR "find_library" "Could not insert NAMES_PER_DIR to find_library call. Lenght: ${_vcpkg_find_lib_NAMES_LENGTH}; Names: ${_vcpkg_find_lib_NAMES}!")
+        endif()
         vcpkg_msg(STATUS "find_library" "Added NAMES_PER_DIR to find_library call at position ${_vcpkg_find_lib_NAMES_LENGTH}!")
     endif()
     vcpkg_msg(STATUS "find_library-vars" "${_vcpkg_list_vars}")
@@ -61,18 +65,52 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
         #Check if within vcpkg folder/if not not our concern
         #This is the first barrier of defense against wrong configuration linkage
             if("${_vcpkg_find_library_imp_output}" MATCHES "_DEBUG")
-                if(NOT "${${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
-                    #This probably means that the find module assumes a wrong name for the debug library
+                if(NOT "${${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/")
+                    #Retry search without common debug suffixes
+                    set(_vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
+                    list(APPEND _vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link")
+                    if(DEFINED _vcpkg_find_lib_PATH_SUFFIXES)
+                        list(FILTER _vcpkg_find_lib_PATH_SUFFIXES EXCLUDE REGEX "[Dd][Ee][Bb][Uu][Gg]/")
+                        foreach(_vcpkg_path_prefix ${_vcpkg_path_search_list})
+                            foreach(_path_suffix ${_vcpkg_find_lib_PATH_SUFFIXES})
+                                list(APPEND _vcpkg_path_search_list "${_vcpkg_path_prefix}/${_path_suffix}")
+                                list(APPEND _vcpkg_path_search_list "${_vcpkg_path_prefix}/${_path_suffix}")
+                            endforeach()
+                        endforeach()
+                    endif()
+                    foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
+                        string(REGEX REPLACE "${_vcpkg_debug_suffix}$" "" _vcpkg_search_lib_name "${_vcpkg_find_lib_NAMES}")
+                        string(REGEX REPLACE "${_vcpkg_debug_suffix};" ";" _vcpkg_search_lib_name "${_vcpkg_find_lib_NAMES}")
+                        vcpkg_msg(STATUS "find_library" "Trying to locate debug libraries without extra debug suffixes in VCPKG directory. NAMES: ${_vcpkg_search_lib_name}")
+                        if(VCPKG_ENABLE_FIND_LIBRARY OR VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
+                            _find_library(_tmp_${_vcpkg_find_library_imp_output} NAMES ${_vcpkg_search_lib_name} NAMES_PER_DIR 
+                                            PATHS ${_vcpkg_path_search_list} NO_DEFAULT_PATH)
+                        else()
+                            find_library(_tmp_${_vcpkg_find_library_imp_output} NAMES ${_vcpkg_search_lib_name} NAMES_PER_DIR 
+                                            PATHS ${_vcpkg_path_search_list} NO_DEFAULT_PATH)
+                        endif()
+                        if(${_tmp_${_vcpkg_find_library_imp_output}} MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/")
+                            vcpkg_msg(STATUS "find_library" "Found debug libraries at ${_tmp_${_vcpkg_find_library_imp_output}}")
+                            vcpkg_msg(WARNING "find_library-fixme" "Find library called with missing debug suffix. ${_vcpkg_find_library_imp_output}: ${_tmp_${_vcpkg_find_library_imp_output}}. NAMES: ${_vcpkg_find_lib_NAMES}")
+                            set(${_vcpkg_find_library_imp_output} ${_tmp_${_vcpkg_find_library_imp_output}})
+                            set(${_vcpkg_find_library_imp_output} ${${_vcpkg_find_library_imp_output}} PARENT_SCOPE) #Propagate the variable into the parent scope!
+                            cmake_policy(POP)
+                            return()
+                        endif()
+                    endforeach()
+                    #This probably means that the find module assumes a wrong name for the debug library or the port was build without debug suffix
+                    #We could try to search with/without extra debug suffixes but from a logic standpoint DEBUG names should always be correct or there is another issue
+                    #As such this is a FATAL_ERROR to reveal the real underlying problem!
                     cmake_policy(POP)
                     vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} does not point to debug directory! Check library debug naming! NAMES: ${_vcpkg_find_lib_NAMES}" ALWAYS)
                 endif()
             elseif("${_vcpkg_find_library_imp_output}" MATCHES "_RELEASE")
                 if("${${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
-                    #This probably means that debug name = release name so we search only in the release lib path!
+                    #This probably means that debug name = release name so we retry and search only in vcpkg release lib path!
                     vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} does not point to release directory! This probably means that debug name = release name!: NAMES: ${_vcpkg_find_lib_NAMES}")
                     set(_vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
                     list(APPEND _vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link")
-                    if(NOT DEFINED _vcpkg_find_lib_PATH_SUFFIXES)
+                    if(DEFINED _vcpkg_find_lib_PATH_SUFFIXES) #Add all the suffixes to the search paths! This is required!
                         list(FILTER _vcpkg_find_lib_PATH_SUFFIXES EXCLUDE REGEX "[Dd][Ee][Bb][Uu][Gg]/")
                         foreach(_vcpkg_path_prefix ${_vcpkg_path_search_list})
                             foreach(_path_suffix ${_vcpkg_find_lib_PATH_SUFFIXES})
@@ -84,7 +122,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                     list(APPEND _vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/")
                     vcpkg_msg(STATUS "find_library" "Searching for release library with paths: ${_vcpkg_path_search_list}")
                     unset(_tmp_${_vcpkg_find_library_imp_output})
-                    if(VCPKG_ENABLE_FIND_LIBRARY OR VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
+                    if(VCPKG_ENABLE_FIND_LIBRARY OR VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE) # Try to discover the release library
                         _find_library(_tmp_${_vcpkg_find_library_imp_output} NAMES ${_vcpkg_find_lib_NAMES} NAMES_PER_DIR 
                                         PATHS ${_vcpkg_path_search_list} NO_DEFAULT_PATH)
                     else()
@@ -92,20 +130,16 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                                         PATHS ${_vcpkg_path_search_list} NO_DEFAULT_PATH)
                     endif()
                     vcpkg_msg(STATUS "find_library" "_tmp_${_vcpkg_find_library_imp_output} is set to ${_tmp_${_vcpkg_find_library_imp_output}}")
-                    if(${_tmp_${_vcpkg_find_library_imp_output}} MATCHES "NOTFOUND")
-                        vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}")
+                    if(${_tmp_${_vcpkg_find_library_imp_output}} MATCHES "NOTFOUND" OR ${_tmp_${_vcpkg_find_library_imp_output}} MATCHES "/debug/") 
+                        # HARD error if not found or still in /debug/. The latter is a logic error and should never happen
+                        vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}" ALWAYS)
                     endif()
-                    #if("${_tmp_${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib") # check if we are still 
-                    #    cmake_policy(POP)
-                    #    vcpkg_msg(FATAL_ERROR "find_library" "${_vcpkg_find_library_imp_output}:${${_vcpkg_find_library_imp_output}} Unable to locate release library! NAMES: ${_vcpkg_find_lib_NAMES}")
-                    #endif()
                     set(${_vcpkg_find_library_imp_output} ${_tmp_${_vcpkg_find_library_imp_output}})
                     set(${_vcpkg_find_library_imp_output} ${${_vcpkg_find_library_imp_output}} PARENT_SCOPE) #Propagate the variable into the parent scope!
-                    vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} after ${${_vcpkg_find_library_imp_output}}")
+                    vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} found at ${${_vcpkg_find_library_imp_output}}")
                 endif()
-            else() #these are the cases we need to correct!
-                if("${${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # the and makes sure that debug was actually build
-                    #TODO: add a search for _d and d suffixed libraries for ports that did not get the memo of #6014. If not succesful -> FATAL_ERROR
+            else() #these are the cases we need to correct! Sometimes also used for stand in of _RELEASE
+                if("${${_vcpkg_find_library_imp_output}}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug") # the AND makes sure that debug was actually build
                     vcpkg_msg(WARNING "find_library" " ${_vcpkg_find_library_imp_output} not pointing to expected debug path. Trying to find library with common debug suffixes!")
                     foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
                         foreach(_vcpkg_lib_name ${_vcpkg_find_lib_NAMES})
@@ -169,11 +203,11 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                 endif()
             endif()
         endif()
-    else()
-        if("${_vcpkg_find_library_imp_output}" MATCHES "_DEBUG")
+    else() #NOTFOUND
+        if("${_vcpkg_find_library_imp_output}" MATCHES "_DEBUG") #Retry to search without debug suffixes
             set(_vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
             list(APPEND _vcpkg_path_search_list "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link")
-            if(NOT DEFINED _vcpkg_find_lib_PATH_SUFFIXES)
+            if(DEFINED _vcpkg_find_lib_PATH_SUFFIXES)
                 list(FILTER _vcpkg_find_lib_PATH_SUFFIXES EXCLUDE REGEX "[Dd][Ee][Bb][Uu][Gg]/")
                 foreach(_vcpkg_path_prefix ${_vcpkg_path_search_list})
                     foreach(_path_suffix ${_vcpkg_find_lib_PATH_SUFFIXES})
@@ -183,7 +217,6 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                 endforeach()
             endif()
             foreach(_vcpkg_debug_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
-            #foreach(_vcpkg_lib_name ${_vcpkg_find_lib_NAMES})
                 string(REGEX REPLACE "${_vcpkg_debug_suffix}$" "" _vcpkg_search_lib_name "${_vcpkg_find_lib_NAMES}")
                 string(REGEX REPLACE "${_vcpkg_debug_suffix};" ";" _vcpkg_search_lib_name "${_vcpkg_find_lib_NAMES}")
                 vcpkg_msg(STATUS "find_library" "Trying to locate debug libraries without extra debug suffixes in VCPKG directory. NAMES: ${_vcpkg_search_lib_name}")

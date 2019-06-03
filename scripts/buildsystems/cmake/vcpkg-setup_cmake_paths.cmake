@@ -1,6 +1,6 @@
 
 #Setting up single configuration generators
-#if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
+#if(CMAKE_BUILD_TYPE MATCHES "^Debug$")
 #Debug build: Put Debug paths before Release paths.
 #    list(APPEND CMAKE_PREFIX_PATH
 #        ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug 
