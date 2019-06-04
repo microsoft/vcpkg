@@ -3,14 +3,21 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF v0.3.0
-    SHA512 604b4289f19be662f15dc5ba80c20b78856975332b485796f979580e45f8d778eb8ce0cc2c02dcbaf27bc1159f473e02676cd951b674b7c8478ed26438a04541
+    REF v0.3.11
+    SHA512 da845f748aecfff61209f542f4eac8d46738af52ce980d5c8315397f859429dfd9e4bf989ddf2fbe938d1efb33dce9c531c92cbe53388b1d1082d5caa97e8750
     HEAD_REF master
 )
+
+if (${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+  set(USE_STATIC ON)
+else()
+  set(USE_STATIC OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DSTATIC_CRT=${USE_STATIC}
 )
 
 vcpkg_install_cmake()
