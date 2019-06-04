@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/libopusenc
-    REF b19e1b14dee3e5245f2e37bfb193bde72fa70a2d
-    SHA512 50e7df3b2937b99e51b9d24d9b6e44a63b38945bf7f45cef8199c30c3ed18dfcf06bd306cdffdb16c367da49465f93261e0396c1c4298ad4f9cc9f1737221a06
+    REF v0.1
+    SHA512 6abc5cd9e87ad41409f844d350cf43ee0067ad05a768aa9ef1d726a7e98ef9b006cbc42a6601d05a51dba6386a1361751a9a367a902c52eff8b4e56c3bf8a04b
     HEAD_REF master)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

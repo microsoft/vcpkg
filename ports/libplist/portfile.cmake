@@ -21,3 +21,7 @@ vcpkg_install_msbuild(
     LICENSE_SUBPATH COPYING.lesser
     REMOVE_ROOT_INCLUDES
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
