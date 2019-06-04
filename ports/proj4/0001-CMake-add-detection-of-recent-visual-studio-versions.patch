@@ -15,8 +15,8 @@ index 294a50b..c7fb6bf 100644
      if(MSVC_VERSION EQUAL 1800)
        set(PROJ_COMPILER_NAME "msvc-12.0") #Visual Studio 2013
      endif()
-+    if(MSVC_VERSION EQUAL 1900)
-+      set(PROJ_COMPILER_NAME "msvc-14.0") #Visual Studio 2015
++    if(MSVC_VERSION GREATER_EQUAL 1900)
++      set(PROJ_COMPILER_NAME "msvc-14.0") #Visual Studio 2015/2017/2019
 +    endif()
    endif(MSVC)
    

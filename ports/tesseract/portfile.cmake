@@ -8,14 +8,10 @@ vcpkg_from_github(
     REF 4.0.0
     SHA512 69e57d4ba1fc43d212fd0fff69a2b5d48a3b37cfee7054fdc083cbb7e04d92317609a32e457229661d70ce8d9b16c9d25e81bfc3861db660dd2c8f292202d447
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/use-vcpkg-icu.patch
-        ${CMAKE_CURRENT_LIST_DIR}/ws2-32.patch
-        ${CMAKE_CURRENT_LIST_DIR}/leptonica.patch
+        use-vcpkg-icu.patch
+        ws2-32.patch
+        leptonica.patch
 )
 
 # The built-in cmake FindICU is better
