@@ -48,18 +48,22 @@ set(MD5_FILES
     src/md5/md5.cpp
 )
 
+set(ZLIB_FILES
+    src/zlib/adler32.c
+    src/zlib/crc32.c
+    src/zlib/inffast.c
+    src/zlib/inflate.c
+    src/zlib/inftrees.c
+    src/zlib/zutil.c
+)
+
 if(WIN32)
     add_definitions(-DUNICODE -D_UNICODE)
 endif()
 
-find_package(zlib REQUIRED)
-
-
 add_library(CascLib ${SRC_FILES} ${HEADER_FILES} ${TOMCRYPT_FILES} ${ZLIB_FILES} ${MD5_FILES})
 
 set_target_properties(CascLib PROPERTIES PUBLIC_HEADER "src/CascLib.h;src/CascPort.h")
-
-target_link_libraries(CascLib PRIVATE ${ZLIB_LIBRARIES})
 
 install(TARGETS CascLib
 	RUNTIME DESTINATION bin 
