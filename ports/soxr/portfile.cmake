@@ -28,6 +28,9 @@ vcpkg_extract_source_archive_ex(
     # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch
+	PATCHES
+		001_initialize-resampler.patch
+		002_disable_warning.patch
 )
 
 vcpkg_configure_cmake(
