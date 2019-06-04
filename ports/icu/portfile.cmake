@@ -197,7 +197,7 @@ else()
     endforeach()
 endif()
 
-# remove any remaining dlls in /lib
+# remove any dlls in /lib
 file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
 if(DUMMY_DLLS)
     file(REMOVE ${DUMMY_DLLS})
