@@ -16,7 +16,12 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 vcpkg_install_cmake()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/asio")
+file(INSTALL
+    ${CMAKE_CURRENT_LIST_DIR}/asio-config.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/asio/
+)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright

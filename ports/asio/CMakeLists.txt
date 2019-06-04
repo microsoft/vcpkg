@@ -16,8 +16,7 @@ install(TARGETS asio
 
 install(EXPORT asio
     DESTINATION "share/asio"
-    FILE asio-config.cmake
-    NAMESPACE asio::
+    FILE asio-targets.cmake
 )
 
 install(DIRECTORY
