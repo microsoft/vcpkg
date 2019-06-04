@@ -142,3 +142,33 @@ index 14747c9..81ab383 100644
 +    set(CPACK_COMPONENT_LIBRARIES_DESCRIPTION "eProsima ${PROJECT_NAME_LARGE} libraries" PARENT_SCOPE)
 +endif()
 \ No newline at end of file
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index 81ab383..24c9916 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -140,25 +140,6 @@ install(EXPORT ${PROJECT_NAME}-targets
+     COMPONENT cmake
+     )
+ 
+-if(MSVC OR MSVC_IDE)
+-    if(TARGET_TYPE STREQUAL "SHARED_LIBRARY")
+-        # Install pdb files
+-        install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Debug/
+-            DESTINATION ${LIB_INSTALL_DIR}${MSVCARCH_DIR_EXTENSION}
+-            COMPONENT libraries${MSVCARCH_EXTENSION}
+-            CONFIGURATIONS Debug
+-            FILES_MATCHING
+-            PATTERN "*.pdb"
+-            )
+-    elseif(NOT (("${MSVC_ARCH}" STREQUAL "i86Win32VS2013") OR ("${MSVC_ARCH}" STREQUAL "x64Win64VS2013")))
+-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.dir/Debug/${PROJECT_NAME}.pdb
+-            DESTINATION ${LIB_INSTALL_DIR}${MSVCARCH_DIR_EXTENSION}
+-            COMPONENT libraries${MSVCARCH_EXTENSION}
+-            CONFIGURATIONS Debug
+-            )
+-    endif()
+-endif()
+-
+ ###############################################################################
+ # Create CMake package config file
+ ###############################################################################
