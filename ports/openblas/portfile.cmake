@@ -4,6 +4,17 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "Linux")
+  set(ADDITIONAL_PATCH "enable_underscore.patch")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(NO_SHARED 1)
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set(NO_STATIC 1)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
@@ -13,6 +24,7 @@ vcpkg_from_github(
     PATCHES
         uwp.patch
         fix_space_path.patch
+        ${ADDITIONAL_PATCH}
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -75,7 +87,12 @@ else()
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
+            #-DSYMBOLSUFFIX=_
+            -DTARGET=SANDYBRIDGE
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DBINARY=64
+            -DNO_SHARED=${NO_SHARED}
+            -DNO_STATIC=${NO_STATIC}
             -DNOFORTRAN=ON)
 endif()
 
