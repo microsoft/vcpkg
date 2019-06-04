@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "ebml does not currently support UWP")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
 vcpkg_from_github(
@@ -25,4 +25,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/EBML)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/ebml RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -36,15 +36,15 @@ vcpkg_copy_pdbs()
 
 if(BUILD_GUI_BUILDER)
     set(EXECUTABLE_SUFFIX "")
-    if (WIN32)
+    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(EXECUTABLE_SUFFIX ".exe")
     endif()
 
     message(STATUS "Check for: ${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}")
     if(EXISTS "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}")
         file(MAKE_DIRECTORY "${TGUI_TOOLS_PATH}")
-        file(RENAME 
-            "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}" 
+        file(RENAME
+            "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}"
             "${TGUI_TOOLS_PATH}/gui-builder${EXECUTABLE_SUFFIX}")
         # Need to copy `resources` and `themes` directories
         file(COPY "${TGUI_SHARE_PATH}/gui-builder/resources" DESTINATION "${TGUI_TOOLS_PATH}")

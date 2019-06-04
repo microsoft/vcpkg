@@ -23,7 +23,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # Note that if you have configured and built both static and shared library on Windows
 # but want to link with the static library compile time define "FMILIB_BUILDING_LIBRARY" must be set.
-if (WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if ((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     SET(FMILIB_BUILDING_LIBRARY ON)
 else()
     SET(FMILIB_BUILDING_LIBRARY OFF)
@@ -33,7 +33,7 @@ endif()
 # This is only used when generating Microsoft Visual Studio solutions. If the options is on then the library will
 # be built against static runtime, otherwise - dynamic runtime (/MD or /MDd). Make sure the client code is using
 # matching runtime
-if (WIN32 AND VCPKG_CRT_LINKAGE STREQUAL static)
+if ((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND VCPKG_CRT_LINKAGE STREQUAL static)
     SET(FMILIB_BUILD_WITH_STATIC_RTLIB ON)
 else()
     SET(FMILIB_BUILD_WITH_STATIC_RTLIB OFF)
@@ -42,7 +42,7 @@ endif()
 # On LINUX position independent code (-fPIC) must be used on all files to be linked into a shared library (.so file).
 # On other systems this is not needed (either is default or relocation is done). Set this option to OFF if you
 # are building an application on Linux and use static library only
-if (UNIX AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if ((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     SET(FMILIB_BUILD_FOR_SHARED_LIBS OFF)
 else()
     SET(FMILIB_BUILD_FOR_SHARED_LIBS ON)
@@ -111,4 +111,3 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmilib RENAME copyright)
-
