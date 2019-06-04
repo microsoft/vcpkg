@@ -8,19 +8,8 @@ vcpkg_from_github(
     REF v1.2.68
     SHA512 c2742bba2d90c21e853255c9ef1b9a63560c3e65541a0a3daaace9b0c48d236b7947008dbcd6e42622251015b686758ebc6b564e379d831cb4f52af812430140
     HEAD_REF msvc-master
+    PATCHES libcurl_d.patch
 )
-
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            libcurl_imp.patch)
-else()
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            libcurl_d.patch)
-endif()
 
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
