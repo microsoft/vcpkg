@@ -87,7 +87,6 @@ else()
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
-            #-DSYMBOLSUFFIX=_
             -DTARGET=SANDYBRIDGE
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
             -DBINARY=64
@@ -104,14 +103,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-## openblas do not make the config file , so I manually made this
-## but I think in most case, libraries will not include these files, they define their own used function prototypes
-## this is only to quite vcpkg
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/openblas_common.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-#
-#file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
-#string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
-#file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
-
-# openblas is BSD
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas RENAME copyright)

@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(ADDITIONAL_PATCH "openblas_linux.patch")
+  set(ADDITIONAL_PATCH "openblas_linux.patch" "enable_openblas_compat.patch")
 endif()
 
 vcpkg_extract_source_archive_ex(
