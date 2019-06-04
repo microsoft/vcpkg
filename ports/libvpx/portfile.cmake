@@ -3,7 +3,6 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(LIBVPX_VERSION 1.7.0)
-set(LIBVPX_HASH 8b3b766b550f8d86907628d7ed88035f9a2612aac21542e0fd5ad35b905eb82cbe1be02a1a24afce7a3bcc4766f62611971f72724761996b392136c40a1e7ff0)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libvpx-${LIBVPX_VERSION})
 
@@ -13,7 +12,7 @@ string(REGEX REPLACE "\\\\" "/" CURRENT_PACKAGES_DIR_UNIX ${CURRENT_PACKAGES_DIR
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/webmproject/libvpx/archive/v${LIBVPX_VERSION}/libvpx-${LIBVPX_VERSION}.tar.gz"
     FILENAME "libvpx-${LIBVPX_VERSION}.tar.gz"
-    SHA512 ${LIBVPX_HASH}
+    SHA512 8b3b766b550f8d86907628d7ed88035f9a2612aac21542e0fd5ad35b905eb82cbe1be02a1a24afce7a3bcc4766f62611971f72724761996b392136c40a1e7ff0
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

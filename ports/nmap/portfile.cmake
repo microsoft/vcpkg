@@ -5,19 +5,19 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "nmap-7.70.tar.bz2"
     SHA512 084c148b022ff6550e269d976d0077f7932a10e2ef218236fe13aa3a70b4eb6506df03329868fc68cb3ce78e4360b200f5a7a491d3145028fed679ef1c9ecae5
 )
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${SQLITE_VERSION}
-)
-
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    REF 7.70
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/detect-crypto-library.patch
+        detect-crypto-library.patch
 )
+
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+vcpkg_add_to_path("$PYTHON2_DIR")
+
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
