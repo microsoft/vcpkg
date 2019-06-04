@@ -8,6 +8,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -69,6 +70,7 @@ namespace vcpkg::Build::Command
             Build::AllowDownloads::YES,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
@@ -129,11 +131,6 @@ namespace vcpkg::Build::Command
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::move(first_arg), default_triplet, COMMAND_STRUCTURE.example_text);
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        if (!spec.features.empty() && !GlobalState::feature_packages)
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-        }
         perform_and_exit_ex(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }
@@ -237,7 +234,7 @@ namespace vcpkg::Build
         if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
 
         const char* tonull = " >nul";
-        if (GlobalState::debugging)
+        if (Debug::g_debugging)
         {
             tonull = "";
         }
@@ -511,7 +508,7 @@ namespace vcpkg::Build
                 // which will give a stable ordering and better names in the key entry.
                 // this is not available in the filesystem TS so instead number the files for the key.
                 std::string key = Strings::format("file_%03d", counter++);
-                if (GlobalState::debugging)
+                if (Debug::g_debugging)
                 {
                     System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
                 }
@@ -536,7 +533,7 @@ namespace vcpkg::Build
         const std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
 
-        if (GlobalState::debugging)
+        if (Debug::g_debugging)
         {
             System::print2("[DEBUG] <abientries>\n");
             for (auto&& entry : abi_tag_entries)

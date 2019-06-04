@@ -1,0 +1,14 @@
+diff --git a/src/bc7/CMakeLists.txt b/src/bc7/CMakeLists.txt
+index 2eb01c06..0c36895b 100644
+--- a/src/bc7/CMakeLists.txt	
++++ b/src/bc7/CMakeLists.txt
+@@ -28,3 +28,8 @@ IF(NOT WIN32)
+         SET_TARGET_PROPERTIES(bc7 PROPERTIES COMPILE_FLAGS -fPIC)
+     ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ ENDIF(NOT WIN32)
++
++INSTALL(TARGETS bc7 
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib/static)
+\ No newline at end of file

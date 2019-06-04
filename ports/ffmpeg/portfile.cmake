@@ -25,8 +25,20 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(SEP ";")
+    #We're assuming that if we're building for Windows we're using MSVC
+    set(INCLUDE_VAR "INCLUDE")
+    set(LIB_PATH_VAR "LIB")
+else()
+    set(SEP ":")
+    set(INCLUDE_VAR "CPATH")
+    set(LIB_PATH_VAR "LIBRARY_PATH")
+endif()
+
 if (WIN32)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -34,7 +46,7 @@ if (WIN32)
     else()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
     endif()
-    
+
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 else()
     set(ENV{PATH} "$ENV{PATH}:${YASM_EXE_PATH}")
@@ -42,8 +54,7 @@ else()
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
 endif()
 
-set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
+set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${SEP}$ENV{${INCLUDE_VAR}}")
 
 set(_csc_PROJECT_PATH ffmpeg)
 
@@ -102,12 +113,11 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
-# bzip2's debug library is named "bz2d", which isn't found by ffmpeg
-# if("bzip2" IN_LIST FEATURES)
-#     set(OPTIONS "${OPTIONS} --enable-bzip2")
-# else()
-#     set(OPTIONS "${OPTIONS} --disable-bzip2")
-# endif()
+if("bzip2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-bzlib")
+else()
+    set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
@@ -141,7 +151,7 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
@@ -150,6 +160,9 @@ if(WIN32)
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
     endif()
 endif()
+
+set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
@@ -162,6 +175,8 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
+
+set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)

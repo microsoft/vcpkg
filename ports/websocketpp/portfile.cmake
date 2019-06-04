@@ -4,11 +4,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zaphoyd/websocketpp
-    REF 0.8.1
-    SHA512 35e0261ed0285acf77d300768819bd380197de8acdf68223e2d7598481b9bfd69cb1653b435139771b1db6c16530c8d8cf9a887a8a6bba3fea126d0da4dbc13c
+    REF 1c699ce46843a787482a703fdeff9271fbb7bb5d
+    SHA512 9de30e02e09b066dca8d840963e78673ef118e5183f9638b8a5c941116422916fe9fe02bb5271843aeb292a460f159b5957887594c0824a88600e6c4a5620dbd
     HEAD_REF master
-    PATCHES
-        openssl_110.patch
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/websocketpp)
