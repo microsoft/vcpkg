@@ -43,7 +43,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
+    PREFER_NINJA
     OPTIONS
         # Set to OFF|ON (default is OFF) to control linking dependencies as external
         -DPOCO_UNBUNDLED=ON
