@@ -1,8 +1,8 @@
 diff --git a/Modules/ThirdParty/GDCM/src/gdcm/CMakeLists.txt b/Modules/ThirdParty/GDCM/src/gdcm/CMakeLists.txt
-index 6e3504d..1d641c2 100644
+index 6ac16ab6..2bde9952 100644
 --- a/Modules/ThirdParty/GDCM/src/gdcm/CMakeLists.txt
 +++ b/Modules/ThirdParty/GDCM/src/gdcm/CMakeLists.txt
-@@ -375,7 +375,8 @@ else()
+@@ -373,7 +373,8 @@ else()
  endif()
  
  if(GDCM_USE_SYSTEM_OPENJPEG)
@@ -11,12 +11,12 @@ index 6e3504d..1d641c2 100644
 +  find_package(OpenJPEG REQUIRED)
    set(GDCM_OPENJPEG_LIBRARIES ${OPENJPEG_LIBRARIES})
  else()
-   set(GDCM_OPENJPEG_LIBRARIES itkgdcmopenjp2)
+   set(GDCM_OPENJPEG_LIBRARIES gdcmopenjp2)
 diff --git a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
-index 4ffe98e..a269690 100644
+index 565cc338..ec126ef9 100644
 --- a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
 +++ b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
-@@ -347,12 +347,8 @@ endif()
+@@ -359,12 +359,8 @@ endif()
  
  #-----------------------------------------------------------------------------
  # pkgconfig support
