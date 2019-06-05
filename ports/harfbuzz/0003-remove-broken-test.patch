@@ -1,6 +1,8 @@
+diff --git a/src/hb-coretext.cc b/src/hb-coretext.cc
+index 85993d1..3e8e642 100644
 --- a/src/hb-coretext.cc
 +++ b/src/hb-coretext.cc
-@@ -1059,20 +1059,6 @@
+@@ -1059,21 +1059,6 @@ resize_and_retry:
        buffer->len += num_glyphs;
      }
  
@@ -14,10 +16,11 @@
 -    if (false)
 -    {
 -      /* Make sure all runs had the expected direction. */
--      bool backward = HB_DIRECTION_IS_BACKWARD (buffer->props.direction);
+-      HB_UNUSED bool backward = HB_DIRECTION_IS_BACKWARD (buffer->props.direction);
 -      assert (bool (status_and & kCTRunStatusRightToLeft) == backward);
 -      assert (bool (status_or  & kCTRunStatusRightToLeft) == backward);
 -    }
- 
+-
      buffer->clear_positions ();
  
+     unsigned int count = buffer->len;
