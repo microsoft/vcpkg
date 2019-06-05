@@ -1,6 +1,6 @@
-# Glib uses winapi functions not available in WindowsStore, so glibmm also
 include(vcpkg_common_functions)
 
+# Glib uses winapi functions not available in WindowsStore
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
