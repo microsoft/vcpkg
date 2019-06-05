@@ -1,0 +1,19 @@
+diff --git a/extern/butteraugli/butteraugli.h b/extern/butteraugli/butteraugli.h
+index 31824b8..c116a73 100644
+--- a/extern/butteraugli/butteraugli.h
++++ b/extern/butteraugli/butteraugli.h
+@@ -134,7 +134,14 @@ bool ButteraugliAdaptiveQuantization(size_t xsize, size_t ysize,
+ // The conventional syntax uint8_t* const RESTRICT is more confusing - it is
+ // not immediately obvious that the pointee is non-const.
+ template <typename T>
++#ifdef _MSC_VER
++// Due to MSVC bug:
++// https://developercommunity.visualstudio.com/content/problem/32196/msvc-cant-compile-a-templated-using-without-instan.html
++// , we cannot use __restrict now. Loss some performance instead of can't use this code.
++using ConstRestrict = T const;
++#else
+ using ConstRestrict = T const BUTTERAUGLI_RESTRICT;
++#endif
+ 
+ // Functions that depend on the cache line size.
+ class CacheAligned {
