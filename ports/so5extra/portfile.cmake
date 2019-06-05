@@ -17,8 +17,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/so5extra")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/so5extra)
 
 # Remove unnecessary stuff.
 # These paths are empty and should be removed too.

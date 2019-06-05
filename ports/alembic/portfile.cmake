@@ -30,7 +30,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/Alembic")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Alembic)
 
 vcpkg_copy_pdbs()
 

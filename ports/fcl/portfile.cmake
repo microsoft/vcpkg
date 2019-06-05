@@ -34,9 +34,9 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/fcl")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fcl)
 endif()
 
 

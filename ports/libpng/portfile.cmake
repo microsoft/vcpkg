@@ -44,7 +44,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endif()
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng TARGET_PATH share/libpng)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)

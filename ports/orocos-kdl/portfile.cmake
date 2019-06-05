@@ -30,14 +30,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/orocos_kdl/cmake" TARGET_PATH share/orocos_kdl)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/orocos_kdl/cmake TARGET_PATH share/orocos_kdl)
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
   ${CURRENT_PACKAGES_DIR}/debug/include
   ${CURRENT_PACKAGES_DIR}/debug/share
   ${CURRENT_PACKAGES_DIR}/share/doc
   ${CURRENT_PACKAGES_DIR}/doc/liborocos-kdl)
-  
+
 
 
 # Handle copyright

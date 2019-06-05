@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/MOOS")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/MOOS)
 
 set(MOOS_EXEC_SUFFIX "")
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")

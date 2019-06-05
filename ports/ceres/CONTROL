@@ -1,5 +1,5 @@
 Source: ceres
-Version: 1.14.0-4
+Version: 1.14.0-5
 Build-Depends: glog, eigen3
 Description: non-linear optimization package
 
@@ -8,11 +8,11 @@ Build-Depends: clapack (!osx)
 Description: Use Lapack in Ceres
 
 Feature: suitesparse
-Build-Depends: ceres[lapack], suitesparse[core]
+Build-Depends: ceres[lapack], suitesparse
 Description: SuiteSparse support for Ceres
 
 Feature: cxsparse
-Build-Depends: suitesparse[core]
+Build-Depends: suitesparse
 Description: CXSparse support for Ceres
 
 Feature: eigensparse

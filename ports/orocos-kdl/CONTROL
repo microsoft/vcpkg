@@ -1,4 +1,4 @@
 Source: orocos-kdl
-Version: 1.4
+Version: 1.4-1
 Description: Kinematics and Dynamics Library
 Build-Depends: eigen3

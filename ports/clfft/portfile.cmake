@@ -32,6 +32,6 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/share/clfft/copyright
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 
 vcpkg_copy_pdbs()

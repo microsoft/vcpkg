@@ -35,7 +35,7 @@ vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
 
 # Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/thrift")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/thrift)
 
 file(GLOB COMPILER "${CURRENT_PACKAGES_DIR}/bin/thrift*")
 if(COMPILER)

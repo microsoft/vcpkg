@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-common/cmake)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/include
@@ -31,4 +31,4 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aw
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/share
-)
+)

@@ -53,6 +53,6 @@ file(REMOVE
         ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140d.dll
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 
 vcpkg_copy_pdbs()

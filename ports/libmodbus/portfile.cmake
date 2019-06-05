@@ -19,8 +19,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmodbus RENAME copyright)

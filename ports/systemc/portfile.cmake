@@ -27,8 +27,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCLanguage TARGET_PATH share/SystemCLanguage)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCTLM TARGET_PATH share/SystemCTLM)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCLanguage TARGET_PATH share/systemclanguage)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCTLM TARGET_PATH share/systemctlm)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/systemc RENAME copyright)

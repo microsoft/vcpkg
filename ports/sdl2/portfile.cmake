@@ -36,11 +36,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/SDL2")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SDL2)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/SDL2.framework/Resources")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "SDL2.framework/Resources")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH SDL2.framework/Resources)
 endif()
 
 file(REMOVE_RECURSE

@@ -20,7 +20,7 @@ vcpkg_from_github(
 	  OPTIONS
       -DCPP-NETLIB_BUILD_TESTS=off
       -DCPP-NETLIB_BUILD_EXAMPLES=off
-	  
+
 )
 
 vcpkg_install_cmake()
@@ -28,10 +28,9 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(WIN32 AND NOT CYGWIN)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
+  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cppnetlib)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-

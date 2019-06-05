@@ -22,9 +22,9 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/openmvs)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CMake/OpenMVS TARGET_PATH share/openmvs)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CMake/OpenMVS)
 endif()
 
 #somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it

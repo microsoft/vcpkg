@@ -36,9 +36,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-static-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libmongoc-static-1.0)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libmongoc-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libmongoc-1.0)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
@@ -92,7 +92,7 @@ endif()
 file(READ ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config.cmake LIBMONGOC_CONFIG_CMAKE)
 
 # Patch: Set _IMPORT_PREFIX and replace PACKAGE_PREFIX_DIR
-string(REPLACE 
+string(REPLACE
 [[
 get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
 ]]

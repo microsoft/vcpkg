@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/armadillo/CMake TARGET_PATH share/armadillo)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/armadillo/CMake)
 
 vcpkg_copy_pdbs()
 

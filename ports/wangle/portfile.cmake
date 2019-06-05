@@ -24,7 +24,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/wangle")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/wangle)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/wangle/wangle-targets.cmake _contents)
 STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
@@ -33,7 +33,7 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/wangle/wangle-targets.cmake "${_content
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/include/wangle/util/test
     ${CURRENT_PACKAGES_DIR}/include/wangle/ssl/test/certs

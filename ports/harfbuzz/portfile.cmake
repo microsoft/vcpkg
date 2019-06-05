@@ -68,7 +68,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/harfbuzz TARGET_PATH share/harfbuzz)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 # Handle copyright

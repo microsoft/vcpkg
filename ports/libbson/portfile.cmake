@@ -28,9 +28,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libbson-static-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-static-1.0)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libbson-1.0")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-1.0)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)

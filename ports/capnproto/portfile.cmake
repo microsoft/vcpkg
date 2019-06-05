@@ -23,7 +23,7 @@ vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/CapnProto")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CapnProto)
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/capnproto")
