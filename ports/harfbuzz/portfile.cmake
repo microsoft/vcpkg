@@ -17,9 +17,11 @@ vcpkg_from_github(
 )
 
 file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
+
 if("${_contents}" MATCHES "include \\(FindFreetype\\)")
     message(FATAL_ERROR "Harfbuzz's cmake must not directly include() FindFreetype.")
 endif()
+
 if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
     message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
 endif()
