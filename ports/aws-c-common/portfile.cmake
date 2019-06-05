@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF f1b5105a8cd56d6ff46eee5eb26276e3fd92abbd
-    SHA512 ebb63939ff9398c1c9790b500fbfb992aae166b6e393d385cb4cbf8bf1ff32cfceaeb28c95233ab5bf42015d4c708aea6c5914f3d86d284c756f6e146b8c358c
+    REF v0.3.0
+    SHA512 604b4289f19be662f15dc5ba80c20b78856975332b485796f979580e45f8d778eb8ce0cc2c02dcbaf27bc1159f473e02676cd951b674b7c8478ed26438a04541
     HEAD_REF master
 )
 

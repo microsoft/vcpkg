@@ -48,5 +48,5 @@ file(INSTALL
 	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
 	# Handle copyright
-file(COPY ${SOURCE_PATH}/MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/MIT.txt ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/LICENSE ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)

@@ -27,5 +27,5 @@ file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(REMOVE ${EXE_FILES})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LGPLv3.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppcms)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cppcms/LGPLv3.txt ${CURRENT_PACKAGES_DIR}/share/cppcms/copyright)
+file(COPY ${SOURCE_PATH}/MIT.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppcms)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/cppcms/MIT.TXT ${CURRENT_PACKAGES_DIR}/share/cppcms/copyright)
