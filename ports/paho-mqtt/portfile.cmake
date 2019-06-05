@@ -10,7 +10,7 @@ vcpkg_from_github(
          remove_compiler_options.patch
          fix-install-path.patch
          fix-static-build.patch
-         fix-unresolvedsymble-arm.patch
+         fix-unresolvedsymbol-arm.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
