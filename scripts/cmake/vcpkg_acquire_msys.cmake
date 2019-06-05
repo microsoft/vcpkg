@@ -113,5 +113,13 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     message(STATUS "Acquiring MSYS Packages... OK")
   endif()
 
+  # Deal with a stale process created by MSYS
+  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+      vcpkg_execute_required_process(
+          COMMAND TASKKILL /F /IM gpg-agent.exe /fi "memusage gt 2"
+          WORKING_DIRECTORY ${SOURCE_PATH}
+      )
+  endif()
+
   set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
 endfunction()

@@ -1,0 +1,12 @@
+diff --git a/itpp/base/timing.cpp b/itpp/base/timing.cpp
+index 58178e4..47d662e 100644
+--- a/itpp/base/timing.cpp
++++ b/itpp/base/timing.cpp
+@@ -51,6 +51,7 @@
+ 
+ #if defined(_WIN32) && !defined(__CYGWIN__)
+ #include <windows.h>
++#include <Winsock2.h>
+ 
+ int gettimeofday(struct timeval* p, void*)
+ {
