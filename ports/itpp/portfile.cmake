@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 set(ITPP_VERSION 4.3.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/itpp/files/itpp/4.3.1/itpp-${ITPP_VERSION}.tar.bz2"
+    URLS "https://sourceforge.net/projects/itpp/files/itpp/${ITPP_VERSION}/itpp-${ITPP_VERSION}.tar.bz2"
     FILENAME "itpp-${ITPP_VERSION}.tar.bz2"
     SHA512 b46d048fa7f33e80d2291a5e38e205c159791ea200f92c70d69e8ad8447ac2f0c847fece566a99af739853a1643cb16e226b4200c8bf115417f324e6d38c66bd
 )
@@ -15,16 +15,16 @@ vcpkg_extract_source_archive_ex(
        msvc2013.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES fix-uwp.patch
-)
-elseif(VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES fix-linux.patch
-)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES fix-uwp.patch
+    )
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES fix-linux.patch
+    )
 endif()
 
 vcpkg_configure_cmake(
