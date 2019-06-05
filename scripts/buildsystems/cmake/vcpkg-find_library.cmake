@@ -148,6 +148,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                                 vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} before ${${_vcpkg_find_library_imp_output}}")
                                 string(REGEX REPLACE "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/\$<\$<CONFIG:DEBUG>:debug/>" ${_vcpkg_find_library_imp_output} "${${_vcpkg_find_library_imp_output}}")
                                 string(REGEX REPLACE "${_vcpkg_lib_found_name}" "${_vcpkg_lib_found_name}\$<\$<CONFIG:DEBUG>:${_vcpkg_debug_suffix}>" ${_vcpkg_find_library_imp_output} "${${_vcpkg_find_library_imp_output}}")
+                                set(${_vcpkg_find_library_imp_output} "${${_vcpkg_find_library_imp_output}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
                                 vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} after ${${_vcpkg_find_library_imp_output}}")
                                 cmake_policy(POP)
                                 return()
