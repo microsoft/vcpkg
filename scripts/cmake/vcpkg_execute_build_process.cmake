@@ -1,4 +1,4 @@
-# Usage: vcpkg_execute_build_process(COMMAND <cmd> [<args>...] WORKING_DIRECTORY </path/to/dir> LOGNAME <my_log_name>)
+# Usage: vcpkg_execute_build_process(COMMAND <cmd> [<args>...] WORKING_DIRECTORY </path/to/dir> LOGNAME <log_name>)
 function(vcpkg_execute_build_process)
     cmake_parse_arguments(_ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out.log")
