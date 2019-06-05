@@ -12,10 +12,18 @@ vcpkg_from_github(
       "windows.patch"
 )
 
+# Convert architecture to VS supplied Platform
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM Win32)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PLATFORM x64)
+endif()
+
+# Add configuration based on requested linkage
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(CONFIGURATIONSUFFIX "-Static")
+elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(CONFIGURATIONSUFFIX "")
 endif()
 
 if (WIN32)
@@ -28,6 +36,9 @@ if (WIN32)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH libu2f-server.vcxproj
+        RELEASE_CONFIGURATION Release${CONFIGURATIONSUFFIX}
+        DEBUG_CONFIGURATION Debug${CONFIGURATIONSUFFIX}
+        PLATFORM ${PLATFORM}
         USE_VCPKG_INTEGRATION
     )
 else()
