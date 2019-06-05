@@ -74,28 +74,40 @@ if(UNIX)
   find_library(ADDITIONAL_LAPACK_LIBRARY m)
 endif()
 
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_dependency(Threads)
+
 if(NOT F2C_LIBRARY)
   find_library(F2C_LIBRARY_RELEASE NAMES f2c libf2c)
   find_library(F2C_LIBRARY_DEBUG NAMES f2cd libf2cd)
+  set(oF2C_LIBRARY_RELEASE ${F2C_LIBRARY_RELEASE})
+  set(oF2C_LIBRARY_DEBUG ${F2C_LIBRARY_DEBUG})
   list(APPEND F2C_LIBRARY_RELEASE ${ADDITIONAL_LAPACK_LIBRARY})
   list(APPEND F2C_LIBRARY_DEBUG ${ADDITIONAL_LAPACK_LIBRARY})
+  select_library_configurations(oF2C)
   select_library_configurations(F2C)
 endif()
 
 if(NOT LAPACK_LIBRARY)
   find_library(LAPACK_LIBRARY_RELEASE NAMES lapack)
   find_library(LAPACK_LIBRARY_DEBUG NAMES lapackd)
+  set(oLAPACK_LIBRARY_RELEASE ${LAPACK_LIBRARY_RELEASE})
+  set(oLAPACK_LIBRARY_DEBUG ${LAPACK_LIBRARY_DEBUG})
   list(APPEND LAPACK_LIBRARY_RELEASE ${F2C_LIBRARY_RELEASE})
   list(APPEND LAPACK_LIBRARY_DEBUG ${F2C_LIBRARY_DEBUG})
 
   if(UNIX AND NOT APPLE)
     find_dependency(OpenBLAS)
+    find_dependency(Threads)
     get_property(_loc TARGET OpenBLAS::OpenBLAS PROPERTY LOCATION_RELEASE)
     set(LAPACK_BLAS_LIBRARY_RELEASE ${_loc})
+    set(oLAPACK_BLAS_LIBRARY_RELEASE ${_loc})
     get_property(_loc TARGET OpenBLAS::OpenBLAS PROPERTY LOCATION_DEBUG)
     set(LAPACK_BLAS_LIBRARY_DEBUG ${_loc})
-    list(APPEND LAPACK_LIBRARY_RELEASE ${LAPACK_BLAS_LIBRARY_RELEASE})
-    list(APPEND LAPACK_LIBRARY_DEBUG ${LAPACK_BLAS_LIBRARY_DEBUG})
+    set(oLAPACK_BLAS_LIBRARY_DEBUG ${_loc})
+    list(APPEND LAPACK_LIBRARY_RELEASE ${LAPACK_BLAS_LIBRARY_RELEASE} Threads::Threads)
+    list(APPEND LAPACK_LIBRARY_DEBUG ${LAPACK_BLAS_LIBRARY_DEBUG} Threads::Threads)
+    select_library_configurations(oLAPACK_BLAS)
     select_library_configurations(LAPACK_BLAS)
   else()
     find_dependency(BLAS)
@@ -103,6 +115,7 @@ if(NOT LAPACK_LIBRARY)
     set(LAPACK_LIBRARY_DEBUG ${BLAS_LIBRARIES})
   endif()
 
+  select_library_configurations(oLAPACK)
   select_library_configurations(LAPACK)
 endif()
 
@@ -121,10 +134,10 @@ set(CLAPACK_INCLUDE_DIRS "${LAPACK_INCLUDE_DIR}" CACHE PATH "" FORCE)
 set(F2C_INCLUDE_DIRS "${F2C_INCLUDE_DIR}" CACHE PATH "" FORCE)
 
 if(WIN32)
-  string( REPLACE ".lib" ".dll" LAPACK_LIBRARY_RELEASE_DLL "${LAPACK_LIBRARY_RELEASE}" )
-  string( REPLACE ".lib" ".dll" LAPACK_LIBRARY_DEBUG_DLL   "${LAPACK_LIBRARY_DEBUG}" )
-  string( REPLACE ".lib" ".dll" F2C_LIBRARY_RELEASE_DLL    "${F2C_LIBRARY_RELEASE}" )
-  string( REPLACE ".lib" ".dll" F2C_LIBRARY_DEBUG_DLL      "${F2C_LIBRARY_DEBUG}" )
+  string(REPLACE ".lib" ".dll" LAPACK_LIBRARY_RELEASE_DLL "${oLAPACK_LIBRARY_RELEASE}")
+  string(REPLACE ".lib" ".dll" LAPACK_LIBRARY_DEBUG_DLL   "${oLAPACK_LIBRARY_DEBUG}")
+  string(REPLACE ".lib" ".dll" F2C_LIBRARY_RELEASE_DLL    "${oF2C_LIBRARY_RELEASE}")
+  string(REPLACE ".lib" ".dll" F2C_LIBRARY_DEBUG_DLL      "${oF2C_LIBRARY_DEBUG}")
 endif()
 
 set(LAPACK_BLAS_LIBRARY "${LAPACK_BLAS_LIBRARY}" CACHE STRING "" FORCE)
@@ -144,85 +157,73 @@ set(F2C_LIBRARY_DEBUG "${F2C_LIBRARY_DEBUG}" CACHE STRING "" FORCE)
 find_package_handle_standard_args(CLAPACK DEFAULT_MSG CLAPACK_LIBRARY CLAPACK_INCLUDE_DIR)
 mark_as_advanced(CLAPACK_INCLUDE_DIR CLAPACK_LIBRARY)
 
-find_package_handle_standard_args(LAPACK  DEFAULT_MSG LAPACK_LIBRARY LAPACK_INCLUDE_DIR)
+find_package_handle_standard_args(LAPACK DEFAULT_MSG LAPACK_LIBRARY LAPACK_INCLUDE_DIR)
 mark_as_advanced(LAPACK_INCLUDE_DIR LAPACK_LIBRARY)
 
-find_package_handle_standard_args(F2C     DEFAULT_MSG F2C_LIBRARY F2C_INCLUDE_DIR)
+find_package_handle_standard_args(F2C DEFAULT_MSG F2C_LIBRARY F2C_INCLUDE_DIR)
 mark_as_advanced(F2C_INCLUDE_DIR F2C_LIBRARY)
 
 #TARGETS
-if( CLAPACK_FOUND AND NOT TARGET clapack::clapack )
-  if( EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}" )
-    add_library( clapack::clapack      SHARED IMPORTED )
-    target_link_libraries(clapack::clapack INTERFACE ${F2C_LIBRARY})
-    if(TARGET OpenBLAS::OpenBLAS)
-      target_link_libraries(clapack::clapack INTERFACE OpenBLAS::OpenBLAS)
-    endif()
-    set_target_properties( clapack::clapack PROPERTIES
-      IMPORTED_LOCATION_RELEASE         ${LAPACK_LIBRARY_RELEASE_DLL}
-      IMPORTED_IMPLIB                   ${LAPACK_LIBRARY_RELEASE}
-      INTERFACE_INCLUDE_DIRECTORIES     ${LAPACK_INCLUDE_DIR}
-      IMPORTED_CONFIGURATIONS           Release
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
-    if( EXISTS "${LAPACK_LIBRARY_DEBUG_DLL}" )
-      set_property( TARGET clapack::clapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-      set_target_properties( clapack::clapack PROPERTIES
-        IMPORTED_LOCATION_DEBUG           ${LAPACK_LIBRARY_DEBUG_DLL}
-        IMPORTED_IMPLIB_DEBUG             ${LAPACK_LIBRARY_DEBUG} )
+if(CLAPACK_FOUND AND NOT TARGET clapack::clapack)
+  if(EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}")
+    add_library(clapack::clapack SHARED IMPORTED)
+    set_target_properties(clapack::clapack PROPERTIES
+      IMPORTED_LOCATION_RELEASE                 "${LAPACK_LIBRARY_RELEASE_DLL}"
+      IMPORTED_IMPLIB                           "${oLAPACK_LIBRARY_RELEASE}"
+      INTERFACE_INCLUDE_DIRECTORIES             "${LAPACK_INCLUDE_DIR}"
+      INTERFACE_LINK_LIBRARIES                  "$<$<NOT:$<CONFIG:DEBUG>>:${oF2C_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oF2C_LIBRARY_DEBUG}>;$<$<NOT:$<CONFIG:DEBUG>>:${oLAPACK_BLAS_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oLAPACK_BLAS_LIBRARY_DEBUG}>;$<LINK_ONLY:m>;$<LINK_ONLY:pthread>"
+      IMPORTED_CONFIGURATIONS                   Release
+      IMPORTED_LINK_INTERFACE_LANGUAGES         "C")
+    if(EXISTS "${LAPACK_LIBRARY_DEBUG_DLL}")
+      set_property(TARGET clapack::clapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+      set_target_properties(clapack::clapack PROPERTIES
+        IMPORTED_LOCATION_DEBUG                 "${LAPACK_LIBRARY_DEBUG_DLL}"
+        IMPORTED_IMPLIB_DEBUG                   "${oLAPACK_LIBRARY_DEBUG}")
     endif()
   else()
-    add_library( clapack::clapack      UNKNOWN IMPORTED )
-    target_link_libraries(clapack::clapack INTERFACE ${F2C_LIBRARY})
-    if(TARGET OpenBLAS::OpenBLAS)
-      target_link_libraries(clapack::clapack INTERFACE OpenBLAS::OpenBLAS)
-    endif()
-    set_target_properties( clapack::clapack PROPERTIES
-      IMPORTED_LOCATION_RELEASE         ${LAPACK_LIBRARY_RELEASE}
-      INTERFACE_INCLUDE_DIRECTORIES     ${LAPACK_INCLUDE_DIR}
-      IMPORTED_CONFIGURATIONS           Release
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
-    if( EXISTS "${LAPACK_LIBRARY_DEBUG}" )
-      set_property( TARGET clapack::clapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-      set_target_properties( clapack::clapack PROPERTIES
-        IMPORTED_LOCATION_DEBUG           ${LAPACK_LIBRARY_DEBUG} )
+    add_library(clapack::clapack UNKNOWN IMPORTED)
+    set_target_properties(clapack::clapack PROPERTIES
+      IMPORTED_LOCATION_RELEASE                 "${oLAPACK_LIBRARY_RELEASE}"
+      INTERFACE_INCLUDE_DIRECTORIES             "${LAPACK_INCLUDE_DIR}"
+      INTERFACE_LINK_LIBRARIES                  "$<$<NOT:$<CONFIG:DEBUG>>:${oF2C_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oF2C_LIBRARY_DEBUG}>;$<$<NOT:$<CONFIG:DEBUG>>:${oLAPACK_BLAS_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oLAPACK_BLAS_LIBRARY_DEBUG}>;$<LINK_ONLY:m>;$<LINK_ONLY:pthread>"
+      IMPORTED_CONFIGURATIONS                   Release
+      IMPORTED_LINK_INTERFACE_LANGUAGES         "C")
+    if(EXISTS "${LAPACK_LIBRARY_DEBUG}")
+      set_property(TARGET clapack::clapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+      set_target_properties(clapack::clapack PROPERTIES
+        IMPORTED_LOCATION_DEBUG                 "${oLAPACK_LIBRARY_DEBUG}")
     endif()
   endif()
 endif()
 
-if( CLAPACK_FOUND AND NOT TARGET lapack )
-  if( EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}" )
-    add_library( lapack      SHARED IMPORTED )
-    target_link_libraries(lapack INTERFACE ${F2C_LIBRARY})
-    if(TARGET OpenBLAS::OpenBLAS)
-      target_link_libraries(lapack INTERFACE OpenBLAS::OpenBLAS)
-    endif()
-    set_target_properties( lapack PROPERTIES
-      IMPORTED_LOCATION_RELEASE         ${LAPACK_LIBRARY_RELEASE_DLL}
-      IMPORTED_IMPLIB                   ${LAPACK_LIBRARY_RELEASE}
-      INTERFACE_INCLUDE_DIRECTORIES     ${LAPACK_INCLUDE_DIR}
-      IMPORTED_CONFIGURATIONS           Release
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
-    if( EXISTS "${LAPACK_LIBRARY_DEBUG_DLL}" )
-      set_property( TARGET lapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-      set_target_properties( lapack PROPERTIES
-        IMPORTED_LOCATION_DEBUG           ${LAPACK_LIBRARY_DEBUG_DLL}
-        IMPORTED_IMPLIB_DEBUG             ${LAPACK_LIBRARY_DEBUG} )
+if(CLAPACK_FOUND AND NOT TARGET lapack)
+  if(EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}")
+    add_library(lapack SHARED IMPORTED)
+    set_target_properties(lapack PROPERTIES
+      IMPORTED_LOCATION_RELEASE                 "${LAPACK_LIBRARY_RELEASE_DLL}"
+      IMPORTED_IMPLIB                           "${oLAPACK_LIBRARY_RELEASE}"
+      INTERFACE_INCLUDE_DIRECTORIES             "${LAPACK_INCLUDE_DIR}"
+      INTERFACE_LINK_LIBRARIES                  "$<$<NOT:$<CONFIG:DEBUG>>:${oF2C_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oF2C_LIBRARY_DEBUG}>;$<$<NOT:$<CONFIG:DEBUG>>:${oLAPACK_BLAS_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oLAPACK_BLAS_LIBRARY_DEBUG}>;$<LINK_ONLY:m>;$<LINK_ONLY:pthread>"
+      IMPORTED_CONFIGURATIONS                   Release
+      IMPORTED_LINK_INTERFACE_LANGUAGES         "C")
+    if(EXISTS "${LAPACK_LIBRARY_DEBUG_DLL}")
+      set_property(TARGET lapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+      set_target_properties(lapack PROPERTIES
+        IMPORTED_LOCATION_DEBUG                 "${LAPACK_LIBRARY_DEBUG_DLL}"
+        IMPORTED_IMPLIB_DEBUG                   "${oLAPACK_LIBRARY_DEBUG}")
     endif()
   else()
-    add_library( lapack      UNKNOWN IMPORTED )
-    target_link_libraries(lapack INTERFACE ${F2C_LIBRARY})
-    if(TARGET OpenBLAS::OpenBLAS)
-      target_link_libraries(lapack INTERFACE OpenBLAS::OpenBLAS)
-    endif()
-    set_target_properties( lapack PROPERTIES
-      IMPORTED_LOCATION_RELEASE         ${LAPACK_LIBRARY_RELEASE}
-      INTERFACE_INCLUDE_DIRECTORIES     ${LAPACK_INCLUDE_DIR}
-      IMPORTED_CONFIGURATIONS           Release
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
-    if( EXISTS "${LAPACK_LIBRARY_DEBUG}" )
-      set_property( TARGET lapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-      set_target_properties( lapack PROPERTIES
-        IMPORTED_LOCATION_DEBUG           ${LAPACK_LIBRARY_DEBUG} )
+    add_library(lapack UNKNOWN IMPORTED)
+    set_target_properties(lapack PROPERTIES
+      IMPORTED_LOCATION_RELEASE                 "${oLAPACK_LIBRARY_RELEASE}"
+      INTERFACE_INCLUDE_DIRECTORIES             "${LAPACK_INCLUDE_DIR}"
+      IMPORTED_CONFIGURATIONS                   Release
+      INTERFACE_LINK_LIBRARIES                  "$<$<NOT:$<CONFIG:DEBUG>>:${oF2C_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oF2C_LIBRARY_DEBUG}>;$<$<NOT:$<CONFIG:DEBUG>>:${oLAPACK_BLAS_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oLAPACK_BLAS_LIBRARY_DEBUG}>;$<LINK_ONLY:m>;$<LINK_ONLY:pthread>"
+      IMPORTED_LINK_INTERFACE_LANGUAGES         "C")
+    if(EXISTS "${LAPACK_LIBRARY_DEBUG}")
+      set_property(TARGET lapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+      set_target_properties(lapack PROPERTIES
+        IMPORTED_LOCATION_DEBUG                 "${oLAPACK_LIBRARY_DEBUG}")
     endif()
   endif()
 endif()
