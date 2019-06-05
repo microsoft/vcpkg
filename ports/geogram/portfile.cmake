@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(ADDITIONAL_PATCHES "linux_openblas.patch" "fix_underscore.patch" "enable_openblas_compatibility.patch")
+    set(ADDITIONAL_PATCHES "fix_underscore.patch" "enable_openblas_compatibility.patch")
 endif()
 
 vcpkg_extract_source_archive_ex(

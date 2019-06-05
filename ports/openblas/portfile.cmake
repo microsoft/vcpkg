@@ -98,7 +98,8 @@ endif()
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
-#maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
+#we install a cmake wrapper since the official FindBLAS thinks that OpenBLAS can solve also LAPACK libraries, while it cannot because we disabled it and we use CLAPACK... maybe we have to trigger finding one package when requesting the other and vice-versa. Wrappers should be ready also to avoid an infinite loop
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
