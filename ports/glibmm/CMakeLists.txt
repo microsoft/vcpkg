@@ -43,7 +43,9 @@ endif()
 # Activate workaround for exporting all symbols from Windows DLLs to mimic the 
 # behavior on Linux, where dynamic libraries always export all symbols.
 # The same approach was already used by the upstream MSVC build (see MSVC_NMake/gendef/gendef.cc)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+if (WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
 
 if(BUILD_SHARED_LIBS)
     add_definitions(-DGLIBMM_DLL -DGIOMM_DLL)
