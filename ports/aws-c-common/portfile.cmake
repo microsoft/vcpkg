@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF v0.3.11
     SHA512 da845f748aecfff61209f542f4eac8d46738af52ce980d5c8315397f859429dfd9e4bf989ddf2fbe938d1efb33dce9c531c92cbe53388b1d1082d5caa97e8750
     HEAD_REF master
+    PATCHES fix-dependencey-build-error.patch # This patch fixes dependency port compilation failure
 )
 
 if (${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
