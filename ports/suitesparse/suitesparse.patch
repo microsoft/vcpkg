@@ -85,6 +85,18 @@ index 3486f05..b8c2e63 100644
  	NAMESPACE
  		SuiteSparse::
  	DESTINATION
+diff --git a/SuiteSparse/CHOLMOD/Include/cholmod_blas.h b/SuiteSparse/CHOLMOD/Include/cholmod_blas.h
+index aef3e63..907512b 100644
+--- a/SuiteSparse/CHOLMOD/Include/cholmod_blas.h
++++ b/SuiteSparse/CHOLMOD/Include/cholmod_blas.h
+@@ -27,6 +27,7 @@
+ #elif defined (__linux) || defined (MGLNX86) || defined (ARCH_GLNX86)
+ #define CHOLMOD_LINUX
+ #define CHOLMOD_ARCHITECTURE "Linux"
++#define BLAS_NO_UNDERSCORE
+ 
+ #elif defined (__APPLE__)
+ #define CHOLMOD_MAC
 diff --git a/SuiteSparse/CMakeLists.txt b/SuiteSparse/CMakeLists.txt
 index c6e2834..5ef08a6 100644
 --- a/SuiteSparse/CMakeLists.txt
