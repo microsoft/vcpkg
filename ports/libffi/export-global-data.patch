@@ -1,5 +1,5 @@
 diff --git a/src/types.c b/src/types.c
-index 0de5994..46c8d18 100644
+index 7e80aec..c46bba2 100644
 --- a/src/types.c
 +++ b/src/types.c
 @@ -31,6 +31,12 @@
@@ -14,17 +14,17 @@ index 0de5994..46c8d18 100644
 +
  /* Type definitions */
  
- #define FFI_TYPEDEF(name, type, id)		\
+ #define FFI_TYPEDEF(name, type, id, maybe_const)\
 @@ -38,7 +44,7 @@ struct struct_align_##name {			\
    char c;					\
    type x;					\
  };						\
--const ffi_type ffi_type_##name = {		\
+-maybe_const ffi_type ffi_type_##name = {	\
 +FFI_EXPORT const ffi_type ffi_type_##name = {		\
    sizeof(type),					\
    offsetof(struct struct_align_##name, x),	\
    id, NULL					\
-@@ -56,7 +62,7 @@ ffi_type ffi_type_##name = {			\
+@@ -60,7 +66,7 @@ maybe_const ffi_type ffi_type_complex_##name = {	\
  }
  
  /* Size and alignment are fake here. They must not be 0. */

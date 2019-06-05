@@ -1,0 +1,18 @@
+diff --git a/src/types.c b/src/types.c
+index c46bba2..9718708 100644
+--- a/src/types.c
++++ b/src/types.c
+@@ -103,6 +103,7 @@ const ffi_type ffi_type_longdouble = { 16, 16, 4, NULL };
+ FFI_TYPEDEF(longdouble, long double, FFI_TYPE_LONGDOUBLE, FFI_LDBL_CONST);
+ #endif
+ 
++#ifndef _MSC_VER
+ #ifdef FFI_TARGET_HAS_COMPLEX_TYPE
+ FFI_COMPLEX_TYPEDEF(float, float, const);
+ FFI_COMPLEX_TYPEDEF(double, double, const);
+@@ -110,3 +111,4 @@ FFI_COMPLEX_TYPEDEF(double, double, const);
+ FFI_COMPLEX_TYPEDEF(longdouble, long double, FFI_LDBL_CONST);
+ #endif
+ #endif
++#endif
+\ No newline at end of file

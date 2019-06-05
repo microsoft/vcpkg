@@ -9,11 +9,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF v3.1
-    SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
+    REF 20562ac0427c3578250d04c6e34fb0127d4551cf
+    SHA512 8bfce073f67850a3af9073fcdeb034d7f8644d38f0e1589926032b46e32a5e7ae689007008ad7bdaf13f03944f6540e9153f1435d45db68e4eb19bb90f47e255
     HEAD_REF master
     PATCHES
         export-global-data.patch
+		fix-COMPLEX_TYPE.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
