@@ -5,9 +5,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/python
-    REF boost-1.67.0
-    SHA512 59091af63626cc6e33f76bded8733b5fb044f7139197e6c887e8e279831954c1e8b67341b6b2f3c9dce97e67a166996321ea439609d225dab7f68762423d6211
+    REF boost-1.70.0
+    SHA512 0e540f68713460c64f195f56af1cbd00ae4fa98adc91a83a0c1fdb7e60950cf282cab02b772f06e7c268c3cd294566d6abfa1d1aa545c687a256d6863870f72d
     HEAD_REF master
+    PATCHES unwind-type.patch
 )
 
 # Find Python. Can't use find_package here, but we already know where everything is

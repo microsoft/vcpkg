@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  message(WARNING "building static")
-  set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ccxvii/mujs
-  REF 222772f6bbd042801e7eefeb3aee8ecfc2113f6e
-  SHA512 7d665f99aabcb8f1daafcb1c4a271c4b4e8b926de44f8a574573b45ed7f0c532f4a3b76f81f867449b45ace29f6d318c6244ab69a6e4e0b4425ea382bf8730a2
+  REF c86267d8b2b5f9a6ae318dc69886109eee0c7b61
+  SHA512 927b000cd6a28b785d510917445a5a39a4dbaf0e13eab920cf83c7838b111b8a0542cfab0110f8493dc65b88a48261deb6ba7a871cbe77fb46119b536a69d470
   HEAD_REF master
 )
 

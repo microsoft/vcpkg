@@ -1,21 +1,21 @@
 cmake_minimum_required (VERSION 3.6)
 project (graphicsmagick)
 
-find_package(Zlib REQUIRED)
-find_package(Bzip2 REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(BZip2 REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
 find_package(TIFF REQUIRED)
 find_package(Freetype REQUIRED)
 
-add_definitions(-D_MAGICKLIB_ -D_WANDLIB_ -DMAGICK_IMPLEMENTATION -D_VISUALC_)
+add_definitions(-D_MAGICKLIB_ -D_WANDLIB_ -DMAGICK_IMPLEMENTATION)
 
 if (BUILD_SHARED_LIBS)
     add_definitions(-D_DLL -DDLL)
 endif ()
 
 if (MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
+    add_definitions( -D_VISUALC_ -D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
 endif ()
 
 if (WIN32)
@@ -29,24 +29,26 @@ include_directories("Magick++")
 include_directories("Magick++/lib")
 include_directories("wand")
 
-include_directories(${ZLIB_INCLUDE_DIRS})
-include_directories(${BZIP2_INCLUDE_DIR})
-include_directories(${NATIVE_JPEG_INCLUDE_PATH})
-include_directories(${PNG_INCLUDE_DIRS})
-include_directories(${TIFF_INCLUDE_DIRS})
-include_directories(${FREETYPE_INCLUDE_DIRS})
-
 file(READ "magick/magick_config.h.in" CONFIG_H)
 string(REPLACE "#undef HasBZLIB" "#define HasBZLIB" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasJPEG" "#define HasJPEG" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasPNG" "#define HasPNG" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasTIFF" "#define HasTIFF" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasTTF" "#define HasTTF" CONFIG_H "${CONFIG_H}")
-string(REPLACE "#undef HasWINGDI32" "#define HasWINGDI32" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef HasTTF" "#define HasTTF" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef HAVE_FT2BUILD_H" "#define HAVE_FT2BUILD_H" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef HasZLIB" "#define HasZLIB" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef QuantumDepth" "#define QuantumDepth 16" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef restrict" "#define restrict" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef size_t" "/* #undef size_t */" CONFIG_H "${CONFIG_H}")
+if (WIN32)
+string(REPLACE "#undef HasWINGDI32" "#define HasWINGDI32" CONFIG_H "${CONFIG_H}")
+else ()
+string(REPLACE "#undef HAVE_VSNPRINTF" "#define HAVE_VSNPRINTF" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef MagickLibSubdir" "#define MagickLibSubdir \"magick\"" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef MagickLibConfigSubDir" "#define MagickLibConfigSubDir \"magick/config\"" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef MagickShareConfigSubDir" "#define MagickShareConfigSubDir \"magick/config\"" CONFIG_H "${CONFIG_H}")
+endif ()
 file(WRITE "magick/magick_config.h" "${CONFIG_H}")
 
 file(READ "magick/magick_config_api.h.in" CONFIG_API_H)
@@ -108,17 +110,48 @@ add_library(graphicsmagick coders/art.c coders/avs.c
 		Magick++/lib/TypeMetric.cpp
 		wand/drawing_wand.c wand/magick_compat.c wand/magick_wand.c wand/pixel_wand.c)
 
-TARGET_LINK_LIBRARIES(graphicsmagick ${ZLIB_LIBRARIES})
-TARGET_LINK_LIBRARIES(graphicsmagick ${BZIP2_LIBRARIES})
-TARGET_LINK_LIBRARIES(graphicsmagick ${JPEG_LIBRARIES})
-TARGET_LINK_LIBRARIES(graphicsmagick ${PNG_LIBRARIES})
-TARGET_LINK_LIBRARIES(graphicsmagick ${TIFF_LIBRARIES})
-TARGET_LINK_LIBRARIES(graphicsmagick ${FREETYPE_LIBRARIES})
+TARGET_LINK_LIBRARIES(graphicsmagick PRIVATE
+    ZLIB::ZLIB
+    BZip2::BZip2
+    #${JPEG_LIBRARIES}
+    JPEG::JPEG
+    PNG::PNG
+    TIFF::TIFF
+    Freetype::Freetype
+)
+target_include_directories(graphicsmagick INTERFACE $<INSTALL_INTERFACE:include>)
 
 install(TARGETS graphicsmagick
+    EXPORT graphicsmagick-targets
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
+
+install(
+    EXPORT graphicsmagick-targets
+    FILE unofficial-graphicsmagick-targets.cmake
+    NAMESPACE unofficial::graphicsmagick::
+    DESTINATION share/unofficial-graphicsmagick
+)
+find_package(ZLIB REQUIRED)
+find_package(BZip2 REQUIRED)
+find_package(JPEG REQUIRED)
+find_package(PNG REQUIRED)
+find_package(TIFF REQUIRED)
+find_package(Freetype REQUIRED)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-graphicsmagick-config.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+find_dependency(BZip2)
+find_dependency(JPEG)
+find_dependency(PNG)
+find_dependency(TIFF)
+find_dependency(Freetype)
+
+include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-graphicsmagick-targets.cmake)
+")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-graphicsmagick-config.cmake DESTINATION share/unofficial-graphicsmagick)
 
 option(INSTALL_HEADERS "Install development header files" ON)
 

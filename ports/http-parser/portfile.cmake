@@ -1,9 +1,12 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nodejs/http-parser
-    REF v2.7.1
-    SHA512 c0fe86455db1a563a5c668f118dfa9a27b9a637ee1c0e2f2f18a5b816352436ed90435ea978e3f3d85b037d3c630234e47d609dc3b7086b898286c4e54d9f031
+    REF v2.9.2
+    SHA512 fe21ba46c9297b55a6382497b689da2af88999a9a5716ffef0731057ce1bb053056e4f20147284c78338e48ed1a793a0270fe0edfe3f4b589926e3ede603d023
     HEAD_REF master
 )
 

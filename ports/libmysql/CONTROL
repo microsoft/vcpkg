@@ -1,4 +1,4 @@
 Source: libmysql
-Version: 8.0.4-2
+Version: 8.0.4-3
 Build-Depends: boost-algorithm, boost-geometry, boost-optional, boost-functional, boost-graph, openssl, icu, libevent, liblzma, lz4, zlib
 Description: A MySQL client library for C development.

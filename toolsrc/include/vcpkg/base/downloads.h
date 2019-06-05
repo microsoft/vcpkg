@@ -9,7 +9,7 @@ namespace vcpkg::Downloads
                                      const fs::path& path,
                                      const std::string& sha512);
 
-    void download_file(vcpkg::Files::Filesystem& fs,
+    void download_file(Files::Filesystem& fs,
                        const std::string& url,
                        const fs::path& download_path,
                        const std::string& sha512);

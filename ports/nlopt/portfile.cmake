@@ -1,18 +1,14 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevengj/nlopt
-    REF c43afa08d4fe086d9c00c37924a6bd4c9de71816
-    SHA512 e063d748b040f081a648b33dadaf9b7deef63ff3be0cffd8988816701c18694202f5bcf06a18991f1f4b35014e3f406ffa4404d4036ff7625d3680bd5e24f8e4
+    REF v2.6.1
+    SHA512 e9b8ee75536a568e75150dc0a169d951b670d54ca9d2797f9db6f2751811d9d21be367fa6794a0bc76370715caf5356b368c9c12ad416f3cfb74ae8fa8eabd5c
     HEAD_REF master
 )
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001_export_symbols.patch)
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

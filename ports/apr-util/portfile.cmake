@@ -10,18 +10,28 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
   SOURCE_PATH ${SOURCE_PATH}
-  PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-vcpkg-expat.patch"
+  PATCHES 
+        use-vcpkg-expat.patch
+        apr.patch
 )
 
-
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_configure_cmake(
+      SOURCE_PATH ${SOURCE_PATH}
+      PREFER_NINJA
+      OPTIONS -DAPU_DECLARE_EXPORT=ON
+      OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+    )
+else()
+    vcpkg_configure_cmake(
+      SOURCE_PATH ${SOURCE_PATH}
+      PREFER_NINJA
+      OPTIONS -DAPU_DECLARE_STATIC=ON
+      OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+    )
+endif()
 
 vcpkg_install_cmake()
-
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/apu.h  APU_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

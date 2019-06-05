@@ -47,4 +47,4 @@ index b0d2d8b..ce54986 100644
  
  MARK_AS_ADVANCED(LEMON_LIBRARY LEMON_INCLUDE_DIR)
 +
-+include(./lemon-targets.cmake)
++include(${CMAKE_CURRENT_LIST_DIR}/lemon-targets.cmake)

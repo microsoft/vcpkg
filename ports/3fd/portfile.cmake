@@ -12,15 +12,7 @@ else()
 endif()
 
 # Check library linkage:
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("3FD only supports static library linkage. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
-# Check CRT linkage:
-if (VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "3FD can only be built with dynamic linkage to CRT!")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 # Get source code:
 vcpkg_from_github(
@@ -31,6 +23,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/remove-seekpos.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/DataException.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/RapidXML.patch"
 )
 
 # Copy the sources to ensure a clean, out-of-source build

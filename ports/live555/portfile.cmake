@@ -1,17 +1,26 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("live555 cannot currently be built dynamically. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE "static")
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+
+if(NOT VCPKG_USE_HEAD_VERSION)
+    # Live555 only makes the latest releases available for download on their site
+    message(FATAL_ERROR "Live555 does not have persistent releases. Please re-run the installation with --head.")
 endif()
 
 include(vcpkg_common_functions)
-set(LIVE_VERSION 2018.07.01)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION}/live)
+
+set(LIVE_VERSION latest)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live.${LIVE_VERSION}.tar.gz"
-    FILENAME "live.${LIVE_VERSION}.tar.gz"
-    SHA512  b24ff9e4debdaf8848220d003627afc3860b9a34c7448f50d993900eb0241c63c9bc622be3e69b68e569607b4f6d174ab897d0e347f49d59842ac4f1b8f9c3ea
+    URLS "http://www.live555.com/liveMedia/public/live555-${LIVE_VERSION}.tar.gz"
+    FILENAME "live555-${LIVE_VERSION}.tar.gz"
+    SKIP_SHA512
 )
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE} 
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

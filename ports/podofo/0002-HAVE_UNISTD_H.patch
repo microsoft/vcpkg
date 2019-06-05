@@ -1,0 +1,15 @@
+diff --git a/podofo_config.h.in b/podofo_config.h.in
+index fea9ada..a813c7b 100644
+--- a/podofo_config.h.in
++++ b/podofo_config.h.in
+@@ -59,3 +59,10 @@
+ #cmakedefine PODOFO_HAVE_OPENSSL_NO_RC4
+ #cmakedefine PODOFO_HAVE_LIBIDN
+ #cmakedefine PODOFO_HAVE_UNISTRING_LIB
++
++/* Fix build for MacOS 10.13 */
++#if defined(__APPLE__) && !defined(__IOS__)
++#cmakedefine01 HAVE_UNISTD_H
++#else
++#cmakedefine HAVE_UNISTD_H
++#endif

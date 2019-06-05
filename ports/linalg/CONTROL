@@ -1,0 +1,3 @@
+Source: linalg
+Version: 2.1
+Description: linalg.h is a single header public domain linear algebra library for C++11

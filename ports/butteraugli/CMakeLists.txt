@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.8.0)
 project(butteraugli CXX)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 add_compile_options(-D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018)

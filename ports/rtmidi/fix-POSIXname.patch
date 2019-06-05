@@ -1,0 +1,17 @@
+diff --git a/rtmidi_c.cpp b/rtmidi_c.cpp
+index 248c9e5..ec1dd38 100644
+--- a/rtmidi_c.cpp
++++ b/rtmidi_c.cpp
+@@ -136,7 +136,11 @@ const char* rtmidi_get_port_name (RtMidiPtr device, unsigned int portNumber)
+ {
+     try {
+         std::string name = ((RtMidi*) device->ptr)->getPortName (portNumber);
+-        return strdup (name.c_str ());
++#if defined(_WIN) || defined(WINAPI_FAMILY) //Windows platform
++			return _strdup (name.c_str ());
++#else // Unix platform
++			return strdup (name.c_str ());
++#endif
+     
+     } catch (const RtMidiError & err) {
+         device->ok  = false;

@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/breakpad
-    REF 79ba6a494fb2097b39f76fe6a4b4b4f407e32a02
-    SHA512 1c2f1f4cb483841b6a7fa0288f9c067b15bd2f04f0d86e9f68d0f3b5560cda84a2c5dd381216cb079666a70dcd7928c39b718e51b50a3f1de8f5a9a33e0737c5
+    REF 21b48a72aa50dde84149267f6b7402522b846b24
+    SHA512 4ca2f877871c0a79c24ce4cc592dddb3ac4c2eac2a5962dad6d3d94edc91ac82afec3d7e4e7f81e7d9916eb83f8708e66759c38a6ef0e1b2c19691dd1518558a
     HEAD_REF master
 )
 

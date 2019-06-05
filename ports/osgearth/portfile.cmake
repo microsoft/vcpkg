@@ -1,20 +1,28 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building will not support load data through plugins.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "osgearth does not support static CRT linkage")
+file(GLOB OSG_PLUGINS_SUBDIR ${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*)
+list(LENGTH OSG_PLUGINS_SUBDIR OSG_PLUGINS_SUBDIR_LENGTH)
+if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
+    message(FATAL_ERROR "Could not determine osg version")
 endif()
+string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OSG_PLUGINS_SUBDIR}")
+
+vcpkg_download_distfile(
+    VS2017PATCH
+    URLS "https://github.com/remoe/osgearth/commit/f7081cc4f9991c955c6a0ef7b7b50e48360d14fd.diff"
+    FILENAME "osgearth-f7081cc4f9991c955c6a0ef7b7b50e48360d14fd.patch"
+    SHA512 eadb47a5713c00c05add8627e5cad22844db041da34081d59104151a1a1e2d5ac9552909d67171bfc0449a3e4d2930dd3a7914d3ec7ef7ff1015574e9c9a6105
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF d06e47995620674900d96eb694ff4866a29a9d4f
-    SHA512 d4b790dc2be4b6ffcd3ab5b4c1062bb56dd4503511ea3f4033a2546ce553dbd45535bfb70ba646416acebf67eba2e5d2740a05477387acad87956bf99fc4038a
+    REF osgearth-2.10.1
+    SHA512 a74e6922ae29f85b4227b23a83dbccba92e08b7880533c281ceb244703c38b51a02823fdee3199c975c969db963b35ebad0e3bfed3c1e218a36d130b20a48e5b
     HEAD_REF master
+    PATCHES ${VS2017PATCH}
 )
 
 vcpkg_configure_cmake(
@@ -26,7 +34,7 @@ vcpkg_install_cmake()
 
 #Release
 set(OSGEARTH_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/osgearth)
-set(OSGEARTH_TOOL_PLUGIN_PATH ${OSGEARTH_TOOL_PATH}/osgPlugins-3.5.6)
+set(OSGEARTH_TOOL_PLUGIN_PATH ${OSGEARTH_TOOL_PATH}/${OSG_PLUGINS_SUBDIR})
 
 file(MAKE_DIRECTORY ${OSGEARTH_TOOL_PATH})
 file(MAKE_DIRECTORY ${OSGEARTH_TOOL_PLUGIN_PATH})
@@ -44,7 +52,7 @@ file(REMOVE_RECURSE ${OSGDB_PLUGINS})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 set(OSGEARTH_DEBUG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/debug/tools/osgearth)
-set(OSGEARTH_DEBUG_TOOL_PLUGIN_PATH ${OSGEARTH_DEBUG_TOOL_PATH}/osgPlugins-3.5.6)
+set(OSGEARTH_DEBUG_TOOL_PLUGIN_PATH ${OSGEARTH_DEBUG_TOOL_PATH}/${OSG_PLUGINS_SUBDIR})
 
 file(MAKE_DIRECTORY ${OSGEARTH_DEBUG_TOOL_PATH})
 file(MAKE_DIRECTORY ${OSGEARTH_DEBUG_TOOL_PLUGIN_PATH})

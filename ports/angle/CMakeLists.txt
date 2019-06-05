@@ -1,15 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
-project(angle CXX)
+project(angle CXX C)
 
 if(WIN32 AND NOT WINDOWS_STORE)
     set(WINDOWS_DESKTOP 1)
 else()
     set(WINDOWS_DESKTOP 0)
-endif()
-if (WINDOWS_DESKTOP OR WINDOWS_STORE)
-    set(WINDOWS_ANY 1)
-else()
-    set(WINDOWS_ANY 0)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -18,10 +13,12 @@ else()
     set(LINUX 0)
 endif()
 
-if(WINDOWS_ANY)
-    add_compile_options(/d2guard4 /Wv:18 /guard:cf)
+if(MSVC)
+    add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive)
 else()
-    add_compile_options(-std=c++17 -fPIC)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
 if (APPLE)
@@ -44,14 +41,26 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
 # angle::common
-if(WINDOWS_ANY)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac")
+if(WIN32)
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
 elseif(APPLE)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
 endif()
-file(GLOB ANGLE_COMMON_SOURCES "src/common/*.h" "src/common/*.inl" "src/common/*.cpp" "src/common/third_party/base/*.h")
+file(GLOB ANGLE_COMMON_SOURCES 
+	"src/common/*.h" 
+	"src/common/*.inl" 
+	"src/common/*.cpp" 
+	"src/common/third_party/base/anglebase/*.h" 
+	"src/common/third_party/base/anglebase/*.cc" 
+	"src/common/third_party/base/anglebase/containers/*.h" 
+	"src/common/third_party/base/anglebase/numerics/*.h" 
+	"src/common/third_party/base/anglebase/numerics/*.cc" 
+	"src/common/third_party/xxhash/*.h" 
+	"src/common/third_party/xxhash/*.c" 
+	"src/common/third_party/smhasher/src/*.h" 
+	"src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
@@ -71,6 +80,10 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/glslang.y"
     "src/compiler/translator/*.h"
     "src/compiler/translator/*.cpp"
+    "src/compiler/translator/tree_ops/*.h"
+    "src/compiler/translator/tree_ops/*.cpp"
+    "src/compiler/translator/tree_util/*.h"
+    "src/compiler/translator/tree_util/*.cpp"
     "src/third_party/compiler/ArrayBoundsClamper.cpp"
 )
 add_library(angle_translator STATIC ${TRANSLATOR_SOURCES})
@@ -134,7 +147,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
 endif()
 
 # D3D Renderers
-if(WINDOWS_ANY)
+if(WIN32)
     ## All D3D Sources
     file(GLOB_RECURSE LIBANGLE_D3D_SOURCES
         "src/libANGLE/renderer/d3d/*.cpp"
@@ -155,7 +168,7 @@ if(WINDOWS_ANY)
     ## Win32/d3d9 D3D Renderer
     if(WINDOWS_DESKTOP)
         set(LIBANGLE_D3D_DESKTOP_SOURCES ${LIBANGLE_D3D_SOURCES})
-        list(FILTER LIBANGLE_D3D_DESKTOP_SOURCES INCLUDE REGEX "d3d9|win32")
+        list(FILTER LIBANGLE_D3D_DESKTOP_SOURCES INCLUDE REGEX "d3d9|win32|converged")
         find_library(D3D9_LIB NAMES d3d9)
         add_library(angle_renderer_win32 INTERFACE)
         target_sources(angle_renderer_win32 INTERFACE ${LIBANGLE_D3D_DESKTOP_SOURCES})
@@ -165,7 +178,7 @@ if(WINDOWS_ANY)
     endif()
 
     ## D3D11 Base renderer
-    list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "winrt|d3d9|win32")
+    list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "winrt|d3d9|win32|converged")
     find_library(DXGUID_LIB NAMES dxguid)
     find_library(D3D11_LIB NAMES d3d11)
     add_library(angle_renderer_d3d INTERFACE)
@@ -174,12 +187,12 @@ if(WINDOWS_ANY)
         -DANGLE_ENABLE_D3D11
         "-DANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ \"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }"
     )
-    target_link_libraries(angle_renderer_d3d INTERFACE ${D3D11_LIB} ${DXGUID_LIB})
+    target_link_libraries(angle_renderer_d3d INTERFACE d3d11 dxguid)
     add_library(angle::renderer::d3d ALIAS angle_renderer_d3d)
 endif()
 
 ## Core libANGLE library
-if(WINDOWS_ANY)
+if(WIN32)
     set(LIBANGLE_SOURCES_PLATFORM
         "src/third_party/systeminfo/SystemInfo.cpp"
     )
@@ -221,6 +234,7 @@ elseif(WINDOWS_DESKTOP)
         angle::renderer::d3d
         angle::renderer::win32
         angle::renderer::opengl
+        gdi32
     )
 else()
     set(LIBANGLE_RENDERER_PLATFORM )
@@ -253,15 +267,17 @@ add_library(angle::libANGLE ALIAS libANGLE)
 
 ##########
 # libGLESv2
-file(GLOB LIBGLESV2_SOURCES "src/libGLESv2/*.h" "src/libGLESv2/*.cpp" "src/libGLESv2/libGLESv2.def")
+file(GLOB LIBGLESV2_SOURCES "src/libGLESv2/*.h" "src/libGLESv2/*.cpp" "src/libGLESv2/libGLESv2_autogen.def")
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
 target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
         -DGL_GLEXT_PROTOTYPES
+        -DGL_API=
         -DGL_APICALL=
         -DEGLAPI=
+        -DGL_API=
 )
 target_include_directories(libGLESv2 PUBLIC "$<INSTALL_INTERFACE:include>")
 
@@ -275,6 +291,7 @@ add_library(libEGL
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>")
+target_include_directories(libEGL PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 
 
 SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
@@ -295,6 +312,8 @@ if(NOT DISABLE_INSTALL_HEADERS)
         DESTINATION include
         FILES_MATCHING PATTERN "*.h"
         PATTERN "GLSLANG" EXCLUDE
+        PATTERN "EGL" EXCLUDE
+        PATTERN "KHR" EXCLUDE
         PATTERN "export.h" EXCLUDE
     )
 endif()

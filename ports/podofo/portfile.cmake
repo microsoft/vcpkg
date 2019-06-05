@@ -1,11 +1,25 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/podofo-0.9.5)
+
+set(PODOFO_VERSION 0.9.6)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/podofo/podofo/0.9.5/podofo-0.9.5.tar.gz"
-    FILENAME "podofo-0.9.5.tar.gz"
-    SHA512 d13b30bfebc89b809173cd2251eed1f15dfa90abb58371bfdce875797d40663923571824ad2b0b1d97aa1be212bdbb710c3a0439bc05bed7022b8eb75ca74705
+    URLS "https://sourceforge.net/projects/podofo/files/podofo/${PODOFO_VERSION}/podofo-${PODOFO_VERSION}.tar.gz/download"
+    FILENAME "podofo-${PODOFO_VERSION}.tar.gz"
+    SHA512 35c1a457758768bdadc93632385f6b9214824fead279f1b85420443fb2135837cefca9ced476df0d47066f060e9150e12fcd40f60fa1606b177da433feb20130
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  set(ADDITIONAL_PATCH "0003-uwp_fix.patch")
+endif()
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${PODOFO_VERSION}
+    PATCHES
+        0001-unique_ptr.patch
+        0002-HAVE_UNISTD_H.patch
+        ${ADDITIONAL_PATCH}
+)
 
 set(PODOFO_NO_FONTMANAGER ON)
 if("fontconfig" IN_LIST FEATURES)
@@ -20,8 +34,12 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
     set(IS_WIN32 ON)
 endif()
 
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindOpenSSL.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindZLIB.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DPODOFO_BUILD_LIB_ONLY=1
         -DPODOFO_BUILD_SHARED=${PODOFO_BUILD_SHARED}
@@ -30,11 +48,13 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_FONTCONFIG=${PODOFO_NO_FONTMANAGER}
         -DCMAKE_DISABLE_FIND_PACKAGE_LIBCRYPTO=${IS_WIN32}
         -DCMAKE_DISABLE_FIND_PACKAGE_LIBIDN=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_CppUnit=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
 )
 
 vcpkg_install_cmake()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/podofo)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/podofo/COPYING ${CURRENT_PACKAGES_DIR}/share/podofo/copyright)

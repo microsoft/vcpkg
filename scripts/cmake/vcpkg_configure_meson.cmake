@@ -26,7 +26,7 @@ function(vcpkg_configure_meson)
     set(MESON_RELEASE_LDFLAGS "${MESON_RELEASE_LDFLAGS} /INCREMENTAL:NO /OPT:REF /OPT:ICF")
     
     # select meson cmd-line options
-    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja)
+    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         list(APPEND _vcm_OPTIONS --default-library shared)
     else()
@@ -39,7 +39,12 @@ function(vcpkg_configure_meson)
     vcpkg_find_acquire_program(MESON)
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+    if(CMAKE_HOST_WIN32)
+        set(_PATHSEP ";")
+    else()
+        set(_PATHSEP ":")
+    endif()
+    set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
 
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
