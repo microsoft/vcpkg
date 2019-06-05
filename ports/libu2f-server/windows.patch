@@ -38,3 +38,36 @@ index da440ec..294c94b 100644
  #include "crypto.h"
  #include "b64/cencode.h"
  #include "b64/cdecode.h"
+@@ -43,7 +43,17 @@ typedef int json_bool;
+ #define u2fs_json_object_object_get(obj, key, value) (value = json_object_object_get(obj, key)) == NULL ? (json_bool)FALSE : (json_bool)TRUE
+ #endif
+ 
+-static u2fs_rc encode_b64u(const char *data, size_t data_len, char *output)
++u2fs_rc u2fs_get_challenge( u2fs_ctx_t * ctx, const char **challenge )
++{
++    if( ctx == NULL || challenge == NULL )
++        return U2FS_MEMORY_ERROR;
++
++    *challenge = ctx->challenge;
++
++    return U2FS_OK;
++}
++
++u2fs_rc encode_b64u(const char *data, size_t data_len, char *output)
+ {
+   base64_encodestate b64;
+   int cnt;
+diff --git a/u2f-server/u2f-server.h b/u2f-server/u2f-server.h
+index 9a72e54..e367647 100644
+--- a/u2f-server/u2f-server.h
++++ b/u2f-server/u2f-server.h
+@@ -129,6 +129,9 @@ extern "C" {
+ 
+   void u2fs_free_auth_res(u2fs_auth_res_t * result);
+ 
++  u2fs_rc encode_b64u( const char *data, size_t data_len, char *output );
++  u2fs_rc u2fs_get_challenge( u2fs_ctx_t * ctx, const char **challenge );
++
+ #ifdef __cplusplus
+ }
+ #endif
