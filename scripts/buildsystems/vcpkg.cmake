@@ -171,7 +171,7 @@ function(add_executable name)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
     list(FIND ARGV "MACOSX_BUNDLE" MACOSX_BUNDLE_IDX)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
-        if(VCPKG_APPLOCAL_DEPS)    
+        if(VCPKG_APPLOCAL_DEPS)
             if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
                 add_custom_command(TARGET ${name} POST_BUILD
                     COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
