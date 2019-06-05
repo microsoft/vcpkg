@@ -8,11 +8,9 @@ vcpkg_from_github(
     REF shogun_6.1.3
     SHA512 11aeed456b13720099ca820ab9742c90ce4af2dc049602a425f8c44d2fa155327c7f1d3af2ec840666f600a91e75902d914ffe784d76ed35810da4f3a5815673
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+    PATCHES
+        cmake.patch
+        use_proper_cmake_symbol.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
@@ -23,6 +21,14 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 0)
 else()
     set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
+endif()
+
+if(NOT CMAKE_SYSTEM_PROCESSOR)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(CMAKE_SYSTEM_PROCESSOR "__x86_64__")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(CMAKE_SYSTEM_PROCESSOR "__i386__")
+    endif()
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -38,6 +44,7 @@ vcpkg_configure_cmake(
         -DUSE_SVMLIGHT=OFF
         -DENABLE_TESTING=OFF
         -DLICENSE_GPL_SHOGUN=OFF
+        -DLIBSHOGUN_BUILD_STATIC=ON
         # Conflicting definitions in OpenBLAS and Eigen
         -DENABLE_EIGEN_LAPACK=OFF
 
@@ -57,6 +64,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
 
         -DINSTALL_TARGETS=shogun-static
+        -DCMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}
 )
 
 vcpkg_install_cmake()
