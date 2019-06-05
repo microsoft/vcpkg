@@ -13,8 +13,7 @@ vcpkg_from_github(
         bc6h.patch
         bc7.patch
         squish.patch
-        fix-build-error-on-windows.patch
-        fix-build-error-on-osx.patch # Use the official solution(#261) and wait for the new version update to remove this patch
+        fix-build-error.patch
 )
 
 vcpkg_configure_cmake(
