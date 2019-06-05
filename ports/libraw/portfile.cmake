@@ -1,10 +1,17 @@
 include(vcpkg_common_functions)
 
+# Update to latest LibRaw-201903 snapshot at d4f05dd1b9b2d44c8f7e82043cbad3c724db2416
+# LibRaw publishes:
+# - snapshots every 5-7 months (in master branch)
+# - releases (0.18, 0.19, etc.) every 1-1.5 years.
+# - security hotfixes for releases (0.19.1, 0.19.2, etc.)
+# Hence, from user point of view, it is practical to refer to the latest snapshot,
+# instead of the latest release.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibRaw/LibRaw
-    REF 0.19.2
-    SHA512 78808a0d5f8a2b0f8e52699783d677c645abfdbcf824ea118542ae047767512b7a3d9a3ccfcb786bbfae6ce788df9b2c58afb89dd78e78e755061b742b50bea6
+    REF d4f05dd1b9b2d44c8f7e82043cbad3c724db2416
+    SHA512 5794521f535163afd7815ad005295301c5e0e2f8b2f34ef0a911d9dd1572c1f456b292777548203f9767957a55782b5bc9041c033190d25d1e9b4240d7df32b9
     HEAD_REF master
 )
 
