@@ -4,7 +4,6 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "This port currently only supports x64 architecture")
 endif()
 
-set(PATCHES forge_targets_fix.patch)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES static_build.patch)
 endif()
@@ -15,7 +14,6 @@ vcpkg_from_github(
     REF 650bf611de102a2cc0c32dba7646f8128f0300c8
     SHA512 2093464db0f3a7f0178f65bed37986a4df1117f1d7ad65157d525584490cdf234475f01ed1a2003a9e54bdc3b9e2e450808044a264c2284d67b8c2a353400027
     HEAD_REF master
-    PATCHES ${PATCHES}
 )
 
 vcpkg_configure_cmake(
@@ -41,4 +39,4 @@ file(REMOVE_RECURSE
     ${DLLS}
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/forge RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/.github/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/forge RENAME copyright)

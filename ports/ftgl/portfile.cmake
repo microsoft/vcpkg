@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+vcpkg_find_acquire_program(DOXYGEN)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,7 +7,7 @@ vcpkg_from_github(
     REF 483639219095ad080538e07ceb5996de901d4e74
     SHA512 d5bf95db8db6a5c9f710bd274cb9bb82e3e67569e8f3ec55b36e068636a09252e6f191e36d8279e61b5d12408c065ce51829fc38d4d7afe5bda724752d2f084f
     HEAD_REF master
-    PATCHES "0001-fix-building-DLL-on-Windows.patch"
+    PATCHES Fix-headersFilePath.patch
 )
 
 vcpkg_configure_cmake(

@@ -1,0 +1,23 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 693e49f..c47ff3c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,9 +1,5 @@
+-
+-
+-
+ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/cmake)
+ 
+-
+ ADD_DEFINITIONS(-DPACKAGE_VERSION="${VERSION_SERIES}.${VERSION_MAJOR}.${VERSION_MINOR}")
+ 
+ IF(WIN32)
+@@ -26,7 +22,7 @@ SET(libftgl_la_SOURCES
+     FTGlyphContainer.h
+     FTInternals.h
+     FTLibrary.cpp
+-    FTLibrary.h
++    FTGL/FTLibrary.h
+     FTList.h
+     FTPoint.cpp
+     FTSize.cpp
