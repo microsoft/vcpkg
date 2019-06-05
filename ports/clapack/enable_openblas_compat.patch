@@ -2,7 +2,7 @@ diff --git a/INCLUDE/blaswrap.h b/INCLUDE/blaswrap.h
 index 333a17a..fb6750a 100644
 --- a/INCLUDE/blaswrap.h
 +++ b/INCLUDE/blaswrap.h
-@@ -155,6 +155,104 @@
+@@ -155,6 +155,107 @@
  #define ctrsm_ f2c_ctrsm
  #define ztrsm_ f2c_ztrsm
  
@@ -103,6 +103,9 @@ index 333a17a..fb6750a 100644
 +#define cgeru_ cgeru
 +#define zgeru_ zgeru
 +#define xerbla_ xerbla
++#define dtrmv_ dtrmv
++#define dsyrk_ dsyrk
++#define zherk_ zherk
 +
  #endif /* NO_BLAS_WRAP */
  

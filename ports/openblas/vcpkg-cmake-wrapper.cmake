@@ -6,6 +6,7 @@ list(REMOVE_ITEM ARGS "CONFIG")
 list(REMOVE_ITEM ARGS "MODULE")
 if(NOT BLAS_LIBRARY OR BLAS_LIBRARIES OR OpenBLAS_LIBRARY OR OpenBLAS_LIBRARIES OR BLAS_LIB OR BLAS_LIBS)
   include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
+  include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 
   _find_package(OpenBLAS CONFIG ${ARGS})
 
@@ -40,4 +41,9 @@ if(NOT BLAS_LIBRARY OR BLAS_LIBRARIES OR OpenBLAS_LIBRARY OR OpenBLAS_LIBRARIES 
   set(OpenBLAS_INCLUDE_DIR "${BLAS_INCLUDE_DIR}" CACHE STRING "" FORCE)
   set(OpenBLAS_INCLUDE_DIRS "${BLAS_INCLUDE_DIR}" CACHE STRING "" FORCE)
   set(BLAS_INC "${BLAS_INCLUDE_DIR}" CACHE STRING "" FORCE)
+
+  find_package_handle_standard_args(BLAS DEFAULT_MSG BLAS_LIBRARY BLAS_INCLUDE_DIR)
+  mark_as_advanced(BLAS_INCLUDE_DIR BLAS_LIBRARY)
+  find_package_handle_standard_args(OpenBLAS DEFAULT_MSG OpenBLAS_LIBRARY OpenBLAS_INCLUDE_DIR)
+  mark_as_advanced(OpenBLAS_INCLUDE_DIR OpenBLAS_LIBRARY)
 endif()
