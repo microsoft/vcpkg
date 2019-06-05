@@ -11,11 +11,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 8c970498a296ed129ffef7d872ccc25d42d1afda
-  SHA512 70dda24656469b8a61a645533ac227b644d365c7d5f4dbc93077a3f46563dd45ae88c563fb1c8f8d02a2021760aba24bea35d81f0f307975d051d0f9bfe92265
+  REF 2347913ef1742c20b3c69e27196d6c3563ef7820
+  SHA512 6aef601c147b61cd6802f3c564cd2f28b0339d97d90fb2c031770750bf16ed55eadf9194419fd3dc0f5b77d00094fe2295491c72c5a685ee3973542afe376326
   HEAD_REF master
   PATCHES
     fix_cmakelists.patch
+    fix_common_variable.patch
 )
 
 set(ENABLE_CUDA OFF)
@@ -61,6 +62,8 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  DISABLE_PARALLEL_CONFIGURE  #since darknet configures a file inside source tree, it is better to disable parallel configure
+  #PREFER_NINJA               #it does not work with cuda on windows https://gitlab.kitware.com/cmake/cmake/issues/19173
   OPTIONS
     -DENABLE_CUDA=${ENABLE_CUDA}
     -DENABLE_OPENCV=${ENABLE_OPENCV}
