@@ -48,6 +48,7 @@ vcpkg_from_github(
         fix-find-lz4.patch
         fix_ogg_linkage.patch
         fix-pugixml-link.patch
+        hdf5_static.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -57,6 +58,7 @@ vcpkg_from_github(
 # so we provide an own one.
 file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
 
 # =============================================================================
