@@ -15,7 +15,6 @@ vcpkg_extract_source_archive_ex(
         configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
-        fixed-debug-bzip2-link.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
