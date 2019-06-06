@@ -21,7 +21,7 @@ index 3bd9e1dc..d95897d3 100644
 +    if(${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS)
 +      include (@PACKAGE_SHARE_INSTALL_DIR@/@SZIP_PACKAGE_NAME@/@SZIP_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
 +    else()
-+      find_package(@SZIP_PACKAGE_NAME@ REQUIRED)
++      find_dependency(@SZIP_PACKAGE_NAME@ REQUIRED)
 +    endif()
    endif ()
    include (@PACKAGE_SHARE_INSTALL_DIR@/@HDF5_PACKAGE@/@HDF5_PACKAGE@@HDF_PACKAGE_EXT@-targets.cmake)
