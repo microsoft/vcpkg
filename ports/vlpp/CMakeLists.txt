@@ -6,7 +6,7 @@ project(Vlpp VERSION 0.10.0.0 LANGUAGES CXX)
 set(SRCS
   Import/Vlpp.cpp
   Import/VlppWorkflowLibrary.cpp
-  Import/VlppWorkflowCompiler.cpp)
+  Import/VlppWorkflowCompiler.cpp
   Import/VlppWorkflowRuntime.cpp)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
