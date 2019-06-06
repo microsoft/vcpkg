@@ -1,5 +1,5 @@
 Source: libwebp
-Version: 1.0.2-5
+Version: 1.0.2-6
 Description: Lossy compression of digital photographic images.
 Build-Depends: opengl
 
