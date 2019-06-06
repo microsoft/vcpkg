@@ -1,0 +1,3 @@
+Source: libsigcpp
+Version: 2.10-1
+Description: Typesafe callback framework for C++

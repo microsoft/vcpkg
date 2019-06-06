@@ -1,0 +1,3 @@
+Source: console-bridge
+Version: 0.3.2-3
+Description: a ROS-independent package for logging that seamlessly pipes into rosconsole/rosout for ROS-dependent packages.

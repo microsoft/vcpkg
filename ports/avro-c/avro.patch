@@ -1,0 +1,349 @@
+diff -ur a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
+--- a/lang/c/CMakeLists.txt	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/CMakeLists.txt	2017-11-12 20:03:13.776973800 -0500
+@@ -50,7 +50,7 @@
+ else(UNIX)
+     # Hard code for win32 -- need to figure out how to port version.sh for
+     # Windows.
+-    set(LIBAVRO_VERSION "22:0:0")
++    set(LIBAVRO_VERSION "23:0:0")
+ endif(UNIX)
+ 
+ 
+@@ -151,25 +151,24 @@
+     message("Disabled snappy codec. libsnappy not found or zlib not found.")
+ endif (SNAPPY_FOUND AND ZLIB_FOUND)
+ 
+-find_package(PkgConfig)
+-pkg_check_modules(LZMA liblzma)
+-if (LZMA_FOUND)
++find_package(LIBLZMA)
++if (LIBLZMA_FOUND)
+     set(LZMA_PKG liblzma)
+     add_definitions(-DLZMA_CODEC)
+-    include_directories(${LZMA_INCLUDE_DIRS})
+-    link_directories(${LZMA_LIBRARY_DIRS})
++    include_directories(${LIBLZMA_INCLUDE_DIRS})
++    link_directories(${LIBLZMA_LIBRARY_DIRS})
+     message("Enabled lzma codec")
+-else (LZMA_FOUND)
++else (LIBLZMA_FOUND)
+     set(LZMA_PKG "")
+     set(LZMA_LIBRARIES "")
+     message("Disabled lzma codec. liblzma not found.")
+-endif (LZMA_FOUND)
++endif (LIBLZMA_FOUND)
+ 
+-set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
++set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+ set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
+ 
+ # Jansson JSON library
+-pkg_check_modules(JANSSON jansson>=2.3)
++find_package(JANSSON REQUIRED)
+ if (JANSSON_FOUND)
+     set(JANSSON_PKG libjansson)
+     include_directories(${JANSSON_INCLUDE_DIR})
+diff -ur a/lang/c/examples/quickstop.c b/lang/c/examples/quickstop.c
+--- a/lang/c/examples/quickstop.c	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/examples/quickstop.c	2017-11-10 12:40:59.151301400 -0500
+@@ -16,6 +16,7 @@
+  */
+ 
+ #include <avro.h>
++#include <avro/platform.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ 
+@@ -102,7 +103,7 @@
+ 
+ 		if (avro_record_get(person, "ID", &id_datum) == 0) {
+ 			avro_int64_get(id_datum, &i64);
+-			fprintf(stdout, "%"PRId64" | ", i64);
++			fprintf(stdout, "%" PRId64 " | ", i64);
+ 		}
+ 		if (avro_record_get(person, "First", &first_datum) == 0) {
+ 			avro_string_get(first_datum, &p);
+diff -ur a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
+--- a/lang/c/src/avro/msinttypes.h	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/src/avro/msinttypes.h	2017-11-10 12:37:30.372271300 -0500
+@@ -54,6 +54,9 @@
+ 
+ // 7.8 Format conversion of integer types
+ 
++#if (_MSC_VER >= 1900)
++#   include <inttypes.h>
++#else
+ typedef struct {
+    intmax_t quot;
+    intmax_t rem;
+@@ -311,5 +314,6 @@
+ #define wcstoimax _wcstoi64
+ #define wcstoumax _wcstoui64
+ 
++#endif
+ 
+ #endif // _MSC_INTTYPES_H_ ]
+diff -ur a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
+--- a/lang/c/src/avro/msstdint.h	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/src/avro/msstdint.h	2017-11-10 10:44:14.011482500 -0500
+@@ -42,6 +42,10 @@
+ 
+ #include <limits.h>
+ 
++#if (_MSC_VER >= 1900)
++#   include <stdint.h>
++#else
++
+ // For Visual Studio 6 in C++ mode and for many Visual Studio versions when
+ // compiling for ARM we should wrap <wchar.h> include with 'extern "C++" {}'
+ // or compiler give many errors like this:
+@@ -243,5 +247,6 @@
+ 
+ #endif // __STDC_CONSTANT_MACROS ]
+ 
++#endif // _MSC_VER < 1900
+ 
+ #endif // _MSC_STDINT_H_ ]
+diff -ur a/lang/c/src/avro_private.h b/lang/c/src/avro_private.h
+--- a/lang/c/src/avro_private.h	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/src/avro_private.h	2017-11-10 10:32:33.414879700 -0500
+@@ -34,7 +34,7 @@
+ #endif
+ 
+ #ifdef _WIN32
+-#define snprintf _snprintf
++    //#define snprintf _snprintf
+ #endif
+ 
+ /* Note that AVRO_PLATFORM_IS_BIG_ENDIAN is *always* defined. It is
+diff -ur a/lang/c/src/avroappend.c b/lang/c/src/avroappend.c
+--- a/lang/c/src/avroappend.c	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/src/avroappend.c	2017-11-10 12:15:14.878275800 -0500
+@@ -20,7 +20,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #ifdef _WIN32
+-#include <unistd.h>
++#include <io.h>
+ #endif
+ 
+ #include "avro.h"
+diff -ur a/lang/c/src/codec.c b/lang/c/src/codec.c
+--- a/lang/c/src/codec.c	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/src/codec.c	2017-11-10 11:09:08.033816100 -0500
+@@ -266,7 +266,7 @@
+ 	s->next_in = (Bytef*)data;
+ 	s->avail_in = (uInt)len;
+ 
+-	s->next_out = c->block_data;
++	s->next_out = (Bytef*)c->block_data;
+ 	s->avail_out = (uInt)c->block_size;
+ 
+ 	s->total_out = 0;
+@@ -310,10 +310,10 @@
+ 
+ 	c->used_size = 0;
+ 
+-	s->next_in = data;
++	s->next_in = (Bytef*)data;
+ 	s->avail_in = len;
+ 
+-	s->next_out = c->block_data;
++	s->next_out = (Bytef*)c->block_data;
+ 	s->avail_out = c->block_size;
+ 
+ 	s->total_out = 0;
+@@ -334,7 +334,7 @@
+ 		if (err == Z_BUF_ERROR)
+ 		{
+ 			c->block_data = avro_realloc(c->block_data, c->block_size, c->block_size * 2);
+-			s->next_out = c->block_data + s->total_out;
++			s->next_out = (Bytef*)c->block_data + s->total_out;
+ 			s->avail_out += c->block_size;
+ 			c->block_size = c->block_size * 2;
+ 		}
+@@ -437,7 +437,7 @@
+ 		return 1;
+ 	}
+ 
+-	ret = lzma_raw_buffer_encode(filters, NULL, data, len, codec->block_data, &written, codec->block_size);
++	ret = lzma_raw_buffer_encode(filters, NULL, (const uint8_t *)data, len, (uint8_t *)codec->block_data, &written, codec->block_size);
+ 
+ 	codec->used_size = written;
+ 
+@@ -468,8 +468,8 @@
+ 
+ 	do
+ 	{
+-		ret = lzma_raw_buffer_decode(filters, NULL, data,
+-			&read_pos, len, codec->block_data, &write_pos,
++		ret = lzma_raw_buffer_decode(filters, NULL, (const uint8_t *)data,
++			&read_pos, len, (uint8_t *)codec->block_data, &write_pos,
+ 			codec->block_size);
+ 
+ 		codec->used_size = write_pos;
+diff -ur a/lang/c/src/schema.c b/lang/c/src/schema.c
+--- a/lang/c/src/schema.c	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/src/schema.c	2017-11-10 11:45:45.268458000 -0500
+@@ -74,7 +74,7 @@
+  * namespace (as a newly allocated buffer using Avro's allocator). */
+ static char *split_namespace_name(const char *fullname, const char **name_out)
+ {
+-	char *last_dot = strrchr(fullname, '.');
++	const char *last_dot = strrchr(fullname, '.');
+ 	if (last_dot == NULL) {
+ 		*name_out = fullname;
+ 		return NULL;
+@@ -742,12 +742,12 @@
+ }
+ 
+ static const char *
+-qualify_name(const char *name, const char *namespace)
++qualify_name(const char *name, const char *namespaceX)
+ {
+ 	char *full_name;
+-	if (namespace != NULL && strchr(name, '.') == NULL) {
+-		full_name = avro_str_alloc(strlen(name) + strlen(namespace) + 2);
+-		sprintf(full_name, "%s.%s", namespace, name);
++	if (namespaceX != NULL && strchr(name, '.') == NULL) {
++		full_name = avro_str_alloc(strlen(name) + strlen(namespaceX) + 2);
++		sprintf(full_name, "%s.%s", namespaceX, name);
+ 	} else {
+ 		full_name = avro_strdup(name);
+ 	}
+@@ -758,20 +758,20 @@
+ save_named_schemas(const avro_schema_t schema, st_table *st)
+ {
+ 	const char *name = avro_schema_name(schema);
+-	const char *namespace = avro_schema_namespace(schema);
+-	const char *full_name = qualify_name(name, namespace);
++	const char *namespaceX = avro_schema_namespace(schema);
++	const char *full_name = qualify_name(name, namespaceX);
+ 	int rval = st_insert(st, (st_data_t) full_name, (st_data_t) schema);
+ 	return rval;
+ }
+ 
+ static avro_schema_t
+-find_named_schemas(const char *name, const char *namespace, st_table *st)
++find_named_schemas(const char *name, const char *namespaceX, st_table *st)
+ {
+ 	union {
+ 		avro_schema_t schema;
+ 		st_data_t data;
+ 	} val;
+-	const char *full_name = qualify_name(name, namespace);
++	const char *full_name = qualify_name(name, namespaceX);
+ 	int rval = st_lookup(st, (st_data_t) full_name, &(val.data));
+ 	avro_str_free((char *)full_name);
+ 	if (rval) {
+@@ -784,7 +784,7 @@
+ static int
+ avro_type_from_json_t(json_t *json, avro_type_t *type,
+ 		      st_table *named_schemas, avro_schema_t *named_type,
+-		      const char *namespace)
++		      const char *namespaceX)
+ {
+ 	json_t *json_type;
+ 	const char *type_str;
+@@ -835,7 +835,7 @@
+ 		*type = AVRO_MAP;
+ 	} else if (strcmp(type_str, "fixed") == 0) {
+ 		*type = AVRO_FIXED;
+-	} else if ((*named_type = find_named_schemas(type_str, namespace, named_schemas))) {
++	} else if ((*named_type = find_named_schemas(type_str, namespaceX, named_schemas))) {
+ 		*type = AVRO_LINK;
+ 	} else {
+ 		avro_set_error("Unknown Avro \"type\": %s", type_str);
+@@ -930,12 +930,12 @@
+ 			}
+ 
+ 			if (strchr(fullname, '.')) {
+-				char *namespace = split_namespace_name(fullname, &name);
+-				*schema = avro_schema_record(name, namespace);
+-				avro_str_free(namespace);
++				char *namespaceX = split_namespace_name(fullname, &name);
++				*schema = avro_schema_record(name, namespaceX);
++				avro_str_free(namespaceX);
+ 			} else if (json_is_string(json_namespace)) {
+-				const char *namespace = json_string_value(json_namespace);
+-				*schema = avro_schema_record(fullname, namespace);
++				const char *namespaceX = json_string_value(json_namespace);
++				*schema = avro_schema_record(fullname, namespaceX);
+ 			} else {
+ 				*schema = avro_schema_record(fullname, parent_namespace);
+ 			}
+@@ -1026,13 +1026,13 @@
+ 			}
+ 
+ 			if (strchr(fullname, '.')) {
+-				char *namespace;
+-				namespace = split_namespace_name(fullname, &name);
+-				*schema = avro_schema_enum_ns(name, namespace);
+-				avro_str_free(namespace);
++				char *namespaceX;
++                namespaceX = split_namespace_name(fullname, &name);
++				*schema = avro_schema_enum_ns(name, namespaceX);
++				avro_str_free(namespaceX);
+ 			} else if (json_is_string(json_namespace)) {
+-				const char *namespace = json_string_value(json_namespace);
+-				*schema = avro_schema_enum_ns(fullname, namespace);
++				const char *namespaceX = json_string_value(json_namespace);
++				*schema = avro_schema_enum_ns(fullname, namespaceX);
+ 			} else {
+ 				*schema = avro_schema_enum_ns(fullname, parent_namespace);
+ 			}
+@@ -1160,13 +1160,13 @@
+ 			fullname = json_string_value(json_name);
+ 
+ 			if (strchr(fullname, '.')) {
+-				char *namespace;
+-				namespace = split_namespace_name(fullname, &name);
+-				*schema = avro_schema_fixed_ns(name, namespace, (int64_t) size);
+-				avro_str_free(namespace);
++				char *namespaceX;
++                namespaceX = split_namespace_name(fullname, &name);
++				*schema = avro_schema_fixed_ns(name, namespaceX, (int64_t) size);
++				avro_str_free(namespaceX);
+ 			} else if (json_is_string(json_namespace)) {
+-				const char *namespace = json_string_value(json_namespace);
+-				*schema = avro_schema_fixed_ns(fullname, namespace, (int64_t) size);
++				const char *namespaceX = json_string_value(json_namespace);
++				*schema = avro_schema_fixed_ns(fullname, namespaceX, (int64_t) size);
+ 			} else {
+ 				*schema = avro_schema_fixed_ns(fullname, parent_namespace, (int64_t) size);
+ 			}
+@@ -1749,9 +1749,9 @@
+ {
+ 	int rval;
+ 	check(rval, avro_write_str(out, "\""));
+-	const char *namespace = avro_schema_namespace(link->to);
+-	if (namespace && nullstrcmp(namespace, parent_namespace)) {
+-		check(rval, avro_write_str(out, namespace));
++	const char *namespaceX = avro_schema_namespace(link->to);
++	if (namespaceX && nullstrcmp(namespaceX, parent_namespace)) {
++		check(rval, avro_write_str(out, namespaceX));
+ 		check(rval, avro_write_str(out, "."));
+ 	}
+ 	check(rval, avro_write_str(out, avro_schema_name(link->to)));
+diff -ur a/lang/c/tests/test_avro_data.c b/lang/c/tests/test_avro_data.c
+--- a/lang/c/tests/test_avro_data.c	2017-04-17 19:56:17.000000000 -0400
++++ b/lang/c/tests/test_avro_data.c	2017-11-10 12:41:29.924190100 -0500
+@@ -112,7 +112,7 @@
+ 		if (size != avro_writer_tell(writer)) {
+ 			fprintf(stderr,
+ 				"Unable to calculate size %s validate=%d "
+-				"(%"PRId64" != %"PRId64")\n  %s\n",
++				"(%" PRId64 " != %" PRId64 ")\n  %s\n",
+ 				type, validate, size, avro_writer_tell(writer),
+ 				avro_strerror());
+ 			exit(EXIT_FAILURE);
+@@ -142,7 +142,7 @@
+ {
+ 	char  *json = NULL;
+ 	avro_datum_to_json(datum, 1, &json);
+-	if (strcasecmp(json, expected) != 0) {
++	if (stricmp(json, expected) != 0) {
+ 		fprintf(stderr, "Unexpected JSON encoding: %s\n", json);
+ 		exit(EXIT_FAILURE);
+ 	}

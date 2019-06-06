@@ -1,0 +1,3 @@
+Source: cfitsio
+Version: 3.410-2
+Description: Library of C and Fortran subroutines for reading and writing data files in FITS (Flexible Image Transport System) data format

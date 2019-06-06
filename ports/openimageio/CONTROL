@@ -1,0 +1,8 @@
+Source: openimageio
+Version: 1.8.16
+Description: A library for reading and writing images, and a bunch of related classes, utilities, and application
+Build-Depends: libjpeg-turbo, tiff, libpng, openexr, boost-thread, boost-smart-ptr, boost-foreach, boost-regex, boost-type-traits, boost-static-assert, boost-unordered, boost-config, boost-algorithm, boost-filesystem, boost-system, boost-thread, boost-asio, boost-random, robin-map
+
+Feature: libraw
+Build-Depends: libraw
+Description: Enable RAW image files support

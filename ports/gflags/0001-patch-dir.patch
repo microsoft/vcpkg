@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3709073..8e919cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -503,7 +503,7 @@ endif ()
+ # ----------------------------------------------------------------------------
+ # installation rules
+ set (EXPORT_NAME ${PACKAGE_NAME}-targets)
+-file (RELATIVE_PATH INSTALL_PREFIX_REL2CONFIG_DIR "${CMAKE_INSTALL_PREFIX}/${CONFIG_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}")
++set (INSTALL_PREFIX_REL2CONFIG_DIR "../..")
+ configure_file (cmake/config.cmake.in  "${PROJECT_BINARY_DIR}/${PACKAGE_NAME}-config-install.cmake" @ONLY)
+ configure_file (cmake/version.cmake.in "${PROJECT_BINARY_DIR}/${PACKAGE_NAME}-config-version.cmake" @ONLY)
+ 

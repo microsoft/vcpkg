@@ -1,0 +1,3 @@
+Source: mman
+Version: git-f5ff813-2
+Description: A light implementation of the mmap functions for MinGW.

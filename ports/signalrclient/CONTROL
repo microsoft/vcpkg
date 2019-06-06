@@ -1,0 +1,4 @@
+Source: signalrclient
+Version: 1.0.0-beta1-6
+Build-Depends: cpprestsdk, openssl
+Description: C++ client for SignalR.

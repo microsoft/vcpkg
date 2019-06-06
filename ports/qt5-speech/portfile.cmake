@@ -1,0 +1,5 @@
+include(vcpkg_common_functions)
+
+include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
+
+qt_modular_library(qtspeech 9623a83cdfbed07dffcd8f0808c2a514c97fda72b68827d917f1a8ee3072286ef8bce06b114db94d7a0c3fc79425c2540fa5cadc6551367fd4431e5396395932)

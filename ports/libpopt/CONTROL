@@ -1,0 +1,3 @@
+Source: libpopt
+Version: 1.16-10~vcpkg1-1
+Description: Library for parsing command line parameters

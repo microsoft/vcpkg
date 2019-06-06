@@ -1,0 +1,3 @@
+Source: atlmfc
+Version: 0
+Description: a stub package that ensures VS has ATL/MFC installed.

@@ -1,0 +1,4 @@
+Source: taglib
+Version: 1.11.1-4
+Description: TagLib Audio Meta-Data Library
+Build-Depends: zlib

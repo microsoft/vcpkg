@@ -1,0 +1,214 @@
+diff --git a/libaiff.c b/libaiff.c
+index d0ad40d..e266802 100644
+--- a/libaiff.c
++++ b/libaiff.c
+@@ -44,6 +44,8 @@ static struct decoder* decoders[] = {
+ 
+ static AIFF_Ref AIFF_ReadOpen (const char *, int);
+ static AIFF_Ref AIFF_WriteOpen (const char *, int);
++static AIFF_Ref AIFF_ReadOpenW (const wchar_t*, int);
++static AIFF_Ref AIFF_WriteOpenW (const wchar_t*, int);
+ static void AIFF_ReadClose (AIFF_Ref);
+ static int AIFF_WriteClose (AIFF_Ref);
+ static void* InitBuffer (AIFF_Ref, size_t);
+@@ -53,6 +55,21 @@ static int Prepare (AIFF_Ref);
+ static void Unprepare (AIFF_Ref);
+ static struct decoder* FindDecoder (IFFType);
+ 
++#ifdef _WIN32
++AIFF_Ref
++AIFF_OpenFileW(const wchar_t *file, int flags)
++{
++	AIFF_Ref ref = NULL;
++	
++	if (flags & F_RDONLY) {
++		ref = AIFF_ReadOpenW(file, flags);
++	} else if (flags & F_WRONLY) {
++		ref = AIFF_WriteOpenW(file, flags);
++	}
++
++	return ref;
++}
++#endif
+ AIFF_Ref
+ AIFF_OpenFile(const char *file, int flags)
+ {
+@@ -86,6 +103,76 @@ AIFF_CloseFile(AIFF_Ref ref)
+ 	return r;
+ }
+ 
++#ifdef _WIN32
++static AIFF_Ref 
++AIFF_ReadOpenW(const wchar_t *file, int flags)
++{
++	AIFF_Ref r;
++	IFFHeader hdr;
++
++	r = malloc(kAIFFRefSize);
++	if (!r) {
++		return NULL;
++	}
++	r->fd = _wfopen(file, L"rb");
++	if (r->fd == NULL) {
++		free(r);
++		return NULL;
++	}
++	r->flags = F_RDONLY | flags;
++	if (fread(&hdr, 1, 4, r->fd) < 4) {
++		fclose(r->fd);
++		free(r);
++		return NULL;
++	}
++	switch (hdr.hid) {
++	case AIFF_TYPE_IFF:
++		/* Continue reading the IFF header */
++		if (fread(&(hdr.len), 1, 8, r->fd) < 8) {
++			fclose(r->fd);
++			free(r);
++			return NULL;
++		}
++		if (hdr.len == 0) {
++			fclose(r->fd);
++			free(r);
++			return NULL;
++		}
++		/*
++ 		 * Check the format type (AIFF or AIFC)
++ 		 */
++		r->format = hdr.fid;
++		switch (r->format) {
++		case AIFF_TYPE_AIFF:
++		case AIFF_TYPE_AIFC:
++			break;
++		default:
++			fclose(r->fd);
++			free(r);
++			return NULL;
++		}
++
++		if (init_aifx(r) < 1) {
++			fclose(r->fd);
++			free(r);
++			return NULL;
++		}
++		break;
++	default:
++		fclose(r->fd);
++		free(r);
++		return NULL;
++	}
++
++	r->stat = 0;
++	r->buffer = NULL;
++	r->buflen = 0;
++
++	return r;
++}
++
++#endif
++
+ static AIFF_Ref 
+ AIFF_ReadOpen(const char *file, int flags)
+ {
+@@ -450,6 +537,89 @@ AIFF_ReadClose(AIFF_Ref r)
+ 	return;
+ }
+ 
++#ifdef WIN32
++static AIFF_Ref 
++AIFF_WriteOpenW(const wchar_t *file, int flags)
++{
++	AIFF_Ref w;
++	IFFHeader hdr;
++	ASSERT(sizeof(IFFHeader) == 12);
++	
++	w = malloc(kAIFFRefSize);
++	if (!w) {
++err0:
++		return NULL;
++	}
++
++	/*
++	 * Simultaneous open for reading & writing
++	 */
++	w->fd = _wfopen(file, L"w+b");
++	if (w->fd == NULL) {
++err1:
++		free(w);
++		goto err0;
++	}
++	hdr.hid = ARRANGE_BE32(AIFF_FORM);
++	w->len = 4;
++	hdr.len = ARRANGE_BE32(4);
++	if (flags & F_AIFC)
++		hdr.fid = ARRANGE_BE32(AIFF_AIFC);
++	else
++		hdr.fid = ARRANGE_BE32(AIFF_AIFF);
++
++	if (fwrite(&hdr, 1, 12, w->fd) < 12) {
++err2:
++		fclose(w->fd);
++		goto err1;
++	}
++	w->stat = 0;
++	w->segmentSize = 0;
++	w->buffer = NULL;
++	w->buflen = 0;
++	w->tics = 0;
++
++	/*
++	 * If writing AIFF-C, write the required FVER chunk
++	 */
++	if (flags & F_AIFC) {
++		IFFChunk chk;
++		uint32_t vers;
++		ASSERT(sizeof(IFFChunk) == 8);
++
++		chk.id = ARRANGE_BE32(AIFF_FVER);
++		chk.len = ARRANGE_BE32(4);
++		vers = ARRANGE_BE32(AIFC_STD_DRAFT_082691);
++
++		if (fwrite(&chk, 1, 8, w->fd) < 8 || 
++		    fwrite(&vers, 1, 4, w->fd) < 4) {
++			goto err2;
++		}
++
++		w->len += 12;
++
++		/*
++		 * If no endianness specified for AIFF-C,
++		 * default to big endian
++		 */
++		if (!(flags & (LPCM_LTE_ENDIAN | LPCM_BIG_ENDIAN))) {
++			flags |= LPCM_BIG_ENDIAN;
++		}
++	} else {
++		/*
++		 * If writing regular AIFF, make sure we
++		 * write big-endian data
++		 */
++		flags &= ~LPCM_LTE_ENDIAN;
++		flags |= LPCM_BIG_ENDIAN;
++	}
++
++	w->flags = F_WRONLY | flags;
++
++	return w;
++}
++#endif
++
+ static AIFF_Ref 
+ AIFF_WriteOpen(const char *file, int flags)
+ {
+diff --git a/libaiff/libaiff.h b/libaiff/libaiff.h
+index 56fc77f..e1940a5 100644
+--- a/libaiff/libaiff.h
++++ b/libaiff/libaiff.h
+@@ -165,6 +165,7 @@ typedef struct s_Instrument Instrument ;
+ 
+ /* == Function prototypes == */
+ AIFF_Ref AIFF_OpenFile(const char *, int) ;
++AIFF_Ref AIFF_OpenFileW(const wchar_t *, int) ;
+ int AIFF_CloseFile(AIFF_Ref) ;
+ char* AIFF_GetAttribute(AIFF_Ref,IFFType) ;
+ int AIFF_GetInstrumentData(AIFF_Ref,Instrument*) ;

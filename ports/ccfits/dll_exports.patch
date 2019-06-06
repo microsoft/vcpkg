@@ -1,0 +1,495 @@
+Index: FITS.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- FITS.h	(date 1502267716000)
++++ FITS.h	(revision )
+@@ -21,6 +21,8 @@
+ #include "HDUCreator.h"
+ // FitsError
+ #include "FitsError.h"
++//DLL Exporting
++#include "ccfits_export.h"
+ 
+ namespace CCfits {
+   class FITSBase;
+@@ -665,9 +667,8 @@
+ 
+ 
+ 
+-  class FITS 
+-  {
+-
++  class CCFITS_EXPORT FITS
++  {	
+     public:
+ 
+ 
+Index: HDU.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- HDU.h	(date 1502267716000)
++++ HDU.h	(revision )
+@@ -568,7 +568,7 @@
+ 
+ 
+ 
+-  class HDU 
++  class CCFITS_EXPORT HDU
+   {
+ 
+     public:
+Index: Table.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Table.h	(date 1502267716000)
++++ Table.h	(revision )
+@@ -268,7 +268,7 @@
+ 
+ 
+ 
+-  class Table : public ExtHDU  //## Inherits: <unnamed>%3804A126EB10
++  class CCFITS_EXPORT Table : public ExtHDU  //## Inherits: <unnamed>%3804A126EB10
+   {
+ 
+     public:
+Index: Column.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Column.h	(date 1502267716000)
++++ Column.h	(revision )
+@@ -838,14 +838,14 @@
+ 
+ 
+ 
+-  class Column 
++  class CCFITS_EXPORT Column
+   {
+ 
+     public:
+ 
+ 
+ 
+-      class RangeError : public FitsException  //## Inherits: <unnamed>%3946526D031A
++      class CCFITS_EXPORT RangeError : public FitsException  //## Inherits: <unnamed>%3946526D031A
+       {
+         public:
+             RangeError (const String& msg, bool silent = true);
+@@ -857,7 +857,7 @@
+ 
+ 
+ 
+-      class InvalidDataType : public FitsException  //## Inherits: <unnamed>%3947CF30033E
++      class CCFITS_EXPORT InvalidDataType : public FitsException  //## Inherits: <unnamed>%3947CF30033E
+       {
+         public:
+             InvalidDataType (const String& str = string(), bool silent = true);
+@@ -869,7 +869,7 @@
+ 
+ 
+ 
+-      class InvalidRowParameter : public FitsException  //## Inherits: <unnamed>%39B5310F01A0
++      class CCFITS_EXPORT InvalidRowParameter : public FitsException  //## Inherits: <unnamed>%39B5310F01A0
+       {
+         public:
+             InvalidRowParameter (const String& diag, bool silent = true);
+@@ -881,7 +881,7 @@
+ 
+ 
+ 
+-      class WrongColumnType : public FitsException  //## Inherits: <unnamed>%39B545780082
++      class CCFITS_EXPORT WrongColumnType : public FitsException  //## Inherits: <unnamed>%39B545780082
+       {
+         public:
+             WrongColumnType (const String& diag, bool silent = true);
+@@ -893,7 +893,7 @@
+ 
+ 
+ 
+-      class UnspecifiedLengths : public FitsException  //## Inherits: <unnamed>%3A018C9D007D
++      class CCFITS_EXPORT UnspecifiedLengths : public FitsException  //## Inherits: <unnamed>%3A018C9D007D
+       {
+         public:
+             UnspecifiedLengths (const String& diag, bool silent = true);
+@@ -905,7 +905,7 @@
+ 
+ 
+ 
+-      class InvalidRowNumber : public FitsException  //## Inherits: <unnamed>%3B0A850F0307
++      class CCFITS_EXPORT InvalidRowNumber : public FitsException  //## Inherits: <unnamed>%3B0A850F0307
+       {
+         public:
+             InvalidRowNumber (const String& diag, bool silent = true);
+@@ -917,7 +917,7 @@
+ 
+ 
+ 
+-      class InsufficientElements : public FitsException  //## Inherits: <unnamed>%3B0BE611010A
++      class CCFITS_EXPORT InsufficientElements : public FitsException  //## Inherits: <unnamed>%3B0BE611010A
+       {
+         public:
+             InsufficientElements (const String& msg, bool silent = true);
+@@ -929,7 +929,7 @@
+ 
+ 
+ 
+-      class NoNullValue : public FitsException  //## Inherits: <unnamed>%3B0D589A0092
++      class CCFITS_EXPORT NoNullValue : public FitsException  //## Inherits: <unnamed>%3B0D589A0092
+       {
+         public:
+             NoNullValue (const String& diag, bool silent = true);
+@@ -941,7 +941,7 @@
+ 
+ 
+ 
+-      class InvalidNumberOfRows : public FitsException  //## Inherits: <unnamed>%3B20EB8B0205
++      class CCFITS_EXPORT InvalidNumberOfRows : public FitsException  //## Inherits: <unnamed>%3B20EB8B0205
+       {
+         public:
+             InvalidNumberOfRows (int number, bool silent = true);
+Index: AsciiTable.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- AsciiTable.h	(date 1502267716000)
++++ AsciiTable.h	(revision )
+@@ -133,7 +133,7 @@
+ 
+ 
+ 
+-  class AsciiTable : public Table  //## Inherits: <unnamed>%3804A75CE420
++  class CCFITS_EXPORT AsciiTable : public Table  //## Inherits: <unnamed>%3804A75CE420
+   {
+ 
+     public:
+Index: CCfits.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CCfits.h	(date 1502267716000)
++++ CCfits.h	(revision )
+@@ -23,7 +23,7 @@
+ #include <sys/types.h>
+ #include "longnam.h"
+ #include "float.h"
+-
++#include "ccfits_export.h"
+ 
+ namespace CCfits {
+   /*! \namespace CCfits
+@@ -32,8 +32,8 @@
+   static const int BITPIX = -32;
+   static const int  NAXIS =   2;
+   static const int  MAXDIM = 99;
+-  extern const unsigned long USBASE;
+-  extern const unsigned long  ULBASE;
++  extern const CCFITS_EXPORT unsigned long USBASE;
++  extern const CCFITS_EXPORT unsigned long ULBASE;
+ 
+   extern  char BSCALE[7];
+   extern  char BZERO[6];
+Index: FITSBase.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- FITSBase.h	(date 1502267716000)
++++ FITSBase.h	(revision )
+@@ -30,7 +30,7 @@
+ 
+ 
+ 
+-  class FITSBase 
++  class CCFITS_EXPORT FITSBase
+   {
+ 
+     public:
+Index: Keyword.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Keyword.h	(date 1502267716000)
++++ Keyword.h	(revision )
+@@ -195,7 +195,7 @@
+ 
+ 
+ 
+-  class Keyword 
++  class CCFITS_EXPORT Keyword
+   {
+ 
+     public:
+Index: ExtHDU.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ExtHDU.h	(date 1502267716000)
++++ ExtHDU.h	(revision )
+@@ -435,7 +435,7 @@
+ 
+ 
+ 
+-  class ExtHDU : public HDU  //## Inherits: <unnamed>%38048213E7A8
++  class CCFITS_EXPORT ExtHDU : public HDU  //## Inherits: <unnamed>%38048213E7A8
+   {
+ 
+     public:
+Index: PHDU.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- PHDU.h	(date 1502267716000)
++++ PHDU.h	(revision )
+@@ -264,7 +264,7 @@
+ 
+ 
+ 
+-  class PHDU : public HDU  //## Inherits: <unnamed>%394E6F9800C3
++  class CCFITS_EXPORT PHDU : public HDU  //## Inherits: <unnamed>%394E6F9800C3
+   {
+ 
+     public:
+Index: BinTable.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- BinTable.h	(date 1502267716000)
++++ BinTable.h	(revision )
+@@ -127,7 +127,7 @@
+ 
+ 
+ 
+-  class BinTable : public Table  //## Inherits: <unnamed>%3804A7E75F10
++  class CCFITS_EXPORT BinTable : public Table  //## Inherits: <unnamed>%3804A7E75F10
+   {
+ 
+     public:
+Index: Image.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Image.h	(date 1502267716000)
++++ Image.h	(revision )
+@@ -32,7 +32,7 @@
+ 
+ 
+   template <typename T>
+-  class Image 
++  class Image
+   {
+ 
+     public:
+Index: ColumnCreator.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ColumnCreator.h	(date 1502267716000)
++++ ColumnCreator.h	(revision )
+@@ -28,7 +28,7 @@
+ 
+ 
+ 
+-  class ColumnCreator 
++  class CCFITS_EXPORT ColumnCreator
+   {
+ 
+     public:
+Index: FitsError.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- FitsError.h	(date 1502267716000)
++++ FitsError.h	(revision )
+@@ -14,6 +14,7 @@
+ //#include <iostream>
+ //#include <stl.h>
+ #include <string>
++#include "ccfits_export.h"
+ using std::string;
+ 
+ 
+@@ -90,7 +91,7 @@
+ 
+ 
+ 
+-  class FitsException 
++  class CCFITS_EXPORT FitsException
+   {
+     public:
+         FitsException (const string& msg, bool& silent);
+@@ -109,7 +110,7 @@
+ 
+ 
+ 
+-  class FitsError : public FitsException  //## Inherits: <unnamed>%399170BD017D
++  class CCFITS_EXPORT FitsError : public FitsException  //## Inherits: <unnamed>%399170BD017D
+   {
+     public:
+         FitsError (int errornum, bool silent = true);
+@@ -123,7 +124,7 @@
+ 
+ 
+ 
+-  class FitsFatal 
++  class CCFITS_EXPORT FitsFatal
+   {
+     public:
+         FitsFatal (const string& diag);
+Index: HDUCreator.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- HDUCreator.h	(date 1502267716000)
++++ HDUCreator.h	(revision )
+@@ -35,7 +35,7 @@
+ 
+ 
+ 
+-  class HDUCreator 
++  class CCFITS_EXPORT HDUCreator
+   {
+ 
+     public:
+Index: ccfits_export.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ccfits_export.h	(revision )
++++ ccfits_export.h	(revision )
+@@ -0,0 +1,42 @@
++
++#ifndef CCFITS_EXPORT_H
++#define CCFITS_EXPORT_H
++
++#ifdef CCFITS_STATIC_DEFINE
++#  define CCFITS_EXPORT
++#  define CCFITS_NO_EXPORT
++#else
++#  ifndef CCFITS_EXPORT
++#    ifdef CCfits_EXPORTS
++        /* We are building this library */
++#      define CCFITS_EXPORT __declspec(dllexport)
++#    else
++        /* We are using this library */
++#      define CCFITS_EXPORT __declspec(dllimport)
++#    endif
++#  endif
++
++#  ifndef CCFITS_NO_EXPORT
++#    define CCFITS_NO_EXPORT 
++#  endif
++#endif
++
++#ifndef CCFITS_DEPRECATED
++#  define CCFITS_DEPRECATED __declspec(deprecated)
++#endif
++
++#ifndef CCFITS_DEPRECATED_EXPORT
++#  define CCFITS_DEPRECATED_EXPORT CCFITS_EXPORT CCFITS_DEPRECATED
++#endif
++
++#ifndef CCFITS_DEPRECATED_NO_EXPORT
++#  define CCFITS_DEPRECATED_NO_EXPORT CCFITS_NO_EXPORT CCFITS_DEPRECATED
++#endif
++
++#if 0 /* DEFINE_NO_DEPRECATED */
++#  ifndef CCFITS_NO_DEPRECATED
++#    define CCFITS_NO_DEPRECATED
++#  endif
++#endif
++
++#endif
+Index: FITSUtil.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- FITSUtil.h	(date 1502267716000)
++++ FITSUtil.h	(revision )
+@@ -22,6 +22,7 @@
+ #include <string>
+ // FitsError
+ #include "FitsError.h"
++#include "ccfits_export.h"
+ #include <typeinfo>
+ 
+ 
+@@ -287,21 +288,21 @@
+     template <typename T>
+     void swap(std::vector<T>& left, std::vector<T>& right);
+ 
+-    string lowerCase(const string& inputString);
++    string CCFITS_EXPORT lowerCase(const string& inputString);
+ 
+-    string upperCase(const string& inputString);
++    string CCFITS_EXPORT upperCase(const string& inputString);
+ 
+   // Check if a file name includes an image compression specifier,
+   // and return its location if it exists.
+-    string::size_type checkForCompressString(const string& fileName);
++    string::size_type CCFITS_EXPORT checkForCompressString(const string& fileName);
+ 
+-  struct InvalidConversion : public FitsException
++  struct CCFITS_EXPORT InvalidConversion : public FitsException
+   {
+ 		InvalidConversion(const string& diag, bool silent=false);
+ 
+   };
+ 
+-  struct MatchStem : public std::binary_function<string,string,bool>
++  struct CCFITS_EXPORT MatchStem : public std::binary_function<string,string,bool>
+   {
+           bool operator()(const string& left, const string& right) const;
+   };
+@@ -323,7 +324,7 @@
+ 
+   char** CharArray(const std::vector<string>& inArray);
+ 
+-  string FITSType2String( int typeInt );
++  string CCFITS_EXPORT FITSType2String( int typeInt );
+ 
+ 
+   template <typename S, typename T> 
+@@ -633,7 +634,7 @@
+ 
+ 
+ 
+-    class UnrecognizedType : public FitsException  //## Inherits: <unnamed>%3CE143AB00C6
++    class CCFITS_EXPORT UnrecognizedType : public FitsException  //## Inherits: <unnamed>%3CE143AB00C6
+     {
+       public:
+           UnrecognizedType (string diag, bool silent = true);
+Index: KeywordCreator.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- KeywordCreator.h	(date 1502267716000)
++++ KeywordCreator.h	(revision )
+@@ -24,7 +24,7 @@
+ 
+ 
+ 
+-  class KeywordCreator 
++  class CCFITS_EXPORT KeywordCreator
+   {
+ 
+     public:

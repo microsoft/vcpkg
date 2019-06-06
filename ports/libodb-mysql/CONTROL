@@ -1,0 +1,4 @@
+Source: libodb-mysql
+Version: 2.4.0-2
+Description: MySQL support for the ODB ORM library
+Build-Depends: libodb, libmysql

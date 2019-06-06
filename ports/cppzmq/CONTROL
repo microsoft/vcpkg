@@ -1,0 +1,4 @@
+Source: cppzmq
+Version: 4.3.0-1
+Build-Depends: zeromq
+Description: lightweight messaging kernel, C++ bindings

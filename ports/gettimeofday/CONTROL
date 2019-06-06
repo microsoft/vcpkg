@@ -1,0 +1,3 @@
+Source: gettimeofday
+Version: 2017-10-14-2
+Description: An implementation of gettimeofday for WIN32

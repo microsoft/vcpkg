@@ -1,0 +1,4 @@
+Source: libdatrie
+Version: 0.2.10-2
+Description: implementation of double-array structure for representing trie
+Build-Depends: libiconv

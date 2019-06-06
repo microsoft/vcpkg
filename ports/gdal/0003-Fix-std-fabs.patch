@@ -1,0 +1,10 @@
+--- a/ogrlinestring.cpp	Fri Dec 14 22:34:20 2018
++++ b/ogrlinestring.cpp	Wed Mar 27 11:00:00 2019
+@@ -34,6 +34,7 @@
+ #include <cstdlib>
+ #include <algorithm>
+ #include <limits>
++#include <cmath>
+
+ CPL_CVSID("$Id: ogrlinestring.cpp 61153d33d7f055c3442ff728adbfa8e09582464b 2019-03-10 14:23:51 +0100 Even Rouault $")
+
