@@ -6,19 +6,14 @@ vcpkg_from_github(
     REF v0.3.11
     SHA512 da845f748aecfff61209f542f4eac8d46738af52ce980d5c8315397f859429dfd9e4bf989ddf2fbe938d1efb33dce9c531c92cbe53388b1d1082d5caa97e8750
     HEAD_REF master
-    PATCHES fix-dependencey-build-error.patch # This patch fixes dependency port compilation failure
+    PATCHES
+        fix-dependencey-build-error.patch # This patch fixes dependency port compilation failure
+        disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
 )
-
-if (${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-  set(USE_STATIC ON)
-else()
-  set(USE_STATIC OFF)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSTATIC_CRT=${USE_STATIC}
 )
 
 vcpkg_install_cmake()
