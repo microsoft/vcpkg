@@ -1,0 +1,3 @@
+Source: gelflib
+Version: 1.0.0
+Description: C++ library for sending Graylog Extended Log Format (GELF) messages using UDP protocol.
