@@ -167,9 +167,6 @@ find_package(Freetype REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(unofficial-fontconfig CONFIG REQUIRED)
 find_package(unofficial-pixman CONFIG REQUIRED)
-if(APPLE)
-  find_package(Threads REQUIRED)
-endif()
 
 # Cairo needs to be told which features of FreeType are availible
 add_definitions(
@@ -193,7 +190,11 @@ endif()
 
 add_library(cairo ${SOURCES})
 
-target_link_libraries(cairo PRIVATE gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
+endif()
 
 # GObject support module
 
