@@ -9,20 +9,19 @@ set(GLIB_LIB_VERSION 2.0)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 
+find_package(unofficial-glib CONFIG REQUIRED)
 find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_VERSION})
-find_library(GLIB_GIO_LIBRARY gio-${GLIB_LIB_VERSION})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_VERSION})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_VERSION})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GOBJECT_LIBRARY} ${GLIB_GMODULE_LIBRARY} ${GLIB_GIO_LIBRARY})
 
-find_path(LIBINTL_INCLUDE_DIR libintl.h)
-find_library(LIBINTL_LIBRARY NAMES libintl intl)
-
-configure_file(./config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+if(WIN32)
+    find_package(unofficial-gettext CONFIG REQUIRED)
+    find_path(LIBINTL_INCLUDE_DIR libintl.h)
+    configure_file(${CMAKE_SOURCE_DIR}/config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+else()
+    configure_file(${CMAKE_SOURCE_DIR}/config.h.linux ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+endif()
 include_directories(. ./gdk-pixbuf)
 
-add_library(gdk-pixbuf
+set(SOURCES
     gdk-pixbuf/gdk-pixbuf.c
     gdk-pixbuf/gdk-pixbuf-animation.c
     gdk-pixbuf/gdk-pixbuf-data.c
@@ -46,6 +45,9 @@ add_library(gdk-pixbuf
     gdk-pixbuf/io-xpm.c
     gdk-pixbuf/io-xbm.c
     gdk-pixbuf/pixops/pixops.c
+)
+if(WIN32)
+    list(APPEND SOURCES
     gdk-pixbuf/io-gdip-animation.c
     gdk-pixbuf/io-gdip-bmp.c
     gdk-pixbuf/io-gdip-emf.c
@@ -54,7 +56,10 @@ add_library(gdk-pixbuf
     gdk-pixbuf/io-gdip-jpeg.c
     gdk-pixbuf/io-gdip-tiff.c
     gdk-pixbuf/io-gdip-utils.c
-    gdk-pixbuf/io-gdip-wmf.c)
+    gdk-pixbuf/io-gdip-wmf.c
+)
+endif()
+add_library(gdk-pixbuf ${SOURCES})
 
 target_include_directories(gdk-pixbuf PRIVATE 
     ${GLIB_INCLUDE_DIR} 
@@ -62,14 +67,20 @@ target_include_directories(gdk-pixbuf PRIVATE
     ${ZLIB_INCLUDE_DIRS}
     ${LIBINTL_INCLUDE_DIR})
 
-target_link_libraries(gdk-pixbuf 
-    ${GLIB_LIBRARIES} 
+set(LIBS 
+    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject 
     ${ZLIB_LIBRARIES} 
     ${PNG_LIBRARIES} 
-    ${LIBINTL_LIBRARY}
-    Gdiplus)
+)
+if(WIN32)
+    list(APPEND LIBS Gdiplus unofficial::gettext::libintl)
+else()
+    list(APPEND LIBS m)
+endif()
 
-target_compile_definitions(gdk-pixbuf PRIVATE
+target_link_libraries(gdk-pixbuf ${LIBS})
+
+set(DEFS
     HAVE_CONFIG_H
     GDK_PIXBUF_COMPILATION
     GDK_PIXBUF_ENABLE_BACKEND
@@ -85,9 +96,12 @@ target_compile_definitions(gdk-pixbuf PRIVATE
     INCLUDE_pnm
     INCLUDE_icns
     INCLUDE_xpm
-    INCLUDE_gdiplus
     G_DISABLE_SINGLE_INCLUDES
     GDK_PIXBUF_DISABLE_SINGLE_INCLUDES)
+if(WIN32)
+    list(APPEND DEFS INCLUDE_gdiplus)
+endif()
+target_compile_definitions(gdk-pixbuf PRIVATE ${DEFS})
 
 set_target_properties(gdk-pixbuf PROPERTIES 
     OUTPUT_NAME gdk_pixbuf-${GDK_PIXBUF_DLL_SUFFIX}
