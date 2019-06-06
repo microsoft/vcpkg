@@ -334,6 +334,23 @@ namespace vcpkg::Build
         return ret;
     }
 
+    static int get_concurrency()
+    {
+        int concurrency;
+
+        auto user_defined_concurrency = System::get_environment_variable("VCPKG_MAX_CONCURRENCY");
+        if (user_defined_concurrency)
+        {
+            concurrency = std::stoi(user_defined_concurrency.value_or_exit(VCPKG_LINE_INFO));
+        }
+        else
+        {
+            concurrency = System::get_num_logical_cores() + 1;
+        }
+
+        return concurrency;
+    }
+
     static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
                                                 const PreBuildInfo& pre_build_info,
                                                 const PackageSpec& spec,
@@ -373,7 +390,7 @@ namespace vcpkg::Build
             {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
-            {"VCPKG_NUM_LOGICAL_CORES", std::to_string(System::get_num_logical_cores())},
+            {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())

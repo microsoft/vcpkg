@@ -7,6 +7,7 @@
 #include <vcpkg/base/system.process.h>
 
 #include <ctime>
+#include <algorithm>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -598,13 +599,7 @@ namespace vcpkg
 
     int System::get_num_logical_cores()
     {
-        int num_cores = std::thread::hardware_concurrency();
-        if (!num_cores)
-        {
-            num_cores = 1;
-        }
-
-        return num_cores;
+        return std::thread::hardware_concurrency();
     }
 }
 

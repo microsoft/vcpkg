@@ -131,7 +131,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # Build release
     message(STATUS "Package ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_NUM_LOGICAL_CORES} && make install"
+        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY} && make install"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
         LOGNAME "build-${TARGET_TRIPLET}-rel")
     message(STATUS "Package ${TARGET_TRIPLET}-rel done")
@@ -141,7 +141,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     # Build debug
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_NUM_LOGICAL_CORES} && make install"
+        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY} && make install"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
         LOGNAME "build-${TARGET_TRIPLET}-dbg")
     message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
