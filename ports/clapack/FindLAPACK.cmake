@@ -90,6 +90,7 @@ else ()
 include(${CMAKE_ROOT}/Modules/CheckFunctionExists.cmake)
 endif ()
 include(${CMAKE_ROOT}/Modules/CMakePushCheckState.cmake)
+include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 
 cmake_push_check_state()
 set(CMAKE_REQUIRED_QUIET ${LAPACK_FIND_QUIETLY})
