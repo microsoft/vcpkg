@@ -25,8 +25,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-        -Dinstall_tests=OFF
-        -Dinstall_cord=OFF
+        -Dbuild_tests=OFF
+        -Dbuild_cord=OFF
     OPTIONS_DEBUG 
         -Dinstall_headers=OFF 
 )
