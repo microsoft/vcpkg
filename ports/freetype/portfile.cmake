@@ -1,6 +1,7 @@
 include(vcpkg_common_functions)
 
 set(FT_VERSION 2.9.1)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.bz2"
     FILENAME "freetype-${FT_VERSION}.tar.bz2"
