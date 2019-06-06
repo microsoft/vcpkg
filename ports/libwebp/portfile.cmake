@@ -63,8 +63,11 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake TARGET_PATH share/webp)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/WebP)
+file(COPY ${CURRENT_PACKAGES_DIR}/share/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/share/webp)
 
 #somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
 if(CMAKE_HOST_WIN32)

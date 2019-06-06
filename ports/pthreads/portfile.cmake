@@ -1,14 +1,16 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(FATAL_ERROR "${PORT} does not currently support UWP")
+include(vcpkg_common_functions)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"  OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  message(FATAL_ERROR "${PORT} does not currently support UWP platform nor ARM architectures")
 endif()
-if(VCPKG_CMAKE_SYSTEM_NAME)
+
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
   return()
 endif()
 
 set(PTHREADS4W_VERSION "3.0.0")
 
-include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
   URLS "https://sourceforge.net/projects/pthreads4w/files/pthreads4w-code-v${PTHREADS4W_VERSION}.zip/download"
   FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
