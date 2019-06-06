@@ -6,6 +6,10 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/packagespec.h>
+
+#include <vector>
+#include <memory>
 
 namespace vcpkg::Commands::DependInfo
 {
@@ -126,20 +130,71 @@ namespace vcpkg::Commands::DependInfo
                                  const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files,
                                  const std::unordered_set<std::string>& switches)
     {
+        auto maybe_requested_spec = ParsedSpecifier::from_string(requested_package);
+        // TODO: move this check to the top-level invocation of this function since
+        // argument `requested_package` shall always be valid in inner-level invocation.
+        if (!maybe_requested_spec.has_value())
+        {
+            System::print2(System::Color::warning,
+                           "'",
+                           requested_package,
+                           "' is not a valid package specifier: ",
+                           vcpkg::to_string(maybe_requested_spec.error()),
+                           "\n");
+            return;
+        }
+        auto requested_spec = maybe_requested_spec.get();
+
         const auto source_control_file =
-            Util::find_if(source_control_files, [&requested_package](const auto& source_control_file) {
-                return source_control_file->core_paragraph->name == requested_package;
+            Util::find_if(source_control_files, [&requested_spec](const auto& source_control_file) {
+                return source_control_file->core_paragraph->name == requested_spec->name;
             });
 
         if (source_control_file != source_control_files.end())
         {
-            const auto new_package = packages_to_keep.insert(requested_package).second;
+            const auto new_package = packages_to_keep.insert(requested_spec->name).second;
 
             if (new_package && !Util::Sets::contains(switches, OPTION_NO_RECURSE))
             {
                 for (const auto& dependency : (*source_control_file)->core_paragraph->depends)
                 {
                     build_dependencies_list(packages_to_keep, dependency.depend.name, source_control_files, switches);
+                }
+
+                // Collect features with `*` considered
+                std::set<const FeatureParagraph*> collected_features;
+                for (const auto& requested_feature_name : requested_spec->features)
+                {
+                    if (requested_feature_name == "*")
+                    {
+                        for (auto &&feature_paragraph : (*source_control_file)->feature_paragraphs)
+                        {
+                            collected_features.insert(std::addressof(Util::as_const(*feature_paragraph)));
+                        }
+                        continue;
+                    }
+                    auto maybe_feature = (*source_control_file)->find_feature(requested_feature_name);
+                    if (auto &&feature_paragraph = maybe_feature.get())
+                    {
+                        collected_features.insert(std::addressof(Util::as_const(*feature_paragraph)));
+                    }
+                    else
+                    {
+                        System::print2(System::Color::warning,
+                                       "dependency '",
+                                       requested_feature_name,
+                                       "' of package '",
+                                       requested_spec->name,
+                                       "' does not exist\n");
+                        continue;
+                    }
+                }
+                for (auto feature_paragraph : collected_features)
+                {
+                    for (const auto& dependency : feature_paragraph->depends)
+                    {
+                        build_dependencies_list(packages_to_keep, dependency.depend.name, source_control_files, switches);
+                    }
                 }
             }
         }
