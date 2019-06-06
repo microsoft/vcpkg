@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8d386ca5..d370ce3d 100644
+index 8d386ca5..b94d6358 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -27,6 +27,10 @@ include(CTest)
@@ -13,8 +13,12 @@ index 8d386ca5..d370ce3d 100644
  option(enable_threads "TODO" OFF) #TODO Support it
  option(enable_parallel_mark "Parallelize marking and free list construction" ON)
  option(enable_thread_local_alloc "Turn on thread-local allocation optimization" ON)
-@@ -55,19 +59,10 @@ if (APPLE)
-     set(CMAKE_OSX_ARCHITECTURES "ppc;i386;x86_64"
+@@ -52,22 +56,13 @@ add_definitions("-DALL_INTERIOR_POINTERS -DNO_EXECUTE_PERMISSION")
+ 
+ if (APPLE)
+   if ("${CMAKE_OSX_ARCHITECTURES}" STREQUAL "")
+-    set(CMAKE_OSX_ARCHITECTURES "ppc;i386;x86_64"
++    set(CMAKE_OSX_ARCHITECTURES "x86_64;i386"
          CACHE STRING "Build architectures for Mac OS X" FORCE)
    endif()
 -elseif (WIN32)
