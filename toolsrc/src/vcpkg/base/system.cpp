@@ -7,7 +7,6 @@
 #include <vcpkg/base/system.process.h>
 
 #include <ctime>
-#include <algorithm>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
