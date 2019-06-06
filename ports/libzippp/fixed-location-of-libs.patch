@@ -9,9 +9,9 @@ index 39f4eaf..56a9902 100644
 -set(LIBZIP_INCLUDE_DIR "${LIBZIP_HOME}/lib;${LIBZIP_HOME}/build" CACHE PATH "Path to libzip include folder.")
 -set(LIBZIP_LIBRARY_RELEASE "../${LIBZIP_HOME}/build/lib/Release/zip" CACHE FILEPATH "Path to libzip release library.")
 -set(LIBZIP_LIBRARY_DEBUG "../${LIBZIP_HOME}/build/lib/Debug/zip" CACHE FILEPATH "Path to libzip debug library.")
-+set(LIBZIP_INCLUDE_DIR "${LIBZIP_HOME}/lib;${LIBZIP_HOME}/build;${LIBZIP_HOME}/include" CACHE PATH "Path to libzip include folder.")
-+set(LIBZIP_LIBRARY_RELEASE "${LIBZIP_HOME}/lib/zip.lib" CACHE FILEPATH "Path to libzip release library.")
-+set(LIBZIP_LIBRARY_DEBUG "${LIBZIP_HOME}/debug/lib/zip.lib" CACHE FILEPATH "Path to libzip debug library.")
++set(LIBZIP_INCLUDE_DIR "${VCPKG_INSTALLED_TRIPLET}/lib;${VCPKG_INSTALLED_TRIPLET}/build;${VCPKG_INSTALLED_TRIPLET}/include" CACHE PATH "Path to libzip include folder.")
++set(LIBZIP_LIBRARY_RELEASE "${VCPKG_INSTALLED_TRIPLET}/lib/zip.lib" CACHE FILEPATH "Path to libzip release library.")
++set(LIBZIP_LIBRARY_DEBUG "${VCPKG_INSTALLED_TRIPLET}/debug/lib/zip.lib" CACHE FILEPATH "Path to libzip debug library.")
  
  FIND_PACKAGE(ZLIB REQUIRED)
  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
