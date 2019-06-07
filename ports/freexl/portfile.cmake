@@ -126,12 +126,8 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
             LOGNAME make-install-${TARGET_TRIPLET}-release
         )
 
-        #file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/gdalplugins)
-        #file(COPY ${OUT_PATH_RELEASE}/lib/pkgconfig DESTINATION ${OUT_PATH_RELEASE}/share/gdal)
-        #file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
         file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
         file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-        #file(COPY ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
         file(COPY ${CURRENT_BUILDTREES_DIR}/src/freexl-1.0.4/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl)
         file(RENAME ${CURRENT_PACKAGES_DIR}/share/freexl/COPYING ${CURRENT_PACKAGES_DIR}/share/freexl/copyright)
         message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
@@ -164,8 +160,6 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
             LOGNAME make-install-${TARGET_TRIPLET}-debug
         )
 
-        #file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/gdalplugins)
-        #file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
         file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
         message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
     endif()
