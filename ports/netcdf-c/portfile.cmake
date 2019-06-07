@@ -10,7 +10,6 @@ vcpkg_from_github(
         no-install-deps.patch
         config-pkg-location.patch
         transitive-hdf5.patch
-#        fix_curl_linkage.patch
         hdf5.patch
         hdf5_2.patch
 )
