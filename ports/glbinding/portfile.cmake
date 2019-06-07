@@ -18,6 +18,7 @@ vcpkg_configure_cmake(
         -DOPTION_BUILD_TESTS=OFF
         -DOPTION_BUILD_GPU_TESTS=OFF
         -DOPTION_BUILD_TOOLS=OFF
+        -DOPTION_BUILD_EXAMPLES=OFF
         -DGIT_REV=0
         -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
 )
