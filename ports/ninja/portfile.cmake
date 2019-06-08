@@ -21,7 +21,7 @@ file(COPY ${to_copy} DESTINATION ${TRIPLET_BUILDTREE})
 
 message(STATUS "Configuring Ninja")
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} configure.py
+    COMMAND ${PYTHON3} configure.py #--bootstrap
     WORKING_DIRECTORY ${TRIPLET_BUILDTREE}
     LOGNAME config-${TARGET_TRIPLET}-rel
 )
@@ -34,6 +34,10 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
+IF(VCPKG_CMAKE_SYSTEM_NAME MATCHES "Windows" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    set(CMAKE_EXECUTABLE_SUFFIX .exe)
+endif()
+file(INSTALL ${TRIPLET_BUILDTREE}/ninja${CMAKE_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ninja RENAME copyright)
-file(INSTALL ${TRIPLET_BUILDTREE}/ninja.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
