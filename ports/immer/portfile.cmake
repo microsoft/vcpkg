@@ -5,11 +5,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arximboldi/immer
-    REF v0.6.2
-    SHA512 bcce4f26f8bb59d7d3fa5b3c2a5168c1aa9e0b257a09c8e393f13fdf399063e5303f92167fbf7faad9952d5ba4de8f9377993baff0f9917b51495f357f20f19e
+    REF fe1d5151f8e62a97a953664f8de39b05ac0d2031
+    SHA512 2f78c2d85a24b2bcb69bbbf8b038c8bacb5a841e0f0ce7e4e521d369423c7d44f803a1c766a77d0955246a1b22476de15fa708a3786f05c41a3b705a574bbb71
     HEAD_REF master
-    PATCHES
-        fix-install.patch
 )
 
 vcpkg_configure_cmake(
