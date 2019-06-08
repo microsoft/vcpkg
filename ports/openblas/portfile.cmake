@@ -1,4 +1,6 @@
 include(vcpkg_common_functions)
+#DYNAMIC_ARCH
+#NUM_THREADS
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
@@ -72,12 +74,16 @@ elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
         OPTIONS
             ${COMMON_OPTIONS})
 else()
+    list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
+    list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
-            -DNOFORTRAN=ON)
+            -DNOFORTRAN=ON
+            -DBU=_  #required for all blas functions to append extra _ using NAME
+            )
 endif()
 
 
