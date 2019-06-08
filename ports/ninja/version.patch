@@ -1,0 +1,13 @@
+diff --git a/src/version.cc b/src/version.cc
+index 1c906aee0..f055abb82 100644
+--- a/src/version.cc	
++++ b/src/version.cc
+@@ -18,7 +18,7 @@
+ 
+ #include "util.h"
+ 
+-const char* kNinjaVersion = "1.9.0.git";
++const char* kNinjaVersion = "1.9.0.git.dyndep-1";
+ 
+ void ParseVersion(const string& version, int* major, int* minor) {
+   size_t end = version.find('.');
