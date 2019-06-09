@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b350cd8c..251f8a69e 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -286,7 +286,8 @@ if (WIN32)
+   find_package(LAPACK)
+   find_package(BLAS)
+   set(ARMADILLO_LIBRARIES
+-       ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
++       ${ARMADILLO_LIBRARIES} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
++  message(STATUS ${ARMADILLO_LIBRARIES})
+ endif ()
+ 
+ # Include directories for the previous dependencies.
+
