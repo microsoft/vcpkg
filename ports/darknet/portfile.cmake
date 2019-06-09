@@ -24,9 +24,9 @@ if("cuda" IN_LIST FEATURES)
   set(ENABLE_CUDA ON)
 endif()
 
-set(ENABLE_OPENCV OFF)
+set(CMAKE_DISABLE_FIND_PACKAGE_OpenCV ON)
 if("opencv" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
+  set(CMAKE_DISABLE_FIND_PACKAGE_OpenCV OFF)
 endif()
 
 if("opencv-cuda" IN_LIST FEATURES)
@@ -65,8 +65,10 @@ vcpkg_configure_cmake(
   DISABLE_PARALLEL_CONFIGURE  #since darknet configures a file inside source tree, it is better to disable parallel configure
   #PREFER_NINJA               #it does not work with cuda on windows https://gitlab.kitware.com/cmake/cmake/issues/19173
   OPTIONS
+    -DINSTALL_BIN_DIR:STRING=bin
+    -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_CUDA=${ENABLE_CUDA}
-    -DENABLE_OPENCV=${ENABLE_OPENCV}
+    -DCMAKE_DISABLE_FIND_PACKAGE_OpenCV=${CMAKE_DISABLE_FIND_PACKAGE_OpenCV}
 )
 
 vcpkg_install_cmake()

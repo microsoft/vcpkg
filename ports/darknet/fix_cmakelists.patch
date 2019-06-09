@@ -2,25 +2,11 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e41a5f7..0d108d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,9 +28,8 @@ enable_language(CXX)
+@@ -28,7 +28,6 @@ enable_language(CXX)
  set(CMAKE_CXX_STANDARD 11)
  set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/" ${CMAKE_MODULE_PATH})
  
 -set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Install prefix" FORCE)
--set(INSTALL_BIN_DIR      "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Path where exe and dll will be installed")
--set(INSTALL_LIB_DIR      "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Path where lib will be installed")
-+set(INSTALL_BIN_DIR      "bin"                       CACHE PATH "Path where exe and dll will be installed")
-+set(INSTALL_LIB_DIR      "lib"                       CACHE PATH "Path where lib will be installed")
+ set(INSTALL_BIN_DIR      "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Path where exe and dll will be installed")
+ set(INSTALL_LIB_DIR      "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Path where lib will be installed")
  set(INSTALL_INCLUDE_DIR  "include/darknet"           CACHE PATH "Path where headers will be installed")
- set(INSTALL_CMAKE_DIR    "share/darknet"             CACHE PATH "Path where cmake configs will be installed")
- 
-@@ -74,7 +73,9 @@ find_package(Threads REQUIRED)
- if(MSVC)
-   find_package(PThreads_windows REQUIRED)
- endif()
-+if(ENABLE_OPENCV)
- find_package(OpenCV)
-+endif()
- find_package(Stb REQUIRED)
- if(${CMAKE_VERSION} VERSION_LESS "3.9.0")
-   message(WARNING "To build with OpenMP support you need CMake 3.9.0+")
