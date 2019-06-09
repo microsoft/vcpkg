@@ -232,36 +232,9 @@ namespace vcpkg::Commands::CI
             {
                 // determine abi tag
                 std::string abi;
-                if (auto scf = p->source_control_file.get())
+                if (GlobalState::g_binary_caching)
                 {
-                    auto triplet = p->spec.triplet();
-
-                    const Build::BuildPackageConfig build_config{
-                        *scf, triplet, paths.port_dir(p->spec), build_options, p->feature_list};
-
-                    auto dependency_abis =
-                        Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
-                            auto it = ret->abi_tag_map.find(spec);
-
-                            if (it == ret->abi_tag_map.end())
-                                return {spec.name(), ""};
-                            else
-                                return {spec.name(), it->second};
-                        });
-                    const auto& pre_build_info = pre_build_info_cache.get_lazy(
-                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
-
-                    auto maybe_tag_and_file =
-                        Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
-                    if (auto tag_and_file = maybe_tag_and_file.get())
-                    {
-                        abi = tag_and_file->tag;
-                        ret->abi_tag_map.emplace(p->spec, abi);
-                    }
-                }
-                else if (auto ipv = p->installed_package.get())
-                {
-                    abi = ipv->core->package.abi;
+                    abi = Dependencies::compute_abi_tag(paths, pre_build_info_cache, ret->abi_tag_map, *p);
                     if (!abi.empty()) ret->abi_tag_map.emplace(p->spec, abi);
                 }
 
