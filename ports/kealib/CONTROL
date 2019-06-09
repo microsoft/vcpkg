@@ -5,6 +5,5 @@ Homepage: https://bitbucket.org/chchrsc/kealib/downloads
 Description: kealib is gdal model using HDF5 standard.
 
 Feature: parallel
-Homepage: https://bitbucket.org/chchrsc/kealib/downloads
 Description: Use parallel support for HDF5
 Build-Depends: hdf5[parallel], msmpi

@@ -7,30 +7,24 @@ Default-Features: libpng, tiff, libjpeg, openexr, jasper, lcms
 
 Feature: libpng
 Build-Depends: libpng
-Homepage: https://github.com/DentonW/DevIL
 Description: Use Libpng for .png (and some .ico)
 
 Feature: tiff
 Build-Depends: tiff
-Homepage: https://github.com/DentonW/DevIL
 Description: Use Libtiff for .tif support
 
 Feature: libjpeg
 Build-Depends: libjpeg-turbo
-Homepage: https://github.com/DentonW/DevIL
 Description: Use Libjpeg for .jpg (and some .blp) support
 
 Feature: openexr
 Build-Depends: openexr
-Homepage: https://github.com/DentonW/DevIL
 Description: Use openexr
 
 Feature: jasper
 Build-Depends: jasper
-Homepage: https://github.com/DentonW/DevIL
 Description: Use JasPer for .jp2 (and some .icns) support
 
 Feature: lcms
 Build-Depends: lcms
-Homepage: https://github.com/DentonW/DevIL
 Description: Use Little CMS for color profiles

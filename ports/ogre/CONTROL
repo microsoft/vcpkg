@@ -5,14 +5,11 @@ Homepage: https://github.com/OGRECave/ogre
 Description: 3D Object-Oriented Graphics Rendering Engine
 
 Feature: d3d9
-Homepage: https://github.com/OGRECave/ogre
 Description: Build Direct3D9 RenderSystem
 
 Feature: java
-Homepage: https://github.com/OGRECave/ogre
 Description: Build Java (JNI) bindings
 
 Feature: python
-Homepage: https://github.com/OGRECave/ogre
 Description: Build Python bindings
 Build-Depends: python3
