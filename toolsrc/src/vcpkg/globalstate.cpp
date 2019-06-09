@@ -7,7 +7,6 @@ namespace vcpkg
     Util::LockGuarded<Chrono::ElapsedTimer> GlobalState::timer;
     Util::LockGuarded<std::string> GlobalState::g_surveydate;
 
-    std::atomic<bool> GlobalState::debugging(false);
     std::atomic<bool> GlobalState::g_binary_caching(false);
 
     std::atomic<int> GlobalState::g_init_console_cp(0);

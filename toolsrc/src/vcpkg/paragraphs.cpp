@@ -3,7 +3,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/globalstate.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
 
@@ -269,7 +269,7 @@ namespace vcpkg::Paragraphs
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
-            if (GlobalState::debugging)
+            if (Debug::g_debugging)
             {
                 print_error_message(results.errors);
             }

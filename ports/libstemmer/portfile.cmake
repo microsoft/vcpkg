@@ -1,8 +1,7 @@
 include(vcpkg_common_functions)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  message(WARNING "Dynamic not supported building static")
-  set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libstemmer_c)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://snowball.tartarus.org/dist/libstemmer_c.tgz"

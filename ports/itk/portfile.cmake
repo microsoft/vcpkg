@@ -1,11 +1,19 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 50 AND CMAKE_HOST_WIN32)
+    message(WARNING "ITKs buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
     REF 906736bd453e95ccf03b318d3d07cb7884285161
     SHA512 8ac62262d46e7acbb0e5b2e964292ec17e1687bb162b8cec666e5b67acbe3449f093a0b1c03737e9951cb88248ed890805ffd57df6eae21220488620da833c57
     HEAD_REF master
+    PATCHES fix_conflict_with_openjp2_pc.patch
 )
 
 if ("vtk" IN_LIST FEATURES)
@@ -13,14 +21,6 @@ if ("vtk" IN_LIST FEATURES)
 else()
     set(ITKVtkGlue OFF)
 endif()
-
-# directory path length needs to be shorter than 50 characters
-set(ITK_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/ITK)
-if(EXISTS ${ITK_BUILD_DIR})
-  file(REMOVE_RECURSE ${ITK_BUILD_DIR})
-endif()
-file(RENAME ${SOURCE_PATH} ${ITK_BUILD_DIR})
-set(SOURCE_PATH "${ITK_BUILD_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -50,7 +50,7 @@ vcpkg_configure_cmake(
 
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
 
-        # I havn't tried Python wrapping in vcpkg
+        # I haven't tried Python wrapping in vcpkg
         #-DITK_WRAP_PYTHON=ON
         #-DITK_PYTHON_VERSION=3
 
@@ -60,6 +60,7 @@ vcpkg_configure_cmake(
         -DModule_IOSTL=ON # example how to turn on a non-default module
         -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         -DModule_RLEImage=ON # example how to turn on a remote module
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON #Use port openjpeg instead of own third-party
         ${ADDITIONAL_OPTIONS}
 )
 

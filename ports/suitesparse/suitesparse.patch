@@ -1,0 +1,73 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3486f05..98badb6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -252,7 +252,7 @@ if(SuiteSparse_LAPACK_BLAS_LIB_DIR) # "Export" the imported targets in config.cm
+ 	set_property(TARGET lapack PROPERTY IMPORTED_IMPLIB 	\${_SuiteSparse_PREFIX}/${SuiteSparse_LAPACK_BLAS_LIB_DIR}/liblapack.lib)")
+ endif()
+ 
+-IF(BUILD_METIS)
++IF(BUILD_METIS OR USE_VCPKG_METIS)
+ 	set(SuiteSparse_LINKER_METIS_LIBS "metis")
+ 	## namespaced library target for config
+ 	set(SuiteSparse_EXPORTED_METIS_LIBS "SuiteSparse::metis")
+@@ -311,7 +311,7 @@ configure_file(cmake/SuiteSparse-config-install.cmake.in
+ ## do the EXPORT for allowing other project to easily use suitesparse with cmake
+ install(EXPORT SuiteSparseTargets
+ 	FILE
+-		SuiteSparse-targets.cmake
++		suitesparse-targets.cmake
+ 	NAMESPACE
+ 		SuiteSparse::
+ 	DESTINATION
+diff --git a/SuiteSparse/CMakeLists.txt b/SuiteSparse/CMakeLists.txt
+index c6e2834..5ef08a6 100644
+--- a/SuiteSparse/CMakeLists.txt
++++ b/SuiteSparse/CMakeLists.txt
+@@ -12,11 +12,11 @@ IF(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+ ENDIF(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+ 
+ # Global flags:
+-IF (BUILD_METIS)
++IF (BUILD_METIS OR USE_VCPKG_METIS)
+ 	INCLUDE_DIRECTORIES("${METIS_SOURCE_DIR}/include")
+-ELSE (BUILD_METIS)
++ELSE ()
+ 	ADD_DEFINITIONS(-DNPARTITION)
+-ENDIF ( BUILD_METIS)
++ENDIF ()
+ 
+ # Disable COMPLEX numbers: disable it by default, since it causes problems in some platforms.
+ SET(HAVE_COMPLEX OFF CACHE BOOL "Enables building SuiteSparse with complex numbers (disabled by default to avoid problems in some platforms)")
+diff --git a/cmake/SuiteSparse-config-install.cmake.in b/cmake/SuiteSparse-config-install.cmake.in
+index cb1f51f..49387b8 100644
+--- a/cmake/SuiteSparse-config-install.cmake.in
++++ b/cmake/SuiteSparse-config-install.cmake.in
+@@ -4,13 +4,10 @@ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_SELF_DIR}" PATH)
+ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+ 
+-find_package(LAPACK CONFIG)
+-if (NOT LAPACK_FOUND) # Load the LAPACK package with which we were built.
+-	@ExternConfig@
+-endif ()
++find_package(LAPACK REQUIRED)
+ 
+ # Load targets from the install tree.
+-include(${_SuiteSparse_SELF_DIR}/SuiteSparse-targets.cmake)
++include(${_SuiteSparse_SELF_DIR}/suitesparse-targets.cmake)
+ 
+ # Report SuiteSparse header search locations.
+ set(SuiteSparse_INCLUDE_DIRS ${_SuiteSparse_PREFIX}/include)
+@@ -31,6 +28,11 @@ set(SuiteSparse_LIBRARIES
+ 	SuiteSparse::spqr
+ 	@SuiteSparse_EXPORTED_METIS_LIBS@
+ )
++set(SUITESPARSE_LIBRARIES ${SuiteSparse_LIBRARIES})
+ 
+ unset(_SuiteSparse_PREFIX)
+ unset(_SuiteSparse_SELF_DIR)
++
++set(SUITESPARSE_FOUND TRUE)
++set(SuiteSparse_FOUND TRUE)
++

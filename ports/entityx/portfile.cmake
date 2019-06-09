@@ -5,16 +5,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alecthomas/entityx
-    REF 1.2.0
-    SHA512 682aa302cb4495666aab2c0b39a286f88cb28046bc8b2deb603402105e15e4b9692e32807077abc3f465e42a4e0f34a7e69169bc74fc5579a5c3d0e17b02fdb8
+    REF 1.3.0
+    SHA512 724a3f421f802e60a1106ff8a69435c9a9da14e35c3e88565bbc17bff3a17f2d9771818aac83320cc4f14de0ec770a66f1eb7cbf4318f43abd516c63e077c07d
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
         enable-std14.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DENTITYX_BUILD_TESTING=false

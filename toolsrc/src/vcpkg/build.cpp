@@ -8,6 +8,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -69,6 +70,7 @@ namespace vcpkg::Build::Command
             Build::AllowDownloads::YES,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
@@ -232,7 +234,7 @@ namespace vcpkg::Build
         if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
 
         const char* tonull = " >nul";
-        if (GlobalState::debugging)
+        if (Debug::g_debugging)
         {
             tonull = "";
         }
@@ -357,24 +359,31 @@ namespace vcpkg::Build
         }
 
         const Toolset& toolset = paths.get_toolset(pre_build_info);
+
+        std::vector<System::CMakeVariable> variables {
+            {"CMD", "BUILD"},
+            {"PORT", config.scf.core_paragraph->name},
+            {"CURRENT_PORT_DIR", config.port_dir},
+            {"TARGET_TRIPLET", spec.triplet().canonical_name()},
+            {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+            {"VCPKG_USE_HEAD_VERSION",
+            Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+            {"DOWNLOADS", paths.downloads},
+            {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+            {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
+            {"FEATURES", Strings::join(";", config.feature_list)},
+            {"ALL_FEATURES", all_features},
+        };
+
+        if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+        {
+            variables.push_back({"GIT", git_exe_path});
+        }
+
         const std::string cmd_launch_cmake = System::make_cmake_cmd(
             cmake_exe_path,
             paths.ports_cmake,
-            {
-                {"CMD", "BUILD"},
-                {"PORT", config.scf.core_paragraph->name},
-                {"CURRENT_PORT_DIR", config.port_dir},
-                {"TARGET_TRIPLET", spec.triplet().canonical_name()},
-                {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                {"VCPKG_USE_HEAD_VERSION",
-                Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"DOWNLOADS", paths.downloads},
-                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
-                {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
-                {"GIT", git_exe_path},
-                {"FEATURES", Strings::join(";", config.feature_list)},
-                {"ALL_FEATURES", all_features},
-            });
+            variables);
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
         if (!command.empty())
@@ -499,7 +508,7 @@ namespace vcpkg::Build
                 // which will give a stable ordering and better names in the key entry.
                 // this is not available in the filesystem TS so instead number the files for the key.
                 std::string key = Strings::format("file_%03d", counter++);
-                if (GlobalState::debugging)
+                if (Debug::g_debugging)
                 {
                     System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
                 }
@@ -524,7 +533,7 @@ namespace vcpkg::Build
         const std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
 
-        if (GlobalState::debugging)
+        if (Debug::g_debugging)
         {
             System::print2("[DEBUG] <abientries>\n");
             for (auto&& entry : abi_tag_entries)

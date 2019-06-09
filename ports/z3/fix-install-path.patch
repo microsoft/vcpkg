@@ -1,0 +1,85 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e73daf63..c6bca7918 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -615,7 +615,7 @@ install(EXPORT
+   Z3_EXPORTED_TARGETS
+   FILE "Z3Targets.cmake"
+   NAMESPACE z3::
+-  DESTINATION "${CMAKE_INSTALL_Z3_CMAKE_PACKAGE_DIR}"
++  DESTINATION share/z3
+ )
+ set(Z3_INSTALL_TREE_CMAKE_CONFIG_FILE "${PROJECT_BINARY_DIR}/cmake/Z3Config.cmake")
+ set(Z3_FIRST_PACKAGE_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
+@@ -640,7 +640,7 @@ unset(CONFIG_FILE_TYPE)
+ # Add install rule to install ${Z3_INSTALL_TREE_CMAKE_CONFIG_FILE}
+ install(
+   FILES "${Z3_INSTALL_TREE_CMAKE_CONFIG_FILE}"
+-  DESTINATION "${CMAKE_INSTALL_Z3_CMAKE_PACKAGE_DIR}"
++  DESTINATION share/z3
+ )
+ 
+ # TODO: Provide a `Z3Version.cmake` file so that clients can specify the version
+diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
+index d5778add9..35b7e4c55 100644
+--- a/doc/CMakeLists.txt
++++ b/doc/CMakeLists.txt
+@@ -88,6 +88,6 @@ set(CMAKE_INSTALL_API_BINDINGS_DOC
+ if (INSTALL_API_BINDINGS_DOCUMENTATION)
+   install(
+     DIRECTORY "${DOC_DEST_DIR}"
+-    DESTINATION "${CMAKE_INSTALL_API_BINDINGS_DOC}"
++    DESTINATION share/z3
+   )
+ endif()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9b6f00b62..8b47125d3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -173,7 +173,8 @@ install(TARGETS libz3
+   EXPORT Z3_EXPORTED_TARGETS
+   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" # On Windows this installs ``libz3.lib`` which CMake calls the "corresponding import library". Do we want this installed?
+-  RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}" # For Windows. DLLs are runtime targets for CMake
++  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" # For Windows. DLLs are runtime targets for CMake
++  BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}" # For MACOSX.
+   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
+ 
+diff --git a/src/api/java/CMakeLists.txt b/src/api/java/CMakeLists.txt
+index f593d91a4..70682b721 100644
+--- a/src/api/java/CMakeLists.txt
++++ b/src/api/java/CMakeLists.txt
+@@ -228,7 +228,7 @@ if (INSTALL_JAVA_BINDINGS)
+     PATH
+     "Directory to install Z3 Java JNI bridge library relative to install prefix"
+   )
+-  install(TARGETS z3java DESTINATION "${Z3_JAVA_JNI_LIB_INSTALLDIR}")
++  install(TARGETS z3java DESTINATION share/z3)
+   # Note: Don't use ``DESTINATION`` here as the version of ``UseJava.cmake`` shipped
+   # with CMake 2.8.12.2 handles that incorrectly.
+   install_jar(z3JavaJar "${Z3_JAVA_JAR_INSTALLDIR}")
+diff --git a/src/api/python/CMakeLists.txt b/src/api/python/CMakeLists.txt
+index 6cabb779a..0b79861bf 100644
+--- a/src/api/python/CMakeLists.txt
++++ b/src/api/python/CMakeLists.txt
+@@ -136,7 +136,7 @@ if (INSTALL_PYTHON_BINDINGS)
+   # Using DESTDIR still seems to work even if we use an absolute path
+   message(STATUS "Python bindings will be installed to \"${CMAKE_INSTALL_PYTHON_PKG_DIR}\"")
+   install(FILES ${build_z3_python_bindings_target_depends}
+-    DESTINATION "${CMAKE_INSTALL_PYTHON_PKG_DIR}/z3"
++    DESTINATION share/z3
+   )
+ else()
+   message(STATUS "Not emitting rules to install Z3 python bindings")
+diff --git a/src/shell/CMakeLists.txt b/src/shell/CMakeLists.txt
+index 278246341..b6cd2f1c1 100644
+--- a/src/shell/CMakeLists.txt
++++ b/src/shell/CMakeLists.txt
+@@ -44,5 +44,5 @@ target_link_libraries(shell PRIVATE ${Z3_DEPENDENT_LIBS})
+ z3_add_component_dependencies_to_target(shell ${shell_expanded_deps})
+ z3_append_linker_flag_list_to_target(shell ${Z3_DEPENDENT_EXTRA_CXX_LINK_FLAGS})
+ install(TARGETS shell
+-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  RUNTIME DESTINATION tools/z3
+ )

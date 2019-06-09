@@ -5,25 +5,32 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
-    REF v2019.01.07.00
-    SHA512 1b4771d92b45fd5e9622985321cfd608510ea13d2f4cb03a4842c52d7253a1b460f825746a315ef0df3b2e37e56abddb5b493b80d383ba327fdbf7294bae193e
+    REF v2019.05.13.00
+    SHA512 17cc164634d3bec5059abed8f28a8d5e76b6bf3475ee848c0fc0e88c59ce82d1257555a86c638484d81795b2e8f582a8559e13a195c38bdd88ae73e3a5684ffc
     HEAD_REF master
     PATCHES
         build.patch
-        gflags.patch
         fix-config-cmake.patch
 )
+# message(FATAL_ERROR "patch")
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/wangle"
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS=OFF
+        -DBUILD_EXAMPLES=OFF
         -DINCLUDE_INSTALL_DIR:STRING=include
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/wangle")
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/wangle/wangle-targets.cmake _contents)
+STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/wangle/wangle-targets.cmake "${_contents}")
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE 
