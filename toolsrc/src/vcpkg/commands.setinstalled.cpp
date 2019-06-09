@@ -42,6 +42,11 @@ namespace vcpkg::Commands::SetInstalled
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "x-set-installed requires --binarycaching");
         }
+        if (!paths.installed_was_overrriden)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "x-set-installed requires --install-root to be manually specified");
+        }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
             return Input::check_and_get_full_package_spec(

@@ -33,6 +33,21 @@ namespace vcpkg
         option_field = std::make_unique<std::string>(*arg_begin);
     }
 
+    static void parse_conjoined_value(std::string new_value,
+                                      const std::string& option_name,
+                                      std::unique_ptr<std::string>& option_field)
+    {
+        if (option_field != nullptr)
+        {
+            System::print2(System::Color::error, "Error: ", option_name, " specified multiple times\n");
+            Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
+            Help::print_usage();
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        option_field = std::make_unique<std::string>(std::move(new_value));
+    }
+
     static void parse_switch(bool new_setting, const std::string& option_name, Optional<bool>& option_field)
     {
         if (option_field && option_field != new_setting)
@@ -101,9 +116,11 @@ namespace vcpkg
 
             if (arg[0] == '-' && arg[1] == '-')
             {
-                // make argument case insensitive
+                // make argument case insensitive before the first =
                 auto& f = std::use_facet<std::ctype<char>>(std::locale());
-                f.tolower(&arg[0], &arg[0] + arg.size());
+                auto first_eq = std::find(arg.begin(), arg.end(), '=');
+                f.tolower(&arg[0], &arg[0] + (first_eq - arg.begin()));
+
                 // command switch
                 if (arg == "--vcpkg-root")
                 {
@@ -111,10 +128,32 @@ namespace vcpkg
                     parse_value(arg_begin, arg_end, "--vcpkg-root", args.vcpkg_root_dir);
                     continue;
                 }
+                if (Strings::starts_with(arg, "--vcpkg-root="))
+                {
+                    parse_conjoined_value(arg.substr(sizeof("--vcpkg-root=") - 1), "--vcpkg-root", args.vcpkg_root_dir);
+                    continue;
+                }
+                if (arg == "--install-root")
+                {
+                    ++arg_begin;
+                    parse_value(arg_begin, arg_end, "--install-root", args.install_root_dir);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--install-root="))
+                {
+                    parse_conjoined_value(
+                        arg.substr(sizeof("--install-root=") - 1), "--install-root", args.install_root_dir);
+                    continue;
+                }
                 if (arg == "--triplet")
                 {
                     ++arg_begin;
                     parse_value(arg_begin, arg_end, "--triplet", args.triplet);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--triplet="))
+                {
+                    parse_conjoined_value(arg.substr(sizeof("--triplet=") - 1), "--triplet", args.triplet);
                     continue;
                 }
                 if (arg == "--debug")

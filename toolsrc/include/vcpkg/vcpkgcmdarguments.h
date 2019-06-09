@@ -73,6 +73,7 @@ namespace vcpkg
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
+        std::unique_ptr<std::string> install_root_dir;
         std::unique_ptr<std::string> triplet;
         Optional<bool> debug = nullopt;
         Optional<bool> sendmetrics = nullopt;

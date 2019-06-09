@@ -47,7 +47,9 @@ namespace vcpkg
 
     struct VcpkgPaths
     {
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path);
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const Optional<fs::path>& install_root_dir,
+                                           const std::string& default_vs_path);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path port_dir(const PackageSpec& spec) const;
@@ -64,6 +66,7 @@ namespace vcpkg
         fs::path downloads;
         fs::path ports;
         fs::path installed;
+        bool installed_was_overrriden;
         fs::path triplets;
         fs::path scripts;
 
