@@ -54,5 +54,5 @@ function(vcpkg_get_fortran_compiler)
         endif()
     endif()
     
-    set(VCPKG_FORTRAN_COMPILER "${CMAKE_Fortran_COMPILER}")
+    set(VCPKG_FORTRAN_COMPILER "${CMAKE_Fortran_COMPILER}" PARENT_SCOPE)
 endfunction()
