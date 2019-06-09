@@ -1,4 +1,4 @@
 Source: glib
-Version: 2.52.3-15
+Version: 2.52.3-16
 Description: Portable, general-purpose utility library.
 Build-Depends: zlib, pcre, libffi, gettext, libiconv
