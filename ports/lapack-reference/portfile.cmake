@@ -20,8 +20,8 @@ set(lapack_ver 3.8.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  Reference-LAPACK/lapack
-    REF ${lapack_ver}
+    REPO  "Reference-LAPACK/lapack"
+    REF "v${lapack_ver}"
     SHA512 17786cb7306fccdc9b4a242de7f64fc261ebe6a10b6ec55f519deb4cb673cb137e8742aa5698fd2dc52f1cd56d3bd116af3f593a01dcf6770c4dcc86c50b2a7f
     HEAD_REF master
 )
