@@ -24,10 +24,18 @@ function(vcpkg_get_fortran_compiler)
         foreach(_pgi_path ${PGI_PATHS})
             if(IS_DIRECTORY ${_pgi_path})
                 if(EXISTS "${_pgi_path}/bin")
-                    list(APPEND CMAKE_PROGRAM_PATH "${_pgi_path}/bin") # Should probably do a search for folders in this 
+                    list(APPEND CMAKE_PROGRAM_PATH "${_pgi_path}/bin")
                 endif()
             endif()
         endforeach()
+        
+        set(_PROGRAMFILESX86 "PROGRAMFILES(x86)")
+        file(TO_CMAKE_PATH "$ENV{${_PROGRAMFILESX86}}" _programfiles_x86)
+        if(EXISTS ${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/bin/intel64)
+             list(APPEND CMAKE_PROGRAM_PATH "${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/bin/intel64")
+             # Seems like newer intel fortran compilers are not yet correctly supported by cmake
+             # I see -- The Fortran compiler identification is unknown: 
+        endif()
     endif()
 
     include(CMakeDetermineFortranCompiler)  # Find a FORTRAN compiler for us. Can be overwritten by setting CMAKE_Fortran_COMPILER
