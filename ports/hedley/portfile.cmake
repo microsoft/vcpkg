@@ -12,5 +12,8 @@ vcpkg_from_github(
 
 file(COPY ${SOURCE_PATH}/hedley.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Handle copyright
-configure_file(${CMAKE_CURRENT_LIST_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(STRINGS ${SOURCE_PATH}/hedley.h SOURCE_LINES)
+# Capture more lines than required to handle future license file changes
+list(SUBLIST SOURCE_LINES 0 30 SOURCE_LINES)
+list(JOIN SOURCE_LINES "\n" _contents)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "${_contents}")
