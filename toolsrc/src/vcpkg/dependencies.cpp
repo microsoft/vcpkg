@@ -543,30 +543,6 @@ namespace vcpkg::Dependencies
         return follow_plus_dependencies(feature, cluster, graph, graph_plan, prevent_default_features);
     }
 
-    void mark_minus_without_reinstall(Cluster& cluster,
-                                      ClusterGraph& graph,
-                                      GraphPlan& graph_plan,
-                                      const std::unordered_set<std::string>& prevent_default_features)
-    {
-        if (cluster.minus) return;
-        cluster.minus = true;
-        cluster.transient_uninstalled = true;
-
-        auto p_installed = cluster.installed.get();
-
-        if (p_installed)
-        {
-            graph_plan.remove_graph.add_vertex({&cluster});
-            for (auto&& edge : p_installed->remove_edges)
-            {
-                auto& depend_cluster = graph.get(edge);
-                Checks::check_exit(VCPKG_LINE_INFO, &cluster != &depend_cluster);
-                graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
-                mark_minus_without_reinstall(depend_cluster, graph, graph_plan, prevent_default_features);
-            }
-        }
-    }
-
     void mark_minus(Cluster& cluster,
                     ClusterGraph& graph,
                     GraphPlan& graph_plan,
@@ -692,13 +668,6 @@ namespace vcpkg::Dependencies
         spec_cluster.request_type = RequestType::USER_REQUESTED;
 
         mark_minus(spec_cluster, *m_graph, *m_graph_plan, {});
-    }
-
-    void PackageGraph::remove(const PackageSpec& spec)
-    {
-        Cluster& spec_cluster = m_graph->get(spec);
-
-        mark_minus_without_reinstall(spec_cluster, *m_graph, *m_graph_plan, {});
     }
 
     std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& options) const
@@ -833,7 +802,6 @@ namespace vcpkg::Dependencies
                 if (it != remove_plans.end())
                 {
                     rebuilt_plans.emplace_back(install_action);
-                    remove_plans.erase(it);
                 }
                 else
                 {
@@ -868,12 +836,6 @@ namespace vcpkg::Dependencies
             });
         };
 
-        static auto remove_actions_to_output_string = [](const std::vector<const RemovePlanAction*>& v) {
-            return Strings::join("\n", v, [](const RemovePlanAction* p) {
-                return to_output_string(p->request_type, p->spec.to_string());
-            });
-        };
-
         if (!excluded.empty())
         {
             System::print2("The following packages are excluded:\n", actions_to_output_string(excluded), '\n');
@@ -884,12 +846,6 @@ namespace vcpkg::Dependencies
             System::print2("The following packages are already installed:\n",
                            actions_to_output_string(already_installed_plans),
                            '\n');
-        }
-
-        if (!remove_plans.empty())
-        {
-            System::print2(
-                "The following packages will be removed:\n", remove_actions_to_output_string(remove_plans), '\n');
         }
 
         if (!rebuilt_plans.empty())
@@ -913,7 +869,7 @@ namespace vcpkg::Dependencies
         if (has_non_user_requested_packages)
             System::print2("Additional packages (*) will be modified to complete this operation.\n");
 
-        if ((!remove_plans.empty() || !rebuilt_plans.empty()) && !is_recursive)
+        if (!remove_plans.empty() && !is_recursive)
         {
             System::print2(System::Color::warning,
                            "If you are sure you want to rebuild the above packages, run the command with the "

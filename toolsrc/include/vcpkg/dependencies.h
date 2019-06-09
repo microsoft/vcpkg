@@ -166,7 +166,6 @@ namespace vcpkg::Dependencies
 
         void install(const FeatureSpec& spec, const std::unordered_set<std::string>& prevent_default_features = {});
         void upgrade(const PackageSpec& spec);
-        void remove(const PackageSpec& spec);
 
         std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
 

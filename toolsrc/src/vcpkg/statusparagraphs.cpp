@@ -18,10 +18,10 @@ namespace vcpkg
         {
             if (p->package.spec.name() == name && p->package.spec.triplet() == triplet)
             {
-                if (p->package.feature.empty())
-                    spghs.emplace(spghs.begin(), &p);
-                else
+                if (p->package.is_feature())
                     spghs.emplace_back(&p);
+                else
+                    spghs.emplace(spghs.begin(), &p);
             }
         }
         return spghs;
@@ -35,13 +35,15 @@ namespace vcpkg
             if (p->package.spec.name() == spec.name() && p->package.spec.triplet() == spec.triplet() &&
                 p->is_installed())
             {
-                if (p->package.feature.empty())
+                if (p->package.is_feature())
+                {
+                    ipv.features.emplace_back(p.get());
+                }
+                else
                 {
                     Checks::check_exit(VCPKG_LINE_INFO, ipv.core == nullptr);
                     ipv.core = p.get();
                 }
-                else
-                    ipv.features.emplace_back(p.get());
             }
         }
         if (ipv.core != nullptr)

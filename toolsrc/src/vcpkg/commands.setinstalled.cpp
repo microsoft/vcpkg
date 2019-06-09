@@ -13,25 +13,20 @@ namespace vcpkg::Commands::SetInstalled
 {
     using Install::KeepGoing;
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
     static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
-    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
+    static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
 
-    static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = {{
-        {OPTION_DRY_RUN, "Do not actually build or install"},
-        {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
+    static constexpr std::array<CommandSwitch, 4> INSTALL_SWITCHES = {{
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
-        {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
+        {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"(set-installed <package>...)"),
+        Help::create_example_string(R"(x-set-installed <package>...)"),
         1,
         SIZE_MAX,
         {INSTALL_SWITCHES},
@@ -45,7 +40,7 @@ namespace vcpkg::Commands::SetInstalled
 
         if (!GlobalState::g_binary_caching)
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "set-installed requires --binarycaching");
+            Checks::exit_with_message(VCPKG_LINE_INFO, "x-set-installed requires --binarycaching");
         }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
@@ -58,14 +53,9 @@ namespace vcpkg::Commands::SetInstalled
             Input::check_triplet(spec.package_spec.triplet(), paths);
         }
 
-        // NOTE: does not respect dry_run
-        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
-        // NOTE: does not respect use_head_version
-        const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
-        // NOTE: does not respect is_recursive
-        const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
+        const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going = Install::to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
         Dependencies::PathsPortFileProvider provider(paths);
@@ -106,10 +96,29 @@ namespace vcpkg::Commands::SetInstalled
 
         for (const auto& action : remove_plan)
         {
-            Remove::remove_package(paths, action.spec, &status_db);
+            Remove::perform_remove_plan_action(paths, action, Remove::Purge::NO, &status_db);
         }
 
         auto real_action_plan = Dependencies::create_feature_install_plan(provider, expanded_specs, status_db, {});
+
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
+            clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
+            clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
+            clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
+            use_aria2 ? Build::DownloadTool::ARIA2 : Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::NO,
+        };
+
+        for (auto& action : real_action_plan)
+        {
+            if (auto p = action.install_action.get())
+            {
+                p->build_options = install_plan_options;
+            }
+        }
 
         Dependencies::print_plan(real_action_plan, true);
 
