@@ -25,6 +25,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+# Ignore the executable
+/vcpkg
+/vcpkg.exe
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -273,14 +276,20 @@ __pycache__/
 ############################################################
 
 .vscode/
-buildtrees/
-build*/
-downloads/
-installed*/
-packages/
-scripts/buildsystems/tmp/
-#ignore custom triplets 
-triplets/*
+*.code-workspace
+/buildtrees/
+/build*/
+/downloads/
+/installed*/
+/packages/
+/scripts/buildsystems/tmp/
+/toolsrc/build.rel/
+/toolsrc/msbuild.x86.debug/
+/toolsrc/msbuild.x86.release/
+/toolsrc/msbuild.x64.debug/
+/toolsrc/msbuild.x64.release/
+#ignore custom triplets
+/triplets/*
 #add vcpkg-designed triplets back in
 !triplets/arm-uwp.cmake
 !triplets/arm-windows.cmake
@@ -292,9 +301,12 @@ triplets/*
 !triplets/x86-windows-static.cmake
 !triplets/arm64-uwp.cmake
 !triplets/arm64-windows.cmake
+!triplets/x64-linux.cmake
+!triplets/x64-osx.cmake
 *.exe
 *.zip
 
 ############################################################
 # vcpkg - End
 ############################################################
+archives

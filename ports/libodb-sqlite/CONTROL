@@ -1,5 +1,5 @@
 Source: libodb-sqlite
-Version: 2.4.0-1
+Version: 2.4.0-3
 Homepage: http://www.codesynthesis.com/download/odb/2.4
 Description: Sqlite support for the ODB ORM library
 Build-Depends: libodb, sqlite3

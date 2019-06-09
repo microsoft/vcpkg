@@ -11,21 +11,26 @@ endif()
 
 # generate atkmarshal.c and atkmarshal.h source files
 # glib-genmarshal should be installed along with glib
-if(NOT EXISTS ${CMAKE_SOURCE_DIR}/atk/atkmarshal.h OR NOT EXISTS ${CMAKE_SOURCE_DIR}/atk/atkmarshal.c)
-    find_program(GLIB_GENMARSHAL glib-genmarshal PATH_SUFFIXES glib)
-    execute_process(
-        COMMAND ${GLIB_GENMARSHAL} --prefix=atk_marshal atkmarshal.list --header
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/atk
-        OUTPUT_FILE ${CMAKE_SOURCE_DIR}/atk/atkmarshal.h)
-    execute_process(
-        COMMAND ${GLIB_GENMARSHAL} --prefix=atk_marshal atkmarshal.list --body
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/atk
-        OUTPUT_FILE ${CMAKE_SOURCE_DIR}/atk/atkmarshal.c)
-endif()
+find_program(GLIB_GENMARSHAL glib-genmarshal PATH_SUFFIXES glib)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/atk)
 
-configure_file(config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
+message("Generating atkmarshal.h: ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --header")
+execute_process(
+    COMMAND ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --header
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/atk
+    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/atk/atkmarshal.h
+)
+
+message("Generating atkmarshal.c: ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --body")
+execute_process(
+    COMMAND ${GLIB_GENMARSHAL} --prefix=atk_marshal ${CMAKE_CURRENT_SOURCE_DIR}/atk/atkmarshal.list --body
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/atk
+    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/atk/atkmarshal.c
+)
+
+configure_file(config.h.win32 ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 add_definitions(-DHAVE_CONFIG_H)
-include_directories(. ./atk)
+include_directories(. ./atk ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/atk)
 
 find_path(GLIB_INCLUDE_DIR glib.h)
 find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_VERSION})

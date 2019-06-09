@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
@@ -38,12 +38,12 @@ namespace vcpkg::Commands::Cache
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const std::vector<BinaryParagraph> binary_paragraphs = read_all_binary_paragraphs(paths);
         if (binary_paragraphs.empty())
         {
-            System::println("No packages are cached.");
+            System::print2("No packages are cached.\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
@@ -51,8 +51,7 @@ namespace vcpkg::Commands::Cache
         {
             for (const BinaryParagraph& binary_paragraph : binary_paragraphs)
             {
-                const std::string displayname = binary_paragraph.displayname();
-                System::println(displayname);
+                System::print2(binary_paragraph.displayname(), '\n');
             }
         }
         else
@@ -61,12 +60,12 @@ namespace vcpkg::Commands::Cache
             for (const BinaryParagraph& binary_paragraph : binary_paragraphs)
             {
                 const std::string displayname = binary_paragraph.displayname();
-                if (Strings::case_insensitive_ascii_find(displayname, args.command_arguments[0]) == displayname.end())
+                if (!Strings::case_insensitive_ascii_contains(displayname, args.command_arguments[0]))
                 {
                     continue;
                 }
 
-                System::println(displayname);
+                System::print2(displayname, '\n');
             }
         }
 

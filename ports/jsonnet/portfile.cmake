@@ -1,25 +1,37 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO google/jsonnet
-    REF 8606e21dfb599f838890944c6d96d9aa7c70b8c1
-    SHA512 955a801a0e50c71a8e7f79cb432496ff23c0769ea5bb17c8dbda8f88d0936d8c3c1213c219641982d606c91adcc48c4354ff02b759f21202831a23ca584d3f0b
-    HEAD_REF master
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO google/jsonnet
+  REF c323f5ce5b8aa663585d23dc0fb94d4b166c6f16
+  SHA512 d9f84c39929e9e80272e2b834f68a13b48c1cb4d64b70f5b6fa16e677555d947f7cf57372453e23066a330faa6a429b9aa750271b46f763581977a223d238785
+  HEAD_REF master
+  PATCHES
+	001-enable-msvc.patch
 )
 
-vcpkg_execute_required_process(
-  COMMAND Powershell -Command "((Get-Content -Encoding Byte ${SOURCE_PATH}/stdlib/std.jsonnet) -join ',') + ',0' > ${SOURCE_PATH}/core/std.jsonnet.h"
-  WORKING_DIRECTORY ${SOURCE_PATH}
-  LOGNAME "std.jsonnet"
-)
-
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  vcpkg_execute_required_process(
+    COMMAND Powershell -Command "((Get-Content -Encoding Byte \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' > \"${SOURCE_PATH}/core/std.jsonnet.h\""
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+    LOGNAME "std.jsonnet"
+  )
+else()
+  vcpkg_execute_required_process(
+    COMMAND bash -c "((od -v -Anone -t u1 \"${SOURCE_PATH}/stdlib/std.jsonnet\" | tr ' ' '\\n' | grep -v '^$' | tr '\\n' ',' ) && echo '0') > \"${SOURCE_PATH}/core/std.jsonnet.h\""
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+    LOGNAME "std.jsonnet"
+  )
+endif()
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
-  OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON -DDISABLE_INSTALL_TOOLS=ON
+  PREFER_NINJA
+  OPTIONS -DBUILD_JSONNET=OFF -DBUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
@@ -27,3 +39,4 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/jsonnet)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jsonnet RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -1,4 +1,4 @@
 Source: pdcurses
-Version: 3.4-1
+Version: 3.6
 Homepage: http://downloads.sourceforge.net/project/pdcurses/pdcurses/3.4
 Description: Public Domain Curses - a curses library for environments that don't fit the termcap/terminfo model.

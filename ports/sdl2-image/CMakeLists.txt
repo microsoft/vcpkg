@@ -3,7 +3,7 @@ project(SDL2_image C)
 
 ### configuration ###
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/libwebp")
 # enable all file formats which are supported natively
 set(SUPPORTED_FORMATS BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
 
@@ -11,6 +11,8 @@ set(SUPPORTED_FORMATS BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
 # first try to load them statically (lib file in vcpkg installation)
 # if this fails try to make them a dynamic dependency (dll will be loaded at runtime) if possible. vcpkg cannot resolve these dependencies!
 # else do not support this file format at all
+
+# Can be explicitly enabled or disabled via USE_XYZ
 set(DEPENDENCIES PNG JPEG TIFF WEBP)
 
 # patch library names for preprocessor flags
@@ -42,8 +44,18 @@ add_library(SDL2_image
     IMG_xpm.c
     IMG_xv.c
     IMG_xxx.c
+    IMG_WIC.c
     version.rc
     )
+
+if (APPLE)
+    target_sources(SDL2_image PRIVATE
+        IMG_ImageIO.m
+    )
+    target_compile_options(SDL2_image BEFORE PRIVATE
+        "-x" "objective-c"
+    )
+endif()
 
 set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 
@@ -53,16 +65,19 @@ endforeach(FORMAT)
 
 # SDL
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)
 include_directories(${CMAKE_SOURCE_DIR})
 
-target_link_libraries(SDL2_image ${SDL_LIBRARY})
+target_link_libraries(SDL2_image SDL2::SDL2)
 
 # external dependencies
-foreach(DEPENDENCY ${DEPENDENCIES})
+foreach(DEPENDENCY IN LISTS DEPENDENCIES)
+    if(NOT USE_${DEPENDENCY})
+        continue()
+    endif()
     find_package(${DEPENDENCY})
 
     if(NOT DEFINED ${DEPENDENCY}_FLAG)
@@ -88,15 +103,22 @@ endif()
 
 
 install(TARGETS SDL2_image
+    EXPORT SDL2_image
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
 install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
 
+install(EXPORT SDL2_image
+    DESTINATION share/sdl2-image/
+    FILE sdl2-image-config.cmake
+    NAMESPACE SDL2::
+)
+
 
 message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
+message(STATUS "  " SDL2::SDL2)
 foreach(DEPENDENCY ${DEPENDENCIES})
     if(${DEPENDENCY}_FOUND)
         message(STATUS "  " ${DEPENDENCY})

@@ -1,5 +1,5 @@
 Source: physfs
-Version: 2.0.3-2
+Version: 3.0.2
 Homepage: https://icculus.org/physfs/downloads
 Description: a library to provide abstract access to various archives
 Build-Depends: zlib

@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
   message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
@@ -12,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF feb2018
-    SHA512 b5d21c8960ef9c8f2e608807ce29fd4873d0f4ad5bb0b6432f6efbb6110bfd61a16fbaab8a5c626cc1977f48923a562a618f29b9b2f112db625c0a8eb43f0422
+    REF apr2019
+    SHA512 a9e0dbf6483633a1727592de7e2fa733de993daff848d9ec2241ce54b67c7d24ed0419058f2f6ce256021dcf7e16d178b62ed9b8c7a1756504ab044f8740be1d
     HEAD_REF master
 )
 

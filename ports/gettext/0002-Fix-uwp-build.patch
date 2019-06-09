@@ -1,7 +1,7 @@
-diff --git "a/gettext-0.19/gettext-runtime/intl/langprefs.c" "b/gettext-0.19/gettext-runtime/intl/langprefs.c"
+diff --git "a/gettext-runtime/intl/langprefs.c" "b/gettext-runtime/intl/langprefs.c"
 index aeb1c4e9..2ac531be 100644
---- "a/gettext-0.19/gettext-runtime/intl/langprefs.c"
-+++ "b/gettext-0.19/gettext-runtime/intl/langprefs.c"
+--- "a/gettext-runtime/intl/langprefs.c"
++++ "b/gettext-runtime/intl/langprefs.c"
 @@ -33,7 +33,13 @@ extern void _nl_locale_name_canonicalize (char *name);
  #endif
  
@@ -17,10 +17,10 @@ index aeb1c4e9..2ac531be 100644
  #endif
  
  #ifdef WIN32_NATIVE
-diff --git "a/gettext-0.19/gettext-runtime/intl/localcharset.c" "b/gettext-0.19/gettext-runtime/intl/localcharset.c"
+diff --git "a/gettext-runtime/intl/localcharset.c" "b/gettext-runtime/intl/localcharset.c"
 index 670b8e6c..035a96bd 100644
---- "a/gettext-0.19/gettext-runtime/intl/localcharset.c"
-+++ "b/gettext-0.19/gettext-runtime/intl/localcharset.c"
+--- "a/gettext-runtime/intl/localcharset.c"
++++ "b/gettext-runtime/intl/localcharset.c"
 @@ -36,6 +36,16 @@
  # define WINDOWS_NATIVE
  #endif
@@ -56,10 +56,10 @@ index 670b8e6c..035a96bd 100644
  
    static char buf[2 + 10 + 1];
  
-diff --git "a/gettext-0.19/gettext-runtime/intl/localename.c" "b/gettext-0.19/gettext-runtime/intl/localename.c"
+diff --git "a/gettext-runtime/intl/localename.c" "b/gettext-runtime/intl/localename.c"
 index 108dd6f1..ace3aa88 100644
---- "a/gettext-0.19/gettext-runtime/intl/localename.c"
-+++ "b/gettext-0.19/gettext-runtime/intl/localename.c"
+--- "a/gettext-runtime/intl/localename.c"
++++ "b/gettext-runtime/intl/localename.c"
 @@ -54,7 +54,13 @@
  #endif
  

@@ -1,28 +1,16 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF 1.2.5
-    SHA512 2d3d51b16edf4fd111a6c565c9bcf99adc35372d642c3850a69cc1a9010e3f1c6953e6bfe37088f85c2fb31c27680cc7f2f66ea68399144ad87cf6d490af4789
+    REF 1.3.5
+    SHA512 f99fcbec60fbd1683d8aacc35ff8ad9ee1c84374132ad4cc8c0f56662f5d33f940f89028cf3e577cde3314fd0766c124f61798121e4127e888f302e9efe1a004
     HEAD_REF master
+    PATCHES
+        fix-compile-error-uwp.patch
+		fix-uwperror.patch
 )
 
 vcpkg_configure_cmake(

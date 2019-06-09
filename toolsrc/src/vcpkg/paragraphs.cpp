@@ -1,8 +1,9 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/globalstate.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
 
@@ -210,17 +211,7 @@ namespace vcpkg::Paragraphs
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
-            auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
-            if (!GlobalState::feature_packages)
-            {
-                if (auto ptr = csf.get())
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, ptr->get() != nullptr);
-                    ptr->get()->core_paragraph->default_features.clear();
-                    ptr->get()->feature_paragraphs.clear();
-                }
-            }
-            return csf;
+            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = path.filename().generic_u8string();
@@ -228,7 +219,7 @@ namespace vcpkg::Paragraphs
         return error_info;
     }
 
-    Expected<BinaryControlFile> try_load_cached_control_package(const VcpkgPaths& paths, const PackageSpec& spec)
+    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
@@ -251,7 +242,13 @@ namespace vcpkg::Paragraphs
     LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
         LoadResults ret;
-        for (auto&& path : fs.get_files_non_recursive(ports_dir))
+        auto port_dirs = fs.get_files_non_recursive(ports_dir);
+        Util::sort(port_dirs);
+        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
+            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
+        });
+
+        for (auto&& path : port_dirs)
         {
             auto maybe_spgh = try_load_port(fs, path);
             if (const auto spgh = maybe_spgh.get())
@@ -272,7 +269,7 @@ namespace vcpkg::Paragraphs
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
-            if (GlobalState::debugging)
+            if (Debug::g_debugging)
             {
                 print_error_message(results.errors);
             }
@@ -280,11 +277,11 @@ namespace vcpkg::Paragraphs
             {
                 for (auto&& error : results.errors)
                 {
-                    System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
+                    System::print2(
+                        System::Color::warning, "Warning: an error occurred while parsing '", error->name, "'\n");
                 }
-                System::println(System::Color::warning,
-                                "Use '--debug' to get more information about the parse failures.\n");
+                System::print2(System::Color::warning,
+                               "Use '--debug' to get more information about the parse failures.\n\n");
             }
         }
         return std::move(results.paragraphs);

@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 17dc02e..e489d75 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -42,7 +42,7 @@ set(VORPALINE_VERSION_MINOR 4)
+@@ -42,7 +42,7 @@ set(VORPALINE_VERSION_MINOR 6)
  set(VORPALINE_VERSION_PATCH 9)
  set(VORPALINE_VERSION ${VORPALINE_VERSION_MAJOR}.${VORPALINE_VERSION_MINOR}.${VORPALINE_VERSION_PATCH})
  
@@ -130,7 +130,7 @@ diff --git a/src/lib/third_party/numerics/CMakeLists.txt b/src/lib/third_party/n
 index 5789cd2..e4262e3 100644
 --- a/src/lib/third_party/numerics/CMakeLists.txt
 +++ b/src/lib/third_party/numerics/CMakeLists.txt
-@@ -10,16 +10,18 @@ endif()
+@@ -10,16 +10,19 @@ endif()
  
  include_directories(${GEOGRAM_SOURCE_DIR}/src/lib/third_party/numerics/INCLUDE)
  
@@ -165,11 +165,7 @@ index 2b69a1e..a504538 100644
 -	extern char **xargv;
 -	Const char *t;
 -	int i;
-+	// extern int xargc;
-+	// extern char **xargv;
-+	// Const char *t;
-+	// int i;
- 	
+-	
 -	if(*n>=0 && *n<xargc)
 -		t = xargv[*n];
 -	else
@@ -179,6 +175,11 @@ index 2b69a1e..a504538 100644
 -	for( ; i<ls ; ++i)
 -		*s++ = ' ';
 -	}
++	// extern int xargc;
++	// extern char **xargv;
++	// Const char *t;
++	// int i;
++	// 
 +	// if(*n>=0 && *n<xargc)
 +	// 	t = xargv[*n];
 +	// else

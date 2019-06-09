@@ -1,0 +1,13 @@
+diff --git a/src/sfml/Graphics/CMakeLists.txt b/src/sfml/Graphics/CMakeLists.txt
+index 883c758..76f3b6f 100644
+--- a/src/sfml/Graphics/CMakeLists.txt
++++ b/src/sfml/Graphics/CMakeLists.txt
+@@ -135,7 +135,7 @@ if(SFML_OS_ANDROID)
+ endif()
+ 
+ sfml_find_package(Freetype INCLUDE "FREETYPE_INCLUDE_DIRS" LINK "FREETYPE_LIBRARY")
+-target_link_libraries(sfml-graphics PRIVATE Freetype)
++target_link_libraries(sfml-graphics PRIVATE Freetype::Freetype)
+ 
+ # add preprocessor symbols
+ target_compile_definitions(sfml-graphics PRIVATE "STBI_FAILURE_USERMSG")

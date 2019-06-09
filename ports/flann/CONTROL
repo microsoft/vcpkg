@@ -1,4 +1,5 @@
 Source: flann
-Version: 1.9.1-7
+Version: jan2019
 Homepage: https://github.com/mariusmuja/flann
+Build-Depends: lz4
 Description: Fast Library for Approximate Nearest Neighbors

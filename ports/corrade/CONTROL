@@ -1,24 +1,20 @@
 Source: corrade
-Version: 2018.02-1
+Version: 2019.01-1
 Homepage: https://github.com/mosra/corrade
 Description: C++11/C++14 multiplatform utility library http://magnum.graphics/corrade/
 Default-Features: interconnect, pluginmanager, testsuite, utility
 
 Feature: interconnect
-Homepage: https://github.com/mosra/corrade
 Description: Interconnect library
 Build-Depends: corrade[utility]
 
 Feature: pluginmanager
-Homepage: https://github.com/mosra/corrade
 Description: PluginManager library
 Build-Depends: corrade[utility]
 
 Feature: testsuite
-Homepage: https://github.com/mosra/corrade
 Description: TestSuite library
 Build-Depends: corrade[utility]
 
 Feature: utility
-Homepage: https://github.com/mosra/corrade
 Description: Utility library

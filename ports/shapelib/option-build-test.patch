@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c3ef935..845ec06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -148,7 +148,7 @@ set(executables
+ find_program(BASH_EXECUTABLE bash)
+ find_program(SED_EXECUTABLE sed)
+ if(BASH_EXECUTABLE AND SED_EXECUTABLE)
+-  set(BUILD_TEST ON)
++  option(BUILD_TEST "" ON)
+ else(BASH_EXECUTABLE AND SED_EXECUTABLE)
+   message(STATUS "WARNING: sed or bash not available so disabling testing")
+ endif(BASH_EXECUTABLE AND SED_EXECUTABLE)

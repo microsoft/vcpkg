@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
@@ -17,17 +17,12 @@ namespace vcpkg::Update
     std::vector<OutdatedPackage> find_outdated_packages(const Dependencies::PortFileProvider& provider,
                                                         const StatusParagraphs& status_db)
     {
-        const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+        auto installed_packages = get_installed_ports(status_db);
 
         std::vector<OutdatedPackage> output;
-        for (const StatusParagraph* pgh : installed_packages)
+        for (auto&& ipv : installed_packages)
         {
-            if (!pgh->package.feature.empty())
-            {
-                // Skip feature paragraphs; only consider master paragraphs for needing updates.
-                continue;
-            }
-
+            const auto& pgh = ipv.core;
             auto maybe_scf = provider.get_control_file(pgh->package.spec.name());
             if (auto p_scf = maybe_scf.get())
             {
@@ -58,7 +53,7 @@ namespace vcpkg::Update
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         args.parse_arguments(COMMAND_STRUCTURE);
-        System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
+        System::print2("Using local portfile versions. To update the local portfiles, use `git pull`.\n");
 
         const StatusParagraphs status_db = database_load_check(paths);
 
@@ -69,21 +64,22 @@ namespace vcpkg::Update
 
         if (outdated_packages.empty())
         {
-            System::println("No packages need updating.");
+            System::print2("No packages need updating.\n");
         }
         else
         {
-            System::println("The following packages differ from their port versions:");
+            System::print2("The following packages differ from their port versions:\n");
             for (auto&& package : outdated_packages)
             {
-                System::println("    %-32s %s", package.spec, package.version_diff.to_string());
+                System::printf("    %-32s %s\n", package.spec, package.version_diff.to_string());
             }
-            System::println("\n"
-                            "To update these packages and all dependencies, run\n"
-                            "    .\\vcpkg upgrade\n"
-                            "\n"
-                            "To only remove outdated packages, run\n"
-                            "    .\\vcpkg remove --outdated\n");
+            System::print2("\n"
+                           "To update these packages and all dependencies, run\n"
+                           "    .\\vcpkg upgrade\n"
+                           "\n"
+                           "To only remove outdated packages, run\n"
+                           "    .\\vcpkg remove --outdated\n"
+                           "\n");
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

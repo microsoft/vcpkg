@@ -12,12 +12,14 @@ namespace vcpkg
         INVALID_CHARACTERS
     };
 
+    void to_string(std::string& out, ::vcpkg::PackageSpecParseResult p);
+
     CStringView to_string(PackageSpecParseResult ev) noexcept;
 
     template<>
     struct ErrorHolder<PackageSpecParseResult>
     {
-        ErrorHolder() : m_err(PackageSpecParseResult::SUCCESS) {}
+        ErrorHolder() noexcept : m_err(PackageSpecParseResult::SUCCESS) {}
         ErrorHolder(PackageSpecParseResult err) : m_err(err) {}
 
         bool has_error() const { return m_err != PackageSpecParseResult::SUCCESS; }

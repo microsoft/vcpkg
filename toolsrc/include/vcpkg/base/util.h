@@ -3,15 +3,15 @@
 #include <algorithm>
 #include <map>
 #include <mutex>
+#include <unordered_map>
 #include <utility>
 #include <vector>
-
-#include <vcpkg/base/optional.h>
 
 namespace vcpkg::Util
 {
     template<class Container>
-    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
+    using ElementT =
+        std::remove_reference_t<decltype(*std::declval<typename std::remove_reference_t<Container>::iterator>())>;
 
     namespace Vectors
     {
@@ -24,18 +24,29 @@ namespace vcpkg::Util
 
     namespace Sets
     {
-        template<class Container>
-        bool contains(const Container& container, const ElementT<Container>& item)
+        template<class Container, class Key>
+        bool contains(const Container& container, const Key& item)
         {
-            return container.find(item) != container.cend();
+            return container.find(item) != container.end();
         }
     }
 
-    template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
+    namespace Maps
+    {
+        template<class K, class V1, class V2, class Func>
+        void transform_values(const std::unordered_map<K, V1>& container, std::unordered_map<K, V2>& output, Func func)
+        {
+            std::for_each(container.cbegin(), container.cend(), [&](const std::pair<const K, V1>& p) {
+                output[p.first] = func(p.second);
+            });
+        }
+    }
 
-    template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
-    std::vector<Out> fmap(Cont&& xs, Func&& f)
+    template<class Range, class Func>
+    using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
+
+    template<class Range, class Func, class Out = FmapOut<Range, Func>>
+    std::vector<Out> fmap(Range&& xs, Func&& f)
     {
         std::vector<Out> ret;
         ret.reserve(xs.size());
@@ -62,18 +73,6 @@ namespace vcpkg::Util
     }
 
     template<class Container, class Pred>
-    void stable_keep_if(Container& cont, Pred pred)
-    {
-        cont.erase(std::stable_partition(cont.begin(), cont.end(), pred), cont.end());
-    }
-
-    template<class Container, class Pred>
-    void unstable_keep_if(Container& cont, Pred pred)
-    {
-        cont.erase(std::partition(cont.begin(), cont.end(), pred), cont.end());
-    }
-
-    template<class Container, class Pred>
     void erase_remove_if(Container& cont, Pred pred)
     {
         cont.erase(std::remove_if(cont.begin(), cont.end(), pred), cont.end());
@@ -93,12 +92,6 @@ namespace vcpkg::Util
         using std::begin;
         using std::end;
         return std::find_if(begin(cont), end(cont), pred);
-    }
-
-    template<class Container, class T = ElementT<Container>>
-    std::vector<T*> element_pointers(Container&& cont)
-    {
-        return fmap(cont, [](auto&& x) { return &x; });
     }
 
     template<class Container, class Pred>
@@ -158,6 +151,8 @@ namespace vcpkg::Util
 
         MoveOnlyBase& operator=(const MoveOnlyBase&) = delete;
         MoveOnlyBase& operator=(MoveOnlyBase&&) = default;
+
+        ~MoveOnlyBase() = default;
     };
 
     struct ResourceBase
@@ -168,6 +163,8 @@ namespace vcpkg::Util
 
         ResourceBase& operator=(const ResourceBase&) = delete;
         ResourceBase& operator=(ResourceBase&&) = delete;
+
+        ~ResourceBase() = default;
     };
 
     template<class T>
@@ -213,5 +210,11 @@ namespace vcpkg::Util
         {
             return e == E::YES;
         }
+    }
+
+    template<class T>
+    void unused(T&& param)
+    {
+        (void)param;
     }
 }

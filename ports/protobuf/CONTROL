@@ -1,9 +1,8 @@
 Source: protobuf
-Version: 3.5.1
+Version: 3.7.1
 Homepage: https://github.com/google/protobuf
 Description: Protocol Buffers - Google's data interchange format
 
 Feature: zlib
-Homepage: https://github.com/google/protobuf
 Description: ZLib based features like Gzip streams
 Build-Depends: zlib

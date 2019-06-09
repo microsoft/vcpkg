@@ -1,103 +1,89 @@
 Source: magnum-plugins
-Version: 2018.02-1
-Build-Depends: magnum
+Version: 2019.01-1
+Build-Depends: magnum[core]
 Homepage: https://github.com/mosra/magnum-plugins
 Description: Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
-Default-Features: anyimageimporter, anysceneimporter, anyimageconverter, ddsimporter, miniexrimageconverter, opengeximporter, stanfordimporter, stbimageconverter, stbimageimporter
-
-Feature: anyimageimporter
-Homepage: https://github.com/mosra/magnum-plugins
-Description: AnyImageImporter plugin
-
-Feature: anyaudioimporter
-Homepage: https://github.com/mosra/magnum-plugins
-Description: AnyAudioImporter plugin
-
-Feature: anyimageconverter
-Homepage: https://github.com/mosra/magnum-plugins
-Description: AnyImageConverter plugin
-
-Feature: anysceneimporter
-Homepage: https://github.com/mosra/magnum-plugins
-Description: AnySceneImporter plugin
+Default-Features: ddsimporter, miniexrimageconverter, opengeximporter, stanfordimporter, stbimageconverter, stbimageimporter
 
 Feature: assimpimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: AssimpImporter plugin
-Build-Depends: assimp, magnum-plugins[anyimageimporter]
+Build-Depends: assimp, magnum[anyimageimporter], magnum[trade]
+
+Feature: openddl
+Description: OpenDdl library
 
 Feature: ddsimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: DdsImporter plugin
+Build-Depends: magnum[trade]
 
 Feature: devilimageimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: DevIlImageImporter plugin
-Build-Depends: devil
+Build-Depends: devil, magnum[trade]
 
 Feature: drflacaudioimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: DrFlacAudioImporter plugin
 Build-Depends: magnum[audio]
 
 Feature: drwavaudioimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: DrWavAudioImporter plugin
 Build-Depends: magnum[audio]
+#
+#Feature: faad2audioimporter
+#Description: Faad2AudioImporter plugin
+#Build-Depends: magnum[audio], faad2
 
 Feature: freetypefont
-Homepage: https://github.com/mosra/magnum-plugins
 Description: FreeTypeFont plugin
 Build-Depends: freetype, magnum[text]
 
 Feature: harfbuzzfont
-Homepage: https://github.com/mosra/magnum-plugins
 Description: HarfBuzzFont plugin
 Build-Depends: harfbuzz, magnum-plugins[freetypefont]
 
 Feature: jpegimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: JpegImporter plugin
-Build-Depends: libjpeg-turbo
+Build-Depends: libjpeg-turbo, magnum[trade]
+
+Feature: jpegimageconverter
+Description: JpegImageConverter plugin
+Build-Depends: libjpeg-turbo, magnum[trade]
 
 Feature: miniexrimageconverter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: MiniExrImageConverter plugin
+Build-Depends: magnum[trade]
 
 Feature: opengeximporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: OpenGexImporter plugin
-Build-Depends: magnum-plugins[anyimageimporter]
+Build-Depends: magnum[anyimageimporter], magnum[trade], magnum-plugins[openddl]
 
 Feature: pngimageconverter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: PngImageConverter plugin
-Build-Depends: libpng
+Build-Depends: libpng, magnum[trade]
 
 Feature: pngimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: PngImporter plugin
-Build-Depends: libpng
+Build-Depends: libpng, magnum[trade]
 
 Feature: stanfordimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: StanfordImporter plugin
+Build-Depends: magnum[trade]
 
 Feature: stbimageconverter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: StbImageConverter plugin
+Build-Depends: magnum[trade]
 
 Feature: stbimageimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: StbImageImporter plugin
+Build-Depends: magnum[trade]
 
 Feature: stbtruetypefont
-Homepage: https://github.com/mosra/magnum-plugins
 Description: StbTrueTypeFont plugin
 Build-Depends: magnum[text]
 
 Feature: stbvorbisaudioimporter
-Homepage: https://github.com/mosra/magnum-plugins
 Description: StbVorbisAudioImporter plugin
 Build-Depends: magnum[audio]
 
+Feature: tinygltfimporter
+Description: TinyGltfImporter plugin
+Build-Depends: magnum[anyimageimporter], magnum-plugins[stbimageimporter], magnum[trade]

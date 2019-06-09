@@ -1,16 +1,15 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported by EASTL. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eastl)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
-    REF 3.07.02
-    SHA512 332db00b69a5493158daf1b0b89717646f0a31aeb0bfc9bf3415caee928102c3253c47c21eda0789350095811db45f5eae82ca24fb3fe1e9d67072f9fcd21235
+    REF 3.13.05
+    SHA512 2364554339203c972f10d58ebe8f14fb221a40451f4cd2c3c5acd6891e8580c1a0a5d4ba592c91349d3feca50d9880648bb37358820a1c9552dde3f7af400a82
     HEAD_REF master
+    PATCHES fixchar8_t.patch # can be removed after electronicarts/EASTL#274 is resolved
 )
 
 vcpkg_configure_cmake(

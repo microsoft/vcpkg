@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/bimap
-    REF boost-1.66.0
-    SHA512 f0784a2fd2be60b404d8a3bb43fa4685ab75a17a18e9e9fb0a8e8d1df18323ad02ad12720f5cfb310c93a33fd3bdec09d8ac92cbc4ff875f9ff4c3a6263d4f8b
+    REF boost-1.70.0
+    SHA512 9f6938bdbbd32a262cfd4c25b90930df6e0610aacff80a26b7a2caa38fdcaa309bdd7da0405e4529dfaf07314f887eb2b928db89aef1088fdbd7bd1da7bf5c0b
     HEAD_REF master
 )
 

@@ -5,10 +5,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/fiber
-    REF boost-1.66.0
-    SHA512 ba3980846e6602999a2187fb40c9c17d0bd0a8b7681bcdb2c9695ec5e218b6306c52680b565e176f170a7219aedf86596e356e92612bee87bf1ad8123261ccaf
+    REF boost-1.70.0
+    SHA512 d0f844808bf8644d3aad6db3cd44629c6355d6e7b028d99cecc104f97b5bcf765f4238c1c97f693af5693738813517a00c6e692840b24a2f59af376b4e7ac14f
     HEAD_REF master
 )
+
+file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
+string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})

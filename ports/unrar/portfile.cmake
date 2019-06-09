@@ -5,9 +5,7 @@ set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
 set(UNRAR_URL http://www.rarlab.com/rar/${UNRAR_FILENAME})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/unrar)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Unrar does not currently support building statically")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 #SRC
 vcpkg_download_distfile(ARCHIVE

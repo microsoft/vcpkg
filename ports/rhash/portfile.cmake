@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rhash/RHash
-    REF v1.3.5
-    SHA512 e8450aab0c16bfb975bf4aeee218740fb4d86d5514e426b70c3edb84e4d63865cd4051939aa95c24a87a78baaedc49e40bb509b2610e89ca3745930808b3ef6c
+    REF v1.3.8
+    SHA512 9dba4fa4dd49d323f2e440c5b93eac1ef62eb4046ec4ef611f0978c12c1739002f1ac1f1ec5e61bd359dc89e9ed612db71be91a795184ac5d5433280d27fa4c1
     HEAD_REF master)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/librhash)

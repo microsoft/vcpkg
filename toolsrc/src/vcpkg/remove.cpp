@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
@@ -55,10 +55,11 @@ namespace vcpkg::Remove
 
                 auto target = paths.installed / suffix;
 
-                const auto status = fs.status(target, ec);
+                const auto status = fs.symlink_status(target, ec);
                 if (ec)
                 {
-                    System::println(System::Color::error, "failed: %s", ec.message());
+                    System::print2(
+                        System::Color::error, "failed: status(", target.u8string(), "): ", ec.message(), "\n");
                     continue;
                 }
 
@@ -66,21 +67,32 @@ namespace vcpkg::Remove
                 {
                     dirs_touched.push_back(target);
                 }
-                else if (fs::is_regular_file(status))
+                else if (fs::is_regular_file(status) || fs::is_symlink(status))
                 {
                     fs.remove(target, ec);
                     if (ec)
                     {
-                        System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
+#if defined(_WIN32)
+                        fs::stdfs::permissions(target, fs::stdfs::perms::owner_all | fs::stdfs::perms::group_all, ec);
+                        fs.remove(target, ec);
+                        if (ec)
+                        {
+                            System::printf(
+                                System::Color::error, "failed: remove(%s): %s\n", target.u8string(), ec.message());
+                        }
+#else
+                        System::printf(
+                            System::Color::error, "failed: remove(%s): %s\n", target.u8string(), ec.message());
+#endif
                     }
                 }
-                else if (!fs::status_known(status))
+                else if (!fs::stdfs::exists(status))
                 {
-                    System::println(System::Color::warning, "Warning: unknown status: %s", target.u8string());
+                    System::printf(System::Color::warning, "Warning: %s: file not found\n", target.u8string());
                 }
                 else
                 {
-                    System::println(System::Color::warning, "Warning: %s: cannot handle file type", target.u8string());
+                    System::printf(System::Color::warning, "Warning: %s: cannot handle file type\n", target.u8string());
                 }
             }
 
@@ -94,7 +106,7 @@ namespace vcpkg::Remove
                     fs.remove(*b, ec);
                     if (ec)
                     {
-                        System::println(System::Color::error, "failed: %s", ec.message());
+                        System::print2(System::Color::error, "failed: ", ec.message(), "\n");
                     }
                 }
             }
@@ -132,10 +144,10 @@ namespace vcpkg::Remove
             switch (plan_type)
             {
                 case RemovePlanType::NOT_INSTALLED:
-                    System::println("The following packages are not installed, so not removed:\n%s", as_string);
+                    System::print2("The following packages are not installed, so not removed:\n", as_string, "\n");
                     continue;
                 case RemovePlanType::REMOVE:
-                    System::println("The following packages will be removed:\n%s", as_string);
+                    System::print2("The following packages will be removed:\n", as_string, "\n");
                     continue;
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
@@ -152,12 +164,12 @@ namespace vcpkg::Remove
         switch (action.plan_type)
         {
             case RemovePlanType::NOT_INSTALLED:
-                System::println(System::Color::success, "Package %s is not installed", display_name);
+                System::printf(System::Color::success, "Package %s is not installed\n", display_name);
                 break;
             case RemovePlanType::REMOVE:
-                System::println("Removing package %s... ", display_name);
+                System::printf("Removing package %s...\n", display_name);
                 remove_package(paths, action.spec, status_db);
-                System::println(System::Color::success, "Removing package %s... done", display_name);
+                System::printf(System::Color::success, "Removing package %s... done\n", display_name);
                 break;
             case RemovePlanType::UNKNOWN:
             default: Checks::unreachable(VCPKG_LINE_INFO);
@@ -165,11 +177,11 @@ namespace vcpkg::Remove
 
         if (purge == Purge::YES)
         {
-            System::println("Purging package %s... ", display_name);
+            System::printf("Purging package %s...\n", display_name);
             Files::Filesystem& fs = paths.get_filesystem();
             std::error_code ec;
             fs.remove_all(paths.packages / action.spec.dir(), ec);
-            System::println(System::Color::success, "Purging package %s... done", display_name);
+            System::printf(System::Color::success, "Purging package %s... done\n", display_name);
         }
     }
 
@@ -190,9 +202,9 @@ namespace vcpkg::Remove
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
         const StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+        auto installed_packages = get_installed_ports(status_db);
 
-        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh->package.spec.to_string(); });
+        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh.spec().to_string(); });
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -213,7 +225,7 @@ namespace vcpkg::Remove
         {
             if (args.command_arguments.size() != 0)
             {
-                System::println(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'");
+                System::print2(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
@@ -224,7 +236,7 @@ namespace vcpkg::Remove
 
             if (specs.empty())
             {
-                System::println(System::Color::success, "There are no outdated packages.");
+                System::print2(System::Color::success, "There are no outdated packages.\n");
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
         }
@@ -232,11 +244,12 @@ namespace vcpkg::Remove
         {
             if (args.command_arguments.size() < 1)
             {
-                System::println(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'");
+                System::print2(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
             specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-                return Input::check_and_get_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
+                return Input::check_and_get_package_spec(
+                    std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
             });
 
             for (auto&& spec : specs)
@@ -247,8 +260,8 @@ namespace vcpkg::Remove
         const bool purge_was_passed = Util::Sets::contains(options.switches, OPTION_PURGE);
         if (purge_was_passed && no_purge_was_passed)
         {
-            System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
-            System::print(COMMAND_STRUCTURE.example_text);
+            System::print2(System::Color::error, "Error: cannot specify both --no-purge and --purge.\n");
+            System::print2(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         const Purge purge = to_purge(purge_was_passed || !no_purge_was_passed);
@@ -269,13 +282,13 @@ namespace vcpkg::Remove
 
         if (has_non_user_requested_packages)
         {
-            System::println(System::Color::warning,
-                            "Additional packages (*) need to be removed to complete this operation.");
+            System::print2(System::Color::warning,
+                           "Additional packages (*) need to be removed to complete this operation.\n");
 
             if (!is_recursive)
             {
-                System::println(System::Color::warning,
-                                "If you are sure you want to remove them, run the command with the --recurse option");
+                System::print2(System::Color::warning,
+                               "If you are sure you want to remove them, run the command with the --recurse option\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }

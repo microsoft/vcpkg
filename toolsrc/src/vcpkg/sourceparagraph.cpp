@@ -6,7 +6,8 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/span.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg
@@ -47,8 +48,12 @@ namespace vcpkg
             Checks::check_exit(VCPKG_LINE_INFO, error_info != nullptr);
             if (error_info->error)
             {
-                System::println(
-                    System::Color::error, "Error: while loading %s: %s", error_info->name, error_info->error.message());
+                System::print2(System::Color::error,
+                               "Error: while loading ",
+                               error_info->name,
+                               ": ",
+                               error_info->error.message(),
+                               '\n');
             }
         }
 
@@ -57,31 +62,36 @@ namespace vcpkg
         {
             if (!error_info->extra_fields.empty())
             {
-                System::println(System::Color::error,
-                                "Error: There are invalid fields in the control file of %s",
-                                error_info->name);
-                System::println("The following fields were not expected:\n\n    %s\n",
-                                Strings::join("\n    ", error_info->extra_fields));
+                System::print2(System::Color::error,
+                               "Error: There are invalid fields in the control file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields were not expected:\n\n    ",
+                               Strings::join("\n    ", error_info->extra_fields),
+                               "\n\n");
                 have_remaining_fields = true;
             }
         }
 
         if (have_remaining_fields)
         {
-            System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n",
-                            Strings::join("\n    ", get_list_of_valid_fields()));
-            System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
+            System::print2("This is the list of valid fields (case-sensitive): \n\n    ",
+                           Strings::join("\n    ", get_list_of_valid_fields()),
+                           "\n\n");
+            System::print2("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n\n");
         }
 
         for (auto&& error_info : error_info_list)
         {
             if (!error_info->missing_fields.empty())
             {
-                System::println(System::Color::error,
-                                "Error: There are missing fields in the control file of %s",
-                                error_info->name);
-                System::println("The following fields were missing:\n\n    %s\n",
-                                Strings::join("\n    ", error_info->missing_fields));
+                System::print2(System::Color::error,
+                               "Error: There are missing fields in the control file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields were missing:\n\n    ",
+                               Strings::join("\n    ", error_info->missing_fields),
+                               "\n\n");
             }
         }
     }
@@ -158,6 +168,16 @@ namespace vcpkg
         return std::move(control_file);
     }
 
+    Optional<const FeatureParagraph&> SourceControlFile::find_feature(const std::string& featurename) const
+    {
+        auto it = Util::find_if(feature_paragraphs,
+                                [&](const std::unique_ptr<FeatureParagraph>& p) { return p->name == featurename; });
+        if (it != feature_paragraphs.end())
+            return **it;
+        else
+            return nullopt;
+    }
+
     Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
     {
         Dependency dep;
@@ -184,16 +204,13 @@ namespace vcpkg
             auto pos = depend_string.find(' ');
             if (pos == std::string::npos) return Dependency::parse_dependency(depend_string, "");
             // expect of the form "\w+ \[\w+\]"
-            Dependency dep;
-
-            dep.depend.name = depend_string.substr(0, pos);
             if (depend_string.c_str()[pos + 1] != '(' || depend_string[depend_string.size() - 1] != ')')
             {
                 // Error, but for now just slurp the entire string.
                 return Dependency::parse_dependency(depend_string, "");
             }
-            dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
-            return dep;
+            return Dependency::parse_dependency(depend_string.substr(0, pos),
+                                                depend_string.substr(pos + 2, depend_string.size() - pos - 3));
         });
     }
 
@@ -202,7 +219,15 @@ namespace vcpkg
         std::vector<std::string> ret;
         for (auto&& dep : deps)
         {
-            if (dep.qualifier.empty() || t.canonical_name().find(dep.qualifier) != std::string::npos)
+            auto qualifiers = Strings::split(dep.qualifier, "&");
+            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
+                    if (qualifier.empty()) return true;
+                    if (qualifier[0] == '!')
+                    {
+                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
+                    }
+                    return t.canonical_name().find(qualifier) != std::string::npos;
+                }))
             {
                 ret.emplace_back(dep.name());
             }

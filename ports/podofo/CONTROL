@@ -1,5 +1,9 @@
 Source: podofo
-Version: 0.9.5-1
+Version: 0.9.6-7
 Homepage: https://downloads.sourceforge.net/project/podofo/podofo/0.9.5
 Description: PoDoFo is a library to work with the PDF file format
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff, openssl, freetype, fontconfig
+Build-Depends: zlib, libpng, libjpeg-turbo, tiff, openssl, freetype
+
+Feature: fontconfig
+Description: Enable font manager support on Unix platforms.
+Build-Depends: fontconfig

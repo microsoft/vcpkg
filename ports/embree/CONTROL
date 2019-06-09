@@ -1,5 +1,0 @@
-Source: embree
-Version: 2.16.4-2
-Homepage: https://github.com/embree/embree
-Description: High Performance Ray Tracing Kernels.
-Build-Depends: tbb

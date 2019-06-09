@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/stacktrace
-    REF boost-1.66.0
-    SHA512 40b96f7c1fdaf5a5909148d7edd4f77b4991ead70d5350bc7c8451781c80020496b14688c0dff365b75941a1ba16244246a52b6a708f4b1f79c99f4d8a0556f0
+    REF boost-1.70.0
+    SHA512 154c9caf3ff24f2a5f1d0af1dd5fcbc5b0b59039b30b495dd788086d731530ea724da496f639d995b700cb0a0c8ef0b9d03b63271386e2fe9bc935ef373d1fa7
     HEAD_REF master
 )
 

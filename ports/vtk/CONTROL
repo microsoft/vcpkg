@@ -1,30 +1,21 @@
 Source: vtk
-Version: 8.1.0-1
+Version: 8.2.0-2
 Homepage: https://github.com/Kitware/VTK
 Description: Software system for 3D computer graphics, image processing, and visualization
-Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora
+Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora, atlmfc (windows), eigen3, double-conversion, pugixml, libharu, sqlite3, netcdf-c
 
 Feature: openvr
-Homepage: https://github.com/Kitware/VTK
 Description: OpenVR functionality for VTK
 Build-Depends: sdl2, openvr
 
 Feature: qt
-Homepage: https://github.com/Kitware/VTK
 Description: Qt functionality for VTK
 Build-Depends: qt5
 
 Feature: mpi
-Homepage: https://github.com/Kitware/VTK
 Description: MPI functionality for VTK
 Build-Depends: msmpi, hdf5[parallel]
 
 Feature: python
-Homepage: https://github.com/Kitware/VTK
 Description: Python functionality for VTK
 Build-Depends: python3
-
-Feature: libharu
-Homepage: https://github.com/Kitware/VTK
-Description: PDF libharu functionality for VTK
-Build-Depends: libharu

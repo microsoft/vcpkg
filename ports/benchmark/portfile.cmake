@@ -2,22 +2,15 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-  message(FATAL_ERROR "Google benchmark only supports dynamic crt linkage.")
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF v1.3.0
-    SHA512 272775e4dbd0ecc65a2a3a64f24e79682b630929dea3af47349329ac8b796341f1197458a67c9aac0e514857ebe7cbc191d18f6fd2c0aea3242562e69d8a6849
+    REF v1.5.0
+    SHA512 a0df9aa3d03f676e302c76d83b436de36eea0a8517ab50a8f5a11c74ccc68a1f5128fa02474901002d8e6b5a4d290ef0272a798ff4670eab3e2d78dc86bb6cd3
     HEAD_REF master
 )
 
@@ -26,6 +19,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()

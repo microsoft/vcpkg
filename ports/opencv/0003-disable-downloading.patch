@@ -1,14 +1,3 @@
-From 692f6f4fcf9bfddaf8779ba622f190c3a8c772f9 Mon Sep 17 00:00:00 2001
-From: Robert Schumacher <roschuma@microsoft.com>
-Date: Wed, 21 Feb 2018 17:20:22 -0800
-Subject: [PATCH 3/5] disable-downloading
-
----
- cmake/OpenCVDownload.cmake | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/cmake/OpenCVDownload.cmake b/cmake/OpenCVDownload.cmake
-index f660502..90785f1 100644
 --- a/cmake/OpenCVDownload.cmake
 +++ b/cmake/OpenCVDownload.cmake
 @@ -151,6 +151,8 @@ function(ocv_download)
@@ -20,6 +9,3 @@ index f660502..90785f1 100644
      file(DOWNLOAD "${DL_URL}" "${CACHE_CANDIDATE}"
           INACTIVITY_TIMEOUT 60
           TIMEOUT 600
--- 
-2.15.1.windows.2
-

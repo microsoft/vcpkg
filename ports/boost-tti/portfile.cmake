@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/tti
-    REF boost-1.66.0
-    SHA512 8c399d475819b68324e1a56b9ba13a3e26faf175d3180b0317e82212ce4c587d8074c597832165e81a3ed6af09026b7c5433a8cd58b6ad861dad7d9fe1d57eee
+    REF boost-1.70.0
+    SHA512 0933d8dac91052ad3a702130162e512f5c1c6a52e2d7bcbc96cd3424ca7eba6e51091e7a2639b17203ff3db84d22f8bf1c402567f471c26a87bc2468a7442e4c
     HEAD_REF master
 )
 

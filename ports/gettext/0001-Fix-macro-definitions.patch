@@ -1,37 +1,12 @@
-From df8121a8822245df0b191b7d3b1654611fdac1b2 Mon Sep 17 00:00:00 2001
-From: vlj <vljn.ovi@gmail.com>
-Date: Tue, 1 Nov 2016 23:09:06 +0100
-Subject: [PATCH] Fix macro definitions.
-
----
- gettext-0.19/gettext-runtime/intl/printf-parse.c | 4 +++-
- gettext-0.19/gettext-runtime/intl/xsize.h        | 6 ++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/gettext-0.19/gettext-runtime/intl/printf-parse.c b/gettext-0.19/gettext-runtime/intl/printf-parse.c
-index 0e2d2c7..8cedfc6 100644
---- a/gettext-0.19/gettext-runtime/intl/printf-parse.c
-+++ b/gettext-0.19/gettext-runtime/intl/printf-parse.c
-@@ -48,7 +48,9 @@
- #include <stddef.h>
- 
- /* Get intmax_t.  */
--#if defined IN_LIBINTL || defined IN_LIBASPRINTF
-+#if _MSC_VER
-+# define intmax_t long int
-+#elif defined IN_LIBINTL || defined IN_LIBASPRINTF
- # if HAVE_STDINT_H_WITH_UINTMAX
- #  include <stdint.h>
- # endif
-diff --git a/gettext-0.19/gettext-runtime/intl/xsize.h b/gettext-0.19/gettext-runtime/intl/xsize.h
-index c256665..d09e79f 100644
---- a/gettext-0.19/gettext-runtime/intl/xsize.h
-+++ b/gettext-0.19/gettext-runtime/intl/xsize.h
+diff --git a/gettext-runtime/intl/xsize.h b/gettext-runtime/intl/xsize.h
+index c256665..7400ea1 100644
+--- a/gettext-runtime/intl/xsize.h
++++ b/gettext-runtime/intl/xsize.h
 @@ -27,6 +27,12 @@
  # include <stdint.h>
  #endif
  
-+#ifdef _WIN32
++#if defined _WIN32
 +# define _GL_INLINE_HEADER_BEGIN
 +# define _GL_INLINE_HEADER_END
 +# define _GL_INLINE static inline
@@ -40,6 +15,3 @@ index c256665..d09e79f 100644
  #ifndef _GL_INLINE_HEADER_BEGIN
   #error "Please include config.h first."
  #endif
--- 
-2.10.1.windows.1
-

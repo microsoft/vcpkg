@@ -1,4 +1,5 @@
 Source: ilmbase
-Version: 2.2.0-1
+Version: 2.3.0
 Homepage: http://download.savannah.nongnu.org/releases/openexr
-Description: Base libraries from ILM for OpenEXR
+Build-Depends: openexr
+Description: empty package, linking to newer one

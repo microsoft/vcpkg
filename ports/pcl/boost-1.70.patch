@@ -1,0 +1,13 @@
+diff --git a/segmentation/include/pcl/segmentation/supervoxel_clustering.h b/segmentation/include/pcl/segmentation/supervoxel_clustering.h
+index 05e6002..99e3a07 100644
+--- a/segmentation/include/pcl/segmentation/supervoxel_clustering.h
++++ b/segmentation/include/pcl/segmentation/supervoxel_clustering.h
+@@ -525,7 +525,7 @@ namespace pcl
+       };
+ 
+       //Make boost::ptr_list can access the private class SupervoxelHelper
+-      friend void boost::checked_delete<> (const typename pcl::SupervoxelClustering<PointT>::SupervoxelHelper *);
++      //friend void boost::checked_delete<> (const typename pcl::SupervoxelClustering<PointT>::SupervoxelHelper *);
+ 
+       typedef boost::ptr_list<SupervoxelHelper> HelperListT;
+       HelperListT supervoxel_helpers_;

@@ -3,14 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mdadams/jasper
-    REF version-2.0.14
-    SHA512 6b270cb1eb55f777f30016f3258e5e2297627e7d086334814c308464f5a4552c23241b0fdbc81ea715a6f4746294657f96c1cb6ceb320629ce57db7e81d84940
+    REF version-2.0.16
+    SHA512 b3bca227f833567c9061c4a29c0599784ed6a131b5cceddfd1696542d19add821eda445ce6d83782b454b266723b24d0f028cbc644a25c0e3a75304e615b34ee
     HEAD_REF master)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/jasper-fix-uwp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/opengl-not-required.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -29,6 +30,8 @@ vcpkg_configure_cmake(
         -DJAS_ENABLE_DOC=OFF
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d # Due to CMakes FindJasper
 )
 
 vcpkg_install_cmake()

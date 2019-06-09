@@ -1,5 +1,5 @@
 Source: libmikmod
-Version: 3.3.11.1-1
+Version: 3.3.11.1-2
 Homepage: https://downloads.sourceforge.net/project/mikmod/libmikmod/3.3.11.1
 Description: Mikmod is a module player and library supporting many formats, including mod, s3m, it, and xm.
 Build-Depends: openal-soft

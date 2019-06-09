@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/alac_decoder)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://distfiles.macports.org/alac_decoder/alac_decoder-0.2.0.tgz"
@@ -15,6 +18,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/remove_stdint_headers.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-pragma-warning.patch
 )
 
 vcpkg_configure_cmake(

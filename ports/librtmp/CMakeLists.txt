@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(librtmp C)
 
-find_package(zlib REQUIRED)
-find_package(openssl REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

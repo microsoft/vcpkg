@@ -1,12 +1,36 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.66.0"
+    $version = "1.70.0"
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
-$libsDisabledInUWP = "iostreams|filesystem|thread|context|python|stacktrace|program-options|program_options|coroutine`$|fiber|locale|test|type-erasure|type_erasure|wave|log"
+function TransformReference()
+{
+    param (
+        [string]$library
+    )
+
+    if ($library -match "python|fiber")
+    {
+        # These two only work on windows desktop
+        "$library (windows)"
+    }
+    elseif ($library -match "thread|type[_-]erasure|contract")
+    {
+        # thread only works on x86-based processors
+        "$library (!arm)"
+    }
+    elseif ($library -match "iostreams|filesystem|context|stacktrace|coroutine`$|locale|test|wave|log`$")
+    {
+        "$library (!uwp)"
+    }
+    else
+    {
+        "$library"
+    }
+}
 
 function Generate()
 {
@@ -71,19 +95,19 @@ function Generate()
         "    REF boost-$version"
         "    SHA512 $Hash"
         "    HEAD_REF master"
+    )
+    if ($Name -eq "thread")
+    {
+        $portfileLines += @("    PATCHES avoid-winapi.patch")
+    }
+    $portfileLines += @(
         ")"
         ""
     )
 
-    if ($Name -eq "python")
+    if (Test-Path "$scriptsDir/post-source-stubs/$Name.cmake")
     {
-        $portfileLines += @(
-            "# Find Python. Can't use find_package here, but we already know where everything is"
-            "file(GLOB PYTHON_INCLUDE_PATH `"`${CURRENT_INSTALLED_DIR}/include/python[0-9.]*`")"
-            "set(PYTHONLIBS_RELEASE `"`${CURRENT_INSTALLED_DIR}/lib`")"
-            "set(PYTHONLIBS_DEBUG `"`${CURRENT_INSTALLED_DIR}/debug/lib`")"
-            "string(REGEX REPLACE `".*python([0-9\.]+)`$`" `"\\1`" PYTHON_VERSION `"`${PYTHON_INCLUDE_PATH}`")"
-        )
+        $portfileLines += @(get-content "$scriptsDir/post-source-stubs/$Name.cmake")
     }
 
     if ($NeedsBuild)
@@ -100,6 +124,7 @@ function Generate()
                 "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
                 "boost_modular_build("
                 "    SOURCE_PATH `${SOURCE_PATH}"
+                "    BOOST_CMAKE_FRAGMENT `"`${CMAKE_CURRENT_LIST_DIR}/cmake-fragment.cmake`""
                 "    OPTIONS"
                 "        boost.locale.iconv=off"
                 "        boost.locale.posix=off"
@@ -125,7 +150,12 @@ function Generate()
         {
             $portfileLines += @(
                 "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
-                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH} REQUIREMENTS `"<library>/boost/date_time//boost_date_time`")"
+                "boost_modular_build("
+                "    SOURCE_PATH `${SOURCE_PATH}"
+                "    REQUIREMENTS `"<library>/boost/date_time//boost_date_time`""
+                "    OPTIONS /boost/thread//boost_thread"
+                "    BOOST_CMAKE_FRAGMENT `${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+                ")"
             )
         }
         else
@@ -141,43 +171,9 @@ function Generate()
         "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
     )
 
-    if ($Name -eq "exception")
+    if (Test-Path "$scriptsDir/post-build-stubs/$Name.cmake")
     {
-        $portfileLines += @(
-            ""
-            "set(VCPKG_LIBRARY_LINKAGE static)"
-            "file(REMOVE_RECURSE `${CURRENT_PACKAGES_DIR}/bin `${CURRENT_PACKAGES_DIR}/debug/bin)"
-         )
-    }
-    if ($Name -eq "config")
-    {
-        $portfileLines += @(
-            "file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n`")"
-            "file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#undef BOOST_ALL_DYN_LINK\n`")"
-            ""
-            "if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)"
-            "    file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#define BOOST_ALL_DYN_LINK\n`")"
-            "endif()"
-        )
-    }
-    if ($Name -eq "test")
-    {
-        $portfileLines += @(
-            "if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL `"release`")"
-            "    file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
-            "    file(GLOB MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)"
-            "    file(COPY `${MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
-            "    file(REMOVE `${MONITOR_LIBS})"
-            "endif()"
-            ""
-            "if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL `"debug`")"
-            "    file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
-            "    file(GLOB DEBUG_MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)"
-            "    file(COPY `${DEBUG_MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
-            "    file(REMOVE `${DEBUG_MONITOR_LIBS})"
-            "endif()"
-            ""
-        )
+        $portfileLines += @(get-content "$scriptsDir/post-build-stubs/$Name.cmake")
     }
 
     $portfileLines | out-file -enc ascii "$scriptsDir/../boost-$sanitizedName/portfile.cmake"
@@ -196,6 +192,19 @@ if (!(Test-Path "$scriptsDir/boost"))
         popd
     }
 }
+else
+{
+    pushd $scriptsDir/boost
+    try
+    {
+        git fetch
+        git checkout -f boost-$version
+    }
+    finally
+    {
+        popd
+    }
+}
 
 $libraries_found = ls $scriptsDir/boost/libs -directory | % name | % {
     if ($_ -match "numeric")
@@ -204,6 +213,10 @@ $libraries_found = ls $scriptsDir/boost/libs -directory | % name | % {
         "interval"
         "odeint"
         "ublas"
+        "safe_numerics"
+    }
+    elseif ($_ -eq "headers")
+    {
     }
     else
     {
@@ -227,7 +240,7 @@ foreach ($library in $libraries)
     if (!(Test-Path $archive))
     {
         "Downloading boost/$library..."
-        Invoke-WebRequest "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile $archive
+        & @(vcpkg fetch aria2)[-1] "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -d "$scriptsDir/downloads" -o "$library-boost-$version.tar.gz"
     }
     $hash = vcpkg hash $archive
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
@@ -249,10 +262,16 @@ foreach ($library in $libraries)
     try
     {
         $groups = $(
-            findstr /si /C:"#include <boost/" include/*
-            findstr /si /C:"#include <boost/" src/*
+            findstr /si /C:"include <boost/" include/*
+            findstr /si /C:"include <boost/" src/*
         ) |
-        % { $_ -replace "^[^:]*:","" -replace "boost/numeric/conversion/","boost/numeric_conversion/" -replace "boost/detail/([^/]+)/","boost/`$1/" -replace "#include ?<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" -replace "/|\.hp?p?| ","" } | group | % name | % {
+        % { $_ `
+                -replace "^[^:]*:","" `
+                -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
+                -replace "boost/functional/hash.hpp","boost/container_hash/hash.hpp" `
+                -replace "boost/detail/([^/]+)/","boost/`$1/" `
+                -replace " *# *include *<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" `
+                -replace "/|\.hp?p?| ","" } | group | % name | % {
             # mappings
             Write-Verbose "${library}: $_"
             if ($_ -match "aligned_storage") { "type_traits" }
@@ -260,9 +279,9 @@ foreach ($library in $libraries)
             elseif ($_ -eq "type") { "core" }
             elseif ($_ -match "unordered_") { "unordered" }
             elseif ($_ -match "cstdint") { "integer" }
-            elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior") { "utility" }
-            elseif ($_ -eq "version") { "config" }
-            elseif ($_ -match "shared_ptr|make_shared|intrusive_ptr|scoped_ptr|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
+            elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior|compressed_pair") { "utility" }
+            elseif ($_ -match "^version|^workaround") { "config" }
+            elseif ($_ -match "enable_shared_from_this|shared_ptr|make_shared|make_unique|intrusive_ptr|scoped_ptr|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
             elseif ($_ -match "iterator_adaptors|generator_iterator|pointee") { "iterator" }
             elseif ($_ -eq "regex_fwd") { "regex" }
             elseif ($_ -eq "make_default") { "convert" }
@@ -281,6 +300,7 @@ foreach ($library in $libraries)
             elseif ($_ -eq "exception_ptr") { "exception" }
             elseif ($_ -eq "multi_index_container") { "multi_index" }
             elseif ($_ -eq "lexical_cast") { "lexical_cast"; "math" }
+            elseif ($_ -match "token_iterator|token_functions") { "tokenizer" }
             elseif ($_ -eq "numeric" -and $library -notmatch "numeric_conversion|interval|odeint|ublas") { "numeric_conversion"; "interval"; "odeint"; "ublas" }
             else { $_ }
         } | group | % name | ? { $_ -ne $library }
@@ -293,7 +313,13 @@ foreach ($library in $libraries)
 
         $deps = @($deps | ? {
             # Boost contains cycles, so remove a few dependencies to break the loop.
-            (($library -notmatch "core|assert|mpl|detail|type_traits") -or ($_ -notmatch "utility")) `
+            (($library -notmatch "core|assert|mpl|detail|throw_exception|type_traits|^exception") -or ($_ -notmatch "utility")) `
+            -and `
+            (($library -notmatch "range") -or ($_ -notmatch "algorithm"))`
+            -and `
+            (($library -ne "config") -or ($_ -notmatch "integer"))`
+            -and `
+            (($library -notmatch "multiprecision") -or ($_ -notmatch "random|math"))`
             -and `
             (($library -notmatch "lexical_cast") -or ($_ -notmatch "math"))`
             -and `
@@ -305,24 +331,21 @@ foreach ($library in $libraries)
             -and `
             (($library -notmatch "spirit") -or ($_ -notmatch "serialization"))`
             -and `
+            (($library -notmatch "throw_exception") -or ($_ -notmatch "^exception"))`
+            -and `
+            (($library -notmatch "iostreams") -or ($_ -notmatch "random"))`
+            -and `
             (($library -notmatch "utility|concept_check") -or ($_ -notmatch "iterator"))
         } | % { "boost-$_" -replace "_","-" } | % {
-            if ($_ -match $libsDisabledInUWP)
-            {
-                "$_ (windows)"
-            }
-            else
-            {
-                $_
-            }
+            TransformReference $_
         })
 
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse")
+        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse" -and $library -ne "graph_parallel")
         {
-            $deps += @("boost-build")
+            $deps += @("boost-build", "boost-modular-build-helper")
             $needsBuild = $true
         }
 
@@ -333,7 +356,11 @@ foreach ($library in $libraries)
         }
         elseif ($library -eq "iostreams")
         {
-            $deps += @("zlib", "bzip2")
+            $deps += @("zlib", "bzip2", "liblzma")
+        }
+        elseif ($library -eq "locale")
+        {
+            $deps += @("libiconv (!uwp&!windows)")
         }
         elseif ($library -eq "asio")
         {
@@ -350,15 +377,7 @@ foreach ($library in $libraries)
             -Depends $deps `
             -NeedsBuild $needsBuild
 
-        if ($library -match $libsDisabledInUWP)
-        {
-            $libraries_in_boost_port += @("$library (windows)")
-        }
-        else
-        {
-            $libraries_in_boost_port += @($library)
-        }
-
+        $libraries_in_boost_port += @(TransformReference $library)
     }
     finally
     {
@@ -366,22 +385,24 @@ foreach ($library in $libraries)
     }
 }
 
-# Generate master boost control file which depends on each individual library
-# mpi is excluded due to it having a dependency on msmpi
-$boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-" } | ? { $_ -notmatch "boost-mpi" }) -join ", "
+if ($libraries_in_boost_port.length -gt 1) {
+    # Generate master boost control file which depends on each individual library
+    # mpi is excluded due to it having a dependency on msmpi
+    $boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-" } | ? { $_ -notmatch "boost-mpi" }) -join ", "
 
-@(
-    "# Automatically generated by boost-vcpkg-helpers/generate-ports.ps1"
-    "Source: boost"
-    "Version: $version"
-    "Description: Peer-reviewed portable C++ source libraries"
-    "Build-Depends: $boostDependsList"
-    ""
-    "Feature: mpi"
-    "Description: Build with MPI support"
-    "Build-Depends: boost-mpi"
-) | out-file -enc ascii $scriptsDir/../boost/CONTROL
+    @(
+        "# Automatically generated by boost-vcpkg-helpers/generate-ports.ps1"
+        "Source: boost"
+        "Version: $version"
+        "Description: Peer-reviewed portable C++ source libraries"
+        "Build-Depends: $boostDependsList"
+        ""
+        "Feature: mpi"
+        "Description: Build with MPI support"
+        "Build-Depends: boost-mpi"
+    ) | out-file -enc ascii $scriptsDir/../boost/CONTROL
 
-"set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" | out-file -enc ascii $scriptsDir/../boost/portfile.cmake
+    "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" | out-file -enc ascii $scriptsDir/../boost/portfile.cmake
+}
 
 return

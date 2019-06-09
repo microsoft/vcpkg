@@ -1,13 +1,17 @@
 cmake_minimum_required(VERSION 3.3.0)
 
-project(Vlpp VERSION 0.9.3.1 LANGUAGES CXX)
+project(Vlpp VERSION 0.10.0.0 LANGUAGES CXX)
 
 # Sources
 set(SRCS
   Import/Vlpp.cpp
-  Import/VlppWorkflow.cpp
-  Import/VlppWorkflowCompiler.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+  Import/VlppWorkflowLibrary.cpp
+  Import/VlppWorkflowCompiler.cpp
+  Import/VlppWorkflowRuntime.cpp)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
 
 # Create and configure the target
 add_library(Vlpp ${SRCS})
@@ -30,8 +34,9 @@ if (NOT DEFINED SKIP_HEADERS)
   install(
       FILES
         Import/Vlpp.h
-        Import/VlppWorkflow.h
+        Import/VlppWorkflowLibrary.h
         Import/VlppWorkflowCompiler.h
+        Import/VlppWorkflowRuntime.h
       DESTINATION "include"
     )
 endif()

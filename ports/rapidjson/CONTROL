@@ -1,4 +1,4 @@
 Source: rapidjson
-Version: 1.1.0
+Version: 1.1.0-3
 Homepage: https://github.com/miloyip/rapidjson
 Description: A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>

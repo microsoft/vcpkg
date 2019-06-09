@@ -1,4 +1,4 @@
 Source: forest
-Version: 4.5.0
+Version: 11.0.1
 Homepage: https://github.com/xorz57/forest
-Description: Forest is an open-source, template library of tree data structures written in C++11.
+Description: Template library of tree data structures

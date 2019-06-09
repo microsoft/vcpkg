@@ -2,96 +2,14 @@
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
-#include <vcpkg/base/strings.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/zstringview.h>
 
 namespace vcpkg::System
 {
-    tm get_current_date_time();
+    Optional<std::string> get_environment_variable(ZStringView varname) noexcept;
 
-    fs::path get_exe_path_of_current_process();
-
-    struct CMakeVariable
-    {
-        CMakeVariable(const CStringView varname, const char* varvalue);
-        CMakeVariable(const CStringView varname, const std::string& varvalue);
-        CMakeVariable(const CStringView varname, const fs::path& path);
-
-        std::string s;
-    };
-
-    std::string make_cmake_cmd(const fs::path& cmake_exe,
-                               const fs::path& cmake_script,
-                               const std::vector<CMakeVariable>& pass_variables);
-
-    struct PowershellParameter
-    {
-        PowershellParameter(const CStringView varname, const char* varvalue);
-        PowershellParameter(const CStringView varname, const std::string& varvalue);
-        PowershellParameter(const CStringView varname, const fs::path& path);
-
-        std::string s;
-    };
-
-    struct ExitCodeAndOutput
-    {
-        int exit_code;
-        std::string output;
-    };
-
-    int cmd_execute_clean(const CStringView cmd_line);
-
-    int cmd_execute(const CStringView cmd_line);
-
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
-
-    void powershell_execute(const std::string& title,
-                            const fs::path& script_path,
-                            const std::vector<PowershellParameter>& parameters = {});
-
-    std::string powershell_execute_and_capture_output(const std::string& title,
-                                                      const fs::path& script_path,
-                                                      const std::vector<PowershellParameter>& parameters = {});
-
-    enum class Color
-    {
-        success = 10,
-        error = 12,
-        warning = 14,
-    };
-
-    void println();
-    void print(const CStringView message);
-    void println(const CStringView message);
-    void print(const Color c, const CStringView message);
-    void println(const Color c, const CStringView message);
-
-    template<class Arg1, class... Args>
-    void print(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
-    {
-        return System::print(Strings::format(message_template, message_arg1, message_args...));
-    }
-
-    template<class Arg1, class... Args>
-    void print(const Color c, const char* message_template, const Arg1& message_arg1, const Args&... message_args)
-    {
-        return System::print(c, Strings::format(message_template, message_arg1, message_args...));
-    }
-
-    template<class Arg1, class... Args>
-    void println(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
-    {
-        return System::println(Strings::format(message_template, message_arg1, message_args...));
-    }
-
-    template<class Arg1, class... Args>
-    void println(const Color c, const char* message_template, const Arg1& message_arg1, const Args&... message_args)
-    {
-        return System::println(c, Strings::format(message_template, message_arg1, message_args...));
-    }
-
-    Optional<std::string> get_environment_variable(const CStringView varname) noexcept;
-
-    Optional<std::string> get_registry_string(void* base_hkey, const CStringView subkey, const CStringView valuename);
+    Optional<std::string> get_registry_string(void* base_hkey, StringView subkey, StringView valuename);
 
     enum class CPUArchitecture
     {
@@ -101,34 +19,13 @@ namespace vcpkg::System
         ARM64,
     };
 
-    Optional<CPUArchitecture> to_cpu_architecture(const CStringView& arch);
+    Optional<CPUArchitecture> to_cpu_architecture(StringView arch);
 
     CPUArchitecture get_host_processor();
 
     std::vector<CPUArchitecture> get_supported_host_architectures();
 
-    const fs::path& get_program_files_32_bit();
+    const Optional<fs::path>& get_program_files_32_bit();
 
-    const fs::path& get_program_files_platform_bitness();
-}
-
-namespace vcpkg::Debug
-{
-    void println(const CStringView message);
-    void println(const System::Color c, const CStringView message);
-
-    template<class Arg1, class... Args>
-    void println(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
-    {
-        return Debug::println(Strings::format(message_template, message_arg1, message_args...));
-    }
-
-    template<class Arg1, class... Args>
-    void println(const System::Color c,
-                 const char* message_template,
-                 const Arg1& message_arg1,
-                 const Args&... message_args)
-    {
-        return Debug::println(c, Strings::format(message_template, message_arg1, message_args...));
-    }
+    const Optional<fs::path>& get_program_files_platform_bitness();
 }

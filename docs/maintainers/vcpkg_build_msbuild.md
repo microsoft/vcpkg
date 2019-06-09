@@ -1,6 +1,6 @@
 # vcpkg_build_msbuild
 
-Build an msbuild-based project.
+Build a msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
 
 ## Usage
 ```cmake
@@ -15,10 +15,16 @@ vcpkg_build_msbuild(
     [OPTIONS </p:ZLIB_INCLUDE_PATH=X>...]
     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
     [OPTIONS_DEBUG </p:ZLIB_LIB=X>...]
+    [USE_VCPKG_INTEGRATION]
 )
 ```
 
 ## Parameters
+### USE_VCPKG_INTEGRATION
+Apply the normal `integrate install` integration for building the project.
+
+By default, projects built with this command will not automatically link libraries or have header paths set.
+
 ### PROJECT_PATH
 The path to the solution (`.sln`) or project (`.vcxproj`) file.
 

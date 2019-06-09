@@ -1,4 +1,4 @@
 Source: geographiclib
-Version: 1.47-patch1-4
+Version: 1.47-patch1-5
 Homepage: https://jaist.dl.sourceforge.net/project/geographiclib/distrib
 Description: a small set of C++ classes for performing conversions between geographic, UTM, UPS, MGRS, geocentric, and local cartesian coordinates, for gravity (e.g., EGM2008), geoid height, and geomagnetic field (e.g., WMM2010) calculations, and for solving geodesic problems.

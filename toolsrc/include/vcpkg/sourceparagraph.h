@@ -63,6 +63,8 @@ namespace vcpkg
 
         std::unique_ptr<SourceParagraph> core_paragraph;
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
+
+        Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
     };
 
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);

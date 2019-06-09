@@ -1,5 +1,5 @@
 Source: freetype
-Version: 2.8.1-1
+Version: 2.9.1-2
 Build-Depends: zlib, bzip2, libpng
 Homepage: http://download.savannah.gnu.org/releases/freetype
 Description: A library to render fonts.

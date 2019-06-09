@@ -29,14 +29,19 @@ namespace
 
 namespace vcpkg
 {
-    static fs::path get_config_path()
+    fs::path get_user_dir()
     {
 #if defined(_WIN32)
-        return get_localappdata() / "vcpkg" / "config";
+        return get_localappdata() / "vcpkg";
 #else
         auto maybe_home = System::get_environment_variable("HOME");
-        return fs::path(maybe_home.value_or("/var")) / "vcpkg" / "config";
+        return fs::path(maybe_home.value_or("/var")) / ".vcpkg";
 #endif
+    }
+
+    static fs::path get_config_path()
+    {
+        return get_user_dir() / "config";
     }
 
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)

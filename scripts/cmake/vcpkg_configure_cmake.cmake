@@ -62,15 +62,20 @@ function(vcpkg_configure_cmake)
         set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
     endif()
 
-    set(NINJA_CAN_BE_USED ON)
+    if(CMAKE_HOST_WIN32)
+        set(_PATHSEP ";")
+    else()
+        set(_PATHSEP ":")
+    endif()
+
+    set(NINJA_CAN_BE_USED ON) # Ninja as generator
+    set(NINJA_HOST ON) # Ninja as parallel configurator
     if(_csc_HOST_ARCHITECTURE STREQUAL "x86")
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(NINJA_CAN_BE_USED OFF)
+        set(NINJA_HOST OFF)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
-        set(NINJA_CAN_BE_USED OFF)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        # Arm64 usage should be allowed once github issue #2375 is resolved
         set(NINJA_CAN_BE_USED OFF)
     endif()
 
@@ -78,7 +83,7 @@ function(vcpkg_configure_cmake)
         set(GENERATOR ${_csc_GENERATOR})
     elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
-    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
         set(GENERATOR "Ninja")
 
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
@@ -104,7 +109,24 @@ function(vcpkg_configure_cmake)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017")
         set(ARCH "ARM64")
+
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        set(GENERATOR "Visual Studio 16 2019")
+        set(ARCH "Win32")
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        set(GENERATOR "Visual Studio 16 2019")
+        set(ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        set(GENERATOR "Visual Studio 16 2019")
+        set(ARCH "ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        set(GENERATOR "Visual Studio 16 2019")
+        set(ARCH "ARM64")
+
     else()
+        if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+            set(VCPKG_CMAKE_SYSTEM_NAME Windows)
+        endif()
         message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
@@ -112,13 +134,17 @@ function(vcpkg_configure_cmake)
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
+        if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+            set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
+        endif()
     endif()
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
         list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
@@ -150,43 +176,21 @@ function(vcpkg_configure_cmake)
 
     if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-    else()
-        set(VCPKG_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP ${VCPKG_CXX_FLAGS}")
-        set(VCPKG_C_FLAGS " /DWIN32 /D_WINDOWS /W3 /utf-8 /MP ${VCPKG_C_FLAGS}")
-        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            list(APPEND _csc_OPTIONS_DEBUG
-                "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
-                "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}"
-            )
-            list(APPEND _csc_OPTIONS_RELEASE
-                "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_CXX_FLAGS_RELEASE}"
-                "-DCMAKE_C_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_C_FLAGS_RELEASE}"
-            )
-        elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-            list(APPEND _csc_OPTIONS_DEBUG
-                "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
-                "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}"
-            )
-            list(APPEND _csc_OPTIONS_RELEASE
-                "-DCMAKE_CXX_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_CXX_FLAGS_RELEASE}"
-                "-DCMAKE_C_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_C_FLAGS_RELEASE}"
-            )
-        else()
-            message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
-        endif()
-
-        list(APPEND _csc_OPTIONS_RELEASE
-            "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
-            "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
-        )
-        list(APPEND _csc_OPTIONS
-            "-DCMAKE_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
-            "-DCMAKE_C_FLAGS=${VCPKG_C_FLAGS}"
-        )
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/linux.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/freebsd.cmake")
     endif()
 
     list(APPEND _csc_OPTIONS
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON"
@@ -195,12 +199,33 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_APPLOCAL_DEPS=OFF"
         "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
+        "-DVCPKG_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
+        "-DVCPKG_CXX_FLAGS_RELEASE=${VCPKG_CXX_FLAGS_RELEASE}"
+        "-DVCPKG_CXX_FLAGS_DEBUG=${VCPKG_CXX_FLAGS_DEBUG}"
+        "-DVCPKG_C_FLAGS=${VCPKG_C_FLAGS}"
+        "-DVCPKG_C_FLAGS_RELEASE=${VCPKG_C_FLAGS_RELEASE}"
+        "-DVCPKG_C_FLAGS_DEBUG=${VCPKG_C_FLAGS_DEBUG}"
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+        "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
+        "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
+        "-DCMAKE_INSTALL_BINDIR:STRING=bin"
     )
 
     if(DEFINED ARCH)
         list(APPEND _csc_OPTIONS
             "-A${ARCH}"
         )
+    endif()
+
+    # Sets configuration variables for macOS builds
+    if(DEFINED VCPKG_INSTALL_NAME_DIR)
+        list(APPEND _csc_OPTIONS "-DCMAKE_INSTALL_NAME_DIR=${VCPKG_INSTALL_NAME_DIR}")
+    endif()
+    if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+    endif()
+    if(DEFINED VCPKG_OSX_SYSROOT)
+        list(APPEND _csc_OPTIONS "-DCMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
 
     set(rel_command
@@ -214,11 +239,11 @@ function(vcpkg_configure_cmake)
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
-    if(NINJA_CAN_BE_USED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
+    if(NINJA_HOST AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
 
         #parallelize the configure step
         set(_contents
@@ -250,7 +275,6 @@ function(vcpkg_configure_cmake)
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
             LOGNAME config-${TARGET_TRIPLET}
         )
-        message(STATUS "Configuring ${TARGET_TRIPLET} done")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
@@ -260,7 +284,6 @@ function(vcpkg_configure_cmake)
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -271,7 +294,6 @@ function(vcpkg_configure_cmake)
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 LOGNAME config-${TARGET_TRIPLET}-rel
             )
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         endif()
     endif()
 

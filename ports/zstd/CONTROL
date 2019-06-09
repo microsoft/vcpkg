@@ -1,4 +1,4 @@
 Source: zstd
-Version: 1.3.3
+Version: 1.4.0
 Homepage: https://github.com/facebook/zstd
 Description: Zstandard - Fast real-time compression algorithm http://www.zstd.net

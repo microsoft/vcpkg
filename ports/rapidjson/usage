@@ -1,0 +1,4 @@
+The package rapidjson provides CMake integration:
+
+    find_package(RapidJSON CONFIG REQUIRED)
+    target_include_directories(main PRIVATE ${RAPIDJSON_INCLUDE_DIRS})

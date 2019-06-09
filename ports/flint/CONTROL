@@ -1,5 +1,5 @@
 Source: flint
-Version: 2.5.2-1
+Version: 2.5.2-3
 Homepage: http://www.flintlib.org/
 Description: Fast Library for Number Theory
 Build-Depends: mpir, mpfr, pthreads, gettimeofday

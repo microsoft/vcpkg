@@ -1,5 +1,5 @@
 Source: libraw
-Version: 0.18.2-5
+Version: 201903
 Build-Depends: lcms, jasper
 Homepage: http://www.libraw.org/data
 Description: raw image decoder library

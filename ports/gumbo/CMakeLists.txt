@@ -16,8 +16,10 @@ set(gumbo_srcs
   src/vector.c
 )
 
-
-include_directories(visualc/include src)
+include_directories(src)
+if (MSVC)
+  include_directories(visualc/include)
+endif (MSVC)
 
 add_library(gumbo ${gumbo_srcs})
 
