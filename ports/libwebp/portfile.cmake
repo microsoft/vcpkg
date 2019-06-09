@@ -67,7 +67,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/WebP)
-file(COPY ${CURRENT_PACKAGES_DIR}/share/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/share/webp)
+file(GLOB CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/*)
+file(COPY ${CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/webp/)
 
 #somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
 if(CMAKE_HOST_WIN32)
@@ -117,5 +118,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebp/COPYING ${CURRENT_PACKAGES_DIR}/share/libwebp/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp RENAME copyright)
