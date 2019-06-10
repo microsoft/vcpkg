@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi-0.20.tar.gz"
     FILENAME "libftdi-0.20.tar.gz"
