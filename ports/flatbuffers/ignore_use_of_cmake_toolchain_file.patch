@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a3388dd..699ea3b 100644
+index 119855a..945085a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -104,7 +104,7 @@ set(FlatBuffers_GRPCTest_SRCS
+@@ -155,7 +155,7 @@ set(FlatBuffers_GRPCTest_SRCS
  # source_group(Compiler FILES ${FlatBuffers_Compiler_SRCS})
  # source_group(Tests FILES ${FlatBuffers_Tests_SRCS})
  
@@ -10,4 +10,4 @@ index a3388dd..699ea3b 100644
 +if(EXISTS "${CMAKE_TOOLCHAIN_FILE}" AND NOT DEFINED VCPKG_TOOLCHAIN)
    # do not apply any global settings if the toolchain
    # is being configured externally
- elseif(APPLE)
+   message(STATUS "Using toolchain file: ${CMAKE_TOOLCHAIN_FILE}.")

@@ -6,9 +6,9 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -377,14 +377,13 @@ namespace vcpkg::Build
 
         const Toolset& toolset = paths.get_toolset(pre_build_info);
 
-        std::vector<System::CMakeVariable> variables {
+        std::vector<System::CMakeVariable> variables{
             {"CMD", "BUILD"},
             {"PORT", config.scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", spec.triplet().canonical_name()},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-            {"VCPKG_USE_HEAD_VERSION",
-            Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+            {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
@@ -398,10 +397,7 @@ namespace vcpkg::Build
             variables.push_back({"GIT", git_exe_path});
         }
 
-        const std::string cmd_launch_cmake = System::make_cmake_cmd(
-            cmake_exe_path,
-            paths.ports_cmake,
-            variables);
+        const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
         if (!command.empty())
@@ -502,14 +498,14 @@ namespace vcpkg::Build
 
         // the order of recursive_directory_iterator is undefined so save the names to sort
         std::vector<fs::path> port_files;
-        for (auto &port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
+        for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
             if (fs::is_regular_file(status(port_file)))
             {
                 port_files.push_back(port_file);
                 if (port_files.size() > max_port_file_count)
                 {
-                    abi_tag_entries.emplace_back(AbiEntry{ "no_hash_max_portfile", "" });
+                    abi_tag_entries.emplace_back(AbiEntry{"no_hash_max_portfile", ""});
                     break;
                 }
             }
@@ -520,7 +516,7 @@ namespace vcpkg::Build
             std::sort(port_files.begin(), port_files.end());
 
             int counter = 0;
-            for (auto & port_file : port_files)
+            for (auto& port_file : port_files)
             {
                 // When vcpkg takes a dependency on C++17 it can use fs::relative,
                 // which will give a stable ordering and better names in the key entry.
@@ -530,7 +526,7 @@ namespace vcpkg::Build
                 {
                     System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
                 }
-                abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1") });
+                abi_tag_entries.emplace_back(AbiEntry{key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1")});
             }
         }
 
@@ -620,8 +616,8 @@ namespace vcpkg::Build
         System::cmd_execute_clean(Strings::format(
             R"("%s" a "%s" "%s\*" >nul)", seven_zip_exe.u8string(), destination.u8string(), source.u8string()));
 #else
-        System::cmd_execute_clean(Strings::format(
-            R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
+        System::cmd_execute_clean(
+            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
 #endif
     }
 
@@ -748,7 +744,7 @@ namespace vcpkg::Build
                     const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
                     fs.create_directories(tmp_log_path_destination, ec);
 
-                    for (auto &log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
+                    for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
                     {
                         if (log_file.path().extension() == ".log")
                         {

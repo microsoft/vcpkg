@@ -1,0 +1,43 @@
+diff --git a/MSVC_Net2013/glibmm/glibmmconfig.h b/MSVC_Net2013/glibmm/glibmmconfig.h
+index 61bb83e..7dbe809 100644
+--- a/MSVC_Net2013/glibmm/glibmmconfig.h
++++ b/MSVC_Net2013/glibmm/glibmmconfig.h
+@@ -7,12 +7,17 @@
+ # if defined(_MSC_VER)
+ #  define GLIBMM_MSC 1
+ #  define GLIBMM_WIN32 1
+-#  define GLIBMM_DLL 1
++#  if !defined(GLIBMM_STATIC_LIB)
++#    define GLIBMM_DLL 1
++#  endif
+ # elif defined(__CYGWIN__)
+ #  define GLIBMM_CONFIGURE 1
+ # elif defined(__MINGW32__)
+ #  define GLIBMM_WIN32 1
+ #  define GLIBMM_CONFIGURE 1
++#  if !defined(GLIBMM_STATIC_LIB)
++#    define GLIBMM_DLL 1
++#  endif
+ # else
+    /* AIX clR compiler complains about this even though it doesn't get this far */
+ #  error "Unknown architecture (send me gcc --dumpspecs or equiv)"
+@@ -108,6 +113,7 @@
+ # define GLIBMM_HAVE_WIDE_STREAM 1
+ # define GLIBMM_HAVE_DISAMBIGUOUS_CONST_TEMPLATE_SPECIALIZATIONS 1
+ # define GLIBMM_HAVE_C_STD_TIME_T_IS_NOT_INT32 1
++# define GLIBMM_HAVE_ALLOWS_STATIC_INLINE_NPOS 1
+ # define GLIBMM_CAN_USE_DYNAMIC_CAST_IN_UNUSED_TEMPLATE_WITHOUT_DEFINITION 1
+ # define GLIBMM_CAN_ASSIGN_NON_EXTERN_C_FUNCTIONS_TO_EXTERN_C_CALLBACKS 1
+ # define GLIBMM_CAN_USE_NAMESPACES_INSIDE_EXTERNC 1
+@@ -140,11 +146,6 @@
+  * it to be defined.  Remove after grace period. */
+ #define GLIBMM_USING_STD(Symbol)
+ 
+-/* Enable DLL-specific stuff only when not building a static library */
+-#if !defined(__CYGWIN__) && defined(__MINGW32__) && !defined(GLIBMM_STATIC_LIB)
+-# define GLIBMM_DLL 1
+-#endif
+-
+ #ifdef GLIBMM_DLL
+ # if defined(GLIBMM_BUILD) && defined(_WINDLL)
+    /* Do not dllexport as it is handled by gendef on MSVC */

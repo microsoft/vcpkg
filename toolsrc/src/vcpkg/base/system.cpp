@@ -178,8 +178,8 @@ namespace vcpkg
     }
 
     std::string System::make_cmake_cmd(const fs::path& cmake_exe,
-                               const fs::path& cmake_script,
-                               const std::vector<CMakeVariable>& pass_variables)
+                                       const fs::path& cmake_script,
+                                       const std::vector<CMakeVariable>& pass_variables)
     {
         const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
         return Strings::format(
@@ -346,7 +346,8 @@ namespace vcpkg
     }
 #endif
 
-    int System::cmd_execute_clean(const ZStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
+    int System::cmd_execute_clean(const ZStringView cmd_line,
+                                  const std::unordered_map<std::string, std::string>& extra_env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
