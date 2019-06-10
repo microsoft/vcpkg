@@ -27,7 +27,7 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(WIN32 AND NOT CYGWIN)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cppnetlib)

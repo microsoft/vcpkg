@@ -27,7 +27,7 @@ file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 # disable assembly on OSX to fix broken build
-if(APPLE)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CRYPTOPP_DISABLE_ASM "ON")
 else()
     set(CRYPTOPP_DISABLE_ASM "OFF")

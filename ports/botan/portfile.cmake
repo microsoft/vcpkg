@@ -14,12 +14,12 @@ set(NUMBER_OF_PROCESSORS "1")
 if(DEFINED ENV{NUMBER_OF_PROCESSORS})
     set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
 else()
-    if(APPLE)
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(job_count_command sysctl -n hw.physicalcpu)
     else()
         set(job_count_command nproc)
     endif()
-    execute_process( 
+    execute_process(
             COMMAND ${job_count_command}
             OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
         )
@@ -93,7 +93,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
-    endif()    
+    endif()
 
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" ${configure_arguments}
