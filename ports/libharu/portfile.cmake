@@ -19,7 +19,7 @@ vcpkg_from_github(
         ${SHADING_PR}
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
   set(VCPKG_BUILD_STATIC_LIBS OFF)
 else()

@@ -15,7 +15,7 @@ vcpkg_from_github(
 
 file(REMOVE ${SOURCE_PATH}/CMake/FindOpenJPEG.cmake)
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)

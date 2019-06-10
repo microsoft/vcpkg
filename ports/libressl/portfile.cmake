@@ -28,7 +28,7 @@ vcpkg_extract_source_archive_ex(
         0002-suppress-msvc-warnings.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
