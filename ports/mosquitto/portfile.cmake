@@ -2,8 +2,6 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
@@ -11,6 +9,7 @@ vcpkg_from_github(
     SHA512 cd94236d5673f7e5a992d1e866afe2ccb496dfb7cc24e53808caed603bc8e899ca12857a16eac58ac7ab7235a849b6e2528c55e0debf651ef76dcebef75e7df9
     HEAD_REF master
     PATCHES
+        archive-dest.patch
         win64-cmake.patch
 )
 
