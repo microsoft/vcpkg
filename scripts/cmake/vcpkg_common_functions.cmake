@@ -1,3 +1,4 @@
+include(vcpkg_common_definitions)
 include(vcpkg_acquire_msys)
 include(vcpkg_add_to_path)
 include(vcpkg_check_linkage)
