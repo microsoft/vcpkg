@@ -24,7 +24,9 @@ install(
 
 if(NOT DISABLE_INSTALL_TOOLS)
   add_executable(butteraugli butteraugli/butteraugli_main.cc)
-  find_library(TURBO turbojpeg)
+  find_library(TURBO_RELEASE turbojpeg turbojpeg-static)
+  find_library(TURBO_DEBUG turbojpegd turbojpeg-staticd)
+  select_library_configurations(TURBO)
   target_link_libraries(butteraugli butteraugli_lib ${JPEG_LIBRARIES} ${TURBO} ${PNG_LIBRARIES})
 
   install (

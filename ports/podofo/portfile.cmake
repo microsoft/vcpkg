@@ -18,6 +18,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-unique_ptr.patch
         0002-HAVE_UNISTD_H.patch
+        fix_dependencies.patch
         ${ADDITIONAL_PATCH}
 )
 
@@ -35,7 +36,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
 endif()
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindOpenSSL.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLIBCRYPTO.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindZLIB.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLIBJPEG.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

@@ -1,0 +1,13 @@
+diff --git a/cmake_modules/FindTurboJPEG.cmake b/cmake_modules/FindTurboJPEG.cmake
+index 55f73071..22a787f4 100644
+--- a/cmake_modules/FindTurboJPEG.cmake	
++++ b/cmake_modules/FindTurboJPEG.cmake
+@@ -23,7 +23,7 @@ FIND_PATH(TurboJPEG_INCLUDE_DIRS
+ # debian sid,strech: libturbojpeg0
+ # debian/ubuntu else: libturbojpeg1-dev #provided by libjpeg-turbo8-dev (ubuntu)
+ FIND_LIBRARY(TurboJPEG_LIBRARIES
+-  NAMES libturbojpeg.so.1 libturbojpeg.so.0 turbojpeg
++  NAMES libturbojpeg.so.1 libturbojpeg.so.0 turbojpeg turbojpeg-static
+   DOC "Found TurboJPEG library path"
+   PATHS
+     "${DEPENDS_DIR}/libjpeg_turbo"
