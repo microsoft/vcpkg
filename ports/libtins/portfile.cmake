@@ -19,7 +19,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/libtins)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") #Windows
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/libtins)
+else() #Linux/Unix/Darwin
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libtins TARGET_PATH share/libtins)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
