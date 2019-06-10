@@ -7,7 +7,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariusmuja/flann
-    REF aa40936816f4feaa714d3a09f92a495da017d95c
+    REF  aa40936816f4feaa714d3a09f92a495da017d95c
     SHA512 f6f2e75f4ce4bc4bc4cc1feab27fe683b8a5f9f5dcea35de4df5136a683b5dff5e68776008821a16ccf1a52a9807cb053c0062deba4fe121948248acd52864ef
     HEAD_REF master
     PATCHES
