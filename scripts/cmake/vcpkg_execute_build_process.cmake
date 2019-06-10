@@ -45,7 +45,7 @@ function(vcpkg_execute_build_process)
                 file(READ ${LOG_ERR} err_contents)
 
                 if(out_contents)
-                    list(APPEND LOGS ${LOG_OUT)
+                    list(APPEND LOGS ${LOG_OUT})
                 endif()
                 if(err_contents)
                     list(APPEND LOGS ${LOG_ERR})
