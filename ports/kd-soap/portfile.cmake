@@ -3,15 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDSoap
-    REF 66a7804f157f51bc62c193b63a28918236bd7424
-    SHA512 e9e2ac3ef714ebd5a85972c0eed613f88cc36f213df4fb938d61b58947972524f26f54a226f8e28ce47385cd859030a560781b4aebe3a25e672ac82b5477eeb8
+    REF kdsoap-1.8.0
+    SHA512 e118f2083887d1b5d613d793e87ec23a570a8a749ef7f4de65582998b735979b4c389a939169a893d735bdf110dc84a4cca5ee38146e4009be715902f6323bb9
     HEAD_REF master
+    PATCHES kd-soap.patch
 )
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/8236bd7424-79789c62ed
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/kd-saop.patch"
-)
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

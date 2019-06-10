@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
-    REF v0.9
-    SHA512 a1081ee8562324137273846526c6570c77b35dba6a1a46df4e67f19cf7d0a1a4d4f6091b9444b66e0ca322f466b418ce4535d0c7ce10000df389cbe615f0c0b6
+    REF v1.0
+    SHA512 d5743660286068d2ec9e80b8cfdf1dd612d76f12f1f10c95d32bab55ae65032a200d820f2c76e4781068c61597e2533df8755fd5d9076d3aac9223134eb5b561
     HEAD_REF master
     PATCHES
         glfw3_target_compat.patch
