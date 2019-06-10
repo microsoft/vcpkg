@@ -1,4 +1,4 @@
 Source: ixwebsocket
-Version: 4.0.0
+Version: 4.0.3
 Build-Depends: zlib, openssl, mbedtls
 Description: Lightweight WebSocket Client and Server + HTTP Client
