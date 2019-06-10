@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1bb5708..183ab29 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -257,28 +257,8 @@ elseif(EMSCRIPTEN)
+ elseif (APPLE AND NOT APPLE_IOS)
+ 
+   set(XCODE_ATTRIBUTE_SDKROOT macosx)
+-  if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+     execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+     string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
+-  else()
+-    set(CMAKE_OSX_SYSROOT macosx)
+-  endif()
+-
+-  if (NOT CMAKE_OSX_ARCHITECTURES)
+-    if(OGRE_BUILD_RENDERSYSTEM_GL3PLUS)
+-      if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+-        set(CMAKE_OSX_ARCHITECTURES "${ARCHS_STANDARD_64_BIT}")
+-      else()
+-        set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)")
+-      endif()
+-    else()
+-      if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+-        set(CMAKE_OSX_ARCHITECTURES "${ARCHS_STANDARD_32_64_BIT}")
+-      else()
+-        set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_64_BIT)")
+-      endif()
+-    endif()
+-  endif()
+ 
+   # Make sure that the OpenGL render system is selected for non-iOS Apple builds
+   set(OGRE_BUILD_RENDERSYSTEM_GLES2 FALSE)
+diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
+index 9446efe..fc07974 100644
+--- a/OgreMain/CMakeLists.txt
++++ b/OgreMain/CMakeLists.txt
+@@ -215,7 +215,6 @@ if (APPLE)
+         LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
+     )
+ 
+-    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
+  
+     if(OGRE_BUILD_LIBS_AS_FRAMEWORKS)
+       add_custom_command(TARGET OgreMain POST_BUILD

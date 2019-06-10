@@ -7,8 +7,9 @@ vcpkg_from_github(
     SHA512 af52821022ab6148e64fdf183b1aa4607b101c7d0edc20d2ccc909f50eed218d7a283fa3b58260fd41cd3f324ecafad8c5137c66e05786580b043240551b2c42
     HEAD_REF master
     PATCHES
-        001-cmake-install-dir.patch
-        002-link-optimized-lib-workaround.patch
+        0001-cmake-install-dir.patch
+        0002-link-optimized-lib-workaround.patch
+        0003-remove-osx-arch-refs.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
