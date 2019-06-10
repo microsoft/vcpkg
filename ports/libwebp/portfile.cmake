@@ -37,6 +37,12 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message("WebP currently requires the following library from the system package manager:\n    Xxf86vm\n\nThis can be installed on Ubuntu systems via apt-get install libxxf86vm-dev")
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(WEBP_BUILD_VWEBP OFF)
+    set(WEBP_BUILD_EXTRAS OFF)
+    message("Due to GLUT Framework problems with CMake, at the moment it's not possible to build VWebP on Mac. It has been disabled together with extras.")
+endif()
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
