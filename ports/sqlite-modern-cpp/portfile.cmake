@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SqliteModernCpp/sqlite_modern_cpp
     REF 936cd0c86aacac87a3dab32906397944ae5f6c3d
-    SHA512 06a2ded49c397bc5863b08e662a4c980b2bb6ffeaade9ba8ffa34f63e22a95fe2138ba2412b51c6ef5429e2d1110c8dfb085af7e97b2548c2293319caea77bae
+    SHA512 8ce1b7593fe77dcab297ab4cae0158b43d55b33c1823b2dc5bf22e5545d9781d675ba5ac82b81782f502b34d2335eee2c26167726746a61a0ad566b657d2faf0
     HEAD_REF master
 )
 
