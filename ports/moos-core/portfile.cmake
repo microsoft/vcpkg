@@ -28,7 +28,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/MOOS")
 
 set(MOOS_EXEC_SUFFIX "")
-if (WIN32)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(MOOS_EXEC_SUFFIX ".exe")
 endif()
 
