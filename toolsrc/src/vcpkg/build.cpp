@@ -336,17 +336,17 @@ namespace vcpkg::Build
 
     static int get_concurrency()
     {
-        int concurrency;
-
+        static int concurrency = []{
         auto user_defined_concurrency = System::get_environment_variable("VCPKG_MAX_CONCURRENCY");
         if (user_defined_concurrency)
         {
-            concurrency = std::stoi(user_defined_concurrency.value_or_exit(VCPKG_LINE_INFO));
+            return std::stoi(user_defined_concurrency.value_or_exit(VCPKG_LINE_INFO));
         }
         else
         {
-            concurrency = System::get_num_logical_cores() + 1;
+            return System::get_num_logical_cores() + 1;
         }
+        }();
 
         return concurrency;
     }
