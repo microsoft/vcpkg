@@ -24,7 +24,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/libtins)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/libtins/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtins RENAME copyright)
 
 # Post-build test for cmake libraries
 vcpkg_test_cmake(PACKAGE_NAME libtins)
