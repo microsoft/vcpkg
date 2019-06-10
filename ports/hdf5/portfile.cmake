@@ -30,9 +30,6 @@ else()
     set(ENABLE_CPP OFF)
 endif()
 
-#Note: HDF5 Builds by default static as well as shared libraries. Set BUILD_SHARED_LIBS to OFF to only get static libraries
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE

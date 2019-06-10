@@ -28,9 +28,10 @@ vcpkg_extract_source_archive_ex(
         0002-suppress-msvc-warnings.patch
 )
 
-set(BUILD_SHARED_LIBS OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_LIBS ON)
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
 endif()
 
 set(LIBRESSL_APPS OFF)
@@ -44,7 +45,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLIBRESSL_APPS=${LIBRESSL_APPS}
         -DLIBRESSL_TESTS=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+        -DBUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
     OPTIONS_DEBUG
         -DLIBRESSL_APPS=OFF
 )
@@ -61,7 +62,7 @@ if(LIBRESSL_APPS)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
 endif()
 
-if(NOT BUILD_SHARED_LIBS)
+if(NOT VCPKG_BUILD_SHARED_LIBS)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -81,7 +82,7 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore) AND BUILD_SHARED_LIBS)
+if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore) AND VCPKG_BUILD_SHARED_LIBS)
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})
         string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")

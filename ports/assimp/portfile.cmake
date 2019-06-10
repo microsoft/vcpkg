@@ -18,13 +18,19 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/zlib ${SOURCE_PATH}/contrib/gtest ${S
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DASSIMP_BUILD_TESTS=OFF
             -DASSIMP_BUILD_ASSIMP_VIEW=OFF
             -DASSIMP_BUILD_ZLIB=OFF
-            -DASSIMP_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+            -DASSIMP_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             -DASSIMP_INSTALL_PDB=OFF
             #-DSYSTEM_IRRXML=ON # Wait for the built-in irrxml to synchronize with port irrlich, add dependencies and enable this macro

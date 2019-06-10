@@ -1,4 +1,4 @@
 Source: libharu
-Version: 2017-08-15-7
+Version: 2017-08-15-8
 Description: libharu - free PDF library
 Build-Depends: zlib, libpng

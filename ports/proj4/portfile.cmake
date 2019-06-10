@@ -18,10 +18,16 @@ vcpkg_extract_source_archive_ex(
         0003-CMake-configurable-cmake-config-install-location.patch
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-    -DBUILD_LIBPROJ_SHARED=${BUILD_SHARED_LIBS}
+    -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
     -DPROJ_DATA_SUBDIR=share/proj4
