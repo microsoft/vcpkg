@@ -1,11 +1,15 @@
 include(vcpkg_common_functions)
 
-vcpkg_from_git(
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi-0.20.tar.gz"
+    FILENAME "libftdi-0.20.tar.gz"
+    SHA512 540e5eb201a65936c3dbabff70c251deba1615874b11ff27c5ca16c39d71c150cf61758a68b541135a444fe32ab403b0fba0daf55c587647aaf9b3f400f1dee7
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL git://developer.intra2net.com/libftdi
+    ARCHIVE ${ARCHIVE}
     REF v0.20
-    SHA512 724d64abd4b47a6d52516f77881620414e53995266512aca67dd3d4c55490c33b4997b64e43349de05c1518b968f65869bd55a4594dd4148a25a1e2fd7e3ea1e
-    HEAD_REF master
     PATCHES
         usb-header.patch
         cmake-fix.patch
