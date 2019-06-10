@@ -48,6 +48,7 @@ namespace vcpkg
         std::string version;
         std::string description;
         std::string maintainer;
+        std::string homepage;
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
