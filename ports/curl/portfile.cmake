@@ -144,7 +144,7 @@ endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib OR EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib)
     # Because vcpkg only ever installs one or the other, there is no need to have the libraries be different names.
     # Using the same name improves compatibility, because downstream projects can always rely on "libcurl.lib"
-    message(FATAL_ERROR "Curl's import library should be consistent with the static library name.")
+    message(FATAL_ERROR "Curl's import library name should be consistent with the static library name.")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
