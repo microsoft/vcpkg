@@ -3,11 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/czmq
-    REF 6d9c89705a2af1aae6f6d93789ec865cea629829
-    SHA512 26881bbc63ddab2cb4ac1b03e476e900f7d41977b37c95a29f33538da23e4237c7b009aefa64332512605d8e0859661b94135d67a24596a0e8d7881651cb6e72
+    REF 7e29cf95305551daad197e32423d9cff5f9b6893
+    SHA512 7d79494c904f5276c9d1e4a193a63882dc622a6db8998b9719de4aec8b223b3a8b3c92ea02be81f39afc12c1a883b310fd3662ea27ed736b0b9c7092b4843a18
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
         fix-dependencies.patch
 )
 
