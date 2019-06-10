@@ -1,48 +1,56 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 418e2f2..f05aad4 100644
+index 64ae92c..6d552d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -62,9 +62,9 @@ ENDIF()
- ### packaging settings
- SET(CPACK_PACKAGE_VENDOR "Eclipse Paho")
- SET(CPACK_PACKAGE_NAME "Eclipse-Paho-MQTT-C")
--INSTALL(FILES CONTRIBUTING.md epl-v10 edl-v10 README.md notice.html DESTINATION .)
-+INSTALL(FILES CONTRIBUTING.md epl-v10 edl-v10 README.md notice.html DESTINATION share/paho-mqtt)
- FILE(GLOB samples "src/samples/*.c")
--INSTALL(FILES ${samples} DESTINATION samples)
-+INSTALL(FILES ${samples} DESTINATION share/paho-mqtt/samples)
- IF (WIN32)
-     SET(CPACK_GENERATOR "ZIP")
- ELSEIF(PAHO_BUILD_DEB_PACKAGE)
+@@ -64,11 +64,11 @@ ENDIF()
+ IF (PAHO_ENABLE_CPACK)
+        ### packaging settings
+        FILE(GLOB samples "src/samples/*.c")
+-       INSTALL(FILES ${samples} DESTINATION samples)
++	   INSTALL(FILES ${samples} DESTINATION share/paho-mqtt/samples)
+ 
+        SET(CPACK_PACKAGE_VENDOR "Eclipse Paho")
+        SET(CPACK_PACKAGE_NAME "Eclipse-Paho-MQTT-C")
+-       INSTALL(FILES CONTRIBUTING.md epl-v10 edl-v10 README.md notice.html DESTINATION .)
++	   INSTALL(FILES CONTRIBUTING.md epl-v10 edl-v10 README.md notice.html DESTINATION share/paho-mqtt)
+ 
+        IF (WIN32)
+                SET(CPACK_GENERATOR "ZIP")
 diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
-index 06e4c5d..9cf7c21 100644
+index f15f314..54deec5 100644
 --- a/doc/CMakeLists.txt
 +++ b/doc/CMakeLists.txt
-@@ -37,4 +37,4 @@ FOREACH(DOXYFILE_SRC DoxyfileV3ClientAPI;DoxyfileV3AsyncAPI;DoxyfileV3ClientInte
-     SET(DOXYTARGETS ${DOXYTARGETS} ${DOXYFILE_SRC}.target)
- ENDFOREACH(DOXYFILE_SRC)
+@@ -39,7 +39,7 @@ ENDFOREACH(DOXYFILE_SRC)
+ 
  ADD_CUSTOM_TARGET(doc ALL DEPENDS ${DOXYTARGETS})
--INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share)
-+INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share/paho-mqtt)
+ IF (PAHO_ENABLE_CPACK)
+-    INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share)
++	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION share/paho-mqtt)
+ ELSE()
+     INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc DESTINATION ${CMAKE_INSTALL_DOCDIR})
+ ENDIF()
+\ No newline at end of file
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index c57185b..98c7f31 100644
+index b46eaca..a132062 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -84,7 +84,7 @@ INSTALL(TARGETS paho-mqtt3c paho-mqtt3a
+@@ -89,7 +89,7 @@ INSTALL(TARGETS paho-mqtt3c paho-mqtt3a
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  INSTALL(TARGETS MQTTVersion
 -    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-+    RUNTIME DESTINATION tools/paho-mqtt)
++	RUNTIME DESTINATION tools/paho-mqtt)
  
  IF (PAHO_BUILD_STATIC)
      ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj> MQTTClient.c)
-@@ -98,7 +98,7 @@ IF (PAHO_BUILD_STATIC)
+@@ -102,8 +102,8 @@ IF (PAHO_BUILD_STATIC)
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  ENDIF()
  
- INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h
+-INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h
 -    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/paho-mqtt)
++INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h 
++	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/paho-mqtt)
  
  IF (PAHO_WITH_SSL)
      SET(OPENSSL_SEARCH_PATH "" CACHE PATH "Directory containing OpenSSL libraries and includes")
