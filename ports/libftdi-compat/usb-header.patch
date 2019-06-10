@@ -1,0 +1,26 @@
+diff --git a/src/ftdi.c b/src/ftdi.c
+index 980622d..8f6ab67 100644
+--- a/src/ftdi.c
++++ b/src/ftdi.c
+@@ -28,7 +28,7 @@
+ /** \addtogroup libftdi */
+ /* @{ */
+ 
+-#include <usb.h>
++#include <lusb0_usb.h>
+ #include <string.h>
+ #include <errno.h>
+ #include <stdio.h>
+diff --git a/src/ftdi.h b/src/ftdi.h
+index 6bb7a3e..d4472c2 100644
+--- a/src/ftdi.h
++++ b/src/ftdi.h
+@@ -17,7 +17,7 @@
+ #ifndef __libftdi_h__
+ #define __libftdi_h__
+ 
+-#include <usb.h>
++#include <lusb0_usb.h>
+ 
+ #define FTDI_DEFAULT_EEPROM_SIZE 128
+ 

@@ -1,0 +1,4 @@
+Source: libftdi-compat
+Version: 0.2-0
+Build-Depends: libusb-win32
+Description: FTDI USB driver with bitbang mode (v0.2)

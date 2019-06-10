@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b68de29..89c8426 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,10 +85,10 @@ if(${UNIX})
+ endif(${UNIX})
+ 
+ add_subdirectory(src)
+-add_subdirectory(ftdipp)
+-add_subdirectory(bindings)
+-add_subdirectory(examples)
+-add_subdirectory(packages)
++#add_subdirectory(ftdipp)
++#add_subdirectory(bindings)
++#add_subdirectory(examples)
++#add_subdirectory(packages)
+ 
+ 
+ 
+@@ -147,10 +147,12 @@ if(${WIN32})
+    set(libdir      ${CMAKE_INSTALL_PREFIX}/bin)
+ endif(${WIN32})
+ 
+-configure_file(${CMAKE_SOURCE_DIR}/libftdi.pc.in ${CMAKE_BINARY_DIR}/libftdi.pc @ONLY)
+-configure_file(${CMAKE_SOURCE_DIR}/libftdipp.pc.in ${CMAKE_BINARY_DIR}/libftdipp.pc @ONLY)
+-install(FILES ${CMAKE_BINARY_DIR}/libftdi.pc ${CMAKE_BINARY_DIR}/libftdipp.pc
+-        DESTINATION lib${LIB_SUFFIX}/pkgconfig)
++if(${UNIX})
++   configure_file(${CMAKE_SOURCE_DIR}/libftdi.pc.in ${CMAKE_BINARY_DIR}/libftdi.pc @ONLY)
++   configure_file(${CMAKE_SOURCE_DIR}/libftdipp.pc.in ${CMAKE_BINARY_DIR}/libftdipp.pc @ONLY)
++   install(FILES ${CMAKE_BINARY_DIR}/libftdi.pc ${CMAKE_BINARY_DIR}/libftdipp.pc
++         DESTINATION lib${LIB_SUFFIX}/pkgconfig)
++endif(${UNIX})
+ 
+ if(${UNIX})
+     configure_file(${CMAKE_SOURCE_DIR}/libftdi-config.in ${CMAKE_BINARY_DIR}/libftdi-config @ONLY)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 071ae90..20cefbc 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -47,11 +47,15 @@ if(${WIN32})
+ 
+    install( TARGETS ftdi
+             DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib
+             COMPONENT sharedlibs
+             )
+ 
+    install( TARGETS ftdi-static
+             DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib
+             COMPONENT staticlibs
+             )
+ 
