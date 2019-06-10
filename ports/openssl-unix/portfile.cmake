@@ -1,8 +1,15 @@
+include(vcpkg_common_functions)
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "This port is only for openssl on Unix-like systems")
 endif()
 
-include(vcpkg_common_functions)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
+endif()
+
 set(OPENSSL_VERSION 1.0.2q)
 
 vcpkg_find_acquire_program(PERL)

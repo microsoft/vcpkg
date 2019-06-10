@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build libressl if openssl is installed. Please remove openssl, and try install libressl again if you need it. Build will continue since libressl is a subset of openssl")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
