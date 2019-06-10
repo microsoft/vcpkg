@@ -1,5 +1,5 @@
 Source: gdal
-Version: 2.4.1-5
+Version: 2.4.1-6
 Description: The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data.
 Build-Depends: proj, libpng, geos, sqlite3, curl, expat, libpq, openjpeg, libwebp, libxml2, liblzma, netcdf-c, hdf5, zlib
 
