@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi-0.20.tar.gz"
     FILENAME "libftdi-0.20.tar.gz"
@@ -30,6 +28,10 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(COPY  ${CMAKE_CURRENT_LIST_DIR}/cmake/LibFTDIConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi-compat)
 file(COPY  ${CMAKE_CURRENT_LIST_DIR}/cmake/LibFTDIConfigVersion.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi-compat)
