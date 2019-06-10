@@ -30,6 +30,8 @@ else()
     set(ENABLE_CPP OFF)
 endif()
 
+file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip 
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
@@ -46,6 +48,7 @@ vcpkg_configure_cmake(
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
 )
+
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
