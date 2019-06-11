@@ -3,7 +3,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
 endif()
 
 include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2r)
+set(OPENSSL_VERSION 1.0.2s)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
 vcpkg_find_acquire_program(PERL) 
@@ -14,7 +14,7 @@ set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 6eb2211f3ad56d7573ac26f388338592c37e5faaf5e2d44c0fa9062c12186e56a324f135d1c956a89b55fcce047e6428bec2756658d103e7275e08b46f741235
+    SHA512 9f745452c4f777df694158e95003cde78a2cf8199bc481a563ec36644664c3c1415a774779b9791dd18f2aeb57fa1721cb52b3db12d025955e970071d5b66d2a
 )
 
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
