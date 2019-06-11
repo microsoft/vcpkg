@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp.patch
-        disable-lite.patch
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -114,10 +113,6 @@ else()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libprotobuf-lite.lib)
-    message(FATAL_ERROR "Expected to not build the lite runtime because it contains some of the same symbols as the full runtime.")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(READ ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h _contents)
     string(REPLACE "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" "\#define PROTOBUF_USE_DLLS\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" _contents "${_contents}")
@@ -126,3 +121,4 @@ endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
 vcpkg_copy_pdbs()
+
