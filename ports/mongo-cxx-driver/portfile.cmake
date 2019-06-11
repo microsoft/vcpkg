@@ -17,6 +17,22 @@ vcpkg_from_github(
         disable-c2338-mongo-cxx-driver.patch
 )
 
+if ("mnmlstc" IN_LIST FEATURES)
+    set(BSONCXX_POLY MNMLSTC)
+elseif ("system-mnmlstc" IN_LIST FEATURES)
+    set(BSONCXX_POLY SYSTEM_MNMLSTC)
+elseif ("boost" IN_LIST FEATURES)
+    set(BSONCXX_POLY BOOST)
+elseif("std-experimental" IN_LIST FEATURES)
+    set(BSONCXX_POLY STD_EXPERIMENTAL)
+else()
+  if (WIN32)
+    set(BSONCXX_POLY BOOST)
+  else()
+    set(BSONCXX_POLY MNMLSTC)
+  endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -25,6 +41,7 @@ vcpkg_configure_cmake(
         -DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
         -DMONGOCXX_HEADER_INSTALL_DIR=include
         -DBSONCXX_HEADER_INSTALL_DIR=include
+        -DBSONCXX_POLY_USE_${BSONCXX_POLY}=1
 )
 
 vcpkg_install_cmake()

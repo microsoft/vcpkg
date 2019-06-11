@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ThePhD/sol2
-    REF v2.20.6
-    SHA512 293df11ca2e375e60dfa7fd890b3e06aa58c0fd2f45a5a032515a2251b21e9501a2578bada446dd49b35933b69e52db8dfe8498c011e0fde7ecc0655f63ed4ed
+    REF 5a4d7dca7f77e65aed15c0fb8f8acf1570677335
+    SHA512 5fc88a000d7a8379c3c8d8ee2dc3371514c4a58dcc3340b700565278ec69b7be0f108d599e3fe3b3ca347ef7c5b25ac01d83b1a988ac0189c8517b6ae66e96d6
     HEAD_REF develop
 )
 
