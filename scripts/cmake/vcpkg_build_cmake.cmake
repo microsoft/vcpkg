@@ -97,9 +97,9 @@ function(vcpkg_build_cmake)
                 endif()
             endif()
             if(DEFINED BUILD_ARGS OR DEFINED PARALLEL_ARG)
-                set(BUILD_TOOL_ARGS_PARALLEL "-- ${BUILD_ARGS} ${PARALLEL_ARG}")
-                set(BUILD_TOOL_ARGS_NO_PARALLEL "-- ${BUILD_ARGS} ${NO_PARALLEL_ARG}")
-                set(BUILD_TOOL_ARGS "-- ${BUILD_ARGS}")
+                set(BUILD_TOOL_ARGS_PARALLEL -- ${BUILD_ARGS} ${PARALLEL_ARG})
+                set(BUILD_TOOL_ARGS_NO_PARALLEL -- ${BUILD_ARGS} ${NO_PARALLEL_ARG})
+                set(BUILD_TOOL_ARGS -- ${BUILD_ARGS})
             endif()
             execute_process(
                 COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_PARALLEL}
