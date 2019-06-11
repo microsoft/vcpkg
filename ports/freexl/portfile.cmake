@@ -1,14 +1,13 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freexl-1.0.4)
+set(FREEXL_VERSION_STR "1.0.4")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freexl-${FREEXL_VERSION_STR})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-1.0.4.tar.gz"
-    FILENAME "freexl-1.0.4.tar.gz"
+    URLS "http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-${FREEXL_VERSION_STR}.tar.gz"
+    FILENAME "freexl-${FREEXL_VERSION_STR}.tar.gz"
     SHA512 d72561f7b82e0281cb211fbf249e5e45411a7cdd009cfb58da3696f0a0341ea7df210883bfde794be28738486aeb4ffc67ec2c98fd2acde5280e246e204ce788
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
 if (CMAKE_HOST_WIN32)
-
+  vcpkg_extract_source_archive(${ARCHIVE})
   vcpkg_apply_patches(
       SOURCE_PATH ${SOURCE_PATH}
       PATCHES
@@ -96,8 +95,18 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
         message(FATAL_ERROR "MAKE not found")
     endif()
 
-    set(SOURCE_PATH_RELEASE ${SOURCE_PATH})
-    set(SOURCE_PATH_DEBUG ${SOURCE_PATH})
+    # CI error logs appear to indicate that it doesn't like ./configure in the same source dir
+    # so extract the source into separate debug/release source directories
+    set(SOURCE_ROOT_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug)
+    set(SOURCE_ROOT_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release)
+    set(SOURCE_PATH_DEBUG   ${SOURCE_ROOT_DEBUG}/freexl-${FREEXL_VERSION_STR})
+    set(SOURCE_PATH_RELEASE ${SOURCE_ROOT_RELEASE}/freexl-${FREEXL_VERSION_STR})
+
+    file(REMOVE_RECURSE ${SOURCE_ROOT_DEBUG})
+    file(REMOVE_RECURSE ${SOURCE_ROOT_RELEASE})
+
+    vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_ROOT_DEBUG})
+    vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_ROOT_RELEASE})
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ################
@@ -128,7 +137,7 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
 
         file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
         file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-        file(COPY ${CURRENT_BUILDTREES_DIR}/src/freexl-1.0.4/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl)
+        file(COPY ${SOURCE_PATH_RELEASE}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl)
         file(RENAME ${CURRENT_PACKAGES_DIR}/share/freexl/COPYING ${CURRENT_PACKAGES_DIR}/share/freexl/copyright)
         message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
     endif()
