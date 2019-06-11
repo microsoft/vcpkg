@@ -14,14 +14,12 @@ vcpkg_download_distfile(
     URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
     SHA512 4c37691246db802e4bae0c8c5f6ac1dac64c5753b607e539c5c1c36e361fcd9dd81bd1d3b5416c2960153b83700ccdb356412847d0506ab7782ae626ac0ffb94
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
+        ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
 )
 vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION})
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
-            ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
-)
 
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
 
@@ -131,9 +129,15 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # Build release
     message(STATUS "Package ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY} && make install"
+        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
+        NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME "build-${TARGET_TRIPLET}-rel")
+        LOGNAME "make-build-${TARGET_TRIPLET}-rel")
+
+    vcpkg_execute_build_process(
+        COMMAND ${BASH} --noprofile --norc -c "make install"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        LOGNAME "make-install-${TARGET_TRIPLET}-rel")
     message(STATUS "Package ${TARGET_TRIPLET}-rel done")
 endif()
 
@@ -141,9 +145,15 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     # Build debug
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY} && make install"
+        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
+        NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME "build-${TARGET_TRIPLET}-dbg")
+        LOGNAME "make-build-${TARGET_TRIPLET}-dbg")
+
+    vcpkg_execute_build_process(
+        COMMAND ${BASH} --noprofile --norc -c "make install"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        LOGNAME "make-install-${TARGET_TRIPLET}-dbg")
     message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
 endif()
 
