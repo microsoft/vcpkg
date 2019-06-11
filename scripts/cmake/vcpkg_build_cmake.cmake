@@ -97,11 +97,12 @@ function(vcpkg_build_cmake)
                 endif()
             endif()
             if(DEFINED BUILD_ARGS OR DEFINED PARALLEL_ARG)
-                set(BUILD_TOOL_ARGS "-- ${BUILD_ARGS} ${PARALLEL_ARG}")
-                set(BUILD_TOOL_ARGS_NO_PARALLEL "-- ${BUILD_ARGS}")
+                set(BUILD_TOOL_ARGS_PARALLEL "-- ${BUILD_ARGS} ${PARALLEL_ARG}")
+                set(BUILD_TOOL_ARGS_NO_PARALLEL "-- ${BUILD_ARGS} ${NO_PARALLEL_ARG}")
+                set(BUILD_TOOL_ARGS "-- ${BUILD_ARGS}")
             endif()
             execute_process(
-                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS}
+                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_PARALLEL}
                 OUTPUT_FILE "${LOGPREFIX}-out.log"
                 ERROR_FILE "${LOGPREFIX}-err.log"
                 RESULT_VARIABLE error_code
@@ -121,7 +122,7 @@ function(vcpkg_build_cmake)
                     # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
                     message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} without parallelism because memory exceeded")
                     execute_process(
-                        COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS}
+                        COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_NO_PARALLEL}
                         OUTPUT_FILE "${LOGPREFIX}-out-1.log"
                         ERROR_FILE "${LOGPREFIX}-err-1.log"
                         RESULT_VARIABLE error_code
@@ -150,7 +151,7 @@ function(vcpkg_build_cmake)
                             MATH(EXPR ITERATION "${ITERATION}+1")
                             message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of wsl subsystem issue. Iteration: ${ITERATION}")
                             execute_process(
-                                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_NO_PARALLEL}
+                                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS}
                                 OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
                                 ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
                                 RESULT_VARIABLE error_code
@@ -178,7 +179,7 @@ function(vcpkg_build_cmake)
                         MATH(EXPR ITERATION "${ITERATION}+1")
                         message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${ITERATION}")
                         execute_process(
-                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS}
+                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_PARALLEL}
                             OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
                             ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
                             RESULT_VARIABLE error_code
@@ -206,7 +207,7 @@ function(vcpkg_build_cmake)
                         file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                         list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
                     endforeach()
-                    set(_eb_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS})
+                    set(_eb_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_PARALLEL})
                     set(_eb_WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
                     message(FATAL_ERROR
                         "  Command failed: ${_eb_COMMAND}\n"
