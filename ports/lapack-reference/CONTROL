@@ -1,0 +1,11 @@
+Source: lapack-reference
+Version: 3.8.0
+Description: LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/
+Default-Features: noblas
+
+Feature: cblas
+Description: Builds CBLAS
+
+Feature: noblas
+Build-Depends: openblas (!osx)
+Description: Use external optimized BLAS
