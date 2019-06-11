@@ -12,6 +12,12 @@ Whenever possible, separate changes into multiple PR's. This makes them signific
 
 For example, avoid reformatting or renaming variables in portfiles that otherwise have no reason to be modified for the issue at hand. However, if you need to modify the file for the primary purpose of the PR (updating the library), then obviously beneficial changes like fixing typos are appreciated!
 
+### Check names against other repositories
+
+A good service to check many at once is [Repology](https://repology.org/). If the library you are adding could be confused with another one, consider renaming to make it clear.
+
+## Portfiles
+
 ### Avoid deprecated helper functions
 
 At this time, the following helpers are deprecated:
@@ -24,9 +30,15 @@ At this time, the following helpers are deprecated:
 
 Ideally, portfiles should be short, simple, and as declarative as possible. Remove any helper comments introduced by the `create` command before submitting a PR.
 
-## Check names against other repositories
+## Build Techniques
 
-A good service to check many at once is [Repology](https://repology.org/). If the library you are adding could be confused with another one, consider renaming to make it clear.
+### Do not use vendored dependencies
+
+Do not use embedded copies of libraries. All dependencies should be split out and packaged separately so they can be updated and maintained.
+
+### Prefer using CMake
+
+When multiple buildsystems are available, prefer using CMake. Additionally, when appropriate, it can be easier and more maintainable to rewrite alternative buildsystems into CMake using `file(GLOB)` directives.
 
 ## Versioning
 
@@ -102,7 +114,3 @@ Important caveat:
 Note that if a library generates CMake integration files (`foo-config.cmake`), renaming must be done through patching the CMake build itself instead of simply calling `file(RENAME)` on the output archives/LIBs.
 
 Finally, DLL files on Windows should never be renamed post-build because it breaks the generated LIBs.
-
-## Do not use vendored dependencies
-
-Do not use embedded copies of libraries. All dependencies should be split out and packaged separately so they can be updated and maintained.
