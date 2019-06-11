@@ -68,8 +68,21 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/harfbuzz TARGET_PATH share/harfbuzz)
+
 vcpkg_copy_pdbs()
+
+if (HAVE_GLIB)
+    # Propagate dependency on glib downstream
+    file(READ "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" _contents)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-glib CONFIG)
+    
+${_contents}
+")
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
