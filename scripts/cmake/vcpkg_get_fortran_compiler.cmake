@@ -39,10 +39,19 @@ function(vcpkg_get_fortran_compiler)
     endif()
 
     #CMake will generate some files. Setting these paths is enough to move those files into the buildtree
+    set(_tmp_CMAKE_PLATFORM_INFO_DIR ${CMAKE_PLATFORM_INFO_DIR})
+    set(_tmp_CMAKE_BUILD_DIRECTORY ${CMAKE_BUILD_DIRECTORY})
+    set(_tmp_CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR})
+
     set(CMAKE_PLATFORM_INFO_DIR ${CURRENT_BUILDTREES_DIR}/cmake/${TARGET_TRIPLET})
     set(CMAKE_BUILD_DIRECTORY ${CURRENT_BUILDTREES_DIR}/cmake/${TARGET_TRIPLET})
     set(CMAKE_BINARY_DIR ${CURRENT_BUILDTREES_DIR}/cmake/${TARGET_TRIPLET})
+
     include(CMakeDetermineFortranCompiler)  # Find a FORTRAN compiler for us. Can be overwritten by setting CMAKE_Fortran_COMPILER
+
+    set(CMAKE_PLATFORM_INFO_DIR ${_tmp_CMAKE_PLATFORM_INFO_DIR})
+    set(CMAKE_BUILD_DIRECTORY ${_tmp_CMAKE_BUILD_DIRECTORY}
+    set(CMAKE_BINARY_DIR ${_tmp_CMAKE_BINARY_DIR})
 
     if(${CMAKE_Fortran_COMPILER} MATCHES "NOTFOUND")
         message(FATAL_ERROR "LAPACK requires a FORTRAN compiler! Examples: Windows: PGI Compiler & Tools/Intel; Linux: gFortran")
