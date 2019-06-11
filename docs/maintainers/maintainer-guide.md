@@ -16,6 +16,12 @@ For example, avoid reformatting or renaming variables in portfiles that otherwis
 
 A good service to check many at once is [Repology](https://repology.org/). If the library you are adding could be confused with another one, consider renaming to make it clear.
 
+### Use GitHub Draft PRs
+
+GitHub Draft PRs are a great way to get CI or human feedback on work that isn't yet ready to merge. Most new PRs should be opened as drafts and converted to normal PRs once the CI passes.
+
+More information about GitHub Draft PRs: https://github.blog/2019-02-14-introducing-draft-pull-requests/
+
 ## Portfiles
 
 ### Avoid deprecated helper functions
