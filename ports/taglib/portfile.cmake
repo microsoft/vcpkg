@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF 662f340f933077a926de443c9882f483973570e3
-    SHA512 34087f77bb099f1f8ec82926a212a562bf589fc13f54eac50a56730c4411af2f4dbf1b7d09877087899048c3070325aea02297c6a94d0ad43fbf6742363dd2b6
+    REF ba7adc2bc261ed634c2a964185bcffb9365ad2f4
+    SHA512 faf516f40f12031a37414ce9246ec409e64e570faebe2d604afdefbb7d665e0a0c9c68bec0e6dcb1c5ceb8fa8e1c3477f5ac75029f17beedd679fa3ea735ce6d
     HEAD_REF master
 )
 
