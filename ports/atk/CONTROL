@@ -1,5 +1,5 @@
 Source: atk
 Version: 2.24.0-3
-Homepage: http://ftp.gnome.org/pub/GNOME/sources/atk/2.24
+Homepage: https://developer.gnome.org/atk/
 Description: GNOME Accessibility Toolkit
 Build-Depends: glib, gettext

@@ -1,5 +1,5 @@
 Source: freeimage
 Version: 3.18.0-5
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff, openjpeg, libwebp[all], libraw, jxrlib, openexr
-Homepage: http://downloads.sourceforge.net/freeimage
+Homepage: https://sourceforge.net/projects/freeimage/
 Description: Support library for graphics image formats

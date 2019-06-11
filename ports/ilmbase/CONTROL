@@ -1,5 +1,4 @@
 Source: ilmbase
 Version: 2.3.0
-Homepage: http://download.savannah.nongnu.org/releases/openexr
 Build-Depends: openexr
 Description: empty package, linking to newer one
