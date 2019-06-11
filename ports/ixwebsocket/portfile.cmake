@@ -11,47 +11,16 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE} 
 )
 
-# ws exe
-set(USE_WS OFF)
-if("tool" IN_LIST FEATURES)
-    set(USE_WS ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS
-    	-DUSE_TLS=1
-	-DUSE_WS=1
+    OPTIONS -DUSE_TLS=1
 )
 
 vcpkg_install_cmake()
-
-# the native CMAKE_EXECUTABLE_SUFFIX does not work in portfiles, so emulate it
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") # Windows
-    set(EXECUTABLE_SUFFIX ".exe")
-else()
-    set(EXECUTABLE_SUFFIX "")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/ws${EXECUTABLE_SUFFIX}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/ixwebsocket")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ws${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/ixwebsocket/ws${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/ixwebsocket)
-endif()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ixwebsocket RENAME copyright)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME ixwebsocket)
