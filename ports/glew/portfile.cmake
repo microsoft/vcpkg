@@ -11,6 +11,11 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE} ${CURRENT_BUILDTREES_DIR}/src/glew)
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+	PATCHES fix-LNK2019.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
     DISABLE_PARALLEL_CONFIGURE
