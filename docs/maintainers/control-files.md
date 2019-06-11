@@ -56,7 +56,7 @@ Version: 2019-3-21
 ```
 
 #### Description
-A description of the library
+A description of the library.
 
 By convention the first line of the description is a summary of the library.  An optional detailed description follows.  The detailed description can be multiple lines, all starting with whitespace.
 
@@ -69,6 +69,14 @@ Description: Mosquitto is an open source message broker that implements the MQ T
   MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine 
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
 ````
+
+#### Homepage
+The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
+
+Example:
+```no-highlight
+Homepage: https://github.com/Microsoft/vcpkg
+```
 
 #### Build-Depends
 Comma separated list of vcpkg ports the library has a dependency on.

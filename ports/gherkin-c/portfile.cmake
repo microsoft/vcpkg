@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-libs/gherkin-c
-    REF e63e83104b835e217140e9dc77d9ce2bb50f234e
-    SHA512 a99b3f695257b45df8ff7b8ec46bff28991cf2b9bc51a25247550471c724bd14ee64340db684f096131f47d7f4ff278d23dda546e7dfe29134bbc1dbccaf0d1e
+    REF 8f31c2ff6a7b58196a061c8847508563679f67b3
+    SHA512 f78a1f9da7ff38fe2546e0db9ed33a2e25e12aa8a407ce827933a379ce083e6f872b39eb2321ff8c35199015c3c2299e46567171c5edfeff07600765f3f0a6ec
     HEAD_REF master
 )
 

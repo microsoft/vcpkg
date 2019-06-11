@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
         configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
+        fix_libvpx_windows_linking.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -92,6 +93,12 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+if("vpx" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvpx")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvpx")
 endif()
 
 if("x264" IN_LIST FEATURES)
