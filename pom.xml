@@ -2,12 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.imanage.work.thirdparty</groupId>
     <artifactId>vcpkg</artifactId>
-    <version>10.2.1-SNAPSHOT</version>
+    <version>10.3.0-SNAPSHOT</version>
 	
-	<name>Thirdparty</name>
+	<name>Vcpkg</name>
 	
 	<properties>
-		<version.prefix>10.2.1</version.prefix>
+		<version.prefix>10.3.0</version.prefix>
 	</properties>
 	
 	<distributionManagement>
@@ -55,8 +55,8 @@
 									<arg value="bzip2:x86-windows-static" />
 									<arg value="cpprestsdk:x64-windows-static" />
 									<arg value="cpprestsdk:x86-windows-static" />
-									<arg value="curl[non-http]:x64-windows-static" />
-									<arg value="curl[non-http]:x86-windows-static" />
+									<arg value="curl[non-http,openssl]:x64-windows-static" />
+									<arg value="curl[non-http,openssl]:x86-windows-static" />
 									<arg value="gtest:x64-windows-static" />
 									<arg value="gtest:x86-windows-static" />
 									<arg value="libssh2:x64-windows-static" />
