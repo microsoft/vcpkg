@@ -46,13 +46,32 @@ Do not use embedded copies of libraries. All dependencies should be split out an
 
 When multiple buildsystems are available, prefer using CMake. Additionally, when appropriate, it can be easier and more maintainable to rewrite alternative buildsystems into CMake using `file(GLOB)` directives.
 
+Examples: [abseil](../../ports/abseil/portfile.cmake)
+
+### Choose either static or shared binaries
+
+By default, `vcpkg_configure_cmake()` will pass in the appropriate setting for `BUILD_SHARED_LIBS`, however for libraries that don't respect that variable, you can switch on `VCPKG_LIBRARY_LINKAGE`:
+
+```cmake
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DKEYSTONE_BUILD_STATIC=${KEYSTONE_BUILD_STATIC}
+        -DKEYSTONE_BUILD_SHARED=${KEYSTONE_BUILD_SHARED}
+)
+```
+
 ## Versioning
 
 ### Follow common conventions for the `Version:` field
 
 For tagged-release ports, we follow the following convention:
 
-1. If the port follows a scheme like `va.b.c`, we remove the leading `v`: `a.b.c`
+1. If the port follows a scheme like `va.b.c`, we remove the leading `v`. In this case, it becomes `a.b.c`.
 2. If the port includes its own name in the version like `curl-7_65_1`, we remove the leading name: `7_65_1`
 3. If the port has been modified, we append a `-N` to distinguish the versions: `1.2.1-4`
 
@@ -92,7 +111,7 @@ Common options that allow avoiding patching:
 
 When making changes to a library, strive to minimize the final diff. This means you should _not_ reformat the upstream source code when making changes that affect a region. Also, when disabling a conditional, it is better to add a `AND FALSE` or `&& 0` to the condition than to delete every line of the conditional.
 
-This helps to keep the size of the vcpkg repository down as well as 
+This helps to keep the size of the vcpkg repository down as well as improves the likelihood that the patch will apply to future code versions.
 
 ### Do not implement features in patches
 
