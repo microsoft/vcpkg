@@ -2,9 +2,13 @@ include(vcpkg_common_functions)
 
 vcpkg_find_acquire_program(PYTHON3)
 
+if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.1")
+  message(FATAL_ERROR "Building with a gcc version less than 7.1 is not supported.")
+endif()
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO nagzira/xmsh
+  REPO libxmsh/xmsh
   REF v0.5.2
   SHA512 f4b722e74679223f5329802ff5dd6a0ade9781246227525303a5382b744e3763aca794a49146867ef5053f06ec956a69dac06469c315bb1388fea88b3ef5c0db
   HEAD_REF master
