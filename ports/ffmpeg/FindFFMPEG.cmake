@@ -31,14 +31,25 @@
 #
 #
 
-include(FindPackageHandleStandardArgs)
-include(SelectLibraryConfigurations)
+include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
+include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
+include(${CMAKE_ROOT}/Modules/CMakeFindDependencyMacro.cmake)
+
+find_dependency(Threads)
+#list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS Threads::Threads)
+if(UNIX)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread)
+endif()
+find_dependency(ZLIB)
+list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${ZLIB_LIBRARIES})
 
 #  Platform dependent libraries required by FFMPEG
 if(WIN32)
   if(NOT CYGWIN)
-    set( FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 Secur32 )
+    list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 Secur32)
   endif()
+else()
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS m)
 endif()
 
 # If the user has provided ``FFMPEG_ROOT``, use it!  Choose items found
@@ -79,17 +90,18 @@ else()
   set(STDINT_OK TRUE)
 endif()
 
-
-FFMPEG_FIND(libavformat   avformat   avformat.h)
-FFMPEG_FIND(libavdevice   avdevice   avdevice.h)
 FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
-FFMPEG_FIND(libavresample avresample avresample.h)
+FFMPEG_FIND(libavdevice   avdevice   avdevice.h)
+FFMPEG_FIND(libavfilter   avfilter   avfilter.h)
+FFMPEG_FIND(libavformat   avformat   avformat.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
+FFMPEG_FIND(libswresample swresample swresample.h)
 FFMPEG_FIND(libswscale    swscale    swscale.h)
 
-if (FFMPEG_libavformat_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavcodec_FOUND AND FFMPEG_libavresample_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswscale_FOUND AND STDINT_OK)
-  list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS} ${FFMPEG_libavdevice_INCLUDE_DIRS} ${FFMPEG_libavcodec_INCLUDE_DIRS} ${FFMPEG_libavutil_INCLUDE_DIRS} ${FFMPEG_libswscale_INCLUDE_DIRS})
+if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_FOUND AND FFMPEG_libavformat_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswresample_FOUND AND FFMPEG_libswscale_FOUND AND STDINT_OK)
+  list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS} ${FFMPEG_libavdevice_INCLUDE_DIRS} ${FFMPEG_libavcodec_INCLUDE_DIRS} ${FFMPEG_libavutil_INCLUDE_DIRS} ${FFMPEG_libswscale_INCLUDE_DIRS} ${FFMPEG_stdint_INCLUDE_DIRS})
   list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
+  list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
 
   set(FFMPEG_INCLUDE_DIR ${FFMPEG_libavformat_INCLUDE_DIRS})
 
@@ -99,10 +111,11 @@ if (FFMPEG_libavformat_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavcodec_
     ${FFMPEG_libavcodec_LIBRARY}
     ${FFMPEG_libavutil_LIBRARY}
     ${FFMPEG_libswscale_LIBRARY}
+    ${FFMPEG_libavfilter_LIBRARY}
+    ${FFMPEG_libswresample_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
   )
   set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
 endif()
-list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
 
 find_package_handle_standard_args(FFMPEG REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_INCLUDE_DIR)
