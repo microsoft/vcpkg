@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (CMAKE_HOST_WIN32)
 
   vcpkg_apply_patches(
       SOURCE_PATH ${SOURCE_PATH}
@@ -88,7 +88,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     endif()
   endif()
 
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Build in UNIX
+elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
 
     # Check build system first
     find_program(MAKE make)
@@ -155,7 +155,7 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
 
         message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
-            COMMAND make -j install
+            COMMAND make install
             WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
             LOGNAME make-install-${TARGET_TRIPLET}-debug
         )
