@@ -13,6 +13,19 @@ namespace vcpkg::Export::Chocolatey
     using Dependencies::ExportPlanType;
     using Install::InstallDir;
 
+    static std::string create_nuspec_dependencies(const BinaryParagraph& binary_paragraph)
+    {
+        static constexpr auto CONTENT_TEMPLATE =
+            R"(<dependency id="@PACKAGE_ID@" version="0.0.0" />)";
+        
+        std::string nuspec_dependencies;
+        for (const std::string& depend: binary_paragraph.depends)
+        {
+            nuspec_dependencies += Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
+        }
+        return nuspec_dependencies;
+    }
+
     static std::string create_nuspec_file_contents(const std::string& exported_root_dir,
                                                    const BinaryParagraph& binary_paragraph)
     {
@@ -25,6 +38,9 @@ namespace vcpkg::Export::Chocolatey
         <description><![CDATA[
             @PACKAGE_DESCRIPTION@
         ]]></description>
+        <dependencies>
+            @PACKAGE_DEPENDENCIES@
+        </dependencies>
     </metadata>
     <files>
         <file src="@EXPORTED_ROOT_DIR@\installed\**" target="installed" />
@@ -45,6 +61,8 @@ namespace vcpkg::Export::Chocolatey
             Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", binary_paragraph.description);
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@EXPORTED_ROOT_DIR@", exported_root_dir);
+        nuspec_file_content =
+            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DEPENDENCIES@", create_nuspec_dependencies(binary_paragraph));
         return nuspec_file_content;
     }
 
