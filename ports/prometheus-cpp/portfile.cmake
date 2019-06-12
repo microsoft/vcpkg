@@ -21,6 +21,7 @@ endmacro()
 feature(compression ENABLE_COMPRESSION)
 feature(pull ENABLE_PULL)
 feature(push ENABLE_PUSH)
+feature(tests ENABLE_TESTING)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
