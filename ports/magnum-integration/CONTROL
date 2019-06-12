@@ -15,11 +15,9 @@ Build-Depends: glm
 Feature: imgui
 Description: ImGuiIntegration library
 Build-Depends: imgui
-
 #Feature: ovr
 #Description: OvrIntegration library
 #Build-Depends: ovrsdk
-
 #Feature: dart
 #Description: DartIntegration library
 #Build-Depends: dart
