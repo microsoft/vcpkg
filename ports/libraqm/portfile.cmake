@@ -7,7 +7,8 @@ vcpkg_from_github(
     REPO HOST-Oman/libraqm
     REF v0.6.0
     SHA512 cd223d97b80e9d2cf26a5b68fbb84a87e53df819f12ffd06f84f1786a2207b34828d0888058a40c1d89a1466bb68b75dd326e25415afab029d51e1ed98f6a924
-    HEAD_REF master)
+    HEAD_REF master
+)
 
 file(COPY ${CURRENT_PORT_DIR}/FindFribidi.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
