@@ -14,15 +14,6 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_get_fortran_compiler()
 
-vcpkg_find_acquire_program(NINJA_KITWARE)
-get_filename_component(NINJA_KITWARE_DIR ${NINJA_KITWARE} DIRECTORY)
-message(STATUS NINJA_KITWARE_DIR:${NINJA_KITWARE_DIR})
-if(CMAKE_HOST_WIN32)
-    set(ENV{PATH} "${NINJA_KITWARE_DIR};$ENV{PATH}") # Put ninja with fortran support into path 
-else()
-    set(ENV{PATH} "${NINJA_KITWARE_DIR}:$ENV{PATH}") # Put ninja with fortran support into path 
-endif()
-
 set(lapack_ver 3.8.0)
 
 vcpkg_from_github(

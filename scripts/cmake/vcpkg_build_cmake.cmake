@@ -43,8 +43,9 @@ function(vcpkg_build_cmake)
         set(BUILD_ARGS "-v") # verbose output
         set(NO_PARALLEL_ARG "-j1")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
-        if(DEFINED VCPKG_FORTRAN_COMPILER AND "${VCPKG_FORTRAN_COMPILER}" MATCHES "ifort")
+        if(VCPKG_Fortran_IS_INTEL)
             # CMake with Intel Fortran Compiler does not like cmake --build . -- <something>
+            # CMake will fallback to devenv for the Intel Fortran Compiler!
         else()
             set(BUILD_ARGS
                 "/p:VCPkgLocalAppDataDisabled=true" #Shouldn't this be set in vcpkg_configure_cmake with VCPKG_APPLOCAL_DEPS=OFF ?
