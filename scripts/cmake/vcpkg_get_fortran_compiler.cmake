@@ -20,7 +20,6 @@ function(vcpkg_get_fortran_compiler)
     if(WIN32)
         file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
         file(GLOB PGI_PATHS LIST_DIRECTORIES true "${_programfiles}/PGI/win64/*") # find possible PGI default paths
-        message(STATUS "${PGI_PATHS}")
         foreach(_pgi_path ${PGI_PATHS})
             if(IS_DIRECTORY ${_pgi_path})
                 if(EXISTS "${_pgi_path}/bin")
