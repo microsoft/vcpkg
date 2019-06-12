@@ -4,6 +4,7 @@
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
+#include <vcpkg/export.chocolatey.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
@@ -256,6 +257,7 @@ namespace vcpkg::Export
         bool ifw = false;
         bool zip = false;
         bool seven_zip = false;
+        bool chocolatey = false;
 
         Optional<std::string> maybe_output;
 
@@ -280,14 +282,16 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
     static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
     static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+    static constexpr StringLiteral OPTION_CHOCOLATEY = "--chocolatey";
 
-    static constexpr std::array<CommandSwitch, 6> EXPORT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 7> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
         {OPTION_IFW, "Export to an IFW-based installer"},
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
+        {OPTION_CHOCOLATEY, "Export a Chocolatey package"},
     }};
 
     static constexpr std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
@@ -326,13 +330,14 @@ namespace vcpkg::Export
         ret.ifw = options.switches.find(OPTION_IFW) != options.switches.cend();
         ret.zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         ret.seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
+        ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
 
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
 
-        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run)
+        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey)
         {
             System::print2(System::Color::error,
-                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip\n");
+                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey\n");
             System::print2(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -542,6 +547,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             IFW::do_export(export_plan, export_id, opts.ifw_options, paths);
 
             print_next_step_info("@RootDir@/src/vcpkg");
+        }
+
+        if (opts.chocolatey)
+        {
+            Chocolatey::do_export(export_plan, paths);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
