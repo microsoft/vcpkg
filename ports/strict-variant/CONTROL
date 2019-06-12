@@ -1,3 +1,3 @@
 Source: strict-variant
-Version: v0.5
+Version: 0.5
 Description: Tagged union implementation that will never throw an exception or make a dynamic allocation in the effort of supporting types that have throwing moves.

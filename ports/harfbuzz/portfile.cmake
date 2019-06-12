@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.4.0
-    SHA512 dd3a5caec689cffdd887bd3ca646ceaee804a0501d1d4ad1e9d9d48d9e4a87a02b76a9aa354dc69528b7d2a17c2431fce67c1681c72ad8246c2f5a1be498d52a
+    REF 2.5.1
+    SHA512 e8b4b98e65d809579456551e4dd70bdd847d02cbfa80df479f6f544eff2bdbfaa7502f22e5f4e5217f063badc8874f6e568d49e9c40ab752b233fafa9e74aeab
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch

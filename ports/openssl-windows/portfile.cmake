@@ -4,28 +4,27 @@ endif()
 
 include(vcpkg_common_functions)
 set(OPENSSL_VERSION 1.0.2q)
-set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
-vcpkg_find_acquire_program(PERL) 
+vcpkg_find_acquire_program(PERL)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
-vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
+vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
     SHA512 403e6cad42db3ba860c3fa4fa81c1b7b02f0b873259e5c19a7fc8e42de0854602555f1b1ca74f4e3a7737a4cbd3aac063061e628ec86534586500819fae7fec0
 )
 
-vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
-    PATCHES 
-        ConfigureIncludeQuotesFix.patch
-        STRINGIFYPatch.patch
-        EnableWinARM32.patch
-        EmbedSymbolsInStaticLibsZ7.patch
-        EnableWinARM64.patch
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH SOURCE_PATH
+  ARCHIVE ${ARCHIVE}
+  PATCHES
+    ConfigureIncludeQuotesFix.patch
+    STRINGIFYPatch.patch
+    EnableWinARM32.patch
+    EmbedSymbolsInStaticLibsZ7.patch
+    EnableWinARM64.patch
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -75,8 +74,16 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BU
 
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-${OPENSSL_VERSION})
+
+    # Copy openssl sources.
+    message(STATUS "Copying openssl release source files...")
+    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
+    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
+        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    endforeach()
+    message(STATUS "Copying openssl release source files... done")
+    set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+
     set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
     message(STATUS "Configure ${TARGET_TRIPLET}-rel")
@@ -112,11 +119,18 @@ endif()
 
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
-    file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
+    # Copy openssl sources.
+    message(STATUS "Copying openssl debug source files...")
+    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
+    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
+        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    endforeach()
+    message(STATUS "Copying openssl debug source files... done")
+    set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+
     set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
 
+    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
@@ -175,6 +189,6 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)
