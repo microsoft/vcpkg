@@ -5,7 +5,7 @@ project(arb C)
 set (DEPS mpir mpfr pthreads flint2 gettimeofday)
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
-set (pthreads_lib pthreads pthread)
+set (pthreads_lib pthreads pthread pthreadVC2 pthreadVC3)
 set (flint2_lib ${LIBRARY_TYPE}_flint flint)
 set (gettimeofday_lib gettimeofday)
 

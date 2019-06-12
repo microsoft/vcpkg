@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/signals2
-    REF boost-1.69.0
-    SHA512 96be2cce707e433dadfd23766870d0b01b67e0d156e4178022eedb29928844964c632eefe1da359266180ec7b7bf5f6083f30baa06eb4eb0092078366e9ac4cd
+    REF boost-1.70.0
+    SHA512 4b8db8941f70a3092992da11c7056916017f76d13c6445d3af4abe5f46dca7d8f3dc5d69e669cad607295b40ec387f65a54464166761a3e7503c841eb8f1aeac
     HEAD_REF master
 )
 

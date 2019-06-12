@@ -54,24 +54,24 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     )
 endforeach()
 
-if (WIN32) # Build in WINDOWS
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   # Check build system first
   find_program(NMAKE nmake REQUIRED)
-  
+
   file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
   file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal" NATIVE_DATA_DIR)
   file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal/html" NATIVE_HTML_DIR)
-  
+
   # Setup proj4 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj.lib" PROJ_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib" PROJ_LIBRARY_DBG)
-  
+
   # Setup libpng libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpng16.lib" PNG_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRARY_DBG)
-  
+
   # Setup zlib libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" ZLIB_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/zlib.lib" ZLIB_LIBRARY_REL)
@@ -86,12 +86,12 @@ if (WIN32) # Build in WINDOWS
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
   endif()
-  
+
   # Setup expat libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/expat.lib" EXPAT_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib" EXPAT_LIBRARY_DBG)
-  
+
   # Setup curl libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
   if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib")
@@ -104,37 +104,37 @@ if (WIN32) # Build in WINDOWS
   elseif(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d_imp.lib")
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d_imp.lib" CURL_LIBRARY_DBG)
   endif()
-  
+
   # Setup sqlite3 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib" SQLITE_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib" SQLITE_LIBRARY_DBG)
-  
+
   # Setup PostgreSQL libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PGSQL_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" PGSQL_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.lib" PGSQL_LIBRARY_DBG)
-  
+
   # Setup OpenJPEG libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" OPENJPEG_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/openjp2.lib" OPENJPEG_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/openjp2.lib" OPENJPEG_LIBRARY_DBG)
-  
+
   # Setup WebP libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" WEBP_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/webp.lib" WEBP_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/webpd.lib" WEBP_LIBRARY_DBG)
-  
+
   # Setup libxml2 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" XML2_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib" XML2_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib" XML2_LIBRARY_DBG)
-  
+
   # Setup liblzma libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" LZMA_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/lzma.lib" LZMA_LIBRARY_REL)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib" LZMA_LIBRARY_DBG)
-  
+
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       # Setup MySQL libraries + include path
       if("mysql-libmysql" IN_LIST FEATURES)
@@ -142,18 +142,18 @@ if (WIN32) # Build in WINDOWS
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib" MYSQL_LIBRARY_REL)
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib" MYSQL_LIBRARY_DBG)
       endif()
-  
+
       if("mysql-libmariadb" IN_LIST FEATURES)
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmariadb.lib" MYSQL_LIBRARY_REL)
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmariadb.lib" MYSQL_LIBRARY_DBG)
       endif()
-  
+
       list(APPEND NMAKE_OPTIONS MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR})
       list(APPEND NMAKE_OPTIONS_REL MYSQL_LIB=${MYSQL_LIBRARY_REL})
       list(APPEND NMAKE_OPTIONS_DBG MYSQL_LIB=${MYSQL_LIBRARY_DBG})
   endif()
-  
+
   if ("libspatialite" IN_LIST FEATURES)
     # Setup spatialite libraries + include path
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/spatialite" SPATIALITE_INCLUDE_DIR)
@@ -161,7 +161,7 @@ if (WIN32) # Build in WINDOWS
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib" SPATIALITE_LIBRARY_DBG)
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
   endif()
-  
+
   list(APPEND NMAKE_OPTIONS
       GDAL_HOME=${NATIVE_PACKAGES_DIR}
       DATADIR=${NATIVE_DATA_DIR}
@@ -186,11 +186,11 @@ if (WIN32) # Build in WINDOWS
       ZLIB_EXTERNAL_LIB=1
       MSVC_VER=1900
   )
-  
+
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       list(APPEND NMAKE_OPTIONS WIN64=YES)
   endif()
-  
+
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
       list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
@@ -198,13 +198,13 @@ if (WIN32) # Build in WINDOWS
       # Enables PDBs for release and debug builds
       list(APPEND NMAKE_OPTIONS WITH_PDB=1)
   endif()
-  
+
   if (VCPKG_CRT_LINKAGE STREQUAL static)
       set(LINKAGE_FLAGS "/MT")
   else()
       set(LINKAGE_FLAGS "/MD")
   endif()
-  
+
   list(APPEND NMAKE_OPTIONS_REL
       ${NMAKE_OPTIONS}
       CXX_CRT_FLAGS=${LINKAGE_FLAGS}
@@ -223,7 +223,7 @@ if (WIN32) # Build in WINDOWS
       # Static Build does not like PG_LIB
       list(APPEND NMAKE_OPTIONS_REL PG_LIB=${PGSQL_LIBRARY_REL})
   endif()
-  
+
   list(APPEND NMAKE_OPTIONS_DBG
       ${NMAKE_OPTIONS}
       CXX_CRT_FLAGS="${LINKAGE_FLAGS}d"
@@ -257,12 +257,12 @@ if (WIN32) # Build in WINDOWS
     )
     message(STATUS "Building ${TARGET_TRIPLET}-rel done")
   endif()
-  
+
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     ################
     # Debug build
     ################
-  
+
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} /G -f makefile.vc
@@ -272,9 +272,9 @@ if (WIN32) # Build in WINDOWS
     )
     message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
   endif()
-  
+
   message(STATUS "Packaging ${TARGET_TRIPLET}")
-  
+
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
   endif()
@@ -287,31 +287,31 @@ if (WIN32) # Build in WINDOWS
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME nmake-install-${TARGET_TRIPLET}
   )
-  
+
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib)
-  
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
       file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
-  
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
       file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
       file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
     endif()
-  
+
   else()
-  
+
     set(GDAL_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/gdal)
     file(MAKE_DIRECTORY ${GDAL_TOOL_PATH})
-  
+
     file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
     file(REMOVE_RECURSE ${GDAL_TOOLS})
-  
+
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
       file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
     endif()
@@ -321,17 +321,17 @@ if (WIN32) # Build in WINDOWS
       file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
     endif()
   endif()
-  
+
   # Copy over PDBs
   vcpkg_copy_pdbs()
 
-elseif (UNIX) # Build in UNIX
+elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Build in UNIX
   # Check build system first
   find_program(MAKE make)
   if (NOT MAKE)
       message(FATAL_ERROR "MAKE not found")
   endif()
-  
+
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
     # Release build
@@ -344,21 +344,21 @@ elseif (UNIX) # Build in UNIX
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME config-${TARGET_TRIPLET}-rel
     )
-    
+
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
       COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-build-${TARGET_TRIPLET}-release
     )
-    
+
     message(STATUS "Installing ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
       COMMAND make install
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-install-${TARGET_TRIPLET}-release
     )
-    
+
     file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/gdalplugins)
     file(COPY ${OUT_PATH_RELEASE}/lib/pkgconfig DESTINATION ${OUT_PATH_RELEASE}/share/gdal)
     file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
@@ -380,21 +380,21 @@ elseif (UNIX) # Build in UNIX
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME config-${TARGET_TRIPLET}-debug
     )
-    
+
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-build-${TARGET_TRIPLET}-debug
     )
-    
+
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND make -j install
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-install-${TARGET_TRIPLET}-debug
     )
-    
+
     file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/gdalplugins)
     file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
     file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)

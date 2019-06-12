@@ -162,14 +162,14 @@ function(vcpkg_build_cmake)
                             endif()
                         endwhile()
                     endif()
-                elseif(out_contents MATCHES "mt : general error c101008d: ")
+                elseif(out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: ")
                     # Antivirus workaround - occasionally files are locked and cause mt.exe to fail
                     set(ITERATION 0)
-                    while (ITERATION LESS 3 AND out_contents MATCHES "mt : general error c101008d: ")
+                    while (ITERATION LESS 3 AND (out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: "))
                         MATH(EXPR ITERATION "${ITERATION}+1")
                         message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${ITERATION}")
                         execute_process(
-                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS}
+                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
                             OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
                             ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
                             RESULT_VARIABLE error_code

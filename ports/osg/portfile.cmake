@@ -17,7 +17,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     set(OSG_DYNAMIC ON)
 endif()
-
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS

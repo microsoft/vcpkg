@@ -59,6 +59,103 @@ index 8c9c2fc33..6a8ab04ca 100644
  )
  
  FIND_LIBRARY(COLLADA_DYNAMIC_LIBRARY
+@@ -15,6 +15,8 @@
+ 
+ 
+ # Check if COLLADA_DIR is set, otherwise use ACTUAL_3DPARTY_DIR:
++include(SelectLibraryConfigurations)
++
+ SET( COLLADA_ENV_VAR_AVAILABLE $ENV{COLLADA_DIR} )
+ IF ( COLLADA_ENV_VAR_AVAILABLE )
+     SET(COLLADA_DOM_ROOT "$ENV{COLLADA_DIR}/dom" CACHE PATH "Location of Collada DOM directory" FORCE)
+@@ -192,31 +194,9 @@ FIND_LIBRARY(COLLADA_STATIC_LIBRARY_DEBUG
+         ENDIF(WIN32)
+     ENDIF(LIBXML2_FOUND)
+ 
+-    FIND_PACKAGE(ZLIB)
+-    IF (ZLIB_FOUND)
+-        IF (ZLIB_LIBRARY_RELEASE)
+-            SET(COLLADA_ZLIB_LIBRARY "${ZLIB_LIBRARY_RELEASE}" CACHE FILEPATH "" FORCE)
+-        ELSE(ZLIB_LIBRARY_RELEASE)
+-            SET(COLLADA_ZLIB_LIBRARY "${ZLIB_LIBRARY}" CACHE FILEPATH "" FORCE)
+-        ENDIF(ZLIB_LIBRARY_RELEASE)
+-        IF (ZLIB_LIBRARY_DEBUG)
+-            SET(COLLADA_ZLIB_LIBRARY_DEBUG "${ZLIB_LIBRARY_DEBUG}" CACHE FILEPATH "" FORCE)
+-        ELSE(ZLIB_LIBRARY_DEBUG)
+-            SET(COLLADA_ZLIB_LIBRARY_DEBUG "${COLLADA_ZLIB_LIBRARY}" CACHE FILEPATH "" FORCE)
+-        ENDIF(ZLIB_LIBRARY_DEBUG)
+-    ELSE(ZLIB_FOUND)
+-        IF(WIN32)
+-            FIND_LIBRARY(COLLADA_ZLIB_LIBRARY
+-                NAMES zlib
+-                PATHS
+-                ${COLLADA_DOM_ROOT}/external-libs/libxml2/win32/lib
+-                ${COLLADA_DOM_ROOT}/external-libs/libxml2/mingw/lib
+-                ${ACTUAL_3DPARTY_DIR}/lib
+-            )
+-        ENDIF(WIN32)
+-    ENDIF(ZLIB_FOUND)
++    FIND_PACKAGE(ZLIB REQUIRED)
+ 
+-    FIND_LIBRARY(COLLADA_PCRECPP_LIBRARY
++    FIND_LIBRARY(COLLADA_PCRECPP_LIBRARY_RELEASE
+         NAMES pcrecpp
+         PATHS
+         ${COLLADA_DOM_ROOT}/external-libs/pcre/lib/${COLLADA_BUILDNAME}
+@@ -233,8 +213,9 @@ FIND_LIBRARY(COLLADA_STATIC_LIBRARY_DEBUG
+         ${COLLADA_DOM_ROOT}/external-libs/pcre/lib/mingw
+         ${ACTUAL_3DPARTY_DIR}/lib
+     )
++    select_library_configurations(COLLADA_PCRECPP)
+ 
+-    FIND_LIBRARY(COLLADA_PCRE_LIBRARY
++    FIND_LIBRARY(COLLADA_PCRE_LIBRARY_RELEASE
+         NAMES pcre
+         PATHS
+         ${COLLADA_DOM_ROOT}/external-libs/pcre/lib/${COLLADA_BUILDNAME}
+@@ -251,8 +232,9 @@ FIND_LIBRARY(COLLADA_STATIC_LIBRARY_DEBUG
+         ${COLLADA_DOM_ROOT}/external-libs/pcre/lib/mingw
+         ${ACTUAL_3DPARTY_DIR}/lib
+     )
++    select_library_configurations(COLLADA_PCRE)
+ 
+-    FIND_LIBRARY(COLLADA_MINIZIP_LIBRARY
++    FIND_LIBRARY(COLLADA_MINIZIP_LIBRARY_RELEASE
+         NAMES minizip
+         PATHS
+         ${COLLADA_DOM_ROOT}/external-libs/minizip/win32/lib
+@@ -267,8 +249,9 @@ FIND_LIBRARY(COLLADA_STATIC_LIBRARY_DEBUG
+         ${COLLADA_DOM_ROOT}/external-libs/minizip/mac
+         ${ACTUAL_3DPARTY_DIR}/lib
+     )
+-
+-    FIND_LIBRARY(COLLADA_BOOST_FILESYSTEM_LIBRARY
++    select_library_configurations(COLLADA_MINIZIP)
++    
++    FIND_LIBRARY(COLLADA_BOOST_FILESYSTEM_LIBRARY_RELEASE
+         NAMES libboost_filesystem boost_filesystem boost_filesystem-mt libboost_filesystem-${COLLADA_BOOST_BUILDNAME}-mt libboost_filesystem-${COLLADA_BOOST_BUILDNAME}-mt-1_54 libboost_filesystem-${COLLADA_BOOST_BUILDNAME}-mt-1_55 libboost_filesystem-${COLLADA_BOOST_BUILDNAME}-mt-1_58 boost_filesystem-${COLLADA_BOOST_BUILDNAME}-mt-1_62 boost_filesystem-${COLLADA_BOOST_BUILDNAME}-mt-1_63
+         PATHS
+         ${COLLADA_DOM_ROOT}/external-libs/boost/lib/${COLLADA_BUILDNAME}
+@@ -283,8 +266,9 @@ FIND_LIBRARY(COLLADA_STATIC_LIBRARY_DEBUG
+         ${COLLADA_DOM_ROOT}/external-libs/boost/lib/mingw
+         ${ACTUAL_3DPARTY_DIR}/lib
+     )
++    select_library_configurations(COLLADA_BOOST_FILESYSTEM)
+ 
+-    FIND_LIBRARY(COLLADA_BOOST_SYSTEM_LIBRARY
++    FIND_LIBRARY(COLLADA_BOOST_SYSTEM_LIBRARY_RELEASE
+         NAMES libboost_system boost_system boost_system-mt libboost_system-${COLLADA_BOOST_BUILDNAME}-mt libboost_system-${COLLADA_BOOST_BUILDNAME}-mt-1_54 libboost_system-${COLLADA_BOOST_BUILDNAME}-mt-1_55  libboost_system-${COLLADA_BOOST_BUILDNAME}-mt-1_58 boost_system-${COLLADA_BOOST_BUILDNAME}-mt-1_62 boost_system-${COLLADA_BOOST_BUILDNAME}-mt-1_63
+         PATHS
+         ${COLLADA_DOM_ROOT}/external-libs/boost/lib/${COLLADA_BUILDNAME}
+@@ -299,7 +283,7 @@ FIND_LIBRARY(COLLADA_STATIC_LIBRARY_DEBUG
+         ${COLLADA_DOM_ROOT}/external-libs/boost/lib/mingw
+         ${ACTUAL_3DPARTY_DIR}/lib
+     )
+-
++    select_library_configurations(COLLADA_BOOST_SYSTEM_LIBRARY)
+ 
+ SET(COLLADA_FOUND "NO")
+ IF(COLLADA_DYNAMIC_LIBRARY OR COLLADA_STATIC_LIBRARY)
 diff --git a/src/osgPlugins/dae/CMakeLists.txt b/src/osgPlugins/dae/CMakeLists.txt
 index af03fb866..7eadfc2f3 100644
 --- a/src/osgPlugins/dae/CMakeLists.txt

@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-netlib/cpp-netlib
-    REF cpp-netlib-0.13.0-rc3
-    SHA512 ddc4178381ebc4179bc243d19ecd4c7e424a61a7b75b6fd59d1f9e9fbcc1383c0afba97bcbef1b791eedb5a7a2cd63a633454f3848dfc5d76a41cc8a2c6ed302
+    REF cpp-netlib-0.13.0-final
+    SHA512 1839bf1acb7917acd2957f1008a44ed26a38849afb5843bfa0d5c557dde530afab4183d8d273a87d6416aad2b3a59fdecdef5fbb62bc91ed484486c80a1de5eb
     HEAD_REF master
 )
 
