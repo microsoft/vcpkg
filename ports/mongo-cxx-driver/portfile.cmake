@@ -12,9 +12,9 @@ vcpkg_from_github(
     SHA512 28c052904f1b456b92482097166238eae1ad50c3ed207496f09366b46f2c9465c7e98c7219f4f10314e4d8fdd01c36b70a2221891bb75231adcc1edf013d43ce
     HEAD_REF master
     PATCHES
-        disable_test_and_example.patch
         fix-uwp.patch
         disable-c2338-mongo-cxx-driver.patch
+        disable_test_and_example.patch
 )
 
 if ("mnmlstc" IN_LIST FEATURES)
