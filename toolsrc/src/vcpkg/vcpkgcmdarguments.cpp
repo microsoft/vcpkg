@@ -133,16 +133,16 @@ namespace vcpkg
                     parse_conjoined_value(arg.substr(sizeof("--vcpkg-root=") - 1), "--vcpkg-root", args.vcpkg_root_dir);
                     continue;
                 }
-                if (arg == "--install-root")
+                if (arg == "--x-install-root")
                 {
                     ++arg_begin;
-                    parse_value(arg_begin, arg_end, "--install-root", args.install_root_dir);
+                    parse_value(arg_begin, arg_end, "--x-install-root", args.install_root_dir);
                     continue;
                 }
-                if (Strings::starts_with(arg, "--install-root="))
+                if (Strings::starts_with(arg, "--x-install-root="))
                 {
                     parse_conjoined_value(
-                        arg.substr(sizeof("--install-root=") - 1), "--install-root", args.install_root_dir);
+                        arg.substr(sizeof("--x-install-root=") - 1), "--x-install-root", args.install_root_dir);
                     continue;
                 }
                 if (arg == "--triplet")
