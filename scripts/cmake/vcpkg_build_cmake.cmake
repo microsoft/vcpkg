@@ -108,6 +108,7 @@ function(vcpkg_build_cmake)
                     NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_NO_PARALLEL}
                     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
+                )
             endif()
 
             if(_bc_ADD_BIN_TO_PATH)
