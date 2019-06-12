@@ -1,0 +1,18 @@
+diff --git a/configure.cmake b/configure.cmake
+index 1f3d8e2..9e45f48 100644
+--- a/configure.cmake
++++ b/configure.cmake
+@@ -456,7 +456,11 @@ IF(NOT HAVE_FCNTL_NONBLOCK)
+ ENDIF()
+ 
+ IF(NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
+-  STRING(TOLOWER ${CMAKE_SYSTEM_PROCESSOR}  processor)
++  IF(${CMAKE_SYSTEM_PROCESSOR})
++    STRING(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} processor)
++  ELSE()
++    STRING(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} processor)
++  ENDIF()
+   IF(processor MATCHES "86" OR processor MATCHES "amd64" OR processor MATCHES "x64")
+     IF(NOT CMAKE_SYSTEM_NAME MATCHES "SunOS")
+       # The loader in some Solaris versions has a bug due to which it refuses to
+
