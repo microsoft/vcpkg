@@ -2,6 +2,7 @@ Source: czmq
 Version: 2019-06-10
 Build-Depends: zeromq
 Description: High-level C binding for ZeroMQ
+Homepage: https://github.com/zeromq/czmq
 
 Feature: tool
 Description: Build and install czmq tools (zmakecert)
