@@ -17,7 +17,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=OFF
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
