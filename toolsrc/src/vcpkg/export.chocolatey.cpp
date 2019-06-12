@@ -21,6 +21,7 @@ namespace vcpkg::Export::Chocolatey
     <metadata>
         <id>@PACKAGE_ID@</id>
         <version>@PACKAGE_VERSION@</version>
+        <authors>@PACKAGE_MAINTAINER@</authors>
         <description><![CDATA[
             @PACKAGE_DESCRIPTION@
         ]]></description>
@@ -30,9 +31,16 @@ namespace vcpkg::Export::Chocolatey
     </files>
 </package>
 )";
-
+        std::string maintainer = binary_paragraph.maintainer;
+        if (maintainer.empty())
+        {
+            maintainer = binary_paragraph.spec.name();
+        }
         std::string nuspec_file_content = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", binary_paragraph.spec.name());
-        nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_VERSION@", binary_paragraph.version);
+        nuspec_file_content =
+            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_VERSION@", binary_paragraph.version);
+        nuspec_file_content =
+            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_MAINTAINER@", maintainer);
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", binary_paragraph.description);
         nuspec_file_content =
@@ -45,7 +53,8 @@ namespace vcpkg::Export::Chocolatey
     {
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path export_to_path = paths.root;
-        const fs::path raw_exported_dir_path = export_to_path / "test-chocolatey";
+        const fs::path raw_exported_dir_path = export_to_path / "chocolatey";
+        const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         std::error_code ec;
         fs.remove_all(raw_exported_dir_path, ec);
@@ -74,9 +83,17 @@ namespace vcpkg::Export::Chocolatey
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
 
             const std::string nuspec_file_content =
-                create_nuspec_file_contents(raw_exported_dir_path.string(), binary_paragraph);
+                create_nuspec_file_contents(per_package_dir_path.string(), binary_paragraph);
             const fs::path nuspec_file_path = per_package_dir_path / Strings::concat(binary_paragraph.spec.name(), ".nuspec");
             fs.write_contents(nuspec_file_path, nuspec_file_content);
+
+            const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+                                              nuget_exe.u8string(),
+                                              raw_exported_dir_path.u8string(),
+                                              nuspec_file_path.u8string());
+
+            const int exit_code = System::cmd_execute_clean(cmd_line);
+            Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
         }
     }
 }
