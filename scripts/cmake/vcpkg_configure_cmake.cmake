@@ -79,7 +79,7 @@ function(vcpkg_configure_cmake)
         set(NINJA_CAN_BE_USED OFF)
     endif()
 
-    if(DEFINED VCPKG_FORTRAN_COMPILER AND "${VCPKG_FORTRAN_COMPILER}" MATCHES "ifort")
+    if(VCPKG_Fortran_IS_INTEL)
         set(NINJA_CAN_BE_USED OFF) # CMake cannot yet use Intel fortran compiler because it does not detect it correctly. 
     endif()
 
