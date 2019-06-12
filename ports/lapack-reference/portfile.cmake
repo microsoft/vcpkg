@@ -14,16 +14,6 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_get_fortran_compiler()
 
-vcpkg_find_acquire_program(NINJA)
-get_filename_component(NINJA_DIR ${NINJA} DIRECTORY)
-
-set(_tmp_PATH "$ENV{PATH}")
-if(CMAKE_HOST_WIN32)
-    set(ENV{PATH} "${NINJA_DIR};$ENV{PATH}") # Put ninja with fortran support into path 
-else()
-    set(ENV{PATH} "${NINJA_DIR}:$ENV{PATH}") # Put ninja with fortran support into path 
-endif()
-
 set(lapack_ver 3.8.0)
 
 vcpkg_from_github(
@@ -62,4 +52,3 @@ file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 # remove debug includs
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-set(ENV{PATH} "${_tmp_PATH}") # restore path variable
