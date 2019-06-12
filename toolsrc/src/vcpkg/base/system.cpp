@@ -246,6 +246,11 @@ namespace vcpkg
             L"VULKAN_SDK",
             // Enable targeted Android NDK
             L"ANDROID_NDK_HOME",
+            // Enables detection of Intel Fortran in CMake
+            L"IFORT_COMPILER15",
+            L"IFORT_COMPILER16",
+            L"IFORT_COMPILER17",
+            L"IFORT_COMPILER18",
         };
 
         const Optional<std::string> keep_vars = System::get_environment_variable("VCPKG_KEEP_ENV_VARS");
