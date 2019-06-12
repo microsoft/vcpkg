@@ -1,67 +1,26 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
-# MAINTAINER NOTE: set this variable to the
-# latest version of libfabric to update the 
-# vcpkg port
-#
-set(LIBFABRIC_VERSION 1.6.2)
+if (VCPKG_CMAKE_SYSTEM_NAME)
+    # The library supports Linux/Darwin/BSD, it is just not yet added here
+    message(FATAL_ERROR "vcpkg libfabric currently suports windows.  Please consider a pull request to add additional support!")
+endif()
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libfabric-${LIBFABRIC_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ofiwg/libfabric/archive/v${LIBFABRIC_VERSION}.zip"
-    FILENAME "libfabric-${LIBFABRIC_VERSION}.zip"
-    SHA512 1a31546e4610beb9ae68ad2c42939ea363bd058bf6fa4260825fdc22489e22dea755648e78ae42bdd52238ac9ec0db93a848373ecded5813afc59fd6964dc348
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ofiwg/libfabric
+    REF v1.7.1
+    HEAD_REF master
+    SHA512 3ae06839295a5b581a5d9936ee991bb597672a4981cc7fa385f4db7645d5328156d758848827ec186c0056cf3abd97f8f3859ec16a8b5bbd0d1f979143ee7bb1
+    PATCHES
+      add_additional_includes.patch
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
-   message(FATAL_ERROR "VCPKG BUILD ERROR: libfabric only supports x64")
-elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
    message(FATAL_ERROR "VCPKG BUILD ERROR: libfabric only supports x64")
 endif()
 
 set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v141")
 set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v141")
-
-#Set this variable to the path to your installation of NetworkDirect_DDK
-#
-set(NETDIRECTDDK_PATH "")
-
-if(NETDIRECTDDK_PATH STREQUAL "")
-    message(FATAL_ERROR "Set variable 'NETDIRECTDDK_PATH' in directory '$VCPKG_ROOT/ports/libfabric/portfile.cmake' to the directory NetworkDirect_DDK.zip was decompressed into. NetworkDirect can be downloaded from nuget at https://www.nuget.org/packages/NetworkDirect or https://www.microsoft.com/en-us/download/details.aspx?id=36043")
-else()
-    file(INSTALL
-        "${NETDIRECTDDK_PATH}/NetDirect/include/nddef.h"
-        DESTINATION ${SOURCE_PATH}/prov/netdir/NetDirect
-    )
-
-    file(INSTALL
-        "${NETDIRECTDDK_PATH}/NetDirect/include/ndioctl.h"
-        DESTINATION ${SOURCE_PATH}/prov/netdir/NetDirect
-    )
-
-    file(INSTALL
-        "${NETDIRECTDDK_PATH}/NetDirect/include/ndspi.h"
-        DESTINATION ${SOURCE_PATH}/prov/netdir/NetDirect
-    )
-
-    file(INSTALL
-        "${NETDIRECTDDK_PATH}/NetDirect/include/ndstatus.h"
-        DESTINATION ${SOURCE_PATH}/prov/netdir/NetDirect
-    )
-endif()
 
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
@@ -73,10 +32,15 @@ vcpkg_install_msbuild(
     DEBUG_CONFIGURATION ${LIBFABRIC_RELEASE_CONFIGURATION}
     USE_VCPKG_INTEGRATION
     ALLOW_ROOT_INCLUDES
+    OPTIONS
+      /p:SolutionDir=${SOURCE_PATH}
+      /p:AdditionalIncludeDirectories="${CURRENT_INSTALLED_DIR}/include"
 )
+
+#Move includes under subdirectory to avoid colisions with other libraries
+file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/includetemp)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
+file(RENAME ${CURRENT_PACKAGES_DIR}/includetemp ${CURRENT_PACKAGES_DIR}/include/libfabric)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libfabric RENAME copyright)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME libfabric)
