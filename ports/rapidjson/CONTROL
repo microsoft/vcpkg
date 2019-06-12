@@ -1,3 +1,4 @@
 Source: rapidjson
 Version: 1.1.0-3
-Description: A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>
+Description: A fast JSON parser/generator for C++ with both SAX/DOM style API
+Homepage: http://rapidjson.org/

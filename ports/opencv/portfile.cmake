@@ -20,6 +20,11 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(CMAKE_MODULE_PATH)
 
+set(BUILD_opencv_world OFF)
+if("world" IN_LIST FEATURES)
+  set(BUILD_opencv_world ON)
+endif()
+
 set(BUILD_opencv_dnn OFF)
 set(WITH_PROTOBUF OFF)
 if("dnn" IN_LIST FEATURES)
@@ -274,6 +279,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
+        -DBUILD_opencv_world=${BUILD_opencv_world}
         # PROTOBUF
         -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
         -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
@@ -387,6 +393,14 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULE
 string(REPLACE "${CURRENT_INSTALLED_DIR}"
                "\${_VCPKG_INSTALLED_DIR}/\${VCPKG_TARGET_TRIPLET}" OPENCV_MODULES "${OPENCV_MODULES}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)
+                 find_package(TIFF REQUIRED)" OPENCV_MODULES "${OPENCV_MODULES}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -1,7 +1,12 @@
 include(vcpkg_common_functions)
 
-if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openjpeg.h")
-    message(FATAL_ERROR "Can't build VXL with non built-in OpenJpeg in current version. Please remove OpenJpeg, and try install VXL again.")
+set(BUILD_CORE_IMAGING OFF)
+if("core_imaging" IN_LIST FEATURES)
+  set(BUILD_CORE_IMAGING ON)
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openjpeg.h")
+    set(BUILD_CORE_IMAGING OFF)
+    message(WARNING "Can't build VXL CORE_IMAGING features with non built-in OpenJpeg. Please remove OpenJpeg, and try install VXL again if you need them.")
+  endif()
 endif()
 
 vcpkg_from_github(
@@ -10,6 +15,8 @@ vcpkg_from_github(
     REF v1.18.0
     SHA512 6666d647b2e7010b91cb0b05016b5f49ae46d198f6bd160fe13fc09bc674eff5b937331fa11d81a8496473968b63452d950eee4fc2512152af57304a14bed63f
     HEAD_REF master
+    PATCHES
+        fix_dependency.patch
 )
 
 set(USE_WIN_WCHAR_T OFF)
@@ -23,6 +30,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DBUILD_CORE_IMAGING=${BUILD_CORE_IMAGING}
         -DVXL_FORCE_V3P_BZLIB2=OFF
         -DVXL_USING_NATIVE_BZLIB2=TRUE # for disable build built-in bzip2 (v3p/bzlib/CMakeLists.txt#L10-L26)
         -DVXL_FORCE_V3P_CLIPPER=ON # TODO : need add clipper port to turn off

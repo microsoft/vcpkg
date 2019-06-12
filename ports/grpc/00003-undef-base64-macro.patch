@@ -1,9 +1,9 @@
 diff --git a/src/core/lib/transport/transport.cc b/src/core/lib/transport/transport.cc
-index 09306110c6..eb0ad96a7a 100644
+index 29c1e56..29de9d8 100644
 --- a/src/core/lib/transport/transport.cc
 +++ b/src/core/lib/transport/transport.cc
-@@ -134,6 +134,8 @@ void grpc_stream_ref_init(grpc_stream_refcount* refcount, int initial_refs,
-   refcount->slice_refcount.sub_refcount = &refcount->slice_refcount;
+@@ -96,6 +96,8 @@ void grpc_stream_ref_init(grpc_stream_refcount* refcount, int initial_refs,
+       refcount, &refcount->slice_refcount);
  }
  
 +#undef move64

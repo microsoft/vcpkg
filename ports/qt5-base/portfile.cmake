@@ -69,7 +69,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         OPTIONS
             ${CORE_OPTIONS}
             -mp
-            -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+            -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
