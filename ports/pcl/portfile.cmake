@@ -3,13 +3,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.9.0
-    SHA512 b2fb6cb1f8b4d203c711ac580e12946cacfba3f06bec95536e01705c63e709d488cee85d2a24b758c958972a0f4f3544a10a2c308ea637e9e23874e9de59becc
+    REF pcl-1.9.1
+    SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
     HEAD_REF master
-    PATCHES pcl_utils.patch
-            pcl_config.patch
-            find_flann.patch
+    PATCHES
+        pcl_utils.patch
+        pcl_config.patch
+        use_flann_targets.patch
+        boost-1.70.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 

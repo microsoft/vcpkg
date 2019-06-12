@@ -1,13 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported. Building static.") # See note below
-    set(VCPKG_LIBRARY_LINKAGE static)
-
-    # As per Ben Craig thrift comment see https://issues.apache.org/jira/browse/THRIFT-1834
-    # Currently, Thrift is designed to be packaged as a static library. As a static library, the consuming program / dll will only pull in the object files that it needs, so the per-binary size increase should be pretty small.
-    # Thrift isn't a very good candidate to become a dynamic library. No attempts are made to preserve binary compatibility, or to provide a C / COM-like interface to make binary compatibility easy.
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
@@ -15,8 +8,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
-    REF 92be4f312b88eac0a4ac450eda29fd20de11b1f0
-    SHA512 0c1c7eb30fc63efa483cd9970305b5285c7d6f57151a9e0f602ff757b05cede3adb13688c5d1436c05ffd4bd142ca7676db8e35cbf4d38e9112033f6a2e77ff4
+    REF acdd4226c210336e9e15eb812e5932a645fcd5ce
+    SHA512 53986b1cde7b2bd19974f32b8c31736566061a228dda368d3d850355c566d910499c16519bbff078a6cdab19931cd9833a7d684ac63fb1ec40b2a123ff263aaa
     HEAD_REF master
 )
 
@@ -24,8 +17,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DWITH_SHARED_LIB=OFF
-        -DWITH_STATIC_LIB=ON
+        -DBUILD_SHARED_LIBS=OFF
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
@@ -41,6 +33,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
+
+# Move CMake config files to the right place
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/thrift")
 
 file(GLOB COMPILER "${CURRENT_PACKAGES_DIR}/bin/thrift*")
 if(COMPILER)

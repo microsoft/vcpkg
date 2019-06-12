@@ -162,6 +162,33 @@ function(vcpkg_build_cmake)
                             endif()
                         endwhile()
                     endif()
+                elseif(out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: ")
+                    # Antivirus workaround - occasionally files are locked and cause mt.exe to fail
+                    set(ITERATION 0)
+                    while (ITERATION LESS 3 AND (out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: "))
+                        MATH(EXPR ITERATION "${ITERATION}+1")
+                        message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${ITERATION}")
+                        execute_process(
+                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
+                            OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
+                            ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
+                            RESULT_VARIABLE error_code
+                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+
+                        if(error_code)
+                            file(READ "${LOGPREFIX}-out-${ITERATION}.log" out_contents)
+                            file(READ "${LOGPREFIX}-err-${ITERATION}.log" err_contents)
+
+                            if(out_contents)
+                                list(APPEND LOGS "${LOGPREFIX}-out-${ITERATION}.log")
+                            endif()
+                            if(err_contents)
+                                list(APPEND LOGS "${LOGPREFIX}-err-${ITERATION}.log")
+                            endif()
+                        else()
+                            break()
+                        endif()
+                    endwhile()
                 endif()
 
                 if(error_code)
@@ -170,7 +197,7 @@ function(vcpkg_build_cmake)
                         file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                         list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
                     endforeach()
-                    set(_eb_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG})
+                    set(_eb_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG})
                     set(_eb_WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
                     message(FATAL_ERROR
                         "  Command failed: ${_eb_COMMAND}\n"

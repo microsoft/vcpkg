@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/chrono
-    REF boost-1.68.0
-    SHA512 a124d6588839405163dcf5de1a81bb8bc57cc0e8914b16ba1dc4cd2dd5497617a03c940c7ef53328ed724a3ee518169454af439168b7f257ad0b6ea8219c986c
+    REF boost-1.70.0
+    SHA512 a0498e5db8d3178479e08eb9b2b980447c5dc1b620ab45331fb42b1cdd94572feeb099498ac436f082fb850994e2f090123b8caffdec69e67cae23c94e8e6de9
     HEAD_REF master
 )
 

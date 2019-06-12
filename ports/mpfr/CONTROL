@@ -1,4 +1,4 @@
 Source: mpfr
-Version: 3.1.6-2
+Version: 4.0.1
 Description: The MPFR library is a C library for multiple-precision floating-point computations with correct rounding
 Build-Depends: mpir

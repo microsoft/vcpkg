@@ -1,7 +1,5 @@
-diff --git a/bson-macros.h b/bson-macros.h
-index 909bf6c..0a1f612 100644
---- a/bson-macros.h
-+++ b/bson-macros.h
+--- a/bson/bson-macros.h
++++ b/bson/bson-macros.h
 @@ -87,7 +87,7 @@
  #elif defined(BSON_COMPILATION)
  #define BSON_API __declspec(dllexport)

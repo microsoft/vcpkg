@@ -1,13 +1,10 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     message(FATAL_ERROR "Caffe2 cannot be built for the x86 architecture")
 endif()
-
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,12 +12,9 @@ vcpkg_from_github(
     REF eab13a2d5c807bf5d49efd4584787b639a981b79
     SHA512 505a8540b0c28329c4e2ce443ac8e198c1ee613eb6b932927ee9d04c8afdc95081f3c4581408b7097d567840427b31f6d7626ea80f27e56532f2f2e6acd87023
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/msvc-fixes.patch
+        msvc-fixes.patch
+        fix-space.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -29,11 +23,16 @@ else()
     set(USE_STATIC_RUNTIME OFF)
 endif()
 
+if(CMAKE_HOST_WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    -DBUILD_SHARED_LIBS=OFF
     # Set to ON to use python
     -DBUILD_PYTHON=OFF
     -DUSE_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
@@ -62,7 +61,7 @@ vcpkg_configure_cmake(
     -DUSE_SNPE=OFF
     -DUSE_ZMQ=OFF
     -DBUILD_TEST=OFF
-    -DPROTOBUF_PROTOC_EXECUTABLE:FILEPATH=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc.exe
+    -DPROTOBUF_PROTOC_EXECUTABLE:FILEPATH=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}
 )
 
 vcpkg_install_cmake()
@@ -86,7 +85,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/caffe2/binaries)
 
 # Move bin to tools
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(GLOB BINARIES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+file(GLOB BINARIES ${CURRENT_PACKAGES_DIR}/bin/*${EXECUTABLE_SUFFIX})
 foreach(binary ${BINARIES})
     get_filename_component(binary_name ${binary} NAME)
     file(RENAME ${binary} ${CURRENT_PACKAGES_DIR}/tools/${binary_name})
@@ -95,21 +94,11 @@ endforeach()
 # Remove bin directory
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 # Remove headers and tools from debug build
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(GLOB BINARIES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-foreach(binary ${BINARIES})
-    get_filename_component(binary_name ${binary} NAME)
-    file(REMOVE ${binary})
-endforeach()
-
-# Remove bin directory
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
 
 # install license
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/caffe2)

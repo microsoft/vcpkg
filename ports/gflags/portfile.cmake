@@ -7,15 +7,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gflags/gflags
-    REF v2.2.1
-    SHA512 e919cbdcff1f993ddbfa9c06d8e595566a4717c27ff62f388a64c0e6b4683a93211c24ce78485eae84c2c76053341574064e6c56af185fc2782e2816b26e1fc9
+    REF v2.2.2
+    SHA512 98c4703aab24e81fe551f7831ab797fb73d0f7dfc516addb34b9ff6d0914e5fd398207889b1ae555bac039537b1d4677067dae403b64903577078d99c1bdb447
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-patch-dir.patch # gflags was estimating a wrong relative path between the gflags-config.cmake file and the include path; "../.." goes from share/gflags/ to the triplet root
+        0001-patch-dir.patch # gflags was estimating a wrong relative path between the gflags-config.cmake file and the include path; "../.." goes from share/gflags/ to the triplet root
+        fix_cmake_config.patch
 )
 
 vcpkg_configure_cmake(

@@ -19,8 +19,6 @@
  using namespace Windows::UI::Xaml::Controls;
 
  namespace cv
-diff --git a/modules/highgui/src/window_winrt_bridge.hpp b/modules/highgui/src/window_winrt_bridge.hpp
-index 25f4aef..5429f0b 100644
 --- a/modules/highgui/src/window_winrt_bridge.hpp
 +++ b/modules/highgui/src/window_winrt_bridge.hpp
 @@ -28,6 +28,7 @@
@@ -31,8 +29,6 @@ index 25f4aef..5429f0b 100644
 
  using namespace Windows::UI::Xaml::Controls;
 
-diff --git a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
-index 236e227..e2417dc 100644
 --- a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
 +++ b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
 @@ -94,10 +94,10 @@ Media::CaptureFrameGrabber::~CaptureFrameGrabber()

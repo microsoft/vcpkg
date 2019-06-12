@@ -1,0 +1,28 @@
+diff --git a/hdf5-config.cmake.in_old b/hdf5-config.cmake.in
+index 3bd9e1dc..d95897d3 100644
+--- a/hdf5-1.10.5/config/cmake/hdf5-config.cmake.in
++++ b/hdf5-1.10.5/config/cmake/hdf5-config.cmake.in
+@@ -108,11 +108,19 @@ set (HDF5_VERSION_MINOR  @HDF5_VERSION_MINOR@)
+ # project which has already built hdf5 as a subproject
+ #-----------------------------------------------------------------------------
+ if (NOT TARGET "@HDF5_PACKAGE@")
+-  if (${HDF5_PACKAGE_NAME}_ENABLE_Z_LIB_SUPPORT AND ${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS AND NOT TARGET "zlib")
+-    include (@PACKAGE_SHARE_INSTALL_DIR@/@ZLIB_PACKAGE_NAME@/@ZLIB_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
++  if (${HDF5_PACKAGE_NAME}_ENABLE_Z_LIB_SUPPORT AND NOT TARGET "zlib")
++    if(${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS)
++      #include (@PACKAGE_SHARE_INSTALL_DIR@/@ZLIB_PACKAGE_NAME@/@ZLIB_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
++    else()
++      #find_package(@ZLIB_PACKAGE_NAME@ REQUIRED)
++    endif()
+   endif ()
+-  if (${HDF5_PACKAGE_NAME}_ENABLE_SZIP_SUPPORT AND ${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS AND NOT TARGET "szip")
+-    include (@PACKAGE_SHARE_INSTALL_DIR@/@SZIP_PACKAGE_NAME@/@SZIP_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
++  if (${HDF5_PACKAGE_NAME}_ENABLE_SZIP_SUPPORT AND NOT TARGET "szip")
++    if(${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS)
++      include (@PACKAGE_SHARE_INSTALL_DIR@/@SZIP_PACKAGE_NAME@/@SZIP_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
++    else()
++      find_package(@SZIP_PACKAGE_NAME@ REQUIRED)
++    endif()
+   endif ()
+   include (@PACKAGE_SHARE_INSTALL_DIR@/@HDF5_PACKAGE@/@HDF5_PACKAGE@@HDF_PACKAGE_EXT@-targets.cmake)
+ endif ()

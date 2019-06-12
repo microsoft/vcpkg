@@ -23,9 +23,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # Note that if you have configured and built both static and shared library on Windows
 # but want to link with the static library compile time define "FMILIB_BUILDING_LIBRARY" must be set.
-if (WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if ((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     SET(FMILIB_BUILDING_LIBRARY ON)
-else() 
+else()
     SET(FMILIB_BUILDING_LIBRARY OFF)
 endif()
 
@@ -33,7 +33,7 @@ endif()
 # This is only used when generating Microsoft Visual Studio solutions. If the options is on then the library will
 # be built against static runtime, otherwise - dynamic runtime (/MD or /MDd). Make sure the client code is using
 # matching runtime
-if (WIN32 AND VCPKG_CRT_LINKAGE STREQUAL static)
+if ((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND VCPKG_CRT_LINKAGE STREQUAL static)
     SET(FMILIB_BUILD_WITH_STATIC_RTLIB ON)
 else()
     SET(FMILIB_BUILD_WITH_STATIC_RTLIB OFF)
@@ -42,9 +42,9 @@ endif()
 # On LINUX position independent code (-fPIC) must be used on all files to be linked into a shared library (.so file).
 # On other systems this is not needed (either is default or relocation is done). Set this option to OFF if you
 # are building an application on Linux and use static library only
-if (UNIX AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if ((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     SET(FMILIB_BUILD_FOR_SHARED_LIBS OFF)
-else() 
+else()
     SET(FMILIB_BUILD_FOR_SHARED_LIBS ON)
 endif()
 
@@ -59,15 +59,45 @@ endif()
 
 SET(OPTIONS
     -DFMILIB_BUILD_TESTS=OFF
-    -DFMILIB_BUILD_STATIC_LIB=${FMILIB_BUILD_STATIC_LIB} 
+    -DFMILIB_BUILD_STATIC_LIB=${FMILIB_BUILD_STATIC_LIB}
     -DFMILIB_BUILD_SHARED_LIB=${FMILIB_BUILD_SHARED_LIB}
-    -DFMILIB_BUILDING_LIBRARY=${FMILIB_BUILDING_LIBRARY}  
-    -DFMILIB_BUILD_WITH_STATIC_RTLIB=${FMILIB_BUILD_WITH_STATIC_RTLIB} 
+    -DFMILIB_BUILDING_LIBRARY=${FMILIB_BUILDING_LIBRARY}
+    -DFMILIB_BUILD_WITH_STATIC_RTLIB=${FMILIB_BUILD_WITH_STATIC_RTLIB}
 )
 
 # Reset package dir
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR})
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR})
+
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+        set(GENERATOR "Visual Studio 12 2013")
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+        set(GENERATOR "Visual Studio 12 2013 Win64")
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+        set(GENERATOR "Visual Studio 12 2013 ARM")
+
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+        set(GENERATOR "Visual Studio 14 2015")
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+        set(GENERATOR "Visual Studio 14 2015 Win64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+        set(GENERATOR "Visual Studio 14 2015 ARM")
+
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017")
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017 Win64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017 ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017")
+    else()
+        message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
+    endif()
+
+endif()
 
 foreach(BUILDTYPE "rel" "dbg")
 
@@ -79,28 +109,30 @@ foreach(BUILDTYPE "rel" "dbg")
 
     # Reset working dir
     file(REMOVE_RECURSE ${BUILD_DIR})
-    file(MAKE_DIRECTORY ${BUILD_DIR}) 
+    file(MAKE_DIRECTORY ${BUILD_DIR})
 
-    if(RELEASE_BUILD)
-        SET(FMILIB_INSTALL_PREFIX ${CURRENT_PACKAGES_DIR})
-    else()
-        SET(FMILIB_INSTALL_PREFIX ${CURRENT_PACKAGES_DIR}/debug)
+    SET(FMILIB_INSTALL_PREFIX ${CURRENT_PACKAGES_DIR})
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        SET(OPTIONS ${OPTIONS} -G ${GENERATOR})
+    endif()
+    if(NOT RELEASE_BUILD)
+        STRING(APPEND FMILIB_INSTALL_PREFIX "/debug")
     endif()
 
     # Step 1: Configure
-    vcpkg_execute_required_process(COMMAND 
-        cmake 
+    vcpkg_execute_required_process(COMMAND
+        cmake
             -DFMILIB_INSTALL_PREFIX=${FMILIB_INSTALL_PREFIX}
-            -DFMILIB_DEFAULT_BUILD_TYPE_RELEASE=${RELEASE_BUILD}  
+            -DFMILIB_DEFAULT_BUILD_TYPE_RELEASE=${RELEASE_BUILD}
             ${OPTIONS}
             ${SOURCE_PATH}
-        WORKING_DIRECTORY 
+        WORKING_DIRECTORY
             ${BUILD_DIR}
     )
 
     # Step 2: Build
     # Custom build - becouse vcpkg_configure_cmake() + vcpkg_install_cmake() fails on Linux for some unknown reason
-    if (UNIX)
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         find_program(MAKE make)
         if(NOT MAKE)
             message(FATAL_ERROR "Could not find make. Please install it through your package manager.")
@@ -112,12 +144,12 @@ foreach(BUILDTYPE "rel" "dbg")
         else()
             SET(CONFIG "Debug")
         endif()
-        vcpkg_execute_required_process(COMMAND 
-            cmake 
-                --build . 
-                --config ${CONFIG} 
-                --target "install" 
-            WORKING_DIRECTORY 
+        vcpkg_execute_required_process(COMMAND
+            cmake
+                --build .
+                --config ${CONFIG}
+                --target "install"
+            WORKING_DIRECTORY
                 ${BUILD_DIR}
         )
     endif()
@@ -127,9 +159,9 @@ foreach(BUILDTYPE "rel" "dbg")
         # remove /doc folder
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 
-        # Move .dll files (if any) from /lib to /bin 
+        # Move .dll files (if any) from /lib to /bin
         file(GLOB TMP ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-        if (TMP) 
+        if (TMP)
             file(COPY ${TMP} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
             file(REMOVE ${TMP})
 
@@ -143,7 +175,7 @@ foreach(BUILDTYPE "rel" "dbg")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 
-        # Move .dll files (if any) from /lib to /bin 
+        # Move .dll files (if any) from /lib to /bin
         file(GLOB TMP ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
         if (TMP)
             file(COPY ${TMP} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

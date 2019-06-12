@@ -1,13 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building will not support load data through plugins.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "osgearth does not support static CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 file(GLOB OSG_PLUGINS_SUBDIR ${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*)
 list(LENGTH OSG_PLUGINS_SUBDIR OSG_PLUGINS_SUBDIR_LENGTH)
@@ -26,8 +19,8 @@ vcpkg_download_distfile(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF d1884d819d4a43de32b7ca1ded655c73964bed17
-    SHA512 525ad4ce8bcbd7d73a2ed66e7fbcd9d302582276f26dda1ef2baa3828da5c1e302ba81aac95d0a0632c7395cbcd072d2b19d084ba641c1ba92872d42bb6f769c
+    REF osgearth-2.10.1
+    SHA512 a74e6922ae29f85b4227b23a83dbccba92e08b7880533c281ceb244703c38b51a02823fdee3199c975c969db963b35ebad0e3bfed3c1e218a36d130b20a48e5b
     HEAD_REF master
     PATCHES ${VS2017PATCH}
 )

@@ -7,7 +7,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
@@ -220,6 +220,8 @@ namespace vcpkg::Metrics
                                    "OSX",
 #elif defined(__linux__)
                                    "Linux",
+#elif defined(__FreeBSD__)
+                                   "FreeBSD",
 #elif defined(__unix__)
                                    "Unix",
 #else

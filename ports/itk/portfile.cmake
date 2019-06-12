@@ -1,16 +1,26 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 50 AND CMAKE_HOST_WIN32)
+    message(WARNING "ITKs buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF d92873e33e8a54e933e445b92151191f02feab42
-    SHA512 0e3ebd27571543e1c497377dd9576a9bb0711129be12131109fe9b3c8413655ad14ce4d9ac6e281bac83c57e6032b614bc9ff53ed357d831544ca52f41513b62
+    REF 906736bd453e95ccf03b318d3d07cb7884285161
+    SHA512 8ac62262d46e7acbb0e5b2e964292ec17e1687bb162b8cec666e5b67acbe3449f093a0b1c03737e9951cb88248ed890805ffd57df6eae21220488620da833c57
     HEAD_REF master
+    PATCHES fix_conflict_with_openjp2_pc.patch
 )
 
-# directory path length needs to be shorter than 50 characters
-file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/ITK)
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/ITK")
+if ("vtk" IN_LIST FEATURES)
+    set(ITKVtkGlue ON)
+else()
+    set(ITKVtkGlue OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -34,19 +44,23 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_PNG=ON
         -DITK_USE_SYSTEM_TIFF=ON
         -DITK_USE_SYSTEM_ZLIB=ON
+        -DITK_USE_SYSTEM_EIGEN=ON
+        # This should be turned on some day, however for now ITK does download specific versions so it shouldn't spontaneously break
         -DITK_FORBID_DOWNLOADS=OFF
 
-        # I havn't tried Python wrapping in vcpkg
+        -DITK_SKIP_PATH_LENGTH_CHECKS=ON
+
+        # I haven't tried Python wrapping in vcpkg
         #-DITK_WRAP_PYTHON=ON
         #-DITK_PYTHON_VERSION=3
 
-        # HDF5 must NOT be installed, otherwise it causes: ...\installed\x64-windows-static\include\H5Tpkg.h(25): fatal error C1189: #error:  "Do not include this file outside the H5T package!"
-        -DITK_USE_SYSTEM_HDF5=OFF # if ON, causes: ...\buildtrees\itk\x64-windows-static-rel\Modules\ThirdParty\HDF5\src\itk_H5Cpp.h(25): fatal error C1083: Cannot open include file: 'H5Cpp.h': No such file or directory
+        -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past
+        -DModule_ITKVtkGlue=${ITKVtkGlue} # optional feature
 
-        # -DModule_ITKVtkGlue=ON # this option requires VTK to be a dependency in CONTROL file. VTK depends on HDF5!
         -DModule_IOSTL=ON # example how to turn on a non-default module
         -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         -DModule_RLEImage=ON # example how to turn on a remote module
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON #Use port openjpeg instead of own third-party
         ${ADDITIONAL_OPTIONS}
 )
 
@@ -55,8 +69,11 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets() # combines release and debug build configurations
 
+file(RENAME ${CURRENT_PACKAGES_DIR}/vcl_compiler_detection.h ${CURRENT_PACKAGES_DIR}/include/ITK-5.0/vcl_compiler_detection.h)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/vcl_compiler_detection.h)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/itk)

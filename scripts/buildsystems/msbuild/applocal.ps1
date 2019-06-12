@@ -15,7 +15,14 @@ if ($copiedFilesLog)
 # Note: this function signature is depended upon by the qtdeploy.ps1 script introduced in 5.7.1-7
 function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$targetBinaryName) {
     if (Test-Path "$targetBinaryDir\$targetBinaryName") {
-        Write-Verbose "  ${targetBinaryName}: already present"
+        $sourceModTime = (Get-Item $SourceDir\$targetBinaryName).LastWriteTime
+        $destModTime = (Get-Item $targetBinaryDir\$targetBinaryName).LastWriteTime
+        if ($destModTime -lt $sourceModTime) {
+            Write-Verbose "  ${targetBinaryName}: Updating $SourceDir\$targetBinaryName"
+            Copy-Item "$SourceDir\$targetBinaryName" $targetBinaryDir
+        } else {
+            Write-Verbose "  ${targetBinaryName}: already present"
+        }
     }
     else {
         Write-Verbose "  ${targetBinaryName}: Copying $SourceDir\$targetBinaryName"
