@@ -50,4 +50,8 @@ endforeach()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+# Remove files already published by egl-registry
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
+
+# Handle copyright
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)
