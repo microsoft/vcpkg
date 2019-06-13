@@ -11,12 +11,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 2347913ef1742c20b3c69e27196d6c3563ef7820
-  SHA512 6aef601c147b61cd6802f3c564cd2f28b0339d97d90fb2c031770750bf16ed55eadf9194419fd3dc0f5b77d00094fe2295491c72c5a685ee3973542afe376326
+  REF a1abd07e23fc5b143a6197de9908fe4f33791c6a
+  SHA512 df91bf595666a4db5beb5cc55f6c60be19667ab987a784faef04cf2215317c9a340cfc0a200640741fcc88c29cff077d5153b86ff497c31ad5ad132f05987516
   HEAD_REF master
-  PATCHES
-    fix_cmakelists.patch
-    fix_common_variable.patch
 )
 
 set(ENABLE_CUDA OFF)
@@ -24,9 +21,9 @@ if("cuda" IN_LIST FEATURES)
   set(ENABLE_CUDA ON)
 endif()
 
-set(CMAKE_DISABLE_FIND_PACKAGE_OpenCV ON)
+set(ENABLE_OPENCV OFF)
 if("opencv" IN_LIST FEATURES)
-  set(CMAKE_DISABLE_FIND_PACKAGE_OpenCV OFF)
+  set(ENABLE_OPENCV ON)
 endif()
 
 if("opencv-cuda" IN_LIST FEATURES)
@@ -68,7 +65,7 @@ vcpkg_configure_cmake(
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_CUDA=${ENABLE_CUDA}
-    -DCMAKE_DISABLE_FIND_PACKAGE_OpenCV=${CMAKE_DISABLE_FIND_PACKAGE_OpenCV}
+    -DENABLE_OPENCV=${ENABLE_OPENCV}
 )
 
 vcpkg_install_cmake()
