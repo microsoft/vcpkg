@@ -1,40 +1,45 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi-0.20.tar.gz"
-    FILENAME "libftdi-0.20.tar.gz"
-    SHA512 540e5eb201a65936c3dbabff70c251deba1615874b11ff27c5ca16c39d71c150cf61758a68b541135a444fe32ab403b0fba0daf55c587647aaf9b3f400f1dee7
+    URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.4.tar.bz2"
+    FILENAME "libftdi1-1.4.tar.bz2"
+    SHA512 dbab74f7bc35ca835b9c6dd5b70a64816948d65da1f73a9ece37a0f0f630bd0df1a676543acc517b02a718bc34ba4f7a30cbc48b6eed1c154c917f8ef0a358fc
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF v0.20
+    REF 1.4
     PATCHES
-        usb-header.patch
         cmake-fix.patch
+        win32.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/FindUSB.cmake DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/exports.def DESTINATION ${SOURCE_PATH}/src)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+        -DBUILD_TESTS=OFF
+        -DDOCUMENTATION=OFF
+        -DEXAMPLES=OFF
+        -DPYTHON_BINDINGS=OFF
+        -DLINK_PYTHON_LIBRARY=OFF
+
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Confuse=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libintl=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libftdi1 TARGET_PATH share/libftdi1)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-file(COPY  ${CMAKE_CURRENT_LIST_DIR}/cmake/LibFTDIConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi-compat)
-file(COPY  ${CMAKE_CURRENT_LIST_DIR}/cmake/LibFTDIConfigVersion.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi-compat)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi-compat)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libftdi-compat/LICENSE ${CURRENT_PACKAGES_DIR}/share/libftdi-compat/copyright)
