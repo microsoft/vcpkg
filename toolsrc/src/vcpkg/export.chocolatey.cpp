@@ -44,6 +44,7 @@ namespace vcpkg::Export::Chocolatey
     </metadata>
     <files>
         <file src="@EXPORTED_ROOT_DIR@\installed\**" target="installed" />
+        <file src="@EXPORTED_ROOT_DIR@\tools\**" target="tools" />
     </files>
 </package>
 )";
@@ -66,12 +67,81 @@ namespace vcpkg::Export::Chocolatey
         return nuspec_file_content;
     }
 
+    static std::string create_chocolatey_install_contents()
+    {
+        static constexpr auto CONTENT_TEMPLATE = R"###(
+$ErrorActionPreference = 'Stop';
+
+$packageName= $env:ChocolateyPackageName
+$toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
+$rootDir    = "$(Split-Path -parent $toolsDir)"
+$installedDir = Join-Path $rootDir 'installed'
+
+$whereToInstall = (pwd).path
+$whereToInstallCache = Join-Path $rootDir 'install.txt'
+Set-Content -Path $whereToInstallCache -Value $whereToInstall
+Copy-Item $installedDir -destination $whereToInstall -recurse -force
+)###";
+        return CONTENT_TEMPLATE;
+    }
+
+    static std::string create_chocolatey_uninstall_contents(const BinaryParagraph& binary_paragraph)
+    {
+        static constexpr auto CONTENT_TEMPLATE = R"###(
+$ErrorActionPreference = 'Stop';
+
+$packageName= $env:ChocolateyPackageName
+$toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
+$rootDir    = "$(Split-Path -parent $toolsDir)"
+$listFile = Join-Path $rootDir 'installed\vcpkg\info\@PACKAGE_FULLSTEM@.list'
+
+$whereToInstall = $null
+$whereToInstallCache = Join-Path $rootDir 'install.txt'
+Get-Content $whereToInstallCache | Foreach-Object {
+    $whereToInstall = $_
+}
+
+$installedDir = Join-Path $whereToInstall 'installed'
+Get-Content $listFile | Foreach-Object { 
+    $fileToRemove = Join-Path $installedDir $_
+    if (Test-Path $fileToRemove -PathType Leaf) {
+        Remove-Item $fileToRemove
+    }
+}
+
+Get-Content $listFile | Foreach-Object {
+    $fileToRemove = Join-Path $installedDir $_
+    if (Test-Path $fileToRemove -PathType Container) {
+        $folderToDelete = Join-Path $fileToRemove *
+        if (-Not (Test-Path $folderToDelete))
+        {
+            Remove-Item $fileToRemove
+        }
+    }
+}
+
+$listFileToRemove = Join-Path $whereToInstall 'installed\vcpkg\info\@PACKAGE_FULLSTEM@.list'
+Remove-Item $listFileToRemove
+
+if (Test-Path $installedDir)
+{
+    while (
+        $empties = Get-ChildItem $installedDir -recurse -Directory | Where-Object {
+            $_.GetFiles().Count -eq 0 -and $_.GetDirectories().Count -eq 0
+        }
+    ) { $empties | Remove-Item }
+}
+)###";
+        std::string chocolatey_uninstall_content = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_FULLSTEM@", binary_paragraph.fullstem());
+        return chocolatey_uninstall_content;
+    }
+
     void do_export(const std::vector<ExportPlanAction>& export_plan,
                    const VcpkgPaths& paths)
     {
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path export_to_path = paths.root;
-        const fs::path raw_exported_dir_path = export_to_path / "chocolatey";
+        const fs::path vcpkg_root_path = paths.root;
+        const fs::path raw_exported_dir_path = vcpkg_root_path / "chocolatey";
         const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         std::error_code ec;
@@ -105,9 +175,19 @@ namespace vcpkg::Export::Chocolatey
             const fs::path nuspec_file_path = per_package_dir_path / Strings::concat(binary_paragraph.spec.name(), ".nuspec");
             fs.write_contents(nuspec_file_path, nuspec_file_content);
 
+            fs.create_directory(per_package_dir_path / "tools", ec);
+
+            const std::string chocolatey_install_content = create_chocolatey_install_contents();
+            const fs::path chocolatey_install_file_path = per_package_dir_path / "tools" / "chocolateyInstall.ps1";
+            fs.write_contents(chocolatey_install_file_path, chocolatey_install_content);
+
+            const std::string chocolatey_uninstall_content = create_chocolatey_uninstall_contents(binary_paragraph);
+            const fs::path chocolatey_uninstall_file_path = per_package_dir_path / "tools" / "chocolateyUninstall.ps1";
+            fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content);
+
             const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
                                               nuget_exe.u8string(),
-                                              raw_exported_dir_path.u8string(),
+                                              vcpkg_root_path.u8string(),
                                               nuspec_file_path.u8string());
 
             const int exit_code = System::cmd_execute_clean(cmd_line);
