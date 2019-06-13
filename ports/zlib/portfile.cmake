@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE_FILE}
     REF ${VERSION}
     PATCHES
-        "cmake_dont_build_more_than_needed.patch"
+        cmake_dont_build_more_than_needed.patch
 )
 
 # This is generated during the cmake build
@@ -25,6 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
         -DSKIP_BUILD_EXAMPLES=ON
+        -DCMAKE_DEBUG_POSTFIX=d
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )

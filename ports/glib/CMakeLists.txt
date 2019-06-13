@@ -86,6 +86,11 @@ else()
         string(STRIP "${CXXFLAGS}" CXXFLAGS)
         string(STRIP "${CFLAGS}"   CFLAGS)
         string(STRIP "${LDFLAGS}"  LDFLAGS)
+
+        if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+            set(ZLIB_POSTFIX "d")
+        endif()
+
         execute_process(
             COMMAND "${CMAKE_SOURCE_DIR}/configure"
                 --disable-libelf
@@ -93,6 +98,7 @@ else()
                 "CPPFLAGS=${CXXFLAGS}"
                 "CFLAGS=${CFLAGS}"
                 "LDFLAGS=${LDFLAGS}"
+                "ZLIB_LIB_NAME=z${ZLIB_POSTFIX}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
             RESULT_VARIABLE res
         )

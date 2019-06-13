@@ -1,0 +1,55 @@
+diff --git a/configure b/configure
+index 266e021..1375a04 100644
+--- a/configure
++++ b/configure
+@@ -801,6 +801,7 @@ USE_NLS
+ CONFIG_STATUS_DEPENDENCIES
+ LIBFFI_LIBS
+ LIBFFI_CFLAGS
++ZLIB_LIB_NAME
+ ZLIB_LIBS
+ ZLIB_CFLAGS
+ pkgpyexecdir
+@@ -1033,6 +1034,7 @@ PKG_CONFIG
+ PKG_CONFIG_PATH
+ PKG_CONFIG_LIBDIR
+ PYTHON
++ZLIB_LIB_NAME
+ ZLIB_CFLAGS
+ ZLIB_LIBS
+ LIBFFI_CFLAGS
+@@ -1759,6 +1761,8 @@ Some influential environment variables:
+   PKG_CONFIG_LIBDIR
+               path overriding pkg-config's built-in search path
+   PYTHON      the Python interpreter
++  ZLIB_LIB_NAME
++              name of zlib library
+   ZLIB_CFLAGS C compiler flags for ZLIB, overriding pkg-config
+   ZLIB_LIBS   linker flags for ZLIB, overriding pkg-config
+   LIBFFI_CFLAGS
+@@ -7799,13 +7803,13 @@ $as_echo "yes" >&6; }
+ fi
+ if test "x$found_zlib" = "xno"; then :
+ 
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for inflate in -lz" >&5
+-$as_echo_n "checking for inflate in -lz... " >&6; }
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for inflate in -l$ZLIB_LIB_NAME" >&5
++$as_echo_n "checking for inflate in -l$ZLIB_LIB_NAME... " >&6; }
+ if ${ac_cv_lib_z_inflate+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="-l$ZLIB_LIB_NAME  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -7847,7 +7851,7 @@ fi
+   if test "x$found_zlib" = "xno" ; then
+     as_fn_error $? "*** Working zlib library and headers not found ***" "$LINENO" 5
+   fi
+-  ZLIB_LIBS='-lz'
++  ZLIB_LIBS='-l$ZLIB_LIB_NAME'
+ 
+ 
+ fi
