@@ -41,7 +41,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libftdi1 TARGET_PATH share/libft
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi-compat)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libftdi-compat/LICENSE ${CURRENT_PACKAGES_DIR}/share/libftdi-compat/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libftdi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libftdi/copyright)
 
 vcpkg_copy_pdbs()
