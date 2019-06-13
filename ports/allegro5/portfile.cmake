@@ -10,10 +10,10 @@ vcpkg_from_github(
         fix-pdb-install.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(ALLEGRO_USE_STATIC OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
-    set(ALLEGRO_USE_STATIC ON)
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -23,7 +23,7 @@ vcpkg_configure_cmake(
         -DWANT_DOCS=OFF
         -DALLEGRO_SDL=OFF
         -DWANT_DEMO=OFF
-        -DSHARED=${ALLEGRO_USE_STATIC}
+        -DSHARED=${VCPKG_BUILD_SHARED_LIBS}
         -DWANT_EXAMPLES=OFF
         -DWANT_CURL_EXAMPLE=OFF
         -DWANT_TESTS=OFF
