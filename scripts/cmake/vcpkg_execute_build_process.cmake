@@ -57,6 +57,7 @@ function(vcpkg_execute_build_process)
         endif()
 
         if(out_contents MATCHES "LINK : fatal error LNK1102:" OR out_contents MATCHES " fatal error C1060: "
+           OR err_contents MATCHES "LINK : fatal error LNK1102:" OR err_contents MATCHES " fatal error C1060: "
            OR out_contents MATCHES "LINK : fatal error LNK1318: Unexpected PDB error; ACCESS_DENIED"
            OR out_contents MATCHES "LINK : fatal error LNK1104:")
             # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
