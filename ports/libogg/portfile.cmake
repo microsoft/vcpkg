@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 6ccfcc2dce48c0d430b45064d0e13c962a64c42f
     SHA512 441950d541f626a2e668efab4ed429c453534ef0334aad410013f07870a4a99e347f7a7eed335d77af41f02ce3dd600564d982e4c976a0c4cb76c19b1231d39e
     HEAD_REF master
+    PATCHES
+        missing_usize64.patch
 )
 
 vcpkg_configure_cmake(
