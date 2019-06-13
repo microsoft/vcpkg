@@ -64,7 +64,7 @@ function(vcpkg_execute_build_process)
             set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
             set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")
 
-            if(${_ebp_NO_PARALLEL_COMMAND})
+            if(_ebp_NO_PARALLEL_COMMAND)
                 execute_process(
                     COMMAND ${_ebp_NO_PARALLEL_COMMAND}
                     WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
