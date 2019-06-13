@@ -42,25 +42,25 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 ##########
 # angle::common
 if(WIN32)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|android_")
 elseif(LINUX)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac|android_")
 elseif(APPLE)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win|android_")
 endif()
 file(GLOB ANGLE_COMMON_SOURCES 
-	"src/common/*.h" 
-	"src/common/*.inl" 
-	"src/common/*.cpp" 
-	"src/common/third_party/base/anglebase/*.h" 
-	"src/common/third_party/base/anglebase/*.cc" 
-	"src/common/third_party/base/anglebase/containers/*.h" 
-	"src/common/third_party/base/anglebase/numerics/*.h" 
-	"src/common/third_party/base/anglebase/numerics/*.cc" 
-	"src/common/third_party/xxhash/*.h" 
-	"src/common/third_party/xxhash/*.c" 
-	"src/common/third_party/smhasher/src/*.h" 
-	"src/common/third_party/smhasher/src/*.cpp")
+    "src/common/*.h" 
+    "src/common/*.inl" 
+    "src/common/*.cpp" 
+    "src/common/third_party/base/anglebase/*.h" 
+    "src/common/third_party/base/anglebase/*.cc" 
+    "src/common/third_party/base/anglebase/containers/*.h" 
+    "src/common/third_party/base/anglebase/numerics/*.h" 
+    "src/common/third_party/base/anglebase/numerics/*.cc" 
+    "src/common/third_party/xxhash/*.h" 
+    "src/common/third_party/xxhash/*.c" 
+    "src/common/third_party/smhasher/src/*.h" 
+    "src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
