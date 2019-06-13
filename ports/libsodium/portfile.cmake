@@ -40,6 +40,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Makefile.am)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/include/sodium/export.h

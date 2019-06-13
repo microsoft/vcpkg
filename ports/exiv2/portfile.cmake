@@ -10,7 +10,7 @@ vcpkg_from_github(
         iconv.patch
 )
 
-if(WIN32 AND ("unicode" IN_LIST FEATURES))
+if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND ("unicode" IN_LIST FEATURES))
     set(enable_win_unicode TRUE)
 elseif()
     set(enable_win_unicode FALSE)
@@ -46,6 +46,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-# Handle copyright 
+# Handle copyright
 file(COPY ${SOURCE_PATH}/ABOUT-NLS DESTINATION ${CURRENT_PACKAGES_DIR}/share/exiv2)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/exiv2/ABOUT-NLS ${CURRENT_PACKAGES_DIR}/share/exiv2/copyright)
