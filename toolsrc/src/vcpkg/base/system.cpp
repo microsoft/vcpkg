@@ -16,7 +16,9 @@
 #include <sys/sysctl.h>
 #endif
 
+#if defined(_WIN32)
 #pragma comment(lib, "Advapi32")
+#endif
 
 using namespace vcpkg::System;
 
