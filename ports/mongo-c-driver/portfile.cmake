@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_SSL=${ENABLE_SSL}
+        -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DBUILD_VERSION=${BUILD_VERSION}
 )
