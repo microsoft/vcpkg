@@ -13,21 +13,30 @@ namespace vcpkg::Export::Chocolatey
     using Dependencies::ExportPlanType;
     using Install::InstallDir;
 
-    static std::string create_nuspec_dependencies(const BinaryParagraph& binary_paragraph)
+    static std::string create_nuspec_dependencies(const BinaryParagraph& binary_paragraph,
+                                                  const std::map<std::string, std::string>& dependsVersion)
     {
         static constexpr auto CONTENT_TEMPLATE =
-            R"(<dependency id="@PACKAGE_ID@" version="0.0.0" />)";
+            R"(<dependency id="@PACKAGE_ID@" version="[@PACKAGE_VERSION@]" />)";
         
         std::string nuspec_dependencies;
         for (const std::string& depend: binary_paragraph.depends)
         {
-            nuspec_dependencies += Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
+            auto found = dependsVersion.find(depend);
+            if (found == dependsVersion.end())
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired dependency version.");
+            }
+            std::string nuspec_dependency = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
+            nuspec_dependency = Strings::replace_all(std::move(nuspec_dependency), "@PACKAGE_VERSION@", found->second);
+            nuspec_dependencies += nuspec_dependency;
         }
         return nuspec_dependencies;
     }
 
     static std::string create_nuspec_file_contents(const std::string& exported_root_dir,
-                                                   const BinaryParagraph& binary_paragraph)
+                                                   const BinaryParagraph& binary_paragraph,
+                                                   const std::map<std::string, std::string>& dependsVersion)
     {
         static constexpr auto CONTENT_TEMPLATE = R"(
 <package>
@@ -63,7 +72,7 @@ namespace vcpkg::Export::Chocolatey
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@EXPORTED_ROOT_DIR@", exported_root_dir);
         nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DEPENDENCIES@", create_nuspec_dependencies(binary_paragraph));
+            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DEPENDENCIES@", create_nuspec_dependencies(binary_paragraph, dependsVersion));
         return nuspec_file_content;
     }
 
@@ -149,6 +158,7 @@ if (Test-Path $installedDir)
         fs.create_directory(raw_exported_dir_path, ec);
 
         // execute the plan
+        std::map<std::string, std::string> dependsVersion;
         for (const ExportPlanAction& action : export_plan)
         {
             if (action.plan_type != ExportPlanType::ALREADY_BUILT)
@@ -156,6 +166,12 @@ if (Test-Path $installedDir)
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
 
+            const BinaryParagraph& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
+            dependsVersion.insert(std::make_pair(binary_paragraph.spec.name(), binary_paragraph.version));
+        }
+
+        for (const ExportPlanAction& action : export_plan)
+        {
             const std::string display_name = action.spec.to_string();
             System::print2("Exporting package ", display_name, "...\n");
 
@@ -171,7 +187,7 @@ if (Test-Path $installedDir)
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
 
             const std::string nuspec_file_content =
-                create_nuspec_file_contents(per_package_dir_path.string(), binary_paragraph);
+                create_nuspec_file_contents(per_package_dir_path.string(), binary_paragraph, dependsVersion);
             const fs::path nuspec_file_path = per_package_dir_path / Strings::concat(binary_paragraph.spec.name(), ".nuspec");
             fs.write_contents(nuspec_file_path, nuspec_file_content);
 
