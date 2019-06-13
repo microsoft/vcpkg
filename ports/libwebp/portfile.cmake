@@ -11,6 +11,7 @@ vcpkg_from_github(
     0002-cmake-config-add-backwards-compatibility.patch
     0003-remove-missing-symbol.patch
     0004-add-missing-linked-library.patch
+    0005-fix-static-build.patch
 )
 
 set(WEBP_BUILD_ANIM_UTILS OFF)

@@ -33,6 +33,7 @@ endif()
 #Note: HDF5 Builds by default static as well as shared libraries. Set BUILD_SHARED_LIBS to OFF to only get static libraries
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
+file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
@@ -49,6 +50,7 @@ vcpkg_configure_cmake(
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
 )
+
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

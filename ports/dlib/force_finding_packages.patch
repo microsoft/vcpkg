@@ -1,8 +1,6 @@
-diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
-index d8a1362..088168c 100644
 --- a/dlib/CMakeLists.txt
 +++ b/dlib/CMakeLists.txt
-@@ -410,68 +410,9 @@ if (NOT TARGET dlib)
+@@ -430,70 +430,9 @@
        endif()
  
        if (DLIB_PNG_SUPPORT)
@@ -11,7 +9,7 @@ index d8a1362..088168c 100644
 -         # Make sure there isn't something wrong with the version of LIBPNG
 -         # installed on this system.  Also never link to anything from anaconda
 -         # since it's probably broken.
--         if (PNG_FOUND AND NOT ("${PNG_INCLUDE_DIR}" MATCHES "(.*)(Ana|ana|mini)conda(.*)"))
+-         if (PNG_FOUND AND NOT ("${PNG_INCLUDE_DIR}" MATCHES "(.*)(Ana|ana|mini)conda(.*)") AND NOT BUILDING_PYTHON_IN_MSVC)
 -            set(CMAKE_REQUIRED_LIBRARIES ${PNG_LIBRARIES})
 -            CHECK_FUNCTION_EXISTS(png_create_read_struct LIBPNG_IS_GOOD)
 -         endif()
@@ -23,6 +21,8 @@ index d8a1362..088168c 100644
 -            # If we can't find libpng then statically compile it in.
 -            include_directories(external/libpng external/zlib)
 -            set(source_files ${source_files}
+-               external/libpng/arm/arm_init.c
+-               external/libpng/arm/filter_neon_intrinsics.c
 -               external/libpng/png.c
 -               external/libpng/pngerror.c
 -               external/libpng/pngget.c
@@ -74,7 +74,7 @@ index d8a1362..088168c 100644
           set(source_files ${source_files}
              image_loader/png_loader.cpp
              image_saver/save_png.cpp
-@@ -479,68 +420,8 @@ if (NOT TARGET dlib)
+@@ -501,68 +440,8 @@
        endif()
  
        if (DLIB_JPEG_SUPPORT)
@@ -83,7 +83,7 @@ index d8a1362..088168c 100644
 -         # Make sure there isn't something wrong with the version of libjpeg 
 -         # installed on this system.  Also don't use the installed libjpeg
 -         # if this is an APPLE system because apparently it's broken (as of 2015/01/01).
--         if (JPEG_FOUND AND NOT ("${JPEG_INCLUDE_DIR}" MATCHES "(.*)(Ana|ana|mini)conda(.*)"))
+-         if (JPEG_FOUND AND NOT ("${JPEG_INCLUDE_DIR}" MATCHES "(.*)(Ana|ana|mini)conda(.*)") AND NOT BUILDING_PYTHON_IN_MSVC)
 -            set(CMAKE_REQUIRED_LIBRARIES ${JPEG_LIBRARY})
 -            CHECK_FUNCTION_EXISTS(jpeg_read_header LIBJPEG_IS_GOOD)
 -         endif()

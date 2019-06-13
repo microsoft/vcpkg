@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Osi
-    REF releases/0.107.9
-    SHA512 52501e2fa81ad9ec1412596b5945e11f2d5c5c91bdb148f41dad9efb8e4a033cfc2f76e389b9e546593b89ae6c7f74c32e6c5b78337c967ad0c90cd6a7183a28
+    REF releases/0.108.4
+    SHA512 43c4da11c7e8b83ef67b10b60fa0be9bd2302965a26447f85c4cf9e747b999710954948e041b7203ac69f5d3cb75ba9c383838184bee8399a95b9ba59eff3f06
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -19,8 +19,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")  #on case-sensitive filesystems, it's necessary to rename and make it lowercase
+  vcpkg_fixup_cmake_targets(CONFIG_PATH "share/Osi")
+else()
+  vcpkg_fixup_cmake_targets()
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/Osi")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/osi RENAME copyright)

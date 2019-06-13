@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commonmark/cmark
-    REF 0.28.3
-    SHA512 409105a3228a8ae22ba6acf95cd99bc9a2c20f8603aa0e803a33172eb6ef53f80f8f0262d2258b77f9fd6e1f2e9017a6c906b88f761e053c09ef88c9ffab7d29
+    REF 0.29.0
+    SHA512 06eb110cfd90c9e980c022b7588e28864d15a4da5d07d61ad4b27c6de47367492b9e58e9434e62b07517aa6dc484f17af13916808be3188f38c37d20cbf33112
     HEAD_REF master
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/rename-shared-lib.patch"

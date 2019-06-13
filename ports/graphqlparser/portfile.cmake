@@ -11,12 +11,12 @@ vcpkg_from_github(
         static-compile-fix.patch
 )
 
-if(UNIX)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
     )
-elseif(WIN32)
+elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_find_acquire_program(PYTHON2)
     vcpkg_find_acquire_program(FLEX) #
     vcpkg_find_acquire_program(BISON)
