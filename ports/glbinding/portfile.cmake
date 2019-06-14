@@ -6,8 +6,8 @@ vcpkg_from_github(
     SHA512 d7294c9a0dc47a7c107b134e5dfa78c5812fc6bf739b9fd778fa7ce946d5ea971839a65c3985e0915fd75311e4a85fb221d33a71856c460199eab0e7622f7151
     HEAD_REF master
     PATCHES 
-		force-system-install.patch
-		fix-uwpmacro.patch
+        force-system-install.patch
+        fix-uwpmacro.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,6 +18,7 @@ vcpkg_configure_cmake(
         -DOPTION_BUILD_TOOLS=OFF
         -DGIT_REV=0
         -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
+        -DOPTION_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
@@ -51,6 +52,9 @@ endforeach()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/glbinding-aux/glbinding-aux-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/KHRplatform/KHRplatform-export.cmake)\nset(glbinding_FOUND TRUE)\n")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+# Remove files already published by egl-registry
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
 
 # Handle copyright
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)
