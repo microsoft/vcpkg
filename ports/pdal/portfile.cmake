@@ -18,12 +18,16 @@ vcpkg_extract_source_archive_ex(
         0001-win32_compiler_options.cmake.patch
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
+        PDALConfig.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
-foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF)
+foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
+    file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
+endforeach()
+foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules. 
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/${_module}.cmake
         DESTINATION ${SOURCE_PATH}/cmake/modules/

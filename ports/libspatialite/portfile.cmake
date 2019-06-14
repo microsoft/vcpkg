@@ -33,10 +33,10 @@ else()
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib")
     set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib")
     set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-    set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib ws2_32.lib")
+    set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
 endif()
 
-set(LIBS_ALL_DBG 
+set(LIBS_ALL_DBG
     "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib \
     ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib \
     ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
@@ -46,7 +46,7 @@ set(LIBS_ALL_DBG
     ${GEOS_LIBS_DBG} \
     ${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib"
    )
-set(LIBS_ALL_REL 
+set(LIBS_ALL_REL
     "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
     ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib \
     ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \

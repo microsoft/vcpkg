@@ -1,4 +1,4 @@
 Source: qt5-connectivity
-Version: 5.12.0
+Version: 5.12.3
 Description: Qt5 Connectivity module - Provides access to Bluetooth and NFC hardware
 Build-Depends: qt5-modularscripts, qt5-base

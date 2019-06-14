@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 # OpenCL C headers
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -51,11 +53,6 @@ vcpkg_from_github(
     SHA512 3029f758ff0c39b57aa10d881af68e73532fd179c54063ed1d4529b7d6e27a5219e3c24b7fb5598d790ebcdc2441e00001a963671dc90fef2fc377c76d724f54
     HEAD_REF master
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Building the ICD loader as a static library is not supported. Building as DLLs instead.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
