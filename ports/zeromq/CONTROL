@@ -1,5 +1,5 @@
 Source: zeromq
-Version: 2019-01-30
+Version: 2019-05-07
 Description: The ZeroMQ lightweight messaging kernel is a library which extends the standard socket interfaces with features traditionally provided by specialised messaging middleware products
 
 Feature: sodium

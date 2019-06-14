@@ -1,13 +1,11 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
   message(FATAL_ERROR "DXUT only supports dynamic CRT linkage")
 endif()
 
-include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DXUT-sept2016)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/Microsoft/DXUT/archive/sept2016.tar.gz"
@@ -33,7 +31,7 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 	FILES_MATCHING PATTERN "*.h"
 )
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/include/Bin)
 
 file(INSTALL

@@ -1,5 +1,5 @@
 Source: openvdb
-Version: 6.0.0
+Version: 6.0.0-2
 Build-Depends: boost-ptr-container, openexr, tbb, blosc, boost-iostreams, boost-system, boost-thread, boost-date-time, boost-any, boost-uuid, boost-interprocess
 Description: Sparse volume data structure and tools
 

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sobjectizerteam/json_dto-0.2
-    REF v.0.2.6
-    SHA512 f6562b6177c941a9b898013eacb4bd78f2b8d460a82b773824bf51e106a92c27c52dca4ab6dd07a2d5e063ca3442a20c27dfd80bdcd78207e65f328b95972890
+    REF v.0.2.8
+    SHA512 50a2d8d31f4cf67bdf84a58bae5f95642f4be571e8e052a48830be119d5e3c4ddbb19c5ac97fc0f8383c9958d64ec9be4ce23019c1da4f2cbf4b8ddbf23f5ad7
 )
 
 vcpkg_configure_cmake(

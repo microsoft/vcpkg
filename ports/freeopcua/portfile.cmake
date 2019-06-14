@@ -13,6 +13,7 @@ vcpkg_from_github(
         uri_facade_win.patch
         serverObj.patch
         include_asio_first.patch
+        boost-1.70.patch
 )
 
 vcpkg_configure_cmake(
@@ -22,12 +23,11 @@ vcpkg_configure_cmake(
       -DBUILD_PYTHON=OFF
       -DBUILD_TESTING=OFF
       -DSSL_SUPPORT_MBEDTLS=OFF
+      -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/freeopcua/FreeOpcUaConfig-debug.cmake ${CURRENT_PACKAGES_DIR}/share/freeopcua/FreeOpcUaConfig-debug.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/freeopcua/FreeOpcUaConfig.cmake ${CURRENT_PACKAGES_DIR}/share/freeopcua/FreeOpcUaConfig.cmake)
+vcpkg_fixup_cmake_targets()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

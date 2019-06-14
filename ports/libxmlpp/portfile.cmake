@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(LIBXMLPP_VERSION 2.40.1)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libxml++-${LIBXMLPP_VERSION})
 vcpkg_download_distfile(ARCHIVE

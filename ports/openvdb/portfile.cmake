@@ -7,9 +7,11 @@ vcpkg_from_github(
     SHA512 6b9e267fff46647b39e1e6faa12059442196c1858df1fda1515cfc375e25bc3033e2828c80e63a652509cfba386376e022cebf81ec85aaccece421b0c721529b
     HEAD_REF master
     PATCHES
-      ${CMAKE_CURRENT_LIST_DIR}/0001-fix-cmake-modules.patch
-      ${CMAKE_CURRENT_LIST_DIR}/0002-add-custom-options.patch
-      ${CMAKE_CURRENT_LIST_DIR}/0003-build-only-necessary-targets.patch
+        0001-fix-cmake-modules.patch
+        0002-add-custom-options.patch
+        0003-build-only-necessary-targets.patch
+        0004-add-necessary-head.patch
+        blosc.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -4,8 +4,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
 endif()
 
 set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  6)
-set(PYTHON_VERSION_PATCH  4)
+set(PYTHON_VERSION_MINOR  7)
+set(PYTHON_VERSION_PATCH  3)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 include(vcpkg_common_functions)
@@ -14,13 +14,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH TEMP_SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 32cca5e344ee66f08712ab5533e5518f724f978ec98d985f7612d0bd8d7f5cac25625363c9eead192faf1806d4ea3393515f72ba962a2a0bed26261e56d8c637
+    SHA512 023960a2f570fe7178d3901df0c3c33346466906b6d55c73ef7947c19619dbab62efc42c7262a0539bc5e31543b1113eb7a088d4615ad7557a0707bdaca27940
     HEAD_REF master
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-iomodule-for-RS4-SDK.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0005-Fix-DefaultWindowsSDKVersion.patch
-        dev16.patch
-        Microsoft.VisualStudio.Setup.Configuration.Native.patch
 )
 
 # We need per-triplet directories because we need to patch the project files differently based on the linkage
@@ -28,21 +23,6 @@ vcpkg_from_github(
 set(SOURCE_PATH "${TEMP_SOURCE_PATH}-Lib-${VCPKG_LIBRARY_LINKAGE}-crt-${VCPKG_CRT_LINKAGE}")
 file(REMOVE_RECURSE ${SOURCE_PATH})
 file(RENAME "${TEMP_SOURCE_PATH}" ${SOURCE_PATH})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/0001-Static-library.patch
-    )
-endif()
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/0002-Static-CRT.patch
-    )
-endif()
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
@@ -57,14 +37,6 @@ endif()
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
     PLATFORM ${BUILD_ARCH})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-header-for-static-linkage.patch
-    )
-endif()
 
 file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
 file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})

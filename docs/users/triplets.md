@@ -33,6 +33,13 @@ Valid options include any CMake system name, such as:
 - `Darwin` (Mac OSX)
 - `Linux` (Linux)
 
+### VCPKG_CMAKE_SYSTEM_VERSION
+Specifies the target platform system version.
+
+This field is optional and, if present, will be passed into the build as `CMAKE_SYSTEM_VERSION`.
+
+See also the CMake documentation for `CMAKE_SYSTEM_VERSION`: https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_VERSION.html.
+
 ### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 Specifies an alternate CMake Toolchain file to use.
 

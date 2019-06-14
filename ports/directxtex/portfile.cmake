@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "DirectXTex only supports dynamic CRT linkage")
@@ -12,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF nov2018
-    SHA512 bcf721820e0a4069b7b1daac44d776b2c69a6ebdc0a817fb2e1fcd94938df8b3fbabc1827c28050d0db4b26cc42a011987f50b7db04487a7075741b34ddb58a8
+    REF apr2019
+    SHA512 3e50c5beb25416a0720614321bb2b712b5677b50989909ca703801080023f8f8ad168bbe4e5dc522500325989a8f6982026d7dc5029ee28d9dcfe35efdd002de
     HEAD_REF master
 )
 

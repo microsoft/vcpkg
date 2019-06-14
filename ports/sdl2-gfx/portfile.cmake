@@ -1,11 +1,19 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2_gfx-1.0.3)
+
+set(VERSION 1.0.4)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.ferzkopp.net/Software/SDL2_gfx/SDL2_gfx-1.0.3.zip"
-    FILENAME "SDL2_gfx-1.0.3.zip"
-    SHA512 f68485f71acf979aba68f3575f260fbc95a59496a9639498bcff80ffbfdb157c82a44bb5a0b0e3b1e157376ea4ff2f196f50466e6f24d850f94cfe7c24b1a497
+    URLS "http://www.ferzkopp.net/Software/SDL2_gfx/SDL2_gfx-${VERSION}.zip"
+    FILENAME "SDL2_gfx-${VERSION}.zip"
+    SHA512 213b481469ba2161bd8558a7a5427b129420193b1c3895923d515f69f87991ed2c99bbc44349c60b4bcbb7d7d2255c1f15ee8a3523c26502070cfaacccaa5242
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH 
+    ARCHIVE ${ARCHIVE}
+    REF ${VERSION}
+)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(

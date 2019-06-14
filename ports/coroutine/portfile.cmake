@@ -1,38 +1,29 @@
 include(vcpkg_common_functions)
 
-# The tagged commit for release 1.4 was changed by the library's author.
-# The current commit for release 1.4 is 3f804ca0f9ec94e3c85e3c5cc00aecc577fb8aad
-# We use the commit's hash to avoid the tag changing again it in the future.
-set(VERSION_1_4_COMMIT 3f804ca0f9ec94e3c85e3c5cc00aecc577fb8aad)
+if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
+    message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead. If it is critical, create an issue at the repo: github.com/luncliff/coroutine")
+endif()
+
+# changed to 1.4.2
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF             ${VERSION_1_4_COMMIT}
-    SHA512          a77d66a8d485a99278f15652d26f255653824c47bd3653233e89ddb6368bc3b45ab0a8049e504c5acc8cf051da582bf6b4d8461c8f7f57bf5a0b7dcaddc0afbb
+    REF             1.4.2
+    SHA512          fc2544116a5bee97b8ef1501fc7f1b805248f0a0c601111f1a317e813aa1d3f9a2e08ab1b140cc36e22d9c90249301110ec5b5e55a40fb39217cf5f40998920d
     HEAD_REF        master
 )
 
-if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
-    message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead or contact maintainer")
-endif()
-
 # package: 'ms-gsl'
-message(STATUS "Using Guideline Support Library at ${CURRENT_INSTALLED_DIR}/include")
-
-set(DLL_LINKAGE false)
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
-    message(STATUS "Using DLL linkage")
-    set(DLL_LINKAGE true)
-endif()
+set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include
+    CACHE PATH "path to include C++ core guideline support library" FORCE)
+message(STATUS "Using ms-gsl at ${GSL_INCLUDE_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        # package: 'ms-gsl'
-        -DGSL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DGSL_INCLUDE_DIR=${GSL_INCLUDE_DIR}
         -DTEST_DISABLED=True
-        -DBUILD_SHARED_LIBS=${DLL_LINKAGE}
 )
 
 vcpkg_install_cmake()
@@ -43,20 +34,6 @@ file(
     RENAME      copyright
 )
 
-if(WIN32 AND DLL_LINKAGE)
-    file(INSTALL        ${CURRENT_PACKAGES_DIR}/debug/lib/coroutine.dll
-         DESTINATION    ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/coroutine.dll)
-
-    file(INSTALL        ${CURRENT_PACKAGES_DIR}/lib/coroutine.dll
-         DESTINATION    ${CURRENT_PACKAGES_DIR}/bin
-    )
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/coroutine.dll)
-endif()
 # removed duplicates in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# unset used variables
-unset(DLL_LINKAGE)

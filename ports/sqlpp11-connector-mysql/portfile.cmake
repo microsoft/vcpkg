@@ -22,5 +22,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sqlpp11-connector-mysql RENAME copyright)

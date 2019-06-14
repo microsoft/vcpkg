@@ -8,6 +8,18 @@ vcpkg_from_github(
     HEAD_REF msvc-master
 )
 
+if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            libcurl_imp.patch)
+else()
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            libcurl_d.patch)
+endif()
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH idevicerestore.vcxproj

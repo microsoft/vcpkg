@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.69.0"
+    $version = "1.70.0"
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
@@ -215,6 +215,9 @@ $libraries_found = ls $scriptsDir/boost/libs -directory | % name | % {
         "ublas"
         "safe_numerics"
     }
+    elseif ($_ -eq "headers")
+    {
+    }
     else
     {
         $_
@@ -316,7 +319,7 @@ foreach ($library in $libraries)
             -and `
             (($library -ne "config") -or ($_ -notmatch "integer"))`
             -and `
-            (($library -notmatch "random") -or ($_ -notmatch "multiprecision"))`
+            (($library -notmatch "multiprecision") -or ($_ -notmatch "random|math"))`
             -and `
             (($library -notmatch "lexical_cast") -or ($_ -notmatch "math"))`
             -and `

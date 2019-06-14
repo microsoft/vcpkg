@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/odeint
-    REF boost-1.69.0
-    SHA512 058f4554fe2a573ef489ea4a7262078ff2c9d1682e389089f04d601c67feba6d258028f1be1715711d0302d33614aa8e04ad781ffcfa0c427f418b9096c53b90
+    REF boost-1.70.0
+    SHA512 1edcd84ee3f9bb8a421971285fe18b6b30af720042f80e87d6178682bb2ec7163185be08e7648f2bb944562f9abafe8bf34fe520412b7f1bd02e7195670c964b
     HEAD_REF master
 )
 

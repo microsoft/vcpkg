@@ -67,6 +67,15 @@ index cea0b86..07ea09e 100644
  
  FIND_PACKAGE_HANDLE_STANDARD_ARGS ( GLFW3
    REQUIRED_VARS GLFW3_LOCATION
+@@ -59,7 +59,7 @@ IF (GLFW3_FOUND)
+ 	  NO_CMAKE_SYSTEM_PATH
+ 	  )
+   ELSE (GLFW3_USE_STATIC_LIBS)
+-    FIND_LIBRARY ( GLFW3_glfw_LIBRARY  glfw
++    FIND_LIBRARY ( GLFW3_glfw_LIBRARY  glfw3dll
+       PATHS ${GLFW3_LOCATION}/lib
+       PATH_SUFFIXES ${GLFW3_PATH_SUFFIXES}
+ 	  NO_DEFAULT_PATH
 diff --git a/cmake/FindILMBase.cmake b/cmake/FindILMBase.cmake
 index 664affd..5197110 100644
 --- a/cmake/FindILMBase.cmake

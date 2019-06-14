@@ -1,5 +1,5 @@
 Source: rocksdb
-Version: 5.17.2
+Version: 6.0.2
 Description: A library that provides an embeddable, persistent key-value store for fast storage
 Default-Features: zlib
 
