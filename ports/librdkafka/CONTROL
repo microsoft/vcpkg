@@ -1,6 +1,7 @@
 Source: librdkafka
-Version: 2019-05-27
-Description: The Apache Kafka C/C++ library 
+Version: 2019-06-13
+Description: The Apache Kafka C/C++ library
+Homepage: https://github.com/edenhill/librdkafka
 Default-Features: ssl
 
 Feature: lz4
