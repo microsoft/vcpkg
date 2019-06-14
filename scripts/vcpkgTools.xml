@@ -87,25 +87,25 @@
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.8.2</version>
+        <version>1.9.0</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip</url>
-        <sha512>9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5</sha512>
-        <archiveName>ninja-win-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip</url>
+        <sha512>1c050e602ec63d4dcf44d9ab3d2d02ac731b4b2977bc0b420a21e85604487f58ec8d3045941d4153ef06ab00c175ca7cf9d57b8e20a757528290e135639962ac</sha512>
+        <archiveName>ninja-win-1.9.0.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.8.2</version>
+        <version>1.9.0</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
-        <sha512>38fcb68e745c1f15b4b50f20069ffe686b1ef5baf93b74958e132ea5d30d155cf6970d6dc1b095aafd421ebd8bcc63acf4f64e305c496266b5182f99b815cca5</sha512>
-        <archiveName>ninja-linux-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-linux.zip</url>
+        <sha512>751fd86520a1a38fb47baadf4a46ab49f9ebb11d6ff9c01e71326564ebf10f141ca2627620e315fcab82db1493a30123f11194f41226241d80413d5008acfc59</sha512>
+        <archiveName>ninja-linux-1.9.0.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.8.2</version>
+        <version>1.9.0</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
-        <sha512>acadfb286eb7d93676629701917fa0c3c39f36daa068c169e4a098c29f97380d1ea95abfd42b04798ff118fd9dc93fdb250fcda36086bac20bc5506354214fc3</sha512>
-        <archiveName>ninja-mac-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-mac.zip</url>
+        <sha512>ec2294b430b89134f54f3388bafd760697c7eb33792bc094416b918371619e79592629973a60fcc35335a92eaa9ed84a41f2bc53c846eb8abf3422d4322cd3e5</sha512>
+        <archiveName>ninja-mac-1.9.0.zip</archiveName>
     </tool>
     <tool name="ninja" os="freebsd">
         <version>1.8.2</version>
