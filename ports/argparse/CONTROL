@@ -1,0 +1,4 @@
+Source: argparse
+Version: 2019-06-10
+Description: Argument parser for modern C++
+Homepage: https://github.com/p-ranav/argparse
