@@ -14,5 +14,3 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 else()
     message(WARNING "Unknown system target for VCPKG_CMAKE_SYSTEM_NAME:${VCPKG_CMAKE_SYSTEM_NAME}! Please define VCPKG_TARGET_IS_<target> in vcpkg_common_definitions.cmake")
 endif()
-
-
