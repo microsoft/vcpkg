@@ -1,0 +1,4 @@
+Source: etcdpp
+Version: 0.4
+Description: A C++ client library for etcd. etcd is a distributed, reliable key-value store.
+Build-Depends: grpc, protobuf
