@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(TARGET_BUILD_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -13,18 +16,17 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
 		-DBUILD_TESTING=OFF
-		-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${TARGET_BUILD_PATH}-rel/platform_folders.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/)	
+    file(INSTALL ${TARGET_BUILD_PATH}-rel/platform_folders.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/)
     file(INSTALL ${TARGET_BUILD_PATH}-dbg/platform_folders.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/)
 endif()
 
-if (WIN32)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/ TARGET_PATH /share/platform_folders)
 else()
 	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ TARGET_PATH /share/)

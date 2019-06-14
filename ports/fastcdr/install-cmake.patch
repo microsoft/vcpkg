@@ -1,26 +1,13 @@
 diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
-index 46d6f20..5d73ec5 100644
+index 14747c9..65c3ddb 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
-@@ -139,7 +139,12 @@ if(MSVC OR MSVC_IDE)
-             set(DIR_EXTENSION "/${MSVC_ARCH}")
-         endif()
+@@ -155,7 +155,7 @@ elseif(NOT EPROSIMA_INSTALLER)
+         COMPONENT cmake
+         )
  
--        install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_static
-+        if(BUILD_SHARED_LIBS)
-+            set(PROJECT_TARGETS ${PROJECT_NAME})
-+        else()
-+            set(PROJECT_TARGETS ${PROJECT_NAME}_static)
-+        endif()
-+        install(TARGETS ${PROJECT_TARGETS}
-             EXPORT ${PROJECT_NAME}Targets
-             RUNTIME DESTINATION ${BIN_INSTALL_DIR}${DIR_EXTENSION}
-             LIBRARY DESTINATION ${LIB_INSTALL_DIR}${DIR_EXTENSION}
-@@ -147,7 +152,6 @@ if(MSVC OR MSVC_IDE)
-             COMPONENT libraries_${MSVC_ARCH}
-             )
- 
--        export(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_static FILE ${PROJECT_BINARY_DIR}/cmake/config/${PROJECT_NAME}Targets.cmake)
-         install(EXPORT ${PROJECT_NAME}Targets
-             DESTINATION ${LIB_INSTALL_DIR}${DIR_EXTENSION}/${PROJECT_NAME}/cmake
-             COMPONENT cmake
+-    if(MSVC OR MSVC_IDE)
++    if(MSVC OR MSVC_IDE AND 0)
+         if(TARGET_TYPE STREQUAL "SHARED_LIBRARY")
+             # Install pdb files
+             install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Debug/

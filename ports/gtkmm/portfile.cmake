@@ -4,13 +4,10 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
-# Glibmm relies on DllMain, so gtkmm also
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-message(STATUS "Warning: Static building not supported. Building dynamic.")
-set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gtkmm-3.22.2)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/gtkmm/3.22/gtkmm-3.22.2.tar.xz"

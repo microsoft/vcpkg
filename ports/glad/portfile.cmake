@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
-    REF v0.1.29
-    SHA512 056c0439b673d86bd10fe733873d4b82cf70861818980f08b3ec23f7b478750064a6d53925cc2cf9445e570cece5f21e12d7af6f1927b64af05d8d1f2afdedcb
+    REF v0.1.30
+    SHA512 2db0f75e5859be039bf4dcbea239dd6d35bdc92e69912e807dfacdb01581c73b6a5eb0f0889f2ffcd705415abe5f28cf204b4010d08f5477b51c0ce3ae6a35b5
     HEAD_REF master
 )
 

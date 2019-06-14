@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 0.57
-    SHA512 6bf48189f35cf2ff20b09e27ab83b6fb36415bed7e5c818c1ea2c9b30b5fe0a60c0f7e9930e92a0637c7b567ccfead4a9208a3aff99be89fed361778cf8c45f1
+    REF 0.58
+    SHA512 c391e72638a748e0e25b53176dc371ba468bc14bdcb6dda2f2418c4ab4d620ebc5507ee284ff81c3104888d0d959703c6c91b55ccd69a8641b07dcb20cd56209
     HEAD_REF master
     PATCHES FixForMSVC.patch
 )

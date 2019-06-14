@@ -7,10 +7,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.3.7
-    SHA512 754dee128db2eb6f0ba09962312ddda79f3178238464dd6161cce50bd08fd4193490a48bb537c4e2a388dc339951909a8857617cb30500d76d5689da4f855b47
+    REF release-1.3.9
+    SHA512 3ae22ed491024b276edde9237df0e41a8e5a4e142ec6783c77d5286d7825fb59be62f336d07f7042baac8fc7ac004ad7cc4605754c5801d65547449ea04c287f
     HEAD_REF master
-    PATCHES export-endofstreamx.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,13 +20,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if (WIN32)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-else ()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ebml)
-endif ()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/EBML)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/ebml RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

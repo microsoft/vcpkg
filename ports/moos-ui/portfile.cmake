@@ -8,28 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-#vcpkg_apply_patches(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fltk.patch
-#)
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-
-
-#if ("gui" IN_LIST FEATURES)
-#    set(BUILD_GRAPHICAL_TOOLS            ON )
-#    message(STATUS "Building graphical tools")
-#else()
-#    set(BUILD_GRAPHICAL_TOOLS            OFF )
-#    message(STATUS "Not building graphical tools")
-#endif()
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
         -DBUILD_CONSOLE_TOOLS=ON
         -DBUILD_GRAPHICAL_TOOLS=OFF #${BUILD_GRAPHICAL_TOOLS}
 )

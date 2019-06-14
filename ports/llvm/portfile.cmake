@@ -28,7 +28,9 @@ endif()
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/install-cmake-modules-to-share.patch
+    PATCHES 
+            install-cmake-modules-to-share.patch
+            fix-build-error.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

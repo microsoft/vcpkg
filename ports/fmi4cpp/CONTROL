@@ -1,7 +1,11 @@
 Source: fmi4cpp
-Version: 0.5.3
+Version: 0.7.0
 Description: FMI 2.0 implementation written in modern C++
-Build-Depends: boost-property-tree, bzip2 (linux), openssl (linux), libzip, spdlog
+Build-Depends: boost-property-tree, libzip[openssl]
+
+Feature: curl
+Build-Depends: curl
+Description: Allows loading FMUs from URL
 
 Feature: odeint
 Build-Depends: boost-ublas, boost-odeint
