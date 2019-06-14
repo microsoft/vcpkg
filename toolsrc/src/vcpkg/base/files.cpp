@@ -163,7 +163,13 @@ namespace vcpkg::Files
         }
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) override
         {
-            fs::stdfs::rename(oldpath, newpath);
+            std::error_code ec;
+            fs::stdfs::rename(oldpath, newpath, ec);
+            if (ec)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "rename(%s, %s) failed: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+            }
         }
         virtual void rename_or_copy(const fs::path& oldpath,
                                     const fs::path& newpath,
@@ -213,7 +219,16 @@ namespace vcpkg::Files
             }
 #endif
         }
-        virtual bool remove(const fs::path& path) override { return fs::stdfs::remove(path); }
+        virtual bool remove(const fs::path& path) override
+        {
+            std::error_code ec;
+            auto b = this->remove(path, ec);
+            if (ec)
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "remove(%s) threw: %s", path.u8string(), ec.message());
+            }
+            return b;
+        }
         virtual bool remove(const fs::path& path, std::error_code& ec) override { return fs::stdfs::remove(path, ec); }
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) override
         {
