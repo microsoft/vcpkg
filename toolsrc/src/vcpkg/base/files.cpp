@@ -177,6 +177,7 @@ namespace vcpkg::Files
                                     std::error_code& ec) override
         {
             this->rename(oldpath, newpath, ec);
+            Util::unused(temp_suffix);
 #if defined(__linux__) || defined(__APPLE__)
             if (ec)
             {
