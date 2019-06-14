@@ -87,6 +87,9 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.1")
+        message(FATAL_ERROR "Building with a gcc version less than 7.1 is not supported.")
+    endif()
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
         PLATFORM "linux-g++"
@@ -104,8 +107,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         OPTIONS_DEBUG
             "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libzd.a"
+            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libzd.a"
             "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
@@ -131,8 +134,8 @@ configure_qt(
     OPTIONS_DEBUG
         "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
         "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libzd.a"
+        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libzd.a"
         "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
         "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
         "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
