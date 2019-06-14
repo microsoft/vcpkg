@@ -13,7 +13,9 @@ vcpkg_from_github(
     REF v5.0.0
     SHA512 7eecd62ab3124147f0abce482699dfdc43610703959d4a3f667c8ce12a6ecacf836a863d146f3cc7d5220b4aa05adf70a0d4dc6fa8e87bac215565badc96acff
     HEAD_REF master
-    PATCHES fix_openjpeg_search.patch
+    PATCHES
+        fix_openjpeg_search.patch
+        fix_libminc_config_path.patch
 )
 
 if ("vtk" IN_LIST FEATURES)
@@ -66,7 +68,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets() 
+vcpkg_fixup_cmake_targets()
 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -74,4 +76,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/vcl_compiler_detection.h)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
