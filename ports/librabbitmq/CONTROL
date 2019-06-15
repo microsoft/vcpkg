@@ -1,4 +1,5 @@
 Source: librabbitmq
 Version: 0.9.0
 Build-Depends: openssl
+Homepage: https://github.com/alanxz/rabbitmq-c
 Description: A C-language AMQP client library for use with v2.0+ of the RabbitMQ broker.

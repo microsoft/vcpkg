@@ -2,7 +2,7 @@ Source: magnum
 Version: 2019.01-1
 Build-Depends: corrade[utility]
 Description: C++11/C++14 graphics middleware for games and data visualization 
-Homepage: http://magnum.graphics/
+Homepage: https://magnum.graphics/
 Default-Features: anyimageimporter, anyaudioimporter, anyimageconverter, anysceneimporter, debugtools, gl, meshtools, primitives, scenegraph, shaders, text, texturetools, trade, sdl2application
 
 Feature: al-info

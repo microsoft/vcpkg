@@ -2,4 +2,5 @@
 Source: boost-proto
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-detail, boost-fusion, boost-mpl, boost-preprocessor, boost-range, boost-static-assert, boost-typeof, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/proto
 Description: Boost proto module

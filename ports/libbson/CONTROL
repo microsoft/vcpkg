@@ -1,3 +1,4 @@
 Source: libbson
 Version: 1.14.0
 Description: libbson is a library providing useful routines related to building, parsing, and iterating BSON documents.
+Homepage: https://github.com/mongodb/libbson

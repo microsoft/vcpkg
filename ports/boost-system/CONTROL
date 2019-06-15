@@ -2,4 +2,5 @@
 Source: boost-system
 Version: 1.70.0
 Build-Depends: boost-build, boost-config, boost-integer, boost-modular-build-helper, boost-vcpkg-helpers, boost-winapi
+Homepage: https://github.com/boostorg/system
 Description: Boost system module

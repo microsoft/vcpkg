@@ -1,4 +1,5 @@
 Source: netcdf-c
 Version: 4.7.0-2
 Build-Depends: hdf5, curl
+Homepage: https://github.com/Unidata/netcdf-c
 Description: a set of self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.

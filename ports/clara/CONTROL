@@ -1,3 +1,4 @@
 Source: clara
 Version: 2019-03-29
+Homepage: https://github.com/philsquared/Clara
 Description: A simple to use command line parser for C++
