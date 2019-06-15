@@ -1,14 +1,12 @@
 include(vcpkg_common_functions)
 
-# Hopefully both PR will be merged soon
+# Hopefully the PR will be merged soon
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO driver1998/libffi
-    REF bb00e92da36faa6e2182592336d6b5ef0a4f7b3c
-    SHA512 1ac2a3d8aa680a9ca9d004ab23de2d950a455d3df703ec4d53a4294878659be9be46eea5564a1060615dc52d3296f73bcfa237b1107b08c81341bc79623cb86d
+    REPO paulmon/libffi
+    REF 20f4c8a7404d4b287edf96d86fd5bd0e6fe14e9c
+    SHA512 708bb59cc6024d4d0e1bec81ae107a9aaf9128a61a4be8e76f74b93d16986a5c9beb7fb2e5da27395d92967bea57d563ff62b18281ed9b48c94e661422fb5237
     HEAD_REF master
-    PATCHES
-        fix-defines.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

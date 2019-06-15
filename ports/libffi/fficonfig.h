@@ -42,7 +42,7 @@
 #define SYMBOL_UNDERSCORE 1
 #endif
 #endif
-#define VERSION "3.1"
+#define VERSION "3.3-rc0"
 #if defined AC_APPLE_UNIVERSAL_BUILD
 # if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1
