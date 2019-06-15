@@ -22,7 +22,7 @@ namespace vcpkg::Chrono
 
     static tm to_local_time(const std::time_t& t)
     {
-        tm parts {};
+        tm parts{};
 #if defined(_WIN32)
         localtime_s(&parts, &t);
 #else
@@ -33,7 +33,7 @@ namespace vcpkg::Chrono
 
     static Optional<tm> to_utc_time(const std::time_t& t)
     {
-        tm parts {};
+        tm parts{};
 #if defined(_WIN32)
         const errno_t err = gmtime_s(&parts, &t);
         if (err)
@@ -127,7 +127,7 @@ namespace vcpkg::Chrono
         const Optional<tm> opt = to_utc_time(ct);
         if (auto p_tm = opt.get())
         {
-            return CTime {*p_tm};
+            return CTime{*p_tm};
         }
 
         return nullopt;
@@ -160,11 +160,11 @@ namespace vcpkg::Chrono
         return ret;
     }
 
-    CTime CTime::add_hours(const int hours) const { return CTime {date_plus_hours(&this->m_tm, hours)}; }
+    CTime CTime::add_hours(const int hours) const { return CTime{date_plus_hours(&this->m_tm, hours)}; }
 
     std::string CTime::to_string() const
     {
-        std::array<char, 80> date {};
+        std::array<char, 80> date{};
         strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S.0Z", &m_tm);
         return &date[0];
     }
