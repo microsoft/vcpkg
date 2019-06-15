@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 project(http-parser C)
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 if(CMAKE_BUILD_TYPE MATCHES "Release")
   add_definitions(-DHTTP_PARSER_STRICT=0)
 endif()

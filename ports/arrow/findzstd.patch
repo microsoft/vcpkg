@@ -1,0 +1,79 @@
+diff --git a/cpp/cmake_modules/FindZSTD.cmake b/cpp/cmake_modules/FindZSTD.cmake
+index 21b4981ec..818e4b5e1 100644
+--- a/cpp/cmake_modules/FindZSTD.cmake	
++++ b/cpp/cmake_modules/FindZSTD.cmake
+@@ -19,44 +19,60 @@ if(MSVC AND NOT DEFINED ZSTD_MSVC_STATIC_LIB_SUFFIX)
+   set(ZSTD_MSVC_STATIC_LIB_SUFFIX "_static")
+ endif()
+ 
+-if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
+-  set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
+-endif()
+-
++set(ZSTD_LIB_NAME_DEBUG_SUFFIX d)
+-set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++set(ZSTD_STATIC_LIB_SUFFIX "${ZSTD_MSVC_STATIC_LIB_SUFFIX}")
+ set(ZSTD_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}zstd${ZSTD_STATIC_LIB_SUFFIX})
+ 
++set(ZSTD_LIB_NAMES_RELEASE zstd "${ZSTD_STATIC_LIB_NAME}"
++                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd")
++set(ZSTD_LIB_NAMES_DEBUG)
++foreach(_zstd_name ${ZSTD_LIB_NAMES_RELEASE})
++    list(APPEND ZSTD_LIB_NAMES_DEBUG ${_zstd_name}${ZSTD_LIB_NAME_DEBUG_SUFFIX})
++    if(DEFINED CMAKE_DEBUG_POSTFIX)
++        list(APPEND ZSTD_LIB_NAMES_DEBUG ${_zstd_name}${CMAKE_DEBUG_POSTFIX})
++    endif()
++endforeach()
++
+ pkg_check_modules(ZSTD_PC libzstd)
+ if(ZSTD_PC_FOUND)
+   set(ZSTD_INCLUDE_DIR "${ZSTD_PC_INCLUDEDIR}")
+ 
+   list(APPEND ZSTD_PC_LIBRARY_DIRS "${ZSTD_PC_LIBDIR}")
+-  find_library(ZSTD_LIB zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}
++  find_library(ZSTD_LIBRARY_RELEASE ${ZSTD_LIB_NAMES_RELEASE}
+                PATHS ${ZSTD_PC_LIBRARY_DIRS}
+                NO_DEFAULT_PATH
+                PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
++  find_library(ZSTD_LIBRARY_DEBUG ${ZSTD_LIB_NAMES_DEBUG}
++               PATHS ${ZSTD_PC_LIBRARY_DIRS}
++               NO_DEFAULT_PATH
++               PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}")
++
+ elseif(ZSTD_ROOT)
+   message(STATUS "Using ZSTD_ROOT: ${ZSTD_ROOT}")
+-  find_library(ZSTD_LIB
+-               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+-                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
++  find_library(ZSTD_LIBRARY_RELEASE
++               NAMES ${ZSTD_LIB_NAMES_RELEASE})
++  find_library(ZSTD_LIBRARY_DEBUG
++               NAMES ${ZSTD_LIB_NAMES_DEBUG})
+   find_path(ZSTD_INCLUDE_DIR
+             NAMES zstd.h
+             PATHS ${ZSTD_ROOT} "${ZSTD_ROOT}/Library"
+             NO_DEFAULT_PATH
+             PATH_SUFFIXES "include")
+ else()
+-  find_library(ZSTD_LIB
+-               NAMES zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX} "${ZSTD_STATIC_LIB_NAME}" "lib${ZSTD_STATIC_LIB_NAME}"
+-                     "${CMAKE_SHARED_LIBRARY_PREFIX}zstd${ZSTD_LIB_NAME_DEBUG_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
++  find_library(ZSTD_LIBRARY_RELEASE
++               NAMES ${ZSTD_LIB_NAMES_RELEASE})
++  find_library(ZSTD_LIBRARY_DEBUG
++               NAMES ${ZSTD_LIB_NAMES_DEBUG})
+   find_path(ZSTD_INCLUDE_DIR NAMES zstd.h PATH_SUFFIXES "include")
+ endif()
+-
++select_library_configurations(ZSTD)
++set(ZSTD_LIB ${ZSTD_LIBRARY})
+ find_package_handle_standard_args(ZSTD REQUIRED_VARS ZSTD_LIB ZSTD_INCLUDE_DIR)
+ 
+ if(ZSTD_FOUND)
+   add_library(ZSTD::zstd UNKNOWN IMPORTED)
+   set_target_properties(ZSTD::zstd
+-                        PROPERTIES IMPORTED_LOCATION "${ZSTD_LIB}"
++                        PROPERTIES IMPORTED_LOCATION_RELEASE "${ZSTD_LIBRARY_RELEASE}"
++                                   IMPORTED_LOCATION_DEBUG "${ZSTD_LIBRARY_DEBUG}"
+                                    INTERFACE_INCLUDE_DIRECTORIES "${ZSTD_INCLUDE_DIR}")
+ endif()

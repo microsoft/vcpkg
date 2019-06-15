@@ -1,3 +1,4 @@
 Source: asmjit
 Version: 2019-03-29
+Homepage: https://github.com/asmjit/asmjit
 Description: Complete x86/x64 JIT and Remote Assembler for C++

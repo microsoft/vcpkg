@@ -1,20 +1,5 @@
-diff --git a/src/draco/core/symbol_coding_utils.h b/src/draco/core/symbol_coding_utils.h
-index be2183d..eaaca00 100644
---- a/src/draco/core/symbol_coding_utils.h
-+++ b/src/draco/core/symbol_coding_utils.h
-@@ -41,7 +41,9 @@ typename std::make_unsigned<IntTypeT>::type ConvertSignedIntToSymbol(
-   if (val >= 0) {
-     return static_cast<UnsignedType>(val) << 1;
-   }
--  val = -(val + 1);  // Map -1 to 0, -2 to -1, etc..
-+  // Map -1 to 0, -2 to -1, etc..
-+  val += 1;
-+  val *= -1;
-   UnsignedType ret = static_cast<UnsignedType>(val);
-   ret <<= 1;
-   ret |= 1;
 diff --git a/src/draco/io/parser_utils.cc b/src/draco/io/parser_utils.cc
-index 1aa52cc..cfbbdbd 100644
+index 0a22ba1..9862949 100644
 --- a/src/draco/io/parser_utils.cc
 +++ b/src/draco/io/parser_utils.cc
 @@ -150,7 +150,9 @@ bool ParseSignedInt(DecoderBuffer *buffer, int32_t *value) {

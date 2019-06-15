@@ -3,15 +3,16 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yaml/libyaml
-    REF 0.2.1
-    SHA512 8b91738183a6d81c2c0381b4279cff9d8f811dac643ce5e08aa869058f5653ad8a2d9d8f9e563b26ad75b617b80b10ccb32753984a50ed684529a90bdd248bff
+    REF 0.2.2
+    SHA512 455494591014a97c4371a1f372ad09f0d6e487e4f1d3419c98e9cd2f16d43a0cf9a0787d7250bebee8b8d400df4626f5acd81e90139e54fa574a66ec84964c06
     HEAD_REF master
-    PATCHES 0001-fix-version.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()

@@ -1,8 +1,6 @@
 Source: mosquitto
-Version: 1.5.0-1
+Version: 1.6.2-2
 Build-Depends: c-ares, libwebsockets, openssl, pthreads
-Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and
-  3.1.1. MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it
-  suitable for "machine to machine" messaging such as with low power sensors or mobile devices such as phones, embedded
-  computers or microcontrollers like the Arduino. you can see more information from this url
-  https://mosquitto.org/download/
+Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1.
+  MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
+Homepage: https://mosquitto.org/download/

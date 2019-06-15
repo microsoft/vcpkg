@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f0135cb..c30312a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -339,7 +339,7 @@ set(rsync_LIB_SRCS
+     src/whole.c
+     ${blake2_SRCS})
+ 
+-add_library(rsync SHARED ${rsync_LIB_SRCS})
++add_library(rsync ${rsync_LIB_SRCS})
+ target_link_libraries(rsync ${blake2_LIBS})
+ 
+ # Optionally link zlib and bzip2 if

@@ -1,40 +1,44 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("live555 cannot currently be built dynamically. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE "static")
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+
+if(NOT VCPKG_USE_HEAD_VERSION)
+    # Live555 only makes the latest releases available for download on their site
+    message(FATAL_ERROR "Live555 does not have persistent releases. Please re-run the installation with --head.")
 endif()
 
-# The current Live555 version from http://www.live555.com/live.2019.03.06
-set(LIVE_VERSION 2019.03.06)
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION}/live)
+
+set(LIVE_VERSION latest)
+
 vcpkg_download_distfile(ARCHIVE
-	URLS "http://www.live555.com/live.2019.03.06.tar.gz"
-	FILENAME "live555-${LIVE_VERSION}.tar.gz"
-	SHA512 cf3cbf57ec43d392fa82f06bd02f6d829208c9a9ec1c505d9eb6c5e2dd3393bbd8829b6216163deb8ea8356c180f30f610a639044a6941df5c9a92f29d4f1a75
+    URLS "http://www.live555.com/liveMedia/public/live555-${LIVE_VERSION}.tar.gz"
+    FILENAME "live555-${LIVE_VERSION}.tar.gz"
+    SKIP_SHA512
 )
 
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE} 
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 
 file(GLOB HEADERS
-	"${SOURCE_PATH}/BasicUsageEnvironment/include/*.h*"
-	"${SOURCE_PATH}/groupsock/include/*.h*"
-	"${SOURCE_PATH}/liveMedia/include/*.h*"
-	"${SOURCE_PATH}/UsageEnvironment/include/*.h*"
+    "${SOURCE_PATH}/BasicUsageEnvironment/include/*.h*"
+    "${SOURCE_PATH}/groupsock/include/*.h*"
+    "${SOURCE_PATH}/liveMedia/include/*.h*"
+    "${SOURCE_PATH}/UsageEnvironment/include/*.h*"
 )
 
 file(COPY ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/live555 RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-

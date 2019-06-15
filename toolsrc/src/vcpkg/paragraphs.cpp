@@ -1,9 +1,9 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/globalstate.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
 
@@ -211,17 +211,7 @@ namespace vcpkg::Paragraphs
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
-            auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
-            if (!GlobalState::feature_packages)
-            {
-                if (auto ptr = csf.get())
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, ptr->get() != nullptr);
-                    ptr->get()->core_paragraph->default_features.clear();
-                    ptr->get()->feature_paragraphs.clear();
-                }
-            }
-            return csf;
+            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = path.filename().generic_u8string();
@@ -279,7 +269,7 @@ namespace vcpkg::Paragraphs
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
-            if (GlobalState::debugging)
+            if (Debug::g_debugging)
             {
                 print_error_message(results.errors);
             }

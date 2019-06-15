@@ -1,19 +1,17 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anholt/libepoxy
-    REF 1.4.3
-    SHA512 41c7a4eea66c89346b0ec71407b2d22bf645ed0ef81ebad560370903f138ed48abb6bc6bcc88c75a3a05497acc6720397db828d61301599c05040263a9f4f7f0
+    REF 1.5.3
+    SHA512 e831f4f918f08fd5f799501efc0e23b8d404478651634f5e7b35f8ebcc29d91abc447ab20da062dde5be75e18cb39ffea708688e6534f7ab257b949f9c53ddc8
     HEAD_REF master)
 
 vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
-        -Denable-glx=no 
+    OPTIONS
+        -Denable-glx=no
         -Denable-egl=no)
 vcpkg_install_meson()
 vcpkg_copy_pdbs()

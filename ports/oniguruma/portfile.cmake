@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF 502b1f416746ed8700498229bbfceb180e400fbc
-    SHA512 0faf12f415de59716d8faa4d3dc026874c3bd6a3624f75f2a184843025294eb885d57164ae6dcb916cba5c7d1a4da4bcb0dc23fce3ceae5b34b7320e8f0e2c02
+    REF v6.9.2
+    SHA512 b5578560f469c2e123280159a23a0e59045bf2452fd3efe09393c5e99ecc6323f965d2189a4e7e6e3a108c1d02b9b041f3fe991cd8ab64f7289003a5a07b4434
     HEAD_REF master
 )
 
@@ -22,6 +22,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
@@ -47,4 +49,4 @@ endif()
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 # CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+vcpkg_test_cmake(PACKAGE_NAME ${PORT})
