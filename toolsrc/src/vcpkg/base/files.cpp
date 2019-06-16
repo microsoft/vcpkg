@@ -51,8 +51,9 @@ namespace vcpkg::Files
     bool Filesystem::remove(const fs::path& path, LineInfo linfo)
     {
         std::error_code ec;
-        this->remove(path, ec);
+        auto r = this->remove(path, ec);
         if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", path.u8string(), ec.message());
+        return r;
     }
 
     void Filesystem::write_lines(const fs::path& path, const std::vector<std::string>& lines, LineInfo linfo)
