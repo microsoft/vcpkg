@@ -111,7 +111,7 @@ namespace vcpkg::Remove
                 }
             }
 
-            fs.remove(paths.listfile_path(ipv.core->package));
+            fs.remove(paths.listfile_path(ipv.core->package), VCPKG_LINE_INFO);
         }
 
         for (auto&& spgh : spghs)

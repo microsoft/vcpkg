@@ -24,12 +24,42 @@ namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
-    void Filesystem::write_contents(const fs::path& file_path, const std::string& data)
+    std::string Filesystem::read_contents(const fs::path& path, LineInfo linfo) const
+    {
+        auto maybe_contents = this->read_contents(path);
+        if (auto p = maybe_contents.get())
+            return std::move(*p);
+        else
+            Checks::exit_with_message(
+                linfo, "error reading file: %s: %s", path.u8string(), maybe_contents.error().message());
+    }
+    void Filesystem::write_contents(const fs::path& path, const std::string& data, LineInfo linfo)
     {
         std::error_code ec;
-        write_contents(file_path, data, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
+        this->write_contents(path, data, ec);
+        if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", path.u8string(), ec.message());
+    }
+    void Filesystem::rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->rename(oldpath, newpath, ec);
+        if (ec)
+            Checks::exit_with_message(
+                linfo, "error renaming file: %s: %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+    }
+
+    bool Filesystem::remove(const fs::path& path, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->remove(path, ec);
+        if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", path.u8string(), ec.message());
+    }
+
+    void Filesystem::write_lines(const fs::path& path, const std::vector<std::string>& lines, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->write_lines(path, lines, ec);
+        if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", path.u8string(), ec.message());
     }
 
     struct RealFilesystem final : Filesystem
@@ -147,23 +177,30 @@ namespace vcpkg::Files
             return ret;
         }
 
-        virtual void write_lines(const fs::path& file_path, const std::vector<std::string>& lines) override
+        virtual void write_lines(const fs::path& file_path,
+                                 const std::vector<std::string>& lines,
+                                 std::error_code& ec) override
         {
             std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+            if (!output)
+            {
+                ec.assign(errno, std::generic_category());
+                return;
+            }
             for (const std::string& line : lines)
             {
                 output << line << "\n";
+                if (!output)
+                {
+                    output.close();
+                    ec.assign(errno, std::generic_category());
+                    return;
+                }
             }
             output.close();
         }
-
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
-            fs::stdfs::rename(oldpath, newpath, ec);
-        }
-        virtual void rename(const fs::path& oldpath, const fs::path& newpath) override
-        {
-            std::error_code ec;
             fs::stdfs::rename(oldpath, newpath, ec);
             if (ec)
             {
@@ -219,16 +256,6 @@ namespace vcpkg::Files
                 this->remove(oldpath, ec);
             }
 #endif
-        }
-        virtual bool remove(const fs::path& path) override
-        {
-            std::error_code ec;
-            auto b = this->remove(path, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, "remove(%s) threw: %s", path.u8string(), ec.message());
-            }
-            return b;
         }
         virtual bool remove(const fs::path& path, std::error_code& ec) override { return fs::stdfs::remove(path, ec); }
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) override

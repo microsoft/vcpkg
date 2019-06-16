@@ -485,11 +485,11 @@ namespace vcpkg::Commands::CI
             System::print2("Total elapsed time: ", result.summary.total_elapsed_time, "\n");
             result.summary.print();
         }
-
+        auto& fs = paths.get_filesystem();
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml());
+            fs.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
