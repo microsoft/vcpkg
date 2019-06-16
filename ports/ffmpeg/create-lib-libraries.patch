@@ -12,8 +12,20 @@ diff --git a/configure b/configure
 index ba38a73906..0a3f308323 100755
 --- a/configure
 +++ b/configure
-@@ -5031,6 +5031,8 @@ case $target_os in
-         fi
+@@ -4890,15 +4890,17 @@
+         ;;
+     win32|win64)
+         disable symver
+-        if enabled shared; then
++#        if enabled shared; then
+             # Link to the import library instead of the normal static library
+             # for shared libs.
+             LD_LIB='%.lib'
+             # Cannot build both shared and static libs with MSVC or icl.
+-            disable static
+-        fi
++#            disable static
++#        fi
          enabled x86_32 && check_ldflags -LARGEADDRESSAWARE
          shlibdir_default="$bindir_default"
 +        LIBPREF=""

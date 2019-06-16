@@ -1,4 +1,5 @@
 Source: openssl
 Version: 0
+Homepage: https://www.openssl.org
 Description: OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.
 Build-Depends: openssl-windows (windows), openssl-uwp (uwp), openssl-unix (!uwp&!windows)

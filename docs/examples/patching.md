@@ -147,11 +147,11 @@ Finally, we need to apply the patch after extracting the source.
 ```cmake
 # ports\libpng\portfile.cmake
 ...
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH SOURCE_PATH
+  ARCHIVE ${ARCHIVE}
+  PATCHES 
+    "use-abort-on-all-platforms.patch"
 )
 
 vcpkg_configure_cmake(

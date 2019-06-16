@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArashPartow/strtk
-    REF b88797408e614ff5a127df12cc520bf41769ada6
-    SHA512 3bb5bfc5f12f46180bc7751b865c5ef9120b3c8764ccc86ca2b4b344d6b9d1744e7bd45e9a9202fe4349f8ce75fbb0c37e807cb1e072f5aef28e790ec94646ca
+    REF c6168dda1deed942b2fbfde9d80f53049fa79f20
+    SHA512 7595f412838e86d4b7cf0ca3da4dc8aebe40011fb29058e1ee42e23923fbbadeb9a2d0fceac3362b2d0a228ff86c111457f9204b533edb8e0379f3022976906e
 )
 
 file(COPY ${SOURCE_PATH}/strtk.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)

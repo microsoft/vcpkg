@@ -7,7 +7,7 @@ endif()
 
 find_package(ZLIB REQUIRED)
 
-find_package(Bzip2 REQUIRED)
+find_package(BZip2 REQUIRED)
 
 set(MIN_SRC contrib/minizip)
 
@@ -34,10 +34,6 @@ set(HEADERS
 )
 if(WIN32)
   list(APPEND HEADERS ${MIN_SRC}/iowin32.h)
-endif()
-
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
 add_library(minizip ${SRC})

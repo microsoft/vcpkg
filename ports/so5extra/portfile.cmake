@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(VERSION 1.2.1)
+set(VERSION 1.2.3)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/so_5_extra-${VERSION}/dev/so_5_extra)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/so_5_extra/so_5_extra-${VERSION}.zip/download"
     FILENAME "so_5_extra-${VERSION}.zip"
-    SHA512 84294839c800571e98e5599a16609c955296bb10ad90261c5600d3eb13fd1dfc08a7a895e89ad48b3547c9ebe28cd49c944158849a4f1d8e693d8d2259e94100
+    SHA512 ed12cdae9d23d652cbedd12e37b7faa935ace4c951eb5cb3881306c1384973ac0a90bd59244471a671ec734f6319f0a3144f7a727342c94cec6330eb4195bae9
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

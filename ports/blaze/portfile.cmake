@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blaze-lib/blaze
-    REF bbe39c81b68eb0d8647da703899e1ee4a82cdfd3
-    SHA512 84eb8226672d9d11d194d165e7aaa333a0d49ca090bb94472f19242e5f2ad0c3e08a30cdafe055cff51b210b603533f879800bd6784f3ffdb0d9eeca65d58b25
+    REF cac64f2b35002f74a8ad2410ce6fb562b2cd2371
+    SHA512 89381d77e518cdea40b0aa5013b8c74cbd737a2ce8d2d6869df1789a8154d2170c692ce04cae907704808fcff4a52fe0860d3fa2ee898780ce650a294b10894f
     HEAD_REF master
     PATCHES
         avoid-src-dir-generation.patch

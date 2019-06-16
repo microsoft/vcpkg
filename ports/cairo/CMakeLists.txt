@@ -160,6 +160,7 @@ endif()
 
 set(CMAKE_DEBUG_POSTFIX "d")
 
+find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
@@ -176,7 +177,7 @@ add_definitions(
     -DHAVE_FT_GET_X11_FONT_FORMAT=1)
 
 # additional features for macOS
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if((CMAKE_SYSTEM_NAME STREQUAL "Darwin") OR (CMAKE_SYSTEM_NAME STREQUAL "Linux"))
   add_definitions(
       -DHAVE_INTTYPES_H=1
       -DHAVE_STDINT_H=1
@@ -189,7 +190,11 @@ endif()
 
 add_library(cairo ${SOURCES})
 
-target_link_libraries(cairo PRIVATE gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
+endif()
 
 # GObject support module
 

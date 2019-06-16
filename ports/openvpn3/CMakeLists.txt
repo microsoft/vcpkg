@@ -8,6 +8,10 @@ find_library(MBEDX509_LIB mbedx509)
 
 include_directories(. ${ASIO_HPP})
 
+if(WIN32) 
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
+
 add_definitions(-DNOMINMAX -DUSE_ASIO -DUSE_MBEDTLS)
 
 add_library(ovpncli client/ovpncli.cpp)

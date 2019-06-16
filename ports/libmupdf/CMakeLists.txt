@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.9)
 project(libmupdf C)
 
 set(CMAKE_DEBUG_POSTFIX d)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/mupdf/pdf/name-table.h")
   execute_process(

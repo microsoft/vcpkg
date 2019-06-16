@@ -2,10 +2,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cginternals/glbinding
-    REF v3.0.2
-    SHA512 524ad20a11af7d8ee1764f53326b43efb3b3dbd6c64d1539f4d9fa2bcb7b58a6bd6caf460d6944aed4fd7439b82536d8f28a0f0f51c14c62c2f0c73baab9afcb
+    REF v3.1.0
+    SHA512 d7294c9a0dc47a7c107b134e5dfa78c5812fc6bf739b9fd778fa7ce946d5ea971839a65c3985e0915fd75311e4a85fb221d33a71856c460199eab0e7622f7151
     HEAD_REF master
-    PATCHES force-system-install.patch
+    PATCHES 
+        force-system-install.patch
+        fix-uwpmacro.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,17 +18,43 @@ vcpkg_configure_cmake(
         -DOPTION_BUILD_TOOLS=OFF
         -DGIT_REV=0
         -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
+        -DOPTION_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding TARGET_PATH share/glbinding/cmake/glbinding)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake/glbinding-aux TARGET_PATH share/glbinding/cmake/glbinding-aux)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/glbinding/cmake)
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/cmake/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/cmake/glbinding-aux/glbinding-aux-export.cmake)\nset(glbinding_FOUND TRUE)\n")
+# _IMPORT_PREFIX needs to go up one extra level in the directory tree.
+# These files should be modified.
+#     /share/glbinding/glbinding-export.cmake 
+#     /share/glbinding-aux/glbinding-aux-export.cmake
+file(GLOB_RECURSE TARGET_CMAKES "${CURRENT_PACKAGES_DIR}/*-export.cmake")
+foreach(TARGET_CMAKE IN LISTS TARGET_CMAKES)
+    file(READ ${TARGET_CMAKE} _contents)
+    string(REPLACE 
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+        _contents "${_contents}")
+    file(WRITE ${TARGET_CMAKE} "${_contents}")
+endforeach()
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/glbinding/glbinding-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/glbinding-aux/glbinding-aux-export.cmake)\ninclude(\${CMAKE_CURRENT_LIST_DIR}/KHRplatform/KHRplatform-export.cmake)\nset(glbinding_FOUND TRUE)\n")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+# Remove files already published by egl-registry
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
 
 # Handle copyright
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)

@@ -5,7 +5,7 @@
 ### A. Build once and share
 
 Customers want to be able to build their set of required libraries once, and then distribute the resulting binaries to all members of the "group". This has been brought up in
-- Enterprise environments, in which there are dedicated teams to acquire libraries and then share them with other team to consume them
+- Enterprise environments, in which there are dedicated teams to acquire libraries and then share them with other teams to consume them
 - Academic environments, in which the professor/teacher wants to build the required libraries and then provide them to all the students
 - CI Systems, in which developers want to quickly distribute their exact set of dependencies to a cloud-based farm of build machines
 
@@ -167,6 +167,6 @@ Alice gives to Bob: a) The links to her project and b) The zip file "vcpkg-expor
 ## 5. Technical model
 
 - Each exported library, must be accompanied with all of its dependencies, even if they are not explicitly specified in the `vcpkg export` command.
-- When exporting a library, a dependency graph will be built, similarly to install, to figure out which packages needs to be exported.
+- When exporting a library, a dependency graph will be built, similarly to install, to figure out which packages need to be exported.
 - It is allowed to have packages from different triplets, so users can include 32/64-bit and dynamic/static binaries in the same export.
 - The exported archives also include the files needed to integrate with MSBuild and/or CMake.

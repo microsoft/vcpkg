@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -16,7 +16,7 @@ namespace vcpkg
     {
         if (arg_begin == arg_end)
         {
-            System::println(System::Color::error, "Error: expected value after %s", option_name);
+            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
             Metrics::g_metrics.lock()->track_property("error", "error option name");
             Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -24,7 +24,7 @@ namespace vcpkg
 
         if (option_field != nullptr)
         {
-            System::println(System::Color::error, "Error: %s specified multiple times", option_name);
+            System::print2(System::Color::error, "Error: ", option_name, " specified multiple times\n");
             Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
             Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -37,7 +37,7 @@ namespace vcpkg
     {
         if (option_field && option_field != new_setting)
         {
-            System::println(System::Color::error, "Error: conflicting values specified for --%s", option_name);
+            System::print2(System::Color::error, "Error: conflicting values specified for --", option_name, '\n');
             Metrics::g_metrics.lock()->track_property("error", "error conflicting switches");
             Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -65,7 +65,7 @@ namespace vcpkg
                 auto lines = fs.read_lines(fs::u8path(arg));
                 if (!lines.has_value())
                 {
-                    System::println(System::Color::error, "Error: Could not open response file %s", arg);
+                    System::print2(System::Color::error, "Error: Could not open response file ", arg, '\n');
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
                 std::copy(lines.get()->begin(), lines.get()->end(), std::back_inserter(v));
@@ -199,11 +199,11 @@ namespace vcpkg
         {
             if (actual_arg_count != command_structure.minimum_arity)
             {
-                System::println(System::Color::error,
-                                "Error: '%s' requires %u arguments, but %u were provided.",
-                                this->command,
-                                command_structure.minimum_arity,
-                                actual_arg_count);
+                System::printf(System::Color::error,
+                               "Error: '%s' requires %u arguments, but %u were provided.\n",
+                               this->command,
+                               command_structure.minimum_arity,
+                               actual_arg_count);
                 failed = true;
             }
         }
@@ -211,20 +211,20 @@ namespace vcpkg
         {
             if (actual_arg_count < command_structure.minimum_arity)
             {
-                System::println(System::Color::error,
-                                "Error: '%s' requires at least %u arguments, but %u were provided",
-                                this->command,
-                                command_structure.minimum_arity,
-                                actual_arg_count);
+                System::printf(System::Color::error,
+                               "Error: '%s' requires at least %u arguments, but %u were provided\n",
+                               this->command,
+                               command_structure.minimum_arity,
+                               actual_arg_count);
                 failed = true;
             }
             if (actual_arg_count > command_structure.maximum_arity)
             {
-                System::println(System::Color::error,
-                                "Error: '%s' requires at most %u arguments, but %u were provided",
-                                this->command,
-                                command_structure.maximum_arity,
-                                actual_arg_count);
+                System::printf(System::Color::error,
+                               "Error: '%s' requires at most %u arguments, but %u were provided\n",
+                               this->command,
+                               command_structure.maximum_arity,
+                               actual_arg_count);
                 failed = true;
             }
         }
@@ -238,8 +238,8 @@ namespace vcpkg
                 if (it->second.has_value())
                 {
                     // Having a string value indicates it was passed like '--a=xyz'
-                    System::println(
-                        System::Color::error, "Error: The option '%s' does not accept an argument.", option.name);
+                    System::printf(
+                        System::Color::error, "Error: The option '%s' does not accept an argument.\n", option.name);
                     failed = true;
                 }
                 else
@@ -258,8 +258,8 @@ namespace vcpkg
                 if (!it->second.has_value())
                 {
                     // Not having a string value indicates it was passed like '--a'
-                    System::println(
-                        System::Color::error, "Error: The option '%s' must be passed an argument.", option.name);
+                    System::printf(
+                        System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
                     failed = true;
                 }
                 else
@@ -272,12 +272,12 @@ namespace vcpkg
 
         if (!options_copy.empty())
         {
-            System::println(System::Color::error, "Unknown option(s) for command '%s':", this->command);
+            System::printf(System::Color::error, "Unknown option(s) for command '%s':\n", this->command);
             for (auto&& option : options_copy)
             {
-                System::println("    %s", option.first);
+                System::print2("    ", option.first, "\n");
             }
-            System::println();
+            System::print2("\n");
             failed = true;
         }
 
@@ -294,21 +294,21 @@ namespace vcpkg
     {
         if (!command_structure.example_text.empty())
         {
-            System::println("%s", command_structure.example_text);
+            System::print2(command_structure.example_text, "\n");
         }
 
-        System::println("Options:");
+        System::print2("Options:\n");
         for (auto&& option : command_structure.options.switches)
         {
-            System::println("    %-40s %s", option.name, option.short_help_text);
+            System::printf("    %-40s %s\n", option.name, option.short_help_text);
         }
         for (auto&& option : command_structure.options.settings)
         {
-            System::println("    %-40s %s", (option.name + "=..."), option.short_help_text);
+            System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
         }
-        System::println("    %-40s %s", "--triplet <t>", "Set the default triplet for unqualified packages");
-        System::println("    %-40s %s",
-                        "--vcpkg-root <path>",
-                        "Specify the vcpkg directory to use instead of current directory or tool directory");
+        System::printf("    %-40s %s\n", "--triplet <t>", "Set the default triplet for unqualified packages");
+        System::printf("    %-40s %s\n",
+                       "--vcpkg-root <path>",
+                       "Specify the vcpkg directory to use instead of current directory or tool directory");
     }
 }

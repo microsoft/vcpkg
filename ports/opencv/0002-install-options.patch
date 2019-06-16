@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c7c76ecf3..d1c14bfcd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -312,6 +312,10 @@ OCV_OPTION(INSTALL_PYTHON_EXAMPLES  "Install Python examples"   OFF )
@@ -48,8 +46,6 @@ index c7c76ecf3..d1c14bfcd 100644
    install(FILES ${OPENCV_LICENSE_FILE}
          PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
          DESTINATION ./ COMPONENT libs)
-diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index b2ca82bad..c2f6e001d 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
 @@ -105,7 +105,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
@@ -70,8 +66,6 @@ index b2ca82bad..c2f6e001d 100644
    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
      if(BUILD_SHARED_LIBS)
        set(_lib_suffix "lib")
-diff --git a/cmake/OpenCVGenHeaders.cmake b/cmake/OpenCVGenHeaders.cmake
-index 477b91055..57dc82e13 100644
 --- a/cmake/OpenCVGenHeaders.cmake
 +++ b/cmake/OpenCVGenHeaders.cmake
 @@ -1,7 +1,9 @@
@@ -94,8 +88,6 @@ index 477b91055..57dc82e13 100644
 +  install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
 +endif()
 \ No newline at end of file
-diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 54f100d3c..eae83b074 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
 @@ -1000,7 +1000,9 @@ macro(_ocv_create_module)
@@ -109,8 +101,6 @@ index 54f100d3c..eae83b074 100644
        endif()
      endforeach()
    endif()
-diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
-index 1f0d72008..86b9d8929 100644
 --- a/data/CMakeLists.txt
 +++ b/data/CMakeLists.txt
 @@ -1,8 +1,10 @@
@@ -126,8 +116,6 @@ index 1f0d72008..86b9d8929 100644
  
  if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
    install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")
-diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index b4e48e6fa..5ac6f1603 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,7 +1,9 @@

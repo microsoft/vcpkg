@@ -13,12 +13,17 @@ vcpkg_from_github(
       "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-protobuf-target.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-custom-protobuf-find-package.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(CMAKE_MODULE_PATH)
+
+set(BUILD_opencv_world OFF)
+if("world" IN_LIST FEATURES)
+  set(BUILD_opencv_world ON)
+endif()
 
 set(BUILD_opencv_dnn OFF)
 set(WITH_PROTOBUF OFF)
@@ -145,6 +150,11 @@ if("ipp" IN_LIST FEATURES)
   endif()
 endif()
 
+set(WITH_TBB OFF)
+if("tbb" IN_LIST FEATURES)
+  set(WITH_TBB ON)
+endif()
+
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ON)
@@ -207,6 +217,11 @@ if("eigen" IN_LIST FEATURES)
   set(WITH_EIGEN ON)
 endif()
 
+set(OPENCV_ENABLE_NONFREE OFF)
+if("nonfree" IN_LIST FEATURES)
+  set(OPENCV_ENABLE_NONFREE ON)
+endif()
+
 if(BUILD_opencv_contrib)
   vcpkg_from_github(
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
@@ -264,6 +279,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
+        -DBUILD_opencv_world=${BUILD_opencv_world}
         # PROTOBUF
         -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
         -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
@@ -273,6 +289,7 @@ vcpkg_configure_cmake(
         # ENABLE
         -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
+        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
         # INSTALL
         -DINSTALL_FORCE_UNIX_PATHS=ON
         -DINSTALL_LICENSE=OFF
@@ -282,7 +299,7 @@ vcpkg_configure_cmake(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
-        -DWITH_CUBLAS=OFF
+        -DWITH_CUBLAS=${WITH_CUDA}
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_EIGEN=${WITH_EIGEN}
         -DWITH_FFMPEG=${WITH_FFMPEG}
@@ -291,6 +308,7 @@ vcpkg_configure_cmake(
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_JPEG=${WITH_JPEG}
         -DWITH_LAPACK=OFF
+        -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENEXR=${WITH_OPENEXR}
@@ -298,6 +316,7 @@ vcpkg_configure_cmake(
         -DWITH_PNG=${WITH_PNG}
         -DWITH_PROTOBUF=${WITH_PROTOBUF}
         -DWITH_QT=${WITH_QT}
+        -DWITH_TBB=${WITH_TBB}
         -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}
@@ -369,6 +388,19 @@ string(REPLACE "PREFIX}/bin"
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake)
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+string(REPLACE "${CURRENT_INSTALLED_DIR}"
+               "\${_VCPKG_INSTALLED_DIR}/\${VCPKG_TARGET_TRIPLET}" OPENCV_MODULES "${OPENCV_MODULES}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)
+                 find_package(TIFF REQUIRED)" OPENCV_MODULES "${OPENCV_MODULES}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

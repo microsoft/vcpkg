@@ -28,10 +28,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EMCECS/ecs-object-client-windows-cpp
-    REF v1.0.1.2
-    SHA512 ee6c9086111f9cb4a3b9b0645a6a8921bae1d3e8fba0d054d824935b0ff82a57db5c1476183202694afe33f89bfc47db1ef91696a739a1a43a1e2411e4361e6f
+    REF v1.0.6.1
+    SHA512 4b16b9ce1dbc9f541fe95a40c10678cd2b0192acc94bc3d57e58fbdf37964af84cdc901686555aad1f58d133632b1ad6f57976a5ac71aed1fce2fb44a2d0f8d3
     HEAD_REF master
-    PATCHES disable-setversion.patch
+    PATCHES NoLibSyms.patch
 )
 
 vcpkg_install_msbuild(
@@ -43,6 +43,10 @@ vcpkg_install_msbuild(
     RELEASE_CONFIGURATION ${ECSUtil_CONFIGURATION_RELEASE}
     DEBUG_CONFIGURATION ${ECSUtil_CONFIGURATION_DEBUG}
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(COPY ${SOURCE_PATH}/ECSUtil DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/ECSUtil/res ${CURRENT_PACKAGES_DIR}/tools)

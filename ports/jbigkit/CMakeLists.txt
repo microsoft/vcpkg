@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 project(libjbig C)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 set(SOURCES
     "libjbig/jbig.c"
     "libjbig/jbig_ar.c"

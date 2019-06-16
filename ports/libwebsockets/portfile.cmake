@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF v3.0.1
-    SHA512 ba96af918dc53e5fe15792985892e726154ec6cd8b0e6b71ec133e1ac53792c42276fd6ae2c48c274acf4163579d8326e403201a8090fc58be29518c9c5b4304
+    REF v3.1.0
+    SHA512 e2a4c1b25bc6f028654a63fc01a2732e6c63414868f8d3d01fa477752fdabe0f61e8d271fe7dd2734db0e15b1250f6b0101285b6d694f971ec4bf67ba7ee067c
     HEAD_REF master
     PATCHES
         0001-Fix-UWP.patch

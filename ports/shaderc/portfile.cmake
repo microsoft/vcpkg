@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-Do-not-generate-build-version.inc.patch
+        0001-Add-a-virtual-destructor.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/third_party/glslang)
@@ -36,7 +37,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*${CMAKE_EXECUTABLE_SUFFIX}")
 file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 #Safe to remove as libs are static

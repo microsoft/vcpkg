@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(giflib)
+project(giflib C)
 
 set(GIFLIB_HEADERS
     lib/gif_lib.h
@@ -17,10 +17,8 @@ set(GIFLIB_SOURCES
     lib/quantize.c
 )
 
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_library(gif ${GIFLIB_SOURCES})
-if (BUILD_SHARED_LIBS)
-    set_property(TARGET gif PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
 
 if (NOT GIFLIB_SKIP_HEADERS)
     install(FILES ${GIFLIB_HEADERS} DESTINATION include)
