@@ -4,26 +4,19 @@ if(${VCPKG_TARGET_ARCHITECTURE} MATCHES x86)
     message(FATAL_ERROR "This library doesn't support x86 arch. Please use x64 instead. If it is critical, create an issue at the repo: github.com/luncliff/coroutine")
 endif()
 
-# changed to 1.4.1
-set(VERSION_1_4_COMMIT 8399236a4adf1cb49ef51133fb887027e3d77141)
+# changed to 1.4.2
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF             ${VERSION_1_4_COMMIT}
-    SHA512          35adf0aa3a923b869e02d1e33987f6c9922f90918e84feaf5a41e46334b7555db75f55c6dd797f74112010ef5e682ee6f5fbf58be84af88a8f8f084f3d6dac05
+    REF             1.4.2
+    SHA512          fc2544116a5bee97b8ef1501fc7f1b805248f0a0c601111f1a317e813aa1d3f9a2e08ab1b140cc36e22d9c90249301110ec5b5e55a40fb39217cf5f40998920d
     HEAD_REF        master
 )
 
 # package: 'ms-gsl'
-set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include 
+set(GSL_INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include
     CACHE PATH "path to include C++ core guideline support library" FORCE)
 message(STATUS "Using ms-gsl at ${GSL_INCLUDE_DIR}")
-
-set(DLL_LINKAGE false)
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES dynamic)
-    message(STATUS "Using DLL linkage")
-    set(DLL_LINKAGE true)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,7 +24,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DGSL_INCLUDE_DIR=${GSL_INCLUDE_DIR}
         -DTEST_DISABLED=True
-        -DBUILD_SHARED_LIBS=${DLL_LINKAGE}
 )
 
 vcpkg_install_cmake()
@@ -42,20 +34,6 @@ file(
     RENAME      copyright
 )
 
-if(WIN32 AND DLL_LINKAGE)
-    file(INSTALL        ${CURRENT_PACKAGES_DIR}/debug/lib/coroutine.dll
-         DESTINATION    ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/coroutine.dll)
-
-    file(INSTALL        ${CURRENT_PACKAGES_DIR}/lib/coroutine.dll
-         DESTINATION    ${CURRENT_PACKAGES_DIR}/bin
-    )
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/coroutine.dll)
-endif()
 # removed duplicates in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# unset used variables
-unset(DLL_LINKAGE)

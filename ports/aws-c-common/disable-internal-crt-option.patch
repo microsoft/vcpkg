@@ -1,0 +1,20 @@
+diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
+index 5ceb11c..9d0aa12 100644
+--- a/cmake/AwsCFlags.cmake
++++ b/cmake/AwsCFlags.cmake
+@@ -38,15 +38,6 @@ function(aws_set_common_properties target)
+         # Disable unknown pragma warnings
+         list(APPEND AWS_C_FLAGS /wd4068)
+ 
+-        string(TOUPPER "${CMAKE_BUILD_TYPE}" _CMAKE_BUILD_TYPE)
+-        if(STATIC_CRT)
+-            string(REPLACE "/MD" "/MT" _FLAGS "${CMAKE_C_FLAGS_${_CMAKE_BUILD_TYPE}}")
+-        else()
+-            string(REPLACE "/MT" "/MD" _FLAGS "${CMAKE_C_FLAGS_${_CMAKE_BUILD_TYPE}}")
+-        endif()
+-        string(REPLACE " " ";" _FLAGS "${_FLAGS}")
+-        list(APPEND AWS_C_FLAGS "${_FLAGS}")
+-
+     else()
+         list(APPEND AWS_C_FLAGS -Wall -Werror -Wstrict-prototypes)
+ 

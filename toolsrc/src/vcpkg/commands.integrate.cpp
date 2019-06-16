@@ -124,7 +124,7 @@ namespace vcpkg::Commands::Integrate
 
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFOW sh_ex_info {};
+        SHELLEXECUTEINFOW sh_ex_info{};
         sh_ex_info.cbSize = sizeof(sh_ex_info);
         sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
         sh_ex_info.hwnd = nullptr;
@@ -415,7 +415,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     static void integrate_bash(const VcpkgPaths& paths)
     {
         const auto home_path = System::get_environment_variable("HOME").value_or_exit(VCPKG_LINE_INFO);
-        const fs::path bashrc_path = fs::path {home_path} / ".bashrc";
+        const fs::path bashrc_path = fs::path{home_path} / ".bashrc";
 
         auto& fs = paths.get_filesystem();
         const fs::path completion_script_path = paths.scripts / "vcpkg_completion.bash";
@@ -430,7 +430,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         for (auto&& line : bashrc_content)
         {
             std::smatch match;
-            if (std::regex_match(line, match, std::regex {R"###(^source.*scripts/vcpkg_completion.bash$)###"}))
+            if (std::regex_match(line, match, std::regex{R"###(^source.*scripts/vcpkg_completion.bash$)###"}))
             {
                 matches.push_back(line);
             }
@@ -439,11 +439,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         if (!matches.empty())
         {
             System::printf("vcpkg bash completion is already imported to your %s file.\n"
-                          "The following entries were found:\n"
-                          "    %s\n"
-                          "Please make sure you have started a new bash shell for the changes to take effect.\n",
-                          bashrc_path.u8string(),
-                          Strings::join("\n    ", matches));
+                           "The following entries were found:\n"
+                           "    %s\n"
+                           "Please make sure you have started a new bash shell for the changes to take effect.\n",
+                           bashrc_path.u8string(),
+                           Strings::join("\n    ", matches));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 

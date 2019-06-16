@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_find_acquire_program(PYTHON2)
+
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Milerius/shiva
@@ -11,7 +13,9 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSHIVA_BUILD_TESTS=OFF
+    OPTIONS
+		-DSHIVA_BUILD_TESTS=OFF
+		-DPYTHON_EXECUTABLE=${PYTHON2}
 )
 
 vcpkg_install_cmake()

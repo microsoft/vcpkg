@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
-    REF 6.0.0
-    SHA512  f237cc03c01a8262eee44a9428206c1cc11b6034dddf540afef145f58eee5c32b880d84832563480d73d834c24311170e2ef6789e100793afbe0b6e393bd4169
+    REF 6.4.4
+    SHA512 a168dbc7af210c711fa9f0f6e20d9d3abea167d412a642f591b104a109f11f4c262a27b6919340d405400a58baf7bcc663f7d3ec1b4ecd03f0a4b6c2960b5099
     HEAD_REF master
+	PATCHES
+		fix-deprecated-bug.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

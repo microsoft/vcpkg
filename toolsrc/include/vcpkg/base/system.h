@@ -28,4 +28,6 @@ namespace vcpkg::System
     const Optional<fs::path>& get_program_files_32_bit();
 
     const Optional<fs::path>& get_program_files_platform_bitness();
+
+    int get_num_logical_cores();
 }

@@ -40,8 +40,10 @@
 #include <memory>
 #include <random>
 
+#if defined(_WIN32)
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
+#endif
 
 using namespace vcpkg;
 
@@ -294,11 +296,11 @@ int main(const int argc, const char* const* const argv)
     Checks::register_global_shutdown_handler([]() {
         const auto elapsed_us_inner = GlobalState::timer.lock()->microseconds();
 
-        bool debugging = GlobalState::debugging;
+        bool debugging = Debug::g_debugging;
 
         auto metrics = Metrics::g_metrics.lock();
         metrics->track_metric("elapsed_us", elapsed_us_inner);
-        GlobalState::debugging = false;
+        Debug::g_debugging = false;
         metrics->flush();
 
 #if defined(_WIN32)
@@ -337,14 +339,13 @@ int main(const int argc, const char* const* const argv)
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
-    if (const auto p = args.featurepackages.get()) GlobalState::feature_packages = *p;
     if (const auto p = args.binarycaching.get()) GlobalState::g_binary_caching = *p;
 
     if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
-    if (const auto p = args.debug.get()) GlobalState::debugging = *p;
+    if (const auto p = args.debug.get()) Debug::g_debugging = *p;
 
-    if (GlobalState::debugging)
+    if (Debug::g_debugging)
     {
         inner(args);
         Checks::exit_fail(VCPKG_LINE_INFO);
@@ -388,4 +389,7 @@ int main(const int argc, const char* const* const argv)
 #endif
     }
     fflush(stdout);
+
+    // It is expected that one of the sub-commands will exit cleanly before we get here.
+    Checks::exit_fail(VCPKG_LINE_INFO);
 }

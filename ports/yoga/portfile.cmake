@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF v1.13.0
-    SHA512 ca87c4526956ccb0693c4e1cdf825b2d9cfd97b20f6c11a06b3966c99903e06c0ca1013f9c72546bbf1d0f56b501f422dfb18dbcfee82ba340e18dcea80b3caf
+    REF 1.14.0
+    SHA512 c634cb9be08a4f4f478c50de9f26a2e1a18b9c6313b78665cd3a28047bd04e14aac2f06702c3bc9f55dba605177b787424a405c4043f052a94d311c76e38bef1
     HEAD_REF master
 )
 

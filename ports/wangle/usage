@@ -2,4 +2,3 @@ The package wangle is compatible with built-in CMake targets:
 
     find_package(wangle REQUIRED)
     target_link_libraries(main PRIVATE wangle::wangle)
-    target_include_directories(main PRIVATE ${WANGLE_INCLUDE_DIR})

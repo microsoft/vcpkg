@@ -4,13 +4,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO GoogleCloudPlatform/google-cloud-cpp
-    REF v0.8.0
-    SHA512 cdb527169c7badab395eb38ba554022a364a99b9cb32705bf69a9613cee74acc1e2402e00ffdcb740467e85603e617f73b01e557afeb1f2786872f8d60f3a75a
+    REPO googleapis/google-cloud-cpp
+    REF v0.10.0
+    SHA512 9a1774dcc39d1626c8a9cf8630fe3b3110df7e21e452c7b137e1911d10b304997571aadff5fc0216715729db4a29621066a5236a0b2cb027bba4ce3c56492fb3
     HEAD_REF master
-	PATCHES
-		cmake-libcurl-target.patch # Not needed _after_ v0.8.0
-		cmake-libcurl-find-config.patch
 )
 
 vcpkg_configure_cmake(

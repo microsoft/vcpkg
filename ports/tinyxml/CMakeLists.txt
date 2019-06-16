@@ -10,8 +10,6 @@ set(SOURCES "tinyxml.cpp"
 
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_library(tinyxml ${SOURCES})
 target_compile_definitions(tinyxml PRIVATE "-DTIXML_USE_STL")
 
@@ -27,5 +25,5 @@ install(
     RUNTIME DESTINATION bin
 )
 
-install(FILES ${HEADERS} 
+install(FILES ${HEADERS}
 	${CMAKE_CURRENT_BINARY_DIR}/tinyxml_export.h DESTINATION include)

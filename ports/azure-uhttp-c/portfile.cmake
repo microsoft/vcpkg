@@ -6,16 +6,16 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF 43dce924b32818f8ab851f972cffebc204edc5c4
-        SHA512 0e5e9e7dac0c8a1a01cea2fd9ef068f988ad3453f978957cbcb009126637fe5810001e273e7b300b4540914705a89250d96df652c4bb2c7f5348cd8ce7240d70
+        REF b8976adff02e543fc00e7db59eae9ce78dd014fe
+        SHA512 65ddccc07831309c4f3f8546bb1a45a6eff84674013311a15c99389d4fc33eaf2ef3da6c7c8e4bb03d32955d12c978190e7badb597379a9fefda4ebcf18827ec
         HEAD_REF master
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF 43dce924b32818f8ab851f972cffebc204edc5c4
-        SHA512 0e5e9e7dac0c8a1a01cea2fd9ef068f988ad3453f978957cbcb009126637fe5810001e273e7b300b4540914705a89250d96df652c4bb2c7f5348cd8ce7240d70
+        REF b8976adff02e543fc00e7db59eae9ce78dd014fe
+        SHA512 65ddccc07831309c4f3f8546bb1a45a6eff84674013311a15c99389d4fc33eaf2ef3da6c7c8e4bb03d32955d12c978190e7badb597379a9fefda4ebcf18827ec
         HEAD_REF master
     )
 endif()

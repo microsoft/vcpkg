@@ -1,12 +1,7 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(ADDITIONAL_OPTIONS -DSHARED=OFF)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://glaros.dtc.umn.edu/gkhome/fetch/sw/parmetis/parmetis-4.0.3.tar.gz"
@@ -24,12 +19,6 @@ vcpkg_extract_source_archive_ex(
         fix-libparmetis-cmakelist.patch
         use_stdint.patch
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(ADDITIONAL_OPTIONS -DSHARED=ON -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
-else()
-  set(ADDITIONAL_OPTIONS -DSHARED=OFF)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

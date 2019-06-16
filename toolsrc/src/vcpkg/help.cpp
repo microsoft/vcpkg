@@ -47,9 +47,10 @@ namespace vcpkg::Help
         nullptr,
     };
 
-    static constexpr std::array<Topic, 12> topics = {{
+    static constexpr std::array<Topic, 13> topics = {{
         {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
         {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
+        {"depend-info", command_topic_fn<Commands::DependInfo::COMMAND_STRUCTURE>},
         {"env", command_topic_fn<Commands::Env::COMMAND_STRUCTURE>},
         {"export", command_topic_fn<Export::COMMAND_STRUCTURE>},
         {"help", command_topic_fn<Help::COMMAND_STRUCTURE>},
@@ -103,6 +104,7 @@ namespace vcpkg::Help
                        "  vcpkg create <pkg> <url>\n"
                        "             [archivename]        Create a new package\n"
                        "  vcpkg owns <pat>                Search for files in installed packages\n"
+                       "  vcpkg depend-info [pkg]...      Display a list of dependencies for packages\n"
                        "  vcpkg env                       Creates a clean shell environment for development or "
                        "compiling.\n"
                        "  vcpkg version                   Display version information\n"
