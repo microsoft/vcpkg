@@ -1,0 +1,4 @@
+Source: robotraconteur
+Version: 0.9.0
+Description: The Robot Raconteur communication framework
+Build-Depends: boost-algorithm, boost-array, boost-asio, boost-assign, boost-atomic, boost-bind, boost-config, boost-container, boost-date-time, boost-smart-ptr, boost-filesystem, boost-foreach, boost-format, boost-function, boost-interprocess, boost-intrusive, boost-lexical-cast, boost-locale, boost-random, boost-range, boost-regex, boost-scope-exit, boost-signals2, boost-thread, boost-tuple, boost-unordered, boost-utility, boost-uuid, boost-program-options
