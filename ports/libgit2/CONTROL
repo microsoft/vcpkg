@@ -1,4 +1,5 @@
 Source: libgit2
 Version: 0.28.2
+Homepage: https://github.com/libgit2/libgit2
 Build-Depends: openssl (!windows&&!uwp)
 Description: Git linkable library

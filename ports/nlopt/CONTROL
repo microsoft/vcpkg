@@ -1,3 +1,4 @@
 Source: nlopt
 Version: 2.6.1
+Homepage: https://github.com/stevengj/nlopt
 Description: a library for nonlinear local and global optimization, for functions with and without gradient information.

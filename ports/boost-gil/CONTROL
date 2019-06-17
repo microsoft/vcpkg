@@ -2,4 +2,5 @@
 Source: boost-gil
 Version: 1.70.0
 Build-Depends: boost-assert, boost-concept-check, boost-config, boost-core, boost-filesystem (!uwp), boost-integer, boost-iterator, boost-mpl, boost-numeric-conversion, boost-type-traits, boost-utility, boost-variant, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/gil
 Description: Boost gil module

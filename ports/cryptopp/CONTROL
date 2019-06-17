@@ -1,3 +1,4 @@
 Source: cryptopp
 Version: 8.1.0-1
+Homepage: https://github.com/weidai11/cryptopp
 Description: Crypto++ is a free C++ class library of cryptographic schemes.

@@ -2,4 +2,5 @@
 Source: boost-signals2
 Version: 1.70.0
 Build-Depends: boost-assert, boost-bind, boost-config, boost-core, boost-detail, boost-function, boost-iterator, boost-mpl, boost-multi-index, boost-optional, boost-parameter, boost-predef, boost-preprocessor, boost-smart-ptr, boost-throw-exception, boost-tuple, boost-type-traits, boost-utility, boost-variant, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/signals2
 Description: Boost signals2 module
