@@ -4,17 +4,29 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_find_acquire_program(<VAR>)
+## vcpkg_find_acquire_program(
+##   <VAR>
+##   [REQUIRED_LIBRARY_PATH_VAR <out_var>]
+##   [REQUIRED_BINARY_PATH_VAR <out_var>]
+##   [VERSION_VAR <out_var>]
+## )
 ## ```
 ## ## Parameters
 ## ### VAR
 ## This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
+## ### REQUIRED_LIBRARY_PATH_VAR
+## This variable specifies the name of a variable in the parent scope to set with the path to libraries required to run the acquired program. The variable will be set to a list. 
+## ### REQUIRED_BINARY_PATH_VAR
+## This variable specifies the name of a variable in the parent scope to set with the paths to binaries required to run the acquired program. The variable will be set to a list.
+## ### VERSION_VAR
+## This variable specifies the name of a variable in the parent scope to set with the version of the program acquired, if applicable.
 ##
 ## ## Notes
 ## The current list of programs includes:
 ##
 ## - 7Z
 ## - BISON
+## - FLANG
 ## - FLEX
 ## - GASPREPROCESSOR
 ## - PERL
@@ -40,6 +52,14 @@ function(vcpkg_find_acquire_program VAR)
   if(EXPANDED_VAR)
     return()
   endif()
+
+  cmake_parse_arguments(
+    _vfa
+    ""
+    "REQUIRED_LIBRARY_PATH_VAR;REQUIRED_BINARY_PATH_VAR;VERSION_VAR"
+    ""
+    ${ARGN}
+  )
 
   unset(NOEXTRACT)
   unset(_vfa_RENAME)
@@ -122,22 +142,33 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "NINJA")
     # We use the Ninja fork from Kitware because it enables Fortran support
     set(PROGNAME ninja)
-    set(SUBDIR "ninja-1.8.2")
-    if(CMAKE_HOST_WIN32)
-      set(SUBDIR)
-      set(PATHS "${DOWNLOADS}/tools/ninja/ninja-1.8.2.g972a7.kitware.dyndep-1_i686-pc-windows-msvc")
-    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-osx")
-    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
-      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-freebsd")
-    else()
-      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-linux")
-    endif()
+    set(SUBDIR "kitware")
+    set(FIND_OPTIONS NO_DEFAULT_PATH)
     set(BREW_PACKAGE_NAME "ninja")
     set(APT_PACKAGE_NAME "ninja-build")
-    set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
-    set(ARCHIVE "ninja-1.8.2-win.zip")
-    set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
+    set(SKIP_PACKAGE_MANAGER 1)
+    if(CMAKE_HOST_WIN32)
+      set(SUBDIR2 "ninja-1.9.0.g99df1.kitware.dyndep-1.jobserver-1_i686-pc-windows-msvc")
+      set(URL "https://github.com/Kitware/ninja/releases/download/v1.9.0.g99df1.kitware.dyndep-1.jobserver-1/ninja-1.9.0.g99df1.kitware.dyndep-1.jobserver-1_i686-pc-windows-msvc.zip")
+      set(ARCHIVE "ninja-kitware-1.9.0-win.zip")
+      set(HASH c3b2953f6320beb7ba792b7285440476384bff0e53fcac37a15c4d4cce4084cdd77eea50912c14ac5a3ba5ed1d89c3421f73515b3f0b7aac1456b4be87670306)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      set(SUBDIR2 "ninja-1.9.0.g99df1.kitware.dyndep-1.jobserver-1_x86_64-apple-darwin")
+      set(URL "https://github.com/Kitware/ninja/releases/download/v1.9.0.g99df1.kitware.dyndep-1.jobserver-1/ninja-1.9.0.g99df1.kitware.dyndep-1.jobserver-1_x86_64-apple-darwin.tar.gz")
+      set(ARCHIVE "ninja-kitware-1.9.0-osx.tar.gz")
+      set(HASH c97a8967f3aad5ee27d90ed47b2e967939a5453b564a22886fd8316f5fc26e8f4c0069d78ae5404d2d228ab6cd73a2380f17e7c7d1ae0b06c061c306db9af0c1)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+      set(SUBDIR2 "ninja-1.9.0.g99df1.kitware.dyndep-1.jobserver-1_x86_64-linux-gnu")
+      set(URL "https://github.com/Kitware/ninja/releases/download/v1.9.0.g99df1.kitware.dyndep-1.jobserver-1/ninja-1.9.0.g99df1.kitware.dyndep-1.jobserver-1_x86_64-linux-gnu.tar.gz")
+      set(ARCHIVE "ninja-kitware-1.9.0-linux.tar.gz")
+      set(HASH  29fbc94a0f6e3cdf8fd930dff20da2ad33c2f7af49f37c946fd2b1f4b3cb9f1b46f82e943a578b68e050ada079b5a220fecf0c8f8d5380f3bd8efab816b8e6cd)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD") 
+      # No prebuilt binary for the Kitware version of ninja so fallback to package manager
+      # Furthermore FreeBSD is not activly supported by vcpkg master (no triplet defined for it)
+      unset(FIND_OPTIONS)
+      unset(SKIP_PACKAGE_MANAGER)
+    endif()
+    set(PATHS "${DOWNLOADS}/tools/ninja/${SUBDIR}/${SUBDIR2}")
   elseif(VAR MATCHES "NUGET")
     set(PROGNAME nuget)
     set(PATHS "${DOWNLOADS}/tools/nuget")
@@ -235,13 +266,69 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip")
     set(ARCHIVE "aria2-1.33.1-win-32bit-build1.zip")
     set(HASH 2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3)
+  elseif(VAR MATCHES "FLANG")
+    set(ERROR_LIST "")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      if(CMAKE_HOST_WIN32)
+        set(VERSION "5.0.0")
+        set(CLANG_URL "https://conda.anaconda.org/conda-forge/win-64/clangdev-${FLANG_VERSION}-flang_3.tar.bz2")
+        set(LIBFLANG_URL "https://conda.anaconda.org/conda-forge/win-64/libflang-${FLANG_VERSION}-vc14_20180208.tar.bz2")
+        set(OPENMP_URL "https://conda.anaconda.org/conda-forge/win-64/openmp-${FLANG_VERSION}-vc14_1.tar.bz2")
+        set(FLANG_URL "https://conda.anaconda.org/conda-forge/win-64/flang-${FLANG_VERSION}-vc14_20180208.tar.bz2")
+
+        set(URL_VARS CLANG_URL LIBFLANG_URL OPENMP_URL FLANG_URL)
+
+        set(ARCHIVES
+            "clangdev-${VERSION}-flang_3.tar.bz2"
+            "libflang-${VERSION}-vc14_20180208.tar.bz2"
+            "openmp-${VERSION}-vc14_1.tar.bz2"
+            "flang-${VERSION}-vc14_20180208.tar.bz2"
+        )
+
+        set(HASHES
+            "fd5eb1d39ba631e2e85ecf63906c8a5d0f87e5f3f9a86dbe4cfd28d399e922f9786804f94f2a3372d13c9c4f01d9d253fba31d9695be815b4798108db17939b4"
+            "a8bcb44b344c9ca3571e1de08894d9ee450e2a36e9a604dedb264415adbabb9b0b698b39d96abc8b319041b15ba991b28d463a61523388509038a363cbaebae2"
+            "5277f0a33d8672b711bbf6c97c9e2e755aea411bfab2fce4470bb2dd112cbbb11c913de2062331cc61c3acf7b294a6243148d7cb71b955cc087586a2f598809a"
+            "c72a4532dfc666ad301e1349c1ff0f067049690f53dbf30fd38382a546b619045a34660ee9591ce5c91cf2a937af59e87d0336db2ee7f59707d167cd92a920c4"
+        )
+
+        set(REQUIRED_LIBRARY_PATH "${DOWNLOADS}/tools/flang/${VERSION}/Library/lib")
+        set(REQUIRED_BINARY_PATH "${DOWNLOADS}/tools/flang/${VERSION}/Library/bin")
+      elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+        set(VERSION "7.0.0")
+        set(URL https://github.com/flang-compiler/flang/releases/download/flang_20190329/flang-20190329-x86-70.tgz)
+        set(ARCHIVE "flang-20190329-x86-70.tgz")
+        set(HASH "4e6f4ced56a10405dd6b556b5a3f1f294db544fe84e6a7a165abccfaa58f192badaacd90f079fd496e2405a84b49bbbc965505ca868bb9c9ccba78df315938ad")
+        set(REQUIRED_LIBRARY_PATH "${DOWNLOADS}/tools/flang/${VERSION}/lib")
+        set(REQUIRED_BINARY_PATH "${DOWNLOADS}/tools/flang/${VERSION}/bin")
+      endif()
+    else()
+      message(FATAL "Flang can only target 64-bit architectures.")
+    endif()
+
+    set(PROGNAME flang)
+    set(SUBDIR ${VERSION})
+    set(PATHS ${DOWNLOADS}/tools/flang/${VERSION}/bin)
+    set(SKIP_PACKAGE_MANAGER TRUE)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
 
+  if(NOT DEFINED ARCHIVES)
+    set(ARCHIVES ${ARCHIVE})
+  endif()
+
+  if(NOT DEFINED HASHES)
+    set(HASHES ${HASH})
+  endif()
+
+  if(NOT DEFINED URL_VARS)
+    set(URL_VARS URL)
+  endif()
+
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
-      find_program(${VAR} ${PROGNAME} PATHS ${PATHS})
+      find_program(${VAR} ${PROGNAME} PATHS ${PATHS} ${FIND_OPTIONS})
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
       find_file(SCRIPT ${SCRIPTNAME} PATHS ${PATHS})
@@ -251,7 +338,7 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
-    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT SKIP_PACKAGE_MANAGER)
       set(EXAMPLE ".")
       if(DEFINED BREW_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
         set(EXAMPLE ":\n    brew install ${BREW_PACKAGE_NAME}")
@@ -261,40 +348,76 @@ function(vcpkg_find_acquire_program VAR)
       message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
     endif()
 
-    vcpkg_download_distfile(ARCHIVE_PATH
-        URLS ${URL}
-        SHA512 ${HASH}
-        FILENAME ${ARCHIVE}
-    )
+    list(LENGTH ARCHIVES ARCHIVES_LENGTH)
+    list(LENGTH HASHES HASHES_LENGTH)
+    list(LENGTH URL_VARS URL_VARS_LENGTH)
 
-    set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
-    file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
-    if(DEFINED NOEXTRACT)
-      if(DEFINED _vfa_RENAME)
-        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME})
-      else()
-        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR})
-      endif()
-    else()
-      get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
-      string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
-      if(ARCHIVE_EXTENSION STREQUAL ".msi")
-        file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-        execute_process(
-          COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
-          WORKING_DIRECTORY ${DOWNLOADS}
-        )
-      else()
-        execute_process(
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
-        )
-      endif()
+    if(ARCHIVES_LENGTH GREATER HASHES_LENGTH)
+      message(FATAL_ERROR "A hash must be provided for every archive")
     endif()
 
-    do_find()
+    if(ARCHIVES_LENGTH GREATER URL_VARS_LENGTH)
+        message(FATAL_ERROR "A list of URLS must be provided for every archive")
+    endif()
+
+    math(EXPR ARCHIVES_LENGTH "${ARCHIVES_LENGTH}-1")
+
+    foreach(ARCHIVE_IDX RANGE ${ARCHIVES_LENGTH})
+      list(GET ARCHIVES $ARCHIVE_IDX ARCHIVE)
+      list(GET HASHES $ARCHIVE_IDX HASH)
+      list(GET URL_VARS $ARCHIVE_IDX URL_VAR)
+      set(URLS ${${URL_VAR}})
+
+      vcpkg_download_distfile(
+          ARCHIVE_PATH
+          URLS ${URLS}
+          SHA512 ${HASH}
+          FILENAME ${ARCHIVE}
+      )
+
+      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
+      file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
+      if(DEFINED NOEXTRACT)
+        if(DEFINED _vfa_RENAME)
+          file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME})
+        else()
+          file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR})
+        endif()
+      else()
+        get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
+        string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
+        if(ARCHIVE_EXTENSION STREQUAL ".msi")
+          file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
+          file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
+          execute_process(
+            COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
+            WORKING_DIRECTORY ${DOWNLOADS}
+          )
+        else()
+          execute_process(
+            COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+            WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+          )
+        endif()
+      endif()
+
+      do_find()
+    endforeach()
   endif()
 
   set(${VAR} "${${VAR}}" PARENT_SCOPE)
+
+  message("${REQUIRED_BINARY_PATH}")
+
+  if(DEFINED _vfa_REQUIRED_LIBRARY_PATH_VAR)
+    set(${_vfa_REQUIRED_LIBRARY_PATH_VAR} ${REQUIRED_LIBRARY_PATH} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED _vfa_REQUIRED_BINARY_PATH_VAR)
+    set(${_vfa_REQUIRED_BINARY_PATH_VAR} ${REQUIRED_BINARY_PATH} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED _vfa_VERSION_VAR)
+    set(${_vfa_VERSION_VAR} ${VERSION} PARENT_SCOPE)
+  endif()
 endfunction()
