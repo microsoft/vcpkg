@@ -1,4 +1,5 @@
 Source: wxwidgets
 Version: 3.1.2-1
+Homepage: https://github.com/wxWidgets/wxWidgets
 Description: wxWidgets is a widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications.
 Build-Depends: zlib, libpng, tiff, expat

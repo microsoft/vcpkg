@@ -2,4 +2,5 @@
 Source: boost-local-function
 Version: 1.70.0
 Build-Depends: boost-config, boost-mpl, boost-preprocessor, boost-scope-exit, boost-typeof, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/local_function
 Description: Boost local_function module

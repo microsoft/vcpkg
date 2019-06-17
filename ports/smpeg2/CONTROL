@@ -1,4 +1,5 @@
 Source: smpeg2
 Version: 2.0.0-6
+Homepage: https://www.libsdl.org/projects/smpeg/
 Description: SDL MPEG Player Library
 Build-Depends: sdl2

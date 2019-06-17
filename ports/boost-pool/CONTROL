@@ -2,4 +2,5 @@
 Source: boost-pool
 Version: 1.70.0
 Build-Depends: boost-assert, boost-compatibility, boost-config, boost-detail, boost-integer, boost-throw-exception, boost-type-traits, boost-vcpkg-helpers, boost-winapi
+Homepage: https://github.com/boostorg/pool
 Description: Boost pool module

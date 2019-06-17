@@ -2,3 +2,4 @@ Source: mongo-c-driver
 Version: 1.14.0-1
 Build-Depends: libbson, openssl (!windows), zlib
 Description: Client library written in C for MongoDB.
+Homepage: https://github.com/mongodb/mongo-c-driver

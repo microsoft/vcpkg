@@ -1,4 +1,5 @@
 Source: freetype
 Version: 2.9.1-2
 Build-Depends: zlib, bzip2, libpng
+Homepage: https://www.freetype.org/
 Description: A library to render fonts.

@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1409c06..c81d219 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -440,12 +440,12 @@ if(LEVELDB_INSTALL)
+   install(
+     EXPORT leveldbTargets
+     NAMESPACE leveldb::
+-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/leveldb"
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/../share/leveldb"
+   )
+   install(
+     FILES
+       "${PROJECT_SOURCE_DIR}/cmake/leveldbConfig.cmake"
+       "${PROJECT_BINARY_DIR}/leveldbConfigVersion.cmake"
+-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/leveldb"
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/../share/leveldb"
+   )
+ endif(LEVELDB_INSTALL)
