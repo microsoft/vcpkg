@@ -1,4 +1,5 @@
 Source: openmama
 Version: 6.2.3
 Build-Depends: libevent, apr, qpid-proton
+Homepage: https://github.com/OpenMAMA/OpenMAMA
 Description: OpenMAMA is a high performance vendor neutral lightweight wrapper that provides a common API interface to different middleware and messaging solutions across a variety of platforms and languages.

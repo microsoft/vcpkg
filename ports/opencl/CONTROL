@@ -1,3 +1,4 @@
 Source: opencl
 Version: 2.2 (2017.07.18)-1
+Homepage: https://github.com/KhronosGroup/OpenCL-Headers
 Description: C/C++ headers and ICD loader (Installable Client Driver) for OpenCL

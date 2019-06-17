@@ -1,4 +1,5 @@
 Source: qt5
 Version: 5.12.3
+Homepage: https://www.qt.io/
 Description: Qt5 Application Framework
 Build-Depends: qt5-3d, qt5-activeqt, qt5-base, qt5-charts, qt5-datavis3d, qt5-declarative, qt5-gamepad, qt5-graphicaleffects, qt5-imageformats, qt5-location, qt5-multimedia, qt5-mqtt, qt5-networkauth, qt5-purchasing, qt5-quickcontrols, qt5-quickcontrols2, qt5-script, qt5-scxml, qt5-sensors, qt5-serialport, qt5-speech, qt5-svg, qt5-tools, qt5-virtualkeyboard, qt5-webchannel, qt5-websockets, qt5-winextras (windows), qt5-macextras (osx), qt5-xmlpatterns

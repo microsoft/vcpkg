@@ -1,3 +1,4 @@
 Source: gtest
 Version: 2019-01-04-2
+Homepage: https://github.com/google/googletest
 Description: GoogleTest and GoogleMock testing frameworks.

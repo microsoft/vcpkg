@@ -1,4 +1,5 @@
 Source: ccfits
 Version: 2.5-2
+Homepage: https://heasarc.gsfc.nasa.gov/fitsio/ccfits
 Description: CCfits is an object oriented interface to the cfitsio library. It is designed to make the capabilities of cfitsio available to programmers working in C++.
 Build-Depends: cfitsio

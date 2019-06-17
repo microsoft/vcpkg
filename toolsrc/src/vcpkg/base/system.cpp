@@ -16,7 +16,9 @@
 #include <sys/sysctl.h>
 #endif
 
+#if defined(_WIN32)
 #pragma comment(lib, "Advapi32")
+#endif
 
 using namespace vcpkg::System;
 
@@ -596,6 +598,11 @@ namespace vcpkg
 #else
     void System::register_console_ctrl_handler() {}
 #endif
+
+    int System::get_num_logical_cores()
+    {
+        return std::thread::hardware_concurrency();
+    }
 }
 
 namespace vcpkg::Debug
