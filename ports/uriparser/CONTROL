@@ -1,5 +1,6 @@
 Source: uriparser
 Version: 0.9.3-4
+Homepage: https://github.com/uriparser/uriparser
 Description: uriparser is a strictly RFC 3986 compliant URI parsing and handling library written in C89 ("ANSI C"). uriparser is cross-platform, fast, supports Unicode, and is licensed under the New BSD license.
 
 Feature: tool

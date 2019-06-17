@@ -1,0 +1,16 @@
+diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
+index 434278c..0d8f4d8 100644
+--- a/modules/imgcodecs/CMakeLists.txt
++++ b/modules/imgcodecs/CMakeLists.txt
+@@ -36,6 +36,11 @@ if(HAVE_PNG)
+ endif()
+ 
+ if(HAVE_GDCM)
++  if (CMAKE_BUILD_TYPE STREQUAL "Release")
++    link_directories("${CURRENT_INSTALLED_DIR}/lib")
++  else()
++    link_directories("${CURRENT_INSTALLED_DIR}/debug/lib")
++  endif()
+   ocv_include_directories(${GDCM_INCLUDE_DIRS})
+   list(APPEND GRFMT_LIBS ${GDCM_LIBRARIES})
+ endif()

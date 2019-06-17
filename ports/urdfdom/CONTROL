@@ -1,4 +1,5 @@
 Source: urdfdom
 Version: 1.0.3
+Homepage: https://github.com/ros/urdfdom
 Description: Provides core data structures and a simple XML parsers for populating the class data structures from an URDF file.
 Build-Depends: console-bridge, tinyxml, urdfdom-headers

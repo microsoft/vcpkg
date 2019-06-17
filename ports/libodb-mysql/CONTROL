@@ -1,4 +1,5 @@
 Source: libodb-mysql
 Version: 2.4.0-2
+Homepage: https://www.codesynthesis.com/products/odb/
 Description: MySQL support for the ODB ORM library
 Build-Depends: libodb, libmysql

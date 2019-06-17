@@ -1,3 +1,4 @@
 Source: xlnt
 Version: 1.3.0-1
+Homepage: https://github.com/tfussell/xlnt
 Description: Cross-platform user-friendly xlsx library for C++14

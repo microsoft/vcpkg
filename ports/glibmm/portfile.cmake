@@ -1,11 +1,9 @@
-# Glib uses winapi functions not available in WindowsStore, so glibmm also
 include(vcpkg_common_functions)
 
+# Glib uses winapi functions not available in WindowsStore
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glibmm-2.52.1)
 vcpkg_download_distfile(ARCHIVE
@@ -17,7 +15,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/glibmm-api-variant.patch
+    PATCHES 
+        ${CMAKE_CURRENT_LIST_DIR}/glibmm-api-variant.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-define-glibmmconfig.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

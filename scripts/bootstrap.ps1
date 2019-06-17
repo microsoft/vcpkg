@@ -339,7 +339,14 @@ if ($disableMetrics)
 
 $platform = "x86"
 $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
-$architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
+if($PSVersionTable.PSVersion.Major -le 2)
+{ 
+    $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
+}
+else
+{
+    $architecture=(Get-CimInstance win32_operatingsystem | Select-Object osarchitecture).osarchitecture
+}
 if ($win64)
 {
     if (-not $architecture -like "*64*")

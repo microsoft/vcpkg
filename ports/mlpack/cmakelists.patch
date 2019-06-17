@@ -1,8 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 26dfd6e..5e287d8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -283,25 +283,8 @@ endif()
+@@ -283,25 +283,8 @@
  # and find LAPACK and BLAS ourselves, using a slightly modified variant of the
  # script Armadillo uses to find these.
  if (WIN32)
@@ -30,7 +28,7 @@ index 26dfd6e..5e287d8 100644
    set(ARMADILLO_LIBRARIES
         ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARY} ${LAPACK_LIBRARY})
  endif ()
-@@ -392,19 +375,11 @@ find_package(Boost 1.49
+@@ -395,19 +378,11 @@
      REQUIRED
  )
  
