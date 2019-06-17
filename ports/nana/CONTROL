@@ -1,4 +1,5 @@
 Source: nana
 Version: 1.7.1
+Homepage: https://github.com/cnjinhao/nana
 Description: Cross-platform library for GUI programming in modern C++ style.
 Build-Depends: libpng, libjpeg-turbo, freetype (!uwp&&!windows), fontconfig (!uwp&&!windows)

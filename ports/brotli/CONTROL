@@ -1,3 +1,4 @@
 Source: brotli
 Version: 1.0.7
+Homepage: https://github.com/google/brotli
 Description: a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling.

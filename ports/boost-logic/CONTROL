@@ -2,4 +2,5 @@
 Source: boost-logic
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-detail, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/logic
 Description: Boost logic module

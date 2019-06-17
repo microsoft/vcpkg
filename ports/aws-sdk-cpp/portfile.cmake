@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.7.106
-    SHA512 58b03f25468ee5c57c47cf92fe6e1d9228754464af83a1253fdd14f2a6dabb6f5f49f1f003597c29cd1ce96649afae0560953d1f1d2c478c575b0d4c0f918635
+    REF 1.7.116
+    SHA512 2d10aebf1c10bb7e7a0efa1fd930b8743d9bce1d7d36f72c55fd13612be4fd30cf0a67ebe4f8d7c05146306084b10d8657ff26ac3bafaaa9efaa4c67707acb49
     HEAD_REF master
 )
 

@@ -32,7 +32,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/assimp-4.1")
+FILE(GLOB lib_cmake_directories RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/assimp-*")
+list(GET lib_cmake_directories 0 lib_cmake_directory)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "${lib_cmake_directory}")
 
 vcpkg_copy_pdbs()
 

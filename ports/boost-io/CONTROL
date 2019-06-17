@@ -2,4 +2,5 @@
 Source: boost-io
 Version: 1.70.0
 Build-Depends: boost-detail, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/io
 Description: Boost io module

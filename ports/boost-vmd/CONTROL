@@ -2,4 +2,5 @@
 Source: boost-vmd
 Version: 1.70.0
 Build-Depends: boost-preprocessor, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/vmd
 Description: Boost vmd module

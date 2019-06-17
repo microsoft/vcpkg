@@ -2,7 +2,7 @@ Source: magnum-plugins
 Version: 2019.01-1
 Build-Depends: magnum[core]
 Description: Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization 
-Homepage: http://magnum.graphics/
+Homepage: https://magnum.graphics/
 Default-Features: ddsimporter, miniexrimageconverter, opengeximporter, stanfordimporter, stbimageconverter, stbimageimporter
 
 Feature: assimpimporter

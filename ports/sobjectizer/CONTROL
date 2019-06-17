@@ -1,3 +1,4 @@
 Source: sobjectizer
 Version: 5.5.24.4
+Homepage: https://sourceforge.net/projects/sobjectizer
 Description: SObjectizer is a C++ in-process message dispatching framework with implementation of Actor Model, Publish-Subscribe Model and CSP-like channels.
