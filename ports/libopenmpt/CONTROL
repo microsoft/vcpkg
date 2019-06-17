@@ -1,4 +1,5 @@
 Source: libopenmpt
 Version: 2017-01-28-cf2390140
+Homepage: https://github.com/OpenMPT/openmpt
 Description: a library to render tracker music
 Build-Depends: zlib, mpg123, libogg, libvorbis, portaudio, libflac

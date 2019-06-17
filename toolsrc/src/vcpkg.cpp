@@ -40,8 +40,10 @@
 #include <memory>
 #include <random>
 
+#if defined(_WIN32)
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
+#endif
 
 using namespace vcpkg;
 

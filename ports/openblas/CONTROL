@@ -1,3 +1,4 @@
 Source: openblas
 Version: 0.3.6-2
+Homepage: https://github.com/xianyi/OpenBLAS
 Description: OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.

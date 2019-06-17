@@ -1,5 +1,6 @@
 Source: date
 Version: ed0368f
+Homepage: https://github.com/HowardHinnant/date
 Description: A date and time library based on the C++11/14/17 <chrono> header
 
 Feature: remote-api

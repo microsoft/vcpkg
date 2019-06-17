@@ -1,3 +1,4 @@
 Source: clockutils
 Version: 1.1.1-3651f232c27074c4ceead169e223edf5f00247c5-3
+Homepage: https://github.com/ClockworkOrigins/clockUtils
 Description: A lightweight c++ library for commonly needed tasks. Optimized for simplicity and speed.
