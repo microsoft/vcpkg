@@ -1,4 +1,5 @@
 Source: libpq
 Version: 9.6.1-7
+Homepage: https://www.postgresql.org/
 Description: The official database access API of postgresql
 Build-Depends: openssl, zlib (linux)

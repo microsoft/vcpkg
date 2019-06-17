@@ -2,4 +2,5 @@
 Source: boost-type-traits
 Version: 1.70.0-1
 Build-Depends: boost-config, boost-detail, boost-static-assert, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/type_traits
 Description: Boost type_traits module

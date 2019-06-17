@@ -1,6 +1,7 @@
 Source: sdl2-image
 Version: 2.0.4-2
 Build-Depends: sdl2, libpng
+Homepage: https://www.libsdl.org/projects/SDL_image
 Description: SDL_image is an image file loading library. It loads images as SDL surfaces and textures, and supports the following formats: BMP, GIF, JPEG, LBM, PCX, PNG, PNM, TGA, TIFF, WEBP, XCF, XPM, XV
 
 Feature: libjpeg-turbo

@@ -2,4 +2,5 @@
 Source: boost-atomic
 Version: 1.70.0
 Build-Depends: boost-assert, boost-build, boost-config, boost-integer, boost-modular-build-helper, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/atomic
 Description: Boost atomic module
