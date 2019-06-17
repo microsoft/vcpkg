@@ -5,12 +5,14 @@ index f4b94d2..e55195b 100644
 @@ -146,9 +146,6 @@ if (BUILD_CUDA_LIB)
      endif(CUDA_FOUND)
  endif(BUILD_CUDA_LIB)
+ 
 
 -find_package(PkgConfig REQUIRED)
 -pkg_check_modules(LZ4 REQUIRED liblz4)
 -
  #set the C/C++ include path to the "include" directory
  include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/cpp)
+ 
 
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index 6b95a71..2c95b6e 100644
@@ -19,6 +21,7 @@ index 6b95a71..2c95b6e 100644
 @@ -3,3 +3,5 @@
  include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
  check_required_components("flann")
+ 
 
 +include(CMakeFindDependencyMacro)
 +find_dependency(lz4)
@@ -36,6 +39,8 @@ index afe4742..8aef8e0 100644
 +    set(FLANN_LIB_INSTALL_DIR "lib")
 +    set(FLANN_INCLUDE_INSTALL_DIR "include")
  endmacro(GET_OS_INFO)
+ 
+ 
 
 
 @@ -27,7 +26,7 @@ macro(find_hdf5)
@@ -48,6 +53,7 @@ index afe4742..8aef8e0 100644
                  REGEX "HAVE_PARALLEL 1" )
              if( HDF5_HAVE_PARALLEL_DEFINE )
 @@ -106,7 +105,7 @@ endmacro(flann_add_pyunit)
+ 
 
  macro(flann_download_test_data _name _md5)
      string(REPLACE "/" "_" _dataset_name dataset_${_name})
@@ -65,8 +71,10 @@ index 3f4655a..7bd5159 100644
 @@ -1,6 +1,6 @@
  add_custom_target(examples ALL)
 
+
 -
 +find_package(lz4 REQUIRED)
+ 
 
  if (BUILD_C_BINDINGS)
      add_executable(flann_example_c flann_example.c)
@@ -74,9 +82,11 @@ index 3f4655a..7bd5159 100644
 +    target_link_libraries(flann_example_c lz4::lz4)
      target_link_libraries(flann_example_c flann)
      set_target_properties(flann_example_c PROPERTIES COMPILE_FLAGS -std=c99)
+ 
 
 @@ -15,7 +16,7 @@ if (HDF5_FOUND)
      include_directories(${HDF5_INCLUDE_DIR})
+ 
 
      add_executable(flann_example_cpp flann_example.cpp)
 -    target_link_libraries(flann_example_cpp -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
@@ -85,12 +95,14 @@ index 3f4655a..7bd5159 100644
      if (HDF5_IS_PARALLEL)
          target_link_libraries(flann_example_cpp ${MPI_LIBRARIES})
 @@ -27,7 +28,7 @@ if (HDF5_FOUND)
+ 
 
      if (USE_MPI AND HDF5_IS_PARALLEL)
          add_executable(flann_example_mpi flann_example_mpi.cpp)
 -        target_link_libraries(flann_example_mpi -Wl,--push-state,--no-as-needed ${LZ4_LIBRARIES} -Wl,--pop-state)
 +        target_link_libraries(flann_example_mpi lz4::lz4)
          target_link_libraries(flann_example_mpi flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
+ 
 
          add_dependencies(examples flann_example_mpi)
 @@ -36,7 +37,3 @@ if (HDF5_FOUND)
@@ -124,6 +136,7 @@ index b421abb..021d7ca 100644
 +add_library(flann_cpp STATIC ${CPP_SOURCES})
 +target_link_libraries(flann_cpp PRIVATE lz4::lz4)
 +set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
+ 
 
  if (BUILD_CUDA_LIB)
      SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-DFLANN_USE_CUDA")
@@ -178,12 +191,15 @@ index b421abb..021d7ca 100644
 +    set_property(TARGET flann_cuda PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
 +    set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
  endif()
+ 
 
 -
  if (USE_MPI AND HDF5_IS_PARALLEL)
      add_executable(flann_mpi_server flann/mpi/flann_mpi_server.cpp)
      target_link_libraries(flann_mpi_server flann_cpp ${HDF5_LIBRARIES} ${MPI_LIBRARIES} ${Boost_LIBRARIES})
 @@ -80,31 +44,9 @@ endif()
+
+
 
 @@ -80,31 +45,9 @@ endif()
 
@@ -220,9 +236,12 @@ index b421abb..021d7ca 100644
 +    target_link_libraries(flann PRIVATE lz4::lz4)
 +    set_property(TARGET flann PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
  endif()
+ 
 
  if(WIN32)
 @@ -118,9 +60,9 @@ endif(WIN32)
+
+
 @@ -118,7 +61,7 @@ endif(WIN32)
 
 
@@ -238,6 +257,7 @@ index b421abb..021d7ca 100644
      LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
      ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
 @@ -128,9 +70,9 @@ install (
+
 @@ -128,7 +71,7 @@ install (
 
  if (BUILD_CUDA_LIB)
@@ -253,6 +273,7 @@ index b421abb..021d7ca 100644
          LIBRARY DESTINATION ${FLANN_LIB_INSTALL_DIR}
          ARCHIVE DESTINATION ${FLANN_LIB_INSTALL_DIR}
 @@ -139,7 +81,7 @@ endif()
+
 @@ -139,7 +82,7 @@ endif()
 
  if (BUILD_C_BINDINGS)
@@ -263,3 +284,4 @@ index b421abb..021d7ca 100644
          EXPORT ${targets_export_name}
          INCLUDES DESTINATION include
          RUNTIME DESTINATION bin
+         RUNTIME DESTINATION bin 
