@@ -12,6 +12,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_targets.patch
+        fix_build_error.patch
+        fix_config_cmake.patch
 )
 
 vcpkg_configure_cmake(
