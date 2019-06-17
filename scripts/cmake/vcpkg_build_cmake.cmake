@@ -45,10 +45,10 @@ function(vcpkg_build_cmake)
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
         if(VCPKG_Fortran_IS_INTEL)
             # CMake with Intel Fortran Compiler does not like cmake --build . -- <something>
-            # CMake will fallback to devenv for the Intel Fortran Compiler!
+            # because CMake falls back to devenv for the Intel Fortran Compiler!
         else()
             set(BUILD_ARGS
-                "/p:VCPkgLocalAppDataDisabled=true" #Shouldn't this be set in vcpkg_configure_cmake with VCPKG_APPLOCAL_DEPS=OFF ?
+                "/p:VCPkgLocalAppDataDisabled=true"
                 "/p:UseIntelMKL=No"
             )
             set(PARALLEL_ARG "/m")
@@ -92,16 +92,21 @@ function(vcpkg_build_cmake)
                 endif()
             endif()
 
+            if(DEFINED BUILD_ARGS OR DEFINED PARALLEL_ARG)
+                set(BUILD_TOOL_ARGS_PARALLEL -- ${BUILD_ARGS} ${PARALLEL_ARG})
+                set(BUILD_TOOL_ARGS_NO_PARALLEL -- ${BUILD_ARGS} ${NO_PARALLEL_ARG})
+            endif()
+
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
+                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_NO_PARALLEL}
                     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
                 )
             else()
                 vcpkg_execute_build_process(
-                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
-                    NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
+                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_PARALLEL}
+                    NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} ${BUILD_TOOL_ARGS_NO_PARALLEL}
                     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
                 )
