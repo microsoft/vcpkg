@@ -1,0 +1,95 @@
+diff --git a/src/c/CMakeLists.txt b/src/c/CMakeLists.txt
+index 00d639e..28ecac5 100644
+--- a/src/c/CMakeLists.txt
++++ b/src/c/CMakeLists.txt
+@@ -153,7 +153,11 @@ configure_file(cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
+ # hashtable library
+ set(hashtable_sources src/hashtable/hashtable_itr.c src/hashtable/hashtable.c)
+ add_library(hashtable STATIC ${hashtable_sources})
+-target_include_directories(hashtable PUBLIC include)
++target_include_directories(hashtable 
++  PUBLIC
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  PRIVATE include)
+ target_link_libraries(hashtable PUBLIC $<$<OR:$<PLATFORM_ID:Linux>,$<PLATFORM_ID:FreeBSD>>:m>)
+ 
+ # zookeeper library
+@@ -175,26 +179,34 @@ if(WIN32)
+   list(APPEND zookeeper_sources src/winport.c)
+ endif()
+ 
+-add_library(zookeeper STATIC ${zookeeper_sources})
+-target_include_directories(zookeeper PUBLIC include ${CMAKE_CURRENT_BINARY_DIR}/include generated)
+-target_link_libraries(zookeeper PUBLIC
++add_library(zookeeper_mt STATIC ${zookeeper_sources})
++target_include_directories(zookeeper_mt
++  INTERFACE
++    "${CMAKE_INSTALL_PREFIX}/include"
++  PUBLIC
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated>
++  PRIVATE include ${CMAKE_CURRENT_BINARY_DIR}/include generated)
++target_link_libraries(zookeeper_mt PUBLIC
+   hashtable
+   $<$<PLATFORM_ID:Linux>:rt> # clock_gettime
+   $<$<PLATFORM_ID:Windows>:ws2_32>) # Winsock 2.0
+ 
+ if(WANT_SYNCAPI AND NOT WIN32)
+   find_package(Threads REQUIRED)
+-  target_link_libraries(zookeeper PUBLIC Threads::Threads)
++  target_link_libraries(zookeeper_mt PUBLIC Threads::Threads)
+ endif()
+ 
+ # cli executable
+ add_executable(cli src/cli.c)
+-target_link_libraries(cli zookeeper)
++target_link_libraries(cli zookeeper_mt)
+ 
+ # load_gen executable
+ if(WANT_SYNCAPI AND NOT WIN32)
+   add_executable(load_gen src/load_gen.c)
+-  target_link_libraries(load_gen zookeeper)
++  target_link_libraries(load_gen zookeeper_mt)
+ endif()
+ 
+ # tests
+@@ -222,28 +234,14 @@ if(WANT_SYNCAPI)
+   list(APPEND test_sources tests/PthreadMocks.cc)
+ endif()
+ 
+-if(WANT_CPPUNIT)
+-  add_executable(zktest ${test_sources})
+-  target_include_directories(zktest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+-
+-  target_compile_definitions(zktest
+-    PRIVATE -DZKSERVER_CMD="${CMAKE_CURRENT_SOURCE_DIR}/tests/zkServer.sh")
+-  # TODO: Use `find_library()` for `cppunit`.
+-  target_link_libraries(zktest zookeeper cppunit dl)
+-
+-  # This reads the link flags from the file `tests/wrappers.opt` into
+-  # the variable `symbol_wrappers` for use in `target_link_libraries`.
+-  # It is a holdover from the original build system.
+-  file(STRINGS tests/wrappers.opt symbol_wrappers)
+-  if(WANT_SYNCAPI)
+-    file(STRINGS tests/wrappers-mt.opt symbol_wrappers_mt)
+-  endif()
++include(GNUInstallDirs)
++
++install(TARGETS zookeeper_mt hashtable EXPORT zookeeper DESTINATION lib/)
+ 
+-  target_link_libraries(zktest ${symbol_wrappers} ${symbol_wrappers_mt})
++if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
++  install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/zookeeper")
++  install(DIRECTORY "generated/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/zookeeper")
++  install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/zookeeper")
+ 
+-  enable_testing()
+-  add_test(NAME zktest_runner COMMAND zktest)
+-  set_property(TEST zktest_runner PROPERTY ENVIRONMENT
+-    "ZKROOT=${CMAKE_CURRENT_SOURCE_DIR}/../.."
+-    "CLASSPATH=$CLASSPATH:$CLOVER_HOME/lib/clover.jar")
++  install(EXPORT zookeeper DESTINATION share/zookeeper_mt/ FILE zookeeper_mtConfig.cmake)
+ endif()
