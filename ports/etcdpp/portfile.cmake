@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO offscale/libetcd-cpp
-    REF cd394bd03affd35d5a7ec5d1535f52d49732143c
-    SHA512 d6bcafc05c359ccf523e8d3c468939ba2afc74bc7f34161783a0e7048f178326335c619a5e2ec31d9e6948149053ef6f51b9bc58821b97713d41c9bb27128408
+    REF 5ac08e4ae365905a4247ddbab8b6fdc8fb7a954a
+    SHA512 5ee13dfb36f1cd2df7a7ac30c99f423b8cbad27a7ba002d182033ef83cec1298465a3036aef1f9736049bee500bb22d370e30c9cddd4938d8feb0be00b27448c
     HEAD_REF master
 )
 
