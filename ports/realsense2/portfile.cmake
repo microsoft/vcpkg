@@ -72,7 +72,7 @@ endif()
 
 
 if(BUILD_OPENNI2_BINDINGS)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver.* 
+  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver* 
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers)
 endif()
 
