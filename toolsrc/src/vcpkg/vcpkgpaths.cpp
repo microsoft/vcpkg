@@ -152,7 +152,7 @@ namespace vcpkg
         const std::vector<Toolset>& vs_toolsets =
             this->toolsets.get_lazy([this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
 
-        std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
+        std::vector<const Toolset*> candidates = Util::fmap(vs_toolsets, [](auto&& x) { return &x; });
         const auto tsv = prebuildinfo.platform_toolset.get();
         auto vsp = prebuildinfo.visual_studio_path.get();
         if (!vsp && !default_vs_path.empty())
@@ -190,26 +190,6 @@ namespace vcpkg
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s.",
                                vs_root_path.generic_string());
-        }
-
-        if (prebuildinfo.cmake_system_name == "WindowsStore")
-        {
-            // For now, cmake does not support VS 2019 when using the MSBuild generator.
-            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               !candidates.empty(),
-                               "With the current CMake version, UWP binaries can only be built with toolset version "
-                               "v141 or below. Please install the v141 toolset in VS 2019.");
-        }
-
-        if (System::get_host_processor() == System::CPUArchitecture::X86)
-        {
-            // For now, cmake does not support VS 2019 when using the MSBuild generator.
-            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               !candidates.empty(),
-                               "With the current CMake version, 32-bit machines can build with toolset version "
-                               "v141 or below. Please install the v141 toolset in VS 2019.");
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");

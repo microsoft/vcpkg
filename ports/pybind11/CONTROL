@@ -1,4 +1,5 @@
 Source: pybind11
 Version: 2.2.4
+Homepage: https://github.com/pybind/pybind11
 Description: pybind11 is a lightweight header-only library that exposes C++ types in Python and vice versa, mainly to create Python bindings of existing C++ code.
 Build-Depends: python3 (windows)

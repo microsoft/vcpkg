@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
@@ -14,9 +15,9 @@ namespace vcpkg::Downloads
 {
 #if defined(_WIN32)
     static void winhttp_download_file(Files::Filesystem& fs,
-                                      CStringView target_file_path,
-                                      CStringView hostname,
-                                      CStringView url_path)
+                                      ZStringView target_file_path,
+                                      StringView hostname,
+                                      StringView url_path)
     {
         // Make sure the directories are present, otherwise fopen_s fails
         const auto dir = fs::path(target_file_path.c_str()).parent_path();
@@ -43,18 +44,20 @@ namespace vcpkg::Downloads
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
         // Win7 IE Proxy fallback
-        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater()) {
+        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater())
+        {
             // First check if any proxy has been found automatically
             WINHTTP_PROXY_INFO proxyInfo;
             DWORD proxyInfoSize = sizeof(WINHTTP_PROXY_INFO);
-            auto noProxyFound = 
-                !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) 
-                || proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
+            auto noProxyFound = !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) ||
+                                proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
 
             // If no proxy was found automatically, use IE's proxy settings, if any
-            if (noProxyFound) {
+            if (noProxyFound)
+            {
                 WINHTTP_CURRENT_USER_IE_PROXY_CONFIG ieProxy;
-                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr) {
+                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr)
+                {
                     WINHTTP_PROXY_INFO proxy;
                     proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
                     proxy.lpszProxy = ieProxy.lpszProxy;
@@ -163,7 +166,7 @@ namespace vcpkg::Downloads
         std::string hostname(url_no_proto.begin(), path_begin);
         std::string path(path_begin, url_no_proto.end());
 
-        winhttp_download_file(fs, download_path_part.c_str(), hostname, path);
+        winhttp_download_file(fs, download_path_part, hostname, path);
 #else
         const auto code = System::cmd_execute(
             Strings::format(R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));

@@ -6,16 +6,16 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF bd7b85d0830634e3157da2411a6d060bf28f266e
-        SHA512 cbc2aa2765242ebe1a5e194e126f419cbd26edda5c1f72ffe9219a6c38b80aa91ef823a4fd8f78ac5d7ae0d9d471b50e5b8c4684e77c71b31e7cf35802e0cc17
-        HEAD_REF public-preview
+        REF 5ceebf6ec8d1973cfa80804077c7cef23d3b36af
+        SHA512 6dc7ffc386339db54ff387760119ae5ffd564642cd18d0dc177e6302167cc3b40bdd0f4d9e50478db8d2760166b15058b53b9eb2d1c160f234693a59ac762a75
+        HEAD_REF master
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF f29401ab5eb3853390d5f573d8fb37c0c96dba16
-        SHA512 8fdee32e2a85218257ee91754873f9f8ae5e16cd2b7b10c88ab6d4115fe4378a2b08f211d8307346b0bd7688c4c896c25a4de34e9231c2506819a97bbf46dd73
+        REF 5ceebf6ec8d1973cfa80804077c7cef23d3b36af
+        SHA512 6dc7ffc386339db54ff387760119ae5ffd564642cd18d0dc177e6302167cc3b40bdd0f4d9e50478db8d2760166b15058b53b9eb2d1c160f234693a59ac762a75
         HEAD_REF master
     )
 endif()
@@ -40,3 +40,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-uamqp-c/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+

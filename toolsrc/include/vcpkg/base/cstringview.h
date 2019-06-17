@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string.h>
+#include <cstring>
 #include <string>
 
 namespace vcpkg
@@ -13,6 +13,8 @@ namespace vcpkg
         CStringView(const std::string& str) : cstr(str.c_str()) {}
 
         constexpr const char* c_str() const { return cstr; }
+
+        void to_string(std::string& str) const { str.append(cstr); }
 
     private:
         const char* cstr;

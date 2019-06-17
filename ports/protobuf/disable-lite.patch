@@ -1,11 +1,11 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 82036cb..378db2d 100644
+index 9b2ae93c..7c9670a3 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -15,10 +15,12 @@ foreach(_library ${_protobuf_libraries})
-     PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-     $<BUILD_INTERFACE:${protobuf_source_dir}/src>
-     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+@@ -22,10 +22,12 @@ foreach(_library ${_protobuf_libraries})
+     set_property(TARGET ${_library}
+       PROPERTY INSTALL_RPATH "@loader_path")
+   endif()
 +  if(NOT "${_library}" STREQUAL "libprotobuf-lite")
    install(TARGETS ${_library} EXPORT protobuf-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${_library}
@@ -15,8 +15,8 @@ index 82036cb..378db2d 100644
  endforeach()
  
  if (protobuf_BUILD_PROTOC_BINARIES)
-@@ -26,7 +28,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
-     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+@@ -40,7 +42,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+   endif()
  endif (protobuf_BUILD_PROTOC_BINARIES)
  
 -install(FILES ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
@@ -24,7 +24,7 @@ index 82036cb..378db2d 100644
  
  file(STRINGS extract_includes.bat.in _extract_strings
    REGEX "^copy")
-@@ -107,12 +109,12 @@ configure_file(protobuf-options.cmake
+@@ -121,12 +123,12 @@ configure_file(protobuf-options.cmake
  # Allows the build directory to be used as a find directory.
  
  if (protobuf_BUILD_PROTOC_BINARIES)

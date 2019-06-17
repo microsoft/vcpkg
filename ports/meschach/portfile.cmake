@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://homepage.math.uiowa.edu/~dstewart/meschach/mesch12b.tar.gz"

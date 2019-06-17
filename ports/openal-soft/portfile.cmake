@@ -12,6 +12,7 @@ vcpkg_from_github(
     PATCHES
         dont-export-symbols-in-static-build.patch
         cmake-3-11.patch
+        fix-arm-builds.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -30,7 +31,6 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DLIBTYPE=${OPENAL_LIBTYPE}
         -DALSOFT_UTILS=OFF
@@ -54,6 +54,7 @@ vcpkg_configure_cmake(
         -DALSOFT_REQUIRE_WINMM=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_REQUIRE_DSOUND=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_REQUIRE_MMDEVAPI=${ALSOFT_REQUIRE_WINDOWS}
+        -DALSOFT_CPUEXT_NEON=OFF
 )
 
 vcpkg_install_cmake()

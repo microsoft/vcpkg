@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 92e4698..002981e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,6 +75,8 @@ else ()
+ 	   set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${CURL_ROOT}/lib")
+     endif ()
+     find_package(CURL REQUIRED)
++    find_package(OpenSSL REQUIRED)
++    find_package(ZLIB REQUIRED)
+ endif ()
+ 
+ set(LIBB64_DIR "${PROJECT_SOURCE_DIR}/ext/b64")
+@@ -89,7 +91,6 @@ endif()
+ 
+ add_subdirectory(ext/json11)
+ add_subdirectory(src)
+-add_subdirectory(tests)
+ 
+ install(
+     DIRECTORY "${HEADERS_DIR}"
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8e24aab..beaac68 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -85,7 +85,10 @@ if (${USE_CPPNETLIB})
+     target_link_libraries(${PROJECT_NAME} PRIVATE ${CPPNETLIB_LIBRARIES})
+ else ()
+     target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
+-    target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES} ${OPENSSL_LIBRARIES} ZLIB::ZLIB)
++    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
++        target_link_libraries(${PROJECT_NAME} PRIVATE "-framework CoreFoundation" "-framework Security")
++    endif ()
+ endif ()
+ 
+ source_group(${PROJECT_NAME} FILES ${SOURCES})

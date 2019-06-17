@@ -1,8 +1,8 @@
 diff --git a/Source/FreeImage/PluginTIFF.cpp b/Source/FreeImage/PluginTIFF.cpp
-index 1b45453..562fdd7 100644
+index 5068d94..8947b03 100644
 --- a/Source/FreeImage/PluginTIFF.cpp
 +++ b/Source/FreeImage/PluginTIFF.cpp
-@@ -37,7 +37,7 @@
+@@ -37,9 +37,9 @@
  
  #include "FreeImage.h"
  #include "Utilities.h"
@@ -10,6 +10,36 @@ index 1b45453..562fdd7 100644
 +#include <tiffio.h>
  #include "../Metadata/FreeImageTag.h"
  #include "../OpenEXR/Half/half.h"
+ 
+ #include "FreeImageIO.h"
+ #include "PSDParser.h"
+@@ -199,15 +199,18 @@ Open a TIFF file for reading or writing
+ @param name
+ @param mode
+ */
++/*
+ TIFF*
+ TIFFOpen(const char* name, const char* mode) {
+ 	return 0;
+ }
++*/
+ 
+ // ----------------------------------------------------------
+ //   TIFF library FreeImage-specific routines.
+ // ----------------------------------------------------------
+ 
++/*
+ void*
+ _TIFFmalloc(tmsize_t s) {
+ 	return malloc(s);
+@@ -245,6 +248,7 @@ int
+ _TIFFmemcmp(const void* p1, const void* p2, tmsize_t c) {
+ 	return (memcmp(p1, p2, (size_t) c));
+ }
++*/
+ 
+ // ----------------------------------------------------------
+ //   in FreeImage warnings and errors are disabled
  
 diff --git a/Source/Metadata/XTIFF.cpp b/Source/Metadata/XTIFF.cpp
 index d5be902..8dbcd5d 100644

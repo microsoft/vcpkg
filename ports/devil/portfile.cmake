@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001_fix-encoding.patch
         0002_fix-missing-mfc-includes.patch
+        0003_fix-openexr.patch
         enable-static.patch
 )
 
@@ -60,6 +61,7 @@ set(IL_USE_DXTC_SQUISH 0)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/DevIL
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DIL_NO_PNG=${IL_NO_PNG}
         -DIL_NO_TIF=${IL_NO_TIF}

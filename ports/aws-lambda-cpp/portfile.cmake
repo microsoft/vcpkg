@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message(FATAL_ERROR "aws-lambda-cpp currently only supports Linux and Mac platforms")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp

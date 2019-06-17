@@ -13,6 +13,7 @@ vcpkg_from_github(
 # Use libcopp's own build process, skipping examples and tests
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     # PREFER_NINJA # Disabled because Ninja does not invoke masm correctly for this project
 )
 vcpkg_install_cmake()
