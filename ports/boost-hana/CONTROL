@@ -2,4 +2,5 @@
 Source: boost-hana
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-fusion, boost-mpl, boost-tuple, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/hana
 Description: Boost hana module

@@ -1,6 +1,7 @@
 Source: vtk
-Version: 8.2.0-2
+Version: 8.2.0-4
 Description: Software system for 3D computer graphics, image processing, and visualization
+Homepage: https://github.com/Kitware/VTK
 Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora, atlmfc (windows), eigen3, double-conversion, pugixml, libharu, sqlite3, netcdf-c
 
 Feature: openvr

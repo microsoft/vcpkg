@@ -27,6 +27,7 @@ vcpkg_configure_cmake(
         -DBUILD_HASKELL=off
         -DBUILD_TUTORIALS=off
         -DFLEX_EXECUTABLE=${FLEX}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt5=TRUE
         -DBISON_EXECUTABLE=${BISON}
 )
 

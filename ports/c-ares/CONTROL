@@ -1,4 +1,5 @@
 Source: c-ares
 Version: 2019-5-2
+Homepage: https://github.com/c-ares/c-ares
 Description: A C library for asynchronous DNS requests
 Build-Depends:

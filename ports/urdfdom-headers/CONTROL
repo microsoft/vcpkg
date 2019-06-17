@@ -1,3 +1,4 @@
 Source: urdfdom-headers
 Version: 1.0.4
+Homepage: https://github.com/ros/urdfdom_headers
 Description: The URDF (U-Robot Description Format) headers provides core data structure headers for URDF.

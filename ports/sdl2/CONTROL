@@ -1,5 +1,6 @@
 Source: sdl2
 Version: 2.0.9-3
+Homepage: https://github.com/SDL-Mirror/SDL
 Description: Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.
 
 Feature: vulkan
