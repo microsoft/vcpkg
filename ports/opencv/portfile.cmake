@@ -9,11 +9,12 @@ vcpkg_from_github(
     SHA512 d653a58eb5e3939b9fdb7438ac35f77cf4385cf72d5d22bfd21722a109e1b3283dbb9407985061b7548114f0d05c9395aac9bb62b4d2bc1f68da770a49987fef
     HEAD_REF master
     PATCHES
-      "${CMAKE_CURRENT_LIST_DIR}/0001-winrt-fixes.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-custom-protobuf-find-package.patch"
+      0001-winrt-fixes.patch
+      0002-install-options.patch
+      0003-disable-downloading.patch
+      0004-use-find-package-required.patch
+      0005-remove-custom-protobuf-find-package.patch
+      0006-fix-missing-openjp2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -321,6 +322,7 @@ vcpkg_configure_cmake(
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}
         -DWITH_ZLIB=${WITH_ZLIB}
+        -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
