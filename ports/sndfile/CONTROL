@@ -1,8 +1,9 @@
 Source: sndfile
-Version: 1.0.29-cebfdf2-1
-Description: Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo
+Version: deprecated
+Description: Deprecated port, use libsndfile instead
+Build-Depends: libsndfile
 Default-Features: external-libs
 
 Feature: external-libs
-Description: Support Ogg Vorbis and FLAC audio files
-Build-Depends: libogg, libflac, libvorbis
+Description: Deprecated port, use libsndfile[external-libs] instead
+Build-Depends: libsndfile[external-libs]

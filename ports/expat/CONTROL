@@ -1,3 +1,4 @@
 Source: expat
 Version: 2.2.6
+Homepage: https://github.com/libexpat/libexpat
 Description: XML parser library written in C

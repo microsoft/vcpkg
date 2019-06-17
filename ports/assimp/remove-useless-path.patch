@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4a20cee..4fcb8dd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,7 +108,6 @@ if (WIN32)
+ endif()
+ 
+ IF(MSVC)
+-  SET (CMAKE_PREFIX_PATH "D:\\libs\\devil")
+   OPTION( ASSIMP_INSTALL_PDB
+     "Install MSVC debug files."
+     ON

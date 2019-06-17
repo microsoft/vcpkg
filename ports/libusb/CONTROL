@@ -1,3 +1,4 @@
 Source: libusb
 Version: 1.0.22-2
+Homepage: https://github.com/libusb/libusb
 Description: a cross-platform library to access USB devices

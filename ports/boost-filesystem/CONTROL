@@ -2,4 +2,5 @@
 Source: boost-filesystem
 Version: 1.70.0
 Build-Depends: boost-assert, boost-build, boost-config, boost-core, boost-detail, boost-functional, boost-integer, boost-io, boost-iterator, boost-modular-build-helper, boost-smart-ptr, boost-system, boost-type-traits, boost-vcpkg-helpers, boost-winapi
+Homepage: https://github.com/boostorg/filesystem
 Description: Boost filesystem module

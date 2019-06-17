@@ -16,7 +16,8 @@ namespace vcpkg::Commands::DependInfo
     constexpr std::array<CommandSwitch, 3> DEPEND_SWITCHES = {{
         {OPTION_DOT, "Creates graph on basis of dot"},
         {OPTION_DGML, "Creates graph on basis of dgml"},
-        {OPTION_NO_RECURSE, "Computes only immediate dependencies of packages explicitly specified on the command-line"},
+        {OPTION_NO_RECURSE,
+         "Computes only immediate dependencies of packages explicitly specified on the command-line"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {

@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libplist
-    REF 2.0.1.197
-    SHA512 55e1817c61d608b11646eb9c28c445f9ee801c7beb2121bd810235561117262adb73dbecb23b9ef5b0c54b0fc8089e0a46acc0e8f4845329a50a663ab004052c
+    REF f279ef534ab5adeb81f063dee5e8a8fc3ca6d3ab
+    SHA512 52001a46935693e3ac5f0b8c3d13d9bf51c5f34189f6f006bd697d7e965f402460060708c4fb54ed43f49a217ac442fcb8dca252fcbccd3e6a154b6c9a8c2104
     HEAD_REF msvc-master
     PATCHES dllexport.patch
 )
@@ -21,3 +21,7 @@ vcpkg_install_msbuild(
     LICENSE_SUBPATH COPYING.lesser
     REMOVE_ROOT_INCLUDES
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()

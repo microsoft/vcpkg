@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         all.patch
         msvc-libname.patch
+        findzstd.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
