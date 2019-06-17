@@ -1,5 +1,5 @@
-Source: etcdpp
-Version: 0.5
+Source: etcdcpp
+Version: 0.1
 Homepage: https://github.com/offscale/libetcd-cpp
 Description: A C++ client library for etcd. etcd is a distributed, reliable key-value store.
 Build-Depends: grpc, protobuf
