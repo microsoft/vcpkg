@@ -1,5 +1,6 @@
 Source: catch-classic
 Version: 1.12.2
+Homepage: https://github.com/catchorg/Catch2
 Description: A modern, header-only test framework for unit tests
  This is specifically the legacy 1.x branch provided for compatibility
  with older compilers.

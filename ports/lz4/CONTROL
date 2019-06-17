@@ -1,4 +1,5 @@
 Source: lz4
 Version: 1.9.1-2
+Homepage: https://github.com/lz4/lz4
 Description: Lossless compression algorithm, providing compression speed at 400 MB/s per core.
 Build-Depends: xxhash

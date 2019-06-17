@@ -1,6 +1,6 @@
 Source: sndfile
 Version: 0
-Description: Library to read, write and manipulate many soundfile types.
+Description:x Library to read, write and manipulate many soundfile types.
 Build-Depends: libsndfile
 Default-Features: external-libs
 

@@ -2,4 +2,5 @@
 Source: boost-disjoint-sets
 Version: 1.70.0
 Build-Depends: boost-graph, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/disjoint_sets
 Description: Boost disjoint_sets module

@@ -1,4 +1,5 @@
 Source: libevent
 Version: 2.1.8-5
 Build-Depends: openssl
+Homepage: https://github.com/libevent/libevent
 Description: An event notification library
