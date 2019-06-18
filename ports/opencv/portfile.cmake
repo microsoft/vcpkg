@@ -1,28 +1,114 @@
 include(vcpkg_common_functions)
 
-set(OPENCV_PORT_VERSION "3.4.3")
+set(OPENCV_VERSION "4.0.1")
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF ${OPENCV_PORT_VERSION}
-    SHA512 d653a58eb5e3939b9fdb7438ac35f77cf4385cf72d5d22bfd21722a109e1b3283dbb9407985061b7548114f0d05c9395aac9bb62b4d2bc1f68da770a49987fef
+    REF ${OPENCV_VERSION}
+    SHA512 d74dd325029a67676dd2c7fdbecb2b14cb531441b2a1b74fc1ebe6db096ea87c12801c8b997ebbe280fbd401311c0220133a0c29911b0dae82cb93453be0b2b0
     HEAD_REF master
     PATCHES
-      "${CMAKE_CURRENT_LIST_DIR}/0001-winrt-fixes.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0005-remove-custom-protobuf-find-package.patch"
+      0001-disable-downloading.patch
+      0002-install-options.patch
+      0003-force-package-requirements.patch
+      0004-use-constexpr.patch
+      0005-uniform-config-install-path.patch
+      0007-use-external-ffmpeg.patch
+      0008-fix-error-c4576.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
-set(CMAKE_MODULE_PATH)
+set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
-set(BUILD_opencv_world OFF)
-if("world" IN_LIST FEATURES)
-  set(BUILD_opencv_world ON)
+set(OPENCV_ENABLE_NONFREE OFF)
+if("nonfree" IN_LIST FEATURES)
+  set(OPENCV_ENABLE_NONFREE ON)
+endif()
+
+set(WITH_CUDA OFF)
+if("cuda" IN_LIST FEATURES)
+  set(WITH_CUDA ON)
+  if(NOT "contrib" IN_LIST FEATURES)
+    list(APPEND FEATURES "contrib")
+    message(WARNING "Forced nonfree feature to enable CUDA")
+  endif()
+endif()
+
+if("contrib" IN_LIST FEATURES)
+  vcpkg_from_github(
+    OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
+    REPO opencv/opencv_contrib
+    REF ${OPENCV_VERSION}
+    SHA512 8876bbb4dc7955f986e4c9fc80a63060ce0ee8586f3ba2fcd0a82dfbcafba390ff590b0c0fee325388b0feda7c70526f8cab48643e9b15fff90a91b14443add0
+    HEAD_REF master
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_bgm.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i"
+    SHA512 5c8702a60314fac4ebb6dafb62a603948ec034058d1a582fcb89a063b51511802c02e192eadfc0b233b1f711f4c74cabab6d9ebe8a50c3554ea0ccdbef87dc5c
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_bgm_bi.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/232c966b13651bd0e46a1497b0852191-boostdesc_bgm_bi.i"
+    SHA512 b28ba2b615e0755ff0f6733b567682800fb9e7d522250aa498075cc1b8927f4177cacdcb0cfdf712539a29c4773232dc714931b6d292292b091b5cf170b203a6
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_bgm_hd.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/324426a24fa56ad9c5b8e3e0b3e5303e-boostdesc_bgm_hd.i"
+    SHA512 c214045c3730a1d9dfc594f70895edf82d2fd3058a3928908627014371e02460d052cbaedf41bb96cf76460c0a8b4b01b7b0ac7d269ec5d3f17f2a46c9f0091b
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_binboost_064.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/202e1b3e9fec871b04da31f7f016679f-boostdesc_binboost_064.i"
+    SHA512 f32240a7b975233d2bbad02fdb74c6e29ed71ed6f0c08172ca33eb1e69a7a7f6d6964adf41422213a0452121a9c4bb2effe3d7b9d6743c9bf58d4bc8c9b1db36
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_binboost_128.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/98ea99d399965c03d555cef3ea502a0b-boostdesc_binboost_128.i"
+    SHA512 f58e2bebfaa690d324691a6c2067d9a1e5267037ea0f2b397966289253b9efd27d8238aff6206e95262086e1fcddf01ae1a1c49f066a8bbac3aa7908214b9a8f
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_binboost_256.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/e6dcfa9f647779eb1ce446a8d759b6ea-boostdesc_binboost_256.i"
+    SHA512 351ee07b9714a379c311f293d96e99f001c894393c911a421b4c536345d43c02ba2d867e9f657eac104841563045ab8c8edab878e5ffeb1e1a7494375ef58987
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_lbgm.i"
+    FILENAME "opencv-cache/xfeatures2d/boostdesc/0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i"
+    SHA512 7fa12e2207ff154acf2433bbb4f3f47aa71d1fa8789493b688d635d20586b7ead30ee8dcd3b3753992ebbe98062cbde44d02683db1c563d52e35aefd7912a4f2
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_48.i"
+    FILENAME "opencv-cache/xfeatures2d/vgg/e8d0dcd54d1bcfdc29203d011a797179-vgg_generated_48.i"
+    SHA512 2403e9119738261a05a3116ca7e5c9e11da452c422f8670cd96ad2cb5bf970f76172e23b9913a3172adf06f2b31bee956f605b66dbccf3d706c4334aff713774
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_64.i"
+    FILENAME "opencv-cache/xfeatures2d/vgg/7126a5d9a8884ebca5aea5d63d677225-vgg_generated_64.i"
+    SHA512 2c954223677905f489b01988389ac80a8caa33bdb57adb3cb9409075012b5e2f472f14966d8be75d75c90c9330f66d59c69539dc6b5a5e265a4d98ff5041f0ea
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_80.i"
+    FILENAME "opencv-cache/xfeatures2d/vgg/7cd47228edec52b6d82f46511af325c5-vgg_generated_80.i"
+    SHA512 9931ad1d1bd6d11951ca5357ab0a524f6ff9b33f936ceeafebc0dafb379ec7e2105e467443e9f424f60a0f2f445bdff821ed9e42330abed883227183ebad4a9e
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_120.i"
+    FILENAME "opencv-cache/xfeatures2d/vgg/151805e03568c9f490a5e3a872777b75-vgg_generated_120.i"
+    SHA512 ad7c1d2b159ab5790c898815663bb90549f1cf7ade3c82d939d381608b26d26c5b2af01eb1ba21f4d114ced74586ab3fc83f14e2d8cfe4e6faac538aa0e7e255
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
+    FILENAME "opencv-cache/data/7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat"
+    SHA512 c16e60a6c4bb4de3ab39b876ae3c3f320ea56f69c93e9303bd2dff8760841dcd71be4161fff8bc71e8fe4fe8747fa8465d49d6bd8f5ebcdaea161f4bc2da7c93
+  )
+  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 endif()
 
 set(BUILD_opencv_dnn OFF)
@@ -39,14 +125,102 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-set(BUILD_opencv_flann OFF)
-if("flann" IN_LIST FEATURES)
-  set(BUILD_opencv_flann ON)
+set(WITH_EIGEN OFF)
+if("eigen" IN_LIST FEATURES)
+  set(WITH_EIGEN ON)
 endif()
 
-set(BUILD_opencv_ovis OFF)
-if("ovis" IN_LIST FEATURES)
-  set(BUILD_opencv_ovis ON)
+set(WITH_FFMPEG OFF)
+if("ffmpeg" IN_LIST FEATURES)
+  set(WITH_FFMPEG ON)
+endif()
+
+set(WITH_GDCM OFF)
+if("gdcm" IN_LIST FEATURES)
+  set(WITH_GDCM ON)
+endif()
+
+set(WITH_IPP OFF)
+if("ipp" IN_LIST FEATURES)
+  set(WITH_IPP ON)
+  if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_mac_intel64_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/fe6b2bb75ae0e3f19ad3ae1a31dfa4a2-ippicv_2019_mac_intel64_general_20180723.tgz"
+        SHA512 266fe3fecf8e95e1f51c09b65330a577743ef72b423b935d4d1fe8d87f1b4f258c282fe6a18fc805d489592f137ebed37c9f1d1b34026590d9f1ba107015132e
+    )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      message(WARNING "Please check from logs about missing download")
+    else()
+      message(WARNING "This target architecture is not supported IPPICV")
+    endif()
+  elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_ia32_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/4f38432c30bfd6423164b7a24bbc98a0-ippicv_2019_lnx_ia32_general_20180723.tgz"
+        SHA512 d96d3989928ff11a18e631bf5ecfdedf88fd350162a23fa2c8f7dbc3bf878bf442aff7fb2a07dc56671d7268cc20682055891be75b9834e9694d20173e92b6a3
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      message(WARNING "Please check from logs about missing download")
+    else()
+      message(WARNING "This target architecture is not supported IPPICV")
+    endif()
+  elseif(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_intel64_20180723_general.zip"
+        FILENAME "opencv-cache/ippicv/1d222685246896fe089f88b8858e4b2f-ippicv_2019_win_intel64_20180723_general.zip"
+        SHA512 b6c4f2696e2004b8f5471efd9bdc6c684b77830e0533d8880310c0b665b450d6f78e10744c937f5592ab900e187c475e46cb49e98701bb4bcbbc7da77723011d
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_ia32_20180723_general.zip"
+        FILENAME "opencv-cache/ippicv/0157251a2eb9cd63a3ebc7eed0f3e59e-ippicv_2019_win_ia32_20180723_general.zip"
+        SHA512 c33fd4019c71b064b153e1b25e0307f9c7ada693af8ec910410edeab471c6f14df9b11bf9f5302ceb0fcd4282f5c0b6c92fb5df0e83eb50ed630c45820d1e184
+      )
+    else()
+      message(WARNING "This target architecture is not supported IPPICV")
+    endif()
+  else()
+    message(WARNING "This target architecture is not supported IPPICV")
+  endif()
+endif()
+
+set(WITH_JASPER OFF)
+if("jasper" IN_LIST FEATURES)
+  set(WITH_JASPER ON)
+endif()
+
+set(WITH_JPEG OFF)
+if("jpeg" IN_LIST FEATURES)
+  set(WITH_JPEG ON)
+endif()
+
+set(WITH_MSMF ON)
+if(VCPKG_CMAKE_SYSTEM_NAME)
+  set(WITH_MSMF OFF)
+endif()
+
+set(WITH_OPENEXR OFF)
+if("openexr" IN_LIST FEATURES)
+  set(WITH_OPENEXR ON)
+endif()
+
+set(WITH_OPENGL OFF)
+if("opengl" IN_LIST FEATURES)
+  set(WITH_OPENGL ON)
+endif()
+
+set(WITH_PNG OFF)
+if("png" IN_LIST FEATURES)
+  set(WITH_PNG ON)
+endif()
+
+set(WITH_QT OFF)
+if("qt" IN_LIST FEATURES)
+  set(WITH_QT ON)
 endif()
 
 set(BUILD_opencv_sfm OFF)
@@ -54,110 +228,18 @@ if("sfm" IN_LIST FEATURES)
   set(BUILD_opencv_sfm ON)
 endif()
 
-set(BUILD_opencv_contrib OFF)
-if("contrib" IN_LIST FEATURES)
-  set(BUILD_opencv_contrib ON)
-
-  # Used for opencv's face module
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
-    FILENAME "opencv-cache/data/7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat"
-    SHA512 c16e60a6c4bb4de3ab39b876ae3c3f320ea56f69c93e9303bd2dff8760841dcd71be4161fff8bc71e8fe4fe8747fa8465d49d6bd8f5ebcdaea161f4bc2da7c93
-  )
-
-  vcpkg_download_distfile(TINYDNN_ARCHIVE
-    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
-    FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
-    SHA512 5f2c1a161771efa67e85b1fea395953b7744e29f61187ac5a6c54c912fb195b3aef9a5827135c3668bd0eeea5ae04a33cc433e1f6683e2b7955010a2632d168b
-  )
-
-  function(download_opencv_3rdparty ID COMMIT HASH)
-    if(NOT EXISTS "${DOWNLOADS}/opencv-cache/${ID}/${COMMIT}.stamp")
-      vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://github.com/opencv/opencv_3rdparty/archive/${COMMIT}.zip"
-          FILENAME "opencv_3rdparty-${COMMIT}.zip"
-          SHA512 ${HASH}
-      )
-      vcpkg_extract_source_archive(${OCV_DOWNLOAD})
-      file(MAKE_DIRECTORY "${DOWNLOADS}/opencv-cache/${ID}")
-      file(GLOB XFEATURES2D_I ${CURRENT_BUILDTREES_DIR}/src/opencv_3rdparty-${COMMIT}/*)
-      foreach(FILE ${XFEATURES2D_I})
-        file(COPY ${FILE} DESTINATION "${DOWNLOADS}/opencv-cache/${ID}")
-        get_filename_component(XFEATURES2D_I_NAME "${FILE}" NAME)
-        file(MD5 "${FILE}" FILE_HASH)
-        file(RENAME "${DOWNLOADS}/opencv-cache/${ID}/${XFEATURES2D_I_NAME}" "${DOWNLOADS}/opencv-cache/${ID}/${FILE_HASH}-${XFEATURES2D_I_NAME}")
-      endforeach()
-      file(WRITE "${DOWNLOADS}/opencv-cache/${ID}/${COMMIT}.stamp")
-    endif()
-  endfunction()
-
-  # Used for opencv's xfeature2d module
-  download_opencv_3rdparty(
-    xfeatures2d/boostdesc
-    34e4206aef44d50e6bbcd0ab06354b52e7466d26
-    2ccdc8fb59da55eabc73309a80a4d3b1e73e2341027cdcdd2d714e0f519e60f243f38f79b13ed3de32f595aa23e4f86418eed42e741f32a81b1e6e0879190601
-  )
-
-  # Used for opencv's xfeature2d module
-  download_opencv_3rdparty(
-    xfeatures2d/vgg
-    fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d
-    7051f5d6ccb938d296b919dd6d5dcddc5afb527aed456639c9984276a8f64565c084d96a72499a7756f127f8d2b1ce9ab70e4cbb3f89c4e16f82296c2a15daed
-  )
-endif()
-
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(WITH_CUDA ON)
-endif()
-
-set(WITH_FFMPEG OFF)
-if("ffmpeg" IN_LIST FEATURES)
-  set(WITH_FFMPEG ON)
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/opencv_ffmpeg.dll"
-    FILENAME "opencv-cache/ffmpeg/fa5a2a4e2f37defcb95bde8ed145c2b3-opencv_ffmpeg.dll"
-    SHA512 875f922e1d9fc2fe7c8e879ede35b1001b6ad8b3c4d71feb3823421ce861f580df3418c791315b23870fcb0378d297b01e0761d3f65277ff11ec2fef8c0b08b7
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/opencv_ffmpeg_64.dll"
-    FILENAME "opencv-cache/ffmpeg/2cc08fc4fef8199fe80e0f126684834f-opencv_ffmpeg_64.dll"
-    SHA512 4e74aa4cb115f103b929f93bbc8dcf675de7d0c7916f8f0a80ac46761134b088634be95f959ce5827753ae9ecb2365ca40440dfbb9a9bf89f22ee11b6c8342b3
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/ffmpeg_version.cmake"
-    FILENAME "opencv-cache/ffmpeg/3b90f67f4b429e77d3da36698cef700c-ffmpeg_version.cmake"
-    SHA512 7d0142c30ac6f6260c1bcabc22753030fd25a708477fa28053e8df847c366967d3b93a8ac14af19a2b7b73d9f8241749a431458faf21a0c8efc7d6d99eecfdcf
-  )
-endif()
-
-set(WITH_IPP OFF)
-if("ipp" IN_LIST FEATURES)
-  set(WITH_IPP ON)
-
-  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_intel64_general_20180518.zip"
-      FILENAME "opencv-cache/ippicv/915ff92958089ede8ea532d3c4fe7187-ippicv_2017u3_win_intel64_general_20180518.zip"
-      SHA512 8aa08292d542d521c042864446e47a7a6bdbf3896d86fc7b43255459c24a2e9f34a4e9b177023d178fed7a2e82a9db410f89d81375a542d049785d263f46c64d
-    )
-  else()
-    vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_ia32_general_20180518.zip"
-      FILENAME "opencv-cache/ippicv/928168c2d99ab284047dfcfb7a821d91-ippicv_2017u3_win_ia32_general_20180518.zip"
-      SHA512 b89b0fb739152303cafc9fb064fa8b24fd94850697137ccbb5c1e344e0f5094115603a5e3be3a25f85d0faefc5c53429a7d65da0142d012ada41e8db2bcdd6b7
-    )
-  endif()
-endif()
-
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
 endif()
+if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND WITH_TBB)
+  message(WARNING "TBB is currently unsupported in this build configuration, turning it off")
+  set(WITH_TBB OFF)
+endif()
 
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_QT ON)
+set(WITH_TIFF OFF)
+if("tiff" IN_LIST FEATURES)
+  set(WITH_TIFF ON)
 endif()
 
 set(WITH_VTK OFF)
@@ -168,137 +250,87 @@ endif()
 set(WITH_WEBP OFF)
 if("webp" IN_LIST FEATURES)
   set(WITH_WEBP ON)
-  list(APPEND CMAKE_MODULE_PATH ${CURRENT_INSTALLED_DIR}/share/libwebp)
 endif()
 
-set(WITH_GDCM OFF)
-if("gdcm" IN_LIST FEATURES)
-  set(WITH_GDCM ON)
+set(BUILD_opencv_world OFF)
+if("world" IN_LIST FEATURES)
+  set(BUILD_opencv_world ON)
 endif()
 
-set(WITH_OPENGL OFF)
-if("opengl" IN_LIST FEATURES)
-  set(WITH_OPENGL ON)
+#broken features
+set(WITH_ADE OFF)
+if("ade" IN_LIST FEATURES)
+  message(WARNING "ADE is currently unsupported, keeping it off")
+  #set(WITH_ADE ON)
 endif()
 
-set(WITH_OPENEXR OFF)
-if("openexr" IN_LIST FEATURES)
-  set(WITH_OPENEXR ON)
-  list(APPEND CMAKE_MODULE_PATH ${CURRENT_INSTALLED_DIR}/share/openexr)
+set(WITH_OPENMP OFF)
+if("openmp" IN_LIST FEATURES)
+  message(WARNING "OpenMP is currently unsupported, keeping it off")
+  #set(WITH_OPENMP ON)
 endif()
 
-set(WITH_MSMF ON)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(WITH_MSMF OFF)
+set(BUILD_opencv_ovis OFF)
+if("ovis" IN_LIST FEATURES)
+  set(BUILD_opencv_ovis ON)
 endif()
-
-set(WITH_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-  set(WITH_TIFF ON)
+if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND NOT VCPKG_CMAKE_SYSTEM_NAME AND BUILD_opencv_ovis)
+  message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
+  set(BUILD_opencv_ovis OFF)
 endif()
-
-set(WITH_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-  set(WITH_JPEG ON)
-endif()
-
-set(WITH_JASPER OFF)
-if("jasper" IN_LIST FEATURES)
-  set(WITH_JASPER ON)
-endif()
-
-set(WITH_PNG OFF)
-if("png" IN_LIST FEATURES)
-  set(WITH_PNG ON)
-endif()
-
-set(WITH_EIGEN OFF)
-if("eigen" IN_LIST FEATURES)
-  set(WITH_EIGEN ON)
-endif()
-
-set(OPENCV_ENABLE_NONFREE OFF)
-if("nonfree" IN_LIST FEATURES)
-  set(OPENCV_ENABLE_NONFREE ON)
-endif()
-
-if(BUILD_opencv_contrib)
-  vcpkg_from_github(
-      OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
-      REPO opencv/opencv_contrib
-      REF ${OPENCV_PORT_VERSION}
-      SHA512 456c6f878fb3bd5459f6430405cf05c609431f8d7db743aa699fc75c305d019682ee3a804bf0cf5107597dd1dbbb69b08be3535a0e6c717e4773ed7c05d08e59
-      HEAD_REF master
-  )
-  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
-endif()
-
-set(WITH_ZLIB ON)
-set(BUILD_opencv_line_descriptor ON)
-set(BUILD_opencv_saliency ON)
-set(BUILD_opencv_bgsegm ON)
-if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-  set(BUILD_opencv_line_descriptor OFF)
-  set(BUILD_opencv_saliency OFF)
-  set(BUILD_opencv_bgsegm OFF)
-endif()
-
-string(REPLACE ";" "\\\\\;" CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
 
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # Ungrouped Entries
-        -DOpenCV_DISABLE_ARCH_PATH=ON
-        # Do not build docs/examples
-        -DBUILD_DOCS=OFF
-        -DBUILD_EXAMPLES=OFF
-        # Do not build integrated libraries, use external ones whenever possible
+        ###### Ungrouped Entries
+        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
+        -DBUILD_opencv_java=OFF
+        -Dade_DIR=${ADE_DIR}
+        ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
-        -DBUILD_PACKAGE=OFF
-        -DBUILD_PERF_TESTS=OFF
         -DBUILD_PNG=OFF
-        -DBUILD_PROTOBUF=OFF
-        -DBUILD_TESTS=OFF
         -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
+        -DBUILD_ZLIB=OFF
+        -DBUILD_TBB=OFF
+        -DBUILD_IPP_IW=OFF
+        -DBUILD_ITT=OFF
+        ###### Disable build 3rd party components
+        -DBUILD_PROTOBUF=OFF
+        ###### OpenCV Build components
+        -DBUILD_opencv_apps=OFF
+        -DBUILD_opencv_js=OFF
+        -DBUILD_ANDROID_PROJECT=OFF
+        -DBUILD_ANDROID_EXAMPLES=OFF
+        -DBUILD_DOCS=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_PACKAGE=OFF
+        -DBUILD_PERF_TESTS=OFF
+        -DBUILD_TESTS=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
-        -DBUILD_ZLIB=OFF
-        # Select which OpenCV modules should be built
-        -DBUILD_opencv_apps=OFF
-        -DBUILD_opencv_bgsegm=${BUILD_opencv_bgsegm}
-        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
-        -DBUILD_opencv_flann=${BUILD_opencv_flann}
-        -DBUILD_opencv_line_descriptor=${BUILD_opencv_line_descriptor}
-        -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
-        -DBUILD_opencv_python2=OFF
-        -DBUILD_opencv_python3=OFF
-        -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
-        -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
-        -DBUILD_opencv_world=${BUILD_opencv_world}
+        -DBUILD_JAVA=OFF
+        ###### PROTOBUF
+        -DPROTOBUF_UPDATE_FILES=ON
+        ###### PYLINT/FLAKE8
+        -DENABLE_PYLINT=OFF
+        -DENABLE_FLAKE8=OFF
         # PROTOBUF
         -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
         -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        "-DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}"
         # ENABLE
         -DENABLE_CXX11=ON
-        -DENABLE_PYLINT=OFF
-        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
-        # INSTALL
-        -DINSTALL_FORCE_UNIX_PATHS=ON
-        -DINSTALL_LICENSE=OFF
-        # OPENCV
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
-        # WITH
+        ###### customized properties
+        -DWITH_ADE=${WITH_ADE}
         -DWITH_CUBLAS=${WITH_CUDA}
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_EIGEN=${WITH_EIGEN}
@@ -307,108 +339,46 @@ vcpkg_configure_cmake(
         -DWITH_IPP=${WITH_IPP}
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_JPEG=${WITH_JPEG}
-        -DWITH_LAPACK=OFF
-        -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
-        -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENEXR=${WITH_OPENEXR}
         -DWITH_OPENGL=${WITH_OPENGL}
+        -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PNG=${WITH_PNG}
-        -DWITH_PROTOBUF=${WITH_PROTOBUF}
+        -DWITH_PROTOBUF=ON
         -DWITH_QT=${WITH_QT}
         -DWITH_TBB=${WITH_TBB}
         -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}
-        -DWITH_ZLIB=${WITH_ZLIB}
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
-        -DINSTALL_OTHER=OFF
+        ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
+        -DWITH_LAPACK=OFF
+        ###### BUILD_options (mainly modules which require additional libraries)
+        -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
+        -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
+        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
+        -DBUILD_opencv_world=${BUILD_opencv_world}
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
+vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/LICENSE ${CURRENT_PACKAGES_DIR}/share/opencv/copyright)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
-
-if(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-  set(OpenCV_RUNTIME vc15)
-else()
-  set(OpenCV_RUNTIME vc14)
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(OpenCV_ARCH x64)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  set(OpenCV_ARCH ARM)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OpenCV_ARCH ARM64)
-else()
-  set(OpenCV_ARCH x86)
-endif()
-
-file(GLOB BIN_AND_LIB ${CURRENT_PACKAGES_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/*)
-file(COPY ${BIN_AND_LIB} DESTINATION ${CURRENT_PACKAGES_DIR})
-file(GLOB DEBUG_BIN_AND_LIB ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH}/${OpenCV_RUNTIME}/*)
-file(COPY ${DEBUG_BIN_AND_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${OpenCV_ARCH})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH})
-
-file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/staticlib/*)
-if(STATICLIB)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
-  file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/staticlib)
-endif()
-file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/debug/staticlib/*)
-if(STATICLIB)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/staticlib)
-endif()
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake OPENCV_CONFIG)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/lib"
-               "PREFIX}/debug/lib" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/bin"
-               "PREFIX}/debug/bin" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake)
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
-string(REPLACE "${CURRENT_INSTALLED_DIR}"
-               "\${_VCPKG_INSTALLED_DIR}/\${VCPKG_TARGET_TRIPLET}" OPENCV_MODULES "${OPENCV_MODULES}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
-
+#OpenCV does not list TIFF as a dependency. We explicitly add it to the module file, in order to fix unresolved symbols linking problems for downstream projects using OpenCV as static library
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
                  find_package(TIFF REQUIRED)" OPENCV_MODULES "${OPENCV_MODULES}")
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/setup_vars_opencv4.cmd)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv4.cmd)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
-
-vcpkg_copy_pdbs()
-
-set(VCPKG_LIBRARY_LINKAGE "dynamic")
-
-set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv RENAME copyright)
