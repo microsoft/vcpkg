@@ -27,8 +27,6 @@ function(vcpkg_add_to_lib)
         set(_lib_var LD_LIBRARY_PATH)
     endif()
 
-    message(STATUS "Before: $ENV{${_lib_var}}")
-
     if("${ARGV0}" STREQUAL "PREPEND")
         if(NOT "${ARGC}" STREQUAL "2")
             message(FATAL_ERROR "Expected second argument.")
@@ -40,6 +38,4 @@ function(vcpkg_add_to_lib)
         endif()
         vcpkg_add_paths_to_var(ENV{${_lib_var}} ${ARGV0})
     endif()
-    
-    message(STATUS "After:$ENV{${_lib_var}}")
 endfunction()
