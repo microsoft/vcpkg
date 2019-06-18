@@ -76,6 +76,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 # Ignore the C# extension DLL in bin/
@@ -83,4 +84,3 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-##
