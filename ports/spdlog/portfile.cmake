@@ -9,7 +9,6 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES
         disable-master-project-check.patch
-        fix-pkgcfg-path.patch
         fix-feature-export.patch
 )
 
