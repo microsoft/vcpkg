@@ -15,7 +15,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DNLOPT_FORTRAN=OFF
-        -DBUILD_SHARED_LIBS=OFF
         -DNLOPT_PYTHON=OFF
         -DNLOPT_OCTAVE=OFF
         -DNLOPT_MATLAB=OFF
