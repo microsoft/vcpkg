@@ -1,6 +1,7 @@
 include(vcpkg_acquire_msys)
 include(vcpkg_add_to_lib)
 include(vcpkg_add_to_path)
+include(_vcpkg_load_environment_from_batch)
 include(vcpkg_auto_get_fortran_compiler)
 include(vcpkg_check_linkage)
 include(vcpkg_clean_msbuild)
