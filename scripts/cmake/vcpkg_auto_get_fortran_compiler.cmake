@@ -59,7 +59,8 @@ function(vcpkg_auto_get_fortran_compiler)
     endif()
 
     get_filename_component(_fort_comp_name ${CMAKE_Fortran_COMPILER} NAME)
-
+    get_filename_component(_fort_PATH "${CMAKE_Fortran_COMPILER}" DIRECTORY)
+    
     if(_fort_comp_name MATCHES "^pg")
         set(VCPKG_Fortran_IS_PGI 1 PARENT_SCOPE)
         if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") 
@@ -67,45 +68,25 @@ function(vcpkg_auto_get_fortran_compiler)
             # PGI 2017 is only available for 64-bit operating systems and does not include the ability to compile 32-bit applications
             message(FATAL_ERROR "PGI can only target x64.")
         endif()
+        # This does not work for PGI -> CMake is not able to compile a simple Fortran program. 
+        # Seems like it is overwriting the normal environment which cmakes requires?
+        #if(EXISTS ${_fort_PATH}/../pgi_env.bat)
+        #    vcpkg_load_environment_from_batch(
+        #        BATCH_FILE_PATH "${_fort_PATH}/../pgi_env.bat"
+        #    )
+        #endif()
     elseif(_fort_comp_name MATCHES "^ifort")
         set(VCPKG_Fortran_IS_INTEL 1 PARENT_SCOPE)
-        get_filename_component(_Fortran_PATH "${CMAKE_Fortran_COMPILER}" DIRECTORY)
         
-        if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-            set(HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
-        else()
-            set(HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
-        endif()
         
-        if("$ENV{HOST_ARCHITECTURE}-${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86-x86")
-            set(INTEL_ARCH "ia32")
-        elseif("${HOST_ARCHITECTURE}-${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86-x64")
-            set(INTEL_ARCH "ia32_intel64")
-        elseif("${HOST_ARCHITECTURE}-${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "AMD64-x64")
-            set(INTEL_ARCH "intel64")
-        else()
-            message(FATAL_ERROR "Combination of host and target architecture is not supported by Intel")
+        vcpkg_determine_intel_vs_and_arch(INTEL_VS INTEL_ARCH)
+        if(EXISTS ${_fort_PATH}/../ifortvars.bat)
+            set(_bat_path "${_fort_PATH}/../ifortvars.bat")
+        elseif(EXISTS ${_fort_PATH}/../compilervars.bat)
+            set(_bat_path "${_fort_PATH}/../compilervars.bat") #on windows there is a linux folder which only has compilervars.bat (crosscompiling?)
         endif()
-
-        if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140")
-            set(INTEL_VS "vs2015")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
-            set(INTEL_VS "vs2017")
-            # The Intel compilervars.bat expects the environment variable VS2017INSTALLDIR to be present so we set it
-            if(NOT "$ENV{VS2017INSTALLDIR}")
-                set(ENV{VS2017INSTALLDIR} "$ENV{VSINSTALLDIR}")
-            endif()
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
-            set(INTEL_VS "vs2019")
-            # The Intel compilervars.bat expects the environment variable VS2019INSTALLDIR to be present so we set it
-            if(NOT "$ENV{VS2019INSTALLDIR}")
-                set(ENV{VS2019INSTALLDIR} "$ENV{VSINSTALLDIR}")
-            endif()
-        else()
-            message(FATAL_ERROR "Visual Studio version is not supported by Intel")
-        endif()
-        _vcpkg_load_environment_from_batch(
-            BATCH_FILE_PATH "${_Fortran_PATH}/../ifortvars.bat"
+        vcpkg_load_environment_from_batch(
+            BATCH_FILE_PATH "${_bat_path}"
             ARGUMENTS
                 ${INTEL_ARCH}
                 ${INTEL_VS}
