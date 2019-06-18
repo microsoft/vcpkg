@@ -13,6 +13,13 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DNLOPT_FORTRAN=OFF
+        -DNLOPT_PYTHON=OFF
+        -DNLOPT_OCTAVE=OFF
+        -DNLOPT_MATLAB=OFF
+        -DNLOPT_GUILE=OFF
+        -DNLOPT_SWIG=OFF
 )
 
 vcpkg_install_cmake()
