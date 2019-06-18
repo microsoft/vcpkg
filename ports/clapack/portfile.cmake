@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  message(WARNING "You do not need this package on macOS, since you already have the Accelerate Framework")
+  return()
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE

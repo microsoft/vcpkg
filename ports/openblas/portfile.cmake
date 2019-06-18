@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  message(WARNING "You do not need this package on macOS, since you already have the Accelerate Framework")
+  return()
+endif()
+
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
