@@ -1,3 +1,4 @@
 Source: unicorn
 Version: 2019-04-19
+Homepage: https://github.com/unicorn-engine/unicorn
 Description: Unicorn is a lightweight multi-platform, multi-architecture CPU emulator framework

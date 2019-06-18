@@ -1,4 +1,5 @@
 Source: discord-rpc
 Version: 3.4.0
+Homepage: https://github.com/discordapp/discord-rpc
 Description: Rich Presence allows you to leverage the totally overhauled "Now Playing" section in a Discord user's profile to help people play your game together.
 Build-Depends: rapidjson

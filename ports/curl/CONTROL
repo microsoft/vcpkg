@@ -1,6 +1,7 @@
 Source: curl
 Version: 7.65.0-1
 Build-Depends: zlib
+Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs
 Default-Features: ssl
 

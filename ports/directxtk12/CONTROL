@@ -1,3 +1,4 @@
 Source: directxtk12
 Version: dec2016-1
+Homepage: https://github.com/Microsoft/DirectXTK12
 Description: A collection of helper classes for writing DirectX 12 code in C++.

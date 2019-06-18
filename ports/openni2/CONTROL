@@ -1,4 +1,5 @@
 Source: openni2
 Version: 2.2.0.33-8
 Build-Depends: kinectsdk1
+Homepage: https://github.com/OpenNI/OpenNI2
 Description: OpenNI is open source library for access to Natural Interaction (NI) devices such as RGB-D camera.

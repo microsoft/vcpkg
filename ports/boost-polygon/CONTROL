@@ -2,4 +2,5 @@
 Source: boost-polygon
 Version: 1.70.0
 Build-Depends: boost-config, boost-integer, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/polygon
 Description: Boost polygon module

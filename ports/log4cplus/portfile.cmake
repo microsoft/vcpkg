@@ -5,6 +5,7 @@ vcpkg_from_github(
     REF REL_2_0_4
     SHA512 194e37b8de7be377dabe911d1cec831de41f5ce14dd617b5333739a7ab8dbc3061aa24351abe811588db507aa1563a637023b26684fb21bbfc88d24b4e4ce062
     HEAD_REF master
+    PATCHES fix-usage-error.patch
 )
 
 set(THREADPOOL_REF cc0b6371d3963f7028c2da5fc007733f9f3bf205)

@@ -1,4 +1,5 @@
 Source: libfreenect2
 Version: 0.2.0-1
 Build-Depends: libusb, libjpeg-turbo
+Homepage: https://github.com/OpenKinect/libfreenect2
 Description: Open source drivers for the Kinect for Windows v2 device
