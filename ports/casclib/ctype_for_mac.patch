@@ -1,0 +1,12 @@
+diff --git a/src/CascPort.h b/src/CascPort.h
+index 87a2f2f..648911c 100644
+--- a/src/CascPort.h
++++ b/src/CascPort.h
+@@ -87,6 +87,7 @@
+   #include <stddef.h>
+   #include <string.h>
+   #include <cassert>
++  #include <ctype.h>
+ 
+   // Support for PowerPC on Max OS X
+   #if (__ppc__ == 1) || (__POWERPC__ == 1) || (_ARCH_PPC == 1)
