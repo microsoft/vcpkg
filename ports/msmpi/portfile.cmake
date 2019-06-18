@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
-
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Static library with dynamic CRT is not supported. Building static linkage to crt.")
+    set(VCPKG_CRT_LINKAGE static)
+endif()
+   
 set(MSMPI_VERSION "10.0.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
