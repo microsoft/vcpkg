@@ -1,12 +1,27 @@
 diff --git a/src/CascPort.h b/src/CascPort.h
-index 87a2f2f..648911c 100644
+index 87a2f2f..da74aef 100644
 --- a/src/CascPort.h
 +++ b/src/CascPort.h
-@@ -87,6 +87,7 @@
+@@ -79,14 +79,19 @@
+   #include <sys/types.h>
+   #include <sys/stat.h>
+   #include <sys/mman.h>
+-  #include <unistd.h>
+   #include <fcntl.h>
+-  #include <stdlib.h>
+   #include <dirent.h>
+-  #include <errno.h>
++  #include <unistd.h>
    #include <stddef.h>
++  #include <stdint.h>
++  #include <stdlib.h>
++  #include <stdio.h>
++  #include <stdarg.h>
    #include <string.h>
-   #include <cassert>
 +  #include <ctype.h>
++  #include <wchar.h>
+   #include <cassert>
++  #include <errno.h>
  
    // Support for PowerPC on Max OS X
    #if (__ppc__ == 1) || (__POWERPC__ == 1) || (_ARCH_PPC == 1)
