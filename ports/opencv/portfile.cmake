@@ -1,7 +1,6 @@
 include(vcpkg_common_functions)
 
 set(OPENCV_PORT_VERSION "3.4.3")
-set(OPENCV_VCSVERSION b38c50b3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -285,6 +284,7 @@ vcpkg_configure_cmake(
         -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
         -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
         # CMAKE
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         "-DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}"
         # ENABLE
@@ -295,7 +295,6 @@ vcpkg_configure_cmake(
         -DINSTALL_FORCE_UNIX_PATHS=ON
         -DINSTALL_LICENSE=OFF
         # OPENCV
-        -DOPENCV_VCSVERSION=vcpkg-${OPENCV_VCSVERSION}
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
