@@ -1,5 +1,6 @@
 Source: sqlite3
-Version: 3.27.2-1
+Version: 3.28.0
+Homepage: https://sqlite.org/
 Description: SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
 
 Feature: tool

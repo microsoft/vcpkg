@@ -1,4 +1,5 @@
 Source: libwebsockets
-Version: 3.1.0
+Version: 3.1.0-1
 Build-Depends: zlib, openssl
+Homepage: https://github.com/warmcat/libwebsockets
 Description: Libwebsockets is a lightweight pure C library built to use minimal CPU and memory resources, and provide fast throughput in both directions as client or server.

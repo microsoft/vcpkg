@@ -2,4 +2,5 @@
 Source: boost-winapi
 Version: 1.70.0
 Build-Depends: boost-config, boost-predef, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/winapi
 Description: Boost winapi module

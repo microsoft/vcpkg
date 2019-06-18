@@ -1,4 +1,5 @@
 Source: libxslt
 Version: 1.1.29
+Homepage: http://xmlsoft.org/XSLT/
 Description: Libxslt is a XSLT library implemented in C for XSLT 1.0 and most of EXSLT
 Build-Depends: libxml2

@@ -1,4 +1,5 @@
 Source: sfml
 Version: 2.5.1-1
+Homepage: https://github.com/sfml/sfml
 Description: Simple and fast multimedia library
 Build-Depends: freetype, libflac, libogg, libvorbis, openal-soft, stb

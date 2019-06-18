@@ -2,4 +2,5 @@
 Source: boost-exception
 Version: 1.70.0
 Build-Depends: boost-assert, boost-build, boost-config, boost-core, boost-modular-build-helper, boost-smart-ptr, boost-tuple, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/exception
 Description: Boost exception module

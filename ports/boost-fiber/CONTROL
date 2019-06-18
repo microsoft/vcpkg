@@ -2,4 +2,5 @@
 Source: boost-fiber
 Version: 1.70.0
 Build-Depends: boost-algorithm, boost-assert, boost-build, boost-config, boost-context (!uwp), boost-core, boost-detail, boost-filesystem (!uwp), boost-format, boost-intrusive, boost-modular-build-helper, boost-predef, boost-smart-ptr, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/fiber
 Description: Boost fiber module

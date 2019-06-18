@@ -2,4 +2,5 @@
 Source: boost-foreach
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-detail, boost-iterator, boost-mpl, boost-range, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/foreach
 Description: Boost foreach module
