@@ -265,6 +265,7 @@ namespace vcpkg::Export
         Optional<std::string> maybe_nuget_version;
 
         IFW::Options ifw_options;
+        Chocolatey::Options chocolatey_options;
         std::vector<PackageSpec> specs;
     };
 
@@ -283,6 +284,8 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
     static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
     static constexpr StringLiteral OPTION_CHOCOLATEY = "--chocolatey";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--maintainer";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--version-suffix";
 
     static constexpr std::array<CommandSwitch, 7> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
@@ -294,7 +297,7 @@ namespace vcpkg::Export
         {OPTION_CHOCOLATEY, "Export a Chocolatey package"},
     }};
 
-    static constexpr std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 10> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
         {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides --output)"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
@@ -303,6 +306,8 @@ namespace vcpkg::Export
         {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
         {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
         {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
+        {OPTION_CHOCOLATEY_MAINTAINER, "Specify the maintainer for the exported Chocolatey package"},
+        {OPTION_CHOCOLATEY_VERSION_SUFFIX, "Specify the version suffix to add for the exported Chocolatey package"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -380,6 +385,13 @@ namespace vcpkg::Export
                             {OPTION_IFW_REPOSITORY_DIR_PATH, ret.ifw_options.maybe_repository_dir_path},
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
+                        });
+
+        options_implies(OPTION_CHOCOLATEY,
+                        ret.chocolatey,
+                        {
+                            {OPTION_CHOCOLATEY_MAINTAINER, ret.chocolatey_options.maybe_maintainer},
+                            {OPTION_CHOCOLATEY_VERSION_SUFFIX, ret.chocolatey_options.maybe_version_suffix},
                         });
         return ret;
     }
@@ -551,7 +563,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         if (opts.chocolatey)
         {
-            Chocolatey::do_export(export_plan, paths);
+            Chocolatey::do_export(export_plan, paths, opts.chocolatey_options);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
