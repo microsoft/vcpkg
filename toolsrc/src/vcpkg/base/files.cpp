@@ -9,10 +9,10 @@
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <string.h>
 #endif
 #if defined(__linux__)
 #include <sys/sendfile.h>

@@ -40,8 +40,10 @@
 #include <memory>
 #include <random>
 
+#if defined(_WIN32)
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
+#endif
 
 using namespace vcpkg;
 
@@ -388,6 +390,6 @@ int main(const int argc, const char* const* const argv)
     }
     fflush(stdout);
 
-    //It is expected that one of the sub-commands will exit cleanly before we get here.
+    // It is expected that one of the sub-commands will exit cleanly before we get here.
     Checks::exit_fail(VCPKG_LINE_INFO);
 }

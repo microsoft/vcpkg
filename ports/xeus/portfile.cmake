@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xeus
-    REF 0.19.1
-    SHA512 1f42cf3b5007fef957c259eee58bdc5d6b812dd32ca316823e33837d3802df0675f778a9c8f2fb97e9ff982c584229d3733e5894684e75498cc244e9c29df209
+    REF 4bc3d2017fcf35ee6e69babf9be1e463483cd11c
+    SHA512 6f68f564a3dfaab5fdfbf9778602c75c883d761e8dd00a4b19f3f57c16e87b8252d40479abdd8eedb350799479e3213f16010176da286e5c3e6c9b9e76e6793d
     HEAD_REF master
 )
 

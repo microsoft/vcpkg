@@ -12,14 +12,17 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DREPROC_BUILD_CXX_WRAPPER=ON
+        -DREPROC++=ON
+        -DREPROC++_INSTALL=ON
         -DREPROC_INSTALL=ON
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/reproc)
+file(GLOB REPROC_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/lib/cmake/reproc++/*)
+file(COPY ${REPROC_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/reproc)
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/reproc)
 
 # Debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

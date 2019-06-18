@@ -1,5 +1,5 @@
---- a/ffmpeg.c	2017-07-29 19:49:29.000000000 +0200
-+++ b/ffmpeg.c	2018-09-02 20:32:27.666725200 +0200
+--- a/fftools/ffmpeg.c	2017-07-29 19:49:29.000000000 +0200
++++ b/fftools/ffmpeg.c	2018-09-02 20:32:27.666725200 +0200
 @@ -23,6 +23,11 @@
   * multimedia converter based on the FFmpeg libraries
   */

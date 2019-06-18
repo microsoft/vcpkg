@@ -2,4 +2,5 @@
 Source: boost-functional
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-iterator, boost-mpl, boost-preprocessor, boost-typeof, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/functional
 Description: Boost functional module

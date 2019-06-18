@@ -8,11 +8,8 @@ vcpkg_from_github(
     REF shogun_6.1.3
     SHA512 11aeed456b13720099ca820ab9742c90ce4af2dc049602a425f8c44d2fa155327c7f1d3af2ec840666f600a91e75902d914ffe784d76ed35810da4f3a5815673
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+    PATCHES
+        cmake.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
@@ -27,7 +24,7 @@ endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path(${PYTHON3_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -38,6 +35,7 @@ vcpkg_configure_cmake(
         -DUSE_SVMLIGHT=OFF
         -DENABLE_TESTING=OFF
         -DLICENSE_GPL_SHOGUN=OFF
+        -DLIBSHOGUN_BUILD_STATIC=ON
         # Conflicting definitions in OpenBLAS and Eigen
         -DENABLE_EIGEN_LAPACK=OFF
 
@@ -53,6 +51,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_ARPREC=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_Ctags=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CCache=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_LAPACK=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
 

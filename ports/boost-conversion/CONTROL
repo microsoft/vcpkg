@@ -2,4 +2,5 @@
 Source: boost-conversion
 Version: 1.70.0
 Build-Depends: boost-assert, boost-config, boost-throw-exception, boost-typeof, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/conversion
 Description: Boost conversion module

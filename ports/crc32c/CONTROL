@@ -1,3 +1,4 @@
 Source: crc32c
 Version: 1.0.7
+Homepage: https://github.com/google/crc32c
 Description: CRC32C implementation with support for CPU-specific acceleration instructions.

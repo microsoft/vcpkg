@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5c31a3c..c3c060a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,6 +63,7 @@ set(USIZE16 uint16_t)
+ set(SIZE32 int32_t)
+ set(USIZE32 uint32_t)
+ set(SIZE64 int64_t)
++set(USIZE64 uint64_t)
+ 
+ configure_file(include/ogg/config_types.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ogg/config_types.h @ONLY)
+ 
