@@ -1,5 +1,6 @@
 #header-only library
 include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
@@ -8,18 +9,27 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES
         disable-master-project-check.patch
+        fix-feature-export.patch
 )
+
+set(SPDLOG_USE_BENCHMARK OFF)
+if("benchmark" IN_LIST FEATURES)
+    set(SPDLOG_USE_BENCHMARK ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSPDLOG_FMT_EXTERNAL=ON
+        -DSPDLOG_BUILD_BENCH=${SPDLOG_USE_BENCHMARK}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/spdlog)
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
