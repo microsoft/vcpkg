@@ -202,17 +202,17 @@ if (Test-Path $installedDir)
             const std::string nuspec_file_content =
                 create_nuspec_file_contents(per_package_dir_path.string(), binary_paragraph, packages_version, chocolatey_options);
             const fs::path nuspec_file_path = per_package_dir_path / Strings::concat(binary_paragraph.spec.name(), ".nuspec");
-            fs.write_contents(nuspec_file_path, nuspec_file_content);
+            fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
             fs.create_directory(per_package_dir_path / "tools", ec);
 
             const std::string chocolatey_install_content = create_chocolatey_install_contents();
             const fs::path chocolatey_install_file_path = per_package_dir_path / "tools" / "chocolateyInstall.ps1";
-            fs.write_contents(chocolatey_install_file_path, chocolatey_install_content);
+            fs.write_contents(chocolatey_install_file_path, chocolatey_install_content, VCPKG_LINE_INFO);
 
             const std::string chocolatey_uninstall_content = create_chocolatey_uninstall_contents(binary_paragraph);
             const fs::path chocolatey_uninstall_file_path = per_package_dir_path / "tools" / "chocolateyUninstall.ps1";
-            fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content);
+            fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
             const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
                                               nuget_exe.u8string(),
