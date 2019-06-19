@@ -40,8 +40,6 @@ find_dependency(Threads)
 if(UNIX)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread)
 endif()
-find_dependency(ZLIB)
-list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${ZLIB_LIBRARIES})
 
 #  Platform dependent libraries required by FFMPEG
 if(WIN32)
@@ -52,24 +50,14 @@ else()
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS m)
 endif()
 
-# If the user has provided ``FFMPEG_ROOT``, use it!  Choose items found
-# at this location over system locations.
-if( EXISTS "$ENV{FFMPEG_ROOT}" )
-  file( TO_CMAKE_PATH "$ENV{FFMPEG_ROOT}" FFMPEG_ROOT )
-  set( FFMPEG_ROOT "${FFMPEG_ROOT}" CACHE PATH "Prefix for FFMPEG installation." )
-elseif(EXISTS "$ENV{FFMPEG_DIR}" )
-  file( TO_CMAKE_PATH "$ENV{FFMPEG_DIR}" FFMPEG_ROOT )
-  set( FFMPEG_ROOT "${FFMPEG_ROOT}" CACHE PATH "Prefix for FFMPEG installation." )
-endif()
-
 macro(FFMPEG_FIND varname shortname headername)
   if(NOT FFMPEG_${varname}_INCLUDE_DIRS)
-    find_path(FFMPEG_${varname}_INCLUDE_DIRS NAMES lib${shortname}/${headername} PATHS ${FFMPEG_ROOT}/include ${FFMPEG_INCLUDE_DIRS} PATH_SUFFIXES ffmpeg Release Debug)
+    find_path(FFMPEG_${varname}_INCLUDE_DIRS NAMES lib${shortname}/${headername} ${headername} PATH_SUFFIXES ffmpeg)
   endif()
   if(NOT FFMPEG_${varname}_LIBRARY)
-    find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATHS ${FFMPEG_ROOT} PATH_SUFFIXES lib ffmpeg ffmpeg/lib)
+    find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATH_SUFFIXES ffmpeg ffmpeg/lib)
     get_filename_component(FFMPEG_${varname}_LIBRARY_RELEASE_DIR ${FFMPEG_${varname}_LIBRARY_RELEASE} DIRECTORY)
-    find_library(FFMPEG_${varname}_LIBRARY_DEBUG NAMES ${shortname}d ${shortname} PATHS debug ${FFMPEG_ROOT}/debug PATH_SUFFIXES debug/lib lib ffmpeg ffmpeg/lib ffmpeg/debug/lib debug/ffmpeg/lib)
+    find_library(FFMPEG_${varname}_LIBRARY_DEBUG NAMES ${shortname}d ${shortname} PATHS debug PATH_SUFFIXES ffmpeg ffmpeg/lib ffmpeg/debug/lib debug/ffmpeg/lib)
     get_filename_component(FFMPEG_${varname}_LIBRARY_DEBUG_DIR ${FFMPEG_${varname}_LIBRARY_DEBUG} DIRECTORY)
     select_library_configurations(FFMPEG_${varname})
   endif()
@@ -81,7 +69,7 @@ endmacro(FFMPEG_FIND)
 
 if(WIN32)
   if(NOT FFMPEG_${varname}_INCLUDE_DIRS)
-    find_path(FFMPEG_stdint_INCLUDE_DIRS NAMES stdint.h PATHS ${FFMPEG_ROOT}/include ${FFMPEG_INCLUDE_DIRS} PATH_SUFFIXES ffmpeg Release Debug)
+    find_path(FFMPEG_stdint_INCLUDE_DIRS NAMES stdint.h PATH_SUFFIXES ffmpeg)
   endif()
   if (FFMPEG_stdint_INCLUDE_DIRS)
     set(STDINT_OK TRUE)
@@ -97,8 +85,9 @@ FFMPEG_FIND(libavformat   avformat   avformat.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
 FFMPEG_FIND(libswresample swresample swresample.h)
 FFMPEG_FIND(libswscale    swscale    swscale.h)
+FFMPEG_FIND(libzlib       zlib       zlib.h)
 
-if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_FOUND AND FFMPEG_libavformat_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswresample_FOUND AND FFMPEG_libswscale_FOUND AND STDINT_OK)
+if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_FOUND AND FFMPEG_libavformat_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswresample_FOUND AND FFMPEG_libswscale_FOUND AND FFMPEG_libzlib_FOUND AND STDINT_OK)
   list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS} ${FFMPEG_libavdevice_INCLUDE_DIRS} ${FFMPEG_libavcodec_INCLUDE_DIRS} ${FFMPEG_libavutil_INCLUDE_DIRS} ${FFMPEG_libswscale_INCLUDE_DIRS} ${FFMPEG_stdint_INCLUDE_DIRS})
   list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
   list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
@@ -111,6 +100,7 @@ if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_
     ${FFMPEG_libswscale_LIBRARY}
     ${FFMPEG_libavfilter_LIBRARY}
     ${FFMPEG_libswresample_LIBRARY}
+    ${FFMPEG_libzlib_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
   )
   set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
