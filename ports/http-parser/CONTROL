@@ -1,3 +1,4 @@
 Source: http-parser
 Version: 2.9.2
+Homepage: https://github.com/nodejs/http-parser
 Description: HTTP Parser.

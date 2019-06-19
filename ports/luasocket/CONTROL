@@ -1,4 +1,5 @@
 Source: luasocket
 Version: 2019-05-07
+Homepage: https://github.com/diegonehab/luasocket
 Description: LuaSocket is a Lua extension library that is composed by two parts: a C core that provides support for the TCP and UDP transport layers, and a set of Lua modules that add support for functionality commonly needed by applications that deal with the Internet.
 Build-Depends: lua

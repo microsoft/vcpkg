@@ -1,3 +1,4 @@
 Source: libogg
-Version: 1.3.3-2
+Version: 1.3.3-3
 Description: Ogg is a multimedia container format, and the native file and stream format for the Xiph.org multimedia codecs.
+Homepage: https://github.com/xiph/ogg

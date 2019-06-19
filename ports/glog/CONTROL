@@ -1,4 +1,5 @@
 Source: glog
 Version: 0.4.0
+Homepage: https://github.com/google/glog
 Description: C++ implementation of the Google logging module
 Build-Depends: gflags

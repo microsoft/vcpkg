@@ -1,3 +1,4 @@
 Source: liblzma
 Version: 5.2.4-2
+Homepage: https://github.com/xz-mirror/xz
 Description: Compression library with an API similar to that of zlib.

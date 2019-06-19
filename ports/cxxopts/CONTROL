@@ -1,3 +1,4 @@
 Source: cxxopts
 Version: 2.1.2
+Homepage: https://github.com/jarro2783/cxxopts
 Description: This is a lightweight C++ option parser library, supporting the standard GNU style syntax for options

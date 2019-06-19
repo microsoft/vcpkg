@@ -49,9 +49,11 @@ endif()
 # Opus support
 if(SDL_MIXER_ENABLE_OPUS)
     find_path(OPUS_INCLUDE_DIR opus/opusfile.h)
+    find_package(ogg CONFIG REQUIRED)
+    find_package(Opus CONFIG REQUIRED)
     find_library(OPUSFILE_LIBRARY opusfile)
     list(APPEND SDL_MIXER_INCLUDES ${OPUS_INCLUDE_DIR})
-    list(APPEND SDL_MIXER_LIBRARIES ${OPUSFILE_LIBRARY})
+    list(APPEND SDL_MIXER_LIBRARIES ${OPUSFILE_LIBRARY} Ogg::ogg Opus::opus)
     list(APPEND SDL_MIXER_DEFINES MUSIC_OPUS)
 endif()
 

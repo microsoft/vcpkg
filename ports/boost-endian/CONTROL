@@ -2,4 +2,5 @@
 Source: boost-endian
 Version: 1.70.0
 Build-Depends: boost-assert, boost-config, boost-core, boost-integer, boost-predef, boost-static-assert, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/endian
 Description: Boost endian module
