@@ -163,7 +163,7 @@ namespace vcpkg::Strings
 
     std::vector<std::string> split(const std::string& s, const std::string& delimiter);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter, int max_count);
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter, size_t max_count);
 
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
 

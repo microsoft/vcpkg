@@ -137,7 +137,7 @@ namespace vcpkg::Help
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         if (args.command_arguments.empty())
         {

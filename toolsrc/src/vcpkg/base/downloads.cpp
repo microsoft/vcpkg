@@ -105,7 +105,7 @@ namespace vcpkg::Downloads
             bResults = WinHttpQueryDataAvailable(hRequest, &dwSize);
             Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpQueryDataAvailable() failed: %d", GetLastError());
 
-            if (buf.size() < dwSize) buf.resize(dwSize * 2);
+            if (buf.size() < dwSize) buf.resize(static_cast<size_t>(dwSize) * 2);
 
             bResults = WinHttpReadData(hRequest, (LPVOID)buf.data(), dwSize, &downloaded_size);
             Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpReadData() failed: %d", GetLastError());

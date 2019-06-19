@@ -203,11 +203,6 @@ namespace vcpkg::Files
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
             fs::stdfs::rename(oldpath, newpath, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "rename(%s, %s) failed: %s", oldpath.u8string(), newpath.u8string(), ec.message());
-            }
         }
         virtual void rename_or_copy(const fs::path& oldpath,
                                     const fs::path& newpath,
