@@ -370,7 +370,23 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
-                 find_package(TIFF REQUIRED)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_package(TIFF REQUIRED)
+find_package(Protobuf REQUIRED)
+if(Protobuf_FOUND)
+  if(TARGET protobuf::libprotobuf)
+    add_library(libprotobuf INTERFACE IMPORTED)
+    set_target_properties(libprotobuf PROPERTIES
+      INTERFACE_LINK_LIBRARIES protobuf::libprotobuf
+    )
+  else()
+    add_library(libprotobuf UNKNOWN IMPORTED)
+    set_target_properties(libprotobuf PROPERTIES
+      IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"
+      INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
+      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
+    )
+  endif()
+endif()" OPENCV_MODULES "${OPENCV_MODULES}")
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
