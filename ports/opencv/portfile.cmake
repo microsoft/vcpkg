@@ -16,7 +16,6 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0004-use-constexpr.patch
       0005-uniform-config-install-path.patch
       0006-fix-missing-openjp2.patch
       0007-use-external-ffmpeg.patch

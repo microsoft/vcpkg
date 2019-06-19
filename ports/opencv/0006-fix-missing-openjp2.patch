@@ -1,5 +1,5 @@
 diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
-index 434278c..0d8f4d8 100644
+index c7ff7e7..3d89b81 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
 @@ -36,6 +36,11 @@ if(HAVE_PNG)

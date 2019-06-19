@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 339fa56..10f2493 100644
+index f376987..7e09803 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1385,13 +1385,7 @@ if(WITH_1394 OR HAVE_DC1394_2)
+@@ -1388,13 +1388,7 @@ if(WITH_1394 OR HAVE_DC1394_2)
  endif()
  
  if(WITH_FFMPEG OR HAVE_FFMPEG)
@@ -14,57 +14,98 @@ index 339fa56..10f2493 100644
 -    status("    FFMPEG:"       HAVE_FFMPEG         THEN YES ELSE NO)
 -  endif()
 +  status("    FFMPEG:"       HAVE_FFMPEG         THEN YES ELSE NO)
-   status("      avcodec:"      FFMPEG_libavcodec_FOUND    THEN "YES (ver ${FFMPEG_libavcodec_VERSION})"    ELSE NO)
-   status("      avformat:"     FFMPEG_libavformat_FOUND   THEN "YES (ver ${FFMPEG_libavformat_VERSION})"   ELSE NO)
-   status("      avutil:"       FFMPEG_libavutil_FOUND     THEN "YES (ver ${FFMPEG_libavutil_VERSION})"     ELSE NO)
-diff --git a/cmake/OpenCVFindLibsVideo.cmake b/cmake/OpenCVFindLibsVideo.cmake
-index 35dda44..7176434 100644
---- a/cmake/OpenCVFindLibsVideo.cmake
-+++ b/cmake/OpenCVFindLibsVideo.cmake
-@@ -184,34 +184,9 @@ endif(WITH_XIMEA)
+   status("      avcodec:"      FFMPEG_libavcodec_VERSION    THEN "YES (${FFMPEG_libavcodec_VERSION})"    ELSE NO)
+   status("      avformat:"     FFMPEG_libavformat_VERSION   THEN "YES (${FFMPEG_libavformat_VERSION})"   ELSE NO)
+   status("      avutil:"       FFMPEG_libavutil_VERSION     THEN "YES (${FFMPEG_libavutil_VERSION})"     ELSE NO)
+diff --git a/modules/videoio/CMakeLists.txt b/modules/videoio/CMakeLists.txt
+index 38d59c2..dbcf885 100644
+--- a/modules/videoio/CMakeLists.txt
++++ b/modules/videoio/CMakeLists.txt
+@@ -194,28 +194,3 @@ if(VIDEOIO_ENABLE_STRICT_PLUGIN_CHECK)
+ endif()
  
- # --- FFMPEG ---
- ocv_clear_vars(HAVE_FFMPEG)
--if(WITH_FFMPEG)  # try FFmpeg autodetection
--  if(OPENCV_FFMPEG_USE_FIND_PACKAGE)
--    if(OPENCV_FFMPEG_USE_FIND_PACKAGE STREQUAL "1" OR OPENCV_FFMPEG_USE_FIND_PACKAGE STREQUAL "ON")
--      set(OPENCV_FFMPEG_USE_FIND_PACKAGE "FFMPEG")
--    endif()
--    find_package(${OPENCV_FFMPEG_USE_FIND_PACKAGE}) # Required components: AVCODEC AVFORMAT AVUTIL SWSCALE
--    if(FFMPEG_FOUND OR FFmpeg_FOUND)
--      set(HAVE_FFMPEG TRUE)
--    else()
--      message(STATUS "Can't find FFmpeg via find_package(${OPENCV_FFMPEG_USE_FIND_PACKAGE})")
--    endif()
--  elseif(WIN32 AND NOT ARM AND NOT OPENCV_FFMPEG_SKIP_DOWNLOAD)
--    include("${OpenCV_SOURCE_DIR}/3rdparty/ffmpeg/ffmpeg.cmake")
--    download_win_ffmpeg(FFMPEG_CMAKE_SCRIPT)
--    if(FFMPEG_CMAKE_SCRIPT)
--      set(HAVE_FFMPEG TRUE)
--      set(HAVE_FFMPEG_WRAPPER 1)
--      include("${FFMPEG_CMAKE_SCRIPT}")
--    endif()
--  elseif(PKG_CONFIG_FOUND)
--    ocv_check_modules(FFMPEG libavcodec libavformat libavutil libswscale)
--    ocv_check_modules(FFMPEG_libavresample libavresample)
--    if(FFMPEG_libavresample_FOUND)
--      ocv_append_build_options(FFMPEG FFMPEG_libavresample)
--    endif()
--  else()
--    message(STATUS "Can't find ffmpeg - 'pkg-config' utility is missing")
+ ocv_target_link_libraries(${the_module} LINK_PRIVATE ${tgts})
+-
+-# copy FFmpeg dll to the output folder
+-if(WIN32 AND HAVE_FFMPEG_WRAPPER)
+-  if(MSVC64 OR MINGW64)
+-    set(FFMPEG_SUFFIX _64)
 -  endif()
-+if(WITH_FFMPEG)
+-  set(ffmpeg_dir "${OpenCV_BINARY_DIR}/3rdparty/ffmpeg")
+-  set(ffmpeg_bare_name "opencv_ffmpeg${FFMPEG_SUFFIX}.dll")
+-  set(ffmpeg_bare_name_ver "opencv_ffmpeg${OPENCV_DLLVERSION}${FFMPEG_SUFFIX}.dll")
+-  set(ffmpeg_path "${ffmpeg_dir}/${ffmpeg_bare_name}")
+-  if(MSVC_IDE)
+-    execute_process(
+-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ffmpeg_path}" "${EXECUTABLE_OUTPUT_PATH}/Release/${ffmpeg_bare_name_ver}"
+-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ffmpeg_path}" "${EXECUTABLE_OUTPUT_PATH}/Debug/${ffmpeg_bare_name_ver}")
+-  elseif(MSVC AND (CMAKE_GENERATOR MATCHES "Visual"))
+-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ffmpeg_path}" "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_BUILD_TYPE}/${ffmpeg_bare_name_ver}")
+-  else()
+-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ffmpeg_path}" "${EXECUTABLE_OUTPUT_PATH}/${ffmpeg_bare_name_ver}")
+-  endif()
+-  install(FILES "${ffmpeg_path}" DESTINATION ${OPENCV_BIN_INSTALL_PATH} COMPONENT libs RENAME "${ffmpeg_bare_name_ver}")
+-  if(INSTALL_CREATE_DISTRIB)
+-    install(FILES "${ffmpeg_dir}/opencv_ffmpeg.dll" DESTINATION "bin/" COMPONENT libs RENAME "opencv_ffmpeg${OPENCV_DLLVERSION}.dll")
+-    install(FILES "${ffmpeg_dir}/opencv_ffmpeg_64.dll" DESTINATION "bin/" COMPONENT libs RENAME "opencv_ffmpeg${OPENCV_DLLVERSION}_64.dll")
+-  endif()
+-endif()
+diff --git a/modules/videoio/cmake/detect_ffmpeg.cmake b/modules/videoio/cmake/detect_ffmpeg.cmake
+index ea1295d..7e179fd 100644
+--- a/modules/videoio/cmake/detect_ffmpeg.cmake
++++ b/modules/videoio/cmake/detect_ffmpeg.cmake
+@@ -1,51 +1,8 @@
+ # --- FFMPEG ---
+-if(NOT HAVE_FFMPEG AND OPENCV_FFMPEG_USE_FIND_PACKAGE)
+-  if(OPENCV_FFMPEG_USE_FIND_PACKAGE STREQUAL "1" OR OPENCV_FFMPEG_USE_FIND_PACKAGE STREQUAL "ON")
+-    set(OPENCV_FFMPEG_USE_FIND_PACKAGE "FFMPEG")
+-  endif()
+-  find_package(${OPENCV_FFMPEG_USE_FIND_PACKAGE}) # Required components: AVCODEC AVFORMAT AVUTIL SWSCALE
+-  if(FFMPEG_FOUND OR FFmpeg_FOUND)
+-    set(HAVE_FFMPEG TRUE)
+-  endif()
+-endif()
+-
+-if(NOT HAVE_FFMPEG AND WIN32 AND NOT ARM AND NOT OPENCV_FFMPEG_SKIP_DOWNLOAD)
+-  include("${OpenCV_SOURCE_DIR}/3rdparty/ffmpeg/ffmpeg.cmake")
+-  download_win_ffmpeg(FFMPEG_CMAKE_SCRIPT)
+-  if(FFMPEG_CMAKE_SCRIPT)
+-    include("${FFMPEG_CMAKE_SCRIPT}")
+-    set(FFMPEG_libavcodec_VERSION ${FFMPEG_libavcodec_VERSION} PARENT_SCOPE) # info
+-    set(FFMPEG_libavformat_VERSION ${FFMPEG_libavformat_VERSION} PARENT_SCOPE) # info
+-    set(FFMPEG_libavutil_VERSION ${FFMPEG_libavutil_VERSION} PARENT_SCOPE) # info
+-    set(FFMPEG_libswscale_VERSION ${FFMPEG_libswscale_VERSION} PARENT_SCOPE) # info
+-    set(FFMPEG_libavresample_VERSION ${FFMPEG_libavresample_VERSION} PARENT_SCOPE) # info
+-    set(HAVE_FFMPEG TRUE)
+-    set(HAVE_FFMPEG_WRAPPER TRUE)
+-  endif()
++if(NOT HAVE_FFMPEG)
 +  find_package(FFMPEG REQUIRED)
 +  set(HAVE_FFMPEG TRUE)
  endif()
- if(HAVE_FFMPEG
-     AND NOT HAVE_FFMPEG_WRAPPER
-@@ -204,6 +204,8 @@ if(HAVE_FFMPEG
-     message(STATUS "WARNING: Can't build ffmpeg test code")
-     set(HAVE_FFMPEG FALSE)
-   else()
-+    ocv_include_directories(${FFMPEG_INCLUDE_DIRS})
-+    ocv_append_build_options(FFMPEG FFMPEG_libavresample)
-     ocv_append_build_options(VIDEOIO FFMPEG)
-   endif()
- endif()
+-
+-if(NOT HAVE_FFMPEG AND PKG_CONFIG_FOUND)
+-  pkg_check_modules(FFMPEG libavcodec libavformat libavutil libswscale QUIET)
+-  pkg_check_modules(FFMPEG_libavresample libavresample QUIET) # optional
+-  if(FFMPEG_FOUND)
+-    if(FFMPEG_libavresample_FOUND)
+-      list(APPEND FFMPEG_LIBRARIES ${FFMPEG_libavresample_LIBRARIES})
+-    endif()
+-    # rewrite libraries to absolute paths
+-    foreach(lib ${FFMPEG_LIBRARIES})
+-      find_library(FFMPEG_ABSOLUTE_${lib} "${lib}" PATHS "${FFMPEG_lib${lib}_LIBDIR}" "${FFMPEG_LIBRARY_DIRS}" NO_DEFAULT_PATH)
+-      if(FFMPEG_ABSOLUTE_${lib})
+-        list(APPEND ffmpeg_abs_libs "${FFMPEG_ABSOLUTE_${lib}}")
+-      else()
+-        list(APPEND ffmpeg_abs_libs "${lib}")
+-      endif()
+-    endforeach()
+-    set(FFMPEG_LIBRARIES "${ffmpeg_abs_libs}" CACHE INTERNAL "" FORCE)
+-
+-    set(HAVE_FFMPEG TRUE)
+-  endif()
+-endif()
+-
+ #==================================
+ 
+ if(HAVE_FFMPEG AND NOT HAVE_FFMPEG_WRAPPER AND NOT OPENCV_FFMPEG_SKIP_BUILD_CHECK)
