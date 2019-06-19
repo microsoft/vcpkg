@@ -283,9 +283,9 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
     static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
     static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
-    static constexpr StringLiteral OPTION_CHOCOLATEY = "--chocolatey";
-    static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--maintainer";
-    static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--version-suffix";
+    static constexpr StringLiteral OPTION_CHOCOLATEY = "--x-chocolatey";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
 
     static constexpr std::array<CommandSwitch, 7> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
@@ -294,7 +294,7 @@ namespace vcpkg::Export
         {OPTION_IFW, "Export to an IFW-based installer"},
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
-        {OPTION_CHOCOLATEY, "Export a Chocolatey package"},
+        {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
     }};
 
     static constexpr std::array<CommandSetting, 10> EXPORT_SETTINGS = {{
@@ -306,8 +306,8 @@ namespace vcpkg::Export
         {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
         {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
         {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
-        {OPTION_CHOCOLATEY_MAINTAINER, "Specify the maintainer for the exported Chocolatey package"},
-        {OPTION_CHOCOLATEY_VERSION_SUFFIX, "Specify the version suffix to add for the exported Chocolatey package"},
+        {OPTION_CHOCOLATEY_MAINTAINER, "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
+        {OPTION_CHOCOLATEY_VERSION_SUFFIX, "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {

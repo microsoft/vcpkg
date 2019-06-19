@@ -150,6 +150,8 @@ if (Test-Path $installedDir)
                    const VcpkgPaths& paths,
                    const Options& chocolatey_options)
     {
+        Checks::check_exit(VCPKG_LINE_INFO, chocolatey_options.maybe_maintainer.has_value(), "--x-maintainer option is required.");
+
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path vcpkg_root_path = paths.root;
         const fs::path raw_exported_dir_path = vcpkg_root_path / "chocolatey";
