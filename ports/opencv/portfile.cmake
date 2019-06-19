@@ -18,6 +18,7 @@ vcpkg_from_github(
       0003-force-package-requirements.patch
       0004-use-constexpr.patch
       0005-uniform-config-install-path.patch
+      0006-fix-missing-openjp2.patch
       0007-use-external-ffmpeg.patch
       0008-fix-error-c4576.patch
 )
@@ -313,6 +314,7 @@ vcpkg_configure_cmake(
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_JAVA=OFF
+        -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
         ###### PYLINT/FLAKE8
@@ -323,6 +325,7 @@ vcpkg_configure_cmake(
         -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         # ENABLE
         -DENABLE_CXX11=ON
         ###### OPENCV vars
