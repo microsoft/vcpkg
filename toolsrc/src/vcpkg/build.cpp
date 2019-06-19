@@ -280,7 +280,7 @@ namespace vcpkg::Build
             start += "\n" + Strings::serialize(feature);
         }
         const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / "CONTROL";
-        paths.get_filesystem().write_contents(binary_control_file, start);
+        paths.get_filesystem().write_contents(binary_control_file, start, VCPKG_LINE_INFO);
     }
 
     static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
@@ -336,16 +336,16 @@ namespace vcpkg::Build
 
     static int get_concurrency()
     {
-        static int concurrency = []{
-        auto user_defined_concurrency = System::get_environment_variable("VCPKG_MAX_CONCURRENCY");
-        if (user_defined_concurrency)
-        {
-            return std::stoi(user_defined_concurrency.value_or_exit(VCPKG_LINE_INFO));
-        }
-        else
-        {
-            return System::get_num_logical_cores() + 1;
-        }
+        static int concurrency = [] {
+            auto user_defined_concurrency = System::get_environment_variable("VCPKG_MAX_CONCURRENCY");
+            if (user_defined_concurrency)
+            {
+                return std::stoi(user_defined_concurrency.value_or_exit(VCPKG_LINE_INFO));
+            }
+            else
+            {
+                return System::get_num_logical_cores() + 1;
+            }
         }();
 
         return concurrency;
@@ -565,7 +565,7 @@ namespace vcpkg::Build
             std::error_code ec;
             fs.create_directories(paths.buildtrees / name, ec);
             const auto abi_file_path = paths.buildtrees / name / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
-            fs.write_contents(abi_file_path, full_abi_info);
+            fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
             return AbiTagAndFile{Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
         }

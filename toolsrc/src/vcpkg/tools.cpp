@@ -131,7 +131,10 @@ namespace vcpkg
         virtual const std::string& exe_stem() const = 0;
         virtual std::array<int, 3> default_min_version() const = 0;
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const {}
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        {
+            Util::unused(out_candidate_paths);
+        }
         virtual Optional<std::string> get_version(const fs::path& path_to_exe) const = 0;
     };
 
@@ -406,6 +409,7 @@ git version 2.17.1.windows.2
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
+            Util::unused(out_candidate_paths);
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
             // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());

@@ -138,7 +138,7 @@ namespace vcpkg::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(listfile, output);
+        fs.write_lines(listfile, output, VCPKG_LINE_INFO);
     }
 
     static std::vector<file_pack> extract_files_in_triplet(
@@ -364,7 +364,12 @@ namespace vcpkg::Install
                 const fs::path download_dir = paths.downloads;
                 std::error_code ec;
                 for (auto& p : fs.get_files_non_recursive(download_dir))
-                    if (!fs.is_directory(p)) fs.remove(p);
+                {
+                    if (!fs.is_directory(p))
+                    {
+                        fs.remove(p, VCPKG_LINE_INFO);
+                    }
+                }
             }
 
             return {code, std::move(bcf)};
@@ -628,6 +633,8 @@ namespace vcpkg::Install
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
+        auto& fs = paths.get_filesystem();
+
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -645,7 +652,7 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto all_ports = Paragraphs::load_all_ports(fs, paths.ports);
         std::unordered_map<std::string, SourceControlFile> scf_map;
         for (auto&& port : all_ports)
             scf_map[port->core_paragraph->name] = std::move(*port);
@@ -703,7 +710,7 @@ namespace vcpkg::Install
             xunit_doc += summary.xunit_results();
 
             xunit_doc += "</collection></assembly></assemblies>\n";
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
+            fs.write_contents(fs::u8path(it_xunit->second), xunit_doc, VCPKG_LINE_INFO);
         }
 
         for (auto&& result : summary.results)

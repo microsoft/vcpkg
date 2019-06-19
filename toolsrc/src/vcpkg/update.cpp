@@ -52,7 +52,7 @@ namespace vcpkg::Update
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
         System::print2("Using local portfile versions. To update the local portfiles, use `git pull`.\n");
 
         const StatusParagraphs status_db = database_load_check(paths);
