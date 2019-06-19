@@ -878,10 +878,10 @@ namespace vcpkg::Dependencies
         }
     }
 
-    std::string Dependencies::compute_abi_tag(const VcpkgPaths& paths,
-                                              vcpkg::Cache<Triplet, Build::PreBuildInfo>& pre_build_info_cache,
-                                              const std::map<PackageSpec, std::string>& abi_tag_map,
-                                              const InstallPlanAction& p)
+    std::string compute_abi_tag(const VcpkgPaths& paths,
+                                vcpkg::Cache<Triplet, Build::PreBuildInfo>& pre_build_info_cache,
+                                const std::map<PackageSpec, std::string>& abi_tag_map,
+                                const InstallPlanAction& p)
     {
         // The only field used during tag computation is checking for BinaryCaching::YES and UseHeadVersion::NO
         static constexpr Build::BuildPackageOptions s_build_options = {
