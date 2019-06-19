@@ -1,0 +1,4 @@
+Source: restclient-cpp
+Version: 0.5.1
+Build-Depends: curl
+Description: Binn is a binary data serialization format designed to be compact, fast and easy to use.

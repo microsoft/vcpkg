@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.patch
-        use_proper_cmake_symbol.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
@@ -23,17 +22,9 @@ else()
     set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
 endif()
 
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(CMAKE_SYSTEM_PROCESSOR "__x86_64__")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(CMAKE_SYSTEM_PROCESSOR "__i386__")
-    endif()
-endif()
-
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path(${PYTHON3_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -65,7 +56,6 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
 
         -DINSTALL_TARGETS=shogun-static
-        -DCMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}
 )
 
 vcpkg_install_cmake()
