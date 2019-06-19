@@ -22,14 +22,6 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
 file(MAKE_DIRECTORY ${SOURCE_PATH}/cmake/external)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/MSDirent.cmake DESTINATION ${SOURCE_PATH}/cmake/external)
 
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(CMAKE_SYSTEM_PROCESSOR "__x86_64__")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(CMAKE_SYSTEM_PROCESSOR "__i386__")
-    endif()
-endif()
-
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
@@ -65,7 +57,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shogun)
 
 file(REMOVE_RECURSE
