@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(OPENCV_VERSION "4.0.1")
+set(OPENCV_VERSION "4.1.0")
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 d74dd325029a67676dd2c7fdbecb2b14cb531441b2a1b74fc1ebe6db096ea87c12801c8b997ebbe280fbd401311c0220133a0c29911b0dae82cb93453be0b2b0
+    SHA512 492168c1260cd30449393c4b266d75202e751493a8f1e184af6c085d8f4a38800ee954d84fe8c36fcceb690b1ebb5e511b68c05901f64be79a0915f3f8a46dc0
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -45,7 +45,7 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 8876bbb4dc7955f986e4c9fc80a63060ce0ee8586f3ba2fcd0a82dfbcafba390ff590b0c0fee325388b0feda7c70526f8cab48643e9b15fff90a91b14443add0
+    SHA512 68b373dcb149891847927709bd4409711d74adc65c6c79e8d91c61eee673a4a2304535868d7f54324ac6156b2bec9608d4f9c8f24b3378d43893b0734e116c35
     HEAD_REF master
   )
   vcpkg_download_distfile(OCV_DOWNLOAD

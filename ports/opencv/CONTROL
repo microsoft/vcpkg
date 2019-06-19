@@ -1,5 +1,5 @@
 Source: opencv
-Version: 4.0.1
+Version: 4.1.0
 Build-Depends: protobuf, zlib
 Description: computer vision library
 Default-Features: dnn, jpeg, opengl, png, tiff, webp
