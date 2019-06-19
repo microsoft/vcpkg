@@ -36,7 +36,7 @@ if("cuda" IN_LIST FEATURES)
   set(WITH_CUDA ON)
   if(NOT "contrib" IN_LIST FEATURES)
     list(APPEND FEATURES "contrib")
-    message(WARNING "Forced nonfree feature to enable CUDA")
+    message(WARNING "Forced contrib feature to enable CUDA")
   endif()
 endif()
 
