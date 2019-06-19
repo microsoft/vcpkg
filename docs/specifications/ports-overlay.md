@@ -170,6 +170,7 @@ Now her team is able to use:
 
 ```
 git clone https://github.com/alice/vcpkg-custom-ports.git
+vcpkg update --overlay-ports=./vcpkg-custom-ports
 vcpkg upgrade --no-dry-run --overlay-ports=./vcpkg-custom-ports
 ``` 
 
