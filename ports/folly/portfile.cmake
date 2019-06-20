@@ -21,6 +21,7 @@ vcpkg_from_github(
         missing-include-atomic.patch
         boost-1.70.patch
         reorder-glog-gflags.patch
+        disable-non-underscore-posix-names.patch
 )
 
 file(COPY
