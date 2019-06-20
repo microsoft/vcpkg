@@ -16,7 +16,7 @@ Build-Depends: hdf5
 Description: opencv_contrib module
 
 Feature: cuda
-Build-Depends: cuda
+Build-Depends: opencv[contrib], cuda
 Description: CUDA support for opencv
 
 Feature: dnn
