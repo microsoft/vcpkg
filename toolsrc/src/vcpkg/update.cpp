@@ -57,24 +57,6 @@ namespace vcpkg::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        // Load ports from ports dirs
-        std::vector<fs::path> ports_dirs;
-        if (args.overlay_ports)
-        {
-            for (auto&& overlay_path : *args.overlay_ports)
-            {
-                if (!overlay_path.empty())
-                {
-                    auto overlay = fs::path(overlay_path);
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                        paths.get_filesystem().exists(overlay),
-                        "Error: Path \"%s\" does not exist",
-                        overlay.string());
-                    ports_dirs.emplace_back(overlay);
-                }
-            }
-        }
-        ports_dirs.emplace_back(paths.ports);
         Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         const auto outdated_packages = SortedVector<OutdatedPackage>(find_outdated_packages(provider, status_db),

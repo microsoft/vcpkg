@@ -137,8 +137,16 @@ namespace vcpkg::Build::Command
         Input::check_triplet(spec.package_spec.triplet(), paths);
 
         PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        const auto port_name = spec.package_spec.name();
+        const auto* scfl = provider.get_control_file(port_name).get();
+        
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           scfl != nullptr,
+                           "Error: Couldn't find port '%s'",
+                           port_name);
+
         perform_and_exit_ex(spec, 
-                            provider.get_control_file(spec.package_spec.name()).get()->source_location,
+                            scfl->source_location,
                             options, 
                             paths); 
     }

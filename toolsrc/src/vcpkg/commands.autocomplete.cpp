@@ -7,9 +7,6 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
-#include <vcpkg/dependencies.h>
-
-using vcpkg::Dependencies::PathsPortFileProvider;
 
 namespace vcpkg::Commands::Autocomplete
 {
