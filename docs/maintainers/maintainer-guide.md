@@ -65,24 +65,31 @@ vcpkg_configure_cmake(
 )
 ```
 
+### When defining features, explicitly control dependencies
+
+When defining a feature that captures an optional dependency, ensure that the dependency will not be used accidentally when the feature is not explicitly enabled. For example:
+
+```cmake
+set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB ON)
+if("zlib" IN_LIST FEATURES)
+    set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB OFF)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
+)
+```
+
+Note that `ZLIB` in the above is case-sensitive. See the [cmake documentation](https://cmake.org/cmake/help/v3.15/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) for more details.
+
 ## Versioning
 
 ### Follow common conventions for the `Version:` field
 
-For tagged-release ports, we follow the following convention:
-
-1. If the port follows a scheme like `va.b.c`, we remove the leading `v`. In this case, it becomes `a.b.c`.
-2. If the port includes its own name in the version like `curl-7_65_1`, we remove the leading name: `7_65_1`
-3. If the port has been modified, we append a `-N` to distinguish the versions: `1.2.1-4`
-
-For rolling-release ports, we use the date that the _portfile_ was created, formatted as `YYYY-MM-DD`.
-
-For example, given:
-1. The latest commit was made on 2019-04-19
-2. The current version string is `2019-02-14-1`
-3. Today's date is 2019-06-01.
-
-Then if you update the source version today, you should give it version `2019-06-01`. If you need to make a change which doesn't adjust the source version, you should give it version `2019-02-14-2`.
+See our [CONTROL files document](control-files.md#version) for a full explanation of our conventions.
 
 ### Update the `Version:` field in the `CONTROL` file of any modified ports
 
@@ -95,6 +102,8 @@ For Example:
 - Zlib's package version is currently `1.2.1`.
 - You've discovered that the wrong copyright file has been deployed, and fixed that in the portfile.
 - You should update the `Version:` field in the control file to `1.2.1-1`.
+
+See our [CONTROL files document](control-files.md#version) for a full explanation of our conventions.
 
 ## Patching
 
