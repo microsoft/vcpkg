@@ -148,3 +148,31 @@ Important caveat:
 Note that if a library generates CMake integration files (`foo-config.cmake`), renaming must be done through patching the CMake build itself instead of simply calling `file(RENAME)` on the output archives/LIBs.
 
 Finally, DLL files on Windows should never be renamed post-build because it breaks the generated LIBs.
+
+## Useful implementation notes
+
+### Portfiles are run in Script Mode
+
+While `portfile.cmake`'s and `CMakeLists.txt`'s share a common syntax and core CMake language constructs, portfiles run in "Script Mode", whereas `CMakeLists.txt` files run in "Build Mode" (unofficial term). The most important difference between these two modes is that "Script Mode" does not have a concept of "Target" -- any behaviors that depend on the "target" machine (`CMAKE_CXX_COMPILER`, `CMAKE_EXECUTABLE_SUFFIX`, `CMAKE_SYSTEM_NAME`, etc) will not be correct.
+
+Portfiles have direct access to variables set in the triplet file, but `CMakeLists.txt`s do not (though there is often a translation that happens -- `VCPKG_LIBRARY_LINKAGE` versus `BUILD_SHARED_LIBS`).
+
+Finally, portfiles and CMake builds invoked by portfiles are run in different processes. Conceptually:
+
+```no-highlight
++----------------------------+       +------------------------------------+
+| CMake.exe                  |       | CMake.exe                          |
++----------------------------+       +------------------------------------+
+| Triplet file               | ====> | Toolchain file                     |
+| (x64-windows.cmake)        |       | (scripts/buildsystems/vcpkg.cmake) |
++----------------------------+       +------------------------------------+
+| Portfile                   | ====> | CMakeLists.txt                     |
+| (ports/foo/portfile.cmake) |       | (buildtrees/../CMakeLists.txt)     |
++----------------------------+       +------------------------------------+
+```
+
+To determine the host in a portfile, the standard CMake variables are fine (`CMAKE_HOST_WIN32`).
+
+To determine the target in a portfile, the vcpkg triplet variables should be used (`VCPKG_CMAKE_SYSTEM_NAME`).
+
+See also our [triplet documentation](../users/triplets.md) for a full enumeration of possible settings.
