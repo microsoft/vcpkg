@@ -424,6 +424,9 @@ namespace vcpkg
             System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
         }
         System::printf("    %-40s %s\n", "--triplet <t>", "Set the default triplet for unqualified packages");
+        System::printf("    %-40s %s\n", 
+                       "--overlay-ports <path>", 
+                       "Specify directories to be used when searching for ports");
         System::printf("    %-40s %s\n",
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");

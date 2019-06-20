@@ -63,6 +63,7 @@ namespace vcpkg::Commands::Search
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
+        // TODO: Support --overlay-ports
         auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
         if (args.command_arguments.empty())
