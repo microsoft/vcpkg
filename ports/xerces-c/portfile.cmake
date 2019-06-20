@@ -48,6 +48,16 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfigInternal.cmake "${
 file(READ ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfig.cmake _contents)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfig.cmake "include(CMakeFindDependencyMacro)\nfind_dependency(Threads)\n${_contents}")
 
+# Disable defining DLL_EXPORT to avoid affecting other ports
+file(READ ${CURRENT_PACKAGES_DIR}/include/xercesc/util/Xerces_autoconf_config.hpp _contents)
+string(REPLACE
+    "#  define DLL_EXPORT"
+    "//#  define DLL_EXPORT"
+    _contents
+    "${_contents}"
+)
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/xercesc/util/Xerces_autoconf_config.hpp "${_contents}")
+
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
     ${CURRENT_PACKAGES_DIR}/share/xercesc
