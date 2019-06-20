@@ -2,51 +2,34 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+    set(WIN_PATCHES strdup-fix.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Yubico/libu2f-server
     REF libu2f-server-1.1.0
     SHA512 085f8e7d74c1efb347747b8930386f18ba870f668f82e9bd479c9f8431585c5dc7f95b2f6b82bdd3a6de0c06f8cb2fbf51c363ced54255a936ab96536158ee59
     HEAD_REF master
-    PATCHES 
-      "windows.patch"
+    PATCHES
+        windows.patch
+        ${WIN_PATCHES}
 )
 
-# Convert architecture to VS supplied Platform
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(PLATFORM Win32)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PLATFORM x64)
-endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/u2f-server-version.h DESTINATION ${SOURCE_PATH}/u2f-server)
 
-# Add configuration based on requested linkage
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(CONFIGURATIONSUFFIX "-Static")
-elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(CONFIGURATIONSUFFIX "")
-endif()
-
-if (WIN32)
-
-    # Copy additional files to Buildtree
-    file(COPY ${CURRENT_PORT_DIR}/libu2f-server.vcxproj DESTINATION ${SOURCE_PATH})
-    file(COPY ${CURRENT_PORT_DIR}/u2f-server-version.h DESTINATION ${SOURCE_PATH}/u2f-server)
-
-    # Built project
-    vcpkg_install_msbuild(
+vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH libu2f-server.vcxproj
-        RELEASE_CONFIGURATION Release${CONFIGURATIONSUFFIX}
-        DEBUG_CONFIGURATION Debug${CONFIGURATIONSUFFIX}
-        PLATFORM ${PLATFORM}
-        USE_VCPKG_INTEGRATION
+        PREFER_NINJA
     )
-else()
-    message(FATAL_ERROR "Sorry but gsoap only can be build in Windows temporary")
-endif()
 
-#file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/u2f-server)
-file(COPY ${SOURCE_PATH}/u2f-server/u2f-server-version.h ${SOURCE_PATH}/u2f-server/u2f-server.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/u2f-server)
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_copy_pdbs()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

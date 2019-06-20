@@ -1,0 +1,130 @@
+diff --git a/u2f-server/core.c b/u2f-server/core.c
+index 81a63b6b..b6255caf 100644
+--- a/u2f-server/core.c
++++ b/u2f-server/core.c
+@@ -221,7 +221,7 @@ u2fs_rc u2fs_set_keyHandle(u2fs_ctx_t * ctx, const char *keyHandle)
+     ctx->keyHandle = NULL;
+   }
+ 
+-  ctx->keyHandle = strndup(keyHandle, strlen(keyHandle));
++  ctx->keyHandle = _strdup(keyHandle);
+ 
+   if (ctx->keyHandle == NULL)
+     return U2FS_MEMORY_ERROR;
+@@ -376,7 +376,7 @@ u2fs_rc u2fs_set_origin(u2fs_ctx_t * ctx, const char *origin)
+     ctx->origin = NULL;
+   }
+ 
+-  ctx->origin = strdup(origin);
++  ctx->origin = _strdup(origin);
+   if (ctx->origin == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -403,7 +403,7 @@ u2fs_rc u2fs_set_appid(u2fs_ctx_t * ctx, const char *appid)
+     ctx->appid = NULL;
+   }
+ 
+-  ctx->appid = strdup(appid);
++  ctx->appid = _strdup(appid);
+   if (ctx->appid == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -443,7 +443,7 @@ static int registration_challenge_json(const char *challenge,
+   json_string = json_object_to_json_string(json_output);
+   if (json_string == NULL)
+     rc = U2FS_JSON_ERROR;
+-  else if ((*output = strdup(json_string)) == NULL)
++  else if ((*output = _strdup(json_string)) == NULL)
+     rc = U2FS_MEMORY_ERROR;
+   else
+     rc = U2FS_OK;
+@@ -493,7 +493,7 @@ parse_clientData(const char *clientData, char **challenge, char **origin)
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+ 
+-  *challenge = strdup(p);
++  *challenge = _strdup(p);
+   if (*challenge == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -504,7 +504,7 @@ parse_clientData(const char *clientData, char **challenge, char **origin)
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+ 
+-  *origin = strdup(p);
++  *origin = _strdup(p);
+   if (*origin == NULL)
+     return U2FS_JSON_ERROR;
+ 
+@@ -534,7 +534,7 @@ parse_registration_response(const char *response, char **registrationData,
+   p = json_object_get_string(k);
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+-  *registrationData = strdup(p);
++  *registrationData = _strdup(p);
+   if (*registrationData == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -543,7 +543,7 @@ parse_registration_response(const char *response, char **registrationData,
+   p = json_object_get_string(k);
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+-  *clientData = strdup(p);
++  *clientData = _strdup(p);
+   if (*clientData == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -736,7 +736,7 @@ static u2fs_rc decode_clientData(const char *clientData, char **output)
+     fprintf(stderr, "clientData: %s\n", data);
+   }
+ 
+-  *output = strndup(data, strlen(data));
++  *output = _strdup(data);
+ 
+   free(data);
+   data = NULL;
+@@ -880,7 +880,7 @@ u2fs_rc u2fs_registration_verify(u2fs_ctx_t * ctx, const char *response,
+     goto failure;
+ 
+   u2fs_EC_KEY_t *key_ptr;
+-  (*output)->keyHandle = strndup(buf, strlen(buf));
++  (*output)->keyHandle = _strdup(buf);
+ 
+   rc = decode_user_key(user_public_key, &key_ptr);
+   if (rc != U2FS_OK)
+@@ -1026,7 +1026,7 @@ static int authentication_challenge_json(const char *challenge,
+ 
+   if (json_string == NULL)
+     rc = U2FS_JSON_ERROR;
+-  else if ((*output = strdup(json_string)) == NULL)
++  else if ((*output = _strdup(json_string)) == NULL)
+     rc = U2FS_MEMORY_ERROR;
+   else
+     rc = U2FS_OK;
+@@ -1139,7 +1139,7 @@ parse_authentication_response(const char *response, char **signatureData,
+   p = json_object_get_string(k);
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+-  *signatureData = strdup(p);
++  *signatureData = _strdup(p);
+   if (*signatureData == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -1148,7 +1148,7 @@ parse_authentication_response(const char *response, char **signatureData,
+   p = json_object_get_string(k);
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+-  *clientData = strdup(p);
++  *clientData = _strdup(p);
+   if (*clientData == NULL)
+     return U2FS_MEMORY_ERROR;
+ 
+@@ -1157,7 +1157,7 @@ parse_authentication_response(const char *response, char **signatureData,
+   p = json_object_get_string(k);
+   if (p == NULL)
+     return U2FS_JSON_ERROR;
+-  *keyHandle = strdup(p);
++  *keyHandle = _strdup(p);
+   if (*keyHandle == NULL)
+     return U2FS_MEMORY_ERROR;
+ 

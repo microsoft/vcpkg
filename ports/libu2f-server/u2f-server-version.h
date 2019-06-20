@@ -34,62 +34,61 @@
 extern "C" {
 #endif
 
-	/**
-	* U2FS_VERSION_STRING
-	*
-	* Pre-processor symbol with a string that describe the header file
-	* version number.  Used together with u2fs_check_version() to verify
-	* header file and run-time library consistency.
-	*/
-#define U2FS_VERSION_STRING "1.2.3"
+/**
+ * U2FS_VERSION_STRING
+ *
+ * Pre-processor symbol with a string that describe the header file
+ * version number.  Used together with u2fs_check_version() to verify
+ * header file and run-time library consistency.
+ */
+#define U2FS_VERSION_STRING "1.1.1"
 
-	/**
-	* U2FS_VERSION_NUMBER
-	*
-	* Pre-processor symbol with a hexadecimal value describing the header
-	* file version number.  For example, when the header version is 1.2.3
-	* this symbol will have the value 0x01020300.  The last two digits
-	* are only used between public releases, and will otherwise be 00.
-	*/
-#define U2FS_VERSION_NUMBER 0x01020300
+/**
+ * U2FS_VERSION_NUMBER
+ *
+ * Pre-processor symbol with a hexadecimal value describing the header
+ * file version number.  For example, when the header version is 1.2.3
+ * this symbol will have the value 0x01020300.  The last two digits
+ * are only used between public releases, and will otherwise be 00.
+ */
+#define U2FS_VERSION_NUMBER 0x01010100
 
-	/**
-	* U2FS_VERSION_MAJOR
-	*
-	* Pre-processor symbol with a decimal value that describe the major
-	* level of the header file version number.  For example, when the
-	* header version is 1.2.3 this symbol will be 1.
-	*/
+/**
+ * U2FS_VERSION_MAJOR
+ *
+ * Pre-processor symbol with a decimal value that describe the major
+ * level of the header file version number.  For example, when the
+ * header version is 1.2.3 this symbol will be 1.
+ */
 #define U2FS_VERSION_MAJOR 1
 
-	/**
-	* U2FS_VERSION_MINOR
-	*
-	* Pre-processor symbol with a decimal value that describe the minor
-	* level of the header file version number.  For example, when the
-	* header version is 1.2.3 this symbol will be 2.
-	*/
-#define U2FS_VERSION_MINOR 2
+/**
+ * U2FS_VERSION_MINOR
+ *
+ * Pre-processor symbol with a decimal value that describe the minor
+ * level of the header file version number.  For example, when the
+ * header version is 1.2.3 this symbol will be 2.
+ */
+#define U2FS_VERSION_MINOR 1
 
-	/**
-	* U2FS_VERSION_PATCH
-	*
-	* Pre-processor symbol with a decimal value that describe the patch
-	* level of the header file version number.  For example, when the
-	* header version is 1.2.3 this symbol will be 3.
-	*/
-#define U2FS_VERSION_PATCH 3
+/**
+ * U2FS_VERSION_PATCH
+ *
+ * Pre-processor symbol with a decimal value that describe the patch
+ * level of the header file version number.  For example, when the
+ * header version is 1.2.3 this symbol will be 3.
+ */
+#define U2FS_VERSION_PATCH 1
 
-	const char *u2fs_check_version(const char *req_version);
+  const char *u2fs_check_version(const char *req_version);
 
 #ifndef TRUE
 #define TRUE 1
 #endif
+
 #ifndef FALSE
 #define FALSE 0
 #endif
-
-#define strndup(a,b) strdup(a)
 
 #ifdef __cplusplus
 }
