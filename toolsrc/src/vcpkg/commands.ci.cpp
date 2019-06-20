@@ -232,12 +232,17 @@ namespace vcpkg::Commands::CI
             {
                 // determine abi tag
                 std::string abi;
-                if (auto scf = p->source_control_file.get())
+                if (auto scfl = p->source_control_file_location.get())
                 {
                     auto triplet = p->spec.triplet();
 
                     const Build::BuildPackageConfig build_config{
-                        *scf, triplet, paths.port_dir(p->spec), build_options, p->feature_list};
+                        *scfl->source_control_file, 
+                        triplet, 
+                        static_cast<fs::path>(scfl->source_location), 
+                        build_options, 
+                        p->feature_list
+                    };
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -351,7 +356,25 @@ namespace vcpkg::Commands::CI
         }
 
         StatusParagraphs status_db = database_load_check(paths);
-        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
+        // Load ports from ports dirs
+        std::vector<fs::path> ports_dirs;
+        if (args.overlay_ports)
+        {
+            for (auto&& overlay_path : *args.overlay_ports)
+            {
+                if (!overlay_path.empty())
+                {
+                    auto overlay = fs::path(overlay_path);
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                        paths.get_filesystem().exists(overlay),
+                        "Error: Path \"%s\" does not exist",
+                        overlay.string());
+                    ports_dirs.emplace_back(overlay);
+                }
+            }
+        }
+        ports_dirs.emplace_back(paths.ports);
+        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths.get_filesystem(), ports_dirs);
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,

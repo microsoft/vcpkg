@@ -154,6 +154,7 @@ namespace vcpkg::Commands::DependInfo
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
+        // TODO: Support --overlay-ports
         auto source_control_files = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
         if (args.command_arguments.size() >= 1)

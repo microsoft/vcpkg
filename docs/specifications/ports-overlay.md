@@ -129,7 +129,7 @@ Given the following directory structure:
 
 * #### Example #3:
 
-  Given that the contents on `preferred-ports.txt` are:
+  Given the content of `preferred-ports.txt` as:
 
   ```
   ./ports/curl

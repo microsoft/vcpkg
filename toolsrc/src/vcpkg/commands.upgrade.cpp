@@ -43,7 +43,25 @@ namespace vcpkg::Commands::Upgrade
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFileProvider provider(paths);
+        // Load ports from ports dirs
+        std::vector<fs::path> ports_dirs;
+        if (args.overlay_ports)
+        {
+            for (auto&& overlay_path : *args.overlay_ports)
+            {
+                if (!overlay_path.empty())
+                {
+                    auto overlay = fs::path(overlay_path);
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                        paths.get_filesystem().exists(overlay),
+                        "Error: Path \"%s\" does not exist",
+                        overlay.string());
+                    ports_dirs.emplace_back(overlay);
+                }
+            }
+        }
+        ports_dirs.emplace_back(paths.ports);
+        Dependencies::PathsPortFileProvider provider(paths.get_filesystem(), ports_dirs);
         Dependencies::PackageGraph graph(provider, status_db);
 
         // input sanitization
@@ -85,12 +103,12 @@ namespace vcpkg::Commands::Upgrade
                     not_installed.push_back(spec);
                 }
 
-                auto maybe_scf = provider.get_control_file(spec.name());
-                if (auto p_scf = maybe_scf.get())
+                auto maybe_scfl = provider.get_control_file(spec.name());
+                if (auto p_scfl = maybe_scfl.get())
                 {
                     if (it != status_db.end())
                     {
-                        if (p_scf->core_paragraph->version != (*it)->package.version)
+                        if (p_scfl->source_control_file->core_paragraph->version != (*it)->package.version)
                         {
                             to_upgrade.push_back(spec);
                         }

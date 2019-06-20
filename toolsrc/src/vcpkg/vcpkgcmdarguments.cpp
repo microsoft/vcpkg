@@ -45,6 +45,45 @@ namespace vcpkg
         option_field = new_setting;
     }
 
+    static void parse_multivalue(const std::string* arg_begin,
+                                 const std::string* arg_end,
+                                 const std::string& option_name,
+                                 std::unique_ptr<std::vector<std::string>>& option_field)
+    {
+        if (arg_begin == arg_end)
+        {
+            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
+            Metrics::g_metrics.lock()->track_property("error", "error option name");
+            Help::print_usage();
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        if (option_field == nullptr)
+        {
+            option_field = std::make_unique<std::vector<std::string>>();
+        }
+        option_field->emplace_back(*arg_begin);
+    }
+
+    static void parse_cojoined_multivalue(std::string new_value,
+                                          const std::string& option_name,
+                                          std::unique_ptr<std::vector<std::string>>& option_field)
+    {
+        if (new_value.empty())
+        {
+            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
+            Metrics::g_metrics.lock()->track_property("error", "error option name");
+            Help::print_usage();
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        if (option_field == nullptr)
+        {
+            option_field = std::make_unique<std::vector<std::string>>();
+        }
+        option_field->emplace_back(std::move(new_value));
+    }
+
     VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc,
                                                                   const CommandLineCharType* const* const argv)
     {
@@ -117,6 +156,19 @@ namespace vcpkg
                     parse_value(arg_begin, arg_end, "--triplet", args.triplet);
                     continue;
                 }
+                if (arg == "--overlay-ports")
+                {
+                    ++arg_begin;
+                    parse_multivalue(arg_begin, arg_end, "--additional-ports", args.overlay_ports);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--overlay-ports="))
+                {
+                    parse_cojoined_multivalue(arg.substr(sizeof("--overlay-ports=") - 1),
+                                              "--overlay-ports",
+                                              args.overlay_ports);
+                    continue;
+                }
                 if (arg == "--debug")
                 {
                     parse_switch(true, "debug", args.debug);
@@ -166,7 +218,17 @@ namespace vcpkg
                 const auto eq_pos = arg.find('=');
                 if (eq_pos != std::string::npos)
                 {
-                    args.optional_command_arguments.emplace(arg.substr(0, eq_pos), arg.substr(eq_pos + 1));
+                    const auto& key = arg.substr(0, eq_pos);
+                    const auto& value = arg.substr(eq_pos + 1);
+                    if (!args.optional_command_arguments.count(key))
+                    {
+                        args.optional_command_arguments.emplace(key, std::vector<std::string> { value });
+                    }
+                    else
+                    {
+                        auto& values = args.optional_command_arguments[key];
+                        values.get()->push_back(value);
+                    }
                 }
                 else
                 {
@@ -264,7 +326,58 @@ namespace vcpkg
                 }
                 else
                 {
-                    output.settings.emplace(option.name, it->second.value_or_exit(VCPKG_LINE_INFO));
+                    const auto& value = it->second.value_or_exit(VCPKG_LINE_INFO);
+                    /*if (value.size() > 1)
+                    {
+                        System::printf(
+                            System::Color::error, "Error: The option '%s' was passed multiple times.\n", option.name);
+                        failed = true;
+
+                    }
+                    else*/ if (value.front().empty())
+                    {
+                        // Fail when not given a value, e.g.: "vcpkg install sqlite3 --additional-ports="
+                        System::printf(
+                            System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
+                        failed = true;
+                    }
+                    else
+                    {
+                        output.settings.emplace(option.name, value.front());
+                        options_copy.erase(it);
+                    }
+                }
+            }
+        }
+
+        for (auto&& option : command_structure.options.multisettings)
+        {
+            const auto it = options_copy.find(option.name);
+            if (it != options_copy.end())
+            {
+                if (!it->second.has_value())
+                {
+                    // Not having a string value indicates it was passed like '--a'
+                    System::printf(
+                        System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
+                    failed = true;
+                }
+                else
+                {
+                    const auto& value = it->second.value_or_exit(VCPKG_LINE_INFO);
+                    for (auto&& v : value)
+                    {
+                        if (v.empty())
+                        {
+                            System::printf(
+                                System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
+                            failed = true;
+                        }
+                        else
+                        {
+                            output.multisettings[option.name].emplace_back(v);
+                        }
+                    }
                     options_copy.erase(it);
                 }
             }
@@ -303,6 +416,10 @@ namespace vcpkg
             System::printf("    %-40s %s\n", option.name, option.short_help_text);
         }
         for (auto&& option : command_structure.options.settings)
+        {
+            System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
+        }
+        for (auto&& option : command_structure.options.multisettings)
         {
             System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
         }

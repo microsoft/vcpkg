@@ -21,10 +21,12 @@
 #include <vcpkg/postbuildlint.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/dependencies.h>
 
 using vcpkg::Build::BuildResult;
 using vcpkg::Parse::ParseControlErrorInfo;
 using vcpkg::Parse::ParseExpected;
+using vcpkg::Dependencies::PathsPortFileProvider;
 
 namespace vcpkg::Build::Command
 {
@@ -43,7 +45,7 @@ namespace vcpkg::Build::Command
         {
             const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
-            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
+            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, port_dir);
             Checks::check_exit(VCPKG_LINE_INFO, error_count == 0);
             Checks::exit_success(VCPKG_LINE_INFO);
         }
@@ -128,10 +130,35 @@ namespace vcpkg::Build::Command
         // Build only takes a single package and all dependencies must already be installed
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         std::string first_arg = args.command_arguments.at(0);
+
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::move(first_arg), default_triplet, COMMAND_STRUCTURE.example_text);
+
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        perform_and_exit_ex(spec, paths.port_dir(spec.package_spec), options, paths);
+
+        // Load ports from ports dirs
+        std::vector<fs::path> ports_dirs;
+        if (args.overlay_ports)
+        {
+            for (auto&& overlay_path : *args.overlay_ports)
+            {
+                if (!overlay_path.empty())
+                {
+                    auto overlay = fs::path(overlay_path);
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       paths.get_filesystem().exists(overlay),
+                                       "Error: Path \"%s\" does not exist",
+                                       overlay.string());
+                    ports_dirs.emplace_back(overlay);
+                }
+            }
+        }
+        ports_dirs.emplace_back(paths.ports);
+        PathsPortFileProvider provider(paths.get_filesystem(), ports_dirs);
+        perform_and_exit_ex(spec, 
+                            provider.get_control_file(spec.package_spec.name()).get()->source_location,
+                            options, 
+                            paths);
     }
 }
 
@@ -360,6 +387,14 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = spec.triplet();
 
+
+
+        if (!Strings::starts_with(Strings::ascii_to_lowercase(config.port_dir.u8string()),
+            Strings::ascii_to_lowercase(paths.ports.u8string())))
+        {
+            System::printf("-- Installing port from location: %s\n", config.port_dir.u8string());
+        }
+
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
@@ -428,7 +463,7 @@ namespace vcpkg::Build
         }
 
         const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
-        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
+        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
 
         auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
 
@@ -629,7 +664,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
-    {
+    {        
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
@@ -705,7 +740,7 @@ namespace vcpkg::Build
                 }
             }
 
-            System::print2("Could not locate cached archive: ", archive_path.u8string(), "\n");
+            System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
 
             ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
                 paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);

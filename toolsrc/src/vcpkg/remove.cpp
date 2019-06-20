@@ -229,7 +229,25 @@ namespace vcpkg::Remove
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            Dependencies::PathsPortFileProvider provider(paths);
+            // Load ports from ports dirs
+            std::vector<fs::path> ports_dirs;
+            if (args.overlay_ports)
+            {
+                for (auto&& overlay_path : *args.overlay_ports)
+                {
+                    if (!overlay_path.empty())
+                    {
+                        auto overlay = fs::path(overlay_path);
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                            paths.get_filesystem().exists(overlay),
+                            "Error: Path \"%s\" does not exist",
+                            overlay.string());
+                        ports_dirs.emplace_back(overlay);
+                    }
+                }
+            }
+            ports_dirs.emplace_back(paths.ports);
+            Dependencies::PathsPortFileProvider provider(paths.get_filesystem(), ports_dirs);
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });

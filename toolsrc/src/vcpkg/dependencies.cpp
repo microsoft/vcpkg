@@ -22,7 +22,7 @@ namespace vcpkg::Dependencies
 
     struct ClusterSource
     {
-        const SourceControlFile* scf = nullptr;
+        const SourceControlFileLocation* scfl = nullptr;
         std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
     };
 
@@ -92,12 +92,12 @@ namespace vcpkg::Dependencies
             if (it == m_graph.end())
             {
                 // Load on-demand from m_provider
-                auto maybe_scf = m_provider.get_control_file(spec.name());
+                auto maybe_scfl = m_provider.get_control_file(spec.name());
                 auto& clust = m_graph[spec];
                 clust.spec = spec;
-                if (auto p_scf = maybe_scf.get())
+                if (auto p_scfl = maybe_scfl.get())
                 {
-                    clust.source = cluster_from_scf(*p_scf, clust.spec.triplet());
+                    clust.source = cluster_from_scf(*p_scfl, clust.spec.triplet());
                 }
                 return clust;
             }
@@ -105,15 +105,17 @@ namespace vcpkg::Dependencies
         }
 
     private:
-        static ClusterSource cluster_from_scf(const SourceControlFile& scf, Triplet t)
+        static ClusterSource cluster_from_scf(const SourceControlFileLocation& scfl, Triplet t)
         {
             ClusterSource ret;
-            ret.build_edges.emplace("core", filter_dependencies_to_specs(scf.core_paragraph->depends, t));
+            ret.build_edges.emplace("core", 
+                filter_dependencies_to_specs(scfl.source_control_file->core_paragraph->depends, 
+                    t));
 
-            for (const auto& feature : scf.feature_paragraphs)
+            for (const auto& feature : scfl.source_control_file->feature_paragraphs)
                 ret.build_edges.emplace(feature->name, filter_dependencies_to_specs(feature->depends, t));
 
-            ret.scf = &scf;
+            ret.scfl = &scfl;
             return ret;
         }
 
@@ -151,12 +153,12 @@ namespace vcpkg::Dependencies
     }
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
-                                         const SourceControlFile& scf,
+                                         const SourceControlFileLocation& scfl,
                                          const std::set<std::string>& features,
                                          const RequestType& request_type,
                                          std::vector<PackageSpec>&& dependencies)
         : spec(spec)
-        , source_control_file(scf)
+        , source_control_file_location(scfl)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
         , request_type(request_type)
         , build_options{}
@@ -268,34 +270,58 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    MapPortFileProvider::MapPortFileProvider(const std::unordered_map<std::string, SourceControlFile>& map) : ports(map)
-    {
-    }
+    MapPortFileProvider::MapPortFileProvider(const std::unordered_map<std::string, SourceControlFileLocation>& map)
+        : ports(map)
+    {}
 
-    Optional<const SourceControlFile&> MapPortFileProvider::get_control_file(const std::string& spec) const
+    Optional<const SourceControlFileLocation&> MapPortFileProvider::get_control_file(const std::string& spec) const
     {
         auto scf = ports.find(spec);
         if (scf == ports.end()) return nullopt;
         return scf->second;
     }
 
-    PathsPortFileProvider::PathsPortFileProvider(const VcpkgPaths& paths) : ports(paths) {}
+    PathsPortFileProvider::PathsPortFileProvider(Files::Filesystem& filesystem,
+                                                 const std::vector<fs::path>& ports_dirs) 
+        : filesystem(filesystem)
+        , ports_dirs(ports_dirs)
+    {}
 
-    Optional<const SourceControlFile&> PathsPortFileProvider::get_control_file(const std::string& spec) const
+    Optional<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
     {
         auto cache_it = cache.find(spec);
         if (cache_it != cache.end())
         {
             return cache_it->second;
         }
-        Parse::ParseExpected<SourceControlFile> source_control_file =
-            Paragraphs::try_load_port(ports.get_filesystem(), ports.port_dir(spec));
 
-        if (auto scf = source_control_file.get())
+        for (auto&& ports_dir : ports_dirs)
         {
-            auto it = cache.emplace(spec, std::move(*scf->get()));
-            return it.first->second;
+            // Try loading individual port
+            auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
+            if (auto scf = maybe_scf.get())
+            {
+                if (scf->get()->core_paragraph->name == spec)
+                {
+                    SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
+                    auto it = cache.emplace(spec, std::move(scfl));
+                    return it.first->second;
+                }
+            }
+
+            // Try loading from ports directories
+            auto found_scf = Paragraphs::try_load_port(filesystem, ports_dir / spec);
+            if (auto scf = found_scf.get())
+            {
+                if (scf->get()->core_paragraph->name == spec)
+                {
+                    SourceControlFileLocation scfl{ std::move(*scf), ports_dir / spec };
+                    auto it = cache.emplace(spec, std::move(scfl));
+                    return it.first->second;
+                }
+            }
         }
+
         return nullopt;
     }
 
@@ -498,7 +524,7 @@ namespace vcpkg::Dependencies
         if (feature.empty())
         {
             // Add default features for this package. This is an exact reference, so ignore prevent_default_features.
-            for (auto&& default_feature : p_source->scf->core_paragraph.get()->default_features)
+            for (auto&& default_feature : p_source->scfl->source_control_file->core_paragraph.get()->default_features)
             {
                 auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
                 if (res != MarkPlusResult::SUCCESS)
@@ -513,7 +539,7 @@ namespace vcpkg::Dependencies
 
         if (feature == "*")
         {
-            for (auto&& fpgh : p_source->scf->feature_paragraphs)
+            for (auto&& fpgh : p_source->scfl->source_control_file->feature_paragraphs)
             {
                 auto res = mark_plus(fpgh->name, cluster, graph, graph_plan, prevent_default_features);
 
@@ -590,7 +616,7 @@ namespace vcpkg::Dependencies
 
             // Check if any default features have been added
             auto& previous_df = p_installed->ipv.core->package.default_features;
-            for (auto&& default_feature : p_source->scf->core_paragraph->default_features)
+            for (auto&& default_feature : p_source->scfl->source_control_file->core_paragraph->default_features)
             {
                 if (std::find(previous_df.begin(), previous_df.end(), default_feature) == previous_df.end())
                 {
@@ -635,7 +661,7 @@ namespace vcpkg::Dependencies
     /// <param name="map">Map of all source control files in the current environment.</param>
     /// <param name="specs">Feature specifications to resolve dependencies for.</param>
     /// <param name="status_db">Status of installed packages in the current environment.</param>
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFileLocation>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)
     {
@@ -698,7 +724,7 @@ namespace vcpkg::Dependencies
             if (p_cluster->transient_uninstalled)
             {
                 // If it will be transiently uninstalled, we need to issue a full installation command
-                auto pscf = p_cluster->source.value_or_exit(VCPKG_LINE_INFO).scf;
+                auto pscfl = p_cluster->source.value_or_exit(VCPKG_LINE_INFO).scfl;
 
                 auto dep_specs = Util::fmap(m_graph_plan->install_graph.adjacency_list(p_cluster),
                                             [](ClusterPtr const& p) { return p->spec; });
@@ -706,7 +732,7 @@ namespace vcpkg::Dependencies
 
                 plan.emplace_back(InstallPlanAction{
                     p_cluster->spec,
-                    *pscf,
+                    *pscfl,
                     p_cluster->to_install_features,
                     p_cluster->request_type,
                     std::move(dep_specs),
