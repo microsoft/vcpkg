@@ -2,11 +2,8 @@
 
 #include <vcpkg/base/expected.h>
 
-#if defined(_WIN32)
-#include <filesystem>
-#else
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
-#endif
 
 namespace fs
 {
