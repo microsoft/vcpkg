@@ -75,7 +75,7 @@ namespace vcpkg::Update
             }
         }
         ports_dirs.emplace_back(paths.ports);
-        Dependencies::PathsPortFileProvider provider(paths.get_filesystem(), ports_dirs);
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         const auto outdated_packages = SortedVector<OutdatedPackage>(find_outdated_packages(provider, status_db),
                                                                      &OutdatedPackage::compare_by_name);

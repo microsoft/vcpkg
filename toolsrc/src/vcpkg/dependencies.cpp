@@ -281,11 +281,34 @@ namespace vcpkg::Dependencies
         return scf->second;
     }
 
-    PathsPortFileProvider::PathsPortFileProvider(Files::Filesystem& filesystem,
-                                                 const std::vector<fs::path>& ports_dirs) 
-        : filesystem(filesystem)
-        , ports_dirs(ports_dirs)
-    {}
+    PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
+                                                 const std::vector<std::string>* ports_dirs_paths) 
+        : filesystem(paths.get_filesystem())
+    {
+        if (ports_dirs_paths)
+        {
+            for (auto&& overlay_path : *ports_dirs_paths)
+            {
+                if (!overlay_path.empty())
+                {
+                    auto overlay = fs::stdfs::canonical(fs::u8path(overlay_path));
+
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       filesystem.exists(overlay),
+                                       "Error: Path \"%s\" does not exist",
+                                       overlay.string());
+
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       fs::stdfs::is_directory(overlay),
+                                       "Error: Path \"%s\" must be a directory",
+                                       overlay.string());
+
+                    ports_dirs.emplace_back(overlay);
+                }
+            }
+        }
+        ports_dirs.emplace_back(paths.ports);
+    }
 
     Optional<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
     {

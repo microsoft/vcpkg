@@ -143,7 +143,8 @@ namespace vcpkg::Dependencies
 
     struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
     {
-        explicit PathsPortFileProvider(Files::Filesystem& filesystem, const std::vector<fs::path>& ports_dirs);
+        explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths, 
+                                       const std::vector<std::string>* ports_dirs_paths);
         Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
 
     private:

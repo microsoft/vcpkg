@@ -653,25 +653,8 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        // Load ports from ports dirs
-        std::vector<fs::path> ports_dirs;
-        if (args.overlay_ports)
-        {
-            for (auto&& overlay_path : *args.overlay_ports)
-            {
-                if (!overlay_path.empty())
-                {
-                    auto overlay = fs::path(overlay_path);
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                        paths.get_filesystem().exists(overlay),
-                        "Error: Path \"%s\" does not exist",
-                        overlay.string());
-                    ports_dirs.emplace_back(overlay);
-                }
-            }
-        }
-        ports_dirs.emplace_back(paths.ports);
-        PathsPortFileProvider provider(paths.get_filesystem(), ports_dirs);
+        //// Load ports from ports dirs
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         std::vector<AnyAction> action_plan =

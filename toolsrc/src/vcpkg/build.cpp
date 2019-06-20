@@ -136,29 +136,11 @@ namespace vcpkg::Build::Command
 
         Input::check_triplet(spec.package_spec.triplet(), paths);
 
-        // Load ports from ports dirs
-        std::vector<fs::path> ports_dirs;
-        if (args.overlay_ports)
-        {
-            for (auto&& overlay_path : *args.overlay_ports)
-            {
-                if (!overlay_path.empty())
-                {
-                    auto overlay = fs::path(overlay_path);
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       paths.get_filesystem().exists(overlay),
-                                       "Error: Path \"%s\" does not exist",
-                                       overlay.string());
-                    ports_dirs.emplace_back(overlay);
-                }
-            }
-        }
-        ports_dirs.emplace_back(paths.ports);
-        PathsPortFileProvider provider(paths.get_filesystem(), ports_dirs);
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
         perform_and_exit_ex(spec, 
                             provider.get_control_file(spec.package_spec.name()).get()->source_location,
                             options, 
-                            paths);
+                            paths); 
     }
 }
 
