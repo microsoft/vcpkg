@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF Xerces-C_3_2_2
     SHA512 66f60fe9194376ac0ca99d13ea5bce23ada86e0261dde30686c21ceb5499e754dab8eb0a98adadd83522bda62709377715501f6dac49763e3a686f9171cc63ea
     HEAD_REF trunk
-    PATCHES disable-tests.patch
+    PATCHES
+        disable-tests.patch
+        remove-dll-export-macro.patch
 )
 
 set(DISABLE_ICU ON)
@@ -47,16 +49,6 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfigInternal.cmake "${
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfig.cmake _contents)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfig.cmake "include(CMakeFindDependencyMacro)\nfind_dependency(Threads)\n${_contents}")
-
-# Disable defining DLL_EXPORT to avoid affecting other ports
-file(READ ${CURRENT_PACKAGES_DIR}/include/xercesc/util/Xerces_autoconf_config.hpp _contents)
-string(REPLACE
-    "#  define DLL_EXPORT"
-    "//#  define DLL_EXPORT"
-    _contents
-    "${_contents}"
-)
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/xercesc/util/Xerces_autoconf_config.hpp "${_contents}")
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
