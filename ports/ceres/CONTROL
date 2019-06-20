@@ -9,11 +9,11 @@ Build-Depends: clapack (!osx)
 Description: Use Lapack in Ceres
 
 Feature: suitesparse
-Build-Depends: ceres[lapack], suitesparse
+Build-Depends: ceres[lapack], suitesparse[core]
 Description: SuiteSparse support for Ceres
 
 Feature: cxsparse
-Build-Depends: suitesparse
+Build-Depends: suitesparse[core]
 Description: CXSparse support for Ceres
 
 Feature: eigensparse
