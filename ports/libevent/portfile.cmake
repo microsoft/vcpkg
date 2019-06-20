@@ -7,10 +7,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
-    REF release-2.1.8-stable
-    SHA512 0d5c872dc797b69ab8ea4b83aebcbac20735b8c6f5adfcc2950aa4d6013d240f5fac3376e817da75ae0ccead50cec0d931619e135a050add438777457b086549
+    REF release-2.1.10-stable
+    SHA512 8c336df258f7a12164da739b0ea68bebcc8b2ea4f4a839300aa1c5edfb673ac5d6517f882ba04ab35d406489ddd682a319e39fa6784ac0cab73227d42e503a55
     PATCHES
-        "fix-target-files.patch"
+        fix-file_path.patch
+        fix-arm_build.patch
 )
 
 vcpkg_configure_cmake(
@@ -27,8 +28,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/libevent)
 vcpkg_copy_pdbs()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libevent)
