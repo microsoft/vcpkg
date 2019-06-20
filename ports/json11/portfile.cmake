@@ -21,6 +21,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+file(INSTALL ${CURRENT_PORT_DIR}/json11-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/json11)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright

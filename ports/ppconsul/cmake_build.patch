@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 92e4698..48610f9 100644
+index 92e4698..b17988e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -75,6 +75,8 @@ else ()
@@ -11,20 +11,30 @@ index 92e4698..48610f9 100644
  endif ()
  
  set(LIBB64_DIR "${PROJECT_SOURCE_DIR}/ext/b64")
-@@ -87,9 +89,7 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
+@@ -87,9 +89,8 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
      message(FATAL_ERROR "Building Ppconsul as dynamic library on Windows is not supported, see https://github.com/oliora/ppconsul/issues/25")
  endif()
  
 -add_subdirectory(ext/json11)
  add_subdirectory(src)
 -add_subdirectory(tests)
++find_package(json11 REQUIRED)
  
  install(
      DIRECTORY "${HEADERS_DIR}"
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d747100..3247000 100644
+index d747100..966c7e2 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
+@@ -78,7 +78,7 @@ target_include_directories(${PROJECT_NAME}
+ 
+ target_link_libraries(${PROJECT_NAME}
+     PRIVATE
+-        json11
++        ${JSON11_LIBRARIES}
+         ${Boost_LIBRARIES}
+ )
+ 
 @@ -87,7 +87,10 @@ if (${USE_CPPNETLIB})
      target_link_libraries(${PROJECT_NAME} PRIVATE ${CPPNETLIB_LIBRARIES})
  else ()
