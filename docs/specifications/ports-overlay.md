@@ -163,14 +163,14 @@ git init
 cp -r %VCPKG_ROOT%/ports/opencv .
 git add .
 git commit -m "[opencv] Add OpenCV 3 port"
-git remote add origin https://github.com/devalice/vcpkg-custom-ports.git
+git remote add origin https://github.com/<Alice's GitHub username>/vcpkg-custom-ports.git
 git push -u origin master
 ```
 
 Now her team is able to use: 
 
 ```
-git clone https://github.com/alice/vcpkg-custom-ports.git
+git clone https://github.com/<Alice's GitHub username>/vcpkg-custom-ports.git
 vcpkg update --overlay-ports=./vcpkg-custom-ports
 vcpkg upgrade --no-dry-run --overlay-ports=./vcpkg-custom-ports
 ``` 
