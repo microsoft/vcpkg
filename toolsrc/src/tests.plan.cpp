@@ -45,12 +45,10 @@ namespace UnitTest1
         const auto& plan = install_action->install_action.value_or_exit(VCPKG_LINE_INFO);
         const auto& feature_list = plan.feature_list;
 
-        Assert::AreEqual(plan.spec.triplet().to_string().c_str(), 
-                         triplet.to_string().c_str());
+        Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
 
         auto* scfl = plan.source_control_file_location.get();
-        Assert::AreEqual(pkg_name.c_str(), 
-                         scfl->source_control_file->core_paragraph->name.c_str());
+        Assert::AreEqual(pkg_name.c_str(), scfl->source_control_file->core_paragraph->name.c_str());
         Assert::AreEqual(size_t(vec.size()), feature_list.size());
 
         for (auto&& feature_name : vec)
@@ -97,7 +95,8 @@ namespace UnitTest1
         {
             auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph->name, triplet);
             Assert::IsTrue(spec.has_value());
-            map.emplace(scf.core_paragraph->name, SourceControlFileLocation{ std::unique_ptr<SourceControlFile>(std::move(&scf)), "" });
+            map.emplace(scf.core_paragraph->name,
+                        SourceControlFileLocation{std::unique_ptr<SourceControlFile>(std::move(&scf)), ""});
             return PackageSpec{*spec.get()};
         }
     };

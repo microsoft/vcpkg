@@ -21,12 +21,11 @@
 #include <vcpkg/postbuildlint.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkglib.h>
-#include <vcpkg/dependencies.h>
 
 using vcpkg::Build::BuildResult;
+using vcpkg::Dependencies::PathsPortFileProvider;
 using vcpkg::Parse::ParseControlErrorInfo;
 using vcpkg::Parse::ParseExpected;
-using vcpkg::Dependencies::PathsPortFileProvider;
 
 namespace vcpkg::Build::Command
 {
@@ -363,10 +362,8 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = spec.triplet();
 
-
-
         if (!Strings::starts_with(Strings::ascii_to_lowercase(config.port_dir.u8string()),
-            Strings::ascii_to_lowercase(paths.ports.u8string())))
+                                  Strings::ascii_to_lowercase(paths.ports.u8string())))
         {
             System::printf("-- Installing port from location: %s\n", config.port_dir.u8string());
         }
@@ -439,7 +436,8 @@ namespace vcpkg::Build
         }
 
         const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
-        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
+        const size_t error_count =
+            PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
 
         auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
 
@@ -640,7 +638,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
-    {        
+    {
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
