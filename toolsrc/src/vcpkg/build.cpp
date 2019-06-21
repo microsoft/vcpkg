@@ -36,34 +36,26 @@ namespace vcpkg::Build::Command
     static constexpr StringLiteral OPTION_CHECKS_ONLY = "--checks-only";
 
     void perform_and_exit_ex(const FullPackageSpec& full_spec,
-                             const fs::path& port_dir,
+                             const SourceControlFileLocation& scfl,
                              const ParsedArguments& options,
                              const VcpkgPaths& paths)
     {
         const PackageSpec& spec = full_spec.package_spec;
+        const auto& scf = *scfl.source_control_file;
         if (Util::Sets::contains(options.switches, OPTION_CHECKS_ONLY))
         {
             const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
-            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, port_dir);
+            const size_t error_count =
+                PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, scfl.source_location);
             Checks::check_exit(VCPKG_LINE_INFO, error_count == 0);
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const ParseExpected<SourceControlFile> source_control_file =
-            Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-
-        if (!source_control_file.has_value())
-        {
-            print_error_message(source_control_file.error());
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        const auto& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           spec.name() == scf->core_paragraph->name,
+                           spec.name() == scf.core_paragraph->name,
                            "The Source field inside the CONTROL file does not match the port directory: '%s' != '%s'",
-                           scf->core_paragraph->name,
+                           scf.core_paragraph->name,
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
@@ -82,7 +74,7 @@ namespace vcpkg::Build::Command
         features_as_set.emplace("core");
 
         const Build::BuildPackageConfig build_config{
-            *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
+            scf, spec.triplet(), fs::path(scfl.source_location), build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -139,16 +131,10 @@ namespace vcpkg::Build::Command
         PathsPortFileProvider provider(paths, args.overlay_ports.get());
         const auto port_name = spec.package_spec.name();
         const auto* scfl = provider.get_control_file(port_name).get();
-        
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           scfl != nullptr,
-                           "Error: Couldn't find port '%s'",
-                           port_name);
 
-        perform_and_exit_ex(spec, 
-                            scfl->source_location,
-                            options, 
-                            paths); 
+        Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
+
+        perform_and_exit_ex(spec, *scfl, options, paths);
     }
 }
 
