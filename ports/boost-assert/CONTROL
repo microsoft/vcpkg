@@ -2,4 +2,5 @@
 Source: boost-assert
 Version: 1.70.0
 Build-Depends: boost-config, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/assert
 Description: Boost assert module

@@ -1,3 +1,4 @@
 Source: leveldb
-Version: 2017-10-25-8b1cd3753b184341e837b30383832645135d3d73-3
+Version: 1.22
+Homepage: https://github.com/bitcoin-core/leveldb
 Description: LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.

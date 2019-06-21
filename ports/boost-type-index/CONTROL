@@ -2,4 +2,5 @@
 Source: boost-type-index
 Version: 1.70.0
 Build-Depends: boost-config, boost-container-hash, boost-core, boost-preprocessor, boost-smart-ptr, boost-static-assert, boost-throw-exception, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/type_index
 Description: Boost type_index module

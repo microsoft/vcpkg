@@ -2,4 +2,5 @@
 Source: boost-tokenizer
 Version: 1.70.0
 Build-Depends: boost-assert, boost-config, boost-detail, boost-iterator, boost-mpl, boost-throw-exception, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/tokenizer
 Description: Boost tokenizer module

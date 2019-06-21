@@ -17,7 +17,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=OFF
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
@@ -27,6 +26,7 @@ vcpkg_configure_cmake(
         -DBUILD_HASKELL=off
         -DBUILD_TUTORIALS=off
         -DFLEX_EXECUTABLE=${FLEX}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt5=TRUE
         -DBISON_EXECUTABLE=${BISON}
 )
 
@@ -35,7 +35,7 @@ vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
 
 # Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/thrift")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/thrift)
 
 file(GLOB COMPILER "${CURRENT_PACKAGES_DIR}/bin/thrift*")
 if(COMPILER)

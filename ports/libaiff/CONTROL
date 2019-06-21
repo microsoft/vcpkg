@@ -1,3 +1,4 @@
 Source: libaiff
 Version:   5.0-1
+Homepage: https://sourceforge.net/projects/aifftools
 Description: LibAiff is an open-source library, providing C applications transparent read & write operations for Audio Interchange File Format (AIFF) files, with the goal of supporting all of its features

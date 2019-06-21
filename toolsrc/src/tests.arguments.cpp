@@ -1,7 +1,9 @@
 #include "tests.pch.h"
 
+#if defined(_WIN32)
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
+#endif
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -33,8 +35,8 @@ namespace UnitTest1
 
         TEST_METHOD(create_from_arg_sequence_valued_options)
         {
-            std::array<CommandSetting, 1> settings = { {{"--a", ""}} };
-            CommandStructure cmdstruct = { "", 0, SIZE_MAX, {{}, settings }, nullptr };
+            std::array<CommandSetting, 1> settings = {{{"--a", ""}}};
+            CommandStructure cmdstruct = {"", 0, SIZE_MAX, {{}, settings}, nullptr};
 
             std::vector<std::string> t = {"--a=b", "command", "argument"};
             auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
@@ -47,8 +49,8 @@ namespace UnitTest1
 
         TEST_METHOD(create_from_arg_sequence_valued_options2)
         {
-            std::array<CommandSwitch, 2> switches = { {{"--a", ""}, {"--c", ""}} };
-            std::array<CommandSetting, 2> settings = { { {"--b", ""}, {"--d", ""}} };
+            std::array<CommandSwitch, 2> switches = {{{"--a", ""}, {"--c", ""}}};
+            std::array<CommandSetting, 2> settings = {{{"--b", ""}, {"--d", ""}}};
             CommandStructure cmdstruct = {"", 0, SIZE_MAX, {switches, settings}, nullptr};
 
             std::vector<std::string> t = {"--a", "--b=c"};

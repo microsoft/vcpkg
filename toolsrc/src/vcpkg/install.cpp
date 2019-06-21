@@ -138,7 +138,7 @@ namespace vcpkg::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(listfile, output);
+        fs.write_lines(listfile, output, VCPKG_LINE_INFO);
     }
 
     static std::vector<file_pack> extract_files_in_triplet(
@@ -156,14 +156,15 @@ namespace vcpkg::Install
 
             const std::string name = t.pgh.package.displayname();
 
-            for (const std::string &file : t.files)
+            for (const std::string& file : t.files)
             {
                 output.emplace_back(file_pack{std::string(file, remove_chars), name});
             }
         }
 
-        std::sort(output.begin(), output.end(),
-                  [](const file_pack &lhs, const file_pack &rhs) { return lhs.first < rhs.first; });
+        std::sort(output.begin(), output.end(), [](const file_pack& lhs, const file_pack& rhs) {
+            return lhs.first < rhs.first;
+        });
         return output;
     }
 
@@ -180,8 +181,7 @@ namespace vcpkg::Install
     }
 
     static SortedVector<file_pack> build_list_of_installed_files(
-        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files,
-        const Triplet& triplet)
+        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
     {
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
         std::vector<file_pack> installed_files =
@@ -198,13 +198,12 @@ namespace vcpkg::Install
 
         const SortedVector<std::string> package_files =
             build_list_of_package_files(paths.get_filesystem(), package_dir);
-        const SortedVector<file_pack> installed_files =
-            build_list_of_installed_files(pgh_and_files, triplet);
+        const SortedVector<file_pack> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
 
         struct intersection_compare
         {
-            bool operator()(const std::string &lhs, const file_pack &rhs) { return lhs < rhs.first; }
-            bool operator()(const file_pack &lhs, const std::string &rhs) { return lhs.first < rhs; }
+            bool operator()(const std::string& lhs, const file_pack& rhs) { return lhs < rhs.first; }
+            bool operator()(const file_pack& lhs, const std::string& rhs) { return lhs.first < rhs; }
         };
 
         std::vector<file_pack> intersection;
@@ -216,11 +215,9 @@ namespace vcpkg::Install
                               std::back_inserter(intersection),
                               intersection_compare());
 
-        std::sort(intersection.begin(), intersection.end(),
-                  [](const file_pack &lhs, const file_pack &rhs)
-                  {
-                      return lhs.second < rhs.second;
-                  });
+        std::sort(intersection.begin(), intersection.end(), [](const file_pack& lhs, const file_pack& rhs) {
+            return lhs.second < rhs.second;
+        });
 
         if (!intersection.empty())
         {
@@ -231,19 +228,13 @@ namespace vcpkg::Install
                            bcf.core_paragraph.spec);
 
             auto i = intersection.begin();
-            while (i != intersection.end()) {
+            while (i != intersection.end())
+            {
                 System::print2("Installed by ", i->second, "\n    ");
-                auto next = std::find_if(i, intersection.end(),
-                                         [i](const auto &val)
-                                         {
-                                             return i->second != val.second;
-                                         });
+                auto next =
+                    std::find_if(i, intersection.end(), [i](const auto& val) { return i->second != val.second; });
 
-                System::print2(Strings::join("\n    ", i, next,
-                                             [](const file_pack &file)
-                                             {
-                                                 return file.first;
-                                             }));
+                System::print2(Strings::join("\n    ", i, next, [](const file_pack& file) { return file.first; }));
                 System::print2("\n\n");
 
                 i = next;
@@ -372,9 +363,13 @@ namespace vcpkg::Install
                 auto& fs = paths.get_filesystem();
                 const fs::path download_dir = paths.downloads;
                 std::error_code ec;
-                for(auto& p: fs.get_files_non_recursive(download_dir))
+                for (auto& p : fs.get_files_non_recursive(download_dir))
+                {
                     if (!fs.is_directory(p))
-                        fs.remove(p);
+                    {
+                        fs.remove(p, VCPKG_LINE_INFO);
+                    }
+                }
             }
 
             return {code, std::move(bcf)};
@@ -638,6 +633,8 @@ namespace vcpkg::Install
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
+        auto& fs = paths.get_filesystem();
+
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -655,7 +652,7 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto all_ports = Paragraphs::load_all_ports(fs, paths.ports);
         std::unordered_map<std::string, SourceControlFile> scf_map;
         for (auto&& port : all_ports)
             scf_map[port->core_paragraph->name] = std::move(*port);
@@ -713,7 +710,7 @@ namespace vcpkg::Install
             xunit_doc += summary.xunit_results();
 
             xunit_doc += "</collection></assembly></assemblies>\n";
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
+            fs.write_contents(fs::u8path(it_xunit->second), xunit_doc, VCPKG_LINE_INFO);
         }
 
         for (auto&& result : summary.results)

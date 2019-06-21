@@ -2,4 +2,5 @@
 Source: boost-heap
 Version: 1.70.0
 Build-Depends: boost-array, boost-assert, boost-bind, boost-concept-check, boost-integer, boost-intrusive, boost-iterator, boost-parameter, boost-static-assert, boost-throw-exception, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/heap
 Description: Boost heap module

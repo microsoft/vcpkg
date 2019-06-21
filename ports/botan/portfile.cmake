@@ -10,32 +10,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(NUMBER_OF_PROCESSORS "1")
-if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-else()
-    if(APPLE)
-        set(job_count_command sysctl -n hw.physicalcpu)
-    else()
-        set(job_count_command nproc)
-    endif()
-    execute_process( 
-            COMMAND ${job_count_command}
-            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-        )
-    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    if(NOT NUMBER_OF_PROCESSORS)
-        set(NUMBER_OF_PROCESSORS "1")
-    endif()
-endif()
-
 if(CMAKE_HOST_WIN32)
     vcpkg_find_acquire_program(JOM)
-    set(build_tool "${JOM}" /J ${NUMBER_OF_PROCESSORS})
+    set(build_tool "${JOM}")
+    set(parallel_build "/J ${VCPKG_CONCURRENCY}")
 else()
     find_program(MAKE make)
-    set(build_tool "${MAKE}" -j${NUMBER_OF_PROCESSORS})
+    set(build_tool "${MAKE}")
+    set(parallel_build "-j${VCPKG_CONCURRENCY}")
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -93,7 +75,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
-    endif()    
+    endif()
 
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" ${configure_arguments}
@@ -102,8 +84,9 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
-    vcpkg_execute_required_process(
+    vcpkg_execute_build_process(
         COMMAND ${build_tool}
+        NO_PARALLEL_COMMAND "${build_tool} ${parallel_build}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")

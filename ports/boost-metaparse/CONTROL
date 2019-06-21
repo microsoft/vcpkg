@@ -2,4 +2,5 @@
 Source: boost-metaparse
 Version: 1.70.0
 Build-Depends: boost-config, boost-mpl, boost-predef, boost-preprocessor, boost-static-assert, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/metaparse
 Description: Boost metaparse module
