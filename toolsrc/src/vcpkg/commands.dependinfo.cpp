@@ -154,8 +154,18 @@ namespace vcpkg::Commands::DependInfo
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        // TODO: Support --overlay-ports
-        auto source_control_files = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        // TODO: Optimize implementation, current implementation loads all ports from disk which is too slow.
+        // It should use our existing dependency graph implementation.
+        std::vector<std::string> ports_dirs;
+        if (args.overlay_ports)
+        {
+            ports_dirs.insert(std::end(ports_dirs),
+                              std::begin(*args.overlay_ports.get()), 
+                              std::end(*args.overlay_ports.get()));
+        }
+        ports_dirs.emplace_back(paths.ports.u8string());
+
+        auto source_control_files = Paragraphs::load_all_ports_from_dirs(paths.get_filesystem(), ports_dirs);
 
         if (args.command_arguments.size() >= 1)
         {
