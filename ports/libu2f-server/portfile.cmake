@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-    set(WIN_PATCHES strdup-fix.patch)
+    set(WIN_PATCHES strdup-fix.patch strncpy-fix.patch)
 endif()
 
 vcpkg_from_github(

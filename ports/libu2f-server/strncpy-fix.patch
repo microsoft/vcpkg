@@ -1,0 +1,13 @@
+diff --git a/u2f-server/core.c b/u2f-server/core.c
+index ef657744..d88ebac4 100644
+--- a/u2f-server/core.c
++++ b/u2f-server/core.c
+@@ -196,7 +196,7 @@ u2fs_rc u2fs_set_challenge(u2fs_ctx_t * ctx, const char *challenge)
+   if (strlen(challenge) != U2FS_CHALLENGE_B64U_LEN)
+     return U2FS_CHALLENGE_ERROR;
+ 
+-  strncpy(ctx->challenge, challenge, U2FS_CHALLENGE_B64U_LEN);
++  strncpy_s(ctx->challenge, strlen(ctx->challenge), challenge, U2FS_CHALLENGE_B64U_LEN);
+ 
+   return U2FS_OK;
+ }
