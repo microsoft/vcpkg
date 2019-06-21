@@ -87,6 +87,12 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(STATUS "Installing libgl1-mesa-dev")
+    execute_process(COMMAND sudo apt-get install libgl1-mesa-dev -f -y)
+    
+    message(STATUS "Installing libglu1-mesa-dev")
+    execute_process(COMMAND sudo apt-get install libglu1-mesa-dev -f -y)
+
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
         PLATFORM "linux-g++"
