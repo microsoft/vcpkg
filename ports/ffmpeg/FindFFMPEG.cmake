@@ -35,6 +35,8 @@ include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 include(${CMAKE_ROOT}/Modules/CMakeFindDependencyMacro.cmake)
 
+set(FFMPEG_VERSION "4.1")
+
 find_dependency(Threads)
 #list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS Threads::Threads)
 if(UNIX)
@@ -92,8 +94,10 @@ if(WIN32)
   if (FFMPEG_stdint_INCLUDE_DIRS)
     set(STDINT_OK TRUE)
   endif()
+  FFMPEG_FIND_GENEX(libzlib zlib       zlib.h)
 else()
   set(STDINT_OK TRUE)
+  FFMPEG_FIND_GENEX(libzlib z          zlib.h)
 endif()
 
 FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
@@ -103,12 +107,19 @@ FFMPEG_FIND(libavformat   avformat   avformat.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
 FFMPEG_FIND(libswresample swresample swresample.h)
 FFMPEG_FIND(libswscale    swscale    swscale.h)
-FFMPEG_FIND_GENEX(libzlib zlib       zlib.h)
 
 if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_FOUND AND FFMPEG_libavformat_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswresample_FOUND AND FFMPEG_libswscale_FOUND AND FFMPEG_libzlib_FOUND AND STDINT_OK)
   list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS} ${FFMPEG_libavdevice_INCLUDE_DIRS} ${FFMPEG_libavcodec_INCLUDE_DIRS} ${FFMPEG_libavutil_INCLUDE_DIRS} ${FFMPEG_libswscale_INCLUDE_DIRS} ${FFMPEG_stdint_INCLUDE_DIRS})
   list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
   list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
+
+  set(FFMPEG_libavformat_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libavdevice_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libavcodec_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libavutil_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libswscale_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libavfilter_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libswresample_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
 
   list(APPEND FFMPEG_LIBRARIES
     ${FFMPEG_libavformat_LIBRARY}
