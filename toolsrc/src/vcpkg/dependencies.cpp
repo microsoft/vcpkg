@@ -281,6 +281,11 @@ namespace vcpkg::Dependencies
         return scf->second;
     }
 
+    std::vector<const SourceControlFileLocation*> MapPortFileProvider::load_all_control_files()
+    {
+        return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation * { return &kvpair.second; });
+    }
+
     PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
                                                  const std::vector<std::string>* ports_dirs_paths) 
         : filesystem(paths.get_filesystem())
@@ -346,6 +351,43 @@ namespace vcpkg::Dependencies
         }
 
         return nullopt;
+    }
+
+    std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files()
+    {
+        // Reload cache with ports contained in all ports_dirs
+        cache.clear();
+        std::vector<const SourceControlFileLocation*> ret;
+        for (auto&& ports_dir : ports_dirs)
+        {
+            // Try loading individual port
+            auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
+            if (auto scf = maybe_scf.get())
+            {
+                auto port_name = scf->get()->core_paragraph->name;
+                if (!cache.count(port_name))
+                {
+                    SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
+                    auto it = cache.emplace(port_name, std::move(scfl));
+                    ret.emplace_back(&cache[port_name]);
+                }
+                continue;
+            }
+
+            // Try loading all ports inside ports_dir
+            auto found_scf = Paragraphs::load_all_ports(filesystem, ports_dir);
+            for (auto&& scf : found_scf)
+            {
+                auto port_name = scf->core_paragraph->name;
+                if (!cache.count(port_name))
+                {
+                    SourceControlFileLocation scfl{ std::move(scf), ports_dir / port_name };
+                    auto it = cache.emplace(port_name, std::move(scfl));
+                    ret.emplace_back(&cache[port_name]);
+                }
+            }
+        }
+        return ret;
     }
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
