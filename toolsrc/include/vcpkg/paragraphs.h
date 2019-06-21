@@ -29,8 +29,4 @@ namespace vcpkg::Paragraphs
 
     std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
                                                                    const fs::path& ports_dir);
-
-    std::vector<std::unique_ptr<SourceControlFile>>
-    load_all_ports_from_dirs(const Files::Filesystem& fs,
-                             const std::vector<std::string>& ports_dirs_paths);
 }
