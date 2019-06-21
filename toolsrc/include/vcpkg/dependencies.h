@@ -130,14 +130,14 @@ namespace vcpkg::Dependencies
     struct PortFileProvider
     {
         virtual Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
-        virtual std::vector<const SourceControlFileLocation*> load_all_control_files() = 0;
+        virtual std::vector<const SourceControlFileLocation*> load_all_control_files() const = 0;
     };
 
     struct MapPortFileProvider : Util::ResourceBase, PortFileProvider
     {
         explicit MapPortFileProvider(const std::unordered_map<std::string, SourceControlFileLocation>& map);
         Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
-        std::vector<const SourceControlFileLocation*> load_all_control_files() override;
+        std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
         const std::unordered_map<std::string, SourceControlFileLocation>& ports;
@@ -148,7 +148,7 @@ namespace vcpkg::Dependencies
         explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths, 
                                        const std::vector<std::string>* ports_dirs_paths);
         Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
-        std::vector<const SourceControlFileLocation*> load_all_control_files() override;
+        std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
         Files::Filesystem& filesystem;

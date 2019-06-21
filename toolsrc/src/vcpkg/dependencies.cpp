@@ -281,7 +281,7 @@ namespace vcpkg::Dependencies
         return scf->second;
     }
 
-    std::vector<const SourceControlFileLocation*> MapPortFileProvider::load_all_control_files()
+    std::vector<const SourceControlFileLocation*> MapPortFileProvider::load_all_control_files() const
     {
         return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation * { return &kvpair.second; });
     }
@@ -353,7 +353,7 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files()
+    std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files() const
     {
         // Reload cache with ports contained in all ports_dirs
         cache.clear();
