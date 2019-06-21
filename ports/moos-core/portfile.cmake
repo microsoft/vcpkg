@@ -12,25 +12,16 @@ vcpkg_from_github(
         cmake_fix.patch
 )
 
-message(STATUS "MOOS VCPKG SOURCE_PATH ${SOURCE_PATH}")
-message(STATUS "MOOS INSTALL -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=OFF
         -DCMAKE_ENABLE_EXPORT=OFF
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/MOOS")
-
-set(MOOS_EXEC_SUFFIX "")
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(MOOS_EXEC_SUFFIX ".exe")
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/MOOS)
 
 # Stage tools
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
