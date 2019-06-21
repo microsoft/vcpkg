@@ -91,11 +91,11 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/mathgl)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mathgl TARGET_PATH share/mathgl)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mathgl)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
