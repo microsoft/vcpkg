@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9696961..47ef712 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,7 +29,7 @@ option(BUILD_RELAPACK "Build with ReLAPACK (recursive implementation of several
+ # 64 bit integer interfaces in OpenBLAS.
+ 
+ set(SYMBOLPREFIX "" CACHE STRING  "Add a prefix to all exported symbol names in the shared library to avoid conflicts with other BLAS libraries" )
+-set(SYMBOLSUFFIX "" CACHE STRING  "Add a suffix to all exported symbol names in the shared library, e.g. _64 for INTERFACE64 builds" )
++set(SYMBOLSUFFIX "_" CACHE STRING  "Add a suffix to all exported symbol names in the shared library, e.g. _64 for INTERFACE64 builds" )
+ #######
+ if(BUILD_WITHOUT_LAPACK)
+ set(NO_LAPACK 1)
+@@ -232,7 +232,7 @@ if (BUILD_SHARED_LIBS AND BUILD_RELAPACK)
+   endif()
+ endif()
+ 
+-if (BUILD_SHARED_LIBS AND NOT ${SYMBOLPREFIX}${SYMBOLSUFIX} STREQUAL "")
++if (NOT ${SYMBOLPREFIX}${SYMBOLSUFFIX} STREQUAL "")
+ if (NOT DEFINED ARCH)
+   set(ARCH_IN "x86_64")
+ else()
+@@ -289,12 +289,14 @@ endif()
+ if (NOT ${SYMBOLSUFFIX} STREQUAL "")
+ message(STATUS "adding suffix ${SYMBOLSUFFIX} to names of exported symbols in ${OpenBLAS_LIBNAME}")
+ endif()
++if(BUILD_SHARED_LIBS)
+ 	add_custom_command(TARGET ${OpenBLAS_LIBNAME} POST_BUILD
+   	COMMAND perl  ${PROJECT_SOURCE_DIR}/exports/gensymbol "objcopy" "${ARCH}" "${BU}" "${EXPRECISION_IN}" "${NO_CBLAS_IN}" "${NO_LAPACK_IN}" "${NO_LAPACKE_IN}" "${NEED2UNDERSCORES_IN}" "${ONLY_CBLAS_IN}" \"${SYMBOLPREFIX}\" \"${SYMBOLSUFFIX}\" "${BUILD_LAPACK_DEPRECATED}" > ${PROJECT_BINARY_DIR}/objcopy.def
+         COMMAND objcopy -v --redefine-syms ${PROJECT_BINARY_DIR}/objcopy.def  ${PROJECT_BINARY_DIR}/lib/lib${OpenBLAS_LIBNAME}.so
+         COMMENT "renaming symbols"
+         )
+ endif()
++endif()
+ 
+ 
+ # Install project
+@@ -385,4 +387,3 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PN}ConfigVersion.cmake
+ install(EXPORT "${PN}${SUFFIX64}Targets"
+         NAMESPACE "${PN}${SUFFIX64}::"
+         DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+-
+diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
+index 259ef16..936fbf7 100644
+--- a/cmake/prebuild.cmake
++++ b/cmake/prebuild.cmake
+@@ -58,10 +58,8 @@ endif ()
+ set(TARGET_CONF_TEMP "${PROJECT_BINARY_DIR}/${TARGET_CONF}.tmp")
+ 
+ # c_check
+-set(FU "")
+-if (APPLE OR (MSVC AND NOT ${CMAKE_C_COMPILER_ID} MATCHES "Clang"))
+-  set(FU "_")
+-endif()
++set(FU "")
++set(BU "")
+ 
+ set(COMPILER_ID ${CMAKE_C_COMPILER_ID})
+ if (${COMPILER_ID} STREQUAL "GNU")
+@@ -75,7 +73,9 @@ file(WRITE ${TARGET_CONF_TEMP}
+   "#define ARCH_${UC_ARCH}\t1\n"
+   "#define C_${COMPILER_ID}\t1\n"
+   "#define __${BINARY}BIT__\t1\n"
+-  "#define FUNDERSCORE\t${FU}\n")
++  "#define FUNDERSCORE\t${FU}\n"
++  "#define BUNDERSCORE\t${BU}\n"
++  "//#define NEEDBUNDERSCORE 1\n")
+ 
+ if (${HOST_OS} STREQUAL "WINDOWSSTORE")
+   file(APPEND ${TARGET_CONF_TEMP}
