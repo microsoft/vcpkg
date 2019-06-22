@@ -2,4 +2,5 @@
 Source: boost-scope-exit
 Version: 1.70.0
 Build-Depends: boost-config, boost-detail, boost-function, boost-preprocessor, boost-typeof, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/scope_exit
 Description: Boost scope_exit module

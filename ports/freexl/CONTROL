@@ -1,5 +1,6 @@
 Source: freexl
 Version: 1.0.4-1
+Homepage: https://www.gaia-gis.it/gaia-sins/freexl-sources
 Description: FreeXL is an open source library to extract valid data from within an Excel (.xls) spreadsheet
 Build-Depends: libiconv
 

@@ -1,4 +1,5 @@
 Source: libgeotiff
 Version: 1.4.2-9
+Homepage: https://download.osgeo.org/geotiff/libgeotiff
 Description: Libgeotiff is an open source library normally hosted on top of libtiff for reading, and writing GeoTIFF information tags.
 Build-Depends: tiff, proj4, zlib, libjpeg-turbo

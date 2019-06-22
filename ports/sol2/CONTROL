@@ -1,4 +1,5 @@
 Source: sol2
 Version: 3.0.2
+Homepage: https://github.com/ThePhD/sol2
 Description: Sol v2.0 - a C++ <-> Lua API wrapper with advanced features and top notch performance - is here, and it's great
 Build-Depends: lua (windows)

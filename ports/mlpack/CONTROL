@@ -1,5 +1,5 @@
 Source: mlpack
-Version: 3.1.0-1
+Version: 3.1.1
 Description: mlpack is a fast, flexible machine learning library, written in C++, that aims to provide fast, extensible implementations of cutting-edge machine learning algorithms.
 Build-Depends: openblas (!osx), clapack (!osx), boost, armadillo, ensmallen
 

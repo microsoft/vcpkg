@@ -2,4 +2,5 @@
 Source: boost-align
 Version: 1.70.0
 Build-Depends: boost-assert, boost-config, boost-core, boost-static-assert, boost-throw-exception, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/align
 Description: Boost align module

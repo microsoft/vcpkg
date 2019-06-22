@@ -1,4 +1,5 @@
 Source: assimp
 Version: 4.1.0-5
+Homepage: https://github.com/assimp/assimp
 Description: The Open Asset import library
 Build-Depends: zlib, rapidjson
