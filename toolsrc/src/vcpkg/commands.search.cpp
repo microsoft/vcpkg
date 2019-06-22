@@ -7,6 +7,9 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/dependencies.h>
+
+using vcpkg::Dependencies::PathsPortFileProvider;
 
 namespace vcpkg::Commands::Search
 {
@@ -63,7 +66,10 @@ namespace vcpkg::Commands::Search
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
-        auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        auto source_paragraphs = Util::fmap(provider.load_all_control_files(), [](auto&& port) -> const SourceControlFile * { 
+            return port->source_control_file.get(); 
+        });
 
         if (args.command_arguments.empty())
         {
