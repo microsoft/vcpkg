@@ -115,8 +115,7 @@ namespace vcpkg::Help
                        "                                  (default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) //
                        ", see 'vcpkg help triplet')\n"
                        "\n"
-                       "  --overlay-ports <path>          Specify directories to be used when searching for ports\n"
-                       "  --overlay-ports=<path>\n"
+                       "  --overlay-ports=<path>          Specify directories to be used when searching for ports\n"
                        "\n"
                        "  --vcpkg-root <path>             Specify the vcpkg root "
                        "directory\n"

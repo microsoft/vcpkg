@@ -58,7 +58,7 @@ namespace vcpkg
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        if (option_field == nullptr)
+        if (!option_field)
         {
             option_field = std::make_unique<std::vector<std::string>>();
         }
@@ -77,7 +77,7 @@ namespace vcpkg
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        if (option_field == nullptr)
+        if (!option_field)
         {
             option_field = std::make_unique<std::vector<std::string>>();
         }
@@ -156,12 +156,6 @@ namespace vcpkg
                     parse_value(arg_begin, arg_end, "--triplet", args.triplet);
                     continue;
                 }
-                if (arg == "--overlay-ports")
-                {
-                    ++arg_begin;
-                    parse_multivalue(arg_begin, arg_end, "--additional-ports", args.overlay_ports);
-                    continue;
-                }
                 if (Strings::starts_with(arg, "--overlay-ports="))
                 {
                     parse_cojoined_multivalue(arg.substr(sizeof("--overlay-ports=") - 1),
@@ -220,14 +214,18 @@ namespace vcpkg
                 {
                     const auto& key = arg.substr(0, eq_pos);
                     const auto& value = arg.substr(eq_pos + 1);
-                    if (!args.optional_command_arguments.count(key))
+                    
+                    auto it = args.optional_command_arguments.find(key);
+                    if (args.optional_command_arguments.end() == it)
                     {
                         args.optional_command_arguments.emplace(key, std::vector<std::string> { value });
                     }
                     else
                     {
-                        auto& values = args.optional_command_arguments[key];
-                        values.get()->push_back(value);
+                        if (auto* maybe_values = it->second.get())
+                        {
+                            maybe_values->emplace_back(value);
+                        }
                     }
                 }
                 else
@@ -327,14 +325,7 @@ namespace vcpkg
                 else
                 {
                     const auto& value = it->second.value_or_exit(VCPKG_LINE_INFO);
-                    /*if (value.size() > 1)
-                    {
-                        System::printf(
-                            System::Color::error, "Error: The option '%s' was passed multiple times.\n", option.name);
-                        failed = true;
-
-                    }
-                    else*/ if (value.front().empty())
+                    if (value.front().empty())
                     {
                         // Fail when not given a value, e.g.: "vcpkg install sqlite3 --additional-ports="
                         System::printf(
@@ -425,7 +416,7 @@ namespace vcpkg
         }
         System::printf("    %-40s %s\n", "--triplet <t>", "Set the default triplet for unqualified packages");
         System::printf("    %-40s %s\n", 
-                       "--overlay-ports <path>", 
+                       "--overlay-ports=<path>", 
                        "Specify directories to be used when searching for ports");
         System::printf("    %-40s %s\n",
                        "--vcpkg-root <path>",

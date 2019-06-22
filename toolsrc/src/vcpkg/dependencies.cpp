@@ -326,18 +326,27 @@ namespace vcpkg::Dependencies
         for (auto&& ports_dir : ports_dirs)
         {
             // Try loading individual port
-            auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
-            if (auto scf = maybe_scf.get())
+            if (filesystem.exists(ports_dir / "CONTROL"))
             {
-                if (scf->get()->core_paragraph->name == spec)
+                auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
+                if (auto scf = maybe_scf.get())
                 {
-                    SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
-                    auto it = cache.emplace(spec, std::move(scfl));
-                    return it.first->second;
+                    if (scf->get()->core_paragraph->name == spec)
+                    {
+                        SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
+                        auto it = cache.emplace(spec, std::move(scfl));
+                        return it.first->second;
+                    }
+                }
+                else
+                {
+                    vcpkg::print_error_message(maybe_scf.error());
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: Failed to load port from %s",
+                                              spec, ports_dir.u8string());
                 }
             }
 
-            // Try loading from ports directories
             auto found_scf = Paragraphs::try_load_port(filesystem, ports_dir / spec);
             if (auto scf = found_scf.get())
             {
@@ -361,15 +370,25 @@ namespace vcpkg::Dependencies
         for (auto&& ports_dir : ports_dirs)
         {
             // Try loading individual port
-            auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
-            if (auto scf = maybe_scf.get())
+            if (filesystem.exists(ports_dir / "CONTROL"))
             {
-                auto port_name = scf->get()->core_paragraph->name;
-                if (!cache.count(port_name))
+                auto maybe_scf = Paragraphs::try_load_port(filesystem, ports_dir);
+                if (auto scf = maybe_scf.get())
                 {
-                    SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
-                    auto it = cache.emplace(port_name, std::move(scfl));
-                    ret.emplace_back(&cache[port_name]);
+                    auto port_name = scf->get()->core_paragraph->name;
+                    if (cache.find(port_name) == cache.end())
+                    {
+                        SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
+                        auto it = cache.emplace(port_name, std::move(scfl));
+                        ret.emplace_back(&it.first->second);
+                    }
+                }
+                else
+                {
+                    vcpkg::print_error_message(maybe_scf.error());
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: Failed to load port from %s",
+                                              ports_dir.u8string());
                 }
                 continue;
             }
@@ -379,11 +398,11 @@ namespace vcpkg::Dependencies
             for (auto&& scf : found_scf)
             {
                 auto port_name = scf->core_paragraph->name;
-                if (!cache.count(port_name))
+                if (cache.find(port_name) == cache.end())
                 {
                     SourceControlFileLocation scfl{ std::move(scf), ports_dir / port_name };
                     auto it = cache.emplace(port_name, std::move(scfl));
-                    ret.emplace_back(&cache[port_name]);
+                    ret.emplace_back(&it.first->second);
                 }
             }
         }
@@ -586,10 +605,11 @@ namespace vcpkg::Dependencies
                 VCPKG_LINE_INFO, "Error: Cannot find definition for package `%s`.", cluster.spec.name());
         }
 
+        auto&& control_file = *p_source->scfl->source_control_file.get();
         if (feature.empty())
         {
             // Add default features for this package. This is an exact reference, so ignore prevent_default_features.
-            for (auto&& default_feature : p_source->scfl->source_control_file->core_paragraph.get()->default_features)
+            for (auto&& default_feature : control_file.core_paragraph.get()->default_features)
             {
                 auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
                 if (res != MarkPlusResult::SUCCESS)
@@ -604,7 +624,7 @@ namespace vcpkg::Dependencies
 
         if (feature == "*")
         {
-            for (auto&& fpgh : p_source->scfl->source_control_file->feature_paragraphs)
+            for (auto&& fpgh : control_file.feature_paragraphs)
             {
                 auto res = mark_plus(fpgh->name, cluster, graph, graph_plan, prevent_default_features);
 
@@ -681,7 +701,8 @@ namespace vcpkg::Dependencies
 
             // Check if any default features have been added
             auto& previous_df = p_installed->ipv.core->package.default_features;
-            for (auto&& default_feature : p_source->scfl->source_control_file->core_paragraph->default_features)
+            auto&& control_file = *p_source->scfl->source_control_file.get();
+            for (auto&& default_feature : control_file.core_paragraph->default_features)
             {
                 if (std::find(previous_df.begin(), previous_df.end(), default_feature) == previous_df.end())
                 {
@@ -789,7 +810,11 @@ namespace vcpkg::Dependencies
             if (p_cluster->transient_uninstalled)
             {
                 // If it will be transiently uninstalled, we need to issue a full installation command
-                auto pscfl = p_cluster->source.value_or_exit(VCPKG_LINE_INFO).scfl;
+                auto* pscfl = p_cluster->source.value_or_exit(VCPKG_LINE_INFO).scfl;
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   pscfl != nullptr,
+                                   "Error: Expected a SourceControlFileLocation to exist");
+                auto&& scfl = *pscfl;
 
                 auto dep_specs = Util::fmap(m_graph_plan->install_graph.adjacency_list(p_cluster),
                                             [](ClusterPtr const& p) { return p->spec; });
@@ -797,7 +822,7 @@ namespace vcpkg::Dependencies
 
                 plan.emplace_back(InstallPlanAction{
                     p_cluster->spec,
-                    *pscfl,
+                    scfl,
                     p_cluster->to_install_features,
                     p_cluster->request_type,
                     std::move(dep_specs),
