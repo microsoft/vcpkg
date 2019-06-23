@@ -10,6 +10,7 @@
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/globalstate.h>
 
 namespace vcpkg::Dependencies
 {
@@ -312,7 +313,11 @@ namespace vcpkg::Dependencies
                 }
             }
         }
-        ports_dirs.emplace_back(paths.ports);
+
+        if (GlobalState::g_load_default_ports)
+        {
+            ports_dirs.emplace_back(paths.ports);
+        }
     }
 
     Optional<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const

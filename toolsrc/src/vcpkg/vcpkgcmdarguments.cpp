@@ -208,7 +208,11 @@ namespace vcpkg
                     parse_switch(false, "binarycaching", args.binarycaching);
                     continue;
                 }
-
+                if (arg == "--no-default-ports")
+                {
+                    parse_switch(false, "default-ports", args.default_ports);
+                    continue;
+                }
                 const auto eq_pos = arg.find('=');
                 if (eq_pos != std::string::npos)
                 {
@@ -418,6 +422,9 @@ namespace vcpkg
         System::printf("    %-40s %s\n", 
                        "--overlay-ports=<path>", 
                        "Specify directories to be used when searching for ports");
+        System::printf("    %-40s %s\n",
+                       "--no-default-ports",
+                       "Don't use ports inside <vcpkg_root>/ports");
         System::printf("    %-40s %s\n",
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");

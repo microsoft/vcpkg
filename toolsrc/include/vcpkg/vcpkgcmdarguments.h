@@ -91,6 +91,7 @@ namespace vcpkg
         Optional<bool> debug = nullopt;
         Optional<bool> sendmetrics = nullopt;
         Optional<bool> printmetrics = nullopt;
+        Optional<bool> default_ports = nullopt;
 
         // feature flags
         Optional<bool> featurepackages = nullopt;
