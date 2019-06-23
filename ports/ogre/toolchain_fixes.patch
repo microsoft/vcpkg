@@ -329,7 +329,7 @@ index 0c48510..7f0c8f6 100644
 +make_library_set(TBB_MALLOC_PROXY)
  findpkg_finish(TBB_MALLOC_PROXY)
 diff --git a/CMake/Packages/FindZZip.cmake b/CMake/Packages/FindZZip.cmake
-index e97951e..673cd27 100644
+index e97951e..1c7cf00 100644
 --- a/CMake/Packages/FindZZip.cmake
 +++ b/CMake/Packages/FindZZip.cmake
 @@ -11,7 +11,7 @@
@@ -341,7 +341,13 @@ index e97951e..673cd27 100644
  #  ZZip_LIBRARIES - link these to use ZZip
  
  include(FindPkgMacros)
-@@ -44,7 +44,6 @@ find_path(ZZip_INCLUDE_DIR NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZi
+@@ -39,12 +39,11 @@ use_pkgconfig(ZZip_PKGC zziplib)
+ 
+ findpkg_framework(ZZip)
+ 
+-find_path(ZZip_INCLUDE_DIR NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZip_PKGC_INCLUDE_DIRS})
++find_path(ZZip_INCLUDE_DIRS NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZip_PKGC_INCLUDE_DIRS})
+ 
  find_library(ZZip_LIBRARY_REL NAMES ${ZZip_LIBRARY_NAMES} HINTS ${ZZip_LIB_SEARCH_PATH} ${ZZip_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
  find_library(ZZip_LIBRARY_DBG NAMES ${ZZip_LIBRARY_NAMES_DBG} HINTS ${ZZip_LIB_SEARCH_PATH} ${ZZip_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
  

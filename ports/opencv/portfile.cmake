@@ -108,12 +108,8 @@ if("contrib" IN_LIST FEATURES)
 endif()
 
 set(BUILD_opencv_dnn OFF)
-set(WITH_PROTOBUF OFF)
 if("dnn" IN_LIST FEATURES)
   set(BUILD_opencv_dnn ON)
-  set(WITH_PROTOBUF ON)
-  set(PROTOBUF_UPDATE_FILES ON)
-  set(UPDATE_PROTO_FILES ON)
   vcpkg_download_distfile(TINYDNN_ARCHIVE
     URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
     FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
@@ -146,22 +142,26 @@ if("ipp" IN_LIST FEATURES)
         FILENAME "opencv-cache/ippicv/fe6b2bb75ae0e3f19ad3ae1a31dfa4a2-ippicv_2019_mac_intel64_general_20180723.tgz"
         SHA512 266fe3fecf8e95e1f51c09b65330a577743ef72b423b935d4d1fe8d87f1b4f258c282fe6a18fc805d489592f137ebed37c9f1d1b34026590d9f1ba107015132e
     )
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-      message(WARNING "Please check from logs about missing download")
     else()
       message(WARNING "This target architecture is not supported IPPICV")
+      set(WITH_IPP OFF)
     endif()
   elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_intel64_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/c0bd78adb4156bbf552c1dfe90599607-ippicv_2019_lnx_intel64_general_20180723.tgz"
+        SHA512 e4ec6b3b9fc03d7b3ae777c2a26f57913e83329fd2f7be26c259b07477ca2a641050b86979e0c96e25aa4c1f9f251b28727690358a77418e76dd910d0f4845c9
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_ia32_general_20180723.tgz"
         FILENAME "opencv-cache/ippicv/4f38432c30bfd6423164b7a24bbc98a0-ippicv_2019_lnx_ia32_general_20180723.tgz"
         SHA512 d96d3989928ff11a18e631bf5ecfdedf88fd350162a23fa2c8f7dbc3bf878bf442aff7fb2a07dc56671d7268cc20682055891be75b9834e9694d20173e92b6a3
       )
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-      message(WARNING "Please check from logs about missing download")
     else()
       message(WARNING "This target architecture is not supported IPPICV")
+      set(WITH_IPP OFF)
     endif()
   elseif(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -178,9 +178,11 @@ if("ipp" IN_LIST FEATURES)
       )
     else()
       message(WARNING "This target architecture is not supported IPPICV")
+      set(WITH_IPP OFF)
     endif()
   else()
     message(WARNING "This target architecture is not supported IPPICV")
+    set(WITH_IPP OFF)
   endif()
 endif()
 
@@ -242,6 +244,10 @@ set(WITH_VTK OFF)
 if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
 endif()
+if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND WITH_VTK)
+  message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
+  set(WITH_VTK OFF)
+endif()
 
 set(WITH_WEBP OFF)
 if("webp" IN_LIST FEATURES)
@@ -253,17 +259,14 @@ if("world" IN_LIST FEATURES)
   set(BUILD_opencv_world ON)
 endif()
 
-#broken features
 set(WITH_ADE OFF)
 if("ade" IN_LIST FEATURES)
-  message(WARNING "ADE is currently unsupported, keeping it off")
-  #set(WITH_ADE ON)
+  set(WITH_ADE ON)
 endif()
 
 set(WITH_OPENMP OFF)
 if("openmp" IN_LIST FEATURES)
-  message(WARNING "OpenMP is currently unsupported, keeping it off")
-  #set(WITH_OPENMP ON)
+  set(WITH_OPENMP ON)
 endif()
 
 set(BUILD_opencv_ovis OFF)
@@ -312,12 +315,10 @@ vcpkg_configure_cmake(
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
+	-DUPDATE_PROTO_FILES=ON
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
-        # PROTOBUF
-        -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
-        -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
@@ -385,7 +386,14 @@ if(Protobuf_FOUND)
   endif()
 endif()
 find_package(HDF5 QUIET)
-find_package(Freetype QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_package(Freetype QUIET)
+find_package(Ogre QUIET)
+find_package(gflags QUIET)
+find_package(Ceres QUIET)
+find_package(ade QUIET)
+find_package(VTK QUIET)
+find_package(GDCM QUIET)
+find_package(OpenJPEG QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
