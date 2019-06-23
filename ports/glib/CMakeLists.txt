@@ -330,8 +330,8 @@ install(
     DESTINATION share/unofficial-glib
 )
 configure_file(
-    cmake/unofficial-glib-config.in.cmake
-    cmake/unofficial-glib-config.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-glib-config.in.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-glib-config.cmake
     @ONLY
 )
 install(

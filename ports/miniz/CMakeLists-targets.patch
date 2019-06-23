@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7dd6309..eaf160f 100644
+index f3e453a..094a4e8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -8,12 +8,12 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
+@@ -8,13 +8,12 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
  CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
  endif ()
  
@@ -11,14 +11,16 @@ index 7dd6309..eaf160f 100644
  set(miniz_SOURCE miniz.c miniz_zip.c miniz_tinfl.c miniz_tdef.c)
  
 -add_library(miniz ${miniz_SOURCE})
+-target_include_directories(miniz PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+-
 +add_library(miniz STATIC ${miniz_SOURCE})
 +target_compile_definitions(miniz PRIVATE _CRT_SECURE_NO_WARNINGS)
- 
++ 
 +if(FALSE)
  set(EXAMPLE1_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.c")
  set(EXAMPLE2_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example2.c")
  set(EXAMPLE3_SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/examples/example3.c")
-@@ -41,12 +41,28 @@ if(${UNIX})
+@@ -41,12 +40,28 @@ if(${UNIX})
      target_link_libraries(example6 m)
  endif()
  
@@ -49,6 +51,5 @@ index 7dd6309..eaf160f 100644
 +    NAMESPACE miniz::
 +)
  file(GLOB INSTALL_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
--install(FILES ${INSTALL_HEADERS} DESTINATION include/${PROJECT_NAME})
+ install(FILES ${INSTALL_HEADERS} DESTINATION include/${PROJECT_NAME})
 \ No newline at end of file
-+install(FILES ${INSTALL_HEADERS} DESTINATION include/${PROJECT_NAME})

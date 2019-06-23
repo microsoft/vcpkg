@@ -2,8 +2,10 @@
 
 #include <tests.utils.h>
 
+#if defined(_WIN32)
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
+#endif
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

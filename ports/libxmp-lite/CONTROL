@@ -1,3 +1,4 @@
 Source: libxmp-lite
 Version: 4.4.1-1
+Homepage: https://sourceforge.net/projects/xmp/
 Description: Lightweight version of libxmp that supports MOD, S3M, XM and IT modules.

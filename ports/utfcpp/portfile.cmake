@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
-    REF v2.3.5
-    SHA512 d5e672de952b78a78a8af0c81664f15667b30558fd406a9abc72c14dc444e0869e7c02cb66fa017ec0e760c0fb23c3e923a4b171c2acb3ed7b71612783e789ee
+    REF v3.1
+    SHA512 826ac7aa61215ac2144fa3f5edc7f291c3dd25dc69b0c82526840f4651f822515ec262915e1117d975e5c5dd729f6166806a5d397262f59a2b323eb7009671f5
     HEAD_REF master
 )
 

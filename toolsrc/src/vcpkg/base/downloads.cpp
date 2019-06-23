@@ -44,18 +44,20 @@ namespace vcpkg::Downloads
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
         // Win7 IE Proxy fallback
-        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater()) {
+        if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater())
+        {
             // First check if any proxy has been found automatically
             WINHTTP_PROXY_INFO proxyInfo;
             DWORD proxyInfoSize = sizeof(WINHTTP_PROXY_INFO);
-            auto noProxyFound = 
-                !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) 
-                || proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
+            auto noProxyFound = !WinHttpQueryOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, &proxyInfoSize) ||
+                                proxyInfo.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY;
 
             // If no proxy was found automatically, use IE's proxy settings, if any
-            if (noProxyFound) {
+            if (noProxyFound)
+            {
                 WINHTTP_CURRENT_USER_IE_PROXY_CONFIG ieProxy;
-                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr) {
+                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr)
+                {
                     WINHTTP_PROXY_INFO proxy;
                     proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
                     proxy.lpszProxy = ieProxy.lpszProxy;
@@ -103,7 +105,7 @@ namespace vcpkg::Downloads
             bResults = WinHttpQueryDataAvailable(hRequest, &dwSize);
             Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpQueryDataAvailable() failed: %d", GetLastError());
 
-            if (buf.size() < dwSize) buf.resize(dwSize * 2);
+            if (buf.size() < dwSize) buf.resize(static_cast<size_t>(dwSize) * 2);
 
             bResults = WinHttpReadData(hRequest, (LPVOID)buf.data(), dwSize, &downloaded_size);
             Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpReadData() failed: %d", GetLastError());
@@ -155,9 +157,10 @@ namespace vcpkg::Downloads
                        const std::string& sha512)
     {
         const std::string download_path_part = download_path.u8string() + ".part";
+        auto download_path_part_path = fs::u8path(download_path_part);
         std::error_code ec;
         fs.remove(download_path, ec);
-        fs.remove(download_path_part, ec);
+        fs.remove(download_path_part_path, ec);
 #if defined(_WIN32)
         auto url_no_proto = url.substr(8); // drop https://
         auto path_begin = Util::find(url_no_proto, '/');
@@ -171,14 +174,7 @@ namespace vcpkg::Downloads
         Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
 #endif
 
-        verify_downloaded_file_hash(fs, url, download_path_part, sha512);
-        fs.rename(download_path_part, download_path, ec);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ec,
-                           "Failed to do post-download rename-in-place.\n"
-                           "fs.rename(%s, %s, %s)",
-                           download_path_part,
-                           download_path.u8string(),
-                           ec.message());
+        verify_downloaded_file_hash(fs, url, download_path_part_path, sha512);
+        fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);
     }
 }

@@ -6,6 +6,7 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
@@ -22,6 +23,7 @@
 #include <vcpkg/vcpkglib.h>
 
 using vcpkg::Build::BuildResult;
+using vcpkg::Dependencies::PathsPortFileProvider;
 using vcpkg::Parse::ParseControlErrorInfo;
 using vcpkg::Parse::ParseExpected;
 
@@ -33,34 +35,26 @@ namespace vcpkg::Build::Command
     static constexpr StringLiteral OPTION_CHECKS_ONLY = "--checks-only";
 
     void perform_and_exit_ex(const FullPackageSpec& full_spec,
-                             const fs::path& port_dir,
+                             const SourceControlFileLocation& scfl,
                              const ParsedArguments& options,
                              const VcpkgPaths& paths)
     {
         const PackageSpec& spec = full_spec.package_spec;
+        const auto& scf = *scfl.source_control_file;
         if (Util::Sets::contains(options.switches, OPTION_CHECKS_ONLY))
         {
             const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
-            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
+            const size_t error_count =
+                PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, scfl.source_location);
             Checks::check_exit(VCPKG_LINE_INFO, error_count == 0);
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const ParseExpected<SourceControlFile> source_control_file =
-            Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-
-        if (!source_control_file.has_value())
-        {
-            print_error_message(source_control_file.error());
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        const auto& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           spec.name() == scf->core_paragraph->name,
+                           spec.name() == scf.core_paragraph->name,
                            "The Source field inside the CONTROL file does not match the port directory: '%s' != '%s'",
-                           scf->core_paragraph->name,
+                           scf.core_paragraph->name,
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
@@ -69,6 +63,7 @@ namespace vcpkg::Build::Command
             Build::AllowDownloads::YES,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
@@ -78,7 +73,7 @@ namespace vcpkg::Build::Command
         features_as_set.emplace("core");
 
         const Build::BuildPackageConfig build_config{
-            *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
+            scf, spec.triplet(), fs::path(scfl.source_location), build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -126,15 +121,19 @@ namespace vcpkg::Build::Command
         // Build only takes a single package and all dependencies must already be installed
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         std::string first_arg = args.command_arguments.at(0);
+
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(
             std::move(first_arg), default_triplet, COMMAND_STRUCTURE.example_text);
+
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        if (!spec.features.empty() && !GlobalState::feature_packages)
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-        }
-        perform_and_exit_ex(spec, paths.port_dir(spec.package_spec), options, paths);
+
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        const auto port_name = spec.package_spec.name();
+        const auto* scfl = provider.get_control_file(port_name).get();
+
+        Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
+
+        perform_and_exit_ex(spec, *scfl, options, paths);
     }
 }
 
@@ -237,7 +236,7 @@ namespace vcpkg::Build
         if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
 
         const char* tonull = " >nul";
-        if (GlobalState::debugging)
+        if (Debug::g_debugging)
         {
             tonull = "";
         }
@@ -283,7 +282,7 @@ namespace vcpkg::Build
             start += "\n" + Strings::serialize(feature);
         }
         const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / "CONTROL";
-        paths.get_filesystem().write_contents(binary_control_file, start);
+        paths.get_filesystem().write_contents(binary_control_file, start, VCPKG_LINE_INFO);
     }
 
     static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
@@ -337,6 +336,23 @@ namespace vcpkg::Build
         return ret;
     }
 
+    static int get_concurrency()
+    {
+        static int concurrency = [] {
+            auto user_defined_concurrency = System::get_environment_variable("VCPKG_MAX_CONCURRENCY");
+            if (user_defined_concurrency)
+            {
+                return std::stoi(user_defined_concurrency.value_or_exit(VCPKG_LINE_INFO));
+            }
+            else
+            {
+                return System::get_num_logical_cores() + 1;
+            }
+        }();
+
+        return concurrency;
+    }
+
     static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
                                                 const PreBuildInfo& pre_build_info,
                                                 const PackageSpec& spec,
@@ -345,6 +361,12 @@ namespace vcpkg::Build
     {
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = spec.triplet();
+
+        if (!Strings::starts_with(Strings::ascii_to_lowercase(config.port_dir.u8string()),
+                                  Strings::ascii_to_lowercase(paths.ports.u8string())))
+        {
+            System::printf("-- Installing port from location: %s\n", config.port_dir.u8string());
+        }
 
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
@@ -363,19 +385,19 @@ namespace vcpkg::Build
 
         const Toolset& toolset = paths.get_toolset(pre_build_info);
 
-        std::vector<System::CMakeVariable> variables {
+        std::vector<System::CMakeVariable> variables{
             {"CMD", "BUILD"},
             {"PORT", config.scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", spec.triplet().canonical_name()},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-            {"VCPKG_USE_HEAD_VERSION",
-            Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+            {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
+            {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
@@ -383,10 +405,7 @@ namespace vcpkg::Build
             variables.push_back({"GIT", git_exe_path});
         }
 
-        const std::string cmd_launch_cmake = System::make_cmake_cmd(
-            cmake_exe_path,
-            paths.ports_cmake,
-            variables);
+        const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
 
         auto command = make_build_env_cmd(pre_build_info, toolset);
         if (!command.empty())
@@ -417,7 +436,8 @@ namespace vcpkg::Build
         }
 
         const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
-        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
+        const size_t error_count =
+            PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
 
         auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
 
@@ -487,14 +507,14 @@ namespace vcpkg::Build
 
         // the order of recursive_directory_iterator is undefined so save the names to sort
         std::vector<fs::path> port_files;
-        for (auto &port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
+        for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
             if (fs::is_regular_file(status(port_file)))
             {
                 port_files.push_back(port_file);
                 if (port_files.size() > max_port_file_count)
                 {
-                    abi_tag_entries.emplace_back(AbiEntry{ "no_hash_max_portfile", "" });
+                    abi_tag_entries.emplace_back(AbiEntry{"no_hash_max_portfile", ""});
                     break;
                 }
             }
@@ -505,17 +525,17 @@ namespace vcpkg::Build
             std::sort(port_files.begin(), port_files.end());
 
             int counter = 0;
-            for (auto & port_file : port_files)
+            for (auto& port_file : port_files)
             {
                 // When vcpkg takes a dependency on C++17 it can use fs::relative,
                 // which will give a stable ordering and better names in the key entry.
                 // this is not available in the filesystem TS so instead number the files for the key.
                 std::string key = Strings::format("file_%03d", counter++);
-                if (GlobalState::debugging)
+                if (Debug::g_debugging)
                 {
                     System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
                 }
-                abi_tag_entries.emplace_back(AbiEntry{ key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1") });
+                abi_tag_entries.emplace_back(AbiEntry{key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1")});
             }
         }
 
@@ -536,7 +556,7 @@ namespace vcpkg::Build
         const std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
 
-        if (GlobalState::debugging)
+        if (Debug::g_debugging)
         {
             System::print2("[DEBUG] <abientries>\n");
             for (auto&& entry : abi_tag_entries)
@@ -554,7 +574,7 @@ namespace vcpkg::Build
             std::error_code ec;
             fs.create_directories(paths.buildtrees / name, ec);
             const auto abi_file_path = paths.buildtrees / name / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
-            fs.write_contents(abi_file_path, full_abi_info);
+            fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
             return AbiTagAndFile{Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
         }
@@ -605,8 +625,8 @@ namespace vcpkg::Build
         System::cmd_execute_clean(Strings::format(
             R"("%s" a "%s" "%s\*" >nul)", seven_zip_exe.u8string(), destination.u8string(), source.u8string()));
 #else
-        System::cmd_execute_clean(Strings::format(
-            R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
+        System::cmd_execute_clean(
+            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
 #endif
     }
 
@@ -694,7 +714,7 @@ namespace vcpkg::Build
                 }
             }
 
-            System::print2("Could not locate cached archive: ", archive_path.u8string(), "\n");
+            System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
 
             ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
                 paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
@@ -733,7 +753,7 @@ namespace vcpkg::Build
                     const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
                     fs.create_directories(tmp_log_path_destination, ec);
 
-                    for (auto &log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
+                    for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
                     {
                         if (log_file.path().extension() == ".log")
                         {

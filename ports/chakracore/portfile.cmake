@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF v1.11.8
-    SHA512 edfeda3e1ce5aefb0042ffd2b05db512601f1309267eee819b30f407a97acda785d4df5294ef7c1e86579ed86073344fb44a59cd50b0cb014446fbf855620733
+    REF v1.11.9
+    SHA512 4703e28f04925074bfc2057dcccee0427aacdd48f7b9f715d08a9385e4de9e804e1620cd49e8b3db7cd330d00ecd374bfaa3205dbe1f3cfce51ed0eea439a55e
     HEAD_REF master
 )
 

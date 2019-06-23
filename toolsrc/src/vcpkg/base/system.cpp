@@ -16,7 +16,9 @@
 #include <sys/sysctl.h>
 #endif
 
+#if defined(_WIN32)
 #pragma comment(lib, "Advapi32")
+#endif
 
 using namespace vcpkg::System;
 
@@ -177,8 +179,8 @@ namespace vcpkg
     }
 
     std::string System::make_cmake_cmd(const fs::path& cmake_exe,
-                               const fs::path& cmake_script,
-                               const std::vector<CMakeVariable>& pass_variables)
+                                       const fs::path& cmake_script,
+                                       const std::vector<CMakeVariable>& pass_variables)
     {
         const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
         return Strings::format(
@@ -345,7 +347,8 @@ namespace vcpkg
     }
 #endif
 
-    int System::cmd_execute_clean(const ZStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
+    int System::cmd_execute_clean(const ZStringView cmd_line,
+                                  const std::unordered_map<std::string, std::string>& extra_env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
@@ -385,6 +388,7 @@ namespace vcpkg
         // Flush stdout before launching external process
         fflush(nullptr);
 
+        auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
         // We are wrap the command line in quotes to cause cmd.exe to correctly process it
         auto actual_cmd_line = Strings::concat('"', cmd_line, '"');
@@ -392,11 +396,19 @@ namespace vcpkg
         g_ctrl_c_state.transition_to_spawn_process();
         const int exit_code = _wsystem(Strings::to_utf16(actual_cmd_line).c_str());
         g_ctrl_c_state.transition_from_spawn_process();
-        Debug::print("_wsystem() returned ", exit_code, '\n');
+        Debug::print("_wsystem() returned ",
+                     exit_code,
+                     " after ",
+                     Strings::format("%8d", static_cast<int>(timer.microseconds())),
+                     " us\n");
 #else
         Debug::print("_system(", cmd_line, ")\n");
         const int exit_code = system(cmd_line.c_str());
-        Debug::print("_system() returned ", exit_code, '\n');
+        Debug::print("_system() returned ",
+                     exit_code,
+                     " after ",
+                     Strings::format("%8d", static_cast<int>(timer.microseconds())),
+                     " us\n");
 #endif
         return exit_code;
     }
@@ -595,6 +607,11 @@ namespace vcpkg
 #else
     void System::register_console_ctrl_handler() {}
 #endif
+
+    int System::get_num_logical_cores()
+    {
+        return std::thread::hardware_concurrency();
+    }
 }
 
 namespace vcpkg::Debug
