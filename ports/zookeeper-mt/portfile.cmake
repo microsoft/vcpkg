@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://archive.apache.org/dist/zookeeper/zookeeper-3.5.4-beta/zookeeper-3.5.4-beta.tar.gz"
-    FILENAME "zookeeper-3.5.4-beta.tar.gz"
-    SHA512 3b45ea03f1f710310633141e5190cd9c7d734d0075bde996c82fe1e4e40a86a2aa48c41412ac7d7fd71c68b2f4c2497482d321b495b7283a57c9a2f0fba9a62e
+    URLS "https://archive.apache.org/dist/zookeeper/zookeeper-3.5.5/apache-zookeeper-3.5.5.tar.gz"
+    FILENAME "zookeeper-3.5.5.tar.gz"
+    SHA512 4e22df899a83ca3cc15f6d94daadb1a8631fb4108e67b4f56d1f4fcf95f10f89c8ff1fb8a7c84799a3856d8803a8db1e1f2f3fe1b7dc0d6cedf485ef90fd212d
 )
 
 vcpkg_extract_source_archive_ex(
