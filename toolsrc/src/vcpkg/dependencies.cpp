@@ -126,16 +126,23 @@ namespace vcpkg::Dependencies
     std::string to_output_string(RequestType request_type, 
                                  const CStringView s, 
                                  const Build::BuildPackageOptions& options, 
-                                 const fs::path& port_path)
+                                 const fs::path& install_port_path,
+                                 const fs::path& default_port_path)
     {
         const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
 
-        switch (request_type)
+        if (!default_port_path.empty()
+            && !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(),
+                                                            default_port_path.u8string()))
         {
-            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s%s -- %s", s, from_head, port_path.u8string());
-            case RequestType::USER_REQUESTED: return Strings::format("    %s%s -- %s", s, from_head, port_path.u8string());
+            switch (request_type)
+            {
+            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s%s -- %s", s, from_head, install_port_path.u8string());
+            case RequestType::USER_REQUESTED: return Strings::format("    %s%s -- %s", s, from_head, install_port_path.u8string());
             default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
         }
+        return to_output_string(request_type, s, options);
     }
 
     std::string to_output_string(RequestType request_type,
@@ -967,15 +974,11 @@ namespace vcpkg::Dependencies
             return Strings::join("\n", v, [&](const InstallPlanAction* p) {
                 if (auto * pscfl = p->source_control_file_location.get())
                 {
-                    if (!default_ports_dir.empty() &&
-                        !Strings::case_insensitive_ascii_starts_with(pscfl->source_location.u8string(),
-                                                                     default_ports_dir.u8string()))
-                    {
-                        return to_output_string(p->request_type, 
-                                                p->displayname(), 
-                                                p->build_options, 
-                                                pscfl->source_location);
-                    }
+                    return to_output_string(p->request_type, 
+                                            p->displayname(), 
+                                            p->build_options, 
+                                            pscfl->source_location, 
+                                            default_ports_dir);
                 }
 
                 return to_output_string(p->request_type, p->displayname(), p->build_options);
