@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 92e4698..b17988e 100644
+index 92e4698..aa643aa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -75,6 +75,8 @@ else ()
+@@ -52,6 +52,8 @@ endif()
+ 
+ enable_testing()
+ 
++find_package(json11 REQUIRED)
++
+ if (${USE_CPPNETLIB})
+     find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS thread filesystem system date_time chrono regex)
+ 
+@@ -75,6 +77,8 @@ else ()
  	   set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${CURL_ROOT}/lib")
      endif ()
      find_package(CURL REQUIRED)
@@ -11,14 +20,13 @@ index 92e4698..b17988e 100644
  endif ()
  
  set(LIBB64_DIR "${PROJECT_SOURCE_DIR}/ext/b64")
-@@ -87,9 +89,8 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
+@@ -87,9 +91,7 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
      message(FATAL_ERROR "Building Ppconsul as dynamic library on Windows is not supported, see https://github.com/oliora/ppconsul/issues/25")
  endif()
  
 -add_subdirectory(ext/json11)
  add_subdirectory(src)
 -add_subdirectory(tests)
-+find_package(json11 REQUIRED)
  
  install(
      DIRECTORY "${HEADERS_DIR}"
