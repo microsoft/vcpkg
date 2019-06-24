@@ -171,7 +171,7 @@ namespace vcpkg::Commands::Upgrade
             }
         }
 
-        Dependencies::print_plan(plan, true);
+        Dependencies::print_plan(plan, true, paths.ports);
 
         if (!no_dry_run)
         {

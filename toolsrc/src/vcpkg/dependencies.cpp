@@ -123,6 +123,27 @@ namespace vcpkg::Dependencies
         const PortFileProvider& m_provider;
     };
 
+    std::string to_output_string(RequestType request_type, 
+                                 const CStringView s, 
+                                 const Build::BuildPackageOptions& options, 
+                                 const fs::path& install_port_path,
+                                 const fs::path& default_port_path)
+    {
+        if (!default_port_path.empty()
+            && !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(),
+                                                            default_port_path.u8string()))
+        {
+            const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
+            switch (request_type)
+            {
+            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s%s -- %s", s, from_head, install_port_path.u8string());
+            case RequestType::USER_REQUESTED: return Strings::format("    %s%s -- %s", s, from_head, install_port_path.u8string());
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }
+        return to_output_string(request_type, s, options);
+    }
+
     std::string to_output_string(RequestType request_type,
                                  const CStringView s,
                                  const Build::BuildPackageOptions& options)
@@ -131,7 +152,7 @@ namespace vcpkg::Dependencies
 
         switch (request_type)
         {
-            case RequestType::AUTO_SELECTED: return Strings::format("  * %s%s", s, from_head);
+            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s%s", s, from_head);
             case RequestType::USER_REQUESTED: return Strings::format("    %s%s", s, from_head);
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
@@ -141,7 +162,7 @@ namespace vcpkg::Dependencies
     {
         switch (request_type)
         {
-            case RequestType::AUTO_SELECTED: return Strings::format("  * %s", s);
+            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s", s);
             case RequestType::USER_REQUESTED: return Strings::format("    %s", s);
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
@@ -893,7 +914,7 @@ namespace vcpkg::Dependencies
 
     PackageGraph::~PackageGraph() = default;
 
-    void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive)
+    void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive, const fs::path& default_ports_dir)
     {
         std::vector<const RemovePlanAction*> remove_plans;
         std::vector<const InstallPlanAction*> rebuilt_plans;
@@ -948,8 +969,17 @@ namespace vcpkg::Dependencies
         std::sort(already_installed_plans.begin(), already_installed_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(excluded.begin(), excluded.end(), &InstallPlanAction::compare_by_name);
 
-        static auto actions_to_output_string = [](const std::vector<const InstallPlanAction*>& v) {
-            return Strings::join("\n", v, [](const InstallPlanAction* p) {
+        static auto actions_to_output_string = [&](const std::vector<const InstallPlanAction*>& v) {
+            return Strings::join("\n", v, [&](const InstallPlanAction* p) {
+                if (auto * pscfl = p->source_control_file_location.get())
+                {
+                    return to_output_string(p->request_type, 
+                                            p->displayname(), 
+                                            p->build_options, 
+                                            pscfl->source_location, 
+                                            default_ports_dir);
+                }
+
                 return to_output_string(p->request_type, p->displayname(), p->build_options);
             });
         };
