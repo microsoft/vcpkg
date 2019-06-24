@@ -1,5 +1,5 @@
 diff --git a/CMake/FindLibSSH2.cmake b/CMake/FindLibSSH2.cmake
-index 84822dba7..0d6219425 100644
+index 84822db..0d62194 100644
 --- a/CMake/FindLibSSH2.cmake
 +++ b/CMake/FindLibSSH2.cmake
 @@ -12,7 +12,7 @@ endif()
@@ -11,18 +11,3 @@ index 84822dba7..0d6219425 100644
  )
  
  if(LIBSSH2_INCLUDE_DIR)
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e6dbb73f1..1e2ff138e 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -1144,7 +1144,9 @@ function(TRANSFORM_MAKEFILE_INC INPUT_FILE OUTPUT_FILE)
- 
- endfunction()
- 
--if(WIN32 AND NOT CYGWIN)
-+if(MSVC)
-+  set(CURL_INSTALL_CMAKE_DIR share/curl)
-+elseif(WIN32 AND NOT CYGWIN)
-   set(CURL_INSTALL_CMAKE_DIR CMake)
- else()
-   set(CURL_INSTALL_CMAKE_DIR lib/cmake/curl)

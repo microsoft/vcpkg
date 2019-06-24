@@ -6,10 +6,14 @@ vcpkg_from_github(
     REF pcl-1.9.1
     SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
     HEAD_REF master
-    PATCHES pcl_utils.patch
-            pcl_config.patch
-            find_flann.patch
+    PATCHES
+        pcl_utils.patch
+        pcl_config.patch
+        use_flann_targets.patch
+        boost-1.70.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
@@ -64,7 +68,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/pcl)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

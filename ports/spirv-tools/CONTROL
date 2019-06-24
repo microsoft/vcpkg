@@ -1,4 +1,5 @@
 Source: spirv-tools
 Version: 2018.1-2
+Homepage: https://github.com/KhronosGroup/SPIRV-Tools
 Description: API and commands for processing SPIR-V modules
 Build-Depends: spirv-headers

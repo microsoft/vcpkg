@@ -1,0 +1,3 @@
+Source: robin-hood-hashing
+Version: 3.2.13
+Description: Fast & memory efficient hashtable based on robin hood hashing for C++14

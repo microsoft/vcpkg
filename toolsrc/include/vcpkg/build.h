@@ -20,7 +20,7 @@ namespace vcpkg::Build
     namespace Command
     {
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
-                                 const fs::path& port_dir,
+                                 const SourceControlFileLocation& scfl,
                                  const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
@@ -46,6 +46,12 @@ namespace vcpkg::Build
     };
 
     enum class CleanPackages
+    {
+        NO = 0,
+        YES
+    };
+
+    enum class CleanDownloads
     {
         NO = 0,
         YES
@@ -82,6 +88,7 @@ namespace vcpkg::Build
         AllowDownloads allow_downloads;
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
+        CleanDownloads clean_downloads;
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;

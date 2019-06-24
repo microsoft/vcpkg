@@ -19,6 +19,8 @@ vcpkg_from_github(
     REF 00d9a4ac58a52b52495736be614cb06ba102663c
     SHA512 a0d08ac2ff46bd4cc606626c8e0da18a83392722a2e40df18f9e40710e5e147c0a24800174bfdf42ed7a12be4d9679f6302c51d8409724d31ca2a29ab4972481
     HEAD_REF master
+    PATCHES
+        OpenSSL.patch
 )
 
 vcpkg_configure_cmake(

@@ -1,5 +1,6 @@
 Source: soci
 Version: 3.2.3-4
+Homepage: https://github.com/SOCI/soci
 Description: SOCI database access library
 
 Feature: boost
