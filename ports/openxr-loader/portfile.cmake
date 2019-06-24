@@ -44,7 +44,7 @@ vcpkg_install_cmake()
 
 function(COPY_BINARIES SOURCE DEST)
     # hack, because CMAKE_SHARED_LIBRARY_SUFFIX seems to be unpopulated
-    if(WIN32)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(SHARED_LIB_SUFFIX ".dll")
     else()
         set(SHARED_LIB_SUFFIX ".so")
