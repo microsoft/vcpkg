@@ -10,6 +10,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     CMakeLists-targets.patch
+    CMakeLists-windows.patch
 )
 
 vcpkg_configure_cmake(
@@ -19,8 +20,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-#vcpkg_fixup_cmake_targets()
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
