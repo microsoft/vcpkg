@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f6968ed..840900f 100644
+index f6968ed..2dfd933 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -44,7 +44,6 @@ endif()
@@ -10,7 +10,7 @@ index f6968ed..840900f 100644
    if(APPLE)
      if(INTERPOSE MATCHES "ON")
        # use interpose on MacOSX
-@@ -108,33 +107,58 @@ endif()
+@@ -108,36 +107,57 @@ endif()
  
  
  # shared library
@@ -73,4 +73,7 @@ index f6968ed..840900f 100644
 +endif()
  target_compile_options(mimalloc-obj PRIVATE ${mi_cflags})
  target_include_directories(mimalloc-obj PRIVATE include PUBLIC $<INSTALL_INTERFACE:include>)
- 
+-
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/mimalloc-obj.dir/src/static.c${CMAKE_C_OUTPUT_EXTENSION}
+-        DESTINATION ${mi_install_dir}
+-        RENAME ${mi_basename}${CMAKE_C_OUTPUT_EXTENSION} )
