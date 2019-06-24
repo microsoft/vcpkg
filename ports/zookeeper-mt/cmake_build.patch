@@ -1,7 +1,7 @@
-diff --git a/src/c/CMakeLists.txt b/src/c/CMakeLists.txt
-index 00d639e..28ecac5 100644
---- a/src/c/CMakeLists.txt
-+++ b/src/c/CMakeLists.txt
+diff --git a/zookeeper-client/zookeeper-client-c/CMakeLists.txt b/zookeeper-client/zookeeper-client-c/CMakeLists.txt
+index 24a5a1b..05b641a 100644
+--- a/zookeeper-client/zookeeper-client-c/CMakeLists.txt
++++ b/zookeeper-client/zookeeper-client-c/CMakeLists.txt
 @@ -153,7 +153,11 @@ configure_file(cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
  # hashtable library
  set(hashtable_sources src/hashtable/hashtable_itr.c src/hashtable/hashtable.c)
@@ -90,6 +90,6 @@ index 00d639e..28ecac5 100644
 -  add_test(NAME zktest_runner COMMAND zktest)
 -  set_property(TEST zktest_runner PROPERTY ENVIRONMENT
 -    "ZKROOT=${CMAKE_CURRENT_SOURCE_DIR}/../.."
--    "CLASSPATH=$CLASSPATH:$CLOVER_HOME/lib/clover.jar")
+-    "CLASSPATH=$CLASSPATH:$CLOVER_HOME/lib/clover*.jar")
 +  install(EXPORT zookeeper DESTINATION share/zookeeper_mt/ FILE zookeeper_mtConfig.cmake)
  endif()

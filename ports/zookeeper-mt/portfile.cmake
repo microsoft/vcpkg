@@ -12,7 +12,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES "cmake_build.patch"
 )
 
-set(SOURCE_PATH ${SOURCE_PATH}/src/c)
+set(SOURCE_PATH ${SOURCE_PATH}/zookeeper-client/zookeeper-client-c)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
