@@ -87,11 +87,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(STATUS "Installing libgl1-mesa-dev")
-    execute_process(COMMAND sudo apt-get install libgl1-mesa-dev -f -y)
-    
-    message(STATUS "Installing libglu1-mesa-dev")
-    execute_process(COMMAND sudo apt-get install libglu1-mesa-dev -f -y)
+    message("qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use command: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\" to install them.")
 
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
