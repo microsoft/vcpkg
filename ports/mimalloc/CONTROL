@@ -2,3 +2,12 @@ Source: mimalloc
 Version: 2019-06-23
 Description: Compact general purpose allocator with excellent performance
 Homepage: https://github.com/microsoft/mimalloc
+
+Feature: asm
+Description: Generate assembly listings
+
+Feature: override
+Description: Override malloc
+
+Feature: secure
+Description: Secure build

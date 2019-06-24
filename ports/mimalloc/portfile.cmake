@@ -10,11 +10,31 @@ vcpkg_from_github(
         fix-cmake.patch
 )
 
+macro(check_feature _feature_name _var)
+    if("${_feature_name}" IN_LIST FEATURES)
+        set(${_var} ON)
+    else()
+        set(${_var} OFF)
+    endif()
+endmacro()
+
+check_feature(asm SEE_ASM)
+check_feature(secure SECURE)
+check_feature(override OVERRIDE)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS_DEBUG
+        -DCHECK_FULL=ON
+    OPTIONS_RELEASE
+        -DCHECK_FULL=OFF
     OPTIONS
-    
+        -DOVERRIDE=${OVERRIDE}
+        -DINTERPOSE=ON
+        -DSEE_ASM=${SEE_ASM}
+        -DUSE_CXX=OFF
+        -DSECURE=${SECURE}
 )
 
 vcpkg_install_cmake()
@@ -29,6 +49,11 @@ vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/mimalloc.cmake
     "lib/mimalloc-1.0/"
     ""
+)
+
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
 file(COPY ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}/include DESTINATION ${CURRENT_PACKAGES_DIR})
