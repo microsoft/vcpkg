@@ -1,6 +1,7 @@
 Source: dlib
 Version: 19.17-1
 Build-Depends: libjpeg-turbo, libpng, sqlite3, fftw3, openblas (!osx), clapack (!osx)
+Homepage: https://github.com/davisking/dlib
 Description: Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++
 
 Feature: cuda

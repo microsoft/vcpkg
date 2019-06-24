@@ -1,4 +1,5 @@
 Source: sqlitecpp
 Version: 2.3.0
 Build-Depends: sqlite3
+Homepage: https://github.com/SRombauts/SQLiteCpp
 Description: SQLiteC++ (SQLiteCpp) is a smart and easy to use C++ SQLite3 wrapper.

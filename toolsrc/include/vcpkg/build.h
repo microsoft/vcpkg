@@ -20,7 +20,7 @@ namespace vcpkg::Build
     namespace Command
     {
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
-                                 const fs::path& port_dir,
+                                 const SourceControlFileLocation& scfl,
                                  const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 

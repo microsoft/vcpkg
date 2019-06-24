@@ -1,4 +1,5 @@
 Source: gdcm2
 Version: deprecated
+Homepage: https://github.com/malaterre/GDCM
 Description: This port was renamed to gdcm.  The gdcm2 name is deprecated.
 Build-Depends: gdcm

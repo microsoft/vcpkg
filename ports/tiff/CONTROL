@@ -1,4 +1,5 @@
 Source: tiff
 Version: 4.0.10-6
 Build-Depends: zlib, libjpeg-turbo, liblzma
+Homepage: https://download.osgeo.org/libtiff
 Description: A library that supports the manipulation of TIFF image files

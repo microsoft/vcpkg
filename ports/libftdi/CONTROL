@@ -1,0 +1,4 @@
+Source: libftdi
+Version: 0.20
+Build-Depends: libusb-win32
+Description: FTDI USB driver with bitbang mode (v0.20)

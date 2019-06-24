@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 # Install tool
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tesseract)
