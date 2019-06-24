@@ -25,6 +25,12 @@ file(GLOB lib_directories RELATIVE ${CURRENT_PACKAGES_DIR}/lib "${CURRENT_PACKAG
 list(GET lib_directories 0 lib_install_dir)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${lib_install_dir}/cmake)
 
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/mimalloc.cmake
+    "lib/mimalloc-1.0/"
+    ""
+)
+
 file(COPY ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 
 file(REMOVE_RECURSE
