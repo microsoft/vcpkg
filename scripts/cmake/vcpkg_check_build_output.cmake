@@ -35,7 +35,7 @@ function(vcpkg_check_build_output)
         
         if(CMAKE_HOST_WIN32)
             string(REGEX REPLACE "\\\\" "/" _vcpkg_check_searchpath2 ${_vcpkg_check_searchpath})
-            string(REGEX REPLACE "/" "\\" _vcpkg_check_searchpath3 ${_vcpkg_check_searchpath})
+            string(REGEX REPLACE "/" "\\\\" _vcpkg_check_searchpath3 ${_vcpkg_check_searchpath})
         endif()
         message(STATUS "VCPKG-check-build-output: Searching for invalid ${_vcpkg_check_searchpath}")
         message(STATUS "VCPKG-check-build-output: Searching for invalid ${_vcpkg_check_searchpath2}")
