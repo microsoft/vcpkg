@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4d31d3..67951e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -23,6 +23,8 @@
+ #
+ # (This copyright notice applies only to this file)
+ 
++cmake_policy(SET CMP0003 NEW)
++
+ PROJECT(libmikmod C)
+ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+ LIST(APPEND CMAKE_MODULE_PATH "${libmikmod_SOURCE_DIR}/cmake")
