@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF 6d26a1be8d7a20d8d89c374ee3dc5c452d18c18d
     SHA512 bc6aa17a97fdfc53d0a247b876cbd1fea8214608b7e463dcf21e34df65015fe77e617c5a6c6bfa84b87e60e56b6aeb89aa2d8d774f97fc1f76f415869948a48a
     HEAD_REF master
-    PATCHES find-zlib.patch
+    PATCHES
+        find-zlib.patch
+        fix-build_error.patch
 )
 
 # Prefer installed config files
