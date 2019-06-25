@@ -28,8 +28,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/exiv2/cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/exiv2/cmake)
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake

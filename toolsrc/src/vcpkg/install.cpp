@@ -138,7 +138,7 @@ namespace vcpkg::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(listfile, output);
+        fs.write_lines(listfile, output, VCPKG_LINE_INFO);
     }
 
     static std::vector<file_pack> extract_files_in_triplet(
@@ -330,9 +330,10 @@ namespace vcpkg::Install
                 System::printf("Building package %s...\n", display_name_with_features);
 
             auto result = [&]() -> Build::ExtendedBuildResult {
-                const Build::BuildPackageConfig build_config{action.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
+                const Build::BuildPackageConfig build_config{*scfl.source_control_file,
                                                              action.spec.triplet(),
-                                                             paths.port_dir(action.spec),
+                                                             static_cast<fs::path>(scfl.source_location),
                                                              action.build_options,
                                                              action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
@@ -364,7 +365,12 @@ namespace vcpkg::Install
                 const fs::path download_dir = paths.downloads;
                 std::error_code ec;
                 for (auto& p : fs.get_files_non_recursive(download_dir))
-                    if (!fs.is_directory(p)) fs.remove(p);
+                {
+                    if (!fs.is_directory(p))
+                    {
+                        fs.remove(p, VCPKG_LINE_INFO);
+                    }
+                }
             }
 
             return {code, std::move(bcf)};
@@ -628,6 +634,8 @@ namespace vcpkg::Install
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
+        auto& fs = paths.get_filesystem();
+
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -645,13 +653,10 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
-        std::unordered_map<std::string, SourceControlFile> scf_map;
-        for (auto&& port : all_ports)
-            scf_map[port->core_paragraph->name] = std::move(*port);
-        MapPortFileProvider provider(scf_map);
+        //// Load ports from ports dirs
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
-        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
+        // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         std::vector<AnyAction> action_plan =
             create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
 
@@ -679,7 +684,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive);
+        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 
         if (dry_run)
         {
@@ -703,7 +708,7 @@ namespace vcpkg::Install
             xunit_doc += summary.xunit_results();
 
             xunit_doc += "</collection></assembly></assemblies>\n";
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
+            fs.write_contents(fs::u8path(it_xunit->second), xunit_doc, VCPKG_LINE_INFO);
         }
 
         for (auto&& result : summary.results)

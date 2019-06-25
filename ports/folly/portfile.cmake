@@ -21,6 +21,7 @@ vcpkg_from_github(
         missing-include-atomic.patch
         boost-1.70.patch
         reorder-glog-gflags.patch
+        disable-non-underscore-posix-names.patch
 )
 
 file(COPY
@@ -72,7 +73,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
+vcpkg_fixup_cmake_targets()
 
 # Release folly-targets.cmake does not link to the right libraries in debug mode.
 # We substitute with generator expressions so that the right libraries are linked for debug and release.

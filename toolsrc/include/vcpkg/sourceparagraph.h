@@ -68,6 +68,15 @@ namespace vcpkg
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
     };
 
+    /// <summary>
+    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was loaded from.
+    /// </summary>
+    struct SourceControlFileLocation
+    {
+        std::unique_ptr<SourceControlFile> source_control_file;
+        fs::path source_location;
+    };
+
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
     inline void print_error_message(const std::unique_ptr<Parse::ParseControlErrorInfo>& error_info_list)
     {

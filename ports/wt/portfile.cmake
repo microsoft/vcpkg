@@ -41,9 +41,9 @@ vcpkg_configure_cmake(
 
         -DCMAKE_INSTALL_DIR=share
 )
-vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/wt)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)

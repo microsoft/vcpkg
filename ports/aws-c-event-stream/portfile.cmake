@@ -12,7 +12,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 	OPTIONS
-		"-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/cmake"
+		"-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common"
 )
 
 vcpkg_install_cmake()
@@ -32,4 +32,4 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aw
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/share
-)
+)
