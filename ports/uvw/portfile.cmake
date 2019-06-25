@@ -13,13 +13,11 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
-vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/uvw")
-file(INSTALL
-    ${CMAKE_CURRENT_LIST_DIR}/uvw-config.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvw/
-)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/uvw-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvw/)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright/readme/package files

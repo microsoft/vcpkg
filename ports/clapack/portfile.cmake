@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  message(WARNING "You do not need this package on macOS, since you already have the Accelerate Framework")
+  return()
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -9,7 +15,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(ADDITIONAL_PATCH "openblas_linux.patch")
+  set(ADDITIONAL_PATCH "enable_openblas_compat.patch")
 endif()
 
 vcpkg_extract_source_archive_ex(
@@ -31,7 +37,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 #TODO: fix the official exported targets, since they are broken (luckily it seems that no-one uses them for now)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/clapack)
+vcpkg_fixup_cmake_targets()
 
 #we install a cmake wrapper since the official FindLAPACK module in cmake does find clapack easily, unfortunately...
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)

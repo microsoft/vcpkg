@@ -32,7 +32,7 @@ vcpkg_install_cmake()
 
 file(STRINGS ${SOURCE_PATH}/.version NN_PACKAGE_VERSION)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/nanomsg-${NN_PACKAGE_VERSION}")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
 
 vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
@@ -64,7 +64,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin
     )
-    
+
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/include/nanomsg/nn.h
         "defined(NN_STATIC_LIB)"
