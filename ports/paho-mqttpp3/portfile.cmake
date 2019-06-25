@@ -18,8 +18,13 @@ set(PAHO_C_LIBRARY_PATH "${CURRENT_INSTALLED_DIR}/lib")
 set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include/paho-mqtt")
 set(PAHO_C_LIB "${PAHO_C_LIBRARY_PATH}/${PAHO_C_LIBNAME}")
 
-#message("PAHO C LIBRARY PATH: ${PAHO_C_LIBRARY_PATH}")
-#message("PAHO C INCLUDE DIRS: ${PAHO_C_INC}")
+if (WIN32)
+  # This is windows setup
+  set(PAHO_CMAKE_GENERATOR "NMake Makefiles")
+else()
+  # This is linux setup
+  set(PAHO_CMAKE_GENERATOR "Ninja")
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(PAHO_MQTTPP3_STATIC ON)
@@ -27,7 +32,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    GENERATOR "NMake Makefiles"
+    GENERATOR ${PAHO_CMAKE_GENERATOR}
     OPTIONS
       -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
       -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
@@ -42,7 +47,7 @@ else()
   vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    GENERATOR "NMake Makefiles"
+    GENERATOR ${PAHO_CMAKE_GENERATOR}
     OPTIONS
       -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
       -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
