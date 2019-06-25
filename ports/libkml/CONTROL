@@ -1,4 +1,5 @@
 Source: libkml
 Version: 1.3.0-2
+Homepage: https://github.com/libkml/libkml
 Description: Reference implementation of OGC KML 2.2
 Build-Depends: zlib, expat, minizip, uriparser, boost-smart-ptr

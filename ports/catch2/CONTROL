@@ -1,4 +1,4 @@
 Source: catch2
-Version: 2.6.0
+Version: 2.7.2-2
 Description: A modern, header-only test framework for unit testing.
-  Issues, PRs and changelogs can be found at https://github.com/catchorg/Catch2
+Homepage: https://github.com/catchorg/Catch2

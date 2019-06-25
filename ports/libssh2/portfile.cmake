@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libssh2/libssh2
-    REF libssh2-1.8.0
-    SHA512 c157db0628126d6348ed52a698fbdd7e20b54b6115123bd7d238f02fda5c68ca7a1585aed8a2376df0840f4a3823743133996192001ae54864ab53c954b938e7
+    REF libssh2-1.8.2
+    SHA512 f676f8c2d1c66cd086ad5a1d328e3eb3a033afd4511577451c5664a4e0c4c1ea006fa1885f332fb2b3842b2eb30456322efdd2abf97c2f148c2be0d53e3e5624
     HEAD_REF master
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch"
 )

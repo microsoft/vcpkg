@@ -9,7 +9,6 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
     endif()
 
-    set(CHARSET_FLAG "/utf-8")
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         # VS 2013 does not support /utf-8
         set(CHARSET_FLAG)

@@ -1,6 +1,6 @@
 ## # vcpkg_build_msbuild
 ##
-## Build an msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
+## Build a msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
 ##
 ## ## Usage
 ## ```cmake

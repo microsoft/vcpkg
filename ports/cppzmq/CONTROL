@@ -1,4 +1,5 @@
 Source: cppzmq
 Version: 4.3.0-1
 Build-Depends: zeromq
+Homepage: https://github.com/zeromq/cppzmq
 Description: lightweight messaging kernel, C++ bindings

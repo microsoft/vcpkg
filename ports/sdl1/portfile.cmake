@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
@@ -17,6 +15,14 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDLmain.vcxproj DESTINATION ${SOURCE_PATH}/V
 
 configure_file(${SOURCE_PATH}/include/SDL_config.h.default ${SOURCE_PATH}/include/SDL_config.h COPYONLY)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/static-build.patch
+    )
+endif()
+
 # This text file gets copied as a library, and included as one in the package 
 file(REMOVE_RECURSE ${SOURCE_PATH}/src/hermes/COPYING.LIB)
 
@@ -28,7 +34,13 @@ vcpkg_install_msbuild(
     ALLOW_ROOT_INCLUDES
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/doxyfile)
+#Take all the fils into include/SDL to sovle conflict with SDL2 port
+file(GLOB files ${CURRENT_PACKAGES_DIR}/include/*)
+foreach(file ${files})
+        file(COPY ${file} DESTINATION ${CURRENT_PACKAGES_DIR}/include/SDL)
+        file(REMOVE ${file})
+endforeach()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/SDL/doxyfile)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)

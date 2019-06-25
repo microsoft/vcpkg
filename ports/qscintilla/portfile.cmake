@@ -27,37 +27,31 @@ vcpkg_configure_qmake(
         DEFINES+=SCI_NAMESPACE
 )
 
-vcpkg_build_qmake(
-    RELEASE_TARGETS release
-    DEBUG_TARGETS debug
-)
+if(CMAKE_HOST_WIN32)
+    vcpkg_build_qmake(
+        RELEASE_TARGETS release
+        DEBUG_TARGETS debug
+    )
+else()
+    vcpkg_build_qmake()
+endif()
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/Qt4Qt5/Qsci/*)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
 
-configure_file(
-    ${RELEASE_DIR}/release/qscintilla2_qt5.lib
-    ${CURRENT_PACKAGES_DIR}/lib/qscintilla2.lib
-    COPYONLY
-)
+if(CMAKE_HOST_WIN32)
+    configure_file(${RELEASE_DIR}/release/qscintilla2_qt5.lib ${CURRENT_PACKAGES_DIR}/lib/qscintilla2.lib COPYONLY)
+    configure_file(${DEBUG_DIR}/debug/qscintilla2_qt5.lib ${CURRENT_PACKAGES_DIR}/debug/lib/qscintilla2.lib COPYONLY)
 
-configure_file(
-    ${DEBUG_DIR}/debug/qscintilla2_qt5.lib
-    ${CURRENT_PACKAGES_DIR}/debug/lib/qscintilla2.lib
-    COPYONLY
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-   file(COPY
-       ${RELEASE_DIR}/release/qscintilla2_qt5.dll
-       DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
-
-    file(COPY
-        ${DEBUG_DIR}/debug/qscintilla2_qt5.dll
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        file(COPY ${RELEASE_DIR}/release/qscintilla2_qt5.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(COPY ${DEBUG_DIR}/debug/qscintilla2_qt5.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+elseif(CMAKE_HOST_APPLE)
+    configure_file(${RELEASE_DIR}/libqscintilla2_qt5.a ${CURRENT_PACKAGES_DIR}/lib/libqscintilla2.a COPYONLY)
+    configure_file(${DEBUG_DIR}/libqscintilla2_qt5.a ${CURRENT_PACKAGES_DIR}/debug/lib/libqscintilla2.a COPYONLY)
 endif()
+
 
 vcpkg_copy_pdbs()
 

@@ -10,6 +10,7 @@ vcpkg_from_github(
         export-symbols-only-in-shared-build.patch
         fix-x86-windows.patch
         enable-winrt-cmake.patch
+        SDL-2.0.9-bug-4391-fix.patch # See: https://bugzilla.libsdl.org/show_bug.cgi?id=4391 # Can be removed once SDL 2.0.10 is released
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -35,11 +36,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/SDL2")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SDL2)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/SDL2.framework/Resources")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "SDL2.framework/Resources")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH SDL2.framework/Resources)
 endif()
 
 file(REMOVE_RECURSE

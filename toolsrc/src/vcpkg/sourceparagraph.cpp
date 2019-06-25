@@ -6,7 +6,8 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/span.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg
@@ -23,6 +24,7 @@ namespace vcpkg
         static const std::string SOURCE = "Source";
         static const std::string SUPPORTS = "Supports";
         static const std::string VERSION = "Version";
+        static const std::string HOMEPAGE = "Homepage";
     }
 
     static Span<const std::string> get_list_of_valid_fields()
@@ -33,6 +35,7 @@ namespace vcpkg
             SourceParagraphFields::DESCRIPTION,
             SourceParagraphFields::MAINTAINER,
             SourceParagraphFields::BUILD_DEPENDS,
+            SourceParagraphFields::HOMEPAGE,
         };
 
         return valid_fields;
@@ -47,8 +50,12 @@ namespace vcpkg
             Checks::check_exit(VCPKG_LINE_INFO, error_info != nullptr);
             if (error_info->error)
             {
-                System::println(
-                    System::Color::error, "Error: while loading %s: %s", error_info->name, error_info->error.message());
+                System::print2(System::Color::error,
+                               "Error: while loading ",
+                               error_info->name,
+                               ": ",
+                               error_info->error.message(),
+                               '\n');
             }
         }
 
@@ -57,31 +64,36 @@ namespace vcpkg
         {
             if (!error_info->extra_fields.empty())
             {
-                System::println(System::Color::error,
-                                "Error: There are invalid fields in the control file of %s",
-                                error_info->name);
-                System::println("The following fields were not expected:\n\n    %s\n",
-                                Strings::join("\n    ", error_info->extra_fields));
+                System::print2(System::Color::error,
+                               "Error: There are invalid fields in the control file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields were not expected:\n\n    ",
+                               Strings::join("\n    ", error_info->extra_fields),
+                               "\n\n");
                 have_remaining_fields = true;
             }
         }
 
         if (have_remaining_fields)
         {
-            System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n",
-                            Strings::join("\n    ", get_list_of_valid_fields()));
-            System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
+            System::print2("This is the list of valid fields (case-sensitive): \n\n    ",
+                           Strings::join("\n    ", get_list_of_valid_fields()),
+                           "\n\n");
+            System::print2("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n\n");
         }
 
         for (auto&& error_info : error_info_list)
         {
             if (!error_info->missing_fields.empty())
             {
-                System::println(System::Color::error,
-                                "Error: There are missing fields in the control file of %s",
-                                error_info->name);
-                System::println("The following fields were missing:\n\n    %s\n",
-                                Strings::join("\n    ", error_info->missing_fields));
+                System::print2(System::Color::error,
+                               "Error: There are missing fields in the control file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields were missing:\n\n    ",
+                               Strings::join("\n    ", error_info->missing_fields),
+                               "\n\n");
             }
         }
     }
@@ -97,6 +109,7 @@ namespace vcpkg
 
         spgh->description = parser.optional_field(SourceParagraphFields::DESCRIPTION);
         spgh->maintainer = parser.optional_field(SourceParagraphFields::MAINTAINER);
+        spgh->homepage = parser.optional_field(SourceParagraphFields::HOMEPAGE);
         spgh->depends = expand_qualified_dependencies(
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));

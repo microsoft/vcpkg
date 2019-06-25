@@ -177,9 +177,6 @@
     <ClCompile Include="..\src\vcpkg\base\files.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp">
-      <Filter>Source Files\vcpkg\base</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
@@ -201,9 +198,6 @@
     <ClCompile Include="..\src\vcpkg\visualstudio.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\base\stringrange.cpp">
-      <Filter>Source Files\vcpkg\base</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg\tools.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -215,6 +209,12 @@
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp">
       <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\stringview.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\system.print.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

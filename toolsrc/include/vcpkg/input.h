@@ -4,10 +4,10 @@
 
 namespace vcpkg::Input
 {
-    PackageSpec check_and_get_package_spec(const std::string& package_spec_as_string,
+    PackageSpec check_and_get_package_spec(std::string&& spec_string,
                                            const Triplet& default_triplet,
                                            CStringView example_text);
-    FullPackageSpec check_and_get_full_package_spec(const std::string& full_package_spec_as_string,
+    FullPackageSpec check_and_get_full_package_spec(std::string&& spec_string,
                                                     const Triplet& default_triplet,
                                                     CStringView example_text);
 

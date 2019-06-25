@@ -1,3 +1,4 @@
 Source: winpcap
 Version: 4.1.3-2
+Homepage: https://www.winpcap.org
 Description: WinPcap is the industry-standard tool for link-layer network access in Windows environments.
