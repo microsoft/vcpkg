@@ -11,16 +11,17 @@ vcpkg_from_github(
 
 # If SSL is defined as part of the feature list, we set that feature ON
 if (openssl IN_LIST FEATURES)
+  # Use OpenSSL support
   set(PAHO_WITH_SSL ON)
-else()
-  set(PAHO_WITH_SSL OFF)
-endif()
-
-if (PAHO_WITH_SSL)
+  # Link with 'paho-mqtt3as.lib'
   set(PAHO_C_LIBNAME paho-mqtt3as)
 else()
+  # Do not use OpenSSL support
+  set(PAHO_WITH_SSL OFF)
+  # Link with 'paho-mqtt3a.lib'
   set(PAHO_C_LIBNAME paho-mqtt3a)
 endif()
+
 
 # Setting the library path
 set(PAHO_C_LIBRARY_PATH "${CURRENT_INSTALLED_DIR}/lib")
@@ -53,6 +54,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   # Setting the library name only for static linkage
   set(PAHO_C_LIB "${PAHO_C_LIBRARY_PATH}/${PAHO_C_LIBNAME}")
   # Configure using cmake for building
+  # Note: If we use static linkage, for some odd reason in Windows builds, the Paho MQTT C++ project cmake files
+  # cannot find the PAHO_MQTT_C_LIBRARIES using find_library(). Therefore, we have to specify the exact path here.  
   vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}                      # Source path
     PREFER_NINJA                                    # Prefer to use Ninja for building
@@ -71,26 +74,32 @@ else()
   # Unless the open source community cleans up the cmake files, we are stuck with setting both of them.
   set(PAHO_MQTTPP3_STATIC OFF)
   set(PAHO_MQTTPP3_SHARED ON)
+  # Configure using cmake for building
+  # Note: We do not have to pass the PAHO_MQTT_C_LIBRARIES here
   vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    GENERATOR ${PAHO_CMAKE_GENERATOR}
-    OPTIONS
-      -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
-      -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
-      -DPAHO_WITH_SSL=${PAHO_WITH_SSL}
-      -DCMAKE_PREFIX_PATH=${PAHO_C_LIBRARY_PATH}
-      -DPAHO_MQTT_C_INCLUDE_DIRS=${PAHO_C_INC}
+    SOURCE_PATH ${SOURCE_PATH}                      # Source path
+    PREFER_NINJA                                    # Prefer to use Ninja for building
+    GENERATOR ${PAHO_CMAKE_GENERATOR}               # Use the appropriate cmake generator
+    OPTIONS                                         # Here are the build options for dynamic/shared builds
+      -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}    #  -DPAHO_BUILD_STATIC=OFF
+      -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}    #  -DPAHO_BUILD_SHARED=ON
+      -DPAHO_WITH_SSL=${PAHO_WITH_SSL}              #  -DPAHO_WITH_SSL=based of ssl feature enabled
+      -DCMAKE_PREFIX_PATH=${PAHO_C_LIBRARY_PATH}    #  -DCMAKE_PREFIX_PATH=path to Paho MQTT C library
+      -DPAHO_MQTT_C_INCLUDE_DIRS=${PAHO_C_INC}      #  -DPAHO_MQTT_C_INCLUDE_DIRS=the path where the Paho MQTT C header files resides
   )
 endif()
 
+# Run the build, copy pdbs and fixup the cmake targets
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/PahoMqttCpp")
 
+# Remove the include and share folders in debug folder
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Add copyright
 file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/paho-mqttpp3 RENAME copyright)
 
+# Add this package as a module
 vcpkg_test_cmake(PACKAGE_NAME paho-mqttpp3 MODULE)
