@@ -30,7 +30,7 @@ set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include/paho-mqtt")
 
 # OS dependent cmake generator
 if (WIN32)
-  # Paho-Mqtt CPP doesn't work well with Ninja. Best is to generate using NMake Makefiles
+  # Paho-Mqtt CPP doesn't work well with Ninja. Best is to generate 'NMake Makefiles'
   set(PAHO_CMAKE_GENERATOR "NMake Makefiles")
 else()
   # This is *nix setup. Use Ninja here
@@ -39,10 +39,10 @@ endif()
 
 # Debug Status message display before configuring
 # It is commented out during release, if anyone wants to debug, you are more than welcome to uncomment it
-message("# Paho MQTT C++ build parameters: ")
-message("  - Static/Shared: ${VCPKG_LIBRARY_LINKAGE}")
-message("  - OpenSSL Support: ${PAHO_WITH_SSL}")
-message("  - Paho C linkage: ${PAHO_C_LIBNAME}")
+#message("# Paho MQTT C++ build parameters: ")
+#message("  - Static/Shared: ${VCPKG_LIBRARY_LINKAGE}")
+#message("  - OpenSSL Support: ${PAHO_WITH_SSL}")
+#message("  - Paho C linkage: ${PAHO_C_LIBNAME}")
 
 # Check if we are building 'static' or 'shared' library
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
