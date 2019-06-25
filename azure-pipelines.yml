@@ -1,0 +1,25 @@
+trigger:
+  - master
+jobs:
+- job: x64-windows
+  pool:
+    vmImage: 'vs2019-win2019'
+  steps:
+    - script: bootstrap-vcpkg.bat
+      displayName: Build vcpkg
+    - script: |
+        vcpkg install icu
+        vcpkg install fontconfig
+        vcpkg install harfbuzz[graphite2,icu,ucdn]
+        vcpkg install luajit
+      env:
+        VCPKG_DEFAULT_TRIPLET: x64-windows-static
+        VCPKG_PLATFORM_TOOLSET: v142
+      displayName: Build packages
+    - script: vcpkg export icu fontconfig harfbuzz[graphite2,icu,ucdn] luajit --raw --output=vcpkg
+      env:
+        VCPKG_DEFAULT_TRIPLET: x64-windows-static
+        VCPKG_PLATFORM_TOOLSET: v142
+      displayName: Pack packages into 7z
+    - publish: $(System.DefaultWorkingDirectory)\vcpkg
+      artifact: SileDeps
