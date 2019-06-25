@@ -2,7 +2,6 @@ include(vcpkg_common_functions)
 
 set(VERSION 1.8.1)
                                               
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libLAS-${VERSION})
 vcpkg_download_distfile(ARCHIVE
 	URLS "http://download.osgeo.org/liblas/libLAS-${VERSION}.tar.bz2"
 	FILENAME "libLAS-${VERSION}-src.tar.bz2"
@@ -20,7 +19,10 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS -DBUILD_OSGEO4W=OFF # Disable osgeo4w
+  OPTIONS 
+	-DBUILD_OSGEO4W=OFF # Disable osgeo4w
+	-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
+	-DCMAKE_DISABLE_FIND_PACKAGE_JPEG=${CMAKE_DISABLE_FIND_PACKAGE_JPEG}
 )
 
 vcpkg_install_cmake()
