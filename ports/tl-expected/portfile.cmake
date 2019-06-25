@@ -3,13 +3,20 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TartanLlama/expected
-    REF v0.3
-    SHA512 a228399f7103020ed814f1c755b82cf831b3d8c6aaa23dbc3aedc226b3cbd39c22075952dda3af84c8cf6f74ab1131c6997a2431ee62314bd82ccafdc9ab23a3
+    REF v1.0.0
+    SHA512 747ea34b5540dfcf595896332851f10c52a823ab8ba3fc8152478b0a9e8ca01f0f26827348407249827f4106ff577bd6e697ea6f749c1f21bd1f0913a621075d
     HEAD_REF master
 )
 
-# Install header file
-file(INSTALL ${SOURCE_PATH}/tl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DEXPECTED_ENABLE_TESTS=OFF
+)
+
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/tl-expected RENAME copyright)
