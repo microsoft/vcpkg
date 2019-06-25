@@ -50,8 +50,6 @@ namespace vcpkg
         static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path);
 
         fs::path package_dir(const PackageSpec& spec) const;
-        fs::path port_dir(const PackageSpec& spec) const;
-        fs::path port_dir(const std::string& name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 

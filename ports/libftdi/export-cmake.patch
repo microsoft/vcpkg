@@ -1,0 +1,24 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1c326fe..3c1d9ab 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -47,14 +47,19 @@ if(WIN32 OR 1)
+ 
+    if(BUILD_SHARED_LIBS)
+    install( TARGETS ftdi
++            EXPORT ftdi
+             COMPONENT sharedlibs
+             )
+ 
++   target_link_libraries(ftdi PUBLIC $<INSTALL_INTERFACE:include>)
+    else()
+    install( TARGETS ftdi-static
++            EXPORT ftdi
+             COMPONENT staticlibs
+             )
++   target_link_libraries(ftdi-static PUBLIC $<INSTALL_INTERFACE:include>)
+    endif()
++   install(EXPORT ftdi FILE libftdi-config.cmake NAMESPACE libftdi:: DESTINATION share/libftdi)
+ 
+    install( FILES ${c_headers}
+             DESTINATION include
