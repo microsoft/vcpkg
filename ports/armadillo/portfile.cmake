@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
     HEAD_REF 9.400.x
     PATCHES
         remove_custom_modules.patch
+		fix-install_path.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindBLAS.cmake)
