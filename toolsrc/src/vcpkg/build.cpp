@@ -228,6 +228,39 @@ namespace vcpkg::Build
                                   }));
     }
 
+    std::string make_env_passthrough(const PreBuildInfo& pre_build_info)
+    {
+        std::vector<std::string> commands;
+
+        if (pre_build_info.passthrough_env_vars)
+        {
+            for (auto&& env_var : pre_build_info.passthrough_env_vars.value_or_exit(VCPKG_LINE_INFO))
+            {
+                auto env_val = System::get_environment_variable(env_var);
+
+                if (env_val)
+                {
+#ifdef _WIN32
+                    commands.push_back("set " + env_var + "=" + env_val.value_or_exit(VCPKG_LINE_INFO));
+#else
+                    commands.push_back(env_var + "=\"" + env_val.value_or_exit(VCPKG_LINE_INFO) + "\"");
+#endif
+                }
+            }
+        }
+
+        if (commands.empty())
+        {
+            return "";
+        }
+
+#ifdef _WIN32
+        return Strings::join("&", commands);
+#else
+        return "/usr/bin/env " + Strings::join(" ", commands);
+#endif
+    }
+
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         if (pre_build_info.external_toolchain_file.has_value()) return "";
@@ -408,6 +441,19 @@ namespace vcpkg::Build
             command.append(" && ");
 #endif
         }
+
+        const std::string passthrough = make_env_passthrough(pre_build_info);
+
+        if (!passthrough.empty())
+        {
+            command.append(passthrough);
+#ifdef _WIN32
+            command.append("& ");
+#else
+            command.append(" && ");
+#endif
+        }
+
         command.append(cmd_launch_cmake);
         const auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -966,10 +1012,28 @@ namespace vcpkg::Build
                 continue;
             }
 
+            if (variable_name == "VCPKG_ENV_PASSTHROUGH")
+            {
+                pre_build_info.passthrough_env_vars =
+                    variable_value.empty() ? nullopt : Optional<std::vector<std::string>>{Strings::split(variable_value, ";")};
+                continue;
+            }
+
+            if (variable_name == "VCPKG_PARTIAL_TRIPLET_HASH_LIST")
+            {
+                std::vector<std::string> hashes = Strings::split(variable_value, ";");
+                std::sort(hashes.begin(), hashes.end());
+                for (auto&& hash : hashes)
+                {
+                    pre_build_info.triplet_abi_tag =
+                        Hash::get_string_hash(hash + pre_build_info.triplet_abi_tag, "SHA1");
+                }
+            }
+
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
         }
 
-        pre_build_info.triplet_abi_tag = [&]() {
+        auto triplet_abi_tag = [&]() {
             const auto& fs = paths.get_filesystem();
             static std::map<fs::path, std::string> s_hash_cache;
 
@@ -1009,6 +1073,9 @@ namespace vcpkg::Build
             s_hash_cache.emplace(triplet_file_path, hash);
             return hash;
         }();
+
+        pre_build_info.triplet_abi_tag =
+            Hash::get_string_hash(pre_build_info.triplet_abi_tag + triplet_abi_tag, "SHA1");
 
         return pre_build_info;
     }

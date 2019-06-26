@@ -135,6 +135,7 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        Optional<std::vector<std::string>> passthrough_env_vars;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
