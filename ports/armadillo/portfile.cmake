@@ -27,18 +27,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/Armadillo/CMake)
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	file(RENAME ${CURRENT_PACKAGES_DIR}/share/Armadillo ${CURRENT_PACKAGES_DIR}/share/armadillo)
-endif()
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 	
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
 endif()
 
