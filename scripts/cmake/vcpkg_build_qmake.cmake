@@ -45,20 +45,11 @@ function(vcpkg_build_qmake)
 
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
-        if (CMAKE_HOST_WIN32)
-            vcpkg_execute_required_process(
-                COMMAND ${INVOKE} ${TARGETS}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
-                LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
-            )
-        else()
-            # No need to add parameters when using make
-            vcpkg_execute_required_process(
-                COMMAND ${INVOKE}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
-                LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
-            )
-        endif()
+        vcpkg_execute_required_process(
+            COMMAND ${INVOKE} ${TARGETS}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
+            LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
+        )
     endfunction()
 
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
