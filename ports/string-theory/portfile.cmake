@@ -22,8 +22,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/string_theory")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/string_theory)
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/string-theory ${CURRENT_PACKAGES_DIR}/share/string_theory)
 

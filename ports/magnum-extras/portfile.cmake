@@ -37,7 +37,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/MagnumExtras TARGET_PATH share/MagnumExtras)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/MagnumExtras TARGET_PATH share/magnumextras)
 
 # Messages to the user
 if("ui" IN_LIST FEATURES)

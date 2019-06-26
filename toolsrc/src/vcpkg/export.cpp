@@ -488,7 +488,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
-        Dependencies::PathsPortFileProvider provider(paths);
+
+        // Load ports from ports dirs
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 

@@ -330,9 +330,10 @@ namespace vcpkg::Install
                 System::printf("Building package %s...\n", display_name_with_features);
 
             auto result = [&]() -> Build::ExtendedBuildResult {
-                const Build::BuildPackageConfig build_config{action.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
+                const Build::BuildPackageConfig build_config{*scfl.source_control_file,
                                                              action.spec.triplet(),
-                                                             paths.port_dir(action.spec),
+                                                             static_cast<fs::path>(scfl.source_location),
                                                              action.build_options,
                                                              action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
@@ -649,9 +650,10 @@ namespace vcpkg::Install
             Build::FailOnTombstone::NO,
         };
 
-        Dependencies::PathsPortFileProvider provider(paths);
+        //// Load ports from ports dirs
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
-        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
+        // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         std::vector<AnyAction> action_plan =
             create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
 
@@ -679,7 +681,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive);
+        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 
         if (dry_run)
         {

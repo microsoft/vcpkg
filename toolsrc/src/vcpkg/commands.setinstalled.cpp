@@ -58,7 +58,7 @@ namespace vcpkg::Commands::SetInstalled
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going = Install::to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
-        Dependencies::PathsPortFileProvider provider(paths);
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         auto expanded_specs = FullPackageSpec::to_feature_specs(specs);
         auto target_action_plan = Dependencies::create_feature_install_plan(provider, expanded_specs, {}, {});

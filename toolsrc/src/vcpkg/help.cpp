@@ -111,9 +111,11 @@ namespace vcpkg::Help
                        "  vcpkg contact                   Display contact information to send feedback\n"
                        "\n"
                        "Options:\n"
-                       "  --triplet <t>                   Specify the target architecture triplet.\n"
+                       "  --triplet <t>                   Specify the target architecture triplet\n"
                        "                                  (default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) //
                        ", see 'vcpkg help triplet')\n"
+                       "\n"
+                       "  --overlay-ports=<path>          Specify directories to be used when searching for ports\n"
                        "\n"
                        "  --vcpkg-root <path>             Specify the vcpkg root "
                        "directory\n"

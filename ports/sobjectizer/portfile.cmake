@@ -29,7 +29,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/sobjectizer")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/../LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sobjectizer)
