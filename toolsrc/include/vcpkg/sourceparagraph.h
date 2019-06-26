@@ -44,6 +44,13 @@ namespace vcpkg
     /// </summary>
     struct SourceParagraph
     {
+        enum CONTROL_TYPE : unsigned
+        {
+            PORT = 0,
+            TOOL,
+            ALIAS,
+        };
+
         std::string name;
         std::string version;
         std::string description;
@@ -52,6 +59,10 @@ namespace vcpkg
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
+        CONTROL_TYPE type;
+
+        static CONTROL_TYPE type_from_string(const std::string& in);
+        static std::string string_from_type(const CONTROL_TYPE& in);
     };
 
     /// <summary>

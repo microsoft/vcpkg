@@ -25,6 +25,7 @@ namespace vcpkg
         static const std::string SUPPORTS = "Supports";
         static const std::string VERSION = "Version";
         static const std::string HOMEPAGE = "Homepage";
+        static const std::string TYPE = "Type";
     }
 
     static Span<const std::string> get_list_of_valid_fields()
@@ -36,6 +37,7 @@ namespace vcpkg
             SourceParagraphFields::MAINTAINER,
             SourceParagraphFields::BUILD_DEPENDS,
             SourceParagraphFields::HOMEPAGE,
+            SourceParagraphFields::TYPE,
         };
 
         return valid_fields;
@@ -98,6 +100,41 @@ namespace vcpkg
         }
     }
 
+    static SourceParagraph::CONTROL_TYPE type_from_string(const std::string& in)
+    {
+        if (Strings::equals(in, "port") || Strings::equals(in, ""))
+        {
+            return SourceParagraph::CONTROL_TYPE::PORT;
+        }
+
+        if (Strings::equals(in, "tool"))
+        {
+            return SourceParagraph::CONTROL_TYPE::TOOL;
+        }
+
+        if (Strings::equals(in, "alias"))
+        {
+            return SourceParagraph::CONTROL_TYPE::ALIAS;
+        }
+
+        System::print2(
+                in, " is not a valid control file type. Valid types are:",
+                "\n    port\n    tool\n    alias");
+
+        Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+
+    static std::string string_from_type(const SourceParagraph::CONTROL_TYPE& in)
+    {
+        switch (in)
+        {
+        case SourceParagraph::CONTROL_TYPE::PORT : return "port";
+        case SourceParagraph::CONTROL_TYPE::TOOL : return "tool";
+        case SourceParagraph::CONTROL_TYPE::ALIAS : return "alias";
+        default : Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid CONTROL_TYPE value.");
+        }
+    }
+
     static ParseExpected<SourceParagraph> parse_source_paragraph(RawParagraph&& fields)
     {
         ParagraphParser parser(std::move(fields));
@@ -114,6 +151,7 @@ namespace vcpkg
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));
         spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
+        spgh->type = type_from_string(parser.optional_field(SourceParagraphFields::TYPE));
 
         auto err = parser.error_info(spgh->name);
         if (err)
