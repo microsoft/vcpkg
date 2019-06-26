@@ -47,7 +47,9 @@ namespace vcpkg
 
     struct VcpkgPaths
     {
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path);
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, 
+                                           const std::string& default_vs_path,
+                                           const std::vector<std::string>* triplets_dirs);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
@@ -62,7 +64,6 @@ namespace vcpkg
         fs::path downloads;
         fs::path ports;
         fs::path installed;
-        fs::path triplets;
         fs::path scripts;
 
         fs::path tools;
@@ -75,6 +76,9 @@ namespace vcpkg
         fs::path vcpkg_dir_updates;
 
         fs::path ports_cmake;
+
+        const fs::path get_triplet_file_path(const Triplet& triplet) const;
+        const std::vector<fs::path>& get_triplets_dirs() const;
 
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
@@ -93,6 +97,7 @@ namespace vcpkg
         Lazy<std::vector<Toolset>> toolsets_vs2013;
 
         fs::path default_vs_path;
+        std::vector<fs::path> triplets_dirs;
 
         mutable std::unique_ptr<ToolCache> m_tool_cache;
     };

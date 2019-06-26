@@ -163,6 +163,13 @@ namespace vcpkg
                                               args.overlay_ports);
                     continue;
                 }
+                if (Strings::starts_with(arg, "--overlay-triplets="))
+                {
+                    parse_cojoined_multivalue(arg.substr(sizeof("--overlay-triplets=") - 1),
+                                              "--overlay-triplets",
+                                              args.overlay_triplets);
+                    continue;
+                }
                 if (arg == "--debug")
                 {
                     parse_switch(true, "debug", args.debug);
@@ -418,6 +425,9 @@ namespace vcpkg
         System::printf("    %-40s %s\n", 
                        "--overlay-ports=<path>", 
                        "Specify directories to be used when searching for ports");
+        System::printf("    %-40s %s\n",
+                       "--overlay-triplets=<path>",
+                       "Specify directories containing triplets files");
         System::printf("    %-40s %s\n",
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");

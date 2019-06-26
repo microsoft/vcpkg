@@ -13,7 +13,9 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path)
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, 
+                                            const std::string& default_vs_path,
+                                            const std::vector<std::string>* triplets_dirs)
     {
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
@@ -62,7 +64,6 @@ namespace vcpkg
 
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
-        paths.triplets = paths.root / "triplets";
         paths.scripts = paths.root / "scripts";
 
         paths.tools = paths.downloads / "tools";
@@ -75,6 +76,20 @@ namespace vcpkg
         paths.vcpkg_dir_updates = paths.vcpkg_dir / "updates";
 
         paths.ports_cmake = paths.scripts / "ports.cmake";
+
+        if (triplets_dirs)
+        {
+            for (auto&& triplets_dir : *triplets_dirs)
+            {
+                auto&&path = fs::u8path(triplets_dir);
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   paths.get_filesystem().exists(path),
+                                   "Error: Path does not exist '%s'",
+                                   triplets_dir);
+                paths.triplets_dirs.emplace_back(fs::stdfs::canonical(path));
+            }
+        }
+        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.root / "triplets"));
 
         return paths;
     }
@@ -95,12 +110,14 @@ namespace vcpkg
     {
         return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
             std::vector<std::string> output;
-            for (auto&& path : this->get_filesystem().get_files_non_recursive(this->triplets))
+            for (auto&& triplets_dir : this->get_triplets_dirs())
             {
-                output.push_back(path.stem().filename().string());
+                for (auto&& path : this->get_filesystem().get_files_non_recursive(triplets_dir))
+                {
+                    output.push_back(path.stem().filename().string());
+                }
             }
-            Util::sort(output);
-
+            Util::sort_unique_erase(output);
             return output;
         });
     }
@@ -111,6 +128,28 @@ namespace vcpkg
             return t.canonical_name() == available_triplet;
         });
         return it != this->get_available_triplets().cend();
+    }
+
+    const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
+    {
+        for (auto&& triplet_dir : this->get_triplets_dirs())
+        {
+            auto&& path = triplet_dir / (triplet.canonical_name() + ".cmake");
+            if (this->get_filesystem().exists(path))
+            {
+                return fs::stdfs::canonical(path);
+            }
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                  "Error: Triplet file %s.cmake not found",
+                                  triplet.canonical_name());
+        return "";
+    }
+
+    const std::vector<fs::path>& VcpkgPaths::get_triplets_dirs() const
+    {
+        return triplets_dirs;
     }
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
