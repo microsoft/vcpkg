@@ -99,6 +99,6 @@ namespace vcpkg
         std::vector<fs::path> triplets_dirs;
 
         mutable std::unique_ptr<ToolCache> m_tool_cache;
-        mutable vcpkg::Cache<std::string, fs::path> m_triplets_cache;
+        mutable vcpkg::Cache<Triplet, fs::path> m_triplets_cache;
     };
 }

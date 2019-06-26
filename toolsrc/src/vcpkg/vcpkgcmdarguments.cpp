@@ -45,26 +45,6 @@ namespace vcpkg
         option_field = new_setting;
     }
 
-    static void parse_multivalue(const std::string* arg_begin,
-                                 const std::string* arg_end,
-                                 const std::string& option_name,
-                                 std::unique_ptr<std::vector<std::string>>& option_field)
-    {
-        if (arg_begin == arg_end)
-        {
-            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
-            Metrics::g_metrics.lock()->track_property("error", "error option name");
-            Help::print_usage();
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        if (!option_field)
-        {
-            option_field = std::make_unique<std::vector<std::string>>();
-        }
-        option_field->emplace_back(*arg_begin);
-    }
-
     static void parse_cojoined_multivalue(std::string new_value,
                                           const std::string& option_name,
                                           std::unique_ptr<std::vector<std::string>>& option_field)

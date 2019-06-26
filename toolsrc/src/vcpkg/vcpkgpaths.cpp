@@ -133,7 +133,7 @@ namespace vcpkg
 
     const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
     {
-        return m_triplets_cache.get_lazy(triplet.canonical_name(), [&]()-> auto {
+        return m_triplets_cache.get_lazy(triplet, [&]()-> auto {
             for (auto&& triplet_dir : triplets_dirs)
             {
                 auto&& path = triplet_dir / (triplet.canonical_name() + ".cmake");
@@ -146,7 +146,6 @@ namespace vcpkg
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       "Error: Triplet file %s.cmake not found",
                                       triplet.canonical_name());
-            return fs::u8path("");
         });
         
     }
