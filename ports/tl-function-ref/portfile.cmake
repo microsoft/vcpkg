@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO TartanLlama/expected
+    REPO TartanLlama/function_ref
     REF v1.0.0
-    SHA512 747ea34b5540dfcf595896332851f10c52a823ab8ba3fc8152478b0a9e8ca01f0f26827348407249827f4106ff577bd6e697ea6f749c1f21bd1f0913a621075d
+    SHA512 64324049021548361caa667a5ad61a8c0acc787d3966e5b132520da99af709970e37b5a5cb71f69523b6254c9d0d8bab441356e7a25880fe53a6998067c587bd
     HEAD_REF master
 )
 
@@ -22,7 +22,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DFETCHCONTENT_FULLY_DISCONNECTED=ON
         -DFETCHCONTENT_SOURCE_DIR_TL_CMAKE=${TL_CMAKE_SOURCE_DIR}
-        -DEXPECTED_ENABLE_TESTS=OFF
+        -DFUNCTION_REF_ENABLE_TESTS=OFF
 )
 
 vcpkg_install_cmake()
@@ -30,4 +30,4 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/tl-expected RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/tl-function-ref RENAME copyright)
