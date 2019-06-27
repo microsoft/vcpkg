@@ -41,7 +41,7 @@ extern "C" {
  * version number.  Used together with u2fs_check_version() to verify
  * header file and run-time library consistency.
  */
-#define U2FS_VERSION_STRING "1.1.1"
+#define U2FS_VERSION_STRING "1.1.0"
 
 /**
  * U2FS_VERSION_NUMBER
@@ -51,7 +51,7 @@ extern "C" {
  * this symbol will have the value 0x01020300.  The last two digits
  * are only used between public releases, and will otherwise be 00.
  */
-#define U2FS_VERSION_NUMBER 0x01010100
+#define U2FS_VERSION_NUMBER 0x01010000
 
 /**
  * U2FS_VERSION_MAJOR
@@ -78,7 +78,7 @@ extern "C" {
  * level of the header file version number.  For example, when the
  * header version is 1.2.3 this symbol will be 3.
  */
-#define U2FS_VERSION_PATCH 1
+#define U2FS_VERSION_PATCH 0
 
 #ifndef TRUE
 #define TRUE 1
