@@ -38,3 +38,10 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cp
 
 # Post-build test for cmake libraries
 vcpkg_test_cmake(PACKAGE_NAME CppMicroServices)
+
+# CppMicroServices uses a custom resource compiler to compile resources
+# the zipped resources are then appended to the target which cause the linker to crash
+# when compiling a static library
+if(NOT BUILD_SHARED_LIBS)
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+endif()
