@@ -4,7 +4,8 @@
 #  Transform all /debug/share/<port>/*targets-debug.cmake files and move them to /share/<port>.
 #  Removes all /debug/share/<port>/*targets.cmake and /debug/share/<port>/*config.cmake
 #
-#  Transform all references matching /bin/*.exe to /tools/<port>/*.exe
+#  Transform all references matching /bin/*.exe to /tools/<port>/*.exe on Windows
+#  Transform all references matching /bin/* to /tools/<port>/* on other platforms
 #
 #  Fix ${_IMPORT_PREFIX} in auto generated targets to be one folder deeper. 
 #  Replace ${CURRENT_INSTALLED_DIR} with ${_IMPORT_PREFIX} in configs/targets.
@@ -25,6 +26,13 @@ function(vcpkg_fixup_cmake_targets)
 
     if(NOT _vfct_TARGET_PATH)
         set(_vfct_TARGET_PATH share/${PORT})
+    endif()
+
+
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(EXECUTABLE_SUFFIX "\\.exe")
+    else()
+        set(EXECUTABLE_SUFFIX)
     endif()
 
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
@@ -107,7 +115,7 @@ function(vcpkg_fixup_cmake_targets)
     foreach(RELEASE_TARGET IN LISTS RELEASE_TARGETS)
         file(READ ${RELEASE_TARGET} _contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
-        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
+        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
         file(WRITE ${RELEASE_TARGET} "${_contents}")
     endforeach()
 
@@ -120,7 +128,7 @@ function(vcpkg_fixup_cmake_targets)
 
             file(READ ${DEBUG_TARGET} _contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
-            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
+            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
             file(WRITE ${RELEASE_SHARE}/${DEBUG_TARGET_REL} "${_contents}")

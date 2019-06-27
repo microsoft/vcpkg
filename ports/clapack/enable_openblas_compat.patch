@@ -1,0 +1,112 @@
+diff --git a/INCLUDE/blaswrap.h b/INCLUDE/blaswrap.h
+index 333a17a..fb6750a 100644
+--- a/INCLUDE/blaswrap.h
++++ b/INCLUDE/blaswrap.h
+@@ -155,6 +155,107 @@
+ #define ctrsm_ f2c_ctrsm
+ #define ztrsm_ f2c_ztrsm
+ 
++#else
++
++#define sswap_    sswap
++#define saxpy_    saxpy
++#define sasum_    sasum
++#define isamax_   isamax
++#define scopy_    scopy
++#define sscal_    sscal
++#define sger_     sger
++#define snrm2_    snrm2
++#define ssymv_    ssymv
++#define sdot_     sdot
++#define saxpy_    saxpy
++#define ssyr2_    ssyr2
++#define srot_     srot
++#define sgemv_    sgemv
++#define strsv_    strsv
++#define sgemm_    sgemm
++#define strsm_    strsm
++
++#define dswap_    dswap
++#define daxpy_    daxpy
++#define dasum_    dasum
++#define idamax_   idamax
++#define dcopy_    dcopy
++#define dscal_    dscal
++#define dger_     dger
++#define dnrm2_    dnrm2
++#define dsymv_    dsymv
++#define ddot_     ddot
++#define dsyr2_    dsyr2
++#define drot_     drot
++#define dgemv_    dgemv
++#define dtrsv_    dtrsv
++#define dgemm_    dgemm
++#define dtrsm_    dtrsm
++
++#define cswap_    cswap
++#define caxpy_    caxpy
++#define scasum_   scasum
++#define icamax_   icamax
++#define ccopy_    ccopy
++#define cscal_    cscal
++#define scnrm2_   scnrm2
++#define cgemv_    cgemv
++#define ctrsv_    ctrsv
++#define cgemm_    cgemm
++#define ctrsm_    ctrsm
++#define cgerc_    cgerc
++#define chemv_    chemv
++#define cher2_    cher2
++
++#define zswap_    zswap
++#define zaxpy_    zaxpy
++#define dzasum_   dzasum
++#define izamax_   izamax
++#define zcopy_    zcopy
++#define zscal_    zscal
++#define dznrm2_   dznrm2
++#define zgemv_    zgemv
++#define ztrsv_    ztrsv
++#define zgemm_    zgemm
++#define ztrsm_    ztrsm
++#define zgerc_    zgerc
++#define zhemv_    zhemv
++#define zher2_    zher2
++
++/* LAPACK */
++#define dlacon_   dlacon
++#define slacon_   slacon
++#define icmax1_   icmax1
++#define scsum1_   scsum1
++#define clacon_   clacon
++#define dzsum1_   dzsum1
++#define izmax1_   izmax1
++#define zlacon_   zlacon
++
++/* Fortran interface */
++#define c_bridge_dgssv_ c_bridge_dgssv
++#define c_fortran_sgssv_ c_fortran_sgssv
++#define c_fortran_dgssv_ c_fortran_dgssv
++#define c_fortran_cgssv_ c_fortran_cgssv
++#define c_fortran_zgssv_ c_fortran_zgssv
++
++#define cdotc_ cdotc
++#define cdotu_ cdotu
++#define csscal_ csscal
++#define zdscal_ zdscal
++#define zdotc_ zdotc
++#define zdotu_ zdotu
++#define ctrmm_ ctrmm
++#define dtrmm_ dtrmm
++#define strmm_ strmm
++#define ztrmm_ ztrmm
++#define cgeru_ cgeru
++#define zgeru_ zgeru
++#define xerbla_ xerbla
++#define dtrmv_ dtrmv
++#define dsyrk_ dsyrk
++#define zherk_ zherk
++
+ #endif /* NO_BLAS_WRAP */
+ 
+ #endif /* __BLASWRAP_H */
