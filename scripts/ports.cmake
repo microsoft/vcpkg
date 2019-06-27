@@ -32,7 +32,7 @@ endif()
 
 
 if(CMD MATCHES "^BUILD$")
-    set(CMAKE_TRIPLET_FILE ${VCPKG_ROOT_DIR}/triplets/${TARGET_TRIPLET}.cmake)
+    set(CMAKE_TRIPLET_FILE ${TARGET_TRIPLET_FILE})
     if(NOT EXISTS ${CMAKE_TRIPLET_FILE})
         message(FATAL_ERROR "Unsupported target triplet. Triplet file does not exist: ${CMAKE_TRIPLET_FILE}")
     endif()
