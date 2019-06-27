@@ -1,21 +1,15 @@
-## # vcpkg_check_feature(s)
+## # vcpkg_check_features
 ##
 ## Check if one or more features are part of the package installation. 
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_check_feature(
-##     <feature> <output_variable>
-## )
-##
 ## vcpkg_check_features(
 ##     <feature1> <output_variable1>
 ##     [<feature2> <output_variable2>]
 ##     ...
 ## )
 ## ```
-##
-## `vcpkg_check_feature` accepts two arguments: a feature, and an output variable.
 ##
 ## `vcpkg_check_feature` accepts a list of (feature, output_variable) pairs.
 ## The syntax is similar to the `PROPERTIES` argument of `set_target_properties`.
@@ -28,27 +22,19 @@
 ##     SOURCE_PATH ${SOURCE_PATH}
 ##     PREFER_NINJA
 ##     OPTIONS
-##         -DBUILD_TESTING=0
+##         -DBUILD_TESTING=ON
 ##         ${FEATURE_OPTIONS}
 ## )
 ## ```
 ##
+## ## Notes
 ## `vcpkg_check_features` is supposed to be called only once. Otherwise, the
 ## `FEATURE_OPTIONS` variable set by a previous call will be overwritten.
 ##
-macro(vcpkg_check_feature feature output_variable)
-    if(NOT ${feature} IN_LIST ALL_FEATURES)
-        message(FATAL_ERROR "Unknown feature: ${feature}")
-    endif()
-
-    if(${feature} IN_LIST FEATURES)
-        set(${output_variable} 1)
-    else()
-        set(${output_variable} 0)
-    endif()
-endmacro()
-
-
+## ## Examples
+##
+## * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
+## * [librdkafka](https://github.com/microsoft/vcpkg/blob/master/ports/librdkafka/portfile.cmake)
 function(vcpkg_check_features)
     cmake_parse_arguments(_vcf "" "" "" ${ARGN})
 
@@ -59,22 +45,31 @@ function(vcpkg_check_features)
         message(FATAL_ERROR "Called with incorrect number of arguments.")
     endif()
 
-    set(_vcf_IS_FEATURE_ARG 1)
+    set(_vcf_IS_FEATURE_ARG ON)
     set(_vcf_FEATURE_OPTIONS)
 
-    # feature1 output_var1
-    # feature2 output_var2
-    # ...
+    # Process (feature, output_var) pairs
     foreach(_vcf_ARG ${ARGN})
         if(_vcf_IS_FEATURE_ARG)
             set(_vcf_FEATURE ${_vcf_ARG})
-            set(_vcf_IS_FEATURE_ARG 0)
+
+            if(NOT ${_vcf_FEATURE} IN_LIST ALL_FEATURES)
+                message(FATAL_ERROR "Unknown feature: ${_vcf_FEATURE}")
+            endif()
+
+            set(_vcf_IS_FEATURE_ARG OFF)
         else()
             set(_vcf_FEATURE_VAR ${_vcf_ARG})
-            vcpkg_check_feature(${_vcf_FEATURE} ${_vcf_FEATURE_VAR})
-            set(${_vcf_FEATURE_VAR} ${${_vcf_FEATURE_VAR}} PARENT_SCOPE)
+
+            if(${_vcf_FEATURE} IN_LIST FEATURES)
+                set(${_vcf_FEATURE_VAR} ON PARENT_SCOPE)
+            else()
+                set(${_vcf_FEATURE_VAR} OFF PARENT_SCOPE)
+            endif()
+
             list(APPEND _vcf_FEATURE_OPTIONS "-D${_vcf_FEATURE_VAR}=${${_vcf_FEATURE_VAR}}")
-            set(_vcf_IS_FEATURE_ARG 1)
+
+            set(_vcf_IS_FEATURE_ARG ON)
         endif()
     endforeach()
 
