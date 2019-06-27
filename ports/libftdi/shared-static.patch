@@ -46,14 +46,14 @@ index 071ae90..f91f6f7 100644
              COMPONENT sharedlibs
              )
  
-+   target_link_libraries(ftdi PUBLIC $<INSTALL_INTERFACE:include>)
++   target_include_directories(ftdi PUBLIC $<INSTALL_INTERFACE:include>)
 +   else()
     install( TARGETS ftdi-static
 -            DESTINATION bin
 +            EXPORT ftdi
              COMPONENT staticlibs
              )
-+   target_link_libraries(ftdi-static PUBLIC $<INSTALL_INTERFACE:include>)
++   target_include_directories(ftdi-static PUBLIC $<INSTALL_INTERFACE:include>)
 +   endif()
 +   install(EXPORT ftdi FILE libftdi-config.cmake NAMESPACE libftdi:: DESTINATION share/libftdi)
  
