@@ -1,23 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 32324d6..89a73a4 100644
+index a418c44..db48e9f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -151,6 +151,9 @@ option(FT_WITH_BZIP2 "Support bzip2 compressed fonts." OFF)
+@@ -156,6 +156,8 @@ option(FT_WITH_BZIP2 "Support bzip2 compressed fonts." OFF)
  option(FT_WITH_PNG "Support PNG compressed OpenType embedded bitmaps." OFF)
  option(FT_WITH_HARFBUZZ "Improve auto-hinting of OpenType fonts." OFF)
  
 +# vcpkg config install path
 +option(CONFIG_INSTALL_PATH "location to install cmake config files" lib/cmake/freetype)
-+
  
  # Disallow in-source builds
- if ("${PROJECT_BINARY_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
-@@ -475,7 +478,7 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+@@ -488,7 +490,7 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
        COMPONENT libraries)
    install(
      EXPORT freetype-targets
 -      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
-+      DESTINATION ${CONFIG_INSTALL_PATH}
++	  DESTINATION ${CONFIG_INSTALL_PATH}
        FILE freetype-config.cmake
        COMPONENT headers)
  endif ()
