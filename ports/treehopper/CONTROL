@@ -1,4 +1,5 @@
 Source: treehopper
-Version: 1.11.3-2
+Version: 1.11.3-3
 Description: Treehopper connects the physical world to your computer, tablet, or smartphone.
 Homepage: https://treehopper.io
+Build-Depends: libusb

@@ -13,6 +13,9 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_GTest=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_jsoncpp=TRUE
 )
 
 vcpkg_install_cmake()

@@ -12,6 +12,7 @@
 - [vcpkg\_copy\_pdbs](vcpkg_copy_pdbs.md)
 - [vcpkg\_copy\_tool\_dependencies](vcpkg_copy_tool_dependencies.md)
 - [vcpkg\_download\_distfile](vcpkg_download_distfile.md)
+- [vcpkg\_execute\_build\_process](vcpkg_execute_build_process.md)
 - [vcpkg\_execute\_required\_process](vcpkg_execute_required_process.md)
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
 - [vcpkg\_extract\_source\_archive\_ex](vcpkg_extract_source_archive_ex.md)
