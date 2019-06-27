@@ -45,6 +45,8 @@ From a user experience perspective, a user expresses interest in adding addition
   * `vcpkg install sqlite3 --overlay-ports=\\share\org\custom-ports`
 
 * a file listing paths to the former two.
+  > NOTE: Reading paths from a text file is not available in the current implementation, some revisions to this part of the specification are being made and will be implemented in a future date.
+  
   * `vcpkg install sqlite3 --overlay-ports=..\port-repos.txt`
 
     _port-repos.txt_
@@ -129,6 +131,8 @@ Given the following directory structure:
 
 * #### Example #3:
 
+  > NOTE: Reading paths from a text file is not available in the current implementation, some revisions to this part of the specification are being made and will be implemented in a future date.
+  
   Given the content of `preferred-ports.txt` as:
 
   ```
