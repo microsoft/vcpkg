@@ -9,11 +9,13 @@
 
 function(vcpkg_build_qmake)
     cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
+    message(STATUS "_csc_DEBUG_TARGETS: ${_csc_DEBUG_TARGETS}")
+    message(STATUS "_csc_RELEASE_TARGETS: ${_csc_RELEASE_TARGETS}")
 
     if(CMAKE_HOST_WIN32)
         set(_PATHSEP ";")
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}")
+        find_program(NMAKE nmake)
+        set(INVOKE "${NMAKE}")
     else()
         set(_PATHSEP ":")
         find_program(MAKE make)
@@ -45,6 +47,7 @@ function(vcpkg_build_qmake)
 
     function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
         message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
+        message(STATUS "TARGETS: ${TARGETS}")
         vcpkg_execute_required_process(
             COMMAND ${INVOKE} ${TARGETS}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
