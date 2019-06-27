@@ -76,7 +76,7 @@ vcpkg_configure_cmake(
         -DPOCO_ENABLE_WSTRING=ON
         -DPOCO_ENABLE_FPENVIRONMENT=ON
         -DPOCO_ENABLE_CPPUNIT=ON
-        # 
+        #
         -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
     OPTIONS_RELEASE
         -DMYSQL_LIBRARY=${MYSQL_LIBRARY}
@@ -144,9 +144,9 @@ endif()
 
 #
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Poco")
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/Poco")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Poco)
 endif()
 
 # remove unused files

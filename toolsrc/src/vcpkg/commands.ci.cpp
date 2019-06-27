@@ -232,12 +232,17 @@ namespace vcpkg::Commands::CI
             {
                 // determine abi tag
                 std::string abi;
-                if (auto scf = p->source_control_file.get())
+                if (auto scfl = p->source_control_file_location.get())
                 {
                     auto triplet = p->spec.triplet();
 
                     const Build::BuildPackageConfig build_config{
-                        *scf, triplet, paths.port_dir(p->spec), build_options, p->feature_list};
+                        *scfl->source_control_file, 
+                        triplet, 
+                        static_cast<fs::path>(scfl->source_location), 
+                        build_options, 
+                        p->feature_list
+                    };
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -351,7 +356,8 @@ namespace vcpkg::Commands::CI
         }
 
         StatusParagraphs status_db = database_load_check(paths);
-        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
+        
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
@@ -369,7 +375,10 @@ namespace vcpkg::Commands::CI
 
         XunitTestResults xunitTestResults;
 
-        std::vector<std::string> all_ports = Install::get_all_port_names(paths);
+        std::vector<std::string> all_ports =
+            Util::fmap(provider.load_all_control_files(), [](auto&& scfl) -> std::string {
+                return scfl->source_control_file.get()->core_paragraph->name;
+            });
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (const Triplet& triplet : triplets)
@@ -378,13 +387,13 @@ namespace vcpkg::Commands::CI
 
             xunitTestResults.push_collection(triplet.canonical_name());
 
-            Dependencies::PackageGraph pgraph(paths_port_file, status_db);
+            Dependencies::PackageGraph pgraph(provider, status_db);
 
             std::vector<PackageSpec> specs = PackageSpec::to_package_specs(all_ports, triplet);
             // Install the default features for every package
             auto all_feature_specs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
             auto split_specs =
-                find_unknown_ports_for_ci(paths, exclusions_set, paths_port_file, all_feature_specs, purge_tombstones);
+                find_unknown_ports_for_ci(paths, exclusions_set, provider, all_feature_specs, purge_tombstones);
             auto feature_specs = FullPackageSpec::to_feature_specs(split_specs->unknown);
 
             for (auto&& fspec : feature_specs)
@@ -442,7 +451,7 @@ namespace vcpkg::Commands::CI
 
             if (is_dry_run)
             {
-                Dependencies::print_plan(action_plan);
+                Dependencies::print_plan(action_plan, true, paths.ports);
             }
             else
             {
@@ -485,11 +494,11 @@ namespace vcpkg::Commands::CI
             System::print2("Total elapsed time: ", result.summary.total_elapsed_time, "\n");
             result.summary.print();
         }
-
+        auto& fs = paths.get_filesystem();
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml());
+            fs.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

@@ -15,12 +15,18 @@ vcpkg_from_github(
 
 file(REMOVE ${SOURCE_PATH}/CMake/FindOpenJPEG.cmake)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DGDCM_BUILD_DOCBOOK_MANPAGES=OFF
-        -DGDCM_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+        -DGDCM_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
         -DGDCM_INSTALL_INCLUDE_DIR=include
         -DGDCM_USE_SYSTEM_EXPAT=ON
         -DGDCM_USE_SYSTEM_ZLIB=ON
@@ -29,7 +35,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/gdcm TARGET_PATH share/gdcm)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/gdcm)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

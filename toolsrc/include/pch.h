@@ -37,11 +37,8 @@
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
-#if defined(_WIN32)
-#include <filesystem>
-#else
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
-#endif
 #include <cstring>
 #include <fstream>
 #include <functional>
