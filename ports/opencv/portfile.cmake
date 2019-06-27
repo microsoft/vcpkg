@@ -282,9 +282,9 @@ vcpkg_configure_cmake(
     OPTIONS
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=""
-        -DOPENCV_LIB_INSTALL_PATH="lib"
-        -DOPENCV_3P_LIB_INSTALL_PATH="lib"
-        -DOPENCV_CONFIG_INSTALL_PATH="share/opencv"
+        -DOPENCV_LIB_INSTALL_PATH=lib
+        -DOPENCV_3P_LIB_INSTALL_PATH=lib
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         ###### Ungrouped Entries
         -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
