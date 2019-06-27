@@ -85,7 +85,7 @@ macro(FFMPEG_FIND_GENEX varname shortname headername)
     set(FFMPEG_${varname}_FOUND 1)
     list(APPEND FFMPEG_LIBRARY_DIRS ${FFMPEG_${varname}_LIBRARY_RELEASE_DIR} ${FFMPEG_${varname}_LIBRARY_DEBUG_DIR})
   endif()
-endmacro(FFMPEG_FIND)
+endmacro(FFMPEG_FIND_GENEX)
 
 if(WIN32)
   if(NOT FFMPEG_${varname}_INCLUDE_DIRS)

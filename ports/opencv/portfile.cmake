@@ -16,9 +16,7 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0005-uniform-config-install-path.patch
       0006-fix-missing-openjp2.patch
-      0007-use-external-ffmpeg.patch
       0008-fix-error-c4576.patch
 )
 
@@ -282,6 +280,12 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ###### ocv_options
+        -DOpenCV_INSTALL_BINARIES_PREFIX=""
+        -DOPENCV_LIB_INSTALL_PATH="lib"
+        -DOPENCV_3P_LIB_INSTALL_PATH="lib"
+        -DOPENCV_CONFIG_INSTALL_PATH="share/opencv"
+        -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         ###### Ungrouped Entries
         -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
         -DBUILD_opencv_java=OFF

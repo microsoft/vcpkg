@@ -1,33 +1,5 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -514,7 +514,7 @@ endif()
- 
- if(WIN32 AND CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-   if(DEFINED OpenCV_RUNTIME AND DEFINED OpenCV_ARCH)
--    ocv_update(OpenCV_INSTALL_BINARIES_PREFIX "${OpenCV_ARCH}/${OpenCV_RUNTIME}/")
-+    ocv_update(OpenCV_INSTALL_BINARIES_PREFIX "")
-   else()
-     message(STATUS "Can't detect runtime and/or arch")
-     ocv_update(OpenCV_INSTALL_BINARIES_PREFIX "")
-@@ -568,15 +568,15 @@ else()
- 
-   if(WIN32 AND CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-     if(OpenCV_STATIC)
--      ocv_update(OPENCV_LIB_INSTALL_PATH   "${OpenCV_INSTALL_BINARIES_PREFIX}staticlib${LIB_SUFFIX}")
-+      ocv_update(OPENCV_LIB_INSTALL_PATH   "${OpenCV_INSTALL_BINARIES_PREFIX}lib${LIB_SUFFIX}")
-     else()
-       ocv_update(OPENCV_LIB_INSTALL_PATH   "${OpenCV_INSTALL_BINARIES_PREFIX}lib${LIB_SUFFIX}")
-     endif()
--    ocv_update(OPENCV_3P_LIB_INSTALL_PATH  "${OpenCV_INSTALL_BINARIES_PREFIX}staticlib${LIB_SUFFIX}")
-+    ocv_update(OPENCV_3P_LIB_INSTALL_PATH  "${OpenCV_INSTALL_BINARIES_PREFIX}lib${LIB_SUFFIX}")
-     ocv_update(OPENCV_SAMPLES_SRC_INSTALL_PATH    samples)
-     ocv_update(OPENCV_JAR_INSTALL_PATH java)
-     ocv_update(OPENCV_OTHER_INSTALL_PATH   etc)
--    ocv_update(OPENCV_CONFIG_INSTALL_PATH  ".")
-+    ocv_update(OPENCV_CONFIG_INSTALL_PATH  "${OpenCV_INSTALL_BINARIES_PREFIX}share/opencv/")
-     ocv_update(OPENCV_INCLUDE_INSTALL_PATH "include")
-     ocv_update(OPENCV_LICENSES_INSTALL_PATH "${OPENCV_OTHER_INSTALL_PATH}/licenses")
-   else()
 @@ -681,7 +681,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
