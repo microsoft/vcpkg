@@ -2,10 +2,6 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-    set(WIN_PATCHES strdup-fix.patch strncpy-fix.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Yubico/libu2f-server
@@ -14,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         windows.patch
-        ${WIN_PATCHES}
+        strndup-fix.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
