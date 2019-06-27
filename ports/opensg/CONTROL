@@ -1,0 +1,4 @@
+Source: opensg
+Version: 1.8.0
+Build-Depends: glew, zlib, tiff, libjpeg-turbo, libpng, opengl, freeglut
+Description: OpenSG is a realtime rendering system based on a scenegraph metaphor.
