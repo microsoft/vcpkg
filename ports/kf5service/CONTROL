@@ -1,0 +1,4 @@
+Source: kf5service
+Version: 5.51.0
+Description: Advanced plugin and service introspection
+Build-Depends: ecm, qt5-tools, kf5config, kf5crash, kf5dbusaddons, kf5i18n

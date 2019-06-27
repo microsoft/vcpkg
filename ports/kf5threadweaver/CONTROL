@@ -1,0 +1,4 @@
+Source: kf5threadweaver
+Version: 5.51.0
+Description: High-level multithreading framework
+Build-Depends: ecm, qt5-base, qt5-tools

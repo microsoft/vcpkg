@@ -1,0 +1,4 @@
+Source: kf5kirigami2
+Version: 5.51.0
+Description: A QtQuick based components set
+Build-Depends: ecm, qt5-tools, qt5-graphicaleffects, qt5-quickcontrols, qt5-quickcontrols2, kf5package

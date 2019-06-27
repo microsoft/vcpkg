@@ -1,0 +1,4 @@
+Source: kf5textwidgets
+Version: 5.51.0
+Description: Advanced text editing widgets
+Build-Depends: ecm, qt5-speech, qt5-tools, kf5completion, kf5iconthemes, kf5service, kf5sonnet

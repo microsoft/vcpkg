@@ -1,0 +1,4 @@
+Source: kf5jobwidgets
+Version: 5.51.0
+Description: Widgets for tracking KJob instances
+Build-Depends: ecm, qt5-winextras, qt5-tools, kf5coreaddons, kf5widgetsaddons

@@ -1,0 +1,4 @@
+Source: kf5designerplugin
+Version: 5.51.0
+Description: Integration of Frameworks widgets in Qt Designer/Creator
+Build-Depends: ecm, qt5-tools, kf5kio, kf5plotting

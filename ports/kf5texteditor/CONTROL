@@ -1,0 +1,4 @@
+Source: kf5texteditor
+Version: 5.51.0
+Description: Advanced embeddable text editor
+Build-Depends: ecm, qt5-tools, editorconfig-core-c, libgit2, kf5syntax-highlighting

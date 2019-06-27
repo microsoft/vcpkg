@@ -1,0 +1,4 @@
+Source: kf5itemmodels
+Version: 5.51.0
+Description: Models for Qt Model/View system
+Build-Depends: ecm, qt5-tools, qt5-base

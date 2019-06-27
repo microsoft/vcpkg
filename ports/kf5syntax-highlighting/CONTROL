@@ -1,0 +1,4 @@
+Source: kf5syntax-highlighting
+Version: 5.51.0
+Description: Syntax highlighting engine for structured text and code
+Build-Depends: ecm, qt5-tools, qt5-xmlpatterns

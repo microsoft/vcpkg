@@ -1,0 +1,4 @@
+Source: kf5solid
+Version: 5.51.0
+Description: Hardware integration and detection
+Build-Depends: ecm, qt5-declarative, qt5-tools

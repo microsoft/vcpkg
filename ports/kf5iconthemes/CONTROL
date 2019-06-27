@@ -1,0 +1,4 @@
+Source: kf5iconthemes
+Version: 5.51.0
+Description: Support for icon themes
+Build-Depends: ecm, qt5-tools, qt5-svg, kf5archive, kf5configwidgets, kf5itemviews

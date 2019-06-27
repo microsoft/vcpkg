@@ -1,0 +1,4 @@
+Source: kf5unitconversion
+Version: 5.51.0
+Description: Support for unit conversion
+Build-Depends: ecm, kf5i18n, qt5-tools

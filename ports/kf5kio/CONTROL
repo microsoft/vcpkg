@@ -1,0 +1,4 @@
+Source: kf5kio
+Version: 5.51.0
+Description: Resource and network access abstraction
+Build-Depends: ecm, qt5-tools, qt5-script, kf5bookmarks, kf5jobwidgets, libxslt, kf5solid
