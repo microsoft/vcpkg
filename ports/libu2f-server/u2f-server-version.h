@@ -80,8 +80,6 @@ extern "C" {
  */
 #define U2FS_VERSION_PATCH 1
 
-  const char *u2fs_check_version(const char *req_version);
-
 #ifndef TRUE
 #define TRUE 1
 #endif
