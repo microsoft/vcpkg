@@ -9,7 +9,7 @@ function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
     endif()
 
     set(MAJOR_MINOR 5.12)
-    set(FULL_VERSION ${MAJOR_MINOR}.3)
+    set(FULL_VERSION ${MAJOR_MINOR}.4)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
@@ -53,7 +53,7 @@ function(qt_modular_build_library SOURCE_PATH)
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
 
-    vcpkg_build_qmake()
+    vcpkg_build_qmake(SKIP_MAKEFILES)
 
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
