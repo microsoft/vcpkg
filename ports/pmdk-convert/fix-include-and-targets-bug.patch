@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9736e25..d761a79 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -371,7 +371,9 @@ if(BUILD_CONVERT_V5)
+ 	set(PMEM_INCLUDE_DIRS nvml-1.5/src/include)
+ 	set(PMEM_LIBRARIES libpmem-convert)
+ 	install(TARGETS libpmem-convert
+-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/pmdk-convert/)
++		RUNTIME DESTINATION bin
++	    LIBRARY DESTINATION lib
++	    ARCHIVE DESTINATION lib)
+ 
+ 	set(SOURCES_15
+ 		nvml-1.5/src/libpmemobj/alloc_class.c
+@@ -488,7 +490,9 @@ if(BUILD_CONVERT_V5)
+ 	set_target_properties(pmemobj_convert_v5_shared PROPERTIES PREFIX "")
+ 
+ 	install(TARGETS pmemobj_convert_v5_shared
+-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/pmdk-convert/)
++		RUNTIME DESTINATION bin
++	    LIBRARY DESTINATION lib
++	    ARCHIVE DESTINATION lib)
+ 
+ 	if(MSVC)
+ 		FILE(READ nvml-1.5/src/libpmemobj/libpmemobj.def DEFFILE)
+@@ -1166,6 +1170,11 @@ if(BUILD_CONVERT_V1)
+ 
+ endif(BUILD_CONVERT_V1)
+ 
++###################################################### install headers
++file(GLOB_RECURSE PMDK_INCLUDES ${CMAKE_SOURCE_DIR}/pmdk-1.4.2/src/include *.h *.hpp)
++list(APPEND PMDK_INCLUDES ${CMAKE_SOURCE_DIR}/pmemobj_convert.h ${CMAKE_SOURCE_DIR}/include/srcversion.h)
++install(FILES ${PMDK_INCLUDES} DESTINATION include)
++
+ ###################################################### everything else
+ if (WIN32)
+ 	add_executable(pmdk-convert pmdk-convert.c nvml-${MAX_VERSION}/src/windows/getopt/getopt.c)
+@@ -1184,7 +1193,9 @@ target_link_libraries(pmdk-convert PRIVATE ${CMAKE_DL_LIBS})
+ target_link_libraries(pmdk-convert PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+ 
+ install(TARGETS pmdk-convert
+-	DESTINATION ${CMAKE_INSTALL_BINDIR}
++	RUNTIME DESTINATION bin
++	LIBRARY DESTINATION lib
++	ARCHIVE DESTINATION lib
+ 	PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+ 
+ option(TRACE_TESTS
