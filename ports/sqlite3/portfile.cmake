@@ -1,14 +1,19 @@
 include(vcpkg_common_functions)
 
-set(SQLITE_VERSION 3240000)
-set(SQLITE_HASH c7050bdd33c50b24e8c9fd2409b7bccbdcd8d6f064b435ee34b6c4a4de6283bce2500d4a3aa3821be2069804dff45a575ff331c97b39e02b227ef32e542ed6cb)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-${SQLITE_VERSION})
+set(SQLITE_VERSION 3280000)
+set(SQLITE_HASH 6a2b9c0accd286b09d7e077393a627e22112ef11c76ff6a5896f5ff1a11eb62a8b2700f5a99eebda82df63b3968814ca460582aa4619852f96a899d2f59b9f8d)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2018/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    URLS "https://sqlite.org/2019/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 ${SQLITE_HASH})
-vcpkg_extract_source_archive(${ARCHIVE})
+    SHA512 ${SQLITE_HASH}
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${SQLITE_VERSION}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

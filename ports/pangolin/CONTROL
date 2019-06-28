@@ -1,4 +1,5 @@
 Source: pangolin
-Version: 0.5-3
+Version: 0.5-7
 Build-Depends: eigen3, glew, libpng, libjpeg-turbo, ffmpeg
+Homepage: https://github.com/stevenlovegrove/Pangolin
 Description: Lightweight GUI Library

@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/range-498839d41519d38bb81089f7d0f517026bd042cc)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/think-cell/range/archive/498839d41519d38bb81089f7d0f517026bd042cc.zip"
-    FILENAME "think-cell_range-498839d.zip"
-    SHA512 801e987c828c954cb50f9a6f9f2feee2ce05f7232d531ecce7394800ecc5a750992795da173fb72b6efcabd6978015a650730682b7db3f874fb8aaac28869711
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO think-cell/range
+    REF 498839d41519d38bb81089f7d0f517026bd042cc
+    SHA512 1292ba4dd994aab2cb620c24ebd03437a47e426368ed803579dad13a3fa52762cefe42c77c9921d5c4bcbd6592775714191de63097c230e50f9b59b9498005e5
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(INSTALL ${SOURCE_PATH}/range DESTINATION ${CURRENT_PACKAGES_DIR}/include/think-cell FILES_MATCHING PATTERN "*.h")
 

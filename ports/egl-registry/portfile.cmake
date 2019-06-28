@@ -16,6 +16,12 @@ file(
 )
 
 file(
+  COPY
+    ${SOURCE_PATH}/api/egl.xml
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/egl-registry
+)
+
+file(
   INSTALL ${SOURCE_PATH}/sdk/docs/man/copyright.xml
   DESTINATION ${CURRENT_PACKAGES_DIR}/share/egl-registry
   RENAME copyright

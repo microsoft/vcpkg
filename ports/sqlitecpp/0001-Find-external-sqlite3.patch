@@ -1,26 +1,14 @@
-From 495f0f8bf2caf158ffed78e479d68359f51289a2 Mon Sep 17 00:00:00 2001
-From: Stanislav Ershov <digital.stream.of.mind@gmail.com>
-Date: Sat, 6 Jan 2018 11:26:55 +0300
-Subject: [PATCH] Find external sqlite3
-
----
- CMakeLists.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4a3e492..f7e22a5 100644
+index 00e058c..489b884 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -193,7 +193,8 @@ install(EXPORT ${PROJECT_NAME}Config DESTINATION lib/cmake/${PROJECT_NAME})
+@@ -199,7 +199,8 @@ install(EXPORT ${PROJECT_NAME}Config DESTINATION lib/cmake/${PROJECT_NAME})
  ## Build provided copy of SQLite3 C library ##
-
- # TODO NOCOMMIT
+ 
+ # TODO 
 -#find_package(sqlite3)
-+find_package(sqlite3 REQUIRED)
++find_package(sqlite3 CONFIG)
 +target_link_libraries(SQLiteCpp PRIVATE sqlite3)
  #if(sqlite3_VERSION VERSION_LESS "3.19")
  #    set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
  #endif()
---
-2.15.0.windows.1
-

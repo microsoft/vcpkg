@@ -1,0 +1,3 @@
+Source: gcem
+Version: 1.12.0
+Description: A C++ compile-time math library using generalized constant expressions

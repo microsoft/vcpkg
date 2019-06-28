@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO docopt/docopt.cpp
-    REF 4f491249e6def236937dbfac7602852e7d99aff8
-    SHA512 d3a61f8d8a8c11723064f3405f03eb838a2ac9aa574f86771b1db89a2dd81996b639215fe5d4465343b893bf71502da178c7af8d883c112c1e45f43c17d473b7
+    REF 7476f8e56b4650aaeafb4e1cda2e5d8f01fddd97
+    SHA512 6765e8a3a834ad75bd87effee5ac7e174482039d26015346b95d7d64e4e0097cc3f1f2e6fd9e3e5970bf4c5719095c0a3e5edfac18217913dc88fbe569d37ae8
     HEAD_REF master
     PATCHES
         001-fix-unresolved-symbol.patch

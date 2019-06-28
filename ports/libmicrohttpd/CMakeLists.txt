@@ -50,10 +50,6 @@ set(HEADERS
   src/microhttpd/mhd_compat.h
 )
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 include_directories(${HEADERS} src/include w32/common)
 
 add_library(libmicrohttpd ${SRC})

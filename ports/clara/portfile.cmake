@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO philsquared/Clara
-    REF a19db09c015f96f80d282e445ed3091ff20b4248
-    SHA512 e7a9574d92ff8cc4b91094d30572bc5b36c30f5dc52c418e76ba2227c526551572f51d4a2fa29e9afab21be82e330070dd8a2118d75bdd49ac1e510755b4cdf4
+    REF e3061072fd5a3739fbd11e56ecb7fef5fbd33e04
+    SHA512 5ad4b4842153e11b3e82579858c159a85c9ef76e8278ef97befecaedcd79508e89a3fcb5f5b5c3f0ac48064d5627e08cdd2a1db046a95f5b2d55d7b8a4437a92
     HEAD_REF master
 )
 file(INSTALL ${SOURCE_PATH}/single_include/clara.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)

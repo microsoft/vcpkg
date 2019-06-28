@@ -7,20 +7,18 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libxslt-1.1.29)
-vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://xmlsoft.org/libxslt/libxslt-1.1.29.tar.gz"
-    FILENAME "libxslt-1.1.29.tar.gz"
-    SHA512 a1ce555a74a9dabe65e8f64bb66e27e77760fd76940d88f2d59f58dd63ca73c8ae59f3fcbd8e76c8f92ff992fb0c09328528c20ea38ccac83e63252106bf5f31
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO GNOME/libxslt
+    REF  v1.1.33
+    SHA512 2c20b2af3c19952b25b10dca0d95fe227602f7f815db352b04dd061c52c458d745f92c597ce08ac9207ba0fbe0169ea2fb78263d8590743717553f84463fe1d9
+    HEAD_REF master
+	PATCHES
+	0001-Fix-makefile.patch
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 find_program(NMAKE nmake)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}/
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-makefile.patch
-)
 
 set(SCRIPTS_DIR ${SOURCE_PATH}/win32)
 
@@ -170,7 +168,7 @@ else()
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxslt)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libxslt/COPYING ${CURRENT_PACKAGES_DIR}/share/libxslt/copyright)
+file(COPY ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxslt)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libxslt/Copyright ${CURRENT_PACKAGES_DIR}/share/libxslt/copyright)
 
 vcpkg_copy_pdbs()

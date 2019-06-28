@@ -1,28 +1,24 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
-    message("tinyobjloader doesn't support dynamic linkage on Windows. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyobjloader
-    REF 8fd9f6e57bf8c70d5ae47cf0f0d1bf1ccae2dfc2
-    SHA512 5b6a2822989c5a28eabee0a33724c045b5d07cf0ccfd4288c7c3a5a2cc5b0c3f6ee8aca45e8e22c941278fbbfabd8f909f5010cd34b9d905c4d84102d151c73b
+    REF v1.0.7
+    SHA512 e88554ead20354da443489e1b6576b328e92b2e6665071df9b6473b38c34c036dbffb6655330e970c01ccf7f99bbd4f9f5418ce48a14239576ec5e0513256637
     HEAD_REF master
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TINYOBJLOADER_COMPILATION_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        -DTINYOBJLOADER_COMPILATION_SHARED=${TINYOBJLOADER_COMPILATION_SHARED}
         -DCMAKE_INSTALL_DOCDIR:STRING=share/tinyobjloader
 )
 
 vcpkg_install_cmake()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/tinyobjloader/cmake)
 
 file(

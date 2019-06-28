@@ -1,20 +1,24 @@
 include(vcpkg_common_functions)
 
-set(IDN2_VERSION 2.0.4)
-set(IDN2_FILENAME libidn2-${IDN2_VERSION}.tar.gz)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libidn2-${IDN2_VERSION})
+set(IDN2_VERSION 2.1.1)
+set(IDN2_FILENAME libidn2-${IDN2_VERSION}a.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 1e51bd4b8f8907531576291f1c2a8865d17429b4105418b4c98754eb982cd1cbb3adbeab4ec0c1c561d2dba11d876c7c09e5dc5b315c55a2c24986d7a2a3b4d2
+    SHA512 404a739e33d324f700ac8e8119de3feef0de778bbb11be09049cb64eab447cd101883f6d489cca1e88c230f58bcaf9758fe102e571b6501450aa750ec2a4a9c6
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${IDN2_VERSION}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/string.h DESTINATION ${SOURCE_PATH}/gl)
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/config.h ${SOURCE_PATH})
 
 function(simple_copy_template_header FILE_PATH BASE_NAME)
     if(NOT EXISTS ${FILE_PATH}/${BASE_NAME}.h)

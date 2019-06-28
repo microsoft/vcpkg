@@ -32,9 +32,9 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SFML)
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     FILE(READ ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake SFML_CONFIG)
-    FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake "set(SFML_STATIC_LIBRARIES true)\n${SFML_CONFIG}")
+    FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake "set(SFML_STATIC_LIBRARIES true)\ninclude(CMakeFindDependencyMacro)\nfind_dependency(Freetype)\n${SFML_CONFIG}")
 endif()
 
 # move sfml-main to manual link dir

@@ -1,4 +1,5 @@
 Source: libdatrie
 Version: 0.2.10-2
+Homepage: https://linux.thai.net/pub/ThaiLinux/software/libthai
 Description: implementation of double-array structure for representing trie
 Build-Depends: libiconv

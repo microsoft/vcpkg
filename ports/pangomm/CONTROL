@@ -1,4 +1,5 @@
 Source: pangomm
 Version: 2.40.1
+Homepage: https://ftp.gnome.org/pub/GNOME/sources/pangomm
 Description: pangomm is the official C++ interface for the Pango font layout library. See, for instance, the Pango::Layout class.
 Build-Depends: glib, gettext, cairo, fontconfig, freetype, harfbuzz, pango, cairomm, glibmm

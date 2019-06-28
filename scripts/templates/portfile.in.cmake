@@ -11,13 +11,24 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/@ROOT_NAME@)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "@URL@"
     FILENAME "@FILENAME@"
     SHA512 @SHA512@
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE} 
+    # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
+    # REF 1.0.0
+    # (Optional) Read the docs for how to generate patches at: 
+    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
+    # PATCHES
+    #   001_port_fixes.patch
+    #   002_more_port_fixes.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

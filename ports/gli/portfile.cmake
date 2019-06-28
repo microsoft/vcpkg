@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO g-truc/gli
-    REF 0.8.2.0
-    SHA512 c254a4e1497d0add985e4a882c552db99c512cc0e9cc72145d51a6e7deada817d624d9818099a47136a8a3ef1223a26a34e355e3c713166f0bb062e506059834
+    REF dd17acf9cc7fc6e6abe9f9ec69949eeeee1ccd82
+    SHA512 9e3a4ab9ee73d5c271b8346cf81339cd3cd0c20d20991524b816313b6a99e8d3a01863316a38cf1a52ef9c5b31d689ecccf6248b12d1d270460c048bf904650b
     HEAD_REF master
 )
 

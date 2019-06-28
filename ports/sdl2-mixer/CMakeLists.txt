@@ -1,15 +1,14 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(SDL2_MIXER C)
 
 find_path(SDL_INCLUDE_DIR SDL.h PATH_SUFFIXES SDL2)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 set(SDL_MIXER_INCLUDES ${SDL_INCLUDE_DIR})
-set(SDL_MIXER_LIBRARIES ${SDL_LIBRARY})
+
+set(SDL_MIXER_LIBRARIES SDL2::SDL2)
 
 # builtin formats
-set(SDL_MIXER_DEFINES
-    MUSIC_WAV
-    MUSIC_MID_NATIVE)
+set(SDL_MIXER_DEFINES MUSIC_WAV)
 
 # MP3 support
 if(SDL_MIXER_ENABLE_MP3)
@@ -22,8 +21,8 @@ endif()
 
 # FLAC support
 if(SDL_MIXER_ENABLE_FLAC)
-    find_path(FLAC_INCLUDE_DIR flac/all.h)
-    find_library(FLAC_LIBRARY flac)
+    find_path(FLAC_INCLUDE_DIR FLAC/all.h)
+    find_library(FLAC_LIBRARY FLAC)
     list(APPEND SDL_MIXER_INCLUDES ${FLAC_INCLUDE_DIR})
     list(APPEND SDL_MIXER_LIBRARIES ${FLAC_LIBRARY})
     list(APPEND SDL_MIXER_DEFINES MUSIC_FLAC)
@@ -47,6 +46,17 @@ if(SDL_MIXER_ENABLE_OGGVORBIS)
     list(APPEND SDL_MIXER_DEFINES MUSIC_OGG)
 endif()
 
+# Opus support
+if(SDL_MIXER_ENABLE_OPUS)
+    find_path(OPUS_INCLUDE_DIR opus/opusfile.h)
+    find_package(ogg CONFIG REQUIRED)
+    find_package(Opus CONFIG REQUIRED)
+    find_library(OPUSFILE_LIBRARY opusfile)
+    list(APPEND SDL_MIXER_INCLUDES ${OPUS_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_LIBRARIES ${OPUSFILE_LIBRARY} Ogg::ogg Opus::opus)
+    list(APPEND SDL_MIXER_DEFINES MUSIC_OPUS)
+endif()
+
 add_library(SDL2_mixer
     effect_position.c
     effect_stereoreverse.c
@@ -62,24 +72,33 @@ add_library(SDL2_mixer
     music_mikmod.c
     music_modplug.c
     music_mpg123.c
-    music_nativemidi.c
     music_ogg.c
-    music_smpeg.c
+    music_opus.c
     music_timidity.c
     music_wav.c
-    native_midi/native_midi_common.c
-    native_midi/native_midi_win32.c
     version.rc)
+
+if(WIN32)
+    list(APPEND SDL_MIXER_DEFINES MUSIC_MID_NATIVE)
+    target_sources(SDL2_mixer PRIVATE music_nativemidi.c native_midi/native_midi_common.c native_midi/native_midi_win32.c)
+    target_link_libraries(SDL2_mixer ${SDL_MIXER_LIBRARIES} Winmm)
+endif()
 
 set_target_properties(SDL2_mixer PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_compile_definitions(SDL2_mixer PRIVATE ${SDL_MIXER_DEFINES})
 target_include_directories(SDL2_mixer PRIVATE ${SDL_MIXER_INCLUDES} ./native_midi)
-target_link_libraries(SDL2_mixer ${SDL_MIXER_LIBRARIES} Winmm)
 
 install(TARGETS SDL2_mixer
+    EXPORT SDL2_mixer
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
+
+install(EXPORT SDL2_mixer
+    DESTINATION share/sdl2-mixer/
+    FILE sdl2-mixer-config.cmake
+    NAMESPACE SDL2::
+)
 
 if(NOT SDL_MIXER_SKIP_HEADERS)
     install(FILES SDL_mixer.h DESTINATION include/SDL2)

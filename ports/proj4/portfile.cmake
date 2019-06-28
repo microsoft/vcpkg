@@ -1,29 +1,33 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/proj-4.9.3)
+
+set(PROJ4_VERSION 4.9.3)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/proj/proj-4.9.3.zip"
-    FILENAME "proj-4.9.3.zip"
+    URLS "http://download.osgeo.org/proj/proj-${PROJ4_VERSION}.zip"
+    FILENAME "proj-${PROJ4_VERSION}.zip"
     SHA512 c9703008cd1f75fe1239b180158e560b9b88ae2ffd900b72923c716908eb86d1abbc4230647af5e3131f8c34481bdc66b03826d669620161ffcfbe67801cb631
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}/
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${PROJ4_VERSION}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/0001-CMake-add-detection-of-recent-visual-studio-versions.patch
-    ${CMAKE_CURRENT_LIST_DIR}/0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
-    ${CMAKE_CURRENT_LIST_DIR}/0003-CMake-configurable-cmake-config-install-location.patch
+        0001-CMake-add-detection-of-recent-visual-studio-versions.patch
+        0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
+        0003-CMake-configurable-cmake-config-install-location.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND CMAKE_OPTIONS "-DBUILD_LIBPROJ_SHARED=YES")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
-    list(APPEND CMAKE_OPTIONS "-DBUILD_LIBPROJ_SHARED=NO")
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${CMAKE_OPTIONS}
+    OPTIONS
+    -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
     -DPROJ_DATA_SUBDIR=share/proj4
@@ -36,8 +40,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/proj4)
+vcpkg_fixup_cmake_targets()
 
 # Rename library and adapt cmake configuration
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -68,11 +71,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     endif()
 endif()
 
-# Remove duplicate headers installed from debug build
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-# Remove data installed from debug build
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/proj4)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/proj4/COPYING ${CURRENT_PACKAGES_DIR}/share/proj4/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/proj4 RENAME copyright)

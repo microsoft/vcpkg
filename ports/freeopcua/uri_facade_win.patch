@@ -1,0 +1,28 @@
+diff --git a/src/core/common/uri_facade_win.cpp b/src/core/common/uri_facade_win.cpp
+index 1a807fb..c579e2d 100644
+--- a/src/core/common/uri_facade_win.cpp
++++ b/src/core/common/uri_facade_win.cpp
+@@ -19,7 +19,7 @@
+ namespace Common
+ {
+ 
+-void Uri::Initialize(const char * uriString, std::size_t size)
++void Uri::Initialize(const std::string& uriString)
+ {
+   URL_COMPONENTS url = {0};
+   url.dwStructSize = sizeof(url);
+@@ -31,7 +31,7 @@ void Uri::Initialize(const char * uriString, std::size_t size)
+ 
+   // TODO msdn says do not use this function in services and in server patforms. :(
+   // TODO http://msdn.microsoft.com/en-us/library/windows/desktop/aa384376(v=vs.85).aspx
+-  if (!InternetCrackUrl(uriString, size, options, &url))
++  if (!InternetCrackUrl(uriString.c_str(), uriString.size(), options, &url))
+     {
+       THROW_ERROR1(CannotParseUri, uriString);
+     }
+@@ -50,5 +50,3 @@ void Uri::Initialize(const char * uriString, std::size_t size)
+ }
+ 
+ } // namespace Common
+-
+-

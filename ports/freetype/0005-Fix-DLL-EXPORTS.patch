@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dd8a878..75f9ab7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -141,7 +141,7 @@ set(VERSION_PATCH "1")
+ #     Increment REVISION.
+ set(LIBRARY_VERSION "6.16.0")
+ set(LIBRARY_SOVERSION "6")
+-
++ADD_DEFINITIONS(-DDLL_EXPORT)
+ # These options mean "require x and complain if not found". They'll get
+ # optionally found anyway. Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to disable
+ # searching for a packge entirely (x is the CMake package name, so "BZip2"
