@@ -281,7 +281,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ###### ocv_options
-        -DOpenCV_INSTALL_BINARIES_PREFIX=""
+        -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
