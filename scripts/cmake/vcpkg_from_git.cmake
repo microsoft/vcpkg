@@ -110,7 +110,6 @@ function(vcpkg_from_git)
     file(RENAME "${TEMP_ARCHIVE}" "${ARCHIVE}")
   else()
     message(STATUS "Using cached ${ARCHIVE}")
-    test_hash("${ARCHIVE}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
   endif()
 
   vcpkg_extract_source_archive_ex(
