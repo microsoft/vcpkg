@@ -11,7 +11,7 @@ vcpkg_check_features(
 )
 ```
 
-`vcpkg_check_feature` accepts a list of (feature, output_variable) pairs.
+`vcpkg_check_features` accepts a list of (feature, output_variable) pairs.
 The syntax is similar to the `PROPERTIES` argument of `set_target_properties`.
 
 `vcpkg_check_features` will create a variable `FEATURE_OPTIONS` in the
@@ -34,7 +34,8 @@ vcpkg_config_cmake(
 ## Examples
 
 * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
-* [librdkafka](https://github.com/microsoft/vcpkg/blob/master/ports/librdkafka/portfile.cmake)
+* [oniguruma](https://github.com/microsoft/vcpkg/blob/master/ports/oniguruma/portfile.cmake)
+* [xtensor](https://github.com/microsoft/vcpkg/blob/master/ports/xtensor/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg_check_features.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_check_features.cmake)
