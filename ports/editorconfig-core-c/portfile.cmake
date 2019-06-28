@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_TARGET_IS_UWP)
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO editorconfig/editorconfig-core-c
