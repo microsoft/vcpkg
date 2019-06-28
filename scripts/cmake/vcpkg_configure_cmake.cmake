@@ -175,9 +175,9 @@ function(vcpkg_configure_cmake)
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS and VCPKG_C_FLAGS")
     endif()
     
-    if(NOT _csc_NO_CHARSET_FLAG)
-        list(APPEND VCPKG_CXX_FLAGS "/utf-8")
-        list(APPEND VCPKG_C_FLAGS "/utf-8")
+    set(VCPKG_SET_CHARSET_FLAG ON)
+    if(_csc_NO_CHARSET_FLAG)
+        set(VCPKG_SET_CHARSET_FLAG OFF)
     endif()
 
     if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -197,6 +197,7 @@ function(vcpkg_configure_cmake)
 
     list(APPEND _csc_OPTIONS
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
         "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
