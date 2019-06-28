@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF b322441568f903ef96c0ccb03e2611d052ceb4e0
     SHA512 1673dfe9dba913890ec93e351263a924437a0d739a5858dcdc07650e1aaca30c3b4fcce59e32b201c1d65e15eb82e27912d759e4d07ecc149ae8a4f9eb1669bc
     HEAD_REF development
+    PATCHES werror.patch
 )
 
 vcpkg_configure_cmake(
