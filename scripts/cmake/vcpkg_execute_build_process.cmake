@@ -131,7 +131,7 @@ function(vcpkg_execute_build_process)
                 file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                 list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
             endforeach()
-            list(JOIN _ebp_COMMAND " " _ebp_COMMAND_PRETTY)
+            prettify_command(_ebp_COMMAND _ebp_COMMAND_PRETTY)
             message(FATAL_ERROR
                 "  Command failed: ${_ebp_COMMAND_PRETTY}\n"
                 "  Working Directory: ${_ebp_WORKING_DIRECTORY}\n"

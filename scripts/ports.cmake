@@ -6,6 +6,18 @@ macro(debug_message)
     endif()
 endmacro()
 
+macro(prettify_command INPUT_VAR OUTPUT_VAR)
+  set(${OUTPUT_VAR} "")
+  foreach(v ${${INPUT_VAR}})
+    if(${v} MATCHES "( )")
+      list(APPEND ${OUTPUT_VAR} \"${v}\")
+    else()
+      list(APPEND ${OUTPUT_VAR} ${v})
+    endif()
+  endforeach()
+  list(JOIN ${OUTPUT_VAR} " " ${OUTPUT_VAR})
+endmacro()
+
 #Detect .vcpkg-root to figure VCPKG_ROOT_DIR
 SET(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
 while(IS_DIRECTORY ${VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")

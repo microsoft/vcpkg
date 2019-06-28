@@ -53,8 +53,9 @@ function(vcpkg_execute_required_process)
             file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
             list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
         endforeach()
+        prettify_command(vcpkg_execute_required_process_COMMAND vcpkg_execute_required_process_COMMAND_PRETTY)
         message(FATAL_ERROR
-            "  Command failed: ${vcpkg_execute_required_process_COMMAND}\n"
+            "  Command failed: ${vcpkg_execute_required_process_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
             "  Error code: ${error_code}\n"
             "  See logs for more information:\n"
