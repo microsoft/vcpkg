@@ -10,24 +10,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("xsimd" IN_LIST FEATURES)
-    set(XTENSOR_USE_XSIMD ON)
-else()
-    set(XTENSOR_USE_XSIMD OFF)
-endif()
-
-if("tbb" IN_LIST FEATURES)
-    set(XTENSOR_USE_TBB ON)
-else()
-    set(XTENSOR_USE_TBB OFF)
-endif()
+vcpkg_check_features(
+    xsimd XTENSOR_USE_XSIMD
+    tbb XTENSOR_USE_TBB
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DXTENSOR_USE_XSIMD=${XTENSOR_USE_XSIMD}
-        -DXTENSOR_USE_TBB=${XTENSOR_USE_TBB}
         -DXTENSOR_ENABLE_ASSERT=OFF
         -DXTENSOR_CHECK_DIMENSION=OFF
         -DBUILD_TESTS=OFF
@@ -36,6 +27,7 @@ vcpkg_configure_cmake(
         -DDOWNLOAD_GBENCHMARK=OFF
         -DDEFAULT_COLUMN_MAJOR=OFF
         -DDISABLE_VS2017=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
