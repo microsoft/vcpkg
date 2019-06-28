@@ -16,15 +16,10 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-set(ENABLE_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(ENABLE_CUDA ON)
-endif()
-
-set(ENABLE_OPENCV OFF)
-if("opencv" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
+vcpkg_check_features(
+  "cuda"    ENABLE_CUDA
+  "opencv"  ENABLE_OPENCV
+)
 
 if("opencv-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
