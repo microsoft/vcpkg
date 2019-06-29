@@ -1,5 +1,6 @@
 Source: nmslib
 Version: 1.7.3.6
+Homepage: https://github.com/searchivarius/nmslib
 Description: Non-Metric Space Library (NMSLIB) is an efficient similarity search library and a toolkit for evaluation of k-NN methods for generic non-metric spaces.
 #
 # ## Extras are currently unsupported for Windows, waiting for fixes.

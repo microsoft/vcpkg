@@ -1,5 +1,6 @@
 Source: hpx
 Version: 1.3.0-1
 Build-Depends: hwloc, boost-accumulators, boost-algorithm, boost-asio, boost-assign, boost-bimap, boost-chrono, boost-config, boost-context, boost-dynamic-bitset, boost-exception, boost-filesystem, boost-iostreams, boost-lockfree, boost-program-options, boost-range, boost-spirit, boost-system, boost-throw-exception, boost-variant, boost-winapi
+Homepage: https://github.com/STEllAR-GROUP/hpx
 Description: The C++ Standards Library for Concurrency and Parallelism
   HPX is a C++ Standards Library for Concurrency and Parallelism. It implements all of the corresponding facilities as defined by the C++ Standard. Additionally, in HPX we implement functionalities proposed as part of the ongoing C++ standardization process. We also extend the C++ Standard APIs to the distributed case.

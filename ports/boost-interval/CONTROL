@@ -2,4 +2,5 @@
 Source: boost-interval
 Version: 1.70.0
 Build-Depends: boost-compatibility, boost-config, boost-logic, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/interval
 Description: Boost interval module

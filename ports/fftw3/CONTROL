@@ -1,5 +1,6 @@
 Source: fftw3
 Version: 3.3.8-6
+Homepage: https://www.fftw.org/
 Description: FFTW is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST).
 
 Feature: openmp

@@ -1,0 +1,22 @@
+diff --git a/CMake/FindHDF5.cmake b/CMake/FindHDF5.cmake
+index 6d558e39..c301e165 100644
+--- a/CMake/FindHDF5.cmake	
++++ b/CMake/FindHDF5.cmake
+@@ -8,7 +8,16 @@ if(CMAKE_VERSION VERSION_LESS 3.6.1)
+ else()
+   include(${CMAKE_ROOT}/Modules/FindHDF5.cmake)
+ endif()
+-
++#It would be better if VTK would actually use HDF5 & SZIP targets. 
++#But current module load order is wrong which will lead to the target being used before it is defined!
++if("${HDF5_LIBRARIES}" MATCHES "libhdf5")
++    find_library(SZIP_LIBRARY_RELEASE NAMES sz libsz szip libszip NAMES_PER_DIR)
++    find_library(SZIP_LIBRARY_DEBUG NAMES sz_d libsz_d szip_d libszip_d NAMES_PER_DIR)
++    select_library_configurations(SZIP)
++    list(APPEND HDF5_LIBRARIES "${SZIP_LIBRARIES}")
++    find_package(ZLIB)
++    list(APPEND HDF5_LIBRARIES "${ZLIB_LIBRARIES}")
++endif()
+ if(HDF5_FOUND AND (HDF5_IS_PARALLEL OR HDF5_ENABLE_PARALLEL))
+   include(vtkMPI)
+   if(MPI_C_INCLUDE_PATH)

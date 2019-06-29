@@ -7,6 +7,7 @@ Configure CMake for Debug and Release builds of a project.
 vcpkg_configure_cmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [PREFER_NINJA]
+    [DISABLE_PARALLEL_CONFIGURE]
     [GENERATOR <"NMake Makefiles">]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
