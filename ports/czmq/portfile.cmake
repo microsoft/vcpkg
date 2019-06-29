@@ -27,26 +27,14 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-macro(check_feature _feature_name _var)
-    if("${_feature_name}" IN_LIST FEATURES)
-        set(${_var} ON)
-    else()
-        set(${_var} OFF)
-    endif()
-endmacro()
-
-check_feature(draft ENABLE_DRAFTS)
-check_feature(httpd CZMQ_WITH_LIBMICROHTTPD)
-check_feature(tool BUILD_TOOLS)
-check_feature(lz4 CZMQ_WITH_LZ4)
-check_feature(curl CZMQ_WITH_LIBCURL)
-
-if("uuid" IN_LIST FEATURES AND
-   VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CZMQ_WITH_UUID ON)
-else()
-    set(CZMQ_WITH_UUID OFF)
-endif()
+vcpkg_check_features(
+    draft ENABLE_DRAFTS
+    tool BUILD_TOOLS
+    curl CZMQ_WITH_LIBCURL
+    httpd CZMQ_WITH_LIBMICROHTTPD
+    lz4 CZMQ_WITH_LZ4
+    uuid CZMQ_WITH_UUID
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -54,12 +42,8 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCZMQ_BUILD_SHARED=${BUILD_SHARED}
         -DCZMQ_BUILD_STATIC=${BUILD_STATIC}
-        -DENABLE_DRAFTS=${ENABLE_DRAFTS}
         -DBUILD_TESTING=OFF
-        -DCZMQ_WITH_LIBCURL=${CZMQ_WITH_LIBCURL}
-        -DCZMQ_WITH_LIBMICROHTTPD=${CZMQ_WITH_LIBMICROHTTPD}
-        -DCZMQ_WITH_LZ4=${CZMQ_WITH_LZ4}
-        -DCZMQ_WITH_UUID=${CZMQ_WITH_UUID}
+        ${FEATRUE_OPTIONS}
 )
 
 vcpkg_install_cmake()
