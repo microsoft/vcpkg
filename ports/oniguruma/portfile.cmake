@@ -8,11 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("non-posix" IN_LIST FEATURES)
-    set(ENABLE_POSIX_API OFF)
-else()
-    set(ENABLE_POSIX_API ON)
-endif()
+vcpkg_check_features(non-posix ENABLE_POSIX_API)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

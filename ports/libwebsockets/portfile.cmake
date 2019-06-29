@@ -27,9 +27,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libwebsockets" TARGET_PATH "share/libwebsockets")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libwebsockets)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

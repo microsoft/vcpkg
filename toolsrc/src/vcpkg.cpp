@@ -118,7 +118,9 @@ static void inner(const VcpkgCmdArguments& args)
 
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, 
+                                                                   default_vs_path, 
+                                                                   args.overlay_triplets.get());
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",

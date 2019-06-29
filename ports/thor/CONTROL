@@ -1,5 +1,4 @@
 Source: thor
-Version: 2.0-2
-Homepage: https://github.com/Bromeon/Thor
+Version: 2.0-3
 Description: Extends the multimedia library SFML with higher-level features
 Build-Depends: sfml, aurora
