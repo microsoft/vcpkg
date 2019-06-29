@@ -1,0 +1,76 @@
+diff --git a/include/ffi.h.in b/include/ffi.h.in
+index f6b4024..6d4fc5c 100644
+--- a/include/ffi.h.in
++++ b/include/ffi.h.in
+@@ -227,6 +227,9 @@ typedef struct {
+   ffi_type *rtype;
+   unsigned bytes;
+   unsigned flags;
++#ifdef _M_ARM64
++  unsigned isVariadic;
++#endif
+ #ifdef FFI_EXTRA_CIF_FIELDS
+   FFI_EXTRA_CIF_FIELDS;
+ #endif
+diff --git a/src/aarch64/ffi.c b/src/aarch64/ffi.c
+index 4225f72..031c5a6 100644
+--- a/src/aarch64/ffi.c
++++ b/src/aarch64/ffi.c
+@@ -808,7 +808,13 @@ ffi_prep_closure_loc (ffi_closure *closure,
+   ffi_clear_cache(tramp, tramp + FFI_TRAMPOLINE_SIZE);
+ 
+   /* Also flush the cache for code mapping.  */
++  #ifdef _M_ARM64
++  // Not using dlmalloc.c for Windows ARM64 builds
++  // so calling ffi_data_to_code_pointer() isn't necessary
++  unsigned char *tramp_code = tramp;
++  #else
+   unsigned char *tramp_code = ffi_data_to_code_pointer (tramp);
++  #endif
+   ffi_clear_cache (tramp_code, tramp_code + FFI_TRAMPOLINE_SIZE);
+ #endif
+ 
+diff --git a/src/aarch64/win64_armasm.S b/src/aarch64/win64_armasm.S
+index 906ceff..8ebc444 100644
+--- a/src/aarch64/win64_armasm.S
++++ b/src/aarch64/win64_armasm.S
+@@ -57,12 +57,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
+    x5 closure
+ */
+ 
+-	NESTED_ENTRY ffi_call_SYSV
+-	/* Use a stack frame allocated by our caller. */
+-	PROLOG_NOP	stp	x29, x30, [x1, #32]
+-    /* For unwind information, Windows has to store fp and lr  */
++	NESTED_ENTRY ffi_call_SYSV_fake
++
++	/* For unwind information, Windows has to store fp and lr  */
+ 	PROLOG_SAVE_REG_PAIR	x29, x30, #-32!
+-	
++
++	ALTERNATE_ENTRY ffi_call_SYSV
++	/* Use a stack frame allocated by our caller. */
++	stp	x29, x30, [x1]
+ 	mov	x29, x1
+ 	mov	sp, x0
+ 
+@@ -97,8 +99,8 @@ ffi_call_SYSV_L1
+ 
+ 	/* Partially deconstruct the stack frame. */
+ 	mov     sp, x29 
+-	ldp     x29, x30, [x29, #32]
+-	
++	ldp     x29, x30, [x29]
++
+ 	/* Save the return value as directed.  */
+ 	adr	x5, ffi_call_SYSV_return
+ 	and	w4, w4, #AARCH64_RET_MASK
+@@ -177,7 +179,7 @@ ffi_call_SYSV_return
+ 	nop
+ 	
+ 	
+-	NESTED_END ffi_call_SYSV	
++	NESTED_END ffi_call_SYSV_fake
+ 	
+ 
+ /* ffi_closure_SYSV
