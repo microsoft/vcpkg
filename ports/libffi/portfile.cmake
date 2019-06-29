@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-# Hopefully the PR will be merged soon
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO paulmon/libffi
-    REF 20f4c8a7404d4b287edf96d86fd5bd0e6fe14e9c
-    SHA512 708bb59cc6024d4d0e1bec81ae107a9aaf9128a61a4be8e76f74b93d16986a5c9beb7fb2e5da27395d92967bea57d563ff62b18281ed9b48c94e661422fb5237
+    REPO libffi/libffi
+    REF e0b4f84fb71c6760068c9d1306e77c9382e76d8d
+    SHA512 52469ab02acd7f7ee6b6234bcfd579a859ecc1dbdab945c8ba3e0c694c0c15abc825fe9418e4e995b349803c62cffbab96884678fa28b558ba6eb8a882cd348d
     HEAD_REF master
+    PATCHES arm64-crash-fix.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
