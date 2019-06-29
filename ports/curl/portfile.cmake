@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_65_0
-    SHA512 436b6b42654c1db2b3f69df410a7f28401a50faf18e74f328a93585c147541e697664b0e9e7df03239fd76c797c1bb4f435f4c668a6b0ad28bdd67e17f786491
+    REF curl-7_65_1
+    SHA512 50ab9e928a353ce68b1876c40e131afaefeec517c3db83f89c544b522de5a8ead499c19256a42141b5b45e87a8932d177455041b60ef47036512edc6c0fdd6ef
     HEAD_REF master
     PATCHES
         0001_cmake.patch
