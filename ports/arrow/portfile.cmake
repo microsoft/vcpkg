@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         all.patch
         msvc-libname.patch
+        findzstd.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
@@ -41,7 +42,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow TARGET_PATH share/arrow)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)

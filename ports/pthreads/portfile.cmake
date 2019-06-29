@@ -1,14 +1,16 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(FATAL_ERROR "${PORT} does not currently support UWP")
+include(vcpkg_common_functions)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"  OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  message(FATAL_ERROR "${PORT} does not currently support UWP platform nor ARM architectures")
 endif()
-if(VCPKG_CMAKE_SYSTEM_NAME)
+
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
   return()
 endif()
 
 set(PTHREADS4W_VERSION "3.0.0")
 
-include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
   URLS "https://sourceforge.net/projects/pthreads4w/files/pthreads4w-code-v${PTHREADS4W_VERSION}.zip/download"
   FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
@@ -55,12 +57,20 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pthreadVSE3d.dll")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/pthreadVC3.dll")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/pthreadVCE3.dll")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/pthreadVSE3.dll")
+
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libpthreadVC3d.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libpthreadVCE3d.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libpthreadVSE3d.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVC3.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVCE3.lib")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libpthreadVSE3.lib")
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pthreadVC3d.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pthreadVCE3d.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pthreadVSE3d.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVC3.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVCE3.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pthreadVSE3.lib")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libpthreadVC3.lib")

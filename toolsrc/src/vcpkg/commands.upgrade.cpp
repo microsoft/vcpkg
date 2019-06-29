@@ -43,7 +43,8 @@ namespace vcpkg::Commands::Upgrade
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFileProvider provider(paths);
+        // Load ports from ports dirs
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
         Dependencies::PackageGraph graph(provider, status_db);
 
         // input sanitization
@@ -85,12 +86,12 @@ namespace vcpkg::Commands::Upgrade
                     not_installed.push_back(spec);
                 }
 
-                auto maybe_scf = provider.get_control_file(spec.name());
-                if (auto p_scf = maybe_scf.get())
+                auto maybe_scfl = provider.get_control_file(spec.name());
+                if (auto p_scfl = maybe_scfl.get())
                 {
                     if (it != status_db.end())
                     {
-                        if (p_scf->core_paragraph->version != (*it)->package.version)
+                        if (p_scfl->source_control_file->core_paragraph->version != (*it)->package.version)
                         {
                             to_upgrade.push_back(spec);
                         }
@@ -155,6 +156,7 @@ namespace vcpkg::Commands::Upgrade
             Build::AllowDownloads::YES,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
@@ -169,7 +171,7 @@ namespace vcpkg::Commands::Upgrade
             }
         }
 
-        Dependencies::print_plan(plan, true);
+        Dependencies::print_plan(plan, true, paths.ports);
 
         if (!no_dry_run)
         {
