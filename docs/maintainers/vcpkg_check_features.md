@@ -64,6 +64,7 @@ is totally wrong.
 ## Examples
 
 * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
+* [xsimd](https://github.com/microsoft/vcpkg/blob/master/ports/xsimd/portfile.cmake)
 * [xtensor](https://github.com/microsoft/vcpkg/blob/master/ports/xtensor/portfile.cmake)
 
 ## Source
