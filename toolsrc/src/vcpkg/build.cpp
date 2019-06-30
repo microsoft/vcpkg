@@ -607,7 +607,7 @@ namespace vcpkg::Build
         int result = System::cmd_execute_clean(
             Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
 #endif
-		return result;
+        return result;
     }
 
     // Compress the source directory into the destination file.
@@ -695,11 +695,11 @@ namespace vcpkg::Build
 
                 auto archive_result = decompress_archive(paths, spec, archive_path);
 
-				if (archive_result != 0)
-				{
-					System::print2("Failed to decompress archive package\n");
-					return BuildResult::BUILD_FAILED;
-				}
+                if (archive_result != 0)
+                {
+                    System::print2("Failed to decompress archive package\n");
+                    return BuildResult::BUILD_FAILED;
+                }
 
                 auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
                 auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
