@@ -8,9 +8,9 @@ index 41a99cb57..3236b97e8 100644
  
 -SET(PCRE_NAMES pcre)
 +if(CMAKE_BUILD_TYPE STREQUAL Debug)
-+  SET(PCRE_NAMES pcre${CMAKE_DEBUG_POSTFIX})
++  SET(PCRE_NAMES pcred pcre)
 +else()
-+  SET(PCRE_NAMES pcre)
++  SET(PCRE_NAMES pcre pcred)
 +endif()
  FIND_LIBRARY(PCRE_LIBRARY NAMES ${PCRE_NAMES} )
  
