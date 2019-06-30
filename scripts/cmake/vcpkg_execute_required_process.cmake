@@ -28,6 +28,7 @@
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(vcpkg_execute_required_process "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
@@ -53,7 +54,7 @@ function(vcpkg_execute_required_process)
             file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
             list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
         endforeach()
-        prettify_command(vcpkg_execute_required_process_COMMAND vcpkg_execute_required_process_COMMAND_PRETTY)
+        vcpkg_prettify_command(vcpkg_execute_required_process_COMMAND vcpkg_execute_required_process_COMMAND_PRETTY)
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
