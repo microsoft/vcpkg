@@ -383,5 +383,23 @@
     <ClInclude Include="..\include\vcpkg\base\downloads.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\stringview.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\system.debug.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\system.print.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\system.process.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\view.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\zstringview.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
