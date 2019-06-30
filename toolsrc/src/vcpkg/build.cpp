@@ -381,7 +381,7 @@ namespace vcpkg::Build
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
 #if defined(_WIN32)
-        const fs::path& powershell_exe_path = paths.get_tool_exe("powershell");
+        const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
         if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
         {
             fs.copy(powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);

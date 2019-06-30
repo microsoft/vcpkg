@@ -380,7 +380,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static constexpr StringLiteral TITLE = "PowerShell Tab-Completion";
         const fs::path script_path = paths.scripts / "addPoshVcpkgToPowershellProfile.ps1";
 
-        const auto& ps = paths.get_tool_exe("powershell");
+        const auto& ps = paths.get_tool_exe("powershell-core");
         const std::string cmd = Strings::format(
             R"("%s" -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' }")", ps.u8string(), script_path.u8string());
         const int rc = System::cmd_execute(cmd);
