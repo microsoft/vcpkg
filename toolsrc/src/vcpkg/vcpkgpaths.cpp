@@ -13,7 +13,8 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, 
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
+                                            const std::string& scripts_root_dir,
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs)
     {
@@ -66,17 +67,16 @@ namespace vcpkg
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
 
-        const auto overriddenScriptsPath = System::get_environment_variable("VCPKG_SCRIPTS");
-        if (auto osp = overriddenScriptsPath.get())
+        if (!scripts_root_dir.empty())
         {
-            auto asPath = fs::u8path(*osp);
+            auto asPath = fs::u8path(scripts_root_dir);
             if (!fs::stdfs::is_directory(asPath))
             {
-                Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_SCRIPTS override directory.");
+                Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
                 Checks::exit_with_message(
                     VCPKG_LINE_INFO,
                     "Invalid scripts override directory: %s; "
-                    "create that directory or unset VCPKG_SCRIPTS to use the default scripts location.",
+                    "create that directory or unset --scripts-root to use the default scripts location.",
                     asPath.u8string());
             }
 

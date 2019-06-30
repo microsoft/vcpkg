@@ -47,7 +47,8 @@ namespace vcpkg
 
     struct VcpkgPaths
     {
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, 
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const std::string& scripts_root_dir,
                                            const std::string& default_vs_path,
                                            const std::vector<std::string>* triplets_dirs);
 
