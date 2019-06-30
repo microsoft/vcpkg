@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6fb9a4..53b0001 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,10 +113,10 @@ endif()
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+ 
+-if(NOT PERL_FOUND)
++if(NOT PERL_FOUND AND DEVELOPER_MODE)
+ 	message(FATAL_ERROR "Perl not found")
+ endif()
+-if (PERL_VERSION_STRING VERSION_LESS 5.16)
++if (PERL_VERSION_STRING VERSION_LESS 5.16 AND DEVELOPER_MODE)
+ 	message(FATAL_ERROR "Too old Perl (<5.16)")
+ endif()
+ 
