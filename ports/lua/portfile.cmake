@@ -32,6 +32,20 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if("cpp" IN_LIST FEATURES)
+	vcpkg_configure_cmake(
+		SOURCE_PATH ${SOURCE_PATH}
+		PREFER_NINJA
+		OPTIONS
+			-DCOMPILE_AS_CPP=ON
+		OPTIONS_DEBUG
+			-DSKIP_INSTALL_HEADERS=ON
+			-DSKIP_INSTALL_TOOLS=ON
+	)
+
+	vcpkg_install_cmake()
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
         file(READ ${CURRENT_PACKAGES_DIR}/include/luaconf.h LUA_CONF_H)
