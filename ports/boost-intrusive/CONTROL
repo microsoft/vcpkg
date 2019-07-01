@@ -2,4 +2,5 @@
 Source: boost-intrusive
 Version: 1.70.0
 Build-Depends: boost-assert, boost-config, boost-container-hash, boost-core, boost-integer, boost-move, boost-static-assert, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/intrusive
 Description: Boost intrusive module

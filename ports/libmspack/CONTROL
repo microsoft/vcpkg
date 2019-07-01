@@ -1,4 +1,5 @@
 Source: libmspack
 Version: 0.10.1
 Build-Depends:
+Homepage: https://www.cabextract.org.uk/libmspack
 Description: libmspack is a portable library for some loosely related Microsoft compression formats.

@@ -12,6 +12,8 @@ vcpkg_from_github(
         transitive-hdf5.patch
         hdf5.patch
         hdf5_2.patch
+        fix-build-error-on-linux.patch
+        hdf5_3.patch
 )
 
 #Remove outdated find modules

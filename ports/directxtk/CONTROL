@@ -1,3 +1,4 @@
 Source: directxtk
 Version: apr2019
+Homepage: https://github.com/Microsoft/DirectXTK
 Description: A collection of helper classes for writing DirectX 11.x code in C++.

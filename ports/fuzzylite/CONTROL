@@ -1,3 +1,4 @@
 Source: fuzzylite
 Version: 6.0-2
+Homepage: https://github.com/fuzzylite/fuzzylite
 Description: A fuzzy logic control library in C++
