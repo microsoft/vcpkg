@@ -94,7 +94,7 @@ function(vcpkg_from_git)
         message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
     endif()
     string(REGEX REPLACE "\n$" "" REV_PARSE_HEAD "${REV_PARSE_HEAD}")
-    if(NOT REV_PARSE_HEAD STREQUAL ${_vdud_REF})
+    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF)
         message(FATAL_ERROR "REF (${_vdud_REF}) does not match FETCH_HEAD (${REV_PARSE_HEAD})")
     endif()
 
