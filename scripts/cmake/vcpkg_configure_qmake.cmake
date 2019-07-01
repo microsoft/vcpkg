@@ -24,7 +24,7 @@ function(vcpkg_configure_qmake)
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND _csc_OPTIONS CONFIG+=staticlib)
+        list(APPEND _csc_OPTIONS CONFIG+=static)
     endif()
 
     # Cleanup build directories
