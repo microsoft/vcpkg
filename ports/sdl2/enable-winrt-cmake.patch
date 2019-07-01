@@ -37,7 +37,7 @@ index 0128c7a..bd534e4 100644
      check_include_file(ddraw.h HAVE_DDRAW_H)
      check_include_file(dsound.h HAVE_DSOUND_H)
      check_include_file(dinput.h HAVE_DINPUT_H)
-+    if(WINDOWS_STORE)
++    if(WINDOWS_STORE OR VCPKG_TARGET_TRIPLET MATCHES "arm-windows")
 +      set(HAVE_DINPUT_H 0)
 +    endif()
      check_include_file(dxgi.h HAVE_DXGI_H)

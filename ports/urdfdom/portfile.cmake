@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  message(STATUS "urdfdom does not support static linkage. Building dynamically.")
-  set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ros/urdfdom
-  REF 1.0.0
-  SHA512 50a218e596bcc0cecff904db2fa626bebc3902c4fe1f5ff8e08195e462b4d9a8c416a41f4773cabbcc71490060d3feff7e8528a76b824569dc7fdb0bda01ec3f
+  REF 1.0.3
+  SHA512 240181d9c61dd7544f16a79a400d9a2c4dc0a682bef165b46529efcb4b31e2a34e27896933b60b9ddbaa5c4a8d575ebda42752599ff3b0a98d1eeef8f9b0b7a7
   HEAD_REF master
 )
 
@@ -29,9 +26,9 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake" TARGET_PATH share/urdfdom)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/urdfdom/cmake" TARGET_PATH share/urdfdom)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/urdfdom/cmake)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom)
 endif()

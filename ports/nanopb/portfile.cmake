@@ -1,12 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(WARNING "\
-The author of nanopb advises using this lib as a static library. \
-For more details, please visit: \
-https://github.com/nanopb/nanopb/pull/383#issuecomment-467852459"
-    )
-endif ()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 message(WARNING "\
 The nanopb's code generator is not installed as part of the installation \
@@ -19,8 +13,6 @@ vcpkg_from_github(
     REF d1305ddef1c18b4cb33992254494ccd255701aaa
     SHA512 70e588b0ff13846005658a9fafe57551dc2c126a32f351fe0b6c166c142c42b3bcc44567288f609f2f3a5adc1fe1bf1c585fec8c5fe90817b5b3ab47955aa1fc
     HEAD_REF master
-    PATCHES
-        shared-lib.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" BUILD_STATIC_LIBS)

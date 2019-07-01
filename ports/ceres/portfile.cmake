@@ -1,3 +1,5 @@
+include(vcpkg_common_functions)
+
 set(MSVC_USE_STATIC_CRT_VALUE OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -6,7 +8,9 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()
 
-include(vcpkg_common_functions)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(ADDITIONAL_PATCH "0004_blas_linux_fix.patch")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,7 +18,18 @@ vcpkg_from_github(
     REF 1.14.0
     SHA512 6dddddf5bd5834332a69add468578ad527e4d94fe85c9751ddf5fe9ad11a34918bdd9c994c49dd6ffc398333d0ac9752ac89aaef1293e2fe0a55524e303d415d
     HEAD_REF master
+    PATCHES
+        0001_cmakelists_fixes.patch
+        0002_use_glog_target.patch
+        0003_fix_exported_ceres_config.patch
+        ${ADDITIONAL_PATCH}
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
+#file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
+#file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
 
 set(SUITESPARSE OFF)
 if("suitesparse" IN_LIST FEATURES)
@@ -53,26 +68,31 @@ vcpkg_configure_cmake(
         -DEIGENSPARSE=${EIGENSPARSE}
         -DLAPACK=${LAPACK}
         -DSUITESPARSE=${SUITESPARSE}
-        -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=ON
-        -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
 )
 
 vcpkg_install_cmake()
 
-if(WIN32)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH "lib${LIB_SUFFIX}/cmake/Ceres")
+  vcpkg_fixup_cmake_targets(CONFIG_PATH lib${LIB_SUFFIX}/cmake/Ceres)
 endif()
 
 vcpkg_copy_pdbs()
 
 # Changes target search path
-file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_TARGETS)
-string(REPLACE "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../"
-               "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../" CERES_TARGETS "${CERES_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake "${CERES_TARGETS}")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_TARGETS)
+  string(REPLACE "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../"
+                 "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../" CERES_TARGETS "${CERES_TARGETS}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake "${CERES_TARGETS}")
+else()
+  file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_TARGETS)
+  string(REPLACE "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../../"
+                 "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../" CERES_TARGETS "${CERES_TARGETS}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake "${CERES_TARGETS}")
+endif()
 
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

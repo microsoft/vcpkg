@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libmad-0.15.1b)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.sourceforge.net/mad/libmad-0.15.1b.tar.gz"

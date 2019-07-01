@@ -1,5 +1,20 @@
 #!/bin/sh
 
+# Find .vcpkg-root, which indicates the root of this repo
+vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
+while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
+    vcpkgRootDir="$(dirname "$vcpkgRootDir")"
+done
+
+# Enable using this entry point on windows from git bash by redirecting to the .bat file.
+unixName=$(uname -s | sed 's/MINGW.*_NT.*/MINGW_NT/')
+if [ "$unixName" = "MINGW_NT" ]; then
+  vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
+  cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat" || exit 1
+  exit 0
+fi
+
+# Argument parsing
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgAllowAppleClang=OFF
@@ -24,12 +39,6 @@ do
         echo "Unknown argument $var. Use '-help' for help."
         exit 1
     fi
-done
-
-# Find vcpkg-root
-vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
-while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
-    vcpkgRootDir="$(dirname "$vcpkgRootDir")"
 done
 
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
@@ -91,7 +100,7 @@ vcpkgDownloadFile()
     url=$1; downloadPath=$2 sha512=$3
     vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
-    curl -L $url --create-dirs --output "$downloadPath.part" || exit 1
+    curl -L $url --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
     mv "$downloadPath.part" "$downloadPath"
@@ -194,7 +203,9 @@ selectCXX()
 
     if [ "x$CXX" = "x" ]; then
         CXX=g++
-        if which g++-8 >/dev/null 2>&1; then
+        if which g++-9 >/dev/null 2>&1; then
+            CXX=g++-9
+        elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
         elif which g++-7 >/dev/null 2>&1; then
             CXX=g++-7

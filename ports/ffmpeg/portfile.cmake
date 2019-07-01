@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
         configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
-        fix_windowsinclude-in-ffmpegexe-3.patch
+        fix_libvpx_windows_linking.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -25,16 +25,28 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
-if (WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(SEP ";")
+    #We're assuming that if we're building for Windows we're using MSVC
+    set(INCLUDE_VAR "INCLUDE")
+    set(LIB_PATH_VAR "LIB")
+else()
+    set(SEP ":")
+    set(INCLUDE_VAR "CPATH")
+    set(LIB_PATH_VAR "LIBRARY_PATH")
+endif()
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
     else()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
     endif()
-    
+
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 else()
     set(ENV{PATH} "$ENV{PATH}:${YASM_EXE_PATH}")
@@ -42,8 +54,7 @@ else()
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/build_linux.sh)
 endif()
 
-set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
+set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${SEP}$ENV{${INCLUDE_VAR}}")
 
 set(_csc_PROJECT_PATH ffmpeg)
 
@@ -84,6 +95,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
 endif()
 
+if("vpx" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvpx")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvpx")
+endif()
+
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
 else()
@@ -102,34 +119,38 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
-# bzip2's debug library is named "bz2d", which isn't found by ffmpeg
-# if("bzip2" IN_LIST FEATURES)
-#     set(OPTIONS "${OPTIONS} --enable-bzip2")
-# else()
-#     set(OPTIONS "${OPTIONS} --disable-bzip2")
-# endif()
+if("bzip2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-bzlib")
+else()
+    set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
+
+set(OPTIONS_CROSS "")
+
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(OPTIONS_CROSS " --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
+    vcpkg_find_acquire_program(GASPREPROCESSOR)
+    foreach(GAS_PATH ${GASPREPROCESSOR})
+        get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH};${GAS_ITEM_PATH}")
+    endforeach(GAS_PATH)
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+else()
+    message(FATAL_ERROR "Unsupported architecture")
+endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
-    set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
+    set(OPTIONS "${OPTIONS} --disable-programs")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
-
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        vcpkg_find_acquire_program(GASPREPROCESSOR)
-        foreach(GAS_PATH ${GASPREPROCESSOR})
-            get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH};${GAS_ITEM_PATH}")
-        endforeach(GAS_PATH)
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    else()
-        message(FATAL_ERROR "Unsupported architecture")
-    endif()
+    set(OPTIONS_CROSS " --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_RELEASE "")
 
+set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -141,7 +162,7 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
@@ -150,6 +171,9 @@ if(WIN32)
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
     endif()
 endif()
+
+set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
@@ -162,6 +186,8 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
+
+set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -179,6 +205,8 @@ file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/de
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(LIB_MACHINE_ARG /machine:ARM)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(LIB_MACHINE_ARG /machine:ARM64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(LIB_MACHINE_ARG /machine:x86)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -215,8 +243,7 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 # TODO: Examine build log and confirm that this license matches the build output
-file(COPY ${SOURCE_PATH}/COPYING.LGPLv2.1 DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffmpeg)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ffmpeg/COPYING.LGPLv2.1 ${CURRENT_PACKAGES_DIR}/share/ffmpeg/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LGPLv2.1 DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-# Used by OpenCV
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffmpeg)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

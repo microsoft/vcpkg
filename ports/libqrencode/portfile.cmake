@@ -3,15 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fukuchi/libqrencode
-    REF v4.0.0
-    SHA512 0e4855c7983d4c73eb4a7f9cb081679547957c9f4a30cb943f2ae25e3a6496a202d3489f46e248386499d05a68c6a36e24f64af57ef4d6f447ef3a39e08374ee
+    REF v4.0.2
+    SHA512 847e32bd13358319f3beabde103b5335a6e11c3f9275425b74e89a00b0ee4d67af8a428f12acc8b80a0419382480e5aeb02e58602a69ee750c21b28f357af6bc
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/remove-deprecated-attribute.patch
+    PATCHES remove-deprecated-attribute.patch
 )
 
 vcpkg_configure_cmake(

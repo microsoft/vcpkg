@@ -13,7 +13,9 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path)
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, 
+                                            const std::string& default_vs_path,
+                                            const std::vector<std::string>* triplets_dirs)
     {
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
@@ -76,13 +78,24 @@ namespace vcpkg
 
         paths.ports_cmake = paths.scripts / "ports.cmake";
 
+        if (triplets_dirs)
+        {
+            for (auto&& triplets_dir : *triplets_dirs)
+            {
+                auto path = fs::u8path(triplets_dir);
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   paths.get_filesystem().exists(path),
+                                   "Error: Path does not exist '%s'",
+                                   triplets_dir);
+                paths.triplets_dirs.emplace_back(fs::stdfs::canonical(path));
+            }
+        }
+        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.root / "triplets"));
+
         return paths;
     }
 
     fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
-
-    fs::path VcpkgPaths::port_dir(const PackageSpec& spec) const { return this->ports / spec.name(); }
-    fs::path VcpkgPaths::port_dir(const std::string& name) const { return this->ports / name; }
 
     fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {
@@ -94,26 +107,47 @@ namespace vcpkg
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
-    const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
-    {
-        return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
-            std::vector<std::string> output;
-            for (auto&& path : this->get_filesystem().get_files_non_recursive(this->triplets))
-            {
-                output.push_back(path.stem().filename().string());
-            }
-            Util::sort(output);
-
-            return output;
-        });
-    }
-
     bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
     {
         const auto it = Util::find_if(this->get_available_triplets(), [&](auto&& available_triplet) {
             return t.canonical_name() == available_triplet;
         });
         return it != this->get_available_triplets().cend();
+    }
+
+    const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
+    {
+        return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
+            std::vector<std::string> output;
+            for (auto&& triplets_dir : triplets_dirs)
+            {
+                for (auto&& path : this->get_filesystem().get_files_non_recursive(triplets_dir))
+                {
+                    output.push_back(path.stem().filename().string());
+                }
+            }
+            Util::sort_unique_erase(output);
+            return output;
+            });
+    }
+
+    const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
+    {
+        return m_triplets_cache.get_lazy(triplet, [&]()-> auto {
+            for (auto&& triplet_dir : triplets_dirs)
+            {
+                auto&& path = triplet_dir / (triplet.canonical_name() + ".cmake");
+                if (this->get_filesystem().exists(path))
+                {
+                    return path;
+                }
+            }
+
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Error: Triplet file %s.cmake not found",
+                                      triplet.canonical_name());
+        });
+        
     }
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
@@ -190,26 +224,6 @@ namespace vcpkg
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s.",
                                vs_root_path.generic_string());
-        }
-
-        if (prebuildinfo.cmake_system_name == "WindowsStore")
-        {
-            // For now, cmake does not support VS 2019 when using the MSBuild generator.
-            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               !candidates.empty(),
-                               "With the current CMake version, UWP binaries can only be built with toolset version "
-                               "v141 or below. Please install the v141 toolset in VS 2019.");
-        }
-
-        if (System::get_host_processor() == System::CPUArchitecture::X86)
-        {
-            // For now, cmake does not support VS 2019 when using the MSBuild generator.
-            Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->version == "v142"; });
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               !candidates.empty(),
-                               "With the current CMake version, 32-bit machines can build with toolset version "
-                               "v141 or below. Please install the v141 toolset in VS 2019.");
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");

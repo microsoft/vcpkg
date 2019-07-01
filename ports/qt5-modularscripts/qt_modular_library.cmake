@@ -2,14 +2,14 @@ set(_qt5base_port_dir "${CMAKE_CURRENT_LIST_DIR}")
 
 function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
     string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-    if(BUILDTREES_PATH_LENGTH GREATER 45)
-        message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
+    if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+        message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
             "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
         )
     endif()
 
     set(MAJOR_MINOR 5.12)
-    set(FULL_VERSION ${MAJOR_MINOR}.1)
+    set(FULL_VERSION ${MAJOR_MINOR}.3)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
@@ -37,7 +37,7 @@ function(qt_modular_build_library SOURCE_PATH)
     #Find Python and add it to the path
     vcpkg_find_acquire_program(PYTHON2)
     get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
-    set(ENV{PATH} "${PYTHON2_EXE_PATH};$ENV{PATH}")
+    vcpkg_add_to_path("${PYTHON2_EXE_PATH}")
 
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
@@ -86,8 +86,12 @@ function(qt_modular_build_library SOURCE_PATH)
     endif()
 
     file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    endif()
     foreach(PRL_FILE IN LISTS PRL_FILES)
         file(READ "${PRL_FILE}" _contents)
         string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
@@ -107,6 +111,8 @@ function(qt_modular_build_library SOURCE_PATH)
     #Move release and debug dlls to the correct directory
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5)
         file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/tools/qt5 ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
     endif()
 
@@ -126,9 +132,13 @@ function(qt_modular_build_library SOURCE_PATH)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
+    endif()
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
 
     #Find the relevant license file and install it
     if(EXISTS "${SOURCE_PATH}/LICENSE.LGPLv3")

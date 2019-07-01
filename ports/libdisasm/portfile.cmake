@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      message(WARNING "Warning: Dynamic building not supported. Building static.")
-      set(VCPKG_LIBRARY_LINKAGE static)
-  endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(BASE_PATH ${CURRENT_BUILDTREES_DIR}/src/libdisasm-0.23)
 set(SOURCE_PATH ${BASE_PATH}/libdisasm)

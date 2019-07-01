@@ -1,8 +1,4 @@
 Source: ismrmrd
-Version: 1.3.2-3
+Version: 1.4.0-1
 Description: ISMRM Raw Data Format
-Build-Depends: pugixml
-
-Feature: dataset
-Description: Dataset and file support
-Build-Depends: hdf5
+Build-Depends: pugixml, hdf5, boost, fftw3

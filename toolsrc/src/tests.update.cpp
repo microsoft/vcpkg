@@ -21,9 +21,9 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
+            std::unordered_map<std::string, SourceControlFileLocation> map;
             auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
-            map.emplace("a", std::move(*scf));
+            map.emplace("a", SourceControlFileLocation { std::move(scf), "" });
             Dependencies::MapPortFileProvider provider(map);
 
             auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
@@ -45,9 +45,9 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
+            std::unordered_map<std::string, SourceControlFileLocation> map;
             auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
-            map.emplace("a", std::move(*scf));
+            map.emplace("a", SourceControlFileLocation { std::move(scf), "" });
             Dependencies::MapPortFileProvider provider(map);
 
             auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
@@ -71,9 +71,9 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
+            std::unordered_map<std::string, SourceControlFileLocation> map;
             auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
-            map.emplace("a", std::move(*scf));
+            map.emplace("a", SourceControlFileLocation{ std::move(scf), "" });
             Dependencies::MapPortFileProvider provider(map);
 
             auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
@@ -92,9 +92,9 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
+            std::unordered_map<std::string, SourceControlFileLocation> map;
             auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "2"}}}));
-            map.emplace("a", std::move(*scf));
+            map.emplace("a", SourceControlFileLocation{ std::move(scf), "" });
             Dependencies::MapPortFileProvider provider(map);
 
             auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),

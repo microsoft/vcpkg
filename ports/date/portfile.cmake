@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   message(WARNING
-    "You will need to also install http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml into your install location.\n"
+    "You will need to also install https://raw.githubusercontent.com/unicode-org/cldr/master/common/supplemental/windowsZones.xml into your install location.\n"
     "See https://howardhinnant.github.io/date/tz.html"
   )
 endif()
@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF 9dc96fd9b5e4e1e7885aa80dc24a3ceb407c3730
-  SHA512 1acb78f1ae7f5b1278a9e034fa5ccbb64643ad381ef9bd76bf42fb04d714c6742f2129b6892024cd98bb925e1a6136337fccb636e3f991b428be1ed05ab8901e
+  REF ed0368fc75427ef05cefdf19a39b60d7bed2f039
+  SHA512 5f6a0d7e094fd1ab7b6a1ea9a96e467138220e9207e2eda68f71b68d6c56759e7470fabdfa920d92876e9c9b466e56ea8102333f407a46bb4cba43a2dfeb5e3a
   HEAD_REF master
 )
 

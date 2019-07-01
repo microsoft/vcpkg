@@ -1,6 +1,7 @@
 Source: curl
-Version: 7.61.1-5
+Version: 7.65.0-2
 Build-Depends: zlib
+Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs
 Default-Features: ssl
 
@@ -15,7 +16,7 @@ Build-Depends: nghttp2, curl[ssl]
 Description: HTTP2 support
 
 Feature: ssl
-Build-Depends: curl[openssl] (!windows), curl[winssl] (windows)
+Build-Depends: curl[openssl] (!windows&!osx), curl[winssl] (windows), curl[sectransp] (osx)
 Description: Default SSL backend
 
 Feature: ssh
@@ -33,3 +34,6 @@ Description: SSL support (Secure Channel / "WinSSL")
 Feature: mbedtls
 Build-Depends: mbedtls
 Description: SSL support (mbedTLS)
+
+Feature: sectransp
+Description: SSL support (sectransp)

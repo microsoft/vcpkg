@@ -1,13 +1,7 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message("gts does not support building statically -- building dynamically instead")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message("gts can only be built dynamically, and therefore cannot static link the CRT")
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  finetjul/gts

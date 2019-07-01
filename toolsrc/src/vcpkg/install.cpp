@@ -138,7 +138,7 @@ namespace vcpkg::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(listfile, output);
+        fs.write_lines(listfile, output, VCPKG_LINE_INFO);
     }
 
     static std::vector<file_pack> extract_files_in_triplet(
@@ -156,14 +156,15 @@ namespace vcpkg::Install
 
             const std::string name = t.pgh.package.displayname();
 
-            for (const std::string &file : t.files)
+            for (const std::string& file : t.files)
             {
                 output.emplace_back(file_pack{std::string(file, remove_chars), name});
             }
         }
 
-        std::sort(output.begin(), output.end(),
-                  [](const file_pack &lhs, const file_pack &rhs) { return lhs.first < rhs.first; });
+        std::sort(output.begin(), output.end(), [](const file_pack& lhs, const file_pack& rhs) {
+            return lhs.first < rhs.first;
+        });
         return output;
     }
 
@@ -180,8 +181,7 @@ namespace vcpkg::Install
     }
 
     static SortedVector<file_pack> build_list_of_installed_files(
-        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files,
-        const Triplet& triplet)
+        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
     {
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
         std::vector<file_pack> installed_files =
@@ -198,13 +198,12 @@ namespace vcpkg::Install
 
         const SortedVector<std::string> package_files =
             build_list_of_package_files(paths.get_filesystem(), package_dir);
-        const SortedVector<file_pack> installed_files =
-            build_list_of_installed_files(pgh_and_files, triplet);
+        const SortedVector<file_pack> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
 
         struct intersection_compare
         {
-            bool operator()(const std::string &lhs, const file_pack &rhs) { return lhs < rhs.first; }
-            bool operator()(const file_pack &lhs, const std::string &rhs) { return lhs.first < rhs; }
+            bool operator()(const std::string& lhs, const file_pack& rhs) { return lhs < rhs.first; }
+            bool operator()(const file_pack& lhs, const std::string& rhs) { return lhs.first < rhs; }
         };
 
         std::vector<file_pack> intersection;
@@ -216,11 +215,9 @@ namespace vcpkg::Install
                               std::back_inserter(intersection),
                               intersection_compare());
 
-        std::sort(intersection.begin(), intersection.end(),
-                  [](const file_pack &lhs, const file_pack &rhs)
-                  {
-                      return lhs.second < rhs.second;
-                  });
+        std::sort(intersection.begin(), intersection.end(), [](const file_pack& lhs, const file_pack& rhs) {
+            return lhs.second < rhs.second;
+        });
 
         if (!intersection.empty())
         {
@@ -231,19 +228,13 @@ namespace vcpkg::Install
                            bcf.core_paragraph.spec);
 
             auto i = intersection.begin();
-            while (i != intersection.end()) {
+            while (i != intersection.end())
+            {
                 System::print2("Installed by ", i->second, "\n    ");
-                auto next = std::find_if(i, intersection.end(),
-                                         [i](const auto &val)
-                                         {
-                                             return i->second != val.second;
-                                         });
+                auto next =
+                    std::find_if(i, intersection.end(), [i](const auto& val) { return i->second != val.second; });
 
-                System::print2(Strings::join("\n    ", i, next,
-                                             [](const file_pack &file)
-                                             {
-                                                 return file.first;
-                                             }));
+                System::print2(Strings::join("\n    ", i, next, [](const file_pack& file) { return file.first; }));
                 System::print2("\n\n");
 
                 i = next;
@@ -302,8 +293,7 @@ namespace vcpkg::Install
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
-        const std::string display_name_with_features =
-            GlobalState::feature_packages ? action.displayname() : display_name;
+        const std::string display_name_with_features = action.displayname();
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
         const bool use_head_version = Util::Enum::to_bool(action.build_options.use_head_version);
@@ -340,9 +330,10 @@ namespace vcpkg::Install
                 System::printf("Building package %s...\n", display_name_with_features);
 
             auto result = [&]() -> Build::ExtendedBuildResult {
-                const Build::BuildPackageConfig build_config{action.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
+                const Build::BuildPackageConfig build_config{*scfl.source_control_file,
                                                              action.spec.triplet(),
-                                                             paths.port_dir(action.spec),
+                                                             static_cast<fs::path>(scfl.source_location),
                                                              action.build_options,
                                                              action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
@@ -366,6 +357,20 @@ namespace vcpkg::Install
                 const fs::path package_dir = paths.package_dir(action.spec);
                 std::error_code ec;
                 fs.remove_all(package_dir, ec);
+            }
+
+            if (action.build_options.clean_downloads == Build::CleanDownloads::YES)
+            {
+                auto& fs = paths.get_filesystem();
+                const fs::path download_dir = paths.downloads;
+                std::error_code ec;
+                for (auto& p : fs.get_files_non_recursive(download_dir))
+                {
+                    if (!fs.is_directory(p))
+                    {
+                        fs.remove(p, VCPKG_LINE_INFO);
+                    }
+                }
             }
 
             return {code, std::move(bcf)};
@@ -464,14 +469,16 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
+    static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
 
-    static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 7> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
+        {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
     }};
     static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
@@ -532,7 +539,9 @@ namespace vcpkg::Install
                         while (next != last)
                         {
                             auto match = *next;
-                            library_targets[find_package_name].push_back(match[1]);
+                            auto& targets = library_targets[find_package_name];
+                            if (std::find(targets.cbegin(), targets.cend(), match[1]) == targets.cend())
+                                targets.push_back(match[1]);
                             ++next;
                         }
                     }
@@ -615,11 +624,6 @@ namespace vcpkg::Install
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.package_spec.triplet(), paths);
-            if (!spec.features.empty() && !GlobalState::feature_packages)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-            }
         }
 
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
@@ -627,7 +631,10 @@ namespace vcpkg::Install
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
+        const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
+
+        auto& fs = paths.get_filesystem();
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -638,36 +645,20 @@ namespace vcpkg::Install
         const Build::BuildPackageOptions install_plan_options = {
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
-            Build::CleanBuildtrees::NO,
-            Build::CleanPackages::NO,
+            clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
+            clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
+            clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
-        auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
-        std::unordered_map<std::string, SourceControlFile> scf_map;
-        for (auto&& port : all_ports)
-            scf_map[port->core_paragraph->name] = std::move(*port);
-        MapPortFileProvider provider(scf_map);
+        //// Load ports from ports dirs
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
-        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
+        // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         std::vector<AnyAction> action_plan =
             create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
-
-        if (!GlobalState::feature_packages)
-        {
-            for (auto&& action : action_plan)
-            {
-                if (action.remove_action.has_value())
-                {
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "The installation plan requires feature packages support. Please re-run the "
-                        "command with --featurepackages.");
-                }
-            }
-        }
 
         for (auto&& action : action_plan)
         {
@@ -693,7 +684,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive);
+        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 
         if (dry_run)
         {
@@ -717,7 +708,7 @@ namespace vcpkg::Install
             xunit_doc += summary.xunit_results();
 
             xunit_doc += "</collection></assembly></assemblies>\n";
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
+            fs.write_contents(fs::u8path(it_xunit->second), xunit_doc, VCPKG_LINE_INFO);
         }
 
         for (auto&& result : summary.results)
