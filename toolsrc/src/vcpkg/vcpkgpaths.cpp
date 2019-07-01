@@ -14,7 +14,7 @@
 namespace vcpkg
 {
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
-                                            const std::string& scripts_root_dir,
+                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs)
     {
@@ -67,24 +67,19 @@ namespace vcpkg
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
 
-        if (!scripts_root_dir.empty())
+        if (auto scripts_dir = vcpkg_scripts_root_dir.get())
         {
-            auto asPath = fs::u8path(scripts_root_dir);
-            if (!fs::stdfs::is_directory(asPath))
+            if (scripts_dir->empty() || !fs::stdfs::is_directory(*scripts_dir))
             {
-                Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO,
-                    "Invalid scripts override directory: %s; "
-                    "create that directory or unset --scripts-root to use the default scripts location.",
-                    asPath.u8string());
+                    Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        "Invalid scripts override directory: %s; "
+                        "create that directory or unset --scripts-root to use the default scripts location.",
+                        scripts_dir->u8string());
             }
 
-            paths.scripts = fs::stdfs::canonical(std::move(asPath), ec);
-            if (ec)
-            {
-                return ec;
-            }
+            paths.scripts = *scripts_dir;
         }
         else
         {
