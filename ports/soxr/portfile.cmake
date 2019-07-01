@@ -12,7 +12,7 @@ vcpkg_extract_source_archive_ex(
 	PATCHES
 		001_initialize-resampler.patch
 		002_disable_warning.patch
-		003_detect_arm_on_windows.h
+		003_detect_arm_on_windows.patch
 )
 
 vcpkg_configure_cmake(
