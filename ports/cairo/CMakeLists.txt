@@ -190,7 +190,11 @@ endif()
 
 add_library(cairo ${SOURCES})
 
-target_link_libraries(cairo PRIVATE gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
+endif()
 
 # GObject support module
 

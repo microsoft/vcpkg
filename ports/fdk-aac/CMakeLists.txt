@@ -169,9 +169,6 @@ include_directories(
   libFDK/include
   libPCMutils/include
 )
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
 
 add_library(fdk-aac ${libfdk_aac_SOURCES})
 

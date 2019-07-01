@@ -1,0 +1,54 @@
+diff --git a/include/opc/ua/services/services.h b/include/opc/ua/services/services.h
+index f138831..4732a59 100644
+--- a/include/opc/ua/services/services.h
++++ b/include/opc/ua/services/services.h
+@@ -26,20 +26,7 @@
+ #include <vector>
+ 
+ #include <boost/version.hpp>
+-
+-
+-namespace boost
+-{
+-namespace asio
+-{
+-#if BOOST_VERSION < 106600
+-  class io_service;
+-#else
+-  class io_context;
+-  typedef io_context io_service;
+-#endif
+-}
+-}
++#include <boost/asio/io_service.hpp>
+ 
+ namespace OpcUa
+ {
+diff --git a/src/server/internal_subscription.cpp b/src/server/internal_subscription.cpp
+index edf4715..69ef74a 100644
+--- a/src/server/internal_subscription.cpp
++++ b/src/server/internal_subscription.cpp
+@@ -14,7 +14,7 @@ InternalSubscription::InternalSubscription(SubscriptionServiceInternal & service
+   , CurrentSession(SessionAuthenticationToken)
+   , Callback(callback)
+   , io(service.GetIOService())
+-  , Timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
++  , Timer(io, boost::posix_time::milliseconds((int)data.RevisedPublishingInterval))
+   , LifeTimeCount(data.RevisedLifetimeCount)
+   , Logger(logger)
+ {
+@@ -105,7 +105,7 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
+     }
+ 
+   TimerStopped = false;
+-  Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
++  Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds((int)Data.RevisedPublishingInterval));
+   std::shared_ptr<InternalSubscription> self = shared_from_this();
+   Timer.async_wait([self](const boost::system::error_code & error) { self->PublishResults(error); });
+ }
+@@ -615,5 +615,3 @@ std::vector<Variant> InternalSubscription::GetEventFields(const EventFilter & fi
+ 
+ }
+ }
+-
+-

@@ -1,29 +1,45 @@
 include(vcpkg_common_functions)
-set(FT_VERSION 2.8.1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-${FT_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2"
-    FILENAME "freetype-${FT_VERSION}.tar.bz2"
-    SHA512 ca59e47f0fceeeb9b8032be2671072604d0c79094675df24187829c05e99757d0a48a0f8062d4d688e056f783aa8f6090d732ad116562e94784fccf1339eb823
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
-            ${CMAKE_CURRENT_LIST_DIR}/0002-Add-CONFIG_INSTALL_PATH-option.patch
-            ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-UWP.patch
+set(FT_VERSION 2.10.0)
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.bz2"
+    FILENAME "freetype-${FT_VERSION}.tar.bz2"
+    SHA512 dfad66f419ea9577f09932e0730c0c887bdcbdbc8152fa7477a0c39d69a5b68476761deed6864ddcc5cf18d100a7a3f728049768e24afcb04b1a74b25b6acf7e
 )
+
+if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
+    vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${FT_VERSION}
+    PATCHES
+        0001-Fix-install-command.patch
+        0002-Add-CONFIG_INSTALL_PATH-option.patch
+        0003-Fix-UWP.patch
+    )
+else()
+    vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${FT_VERSION}
+    PATCHES
+        0001-Fix-install-command.patch
+        0002-Add-CONFIG_INSTALL_PATH-option.patch
+        0003-Fix-UWP.patch
+        0005-Fix-DLL-EXPORTS.patch
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DCONFIG_INSTALL_PATH=share/freetype
-        -DWITH_ZLIB=ON
-        -DWITH_BZip2=ON
-        -DWITH_PNG=ON
-        -DWITH_HarfBuzz=OFF
+        -DFT_WITH_ZLIB=ON
+        -DFT_WITH_BZIP2=ON
+        -DFT_WITH_PNG=ON
+        -DFT_WITH_HARFBUZZ=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
 )
 
 vcpkg_install_cmake()
@@ -52,7 +68,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 else() #if(VCPKG_BUILD_TYPE STREQUAL "release")
     file(READ ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-config.cmake CONFIG_MODULE)
 endif()
-string(REPLACE "\${_IMPORT_PREFIX}/include/freetype2" "\${_IMPORT_PREFIX}/include/freetype" CONFIG_MODULE "${CONFIG_MODULE}")
+string(REPLACE "\${_IMPORT_PREFIX}/include/freetype2" "\${_IMPORT_PREFIX}/include;\${_IMPORT_PREFIX}/include/freetype" CONFIG_MODULE "${CONFIG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-config.cmake "${CONFIG_MODULE}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

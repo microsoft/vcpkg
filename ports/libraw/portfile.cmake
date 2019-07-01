@@ -1,10 +1,17 @@
 include(vcpkg_common_functions)
 
+# Update to latest LibRaw-201903 snapshot at d4f05dd1b9b2d44c8f7e82043cbad3c724db2416
+# LibRaw publishes:
+# - snapshots every 5-7 months (in master branch)
+# - releases (0.18, 0.19, etc.) every 1-1.5 years.
+# - security hotfixes for releases (0.19.1, 0.19.2, etc.)
+# Hence, from user point of view, it is practical to refer to the latest snapshot,
+# instead of the latest release.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibRaw/LibRaw
-    REF 0.19.0
-    SHA512 4fbcce6567463cff1784d0ab9e908906acf79ad3d5af3d52d231f99941b3c3e5daf9049ce2d32a56ba7ec523138ad0c1ff8b61d38fe33abcf1aa6deafd4927f2
+    REF d4f05dd1b9b2d44c8f7e82043cbad3c724db2416
+    SHA512 5794521f535163afd7815ad005295301c5e0e2f8b2f34ef0a911d9dd1572c1f456b292777548203f9767957a55782b5bc9041c033190d25d1e9b4240d7df32b9
     HEAD_REF master
 )
 
@@ -52,13 +59,17 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     # because otherwise libraries that build on top of libraw have to choose.
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/raw.lib ${CURRENT_PACKAGES_DIR}/debug/lib/rawd.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/raw_r.lib ${CURRENT_PACKAGES_DIR}/lib/raw.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/raw_rd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/rawd.lib)
+    if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/raw_rd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/rawd.lib)
+    endif()
 
     # Cleanup
     file(GLOB RELEASE_EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(REMOVE ${RELEASE_EXECUTABLES})
-    file(GLOB DEBUG_EXECUTABLES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${DEBUG_EXECUTABLES})
+    if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB DEBUG_EXECUTABLES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+        file(REMOVE ${DEBUG_EXECUTABLES})
+    endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -74,6 +85,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Rename cmake module into a config in order to allow more flexible lookup rules
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libraw/FindLibRaw.cmake ${CURRENT_PACKAGES_DIR}/share/libraw/LibRaw-config.cmake)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw)

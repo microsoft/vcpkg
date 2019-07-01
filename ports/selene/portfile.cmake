@@ -5,9 +5,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kmhofmann/selene
-    REF v0.2
-    SHA512 9ec1c767541cbe0b349302b7db13a55869003a230669636b6bc37de01be833633be0741b80f58109140b9563b7a7f4c6a5b7ab46ecb142688170a47dba24bdc4
+    REF v0.3.1
+    SHA512 7bc57ebe9e2442da2716eb5c1af11f8d610b0b09fe96e3122d1028575732b6045a987c499bbf7de53003edd627b8809d86c80ea4975fc2264a1c61d5891a46c3
     HEAD_REF master
+    PATCHES
+        disable_x86_intrinsics_on_arm.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,7 +18,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/selene")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/selene)
 vcpkg_copy_pdbs()
 
 # Include files should not be duplicated into the /debug/include directory.

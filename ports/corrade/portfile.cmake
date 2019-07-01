@@ -2,9 +2,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/corrade
-    REF v2018.10
-    SHA512 594c15d9622fa0abdf893c15054f27bdcc40b5de1543d722b7173138ec5d299c45b7a85376ed617cdf9b4f52a05bf7a3d1ea1983e112b62690211116c255d201
+    REF v2019.01
+    SHA512 63468ee0a9362d92d61e2bc77fb8c3e455761894998393910f6bce4111b0ec74db8fe2a8658cec1292c5ceb26e57e005324b34f1ec343d4216abf3a955eaa97e
     HEAD_REF master
+    PATCHES fixC2666.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -29,6 +30,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
+        -DDUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
         ${_COMPONENT_FLAGS}
 )

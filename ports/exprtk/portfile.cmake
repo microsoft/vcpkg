@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArashPartow/exprtk
-    REF d89d2f5f46fbd33372c81e8ad4b997fa84569fae
-    SHA512 bad42b83a0f1d8142ceafac862ec62dafc040fa8293bfbca29e49afdc8dca1000fc43537a5cf28d1dae00f5e86516899bd37f996975fbbccdd6a8298d1adb359
+    REF 9fad72832c70348725c073e369a3321781001766
+    SHA512 6a2a4bdc331806bb5f97737316cc126ab5e8ec75626dd5a63e854a24b7ae41cddccfee8ea09168ed0d272a92dd89cfc9878507ecf70c3f03d5b4f5e53d877727
 )
 
 file(COPY ${SOURCE_PATH}/exprtk.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)

@@ -12,6 +12,7 @@ vcpkg_from_github(
         #             since libraw port installs 'raw_r' library as 'raw'
         fix_libraw.patch
         use-webp.patch
+        remove_wrong_dependency.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")

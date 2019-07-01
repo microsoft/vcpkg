@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cjlin1/liblinear
-    REF v221
-    SHA512 abf21f9030e67886d88a95ad1699e566f8b67bb3bd23253f1f656460911f92a5c3c184fe127390d6100bbf9970cf7a246ef3611b0788907c35a33286228f1753
+    REF v230
+    SHA512 c8acdd9f5cfcf7ef1ff9b9fac658ff51ac4677801fdb9ce6a210ccca7fb136a7957d0edaf45e83269c1928de1926de0200d669cd94e09371c06821d42ba539bc
     HEAD_REF master
 )
 
