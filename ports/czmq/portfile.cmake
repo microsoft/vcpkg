@@ -44,7 +44,7 @@ vcpkg_configure_cmake(
         -DCZMQ_BUILD_SHARED=${BUILD_SHARED}
         -DCZMQ_BUILD_STATIC=${BUILD_STATIC}
         -DBUILD_TESTING=OFF
-        ${FEATRUE_OPTIONS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
