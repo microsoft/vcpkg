@@ -1,0 +1,12 @@
+diff --git a/include/nana/filesystem/filesystem.hpp b/include/nana/filesystem/filesystem.hpp
+index 86b907a..ea8db75 100644
+--- a/include/nana/filesystem/filesystem.hpp
++++ b/include/nana/filesystem/filesystem.hpp
+@@ -30,6 +30,7 @@
+ #ifndef NANA_FILESYSTEM_HPP
+ #define NANA_FILESYSTEM_HPP
+ #include <nana/push_ignore_diagnostic>
++#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+ 
+ //Filesystem Selection
+ #include <nana/config.hpp>

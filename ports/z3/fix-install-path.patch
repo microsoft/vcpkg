@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9877af8..10ef458 100644
+index 6e73daf63..c6bca7918 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -675,7 +675,7 @@ install(EXPORT
+@@ -615,7 +615,7 @@ install(EXPORT
    Z3_EXPORTED_TARGETS
    FILE "Z3Targets.cmake"
    NAMESPACE z3::
 -  DESTINATION "${CMAKE_INSTALL_Z3_CMAKE_PACKAGE_DIR}"
 +  DESTINATION share/z3
  )
- set(Z3_INSTALL_TREE_CMAKE_CONFIG_FILE "${CMAKE_BINARY_DIR}/cmake/Z3Config.cmake")
+ set(Z3_INSTALL_TREE_CMAKE_CONFIG_FILE "${PROJECT_BINARY_DIR}/cmake/Z3Config.cmake")
  set(Z3_FIRST_PACKAGE_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
-@@ -700,7 +700,7 @@ unset(CONFIG_FILE_TYPE)
+@@ -640,7 +640,7 @@ unset(CONFIG_FILE_TYPE)
  # Add install rule to install ${Z3_INSTALL_TREE_CMAKE_CONFIG_FILE}
  install(
    FILES "${Z3_INSTALL_TREE_CMAKE_CONFIG_FILE}"
@@ -21,7 +21,7 @@ index 9877af8..10ef458 100644
  
  # TODO: Provide a `Z3Version.cmake` file so that clients can specify the version
 diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
-index b097126..e127bef 100644
+index d5778add9..35b7e4c55 100644
 --- a/doc/CMakeLists.txt
 +++ b/doc/CMakeLists.txt
 @@ -88,6 +88,6 @@ set(CMAKE_INSTALL_API_BINDINGS_DOC
@@ -33,7 +33,7 @@ index b097126..e127bef 100644
    )
  endif()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index c497c19..0b0e081 100644
+index 9b6f00b62..8b47125d3 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -173,7 +173,8 @@ install(TARGETS libz3
@@ -46,39 +46,8 @@ index c497c19..0b0e081 100644
    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
  )
  
-diff --git a/src/api/dotnet/CMakeLists.txt b/src/api/dotnet/CMakeLists.txt
-index 20621e4..57bb3f0 100644
---- a/src/api/dotnet/CMakeLists.txt
-+++ b/src/api/dotnet/CMakeLists.txt
-@@ -257,7 +257,7 @@ if (DOTNET_TOOLCHAIN_IS_MONO)
-   message(STATUS "Emitting install rules for .NET bindings")
-   # Install pkgconfig file for the assembly. This is needed by Monodevelop
-   # to find the assembly
--  install(FILES "${Z3_DOTNET_PKGCONFIG_FILE}" DESTINATION "${CMAKE_INSTALL_PKGCONFIGDIR}")
-+  install(FILES "${Z3_DOTNET_PKGCONFIG_FILE}" DESTINATION share/z3/pkgconfig)
- 
-   # Configure the install and uninstall scripts.
-   # Note: If multi-configuration generator support is ever fixed then these
-@@ -266,7 +266,7 @@ if (DOTNET_TOOLCHAIN_IS_MONO)
-   configure_file(cmake_uninstall_gac.cmake.in cmake_uninstall_gac.cmake @ONLY)
- 
-   # Tell CMake to Invoke a script to install assembly to the GAC during install
--  install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/cmake_install_gac.cmake")
-+  install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/cmake_install_gac.cmake" DESTINATION share/z3)
- 
-   # Add custom target to uninstall the assembly from the GAC
-   add_custom_target(remove_dotnet_dll_from_gac
-@@ -280,7 +280,7 @@ elseif(DOTNET_TOOLCHAIN_IS_WINDOWS)
-   # Don't install Z3_DOTNET_ASSEMBLY_DLL into the gac. Instead just copy into
-   # installation directory.
-   install(FILES "${Z3_DOTNET_ASSEMBLY_DLL}" DESTINATION "${CMAKE_INSTALL_LIBDIR}")
--  install(FILES "${Z3_DOTNET_ASSEMBLY_DLL_DOC}" DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-+  install(FILES "${Z3_DOTNET_ASSEMBLY_DLL_DOC}" DESTINATION share/z3)
- else()
-   message(FATAL_ERROR "Unknown .NET toolchain")
- endif()
 diff --git a/src/api/java/CMakeLists.txt b/src/api/java/CMakeLists.txt
-index c2d73ff..506142c 100644
+index f593d91a4..70682b721 100644
 --- a/src/api/java/CMakeLists.txt
 +++ b/src/api/java/CMakeLists.txt
 @@ -228,7 +228,7 @@ if (INSTALL_JAVA_BINDINGS)
@@ -91,7 +60,7 @@ index c2d73ff..506142c 100644
    # with CMake 2.8.12.2 handles that incorrectly.
    install_jar(z3JavaJar "${Z3_JAVA_JAR_INSTALLDIR}")
 diff --git a/src/api/python/CMakeLists.txt b/src/api/python/CMakeLists.txt
-index 6efdc15..e4d5be0 100644
+index 6cabb779a..0b79861bf 100644
 --- a/src/api/python/CMakeLists.txt
 +++ b/src/api/python/CMakeLists.txt
 @@ -136,7 +136,7 @@ if (INSTALL_PYTHON_BINDINGS)
@@ -104,7 +73,7 @@ index 6efdc15..e4d5be0 100644
  else()
    message(STATUS "Not emitting rules to install Z3 python bindings")
 diff --git a/src/shell/CMakeLists.txt b/src/shell/CMakeLists.txt
-index 2782463..b6cd2f1 100644
+index 278246341..b6cd2f1c1 100644
 --- a/src/shell/CMakeLists.txt
 +++ b/src/shell/CMakeLists.txt
 @@ -44,5 +44,5 @@ target_link_libraries(shell PRIVATE ${Z3_DEPENDENT_LIBS})

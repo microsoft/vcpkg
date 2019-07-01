@@ -7,6 +7,7 @@
 ## vcpkg_configure_cmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [PREFER_NINJA]
+##     [DISABLE_PARALLEL_CONFIGURE]
 ##     [GENERATOR <"NMake Makefiles">]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
@@ -52,8 +53,8 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc
-        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE"
+    cmake_parse_arguments(_csc 
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -75,7 +76,7 @@ function(vcpkg_configure_cmake)
         set(_PATHSEP ":")
     endif()
 
-   	set(NINJA_CAN_BE_USED ON) # Ninja as generator
+    set(NINJA_CAN_BE_USED ON) # Ninja as generator
     set(NINJA_HOST ON) # Ninja as parallel configurator
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -174,15 +175,14 @@ function(vcpkg_configure_cmake)
             "It must be \"static\" or \"dynamic\"")
     endif()
 
-    macro(check_both_vars_are_set var1 var2)
-        if((NOT DEFINED ${var1} OR NOT DEFINED ${var2}) AND (DEFINED ${var1} OR DEFINED ${var2}))
-            message(FATAL_ERROR "Both ${var1} and ${var2} must be set.")
-        endif()
-    endmacro()
-
     check_both_vars_are_set(VCPKG_CXX_FLAGS_DEBUG VCPKG_C_FLAGS_DEBUG)
     check_both_vars_are_set(VCPKG_CXX_FLAGS_RELEASE VCPKG_C_FLAGS_RELEASE)
     check_both_vars_are_set(VCPKG_CXX_FLAGS VCPKG_C_FLAGS)
+
+    set(VCPKG_SET_CHARSET_FLAG ON)
+    if(_csc_NO_CHARSET_FLAG)
+        set(VCPKG_SET_CHARSET_FLAG OFF)
+    endif()
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR _TARGETTING_UWP)
@@ -198,9 +198,11 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
+
     list(APPEND _csc_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
         "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
@@ -218,6 +220,7 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_C_FLAGS_DEBUG=${VCPKG_C_FLAGS_DEBUG}"
         "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"
     )

@@ -13,10 +13,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.20.1
-    SHA512 e0dd0318d2b4ec07e0eafffa218938d91b1440c5053a557460ea7fceaab3d76f0cccc1d595abe7de9fa79f068b71cfbc5a28a3b688bc9c1e2737086928149583
+    REF 75475f090875e737ad6909a6057c59577f0c79b1
+    SHA512 db9ff82dee38cb0f4ba10874d10bf6cb20c8a4d49e7dd24bcd9f71388c54c782ee12fda6f1bfedd79ad988b0275d3f96df4686217465acfafcfb5e4c30093a5b
     HEAD_REF master
-    PATCHES 
+    PATCHES
         00001-fix-uwp.patch
         00002-static-linking-in-linux.patch
         00003-undef-base64-macro.patch
@@ -63,7 +63,7 @@ vcpkg_configure_cmake(
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
-        -DgRPC_INSTALL_BINDIR:STRING=bin
+        -DgRPC_INSTALL_BINDIR:STRING=tools/grpc
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
@@ -72,26 +72,15 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 
-# Install tools
-file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
-if(TOOLS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/grpc)
-    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/grpc)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
-endif()
-
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 # Ignore the C# extension DLL in bin/
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-##

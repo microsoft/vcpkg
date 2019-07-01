@@ -1,3 +1,4 @@
 Source: dimcli
 Version: 4.1.0
+Homepage: https://github.com/gknowles/dimcli
 Description: C++ command line parser toolkit

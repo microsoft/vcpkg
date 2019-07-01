@@ -42,25 +42,25 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 ##########
 # angle::common
 if(WIN32)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|android_")
 elseif(LINUX)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac|android_")
 elseif(APPLE)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win|android_")
 endif()
 file(GLOB ANGLE_COMMON_SOURCES 
-	"src/common/*.h" 
-	"src/common/*.inl" 
-	"src/common/*.cpp" 
-	"src/common/third_party/base/anglebase/*.h" 
-	"src/common/third_party/base/anglebase/*.cc" 
-	"src/common/third_party/base/anglebase/containers/*.h" 
-	"src/common/third_party/base/anglebase/numerics/*.h" 
-	"src/common/third_party/base/anglebase/numerics/*.cc" 
-	"src/common/third_party/xxhash/*.h" 
-	"src/common/third_party/xxhash/*.c" 
-	"src/common/third_party/smhasher/src/*.h" 
-	"src/common/third_party/smhasher/src/*.cpp")
+    "src/common/*.h"
+    "src/common/*.inl"
+    "src/common/*.cpp"
+    "src/common/third_party/base/anglebase/*.h"
+    "src/common/third_party/base/anglebase/*.cc"
+    "src/common/third_party/base/anglebase/containers/*.h"
+    "src/common/third_party/base/anglebase/numerics/*.h"
+    "src/common/third_party/base/anglebase/numerics/*.cc"
+    "src/common/third_party/xxhash/*.h"
+    "src/common/third_party/xxhash/*.c"
+    "src/common/third_party/smhasher/src/*.h"
+    "src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
@@ -191,6 +191,32 @@ if(WIN32)
     add_library(angle::renderer::d3d ALIAS angle_renderer_d3d)
 endif()
 
+## angle::gpu_info_util
+file(GLOB ANGLE_GPU_INFO_UTIL_SOURCES
+    "src/gpu_info_util/SystemInfo.h"
+    "src/gpu_info_util/SystemInfo_internal.h"
+    "src/gpu_info_util/SystemInfo.cpp"
+)
+add_library(angle_gpu_info_util STATIC ${ANGLE_GPU_INFO_UTIL_SOURCES})
+if(WIN32)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
+    target_link_libraries(angle_gpu_info_util PRIVATE setupapi.lib dxgi.lib)
+elseif(APPLE)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_mac.mm")
+	find_library(IOKit IOKit)
+	find_library(CoreFoundation CoreFoundation)
+	find_library(CoreGraphics CoreGraphics)
+	target_link_libraries(angle_gpu_info_util PRIVATE ${IOKit} ${CoreFoundation} ${CoreGraphics})
+elseif(LINUX)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_linux.cpp" "src/gpu_info_util/SystemInfo_x11.cpp")
+    target_compile_definitions(angle_gpu_info_util PRIVATE GPU_INFO_USE_X11)
+    target_link_libraries(angle_gpu_info_util PRIVATE X11 Xi Xext)
+elseif(ANDROID)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_android.cpp")
+endif()
+target_link_libraries(angle_gpu_info_util PRIVATE angle::common)
+add_library(angle::gpu_info_util ALIAS angle_gpu_info_util)
+
 ## Core libANGLE library
 if(WIN32)
     set(LIBANGLE_SOURCES_PLATFORM
@@ -252,6 +278,7 @@ add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
 target_link_libraries(libANGLE PRIVATE
     angle::common
     angle::image_util
+    angle::gpu_info_util
     angle::translator
     angle::preprocessor
     ${LIBANGLE_RENDERER_PLATFORM}

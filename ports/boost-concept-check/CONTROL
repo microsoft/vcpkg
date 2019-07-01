@@ -2,4 +2,5 @@
 Source: boost-concept-check
 Version: 1.70.0
 Build-Depends: boost-config, boost-preprocessor, boost-static-assert, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/concept_check
 Description: Boost concept_check module

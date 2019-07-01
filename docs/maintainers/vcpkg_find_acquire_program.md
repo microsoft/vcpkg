@@ -24,6 +24,7 @@ The current list of programs includes:
 - MESON
 - NASM
 - NINJA
+- NUGET
 - YASM
 - ARIA2 (Downloader)
 
