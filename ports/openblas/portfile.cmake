@@ -1,24 +1,24 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  message(WARNING "You do not need this package on macOS, since you already have the Accelerate Framework")
+  return()
+endif()
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-    set(CMAKE_CROSSCOMPILING OFF)
+if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "Linux")
+  set(ADDITIONAL_PATCH "enable_underscore.patch")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(NO_SHARED 1)
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set(NO_STATIC 1)
 endif()
 
 vcpkg_from_github(
@@ -29,7 +29,8 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         uwp.patch
-        fix-space-path.patch
+        fix_space_path.patch
+        ${ADDITIONAL_PATCH}
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -42,6 +43,8 @@ set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
+
+set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
@@ -56,7 +59,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DTARGET=NEHALEM
     )
 
     # add just built path to environment for gen_config_h.exe,
@@ -72,35 +77,37 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
-        "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DVS_WINRT_COMPONENT=TRUE
+            "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
+        OPTIONS
+            ${COMMON_OPTIONS})
 else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DNOFORTRAN=ON)
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DTARGET=SANDYBRIDGE
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DBINARY=64
+            -DNO_SHARED=${NO_SHARED}
+            -DNO_STATIC=${NO_STATIC}
+            -DNOFORTRAN=ON)
 endif()
 
 
 vcpkg_install_cmake()
-
-# openblas do not make the config file , so I manually made this
-# but I think in most case, libraries will not include these files, they define their own used function prototypes
-# this is only to quite vcpkg
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/openblas_common.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
-string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
-
-# openblas is BSD
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS)
+#we install a cmake wrapper since the official FindBLAS thinks that OpenBLAS can solve also LAPACK libraries, while it cannot because we disabled it and we use CLAPACK... maybe we have to trigger finding one package when requesting the other and vice-versa. Wrappers should be ready also to avoid an infinite loop
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas RENAME copyright)

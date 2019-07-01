@@ -7,24 +7,60 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
-#include <sys/sendfile.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#endif
+#if defined(__linux__)
+#include <sys/sendfile.h>
+#elif defined(__APPLE__)
+#include <copyfile.h>
 #endif
 
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
-    void Filesystem::write_contents(const fs::path& file_path, const std::string& data)
+    std::string Filesystem::read_contents(const fs::path& path, LineInfo linfo) const
+    {
+        auto maybe_contents = this->read_contents(path);
+        if (auto p = maybe_contents.get())
+            return std::move(*p);
+        else
+            Checks::exit_with_message(
+                linfo, "error reading file: %s: %s", path.u8string(), maybe_contents.error().message());
+    }
+    void Filesystem::write_contents(const fs::path& path, const std::string& data, LineInfo linfo)
     {
         std::error_code ec;
-        write_contents(file_path, data, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
+        this->write_contents(path, data, ec);
+        if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", path.u8string(), ec.message());
+    }
+    void Filesystem::rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->rename(oldpath, newpath, ec);
+        if (ec)
+            Checks::exit_with_message(
+                linfo, "error renaming file: %s: %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+    }
+
+    bool Filesystem::remove(const fs::path& path, LineInfo linfo)
+    {
+        std::error_code ec;
+        auto r = this->remove(path, ec);
+        if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", path.u8string(), ec.message());
+        return r;
+    }
+
+    void Filesystem::write_lines(const fs::path& path, const std::vector<std::string>& lines, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->write_lines(path, lines, ec);
+        if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", path.u8string(), ec.message());
     }
 
     struct RealFilesystem final : Filesystem
@@ -142,23 +178,31 @@ namespace vcpkg::Files
             return ret;
         }
 
-        virtual void write_lines(const fs::path& file_path, const std::vector<std::string>& lines) override
+        virtual void write_lines(const fs::path& file_path,
+                                 const std::vector<std::string>& lines,
+                                 std::error_code& ec) override
         {
             std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+            if (!output)
+            {
+                ec.assign(errno, std::generic_category());
+                return;
+            }
             for (const std::string& line : lines)
             {
                 output << line << "\n";
+                if (!output)
+                {
+                    output.close();
+                    ec.assign(errno, std::generic_category());
+                    return;
+                }
             }
             output.close();
         }
-
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
             fs::stdfs::rename(oldpath, newpath, ec);
-        }
-        virtual void rename(const fs::path& oldpath, const fs::path& newpath) override
-        {
-            fs::stdfs::rename(oldpath, newpath);
         }
         virtual void rename_or_copy(const fs::path& oldpath,
                                     const fs::path& newpath,
@@ -166,7 +210,8 @@ namespace vcpkg::Files
                                     std::error_code& ec) override
         {
             this->rename(oldpath, newpath, ec);
-#if defined(__linux__)
+            Util::unused(temp_suffix);
+#if defined(__linux__) || defined(__APPLE__)
             if (ec)
             {
                 auto dst = newpath;
@@ -182,13 +227,25 @@ namespace vcpkg::Files
                     return;
                 }
 
+#if defined(__linux__)
                 off_t bytes = 0;
                 struct stat info = {0};
                 fstat(i_fd, &info);
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
+#elif defined(__APPLE__)
+                auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
+#endif
+                if (written_bytes == -1)
+                {
+                    ec.assign(errno, std::generic_category());
+                    close(i_fd);
+                    close(o_fd);
+
+                    return;
+                }
+
                 close(i_fd);
                 close(o_fd);
-                if (written_bytes == -1) return;
 
                 this->rename(dst, newpath, ec);
                 if (ec) return;
@@ -196,7 +253,6 @@ namespace vcpkg::Files
             }
 #endif
         }
-        virtual bool remove(const fs::path& path) override { return fs::stdfs::remove(path); }
         virtual bool remove(const fs::path& path, std::error_code& ec) override { return fs::stdfs::remove(path, ec); }
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) override
         {

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jarro2783/cxxopts
-    REF  v2.1.1
-    SHA512 1da6ed65c3e0ee3e0beb39a5d0bccf6e32f44bbb37f8e849ada1421f03630981e4ede6d9966284bb642af6e75c71a1c9f7c9262ba9578d183d4514c011cbfa8e
+    REF v2.1.2
+    SHA512 7ee3725995d4d0f78b75d1d87f10290f20529ca4aa430eb8dd1c59d98c6e99c54b54fc545926b59f499d02ae4f75f9064b3b5ebbab3f74031d3638e7a2378440
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cxxopts TARGET_PATH share/cxxopts)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cxxopts)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 

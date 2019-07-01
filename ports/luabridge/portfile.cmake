@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vinniefalco/LuaBridge
-    REF 2.1
-    SHA512 062efda16fe43a02bcc757aaebba839e0ec72a9a3b7bf1e5bc1427a54d664a52197c8bcd4ac584f0d04cce812c0f078e257716e8bca016bcabda82c2c332ac04
+    REF 2.3.1
+    SHA512 6478410ec5863f40087f023a68c585b4c84974aa27dd522552094f6c823bee9820edc77685a9932b5d7d74f26cced4d624810dbfbaa3694f55c0b7803d2d5216
     HEAD_REF master
 )
 
