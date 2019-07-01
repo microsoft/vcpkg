@@ -17,6 +17,8 @@ endif()
 get_filename_component(SOURCE_VERSION "${SOURCE_PATH}" NAME)
 file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 
+file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -60,7 +62,7 @@ foreach(PACKAGE FreeRDP-Client2 FreeRDP2 WinPR2)
 endforeach()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP-Client2_temp/FreeRDP-Client2 TARGET_PATH share/freerdp-client)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP2_temp/FreeRDP2 TARGET_PATH share/freerdp)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP2_temp/FreeRDP2)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WinPR2_temp/WinPR2 TARGET_PATH share/winpr)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

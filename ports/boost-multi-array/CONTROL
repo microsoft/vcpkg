@@ -2,4 +2,5 @@
 Source: boost-multi-array
 Version: 1.70.0
 Build-Depends: boost-compatibility, boost-config, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/multi_array
 Description: Boost multi_array module

@@ -2,8 +2,8 @@ set(_qt5base_port_dir "${CMAKE_CURRENT_LIST_DIR}")
 
 function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
     string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-    if(BUILDTREES_PATH_LENGTH GREATER 45)
-        message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
+    if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
+        message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
             "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
         )
     endif()
@@ -37,7 +37,7 @@ function(qt_modular_build_library SOURCE_PATH)
     #Find Python and add it to the path
     vcpkg_find_acquire_program(PYTHON2)
     get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
-    set(ENV{PATH} "${PYTHON2_EXE_PATH};$ENV{PATH}")
+    vcpkg_add_to_path("${PYTHON2_EXE_PATH}")
 
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
@@ -110,7 +110,7 @@ function(qt_modular_build_library SOURCE_PATH)
 
     #Move release and debug dlls to the correct directory
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})    
+        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5 ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     endif()
     if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/tools/qt5 ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})

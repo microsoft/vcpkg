@@ -1,4 +1,5 @@
 Source: libqrencode
 Version: 4.0.2
 Build-Depends: libpng, libiconv
+Homepage: https://github.com/fukuchi/libqrencode
 Description: libqrencode - a fast and compact QR Code encoding library

@@ -2,4 +2,5 @@
 Source: boost-ratio
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-integer, boost-mpl, boost-rational, boost-static-assert, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/ratio
 Description: Boost ratio module

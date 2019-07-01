@@ -1,3 +1,4 @@
 Source: dxut
 Version: 11.14-3
+Homepage: https://github.com/Microsoft/DXUT
 Description: A "GLUT"-like framework for Direct3D 11.x Win32 desktop applications

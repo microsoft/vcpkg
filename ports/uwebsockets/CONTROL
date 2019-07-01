@@ -1,4 +1,5 @@
 Source: uwebsockets
 Version: 0.15.6
 Build-Depends: zlib, usockets
+Homepage: https://github.com/uWebSockets/uWebSockets
 Description: Simple, secure & standards compliant web I/O for the most demanding of applications

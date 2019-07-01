@@ -106,7 +106,8 @@ namespace vcpkg::Export::IFW
                               create_release_date(),
                               action.spec.name(),
                               action.spec.triplet().canonical_name(),
-                              deps));
+                              deps),
+                          VCPKG_LINE_INFO);
 
         // Return dir path for export package data
         return ifw_packages_dir_path /
@@ -138,7 +139,8 @@ namespace vcpkg::Export::IFW
     <ReleaseDate>%s</ReleaseDate>
 </Package>
 )###",
-                              create_release_date()));
+                              create_release_date()),
+                          VCPKG_LINE_INFO);
 
         for (const auto& unique_package : unique_packages)
         {
@@ -167,7 +169,8 @@ namespace vcpkg::Export::IFW
                                   action.spec.name(),
                                   safe_rich_from_plain_text(binary_paragraph.description),
                                   binary_paragraph.version,
-                                  create_release_date()));
+                                  create_release_date()),
+                              VCPKG_LINE_INFO);
         }
     }
 
@@ -195,7 +198,8 @@ namespace vcpkg::Export::IFW
     <ReleaseDate>%s</ReleaseDate>
 </Package>
 )###",
-                              create_release_date()));
+                              create_release_date()),
+                          VCPKG_LINE_INFO);
 
         for (const std::string& triplet : unique_triplets)
         {
@@ -217,7 +221,8 @@ namespace vcpkg::Export::IFW
 </Package>
 )###",
                                   triplet,
-                                  create_release_date()));
+                                  create_release_date()),
+                              VCPKG_LINE_INFO);
         }
     }
 
@@ -243,7 +248,8 @@ namespace vcpkg::Export::IFW
     <ReleaseDate>%s</ReleaseDate>
 </Package>
 )###",
-                              create_release_date()));
+                              create_release_date()),
+                          VCPKG_LINE_INFO);
     }
 
     void export_config(const std::string& export_id, const Options& ifw_options, const VcpkgPaths& paths)
@@ -283,7 +289,8 @@ namespace vcpkg::Export::IFW
     <TargetDir>@RootDir@/src/vcpkg</TargetDir>%s
 </Installer>
 )###",
-                              formatted_repo_url));
+                              formatted_repo_url),
+                          VCPKG_LINE_INFO);
     }
 
     void export_maintenance_tool(const fs::path& ifw_packages_dir_path, const VcpkgPaths& paths)
@@ -325,7 +332,8 @@ namespace vcpkg::Export::IFW
     <ForcedInstallation>true</ForcedInstallation>
 </Package>
 )###",
-                              create_release_date()));
+                              create_release_date()),
+                          VCPKG_LINE_INFO);
         const fs::path script_source = paths.root / "scripts" / "ifw" / "maintenance.qs";
         const fs::path script_destination = ifw_packages_dir_path / "maintenance" / "meta" / "maintenance.qs";
         fs.copy_file(script_source, script_destination, fs::copy_options::overwrite_existing, ec);

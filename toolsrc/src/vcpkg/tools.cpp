@@ -62,7 +62,7 @@ namespace vcpkg
 #if defined(_WIN32) || defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
-        static const std::regex XML_VERSION_REGEX {R"###(<tools[\s]+version="([^"]+)">)###"};
+        static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
         std::smatch match_xml_version;
         const bool has_xml_version = std::regex_search(XML.cbegin(), XML.cend(), match_xml_version, XML_VERSION_REGEX);
@@ -78,7 +78,7 @@ namespace vcpkg
                            XML_VERSION,
                            match_xml_version[1]);
 
-        const std::regex tool_regex {Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">)###", tool, OS_STRING)};
+        const std::regex tool_regex{Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">)###", tool, OS_STRING)};
         std::smatch match_tool_entry;
         const bool has_tool_entry = std::regex_search(XML.cbegin(), XML.cend(), match_tool_entry, tool_regex);
         if (!has_tool_entry)
@@ -109,13 +109,13 @@ namespace vcpkg
         const fs::path tool_dir_path = paths.tools / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
 
-        return ToolData {*version.get(),
-                         exe_path,
-                         url,
-                         paths.downloads / archive_name.value_or(exe_relative_path).to_string(),
-                         archive_name.has_value(),
-                         tool_dir_path,
-                         sha512};
+        return ToolData{*version.get(),
+                        exe_path,
+                        url,
+                        paths.downloads / archive_name.value_or(exe_relative_path).to_string(),
+                        archive_name.has_value(),
+                        tool_dir_path,
+                        sha512};
 #endif
     }
 
@@ -131,7 +131,10 @@ namespace vcpkg
         virtual const std::string& exe_stem() const = 0;
         virtual std::array<int, 3> default_min_version() const = 0;
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const {}
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        {
+            Util::unused(out_candidate_paths);
+        }
         virtual Optional<std::string> get_version(const fs::path& path_to_exe) const = 0;
     };
 
@@ -156,7 +159,7 @@ namespace vcpkg
                  actual_version[2] >= expected_version[2]);
             if (!version_acceptable) continue;
 
-            return PathAndVersion {candidate, *version};
+            return PathAndVersion{candidate, *version};
         }
 
         return nullopt;
@@ -406,6 +409,7 @@ git version 2.17.1.windows.2
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
+            Util::unused(out_candidate_paths);
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
             // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());

@@ -2,4 +2,5 @@
 Source: boost-statechart
 Version: 1.70.0
 Build-Depends: boost-assert, boost-bind, boost-config, boost-conversion, boost-core, boost-detail, boost-function, boost-mpl, boost-smart-ptr, boost-static-assert, boost-thread (!arm), boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/statechart
 Description: Boost statechart module

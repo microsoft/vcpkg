@@ -1,3 +1,4 @@
 Source: cunit
 Version: 2.1.3-2
+Homepage: https://sourceforge.net/projects/cunit/
 Description: CUnit is a lightweight system for writing, administering, and running unit tests in C.  It provides C programmers a basic testing functionality with a flexible variety of user interfaces

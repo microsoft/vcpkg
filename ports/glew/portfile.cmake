@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew/glew-2.1.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew-58abdfb190)
 
 # Don't change to vcpkg_from_github! The github-auto-generated archives are missing some files.
 # More info: https://github.com/nigels-com/glew/issues/31 and https://github.com/nigels-com/glew/issues/13
@@ -9,7 +9,12 @@ vcpkg_download_distfile(ARCHIVE_FILE
     FILENAME "glew-2.1.0.tgz"
     SHA512 9a9b4d81482ccaac4b476c34ed537585ae754a82ebb51c3efa16d953c25cc3931be46ed2e49e79c730cd8afc6a1b78c97d52cd714044a339c3bc29734cd4d2ab
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE} ${CURRENT_BUILDTREES_DIR}/src/glew)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH ${SOURCE_PATH}
+    ARCHIVE ${ARCHIVE_FILE}
+    REF glew
+    PATCHES fix-LNK2019.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
@@ -19,8 +24,7 @@ vcpkg_configure_cmake(
     )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/glew")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glew)
 
 set(_targets_cmake_files)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")

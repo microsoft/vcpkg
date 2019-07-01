@@ -2,4 +2,5 @@
 Source: boost-lambda
 Version: 1.70.0
 Build-Depends: boost-bind, boost-config, boost-detail, boost-mpl, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/lambda
 Description: Boost lambda module

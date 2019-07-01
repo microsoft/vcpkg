@@ -2,4 +2,5 @@
 Source: boost-format
 Version: 1.70.0
 Build-Depends: boost-assert, boost-compatibility, boost-config, boost-core, boost-detail, boost-optional, boost-smart-ptr, boost-throw-exception, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/format
 Description: Boost format module

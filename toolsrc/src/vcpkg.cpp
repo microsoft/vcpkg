@@ -40,8 +40,10 @@
 #include <memory>
 #include <random>
 
+#if defined(_WIN32)
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
+#endif
 
 using namespace vcpkg;
 
@@ -116,7 +118,9 @@ static void inner(const VcpkgCmdArguments& args)
 
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, 
+                                                                   default_vs_path, 
+                                                                   args.overlay_triplets.get());
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",
@@ -388,6 +392,6 @@ int main(const int argc, const char* const* const argv)
     }
     fflush(stdout);
 
-    //It is expected that one of the sub-commands will exit cleanly before we get here.
+    // It is expected that one of the sub-commands will exit cleanly before we get here.
     Checks::exit_fail(VCPKG_LINE_INFO);
 }

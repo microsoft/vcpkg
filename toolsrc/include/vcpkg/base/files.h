@@ -2,11 +2,8 @@
 
 #include <vcpkg/base/expected.h>
 
-#if defined(_WIN32)
-#include <filesystem>
-#else
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
-#endif
 
 namespace fs
 {
@@ -27,21 +24,25 @@ namespace vcpkg::Files
 {
     struct Filesystem
     {
+        std::string read_contents(const fs::path& file_path, LineInfo linfo) const;
         virtual Expected<std::string> read_contents(const fs::path& file_path) const = 0;
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
-
-        virtual void write_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
+        void write_lines(const fs::path& file_path, const std::vector<std::string>& lines, LineInfo linfo);
+        virtual void write_lines(const fs::path& file_path,
+                                 const std::vector<std::string>& lines,
+                                 std::error_code& ec) = 0;
+        void write_contents(const fs::path& path, const std::string& data, LineInfo linfo);
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
-        virtual void rename(const fs::path& oldpath, const fs::path& newpath) = 0;
+        void rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo);
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual void rename_or_copy(const fs::path& oldpath,
                                     const fs::path& newpath,
                                     StringLiteral temp_suffix,
                                     std::error_code& ec) = 0;
-        virtual bool remove(const fs::path& path) = 0;
+        bool remove(const fs::path& path, LineInfo linfo);
         virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) = 0;
         virtual bool exists(const fs::path& path) const = 0;
@@ -60,8 +61,6 @@ namespace vcpkg::Files
         virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const = 0;
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
-
-        void write_contents(const fs::path& file_path, const std::string& data);
     };
 
     Filesystem& get_real_filesystem();
