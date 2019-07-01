@@ -435,7 +435,7 @@ namespace vcpkg
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");
         System::printf("    %-40s %s\n",
-                       "--scripts-root <path>",
+                       "--scripts-root=<path>",
                        "Specify the scripts directory to use instead of default vcpkg scripts directory");
     }
 }
