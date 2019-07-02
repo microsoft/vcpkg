@@ -79,6 +79,7 @@ vcpkg_build_msbuild(
     PLATFORM ${MSBUILD_PLATFORM}
 )
 
+
 file(INSTALL ${SOURCE_PATH}/physx/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/physx/)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

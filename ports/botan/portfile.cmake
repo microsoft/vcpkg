@@ -47,7 +47,6 @@ else()
 endif()
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
-
     if(BOTAN_BUILD_TYPE STREQUAL "dbg")
         set(BOTAN_FLAG_PREFIX ${CURRENT_PACKAGES_DIR}/debug)
         set(BOTAN_FLAG_DEBUGMODE --debug-mode)

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-
 set(HYPERSCAN_VERSION 5.1.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/intel/hyperscan/archive/v${HYPERSCAN_VERSION}.zip"
     FILENAME "v${HYPERSCAN_VERSION}.zip"
@@ -14,7 +14,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${HYPERSCAN_VERSION})
+    REF ${HYPERSCAN_VERSION}
+)
 
 vcpkg_find_acquire_program(PYTHON3)
 

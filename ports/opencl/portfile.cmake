@@ -11,10 +11,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL
-        "${SOURCE_PATH}/opencl22/CL"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+file(INSTALL "${SOURCE_PATH}/opencl22/CL"
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
 # OpenCL C++ headers

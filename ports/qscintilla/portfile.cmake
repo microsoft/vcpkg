@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/QScintilla_gpl-2.10)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-2.10/QScintilla_gpl-2.10.zip"
@@ -55,6 +56,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/qscintilla)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/qscintilla/LICENSE ${CURRENT_PACKAGES_DIR}/share/qscintilla/copyright)

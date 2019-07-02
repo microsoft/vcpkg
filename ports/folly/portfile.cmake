@@ -24,6 +24,7 @@ vcpkg_from_github(
         disable-non-underscore-posix-names.patch
 )
 
+
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake
     ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
