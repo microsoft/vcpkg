@@ -23,6 +23,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     vcpkg_install_cmake()
 
     # Settings for TBBConfigInternal.cmake.in
+    set(TBB_LIB_EXT a)
     set(TBB_LIB_PREFIX lib)
 else()
     if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -40,6 +41,7 @@ else()
         DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
     )
     # Settings for TBBConfigInternal.cmake.in
+    set(TBB_LIB_EXT lib)
     set(TBB_LIB_PREFIX)
 endif()
 
