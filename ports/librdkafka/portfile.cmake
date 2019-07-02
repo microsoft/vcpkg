@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF b25436e6325e7c941eaed1d80a3ed65b6f404e47
-    SHA512 4de86fb14f932a67569cd79f924182559cb9bcc957635c36be493ec3233981755ff751982e48f6999fac50acb153f5c28a23e30538af1a2ad69af87be606a81f
+    REF v1.1.0
+    SHA512 35561399b07278a09a51245c5503c86eb0cc8971692b4e65a332144bfb71e2e86d4ceaf1804534b6a416bcace74cef493b6465c20b32c14de97f45f2854359c6
     HEAD_REF master
     PATCHES
         fix-arm64.patch
@@ -12,18 +12,12 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
-macro(check_feature _feature_name _var)
-    if("${_feature_name}" IN_LIST FEATURES)
-        set(${_var} ON)
-    else()
-        set(${_var} OFF)
-    endif()
-endmacro()
-
-check_feature(lz4 ENABLE_LZ4_EXT)
-check_feature(ssl WITH_SSL)
-check_feature(zlib WITH_ZLIB)
-check_feature(zstd WITH_ZSTD)
+vcpkg_check_features(
+    lz4 ENABLE_LZ4_EXT
+    ssl WITH_SSL
+    zlib WITH_ZLIB
+    zstd WITH_ZSTD
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -32,11 +26,8 @@ vcpkg_configure_cmake(
         -DRDKAFKA_BUILD_STATIC=${RDKAFKA_BUILD_STATIC}
         -DRDKAFKA_BUILD_EXAMPLES=OFF
         -DRDKAFKA_BUILD_TESTS=OFF
-        -DENABLE_LZ4_EXT=${ENABLE_LZ4_EXT}
-        -DWITH_SSL=${WITH_SSL}
         -DWITH_BUNDLED_SSL=OFF
-        -DWITH_ZLIB=${WITH_ZLIB}
-        -DWITH_ZSTD=${WITH_ZSTD}
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_DEVEL=ON
         -DENABLE_REFCNT_DEBUG=ON
