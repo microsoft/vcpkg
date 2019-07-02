@@ -45,6 +45,7 @@ function(vcpkg_find_acquire_program VAR)
   unset(_vfa_RENAME)
   unset(SUBDIR)
   unset(REQUIRED_INTERPRETER)
+  unset(POST_INSTALL_COMMAND)
 
   vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
   vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
@@ -77,11 +78,12 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
-      set(SUBDIR "python3")
+      set(SUBDIR "python-3.7.3")
       set(PATHS ${DOWNLOADS}/tools/python/${SUBDIR})
       set(URL "https://www.python.org/ftp/python/3.7.3/python-3.7.3-embed-win32.zip")
       set(ARCHIVE "python-3.7.3-embed-win32.zip")
       set(HASH 2c1b1f0a29d40a91771ae21a5f733eedc10984cd182cb10c2793bbd24191a89f20612a3f23c34047f37fb06369016bfd4a52915ed1b4a56f8bd2b4ca6994eb31)
+      set(POST_INSTALL_COMMAND ${CMAKE_COMMAND} -E remove python37._pth)
     else()
       set(PROGNAME python3)
       set(BREW_PACKAGE_NAME "python")
@@ -289,6 +291,14 @@ function(vcpkg_find_acquire_program VAR)
           WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       endif()
+    endif()
+
+    if(DEFINED POST_INSTALL_COMMAND)
+      vcpkg_execute_required_process(
+        COMMAND ${POST_INSTALL_COMMAND}
+        WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
+        LOGNAME ${VAR}-tool-post-install
+      )
     endif()
 
     do_find()
