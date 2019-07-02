@@ -1,4 +1,5 @@
 Source: fontconfig
 Version: 2.12.4-9
+Homepage: https://www.freedesktop.org/software/fontconfig/front.html
 Description: Library for configuring and customizing font access.
 Build-Depends: freetype, expat, libiconv, dirent

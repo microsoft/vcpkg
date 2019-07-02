@@ -1,4 +1,5 @@
 Source: librtmp
 Version: 2.4-1
 Build-Depends: zlib, openssl
+Homepage: https://rtmpdump.mplayerhq.hu
 Description: RTMPDump Real-Time Messaging Protocol API

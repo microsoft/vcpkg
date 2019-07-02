@@ -10,11 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("xcomplex" IN_LIST FEATURES)
-    set(ENABLE_XTL_COMPLEX ON)
-else()
-    set(ENABLE_XTL_COMPLEX OFF)
-endif()
+vcpkg_check_features(xcomplex ENABLE_XTL_COMPLEX)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

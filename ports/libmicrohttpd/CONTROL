@@ -1,3 +1,4 @@
 Source: libmicrohttpd
 Version: 0.9.63
+Homepage: https://www.gnu.org/software/libmicrohttpd/
 Description: GNU libmicrohttpd is a small C library that is supposed to make it easy to run an HTTP server as part of another application

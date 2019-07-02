@@ -1,3 +1,4 @@
 Source: libsodium
-Version: 1.0.17-3
+Version: 1.0.18
 Description: A modern and easy-to-use crypto library
+Homepage: https://github.com/jedisct1/libsodium

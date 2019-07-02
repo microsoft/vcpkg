@@ -13,7 +13,7 @@
 namespace Microsoft::VisualStudio::CppUnitTestFramework
 {
     template<>
-    std::wstring ToString<vcpkg::Dependencies::InstallPlanType>(const vcpkg::Dependencies::InstallPlanType& t)
+    inline std::wstring ToString<vcpkg::Dependencies::InstallPlanType>(const vcpkg::Dependencies::InstallPlanType& t)
     {
         switch (t)
         {
@@ -26,7 +26,7 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
     }
 
     template<>
-    std::wstring ToString<vcpkg::Dependencies::RequestType>(const vcpkg::Dependencies::RequestType& t)
+    inline std::wstring ToString<vcpkg::Dependencies::RequestType>(const vcpkg::Dependencies::RequestType& t)
     {
         switch (t)
         {
@@ -38,13 +38,13 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
     }
 
     template<>
-    std::wstring ToString<vcpkg::PackageSpecParseResult>(const vcpkg::PackageSpecParseResult& t)
+    inline std::wstring ToString<vcpkg::PackageSpecParseResult>(const vcpkg::PackageSpecParseResult& t)
     {
         return ToString(static_cast<uint32_t>(t));
     }
 
     template<>
-    std::wstring ToString<vcpkg::PackageSpec>(const vcpkg::PackageSpec& t)
+    inline std::wstring ToString<vcpkg::PackageSpec>(const vcpkg::PackageSpec& t)
     {
         return ToString(t.to_string());
     }

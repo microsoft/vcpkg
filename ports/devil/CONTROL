@@ -1,6 +1,7 @@
 Source: devil
 Version: 1.8.0-4
 Build-Depends:
+Homepage: https://github.com/DentonW/DevIL
 Description: A full featured cross-platform image library
 Default-Features: libpng, tiff, libjpeg, openexr, jasper, lcms
 

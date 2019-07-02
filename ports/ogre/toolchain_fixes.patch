@@ -1,0 +1,533 @@
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+index a7a3796..2e21403 100755
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -13,10 +13,12 @@
+ # directory, but can also be used for custom projects.
+ #############################################################
+ 
+-if(WIN32 OR APPLE)
+-	set(OGRE_CMAKE_DIR "CMake")
+-else()
+-	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++if(NOT DEFINED OGRE_CMAKE_DIR)
++  if(WIN32 OR APPLE)
++    set(OGRE_CMAKE_DIR "CMake")
++  else()
++    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++  endif()
+ endif()
+ 
+ set(INST_FILES Utils/FindPkgMacros.cmake) 
+diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
+index 783755e..79f7514 100644
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -208,10 +208,12 @@ endif ()
+ # Create the CMake package files
+ include(CMakePackageConfigHelpers)
+ 
+-if(WIN32 OR APPLE)
+-  set(OGRE_CMAKE_DIR "CMake")
+-else()
+-  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++if(NOT DEFINED OGRE_CMAKE_DIR)
++  if(WIN32 OR APPLE)
++    set(OGRE_CMAKE_DIR "CMake")
++  else()
++    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++  endif()
+ endif()
+ configure_package_config_file(${OGRE_TEMPLATES_DIR}/OGREConfig.cmake.in ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
+     INSTALL_DESTINATION ${OGRE_CMAKE_DIR}
+diff --git a/CMake/Packages/FindCg.cmake b/CMake/Packages/FindCg.cmake
+index 4501cf9..e91bfd0 100644
+--- a/CMake/Packages/FindCg.cmake
++++ b/CMake/Packages/FindCg.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  Cg_FOUND - system has Cg
+-#  Cg_INCLUDE_DIRS - the Cg include directories 
++#  Cg_INCLUDE_DIRS - the Cg include directories
+ #  Cg_LIBRARIES - link these to use Cg
+ 
+ include(FindPkgMacros)
+@@ -56,7 +56,7 @@ endif()
+ 
+ find_library(Cg_LIBRARY_REL NAMES ${Cg_LIBRARY_NAMES} HINTS ${Cg_LIB_SEARCH_PATH} ${Cg_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
+ find_library(Cg_LIBRARY_DBG NAMES ${Cg_LIBRARY_NAMES_DBG} HINTS ${Cg_LIB_SEARCH_PATH} ${Cg_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
+-make_library_set(Cg_LIBRARY)
++make_library_set(Cg)
+ 
+ if (WIN32)
+ 	if (CMAKE_CL_64)
+diff --git a/CMake/Packages/FindFreeImage.cmake b/CMake/Packages/FindFreeImage.cmake
+index 7c89ec5..445d86a 100644
+--- a/CMake/Packages/FindFreeImage.cmake
++++ b/CMake/Packages/FindFreeImage.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  FreeImage_FOUND - system has FreeImage
+-#  FreeImage_INCLUDE_DIRS - the FreeImage include directories 
++#  FreeImage_INCLUDE_DIRS - the FreeImage include directories
+ #  FreeImage_LIBRARIES - link these to use FreeImage
+ 
+ include(FindPkgMacros)
+@@ -43,7 +43,6 @@ find_path(FreeImage_INCLUDE_DIR NAMES FreeImage.h HINTS ${FreeImage_INC_SEARCH_P
+ find_library(FreeImage_LIBRARY_REL NAMES ${FreeImage_LIBRARY_NAMES} HINTS ${FreeImage_LIB_SEARCH_PATH} ${FreeImage_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
+ find_library(FreeImage_LIBRARY_DBG NAMES ${FreeImage_LIBRARY_NAMES_DBG} HINTS ${FreeImage_LIB_SEARCH_PATH} ${FreeImage_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
+ 
+-make_library_set(FreeImage_LIBRARY)
++make_library_set(FreeImage)
+ 
+ findpkg_finish(FreeImage)
+-
+diff --git a/CMake/Packages/FindGLSLOptimizer.cmake b/CMake/Packages/FindGLSLOptimizer.cmake
+index dd4b179..8e51d2f 100644
+--- a/CMake/Packages/FindGLSLOptimizer.cmake
++++ b/CMake/Packages/FindGLSLOptimizer.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  GLSL_Optimizer_FOUND - system has GLSL_Optimizer
+-#  GLSL_Optimizer_INCLUDE_DIRS - the GLSL_Optimizer include directories 
++#  GLSL_Optimizer_INCLUDE_DIRS - the GLSL_Optimizer include directories
+ #  GLSL_Optimizer_LIBRARIES - link these to use GLSL_Optimizer
+ 
+ include(FindPkgMacros)
+@@ -38,8 +38,7 @@ findpkg_framework(GLSL_Optimizer)
+ find_path(GLSL_Optimizer_INCLUDE_DIR NAMES glsl_optimizer.h HINTS ${GLSL_Optimizer_INC_SEARCH_PATH} ${GLSL_Optimizer_PKGC_INCLUDE_DIRS} PATH_SUFFIXES GLSL_Optimizer)
+ find_library(GLSL_Optimizer_LIBRARY_REL NAMES ${GLSL_Optimizer_LIBRARY_NAMES} HINTS ${GLSL_Optimizer_LIB_SEARCH_PATH} ${GLSL_Optimizer_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
+ find_library(GLSL_Optimizer_LIBRARY_DBG NAMES ${GLSL_Optimizer_LIBRARY_NAMES_DBG} HINTS ${GLSL_Optimizer_LIB_SEARCH_PATH} ${GLSL_Optimizer_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
+-make_library_set(GLSL_Optimizer_LIBRARY)
++make_library_set(GLSL_Optimizer)
+ 
+ findpkg_finish(GLSL_Optimizer)
+ add_parent_dir(GLSL_Optimizer_INCLUDE_DIRS GLSL_Optimizer_INCLUDE_DIR)
+-
+diff --git a/CMake/Packages/FindHLSL2GLSL.cmake b/CMake/Packages/FindHLSL2GLSL.cmake
+index 7125895..f73c928 100644
+--- a/CMake/Packages/FindHLSL2GLSL.cmake
++++ b/CMake/Packages/FindHLSL2GLSL.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  HLSL2GLSL_FOUND - system has HLSL2GLSL
+-#  HLSL2GLSL_INCLUDE_DIRS - the HLSL2GLSL include directories 
++#  HLSL2GLSL_INCLUDE_DIRS - the HLSL2GLSL include directories
+ #  HLSL2GLSL_LIBRARIES - link these to use HLSL2GLSL
+ 
+ include(FindPkgMacros)
+@@ -38,8 +38,7 @@ findpkg_framework(HLSL2GLSL)
+ find_path(HLSL2GLSL_INCLUDE_DIR NAMES hlsl2glsl.h HINTS ${HLSL2GLSL_INC_SEARCH_PATH} ${HLSL2GLSL_PKGC_INCLUDE_DIRS} PATH_SUFFIXES HLSL2GLSL)
+ find_library(HLSL2GLSL_LIBRARY_REL NAMES ${HLSL2GLSL_LIBRARY_NAMES} HINTS ${HLSL2GLSL_LIB_SEARCH_PATH} ${HLSL2GLSL_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
+ find_library(HLSL2GLSL_LIBRARY_DBG NAMES ${HLSL2GLSL_LIBRARY_NAMES_DBG} HINTS ${HLSL2GLSL_LIB_SEARCH_PATH} ${HLSL2GLSL_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
+-make_library_set(HLSL2GLSL_LIBRARY)
++make_library_set(HLSL2GLSL)
+ 
+ findpkg_finish(HLSL2GLSL)
+ add_parent_dir(HLSL2GLSL_INCLUDE_DIRS HLSL2GLSL_INCLUDE_DIR)
+-
+diff --git a/CMake/Packages/FindNVAPI.cmake b/CMake/Packages/FindNVAPI.cmake
+index 95c70cd..17dabb8 100644
+--- a/CMake/Packages/FindNVAPI.cmake
++++ b/CMake/Packages/FindNVAPI.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  NVAPI_FOUND - system has NVAPI
+-#  NVAPI_INCLUDE_DIRS - the NVAPI include directories 
++#  NVAPI_INCLUDE_DIRS - the NVAPI include directories
+ #  NVAPI_LIBRARIES - link these to use NVAPI
+ 
+ include(FindPkgMacros)
+@@ -44,7 +44,7 @@ findpkg_framework(NVAPI)
+ find_path(NVAPI_INCLUDE_DIR NAMES nvapi.h HINTS ${NVAPI_FRAMEWORK_INCLUDES} ${NVAPI_INC_SEARCH_PATH} ${NVAPI_PKGC_INCLUDE_DIRS} PATH_SUFFIXES NVAPI)
+ find_library(NVAPI_LIBRARY_REL NAMES ${NVAPI_LIBRARY_NAMES} HINTS ${NVAPI_LIB_SEARCH_PATH} ${NVAPI_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" release relwithdebinfo minsizerel)
+ find_library(NVAPI_LIBRARY_DBG NAMES ${NVAPI_LIBRARY_NAMES_DBG} HINTS ${NVAPI_LIB_SEARCH_PATH} ${NVAPI_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" debug)
+-make_library_set(NVAPI_LIBRARY)
++make_library_set(NVAPI)
+ 
+ findpkg_finish(NVAPI)
+-add_parent_dir(NVAPI_INCLUDE_DIRS NVAPI_INCLUDE_DIR)
+\ No newline at end of file
++add_parent_dir(NVAPI_INCLUDE_DIRS NVAPI_INCLUDE_DIR)
+diff --git a/CMake/Packages/FindPOCO.cmake b/CMake/Packages/FindPOCO.cmake
+index 6b6d7fa..c2cb80e 100644
+--- a/CMake/Packages/FindPOCO.cmake
++++ b/CMake/Packages/FindPOCO.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  POCO_FOUND - system has POCO
+-#  POCO_INCLUDE_DIRS - the POCO include directories 
++#  POCO_INCLUDE_DIRS - the POCO include directories
+ #  POCO_LIBRARIES - link these to use POCO
+ 
+ include(FindPkgMacros)
+@@ -23,8 +23,8 @@ getenv_path(POCO_ROOT)
+ getenv_path(POCO_BASE)
+ 
+ # construct search paths
+-set(POCO_PREFIX_PATH 
+-  ${POCO_HOME} ${ENV_POCO_HOME} 
++set(POCO_PREFIX_PATH
++  ${POCO_HOME} ${ENV_POCO_HOME}
+   ${POCO_ROOT} ${ENV_POCO_ROOT}
+   ${POCO_BASE} ${ENV_POCO_BASE}
+ )
+@@ -50,7 +50,7 @@ findpkg_framework(POCO)
+ find_path(POCO_INCLUDE_DIR NAMES Poco/Foundation.h HINTS ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES Foundation/include)
+ find_library(POCO_LIBRARY_REL NAMES ${POCO_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+ find_library(POCO_LIBRARY_DBG NAMES ${POCO_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+-make_library_set(POCO_LIBRARY)
++make_library_set(POCO)
+ 
+ findpkg_finish(POCO)
+ 
+@@ -66,7 +66,7 @@ get_debug_names(POCO_Util_LIBRARY_NAMES)
+ find_path(POCO_Util_INCLUDE_DIR NAMES Poco/Util/Util.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES Util/include)
+ find_library(POCO_Util_LIBRARY_REL NAMES ${POCO_Util_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+ find_library(POCO_Util_LIBRARY_DBG NAMES ${POCO_Util_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+-make_library_set(POCO_Util_LIBRARY)
++make_library_set(POCO_Util)
+ findpkg_finish(POCO_Util)
+ 
+ # Look for Poco's Net package
+@@ -76,7 +76,7 @@ get_debug_names(POCO_Net_LIBRARY_NAMES)
+ find_path(POCO_Net_INCLUDE_DIR NAMES Poco/Net/Net.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES Net/include)
+ find_library(POCO_Net_LIBRARY_REL NAMES ${POCO_Net_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+ find_library(POCO_Net_LIBRARY_DBG NAMES ${POCO_Net_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+-make_library_set(POCO_Net_LIBRARY)
++make_library_set(POCO_Net)
+ findpkg_finish(POCO_Net)
+ 
+ # Look for Poco's NetSSL package
+@@ -86,7 +86,7 @@ get_debug_names(POCO_NetSSL_LIBRARY_NAMES)
+ find_path(POCO_NetSSL_INCLUDE_DIR NAMES Poco/Net/NetSSL.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES NetSSL/include)
+ find_library(POCO_NetSSL_LIBRARY_REL NAMES ${POCO_NetSSL_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+ find_library(POCO_NetSSL_LIBRARY_DBG NAMES ${POCO_NetSSL_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+-make_library_set(POCO_NetSSL_LIBRARY)
++make_library_set(POCO_NetSSL)
+ findpkg_finish(POCO_NetSSL)
+ 
+ # Look for Poco's XML package
+@@ -96,6 +96,5 @@ get_debug_names(POCO_XML_LIBRARY_NAMES)
+ find_path(POCO_XML_INCLUDE_DIR NAMES Poco/XML/XML.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES XML/include)
+ find_library(POCO_XML_LIBRARY_REL NAMES ${POCO_XML_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+ find_library(POCO_XML_LIBRARY_DBG NAMES ${POCO_XML_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
+-make_library_set(POCO_XML_LIBRARY)
++make_library_set(POCO_XML)
+ findpkg_finish(POCO_XML)
+-
+diff --git a/CMake/Packages/FindTBB.cmake b/CMake/Packages/FindTBB.cmake
+index 0c48510..7f0c8f6 100644
+--- a/CMake/Packages/FindTBB.cmake
++++ b/CMake/Packages/FindTBB.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  TBB_FOUND - system has TBB
+-#  TBB_INCLUDE_DIRS - the TBB include directories 
++#  TBB_INCLUDE_DIRS - the TBB include directories
+ #  TBB_LIBRARIES - link these to use TBB
+ 
+ include(FindPkgMacros)
+@@ -23,8 +23,8 @@ getenv_path(TBB_ROOT)
+ getenv_path(TBB_BASE)
+ 
+ # construct search paths
+-set(TBB_PREFIX_PATH 
+-  ${TBB_HOME} ${ENV_TBB_HOME} 
++set(TBB_PREFIX_PATH
++  ${TBB_HOME} ${ENV_TBB_HOME}
+   ${TBB_ROOT} ${ENV_TBB_ROOT}
+   ${TBB_BASE} ${ENV_TBB_BASE}
+ )
+@@ -68,11 +68,11 @@ if (WIN32 AND MSVC)
+   endif ()
+   if (MSVC_VERSION EQUAL 1900)
+     set(COMPILER_PREFIX "vc13")
+-  endif ()  
++  endif ()
+   if (MSVC_VERSION EQUAL 1911)
+     set(COMPILER_PREFIX "vc14")
+   endif ()
+-  
++
+   # for each prefix path, add ia32/64\${COMPILER_PREFIX}\lib to the lib search path
+   foreach (dir ${TBB_PREFIX_PATH})
+     if (CMAKE_CL_64)
+@@ -104,7 +104,7 @@ findpkg_framework(TBB)
+ find_path(TBB_INCLUDE_DIR NAMES tbb/tbb.h HINTS ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS})
+ find_library(TBB_LIBRARY_REL NAMES ${TBB_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
+ find_library(TBB_LIBRARY_DBG NAMES ${TBB_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
+-make_library_set(TBB_LIBRARY)
++make_library_set(TBB)
+ 
+ findpkg_finish(TBB)
+ 
+@@ -120,7 +120,7 @@ get_debug_names(TBB_MALLOC_LIBRARY_NAMES)
+ find_path(TBB_MALLOC_INCLUDE_DIR NAMES tbb/tbb.h HINTS ${TBB_INCLUDE_DIR} ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS} )
+ find_library(TBB_MALLOC_LIBRARY_REL NAMES ${TBB_MALLOC_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS} )
+ find_library(TBB_MALLOC_LIBRARY_DBG NAMES ${TBB_MALLOC_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS} )
+-make_library_set(TBB_MALLOC_LIBRARY)
++make_library_set(TBB_MALLOC)
+ findpkg_finish(TBB_MALLOC)
+ 
+ # Look for TBB's malloc proxy package
+@@ -130,5 +130,5 @@ get_debug_names(TBB_MALLOC_PROXY_LIBRARY_NAMES)
+ find_path(TBB_MALLOC_PROXY_INCLUDE_DIR NAMES tbb/tbbmalloc_proxy.h HINTS ${TBB_INCLUDE_DIR} ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS})
+ find_library(TBB_MALLOC_PROXY_LIBRARY_REL NAMES ${TBB_MALLOC_PROXY_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
+ find_library(TBB_MALLOC_PROXY_LIBRARY_DBG NAMES ${TBB_MALLOC_PROXY_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
+-make_library_set(TBB_MALLOC_PROXY_LIBRARY)
++make_library_set(TBB_MALLOC_PROXY)
+ findpkg_finish(TBB_MALLOC_PROXY)
+diff --git a/CMake/Packages/FindZZip.cmake b/CMake/Packages/FindZZip.cmake
+index e97951e..1c7cf00 100644
+--- a/CMake/Packages/FindZZip.cmake
++++ b/CMake/Packages/FindZZip.cmake
+@@ -11,7 +11,7 @@
+ # Once done, this will define
+ #
+ #  ZZip_FOUND - system has ZZip
+-#  ZZip_INCLUDE_DIRS - the ZZip include directories 
++#  ZZip_INCLUDE_DIRS - the ZZip include directories
+ #  ZZip_LIBRARIES - link these to use ZZip
+ 
+ include(FindPkgMacros)
+@@ -39,12 +39,11 @@ use_pkgconfig(ZZip_PKGC zziplib)
+ 
+ findpkg_framework(ZZip)
+ 
+-find_path(ZZip_INCLUDE_DIR NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZip_PKGC_INCLUDE_DIRS})
++find_path(ZZip_INCLUDE_DIRS NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZip_PKGC_INCLUDE_DIRS})
+ 
+ find_library(ZZip_LIBRARY_REL NAMES ${ZZip_LIBRARY_NAMES} HINTS ${ZZip_LIB_SEARCH_PATH} ${ZZip_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
+ find_library(ZZip_LIBRARY_DBG NAMES ${ZZip_LIBRARY_NAMES_DBG} HINTS ${ZZip_LIB_SEARCH_PATH} ${ZZip_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
+ 
+-make_library_set(ZZip_LIBRARY)
++make_library_set(ZZip)
+ 
+ findpkg_finish(ZZip)
+-
+diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
+index 374f84b..dc7066d 100644
+--- a/CMake/Utils/FindPkgMacros.cmake
++++ b/CMake/Utils/FindPkgMacros.cmake
+@@ -79,15 +79,21 @@ endmacro (use_pkgconfig)
+ 
+ # Couple a set of release AND debug libraries (or frameworks)
+ macro(make_library_set PREFIX)
+-  if (${PREFIX}_FWK)
+-    set(${PREFIX} ${${PREFIX}_FWK})
+-  elseif (${PREFIX}_REL AND ${PREFIX}_DBG)
+-    set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})
+-  elseif (${PREFIX}_REL)
+-    set(${PREFIX} ${${PREFIX}_REL})
+-  elseif (${PREFIX}_DBG)
+-    set(${PREFIX} ${${PREFIX}_DBG})
+-  endif ()
++  include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
++  set(PREFIX_LIB "${PREFIX}_LIBRARY")
++  if (${PREFIX_LIB}_FWK)
++    set(${PREFIX_LIB} ${${PREFIX_LIB}_FWK})
++  elseif (${PREFIX_LIB}_REL AND ${PREFIX_LIB}_DBG)
++    set(${PREFIX_LIB}_RELEASE ${${PREFIX_LIB}_REL} CACHE STRING "")
++    set(${PREFIX_LIB}_DEBUG ${${PREFIX_LIB}_DBG} CACHE STRING "")
++    select_library_configurations(${PREFIX})
++  elseif (${PREFIX_LIB}_REL)
++    set(${PREFIX_LIB} ${${PREFIX_LIB}_REL})
++    set(${PREFIX_LIB}_RELEASE ${${PREFIX_LIB}_REL})
++  elseif (${PREFIX_LIB}_DBG)
++    set(${PREFIX_LIB} ${${PREFIX_LIB}_DBG})
++    set(${PREFIX_LIB}_DEBUG ${${PREFIX_LIB}_DBG})
++  endif()
+ endmacro(make_library_set)
+ 
+ # Generate debug names from given release names
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d2819f0..8b54b38 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -142,7 +142,7 @@ if (MSVC)
+ 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
+   endif ()
+ 
+-  if (OGRE_PROJECT_FOLDERS)  
++  if (OGRE_PROJECT_FOLDERS)
+     # Turn on the ability to create folders to organize projects (.vcproj)
+     # It creates "CMakePredefinedTargets" folder by default and adds CMake
+     # defined projects like INSTALL.vcproj and ZERO_CHECK.vcproj
+@@ -274,14 +274,9 @@ elseif(EMSCRIPTEN)
+ elseif (APPLE AND NOT APPLE_IOS)
+ 
+   set(XCODE_ATTRIBUTE_SDKROOT macosx)
+-  if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+     execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+     string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
+-  else()
+-    set(CMAKE_OSX_SYSROOT macosx)
+-  endif()
+ 
+-  # Make sure that the OpenGL render system is selected for non-iOS Apple builds
+   set(OGRE_BUILD_RENDERSYSTEM_GLES2 FALSE)
+ endif ()
+ 
+@@ -310,7 +305,7 @@ include(Dependencies)
+ # Customise what to build
+ option(OGRE_STATIC "Static build" FALSE)
+ option(OGRE_ENABLE_PRECOMPILED_HEADERS "Use precompiled headers to speed up build" TRUE)
+-set(OGRE_RESOURCEMANAGER_STRICT "2" CACHE STRING 
++set(OGRE_RESOURCEMANAGER_STRICT "2" CACHE STRING
+   "Make ResourceManager strict for faster operation. Possible values:
+   0 - OFF search in all groups twice - for case sensitive and insensitive lookup [DEPRECATED]
+   1 - PEDANTIC require an explicit resource group. Case sensitive lookup.
+@@ -352,7 +347,7 @@ cmake_dependent_option(OGRE_BUILD_LIBS_AS_FRAMEWORKS "Build frameworks for libra
+ option(OGRE_BUILD_TESTS "Build the unit tests & PlayPen" FALSE)
+ option(OGRE_CONFIG_DOUBLE "Use doubles instead of floats in Ogre" FALSE)
+ option(OGRE_CONFIG_NODE_INHERIT_TRANSFORM "Tells the node whether it should inherit full transform from it's parent node or derived position, orientation and scale" FALSE)
+-set(OGRE_CONFIG_THREADS "3" CACHE STRING 
++set(OGRE_CONFIG_THREADS "3" CACHE STRING
+ 	"Enable Ogre thread safety support for multithreading. Possible values:
+ 	0 - no thread safety. DefaultWorkQueue is not threaded.
+ 	1 - background resource preparation and loading is thread safe. Threaded DefaultWorkQueue. [DEPRECATED]
+diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
+index bdb303d..e8031d1 100644
+--- a/Components/Overlay/CMakeLists.txt
++++ b/Components/Overlay/CMakeLists.txt
+@@ -13,7 +13,7 @@
+ 
+ # define header and source files for the library
+ file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+-list(APPEND HEADER_FILES 
++list(APPEND HEADER_FILES
+   ${PROJECT_BINARY_DIR}/include/OgreOverlayPrerequisites.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/OgreOverlay.i)
+ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+@@ -21,17 +21,17 @@ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+ # setup target
+ add_library(OgreOverlay ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES} ${PLATFORM_HEADER_FILES} ${PLATFORM_SOURCE_FILES})
+ set_target_properties(OgreOverlay PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
+-target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE "${FREETYPE_LIBRARIES}" ZLIB::ZLIB)
+-target_include_directories(OgreOverlay PUBLIC 
++target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE ${FREETYPE_LIBRARIES} ZLIB::ZLIB)
++target_include_directories(OgreOverlay PUBLIC
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+   $<INSTALL_INTERFACE:include/OGRE/Overlay>
+   PRIVATE ${FREETYPE_INCLUDE_DIRS})
+ 
+-generate_export_header(OgreOverlay 
++generate_export_header(OgreOverlay
+     EXPORT_MACRO_NAME _OgreOverlayExport
+     EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreOverlayPrerequisites.h)
+ 
+-# install 
++# install
+ ogre_config_framework(OgreOverlay)
+ ogre_config_component(OgreOverlay)
+ 
+@@ -40,4 +40,4 @@ install(FILES ${HEADER_FILES}
+ )
+ install(FILES "${PROJECT_SOURCE_DIR}/Media/packs/profiler.zip"
+   DESTINATION "${OGRE_MEDIA_PATH}/packs/"
+-)
+\ No newline at end of file
++)
+diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
+index 6ec4e34..666a736 100644
+--- a/OgreMain/CMakeLists.txt
++++ b/OgreMain/CMakeLists.txt
+@@ -188,21 +188,21 @@ if (WINDOWS_STORE OR WINDOWS_PHONE)
+ 	set_target_properties(OgreMain PROPERTIES VS_WINRT_COMPONENT "true")
+ endif ()
+ 
+-generate_export_header(OgreMain 
++generate_export_header(OgreMain
+     EXPORT_MACRO_NAME _OgreExport
+     NO_EXPORT_MACRO_NAME _OgrePrivate
+     DEPRECATED_MACRO_NAME OGRE_DEPRECATED
+     EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreExports.h)
+ 
+-target_include_directories(OgreMain PUBLIC 
+-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>" 
++target_include_directories(OgreMain PUBLIC
++  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+   "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"
+   $<INSTALL_INTERFACE:include/OGRE>
+   PRIVATE "${OGRE_PROFILING_REMOTERY_PATH}")
+ 
+ # In visual studio 2010 - 64 bit we get this error: "LINK : fatal error LNK1210: exceeded internal ILK size limit; link with /INCREMENTAL:NO"
+ if(WIN32 AND MSVC10 AND CMAKE_CL_64)
+-  set_target_properties(OgreMain PROPERTIES 
++  set_target_properties(OgreMain PROPERTIES
+                         VERSION ${OGRE_SOVERSION}
+                         LINK_FLAGS "/INCREMENTAL:NO"
+                       )
+@@ -211,7 +211,7 @@ else()
+ endif()
+ 
+ if(OGRE_GCC_VERSION VERSION_EQUAL 4.8 OR OGRE_GCC_VERSION VERSION_GREATER 4.8)
+-	if(CMAKE_SYSTEM_NAME STREQUAL "Android") 
++	if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+ 	  list(APPEND LIBRARIES "atomic")
+ 	else()
+ 	  list(APPEND LIBRARIES "-latomic")
+@@ -226,8 +226,6 @@ if (APPLE)
+         LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
+     )
+ 
+-    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
+-  
+     if(OGRE_BUILD_LIBS_AS_FRAMEWORKS)
+       add_custom_command(TARGET OgreMain POST_BUILD
+           COMMAND mkdir ARGS -p ${PROJECT_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
+diff --git a/PlugIns/EXRCodec/CMakeLists.txt b/PlugIns/EXRCodec/CMakeLists.txt
+index e9c936a..a83d793 100644
+--- a/PlugIns/EXRCodec/CMakeLists.txt
++++ b/PlugIns/EXRCodec/CMakeLists.txt
+@@ -13,14 +13,14 @@ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+ 
+ add_library(Codec_EXR ${OGRE_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
+ target_link_libraries(Codec_EXR OgreMain ${OPENEXR_LIBRARIES})
+-target_include_directories(Codec_EXR PUBLIC 
++target_include_directories(Codec_EXR PUBLIC
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+     $<INSTALL_INTERFACE:include/OGRE/Plugins/EXRCodec>)
+-target_include_directories(Codec_EXR SYSTEM PRIVATE  "${OPENEXR_INCLUDE_DIR}/OpenEXR")
++target_include_directories(Codec_EXR SYSTEM PRIVATE  "${OPENEXR_INCLUDE_DIR}")
+ 
+ ogre_config_framework(Codec_EXR)
+ ogre_config_plugin(Codec_EXR)
+-generate_export_header(Codec_EXR 
++generate_export_header(Codec_EXR
+     EXPORT_MACRO_NAME _OgreEXRPluginExport
+     EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreEXRCodecExports.h)
+ install(FILES ${HEADER_FILES} DESTINATION include/OGRE/Plugins/EXRCodec)
+diff --git a/RenderSystems/GL3Plus/CMakeLists.txt b/RenderSystems/GL3Plus/CMakeLists.txt
+index ba55b43..66c2758 100644
+--- a/RenderSystems/GL3Plus/CMakeLists.txt
++++ b/RenderSystems/GL3Plus/CMakeLists.txt
+@@ -21,12 +21,12 @@ set(HEADER_FILES ${HEADER_FILES} ${GLSL_HEADERS})
+ add_definitions(${OGRE_VISIBILITY_FLAGS})
+ 
+ if(OGRE_CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT)
+-  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/OgreGL3PlusStateCacheManager.cpp 
++  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/OgreGL3PlusStateCacheManager.cpp
+     PROPERTIES COMPILE_DEFINITIONS OGRE_ENABLE_STATE_CACHE)
+ endif()
+ add_library(RenderSystem_GL3Plus ${OGRE_LIB_TYPE} ${HEADER_FILES} ${GLSL_SOURCE} ${SOURCE_FILES})
+ target_link_libraries(RenderSystem_GL3Plus OgreMain OgreGLSupport ${OPENGL_gl_LIBRARY} ${CMAKE_DL_LIBS})
+-target_include_directories(RenderSystem_GL3Plus PUBLIC 
++target_include_directories(RenderSystem_GL3Plus PUBLIC
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/GLSL>"
+     $<INSTALL_INTERFACE:include/OGRE/RenderSystems/GL3Plus>
+@@ -44,4 +44,4 @@ ogre_config_plugin(RenderSystem_GL3Plus)
+ 
+ install(FILES ${HEADER_FILES} ${GLSUPPORT_HEADERS} DESTINATION include/OGRE/RenderSystems/GL3Plus)
+ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/GL DESTINATION include/OGRE/RenderSystems/GL3Plus)
+-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/GLSL/ DESTINATION include/OGRE/RenderSystems/GL3Plus)
++install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/GLSL DESTINATION include/OGRE/RenderSystems/GL3Plus)

@@ -1,3 +1,4 @@
 Source: glew
 Version: 2.1.0-4
 Description: The OpenGL Extension Wrangler Library (GLEW) is a cross-platform open-source C/C++ extension loading library.
+Homepage: https://github.com/nigels-com/glew

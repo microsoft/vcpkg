@@ -1,4 +1,5 @@
 Source: kf5plotting
 Version: 5.58.0
+Homepage: https://api.kde.org/frameworks/kplotting/html/index.html
 Description: Lightweight plotting framework
 Build-Depends: ecm, qt5-base
