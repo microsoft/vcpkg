@@ -10,17 +10,11 @@ vcpkg_from_github(
         fix-cmake.patch
 )
 
-macro(check_feature _feature_name _var)
-    if("${_feature_name}" IN_LIST FEATURES)
-        set(${_var} ON)
-    else()
-        set(${_var} OFF)
-    endif()
-endmacro()
-
-check_feature(asm MI_SEE_ASM)
-check_feature(secure MI_SECURE)
-check_feature(override MI_OVERRIDE)
+vcpkg_check_features(
+    asm MI_SEE_ASM
+    secure MI_SECURE
+    override MI_OVERRIDE
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
