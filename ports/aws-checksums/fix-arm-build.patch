@@ -1,0 +1,77 @@
+diff --git a/source/arm/crc32c_arm.c b/source/arm/crc32c_arm.c
+new file mode 100644
+index 0000000..7ed1d8c
+--- /dev/null
++++ b/source/arm/crc32c_arm.c
+@@ -0,0 +1,25 @@
++/*
++ * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License").
++ * You may not use this file except in compliance with the License.
++ * A copy of the License is located at
++ *
++ *  http://aws.amazon.com/apache2.0
++ *
++ * or in the "license" file accompanying this file. This file is distributed
++ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
++ * express or implied. See the License for the specific language governing
++ * permissions and limitations under the License.
++ */
++
++/* for the moment, fallback to SW on ARM until MSFT adds intrensics for ARM v8.1+ */
++#if (defined(_M_ARM) || defined(__arm__) || defined(__ARM_ARCH_ISA_A64)) && !(defined(__GNUC__) && defined(DEBUG_BUILD))
++
++#    include <aws/checksums/private/crc_priv.h>
++
++uint32_t aws_checksums_crc32c_hw(const uint8_t *data, int length, uint32_t previousCrc32) {
++    aws_checksums_crc32c_sw(data, length, previousCrc32);
++}
++
++#endif
+\ No newline at end of file
+diff --git a/source/visualc/visualc_crc32c_sse42.c b/source/visualc/visualc_crc32c_sse42.c
+index 05ad5cf..bc80771 100644
+--- a/source/visualc/visualc_crc32c_sse42.c
++++ b/source/visualc/visualc_crc32c_sse42.c
+@@ -16,13 +16,15 @@
+ #include <aws/checksums/private/crc_priv.h>
+ #include <intrin.h>
+ 
+-#if defined(_M_X64)
++#if defined(_M_X64) || defined(_M_IX86)
++
++#    if defined(_M_X64)
+ typedef uint64_t *slice_ptr_type;
+ typedef uint64_t slice_ptr_int_type;
+-#else
++#    else
+ typedef uint32_t *slice_ptr_type;
+ typedef uint32_t slice_ptr_int_type;
+-#endif
++#    endif
+ 
+ /**
+  * This implements crc32c via the intel sse 4.2 instructions.
+@@ -62,11 +64,11 @@ uint32_t aws_checksums_crc32c_hw(const uint8_t *data, int length, uint32_t previ
+     uint32_t remainder = length_to_process % sizeof(temp);
+ 
+     while (slices--) {
+-#if defined(_M_X64)
++#    if defined(_M_X64)
+         crc = (uint32_t)_mm_crc32_u64(crc, *temp++);
+-#else
++#    else
+         crc = _mm_crc32_u32(crc, *temp++);
+-#endif
++#    endif
+     }
+ 
+     /* process the remaining parts that can't be done on the slice size. */
+@@ -78,3 +80,5 @@ uint32_t aws_checksums_crc32c_hw(const uint8_t *data, int length, uint32_t previ
+ 
+     return ~crc;
+ }
++
++#endif /* x64 || x86 */
+\ No newline at end of file
