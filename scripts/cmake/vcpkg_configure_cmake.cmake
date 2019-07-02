@@ -251,11 +251,9 @@ function(vcpkg_configure_cmake)
 
     if(NINJA_HOST AND CMAKE_HOST_WIN32 AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
-        if(NOT EXISTS NINJA)
-            vcpkg_find_acquire_program(NINJA)
-            get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
-        endif()
+        vcpkg_find_acquire_program(NINJA)
+        get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
 
         #parallelize the configure step
         set(_contents
@@ -289,25 +287,25 @@ function(vcpkg_configure_cmake)
             LOGNAME config-${TARGET_TRIPLET}
         )
     else()
-        macro(_configure_target_triplet build_type)
-            message(STATUS "Configuring ${TARGET_TRIPLET}-${build_type}")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${build_type})
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
             vcpkg_execute_required_process(
-                COMMAND ${${build_type}_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${build_type}
-                LOGNAME config-${TARGET_TRIPLET}-${build_type}
+                COMMAND ${dbg_command}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+                LOGNAME config-${TARGET_TRIPLET}-dbg
             )
-        endmacro()
-
-        if(NOT DEFINED VCPKG_BUILD_TYPE)
-            _configure_target_triplet("dbg")
-            _configure_target_triplet("rel")
-        elseif(VCPKG_BUILD_TYPE STREQUAL "debug")
-            _configure_target_triplet("dbg")
-        elseif(VCPKG_BUILD_TYPE STREQUAL "release")
-            _configure_target_triplet("rel")
         endif()
 
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+            vcpkg_execute_required_process(
+                COMMAND ${rel_command}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+                LOGNAME config-${TARGET_TRIPLET}-rel
+            )
+        endif()
     endif()
 
     set(_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
