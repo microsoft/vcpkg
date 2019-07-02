@@ -30,6 +30,16 @@ namespace vcpkg
     std::string to_string(const Dependency& dep);
 
     /// <summary>
+    /// Port version does not have packaging suffix, 1.2.3-1 -> 1.2.3
+    /// </summary>
+    std::string to_port_version(std::string version);
+
+    /// <summary>
+    /// Cmake version has up to 4 components and has only digits in each component 1.2.3a -> 1.2.3
+    /// </summary>
+    std::string to_cmake_version(std::string version);
+
+    /// <summary>
     /// Port metadata of additional feature in a package (part of CONTROL file)
     /// </summary>
     struct FeatureParagraph

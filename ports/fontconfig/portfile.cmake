@@ -1,7 +1,7 @@
 
 include(vcpkg_common_functions)
 
-set(FONTCONFIG_VERSION 2.12.4)
+set(FONTCONFIG_VERSION ${PORT_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.gz"
     FILENAME "fontconfig-${FONTCONFIG_VERSION}.tar.gz"
@@ -49,3 +49,4 @@ file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fontc
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/fontconfig/COPYING ${CURRENT_PACKAGES_DIR}/share/fontconfig/copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME unofficial-fontconfig)
+vcpkg_pkgconfig(REQUIRES expat freetype2)

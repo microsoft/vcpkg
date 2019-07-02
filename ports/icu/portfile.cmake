@@ -223,3 +223,5 @@ vcpkg_copy_pdbs()
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)
+vcpkg_pkgconfig(NAME icu-uc COMMON -licuuc -licudata -lpthread -ldl -lm)
+vcpkg_pkgconfig(NAME icu-i18n COMMON -licui18n REQUIRES icu-uc)

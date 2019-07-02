@@ -405,6 +405,12 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
             {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+            {"PORT_FULL_VERSION", config.scf.core_paragraph->version},
+            {"PORT_VERSION", to_port_version(config.scf.core_paragraph->version)},
+            {"PORT_CMAKE_VERSION", to_cmake_version(config.scf.core_paragraph->version)},
+            {"PORT_DESCRIPTION", config.scf.core_paragraph->description},
+            {"PORT_HOMEPAGE", config.scf.core_paragraph->homepage},
+            {"PORT_DEPENDENCIES", Strings::join(";", filter_dependencies(config.scf.core_paragraph->depends, triplet))},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())

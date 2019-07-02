@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 2.0.2
+    REF ${PORT_VERSION}
     SHA512 4dcde37ba014500cee69f7d49b359112655c177cf2c0003b4693bfe25f8a55147e9a87f58d31b4fc952a7faed6fecd5087220fd879110ade326922991f11c423
     HEAD_REF master
     PATCHES
@@ -86,3 +86,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/LICENSE.md ${CURRENT_PAC
 vcpkg_copy_pdbs()
 
 vcpkg_test_cmake(PACKAGE_NAME JPEG MODULE)
+vcpkg_pkgconfig(NAME libjpeg COMMON -ljpeg)
+vcpkg_pkgconfig(NAME libturbojpeg COMMON -lturbojpeg)

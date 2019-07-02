@@ -245,6 +245,32 @@ namespace vcpkg
 
     std::string to_string(const Dependency& dep) { return dep.name(); }
 
+    std::string to_port_version(std::string version)
+    {
+      auto pos = version.find('-');
+      if (pos != version.npos) { version.erase(pos); }
+      return version;
+    }
+
+    std::string to_cmake_version(std::string version)
+    {
+        auto versions = Strings::split(version, ".");
+        if (versions.size() > 4) { versions.erase(versions.begin() + 4, versions.end()); }
+        version.clear();
+        for (auto& v : versions)
+        {
+            size_t i = 0;
+            for (; i < v.size(); ++i)
+            {
+                if (v[i] < '0' || v[i] > '9') { break; }
+            }
+            if (i == 0) { return version; }
+            if (!version.empty()) { version.append("."); }
+            version.append(v.begin(), v.begin() + i);
+        }
+        return version;
+    }
+
     ExpectedT<Supports, std::vector<std::string>> Supports::parse(const std::vector<std::string>& strs)
     {
         Supports ret;

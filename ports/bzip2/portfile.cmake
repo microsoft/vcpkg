@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(BZIP2_VERSION 1.0.6)
+set(BZIP2_VERSION ${PORT_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/past-due/bzip2-mirror/releases/download/v${BZIP2_VERSION}/bzip2-${BZIP2_VERSION}.tar.gz"
     FILENAME "bzip2-${BZIP2_VERSION}.tar.gz"
@@ -40,3 +40,4 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/bzip2/LICENSE ${CURRENT_PACKAGES_DIR}/
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_test_cmake(PACKAGE_NAME BZip2 MODULE)
+vcpkg_pkgconfig(RELEASE -lbz2 DEBUG -lbz2d)

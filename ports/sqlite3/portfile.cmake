@@ -44,3 +44,4 @@ configure_file(
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
 vcpkg_copy_pdbs()
+vcpkg_pkgconfig(COMMON -lsqlite3 -ldl -lpthread)
