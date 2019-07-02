@@ -361,9 +361,15 @@ namespace vcpkg::Build
     {
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = spec.triplet();
+        const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
-        if (!Strings::starts_with(Strings::ascii_to_lowercase(config.port_dir.u8string()),
-                                  Strings::ascii_to_lowercase(paths.ports.u8string())))
+        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, 
+                                                         paths.triplets.u8string()))
+        {
+            System::printf("-- Loading triplet configuration from: %s\n", triplet_file_path);
+        }
+        if (!Strings::case_insensitive_ascii_starts_with(config.port_dir.u8string(),
+                                                         paths.ports.u8string()))
         {
             System::printf("-- Installing port from location: %s\n", config.port_dir.u8string());
         }
@@ -390,6 +396,7 @@ namespace vcpkg::Build
             {"PORT", config.scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", spec.triplet().canonical_name()},
+            {"TARGET_TRIPLET_FILE", triplet_file_path},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
@@ -587,7 +594,7 @@ namespace vcpkg::Build
         return nullopt;
     }
 
-    static void decompress_archive(const VcpkgPaths& paths, const PackageSpec& spec, const fs::path& archive_path)
+    static int decompress_archive(const VcpkgPaths& paths, const PackageSpec& spec, const fs::path& archive_path)
     {
         auto& fs = paths.get_filesystem();
 
@@ -601,12 +608,13 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_clean(Strings::format(
+        int result = System::cmd_execute_clean(Strings::format(
             R"("%s" x "%s" -o"%s" -y >nul)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string()));
 #else
-        System::cmd_execute_clean(
+        int result = System::cmd_execute_clean(
             Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
 #endif
+        return result;
     }
 
     // Compress the source directory into the destination file.
@@ -692,11 +700,16 @@ namespace vcpkg::Build
             {
                 System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
 
-                decompress_archive(paths, spec, archive_path);
+                auto archive_result = decompress_archive(paths, spec, archive_path);
+
+                if (archive_result != 0)
+                {
+                    System::print2("Failed to decompress archive package\n");
+                    return BuildResult::BUILD_FAILED;
+                }
 
                 auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
-                std::unique_ptr<BinaryControlFile> bcf =
-                    std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
+                auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
                 return {BuildResult::SUCCEEDED, std::move(bcf)};
             }
 
@@ -890,7 +903,7 @@ namespace vcpkg::Build
 
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
-        const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
+        const fs::path triplet_file_path = paths.get_triplet_file_path(triplet);
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
                                                              ports_cmake_script_path,
@@ -993,6 +1006,12 @@ namespace vcpkg::Build
             {
                 hash += "-";
                 hash += Hash::get_file_hash(fs, *p, "SHA1");
+            }
+            else if (pre_build_info.cmake_system_name.empty() || 
+                     pre_build_info.cmake_system_name == "WindowsStore")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "windows.cmake", "SHA1");
             }
             else if (pre_build_info.cmake_system_name == "Linux")
             {

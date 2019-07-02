@@ -9,6 +9,10 @@ vcpkg_from_github(
     PATCHES "cmake_build.patch"
 )
 
+# Force the use of the vcpkg installed versions
+file(REMOVE_RECURSE ${SOURCE_PATH}/ext/json11)
+file(REMOVE_RECURSE ${SOURCE_PATH}/ext/catch)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
 
-set(FT_VERSION 2.9.1)
+set(FT_VERSION 2.10.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.bz2"
     FILENAME "freetype-${FT_VERSION}.tar.bz2"
-    SHA512 856766e1f3f4c7dc8afb2b5ee991138c8b642c6a6e5e007cd2bc04ae58bde827f082557cf41bf541d97e8485f7fd064d10390d1ee597f19d1daed6c152e27708
+    SHA512 dfad66f419ea9577f09932e0730c0c887bdcbdbc8152fa7477a0c39d69a5b68476761deed6864ddcc5cf18d100a7a3f728049768e24afcb04b1a74b25b6acf7e
 )
 
 if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
@@ -16,7 +16,6 @@ if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
         0001-Fix-install-command.patch
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
-        0004-Fix-DLL-install.patch
     )
 else()
     vcpkg_extract_source_archive_ex(
@@ -27,7 +26,6 @@ else()
         0001-Fix-install-command.patch
         0002-Add-CONFIG_INSTALL_PATH-option.patch
         0003-Fix-UWP.patch
-        0004-Fix-DLL-install.patch
         0005-Fix-DLL-EXPORTS.patch
     )
 endif()
