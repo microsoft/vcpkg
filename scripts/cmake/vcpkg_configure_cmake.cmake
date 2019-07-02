@@ -174,7 +174,13 @@ function(vcpkg_configure_cmake)
             "Invalid setting for VCPKG_LIBRARY_LINKAGE: \"${VCPKG_LIBRARY_LINKAGE}\". "
             "It must be \"static\" or \"dynamic\"")
     endif()
-
+    
+    macro(check_both_vars_are_set var1 var2)
+        if((NOT DEFINED ${var1} OR NOT DEFINED ${var2}) AND (DEFINED ${var1} OR DEFINED ${var2}))
+            message(FATAL_ERROR "Both ${var1} and ${var2} must be set.")
+        endif()
+    endmacro()
+    
     check_both_vars_are_set(VCPKG_CXX_FLAGS_DEBUG VCPKG_C_FLAGS_DEBUG)
     check_both_vars_are_set(VCPKG_CXX_FLAGS_RELEASE VCPKG_C_FLAGS_RELEASE)
     check_both_vars_are_set(VCPKG_CXX_FLAGS VCPKG_C_FLAGS)
