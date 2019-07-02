@@ -23,13 +23,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     vcpkg_install_cmake()
 
     # Settings for TBBConfigInternal.cmake.in
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(TBB_LIB_EXT a)
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        set(TBB_LIB_EXT dylib)
-    else()
-        set(TBB_LIB_EXT so.2)
-    endif()
     set(TBB_LIB_PREFIX lib)
 else()
     if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -47,7 +40,6 @@ else()
         DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
     )
     # Settings for TBBConfigInternal.cmake.in
-    set(TBB_LIB_EXT lib)
     set(TBB_LIB_PREFIX)
 endif()
 
@@ -84,14 +76,14 @@ string(REPLACE
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
-    "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
+    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}"
+    "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}"
     _contents
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
-    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
+    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}"
+    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}"
     _contents
     "${_contents}"
 )
