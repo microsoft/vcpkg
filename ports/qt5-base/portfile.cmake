@@ -76,12 +76,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             LIBPNG_LIBS="-llibpng16"
             PSQL_LIBS="-llibpq"
             PCRE2_LIBS="-lpcre2-16"
+            HARFBUZZ_LIBS="-lharfbuzz"
         OPTIONS_DEBUG
             LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
             PCRE2_LIBS="-lpcre2-16d"
+            HARFBUZZ_LIBS="-lharfbuzz"
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
