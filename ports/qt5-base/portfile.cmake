@@ -27,7 +27,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
+foreach(DEPENDENCY zlib harfbuzzng libjpeg libpng double-conversion sqlite)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
@@ -44,7 +44,7 @@ set(CORE_OPTIONS
     -system-zlib
     -system-libjpeg
     -system-libpng
-    -system-freetype
+    -qt-freetype
     -system-pcre
     -system-doubleconversion
     -system-sqlite
@@ -76,14 +76,12 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             LIBPNG_LIBS="-llibpng16"
             PSQL_LIBS="-llibpq"
             PCRE2_LIBS="-lpcre2-16"
-            FREETYPE_LIBS="-lfreetype"
         OPTIONS_DEBUG
             LIBJPEG_LIBS="-ljpegd"
             ZLIB_LIBS="-lzlibd"
             LIBPNG_LIBS="-llibpng16d"
             PSQL_LIBS="-llibpqd"
             PCRE2_LIBS="-lpcre2-16d"
-            FREETYPE_LIBS="-lfreetyped"
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -98,7 +96,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
             "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
         OPTIONS_DEBUG
@@ -107,7 +104,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
             "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
     )
@@ -124,7 +120,6 @@ configure_qt(
         "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
         "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
         "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
         "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
         "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
         "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/lib/libharfbuzz.a -framework ApplicationServices"
@@ -134,7 +129,6 @@ configure_qt(
         "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
         "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
         "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
         "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
         "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
         "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libharfbuzz.a -framework ApplicationServices"
@@ -199,14 +193,16 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl)
+        # qt5-declarative need this lib in path lib
+        #file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
+        #file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl)
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
         file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
+        # qt5-declarative need this lib in path debug/lib
+        #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
+        #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
     endif()
 
     #---------------------------------------------------------------------------
