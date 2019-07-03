@@ -16,15 +16,6 @@ vcpkg_check_features(
     override MI_OVERRIDE
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    if(BUILD_STATIC AND MI_OVERRIDE)
-        message(WARNING "It is only possible to override malloc on Windows when building as a DLL.")
-        set(MI_OVERRIDE OFF)
-    endif()
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -67,7 +58,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/lib/${lib_install_dir}
 )
 
-if(NOT BUILD_STATIC)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/include/mimalloc.h
         "!defined(MI_SHARED_LIB)"
