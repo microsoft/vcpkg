@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/zookeeper/zookeeper-3.5.5/apache-zookeeper-3.5.5.tar.gz"
     FILENAME "zookeeper-3.5.5.tar.gz"
@@ -9,7 +11,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE} 
-    PATCHES "cmake_build.patch"
+    PATCHES
+        "cmake_build.patch"
+        "crt-warning.patch"
 )
 
 set(SOURCE_PATH ${SOURCE_PATH}/zookeeper-client/zookeeper-client-c)
