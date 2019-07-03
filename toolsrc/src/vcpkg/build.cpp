@@ -692,6 +692,8 @@ namespace vcpkg::Build
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
     {
+        static PartialTripletCache partial_triplet_cache;
+
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
@@ -704,7 +706,9 @@ namespace vcpkg::Build
 
         // Find all features that aren't installed. This mutates required_fspecs.
         Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
-            return status_db.is_installed(fspec) || fspec.name() == name;
+            return status_db.is_installed(fspec) ||
+                   fspec.name() == name ||
+                   Util::Sets::contains(partial_triplet_cache, fspec);
         });
 
         if (!required_fspecs.empty())
@@ -722,9 +726,12 @@ namespace vcpkg::Build
         {
             if (pspec == spec) continue;
             const auto status_it = status_db.find_installed(pspec);
-            Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
-            dependency_abis.emplace_back(
-                AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
+
+            if (status_it != status_db.end())
+            {
+                dependency_abis.emplace_back(
+                        AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
+            }
         }
 
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
@@ -937,7 +944,134 @@ namespace vcpkg::Build
         return inner_create_buildinfo(*pghs.get());
     }
 
-    PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet)
+    std::string::const_iterator find_quote(const std::string::const_iterator& start,
+                                           const std::string::const_iterator& end)
+    {
+        bool is_escape_slash = false;
+
+        std::string::const_iterator ret = start;
+        for (std::string::const_iterator ret = start;
+             ret != end;
+             ret++)
+        {
+            switch (*ret)
+            {
+            case '\\' : is_escape_slash = !is_escape_slash; break;
+            case '\"' : if (!is_escape_slash) return ret;
+            default   : is_escape_slash = false;
+            }
+        }
+
+        return ret;
+    }
+
+    std::pair<std::string::const_iterator, std::string::const_iterator>
+        find_first_token(const std::string::const_iterator& start,
+                         const std::string::const_iterator& end)
+    {
+        std::pair<std::string::const_iterator,
+                  std::string::const_iterator> ret;
+
+        auto first_quote = find_quote(start, end);
+        if (first_quote != end)
+        {
+            ret.first = std::next(first_quote);
+            ret.second = find_quote(ret.first, end);
+        }
+        else
+        {
+            ret.first = end;
+            ret.second = end;
+        }
+
+        return ret;
+    }
+
+    PartialTripletFields parse_partial_triplet(const std::string& fields)
+    {
+        PartialTripletFields ret;
+
+        int line_num = 0;
+        for (const std::string& line : Strings::split(fields, "\n"))
+        {
+            line_num++;
+            
+            if (line.empty()) continue;
+
+            auto var_name = find_first_token(line.cbegin(), line.cend());
+
+            if (var_name.first == line.cend() ||
+                var_name.second == line.cend())
+            {
+                Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        "Failed to find the variable name of partial triplet on line: " +
+                        std::to_string(line_num));
+            }
+
+            auto value = find_first_token(std::next(var_name.second), line.cend());
+
+            if (value.first == line.cend() ||
+                value.second == line.cend())
+            {
+                Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        "Failed to find variable value of partial triplet on line: " +
+                        std::to_string(line_num));
+            }
+
+            ret.emplace(var_name.first, var_name.second,
+                        value.first, value.second);
+        }
+
+        return ret;
+    }
+
+    Expected<PartialTripletFields> get_partial_triplet_fields(const Files::Filesystem& fs,
+                                                              const fs::path& filepath)
+    {
+        const Expected<std::string> contents = fs.read_contents(filepath);
+        if (auto vars = contents.get())
+        {
+            return parse_partial_triplet(*vars);
+        }
+
+        return contents.error();
+    }
+
+    Expected<PartialTriplet> PartialTriplet::create(const VcpkgPaths& paths,
+                                                    const std::string& name)
+    {
+        fs::path partial_path = paths.buildsystems / name / "partial_triplet.tmp";
+        auto maybe_partial_fields = get_partial_triplet_fields(paths.get_filesystem(),
+                                                               partial_path);
+
+        if (maybe_partial_fields)
+        {
+            PartialTripletFields& fields = *maybe_partial_fields.get();
+            PartialTriplet partial;
+
+            auto partial_hash_itr = fields.find("VCPKG_PARTIAL_HASH");
+            if (partial_hash_itr == fields.end())
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                        "Partial triplets must provide a VCPKG_PARTIAL_HASH which goes into the abi calculation");
+            }
+
+            partial.abi = std::move(partial_hash_itr->second);
+            fields.erase(partial_hash_itr);
+
+            partial.fields = std::move(fields);
+
+            return partial;
+        }
+
+        return maybe_partial_fields.error();
+    }
+
+    PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths,
+                                                 const Triplet& triplet,
+                                                 const PartialTripletCache& cache)
     {
         static constexpr CStringView FLAG_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
 

@@ -9,6 +9,7 @@
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/util.h>
 
 #include <array>
 #include <map>
@@ -117,6 +118,61 @@ namespace vcpkg::Build
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
     std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
+    typedef std::unordered_map<std::string, std::string> PartialTripletFields;
+
+    struct PartialTriplet
+    {
+        static Expected<PartialTriplet> create(const VcpkgPaths& paths,
+                                               const std::string& name);
+
+        std::string abi;
+        PartialTripletFields fields;
+    };
+
+    struct name_hash
+    {
+        std::size_t operator()(FullPackageSpec const& fps) const
+        {
+            size_t hash = 17;
+            hash = hash * 31 + std::hash<std::string>()(fps.package_spec.name());
+            return hash;
+        }
+    };
+
+    struct contains_equals
+    {
+        bool operator()(const FullPackageSpec& left,
+                        const FullPackageSpec& right)
+        {
+            if (left.package_spec.name() == right.package_spec.name())
+            {
+                if (left.features.size() < right.features.size())
+                {
+                    return std::all_of(left.features.cbegin(),
+                                       left.features.cend(),
+                                       [&](const std::string& feature)
+                                       {
+                                           return Util::Sets::contains(right, feature);
+                                       });
+                }
+                if (left.features.size() >= right.features.size())
+                {
+                    return std::all_of(right.features.cbegin(),
+                                       right.features.cend(),
+                                       [&](const std::string& feature)
+                                       {
+                                           return Util::Sets::contains(left, feature);
+                                       });
+                }
+            }
+
+            return false;
+        }
+    };
+
+    typedef std::unordered_map<FullPackageSpec, PartialTriplet, name_hash, contains_equals>
+        PartialTripletCache;
+
     /// <summary>
     /// Settings from the triplet file which impact the build environment and post-build checks
     /// </summary>
@@ -125,7 +181,9 @@ namespace vcpkg::Build
         /// <summary>
         /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
         /// </summary>
-        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
+        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
+                                              const Triplet& triplet,
+                                              const PartialTripletCache& cache);
 
         std::string triplet_abi_tag;
         std::string target_architecture;

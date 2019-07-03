@@ -100,37 +100,31 @@ namespace vcpkg
         }
     }
 
-    static SourceParagraph::CONTROL_TYPE type_from_string(const std::string& in)
+    static SourceParagraph::TYPE type_from_string(const std::string& in)
     {
         if (Strings::equals(in, "port") || Strings::equals(in, ""))
         {
-            return SourceParagraph::CONTROL_TYPE::PORT;
+            return SourceParagraph::PORT;
         }
 
-        if (Strings::equals(in, "tool"))
+        if (Strings::equals(in, "sys-tool"))
         {
-            return SourceParagraph::CONTROL_TYPE::TOOL;
-        }
-
-        if (Strings::equals(in, "alias"))
-        {
-            return SourceParagraph::CONTROL_TYPE::ALIAS;
+            return SourceParagraph::SYS_TOOL;
         }
 
         System::print2(
                 in, " is not a valid control file type. Valid types are:",
-                "\n    port\n    tool\n    alias");
+                "\n    port\n    sys-tool");
 
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    static std::string string_from_type(const SourceParagraph::CONTROL_TYPE& in)
+    static std::string string_from_type(const SourceParagraph::TYPE& in)
     {
         switch (in)
         {
-        case SourceParagraph::CONTROL_TYPE::PORT : return "port";
-        case SourceParagraph::CONTROL_TYPE::TOOL : return "tool";
-        case SourceParagraph::CONTROL_TYPE::ALIAS : return "alias";
+        case SourceParagraph::PORT : return "port";
+        case SourceParagraph::SYS_TOOL : return "sys-tool";
         default : Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid CONTROL_TYPE value.");
         }
     }

@@ -100,6 +100,12 @@ namespace vcpkg
     ///
     struct FullPackageSpec
     {
+        FullPackageSpec() = default;
+        FullPackageSpec(const FeatureSpec& fspec)
+            : package_spec(fspec.spec())
+            , features({fspec.name()})
+        {}
+
         PackageSpec package_spec;
         std::vector<std::string> features;
 
@@ -144,5 +150,33 @@ namespace std
     struct equal_to<vcpkg::PackageSpec>
     {
         bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const { return left == right; }
+    };
+
+    template<>
+    struct hash<vcpkg::FullPackageSpec>
+    {
+        size_t operator()(const vcpkg::FullPackageSpec& value) const
+        {
+            size_t hash = 17;
+            hash = hash * 31 + std::hash<vcpkg::PackageSpec>()(value.package_spec);
+
+            for (const std::string& feature : value.features)
+            {
+                hash = hash * 31 + std::hash<std::string>()(feature);
+            }
+
+            return hash;
+        }
+    };
+
+    template<>
+    struct equal_to<vcpkg::FullPackageSpec>
+    {
+        size_t operator()(const vcpkg::FullPackageSpec& left,
+                          const vcpkg::FullPackageSpec& right) const
+        {
+            return left.package_spec == right.package_spec &&
+                   left.features == right.features;
+        }
     };
 }
