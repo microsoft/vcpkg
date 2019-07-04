@@ -206,14 +206,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
         #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
         #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
     endif()
-
-    #---------------------------------------------------------------------------
-    # Qt5Bootstrap: only used to bootstrap qmake dependencies
-    #---------------------------------------------------------------------------
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-    endif()
     #---------------------------------------------------------------------------
 endif()
 
