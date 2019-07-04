@@ -1,6 +1,6 @@
 ## # vcpkg_pkgconfig
 ##
-## Create pkgconfig files.
+## Create pkgconfig files. Function does nothing on windows.
 ##
 ## ## Usage
 ## ```cmake
@@ -46,6 +46,9 @@
 ## If dependencies are not specified, port dependencies are used.
 ##
 function(vcpkg_pkgconfig)
+    if(CMAKE_HOST_WIN32)
+        return()
+    endif()
     cmake_parse_arguments(_pc "REMOVE" "NAME" "COMMON;RELEASE;DEBUG;REQUIRES;REQUIRES_RELEASE;REQUIRES_DEBUG" ${ARGN})
     set(PORT_LIBS_RELEASE ${_pc_COMMON} ${_pc_RELEASE})
     set(PORT_LIBS_DEBUG ${_pc_COMMON} ${_pc_DEBUG})

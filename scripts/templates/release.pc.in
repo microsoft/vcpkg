@@ -8,7 +8,5 @@ URL: @PORT_HOMEPAGE@
 Description: @PORT_DESCRIPTION@
 Version: @PORT_VERSION@
 Requires: @PORT_REQUIRES_RELEASE@
-Requires.private:
 Libs: -L${libdir} @PORT_LIBS_RELEASE@
-Libs.private:
 Cflags: -I${includedir}
