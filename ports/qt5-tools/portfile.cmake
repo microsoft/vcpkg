@@ -5,6 +5,12 @@ include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmak
 # Copy qt5-declarative tools and library
 # This is a temporary workaround and hope to fix and remove it after the version update.
 if (VCPKG_TARGET_IS_WINDOWS)
+    if (EXISTS ${CURRENT_INSTALLED_DIR}/tools/qt5/Qt5Bootstrap.lib)
+        file(COPY ${CURRENT_INSTALLED_DIR}/tools/qt5/Qt5Bootstrap.lib DESTINATION ${CURRENT_INSTALLED_DIR}/lib/qt5/)
+        file(COPY ${CURRENT_INSTALLED_DIR}/tools/qt5/Qt5Bootstrap.prl DESTINATION ${CURRENT_INSTALLED_DIR}/lib/qt5/)
+        file(COPY ${CURRENT_INSTALLED_DIR}/tools/qt5/Qt5Bootstrap.lib DESTINATION ${CURRENT_INSTALLED_DIR}/debug/lib/qt5/)
+        file(COPY ${CURRENT_INSTALLED_DIR}/tools/qt5/Qt5Bootstrap.prl DESTINATION ${CURRENT_INSTALLED_DIR}/debug/lib/qt5/)
+    endif()
     if (EXISTS ${CURRENT_INSTALLED_DIR}/debug/tools/qt5-declarative/qmlimportscanner.exe)
         file(COPY ${CURRENT_INSTALLED_DIR}/debug/tools/qt5-declarative/qmlimportscanner.exe DESTINATION ${CURRENT_INSTALLED_DIR}/debug/tools/qt5/)
     endif()
