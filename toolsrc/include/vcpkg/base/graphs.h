@@ -2,10 +2,11 @@
 
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/span.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
 {
@@ -43,9 +44,9 @@ namespace vcpkg::Graphs
         void shuffle(Container& c, Randomizer* r)
         {
             if (!r) return;
-            for (int i = static_cast<int>(c.size()); i > 1; --i)
+            for (auto i = c.size(); i > 1; --i)
             {
-                auto j = r->random(i);
+                auto j = r->random(static_cast<int>(i));
                 if (j != i - 1)
                 {
                     std::swap(c[i - 1], c[j]);
@@ -66,12 +67,12 @@ namespace vcpkg::Graphs
                 case ExplorationStatus::FULLY_EXPLORED: return;
                 case ExplorationStatus::PARTIALLY_EXPLORED:
                 {
-                    System::println("Cycle detected within graph at %s:", f.to_string(vertex));
+                    System::print2("Cycle detected within graph at ", f.to_string(vertex), ":\n");
                     for (auto&& node : exploration_status)
                     {
                         if (node.second == ExplorationStatus::PARTIALLY_EXPLORED)
                         {
-                            System::println("    %s", f.to_string(node.first));
+                            System::print2("    ", f.to_string(node.first), '\n');
                         }
                     }
                     Checks::exit_fail(VCPKG_LINE_INFO);

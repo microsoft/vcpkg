@@ -4,8 +4,6 @@ project(libidn2 C)
 
 find_package(unofficial-iconv REQUIRED)
 
-set(CMAKE_DEBUG_POSTFIX "d")
-
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)

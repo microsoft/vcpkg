@@ -1,10 +1,6 @@
-# vcpkg portfile.cmake for pdal-c, the C API for PDAL
-
 include(vcpkg_common_functions)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building will not support load data through plugins.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH

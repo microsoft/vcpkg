@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -77,7 +78,7 @@ namespace vcpkg::Commands::Fetch
 
         const std::string tool = args.command_arguments[0];
         const fs::path tool_path = paths.get_tool_exe(tool);
-        System::println(tool_path.u8string());
+        System::print2(tool_path.u8string(), '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
@@ -100,7 +101,7 @@ namespace vcpkg::Commands::Hash
         const fs::path file_to_hash = args.command_arguments[0];
         const std::string algorithm = args.command_arguments.size() == 2 ? args.command_arguments[1] : "SHA512";
         const std::string hash = vcpkg::Hash::get_file_hash(paths.get_filesystem(), file_to_hash, algorithm);
-        System::println(hash);
+        System::print2(hash, '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

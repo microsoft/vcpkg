@@ -1,14 +1,21 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-    message("Static building not supported yet")
-endif()
+include(vcpkg_common_functions)
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "This portfile only supports UWP")
 endif()
 
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
+endif()
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(UWP_PLATFORM  "arm")
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(UWP_PLATFORM  "arm64")
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(UWP_PLATFORM  "x64")
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -17,25 +24,19 @@ else ()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
-include(vcpkg_common_functions)
-
-
 vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/openssl/archive/OpenSSL_1_0_2q_WinRT.zip"
-    FILENAME "openssl-microsoft-1.0.2q_WinRT.zip"
-    SHA512 828ddeb10b7d04155df64cb38f3d8b8109ff01494fed7f6c1063673e45414c1c309379e8bbe72478bd0fbae649d6749877c20b1b4a91db136a0853745f4da6b6
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES 
+    REPO Microsoft/openssl
+    REF OpenSSL_1_0_2r_WinRT
+    SHA512 3045693fca4b042b69675f6164d8cc82106582cf31081d65a0adbd528f04e77fa48b3761f3be7bdf8ab962a093b28fec0ae6d7da02058f2b049f79b784c39c2e
+    HEAD_REF master
+    PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-configure-unicode.patch
 )

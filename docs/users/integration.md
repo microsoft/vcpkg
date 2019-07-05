@@ -139,7 +139,7 @@ You can set `VCPKG_TARGET_TRIPLET` on the configure line:
 ```no-highlight
 cmake ../my/project -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_TOOLCHAIN_FILE=...
 ```
-If you use `VCPKG_DEFAULT_TRIPLET` [environment variable](config-environment.md) to contoll the unqualified triplet in vcpkg command lines you can default `VCPKG_TARGET_TRIPLET` in CMake like [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option):
+If you use `VCPKG_DEFAULT_TRIPLET` [environment variable](config-environment.md) to control the unqualified triplet in vcpkg command lines you can default `VCPKG_TARGET_TRIPLET` in CMake like [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option):
 
 ```cmake
 if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)

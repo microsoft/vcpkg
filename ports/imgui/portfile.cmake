@@ -1,18 +1,12 @@
 include(vcpkg_common_functions)
 
-if (TARGET_TRIPLET MATCHES "^x(86|64)-windows$" AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(WARNING "\
-The author of imgui strongly advises users of this lib against using a DLL. \
-For more details, please visit: \
-https://github.com/Microsoft/vcpkg/issues/5110"
-    )
-endif ()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.68
-    SHA512 4a7996f188816eb1caa3130546fbfbe2069a8a338daf0540ae09e7c7d6a40082e25144e91c94f53d7ff6023925c92ce591e4d59614e08b1ca7b91097519bf4a4
+    REF v1.70
+    SHA512 b1a0fba339a9b19a49316494e58eabacd250e85e8ee17552c03ed99f50886072c882979039f18139e504c4406cf31aea3e9ce391d4641318f0022fa9b51bb9c4
     HEAD_REF master
 )
 
@@ -27,6 +21,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/imgui)
+vcpkg_fixup_cmake_targets()
 
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/imgui/copyright COPYONLY)

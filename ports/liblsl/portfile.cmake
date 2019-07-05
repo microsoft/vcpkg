@@ -5,10 +5,9 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sccn/liblsl
-    REF v1.13.0-b4 # NOTE: when updating version, also change it in the parameter to vcpkg_configure_cmake
-    SHA512 19bc587afcff315385e7bab1f88cf4edd315acfda61a630b23ffe4c59bc0f5aa570f0a979071f2b60009bb4d4b8ce08c98c414dc5b88042556b2501f4b8dcb79
+    REF 1.13.0-b6 # NOTE: when updating version, also change it in the parameter to vcpkg_configure_cmake
+    SHA512 fb98cdd73de5f13e97f639ba3f2f836d46ce28cdcb2246584728f296eb647e2c9c069534470a603b10d7dc34ab8978bf246e2187428ab231a925feb0b7024c89
     HEAD_REF master
-    PATCHES hardcode-version.patch fix-runtime-destination.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,7 +17,7 @@ vcpkg_configure_cmake(
 		-DLSL_BUILD_STATIC=OFF
 		-DLSL_UNIXFOLDERS=ON
 		-DLSL_NO_FANCY_LIBNAME=ON
-		-Dlslgitrevision="v1.13.0-b4"
+		-Dlslgitrevision="1.13.0-b6"
 		-Dlslgitbranch="master"
 )
 

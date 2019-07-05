@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
 vcpkg_from_github(
@@ -11,24 +14,24 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-# The file guiddef.h is part of the Windows SDK,
-# we then remove the local copy shipped with jxrlib
-file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Darwin AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES Linux)
+  # The file guiddef.h is part of the Windows SDK,
+  # we then remove the local copy shipped with jxrlib
+  file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS:BOOL=ON
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jxrlib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jxrlib/LICENSE ${CURRENT_PACKAGES_DIR}/share/jxrlib/copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 #install FindJXR.cmake file
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindJXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/JXR)
-
-vcpkg_copy_pdbs()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindJXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jxr)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jxr)

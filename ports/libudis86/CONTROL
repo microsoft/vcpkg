@@ -1,3 +1,4 @@
 Source: libudis86
 Version: 2018-01-28-56ff6c87
+Homepage: https://github.com/vmt/udis86
 Description: Disassembler Library for x86 and x86-64 

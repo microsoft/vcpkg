@@ -39,10 +39,7 @@ namespace vcpkg
 #endif
     }
 
-    static fs::path get_config_path()
-    {
-        return get_user_dir() / "config";
-    }
+    static fs::path get_config_path() { return get_user_dir() / "config"; }
 
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)
     {
