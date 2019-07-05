@@ -13,16 +13,22 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE} 
     PATCHES
         cmake.patch
+        win32.patch
 )
 
 set(SOURCE_PATH ${SOURCE_PATH}/zookeeper-client/zookeeper-client-c)
+
+set(WANT_SYNCAPI ON)
+if("async" IN_LIST FEATURES)
+    set(WANT_SYNCAPI OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DWANT_CPPUNIT=OFF
-        -DWANT_SYNCAPI=ON
+        -DWANT_SYNCAPI=${WANT_SYNCAPI}
 )
 
 vcpkg_install_cmake()

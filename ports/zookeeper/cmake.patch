@@ -7,7 +7,7 @@ index 24a5a1b..09d7b83 100644
      "CLASSPATH=$CLASSPATH:$CLOVER_HOME/lib/clover*.jar")
  endif()
 +
-+target_compile_definitions(zookeeper PRIVATE _CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS)
++target_compile_definitions(zookeeper PRIVATE _CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
 +target_compile_definitions(cli PRIVATE _CRT_SECURE_NO_WARNINGS)
 +
 +file(GLOB ZOOKEEPER_HEADERS include/*.h)
