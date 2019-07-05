@@ -52,7 +52,7 @@ endif()
 set(PThreads4W_MAJOR_VERSION 3)
 set(PThreads4W_MINOR_VERSION 0)
 set(PThreads4W_PATCH_VERSION 0)
-set(PThreads_VERSION "${PThreads4W_MAJOR_VERSION}.${PThreads4W_MINOR_VERSION}.${PThreads4W_PATCH_VERSION}")
+set(PThreads4W_VERSION "${PThreads4W_MAJOR_VERSION}.${PThreads4W_MINOR_VERSION}.${PThreads4W_PATCH_VERSION}")
 
 # Allow libraries to be set manually
 if(NOT PThreads4W_LIBRARY)
@@ -93,7 +93,10 @@ set(PTHREADS_LIBRARY ${PThreads4W_LIBRARY} CACHE STRING "" FORCE)
 set(LIBPTHREAD ${PThreads4W_LIBRARY} CACHE STRING "" FORCE)
 set(LIBPTHREADS ${PThreads4W_LIBRARY} CACHE STRING "" FORCE)
 set(PThreads_windows_LIBRARY ${PThreads4W_LIBRARY} CACHE STRING "" FORCE)
-
+set(PThreads_VERSION "${PThreads4W_VERSION}")
+if(PThreads4W_FOUND)
+  set(PThreads_windows_FOUND TRUE)
+endif()
 
 #TARGETS
 if( PThreads4W_FOUND AND NOT TARGET PThreads4W::PThreads4W_CXXEXC )
