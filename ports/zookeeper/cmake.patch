@@ -1,0 +1,23 @@
+diff --git a/zookeeper-client/zookeeper-client-c/CMakeLists.txt b/zookeeper-client/zookeeper-client-c/CMakeLists.txt
+index 24a5a1b..09d7b83 100644
+--- a/zookeeper-client/zookeeper-client-c/CMakeLists.txt
++++ b/zookeeper-client/zookeeper-client-c/CMakeLists.txt
+@@ -247,3 +247,17 @@ if(WANT_CPPUNIT)
+     "ZKROOT=${CMAKE_CURRENT_SOURCE_DIR}/../.."
+     "CLASSPATH=$CLASSPATH:$CLOVER_HOME/lib/clover*.jar")
+ endif()
++
++target_compile_definitions(zookeeper PRIVATE _CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS)
++target_compile_definitions(cli PRIVATE _CRT_SECURE_NO_WARNINGS)
++
++file(GLOB ZOOKEEPER_HEADERS include/*.h)
++
++install(FILES ${ZOOKEEPER_HEADERS} generated/zookeeper.jute.h DESTINATION include/zookeeper)
++
++install(TARGETS zookeeper
++    EXPORT zookeeperConfig
++    RUNTIME DESTINATION bin
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++)
+\ No newline at end of file

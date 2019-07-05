@@ -12,8 +12,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE} 
     PATCHES
-        "cmake_build.patch"
-        "crt-warning.patch"
+        cmake.patch
 )
 
 set(SOURCE_PATH ${SOURCE_PATH}/zookeeper-client/zookeeper-client-c)
@@ -21,10 +20,15 @@ set(SOURCE_PATH ${SOURCE_PATH}/zookeeper-client/zookeeper-client-c)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DWANT_CPPUNIT=OFF
+        -DWANT_SYNCAPI=ON
 )
 
 vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zookeeper-mt RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zookeeper RENAME copyright)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()

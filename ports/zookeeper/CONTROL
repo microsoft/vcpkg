@@ -1,0 +1,3 @@
+Source: zookeeper
+Version: 3.5.5
+Description: ZooKeeper C bindings
