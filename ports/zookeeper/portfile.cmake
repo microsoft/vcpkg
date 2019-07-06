@@ -18,13 +18,14 @@ vcpkg_extract_source_archive_ex(
 
 set(SOURCE_PATH ${SOURCE_PATH}/zookeeper-client/zookeeper-client-c)
 
-set(WANT_SYNCAPI ON)
-if("async" IN_LIST FEATURES)
-    set(WANT_SYNCAPI OFF)
+set(WANT_SYNCAPI OFF)
+if("sync" IN_LIST FEATURES)
+    set(WANT_SYNCAPI ON)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DWANT_CPPUNIT=OFF

@@ -1,6 +1,7 @@
 Source: zookeeper
 Version: 3.5.5
 Description: ZooKeeper C bindings
+Default-Features: sync
 
-Feature: async
-Description: ZooKeeper with only the async API
+Feature: sync
+Description: ZooKeeper with the sync API
