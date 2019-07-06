@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(gtk+ C)
 
-configure_file(config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
-configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h COPYONLY)
-
 set(GLIB_LIB_SUFFIX 2.0)
 set(PANGO_LIB_SUFFIX 1.0)
 set(ATK_LIB_SUFFIX 1.0)
@@ -121,7 +118,8 @@ macro(gtk_add_module MODULE_NAME)
     target_include_directories(${MODULE_NAME} PRIVATE . ./gdk ./gtk ${GTK_REQUIRED_INCLUDE_DIR})
     target_link_libraries(${MODULE_NAME} ${GTK_REQUIRED_LIBRARIES})
     set_target_properties(${MODULE_NAME} PROPERTIES 
-        ARCHIVE_OUTPUT_NAME ${MODULE_NAME}.0)
+        ARCHIVE_OUTPUT_NAME ${MODULE_NAME}.0
+        LIBRARY_OUTPUT_NAME ${MODULE_NAME}.0)
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
 endmacro()
 
