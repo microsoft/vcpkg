@@ -18,13 +18,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppmicroservices RENAME copyright)
 
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME CppMicroServices)
+vcpkg_fixup_cmake_targets()
 
 # CppMicroServices uses a custom resource compiler to compile resources
 # the zipped resources are then appended to the target which cause the linker to crash
