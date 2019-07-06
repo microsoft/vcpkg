@@ -363,13 +363,11 @@ namespace vcpkg::Build
         const Triplet& triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
-        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, 
-                                                         paths.triplets.u8string()))
+        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
         {
             System::printf("-- Loading triplet configuration from: %s\n", triplet_file_path);
         }
-        if (!Strings::case_insensitive_ascii_starts_with(config.port_dir.u8string(),
-                                                         paths.ports.u8string()))
+        if (!Strings::case_insensitive_ascii_starts_with(config.port_dir.u8string(), paths.ports.u8string()))
         {
             System::printf("-- Installing port from location: %s\n", config.port_dir.u8string());
         }
@@ -382,6 +380,13 @@ namespace vcpkg::Build
 
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
+#if defined(_WIN32)
+        const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
+        if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
+        {
+            fs.copy(powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
+        }
+#endif
 
         std::string all_features;
         for (auto& feature : config.scf.feature_paragraphs)
@@ -425,8 +430,14 @@ namespace vcpkg::Build
         }
         command.append(cmd_launch_cmake);
         const auto timer = Chrono::ElapsedTimer::create_started();
-
-        const int return_code = System::cmd_execute_clean(command);
+        const int return_code = System::cmd_execute_clean(
+            command,
+            {}
+#ifdef _WIN32
+            ,
+            powershell_exe_path.parent_path().u8string() + ";"
+#endif
+        );
         const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
 
