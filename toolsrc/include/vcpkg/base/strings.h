@@ -184,4 +184,36 @@ namespace vcpkg::Strings
     const char* search(StringView haystack, StringView needle);
 
     bool contains(StringView haystack, StringView needle);
+
+    // base 64 encoding with URL and filesafe alphabet (base64url)
+    // based on IETF RFC 4648
+    // ignores padding, since one implicitly knows the length from the size of x
+    template <class Integral>
+    std::string b64url_encode(Integral x) {
+        static_assert(std::is_integral_v<Integral>);
+        auto value = static_cast<std::make_unsigned_t<Integral>>(x);
+
+        // 64 values, plus the implicit \0
+        constexpr static char map[0x41] =
+            /*     0123456789ABCDEF */
+            /*0*/ "ABCDEFGHIJKLMNOP"
+            /*1*/ "QRSTUVWXYZabcdef"
+            /*2*/ "ghijklmnopqrstuv"
+            /*3*/ "wxyz0123456789-_"
+        ;
+
+        constexpr static std::make_unsigned_t<Integral> mask = 0x3F;
+        constexpr static int shift = 5;
+
+        std::string result;
+        // reserve ceiling(number of bits / 3)
+        result.reserve((sizeof(value) * 8 + 2) / 3);
+
+        while (value != 0) {
+            char mapped_value = map[value & mask];
+            result.push_back(mapped_value);
+        }
+
+        return result;
+    }
 }

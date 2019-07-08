@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/rng.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.print.h>
@@ -256,26 +257,61 @@ namespace vcpkg::Files
         virtual bool remove(const fs::path& path, std::error_code& ec) override { return fs::stdfs::remove(path, ec); }
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) override
         {
-            // Working around the currently buggy remove_all()
-            std::uintmax_t out = fs::stdfs::remove_all(path, ec);
+            /*
+                does not use the std::filesystem call since it is buggy, and can
+                have spurious errors before VS 2017 update 6, and on later versions
+                (as well as on macOS and Linux), this is just as fast and will have
+                fewer spurious errors due to locks.
+            */
+            struct recursive {
+                const fs::path& tmp_directory;
+                std::error_code& ec;
+                xoshiro256ss_engine& rng;
 
-            for (int i = 0; i < 5 && this->exists(path); i++)
-            {
-                using namespace std::chrono_literals;
-                std::this_thread::sleep_for(i * 100ms);
-                out += fs::stdfs::remove_all(path, ec);
+                void operator()(const fs::path& current) const {
+                    const auto type = fs::stdfs::symlink_status(current, ec).type();
+                    if (ec) return;
+
+                    const auto tmp_name = Strings::b64url_encode(rng());
+                    const auto tmp_path = tmp_directory / tmp_name;
+
+                    switch (type) {
+                    case fs::file_type::directory: {
+                        fs::stdfs::rename(current, tmp_path, ec);
+                        if (ec) return;
+                        for (const auto& entry : fs::stdfs::directory_iterator(tmp_path)) {
+                            (*this)(entry);
+                        }
+                        fs::stdfs::remove(tmp_path, ec);
+                    } break;
+                    case fs::file_type::symlink:
+                    case fs::file_type::regular: {
+                        fs::stdfs::rename(current, tmp_path, ec);
+                        fs::stdfs::remove(current, ec);
+                    } break;
+                    case fs::file_type::not_found: return;
+                    case fs::file_type::none: {
+                        Checks::exit_with_message(VCPKG_LINE_INFO, "Error occurred when evaluating file type of file: %s", current);
+                    }
+                    default: {
+                        Checks::exit_with_message(VCPKG_LINE_INFO, "Attempted to delete special file: %s", current);
+                    }
+                    }
+                }
+            };
+
+            auto const real_path = fs::stdfs::absolute(path);
+
+            if (! real_path.has_parent_path()) {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Attempted to remove_all the base directory");
             }
 
-            if (this->exists(path))
-            {
-                System::print2(
-                    System::Color::warning,
-                    "Some files in ",
-                    path.u8string(),
-                    " were unable to be removed. Close any editors operating in this directory and retry.\n");
-            }
+            // thoughts: is this fine? or should we do something different?
+            // maybe a temporary directory?
+            auto const base_path = real_path.parent_path();
 
-            return out;
+            xoshiro256ss_engine rng{};
+            recursive{base_path, ec, rng}(real_path);
         }
         virtual bool exists(const fs::path& path) const override { return fs::stdfs::exists(path); }
         virtual bool is_directory(const fs::path& path) const override { return fs::stdfs::is_directory(path); }
