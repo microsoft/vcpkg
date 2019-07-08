@@ -7,27 +7,21 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 dfad66f419ea9577f09932e0730c0c887bdcbdbc8152fa7477a0c39d69a5b68476761deed6864ddcc5cf18d100a7a3f728049768e24afcb04b1a74b25b6acf7e
 )
 
+vcpkg_extract_source_archive_ex(
+OUT_SOURCE_PATH SOURCE_PATH
+ARCHIVE ${ARCHIVE}
+REF ${FT_VERSION}
+PATCHES
+    0001-Fix-install-command.patch
+    0002-Add-CONFIG_INSTALL_PATH-option.patch
+    0003-Fix-UWP.patch
+    0005-Fix-DLL-EXPORTS.patch
+)
+    
 if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-    vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${FT_VERSION}
-    PATCHES
-        0001-Fix-install-command.patch
-        0002-Add-CONFIG_INSTALL_PATH-option.patch
-        0003-Fix-UWP.patch
-    )
+  set(ENABLE_DLL_EXPORT OFF)
 else()
-    vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${FT_VERSION}
-    PATCHES
-        0001-Fix-install-command.patch
-        0002-Add-CONFIG_INSTALL_PATH-option.patch
-        0003-Fix-UWP.patch
-        0005-Fix-DLL-EXPORTS.patch
-    )
+  set(ENABLE_DLL_EXPORT ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -40,6 +34,7 @@ vcpkg_configure_cmake(
         -DFT_WITH_PNG=ON
         -DFT_WITH_HARFBUZZ=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
+        -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
 )
 
 vcpkg_install_cmake()
