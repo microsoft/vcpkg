@@ -8,6 +8,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(unofficial-iconv REQUIRED)
 
 FILE(GLOB SOURCESXMLSEC
 	src/*.c
@@ -135,7 +136,7 @@ if(INSTALL_HEADERS_TOOLS)
 	endif()
 
 	target_link_libraries(xmlsec PRIVATE
-		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl
+		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl unofficial::iconv::libiconv
 	)
 
 	target_compile_definitions(xmlsec PRIVATE
