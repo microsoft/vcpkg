@@ -21,15 +21,15 @@ vcpkg_apply_patches(
 set(CURRENT_INSTALLED_DIR "\"${CURRENT_INSTALLED_DIR}\"")
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi")
-    set(CL_FLAGS_REL "/MD /Ox")
+    set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
+    set(CL_FLAGS_REL "/MD /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
     set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
     set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
     set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
 else()
-    set(CL_FLAGS_DBG "/MTd /Zi")
-    set(CL_FLAGS_REL "/MT /Ox")
+    set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
+    set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib")
     set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib")
     set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
@@ -44,7 +44,7 @@ set(LIBS_ALL_DBG
     ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
     ${LIBXML2_LIBS_DBG} \
     ${GEOS_LIBS_DBG} \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib"
+    ${CURRENT_INSTALLED_DIR}/debug/lib/proj_6_1_d.lib"
    )
 set(LIBS_ALL_REL
     "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
@@ -54,7 +54,7 @@ set(LIBS_ALL_REL
     ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
     ${LIBXML2_LIBS_REL} \
     ${GEOS_LIBS_REL} \
-    ${CURRENT_INSTALLED_DIR}/lib/proj.lib"
+    ${CURRENT_INSTALLED_DIR}/lib/proj_6_1.lib"
    )
 
 ################
