@@ -16,3 +16,18 @@ index a4c648e..db90735 100644
  
  set(version 3.0.1)
  set(libdir ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 89a59af..c72be21 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -141,7 +141,9 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+         LINKER_LANGUAGE C)
+     target_link_libraries(graphite2 c)
+     include(Graphite)
+-    nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
++    if(NOT DISABLE_TESTS)
++        nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
++    endif()
+     set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
+     CREATE_LIBTOOL_FILE(graphite2 "/lib${LIB_SUFFIX}")
+ endif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B98C92B7-2874-4537-9D46-D14E5C237F04}</ProjectGuid>
     <RootNamespace>vcpkglib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <PlatformToolset>v142</PlatformToolset>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -161,8 +161,14 @@
     <ClInclude Include="..\include\vcpkg\base\stringliteral.h" />
     <ClInclude Include="..\include\vcpkg\base\stringrange.h" />
     <ClInclude Include="..\include\vcpkg\base\strings.h" />
+    <ClInclude Include="..\include\vcpkg\base\stringview.h" />
+    <ClInclude Include="..\include\vcpkg\base\system.debug.h" />
     <ClInclude Include="..\include\vcpkg\base\system.h" />
+    <ClInclude Include="..\include\vcpkg\base\system.print.h" />
+    <ClInclude Include="..\include\vcpkg\base\system.process.h" />
     <ClInclude Include="..\include\vcpkg\base\util.h" />
+    <ClInclude Include="..\include\vcpkg\base\view.h" />
+    <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
     <ClInclude Include="..\include\vcpkg\build.h" />
     <ClInclude Include="..\include\vcpkg\commands.h" />

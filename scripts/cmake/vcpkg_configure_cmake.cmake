@@ -7,6 +7,7 @@
 ## vcpkg_configure_cmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [PREFER_NINJA]
+##     [DISABLE_PARALLEL_CONFIGURE]
 ##     [GENERATOR <"NMake Makefiles">]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
@@ -50,7 +51,7 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+    cmake_parse_arguments(_csc "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap-vcpkg.bat\n")
@@ -173,6 +174,11 @@ function(vcpkg_configure_cmake)
     else()
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS and VCPKG_C_FLAGS")
     endif()
+    
+    set(VCPKG_SET_CHARSET_FLAG ON)
+    if(_csc_NO_CHARSET_FLAG)
+        set(VCPKG_SET_CHARSET_FLAG OFF)
+    endif()
 
     if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
@@ -188,8 +194,10 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/freebsd.cmake")
     endif()
 
+
     list(APPEND _csc_OPTIONS
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
         "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"

@@ -451,7 +451,7 @@ namespace vcpkg::Commands::CI
 
             if (is_dry_run)
             {
-                Dependencies::print_plan(action_plan);
+                Dependencies::print_plan(action_plan, true, paths.ports);
             }
             else
             {
