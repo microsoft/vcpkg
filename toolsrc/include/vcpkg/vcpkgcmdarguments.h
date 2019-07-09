@@ -87,6 +87,7 @@ namespace vcpkg
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> install_root_dir;
+        std::unique_ptr<std::string> scripts_root_dir;
         std::unique_ptr<std::string> triplet;
         std::unique_ptr<std::vector<std::string>> overlay_ports;
         std::unique_ptr<std::vector<std::string>> overlay_triplets;

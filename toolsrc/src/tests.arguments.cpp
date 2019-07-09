@@ -15,9 +15,10 @@ namespace UnitTest1
     {
         TEST_METHOD(create_from_arg_sequence_options_lower)
         {
-            std::vector<std::string> t = {"--vcpkg-root", "C:\\vcpkg", "--debug", "--sendmetrics", "--printmetrics"};
+            std::vector<std::string> t = {"--vcpkg-root", "C:\\vcpkg", "--scripts-root", "C:\\scripts", "--debug", "--sendmetrics", "--printmetrics"};
             auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
             Assert::AreEqual("C:\\vcpkg", v.vcpkg_root_dir.get()->c_str());
+            Assert::AreEqual("C:\\scripts", v.scripts_root_dir.get()->c_str());
             Assert::IsTrue(v.debug && *v.debug.get());
             Assert::IsTrue(v.sendmetrics && v.sendmetrics.get());
             Assert::IsTrue(v.printmetrics && *v.printmetrics.get());
@@ -25,9 +26,10 @@ namespace UnitTest1
 
         TEST_METHOD(create_from_arg_sequence_options_upper)
         {
-            std::vector<std::string> t = {"--VCPKG-ROOT", "C:\\vcpkg", "--DEBUG", "--SENDMETRICS", "--PRINTMETRICS"};
+            std::vector<std::string> t = {"--VCPKG-ROOT", "C:\\vcpkg", "--SCRIPTS-ROOT", "C:\\scripts", "--DEBUG", "--SENDMETRICS", "--PRINTMETRICS"};
             auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
             Assert::AreEqual("C:\\vcpkg", v.vcpkg_root_dir.get()->c_str());
+            Assert::AreEqual("C:\\scripts", v.scripts_root_dir.get()->c_str());
             Assert::IsTrue(v.debug && *v.debug.get());
             Assert::IsTrue(v.sendmetrics && v.sendmetrics.get());
             Assert::IsTrue(v.printmetrics && *v.printmetrics.get());
