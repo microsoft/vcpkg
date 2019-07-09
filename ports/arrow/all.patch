@@ -53,7 +53,7 @@ index 8410916..a196b25 100644
        PATH_SUFFIXES ${LIB_PATH_SUFFIXES})
      find_path(LZ4_INCLUDE_DIR NAMES lz4.h PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index 87cc24e..4ac61e2 100644
+index 87cc24e..4de0760 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
 +++ b/cpp/cmake_modules/FindThrift.cmake
 @@ -54,6 +54,10 @@ if(MSVC AND NOT THRIFT_MSVC_STATIC_LIB_SUFFIX)
@@ -67,7 +67,7 @@ index 87cc24e..4ac61e2 100644
  if(Thrift_ROOT)
    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
                 PATHS ${Thrift_ROOT}
-@@ -71,15 +75,14 @@ else()
+@@ -71,15 +75,13 @@ else()
  
      list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
  
@@ -78,7 +78,7 @@ index 87cc24e..4ac61e2 100644
 +                 PATHS ${THRIFT_PC_LIBRARY_DIRS})
      find_program(THRIFT_COMPILER thrift
                   HINTS ${THRIFT_PC_PREFIX}
-                  NO_DEFAULT_PATH
+-                 NO_DEFAULT_PATH
                   PATH_SUFFIXES "bin")
    else()
 -    find_library(THRIFT_STATIC_LIB thrift${THRIFT_MSVC_STATIC_LIB_SUFFIX}
