@@ -10,7 +10,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
-set(GLIB_VERSION ${PORT_VERSION})
+set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
     FILENAME "glib-${GLIB_VERSION}.tar.xz"
@@ -50,8 +50,3 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/glib)
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/glib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glib/COPYING ${CURRENT_PACKAGES_DIR}/share/glib/copyright)
-vcpkg_pkgconfig(NAME glib-2.0 COMMON -lglib-2.0 REQUIRES zlib libpcre)
-vcpkg_pkgconfig(NAME gmodule-2.0 COMMON -lgmodule-2.0 REQUIRES glib-2.0)
-vcpkg_pkgconfig(NAME gobject-2.0 COMMON -lgobject-2.0 REQUIRES glib-2.0 libffi)
-vcpkg_pkgconfig(NAME gthread-2.0 COMMON -lgthread-2.0 REQUIRES glib-2.0)
-vcpkg_pkgconfig(NAME gio-2.0 COMMON -lgio-2.0 REQUIRES gobject-2.0 gmodule-2.0)

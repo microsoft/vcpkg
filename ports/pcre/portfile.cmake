@@ -6,7 +6,7 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-set(PCRE_VERSION ${PORT_VERSION})
+set(PCRE_VERSION 8.41)
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre-${PCRE_VERSION})
 vcpkg_download_distfile(ARCHIVE
@@ -67,8 +67,3 @@ file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre/copyright)
 
 vcpkg_copy_pdbs()
-vcpkg_pkgconfig(NAME libpcre COMMON -lpcre -lpthread -pthread)
-vcpkg_pkgconfig(NAME libpcre-16 COMMON -lpcre-16 -pthread)
-vcpkg_pkgconfig(NAME libpcre-32 COMMON -lpcre-32 -pthread)
-vcpkg_pkgconfig(NAME libpcre-cpp COMMON -lpcre-cpp REQUIRES libpcre-8)
-vcpkg_pkgconfig(NAME libpcre-posix COMMON -lpcre-posix REQUIRES libpcre-8)

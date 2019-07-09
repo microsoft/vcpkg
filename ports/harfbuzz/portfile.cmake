@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF ${PORT_VERSION}
+    REF 2.5.1
     SHA512 e8b4b98e65d809579456551e4dd70bdd847d02cbfa80df479f6f544eff2bdbfaa7502f22e5f4e5217f063badc8874f6e568d49e9c40ab752b233fafa9e74aeab
     HEAD_REF master
     PATCHES
@@ -89,4 +89,3 @@ endif()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
-vcpkg_pkgconfig(REQUIRES freetype2)

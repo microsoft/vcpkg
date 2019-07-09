@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(FT_VERSION ${PORT_VERSION})
+set(FT_VERSION 2.10.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.bz2"
     FILENAME "freetype-${FT_VERSION}.tar.bz2"
@@ -81,4 +81,3 @@ vcpkg_copy_pdbs()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/freetype)
 endif()
-vcpkg_pkgconfig(NAME freetype2 RELEASE -lfreetype DEBUG -lfreetyped)

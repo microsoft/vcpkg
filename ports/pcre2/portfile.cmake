@@ -1,4 +1,4 @@
-set(PCRE2_VERSION ${PORT_VERSION})
+set(PCRE2_VERSION 10.30)
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
@@ -48,7 +48,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre2)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre2/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre2/copyright)
-vcpkg_pkgconfig(NAME libpcre2-8 COMMON -lpcre2-8)
-vcpkg_pkgconfig(NAME libpcre2-16 COMMON -lpcre2-16)
-vcpkg_pkgconfig(NAME libpcre2-32 COMMON -lpcre2-32)
-vcpkg_pkgconfig(NAME libpcre2-posix COMMON -lpcre2-posix REQUIRES libpcre2-8)
