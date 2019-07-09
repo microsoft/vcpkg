@@ -3,22 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF v4.3.2
-    SHA512 3c0a2dfc60c2265311f6ba16c47fab37e71312949b4cf2aa8855530431763bb6b8844c7d72c4b112c21125f0590c663d2a3192249b14611df64a2c6d3e5ac1c7
+    REF b5db4b4421c8b2766321e70e5e9ca07c197fac47
+    SHA512 e1166b9eec3c0613c2b085bf995e6d711554ba77e180f7b86aa2d04157f2ab7dca8131b855568f8fc931ac256628f6018e6bc67bc9fbecfd498776b4151d6e63
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} \"-I${SOURCE_PATH}/builds/msvc\"")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} \"-I${SOURCE_PATH}/builds/msvc\"")
-
-if("sodium" IN_LIST FEATURES)
-    set(WITH_LIBSODIUM ON)
-else()
-    set(WITH_LIBSODIUM OFF)
-endif()
+vcpkg_check_features(sodium WITH_LIBSODIUM)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
