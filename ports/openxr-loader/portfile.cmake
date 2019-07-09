@@ -1,3 +1,12 @@
+if (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm*")
+  message(FATAL_ERROR "OpenXR does not support arm")
+endif()
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  # Due to UWP restricting the usage of static CRT OpenXR cannot be built.
+  message(FATAL_ERROR "OpenXR does not support UWP")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
