@@ -456,7 +456,7 @@ namespace vcpkg::Commands::CI
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
+                auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db, false);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive

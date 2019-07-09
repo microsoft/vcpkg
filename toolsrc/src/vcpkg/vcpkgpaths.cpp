@@ -13,7 +13,8 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, 
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
+                                            const Optional<fs::path>& install_root_dir,
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs)
     {
@@ -63,7 +64,16 @@ namespace vcpkg
         }
 
         paths.ports = paths.root / "ports";
-        paths.installed = paths.root / "installed";
+        if (auto ird = install_root_dir.get())
+        {
+            paths.installed = *ird;
+            paths.installed_was_overrriden = true;
+        }
+        else
+        {
+            paths.installed = paths.root / "installed";
+            paths.installed_was_overrriden = false;
+        }
         paths.triplets = paths.root / "triplets";
         paths.scripts = paths.root / "scripts";
 

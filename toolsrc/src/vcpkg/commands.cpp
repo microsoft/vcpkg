@@ -19,7 +19,6 @@ namespace vcpkg::Commands
             {"install", &Install::perform_and_exit},
             {"ci", &CI::perform_and_exit},
             {"remove", &Remove::perform_and_exit},
-            {"upgrade", &Upgrade::perform_and_exit},
             {"build", &Build::Command::perform_and_exit},
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},
@@ -60,6 +59,13 @@ namespace vcpkg::Commands
         };
         return t;
     }
+	Span<const PackageNameAndFunction<CommandTypeD>> get_available_commands_type_d()
+	{
+            static std::vector<PackageNameAndFunction<CommandTypeD>> t = {
+                {"upgrade", &Upgrade::perform_and_exit},
+            };
+            return t;
+	}
 }
 
 namespace vcpkg::Commands::Fetch

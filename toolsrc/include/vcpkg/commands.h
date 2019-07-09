@@ -17,6 +17,10 @@ namespace vcpkg::Commands
                                   const Triplet& default_triplet);
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     using CommandTypeC = void (*)(const VcpkgCmdArguments& args);
+    using CommandTypeD = void (*)(const VcpkgCmdArguments& args,
+                                  const VcpkgPaths& paths,
+                                  const VcpkgPaths& upgrade_paths,
+                                  const Triplet& default_triplet);
 
     namespace BuildExternal
     {
@@ -44,7 +48,10 @@ namespace vcpkg::Commands
     namespace Upgrade
     {
         extern const CommandStructure COMMAND_STRUCTURE;
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args,
+                              const VcpkgPaths& paths,
+                              const VcpkgPaths& upgrade_paths,
+                              const Triplet& default_triplet);
     }
 
     namespace Edit
@@ -146,6 +153,7 @@ namespace vcpkg::Commands
     Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a();
     Span<const PackageNameAndFunction<CommandTypeB>> get_available_commands_type_b();
     Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c();
+    Span<const PackageNameAndFunction<CommandTypeD>> get_available_commands_type_d();
 
     template<typename T>
     T find(const std::string& command_name, const std::vector<PackageNameAndFunction<T>> available_commands)

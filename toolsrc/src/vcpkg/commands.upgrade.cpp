@@ -34,7 +34,10 @@ namespace vcpkg::Commands::Upgrade
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          const VcpkgPaths& upgrade_paths,
+                          const Triplet& default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -181,7 +184,90 @@ namespace vcpkg::Commands::Upgrade
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        const Install::InstallSummary summary = Install::perform(plan, keep_going, paths, status_db);
+        auto& fs = upgrade_paths.get_filesystem();
+        std::error_code ec;
+
+        StatusParagraphs status_db_upgrade = database_load_check(upgrade_paths);
+
+        auto installed_packages = get_installed_ports(status_db);
+        for (auto&& installed_package : installed_packages)
+        {
+            // copy packages that are not removed
+            bool copy_package = true;
+            for (auto&& action : plan)
+            {
+                if (auto p_remove = action.remove_action.get())
+                {
+                    if (installed_package.spec() == p_remove->spec)
+                    {
+                        copy_package = false;
+                        break;
+                    }
+                }
+            }
+
+            if (copy_package)
+            {
+                auto maybe_lines = fs.read_lines(paths.listfile_path(installed_package.core->package));
+
+                if (const auto lines = maybe_lines.get())
+                {
+                    for (auto&& suffix : *lines)
+                    {
+                        if (!suffix.empty() && suffix.back() == '\r') suffix.pop_back();
+
+                        auto host = paths.installed / suffix;
+                        auto target = upgrade_paths.installed / suffix;
+
+                        const auto status = fs.symlink_status(host, ec);
+                        if (ec)
+                        {
+                            System::print2(
+                                System::Color::error, "failed: status(", host.u8string(), "): ", ec.message(), "\n");
+                            continue;
+                        }
+
+                        if (fs::is_directory(status))
+                        {
+                            fs.create_directory(target, ec);
+                        }
+                        else if (fs::is_regular_file(status) || fs::is_symlink(status))
+                        {
+                            fs.copy(host, target, fs::copy_options::overwrite_existing);
+                        }
+                        else if (!fs::stdfs::exists(status))
+                        {
+                            System::printf(System::Color::warning, "Warning: %s: file not found\n", host.u8string());
+                        }
+                        else
+                        {
+                            System::printf(
+                                System::Color::warning, "Warning: %s: cannot handle file type\n", host.u8string());
+                        }
+                    }
+                }
+
+                PackageSpec spec = installed_package.spec();
+
+                auto installed_view = status_db.find_all_installed(spec).value_or_exit(VCPKG_LINE_INFO);
+
+                fs.copy(paths.listfile_path(installed_view.core->package),
+                        upgrade_paths.listfile_path(installed_view.core->package),
+                        fs::copy_options::overwrite_existing);
+
+                write_update(upgrade_paths, *installed_view.core);
+                status_db_upgrade.insert(std::make_unique<StatusParagraph>(std::move(*installed_view.core)));
+                for (auto&& feature_status_pgh : installed_view.features)
+                {
+                    write_update(upgrade_paths, *feature_status_pgh);
+                    status_db_upgrade.insert(std::make_unique<StatusParagraph>(std::move(*feature_status_pgh)));
+                }
+            }
+        }
+
+        bool skip_remove_plan = true;
+        const Install::InstallSummary summary =
+            Install::perform(plan, keep_going, upgrade_paths, status_db_upgrade, skip_remove_plan);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
@@ -189,6 +275,18 @@ namespace vcpkg::Commands::Upgrade
         {
             summary.print();
         }
+
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "error updating installed directory %s: %s\n",
+                                      paths.installed.u8string(),
+                                      ec.message());
+        }
+
+        fs.rename(paths.installed, paths.root / "installed-old", VCPKG_LINE_INFO);
+        fs.rename(upgrade_paths.installed, paths.installed, VCPKG_LINE_INFO);
+        fs.remove_all(paths.root / "installed-old", ec);
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

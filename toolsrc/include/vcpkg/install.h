@@ -77,7 +77,8 @@ namespace vcpkg::Install
     InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
-                           StatusParagraphs& status_db);
+                           StatusParagraphs& status_db,
+                           bool skip_remove_plan);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 

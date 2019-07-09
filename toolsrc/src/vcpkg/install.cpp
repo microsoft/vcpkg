@@ -415,21 +415,28 @@ namespace vcpkg::Install
     InstallSummary perform(const std::vector<AnyAction>& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
-                           StatusParagraphs& status_db)
+                           StatusParagraphs& status_db,
+                           bool skip_remove_plan)
     {
         std::vector<SpecSummary> results;
 
         const auto timer = Chrono::ElapsedTimer::create_started();
         size_t counter = 0;
-        const size_t package_count = action_plan.size();
+        size_t package_count = action_plan.size();
 
         for (const auto& action : action_plan)
         {
+            if (skip_remove_plan && action.remove_action.get())
+            {
+                package_count--;
+                continue;
+            }
             const auto build_timer = Chrono::ElapsedTimer::create_started();
             counter++;
 
             const PackageSpec& spec = action.spec();
             const std::string display_name = spec.to_string();
+
             System::printf("Starting package %zd/%zd: %s\n", counter, package_count, display_name);
 
             results.emplace_back(spec, &action);
@@ -691,7 +698,7 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db);
+        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db, false);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 

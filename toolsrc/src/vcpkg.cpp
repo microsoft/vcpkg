@@ -116,11 +116,18 @@ static void inner(const VcpkgCmdArguments& args)
 
     Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
 
+    Optional<fs::path> install_root_dir;
+    if (args.install_root_dir != nullptr)
+    {
+        install_root_dir = fs::stdfs::absolute(fs::u8path(*args.install_root_dir));
+        Debug::print("Using install-root: ", install_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
+    }
+
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, 
-                                                                   default_vs_path, 
-                                                                   args.overlay_triplets.get());
+    const Expected<VcpkgPaths> expected_paths =
+        VcpkgPaths::create(vcpkg_root_dir, install_root_dir, default_vs_path, args.overlay_triplets.get());
+
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",
@@ -162,6 +169,36 @@ static void inner(const VcpkgCmdArguments& args)
         }
     }
 
+    if (args.command == "list" || args.command == "install" || args.command == "remove" || args.command == "update" ||
+        args.command == "upgrade" || args.command == "export" || args.command == "import")
+    {
+        // always make sure we have an installed directory
+        std::error_code ec;
+        auto& fs = paths.get_filesystem();
+        auto installed_old = fs::u8path(default_vs_path) / "installed-old";
+        auto installed_new = fs::u8path(default_vs_path) / "installed-new";
+        if (fs.exists(installed_old) && fs.exists(installed_new) && !fs.exists(paths.installed))
+        {
+            fs.rename(installed_new, paths.installed, ec);
+            fs.remove_all(installed_old, ec);
+        }
+        else if (!fs.exists(installed_old) && fs.exists(installed_new) && fs.exists(paths.installed))
+        {
+            fs.remove_all(installed_new, ec);
+        }
+        else if (fs.exists(installed_old) && !fs.exists(installed_new) && fs.exists(paths.installed))
+        {
+            fs.remove_all(installed_old, ec);
+        }
+        else
+        {
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !fs.exists(installed_old) && !fs.exists(installed_new) && fs.exists(paths.installed),
+                               "Error: Failed to upgrade vcpkg root directory %s",
+                               vcpkg_root_dir.string());
+        }
+    }
+
     if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
     {
         return command_function->function(args, paths);
@@ -200,6 +237,21 @@ static void inner(const VcpkgCmdArguments& args)
     if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
     {
         return command_function->function(args, paths, default_triplet);
+    }
+
+    if (const auto command_function = find_command(Commands::get_available_commands_type_d()))
+    {
+        Optional<fs::path> install_root_dir = fs::stdfs::absolute(fs::u8path(default_vs_path) / "installed-new");
+
+        const Expected<VcpkgPaths> expected_paths =
+            VcpkgPaths::create(vcpkg_root_dir, install_root_dir, default_vs_path, args.overlay_triplets.get());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !expected_paths.error(),
+                           "Error: Failed to upgrade vcpkg root directory %s: %s",
+                           vcpkg_root_dir.string(),
+                           expected_paths.error().message());
+        const VcpkgPaths& upgrade_paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
+        return command_function->function(args, paths, upgrade_paths, default_triplet);
     }
 
     return invalid_command(args.command);
