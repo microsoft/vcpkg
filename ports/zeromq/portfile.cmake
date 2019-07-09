@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF f41f51461fd86f2272209a3175d1df0e655883ef
-    SHA512 ee37cda1e86063fc4f9edfc2ae27246d7919f59efe90532944f299b03478d53d8708eb18be824d3885c96ca38917e1f6f72a941845c9b376ddda7ee1fd42cfac
+    REF v4.3.2
+    SHA512 3c0a2dfc60c2265311f6ba16c47fab37e71312949b4cf2aa8855530431763bb6b8844c7d72c4b112c21125f0590c663d2a3192249b14611df64a2c6d3e5ac1c7
     HEAD_REF master
 )
 
@@ -45,6 +45,11 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/ZeroMQ)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/ZeroMQ)
 endif()
 
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/zmq.h
         "defined ZMQ_STATIC"
@@ -52,20 +57,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/zeromq/ZeroMQConfig.cmake _contents)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "get_target_property(ZeroMQ_STATIC_LIBRARY libzmq-static LOCATION)" "add_library(libzmq-static INTERFACE IMPORTED)\nset_target_properties(libzmq-static PROPERTIES INTERFACE_LINK_LIBRARIES libzmq)" _contents "${_contents}")
-    set(_contents "${_contents}\nset(ZeroMQ_STATIC_LIBRARY \${ZeroMQ_LIBRARY})\n")
-else()
-    string(REPLACE "get_target_property(ZeroMQ_INCLUDE_DIR libzmq INTERFACE_INCLUDE_DIRECTORIES)" "get_target_property(ZeroMQ_INCLUDE_DIR libzmq-static INTERFACE_INCLUDE_DIRECTORIES)" _contents "${_contents}")
-    string(REPLACE "get_target_property(ZeroMQ_LIBRARY libzmq LOCATION)" "add_library(libzmq INTERFACE IMPORTED)\nset_target_properties(libzmq PROPERTIES INTERFACE_LINK_LIBRARIES libzmq-static)" _contents "${_contents}")
-    set(_contents "${_contents}\nset(ZeroMQ_LIBRARY \${ZeroMQ_STATIC_LIBRARY})\n")
-
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/zeromq/ZeroMQConfig.cmake "${_contents}")
 
 # Handle copyright
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/zmq/COPYING.LESSER.txt ${CURRENT_PACKAGES_DIR}/share/zeromq/copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/zmq)
+
+# CMake integration test
+vcpkg_test_cmake(PACKAGE_NAME ZeroMQ)
