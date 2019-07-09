@@ -26,11 +26,14 @@ if("opencv-cuda" IN_LIST FEATURES)
   set(ENABLE_CUDA ON)
 endif()
 
-if (ENABLE_CUDA)
-  if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
+if (ENABLE_CUDA AND CMAKE_HOST_WIN32)
+  if (NOT ENV{CUDACXX})
     #CMake looks for nvcc only in PATH and CUDACXX env vars for the Ninja generator. Since we filter path on vcpkg and CUDACXX env var is not set by CUDA installer on Windows, CMake cannot find CUDA when using Ninja generator, so we need to manually enlight it if necessary (https://gitlab.kitware.com/cmake/cmake/issues/19173). Otherwise we could just disable Ninja and use MSBuild, but unfortunately CUDA installer does not integrate with some distributions of MSBuild (like the ones inside Build Tools), making CUDA unavailable otherwise in those cases, which we want to avoid
     set(ENV{CUDACXX} "$ENV{CUDA_PATH}/bin/nvcc.exe")
+    set(ENABLE_NINJA "")
   endif()
+else()
+  set(ENABLE_NINJA "PREFER_NINJA")
 endif()
 
 if("weights" IN_LIST FEATURES)
@@ -62,7 +65,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   DISABLE_PARALLEL_CONFIGURE  #since darknet configures a file inside source tree, it is better to disable parallel configure
-  PREFER_NINJA
+  ${ENABLE_NINJA}
   OPTIONS
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
