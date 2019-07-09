@@ -1,6 +1,7 @@
 Source: harfbuzz
-Version: 2.5.1
+Version: 2.5.1-1
 Description: HarfBuzz OpenType text shaping engine
+Homepage: https://github.com/behdad/harfbuzz
 Build-Depends: freetype, ragel, gettext (osx)
 Default-Features: ucdn
 

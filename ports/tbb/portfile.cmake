@@ -6,9 +6,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO 01org/tbb
-    REF 2019_U6
-    SHA512 6513d30a498f507cb3e9a06746e430a8bc829de0d204b15d7a79f79c5e7565e59bb0b459c8ca4946293ecb25e2ce11d25cfc7f311e91c7e67342eceb31000d07
+    REPO intel/tbb
+    REF 4233fef583b4f8cbf9f781311717600feaaa0694
+    SHA512 6eb239f16e0ecacb825264869aafad7fb39aa1b1f8a3c03c92344c4255d1c1a34ca0a47a366c471fd2da808f3be14262c7e2305294677f2f490c1a48f6f76ec3
     HEAD_REF tbb_2019
 )
 
@@ -78,14 +78,14 @@ string(REPLACE
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
-    "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}\${_tbb_component}.${TBB_LIB_EXT}\")"
+    "set(_tbb_release_lib \"/${TBB_LIB_PREFIX}"
+    "set(_tbb_release_lib \"\${_tbb_root}/lib/${TBB_LIB_PREFIX}"
     _contents
     "${_contents}"
 )
 string(REPLACE
-    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
-    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}\${_tbb_component}_debug.${TBB_LIB_EXT}\")"
+    "set(_tbb_debug_lib \"/${TBB_LIB_PREFIX}"
+    "set(_tbb_debug_lib \"\${_tbb_root}/debug/lib/${TBB_LIB_PREFIX}"
     _contents
     "${_contents}"
 )

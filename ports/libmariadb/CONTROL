@@ -1,3 +1,4 @@
 Source: libmariadb
 Version: 3.0.10-1
+Homepage: https://github.com/MariaDB/mariadb-connector-c
 Description: MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases

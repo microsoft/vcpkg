@@ -27,11 +27,15 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 # Install tool
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tesseract)
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
+set(EXTENSION)
+if(WIN32)
+    set(EXTENSION ".exe")
+endif()
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/tesseract)
 
 vcpkg_copy_pdbs()

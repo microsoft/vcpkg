@@ -10,6 +10,9 @@
 
 #include <vector>
 #include <memory>
+#include <vcpkg/dependencies.h>
+
+using vcpkg::Dependencies::PathsPortFileProvider;
 
 namespace vcpkg::Commands::DependInfo
 {
@@ -20,7 +23,8 @@ namespace vcpkg::Commands::DependInfo
     constexpr std::array<CommandSwitch, 3> DEPEND_SWITCHES = {{
         {OPTION_DOT, "Creates graph on basis of dot"},
         {OPTION_DGML, "Creates graph on basis of dgml"},
-        {OPTION_NO_RECURSE, "Computes only immediate dependencies of packages explicitly specified on the command-line"},
+        {OPTION_NO_RECURSE,
+         "Computes only immediate dependencies of packages explicitly specified on the command-line"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -38,7 +42,7 @@ namespace vcpkg::Commands::DependInfo
         return output;
     }
 
-    std::string create_dot_as_string(const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+    std::string create_dot_as_string(const std::vector<const SourceControlFile*>& source_control_files)
     {
         int empty_node_count = 0;
 
@@ -67,7 +71,7 @@ namespace vcpkg::Commands::DependInfo
         return s;
     }
 
-    std::string create_dgml_as_string(const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+    std::string create_dgml_as_string(const std::vector<const SourceControlFile*>& source_control_files)
     {
         std::string s;
         s.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -112,7 +116,7 @@ namespace vcpkg::Commands::DependInfo
     }
 
     std::string create_graph_as_string(const std::unordered_set<std::string>& switches,
-                                       const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
+                                       const std::vector<const SourceControlFile*>& source_control_files)
     {
         if (Util::Sets::contains(switches, OPTION_DOT))
         {
@@ -127,7 +131,7 @@ namespace vcpkg::Commands::DependInfo
 
     void build_dependencies_list(std::set<std::string>& packages_to_keep,
                                  const std::string& requested_package,
-                                 const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files,
+                                 const std::vector<const SourceControlFile*>& source_control_files,
                                  const std::unordered_set<std::string>& switches)
     {
         auto maybe_requested_spec = ParsedSpecifier::from_string(requested_package);
@@ -208,7 +212,11 @@ namespace vcpkg::Commands::DependInfo
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        auto source_control_files = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        // TODO: Optimize implementation, current implementation needs to load all ports from disk which is too slow.
+        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        auto source_control_files = Util::fmap(provider.load_all_control_files(), [](auto&& scfl) -> const SourceControlFile * {
+            return scfl->source_control_file.get();
+        });
 
         if (args.command_arguments.size() >= 1)
         {
@@ -232,7 +240,7 @@ namespace vcpkg::Commands::DependInfo
 
         for (auto&& source_control_file : source_control_files)
         {
-            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
+            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph.get();
             const auto s = Strings::join(", ", source_paragraph.depends, [](const Dependency& d) { return d.name(); });
             System::print2(source_paragraph.name, ": ", s, "\n");
         }

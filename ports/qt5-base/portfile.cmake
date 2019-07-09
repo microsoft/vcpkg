@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
 if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
+    message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
         "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
     )
 endif()
@@ -153,7 +153,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
-    file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
+    file(INSTALL ${BINARY_TOOLS}
+         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
     file(REMOVE ${BINARY_TOOLS})
 
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_release.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
