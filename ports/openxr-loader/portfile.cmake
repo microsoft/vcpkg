@@ -17,8 +17,8 @@ vcpkg_from_github(
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and
 # vice-versa.  Might be better in future iterations to patch the CMakeLists.txt for OpenXR
-if (WIN32) 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)   
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         set(DYNAMIC_LOADER OFF)
         set(VCPKG_CRT_LINKAGE dynamic)
     else()
@@ -41,7 +41,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-
 function(COPY_BINARIES SOURCE DEST)
     # hack, because CMAKE_SHARED_LIBRARY_SUFFIX seems to be unpopulated
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -57,8 +56,11 @@ endfunction()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+# No CMake files are contained in /share only docs
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openxr-loader RENAME copyright)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     COPY_BINARIES(${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/bin)
     COPY_BINARIES(${CURRENT_PACKAGES_DIR}/debug/lib ${CURRENT_PACKAGES_DIR}/debug/bin)
