@@ -10,9 +10,9 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   return()
 endif()
 
-set(OPENSSL_VERSION 1.0.2q)
-
 vcpkg_find_acquire_program(PERL)
+
+set(OPENSSL_VERSION 1.0.2s)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
@@ -20,7 +20,7 @@ set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 403e6cad42db3ba860c3fa4fa81c1b7b02f0b873259e5c19a7fc8e42de0854602555f1b1ca74f4e3a7737a4cbd3aac063061e628ec86534586500819fae7fec0
+    SHA512 9f745452c4f777df694158e95003cde78a2cf8199bc481a563ec36644664c3c1415a774779b9791dd18f2aeb57fa1721cb52b3db12d025955e970071d5b66d2a
 )
 
 vcpkg_extract_source_archive_ex(

@@ -23,7 +23,14 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES 
         fix-missing-dll.patch
+        name_conflict.patch
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(ENABLE_STATIC ON)
+else()
+    set(ENABLE_STATIC OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -41,6 +48,7 @@ vcpkg_configure_cmake(
         -DENABLE_STDOUT=ON
         -DENABLE_WAV=ON
         -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DENABLE_STATIC=${ENABLE_STATIC}
     OPTIONS_RELEASE -DENABLE_SIMD=ON
     OPTIONS_DEBUG -DENABLE_SIMD=OFF
 )

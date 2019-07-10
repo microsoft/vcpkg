@@ -32,7 +32,7 @@ endif()
 
 
 if(CMD MATCHES "^BUILD$")
-    set(CMAKE_TRIPLET_FILE ${VCPKG_ROOT_DIR}/triplets/${TARGET_TRIPLET}.cmake)
+    set(CMAKE_TRIPLET_FILE ${TARGET_TRIPLET_FILE})
     if(NOT EXISTS ${CMAKE_TRIPLET_FILE})
         message(FATAL_ERROR "Unsupported target triplet. Triplet file does not exist: ${CMAKE_TRIPLET_FILE}")
     endif()
@@ -68,6 +68,8 @@ if(CMD MATCHES "^BUILD$")
 
     include(${CMAKE_TRIPLET_FILE})
     set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
+    include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_definitions.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_functions.cmake)
     include(${CURRENT_PORT_DIR}/portfile.cmake)
 
     set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)

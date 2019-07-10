@@ -229,7 +229,8 @@ namespace vcpkg::Remove
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            Dependencies::PathsPortFileProvider provider(paths);
+            // Load ports from ports dirs
+            Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });
