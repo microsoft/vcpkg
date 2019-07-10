@@ -5,17 +5,30 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.0.0
-    SHA512 69e57d4ba1fc43d212fd0fff69a2b5d48a3b37cfee7054fdc083cbb7e04d92317609a32e457229661d70ce8d9b16c9d25e81bfc3861db660dd2c8f292202d447
+    REF 4.1.0
+    SHA512 d617f5c5b826640b2871dbe3d7973bcc5e66fafd837921a20e009d683806ed50f0f258aa455019d99fc54f5cb65c2fa0380e3a3c92b39ab0684b8799c730b09d
     HEAD_REF master
-    PATCHES
-        use-vcpkg-icu.patch
-        ws2-32.patch
-        leptonica.patch
 )
 
 # The built-in cmake FindICU is better
 file(REMOVE ${SOURCE_PATH}/cmake/FindICU.cmake)
+
+# Handle Static Library Output
+if(VCPKG_LIBRARY_LINKAGE EQUAL "static")
+    list(APPEND OPTIONS_LIST -DSTATIC=ON)
+endif()
+
+# Handle CONTROL
+if("training_tools" IN_LIST FEATURES)
+    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=ON)
+else()
+    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=OFF)
+endif()
+if("independed_architecture" IN_LIST FEATURES)
+    list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=none)
+else()
+    list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -23,6 +36,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSTATIC=ON
         -DUSE_SYSTEM_ICU=True
+	${OPTIONS_LIST}
 )
 
 vcpkg_install_cmake()
@@ -31,7 +45,30 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 # Install tool
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tesseract)
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
+set(EXTENSION)
+if(WIN32)
+    set(EXTENSION ".exe")
+endif()
+
+# copy training tools
+if("training_tools" IN_LIST FEATURES)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/ambiguous_words${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/classifier_tester${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/combine_tessdata${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/cntraining${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/dawg2wordlist${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/mftraining${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/shapeclustering${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/wordlist2dawg${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/combine_lang_model${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/lstmeval${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/lstmtraining${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/set_unicharset_properties${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/unicharset_extractor${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/text2image${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
+endif()
+
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/tesseract)
 
 vcpkg_copy_pdbs()
