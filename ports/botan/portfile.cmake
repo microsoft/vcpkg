@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF 0129d3172ec419beb90a2b3487f6385a35da0742
     SHA512 a8328df5ad2693a96935d1d2202ddd6678a5ba9c63a8159acbe56f1c884fa5faaa71339e8f56284cfd00574a9b4f91bdb1fb22c36c8e899d9b4cbe881f4867d3
     HEAD_REF master
+	PATCHES
+		fix-build_error.patch
 )
 
 if(CMAKE_HOST_WIN32)
