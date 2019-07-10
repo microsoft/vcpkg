@@ -2,4 +2,5 @@
 Source: boost-function-types
 Version: 1.70.0
 Build-Depends: boost-config, boost-core, boost-detail, boost-mpl, boost-preprocessor, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/function_types
 Description: Boost function_types module

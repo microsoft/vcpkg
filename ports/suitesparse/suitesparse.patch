@@ -1,17 +1,82 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3486f05..98badb6 100644
+index 3486f05..b8c2e63 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -252,7 +252,7 @@ if(SuiteSparse_LAPACK_BLAS_LIB_DIR) # "Export" the imported targets in config.cm
- 	set_property(TARGET lapack PROPERTY IMPORTED_IMPLIB 	\${_SuiteSparse_PREFIX}/${SuiteSparse_LAPACK_BLAS_LIB_DIR}/liblapack.lib)")
+@@ -191,68 +191,14 @@ if(WITH_CUDA)
+ 	ENDIF(${CUDA_FOUND})
  endif()
+ 
+-find_package(BLAS)
+-find_package(LAPACK)
+-if (LAPACK_FOUND AND BLAS_FOUND)
++find_package(BLAS REQUIRED)
++find_package(LAPACK REQUIRED)
++if(LAPACK_FOUND AND BLAS_FOUND)
+ 	message(STATUS "found lapack and blas config file. Linking targets lapack and blas")
+ 	set(SuiteSparse_LINKER_LAPACK_BLAS_LIBS ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+-else () # LAPACK is not found
+-
+-## Need to use SuiteSparse_LINKER_LAPACK_BLAS_LIBS in our subproject in case of SHARED flag is set to ON
+-SET(SUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS OFF CACHE BOOL "Check if you have custom LAPACK/BLAS libraries (AMD,...)")
+-IF (SUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS)
+-	SET(SUITESPARSE_CUSTOM_BLAS_LIB "" CACHE FILE "Path to custom library file for BLAS")
+-	SET(SUITESPARSE_CUSTOM_LAPACK_LIB "" CACHE FILE "Path to custom library file for LAPACK")
+-	IF (NOT EXISTS "${SUITESPARSE_CUSTOM_BLAS_LIB}" OR NOT EXISTS "${SUITESPARSE_CUSTOM_LAPACK_LIB}")
+-		MESSAGE("*Error*: Correctly set SUITESPARSE_CUSTOM_BLAS_LIB and SUITESPARSE_CUSTOM_LAPACK_LIB or uncheck SUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS")
+-	ELSE()
+-		SET(SuiteSparse_LINKER_LAPACK_BLAS_LIBS ${SUITESPARSE_CUSTOM_BLAS_LIB} ${SUITESPARSE_CUSTOM_LAPACK_LIB})
+-	ENDIF()
+-ELSE()
+-	IF (UNIX)
+-		SET(SuiteSparse_LINKER_LAPACK_BLAS_LIBS lapack blas rt)
+-	ELSE()
+-		IF(CMAKE_SIZEOF_VOID_P EQUAL 8)  # Size in bytes!
+-			set(PATH_WORD_SIZE "x64")
+-		ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)  # Size in bytes!
+-			set(PATH_WORD_SIZE "x32")
+-		ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+-
+-		add_library(blas SHARED IMPORTED)
+-		set_property(TARGET blas PROPERTY IMPORTED_LOCATION ${SuiteSparseProject_SOURCE_DIR}/lapack_windows/${PATH_WORD_SIZE}/libblas.dll)
+-		set_property(TARGET blas PROPERTY IMPORTED_IMPLIB 	${SuiteSparseProject_SOURCE_DIR}/lapack_windows/${PATH_WORD_SIZE}/libblas.lib)
+-
+-		add_library(lapack SHARED IMPORTED)
+-		set_property(TARGET lapack PROPERTY IMPORTED_LOCATION 	${SuiteSparseProject_SOURCE_DIR}/lapack_windows/${PATH_WORD_SIZE}/liblapack.dll)
+-		set_property(TARGET lapack PROPERTY IMPORTED_IMPLIB 	${SuiteSparseProject_SOURCE_DIR}/lapack_windows/${PATH_WORD_SIZE}/liblapack.lib)
+-
+-		SET(SuiteSparse_LINKER_LAPACK_BLAS_LIBS blas lapack)
+-
+-		## install lapack and blas dependencies
+-		file(GLOB lapack_blas_windows_libs 	"${CMAKE_SOURCE_DIR}/lapack_windows/${PATH_WORD_SIZE}/*.lib")
+-		file(GLOB lapack_blas_windows_dll 	"${CMAKE_SOURCE_DIR}/lapack_windows/${PATH_WORD_SIZE}/*.dll")
+-		if(lapack_blas_windows_dll AND lapack_blas_windows_libs)
+-			set(SuiteSparse_LAPACK_BLAS_LIB_DIR "lib${LIB_POSTFIX}/lapack_blas_windows")
+-			install(FILES 		${lapack_blas_windows_libs}
+-								${lapack_blas_windows_dll}
+-					DESTINATION ${SuiteSparse_LAPACK_BLAS_LIB_DIR}
+-			)
+-		endif()
+-	ENDIF()
+-ENDIF()
+-ENDIF() # LAPACK found
+-
+-if(SuiteSparse_LAPACK_BLAS_LIB_DIR) # "Export" the imported targets in config.cmake manually
+-	set(ExternConfig "add_library(blas SHARED IMPORTED)
+-	set_property(TARGET blas PROPERTY IMPORTED_LOCATION \${_SuiteSparse_PREFIX}/${SuiteSparse_LAPACK_BLAS_LIB_DIR}/libblas.dll)
+-	set_property(TARGET blas PROPERTY IMPORTED_IMPLIB 	\${_SuiteSparse_PREFIX}/${SuiteSparse_LAPACK_BLAS_LIB_DIR}/libblas.lib)
+-
+-	add_library(lapack SHARED IMPORTED)
+-	set_property(TARGET lapack PROPERTY IMPORTED_LOCATION 	\${_SuiteSparse_PREFIX}/${SuiteSparse_LAPACK_BLAS_LIB_DIR}/liblapack.dll)
+-	set_property(TARGET lapack PROPERTY IMPORTED_IMPLIB 	\${_SuiteSparse_PREFIX}/${SuiteSparse_LAPACK_BLAS_LIB_DIR}/liblapack.lib)")
+-endif()
++endif() # LAPACK is not found
  
 -IF(BUILD_METIS)
 +IF(BUILD_METIS OR USE_VCPKG_METIS)
  	set(SuiteSparse_LINKER_METIS_LIBS "metis")
  	## namespaced library target for config
  	set(SuiteSparse_EXPORTED_METIS_LIBS "SuiteSparse::metis")
-@@ -311,7 +311,7 @@ configure_file(cmake/SuiteSparse-config-install.cmake.in
+@@ -311,7 +257,7 @@ configure_file(cmake/SuiteSparse-config-install.cmake.in
  ## do the EXPORT for allowing other project to easily use suitesparse with cmake
  install(EXPORT SuiteSparseTargets
  	FILE
@@ -20,6 +85,18 @@ index 3486f05..98badb6 100644
  	NAMESPACE
  		SuiteSparse::
  	DESTINATION
+diff --git a/SuiteSparse/CHOLMOD/Include/cholmod_blas.h b/SuiteSparse/CHOLMOD/Include/cholmod_blas.h
+index aef3e63..907512b 100644
+--- a/SuiteSparse/CHOLMOD/Include/cholmod_blas.h
++++ b/SuiteSparse/CHOLMOD/Include/cholmod_blas.h
+@@ -27,6 +27,7 @@
+ #elif defined (__linux) || defined (MGLNX86) || defined (ARCH_GLNX86)
+ #define CHOLMOD_LINUX
+ #define CHOLMOD_ARCHITECTURE "Linux"
++#define BLAS_NO_UNDERSCORE
+ 
+ #elif defined (__APPLE__)
+ #define CHOLMOD_MAC
 diff --git a/SuiteSparse/CMakeLists.txt b/SuiteSparse/CMakeLists.txt
 index c6e2834..5ef08a6 100644
 --- a/SuiteSparse/CMakeLists.txt

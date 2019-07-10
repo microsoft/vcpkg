@@ -1,4 +1,5 @@
 Source: aubio
 Version: 0.4.9
+Homepage: https://github.com/aubio/aubio
 Description: Aubio is a tool designed for the extraction of annotations from audio signals. Its features include segmenting a sound file before each of its attacks, performing pitch detection, tapping the beat and producing midi streams from live audio.
 Build-Depends: ffmpeg, libsndfile, libogg, libflac, libvorbis, bzip2, liblzma

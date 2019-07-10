@@ -1,0 +1,3 @@
+Source: hedley
+Version: 2019-05-08-1
+Description: A C/C++ header to help move #ifdefs out of your code

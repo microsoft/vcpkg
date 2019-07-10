@@ -1,4 +1,5 @@
 Source: jack2
 Version: 1.9.12-1
+Homepage: https://github.com/jackaudio/jack2
 Description: Cross-platform API that enables device sharing and inter-application audio routing
 

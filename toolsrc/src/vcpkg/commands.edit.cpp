@@ -19,26 +19,16 @@ namespace vcpkg::Commands::Edit
             HKEY root;
             StringLiteral subkey;
         } REGKEYS[] = {
-            {
-                HKEY_LOCAL_MACHINE,
-                R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)"
-            },
-            {
-                HKEY_LOCAL_MACHINE,
-                R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)"
-            },
-            {
-                HKEY_LOCAL_MACHINE,
-                R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)"
-            },
-            {
-                HKEY_CURRENT_USER,
-                R"(Software\Microsoft\Windows\CurrentVersion\Uninstall\{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1)"
-            },
-            {
-                HKEY_LOCAL_MACHINE,
-                R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1)"
-            },
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)"},
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)"},
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)"},
+            {HKEY_CURRENT_USER,
+             R"(Software\Microsoft\Windows\CurrentVersion\Uninstall\{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1)"},
+            {HKEY_LOCAL_MACHINE,
+             R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1)"},
         };
 
         for (auto&& keypath : REGKEYS)
@@ -89,6 +79,7 @@ namespace vcpkg::Commands::Edit
             const auto& fs = paths.get_filesystem();
             auto packages = fs.get_files_non_recursive(paths.packages);
 
+            // TODO: Support edit for --overlay-ports
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
                 const auto portpath = paths.ports / port_name;
                 const auto portfile = portpath / "portfile.cmake";
@@ -177,7 +168,8 @@ namespace vcpkg::Commands::Edit
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
 #elif defined(__APPLE__)
-        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
+        candidate_paths.push_back(
+            fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
         candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
 #elif defined(__linux__)
         candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});

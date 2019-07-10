@@ -31,6 +31,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    NO_CHARSET_FLAG
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DINSTALL_LIBMSIX=ON

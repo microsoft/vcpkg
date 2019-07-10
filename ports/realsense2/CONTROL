@@ -1,7 +1,12 @@
 Source: realsense2
-Version: 2.16.1-2
+Version: 2.22.0-1
+Homepage: https://github.com/IntelRealSense/librealsense
 Description: Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel® RealSense™ depth cameras (D400 series and the SR300).
 
 Feature: tools
 Build-Depends: opengl
 Description: Build Intel® RealSense™ examples and tools
+
+Feature: openni2
+Build-Depends: openni2
+Description: Build Intel® RealSense™ OpenNI2 driver

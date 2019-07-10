@@ -1,0 +1,3 @@
+Source: simde
+Version: 2019-06-05
+Description: Implementations of SIMD instruction sets for systems which don't natively support them
