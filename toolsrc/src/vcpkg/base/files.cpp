@@ -21,8 +21,8 @@
 #include <copyfile.h>
 #endif
 
-namespace fs {
-    file_status decltype(symlink_status)::operator()(const path& p, std::error_code& ec) const noexcept {
+namespace fs::detail {
+    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept {
 #if defined(_WIN32)
         /*
             do not find the permissions of the file -- it's unnecessary for the
@@ -53,7 +53,7 @@ namespace fs {
 #endif
     }
 
-    file_status decltype(symlink_status)::operator()(const path& p) const noexcept {
+    file_status symlink_status_t::operator()(const path& p) const noexcept {
         std::error_code ec;
         auto result = symlink_status(p, ec);
         if (ec) vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "error getting status of path %s: %s", p.string(), ec.message());

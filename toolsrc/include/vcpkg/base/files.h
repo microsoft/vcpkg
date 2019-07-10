@@ -25,23 +25,28 @@ namespace fs
     using stdfs::status;
 
     // we want to poison ADL with these niebloids
-    constexpr struct {
-        file_status operator()(const path& p, std::error_code& ec) const noexcept;
-        file_status operator()(const path& p) const noexcept;
-    } symlink_status{};
 
-    constexpr struct {
-        inline bool operator()(file_status s) const {
-            return stdfs::is_symlink(s);
-        }
+    namespace detail {
+        struct symlink_status_t {
+            file_status operator()(const path& p, std::error_code& ec) const noexcept;
+            file_status operator()(const path& p) const noexcept;
+        };
+        struct is_symlink_t {
+            inline bool operator()(file_status s) const {
+                return stdfs::is_symlink(s);
+            }
 
-        inline bool operator()(const path& p) const {
-            return stdfs::is_symlink(symlink_status(p));
-        }
-        inline bool operator()(const path& p, std::error_code& ec) const {
-            return stdfs::is_symlink(symlink_status(p, ec));
-        }
-    } is_symlink{};
+            inline bool operator()(const path& p) const {
+                return stdfs::is_symlink(symlink_status(p));
+            }
+            inline bool operator()(const path& p, std::error_code& ec) const {
+                return stdfs::is_symlink(symlink_status(p, ec));
+            }
+        };
+    }
+
+    constexpr detail::symlink_status_t symlink_status{};
+    constexpr detail::is_symlink_t is_symlink{};
 
     inline bool is_regular_file(file_status s) { return stdfs::is_regular_file(s); }
     inline bool is_directory(file_status s) { return stdfs::is_directory(s); }

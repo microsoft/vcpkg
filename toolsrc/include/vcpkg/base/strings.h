@@ -190,7 +190,7 @@ namespace vcpkg::Strings
     // ignores padding, since one implicitly knows the length from the size of x
     template <class Integral>
     std::string b64url_encode(Integral x) {
-        static_assert(std::is_integral_v<Integral>);
+        static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
         auto value = static_cast<std::make_unsigned_t<Integral>>(x);
 
         // 64 values, plus the implicit \0
