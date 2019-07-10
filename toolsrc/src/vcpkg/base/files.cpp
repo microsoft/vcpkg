@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/rng.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.print.h>
@@ -57,7 +56,9 @@ namespace fs {
     file_status decltype(symlink_status)::operator()(const path& p) const noexcept {
         std::error_code ec;
         auto result = symlink_status(p, ec);
-        if (ec) vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "error getting status of path %s: %s", p, ec.message());
+        if (ec) vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "error getting status of path %s: %s", p.string(), ec.message());
+
+				return result;
     }
 }
 
@@ -393,11 +394,11 @@ namespace vcpkg::Files
                 std::mutex ec_mutex;
 
                 auto queue = remove::queue([&] {
-                    index += 1 << 32;
+                    index += static_cast<std::uint64_t>(1) << 32;
                     return remove::tld{path, index, files_deleted, ec_mutex, ec};
                 });
 
-                index += 1 << 32;
+                index += static_cast<std::uint64_t>(1) << 32;
                 auto main_tld = remove::tld{path, index, files_deleted, ec_mutex, ec};
                 for (const auto& entry : fs::stdfs::directory_iterator(path)) {
                     remove{}(entry, main_tld, queue);

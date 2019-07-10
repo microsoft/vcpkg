@@ -1,10 +1,15 @@
 #pragma once
 
+#include <condition_variable>
 #include <memory>
 #include <queue>
 
 namespace vcpkg {
+    template <class Action, class ThreadLocalData>
+    struct WorkQueue;
+
     namespace detail {
+        // for SFINAE purposes, keep out of the class
         template <class Action, class ThreadLocalData>
         auto call_action(
             Action& action,
@@ -29,8 +34,8 @@ namespace vcpkg {
     template <class Action, class ThreadLocalData>
     struct WorkQueue {
         template <class F>
-        explicit WorkQueue(const F& initializer) noexcept {
-            state = State::Joining;
+        explicit WorkQueue(const F& tld_init) noexcept {
+            m_state = State::Running;
 
             std::size_t num_threads = std::thread::hardware_concurrency();
             if (num_threads == 0) {
@@ -39,7 +44,7 @@ namespace vcpkg {
 
             m_threads.reserve(num_threads);
             for (std::size_t i = 0; i < num_threads; ++i) {
-                m_threads.emplace_back(this, initializer);
+                m_threads.push_back(std::thread(Worker{this, tld_init()}));
             }
         }
 
@@ -93,10 +98,10 @@ namespace vcpkg {
 
                 auto lck = std::unique_lock<std::mutex>(m_mutex);
 
-                auto first = begin(rng);
-                auto last = end(rng);
+                const auto first = begin(rng);
+                const auto last = end(rng);
 
-                m_actions.reserve(m_actions.size() + (end - begin));
+                m_actions.reserve(m_actions.size() + (last - first));
 
                 std::move(first, last, std::back_insert_iterator(rng));
             }
@@ -112,10 +117,10 @@ namespace vcpkg {
 
                 auto lck = std::unique_lock<std::mutex>(m_mutex);
 
-                auto first = begin(rng);
-                auto last = end(rng);
+                const auto first = begin(rng);
+                const auto last = end(rng);
 
-                m_actions.reserve(m_actions.size() + (end - begin));
+                m_actions.reserve(m_actions.size() + (last - first));
 
                 std::copy(first, last, std::back_insert_iterator(rng));
             }
@@ -124,18 +129,15 @@ namespace vcpkg {
         }
 
     private:
-        friend struct WorkQueueWorker {
+        struct Worker {
             const WorkQueue* work_queue;
             ThreadLocalData tld;
 
-            template <class F>
-            WorkQueueWorker(const WorkQueue* work_queue, const F& initializer)
-                : work_queue(work_queue), tld(initializer())
-            { }
-
             void operator()() {
+                // unlocked when waiting, or when in the `call_action` block
+                // locked otherwise
+                auto lck = std::unique_lock<std::mutex>(work_queue->m_mutex);
                 for (;;) {
-                    auto lck = std::unique_lock<std::mutex>(work_queue->m_mutex);
                     ++work_queue->running_workers;
 
                     const auto state = work_queue->m_state;
@@ -157,10 +159,12 @@ namespace vcpkg {
                         return;
                     }
 
-                    Action action = work_queue->m_actions.pop_back();
-                    lck.unlock();
+                    Action action = std::move(work_queue->m_actions.back());
+                    work_queue->m_actions.pop_back();
 
+                    lck.unlock();
                     detail::call_action(action, *work_queue, tld);
+                    lck.lock();
                 }
             }
         };
@@ -176,7 +180,7 @@ namespace vcpkg {
         mutable State m_state;
         mutable std::uint16_t running_workers;
         mutable std::vector<Action> m_actions;
-        mutable std::condition_variable condition_variable;
+        mutable std::condition_variable m_cv;
 
         std::vector<std::thread> m_threads;
     };
