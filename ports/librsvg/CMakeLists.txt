@@ -7,7 +7,12 @@ find_package(unofficial-glib CONFIG REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_library(PANGO_LIB pango-1.0)
 find_library(PANGO_CAIRO_LIB pangocairo-1.0)
-find_library(GDK_PIXBUF_LIB gdk_pixbuf-2.0)
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+  find_library(GDK_PIXBUF_LIB gdk_pixbuf-2.0)
+else()
+  find_library(GDK_PIXBUF_LIB gdk_pixbuf-2)
+endif()
+
 find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
 
 # Add include directories
