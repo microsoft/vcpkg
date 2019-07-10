@@ -12,7 +12,10 @@ find_path(HARFBUZZ_INCLUDE_DIRS
           NAMES hb.h
           PATH_SUFFIXES harfbuzz)
 find_path(FREETYPE_ADDITIONAL_INCLUDE_DIRS NAMES ft2build.h)
-add_library(raqm ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.c ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.h)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h)
+
+add_library(raqm ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.c ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm.h ${CMAKE_CURRENT_SOURCE_DIR}/src/raqm-version.h)
 
 target_include_directories(raqm SYSTEM PUBLIC ${FREETYPE_ADDITIONAL_INCLUDE_DIRS})
 target_include_directories(raqm SYSTEM PUBLIC ${FREETYPE_INCLUDE_DIRS})

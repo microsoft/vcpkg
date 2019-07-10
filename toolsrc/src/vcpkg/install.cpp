@@ -684,7 +684,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive);
+        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 
         if (dry_run)
         {

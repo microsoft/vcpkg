@@ -33,6 +33,21 @@ namespace vcpkg
         option_field = std::make_unique<std::string>(*arg_begin);
     }
 
+    static void parse_cojoined_value(std::string new_value,
+                                     const std::string& option_name,
+                                     std::unique_ptr<std::string>& option_field)
+    {
+        if (nullptr != option_field)
+        {
+            System::printf(System::Color::error, "Error: %s specified multiple times\n", option_name);
+            Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
+            Help::print_usage();
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        option_field = std::make_unique<std::string>(std::move(new_value));
+    }
+
     static void parse_switch(bool new_setting, const std::string& option_name, Optional<bool>& option_field)
     {
         if (option_field && option_field != new_setting)
@@ -43,26 +58,6 @@ namespace vcpkg
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         option_field = new_setting;
-    }
-
-    static void parse_multivalue(const std::string* arg_begin,
-                                 const std::string* arg_end,
-                                 const std::string& option_name,
-                                 std::unique_ptr<std::vector<std::string>>& option_field)
-    {
-        if (arg_begin == arg_end)
-        {
-            System::print2(System::Color::error, "Error: expected value after ", option_name, '\n');
-            Metrics::g_metrics.lock()->track_property("error", "error option name");
-            Help::print_usage();
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        if (!option_field)
-        {
-            option_field = std::make_unique<std::vector<std::string>>();
-        }
-        option_field->emplace_back(*arg_begin);
     }
 
     static void parse_cojoined_multivalue(std::string new_value,
@@ -140,14 +135,22 @@ namespace vcpkg
 
             if (arg[0] == '-' && arg[1] == '-')
             {
-                // make argument case insensitive
+                // make argument case insensitive before the first =
                 auto& f = std::use_facet<std::ctype<char>>(std::locale());
-                f.tolower(&arg[0], &arg[0] + arg.size());
+                auto first_eq = std::find(std::begin(arg), std::end(arg), '=');
+                f.tolower(&arg[0], &arg[0] + (first_eq - std::begin(arg)));
                 // command switch
                 if (arg == "--vcpkg-root")
                 {
                     ++arg_begin;
                     parse_value(arg_begin, arg_end, "--vcpkg-root", args.vcpkg_root_dir);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--scripts-root="))
+                {
+                    parse_cojoined_value(arg.substr(sizeof("--scripts-root=") - 1),
+                                                    "--scripts-root",
+                                                    args.scripts_root_dir);
                     continue;
                 }
                 if (arg == "--triplet")
@@ -161,6 +164,13 @@ namespace vcpkg
                     parse_cojoined_multivalue(arg.substr(sizeof("--overlay-ports=") - 1),
                                               "--overlay-ports",
                                               args.overlay_ports);
+                    continue;
+                }
+                if (Strings::starts_with(arg, "--overlay-triplets="))
+                {
+                    parse_cojoined_multivalue(arg.substr(sizeof("--overlay-triplets=") - 1),
+                                              "--overlay-triplets",
+                                              args.overlay_triplets);
                     continue;
                 }
                 if (arg == "--debug")
@@ -426,7 +436,13 @@ namespace vcpkg
                        "--no-default-ports",
                        "Don't use ports inside <vcpkg_root>/ports");
         System::printf("    %-40s %s\n",
+                       "--overlay-triplets=<path>",
+                       "Specify directories containing triplets files");
+        System::printf("    %-40s %s\n",
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");
+        System::printf("    %-40s %s\n",
+                       "--scripts-root=<path>",
+                       "Specify the scripts directory to use instead of default vcpkg scripts directory");
     }
 }

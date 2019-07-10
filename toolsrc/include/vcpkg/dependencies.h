@@ -199,5 +199,7 @@ namespace vcpkg::Dependencies
                                                        const StatusParagraphs& status_db,
                                                        const CreateInstallPlanOptions& options = {});
 
-    void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive = true);
+    void print_plan(const std::vector<AnyAction>& action_plan, 
+                    const bool is_recursive = true,
+                    const fs::path& default_ports_dir = "");
 }
