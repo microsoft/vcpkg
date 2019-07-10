@@ -6,6 +6,7 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/work_queue.h>
 #include <vcpkg/base/util.h>
 
 #if defined(__linux__) || defined(__APPLE__)
@@ -20,6 +21,45 @@
 #elif defined(__APPLE__)
 #include <copyfile.h>
 #endif
+
+namespace fs {
+    file_status decltype(symlink_status)::operator()(const path& p, std::error_code& ec) const noexcept {
+#if defined(_WIN32)
+        /*
+            do not find the permissions of the file -- it's unnecessary for the
+            things that vcpkg does.
+            if one were to add support for this in the future, one should look
+            into GetFileSecurityW
+        */
+        perms permissions = perms::unknown;
+
+        WIN32_FILE_ATTRIBUTE_DATA file_attributes;
+        file_type ft = file_type::unknown;
+        if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes)) {
+            ft = file_type::not_found;
+        } else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+            // check for reparse point -- if yes, then symlink
+            ft = file_type::symlink;
+        } else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            ft = file_type::directory;
+        } else {
+            // otherwise, the file is a regular file
+            ft = file_type::regular;
+        }
+
+        return file_status(ft, permissions);
+
+#else
+        return stdfs::symlink_status(p, ec);
+#endif
+    }
+
+    file_status decltype(symlink_status)::operator()(const path& p) const noexcept {
+        std::error_code ec;
+        auto result = symlink_status(p, ec);
+        if (ec) vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "error getting status of path %s: %s", p, ec.message());
+    }
+}
 
 namespace vcpkg::Files
 {
@@ -263,55 +303,129 @@ namespace vcpkg::Files
                 (as well as on macOS and Linux), this is just as fast and will have
                 fewer spurious errors due to locks.
             */
-            struct recursive {
-                const fs::path& tmp_directory;
-                std::error_code& ec;
-                xoshiro256ss_engine& rng;
 
-                void operator()(const fs::path& current) const {
-                    const auto type = fs::stdfs::symlink_status(current, ec).type();
-                    if (ec) return;
+            /*
+                `remove` doesn't actually remove anything -- it simply moves the
+                files into a parent directory (which ends up being at `path`),
+                and then inserts `actually_remove{current_path}` into the work
+                queue.
+            */
+            struct remove {
+                struct tld {
+                    const fs::path& tmp_directory;
+                    std::uint64_t index;
 
-                    const auto tmp_name = Strings::b64url_encode(rng());
-                    const auto tmp_path = tmp_directory / tmp_name;
+                    std::atomic<std::uintmax_t>& files_deleted;
 
-                    switch (type) {
-                    case fs::file_type::directory: {
-                        fs::stdfs::rename(current, tmp_path, ec);
-                        if (ec) return;
-                        for (const auto& entry : fs::stdfs::directory_iterator(tmp_path)) {
-                            (*this)(entry);
+                    std::mutex& ec_mutex;
+                    std::error_code& ec;
+                };
+
+                struct actually_remove;
+                using queue = WorkQueue<actually_remove, tld>;
+
+                /*
+                    if `current_path` is a directory, first `remove`s all
+                    elements of the directory, then calls remove.
+
+                    else, just calls remove.
+                */
+                struct actually_remove {
+                    fs::path current_path;
+
+                    void operator()(tld& info, const queue& queue) const {
+                        std::error_code ec;
+                        const auto path_type = fs::symlink_status(current_path, ec).type();
+
+                        if (check_ec(ec, info, queue)) return;
+
+                        if (path_type == fs::file_type::directory) {
+                            for (const auto& entry : fs::stdfs::directory_iterator(current_path)) {
+                                remove{}(entry, info, queue);
+                            }
                         }
-                        fs::stdfs::remove(tmp_path, ec);
-                    } break;
-                    case fs::file_type::symlink:
-                    case fs::file_type::regular: {
-                        fs::stdfs::rename(current, tmp_path, ec);
-                        fs::stdfs::remove(current, ec);
-                    } break;
-                    case fs::file_type::not_found: return;
-                    case fs::file_type::none: {
-                        Checks::exit_with_message(VCPKG_LINE_INFO, "Error occurred when evaluating file type of file: %s", current);
+
+                        if (fs::stdfs::remove(current_path, ec)) {
+                            info.files_deleted.fetch_add(1, std::memory_order_relaxed);
+                        } else {
+                            check_ec(ec, info, queue);
+                        }
                     }
-                    default: {
-                        Checks::exit_with_message(VCPKG_LINE_INFO, "Attempted to delete special file: %s", current);
+                };
+
+                static bool check_ec(const std::error_code& ec, tld& info, const queue& queue) {
+                    if (ec) {
+                        queue.terminate();
+
+                        auto lck = std::unique_lock<std::mutex>(info.ec_mutex);
+                        if (!info.ec) {
+                            info.ec = ec;
+                        }
+
+                        return true;
+                    } else {
+                        return false;
                     }
-                    }
+                }
+
+                void operator()(const fs::path& current_path, tld& info, const queue& queue) const {
+                    std::error_code ec;
+
+                    const auto type = fs::symlink_status(current_path, ec).type();
+                    if (check_ec(ec, info, queue)) return;
+
+                    const auto tmp_name = Strings::b64url_encode(info.index++);
+                    const auto tmp_path = info.tmp_directory / tmp_name;
+
+                    fs::stdfs::rename(current_path, tmp_path, ec);
+                    if (check_ec(ec, info, queue)) return;
+
+                    queue.enqueue_action(actually_remove{std::move(tmp_path)});
                 }
             };
 
-            auto const real_path = fs::stdfs::absolute(path);
+            const auto path_type = fs::symlink_status(path, ec).type();
 
-            if (! real_path.has_parent_path()) {
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Attempted to remove_all the base directory");
+            std::atomic<std::uintmax_t> files_deleted = 0;
+
+            if (path_type == fs::file_type::directory) {
+                std::uint64_t index = 0;
+                std::mutex ec_mutex;
+
+                auto queue = remove::queue([&] {
+                    index += 1 << 32;
+                    return remove::tld{path, index, files_deleted, ec_mutex, ec};
+                });
+
+                index += 1 << 32;
+                auto main_tld = remove::tld{path, index, files_deleted, ec_mutex, ec};
+                for (const auto& entry : fs::stdfs::directory_iterator(path)) {
+                    remove{}(entry, main_tld, queue);
+                }
+
+                queue.join();
             }
 
-            // thoughts: is this fine? or should we do something different?
-            // maybe a temporary directory?
-            auto const base_path = real_path.parent_path();
+            /*
+                we need to do backoff on the removal of the top level directory,
+                since we need to place all moved files into that top level
+                directory, and so we can only delete the directory after all the
+                lower levels have been deleted.
+            */
+            for (int backoff = 0; backoff < 5; ++backoff) {
+                if (backoff) {
+                    using namespace std::chrono_literals;
+                    auto backoff_time = 100ms * backoff;
+                    std::this_thread::sleep_for(backoff_time);
+                }
 
-            xoshiro256ss_engine rng{};
-            recursive{base_path, ec, rng}(real_path);
+                if (fs::stdfs::remove(path, ec)) {
+                    files_deleted.fetch_add(1, std::memory_order_relaxed);
+                    break;
+                }
+            }
+
+            return files_deleted;
         }
         virtual bool exists(const fs::path& path) const override { return fs::stdfs::exists(path); }
         virtual bool is_directory(const fs::path& path) const override { return fs::stdfs::is_directory(path); }
@@ -343,11 +457,11 @@ namespace vcpkg::Files
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
         {
-            return fs::stdfs::status(path, ec);
+            return fs::status(path, ec);
         }
         virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const override
         {
-            return fs::stdfs::symlink_status(path, ec);
+            return fs::symlink_status(path, ec);
         }
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {

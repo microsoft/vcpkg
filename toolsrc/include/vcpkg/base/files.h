@@ -12,13 +12,49 @@ namespace fs
     using stdfs::copy_options;
     using stdfs::file_status;
     using stdfs::file_type;
+    using stdfs::perms;
     using stdfs::path;
     using stdfs::u8path;
 
+    /*
+        std::experimental::filesystem's file_status and file_type are broken in
+        the presence of symlinks -- a symlink is treated as the object it points
+        to for `symlink_status` and `symlink_type`
+    */
+
+    using stdfs::status;
+
+    // we want to poison ADL with these niebloids
+    constexpr struct {
+        file_status operator()(const path& p, std::error_code& ec) const noexcept;
+        file_status operator()(const path& p) const noexcept;
+    } symlink_status{};
+
+    constexpr struct {
+        inline bool operator()(file_status s) const {
+            return stdfs::is_symlink(s);
+        }
+
+        inline bool operator()(const path& p) const {
+            return stdfs::is_symlink(symlink_status(p));
+        }
+        inline bool operator()(const path& p, std::error_code& ec) const {
+            return stdfs::is_symlink(symlink_status(p, ec));
+        }
+    } is_symlink{};
+
     inline bool is_regular_file(file_status s) { return stdfs::is_regular_file(s); }
     inline bool is_directory(file_status s) { return stdfs::is_directory(s); }
-    inline bool is_symlink(file_status s) { return stdfs::is_symlink(s); }
 }
+
+/*
+    if someone attempts to use unqualified `symlink_status` or `is_symlink`,
+    they might get the ADL version, which is broken.
+    Therefore, put `symlink_status` in the global namespace, so that they get
+    our symlink_status.
+*/
+using fs::symlink_status;
+using fs::is_symlink;
 
 namespace vcpkg::Files
 {
