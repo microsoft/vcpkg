@@ -129,7 +129,7 @@ namespace vcpkg::Files
             file_stream.read(&output[0], length);
             file_stream.close();
 
-            return std::move(output);
+            return output;
         }
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const override
         {
@@ -147,7 +147,7 @@ namespace vcpkg::Files
             }
             file_stream.close();
 
-            return std::move(output);
+            return output;
         }
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
                                                   const std::string& filename) const override
@@ -372,9 +372,6 @@ namespace vcpkg::Files
                 void operator()(const fs::path& current_path, tld& info, const queue& queue) const {
                     std::error_code ec;
 
-                    const auto type = fs::symlink_status(current_path, ec).type();
-                    if (check_ec(ec, info, queue)) return;
-
                     const auto tmp_name = Strings::b64url_encode(info.index++);
                     const auto tmp_path = info.tmp_directory / tmp_name;
 
@@ -387,16 +384,16 @@ namespace vcpkg::Files
 
             const auto path_type = fs::symlink_status(path, ec).type();
 
-            std::atomic<std::uintmax_t> files_deleted = 0;
+            std::atomic<std::uintmax_t> files_deleted{0};
 
             if (path_type == fs::file_type::directory) {
                 std::uint64_t index = 0;
                 std::mutex ec_mutex;
 
-                auto queue = remove::queue([&] {
+                remove::queue queue{[&] {
                     index += static_cast<std::uint64_t>(1) << 32;
                     return remove::tld{path, index, files_deleted, ec_mutex, ec};
-                });
+                }};
 
                 index += static_cast<std::uint64_t>(1) << 32;
                 auto main_tld = remove::tld{path, index, files_deleted, ec_mutex, ec};

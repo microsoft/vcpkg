@@ -103,7 +103,7 @@ namespace vcpkg {
 
                 m_actions.reserve(m_actions.size() + (last - first));
 
-                std::move(first, last, std::back_insert_iterator(rng));
+                std::move(first, last, std::back_inserter(rng));
             }
 
             m_cv.notify_all();
@@ -122,7 +122,7 @@ namespace vcpkg {
 
                 m_actions.reserve(m_actions.size() + (last - first));
 
-                std::copy(first, last, std::back_insert_iterator(rng));
+                std::copy(first, last, std::back_inserter(rng));
             }
 
             m_cv.notify_all();

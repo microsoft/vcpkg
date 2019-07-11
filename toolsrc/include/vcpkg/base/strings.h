@@ -191,7 +191,8 @@ namespace vcpkg::Strings
     template <class Integral>
     std::string b64url_encode(Integral x) {
         static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
-        auto value = static_cast<std::make_unsigned_t<Integral>>(x);
+        using Unsigned = std::make_unsigned_t<Integral>;
+        auto value = static_cast<Unsigned>(x);
 
         // 64 values, plus the implicit \0
         constexpr static char map[0x41] =
@@ -202,8 +203,8 @@ namespace vcpkg::Strings
             /*3*/ "wxyz0123456789-_"
         ;
 
-        constexpr static std::make_unsigned_t<Integral> mask = 0x3F;
         constexpr static int shift = 5;
+        constexpr static auto mask = (static_cast<Unsigned>(1) << shift) - 1;
 
         std::string result;
         // reserve ceiling(number of bits / 3)
@@ -212,6 +213,7 @@ namespace vcpkg::Strings
         while (value != 0) {
             char mapped_value = map[value & mask];
             result.push_back(mapped_value);
+            value >>= shift;
         }
 
         return result;
