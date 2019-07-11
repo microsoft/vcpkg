@@ -284,7 +284,7 @@ vcpkg_configure_cmake(
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv4
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         ###### Ungrouped Entries
         -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
@@ -332,7 +332,7 @@ vcpkg_configure_cmake(
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
-        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
+        -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
         ###### customized properties
         -DWITH_ADE=${WITH_ADE}
         -DWITH_CUBLAS=${WITH_CUDA}
@@ -369,7 +369,7 @@ vcpkg_copy_pdbs()
 
 #OpenCV does not list TIFF as a dependency. We explicitly add it to the module file, in order to fix unresolved symbols linking problems for downstream projects using OpenCV as static library
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
 find_package(TIFF REQUIRED)
@@ -398,7 +398,7 @@ find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(GDCM QUIET)
 find_package(OpenJPEG QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake "${OPENCV_MODULES}")
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
@@ -410,4 +410,4 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv4.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv4 RENAME copyright)
