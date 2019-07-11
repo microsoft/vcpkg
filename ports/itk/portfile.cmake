@@ -35,8 +35,6 @@ vcpkg_configure_cmake(
         -DITK_INSTALL_DATA_DIR=share/itk/data
         -DITK_INSTALL_DOC_DIR=share/itk/doc
         -DITK_INSTALL_PACKAGE_DIR=share/itk
-        -DITK_LEGACY_REMOVE=ON
-        -DITK_FUTURE_LEGACY_REMOVE=ON
         -DITK_USE_64BITS_IDS=ON
         -DITK_USE_CONCEPT_CHECKING=ON
         #-DITK_USE_SYSTEM_LIBRARIES=ON # enables USE_SYSTEM for all third party libraries, some of which do not have vcpkg ports such as CastXML, SWIG, MINC etc
