@@ -11,7 +11,7 @@ namespace vcpkg {
     namespace detail {
         // for SFINAE purposes, keep out of the class
         template <class Action, class ThreadLocalData>
-        auto call_action(
+        auto call_moved_action(
             Action& action,
             const WorkQueue<Action, ThreadLocalData>& work_queue,
             ThreadLocalData& tld
@@ -21,7 +21,7 @@ namespace vcpkg {
         }
 
         template <class Action, class ThreadLocalData>
-        auto call_action(
+        auto call_moved_action(
             Action& action,
             const WorkQueue<Action, ThreadLocalData>&,
             ThreadLocalData& tld
@@ -134,21 +134,18 @@ namespace vcpkg {
             ThreadLocalData tld;
 
             void operator()() {
-                // unlocked when waiting, or when in the `call_action` block
+                // unlocked when waiting, or when in the `call_moved_action`
+                // block
                 // locked otherwise
                 auto lck = std::unique_lock<std::mutex>(work_queue->m_mutex);
                 for (;;) {
-                    ++work_queue->running_workers;
-
                     const auto state = work_queue->m_state;
 
                     if (state == State::Terminated) {
-                        --work_queue->running_workers;
                         return;
                     }
 
                     if (work_queue->m_actions.empty()) {
-                        --work_queue->running_workers;
                         if (state == State::Running || work_queue->running_workers > 0) {
                             work_queue->m_cv.wait(lck);
                             continue;
@@ -162,9 +159,11 @@ namespace vcpkg {
                     Action action = std::move(work_queue->m_actions.back());
                     work_queue->m_actions.pop_back();
 
+                    ++work_queue->running_workers;
                     lck.unlock();
-                    detail::call_action(action, *work_queue, tld);
+                    detail::call_moved_action(action, *work_queue, tld);
                     lck.lock();
+                    --work_queue->running_workers;
                 }
             }
         };

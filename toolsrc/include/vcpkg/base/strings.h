@@ -208,11 +208,13 @@ namespace vcpkg::Strings
 
         std::string result;
         // reserve ceiling(number of bits / 3)
-        result.reserve((sizeof(value) * 8 + 2) / 3);
+        result.resize((sizeof(value) * 8 + 2) / 3, map[0]);
 
-        while (value != 0) {
-            char mapped_value = map[value & mask];
-            result.push_back(mapped_value);
+        for (char& c: result) {
+            if (value == 0) {
+                break;
+            }
+            c = map[value & mask];
             value >>= shift;
         }
 
