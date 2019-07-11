@@ -363,7 +363,8 @@ namespace vcpkg::Build
         const Triplet& triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
-        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
+        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path,
+                                                         paths.triplets.u8string()))
         {
             System::printf("-- Loading triplet configuration from: %s\n", triplet_file_path);
         }
@@ -495,7 +496,8 @@ namespace vcpkg::Build
                 if (fs.is_directory(file)) // Will only keep the logs
                 {
                     std::error_code ec;
-                    fs.remove_all(file, ec);
+                    fs::path failure_point;
+                    fs.remove_all(file, ec, failure_point);
                 }
             }
         }
@@ -610,8 +612,8 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
 
         auto pkg_path = paths.package_dir(spec);
+        fs.remove_all(pkg_path, VCPKG_LINE_INFO);
         std::error_code ec;
-        fs.remove_all(pkg_path, ec);
         fs.create_directories(pkg_path, ec);
         auto files = fs.get_files_non_recursive(pkg_path);
         Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
@@ -794,7 +796,7 @@ namespace vcpkg::Build
                     fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
                     // clean up temporary directory
-                    fs.remove_all(tmp_log_path, ec);
+                    fs.remove_all(tmp_log_path, VCPKG_LINE_INFO);
                 }
             }
 
@@ -1018,7 +1020,7 @@ namespace vcpkg::Build
                 hash += "-";
                 hash += Hash::get_file_hash(fs, *p, "SHA1");
             }
-            else if (pre_build_info.cmake_system_name.empty() || 
+            else if (pre_build_info.cmake_system_name.empty() ||
                      pre_build_info.cmake_system_name == "WindowsStore")
             {
                 hash += "-";

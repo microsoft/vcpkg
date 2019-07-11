@@ -5,8 +5,8 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/base/work_queue.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/base/work_queue.h>
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
@@ -21,8 +21,10 @@
 #include <copyfile.h>
 #endif
 
-namespace fs::detail {
-    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept {
+namespace fs::detail
+{
+    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept
+    {
 #if defined(_WIN32)
         /*
             do not find the permissions of the file -- it's unnecessary for the
@@ -34,14 +36,21 @@ namespace fs::detail {
 
         WIN32_FILE_ATTRIBUTE_DATA file_attributes;
         file_type ft = file_type::unknown;
-        if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes)) {
+        if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
+        {
             ft = file_type::not_found;
-        } else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+        }
+        else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+        {
             // check for reparse point -- if yes, then symlink
             ft = file_type::symlink;
-        } else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+        }
+        else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
             ft = file_type::directory;
-        } else {
+        }
+        else
+        {
             // otherwise, the file is a regular file
             ft = file_type::regular;
         }
@@ -53,12 +62,13 @@ namespace fs::detail {
 #endif
     }
 
-    file_status symlink_status_t::operator()(const path& p) const noexcept {
+    file_status symlink_status_t::operator()(const path& p, vcpkg::LineInfo li) const noexcept
+    {
         std::error_code ec;
         auto result = symlink_status(p, ec);
-        if (ec) vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "error getting status of path %s: %s", p.string(), ec.message());
+        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
 
-				return result;
+        return result;
     }
 }
 
@@ -103,6 +113,25 @@ namespace vcpkg::Files
         std::error_code ec;
         this->write_lines(path, lines, ec);
         if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", path.u8string(), ec.message());
+    }
+
+    std::uintmax_t Filesystem::remove_all(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        fs::path failure_point;
+
+        const auto result = this->remove_all(path, ec, failure_point);
+
+        if (ec)
+        {
+            Checks::exit_with_message(li,
+                                      "Failure to remove_all(%s) due to file %s: %s",
+                                      path.string(),
+                                      failure_point.string(),
+                                      ec.message());
+        }
+
+        return result;
     }
 
     struct RealFilesystem final : Filesystem
@@ -296,7 +325,7 @@ namespace vcpkg::Files
 #endif
         }
         virtual bool remove(const fs::path& path, std::error_code& ec) override { return fs::stdfs::remove(path, ec); }
-        virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) override
+        virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) override
         {
             /*
                 does not use the std::filesystem call since it is buggy, and can
@@ -311,8 +340,10 @@ namespace vcpkg::Files
                 and then inserts `actually_remove{current_path}` into the work
                 queue.
             */
-            struct remove {
-                struct tld {
+            struct remove
+            {
+                struct tld
+                {
                     const fs::path& tmp_directory;
                     std::uint64_t index;
 
@@ -320,6 +351,7 @@ namespace vcpkg::Files
 
                     std::mutex& ec_mutex;
                     std::error_code& ec;
+                    fs::path& failure_point;
                 };
 
                 struct actually_remove;
@@ -331,52 +363,68 @@ namespace vcpkg::Files
 
                     else, just calls remove.
                 */
-                struct actually_remove {
+                struct actually_remove
+                {
                     fs::path current_path;
 
-                    void operator()(tld& info, const queue& queue) const {
+                    void operator()(tld& info, const queue& queue) const
+                    {
                         std::error_code ec;
                         const auto path_type = fs::symlink_status(current_path, ec).type();
 
-                        if (check_ec(ec, info, queue)) return;
+                        if (check_ec(ec, info, queue, current_path)) return;
 
-                        if (path_type == fs::file_type::directory) {
-                            for (const auto& entry : fs::stdfs::directory_iterator(current_path)) {
+                        if (path_type == fs::file_type::directory)
+                        {
+                            for (const auto& entry : fs::stdfs::directory_iterator(current_path))
+                            {
                                 remove{}(entry, info, queue);
                             }
                         }
 
-                        if (fs::stdfs::remove(current_path, ec)) {
+                        if (fs::stdfs::remove(current_path, ec))
+                        {
                             info.files_deleted.fetch_add(1, std::memory_order_relaxed);
-                        } else {
-                            check_ec(ec, info, queue);
+                        }
+                        else
+                        {
+                            check_ec(ec, info, queue, current_path);
                         }
                     }
                 };
 
-                static bool check_ec(const std::error_code& ec, tld& info, const queue& queue) {
-                    if (ec) {
+                static bool check_ec(const std::error_code& ec,
+                                     tld& info,
+                                     const queue& queue,
+                                     const fs::path& failure_point)
+                {
+                    if (ec)
+                    {
                         queue.terminate();
 
                         auto lck = std::unique_lock<std::mutex>(info.ec_mutex);
-                        if (!info.ec) {
+                        if (!info.ec)
+                        {
                             info.ec = ec;
                         }
 
                         return true;
-                    } else {
+                    }
+                    else
+                    {
                         return false;
                     }
                 }
 
-                void operator()(const fs::path& current_path, tld& info, const queue& queue) const {
+                void operator()(const fs::path& current_path, tld& info, const queue& queue) const
+                {
                     std::error_code ec;
 
                     const auto tmp_name = Strings::b64url_encode(info.index++);
                     const auto tmp_path = info.tmp_directory / tmp_name;
 
                     fs::stdfs::rename(current_path, tmp_path, ec);
-                    if (check_ec(ec, info, queue)) return;
+                    if (check_ec(ec, info, queue, current_path)) return;
 
                     queue.enqueue_action(actually_remove{std::move(tmp_path)});
                 }
@@ -386,22 +434,28 @@ namespace vcpkg::Files
 
             std::atomic<std::uintmax_t> files_deleted{0};
 
-            if (path_type == fs::file_type::directory) {
+            if (path_type == fs::file_type::directory)
+            {
                 std::uint64_t index = 0;
                 std::mutex ec_mutex;
 
-                remove::queue queue{[&] {
+                auto const tld_gen = [&] {
                     index += static_cast<std::uint64_t>(1) << 32;
-                    return remove::tld{path, index, files_deleted, ec_mutex, ec};
-                }};
+                    return remove::tld{path, index, files_deleted, ec_mutex, ec, failure_point};
+                };
 
-                index += static_cast<std::uint64_t>(1) << 32;
-                auto main_tld = remove::tld{path, index, files_deleted, ec_mutex, ec};
-                for (const auto& entry : fs::stdfs::directory_iterator(path)) {
+                remove::queue queue{4, VCPKG_LINE_INFO, tld_gen};
+
+                // note: we don't actually start the queue running until the
+                // `join()`. This allows us to rename all the top-level files in
+                // peace, so that we don't get collisions.
+                auto main_tld = tld_gen();
+                for (const auto& entry : fs::stdfs::directory_iterator(path))
+                {
                     remove{}(entry, main_tld, queue);
                 }
 
-                queue.join();
+                queue.join(VCPKG_LINE_INFO);
             }
 
             /*
@@ -410,14 +464,17 @@ namespace vcpkg::Files
                 directory, and so we can only delete the directory after all the
                 lower levels have been deleted.
             */
-            for (int backoff = 0; backoff < 5; ++backoff) {
-                if (backoff) {
+            for (int backoff = 0; backoff < 5; ++backoff)
+            {
+                if (backoff)
+                {
                     using namespace std::chrono_literals;
                     auto backoff_time = 100ms * backoff;
                     std::this_thread::sleep_for(backoff_time);
                 }
 
-                if (fs::stdfs::remove(path, ec)) {
+                if (fs::stdfs::remove(path, ec))
+                {
                     files_deleted.fetch_add(1, std::memory_order_relaxed);
                     break;
                 }

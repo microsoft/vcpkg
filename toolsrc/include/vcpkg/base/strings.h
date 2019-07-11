@@ -188,36 +188,13 @@ namespace vcpkg::Strings
     // base 64 encoding with URL and filesafe alphabet (base64url)
     // based on IETF RFC 4648
     // ignores padding, since one implicitly knows the length from the size of x
-    template <class Integral>
-    std::string b64url_encode(Integral x) {
-        static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
-        using Unsigned = std::make_unsigned_t<Integral>;
-        auto value = static_cast<Unsigned>(x);
+    namespace detail {
 
-        // 64 values, plus the implicit \0
-        constexpr static char map[0x41] =
-            /*     0123456789ABCDEF */
-            /*0*/ "ABCDEFGHIJKLMNOP"
-            /*1*/ "QRSTUVWXYZabcdef"
-            /*2*/ "ghijklmnopqrstuv"
-            /*3*/ "wxyz0123456789-_"
-        ;
+        struct b64url_encode_t {
+            std::string operator()(std::uint64_t x) const noexcept;
+        };
 
-        constexpr static int shift = 5;
-        constexpr static auto mask = (static_cast<Unsigned>(1) << shift) - 1;
-
-        std::string result;
-        // reserve ceiling(number of bits / 3)
-        result.resize((sizeof(value) * 8 + 2) / 3, map[0]);
-
-        for (char& c: result) {
-            if (value == 0) {
-                break;
-            }
-            c = map[value & mask];
-            value >>= shift;
-        }
-
-        return result;
     }
+
+    constexpr detail::b64url_encode_t b64url_encode{};
 }

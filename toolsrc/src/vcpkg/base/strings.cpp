@@ -288,3 +288,45 @@ bool Strings::contains(StringView haystack, StringView needle)
 {
     return Strings::search(haystack, needle) != haystack.end();
 }
+
+namespace vcpkg::Strings::detail {
+
+    template <class Integral>
+    std::string b64url_encode_implementation(Integral x) {
+        static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
+        using Unsigned = std::make_unsigned_t<Integral>;
+        auto value = static_cast<Unsigned>(x);
+
+        // 64 values, plus the implicit \0
+        constexpr static char map[0x41] =
+            /*     0123456789ABCDEF */
+            /*0*/ "ABCDEFGHIJKLMNOP"
+            /*1*/ "QRSTUVWXYZabcdef"
+            /*2*/ "ghijklmnopqrstuv"
+            /*3*/ "wxyz0123456789-_"
+        ;
+
+        constexpr static int shift = 5;
+        constexpr static auto mask = (static_cast<Unsigned>(1) << shift) - 1;
+
+        std::string result;
+        // reserve ceiling(number of bits / 3)
+        result.resize((sizeof(value) * 8 + 2) / 3, map[0]);
+
+        for (char& c: result) {
+            if (value == 0) {
+                break;
+            }
+            c = map[value & mask];
+            value >>= shift;
+        }
+
+        return result;
+    }
+
+    std::string b64url_encode_t::operator()(std::uint64_t x) const noexcept{
+        return b64url_encode_implementation(x);
+    }
+
+}
+

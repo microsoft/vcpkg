@@ -29,18 +29,19 @@ namespace vcpkg {
         {
             std::move(action)(tld);
         }
+
+        struct immediately_run_t {};
     }
+
+    constexpr detail::immediately_run_t immediately_run{};
+
 
     template <class Action, class ThreadLocalData>
     struct WorkQueue {
         template <class F>
-        explicit WorkQueue(const F& tld_init) noexcept {
-            m_state = State::Running;
-
-            std::size_t num_threads = std::thread::hardware_concurrency();
-            if (num_threads == 0) {
-                num_threads = 4;
-            }
+        WorkQueue(std::size_t num_threads, LineInfo li, const F& tld_init) noexcept {
+            m_line_info = li;
+            m_state = State::BeforeRun;
 
             m_threads.reserve(num_threads);
             for (std::size_t i = 0; i < num_threads; ++i) {
@@ -48,22 +49,52 @@ namespace vcpkg {
             }
         }
 
+        template <class F>
+        WorkQueue(
+            detail::immediately_run_t,
+            std::size_t num_threads,
+            LineInfo li,
+            const F& tld_init
+        ) noexcept : WorkQueue(num_threads, li, tld_init) {
+            m_state = State::Running;
+        }
+
         WorkQueue(WorkQueue const&) = delete;
         WorkQueue(WorkQueue&&) = delete;
 
-        ~WorkQueue() = default;
+        ~WorkQueue() {
+            auto lck = std::unique_lock<std::mutex>(m_mutex);
+            if (m_state == State::Running) {
+                Checks::exit_with_message(m_line_info, "Failed to call join() on a WorkQueue that was destroyed");
+            }
+        }
+
+        // should only be called once; anything else is an error
+        void run(LineInfo li) {
+            // this should _not_ be locked before `run()` is called; however, we
+            // want to terminate if someone screws up, rather than cause UB
+            auto lck = std::unique_lock<std::mutex>(m_mutex);
+
+            if (m_state != State::BeforeRun) {
+                Checks::exit_with_message(li, "Attempted to run() twice");
+            }
+
+            m_state = State::Running;
+        }
 
         // runs all remaining tasks, and blocks on their finishing
         // if this is called in an existing task, _will block forever_
         // DO NOT DO THAT
         // thread-unsafe
-        void join() {
+        void join(LineInfo li) {
             {
                 auto lck = std::unique_lock<std::mutex>(m_mutex);
-                if (m_state == State::Running) {
-                    m_state = State::Joining;
-                } else if (m_state == State::Joining) {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, "Attempted to join more than once");
+                if (is_joined(m_state)) {
+                    Checks::exit_with_message(li, "Attempted to call join() more than once");
+                } else if (m_state == State::Terminated) {
+                    m_state = State::TerminatedJoined;
+                } else {
+                    m_state = State::Joined;
                 }
             }
             for (auto& thrd : m_threads) {
@@ -77,7 +108,11 @@ namespace vcpkg {
         void terminate() const {
             {
                 auto lck = std::unique_lock<std::mutex>(m_mutex);
-                m_state = State::Terminated;
+                if (is_joined(m_state)) {
+                    m_state = State::TerminatedJoined;
+                } else {
+                    m_state = State::Terminated;
+                }
             }
             m_cv.notify_all();
         }
@@ -86,6 +121,8 @@ namespace vcpkg {
             {
                 auto lck = std::unique_lock<std::mutex>(m_mutex);
                 m_actions.push_back(std::move(a));
+
+                if (m_state == State::BeforeRun) return;
             }
             m_cv.notify_one();
         }
@@ -104,6 +141,8 @@ namespace vcpkg {
                 m_actions.reserve(m_actions.size() + (last - first));
 
                 std::move(first, last, std::back_inserter(rng));
+
+                if (m_state == State::BeforeRun) return;
             }
 
             m_cv.notify_all();
@@ -123,6 +162,8 @@ namespace vcpkg {
                 m_actions.reserve(m_actions.size() + (last - first));
 
                 std::copy(first, last, std::back_inserter(rng));
+
+                if (m_state == State::BeforeRun) return;
             }
 
             m_cv.notify_all();
@@ -134,24 +175,30 @@ namespace vcpkg {
             ThreadLocalData tld;
 
             void operator()() {
-                // unlocked when waiting, or when in the `call_moved_action`
-                // block
+                // unlocked when waiting, or when in the action
                 // locked otherwise
                 auto lck = std::unique_lock<std::mutex>(work_queue->m_mutex);
+
+                work_queue->m_cv.wait(lck, [&] {
+                    return work_queue->m_state != State::BeforeRun;
+                });
+
                 for (;;) {
                     const auto state = work_queue->m_state;
 
-                    if (state == State::Terminated) {
+                    if (is_terminated(state)) {
                         return;
                     }
 
                     if (work_queue->m_actions.empty()) {
                         if (state == State::Running || work_queue->running_workers > 0) {
+                            --work_queue->running_workers;
                             work_queue->m_cv.wait(lck);
+                            ++work_queue->running_workers;
                             continue;
                         }
 
-                        // state == State::Joining and we are the only worker
+                        // the queue isn't running, and we are the only worker
                         // no more work!
                         return;
                     }
@@ -159,20 +206,30 @@ namespace vcpkg {
                     Action action = std::move(work_queue->m_actions.back());
                     work_queue->m_actions.pop_back();
 
-                    ++work_queue->running_workers;
                     lck.unlock();
                     detail::call_moved_action(action, *work_queue, tld);
                     lck.lock();
-                    --work_queue->running_workers;
                 }
             }
         };
 
-        enum class State : std::uint16_t {
+        enum class State : std::int16_t {
+            // can only exist upon construction
+            BeforeRun = -1,
+
             Running,
-            Joining,
+            Joined,
             Terminated,
+            TerminatedJoined,
         };
+
+        static bool is_terminated(State st) {
+            return st == State::Terminated || st == State::TerminatedJoined;
+        }
+
+        static bool is_joined(State st) {
+            return st != State::Joined || st == State::TerminatedJoined;
+        }
 
         mutable std::mutex m_mutex;
         // these four are under m_mutex
@@ -182,5 +239,6 @@ namespace vcpkg {
         mutable std::condition_variable m_cv;
 
         std::vector<std::thread> m_threads;
+        LineInfo m_line_info;
     };
 }
