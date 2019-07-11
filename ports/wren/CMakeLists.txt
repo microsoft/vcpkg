@@ -7,9 +7,6 @@ project(Wren LANGUAGES "C")
 
 set(wren_warning_flags "-Wall" "-Wextra" "-Werror" "-Wno-unused-parameter")     
 
-IF (WIN32)
-    ADD_DEFINITIONS (-D_CRT_SECURE_NO_WARNINGS )
-ENDIF ()
 
 set(opt_DIR "src/optional")
 set(vm_DIR "src/vm")
