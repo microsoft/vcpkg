@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO winsoft666/ppxnet
-    REF v1.10
-    SHA512 de2a1ee32a182a3aba9c3c83f391eb65c04c41a8670571b7199bbcdd75eceb7754c7c0016b018b6c25e556cd7eef85dbb60cc4b8469987f6f171e289d873c826
+    REPO winsoft666/duilib2
+    REF v1.13
+    SHA512 9753097e3eddeb9be25d32c893b57398503bffe89cefdd997a2a7d94c2e019014e54e0fc76b2181b0665f2930dad8e49844045cdd544bc21feb995f154a8c947
     HEAD_REF master
 )
 
@@ -15,6 +15,12 @@ else()
 	set(BUILD_SHARED_LIBS ON)
 endif()
 
+set(UILIB_WITH_CEF OFF)
+if("cef" IN_LIST FEATURES)
+    set(UILIB_WITH_CEF ON)
+	message(STATUS "UILIB_WITH_CEF=ON")
+endif()
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,21 +28,23 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TESTS=OFF
+		-DUILIB_WITH_CEF=${UILIB_WITH_CEF}
 	OPTIONS_RELEASE
 	OPTIONS_DEBUG
 )
 
 vcpkg_install_cmake()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/ppxnet)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ppxnet)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/ppxnet)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/ppxnet)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/duilib2)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/duilib2)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/duilib2)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/duilib2)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ppxnet RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/duilib2 RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 
 vcpkg_copy_pdbs()
 
