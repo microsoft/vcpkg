@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.0.0
-    SHA512 69e57d4ba1fc43d212fd0fff69a2b5d48a3b37cfee7054fdc083cbb7e04d92317609a32e457229661d70ce8d9b16c9d25e81bfc3861db660dd2c8f292202d447
+    REF 5280bbcade4e2dec5eef439a6e189504c2eadcd9
+    SHA512 1d000cbf368863e86a81304c832c5f8c7bdecfb08d19d92d074e783acd532508239189c31a17020645c97fc4f83fabdde23b68c4d8c83a0ea6f0564eb5e65aac
     HEAD_REF master
     PATCHES
         use-vcpkg-icu.patch

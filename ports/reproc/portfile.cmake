@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF v6.0.0
-    SHA512 482eb7b52961878877d1e4a4f1e1a5a867ff5b83f0df3ce47c0eb68f43eabcde720ea7ccb2eeb960dbc29fc61c888db62751984425e9b27c7498dfa4441aa801
+    REF aba3ce528ff48c4ce84365d2c395b9f0a7c1824d
+    SHA512 3305c868c814a9c8a22e0e4c1229bd00c302cb56a3cde416c37a4d4eb2f7e0ca55165ca768da903aedc4e2267f77dae8bc8aec70fb3035b4b2ff45aae0c467aa
     HEAD_REF master
 )
 

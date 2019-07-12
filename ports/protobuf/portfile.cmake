@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/protobuf
-    REF v3.8.0
-    SHA512 ba27c64e5193cd4a144bf0c9dc0d195fbbe6e580aaca01960362f0f185074588ca40046d3bcea76e1deae7508b722f6c5be484ea957122ae8e98229c7c3a4ad2
+    REF 6a59a2ad1f61d9696092f79b6d74368b4d7970a3
+    SHA512 1ebcd454a5b208fb197f485094afd32c2c9c622a8e72facfce9f4f9fb856268f1314a658d71d6caeb65cb858b790d3f217dfaf90155bf0cf7d289ce54e4091f1
     HEAD_REF master
     PATCHES
         fix-uwp.patch

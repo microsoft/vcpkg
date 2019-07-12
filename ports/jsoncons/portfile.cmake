@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO danielaparker/jsoncons
-    REF v0.125.0
-    SHA512 60969fa9bb47c8ee2e01c9333322940c7e9063e4c7761fa54f9d2bba8e49815145e2b48f2bc528a5b3b5316aded2930cdf410a29ce608df09a561a4650d20e15
+    REF fed8594a0144fb953ab04fd6040398f4e0e8bc97
+    SHA512 efec76d7ffa610407a71f666667e94444d8dc843ebe4387b3166cb290d55367cfcda6f97ff585208a20d73d6f1d41d31778707fa18a43b2e263bf0b43301747f
     HEAD_REF master
 )
 

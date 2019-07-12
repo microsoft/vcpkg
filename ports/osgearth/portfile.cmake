@@ -19,8 +19,8 @@ vcpkg_download_distfile(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF osgearth-2.10.1
-    SHA512 a74e6922ae29f85b4227b23a83dbccba92e08b7880533c281ceb244703c38b51a02823fdee3199c975c969db963b35ebad0e3bfed3c1e218a36d130b20a48e5b
+    REF bd1ed67279472d475bafa8cb44453f76bed8efbd
+    SHA512 ea33aaa57489917005b89442e0671bcc80a47603717e11ab6d1fc79048573a09b25451bd0eed0d4eecc04f01b522f896ada9fa6153864b5af493840250cf5320
     HEAD_REF master
     PATCHES ${VS2017PATCH}
 )
