@@ -2,4 +2,5 @@
 Source: boost-mp11
 Version: 1.70.0
 Build-Depends: boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/mp11
 Description: Boost mp11 module

@@ -89,7 +89,7 @@ namespace vcpkg::Commands::Import
         place_library_files_in(paths.get_filesystem(), include_directory, project_directory, library_destination_path);
 
         const fs::path control_file_path = library_destination_path / "CONTROL";
-        fs.write_contents(control_file_path, Strings::serialize(control_file_data));
+        fs.write_contents(control_file_path, Strings::serialize(control_file_data), VCPKG_LINE_INFO);
     }
 
     const CommandStructure COMMAND_STRUCTURE = {

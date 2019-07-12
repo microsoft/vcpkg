@@ -31,6 +31,7 @@
 ## ## Examples
 ##
 ## * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
+include(vcpkg_prettify_command)
 function(vcpkg_execute_build_process)
     cmake_parse_arguments(_ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND" ${ARGN})
 
@@ -57,13 +58,16 @@ function(vcpkg_execute_build_process)
         endif()
 
         if(out_contents MATCHES "LINK : fatal error LNK1102:" OR out_contents MATCHES " fatal error C1060: "
-           OR err_contents MATCHES "LINK : fatal error LNK1102:" OR err_contents MATCHES " fatal error C1060: ")
+           OR err_contents MATCHES "LINK : fatal error LNK1102:" OR err_contents MATCHES " fatal error C1060: "
+           OR out_contents MATCHES "LINK : fatal error LNK1318: Unexpected PDB error; ACCESS_DENIED"
+           OR out_contents MATCHES "LINK : fatal error LNK1104:"
+           OR out_contents MATCHES "LINK : fatal error LNK1201:")
             # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
             message(STATUS "Restarting Build without parallelism because memory exceeded")
             set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
             set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")
 
-            if(${_ebp_NO_PARALLEL_COMMAND})
+            if(_ebp_NO_PARALLEL_COMMAND)
                 execute_process(
                     COMMAND ${_ebp_NO_PARALLEL_COMMAND}
                     WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
@@ -128,8 +132,9 @@ function(vcpkg_execute_build_process)
                 file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                 list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
             endforeach()
+            vcpkg_prettify_command(_ebp_COMMAND _ebp_COMMAND_PRETTY)
             message(FATAL_ERROR
-                "  Command failed: ${_ebp_COMMAND}\n"
+                "  Command failed: ${_ebp_COMMAND_PRETTY}\n"
                 "  Working Directory: ${_ebp_WORKING_DIRECTORY}\n"
                 "  See logs for more information:\n"
                 ${STRINGIFIED_LOGS})

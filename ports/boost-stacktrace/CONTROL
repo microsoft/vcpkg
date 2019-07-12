@@ -2,4 +2,5 @@
 Source: boost-stacktrace
 Version: 1.70.0
 Build-Depends: boost-array, boost-build, boost-config, boost-container-hash, boost-core, boost-modular-build-helper, boost-predef, boost-static-assert, boost-type-traits, boost-vcpkg-helpers, boost-winapi
+Homepage: https://github.com/boostorg/stacktrace
 Description: Boost stacktrace module
