@@ -2,4 +2,8 @@ Source: minizip
 Version: 1.2.11-4
 Homepage: https://github.com/madler/zlib
 Description: Zip compression library
-Build-Depends: bzip2, zlib
+Build-Depends: zlib
+
+Feature: bzip2support
+Description: Support compression using bzip2 library
+Build-Depends: bzip2

@@ -7,11 +7,11 @@ endif()
 
 find_package(ZLIB REQUIRED)
 
-find_package(BZip2 REQUIRED)
+find_package(BZip2)
 
 set(MIN_SRC contrib/minizip)
 
-include_directories(${MIN_SRC} ${ZLIB_INCLUDE_DIRS} ${BZIP2_INCLUDE_DIR})
+include_directories(${MIN_SRC} ${ZLIB_INCLUDE_DIRS})
 
 set(SRC
   ${MIN_SRC}/ioapi.c
@@ -41,8 +41,13 @@ add_library(minizip ${SRC})
 target_link_libraries(minizip PRIVATE ZLIB::ZLIB)
 target_compile_definitions(minizip PRIVATE -D_ZLIB_H)
 
-target_link_libraries(minizip PRIVATE ${BZIP2_LIBRARIES})
-target_compile_definitions(minizip PRIVATE -DHAVE_BZIP2=1)
+if(BZip2_FOUND)
+  include_directories(${BZIP2_INCLUDE_DIR})
+  target_link_libraries(minizip PRIVATE ${BZIP2_LIBRARIES})
+  target_compile_definitions(minizip PRIVATE -DHAVE_BZIP2=1)
+else()
+  set(BZIP2_LIBRARIES "")
+endif()
 
 add_executable(minizip_bin  ${MIN_SRC}/minizip.c)
 add_executable(miniunz_bin  ${MIN_SRC}/miniunz.c)
