@@ -89,14 +89,15 @@ namespace UnitTest1
                             const std::vector<std::pair<const char*, const char*>>& features = {},
                             const std::vector<const char*>& default_features = {})
         {
-            return emplace(std::move(*make_control_file(name, depends, features, default_features)));
+            auto scfl = SourceControlFileLocation { make_control_file(name, depends, features, default_features), "" };
+            return emplace(std::move(scfl));
         }
-        PackageSpec emplace(vcpkg::SourceControlFile&& scf)
+
+        PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl)
         {
-            auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph->name, triplet);
+            auto spec = PackageSpec::from_name_and_triplet(scfl.source_control_file->core_paragraph->name, triplet);
             Assert::IsTrue(spec.has_value());
-            map.emplace(scf.core_paragraph->name,
-                        SourceControlFileLocation{std::unique_ptr<SourceControlFile>(std::move(&scf)), ""});
+            map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
             return PackageSpec{*spec.get()};
         }
     };
