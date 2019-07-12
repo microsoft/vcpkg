@@ -22,6 +22,7 @@
     <ClCompile Include="..\src\tests.arguments.cpp" />
     <ClCompile Include="..\src\tests.chrono.cpp" />
     <ClCompile Include="..\src\tests.dependencies.cpp" />
+    <ClCompile Include="..\src\tests.files.cpp" />
     <ClCompile Include="..\src\tests.packagespec.cpp" />
     <ClCompile Include="..\src\tests.paragraph.cpp" />
     <ClCompile Include="..\src\tests.pch.cpp">
@@ -32,6 +33,7 @@
     </ClCompile>
     <ClCompile Include="..\src\tests.plan.cpp" />
     <ClCompile Include="..\src\tests.statusparagraphs.cpp" />
+    <ClCompile Include="..\src\tests.strings.cpp" />
     <ClCompile Include="..\src\tests.update.cpp" />
     <ClCompile Include="..\src\tests.utils.cpp" />
   </ItemGroup>
@@ -48,8 +50,8 @@
     <ProjectGuid>{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>vcpkgtest</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <PlatformToolset>v140</PlatformToolset>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -84,7 +86,7 @@
   <ImportGroup Label="Shared">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)msbuild.x86.debug\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)msbuild.x86.debug\</OutDir>
   </PropertyGroup>

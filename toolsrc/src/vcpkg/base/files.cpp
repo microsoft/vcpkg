@@ -23,7 +23,7 @@
 
 namespace fs::detail
 {
-    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept
+    file_status symlink_status_t::operator()(const path& p, std::error_code&) const noexcept
     {
 #if defined(_WIN32)
         /*
@@ -406,6 +406,7 @@ namespace vcpkg::Files
                         if (!info.ec)
                         {
                             info.ec = ec;
+                            info.failure_point = failure_point;
                         }
 
                         return true;

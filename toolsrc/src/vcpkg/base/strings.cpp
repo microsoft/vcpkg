@@ -289,44 +289,46 @@ bool Strings::contains(StringView haystack, StringView needle)
     return Strings::search(haystack, needle) != haystack.end();
 }
 
-namespace vcpkg::Strings::detail {
+namespace vcpkg::Strings
+{
+    namespace
+    {
+        template<class Integral>
+        std::string b64url_encode_implementation(Integral x)
+        {
+            static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
+            using Unsigned = std::make_unsigned_t<Integral>;
+            auto value = static_cast<Unsigned>(x);
 
-    template <class Integral>
-    std::string b64url_encode_implementation(Integral x) {
-        static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
-        using Unsigned = std::make_unsigned_t<Integral>;
-        auto value = static_cast<Unsigned>(x);
+            // 64 values, plus the implicit \0
+            constexpr static char map[65] =
+                /*     0123456789ABCDEF */
+                /*0*/ "ABCDEFGHIJKLMNOP"
+                      /*1*/ "QRSTUVWXYZabcdef"
+                      /*2*/ "ghijklmnopqrstuv"
+                      /*3*/ "wxyz0123456789-_";
 
-        // 64 values, plus the implicit \0
-        constexpr static char map[0x41] =
-            /*     0123456789ABCDEF */
-            /*0*/ "ABCDEFGHIJKLMNOP"
-            /*1*/ "QRSTUVWXYZabcdef"
-            /*2*/ "ghijklmnopqrstuv"
-            /*3*/ "wxyz0123456789-_"
-        ;
+            // log2(64)
+            constexpr static int shift = 6;
+            // 64 - 1
+            constexpr static auto mask = 63;
 
-        constexpr static int shift = 5;
-        constexpr static auto mask = (static_cast<Unsigned>(1) << shift) - 1;
+            // ceiling(bitsize(Integral) / log2(64))
+            constexpr static auto result_size = (sizeof(value) * 8 + shift - 1) / shift;
 
-        std::string result;
-        // reserve ceiling(number of bits / 3)
-        result.resize((sizeof(value) * 8 + 2) / 3, map[0]);
+            std::string result;
+            result.reserve(result_size);
 
-        for (char& c: result) {
-            if (value == 0) {
-                break;
+            for (std::size_t i = 0; i < result_size; ++i)
+            {
+                result.push_back(map[value & mask]);
+                value >>= shift;
             }
-            c = map[value & mask];
-            value >>= shift;
+
+            return result;
         }
-
-        return result;
     }
 
-    std::string b64url_encode_t::operator()(std::uint64_t x) const noexcept{
-        return b64url_encode_implementation(x);
-    }
+    std::string b64url_encode(std::uint64_t x) noexcept { return b64url_encode_implementation(x); }
 
 }
-

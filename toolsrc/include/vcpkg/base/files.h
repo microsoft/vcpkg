@@ -12,8 +12,8 @@ namespace fs
     using stdfs::copy_options;
     using stdfs::file_status;
     using stdfs::file_type;
-    using stdfs::perms;
     using stdfs::path;
+    using stdfs::perms;
     using stdfs::u8path;
 
     /*
@@ -26,25 +26,24 @@ namespace fs
 
     // we want to poison ADL with these niebloids
 
-    namespace detail {
-        struct symlink_status_t {
+    namespace detail
+    {
+        struct symlink_status_t
+        {
             file_status operator()(const path& p, std::error_code& ec) const noexcept;
             file_status operator()(const path& p, vcpkg::LineInfo li) const noexcept;
         };
-        struct is_symlink_t {
-            inline bool operator()(file_status s) const {
-                return stdfs::is_symlink(s);
-            }
+        struct is_symlink_t
+        {
+            inline bool operator()(file_status s) const { return stdfs::is_symlink(s); }
         };
-        struct is_regular_file_t {
-            inline bool operator()(file_status s) const {
-                return stdfs::is_regular_file(s);
-            }
+        struct is_regular_file_t
+        {
+            inline bool operator()(file_status s) const { return stdfs::is_regular_file(s); }
         };
-        struct is_directory_t {
-            inline bool operator()(file_status s) const {
-                return stdfs::is_directory(s);
-            }
+        struct is_directory_t
+        {
+            inline bool operator()(file_status s) const { return stdfs::is_directory(s); }
         };
     }
 
@@ -63,10 +62,10 @@ namespace fs
     We also want to poison the ADL on is_regular_file and is_directory, because
     we don't want people calling these functions on paths
 */
-using fs::symlink_status;
-using fs::is_symlink;
-using fs::is_regular_file;
 using fs::is_directory;
+using fs::is_regular_file;
+using fs::is_symlink;
+using fs::symlink_status;
 
 namespace vcpkg::Files
 {

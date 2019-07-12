@@ -188,13 +188,5 @@ namespace vcpkg::Strings
     // base 64 encoding with URL and filesafe alphabet (base64url)
     // based on IETF RFC 4648
     // ignores padding, since one implicitly knows the length from the size of x
-    namespace detail {
-
-        struct b64url_encode_t {
-            std::string operator()(std::uint64_t x) const noexcept;
-        };
-
-    }
-
-    constexpr detail::b64url_encode_t b64url_encode{};
+    std::string b64url_encode(std::uint64_t x) noexcept;
 }
