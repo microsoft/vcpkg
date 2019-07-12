@@ -23,9 +23,11 @@
 
 namespace fs::detail
 {
-    file_status symlink_status_t::operator()(const path& p, std::error_code&) const noexcept
+    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept
     {
 #if defined(_WIN32)
+        static_cast<void>(ec);
+
         /*
             do not find the permissions of the file -- it's unnecessary for the
             things that vcpkg does.
