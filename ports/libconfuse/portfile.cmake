@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 2f7d120e170351cf424845ed27a532cce443247d
     SHA512 f80f4e2c93d9e2640758c0876147e26874e4627bd133df55e429b9d703d8ab4917c49eec3ca37a4e484f569f01ea1ebbf4867eb97097917dbfb9e0761ddb8714
     HEAD_REF master
+    PATCHES
+        fix-uwp-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
