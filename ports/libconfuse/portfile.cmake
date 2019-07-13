@@ -3,11 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinh/libconfuse
-    REF 398123ffbf5baea47b946c4a72fc1e56957749a9
-    SHA512 46a59829b8bea4fac4d2940fbf357a25e491737bbf088813e918f8ac4b1948bb1a2317f1ae2dcc6cc06ce0002314189cfeb99da7a43cbe1b47e7b91fe317cd2d
+    REF 2f7d120e170351cf424845ed27a532cce443247d
+    SHA512 f80f4e2c93d9e2640758c0876147e26874e4627bd133df55e429b9d703d8ab4917c49eec3ca37a4e484f569f01ea1ebbf4867eb97097917dbfb9e0761ddb8714
     HEAD_REF master
-    PATCHES
-        static-lib.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
