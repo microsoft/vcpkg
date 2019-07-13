@@ -4,8 +4,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eidheim/Simple-WebSocket-Server
-    REF 117e09e29313b814bc0a070ab5fefe4e76a019e5
-    SHA512 a33090e9151835bcef3ad48aa5d6a8b564d65bd5a1e8a1adb52133d3d48a41a2fe750a90253e75a2f87c0843df935a6dec3784a7a60583e485c36b6a4d689fc3
+    REF a4d0d06460f9b16edbfa87fac2862d9941824aaa
+    SHA512 57d8e207d29c91074e8829e1995be63790a30e672bcaeaaa7266dd3a4035a08bb236caff2ed3b6c7d7dbef578c7ea921e27f158c62cb1e8a8e80123dadba8b74
     HEAD_REF master
 )
 
