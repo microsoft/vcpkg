@@ -1,8 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index debc232..c1c4e29 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,6 +53,7 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/.cppan)
+     find_package(PNG)
+     find_package(TIFF)
+     find_package(ZLIB)
++    find_package(WEBP)
+     find_package(PkgConfig)
+     if (PKG_CONFIG_FOUND)
+         pkg_check_modules(WEBP libwebp)
 diff --git a/cmake/templates/LeptonicaConfig.cmake.in b/cmake/templates/LeptonicaConfig.cmake.in
-index d53904a..2aa2fea 100644
+index 4f7527a..75697f5 100644
 --- a/cmake/templates/LeptonicaConfig.cmake.in
 +++ b/cmake/templates/LeptonicaConfig.cmake.in
-@@ -20,6 +20,13 @@
+@@ -20,6 +20,14 @@
  #
  # ===================================================================================
  
@@ -12,6 +24,7 @@ index d53904a..2aa2fea 100644
 +find_dependency(PNG)
 +find_dependency(JPEG)
 +find_dependency(GIF)
++find_dependency(webP)
 +
  include(${CMAKE_CURRENT_LIST_DIR}/LeptonicaTargets.cmake)
  

@@ -11,10 +11,9 @@ vcpkg_from_github(
     SHA512 8feac2c0e22e5b7c05f3be97c774ad82d39bdea4b3fa3a2b297b85f8a5a9f548c528ef63f5495afd42fb75759e03a4108f3831b27103f899f8fe4ef7e8e2d1cf
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-dependencies.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-lz4.patch
-        ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
+        fix-buildsystem.patch
+        fix-dependencies.patch
+        fix-lz4.patch
 )
 
 set(BUILD_libarchive_bzip2 OFF)
@@ -69,7 +68,9 @@ vcpkg_configure_cmake(
         -DENABLE_ACL=OFF
         -DENABLE_TEST=OFF
         -DENABLE_ICONV=OFF
-        -DPOSIX_REGEX_LIB=NONE)
+        -DPOSIX_REGEX_LIB=NONE
+        -DENABLE_WERROR=OFF
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
