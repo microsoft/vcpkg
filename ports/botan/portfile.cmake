@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(BOTAN_VERSION 2.9.0)
+set(BOTAN_VERSION 2.11.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,8 +8,6 @@ vcpkg_from_github(
     REF 16a726c3ad10316bd8d37b6118a5cc52894e8e8f
     SHA512 3d759fb262d65f7d325a1e888f74cb1c372ef687b0fcc6fc6ba041b83e3dc65c2928b343c65a89e73ea00c09d11cdda3a161ca98dbabe426903c4cbaf030767c
     HEAD_REF master
-	PATCHES
-		fix-build_error.patch
 )
 
 if(CMAKE_HOST_WIN32)
