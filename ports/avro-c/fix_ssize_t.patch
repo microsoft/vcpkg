@@ -1,0 +1,16 @@
+diff --git a/lang/c/src/generic.c b/lang/c/src/generic.c
+index 5f957b7..cfbbe06 100644
+--- a/lang/c/src/generic.c
++++ b/lang/c/src/generic.c
+@@ -29,7 +29,10 @@
+ #include "avro_generic_internal.h"
+ #include "avro_private.h"
+ 
+-
++#if defined(_MSC_VER)
++#include <BaseTsd.h>
++typedef int ssize_t;
++#endif
+ /*-----------------------------------------------------------------------
+  * Forward definitions
+  */

@@ -15,8 +15,8 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
         avro.patch
-        avro-pr-217.patch
         fix-build-error.patch # Since jansson updated, use jansson::jansson instead of the macro ${JANSSON_LIBRARIES}
+        fix_ssize_t.patch
 )
 
 vcpkg_configure_cmake(
