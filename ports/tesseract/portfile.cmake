@@ -7,7 +7,8 @@ vcpkg_from_github(
     REPO tesseract-ocr/tesseract
     REF 4.1.0
     SHA512 d617f5c5b826640b2871dbe3d7973bcc5e66fafd837921a20e009d683806ed50f0f258aa455019d99fc54f5cb65c2fa0380e3a3c92b39ab0684b8799c730b09d
-    HEAD_REF master
+    PATCHES
+        fix-tiff-linkage.patch
 )
 
 # The built-in cmake FindICU is better
@@ -38,8 +39,6 @@ vcpkg_configure_cmake(
         -DUSE_SYSTEM_ICU=True
 	#any value for vcpkg leptonica link cmake branch select
 	-DLeptonica_DIR=YES
-	#false for stop linking tiff on tesseract executable, it's already linked in leptonica
-	-DHAVE_TIFFIO_H=FALSE
 	${OPTIONS_LIST}
 )
 
