@@ -2,4 +2,5 @@
 Source: boost-parameter
 Version: 1.70.0
 Build-Depends: boost-config, boost-detail, boost-mpl, boost-optional, boost-preprocessor, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/parameter
 Description: Boost parameter module

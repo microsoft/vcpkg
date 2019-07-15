@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO greg7mdp/parallel-hashmap
-    REF 1.22
-    SHA512 930ad0a2fd95310bd2d99c858a09416ca1c02bb823a49f96ec38cfc9ec4029b95b3dc3eacff88dc93df2cad968008b2db3cbb1c458c6cceddc542bb0ca74fad9
+    REF 1.23
+    SHA512 efdc717d965292949dc47c2614d97274d52e409a70b283d2b12a957bf3135c6682ed6f77a5b130b70f77eb2cc5c522626cc4b08cd792a7037844df5ba1538985
     HEAD_REF master
 )
 
@@ -18,6 +18,8 @@ vcpkg_install_cmake()
 
 # Delete redundant directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/doc)
+
+file(COPY ${SOURCE_PATH}/phmap.natvis DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/parallel-hashmap)

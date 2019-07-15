@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+  message(WARNING "Can't build libressl if openssl is installed. Please remove openssl, and try install libressl again if you need it. Build will continue since libressl is a subset of openssl")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
@@ -28,11 +34,6 @@ vcpkg_extract_source_archive_ex(
         0002-suppress-msvc-warnings.patch
 )
 
-set(BUILD_SHARED_LIBS OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_LIBS ON)
-endif()
-
 set(LIBRESSL_APPS OFF)
 if("tools" IN_LIST FEATURES)
     set(LIBRESSL_APPS ON)
@@ -44,7 +45,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLIBRESSL_APPS=${LIBRESSL_APPS}
         -DLIBRESSL_TESTS=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
     OPTIONS_DEBUG
         -DLIBRESSL_APPS=OFF
 )
@@ -61,7 +61,7 @@ if(LIBRESSL_APPS)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
 endif()
 
-if(NOT BUILD_SHARED_LIBS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -81,7 +81,7 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore) AND BUILD_SHARED_LIBS)
+if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})
         string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")

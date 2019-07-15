@@ -1,4 +1,5 @@
 Source: libodb-pgsql
 Version: 2.4.0-2
+Homepage: https://www.codesynthesis.com/products/odb/
 Description: Description: PostgreSQL support for the ODB ORM library
 Build-Depends: libodb, libpq
