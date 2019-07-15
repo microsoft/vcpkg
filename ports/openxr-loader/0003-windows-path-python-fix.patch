@@ -1,0 +1,16 @@
+diff --git a/specification/scripts/generator.py b/specification/scripts/generator.py
+index d6a1afe..5f9d0b6 100644
+--- a/specification/scripts/generator.py
++++ b/specification/scripts/generator.py
+@@ -516,9 +516,10 @@ class OutputGenerator:
+         # Generator can be used without writing to a file.
+         if self.genOpts.filename is not None:
+             if sys.platform == 'win32':
+-                directory = Path(self.genOpts.directory)
++                directory = self.genOpts.directory
+                 if not os.path.exists(directory):
+                     os.makedirs(directory)
+-                self.outFile = io.open(directory / self.genOpts.filename, 'w', encoding='utf-8')
++                self.outFile = io.open(directory + '/' + self.genOpts.filename, 'w', encoding='utf-8')
+             else:
+                 filename = self.genOpts.directory + '/' + self.genOpts.filename
