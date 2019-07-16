@@ -1,6 +1,6 @@
 include(${CMAKE_TRIPLET_FILE})
-if (DEFINED CMAKE_PORTFILE_SETTINGS)
-    include(${CMAKE_PORTFILE_SETTINGS} OPTIONAL)
+if (DEFINED CMAKE_PORT_SETTINGS)
+    include(${CMAKE_PORT_SETTINGS} OPTIONAL)
 endif()
 
 # GUID used as a flag - "cut here line"
