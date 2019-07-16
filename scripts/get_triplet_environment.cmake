@@ -1,4 +1,7 @@
 include(${CMAKE_TRIPLET_FILE})
+if (DEFINED CMAKE_PORTFILE_SETTINGS)
+    include(${CMAKE_PORTFILE_SETTINGS} OPTIONAL)
+endif()
 
 # GUID used as a flag - "cut here line"
 message("c35112b6-d1ba-415b-aa5d-81de856ef8eb")

@@ -140,29 +140,6 @@ namespace vcpkg::Build
        {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
    };
 
-    /// <summary>
-    /// Settings from the triplet file which impact the build environment and post-build checks
-    /// </summary>
-    struct PreBuildInfo
-    {
-        /// <summary>
-        /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
-        /// </summary>
-        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
-
-        std::string triplet_abi_tag;
-        std::string target_architecture;
-        std::string cmake_system_name;
-        std::string cmake_system_version;
-        Optional<std::string> platform_toolset;
-        Optional<fs::path> visual_studio_path;
-        Optional<std::string> external_toolchain_file;
-        Optional<ConfigurationType> build_type;
-        std::vector<std::string> passthrough_env_vars;
-    };
-
-    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
-
     struct ExtendedBuildResult
     {
         ExtendedBuildResult(BuildResult code);
@@ -199,6 +176,31 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db);
+
+    /// <summary>
+    /// Settings from the triplet file which impact the build environment and post-build checks
+    /// </summary>
+    struct PreBuildInfo
+    {
+        /// <summary>
+        /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
+        /// </summary>
+        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
+                const Triplet& triplet,
+                Optional<const std::string&> port = nullopt);
+
+        std::string triplet_abi_tag;
+        std::string target_architecture;
+        std::string cmake_system_name;
+        std::string cmake_system_version;
+        Optional<std::string> platform_toolset;
+        Optional<fs::path> visual_studio_path;
+        Optional<std::string> external_toolchain_file;
+        Optional<ConfigurationType> build_type;
+        std::vector<std::string> passthrough_env_vars;
+    };
+
+    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
 
     enum class BuildPolicy
     {
