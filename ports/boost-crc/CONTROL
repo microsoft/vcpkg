@@ -2,4 +2,5 @@
 Source: boost-crc
 Version: 1.70.0
 Build-Depends: boost-array, boost-compatibility, boost-config, boost-integer, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/crc
 Description: Boost crc module

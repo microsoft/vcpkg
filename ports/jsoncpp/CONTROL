@@ -1,3 +1,4 @@
 Source: jsoncpp
 Version: 1.8.4-1
+Homepage: https://github.com/open-source-parsers/jsoncpp
 Description: jsoncpp is an implementation of a JSON reader and writer in C++. JSON (JavaScript Object Notation) is a lightweight data-interchange format that it is easy to parse and redeable for human.

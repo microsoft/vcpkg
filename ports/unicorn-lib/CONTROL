@@ -1,4 +1,5 @@
 Source: unicorn-lib
 Version: 2019-05-07-1
+Homepage: https://github.com/CaptainCrowbar/unicorn-lib
 Description: Unicode library for C++ by Ross Smith
 Build-Depends: rs-core-lib, pcre2, zlib, libiconv

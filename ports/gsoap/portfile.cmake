@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 set(GSOAP_VERSION 2.8)
-set(GSOAP_SUB_VERSION .84)
+set(GSOAP_SUB_VERSION .87)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsoap-${GSOAP_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ayera.dl.sourceforge.net/project/gsoap2/gsoap-${GSOAP_VERSION}/gsoap_${GSOAP_VERSION}${GSOAP_SUB_VERSION}.zip"
     FILENAME "gsoap_${GSOAP_VERSION}${GSOAP_SUB_VERSION}.zip"
-    SHA512 ec050119cd3e480b266cad36823f4862fe0ac21045ce901c3c91a552eae2fbf9e1cd515458835807cce54c04df7835a980a299d37f418190cd57684fd6bdcf79
+    SHA512 638bf9b2b8aca5facba518f136ad5af5bda41f2b92ee345ee6989d73223a571ce5ddab23c0b65259e9fd524039250d861defc8cfc2fc0a366a578ce3629b9ca4
 )
 
 vcpkg_extract_source_archive_ex(

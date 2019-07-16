@@ -2,4 +2,5 @@
 Source: boost-static-assert
 Version: 1.70.0
 Build-Depends: boost-config, boost-detail, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/static_assert
 Description: Boost static_assert module

@@ -1,4 +1,5 @@
 Source: lpeg
 Version: 1.0.1-3
+Homepage: https://www.inf.puc-rio.br/~roberto/lpeg
 Description: LPeg is a pattern-matching library for Lua, based on Parsing Expression Grammars (PEGs).
 Build-Depends: lua

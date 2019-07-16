@@ -185,7 +185,7 @@ std::vector<std::string> Strings::split(const std::string& s, const std::string&
     return output;
 }
 
-std::vector<std::string> Strings::split(const std::string& s, const std::string& delimiter, int max_count)
+std::vector<std::string> Strings::split(const std::string& s, const std::string& delimiter, size_t max_count)
 {
     std::vector<std::string> output;
 

@@ -1,3 +1,4 @@
 Source: x264
 Version: 157-303c484ec828ed0-2
+Homepage: https://github.com/mirror/x264
 Description: x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format

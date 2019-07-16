@@ -47,7 +47,8 @@ namespace UnitTest1
 
         Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
 
-        Assert::AreEqual(pkg_name.c_str(), plan.source_control_file.get()->core_paragraph->name.c_str());
+        auto* scfl = plan.source_control_file_location.get();
+        Assert::AreEqual(pkg_name.c_str(), scfl->source_control_file->core_paragraph->name.c_str());
         Assert::AreEqual(size_t(vec.size()), feature_list.size());
 
         for (auto&& feature_name : vec)
@@ -79,7 +80,7 @@ namespace UnitTest1
     /// </summary>
     struct PackageSpecMap
     {
-        std::unordered_map<std::string, SourceControlFile> map;
+        std::unordered_map<std::string, SourceControlFileLocation> map;
         Triplet triplet;
         PackageSpecMap(const Triplet& t = Triplet::X86_WINDOWS) noexcept { triplet = t; }
 
@@ -88,13 +89,15 @@ namespace UnitTest1
                             const std::vector<std::pair<const char*, const char*>>& features = {},
                             const std::vector<const char*>& default_features = {})
         {
-            return emplace(std::move(*make_control_file(name, depends, features, default_features)));
+            auto scfl = SourceControlFileLocation { make_control_file(name, depends, features, default_features), "" };
+            return emplace(std::move(scfl));
         }
-        PackageSpec emplace(vcpkg::SourceControlFile&& scf)
+
+        PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl)
         {
-            auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph->name, triplet);
+            auto spec = PackageSpec::from_name_and_triplet(scfl.source_control_file->core_paragraph->name, triplet);
             Assert::IsTrue(spec.has_value());
-            map.emplace(scf.core_paragraph->name, std::move(scf));
+            map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
             return PackageSpec{*spec.get()};
         }
     };

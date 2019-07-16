@@ -1,0 +1,25 @@
+diff --git a/include/fmi4cpp/fmu_resource.hpp b/include/fmi4cpp/fmu_resource.hpp
+index 98f2067..8e88dcf 100644
+--- a/include/fmi4cpp/fmu_resource.hpp
++++ b/include/fmi4cpp/fmu_resource.hpp
+@@ -24,6 +24,7 @@
+ 
+ #ifndef FMI4CPP_FMURESOURCE_HPP
+ #define FMI4CPP_FMURESOURCE_HPP
++#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+ 
+ #include <string>
+ #include <experimental/filesystem>
+diff --git a/src/fmi2/fmu.cpp b/src/fmi2/fmu.cpp
+index a0d5f75..bd01487 100644
+--- a/src/fmi2/fmu.cpp
++++ b/src/fmi2/fmu.cpp
+@@ -26,6 +26,8 @@
+ #include <curl/curl.h>
+ #endif
+ 
++#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
++
+ #include <utility>
+ #include <experimental/filesystem>
+ 

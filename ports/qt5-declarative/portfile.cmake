@@ -6,7 +6,9 @@ qt_modular_library(qtdeclarative 0caddcfee36cbf52bacd3a400d304511255715e2b5a58c1
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/plugins/platforminputcontexts)
 
-set(qt5decpath ${CURRENT_PACKAGES_DIR}/share/qt5/debug/mkspecs/modules/qt_lib_qmldevtools_private.pri)
-file(READ "${qt5decpath}" _contents)
-string(REPLACE [[QT.qmldevtools_private.libs = $$QT_MODULE_HOST_LIB_BASE]] [[QT.qmldevtools_private.libs = $$QT_MODULE_LIB_BASE]]  _contents "${_contents}")
-file(WRITE "${qt5decpath}" "${_contents}")
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+	set(qt5decpath ${CURRENT_PACKAGES_DIR}/share/qt5/debug/mkspecs/modules/qt_lib_qmldevtools_private.pri)
+	file(READ "${qt5decpath}" _contents)
+	string(REPLACE [[QT.qmldevtools_private.libs = $$QT_MODULE_HOST_LIB_BASE]] [[QT.qmldevtools_private.libs = $$QT_MODULE_LIB_BASE]]  _contents "${_contents}")
+	file(WRITE "${qt5decpath}" "${_contents}")
+endif()
