@@ -1,6 +1,4 @@
 include(vcpkg_common_functions)
-#DYNAMIC_ARCH
-#NUM_THREADS
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
@@ -28,8 +26,7 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
-set(COMMON_OPTIONS
-    -DBUILD_WITHOUT_LAPACK=ON)
+set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
