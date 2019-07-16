@@ -11,9 +11,8 @@ vcpkg_from_github(
     SHA512 24f060597ca99ef7d45fe21764709e0d3bbfca4644bb978a2e49c017d56fb80e952a5101fcfc3e9b05cdd641a68011defdaba3272fbb3ea25df611a9ca60ac5f
     HEAD_REF master
     PATCHES
-        all.patch
+        fix-find-package.patch
         msvc-libname.patch
-        findzstd.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
