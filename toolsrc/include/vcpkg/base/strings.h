@@ -185,8 +185,8 @@ namespace vcpkg::Strings
 
     bool contains(StringView haystack, StringView needle);
 
-    // base 64 encoding with URL and filesafe alphabet (base64url)
-    // based on IETF RFC 4648
-    // ignores padding, since one implicitly knows the length from the size of x
-    std::string b64url_encode(std::uint64_t x) noexcept;
+    // base 32 encoding, since base64 encoding requires lowercase letters,
+	// which are not distinct from uppercase letters on macOS or Windows filesystems.
+	// follows RFC 4648
+    std::string b32_encode(std::uint64_t x) noexcept;
 }

@@ -423,7 +423,7 @@ namespace vcpkg::Files
                 {
                     std::error_code ec;
 
-                    const auto tmp_name = Strings::b64url_encode(info.index++);
+                    const auto tmp_name = Strings::b32_encode(info.index++);
                     const auto tmp_path = info.tmp_directory / tmp_name;
 
                     fs::stdfs::rename(current_path, tmp_path, ec);

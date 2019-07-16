@@ -4,6 +4,7 @@
 #include <vcpkg/base/strings.h>
 
 #include <iostream>
+#include <filesystem> // required for filesystem::create_{directory_}symlink
 #include <random>
 
 #include <windows.h>
@@ -21,18 +22,20 @@ namespace UnitTest1
         {
             HKEY key;
             const auto status = RegOpenKeyExW(
-                HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)", 0, KEY_READ, &key);
+                HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)", 0, 0, &key);
 
-            if (!status)
+            if (status == ERROR_FILE_NOT_FOUND)
             {
                 ALLOW_SYMLINKS = false;
                 std::clog << "Symlinks are not allowed on this system\n";
             }
             else
             {
+				// if we get a permissions error, we still know that we're in developer mode
                 ALLOW_SYMLINKS = true;
-                RegCloseKey(key);
             }
+
+			if (status == ERROR_SUCCESS) RegCloseKey(key);
         }
 
     private:
@@ -62,9 +65,9 @@ namespace UnitTest1
 
             std::clog << "temp dir is: " << temp_dir << '\n';
 
-            std::error_code ec;
             create_directory_tree(urbg, fs, 0, temp_dir);
 
+            std::error_code ec;
             fs::path fp;
             fs.remove_all(temp_dir, ec, fp);
             Assert::IsFalse(bool(ec));
@@ -80,7 +83,7 @@ namespace UnitTest1
             return std::mt19937_64{index + 9223372036854775837};
         }
 
-        std::string get_random_filename(std::mt19937_64& urbg) { return vcpkg::Strings::b64url_encode(uid{}(urbg)); }
+        std::string get_random_filename(std::mt19937_64& urbg) { return vcpkg::Strings::b32_encode(uid{}(urbg)); }
 
         void create_directory_tree(std::mt19937_64& urbg,
                                    vcpkg::Files::Filesystem& fs,
@@ -88,46 +91,57 @@ namespace UnitTest1
                                    const fs::path& base)
         {
             std::random_device rd;
-            constexpr auto max_depth = std::uint64_t(3);
-            const auto width = depth ? uid{0, (max_depth - depth) * 3 / 2}(urbg) : 5;
+            constexpr std::uint64_t max_depth = 5;
+            constexpr std::uint64_t width = 5;
+            const auto type = depth < max_depth ? uid{0, 9}(urbg) : uid{7, 9}(urbg);
+
+			// 0 <= type < 7 : directory
+			// 7 = type : regular
+			// 8 = type : regular symlink (regular file if !ALLOW_SYMLINKS)
+			// 9 = type : directory symlink (^^)
 
             std::error_code ec;
-            if (width == 0)
+            if (type >= 7)
             {
                 // I don't want to move urbg forward conditionally
-                const auto type = uid{0, 3}(urbg);
-                if (type == 0 || !ALLOW_SYMLINKS)
+                if (type == 7 || !ALLOW_SYMLINKS)
                 {
-                    // 0 is a regular file
+					// regular file
                     fs.write_contents(base, "", ec);
                 }
-                else if (type == 1)
+                else if (type == 8)
                 {
-                    // 1 is a regular symlink
+                    // regular symlink
                     fs.write_contents(base, "", ec);
                     Assert::IsFalse(bool(ec));
-                    fs::path base_link = base;
-                    base_link.append("-link");
-                    fs::stdfs::create_symlink(base, base_link, ec);
+                    const std::filesystem::path basep = base.native();
+                    auto basep_link = basep;
+                    basep_link.replace_filename(basep.filename().native() + L"-link");
+                    std::filesystem::create_symlink(basep, basep_link, ec);
                 }
                 else
                 {
-                    // 2 is a directory symlink
-                    fs::stdfs::create_directory_symlink(".", base, ec);
+                    // directory symlink
+                    std::filesystem::path basep = base.native();
+                    std::filesystem::create_directory_symlink(basep / "..", basep, ec);
                 }
 
                 Assert::IsFalse(bool(ec));
 
-                return;
             }
-
-            fs.create_directory(base, ec);
-            Assert::IsFalse(bool(ec));
-
-            for (int i = 0; i < width; ++i)
+            else
             {
-                create_directory_tree(urbg, fs, depth + 1, base / get_random_filename(urbg));
+				// directory
+                fs.create_directory(base, ec);
+                Assert::IsFalse(bool(ec));
+
+                for (int i = 0; i < width; ++i)
+                {
+                    create_directory_tree(urbg, fs, depth + 1, base / get_random_filename(urbg));
+                }
+        
             }
+
         }
     };
 }

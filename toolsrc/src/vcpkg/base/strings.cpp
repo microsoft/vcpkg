@@ -294,26 +294,21 @@ namespace vcpkg::Strings
     namespace
     {
         template<class Integral>
-        std::string b64url_encode_implementation(Integral x)
+        std::string b32_encode_implementation(Integral x)
         {
             static_assert(std::is_integral<Integral>::value, "b64url_encode must take an integer type");
             using Unsigned = std::make_unsigned_t<Integral>;
             auto value = static_cast<Unsigned>(x);
 
-            // 64 values, plus the implicit \0
-            constexpr static char map[65] =
-                /*     0123456789ABCDEF */
-                /*0*/ "ABCDEFGHIJKLMNOP"
-                      /*1*/ "QRSTUVWXYZabcdef"
-                      /*2*/ "ghijklmnopqrstuv"
-                      /*3*/ "wxyz0123456789-_";
+            // 32 values, plus the implicit \0
+            constexpr static char map[33] = "ABCDEFGHIJKLMNOP" "QRSTUVWXYZ234567";
 
-            // log2(64)
-            constexpr static int shift = 6;
-            // 64 - 1
-            constexpr static auto mask = 63;
+            // log2(32)
+            constexpr static int shift = 5;
+            // 32 - 1
+            constexpr static auto mask = 31;
 
-            // ceiling(bitsize(Integral) / log2(64))
+            // ceiling(bitsize(Integral) / log2(32))
             constexpr static auto result_size = (sizeof(value) * 8 + shift - 1) / shift;
 
             std::string result;
@@ -329,6 +324,6 @@ namespace vcpkg::Strings
         }
     }
 
-    std::string b64url_encode(std::uint64_t x) noexcept { return b64url_encode_implementation(x); }
+    std::string b32_encode(std::uint64_t x) noexcept { return b32_encode_implementation(x); }
 
 }
