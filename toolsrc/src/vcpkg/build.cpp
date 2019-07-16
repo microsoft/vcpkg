@@ -317,26 +317,6 @@ namespace vcpkg::Build
         );
     }
 
-    static std::vector<fs::path> get_partials(const VcpkgPaths& paths,
-                                              const std::vector<std::string>& dependencies,
-                                              const Triplet& triplet)
-    {
-        std::vector<fs::path> ret;
-        Files::Filesystem& fs = paths.get_filesystem();
-
-        for (const std::string& dependency : dependencies)
-        {
-            fs::path partial =
-                paths.buildtrees / dependency / triplet.canonical_name() / "partial_triplet.cmake";
-            if (fs.is_regular_file(partial))
-            {
-                ret.emplace_back(std::move(partial));
-            }
-        }
-
-        return ret;
-    }
-
     static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
                                                                    const StatusParagraphs& status_db)
     {
@@ -415,15 +395,6 @@ namespace vcpkg::Build
             all_features.append(feature->name + ";");
         }
 
-        std::vector<std::string> partials =
-            Util::fmap(
-                get_partials(paths, get_dependency_names(config.scf, config.feature_list, triplet), triplet),
-                [&](const fs::path& path)
-                {
-                    return path.u8string();
-                }
-            );
-
         std::vector<System::CMakeVariable> variables{
             {"CMD", "BUILD"},
             {"PORT", config.scf.core_paragraph->name},
@@ -438,7 +409,6 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
             {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
-            {"VCPKG_PARTIAL_TRIPLETS", Strings::join(";", partials)},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
