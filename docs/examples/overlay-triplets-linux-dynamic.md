@@ -2,18 +2,24 @@
 
 Using **vcpkg** you can build libraries for the following triplets:
 
-* arm-uwp
-* arm-windows
-* arm64-uwp
-* arm64-windows
-* x64-linux
-* x64-osx
-* x64-uwp
-* x64-windows
-* x64-windows-static
-* x86-uwp
-* x86-windows
-* x86-windows-static
+<div>
+    <ul style="columns: 3;">
+        <li> arm-uwp</li>
+        <li> arm-windows</li>
+        <li> arm64-uwp</li>
+        <li> arm64-windows</li>
+        <li> x86-uwp</li>
+        <li> x86-windows</li>
+        <li> x86-windows-static</li>
+        <li> x64-uwp</li>
+        <li> x64-linux</li>
+        <li> x64-osx</li>
+        <li> x64-windows</li>
+        <li> x64-windows-static</li>
+    </ul>
+</div>
+
+
 
 An important note is that by design **vcpkg** builds only static libraries for Linux and Mac OS.
 However, this doesn't mean that you cannot use **vcpkg** to build your dynamic libraries on these platforms.
