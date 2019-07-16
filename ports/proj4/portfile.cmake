@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF 6.1.1
     SHA512 d7c13eec5bc75ace132b7a35118b0e254b9e766cad7bfe23f8d1ec52c32e388607b4f04e9befceef8185e25b98c678c492a6319d19a5e62d074a6d23474b68fa
     HEAD_REF master
+    PATCHES fix-sqlite3-bin.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
