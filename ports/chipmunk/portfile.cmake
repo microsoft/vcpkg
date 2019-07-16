@@ -29,7 +29,7 @@ vcpkg_from_github(
 )
 
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/msvc/vc14/chipmunk/chipmunk.vcxproj
+    PROJECT_PATH ${SOURCE_PATH}/msvc/VS2015/chipmunk/chipmunk.vcxproj
     RELEASE_CONFIGURATION "Release${CHIPMUNK_CONFIGURATION_SUFFIX}"
     DEBUG_CONFIGURATION "Debug${CHIPMUNK_CONFIGURATION_SUFFIX}"
 )
@@ -37,32 +37,32 @@ vcpkg_build_msbuild(
 message(STATUS "Installing")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(INSTALL
-        "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Debug${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.dll"
-        "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Debug${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
+        "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Debug${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.dll"
+        "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Debug${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
     file(INSTALL
-        "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.dll"
-        "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
+        "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.dll"
+        "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
 else()
     file(INSTALL
-        "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
+        "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
     file(INSTALL
-        "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
+        "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.pdb"
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 endif()
 
 file(INSTALL
-    "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Debug${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.lib"
+    "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Debug${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.lib"
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 file(INSTALL
-    "${SOURCE_PATH}/msvc/vc14/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.lib"
+    "${SOURCE_PATH}/msvc/VS2015/chipmunk/${CHIPMUNK_ARCH}/Release${CHIPMUNK_CONFIGURATION_SUFFIX}/chipmunk.lib"
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
 file(INSTALL

@@ -21,6 +21,7 @@ vcpkg_from_github(
         00002-static-linking-in-linux.patch
         00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
+        00005-fix-uwp-error.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
