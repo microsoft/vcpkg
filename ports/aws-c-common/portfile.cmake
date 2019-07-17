@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 c9dc394bf3ef8eb33d36b81bae5a2002a8fccc7d876ad9c631da818aae7d06846615791c2311e8baa6efa7fcd9d565effabfec6f01767ca0099c6fa64d58e2fa
     HEAD_REF master
     PATCHES
-        fix-dependencey-build-error.patch # This patch fixes dependency port compilation failure
+        disable-error-4068.patch # This patch fixes dependency port compilation failure
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
 )
 

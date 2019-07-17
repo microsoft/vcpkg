@@ -23,6 +23,7 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/proc_table.h DESTINATION ${SOURCE_PATH}/src/libGLESv2)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
