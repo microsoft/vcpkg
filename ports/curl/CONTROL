@@ -37,3 +37,13 @@ Description: SSL support (mbedTLS)
 
 Feature: sectransp
 Description: SSL support (sectransp)
+
+Feature: c-ares
+Build-Depends: c-ares
+Description: c-ares support
+
+Feature:sspi
+Description: SSPI support 
+
+Feature: brotli
+Description: brotli support (brotli)

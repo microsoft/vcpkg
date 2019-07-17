@@ -34,7 +34,7 @@ else()
         ARCHIVE
         URLS "https://get.haskellstack.org/"
         FILENAME "stack-install.sh"
-        SHA512 6db2008297416ad856aa498908bf695737cf3cc466440397720a458358e9661d07abdba762662080ee8bbd8171cdcb05eec6d3696382575c099adfb8427e05fd
+        SHA512 35a953d626d81bebef33d84cfeb54028b315f6e2802fc50739ed8c5731944bcbefea6284e482f898b27bbed421dbf3e43f284998620091a16d8eed825ebcda37
     )
     
     set(BASH /bin/bash)

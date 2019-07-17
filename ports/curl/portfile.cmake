@@ -73,6 +73,24 @@ if("tool" IN_LIST FEATURES)
     set(BUILD_CURL_EXE ON)
 endif()
 
+# c-ares
+set(USE_ARES OFF)
+if("c-ares" IN_LIST FEATURES)
+    set(USE_ARES ON)
+endif()
+
+# SSPI
+set(USE_WINDOWS_SSPI OFF)
+if("sspi" IN_LIST FEATURES)
+    set(USE_WINDOWS_SSPI ON)
+endif()
+
+# brotli
+set(HAVE_BROTLI OFF) 
+if("brotli" IN_LIST FEATURES)
+    set(HAVE_BROTLI ON)
+endif()
+
 # UWP targets
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -101,6 +119,9 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_SECTRANSP=${USE_SECTRANSP}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
+        -DENABLE_ARES=${USE_ARES}
+        -DCURL_WINDOWS_SSPI=${USE_WINDOWS_SSPI}
+        -DCURL_BROTLI=${HAVE_BROTLI}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_RELEASE
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}

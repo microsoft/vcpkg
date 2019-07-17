@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DDUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
+        -DCORRADE_MSVC2017_COMPATIBILITY=ON
         ${_COMPONENT_FLAGS}
 )
 

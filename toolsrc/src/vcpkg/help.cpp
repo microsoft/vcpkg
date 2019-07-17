@@ -124,6 +124,8 @@ namespace vcpkg::Help
                        "                                  (default: " ENVVAR(VCPKG_ROOT) //
                        ")\n"
                        "\n"
+                       "  --scripts-root=<path>             Specify the scripts root directory\n"
+                       "\n"
                        "  @response_file                  Specify a "
                        "response file to provide additional parameters\n"
                        "\n"

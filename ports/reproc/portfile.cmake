@@ -20,8 +20,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(GLOB REPROC_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/lib/cmake/reproc++/*)
-file(COPY ${REPROC_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/reproc)
-
+file(INSTALL ${REPROC_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc++)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/reproc++/reproc++-targets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc++)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/reproc)
 
 # Debug

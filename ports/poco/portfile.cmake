@@ -19,6 +19,7 @@ vcpkg_from_github(
         unbundled_pdf.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
+        fix_foundation_link.patch
 )
 
 # define Poco linkage type
