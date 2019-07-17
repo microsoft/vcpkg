@@ -6,13 +6,21 @@ vcpkg_from_github(
     REF 6.1.1
     SHA512 d7c13eec5bc75ace132b7a35118b0e254b9e766cad7bfe23f8d1ec52c32e388607b4f04e9befceef8185e25b98c678c492a6319d19a5e62d074a6d23474b68fa
     HEAD_REF master
-    PATCHES fix-sqlite3-bin.patch
+    PATCHES
+        fix-sqlite3-bin.patch
+        disable-projdb-with-arm-uwp.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
+set(BUILD_PROJ_DATABASE ON)
+if (${TARGET_TRIPLET} MATCHES "uwp" OR ${TARGET_TRIPLET} MATCHES "arm")
+    message("Proj4 database cannot be built in arm/uwp currently.")
+    set(BUILD_PROJ_DATABASE OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -29,6 +37,7 @@ vcpkg_configure_cmake(
     -DBUILD_PROJ=OFF
     -DBUILD_PROJINFO=OFF
     -DPROJ_TESTS=OFF
+    -DBUILD_PROJ_DATABASE=${BUILD_PROJ_DATABASE}
 )
 
 vcpkg_install_cmake()
