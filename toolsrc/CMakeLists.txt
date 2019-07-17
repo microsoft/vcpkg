@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.3)
 
 project(vcpkg C CXX)
 
+enable_testing()
+
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
 
@@ -33,6 +35,7 @@ if(GCC OR CLANG)
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-tests/*.cpp)
 
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
@@ -43,6 +46,12 @@ endif()
 add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
 target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg PRIVATE include)
+
+add_executable(vcpkg-test ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURCES})
+target_compile_definitions(vcpkg-test PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+target_include_directories(vcpkg-test PRIVATE include)
+
+add_test(arguments vcpkg-test [arguments])
 
 if(CLANG)
     include(CheckCXXSourceCompiles)
@@ -57,8 +66,10 @@ endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
     target_link_libraries(vcpkg PRIVATE stdc++fs)
+    target_link_libraries(vcpkg-test PRIVATE stdc++fs)
 elseif(CLANG)
     target_link_libraries(vcpkg PRIVATE c++fs)
+    target_link_libraries(vcpkg-test PRIVATE c++fs)
 endif()
 
 if(MSVC)
