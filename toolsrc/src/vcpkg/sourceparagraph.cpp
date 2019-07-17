@@ -100,7 +100,7 @@ namespace vcpkg
         }
     }
 
-    static SourceParagraph::TYPE type_from_string(const std::string& in)
+    SourceParagraph::TYPE SourceParagraph::type_from_string(const std::string& in)
     {
         if (Strings::equals(in, "port") || Strings::equals(in, ""))
         {
@@ -119,7 +119,7 @@ namespace vcpkg
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    static std::string string_from_type(const SourceParagraph::TYPE& in)
+    std::string SourceParagraph::string_from_type(const SourceParagraph::TYPE& in)
     {
         switch (in)
         {
@@ -145,7 +145,7 @@ namespace vcpkg
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));
         spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
-        spgh->type = type_from_string(parser.optional_field(SourceParagraphFields::TYPE));
+        spgh->type = SourceParagraph::type_from_string(parser.optional_field(SourceParagraphFields::TYPE));
 
         auto err = parser.error_info(spgh->name);
         if (err)

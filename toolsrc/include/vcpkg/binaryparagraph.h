@@ -31,6 +31,7 @@ namespace vcpkg
         std::vector<std::string> default_features;
         std::vector<std::string> depends;
         std::string abi;
+        SourceParagraph::TYPE type;
     };
 
     struct BinaryControlFile
