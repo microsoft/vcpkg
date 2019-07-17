@@ -14,7 +14,7 @@ vcpkg (2019.6.30)
 |arm-uwp|504|
 
 #### The following commands and options have been updated:
-- --overlay-ports ***[NEW OPTION]***
+- [--overlay-ports](docs/specifications/ports-overlay.md) ***[NEW OPTION]***
     - Specify directories to be used when searching for ports
         - [(#6981)](https://github.com/Microsoft/vcpkg/pull/6981) Ports Overlay partial implementation
         - [(#7002)](https://github.com/Microsoft/vcpkg/pull/7002) [--overlay-ports] Show location of overriden ports during install plan
