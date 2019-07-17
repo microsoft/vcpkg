@@ -496,6 +496,31 @@ namespace vcpkg::Build
             s_hash_cache.emplace(triplet_file_path, hash);
         }
 
+        for (const fs::path& additional_file : pre_build_info.additional_files)
+        {
+            it_hash = s_hash_cache.find(additional_file);
+
+            if (it_hash != s_hash_cache.end())
+            {
+                hash += "-";
+                hash += it_hash->second;
+            }
+            else if (fs.is_regular_file(additional_file))
+            {
+                std::string tmp_hash = Hash::get_file_hash(fs, additional_file, "SHA1");
+                hash += "-";
+                hash += tmp_hash;
+
+                s_hash_cache.emplace(additional_file, tmp_hash);
+            }
+            else
+            {
+                Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        additional_file + " was listed as an additional file for calculating the abi, but was not found.");
+            }
+        }
+
         return hash;
     }
 
@@ -1086,6 +1111,13 @@ namespace vcpkg::Build
                     break;
                 case VcpkgTripletVar::ENV_PASSTHROUGH :
                     pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
+                    break;
+                case VcpkgTripletVar::ABI_ADDITIONAL_FILES :
+                    pre_build_info.additional_files = Util::fmap(Strings::split(variable_value, ";"),
+                            [](const std::string& path)
+                            {
+                                return fs::path{path};
+                            });
                     break;
                 }
             }
