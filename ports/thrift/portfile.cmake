@@ -18,6 +18,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     NO_CHARSET_FLAG
     OPTIONS
+        -DWITH_SHARED_LIB=OFF
+        -DWITH_STATIC_LIB=ON
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
