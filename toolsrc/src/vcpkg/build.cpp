@@ -623,8 +623,6 @@ namespace vcpkg::Build
                                             const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis)
     {
-        if (config.build_package_options.binary_caching == BinaryCaching::NO) return nullopt;
-
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
@@ -713,7 +711,7 @@ namespace vcpkg::Build
         }
 
         System::print2(
-            "Warning: binary caching disabled because abi keys are missing values:\n",
+            "Warning: abi keys are missing values:\n",
             Strings::join("", abi_tag_entries_missing, [](const AbiEntry& e) { return "    " + e.key + "\n"; }),
             "\n");
 
@@ -814,15 +812,14 @@ namespace vcpkg::Build
         auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
 
         const auto abi_tag_and_file = maybe_abi_tag_and_file.get();
+        const fs::path archives_root_dir = paths.root / "archives";
+        const std::string archive_name = abi_tag_and_file->tag + ".zip";
+        const fs::path archive_subpath = fs::u8path(abi_tag_and_file->tag.substr(0, 2)) / archive_name;
+        const fs::path archive_path = archives_root_dir / archive_subpath;
+        const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
 
         if (config.build_package_options.binary_caching == BinaryCaching::YES && abi_tag_and_file)
         {
-            const fs::path archives_root_dir = paths.root / "archives";
-            const std::string archive_name = abi_tag_and_file->tag + ".zip";
-            const fs::path archive_subpath = fs::u8path(abi_tag_and_file->tag.substr(0, 2)) / archive_name;
-            const fs::path archive_path = archives_root_dir / archive_subpath;
-            const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
-
             if (fs.exists(archive_path))
             {
                 System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
@@ -855,70 +852,75 @@ namespace vcpkg::Build
             }
 
             System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
-
-            ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
-                paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
-
-            std::error_code ec;
-            fs.create_directories(paths.package_dir(spec) / "share" / spec.name(), ec);
-            auto abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-            fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
-            Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
-
-            if (result.code == BuildResult::SUCCEEDED)
-            {
-                const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
-
-                compress_archive(paths, spec, tmp_archive_path);
-
-                fs.create_directories(archive_path.parent_path(), ec);
-                fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
-                if (ec)
-                {
-                    System::printf(System::Color::warning,
-                                   "Failed to store binary cache %s: %s\n",
-                                   archive_path.u8string(),
-                                   ec.message());
-                }
-                else
-                    System::printf("Stored binary cache: %s\n", archive_path.u8string());
-            }
-            else if (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED)
-            {
-                if (!fs.exists(archive_tombstone_path))
-                {
-                    // Build failed, store all failure logs in the tombstone.
-                    const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
-                    const auto tmp_log_path_destination = tmp_log_path / spec.name();
-                    const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
-                    fs.create_directories(tmp_log_path_destination, ec);
-
-                    for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
-                    {
-                        if (log_file.path().extension() == ".log")
-                        {
-                            fs.copy_file(log_file.path(),
-                                         tmp_log_path_destination / log_file.path().filename(),
-                                         fs::stdfs::copy_options::none,
-                                         ec);
-                        }
-                    }
-
-                    compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
-
-                    fs.create_directories(archive_tombstone_path.parent_path(), ec);
-                    fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
-
-                    // clean up temporary directory
-                    fs.remove_all(tmp_log_path, ec);
-                }
-            }
-
-            return result;
         }
 
-        return do_build_package_and_clean_buildtrees(
-            paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
+        ExtendedBuildResult result =
+            do_build_package_and_clean_buildtrees(
+                    paths,
+                    pre_build_info,
+                    spec,
+                    maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag,
+                    config);
+
+        std::error_code ec;
+        fs.create_directories(paths.package_dir(spec) / "share" / spec.name(), ec);
+        auto abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
+        fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
+
+        if (config.build_package_options.binary_caching == BinaryCaching::YES &&
+            result.code == BuildResult::SUCCEEDED)
+        {
+            const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
+
+            compress_archive(paths, spec, tmp_archive_path);
+
+            fs.create_directories(archive_path.parent_path(), ec);
+            fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
+            if (ec)
+            {
+                System::printf(System::Color::warning,
+                        "Failed to store binary cache %s: %s\n",
+                        archive_path.u8string(),
+                        ec.message());
+            }
+            else
+                System::printf("Stored binary cache: %s\n", archive_path.u8string());
+        }
+        else if (config.build_package_options.binary_caching == BinaryCaching::YES &&
+                 (result.code == BuildResult::BUILD_FAILED ||
+                 result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
+        {
+            if (!fs.exists(archive_tombstone_path))
+            {
+                // Build failed, store all failure logs in the tombstone.
+                const auto tmp_log_path = paths.buildtrees / spec.name() / "tmp_failure_logs";
+                const auto tmp_log_path_destination = tmp_log_path / spec.name();
+                const auto tmp_failure_zip = paths.buildtrees / spec.name() / "failure_logs.zip";
+                fs.create_directories(tmp_log_path_destination, ec);
+
+                for (auto& log_file : fs::stdfs::directory_iterator(paths.buildtrees / spec.name()))
+                {
+                    if (log_file.path().extension() == ".log")
+                    {
+                        fs.copy_file(log_file.path(),
+                                tmp_log_path_destination / log_file.path().filename(),
+                                fs::stdfs::copy_options::none,
+                                ec);
+                    }
+                }
+
+                compress_directory(paths, tmp_log_path, paths.buildtrees / spec.name() / "failure_logs.zip");
+
+                fs.create_directories(archive_tombstone_path.parent_path(), ec);
+                fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
+
+                // clean up temporary directory
+                fs.remove_all(tmp_log_path, ec);
+            }
+        }
+
+        return result;
     }
 
     const std::string& to_string(const BuildResult build_result)
