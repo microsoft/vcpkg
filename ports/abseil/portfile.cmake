@@ -15,17 +15,19 @@ vcpkg_from_github(
     PATCHES fix-usage-lnk-error.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil TARGET_PATH share/unofficial-abseil)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/absl)
 
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/abseil RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
+                    ${CURRENT_PACKAGES_DIR}/debug/include
+                    ${CURRENT_PACKAGES_DIR}/include/absl/copts
+                    ${CURRENT_PACKAGES_DIR}/include/absl/strings/testdata
+                    ${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata)
