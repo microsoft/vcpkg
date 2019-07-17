@@ -4,77 +4,78 @@
 
 #include <vector>
 
-using namespace vcpkg;
+using vcpkg::CommandSetting;
+using vcpkg::CommandStructure;
+using vcpkg::CommandSwitch;
+using vcpkg::VcpkgCmdArguments;
 
-TEST_CASE("VcpkgCmdArguments", "[arguments]")
+TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
 {
-    SECTION("create from lowercase argument sequence")
-    {
-        std::vector<std::string> t = {
-            "--vcpkg-root", "C:\\vcpkg",
-            "--scripts-root=C:\\scripts",
-            "--debug",
-            "--sendmetrics",
-            "--printmetrics",
-            "--overlay-ports=C:\\ports1",
-            "--overlay-ports=C:\\ports2",
-            "--overlay-triplets=C:\\tripletsA",
-            "--overlay-triplets=C:\\tripletsB"
-        };
-        auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
+    std::vector<std::string> t = {"--vcpkg-root",
+                                  "C:\\vcpkg",
+                                  "--scripts-root=C:\\scripts",
+                                  "--debug",
+                                  "--sendmetrics",
+                                  "--printmetrics",
+                                  "--overlay-ports=C:\\ports1",
+                                  "--overlay-ports=C:\\ports2",
+                                  "--overlay-triplets=C:\\tripletsA",
+                                  "--overlay-triplets=C:\\tripletsB"};
+    auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
 
-        REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
-        REQUIRE(*v.scripts_root_dir == "C:\\scripts");
-        REQUIRE(v.debug);
-        REQUIRE(*v.debug.get());
-        REQUIRE(v.sendmetrics);
-        REQUIRE(*v.sendmetrics.get());
-        REQUIRE(v.printmetrics);
-        REQUIRE(*v.printmetrics.get());
+    REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
+    REQUIRE(*v.scripts_root_dir == "C:\\scripts");
+    REQUIRE(v.debug);
+    REQUIRE(*v.debug.get());
+    REQUIRE(v.sendmetrics);
+    REQUIRE(*v.sendmetrics.get());
+    REQUIRE(v.printmetrics);
+    REQUIRE(*v.printmetrics.get());
 
-        REQUIRE(v.overlay_ports->size() == 2);
-        REQUIRE(v.overlay_ports->at(0) == "C:\\ports1");
-        REQUIRE(v.overlay_ports->at(1) == "C:\\ports2");
+    REQUIRE(v.overlay_ports->size() == 2);
+    REQUIRE(v.overlay_ports->at(0) == "C:\\ports1");
+    REQUIRE(v.overlay_ports->at(1) == "C:\\ports2");
 
-        REQUIRE(v.overlay_triplets->size() == 2);
-        REQUIRE(v.overlay_triplets->at(0) == "C:\\tripletsA");
-        REQUIRE(v.overlay_triplets->at(1) == "C:\\tripletsB");
-    }
+    REQUIRE(v.overlay_triplets->size() == 2);
+    REQUIRE(v.overlay_triplets->at(0) == "C:\\tripletsA");
+    REQUIRE(v.overlay_triplets->at(1) == "C:\\tripletsB");
+}
 
-    SECTION("create from uppercase argument sequence")
-    {
-        std::vector<std::string> t = {
-            "--VCPKG-ROOT", "C:\\vcpkg",
-            "--SCRIPTS-ROOT=C:\\scripts",
-            "--DEBUG",
-            "--SENDMETRICS",
-            "--PRINTMETRICS",
-            "--OVERLAY-PORTS=C:\\ports1",
-            "--OVERLAY-PORTS=C:\\ports2",
-            "--OVERLAY-TRIPLETS=C:\\tripletsA",
-            "--OVERLAY-TRIPLETS=C:\\tripletsB"
-        };
-        auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
+TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
+{
+    std::vector<std::string> t = {"--VCPKG-ROOT",
+                                  "C:\\vcpkg",
+                                  "--SCRIPTS-ROOT=C:\\scripts",
+                                  "--DEBUG",
+                                  "--SENDMETRICS",
+                                  "--PRINTMETRICS",
+                                  "--OVERLAY-PORTS=C:\\ports1",
+                                  "--OVERLAY-PORTS=C:\\ports2",
+                                  "--OVERLAY-TRIPLETS=C:\\tripletsA",
+                                  "--OVERLAY-TRIPLETS=C:\\tripletsB"};
+    auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
 
-        REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
-        REQUIRE(*v.scripts_root_dir == "C:\\scripts");
-        REQUIRE(v.debug);
-        REQUIRE(*v.debug.get());
-        REQUIRE(v.sendmetrics);
-        REQUIRE(*v.sendmetrics.get());
-        REQUIRE(v.printmetrics);
-        REQUIRE(*v.printmetrics.get());
+    REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
+    REQUIRE(*v.scripts_root_dir == "C:\\scripts");
+    REQUIRE(v.debug);
+    REQUIRE(*v.debug.get());
+    REQUIRE(v.sendmetrics);
+    REQUIRE(*v.sendmetrics.get());
+    REQUIRE(v.printmetrics);
+    REQUIRE(*v.printmetrics.get());
 
-        REQUIRE(v.overlay_ports->size() == 2);
-        REQUIRE(v.overlay_ports->at(0) == "C:\\ports1");
-        REQUIRE(v.overlay_ports->at(1) == "C:\\ports2");
+    REQUIRE(v.overlay_ports->size() == 2);
+    REQUIRE(v.overlay_ports->at(0) == "C:\\ports1");
+    REQUIRE(v.overlay_ports->at(1) == "C:\\ports2");
 
-        REQUIRE(v.overlay_triplets->size() == 2);
-        REQUIRE(v.overlay_triplets->at(0) == "C:\\tripletsA");
-        REQUIRE(v.overlay_triplets->at(1) == "C:\\tripletsB");
-    }
+    REQUIRE(v.overlay_triplets->size() == 2);
+    REQUIRE(v.overlay_triplets->at(0) == "C:\\tripletsA");
+    REQUIRE(v.overlay_triplets->at(1) == "C:\\tripletsB");
+}
 
-    SECTION("create from argument sequence with valued options")
+TEST_CASE ("VcpkgCmdArguments from argument sequence with valued options", "[arguments]")
+{
+    SECTION ("case 1")
     {
         std::array<CommandSetting, 1> settings = {{{"--a", ""}}};
         CommandStructure cmdstruct = {"", 0, SIZE_MAX, {{}, settings}, nullptr};
@@ -89,7 +90,7 @@ TEST_CASE("VcpkgCmdArguments", "[arguments]")
         REQUIRE(v.command == "command");
     }
 
-    SECTION("create from argument sequence with valued options 2")
+    SECTION ("case 2")
     {
         std::array<CommandSwitch, 2> switches = {{{"--a", ""}, {"--c", ""}}};
         std::array<CommandSetting, 2> settings = {{{"--b", ""}, {"--d", ""}}};

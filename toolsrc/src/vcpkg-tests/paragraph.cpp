@@ -1,9 +1,5 @@
-#include "tests.pch.h"
-
-#if defined(_WIN32)
-#pragma comment(lib, "version")
-#pragma comment(lib, "winhttp")
-#endif
+#include <vcpkg-tests/catch.h>
+#include <vcpkg-tests/utils.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

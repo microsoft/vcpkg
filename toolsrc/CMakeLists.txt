@@ -47,11 +47,16 @@ add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
 target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg PRIVATE include)
 
-add_executable(vcpkg-test ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURCES})
+
+add_executable(vcpkg-test EXCLUDE_FROM_ALL ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURCES})
 target_compile_definitions(vcpkg-test PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg-test PRIVATE include)
 
 add_test(arguments vcpkg-test [arguments])
+add_test(chrono vcpkg-test [chrono])
+add_test(dependencies vcpkg-test [dependencies])
+add_test(specifier vcpkg-test [specifier])
+add_test(supports vcpkg-test [supports])
 
 if(CLANG)
     include(CheckCXXSourceCompiles)
