@@ -517,7 +517,7 @@ namespace vcpkg::Build
             {
                 Checks::exit_with_message(
                         VCPKG_LINE_INFO,
-                        additional_file + " was listed as an additional file for calculating the abi, but was not found.");
+                        additional_file.u8string() + " was listed as an additional file for calculating the abi, but was not found.");
             }
         }
 
