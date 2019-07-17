@@ -293,19 +293,19 @@ namespace vcpkg::Build
                                                   const std::set<std::string>& feature_list,
                                                   const Triplet& triplet)
     {
-        return Util::fmap_flatten(feature_list,
-                [&](std::string const& feature) -> std::vector<Features> {
+        return Util::fmap_flatten(
+            feature_list,
+            [&](std::string const& feature) -> std::vector<Features> {
                 if (feature == "core")
                 {
-                return filter_dependencies_to_features(scf.core_paragraph->depends, triplet);
+                    return filter_dependencies_to_features(scf.core_paragraph->depends, triplet);
                 }
 
                 auto maybe_feature = scf.find_feature(feature);
                 Checks::check_exit(VCPKG_LINE_INFO, maybe_feature.has_value());
 
                 return filter_dependencies_to_features(maybe_feature.get()->depends, triplet);
-                }
-                );
+            });
     }
 
     static std::vector<std::string> get_dependency_names(const SourceControlFile& scf,
