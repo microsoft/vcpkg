@@ -7,7 +7,7 @@
 
 namespace Strings = vcpkg::Strings;
 
-TEST_CASE("SourceParagraph construct minimum", "[paragraph]")
+TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -25,7 +25,7 @@ TEST_CASE("SourceParagraph construct minimum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends.size() == 0);
 }
 
-TEST_CASE("SourceParagraph construct maximum", "[paragraph]")
+TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -52,7 +52,7 @@ TEST_CASE("SourceParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->supports[0] == "x64");
 }
 
-TEST_CASE("SourceParagraph two depends", "[paragraph]")
+TEST_CASE ("SourceParagraph two depends", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -68,7 +68,7 @@ TEST_CASE("SourceParagraph two depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
 }
 
-TEST_CASE("SourceParagraph three depends", "[paragraph]")
+TEST_CASE ("SourceParagraph three depends", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -85,7 +85,7 @@ TEST_CASE("SourceParagraph three depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[2].name() == "xyz");
 }
 
-TEST_CASE("SourceParagraph three supports", "[paragraph]")
+TEST_CASE ("SourceParagraph three supports", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -102,7 +102,7 @@ TEST_CASE("SourceParagraph three supports", "[paragraph]")
     REQUIRE(pgh.core_paragraph->supports[2] == "uwp");
 }
 
-TEST_CASE("SourceParagraph construct qualified depends", "[paragraph]")
+TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -124,7 +124,7 @@ TEST_CASE("SourceParagraph construct qualified depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[1].qualifier == "uwp");
 }
 
-TEST_CASE("SourceParagraph default features", "[paragraph]")
+TEST_CASE ("SourceParagraph default features", "[paragraph]")
 {
     auto m_pgh =
         vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
@@ -139,7 +139,7 @@ TEST_CASE("SourceParagraph default features", "[paragraph]")
     REQUIRE(pgh.core_paragraph->default_features[0] == "a1");
 }
 
-TEST_CASE("BinaryParagraph construct minimum", "[paragraph]")
+TEST_CASE ("BinaryParagraph construct minimum", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},
@@ -156,7 +156,7 @@ TEST_CASE("BinaryParagraph construct minimum", "[paragraph]")
     REQUIRE(pgh.depends.size() == 0);
 }
 
-TEST_CASE("BinaryParagraph construct maximum", "[paragraph]")
+TEST_CASE ("BinaryParagraph construct maximum", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "s"},
@@ -176,7 +176,7 @@ TEST_CASE("BinaryParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.depends[0] == "bd");
 }
 
-TEST_CASE("BinaryParagraph three depends", "[paragraph]")
+TEST_CASE ("BinaryParagraph three depends", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},
@@ -192,7 +192,7 @@ TEST_CASE("BinaryParagraph three depends", "[paragraph]")
     REQUIRE(pgh.depends[2] == "c");
 }
 
-TEST_CASE("BinaryParagraph abi", "[paragraph]")
+TEST_CASE ("BinaryParagraph abi", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},
@@ -206,7 +206,7 @@ TEST_CASE("BinaryParagraph abi", "[paragraph]")
     REQUIRE(pgh.abi == "abcd123");
 }
 
-TEST_CASE("BinaryParagraph default features", "[paragraph]")
+TEST_CASE ("BinaryParagraph default features", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "a"},
@@ -221,14 +221,14 @@ TEST_CASE("BinaryParagraph default features", "[paragraph]")
     REQUIRE(pgh.default_features[0] == "a1");
 }
 
-TEST_CASE("parse paragraphs empty", "[paragraph]")
+TEST_CASE ("parse paragraphs empty", "[paragraph]")
 {
     const char* str = "";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs.empty());
 }
 
-TEST_CASE("parse paragraphs one field", "[paragraph]")
+TEST_CASE ("parse paragraphs one field", "[paragraph]")
 {
     const char* str = "f1: v1";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
@@ -237,10 +237,10 @@ TEST_CASE("parse paragraphs one field", "[paragraph]")
     REQUIRE(pghs[0]["f1"] == "v1");
 }
 
-TEST_CASE("parse paragraphs one pgh", "[paragraph]")
+TEST_CASE ("parse paragraphs one pgh", "[paragraph]")
 {
     const char* str = "f1: v1\n"
-                        "f2: v2";
+                      "f2: v2";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 2);
@@ -248,13 +248,13 @@ TEST_CASE("parse paragraphs one pgh", "[paragraph]")
     REQUIRE(pghs[0]["f2"] == "v2");
 }
 
-TEST_CASE("parse paragraphs two pgh", "[paragraph]")
+TEST_CASE ("parse paragraphs two pgh", "[paragraph]")
 {
     const char* str = "f1: v1\n"
-                        "f2: v2\n"
-                        "\n"
-                        "f3: v3\n"
-                        "f4: v4";
+                      "f2: v2\n"
+                      "\n"
+                      "f3: v3\n"
+                      "f4: v4";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
@@ -266,36 +266,36 @@ TEST_CASE("parse paragraphs two pgh", "[paragraph]")
     REQUIRE(pghs[1]["f4"] == "v4");
 }
 
-TEST_CASE("parse paragraphs field names", "[paragraph]")
+TEST_CASE ("parse paragraphs field names", "[paragraph]")
 {
     const char* str = "1:\n"
-                        "f:\n"
-                        "F:\n"
-                        "0:\n"
-                        "F-2:\n";
+                      "f:\n"
+                      "F:\n"
+                      "0:\n"
+                      "F-2:\n";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 5);
 }
 
-TEST_CASE("parse paragraphs multiple blank lines", "[paragraph]")
+TEST_CASE ("parse paragraphs multiple blank lines", "[paragraph]")
 {
     const char* str = "f1: v1\n"
-                        "f2: v2\n"
-                        "\n"
-                        "\n"
-                        "f3: v3\n"
-                        "f4: v4";
+                      "f2: v2\n"
+                      "\n"
+                      "\n"
+                      "f3: v3\n"
+                      "f4: v4";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
 }
 
-TEST_CASE("parse paragraphs empty fields", "[paragraph]")
+TEST_CASE ("parse paragraphs empty fields", "[paragraph]")
 {
     const char* str = "f1:\n"
-                        "f2: ";
+                      "f2: ";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
@@ -305,13 +305,13 @@ TEST_CASE("parse paragraphs empty fields", "[paragraph]")
     REQUIRE(pghs[0].size() == 2);
 }
 
-TEST_CASE("parse paragraphs multiline fields", "[paragraph]")
+TEST_CASE ("parse paragraphs multiline fields", "[paragraph]")
 {
     const char* str = "f1: simple\n"
-                        " f1\r\n"
-                        "f2:\r\n"
-                        " f2\r\n"
-                        " continue\r\n";
+                      " f1\r\n"
+                      "f2:\r\n"
+                      " f2\r\n"
+                      " continue\r\n";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
@@ -319,13 +319,13 @@ TEST_CASE("parse paragraphs multiline fields", "[paragraph]")
     REQUIRE(pghs[0]["f2"] == "\n f2\n continue");
 }
 
-TEST_CASE("parse paragraphs crlfs", "[paragraph]")
+TEST_CASE ("parse paragraphs crlfs", "[paragraph]")
 {
     const char* str = "f1: v1\r\n"
-                        "f2: v2\r\n"
-                        "\r\n"
-                        "f3: v3\r\n"
-                        "f4: v4";
+                      "f2: v2\r\n"
+                      "\r\n"
+                      "f3: v3\r\n"
+                      "f4: v4";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
@@ -337,17 +337,17 @@ TEST_CASE("parse paragraphs crlfs", "[paragraph]")
     REQUIRE(pghs[1]["f4"] == "v4");
 }
 
-TEST_CASE("parse paragraphs comment", "[paragraph]")
+TEST_CASE ("parse paragraphs comment", "[paragraph]")
 {
     const char* str = "f1: v1\r\n"
-                        "#comment\r\n"
-                        "f2: v2\r\n"
-                        "#comment\r\n"
-                        "\r\n"
-                        "#comment\r\n"
-                        "f3: v3\r\n"
-                        "#comment\r\n"
-                        "f4: v4";
+                      "#comment\r\n"
+                      "f2: v2\r\n"
+                      "#comment\r\n"
+                      "\r\n"
+                      "#comment\r\n"
+                      "f3: v3\r\n"
+                      "#comment\r\n"
+                      "f4: v4";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
@@ -359,16 +359,16 @@ TEST_CASE("parse paragraphs comment", "[paragraph]")
     REQUIRE(pghs[1]["f4"] == "v4");
 }
 
-TEST_CASE("parse comment before single line feed", "[paragraph]")
+TEST_CASE ("parse comment before single line feed", "[paragraph]")
 {
     const char* str = "f1: v1\r\n"
-                        "#comment\n";
+                      "#comment\n";
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs[0].size() == 1);
     REQUIRE(pghs[0]["f1"] == "v1");
 }
 
-TEST_CASE("BinaryParagraph serialize min", "[paragraph]")
+TEST_CASE ("BinaryParagraph serialize min", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},
@@ -387,7 +387,7 @@ TEST_CASE("BinaryParagraph serialize min", "[paragraph]")
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
 }
 
-TEST_CASE("BinaryParagraph serialize max", "[paragraph]")
+TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},
@@ -411,7 +411,7 @@ TEST_CASE("BinaryParagraph serialize max", "[paragraph]")
     REQUIRE(pghs[0]["Depends"] == "dep");
 }
 
-TEST_CASE("BinaryParagraph serialize multiple deps", "[paragraph]")
+TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},
@@ -427,7 +427,7 @@ TEST_CASE("BinaryParagraph serialize multiple deps", "[paragraph]")
     REQUIRE(pghs[0]["Depends"] == "a, b, c");
 }
 
-TEST_CASE("BinaryParagraph serialize abi", "[paragraph]")
+TEST_CASE ("BinaryParagraph serialize abi", "[paragraph]")
 {
     vcpkg::BinaryParagraph pgh({
         {"Package", "zlib"},

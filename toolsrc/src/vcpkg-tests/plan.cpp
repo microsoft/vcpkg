@@ -11,8 +11,8 @@
 
 using namespace vcpkg;
 
-using Test::make_status_pgh;
 using Test::make_status_feature_pgh;
+using Test::make_status_pgh;
 using Test::unsafe_pspec;
 
 static std::unique_ptr<SourceControlFile> make_control_file(
@@ -24,9 +24,9 @@ static std::unique_ptr<SourceControlFile> make_control_file(
     using Pgh = std::unordered_map<std::string, std::string>;
     std::vector<Pgh> scf_pghs;
     scf_pghs.push_back(Pgh{{"Source", name},
-                            {"Version", "0"},
-                            {"Build-Depends", depends},
-                            {"Default-Features", Strings::join(", ", default_features)}});
+                           {"Version", "0"},
+                           {"Build-Depends", depends},
+                           {"Default-Features", Strings::join(", ", default_features)}});
     for (auto&& feature : features)
     {
         scf_pghs.push_back(Pgh{
@@ -44,9 +44,9 @@ static std::unique_ptr<SourceControlFile> make_control_file(
 /// Assert that the given action an install of given features from given package.
 /// </summary>
 static void features_check(Dependencies::AnyAction& install_action,
-                            std::string pkg_name,
-                            std::vector<std::string> vec,
-                            const Triplet& triplet = Triplet::X86_WINDOWS)
+                           std::string pkg_name,
+                           std::vector<std::string> vec,
+                           const Triplet& triplet = Triplet::X86_WINDOWS)
 {
     REQUIRE(install_action.install_action.has_value());
     const auto& plan = install_action.install_action.value_or_exit(VCPKG_LINE_INFO);
@@ -64,7 +64,7 @@ static void features_check(Dependencies::AnyAction& install_action,
         if (feature_name == "core" || feature_name == "")
         {
             REQUIRE((Util::find(feature_list, "core") != feature_list.end() ||
-                            Util::find(feature_list, "") != feature_list.end()));
+                     Util::find(feature_list, "") != feature_list.end()));
             continue;
         }
         REQUIRE(Util::find(feature_list, feature_name) != feature_list.end());
@@ -75,8 +75,8 @@ static void features_check(Dependencies::AnyAction& install_action,
 /// Assert that the given action is a remove of given package.
 /// </summary>
 static void remove_plan_check(Dependencies::AnyAction& remove_action,
-                                std::string pkg_name,
-                                const Triplet& triplet = Triplet::X86_WINDOWS)
+                              std::string pkg_name,
+                              const Triplet& triplet = Triplet::X86_WINDOWS)
 {
     const auto& plan = remove_action.remove_action.value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(plan.spec.triplet().to_string() == triplet.to_string());
@@ -97,7 +97,7 @@ struct PackageSpecMap
                         const std::vector<std::pair<const char*, const char*>>& features = {},
                         const std::vector<const char*>& default_features = {})
     {
-        auto scfl = SourceControlFileLocation { make_control_file(name, depends, features, default_features), "" };
+        auto scfl = SourceControlFileLocation{make_control_file(name, depends, features, default_features), ""};
         return emplace(std::move(scfl));
     }
 
@@ -110,7 +110,7 @@ struct PackageSpecMap
     }
 };
 
-TEST_CASE("basic install scheme", "[plan]")
+TEST_CASE ("basic install scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -129,7 +129,7 @@ TEST_CASE("basic install scheme", "[plan]")
     REQUIRE(install_plan.at(2).spec().name() == "a");
 }
 
-TEST_CASE("multiple install scheme", "[plan]")
+TEST_CASE ("multiple install scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -150,8 +150,8 @@ TEST_CASE("multiple install scheme", "[plan]")
         StatusParagraphs(std::move(status_paragraphs)));
 
     auto iterator_pos = [&](const PackageSpec& spec) {
-        auto it = std::find_if(
-            install_plan.begin(), install_plan.end(), [&](auto& action) { return action.spec() == spec; });
+        auto it =
+            std::find_if(install_plan.begin(), install_plan.end(), [&](auto& action) { return action.spec() == spec; });
         REQUIRE(it != install_plan.end());
         return it - install_plan.begin();
     };
@@ -176,7 +176,7 @@ TEST_CASE("multiple install scheme", "[plan]")
     REQUIRE(e_pos > g_pos);
 }
 
-TEST_CASE("existing package scheme", "[plan]")
+TEST_CASE ("existing package scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(vcpkg::Test::make_status_pgh("a"));
@@ -184,10 +184,8 @@ TEST_CASE("existing package scheme", "[plan]")
     PackageSpecMap spec_map;
     auto spec_a = FullPackageSpec{spec_map.emplace("a")};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_a}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_a}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 1);
     const auto p = install_plan.at(0).install_action.get();
@@ -197,7 +195,7 @@ TEST_CASE("existing package scheme", "[plan]")
     REQUIRE(p->request_type == Dependencies::RequestType::USER_REQUESTED);
 }
 
-TEST_CASE("user requested package scheme", "[plan]")
+TEST_CASE ("user requested package scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -205,10 +203,8 @@ TEST_CASE("user requested package scheme", "[plan]")
     const auto spec_a = FullPackageSpec{spec_map.emplace("a", "b")};
     const auto spec_b = FullPackageSpec{spec_map.emplace("b")};
 
-    const auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_a}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    const auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_a}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 2);
     const auto p = install_plan.at(0).install_action.get();
@@ -224,7 +220,7 @@ TEST_CASE("user requested package scheme", "[plan]")
     REQUIRE(p2->request_type == Dependencies::RequestType::USER_REQUESTED);
 }
 
-TEST_CASE("long install scheme", "[plan]")
+TEST_CASE ("long install scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("j", "k"));
@@ -258,7 +254,7 @@ TEST_CASE("long install scheme", "[plan]")
     REQUIRE(install_plan.at(7).spec().name() == "a");
 }
 
-TEST_CASE("basic feature test 1", "[plan]")
+TEST_CASE ("basic feature test 1", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a", "b, b[b1]"));
@@ -269,10 +265,8 @@ TEST_CASE("basic feature test 1", "[plan]")
     auto spec_a = FullPackageSpec{spec_map.emplace("a", "b, b[b1]", {{"a1", "b[b2]"}}), {"a1"}};
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}, {"b3", ""}})};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_a}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_a}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 4);
     remove_plan_check(install_plan.at(0), "a");
@@ -281,7 +275,7 @@ TEST_CASE("basic feature test 1", "[plan]")
     features_check(install_plan.at(3), "a", {"a1", "core"});
 }
 
-TEST_CASE("basic feature test 2", "[plan]")
+TEST_CASE ("basic feature test 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -290,17 +284,15 @@ TEST_CASE("basic feature test 2", "[plan]")
     auto spec_a = FullPackageSpec{spec_map.emplace("a", "b[b1]", {{"a1", "b[b2]"}}), {"a1"}};
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}, {"b3", ""}})};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_a}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_a}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 2);
     features_check(install_plan.at(0), "b", {"b1", "b2", "core"});
     features_check(install_plan.at(1), "a", {"a1", "core"});
 }
 
-TEST_CASE("basic feature test 3", "[plan]")
+TEST_CASE ("basic feature test 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
@@ -311,10 +303,9 @@ TEST_CASE("basic feature test 3", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b")};
     auto spec_c = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_c, spec_a}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(spec_map.map,
+                                                                  FullPackageSpec::to_feature_specs({spec_c, spec_a}),
+                                                                  StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 4);
     remove_plan_check(install_plan.at(0), "a");
@@ -323,7 +314,7 @@ TEST_CASE("basic feature test 3", "[plan]")
     features_check(install_plan.at(3), "c", {"core"});
 }
 
-TEST_CASE("basic feature test 4", "[plan]")
+TEST_CASE ("basic feature test 4", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
@@ -335,16 +326,14 @@ TEST_CASE("basic feature test 4", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b")};
     auto spec_c = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_c}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_c}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 1);
     features_check(install_plan.at(0), "c", {"core"});
 }
 
-TEST_CASE("basic feature test 5", "[plan]")
+TEST_CASE ("basic feature test 5", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -354,17 +343,15 @@ TEST_CASE("basic feature test 5", "[plan]")
         FullPackageSpec{spec_map.emplace("a", "", {{"a1", "b[b1]"}, {"a2", "b[b2]"}, {"a3", "a[a2]"}}), {"a3"}};
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}})};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_a}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_a}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 2);
     features_check(install_plan.at(0), "b", {"core", "b2"});
     features_check(install_plan.at(1), "a", {"core", "a3", "a2"});
 }
 
-TEST_CASE("basic feature test 6", "[plan]")
+TEST_CASE ("basic feature test 6", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("b"));
@@ -373,10 +360,9 @@ TEST_CASE("basic feature test 6", "[plan]")
     auto spec_a = FullPackageSpec{spec_map.emplace("a", "b[core]"), {"core"}};
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}}), {"b1"}};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_a, spec_b}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(spec_map.map,
+                                                                  FullPackageSpec::to_feature_specs({spec_a, spec_b}),
+                                                                  StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);
     remove_plan_check(install_plan.at(0), "b");
@@ -384,7 +370,7 @@ TEST_CASE("basic feature test 6", "[plan]")
     features_check(install_plan.at(2), "a", {"core"});
 }
 
-TEST_CASE("basic feature test 7", "[plan]")
+TEST_CASE ("basic feature test 7", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("x", "b"));
@@ -396,10 +382,8 @@ TEST_CASE("basic feature test 7", "[plan]")
     auto spec_x = FullPackageSpec{spec_map.emplace("x", "a"), {"core"}};
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}}), {"b1"}};
 
-    auto install_plan =
-        Dependencies::create_feature_install_plan(spec_map.map,
-                                                    FullPackageSpec::to_feature_specs({spec_b}),
-                                                    StatusParagraphs(std::move(status_paragraphs)));
+    auto install_plan = Dependencies::create_feature_install_plan(
+        spec_map.map, FullPackageSpec::to_feature_specs({spec_b}), StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 5);
     remove_plan_check(install_plan.at(0), "x");
@@ -411,7 +395,7 @@ TEST_CASE("basic feature test 7", "[plan]")
     features_check(install_plan.at(4), "x", {"core"});
 }
 
-TEST_CASE("basic feature test 8", "[plan]")
+TEST_CASE ("basic feature test 8", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
@@ -444,7 +428,7 @@ TEST_CASE("basic feature test 8", "[plan]")
     features_check(install_plan.at(7), "c", {"core"});
 }
 
-TEST_CASE("install all features test", "[plan]")
+TEST_CASE ("install all features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -463,7 +447,7 @@ TEST_CASE("install all features test", "[plan]")
     features_check(install_plan.at(0), "a", {"0", "1", "core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("install default features test 1", "[plan]")
+TEST_CASE ("install default features test 1", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -483,7 +467,7 @@ TEST_CASE("install default features test 1", "[plan]")
     features_check(install_plan.at(0), "a", {"1", "core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("install default features test 2", "[plan]")
+TEST_CASE ("install default features test 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
@@ -510,7 +494,7 @@ TEST_CASE("install default features test 2", "[plan]")
     features_check(install_plan.at(1), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("install default features test 3", "[plan]")
+TEST_CASE ("install default features test 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -530,7 +514,7 @@ TEST_CASE("install default features test 3", "[plan]")
     features_check(install_plan.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("install default features of dependency test 1", "[plan]")
+TEST_CASE ("install default features of dependency test 1", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -554,7 +538,7 @@ TEST_CASE("install default features of dependency test 1", "[plan]")
     features_check(install_plan.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("do not install default features of existing dependency", "[plan]")
+TEST_CASE ("do not install default features of existing dependency", "[plan]")
 {
     // Add a port "a" which depends on the core of "b"
     PackageSpecMap spec_map(Triplet::X64_WINDOWS);
@@ -580,7 +564,7 @@ TEST_CASE("do not install default features of existing dependency", "[plan]")
     features_check(install_plan.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("install default features of dependency test 2", "[plan]")
+TEST_CASE ("install default features of dependency test 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("b"));
@@ -607,7 +591,7 @@ TEST_CASE("install default features of dependency test 2", "[plan]")
     features_check(install_plan.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("install plan action dependencies", "[plan]")
+TEST_CASE ("install plan action dependencies", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -629,15 +613,13 @@ TEST_CASE("install plan action dependencies", "[plan]")
     features_check(install_plan.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
 
     features_check(install_plan.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies ==
-                    std::vector<PackageSpec>{spec_c});
+    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_c});
 
     features_check(install_plan.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies ==
-                    std::vector<PackageSpec>{spec_b});
+    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_b});
 }
 
-TEST_CASE("install plan action dependencies 2", "[plan]")
+TEST_CASE ("install plan action dependencies 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -659,15 +641,13 @@ TEST_CASE("install plan action dependencies 2", "[plan]")
     features_check(install_plan.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
 
     features_check(install_plan.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies ==
-                    std::vector<PackageSpec>{spec_c});
+    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_c});
 
     features_check(install_plan.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies ==
-                    std::vector<PackageSpec>{spec_b, spec_c});
+    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_b, spec_c});
 }
 
-TEST_CASE("install plan action dependencies 3", "[plan]")
+TEST_CASE ("install plan action dependencies 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -688,7 +668,7 @@ TEST_CASE("install plan action dependencies 3", "[plan]")
     REQUIRE(install_plan.at(0).install_action.get()->computed_dependencies == std::vector<PackageSpec>{});
 }
 
-TEST_CASE("install with default features", "[plan]")
+TEST_CASE ("install with default features", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a", ""));
@@ -708,7 +688,7 @@ TEST_CASE("install with default features", "[plan]")
     features_check(install_plan.at(2), "a", {"0", "core"});
 }
 
-TEST_CASE("upgrade with default features 1", "[plan]")
+TEST_CASE ("upgrade with default features 1", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a", "", "1"));
@@ -733,7 +713,7 @@ TEST_CASE("upgrade with default features 1", "[plan]")
     features_check(plan.at(1), "a", {"core", "0"});
 }
 
-TEST_CASE("upgrade with default features 2", "[plan]")
+TEST_CASE ("upgrade with default features 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     // B is currently installed _without_ default feature b0
@@ -761,7 +741,7 @@ TEST_CASE("upgrade with default features 2", "[plan]")
     features_check(plan.at(3), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("upgrade with default features 3", "[plan]")
+TEST_CASE ("upgrade with default features 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     // note: unrelated package due to x86 triplet
@@ -787,7 +767,7 @@ TEST_CASE("upgrade with default features 3", "[plan]")
     features_check(plan.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("upgrade with new default feature", "[plan]")
+TEST_CASE ("upgrade with new default feature", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a", "", "0", "x86-windows"));
@@ -809,7 +789,7 @@ TEST_CASE("upgrade with new default feature", "[plan]")
     features_check(plan.at(1), "a", {"core", "1"}, Triplet::X86_WINDOWS);
 }
 
-TEST_CASE("transitive features test", "[plan]")
+TEST_CASE ("transitive features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -832,7 +812,7 @@ TEST_CASE("transitive features test", "[plan]")
     features_check(install_plan.at(2), "a", {"0", "core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("no transitive features test", "[plan]")
+TEST_CASE ("no transitive features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -855,7 +835,7 @@ TEST_CASE("no transitive features test", "[plan]")
     features_check(install_plan.at(2), "a", {"0", "core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("only transitive features test", "[plan]")
+TEST_CASE ("only transitive features test", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
@@ -878,7 +858,7 @@ TEST_CASE("only transitive features test", "[plan]")
     features_check(install_plan.at(2), "a", {"0", "core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE("basic remove scheme", "[plan]")
+TEST_CASE ("basic remove scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -890,7 +870,7 @@ TEST_CASE("basic remove scheme", "[plan]")
     REQUIRE(remove_plan.at(0).spec.name() == "a");
 }
 
-TEST_CASE("recurse remove scheme", "[plan]")
+TEST_CASE ("recurse remove scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -904,7 +884,7 @@ TEST_CASE("recurse remove scheme", "[plan]")
     REQUIRE(remove_plan.at(1).spec.name() == "a");
 }
 
-TEST_CASE("features depend remove scheme", "[plan]")
+TEST_CASE ("features depend remove scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -919,7 +899,7 @@ TEST_CASE("features depend remove scheme", "[plan]")
     REQUIRE(remove_plan.at(1).spec.name() == "a");
 }
 
-TEST_CASE("features depend remove scheme once removed", "[plan]")
+TEST_CASE ("features depend remove scheme once removed", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("expat"));
@@ -936,7 +916,7 @@ TEST_CASE("features depend remove scheme once removed", "[plan]")
     REQUIRE(remove_plan.at(2).spec.name() == "expat");
 }
 
-TEST_CASE("features depend remove scheme once removed x64", "[plan]")
+TEST_CASE ("features depend remove scheme once removed x64", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("expat", "", "", "x64"));
@@ -945,8 +925,8 @@ TEST_CASE("features depend remove scheme once removed x64", "[plan]")
     pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk", "x64"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan(
-        {unsafe_pspec("expat", Triplet::from_canonical_name("x64"))}, status_db);
+    auto remove_plan =
+        Dependencies::create_remove_plan({unsafe_pspec("expat", Triplet::from_canonical_name("x64"))}, status_db);
 
     REQUIRE(remove_plan.size() == 3);
     REQUIRE(remove_plan.at(0).spec.name() == "opencv");
@@ -954,22 +934,22 @@ TEST_CASE("features depend remove scheme once removed x64", "[plan]")
     REQUIRE(remove_plan.at(2).spec.name() == "expat");
 }
 
-TEST_CASE("features depend core remove scheme", "[plan]")
+TEST_CASE ("features depend core remove scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("curl", "", "", "x64"));
     pghs.push_back(make_status_pgh("cpr", "curl[core]", "", "x64"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan(
-        {unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+    auto remove_plan =
+        Dependencies::create_remove_plan({unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
 
     REQUIRE(remove_plan.size() == 2);
     REQUIRE(remove_plan.at(0).spec.name() == "cpr");
     REQUIRE(remove_plan.at(1).spec.name() == "curl");
 }
 
-TEST_CASE("features depend core remove scheme 2", "[plan]")
+TEST_CASE ("features depend core remove scheme 2", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("curl", "", "", "x64"));
@@ -977,14 +957,14 @@ TEST_CASE("features depend core remove scheme 2", "[plan]")
     pghs.push_back(make_status_feature_pgh("curl", "b", "curl[a]", "x64"));
     StatusParagraphs status_db(std::move(pghs));
 
-    auto remove_plan = Dependencies::create_remove_plan(
-        {unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+    auto remove_plan =
+        Dependencies::create_remove_plan({unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
 
     REQUIRE(remove_plan.size() == 1);
     REQUIRE(remove_plan.at(0).spec.name() == "curl");
 }
 
-TEST_CASE("basic upgrade scheme", "[plan]")
+TEST_CASE ("basic upgrade scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1007,7 +987,7 @@ TEST_CASE("basic upgrade scheme", "[plan]")
     REQUIRE(plan.at(1).install_action.has_value());
 }
 
-TEST_CASE("basic upgrade scheme with recurse", "[plan]")
+TEST_CASE ("basic upgrade scheme with recurse", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1039,7 +1019,7 @@ TEST_CASE("basic upgrade scheme with recurse", "[plan]")
     REQUIRE(plan.at(3).install_action.has_value());
 }
 
-TEST_CASE("basic upgrade scheme with bystander", "[plan]")
+TEST_CASE ("basic upgrade scheme with bystander", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1064,7 +1044,7 @@ TEST_CASE("basic upgrade scheme with bystander", "[plan]")
     REQUIRE(plan.at(1).install_action.has_value());
 }
 
-TEST_CASE("basic upgrade scheme with new dep", "[plan]")
+TEST_CASE ("basic upgrade scheme with new dep", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1090,7 +1070,7 @@ TEST_CASE("basic upgrade scheme with new dep", "[plan]")
     REQUIRE(plan.at(2).install_action.has_value());
 }
 
-TEST_CASE("basic upgrade scheme with features", "[plan]")
+TEST_CASE ("basic upgrade scheme with features", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1115,7 +1095,7 @@ TEST_CASE("basic upgrade scheme with features", "[plan]")
     features_check(plan.at(1), "a", {"core", "a1"});
 }
 
-TEST_CASE("basic upgrade scheme with new default feature", "[plan]")
+TEST_CASE ("basic upgrade scheme with new default feature", "[plan]")
 {
     // only core of package "a" is installed
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
@@ -1141,7 +1121,7 @@ TEST_CASE("basic upgrade scheme with new default feature", "[plan]")
     features_check(plan.at(1), "a", {"core", "a1"});
 }
 
-TEST_CASE("basic upgrade scheme with self features", "[plan]")
+TEST_CASE ("basic upgrade scheme with self features", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1169,7 +1149,7 @@ TEST_CASE("basic upgrade scheme with self features", "[plan]")
     REQUIRE(plan.at(1).install_action.get()->feature_list == std::set<std::string>{"core", "a1", "a2"});
 }
 
-TEST_CASE("basic export scheme", "[plan]")
+TEST_CASE ("basic export scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1185,7 +1165,7 @@ TEST_CASE("basic export scheme", "[plan]")
     REQUIRE(plan.at(0).plan_type == Dependencies::ExportPlanType::ALREADY_BUILT);
 }
 
-TEST_CASE("basic export scheme with recurse", "[plan]")
+TEST_CASE ("basic export scheme with recurse", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1206,7 +1186,7 @@ TEST_CASE("basic export scheme with recurse", "[plan]")
     REQUIRE(plan.at(1).plan_type == Dependencies::ExportPlanType::ALREADY_BUILT);
 }
 
-TEST_CASE("basic export scheme with bystander", "[plan]")
+TEST_CASE ("basic export scheme with bystander", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("a"));
@@ -1224,7 +1204,7 @@ TEST_CASE("basic export scheme with bystander", "[plan]")
     REQUIRE(plan.at(0).plan_type == Dependencies::ExportPlanType::ALREADY_BUILT);
 }
 
-TEST_CASE("basic export scheme with missing", "[plan]")
+TEST_CASE ("basic export scheme with missing", "[plan]")
 {
     StatusParagraphs status_db;
 
@@ -1238,7 +1218,7 @@ TEST_CASE("basic export scheme with missing", "[plan]")
     REQUIRE(plan.at(0).plan_type == Dependencies::ExportPlanType::NOT_BUILT);
 }
 
-TEST_CASE("basic export scheme with features", "[plan]")
+TEST_CASE ("basic export scheme with features", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;
     pghs.push_back(make_status_pgh("b"));
