@@ -18,6 +18,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")
 file(COPY
   "${CMAKE_CURRENT_LIST_DIR}/Findlz4.cmake"
   "${CMAKE_CURRENT_LIST_DIR}/Findsnappy.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/Findzstd.cmake"
   DESTINATION "${SOURCE_PATH}/cmake/modules"
 )
 
@@ -40,6 +41,11 @@ if("zlib" IN_LIST FEATURES)
   set(WITH_ZLIB ON)
 endif()
 
+set(WITH_ZLIB OFF)
+if("zstd" IN_LIST FEATURES)
+  set(WITH_ZLIB ON)
+endif()
+
 set(WITH_TBB OFF)
 set(ROCKSDB_IGNORE_PACKAGE_TBB TRUE)
 if("tbb" IN_LIST FEATURES)
@@ -57,6 +63,7 @@ vcpkg_configure_cmake(
   -DWITH_LZ4=${WITH_LZ4}
   -DWITH_ZLIB=${WITH_ZLIB}
   -DWITH_TBB=${WITH_TBB}
+  -DWITH_ZSTD=${WITH_ZSTD}
   -DWITH_TESTS=OFF
   -DUSE_RTTI=1
   -DROCKSDB_INSTALL_ON_WINDOWS=ON
