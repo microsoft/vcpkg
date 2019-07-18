@@ -37,6 +37,8 @@ namespace vcpkg::Build::Command
                              const ParsedArguments& options,
                              const VcpkgPaths& paths)
     {
+        vcpkg::Util::unused(options);
+
         const StatusParagraphs status_db = database_load_check(paths);
         const PackageSpec& spec = full_spec.package_spec;
         const SourceControlFile& scf = *scfl.source_control_file;
@@ -291,9 +293,10 @@ namespace vcpkg::Build
                                                   const std::set<std::string>& feature_list,
                                                   const Triplet& triplet)
     {
-        return Util::fmap_flatten(feature_list,
+        return Util::fmap_flatten(
+            feature_list,
             [&](std::string const& feature) -> std::vector<Features> {
-            if (feature == "core")
+                if (feature == "core")
                 {
                     return filter_dependencies_to_features(scf.core_paragraph->depends, triplet);
                 }
@@ -302,8 +305,7 @@ namespace vcpkg::Build
                 Checks::check_exit(VCPKG_LINE_INFO, maybe_feature.has_value());
 
                 return filter_dependencies_to_features(maybe_feature.get()->depends, triplet);
-            }
-        );
+            });
     }
 
     static std::vector<std::string> get_dependency_names(const SourceControlFile& scf,
@@ -376,7 +378,6 @@ namespace vcpkg::Build
     }
 
     static std::vector<System::CMakeVariable> get_cmake_vars(const VcpkgPaths& paths,
-                                                             const PreBuildInfo& pre_build_info,
                                                              const BuildPackageConfig& config,
                                                              const Triplet& triplet,
                                                              const Toolset& toolset)
@@ -428,7 +429,7 @@ namespace vcpkg::Build
         const Toolset& toolset = paths.get_toolset(pre_build_info);
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         std::vector<System::CMakeVariable> variables =
-            get_cmake_vars(paths, pre_build_info, config, triplet, toolset);
+            get_cmake_vars(paths, config, triplet, toolset);
 
         const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
 
