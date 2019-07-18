@@ -11,7 +11,9 @@ vcpkg_from_github(
     SHA512 1642a9cf1923d00c52c346399941517787431dad3e6d3a5da07bc02243a231a95e30e0a9568ffd29bb9b9757f15c1c47d2d811c2bedb301f2d27cf912be0a534
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
+        0002-Fix-z7-override.patch
+        fix-main-lib-path.patch
+        fix-gmock-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
@@ -28,6 +30,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/GMock)
 
 file(
     INSTALL
@@ -49,31 +52,11 @@ file(
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest_maind.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock_maind.lib)
-
-    file(READ ${CURRENT_PACKAGES_DIR}/share/gtest/GTestTargets-debug.cmake DEBUG_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/gtest_maind.lib"
-                   "\${_IMPORT_PREFIX}/debug/lib/manual-link/gtest_maind.lib" DEBUG_CONFIG "${DEBUG_CONFIG}")
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/gmock_maind.lib"
-                   "\${_IMPORT_PREFIX}/debug/lib/manual-link/gmock_maind.lib" DEBUG_CONFIG "${DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/gtest/GTestTargets-debug.cmake "${DEBUG_CONFIG}")
-endif()
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest_main.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gtest_main.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock_main.lib)
-
-    file(READ ${CURRENT_PACKAGES_DIR}/share/gtest/GTestTargets-release.cmake RELEASE_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}/lib/gtest_main.lib"
-                   "\${_IMPORT_PREFIX}/lib/manual-link/gtest_main.lib" RELEASE_CONFIG "${RELEASE_CONFIG}")
-    string(REPLACE "\${_IMPORT_PREFIX}/lib/gmock_main.lib"
-                   "\${_IMPORT_PREFIX}/lib/manual-link/gmock_main.lib" RELEASE_CONFIG "${RELEASE_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/gtest/GTestTargets-release.cmake "${RELEASE_CONFIG}")
-endif()
+# Install gmock cmake files.
+file(GLOB GMOCK_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/gtest/GMock*.cmake)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gmock)
+file(COPY ${GMOCK_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/gmock)
+file(REMOVE ${GMOCK_CMAKE_FILES})
 
 vcpkg_copy_pdbs()
 
