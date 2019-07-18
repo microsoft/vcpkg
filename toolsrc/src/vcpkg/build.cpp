@@ -64,7 +64,7 @@ namespace vcpkg::Build::Command
         features_as_set.emplace("core");
 
         const Build::BuildPackageConfig build_config{
-            scf, spec.triplet(), fs::path(scfl.source_location), build_package_options, features_as_set};
+            scfl, spec.triplet(), build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -785,7 +785,7 @@ namespace vcpkg::Build
         }
 
         const auto pre_build_info =
-            PreBuildInfo::from_triplet_file(paths, triplet, config.scf.core_paragraph->name);
+            PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
 
         auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
 
@@ -1002,7 +1002,7 @@ namespace vcpkg::Build
 
     PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths,
                                                  const Triplet& triplet,
-                                                 Optional<const std::string&> port)
+                                                 Optional<const SourceControlFileLocation&> port)
     {
         static constexpr CStringView FLAG_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
 
@@ -1016,7 +1016,7 @@ namespace vcpkg::Build
         {
             args.emplace_back(
                     "CMAKE_ENV_OVERRIDES_FILE",
-                    paths.ports / port.value_or_exit(VCPKG_LINE_INFO) / "environment-overrides.cmake");
+                    port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
         }
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
