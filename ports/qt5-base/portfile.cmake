@@ -33,10 +33,6 @@ foreach(DEPENDENCY zlib harfbuzzng libjpeg libpng double-conversion sqlite)
     endif()
 endforeach()
 
-if ((NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")) AND (EXISTS ${SOURCE_PATH}/src/3rdparty/freetype))
-    FILE(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/freetype)
-endif()
-
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
@@ -254,19 +250,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
             file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
         endif()
     endif()
-
-    #---------------------------------------------------------------------------
-    # Qt5Bootstrap: only used to bootstrap qmake dependencies
-    #---------------------------------------------------------------------------
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.prl)
-    endif()
-    #---------------------------------------------------------------------------
 endif()
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")

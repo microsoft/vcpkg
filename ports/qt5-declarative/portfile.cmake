@@ -21,10 +21,11 @@ endif()
 
 # Copy qt5-declarative tools
 # This is a temporary workaround and hope to fix and remove it after the version update.
+if (EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/ ${CURRENT_PACKAGES_DIR}/tools/qt5/)
+endif()
+
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/ ${CURRENT_PACKAGES_DIR}/tools/qt5/)
-    endif()
     if (EXISTS ${CURRENT_PACKAGES_DIR}/lib/libQt5QmlDevTools.a)
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/libQt5QmlDevTools.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     endif()
