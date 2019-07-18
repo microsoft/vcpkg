@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF 71d85f0cd4ec2012c9cf19bfa741e094fcecfa3e
     SHA512 6b0ff7a75a09226f775fa01fd9753d0f69c4838b40253fe9fc824eeee3c2efa1884e711188858f185f9c765f1dadace0bb72227d71e4d2218c493ddfb60224fa
     HEAD_REF master
+    PATCHES
+        fix-interface-include-directories.patch
 )
 
 vcpkg_configure_cmake(
