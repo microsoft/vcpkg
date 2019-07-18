@@ -1,437 +1,445 @@
 #include <vcpkg-tests/catch.h>
-#include <vcpkg-tests/utils.h>
+#include <vcpkg-tests/util.h>
 
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+#include <vcpkg/base/strings.h>
+
+#include <vcpkg/paragraphs.h>
 
 namespace Strings = vcpkg::Strings;
 
-namespace UnitTest1
+TEST_CASE("SourceParagraph construct minimum", "[paragraph]")
 {
-    class ControlParsing : public TestClass<ControlParsing>
-    {
-        TEST_METHOD(SourceParagraph_Construct_Minimum)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"},
-                    {"Version", "1.2.8"},
-                }});
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "zlib"},
+            {"Version", "1.2.8"},
+        }});
 
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual("zlib", pgh->core_paragraph->name.c_str());
-            Assert::AreEqual("1.2.8", pgh->core_paragraph->version.c_str());
-            Assert::AreEqual("", pgh->core_paragraph->maintainer.c_str());
-            Assert::AreEqual("", pgh->core_paragraph->description.c_str());
-            Assert::AreEqual(size_t(0), pgh->core_paragraph->depends.size());
-        }
+    REQUIRE(pgh.core_paragraph->name == "zlib");
+    REQUIRE(pgh.core_paragraph->version == "1.2.8");
+    REQUIRE(pgh.core_paragraph->maintainer == "");
+    REQUIRE(pgh.core_paragraph->description == "");
+    REQUIRE(pgh.core_paragraph->depends.size() == 0);
+}
 
-        TEST_METHOD(SourceParagraph_Construct_Maximum)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "s"},
-                    {"Version", "v"},
-                    {"Maintainer", "m"},
-                    {"Description", "d"},
-                    {"Build-Depends", "bd"},
-                    {"Default-Features", "df"},
-                    {"Supports", "x64"},
-                }});
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+TEST_CASE("SourceParagraph construct maximum", "[paragraph]")
+{
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "s"},
+            {"Version", "v"},
+            {"Maintainer", "m"},
+            {"Description", "d"},
+            {"Build-Depends", "bd"},
+            {"Default-Features", "df"},
+            {"Supports", "x64"},
+        }});
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual("s", pgh->core_paragraph->name.c_str());
-            Assert::AreEqual("v", pgh->core_paragraph->version.c_str());
-            Assert::AreEqual("m", pgh->core_paragraph->maintainer.c_str());
-            Assert::AreEqual("d", pgh->core_paragraph->description.c_str());
-            Assert::AreEqual(size_t(1), pgh->core_paragraph->depends.size());
-            Assert::AreEqual("bd", pgh->core_paragraph->depends[0].name().c_str());
-            Assert::AreEqual(size_t(1), pgh->core_paragraph->default_features.size());
-            Assert::AreEqual("df", pgh->core_paragraph->default_features[0].c_str());
-            Assert::AreEqual(size_t(1), pgh->core_paragraph->supports.size());
-            Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
-        }
+    REQUIRE(pgh.core_paragraph->name == "s");
+    REQUIRE(pgh.core_paragraph->version == "v");
+    REQUIRE(pgh.core_paragraph->maintainer == "m");
+    REQUIRE(pgh.core_paragraph->description == "d");
+    REQUIRE(pgh.core_paragraph->depends.size() == 1);
+    REQUIRE(pgh.core_paragraph->depends[0].name() == "bd");
+    REQUIRE(pgh.core_paragraph->default_features.size() == 1);
+    REQUIRE(pgh.core_paragraph->default_features[0] == "df");
+    REQUIRE(pgh.core_paragraph->supports.size() == 1);
+    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
+}
 
-        TEST_METHOD(SourceParagraph_Two_Depends)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"},
-                    {"Version", "1.2.8"},
-                    {"Build-Depends", "z, openssl"},
-                }});
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+TEST_CASE("SourceParagraph two depends", "[paragraph]")
+{
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "zlib"},
+            {"Version", "1.2.8"},
+            {"Build-Depends", "z, openssl"},
+        }});
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual(size_t(2), pgh->core_paragraph->depends.size());
-            Assert::AreEqual("z", pgh->core_paragraph->depends[0].name().c_str());
-            Assert::AreEqual("openssl", pgh->core_paragraph->depends[1].name().c_str());
-        }
+    REQUIRE(pgh.core_paragraph->depends.size() == 2);
+    REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
+    REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
+}
 
-        TEST_METHOD(SourceParagraph_Three_Depends)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"},
-                    {"Version", "1.2.8"},
-                    {"Build-Depends", "z, openssl, xyz"},
-                }});
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+TEST_CASE("SourceParagraph three depends", "[paragraph]")
+{
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "zlib"},
+            {"Version", "1.2.8"},
+            {"Build-Depends", "z, openssl, xyz"},
+        }});
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual(size_t(3), pgh->core_paragraph->depends.size());
-            Assert::AreEqual("z", pgh->core_paragraph->depends[0].name().c_str());
-            Assert::AreEqual("openssl", pgh->core_paragraph->depends[1].name().c_str());
-            Assert::AreEqual("xyz", pgh->core_paragraph->depends[2].name().c_str());
-        }
+    REQUIRE(pgh.core_paragraph->depends.size() == 3);
+    REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
+    REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
+    REQUIRE(pgh.core_paragraph->depends[2].name() == "xyz");
+}
 
-        TEST_METHOD(SourceParagraph_Three_Supports)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"},
-                    {"Version", "1.2.8"},
-                    {"Supports", "x64, windows, uwp"},
-                }});
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+TEST_CASE("SourceParagraph three supports", "[paragraph]")
+{
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "zlib"},
+            {"Version", "1.2.8"},
+            {"Supports", "x64, windows, uwp"},
+        }});
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual(size_t(3), pgh->core_paragraph->supports.size());
-            Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
-            Assert::AreEqual("windows", pgh->core_paragraph->supports[1].c_str());
-            Assert::AreEqual("uwp", pgh->core_paragraph->supports[2].c_str());
-        }
+    REQUIRE(pgh.core_paragraph->supports.size() == 3);
+    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
+    REQUIRE(pgh.core_paragraph->supports[1] == "windows");
+    REQUIRE(pgh.core_paragraph->supports[2] == "uwp");
+}
 
-        TEST_METHOD(SourceParagraph_Construct_Qualified_Depends)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"},
-                    {"Version", "1.2.8"},
-                    {"Build-Depends", "libA (windows), libB (uwp)"},
-                }});
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+TEST_CASE("SourceParagraph construct qualified depends", "[paragraph]")
+{
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "zlib"},
+            {"Version", "1.2.8"},
+            {"Build-Depends", "libA (windows), libB (uwp)"},
+        }});
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual("zlib", pgh->core_paragraph->name.c_str());
-            Assert::AreEqual("1.2.8", pgh->core_paragraph->version.c_str());
-            Assert::AreEqual("", pgh->core_paragraph->maintainer.c_str());
-            Assert::AreEqual("", pgh->core_paragraph->description.c_str());
-            Assert::AreEqual(size_t(2), pgh->core_paragraph->depends.size());
-            Assert::AreEqual("libA", pgh->core_paragraph->depends[0].name().c_str());
-            Assert::AreEqual("windows", pgh->core_paragraph->depends[0].qualifier.c_str());
-            Assert::AreEqual("libB", pgh->core_paragraph->depends[1].name().c_str());
-            Assert::AreEqual("uwp", pgh->core_paragraph->depends[1].qualifier.c_str());
-        }
+    REQUIRE(pgh.core_paragraph->name == "zlib");
+    REQUIRE(pgh.core_paragraph->version == "1.2.8");
+    REQUIRE(pgh.core_paragraph->maintainer == "");
+    REQUIRE(pgh.core_paragraph->description == "");
+    REQUIRE(pgh.core_paragraph->depends.size() == 2);
+    REQUIRE(pgh.core_paragraph->depends[0].name() == "libA");
+    REQUIRE(pgh.core_paragraph->depends[0].qualifier == "windows");
+    REQUIRE(pgh.core_paragraph->depends[1].name() == "libB");
+    REQUIRE(pgh.core_paragraph->depends[1].qualifier == "uwp");
+}
 
-        TEST_METHOD(SourceParagraph_Default_Features)
-        {
-            auto m_pgh =
-                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "a"},
-                    {"Version", "1.0"},
-                    {"Default-Features", "a1"},
-                }});
-            Assert::IsTrue(m_pgh.has_value());
-            auto& pgh = *m_pgh.get();
+TEST_CASE("SourceParagraph default features", "[paragraph]")
+{
+    auto m_pgh =
+        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+            {"Source", "a"},
+            {"Version", "1.0"},
+            {"Default-Features", "a1"},
+        }});
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
 
-            Assert::AreEqual(size_t(1), pgh->core_paragraph->default_features.size());
-            Assert::AreEqual("a1", pgh->core_paragraph->default_features[0].c_str());
-        }
+    REQUIRE(pgh.core_paragraph->default_features.size() == 1);
+    REQUIRE(pgh.core_paragraph->default_features[0] == "a1");
+}
 
-        TEST_METHOD(BinaryParagraph_Construct_Minimum)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-            });
+TEST_CASE("BinaryParagraph construct minimum", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+    });
 
-            Assert::AreEqual("zlib", pgh.spec.name().c_str());
-            Assert::AreEqual("1.2.8", pgh.version.c_str());
-            Assert::AreEqual("", pgh.maintainer.c_str());
-            Assert::AreEqual("", pgh.description.c_str());
-            Assert::AreEqual("x86-windows", pgh.spec.triplet().canonical_name().c_str());
-            Assert::AreEqual(size_t(0), pgh.depends.size());
-        }
+    REQUIRE(pgh.spec.name() == "zlib");
+    REQUIRE(pgh.version == "1.2.8");
+    REQUIRE(pgh.maintainer == "");
+    REQUIRE(pgh.description == "");
+    REQUIRE(pgh.spec.triplet().canonical_name() == "x86-windows");
+    REQUIRE(pgh.depends.size() == 0);
+}
 
-        TEST_METHOD(BinaryParagraph_Construct_Maximum)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "s"},
-                {"Version", "v"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-                {"Maintainer", "m"},
-                {"Description", "d"},
-                {"Depends", "bd"},
-            });
-            Assert::AreEqual("s", pgh.spec.name().c_str());
-            Assert::AreEqual("v", pgh.version.c_str());
-            Assert::AreEqual("m", pgh.maintainer.c_str());
-            Assert::AreEqual("d", pgh.description.c_str());
-            Assert::AreEqual(size_t(1), pgh.depends.size());
-            Assert::AreEqual("bd", pgh.depends[0].c_str());
-        }
+TEST_CASE("BinaryParagraph construct maximum", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "s"},
+        {"Version", "v"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Maintainer", "m"},
+        {"Description", "d"},
+        {"Depends", "bd"},
+    });
 
-        TEST_METHOD(BinaryParagraph_Three_Depends)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-                {"Depends", "a, b, c"},
-            });
+    REQUIRE(pgh.spec.name() == "s");
+    REQUIRE(pgh.version == "v");
+    REQUIRE(pgh.maintainer == "m");
+    REQUIRE(pgh.description == "d");
+    REQUIRE(pgh.depends.size() == 1);
+    REQUIRE(pgh.depends[0] == "bd");
+}
 
-            Assert::AreEqual(size_t(3), pgh.depends.size());
-            Assert::AreEqual("a", pgh.depends[0].c_str());
-            Assert::AreEqual("b", pgh.depends[1].c_str());
-            Assert::AreEqual("c", pgh.depends[2].c_str());
-        }
+TEST_CASE("BinaryParagraph three depends", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Depends", "a, b, c"},
+    });
 
-        TEST_METHOD(BinaryParagraph_Abi)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-                {"Abi", "abcd123"},
-            });
+    REQUIRE(pgh.depends.size() == 3);
+    REQUIRE(pgh.depends[0] == "a");
+    REQUIRE(pgh.depends[1] == "b");
+    REQUIRE(pgh.depends[2] == "c");
+}
 
-            Assert::AreEqual(size_t(0), pgh.depends.size());
-            Assert::IsTrue(pgh.abi == "abcd123");
-        }
+TEST_CASE("BinaryParagraph abi", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Abi", "abcd123"},
+    });
 
-        TEST_METHOD(BinaryParagraph_Default_Features)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "a"},
-                {"Version", "1.0"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-                {"Default-Features", "a1"},
-            });
+    REQUIRE(pgh.depends.size() == 0);
+    REQUIRE(pgh.abi == "abcd123");
+}
 
-            Assert::AreEqual(size_t(0), pgh.depends.size());
-            Assert::AreEqual(size_t(1), pgh.default_features.size());
-            Assert::IsTrue(pgh.default_features[0] == "a1");
-        }
+TEST_CASE("BinaryParagraph default features", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "a"},
+        {"Version", "1.0"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Default-Features", "a1"},
+    });
 
-        TEST_METHOD(parse_paragraphs_empty)
-        {
-            const char* str = "";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::IsTrue(pghs.empty());
-        }
+    REQUIRE(pgh.depends.size() == 0);
+    REQUIRE(pgh.default_features.size() == 1);
+    REQUIRE(pgh.default_features[0] == "a1");
+}
 
-        TEST_METHOD(parse_paragraphs_one_field)
-        {
-            const char* str = "f1: v1";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual(size_t(1), pghs[0].size());
-            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-        }
+TEST_CASE("parse paragraphs empty", "[paragraph]")
+{
+    const char* str = "";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    REQUIRE(pghs.empty());
+}
 
-        TEST_METHOD(parse_paragraphs_one_pgh)
-        {
-            const char* str = "f1: v1\n"
-                              "f2: v2";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual(size_t(2), pghs[0].size());
-            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-            Assert::AreEqual("v2", pghs[0]["f2"].c_str());
-        }
+TEST_CASE("parse paragraphs one field", "[paragraph]")
+{
+    const char* str = "f1: v1";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0].size() == 1);
+    REQUIRE(pghs[0]["f1"] == "v1");
+}
 
-        TEST_METHOD(parse_paragraphs_two_pgh)
-        {
-            const char* str = "f1: v1\n"
-                              "f2: v2\n"
-                              "\n"
-                              "f3: v3\n"
-                              "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(2), pghs.size());
-            Assert::AreEqual(size_t(2), pghs[0].size());
-            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-            Assert::AreEqual("v2", pghs[0]["f2"].c_str());
-            Assert::AreEqual(size_t(2), pghs[1].size());
-            Assert::AreEqual("v3", pghs[1]["f3"].c_str());
-            Assert::AreEqual("v4", pghs[1]["f4"].c_str());
-        }
+TEST_CASE("parse paragraphs one pgh", "[paragraph]")
+{
+    const char* str = "f1: v1\n"
+                        "f2: v2";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0].size() == 2);
+    REQUIRE(pghs[0]["f1"] == "v1");
+    REQUIRE(pghs[0]["f2"] == "v2");
+}
 
-        TEST_METHOD(parse_paragraphs_field_names)
-        {
-            const char* str = "1:\n"
-                              "f:\n"
-                              "F:\n"
-                              "0:\n"
-                              "F-2:\n";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual(size_t(5), pghs[0].size());
-        }
+TEST_CASE("parse paragraphs two pgh", "[paragraph]")
+{
+    const char* str = "f1: v1\n"
+                        "f2: v2\n"
+                        "\n"
+                        "f3: v3\n"
+                        "f4: v4";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
-        TEST_METHOD(parse_paragraphs_multiple_blank_lines)
-        {
-            const char* str = "f1: v1\n"
-                              "f2: v2\n"
-                              "\n"
-                              "\n"
-                              "f3: v3\n"
-                              "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(2), pghs.size());
-        }
+    REQUIRE(pghs.size() == 2);
+    REQUIRE(pghs[0].size() == 2);
+    REQUIRE(pghs[0]["f1"] == "v1");
+    REQUIRE(pghs[0]["f2"] == "v2");
+    REQUIRE(pghs[1].size() == 2);
+    REQUIRE(pghs[1]["f3"] == "v3");
+    REQUIRE(pghs[1]["f4"] == "v4");
+}
 
-        TEST_METHOD(parse_paragraphs_empty_fields)
-        {
-            const char* str = "f1:\n"
-                              "f2: ";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual(size_t(2), pghs[0].size());
-            Assert::AreEqual("", pghs[0]["f1"].c_str());
-            Assert::AreEqual("", pghs[0]["f2"].c_str());
-            Assert::AreEqual(size_t(2), pghs[0].size());
-        }
+TEST_CASE("parse paragraphs field names", "[paragraph]")
+{
+    const char* str = "1:\n"
+                        "f:\n"
+                        "F:\n"
+                        "0:\n"
+                        "F-2:\n";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
-        TEST_METHOD(parse_paragraphs_multiline_fields)
-        {
-            const char* str = "f1: simple\n"
-                              " f1\r\n"
-                              "f2:\r\n"
-                              " f2\r\n"
-                              " continue\r\n";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual("simple\n f1", pghs[0]["f1"].c_str());
-            Assert::AreEqual("\n f2\n continue", pghs[0]["f2"].c_str());
-        }
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0].size() == 5);
+}
 
-        TEST_METHOD(parse_paragraphs_crlfs)
-        {
-            const char* str = "f1: v1\r\n"
-                              "f2: v2\r\n"
-                              "\r\n"
-                              "f3: v3\r\n"
-                              "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(2), pghs.size());
-            Assert::AreEqual(size_t(2), pghs[0].size());
-            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-            Assert::AreEqual("v2", pghs[0]["f2"].c_str());
-            Assert::AreEqual(size_t(2), pghs[1].size());
-            Assert::AreEqual("v3", pghs[1]["f3"].c_str());
-            Assert::AreEqual("v4", pghs[1]["f4"].c_str());
-        }
+TEST_CASE("parse paragraphs multiple blank lines", "[paragraph]")
+{
+    const char* str = "f1: v1\n"
+                        "f2: v2\n"
+                        "\n"
+                        "\n"
+                        "f3: v3\n"
+                        "f4: v4";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
-        TEST_METHOD(parse_paragraphs_comment)
-        {
-            const char* str = "f1: v1\r\n"
-                              "#comment\r\n"
-                              "f2: v2\r\n"
-                              "#comment\r\n"
-                              "\r\n"
-                              "#comment\r\n"
-                              "f3: v3\r\n"
-                              "#comment\r\n"
-                              "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(2), pghs.size());
-            Assert::AreEqual(size_t(2), pghs[0].size());
-            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-            Assert::AreEqual("v2", pghs[0]["f2"].c_str());
-            Assert::AreEqual(size_t(2), pghs[1].size());
-            Assert::AreEqual("v3", pghs[1]["f3"].c_str());
-            Assert::AreEqual("v4", pghs[1]["f4"].c_str());
-        }
+    REQUIRE(pghs.size() == 2);
+}
 
-        TEST_METHOD(parse_comment_before_single_slashN)
-        {
-            const char* str = "f1: v1\r\n"
-                              "#comment\n";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs[0].size());
-            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-        }
+TEST_CASE("parse paragraphs empty fields", "[paragraph]")
+{
+    const char* str = "f1:\n"
+                        "f2: ";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
-        TEST_METHOD(BinaryParagraph_serialize_min)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-            });
-            std::string ss = Strings::serialize(pgh);
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual(size_t(4), pghs[0].size());
-            Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
-            Assert::AreEqual("1.2.8", pghs[0]["Version"].c_str());
-            Assert::AreEqual("x86-windows", pghs[0]["Architecture"].c_str());
-            Assert::AreEqual("same", pghs[0]["Multi-Arch"].c_str());
-        }
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0].size() == 2);
+    REQUIRE(pghs[0]["f1"] == "");
+    REQUIRE(pghs[0]["f2"] == "");
+    REQUIRE(pghs[0].size() == 2);
+}
 
-        TEST_METHOD(BinaryParagraph_serialize_max)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Description", "first line\n second line"},
-                {"Maintainer", "abc <abc@abc.abc>"},
-                {"Depends", "dep"},
-                {"Multi-Arch", "same"},
-            });
-            std::string ss = Strings::serialize(pgh);
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual(size_t(7), pghs[0].size());
-            Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
-            Assert::AreEqual("1.2.8", pghs[0]["Version"].c_str());
-            Assert::AreEqual("x86-windows", pghs[0]["Architecture"].c_str());
-            Assert::AreEqual("same", pghs[0]["Multi-Arch"].c_str());
-            Assert::AreEqual("first line\n second line", pghs[0]["Description"].c_str());
-            Assert::AreEqual("dep", pghs[0]["Depends"].c_str());
-        }
+TEST_CASE("parse paragraphs multiline fields", "[paragraph]")
+{
+    const char* str = "f1: simple\n"
+                        " f1\r\n"
+                        "f2:\r\n"
+                        " f2\r\n"
+                        " continue\r\n";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
 
-        TEST_METHOD(BinaryParagraph_serialize_multiple_deps)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-                {"Depends", "a, b, c"},
-            });
-            std::string ss = Strings::serialize(pgh);
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual("a, b, c", pghs[0]["Depends"].c_str());
-        }
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0]["f1"] == "simple\n f1");
+    REQUIRE(pghs[0]["f2"] == "\n f2\n continue");
+}
 
-        TEST_METHOD(BinaryParagraph_serialize_abi)
-        {
-            vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"},
-                {"Version", "1.2.8"},
-                {"Architecture", "x86-windows"},
-                {"Multi-Arch", "same"},
-                {"Depends", "a, b, c"},
-                {"Abi", "123abc"},
-            });
-            std::string ss = Strings::serialize(pgh);
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(size_t(1), pghs.size());
-            Assert::AreEqual("123abc", pghs[0]["Abi"].c_str());
-        }
-    };
+TEST_CASE("parse paragraphs crlfs", "[paragraph]")
+{
+    const char* str = "f1: v1\r\n"
+                        "f2: v2\r\n"
+                        "\r\n"
+                        "f3: v3\r\n"
+                        "f4: v4";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+
+    REQUIRE(pghs.size() == 2);
+    REQUIRE(pghs[0].size() == 2);
+    REQUIRE(pghs[0]["f1"] == "v1");
+    REQUIRE(pghs[0]["f2"] == "v2");
+    REQUIRE(pghs[1].size() == 2);
+    REQUIRE(pghs[1]["f3"] == "v3");
+    REQUIRE(pghs[1]["f4"] == "v4");
+}
+
+TEST_CASE("parse paragraphs comment", "[paragraph]")
+{
+    const char* str = "f1: v1\r\n"
+                        "#comment\r\n"
+                        "f2: v2\r\n"
+                        "#comment\r\n"
+                        "\r\n"
+                        "#comment\r\n"
+                        "f3: v3\r\n"
+                        "#comment\r\n"
+                        "f4: v4";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+
+    REQUIRE(pghs.size() == 2);
+    REQUIRE(pghs[0].size() == 2);
+    REQUIRE(pghs[0]["f1"] == "v1");
+    REQUIRE(pghs[0]["f2"] == "v2");
+    REQUIRE(pghs[1].size());
+    REQUIRE(pghs[1]["f3"] == "v3");
+    REQUIRE(pghs[1]["f4"] == "v4");
+}
+
+TEST_CASE("parse comment before single line feed", "[paragraph]")
+{
+    const char* str = "f1: v1\r\n"
+                        "#comment\n";
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    REQUIRE(pghs[0].size() == 1);
+    REQUIRE(pghs[0]["f1"] == "v1");
+}
+
+TEST_CASE("BinaryParagraph serialize min", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+    });
+    std::string ss = Strings::serialize(pgh);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0].size() == 4);
+    REQUIRE(pghs[0]["Package"] == "zlib");
+    REQUIRE(pghs[0]["Version"] == "1.2.8");
+    REQUIRE(pghs[0]["Architecture"] == "x86-windows");
+    REQUIRE(pghs[0]["Multi-Arch"] == "same");
+}
+
+TEST_CASE("BinaryParagraph serialize max", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Description", "first line\n second line"},
+        {"Maintainer", "abc <abc@abc.abc>"},
+        {"Depends", "dep"},
+        {"Multi-Arch", "same"},
+    });
+    std::string ss = Strings::serialize(pgh);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0].size() == 7);
+    REQUIRE(pghs[0]["Package"] == "zlib");
+    REQUIRE(pghs[0]["Version"] == "1.2.8");
+    REQUIRE(pghs[0]["Architecture"] == "x86-windows");
+    REQUIRE(pghs[0]["Multi-Arch"] == "same");
+    REQUIRE(pghs[0]["Description"] == "first line\n second line");
+    REQUIRE(pghs[0]["Depends"] == "dep");
+}
+
+TEST_CASE("BinaryParagraph serialize multiple deps", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Depends", "a, b, c"},
+    });
+    std::string ss = Strings::serialize(pgh);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0]["Depends"] == "a, b, c");
+}
+
+TEST_CASE("BinaryParagraph serialize abi", "[paragraph]")
+{
+    vcpkg::BinaryParagraph pgh({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Depends", "a, b, c"},
+        {"Abi", "123abc"},
+    });
+    std::string ss = Strings::serialize(pgh);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+
+    REQUIRE(pghs.size() == 1);
+    REQUIRE(pghs[0]["Abi"] == "123abc");
 }

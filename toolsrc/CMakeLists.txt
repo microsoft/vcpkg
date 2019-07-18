@@ -55,6 +55,8 @@ target_include_directories(vcpkg-test PRIVATE include)
 add_test(arguments vcpkg-test [arguments])
 add_test(chrono vcpkg-test [chrono])
 add_test(dependencies vcpkg-test [dependencies])
+add_test(paragraph vcpkg-test [paragraph])
+add_test(plan vcpkg-test [plan])
 add_test(specifier vcpkg-test [specifier])
 add_test(supports vcpkg-test [supports])
 
