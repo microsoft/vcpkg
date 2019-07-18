@@ -43,7 +43,7 @@ set(KINECTSDK20_DIR "${CURRENT_BUILDTREES_DIR}/src/installer/msi/Microsoft SDKs/
 
 file(
     INSTALL
-        "${KINECTSDK20_DIR}/inc/Kinect.h"
+        "${KINECTSDK20_DIR}/inc/"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/include
 )

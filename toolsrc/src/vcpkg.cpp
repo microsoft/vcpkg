@@ -143,7 +143,7 @@ static void inner(const VcpkgCmdArguments& args)
 #else
     const int exit_code = chdir(paths.root.c_str());
 #endif
-    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working directory to the vcpkg root directory failed. Did you incorrectly define the VCPKG_ROOT environment variable, or did you mistakenly create a file named .vcpkg-root somewhere?");
 
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {

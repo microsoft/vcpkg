@@ -52,8 +52,12 @@ function(qt_modular_build_library SOURCE_PATH)
 
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
-
-    vcpkg_build_qmake()
+    #Build debug+release
+    if (CMAKE_HOST_WIN32)
+        vcpkg_build_qmake()
+    else()
+        vcpkg_build_qmake(SKIP_MAKEFILES)
+    endif()
 
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
@@ -76,11 +80,12 @@ function(qt_modular_build_library SOURCE_PATH)
     #Install the module files
     vcpkg_build_qmake(TARGETS install SKIP_MAKEFILES BUILD_LOGNAME install)
 
-    #Remove extra cmake files
+    #Install cmake files
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake)
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
     endif()
+    #Remove extra cmake files
     if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
     endif()

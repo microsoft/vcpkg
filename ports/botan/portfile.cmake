@@ -8,12 +8,14 @@ vcpkg_from_github(
     REF 0129d3172ec419beb90a2b3487f6385a35da0742
     SHA512 a8328df5ad2693a96935d1d2202ddd6678a5ba9c63a8159acbe56f1c884fa5faaa71339e8f56284cfd00574a9b4f91bdb1fb22c36c8e899d9b4cbe881f4867d3
     HEAD_REF master
+	PATCHES
+		fix-build_error.patch
 )
 
 if(CMAKE_HOST_WIN32)
     vcpkg_find_acquire_program(JOM)
     set(build_tool "${JOM}")
-    set(parallel_build "/J ${VCPKG_CONCURRENCY}")
+    set(parallel_build "/J${VCPKG_CONCURRENCY}")
 else()
     find_program(MAKE make)
     set(build_tool "${MAKE}")
@@ -85,8 +87,8 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     vcpkg_execute_build_process(
-        COMMAND ${build_tool}
-        NO_PARALLEL_COMMAND "${build_tool} ${parallel_build}"
+        COMMAND "${build_tool}" ${parallel_build}
+        NO_PARALLEL_COMMAND "${build_tool}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")

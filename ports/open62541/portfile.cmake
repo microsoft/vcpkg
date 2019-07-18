@@ -31,12 +31,14 @@ endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+get_filename_component(PYTHON3_DIR_NAME "${PYTHON3_DIR}" NAME)
 vcpkg_add_to_path("${PYTHON3_DIR}")
+
 if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
         vcpkg_download_distfile(GET_PIP
             URLS "https://bootstrap.pypa.io/get-pip.py"
-            FILENAME "tools/python/python3/get-pip.py"
+            FILENAME "tools/python/${PYTHON3_DIR_NAME}/get-pip.py"
             SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad
         )
         execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON3_DIR}/get-pip.py)

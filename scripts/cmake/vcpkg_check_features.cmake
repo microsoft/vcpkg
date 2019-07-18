@@ -94,11 +94,11 @@ function(vcpkg_check_features)
 
             if(${_vcf_FEATURE} IN_LIST FEATURES)
                 set(${_vcf_FEATURE_VAR} ON PARENT_SCOPE)
+                list(APPEND _vcf_FEATURE_OPTIONS "-D${_vcf_FEATURE_VAR}=ON")
             else()
                 set(${_vcf_FEATURE_VAR} OFF PARENT_SCOPE)
+                list(APPEND _vcf_FEATURE_OPTIONS "-D${_vcf_FEATURE_VAR}=OFF")
             endif()
-
-            list(APPEND _vcf_FEATURE_OPTIONS "-D${_vcf_FEATURE_VAR}=${${_vcf_FEATURE_VAR}}")
 
             set(_vcf_IS_FEATURE_ARG ON)
         endif()
