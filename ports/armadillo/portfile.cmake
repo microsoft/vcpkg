@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
     HEAD_REF 9.400.x
     PATCHES
         remove_custom_modules.patch
+		fix-CMakePath.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindBLAS.cmake)
@@ -36,5 +37,5 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL
 	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
 endif()
 
-
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/armadillo)
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/armadillo RENAME copyright)
