@@ -402,7 +402,7 @@ namespace vcpkg::Build
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"CMAKE_PORT_SETTINGS", config.port_dir / "port_settings.cmake"},
+            {"CMAKE_PORT_SETTINGS", config.port_dir / "port-settings.cmake"},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
@@ -1016,7 +1016,7 @@ namespace vcpkg::Build
         {
             args.emplace_back(
                     "CMAKE_PORT_SETTINGS",
-                    paths.ports / port.value_or_exit(VCPKG_LINE_INFO) / "port_settings.cmake");
+                    paths.ports / port.value_or_exit(VCPKG_LINE_INFO) / "port-settings.cmake");
         }
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
