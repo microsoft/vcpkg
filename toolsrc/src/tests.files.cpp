@@ -3,8 +3,8 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 
-#include <iostream>
 #include <filesystem> // required for filesystem::create_{directory_}symlink
+#include <iostream>
 #include <random>
 
 #include <windows.h>
@@ -31,11 +31,11 @@ namespace UnitTest1
             }
             else
             {
-				// if we get a permissions error, we still know that we're in developer mode
+                // if we get a permissions error, we still know that we're in developer mode
                 ALLOW_SYMLINKS = true;
             }
 
-			if (status == ERROR_SUCCESS) RegCloseKey(key);
+            if (status == ERROR_SUCCESS) RegCloseKey(key);
         }
 
     private:
@@ -105,13 +105,17 @@ namespace UnitTest1
 
             // if we're at the max depth, we only want to build non-directories
             std::uint64_t file_type;
-            if (depth < max_depth) {
+            if (depth < max_depth)
+            {
                 file_type = uid{directory_min_tag, regular_symlink_tag}(urbg);
-            } else {
+            }
+            else
+            {
                 file_type = uid{regular_file_tag, regular_symlink_tag}(urbg);
             }
 
-            if (!ALLOW_SYMLINKS && file_type > regular_file_tag) {
+            if (!ALLOW_SYMLINKS && file_type > regular_file_tag)
+            {
                 file_type = regular_file_tag;
             }
 

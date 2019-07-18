@@ -98,8 +98,7 @@ namespace vcpkg
                 if (!running_workers())
                 {
                     m_cv.notify_one();
-          
-				}
+                }
             }
 
             // wait for all threads to join

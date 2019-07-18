@@ -301,7 +301,8 @@ namespace vcpkg::Strings
             auto value = static_cast<Unsigned>(x);
 
             // 32 values, plus the implicit \0
-            constexpr static char map[33] = "ABCDEFGHIJKLMNOP" "QRSTUVWXYZ234567";
+            constexpr static char map[33] = "ABCDEFGHIJKLMNOP"
+                                            "QRSTUVWXYZ234567";
 
             // log2(32)
             constexpr static int shift = 5;

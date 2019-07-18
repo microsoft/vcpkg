@@ -8,8 +8,10 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace UnitTest1 {
-    class StringsTest : public TestClass<StringsTest> {
+namespace UnitTest1
+{
+    class StringsTest : public TestClass<StringsTest>
+    {
         TEST_METHOD(b64url_encode)
         {
             using u64 = std::uint64_t;
@@ -29,7 +31,8 @@ namespace UnitTest1 {
             map.emplace_back(0xFFFF'FFFF'FFFF'FFFF, "777777777777P");
 
             std::string result;
-            for (const auto& pr : map) {
+            for (const auto& pr : map)
+            {
                 result = vcpkg::Strings::b32_encode(pr.first);
                 Assert::AreEqual(result, pr.second);
             }

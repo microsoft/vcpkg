@@ -363,8 +363,7 @@ namespace vcpkg::Build
         const Triplet& triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
-        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path,
-                                                         paths.triplets.u8string()))
+        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
         {
             System::printf("-- Loading triplet configuration from: %s\n", triplet_file_path);
         }
@@ -431,12 +430,11 @@ namespace vcpkg::Build
         }
         command.append(cmd_launch_cmake);
         const auto timer = Chrono::ElapsedTimer::create_started();
-        const int return_code = System::cmd_execute_clean(
-            command,
-            {}
+        const int return_code = System::cmd_execute_clean(command,
+                                                          {}
 #ifdef _WIN32
-            ,
-            powershell_exe_path.parent_path().u8string() + ";"
+                                                          ,
+                                                          powershell_exe_path.parent_path().u8string() + ";"
 #endif
         );
         const auto buildtimeus = timer.microseconds();
@@ -1020,8 +1018,7 @@ namespace vcpkg::Build
                 hash += "-";
                 hash += Hash::get_file_hash(fs, *p, "SHA1");
             }
-            else if (pre_build_info.cmake_system_name.empty() ||
-                     pre_build_info.cmake_system_name == "WindowsStore")
+            else if (pre_build_info.cmake_system_name.empty() || pre_build_info.cmake_system_name == "WindowsStore")
             {
                 hash += "-";
                 hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "windows.cmake", "SHA1");
