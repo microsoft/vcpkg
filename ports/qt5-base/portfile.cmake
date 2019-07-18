@@ -27,11 +27,15 @@ vcpkg_extract_source_archive_ex(
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
+foreach(DEPENDENCY zlib harfbuzzng libjpeg libpng double-conversion sqlite)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
 endforeach()
+
+if ((NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")) AND (EXISTS ${SOURCE_PATH}/src/3rdparty/freetype))
+    FILE(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/freetype)
+endif()
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
@@ -44,7 +48,6 @@ set(CORE_OPTIONS
     -system-zlib
     -system-libjpeg
     -system-libpng
-    -system-freetype
     -system-pcre
     -system-doubleconversion
     -system-sqlite
@@ -54,37 +57,70 @@ set(CORE_OPTIONS
     -nomake tests
 )
 
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND CORE_OPTIONS -qt-freetype)
+else()
+    list(APPEND CORE_OPTIONS -system-freetype)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND CORE_OPTIONS
         -static
     )
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     set(PLATFORM "win32-msvc")
 
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        PLATFORM ${PLATFORM}
-        OPTIONS
-            ${CORE_OPTIONS}
-            -mp
-            -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-        OPTIONS_RELEASE
-            LIBJPEG_LIBS="-ljpeg"
-            ZLIB_LIBS="-lzlib"
-            LIBPNG_LIBS="-llibpng16"
-            PSQL_LIBS="-llibpq"
-            PCRE2_LIBS="-lpcre2-16"
-            FREETYPE_LIBS="-lfreetype"
-        OPTIONS_DEBUG
-            LIBJPEG_LIBS="-ljpegd"
-            ZLIB_LIBS="-lzlibd"
-            LIBPNG_LIBS="-llibpng16d"
-            PSQL_LIBS="-llibpqd"
-            PCRE2_LIBS="-lpcre2-16d"
-            FREETYPE_LIBS="-lfreetyped"
-    )
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        configure_qt(
+            SOURCE_PATH ${SOURCE_PATH}
+            PLATFORM ${PLATFORM}
+            OPTIONS
+                ${CORE_OPTIONS}
+                -mp
+                -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+            OPTIONS_RELEASE
+                LIBJPEG_LIBS="-ljpeg"
+                ZLIB_LIBS="-lzlib"
+                LIBPNG_LIBS="-llibpng16"
+                PSQL_LIBS="-llibpq"
+                PCRE2_LIBS="-lpcre2-16"
+                HARFBUZZ_LIBS="-lharfbuzz"
+            OPTIONS_DEBUG
+                LIBJPEG_LIBS="-ljpegd"
+                ZLIB_LIBS="-lzlibd"
+                LIBPNG_LIBS="-llibpng16d"
+                PSQL_LIBS="-llibpqd"
+                PCRE2_LIBS="-lpcre2-16d"
+                HARFBUZZ_LIBS="-lharfbuzz"
+        )
+    else()
+        configure_qt(
+            SOURCE_PATH ${SOURCE_PATH}
+            PLATFORM ${PLATFORM}
+            OPTIONS
+                ${CORE_OPTIONS}
+                -mp
+                -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+            OPTIONS_RELEASE
+                LIBJPEG_LIBS="-ljpeg"
+                ZLIB_LIBS="-lzlib"
+                LIBPNG_LIBS="-llibpng16"
+                PSQL_LIBS="-llibpq"
+                PCRE2_LIBS="-lpcre2-16"
+                FREETYPE_LIBS="-lfreetype"
+                HARFBUZZ_LIBS="-lharfbuzz"
+            OPTIONS_DEBUG
+                LIBJPEG_LIBS="-ljpegd"
+                ZLIB_LIBS="-lzlibd"
+                LIBPNG_LIBS="-llibpng16d"
+                PSQL_LIBS="-llibpqd"
+                PCRE2_LIBS="-lpcre2-16d"
+                FREETYPE_LIBS="-lfreetyped"
+                HARFBUZZ_LIBS="-lharfbuzz"
+        )
+    endif()
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     if (NOT EXISTS "/usr/include/GL/glu.h")
@@ -203,14 +239,20 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl)
+        # qt5-declarative:windows-static need this lib in path lib
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
+            file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl)
+        endif()
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
         file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
+        # qt5-declarative:windows-static need this lib in path debug/lib
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
+            file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
+        endif()
     endif()
 
     #---------------------------------------------------------------------------
