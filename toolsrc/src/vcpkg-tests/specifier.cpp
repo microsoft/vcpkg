@@ -118,6 +118,7 @@ TEST_CASE ("specifier parsing", "[specifier]")
         REQUIRE(Util::all_equal(specs, spectargets));
     }
 
+#if defined(_WIN32)
     SECTION ("ASCII to utf16")
     {
         auto str = vcpkg::Strings::to_utf16("abc");
@@ -129,4 +130,5 @@ TEST_CASE ("specifier parsing", "[specifier]")
         auto str = vcpkg::Strings::to_utf16("abc -x86-windows");
         REQUIRE(str == L"abc -x86-windows");
     }
+#endif
 };

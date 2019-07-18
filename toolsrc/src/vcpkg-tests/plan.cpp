@@ -395,7 +395,7 @@ TEST_CASE ("basic feature test 7", "[plan]")
     features_check(install_plan.at(4), "x", {"core"});
 }
 
-TEST_CASE ("basic feature test 8", "[plan]")
+TEST_CASE ("basic feature test 8", "[plan][!mayfail]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("a"));
