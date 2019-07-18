@@ -93,45 +93,31 @@ namespace UnitTest1
             std::random_device rd;
             constexpr std::uint64_t max_depth = 5;
             constexpr std::uint64_t width = 5;
-            const auto type = depth < max_depth ? uid{0, 9}(urbg) : uid{7, 9}(urbg);
 
-			// 0 <= type < 7 : directory
-			// 7 = type : regular
-			// 8 = type : regular symlink (regular file if !ALLOW_SYMLINKS)
-			// 9 = type : directory symlink (^^)
+            // we want ~70% of our "files" to be directories, and then a third
+            // each of the remaining ~30% to be regular files, directory symlinks,
+            // and regular symlinks
+            constexpr std::uint64_t directory_min_tag = 0;
+            constexpr std::uint64_t directory_max_tag = 6;
+            constexpr std::uint64_t regular_file_tag = 7;
+            constexpr std::uint64_t regular_symlink_tag = 8;
+            constexpr std::uint64_t directory_symlink_tag = 9;
+
+            // if we're at the max depth, we only want to build non-directories
+            std::uint64_t file_type;
+            if (depth < max_depth) {
+                file_type = uid{directory_min_tag, regular_symlink_tag}(urbg);
+            } else {
+                file_type = uid{regular_file_tag, regular_symlink_tag}(urbg);
+            }
+
+            if (!ALLOW_SYMLINKS && file_type > regular_file_tag) {
+                file_type = regular_file_tag;
+            }
 
             std::error_code ec;
-            if (type >= 7)
+            if (type <= directory_max_tag)
             {
-                // I don't want to move urbg forward conditionally
-                if (type == 7 || !ALLOW_SYMLINKS)
-                {
-					// regular file
-                    fs.write_contents(base, "", ec);
-                }
-                else if (type == 8)
-                {
-                    // regular symlink
-                    fs.write_contents(base, "", ec);
-                    Assert::IsFalse(bool(ec));
-                    const std::filesystem::path basep = base.native();
-                    auto basep_link = basep;
-                    basep_link.replace_filename(basep.filename().native() + L"-link");
-                    std::filesystem::create_symlink(basep, basep_link, ec);
-                }
-                else
-                {
-                    // directory symlink
-                    std::filesystem::path basep = base.native();
-                    std::filesystem::create_directory_symlink(basep / "..", basep, ec);
-                }
-
-                Assert::IsFalse(bool(ec));
-
-            }
-            else
-            {
-				// directory
                 fs.create_directory(base, ec);
                 Assert::IsFalse(bool(ec));
 
@@ -139,9 +125,30 @@ namespace UnitTest1
                 {
                     create_directory_tree(urbg, fs, depth + 1, base / get_random_filename(urbg));
                 }
-        
+            }
+            else if (type == regular_file_tag)
+            {
+                // regular file
+                fs.write_contents(base, "", ec);
+            }
+            else if (type == regular_symlink_tag)
+            {
+                // regular symlink
+                fs.write_contents(base, "", ec);
+                Assert::IsFalse(bool(ec));
+                const std::filesystem::path basep = base.native();
+                auto basep_link = basep;
+                basep_link.replace_filename(basep.filename().native() + L"-link");
+                std::filesystem::create_symlink(basep, basep_link, ec);
+            }
+            else // type == directory_symlink_tag
+            {
+                // directory symlink
+                std::filesystem::path basep = base.native();
+                std::filesystem::create_directory_symlink(basep / "..", basep, ec);
             }
 
+            Assert::IsFalse(bool(ec));
         }
     };
 }
