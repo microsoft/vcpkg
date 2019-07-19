@@ -1,0 +1,26 @@
+diff --git a/src/common/mathutil.h b/src/common/mathutil.h
+index bdf8c2a..6e0daac 100644
+--- a/src/common/mathutil.h
++++ b/src/common/mathutil.h
+@@ -1254,7 +1254,7 @@ inline constexpr unsigned int UnsignedCeilDivide(unsigned int value, unsigned in
+     return (divided + ((value % divisor == 0) ? 0 : 1));
+ }
+ 
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) || defined(__GNUC__)
+ 
+ #    define ANGLE_ROTL(x, y) _rotl(x, y)
+ #    define ANGLE_ROTL64(x, y) _rotl64(x, y)
+diff --git a/src/libGLESv2/proc_table_autogen.cpp b/src/libGLESv2/proc_table_autogen.cpp
+index a57622e..82944b8 100644
+--- a/src/libGLESv2/proc_table_autogen.cpp
++++ b/src/libGLESv2/proc_table_autogen.cpp
+@@ -10,7 +10,7 @@
+ //   Mapping from a string entry point name to function address.
+ //
+ 
+-#include "libGLESv2/proc_table.h"
++#include "libGLESv2/proc_table_egl.h"
+ 
+ #include "libGLESv2/entry_points_egl.h"
+ #include "libGLESv2/entry_points_egl_ext.h"
