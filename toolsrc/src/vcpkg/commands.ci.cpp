@@ -237,9 +237,8 @@ namespace vcpkg::Commands::CI
                     auto triplet = p->spec.triplet();
 
                     const Build::BuildPackageConfig build_config{
-                        *scfl->source_control_file, 
+                        *scfl,
                         triplet, 
-                        static_cast<fs::path>(scfl->source_location), 
                         build_options, 
                         p->feature_list
                     };
@@ -259,7 +258,7 @@ namespace vcpkg::Commands::CI
                             return Build::PreBuildInfo::from_triplet_file(
                                     paths,
                                     triplet,
-                                    scfl->source_control_file->core_paragraph->name);
+                                    *scfl);
                         }
                     );
 
