@@ -15,7 +15,7 @@ vcpkg_from_github(
 if(CMAKE_HOST_WIN32)
     vcpkg_find_acquire_program(JOM)
     set(build_tool "${JOM}")
-    set(parallel_build "/J ${VCPKG_CONCURRENCY}")
+    set(parallel_build "/J${VCPKG_CONCURRENCY}")
 else()
     find_program(MAKE make)
     set(build_tool "${MAKE}")
@@ -87,8 +87,8 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     vcpkg_execute_build_process(
-        COMMAND ${build_tool}
-        NO_PARALLEL_COMMAND "${build_tool} ${parallel_build}"
+        COMMAND "${build_tool}" ${parallel_build}
+        NO_PARALLEL_COMMAND "${build_tool}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")

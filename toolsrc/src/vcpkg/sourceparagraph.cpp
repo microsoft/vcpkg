@@ -238,6 +238,28 @@ namespace vcpkg
         return ret;
     }
 
+    std::vector<Features> filter_dependencies_to_features(const std::vector<vcpkg::Dependency>& deps,
+                                                          const Triplet& t)
+    {
+        std::vector<Features> ret;
+        for (auto&& dep : deps)
+        {
+            auto qualifiers = Strings::split(dep.qualifier, "&");
+            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
+                    if (qualifier.empty()) return true;
+                    if (qualifier[0] == '!')
+                    {
+                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
+                    }
+                    return t.canonical_name().find(qualifier) != std::string::npos;
+                }))
+            {
+                ret.emplace_back(dep.depend);
+            }
+        }
+        return ret;
+    }
+
     std::vector<FeatureSpec> filter_dependencies_to_specs(const std::vector<Dependency>& deps, const Triplet& t)
     {
         return FeatureSpec::from_strings_and_triplet(filter_dependencies(deps, t), t);
