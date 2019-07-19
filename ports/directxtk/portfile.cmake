@@ -22,7 +22,7 @@ ELSE()
 ENDIF()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(SLN_NAME "Windows10")
+  set(SLN_NAME "Windows10_2017")
 else()
   set(SLN_NAME "Desktop_2017")
 endif()
