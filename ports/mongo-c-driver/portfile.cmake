@@ -1,9 +1,10 @@
 include(vcpkg_common_functions)
+set(BUILD_VERSION 1.14.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF 1.14.0
+    REF ${BUILD_VERSION}
     SHA512 bf2bb835543dd2a445aac6cafa7bbbf90921ec41014534779924a5eb7cbd9fd532acd8146ce81dfcf1bcac33a78d8fce22b962ed7f776449e4357eccab8d6110
     HEAD_REF master
     PATCHES fix-uwp.patch
