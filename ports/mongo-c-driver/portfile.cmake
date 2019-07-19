@@ -1,13 +1,16 @@
 include(vcpkg_common_functions)
-set(BUILD_VERSION 1.14.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF ${BUILD_VERSION}
+    REF 1.14.0
     SHA512 bf2bb835543dd2a445aac6cafa7bbbf90921ec41014534779924a5eb7cbd9fd532acd8146ce81dfcf1bcac33a78d8fce22b962ed7f776449e4357eccab8d6110
     HEAD_REF master
     PATCHES fix-uwp.patch
+)
+
+vcpkg_check_features(
+    "snappy" MONGO_ENABLE_SNAPPY
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -34,6 +37,7 @@ vcpkg_configure_cmake(
         -DENABLE_SSL=${ENABLE_SSL}
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DENABLE_SNAPPY=${MONGO_ENABLE_SNAPPY}
         -DBUILD_VERSION=${BUILD_VERSION}
 )
 
