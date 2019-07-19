@@ -2,7 +2,7 @@
 name: Request a feature or improvement to a port
 about: Suggest an improvement to one the the ports/libraries in vcpkg
 title: "[<portname>] <short description of feature>"
-labels: ''
+labels: port feature
 assignees: ''
 
 ---

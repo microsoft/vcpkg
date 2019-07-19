@@ -2,7 +2,7 @@
 name: Request a feature or improvement
 about: Suggest an improvement to vcpkg
 title: ''
-labels: ''
+labels: vcpkg feature
 assignees: ''
 
 ---
