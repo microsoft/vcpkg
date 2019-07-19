@@ -29,22 +29,11 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR
     endif()
     
 else()
-    message(STATUS "Installing stack...")
-    vcpkg_download_distfile(
-        ARCHIVE
-        URLS "https://get.haskellstack.org/"
-        FILENAME "stack-install.sh"
-        SHA512 6db2008297416ad856aa498908bf695737cf3cc466440397720a458358e9661d07abdba762662080ee8bbd8171cdcb05eec6d3696382575c099adfb8427e05fd
-    )
-    
-    set(BASH /bin/bash)
-    
-    vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${ARCHIVE}" -f
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME install-stack
-    )
-    
+    # According to the readme on https://github.com/microsoft/bond/
+    # The build needs a version of the Haskel Tool stack that is newer than some distros ship with.
+    # For this reason the message is not guarded by checking to see if the tool is installed.
+    message("\nA recent version of Haskell Tool Stack is required to build.\n  For information on how to install see https://docs.haskellstack.org/en/stable/README/\n")
+        
 endif()
 
 vcpkg_configure_cmake(
