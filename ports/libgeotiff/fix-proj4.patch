@@ -1,17 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 759f6e1..33e3966 100644
+index 759f6e1..59712f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -146,8 +146,11 @@ IF(WITH_PROJ4)
+@@ -146,7 +146,7 @@ IF(WITH_PROJ4)
      endif ()
  
      IF(PROJ4_FOUND)
 -        ADD_DEFINITIONS(-DHAVE_LIBPROJ=1)
 +        ADD_DEFINITIONS(-DHAVE_LIBPROJ=1 -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1)
          INCLUDE_DIRECTORIES(${PROJ4_INCLUDE_DIR})
-+        IF(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-+            LIST(APPEND PROJ4_LIBRARIES libdl.so)
-+        ENDIF()
      ENDIF()
  ENDIF()
- 
