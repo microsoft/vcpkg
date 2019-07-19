@@ -32,9 +32,12 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-	
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
+
+file(GLOB SHARE_CONTENT ${CURRENT_PACKAGES_DIR}/share/Armadillo)
+list(LENGTH SHARE_CONTENT SHARE_LEN)
+if(SHARE_LEN EQUAL 0)
+    # On case sensitive file system there is an extra empty directory created that should be removed
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
 endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/armadillo)
