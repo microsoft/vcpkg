@@ -250,6 +250,19 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
             file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
         endif()
     endif()
+    
+    #---------------------------------------------------------------------------
+    # Qt5Bootstrap: only used to bootstrap qmake dependencies
+    #---------------------------------------------------------------------------
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.prl)
+    endif()
+    #---------------------------------------------------------------------------
 endif()
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
