@@ -1,3 +1,4 @@
+#include <vcpkg/base/files.h>
 #include <vcpkg/statusparagraph.h>
 
 #include <memory>
@@ -29,5 +30,9 @@ T&& unwrap(vcpkg::Optional<T>&& opt)
     REQUIRE(opt.has_value());
     return std::move(*opt.get());
 }
+
+extern const bool SYMLINKS_ALLOWED;
+
+extern const fs::path TEMPORARY_DIRECTORY;
 
 }

@@ -52,7 +52,11 @@ add_executable(vcpkg-test EXCLUDE_FROM_ALL ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURC
 target_compile_definitions(vcpkg-test PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg-test PRIVATE include)
 
-foreach(TEST_NAME arguments chrono dependencies paragraph plan specifier supports)
+foreach(TEST_NAME
+    arguments chrono dependencies files
+    paragraph plan specifier statusparagraphs
+    strings supports update
+)
     add_test(${TEST_NAME} vcpkg-test [${TEST_NAME}])
 endforeach()
 

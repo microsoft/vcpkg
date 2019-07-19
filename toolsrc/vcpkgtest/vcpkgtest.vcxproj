@@ -23,10 +23,12 @@
     <ClCompile Include="..\src\vcpkg-tests\catch.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\chrono.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\dependencies.cpp" />
+    <ClCompile Include="..\src\vcpkg-tests\files.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\paragraph.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\plan.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\specifier.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\statusparagraphs.cpp" />
+    <ClCompile Include="..\src\vcpkg-tests\strings.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\supports.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\update.cpp" />
     <ClCompile Include="..\src\vcpkg-tests\util.cpp" />
