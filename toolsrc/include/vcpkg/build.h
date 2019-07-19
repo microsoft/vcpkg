@@ -117,6 +117,29 @@ namespace vcpkg::Build
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
     std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
+   enum class VcpkgTripletVar
+   {
+       TARGET_ARCHITECTURE = 0,
+       CMAKE_SYSTEM_NAME,
+       CMAKE_SYSTEM_VERSION,
+       PLATFORM_TOOLSET,
+       VISUAL_STUDIO_PATH,
+       CHAINLOAD_TOOLCHAIN_FILE,
+       BUILD_TYPE,
+       ENV_PASSTHROUGH,
+   };
+
+   const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
+       {"VCPKG_TARGET_ARCHITECTURE", VcpkgTripletVar::TARGET_ARCHITECTURE},
+       {"VCPKG_CMAKE_SYSTEM_NAME", VcpkgTripletVar::CMAKE_SYSTEM_NAME},
+       {"VCPKG_CMAKE_SYSTEM_VERSION", VcpkgTripletVar::CMAKE_SYSTEM_VERSION},
+       {"VCPKG_PLATFORM_TOOLSET", VcpkgTripletVar::PLATFORM_TOOLSET},
+       {"VCPKG_VISUAL_STUDIO_PATH", VcpkgTripletVar::VISUAL_STUDIO_PATH},
+       {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
+       {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
+       {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+   };
+
     /// <summary>
     /// Settings from the triplet file which impact the build environment and post-build checks
     /// </summary>
@@ -135,6 +158,7 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        std::vector<std::string> passthrough_env_vars;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
