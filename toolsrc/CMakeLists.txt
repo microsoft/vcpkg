@@ -52,13 +52,9 @@ add_executable(vcpkg-test EXCLUDE_FROM_ALL ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURC
 target_compile_definitions(vcpkg-test PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg-test PRIVATE include)
 
-add_test(arguments vcpkg-test [arguments])
-add_test(chrono vcpkg-test [chrono])
-add_test(dependencies vcpkg-test [dependencies])
-add_test(paragraph vcpkg-test [paragraph])
-add_test(plan vcpkg-test [plan])
-add_test(specifier vcpkg-test [specifier])
-add_test(supports vcpkg-test [supports])
+foreach(TEST_NAME arguments chrono dependencies paragraph plan specifier supports)
+    add_test(${TEST_NAME} vcpkg-test [${TEST_NAME}])
+endforeach()
 
 if(CLANG)
     include(CheckCXXSourceCompiles)
