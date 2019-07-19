@@ -1,6 +1,6 @@
 ---
 name: Request a feature or improvement
-about: Suggest an improvement to vcpkg or its packages
+about: Suggest an improvement to vcpkg
 title: ''
 labels: ''
 assignees: ''
