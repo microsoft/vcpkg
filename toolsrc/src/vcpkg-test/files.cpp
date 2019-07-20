@@ -1,10 +1,9 @@
-#include <vcpkg-tests/catch.h>
-#include <vcpkg-tests/util.h>
+#include <vcpkg-test/catch.h>
+#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 
-#include <filesystem> // required for filesystem::create_{directory_}symlink
 #include <iostream>
 #include <random>
 
@@ -20,7 +19,7 @@ namespace
     std::mt19937_64 get_urbg(std::uint64_t index)
     {
         // smallest prime > 2**63 - 1
-        return std::mt19937_64{index + 9223372036854775837};
+        return std::mt19937_64{index + 9223372036854775837ULL};
     }
 
     std::string get_random_filename(std::mt19937_64& urbg) { return vcpkg::Strings::b32_encode(uid{}(urbg)); }
@@ -83,16 +82,14 @@ namespace
             // regular symlink
             fs.write_contents(base, "", ec);
             REQUIRE_FALSE(ec);
-            const std::filesystem::path basep = base.native();
-            auto basep_link = basep;
-            basep_link.replace_filename(basep.filename().native() + L"-link");
-            std::filesystem::create_symlink(basep, basep_link, ec);
+            auto base_link = base;
+            base_link.replace_filename(base.filename().u8string() + "-link");
+            vcpkg::Test::create_symlink(base, base_link, ec);
         }
         else // type == directory_symlink_tag
         {
             // directory symlink
-            std::filesystem::path basep = base.native();
-            std::filesystem::create_directory_symlink(basep / "..", basep, ec);
+            vcpkg::Test::create_directory_symlink(base / "..", base, ec);
         }
 
         REQUIRE_FALSE(ec);

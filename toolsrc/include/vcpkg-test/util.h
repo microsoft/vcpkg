@@ -35,4 +35,8 @@ extern const bool SYMLINKS_ALLOWED;
 
 extern const fs::path TEMPORARY_DIRECTORY;
 
+void create_symlink(const fs::path& file, const fs::path& target, std::error_code& ec);
+
+void create_directory_symlink(const fs::path& file, const fs::path& target, std::error_code& ec);
+
 }

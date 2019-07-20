@@ -1,6 +1,7 @@
-#include <vcpkg-tests/catch.h>
-#include <vcpkg-tests/util.h>
+#include <vcpkg-test/catch.h>
+#include <vcpkg-test/util.h>
 
+#include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/statusparagraph.h>
 
@@ -9,6 +10,18 @@
 
 #if defined(_WIN32)
 #include <windows.h>
+#endif
+
+#if defined(_MSC_VER) && _MSC_VER >= 1914
+
+#define USE_STD_FILESYSTEM
+
+#include <filesystem> // required for filesystem::create_{directory_}symlink
+
+#elif !defined(_MSC_VER)
+
+#include <unistd.h>
+
 #endif
 
 namespace vcpkg::Test
@@ -51,9 +64,14 @@ namespace vcpkg::Test
     }
 
 
-    #if defined(_WIN32)
+
+    // I am so sorry for this awful mix of macros
 
     static bool system_allows_symlinks() {
+#if defined(_WIN32)
+    #if !defined(USE_STD_FILESYSTEM)
+        return false;
+    #else
         HKEY key;
         bool allow_symlinks = true;
 
@@ -69,9 +87,14 @@ namespace vcpkg::Test
         if (status == ERROR_SUCCESS) RegCloseKey(key);
 
         return allow_symlinks;
+    #endif
+#else
+        return true;
+#endif
     }
 
     static fs::path internal_temporary_directory() {
+#if defined(_WIN32)
         wchar_t* tmp = static_cast<wchar_t*>(std::calloc(32'767, 2));
 
         if (!GetEnvironmentVariableW(L"TEMP", tmp, 32'767)) {
@@ -83,19 +106,53 @@ namespace vcpkg::Test
         std::free(tmp);
 
         return result / L"vcpkg-test";
-    }
-
-    #else
-
-    constexpr static bool system_allows_symlinks() {
-        return true;
-    }
-    static fs::path internal_temporary_directory() {
+#else
         return "/tmp/vcpkg-test";
+#endif
     }
-
-    #endif
 
     const bool SYMLINKS_ALLOWED = system_allows_symlinks();
     const fs::path TEMPORARY_DIRECTORY = internal_temporary_directory();
+
+    void create_symlink(const fs::path& target, const fs::path& file, std::error_code& ec) {
+#if defined(_MSC_VER)
+    #if defined(USE_STD_FILESYSTEM)
+        if (SYMLINKS_ALLOWED)
+        {
+            std::filesystem::path targetp = target.native();
+            std::filesystem::path filep = file.native();
+
+            std::filesystem::create_symlink(targetp, filep);
+        }
+        else
+    #endif
+        {
+            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Symlinks are not allowed on this system");
+        }
+#else
+        if(symlink(target.c_str(), file.c_str()) != 0) {
+            ec.assign(errno, std::system_category());
+        }
+#endif
+    }
+
+    void create_directory_symlink(const fs::path& target, const fs::path& file, std::error_code& ec) {
+#if defined(_MSC_VER)
+    #if defined(USE_STD_FILESYSTEM)
+        if (SYMLINKS_ALLOWED)
+        {
+            std::filesystem::path targetp = target.native();
+            std::filesystem::path filep = file.native();
+
+            std::filesystem::create_symlink(targetp, filep);
+        }
+        else
+    #endif
+        {
+            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Symlinks are not allowed on this system");
+        }
+#else
+        ::vcpkg::Test::create_symlink(target, file, ec);
+#endif
+    }
 }

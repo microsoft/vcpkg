@@ -1,5 +1,5 @@
-#include <vcpkg-tests/catch.h>
-#include <vcpkg-tests/util.h>
+#include <vcpkg-test/catch.h>
+#include <vcpkg-test/util.h>
 
 #include <vcpkg/dependencies.h>
 #include <vcpkg/sourceparagraph.h>

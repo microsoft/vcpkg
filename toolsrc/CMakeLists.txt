@@ -35,7 +35,7 @@ if(GCC OR CLANG)
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-tests/*.cpp)
+file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
 
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
@@ -95,3 +95,4 @@ endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(vcpkg PRIVATE Threads::Threads)
+target_link_libraries(vcpkg-test PRIVATE Threads::Threads)
