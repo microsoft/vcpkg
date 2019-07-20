@@ -37,7 +37,7 @@ endif()
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/qhull) 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull) 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB_RECURSE HTMFILES ${CURRENT_PACKAGES_DIR}/include/*.htm)
