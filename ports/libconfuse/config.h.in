@@ -95,3 +95,5 @@
 
 /* Version number of package */
 #define VERSION "@PACKAGE_VERSION@"
+
+#define LOCALEDIR "@CMAKE_INSTALL_LOCALEDIR@"

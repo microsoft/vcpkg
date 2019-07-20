@@ -113,7 +113,6 @@ target_compile_definitions(libconfuse
         $<$<BOOL:${MSVC}>:_CRT_NONSTDC_NO_DEPRECATE>
         $<$<BOOL:${MSVC}>:strcasecmp=_stricmp>
         $<$<BOOL:${USING_GNUC}>:_GNU_SOURCE>
-        $<$<BOOL:${USING_GNUC}>:LOCALEDIR=${CMAKE_INSTALL_LOCALEDIR}>
 )
 
 target_include_directories(libconfuse
