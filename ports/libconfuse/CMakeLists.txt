@@ -24,9 +24,28 @@ include(CheckIncludeFile)
 include(GNUInstallDirs)
 
 find_package(FLEX REQUIRED)
+find_package(Gettext QUIET)
+find_package(Intl QUIET)
 
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+
+if (GETTEXT_FOUND)
+    set(ENABLE_NLS 1)
+endif ()
+
+# libconfig.pc.in
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${prefix})
+set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
+set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+set(VERSION ${PROJECT_VERSION})
+
+if (Intl_FOUND AND Intl_LIBRARIES)
+    set(LTLIBINTL ${Intl_LIBRARIES})
+endif ()
+
+configure_file(libconfuse.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libconfuse.pc @ONLY)
 
 check_function_exists(dcgettext  HAVE_DCGETTEXT)
 check_function_exists(fmemopen   HAVE_FMEMOPEN)
@@ -47,13 +66,9 @@ if (MSVC)
     check_function_exists(_stricmp HAVE_STRCASECMP)
 endif ()
 
-check_include_file(inttypes.h HAVE_INTTYPES_H)
-check_include_file(memory.h   HAVE_MEMORY_H)
-check_include_file(stdint.h   HAVE_STDINT_H)
-check_include_file(stdlib.h   HAVE_STDLIB_H)
-check_include_file(string.h   HAVE_STRING_H)
+check_include_file(stdlib.h HAVE_STDLIB_H)
+check_include_file(string.h HAVE_STRING_H)
 
-check_include_file(dlfcn.h     HAVE_DLFCN_H)
 check_include_file(strings.h   HAVE_STRINGS_H)
 check_include_file(sys/stat.h  HAVE_SYS_STAT_H)
 check_include_file(sys/types.h HAVE_SYS_TYPES_H)
@@ -88,14 +103,16 @@ else ()
     target_compile_definitions(libconfuse PUBLIC BUILDING_STATIC)
 endif ()
 
+string(COMPARE EQUAL "${CMAKE_C_COMPILER_ID}" "GNU" USING_GNUC)
+
 target_compile_definitions(libconfuse
     PUBLIC
         $<BUILD_INTERFACE:HAVE_CONFIG_H>
     PRIVATE
-        $<$<BOOL:${BUILD_SHARED_LIBS}>:BUILDING_DLL>
         $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>
         $<$<BOOL:${MSVC}>:_CRT_NONSTDC_NO_DEPRECATE>
         $<$<BOOL:${MSVC}>:strcasecmp=_stricmp>
+        $<$<BOOL:${USING_GNUC}>:_GNU_SOURCE>
 )
 
 target_include_directories(libconfuse
@@ -116,6 +133,7 @@ install(
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
 
-
-# References:
-# https://github.com/php/php-src/commit/a700451706b1a6da75f08a6a7e331635e17a6e99
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/libconfuse.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)

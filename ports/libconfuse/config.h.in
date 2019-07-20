@@ -2,23 +2,11 @@
    language is requested. */
 #cmakedefine ENABLE_NLS
 
-/* Define if you have the <inttypes.h> header file. */
-#cmakedefine HAVE_INTTYPES_H
-
-/* Define if you have the <memory.h> header file. */
-#cmakedefine HAVE_MEMORY_H
-
-/* Define if you have the <stdint.h> header file. */
-#cmakedefine HAVE_STDINT_H
-
 /* Define if you have the <stdlib.h> header file. */
 #cmakedefine HAVE_STDLIB_H
 
 /* Define if you have the <string.h> header file. */
 #cmakedefine HAVE_STRING_H
-
-/* Define if you have the <dlfcn.h> header file. */
-#cmakedefine HAVE_DLFCN_H
 
 /* Define if you have the <strings.h> header file. */
 #cmakedefine HAVE_STRINGS_H
