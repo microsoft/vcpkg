@@ -11,13 +11,10 @@ vcpkg_from_github(
         windows-boost-1.70.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTORRENT_SHARED)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        -Dshared=${LIBTORRENT_SHARED}
         -Ddeprecated-functions=off
 )
 
@@ -26,7 +23,8 @@ vcpkg_install_cmake()
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # Defines for shared lib
     file(READ ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp EXPORT_H)
-    string(REPLACE "defined TORRENT_BUILDING_SHARED" "1" EXPORT_H "${EXPORT_H}")
+    string(REPLACE "defined TORRENT_BUILDING_SHARED" "0" EXPORT_H "${EXPORT_H}")
+    string(REPLACE "defined TORRENT_LINKING_SHARED" "1" EXPORT_H "${EXPORT_H}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp "${EXPORT_H}")
 endif()
 
