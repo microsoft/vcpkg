@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+# WINDOWS_EXPORT_ALL_SYMBOLS doesn't work.
+# unresolved external symbol "public: static unsigned int const foonathan::memory::detail::memory_block_stack::implementation_offset
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/memory
