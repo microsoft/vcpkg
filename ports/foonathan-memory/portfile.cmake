@@ -3,12 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/memory
-    REF 9673ac1d0405dd0a9c9a03058e5554df61b4cb67
-    SHA512 a3d7066ae14eba1e7b1092db13ae66cce69114bbf2719182adb7b23f4bea128636fb9ac442c82952d3ef7fb8e8c1a4fc497b49ea28be02edd3a69465438b1cf0
+    REF 885a9d97bebe9a2f131d21d3c0928c42ab377c8b
+    SHA512 7ce78a6e67d590a41b7f8a3d4ae0f6c1fa157c561b718a63973dffc000df74a9f0a0d7955a099e84fbeb3cf4085092eb866a6b8cec8bafd50bdcee94d069f65d
     HEAD_REF master
-    PATCHES
-        export-all-symbols.patch
-        fix-install-includedir.patch
 )
 
 vcpkg_from_github(
@@ -21,11 +18,7 @@ vcpkg_from_github(
 
 file(COPY ${COMP_SOURCE_PATH}/comp_base.cmake DESTINATION ${SOURCE_PATH}/cmake/comp)
 
-if("tool" IN_LIST FEATURES)
-    set(FOONATHAN_MEMORY_BUILD_TOOLS ON)
-else()
-    set(FOONATHAN_MEMORY_BUILD_TOOLS OFF)
-endif()
+vcpkg_check_features(tool FOONATHAN_MEMORY_BUILD_TOOLS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -40,6 +33,8 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/foonathan_memory)
 
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
@@ -52,5 +47,29 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/README.md
 )
 
+if(FOONATHAN_MEMORY_BUILD_TOOLS)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR
+       VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(EXECUTABLE_SUFFIX ".exe")
+    else()
+        set(EXECUTABLE_SUFFIX "")
+    endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE
+            ${CURRENT_PACKAGES_DIR}/bin
+            ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+    else()
+        file(REMOVE
+            ${CURRENT_PACKAGES_DIR}/bin/nodesize_dbg${EXECUTABLE_SUFFIX}
+            ${CURRENT_PACKAGES_DIR}/debug/bin/nodesize_dbg${EXECUTABLE_SUFFIX}
+        )
+    endif()
+endif()
+
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+
+# CMake integration test
+vcpkg_test_cmake(PACKAGE_NAME ${PORT})

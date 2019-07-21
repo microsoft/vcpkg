@@ -1,6 +1,7 @@
 Source: foonathan-memory
-Version: 2018-10-10
+Version: 2019-07-21
 Description: STL compatible C++ memory allocator library
+Homepage: https://foonathan.net/doc/memory/
 
 Feature: tool
 Description: Build foonathan memory tool
