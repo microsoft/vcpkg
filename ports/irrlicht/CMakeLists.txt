@@ -85,6 +85,13 @@ target_link_libraries(Irrlicht PRIVATE
     ${BZIP2_LIBRARY}
     )
 
+target_compile_definitions(Irrlicht PRIVATE
+    NO_IRR_USE_NON_SYSTEM_ZLIB_
+    NO_IRR_USE_NON_SYSTEM_LIB_PNG_
+    NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
+    NO_IRR_USE_NON_SYSTEM_BZLIB_
+    )
+
 if(IRR_BUILD_TOOLS)
     add_executable(FileToHeader         ${IRR_TOOL_FILES_FILE_TO_HEADER})
 
