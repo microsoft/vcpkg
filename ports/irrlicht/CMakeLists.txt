@@ -144,6 +144,9 @@ endif()
 target_compile_definitions(Irrlicht PRIVATE IRRLICHT_EXPORTS)
 
 if(WIN32)
+    # Unicode
+    target_compile_definitions(Irrlicht PRIVATE UNICODE _UNICODE)
+
     # Import the symbols of bzip2
     target_compile_definitions(Irrlicht PRIVATE BZ_IMPORT)
 
