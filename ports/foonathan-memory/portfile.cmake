@@ -67,6 +67,17 @@ vcpkg_replace_string(
 )
 # Place header files into the right folders - Done!
 
+# The Debug version of this lib is built with:
+# #define FOONATHAN_MEMORY_DEBUG_FILL 1
+# and Release version is built with:
+# #define FOONATHAN_MEMORY_DEBUG_FILL 0
+# We only have the Release version header files installed, however.
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/include/foonathan/memory/detail/debug_helpers.hpp
+    "#if FOONATHAN_MEMORY_DEBUG_FILL"
+    "#ifndef NDEBUG //#if FOONATHAN_MEMORY_DEBUG_FILL"
+)
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
