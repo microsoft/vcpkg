@@ -41,9 +41,9 @@ if("zlib" IN_LIST FEATURES)
   set(WITH_ZLIB ON)
 endif()
 
-set(WITH_ZLIB OFF)
+set(WITH_ZSTD OFF)
 if("zstd" IN_LIST FEATURES)
-  set(WITH_ZLIB ON)
+  set(WITH_ZSTD ON)
 endif()
 
 set(WITH_TBB OFF)
