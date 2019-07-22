@@ -19,6 +19,7 @@ else()
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    add_compile_options(-std=c++17)
 endif()
 
 if (APPLE)
@@ -294,7 +295,35 @@ add_library(angle::libANGLE ALIAS libANGLE)
 
 ##########
 # libGLESv2
-file(GLOB LIBGLESV2_SOURCES "src/libGLESv2/*.h" "src/libGLESv2/*.cpp" "src/libGLESv2/libGLESv2_autogen.def")
+# Modified according to the file src/libGLESv2.gni
+list(APPEND LIBGLESV2_SOURCES
+  "src/common/angleutils.h"
+  "src/common/debug.h"
+  "src/libANGLE/entry_points_enum_autogen.h"
+  "src/libANGLE/entry_points_utils.h"
+  "src/libGLESv2/entry_points_egl.cpp"
+  "src/libGLESv2/entry_points_egl.h"
+  "src/libGLESv2/entry_points_egl_ext.cpp"
+  "src/libGLESv2/entry_points_egl_ext.h"
+  "src/libGLESv2/entry_points_gles_1_0_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_1_0_autogen.h"
+  "src/libGLESv2/entry_points_gles_2_0_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_2_0_autogen.h"
+  "src/libGLESv2/entry_points_gles_3_0_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_3_0_autogen.h"
+  "src/libGLESv2/entry_points_gles_3_1_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_3_1_autogen.h"
+  "src/libGLESv2/entry_points_gles_ext_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_ext_autogen.h"
+  "src/libGLESv2/global_state.cpp"
+  "src/libGLESv2/global_state.h"
+  "src/libGLESv2/libGLESv2_autogen.cpp"
+  "src/libGLESv2/libGLESv2.rc"
+  "src/libGLESv2/proc_table_egl.h"
+  "src/libGLESv2/proc_table_egl_autogen.cpp"
+  "src/libGLESv2/resource.h"
+  "src/libGLESv2/libGLESv2_autogen.def"
+)
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
 target_compile_definitions(libGLESv2

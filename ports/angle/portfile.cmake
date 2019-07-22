@@ -2,6 +2,10 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(WARNING "Building with a gcc version less than 6.1 is not supported.")
+endif()
+
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ANGLE_CPU_BITNESS ANGLE_IS_32_BIT_CPU)
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")

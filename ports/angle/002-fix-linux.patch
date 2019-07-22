@@ -1,26 +1,28 @@
 diff --git a/src/common/mathutil.h b/src/common/mathutil.h
-index bdf8c2a..6e0daac 100644
+index bdf8c2a..d2aa5dd 100644
 --- a/src/common/mathutil.h
 +++ b/src/common/mathutil.h
-@@ -1254,7 +1254,7 @@ inline constexpr unsigned int UnsignedCeilDivide(unsigned int value, unsigned in
-     return (divided + ((value % divisor == 0) ? 0 : 1));
- }
+@@ -21,6 +21,10 @@
+ #include "common/debug.h"
+ #include "common/platform.h"
  
--#if defined(_MSC_VER)
-+#if defined(_MSC_VER) || defined(__GNUC__)
- 
- #    define ANGLE_ROTL(x, y) _rotl(x, y)
++#if defined(__GNUC__)
++#include <x86intrin.h>
++#endif
++
+ namespace angle
+ {
+ using base::CheckedNumeric;
+@@ -1260,6 +1264,12 @@ inline constexpr unsigned int UnsignedCeilDivide(unsigned int value, unsigned in
  #    define ANGLE_ROTL64(x, y) _rotl64(x, y)
-diff --git a/src/libGLESv2/proc_table_autogen.cpp b/src/libGLESv2/proc_table_autogen.cpp
-index a57622e..82944b8 100644
---- a/src/libGLESv2/proc_table_autogen.cpp
-+++ b/src/libGLESv2/proc_table_autogen.cpp
-@@ -10,7 +10,7 @@
- //   Mapping from a string entry point name to function address.
- //
+ #    define ANGLE_ROTR16(x, y) _rotr16(x, y)
  
--#include "libGLESv2/proc_table.h"
-+#include "libGLESv2/proc_table_egl.h"
++#elif defined(__GNUC__)
++
++#    define ANGLE_ROTL(x, y) __rold(x, y)
++#    define ANGLE_ROTL64(x, y) __rolq(x, y)
++#    define ANGLE_ROTR16(x, y) __rolw(x, y)
++
+ #elif defined(__clang__) && __has_builtin(__builtin_rotateleft32) && \
+     __has_builtin(__builtin_rotateleft64) && __has_builtin(__builtin_rotateright16)
  
- #include "libGLESv2/entry_points_egl.h"
- #include "libGLESv2/entry_points_egl_ext.h"
