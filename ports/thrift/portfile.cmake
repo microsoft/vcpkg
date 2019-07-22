@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
@@ -18,8 +16,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     NO_CHARSET_FLAG
     OPTIONS
-        -DWITH_SHARED_LIB=OFF
-        -DWITH_STATIC_LIB=ON
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
@@ -40,14 +36,18 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/th
 # Move CMake config files to the right place
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/thrift)
 
-file(GLOB COMPILER "${CURRENT_PACKAGES_DIR}/bin/thrift*")
+file(GLOB COMPILER "${CURRENT_PACKAGES_DIR}/bin/thrift" "${CURRENT_PACKAGES_DIR}/bin/thrift.exe")
 if(COMPILER)
     file(COPY ${COMPILER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/thrift)
     file(REMOVE ${COMPILER})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/thrift)
 endif()
 
+file(GLOB COMPILERD "${CURRENT_PACKAGES_DIR}/debug/bin/thrift" "${CURRENT_PACKAGES_DIR}/debug/bin/thrift.exe")
+if(COMPILERD)
+    file(REMOVE ${COMPILERD})
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+
 vcpkg_copy_pdbs()
