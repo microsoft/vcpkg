@@ -3,16 +3,23 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cutelyst/cutelyst
-    REF v2.7.0
-    SHA512 78848d6d4e79149d9e9ae07211875dd212eb046bcdde7cde0bd781ed89d006247b21bc7a37c4e028d0982bb0f69654d469eb37b857dc0d585e9adc79ecd6291d
+    REF c020f115b392bb8e22bed1e1669724102a31ab0c #v2.8.0
+    SHA512 79b440f6dc0a78bc6b3ea83b496a4a9fd7bb016ea2492393c53d82af2c304291ac62a11af96bb05b1fc6422bf2012bec501bb8eb4bd770c54ad166d119891bc1
     HEAD_REF master
+    PATCHES fix-static-build.patch
 )
+
+set(BUILD_WIN_STATIC OFF)
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(BUILD_WIN_STATIC ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS:BOOL=OFF
+        -DBUILD_WIN_STATIC=${BUILD_WIN_STATIC}
 )
 
 vcpkg_install_cmake()
