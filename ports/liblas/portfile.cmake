@@ -21,6 +21,8 @@ vcpkg_configure_cmake(
   PREFER_NINJA
   OPTIONS 
 	-DBUILD_OSGEO4W=OFF # Disable osgeo4w
+	-DWITH_TESTS=OFF
+	-DWITH_UTILITIES=OFF
 	-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 	-DCMAKE_DISABLE_FIND_PACKAGE_JPEG=${CMAKE_DISABLE_FIND_PACKAGE_JPEG}
 )
@@ -40,5 +42,7 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/cmake/liblas/liblas-depends.cmak
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/share/cmake/liblas)
 	vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/liblas)
 endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblas RENAME copyright)
