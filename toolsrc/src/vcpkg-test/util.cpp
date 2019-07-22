@@ -5,6 +5,9 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/statusparagraph.h>
 
+// used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
+#include <ciso646>
+
 #include <iostream>
 #include <memory>
 
@@ -12,15 +15,23 @@
 #include <windows.h>
 #endif
 
-#if defined(_MSC_VER) && _MSC_VER >= 1914
+#define FILESYSTEM_SYMLINK_STD 0
+#define FILESYSTEM_SYMLINK_UNIX 1
+#define FILESYSTEM_SYMLINK_NONE 2
 
-#define USE_STD_FILESYSTEM
+#if defined(__cpp_lib_filesystem)
 
+#define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_STD
 #include <filesystem> // required for filesystem::create_{directory_}symlink
 
 #elif !defined(_MSC_VER)
 
+#define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_UNIX
 #include <unistd.h>
+
+#else
+
+#define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_NONE
 
 #endif
 
@@ -63,15 +74,14 @@ namespace vcpkg::Test
         return m_ret.value_or_exit(VCPKG_LINE_INFO);
     }
 
-
-
-    // I am so sorry for this awful mix of macros
-
-    static bool system_allows_symlinks() {
+    static bool system_allows_symlinks()
+    {
 #if defined(_WIN32)
-    #if !defined(USE_STD_FILESYSTEM)
-        return false;
-    #else
+        if (!__cpp_lib_filesystem)
+        {
+            return false;
+        }
+
         HKEY key;
         bool allow_symlinks = true;
 
@@ -87,17 +97,18 @@ namespace vcpkg::Test
         if (status == ERROR_SUCCESS) RegCloseKey(key);
 
         return allow_symlinks;
-    #endif
 #else
         return true;
 #endif
     }
 
-    static fs::path internal_temporary_directory() {
+    static fs::path internal_temporary_directory()
+    {
 #if defined(_WIN32)
         wchar_t* tmp = static_cast<wchar_t*>(std::calloc(32'767, 2));
 
-        if (!GetEnvironmentVariableW(L"TEMP", tmp, 32'767)) {
+        if (!GetEnvironmentVariableW(L"TEMP", tmp, 32'767))
+        {
             std::cerr << "No temporary directory found.\n";
             std::abort();
         }
@@ -114,9 +125,14 @@ namespace vcpkg::Test
     const bool SYMLINKS_ALLOWED = system_allows_symlinks();
     const fs::path TEMPORARY_DIRECTORY = internal_temporary_directory();
 
-    void create_symlink(const fs::path& target, const fs::path& file, std::error_code& ec) {
-#if defined(_MSC_VER)
-    #if defined(USE_STD_FILESYSTEM)
+#if FILESYSTEM_SYMLINK == FILSYSTEM_SYMLINK_NONE
+    constexpr inline char no_filesystem_message[] =
+        "<filesystem> doesn't exist; on windows, we don't attempt to use the win32 calls to create symlinks";
+#endif
+
+    void create_symlink(const fs::path& target, const fs::path& file, std::error_code& ec)
+    {
+#if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         if (SYMLINKS_ALLOWED)
         {
             std::filesystem::path targetp = target.native();
@@ -125,20 +141,22 @@ namespace vcpkg::Test
             std::filesystem::create_symlink(targetp, filep);
         }
         else
-    #endif
         {
             vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Symlinks are not allowed on this system");
         }
-#else
-        if(symlink(target.c_str(), file.c_str()) != 0) {
+#elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
+        if (symlink(target.c_str(), file.c_str()) != 0)
+        {
             ec.assign(errno, std::system_category());
         }
+#else
+        vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
 
-    void create_directory_symlink(const fs::path& target, const fs::path& file, std::error_code& ec) {
-#if defined(_MSC_VER)
-    #if defined(USE_STD_FILESYSTEM)
+    void create_directory_symlink(const fs::path& target, const fs::path& file, std::error_code& ec)
+    {
+#if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         if (SYMLINKS_ALLOWED)
         {
             std::filesystem::path targetp = target.native();
@@ -147,12 +165,13 @@ namespace vcpkg::Test
             std::filesystem::create_symlink(targetp, filep);
         }
         else
-    #endif
         {
             vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Symlinks are not allowed on this system");
         }
-#else
+#elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
+#else
+        vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
 }
