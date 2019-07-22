@@ -50,4 +50,9 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+
 vcpkg_copy_pdbs()
