@@ -9,11 +9,17 @@ vcpkg_from_github(
     PATCHES fix-static-build.patch
 )
 
+set(BUILD_WIN_STATIC OFF)
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(BUILD_WIN_STATIC ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS:BOOL=OFF
+        -DBUILD_WIN_STATIC=${BUILD_WIN_STATIC}
 )
 
 vcpkg_install_cmake()
