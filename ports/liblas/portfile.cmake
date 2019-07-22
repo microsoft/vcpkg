@@ -27,16 +27,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/liblas)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/cmake/liblas/liblas-depends.cmake)
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/share/cmake/liblas)
+	vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/liblas)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblas RENAME copyright)
