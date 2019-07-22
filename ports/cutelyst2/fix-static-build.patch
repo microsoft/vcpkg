@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9a695fd..858d8e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -127,6 +127,28 @@ add_definitions(
+     -DQT_NO_SIGNALS_SLOTS_KEYWORDS
+     -DQT_USE_FAST_OPERATOR_PLUS
+     -DQT_DISABLE_DEPRECATED_BEFORE=0x050c00
++    -DCutelyst2Qt5_EXPORTS
++    -DActionRenderView_EXPORTS
++    -DActionREST_EXPORTS
++    -DActionRoleACL_EXPORTS
++    -DCutelyst2Qt5Authentication_EXPORTS
++    -DCutelyst2Qt5Session_EXPORTS
++    -DCutelyst2Qt5StaticSimple_EXPORTS
++    -DCutelyst2Qt5StaticCompressed_EXPORTS
++    -DCutelyst2Qt5UtilsPagination_EXPORTS
++    -DCutelyst2Qt5StatusMessage_EXPORTS
++    -DCutelyst2Qt5Memcached_EXPORTS
++    -DCutelyst2Qt5MemcachedSessionStore_EXPORTS
++    -DCutelyst2Qt5CSRFProtection_EXPORTS
++    -DCutelyst2Qt5UtilsSql_EXPORTS
++    -DCutelyst2Qt5UtilsValidator_EXPORTS
++    -DCutelyst2Qt5UtilsLangSelect_EXPORTS
++    -DCutelyst2Qt5ViewClearSilver_EXPORTS
++    -DCutelyst2Qt5ViewEmail_EXPORTS
++    -DCutelyst2Qt5ViewGrantlee_EXPORTS
++    -DCutelyst2Qt5ViewJson_EXPORTS
++    -DCutelyst2Qt5Wsgi_EXPORTS
++    -DCutelyst2Qt5UserAgent_EXPORTS
+ )
+ 
+ set(CMAKE_CXX_STANDARD 11)
