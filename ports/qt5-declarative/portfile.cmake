@@ -22,6 +22,12 @@ endif()
 # Copy qt5-declarative tools
 # This is a temporary workaround and hope to fix and remove it after the version update.
 if (EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        file(REMOVE
+            ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/Qt5Core.dll
+            ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/pcre2-16.dll
+            ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/zlib1.dll)
+        endif()
     file(RENAME ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/ ${CURRENT_PACKAGES_DIR}/tools/qt5/)
 endif()
 
