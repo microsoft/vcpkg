@@ -127,7 +127,7 @@ namespace vcpkg::Build
         /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
                 const Triplet& triplet,
-                Optional<const std::string&> port = nullopt);
+                Optional<const SourceControlFileLocation&> port = nullopt);
 
         std::string triplet_abi_tag;
         std::string target_architecture;
@@ -181,19 +181,20 @@ namespace vcpkg::Build
 
     struct BuildPackageConfig
     {
-        BuildPackageConfig(const SourceControlFile& src,
+        BuildPackageConfig(const SourceControlFileLocation& scfl,
                            const Triplet& triplet,
-                           fs::path&& port_dir,
                            const BuildPackageOptions& build_package_options,
                            const std::set<std::string>& feature_list)
-            : scf(src)
+            : scfl(scfl)
+            , scf(*scfl.source_control_file)
             , triplet(triplet)
-            , port_dir(std::move(port_dir))
+            , port_dir(scfl.source_location)
             , build_package_options(build_package_options)
             , feature_list(feature_list)
         {
         }
 
+        const SourceControlFileLocation& scfl;
         const SourceControlFile& scf;
         const Triplet& triplet;
         fs::path port_dir;

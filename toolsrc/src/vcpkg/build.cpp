@@ -38,6 +38,8 @@ namespace vcpkg::Build::Command
                              const ParsedArguments& options,
                              const VcpkgPaths& paths)
     {
+        vcpkg::Util::unused(options);
+
         const StatusParagraphs status_db = database_load_check(paths);
         const PackageSpec& spec = full_spec.package_spec;
         const SourceControlFile& scf = *scfl.source_control_file;
@@ -63,7 +65,7 @@ namespace vcpkg::Build::Command
         features_as_set.emplace("core");
 
         const Build::BuildPackageConfig build_config{
-            scf, spec.triplet(), fs::path(scfl.source_location), build_package_options, features_as_set};
+            scfl, spec.triplet(), build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -302,9 +304,10 @@ namespace vcpkg::Build
                                                   const std::set<std::string>& feature_list,
                                                   const Triplet& triplet)
     {
-        return Util::fmap_flatten(feature_list,
+        return Util::fmap_flatten(
+            feature_list,
             [&](std::string const& feature) -> std::vector<Features> {
-            if (feature == "core")
+                if (feature == "core")
                 {
                     return filter_dependencies_to_features(scf.core_paragraph->depends, triplet);
                 }
@@ -313,8 +316,7 @@ namespace vcpkg::Build
                 Checks::check_exit(VCPKG_LINE_INFO, maybe_feature.has_value());
 
                 return filter_dependencies_to_features(maybe_feature.get()->depends, triplet);
-            }
-        );
+            });
     }
 
     static std::vector<std::string> get_dependency_names(const SourceControlFile& scf,
@@ -387,7 +389,6 @@ namespace vcpkg::Build
     }
 
     static std::vector<System::CMakeVariable> get_cmake_vars(const VcpkgPaths& paths,
-                                                             const PreBuildInfo& pre_build_info,
                                                              const BuildPackageConfig& config,
                                                              const Triplet& triplet,
                                                              const Toolset& toolset)
@@ -412,7 +413,7 @@ namespace vcpkg::Build
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"CMAKE_PORT_SETTINGS", config.port_dir / "port_settings.cmake"},
+            {"ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake"},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
@@ -439,7 +440,7 @@ namespace vcpkg::Build
         const Toolset& toolset = paths.get_toolset(pre_build_info);
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         std::vector<System::CMakeVariable> variables =
-            get_cmake_vars(paths, pre_build_info, config, triplet, toolset);
+            get_cmake_vars(paths, config, triplet, toolset);
 
         const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
 
@@ -861,7 +862,7 @@ namespace vcpkg::Build
         }
 
         const auto pre_build_info =
-            PreBuildInfo::from_triplet_file(paths, triplet, config.scf.core_paragraph->name);
+            PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
 
         auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
 
@@ -1082,7 +1083,7 @@ namespace vcpkg::Build
 
     PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths,
                                                  const Triplet& triplet,
-                                                 Optional<const std::string&> port)
+                                                 Optional<const SourceControlFileLocation&> port)
     {
         static constexpr CStringView FLAG_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
 
@@ -1095,8 +1096,8 @@ namespace vcpkg::Build
         if (port)
         {
             args.emplace_back(
-                    "CMAKE_PORT_SETTINGS",
-                    paths.ports / port.value_or_exit(VCPKG_LINE_INFO) / "port_settings.cmake");
+                    "CMAKE_ENV_OVERRIDES_FILE",
+                    port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
         }
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
