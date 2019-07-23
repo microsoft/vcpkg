@@ -119,14 +119,14 @@ namespace vcpkg
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet, const std::string& abi_tag)
-        : version(spgh.version), description(spgh.description), maintainer(spgh.maintainer), abi(abi_tag), type(spgh.type)
+        : version(spgh.version), description(spgh.description), maintainer(spgh.maintainer), abi(abi_tag)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
         this->depends = filter_dependencies(spgh.depends, triplet);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
-        : version(), description(fpgh.description), maintainer(), feature(fpgh.name), type(spgh.type)
+        : version(), description(fpgh.description), maintainer(), feature(fpgh.name)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
         this->depends = filter_dependencies(fpgh.depends, triplet);

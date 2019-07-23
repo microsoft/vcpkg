@@ -40,7 +40,6 @@ namespace vcpkg
         std::vector<std::string> default_features;
         std::vector<std::string> depends;
         std::string abi;
-        SourceParagraph::TYPE type;
         std::unordered_map<std::string, std::string> external_files;
 
         mutable ConsistencyState consistency = ConsistencyState::UNKNOWN;

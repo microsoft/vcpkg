@@ -100,35 +100,6 @@ namespace vcpkg
         }
     }
 
-    SourceParagraph::TYPE SourceParagraph::type_from_string(const std::string& in)
-    {
-        if (Strings::equals(in, "port") || Strings::equals(in, ""))
-        {
-            return SourceParagraph::PORT;
-        }
-
-        if (Strings::equals(in, "sys-tool"))
-        {
-            return SourceParagraph::SYS_TOOL;
-        }
-
-        System::print2(
-                in, " is not a valid control file type. Valid types are:",
-                "\n    port\n    sys-tool");
-
-        Checks::exit_fail(VCPKG_LINE_INFO);
-    }
-
-    std::string SourceParagraph::string_from_type(const SourceParagraph::TYPE& in)
-    {
-        switch (in)
-        {
-        case SourceParagraph::PORT : return "port";
-        case SourceParagraph::SYS_TOOL : return "sys-tool";
-        default : Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid CONTROL_TYPE value.");
-        }
-    }
-
     static ParseExpected<SourceParagraph> parse_source_paragraph(RawParagraph&& fields)
     {
         ParagraphParser parser(std::move(fields));
@@ -145,7 +116,6 @@ namespace vcpkg
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));
         spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
-        spgh->type = SourceParagraph::type_from_string(parser.optional_field(SourceParagraphFields::TYPE));
 
         auto err = parser.error_info(spgh->name);
         if (err)

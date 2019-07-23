@@ -46,12 +46,6 @@ namespace vcpkg
     /// </summary>
     struct SourceParagraph
     {
-        enum TYPE : unsigned
-        {
-            PORT = 0,
-            SYS_TOOL,
-        };
-
         std::string name;
         std::string version;
         std::string description;
@@ -60,10 +54,6 @@ namespace vcpkg
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
-        TYPE type;
-
-        static TYPE type_from_string(const std::string& in);
-        static std::string string_from_type(const TYPE& in);
     };
 
     /// <summary>
