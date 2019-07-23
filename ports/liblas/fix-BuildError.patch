@@ -2,16 +2,6 @@ diff --git a/apps/CMakeLists.txt b/apps/CMakeLists.txt
 index beb83e2..6f216bd 100644
 --- a/apps/CMakeLists.txt
 +++ b/apps/CMakeLists.txt
-@@ -35,9 +35,6 @@ endif()
- 
- # Set the build type to release if it is not explicitly set by the user and
- # isn't in the cache yet
--if (NOT CMAKE_BUILD_TYPE )
--  set(CMAKE_BUILD_TYPE "Release")
--endif()
- 
- # Utilities depending on 3rd-pary libraries
- if(GDAL_FOUND)
 @@ -155,7 +152,7 @@ endif()
  # Targets installation
  
