@@ -603,7 +603,7 @@ namespace vcpkg::Build
                 *config.scf.core_paragraph,
                 triplet,
                 build_info,
-                pre_build_info,
+                std::move(pre_build_info),
                 abi_tag);
 
         if (error_count != 0)
