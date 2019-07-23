@@ -1,6 +1,10 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set(BUILD_SHARED_LIBS ON)
+else()
+  set(BUILD_SHARED_LIBS OFF)
+endif()
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://jugit.fz-juelich.de/mlz/libcerf/uploads/924b8d245ad3461107ec630734dfc781/libcerf-1.13.tgz"
@@ -10,7 +14,8 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE ${ARCHIVE}
+    PATCHES 001-fix-static-build.patch
 )
 
 vcpkg_configure_cmake(
@@ -19,6 +24,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCERF_CPP=ON
         -DLIB_MAN=OFF
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
