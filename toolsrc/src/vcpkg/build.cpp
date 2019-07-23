@@ -281,7 +281,7 @@ namespace vcpkg::Build
         for (auto& file_hash : pre_build_info.external_files)
         {
             bpgh.external_files.emplace(
-                std::move(file_hash.first),
+                file_hash.first.u8string(),
                 std::move(file_hash.second));
         }
 
@@ -459,7 +459,7 @@ namespace vcpkg::Build
         return command;
     }
 
-    static std::vector<std::pair<std::string, std::string>> get_external_file_hashes(
+    static std::vector<std::pair<fs::path, std::string>> get_external_file_hashes(
         const VcpkgPaths& paths,
         const std::vector<fs::path>& files)
     {
@@ -467,7 +467,7 @@ namespace vcpkg::Build
 
         const auto& fs = paths.get_filesystem();
 
-        std::vector<std::pair<std::string, std::string>> hashes;
+        std::vector<std::pair<fs::path, std::string>> hashes;
         for (const fs::path& external_file : files)
         {
             auto it_hash = s_hash_cache.find(external_file);
@@ -705,7 +705,16 @@ namespace vcpkg::Build
         }
 
         //Make a copy of the external files and their hashes, and sort by hash
-        auto additional_file_hashes = pre_build_info.external_files;
+        std::vector<std::pair<std::string, std::string>> additional_file_hashes
+            = Util::fmap(pre_build_info.external_files,
+                         [](const std::pair<fs::path, std::string>& file_hash)
+                         {
+                             return std::pair<std::string, std::string>{
+                                 file_hash.first.filename().u8string(),
+                                 file_hash.second
+                             };
+                         });
+
         std::sort(
             additional_file_hashes.begin(),
             additional_file_hashes.end(),

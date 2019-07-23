@@ -138,7 +138,7 @@ namespace vcpkg::Build
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
         std::vector<std::string> passthrough_env_vars;
-        std::vector<std::pair<std::string, std::string>> external_files;
+        std::vector<std::pair<fs::path, std::string>> external_files;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
