@@ -37,7 +37,7 @@ namespace vcpkg
             {
                 const auto& realfs = Files::get_real_filesystem();
 
-                if (realfs.is_regular_file(file_hash.first) &&
+                if (!realfs.is_regular_file(file_hash.first) ||
                     Hash::get_file_hash(realfs, file_hash.first, "SHA1") != file_hash.second)
                 {
                     consistency = ConsistencyState::INCONSISTENT;
