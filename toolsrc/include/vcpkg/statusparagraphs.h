@@ -62,8 +62,6 @@ namespace vcpkg
         /// <returns>`true` if installed, `false` if not or not found.</returns>
         bool is_installed(const FeatureSpec& spec) const;
 
-        bool needs_rebuild(const PackageSpec& spec);
-
         iterator insert(std::unique_ptr<StatusParagraph>);
 
         friend void serialize(const StatusParagraphs& pgh, std::string& out_str);
