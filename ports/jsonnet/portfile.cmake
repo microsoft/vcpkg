@@ -15,8 +15,25 @@ vcpkg_from_github(
 )
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  # Get PowerShell version
+  set(PS_VER "")
+  execute_process(
+      COMMAND Powershell -Command "Get-Host"
+      OUTPUT_VARIABLE PS_VER
+      ERROR_QUIET
+      RESULT_VARIABLE error_code
+      WORKING_DIRECTORY "${SOURCE_PATH}")
+  
+  string(REGEX MATCH "Version\ *:\ *([0-9\.]+)" PS_VER ${PS_VER})
+  message(STATUS "Current PowerShell ${PS_VER}")
+  # PowerShell v6.0 change the parameter -Encoding Byte to -AsByteStream
+  if (PS_VER VERSION_LESS "6")
+    set(PS_COMMAND "((Get-Content -Encoding Byte \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' > \"${SOURCE_PATH}/core/std.jsonnet.h\"")
+  else()
+    set(PS_COMMAND "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' > \"${SOURCE_PATH}/core/std.jsonnet.h\"")
+  endif()
   vcpkg_execute_required_process(
-    COMMAND Powershell -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' > \"${SOURCE_PATH}/core/std.jsonnet.h\""
+    COMMAND Powershell -Command ${PS_COMMAND}
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME "std.jsonnet"
   )
