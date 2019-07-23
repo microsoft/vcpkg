@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/binaryparagraph.h>
@@ -25,6 +26,32 @@ namespace vcpkg
         static const std::string DEPENDS = "Depends";
         static const std::string DEFAULTFEATURES = "Default-Features";
         static const std::string EXTERNALFILES = "External-Files";
+    }
+
+    bool BinaryParagraph::is_consistent() const
+    {
+        switch (consistency)
+        {
+        case ConsistencyState::UNKNOWN :
+            for (const auto& file_hash : external_files)
+            {
+                const auto& realfs = Files::get_real_filesystem();
+
+                if (realfs.is_regular_file(file_hash.first) &&
+                    Hash::get_file_hash(realfs, file_hash.first, "SHA1") != file_hash.second)
+                {
+                    consistency = ConsistencyState::INCONSISTENT;
+                    return false;
+                }
+            }
+
+            consistency = ConsistencyState::CONSISTENT;
+            return true;
+        case ConsistencyState::CONSISTENT : return true;
+        case ConsistencyState::INCONSISTENT : return false;
+        }
+
+        Checks::unreachable(VCPKG_LINE_INFO);
     }
 
     BinaryParagraph::BinaryParagraph() = default;

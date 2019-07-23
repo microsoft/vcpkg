@@ -7,6 +7,13 @@
 
 namespace vcpkg
 {
+    enum class ConsistencyState : unsigned
+    {
+        UNKNOWN = 0,
+        CONSISTENT,
+        INCONSISTENT,
+    };
+
     /// <summary>
     /// Built package metadata
     /// </summary>
@@ -23,6 +30,8 @@ namespace vcpkg
 
         std::string dir() const;
 
+        bool is_consistent() const;
+
         PackageSpec spec;
         std::string version;
         std::string description;
@@ -33,6 +42,8 @@ namespace vcpkg
         std::string abi;
         SourceParagraph::TYPE type;
         std::unordered_map<std::string, std::string> external_files;
+
+        mutable ConsistencyState consistency = ConsistencyState::UNKNOWN;
     };
 
     struct BinaryControlFile

@@ -475,11 +475,15 @@ namespace vcpkg::Build
             {
                 hashes.emplace_back(external_file, it_hash->second);
             }
-            else if (fs.is_regular_file(external_file))
+            else if (Files::get_real_filesystem().is_regular_file(external_file))
             {
-                auto emp = s_hash_cache.emplace(external_file.u8string(),
-                                                Hash::get_file_hash(fs, external_file, "SHA1"));
-                hashes.emplace_back(external_file, emp.first->second);
+                auto emp = s_hash_cache.emplace(
+                        external_file.u8string(),
+                        Hash::get_file_hash(
+                            Files::get_real_filesystem(),
+                            external_file, "SHA1"));
+
+                hashes.emplace_back(external_file.u8string(), emp.first->second);
             }
             else
             {
