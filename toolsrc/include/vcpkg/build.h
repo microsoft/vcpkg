@@ -138,7 +138,7 @@ namespace vcpkg::Build
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
         std::vector<std::string> passthrough_env_vars;
-        std::vector<fs::path> additional_files;
+        std::vector<std::pair<std::string, std::string>> external_files;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
@@ -153,7 +153,7 @@ namespace vcpkg::Build
         CHAINLOAD_TOOLCHAIN_FILE,
         BUILD_TYPE,
         ENV_PASSTHROUGH,
-        ABI_ADDITIONAL_FILES,
+        EXTERNAL_FILES,
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -165,7 +165,7 @@ namespace vcpkg::Build
         {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
         {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
-        {"VCPKG_ABI_ADDITIONAL_FILES", VcpkgTripletVar::ABI_ADDITIONAL_FILES},
+        {"VCPKG_EXTERNAL_FILES", VcpkgTripletVar::EXTERNAL_FILES},
     };
 
     struct ExtendedBuildResult

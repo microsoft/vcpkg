@@ -32,6 +32,7 @@ namespace vcpkg
         std::vector<std::string> depends;
         std::string abi;
         SourceParagraph::TYPE type;
+        std::unordered_map<std::string, std::string> external_files;
     };
 
     struct BinaryControlFile

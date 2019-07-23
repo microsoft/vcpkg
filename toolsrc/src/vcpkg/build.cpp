@@ -9,6 +9,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -261,10 +262,12 @@ namespace vcpkg::Build
         return BinaryParagraph(source_paragraph, feature_paragraph, triplet);
     }
 
-    static std::unique_ptr<BinaryControlFile> create_binary_control_file(const SourceParagraph& source_paragraph,
-                                                                         const Triplet& triplet,
-                                                                         const BuildInfo& build_info,
-                                                                         const std::string& abi_tag)
+    static std::unique_ptr<BinaryControlFile> create_binary_control_file(
+        const SourceParagraph& source_paragraph,
+        const Triplet& triplet,
+        const BuildInfo& build_info,
+        const PreBuildInfo& pre_build_info,
+        const std::string& abi_tag)
     {
         auto bcf = std::make_unique<BinaryControlFile>();
         BinaryParagraph bpgh(source_paragraph, triplet, abi_tag);
@@ -272,6 +275,14 @@ namespace vcpkg::Build
         {
             bpgh.version = *p_ver;
         }
+
+        for (auto& file_hash : pre_build_info.external_files)
+        {
+            bpgh.external_files.emplace(
+                std::move(file_hash.first),
+                std::move(file_hash.second));
+        }
+
         bcf->core_paragraph = std::move(bpgh);
         return bcf;
     }
@@ -447,6 +458,41 @@ namespace vcpkg::Build
         return command;
     }
 
+    static std::vector<std::pair<std::string, std::string>> get_external_file_hashes(
+        const VcpkgPaths& paths,
+        const std::vector<fs::path>& files)
+    {
+        static std::map<fs::path, std::string> s_hash_cache;
+
+        const auto& fs = paths.get_filesystem();
+
+        std::vector<std::pair<std::string, std::string>> hashes;
+        for (const fs::path& external_file : files)
+        {
+            auto it_hash = s_hash_cache.find(external_file);
+
+            if (it_hash != s_hash_cache.end())
+            {
+                hashes.emplace_back(external_file, it_hash->second);
+            }
+            else if (fs.is_regular_file(external_file))
+            {
+                auto emp = s_hash_cache.emplace(external_file.u8string(),
+                                                Hash::get_file_hash(fs, external_file, "SHA1"));
+                hashes.emplace_back(external_file, emp.first->second);
+            }
+            else
+            {
+                Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        external_file.u8string() +
+                        " was listed as an additional file for calculating the abi, but was not found.");
+            }
+        }
+
+        return hashes;
+    }
+
     static std::string get_triplet_abi(const VcpkgPaths& paths,
                                        const PreBuildInfo& pre_build_info,
                                        const Triplet& triplet)
@@ -494,31 +540,6 @@ namespace vcpkg::Build
             }
 
             s_hash_cache.emplace(triplet_file_path, hash);
-        }
-
-        for (const fs::path& additional_file : pre_build_info.additional_files)
-        {
-            it_hash = s_hash_cache.find(additional_file);
-
-            if (it_hash != s_hash_cache.end())
-            {
-                hash += "-";
-                hash += it_hash->second;
-            }
-            else if (fs.is_regular_file(additional_file))
-            {
-                std::string tmp_hash = Hash::get_file_hash(fs, additional_file, "SHA1");
-                hash += "-";
-                hash += tmp_hash;
-
-                s_hash_cache.emplace(additional_file, tmp_hash);
-            }
-            else
-            {
-                Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        additional_file.u8string() + " was listed as an additional file for calculating the abi, but was not found.");
-            }
         }
 
         return hash;
@@ -572,7 +593,13 @@ namespace vcpkg::Build
         const size_t error_count =
             PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
 
-        auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
+        std::unique_ptr<BinaryControlFile> bcf =
+            create_binary_control_file(
+                *config.scf.core_paragraph,
+                triplet,
+                build_info,
+                pre_build_info,
+                abi_tag);
 
         if (error_count != 0)
         {
@@ -629,7 +656,9 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
-        abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
+        // Sorted here as the order of dependency_abis is the only
+        // non-deterministicly ordered set of AbiEntries
+        Util::sort(abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
         // something suspicious is going on.  Rather than hash all of them
@@ -637,13 +666,16 @@ namespace vcpkg::Build
         const int max_port_file_count = 100;
 
         // the order of recursive_directory_iterator is undefined so save the names to sort
-        std::vector<fs::path> port_files;
+        std::vector<std::pair<std::string, std::string>> hashes_files;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
             if (fs::is_regular_file(status(port_file)))
             {
-                port_files.push_back(port_file);
-                if (port_files.size() > max_port_file_count)
+                hashes_files.emplace_back(
+                    vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"),
+                    port_file.path().filename());
+
+                if (hashes_files.size() > max_port_file_count)
                 {
                     abi_tag_entries.emplace_back(AbiEntry{"no_hash_max_portfile", ""});
                     break;
@@ -651,24 +683,44 @@ namespace vcpkg::Build
             }
         }
 
-        if (port_files.size() <= max_port_file_count)
+        if (hashes_files.size() <= max_port_file_count)
         {
-            std::sort(port_files.begin(), port_files.end());
+            Util::sort(hashes_files);
 
-            int counter = 0;
-            for (auto& port_file : port_files)
+            for (auto& hash_file : hashes_files)
             {
-                // When vcpkg takes a dependency on C++17 it can use fs::relative,
-                // which will give a stable ordering and better names in the key entry.
-                // this is not available in the filesystem TS so instead number the files for the key.
-                std::string key = Strings::format("file_%03d", counter++);
-                if (Debug::g_debugging)
-                {
-                    System::print2("[DEBUG] mapping ", key, " from ", port_file.u8string(), "\n");
-                }
-                abi_tag_entries.emplace_back(AbiEntry{key, vcpkg::Hash::get_file_hash(fs, port_file, "SHA1")});
+                // We've already sorted by hash so it's safe to write down the
+                // filename, which will be consistent across machines.
+                abi_tag_entries.emplace_back(
+                    AbiEntry{
+                        std::move(hash_file.second),
+                        std::move(hash_file.first)
+                    });
             }
         }
+
+        //Make a copy of the external files and their hashes, and sort by hash
+        auto additional_file_hashes = pre_build_info.external_files;
+        std::sort(
+            additional_file_hashes.begin(),
+            additional_file_hashes.end(),
+            [](const std::pair<fs::path, std::string>& l,
+               const std::pair<fs::path, std::string>& r)
+            {
+                return l.second < r.second ||
+                    (l.second == r.second && l.first < r.first);
+            });
+
+        for (auto& hash_file : additional_file_hashes)
+        {
+            abi_tag_entries.emplace_back(
+                AbiEntry{
+                    std::move(hash_file.first),
+                    std::move(hash_file.second)
+                });
+        }
+
+        abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
         abi_tag_entries.emplace_back(AbiEntry{
             "vcpkg_fixup_cmake_targets",
@@ -681,8 +733,6 @@ namespace vcpkg::Build
 
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
             abi_tag_entries.emplace_back(AbiEntry{"head", ""});
-
-        Util::sort(abi_tag_entries);
 
         const std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
@@ -1114,12 +1164,15 @@ namespace vcpkg::Build
                 case VcpkgTripletVar::ENV_PASSTHROUGH :
                     pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
                     break;
-                case VcpkgTripletVar::ABI_ADDITIONAL_FILES :
-                    pre_build_info.additional_files = Util::fmap(Strings::split(variable_value, ";"),
+                case VcpkgTripletVar::EXTERNAL_FILES :
+                    pre_build_info.external_files = 
+                        get_external_file_hashes(
+                            paths,
+                            Util::fmap(Strings::split(variable_value, ";"),
                             [](const std::string& path)
                             {
                                 return fs::path{path};
-                            });
+                            }));
                     break;
                 }
             }
