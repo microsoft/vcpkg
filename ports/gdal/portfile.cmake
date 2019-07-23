@@ -37,20 +37,21 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+                0001-Fix-debug-crt-flags.patch
+                0002-Fix-static-build.patch
       )
     else()
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+                0001-Fix-debug-crt-flags.patch
+                fix-proj-name.patch
       )
     endif()
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
         PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-std-fabs.patch
+              0003-Fix-std-fabs.patch
     )
 endforeach()
 

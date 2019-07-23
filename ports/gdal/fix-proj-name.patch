@@ -1,0 +1,17 @@
+diff --git a/ogr/ogrct.cpp b/ogr/ogrct.cpp
+index c13a154..b36e730 100644
+--- a/ogr/ogrct.cpp
++++ b/ogr/ogrct.cpp
+@@ -110,7 +110,11 @@ static bool      bProjLocaleSafe = false;
+ #endif
+ 
+ #if defined(WIN32) && !defined(__MINGW32__)
+-#  define LIBNAME "proj.dll"
++#if defined(DEBUG)
++#  define LIBNAME "proj_6_1_d.dll"
++#else
++#  define LIBNAME "proj_6_1.dll"
++#endif
+ #elif defined(__MINGW32__)
+ // XXX: If PROJ.4 library was properly built using libtool in Cygwin or MinGW
+ // environments it has the interface version number embedded in the file name
