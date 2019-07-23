@@ -118,31 +118,6 @@ namespace vcpkg
         return it != end() && (*it)->is_installed();
     }
 
-    //bool vcpkg::StatusParagraphs::needs_rebuild(const PackageSpec& spec)
-    //{
-    //    auto it = find(spec);
-    //    if (it != end())
-    //    {
-    //        for (const std::string& dep : (*it)->package.depends)
-    //        {
-    //            PackageSpec dep_spec =
-    //                PackageSpec::from_name_and_triplet(
-    //                        dep,
-    //                        spec.triplet()).value_or_exit(VCPKG_LINE_INFO);
-
-    //            if (needs_rebuild(dep_spec))
-    //            {
-    //                (*it)->state = InstallState::NEEDS_REBUILD;
-    //                return true;
-    //            }
-    //        }
-
-    //        return (*it)->needs_rebuild();
-    //    }
-
-    //    return false;
-    //}
-
     StatusParagraphs::iterator StatusParagraphs::insert(std::unique_ptr<StatusParagraph> pgh)
     {
         Checks::check_exit(VCPKG_LINE_INFO, pgh != nullptr, "Inserted null paragraph");
