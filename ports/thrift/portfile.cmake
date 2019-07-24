@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+# We currently insist on static only because:
+# - Thrift doesn't yet support building as a DLL on Windows.
+# - x64-linux only builds static anyway
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
@@ -11,11 +16,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# note we specify values for WITH_STATIC_LIB and WITH_SHARED_LIB because even though
+# they're marked as deprecated, Thrift incorrectly hard-codes a value for BUILD_SHARED_LIBS.
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     NO_CHARSET_FLAG
     OPTIONS
+        -DWITH_SHARED_LIB=off
+        -DWITH_STATIC_LIB=on # these are marked as deprecated but 
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
