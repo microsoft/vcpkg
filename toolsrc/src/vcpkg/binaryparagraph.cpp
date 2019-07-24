@@ -175,9 +175,9 @@ namespace vcpkg
             out_str.append(Strings::join(",",
                         Util::fmap(
                             pgh.external_files,
-                            [](const std::pair<std::string, std::string>& kv)
+                            [](const std::pair<fs::path, std::string>& kv)
                             {
-                                return kv.first + "," + kv.second;
+                                return kv.first.u8string() + "," + kv.second;
                             }))).push_back('\n');
         }
     }
