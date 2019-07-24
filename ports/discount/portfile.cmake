@@ -14,7 +14,7 @@ vcpkg_from_github(
       generate-blocktags-command.patch
 )
 
-if(VCPKG_TARGET_TRIPLET MATCHES "^arm" OR VCPKG_TARGET_TRIPLET MATCHES "uwp$")
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64" OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     file(COPY "${CURRENT_PORT_DIR}/blocktags" DESTINATION "${SOURCE_PATH}/blocktags")
 endif()
 
