@@ -679,7 +679,7 @@ namespace vcpkg::Build
             {
                 hashes_files.emplace_back(
                     vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"),
-                    port_file.path().filename());
+                    port_file.path().filename().u8string());
 
                 if (hashes_files.size() > max_port_file_count)
                 {
