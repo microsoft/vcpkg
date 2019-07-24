@@ -30,6 +30,10 @@
 include(vcpkg_execute_required_process)
 
 function(vcpkg_extract_source_archive ARCHIVE)
+    if(VCPKG_CACHE_ONLY)
+        return()
+    endif()
+    
     if(NOT ARGC EQUAL 2)
         set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src")
     else()

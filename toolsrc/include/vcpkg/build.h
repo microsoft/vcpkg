@@ -82,6 +82,12 @@ namespace vcpkg::Build
         YES
     };
 
+	enum class CacheOnly
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -92,6 +98,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
+        CacheOnly cache_only;
     };
 
     enum class BuildResult
@@ -103,6 +110,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+		CACHED,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
