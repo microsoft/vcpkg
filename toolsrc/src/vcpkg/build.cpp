@@ -64,7 +64,7 @@ namespace vcpkg::Build::Command
         features_as_set.emplace("core");
 
         const Build::BuildPackageConfig build_config{
-            scf, spec.triplet(), fs::path(scfl.source_location), build_package_options, features_as_set};
+            scfl, spec.triplet(), build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -402,6 +402,7 @@ namespace vcpkg::Build
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
+            {"ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake"},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
@@ -783,7 +784,8 @@ namespace vcpkg::Build
                 AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
         }
 
-        const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
+        const auto pre_build_info =
+            PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
 
         auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
 
@@ -998,7 +1000,9 @@ namespace vcpkg::Build
         return inner_create_buildinfo(*pghs.get());
     }
 
-    PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet)
+    PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths,
+                                                 const Triplet& triplet,
+                                                 Optional<const SourceControlFileLocation&> port)
     {
         static constexpr CStringView FLAG_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
 
@@ -1006,11 +1010,19 @@ namespace vcpkg::Build
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
         const fs::path triplet_file_path = paths.get_triplet_file_path(triplet);
 
+        std::vector<System::CMakeVariable> args{{"CMAKE_TRIPLET_FILE", triplet_file_path}};
+
+        if (port)
+        {
+            args.emplace_back(
+                    "CMAKE_ENV_OVERRIDES_FILE",
+                    port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
+        }
+
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
                                                              ports_cmake_script_path,
-                                                             {
-                                                                 {"CMAKE_TRIPLET_FILE", triplet_file_path},
-                                                             });
+                                                             args);
+
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
