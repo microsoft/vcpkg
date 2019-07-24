@@ -24,7 +24,7 @@ vcpkg_configure_cmake(
     NO_CHARSET_FLAG
     OPTIONS
         -DWITH_SHARED_LIB=off
-        -DWITH_STATIC_LIB=on # these are marked as deprecated but 
+        -DWITH_STATIC_LIB=on
         -DWITH_STDTHREADS=ON
         -DBUILD_TESTING=off
         -DBUILD_JAVA=off
