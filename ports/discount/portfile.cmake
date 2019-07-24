@@ -11,7 +11,12 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       cmake.patch
+      generate-blocktags-command.patch
 )
+
+if(VCPKG_TARGET_TRIPLET MATCHES "^arm" OR VCPKG_TARGET_TRIPLET MATCHES "uwp$")
+    file(COPY "${CURRENT_PORT_DIR}/blocktags" DESTINATION "${SOURCE_PATH}/blocktags")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/cmake"

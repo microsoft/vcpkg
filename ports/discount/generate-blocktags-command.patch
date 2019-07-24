@@ -1,0 +1,24 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index a183836..0dd528d 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -113,12 +113,14 @@ configure_file("${_ROOT}/mkdio.h.in"
+ 
+ include_directories("${_ROOT}")
+ 
+-add_executable(mktags
+-    "${_ROOT}/mktags.c")
++if(NOT VCPKG_TARGET_TRIPLET MATCHES "^arm" AND NOT VCPKG_TARGET_TRIPLET MATCHES "uwp$")
++    add_executable(mktags
++        "${_ROOT}/mktags.c")
+ 
+-add_custom_command(OUTPUT "${_ROOT}/blocktags"
+-    COMMAND mktags > blocktags
+-    WORKING_DIRECTORY "${_ROOT}")
++    add_custom_command(OUTPUT "${_ROOT}/blocktags"
++        COMMAND mktags > blocktags
++        WORKING_DIRECTORY "${_ROOT}")
++endif()
+ 
+ add_library(libmarkdown
+     "${_ROOT}/mkdio.c"
