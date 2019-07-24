@@ -711,27 +711,19 @@ namespace vcpkg::Build
                          [](const std::pair<fs::path, std::string>& file_hash)
                          {
                              return std::pair<std::string, std::string>{
-                                 file_hash.first.filename().u8string(),
-                                 file_hash.second
+                                 file_hash.second,
+                                 file_hash.first.filename().u8string()
                              };
                          });
 
-        std::sort(
-            additional_file_hashes.begin(),
-            additional_file_hashes.end(),
-            [](const std::pair<fs::path, std::string>& l,
-               const std::pair<fs::path, std::string>& r)
-            {
-                return l.second < r.second ||
-                    (l.second == r.second && l.first < r.first);
-            });
+        std::sort(additional_file_hashes.begin(), additional_file_hashes.end());
 
         for (auto& hash_file : additional_file_hashes)
         {
             abi_tag_entries.emplace_back(
                 AbiEntry{
-                    std::move(hash_file.first),
-                    std::move(hash_file.second)
+                    std::move(hash_file.second),
+                    std::move(hash_file.first)
                 });
         }
 
