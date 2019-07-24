@@ -35,7 +35,7 @@ if(GCC OR CLANG)
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-tests/*.cpp)
+file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
 
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
@@ -52,7 +52,11 @@ add_executable(vcpkg-test EXCLUDE_FROM_ALL ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURC
 target_compile_definitions(vcpkg-test PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg-test PRIVATE include)
 
-foreach(TEST_NAME arguments chrono dependencies paragraph plan specifier supports)
+foreach(TEST_NAME
+    arguments chrono dependencies files
+    paragraph plan specifier statusparagraphs
+    strings supports update
+)
     add_test(${TEST_NAME} vcpkg-test [${TEST_NAME}])
 endforeach()
 
@@ -91,3 +95,4 @@ endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(vcpkg PRIVATE Threads::Threads)
+target_link_libraries(vcpkg-test PRIVATE Threads::Threads)
