@@ -105,7 +105,7 @@ namespace vcpkg::Commands::PortsDiff
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : all_ports)
             names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
-        fs.remove_all(temp_checkout_path, ec);
+        fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;
     }
 

@@ -35,7 +35,7 @@ if(GCC OR CLANG)
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-tests/*.cpp)
+file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
 
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
@@ -43,16 +43,28 @@ else()
     set(DISABLE_METRICS_VALUE "0")
 endif()
 
-add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
-target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
-target_include_directories(vcpkg PRIVATE include)
+add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+add_executable(vcpkg-test
+    EXCLUDE_FROM_ALL
+    ${VCPKGTEST_SOURCES}
+    $<TARGET_OBJECTS:vcpkglib>)
 
+foreach(TARGET_NAME vcpkglib vcpkg vcpkg-test)
+    target_compile_definitions(${TARGET_NAME} PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+    target_include_directories(${TARGET_NAME} PRIVATE include)
+endforeach()
 
-add_executable(vcpkg-test EXCLUDE_FROM_ALL ${VCPKGTEST_SOURCES} ${VCPKGLIB_SOURCES})
-target_compile_definitions(vcpkg-test PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
-target_include_directories(vcpkg-test PRIVATE include)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(vcpkg PRIVATE Threads::Threads)
+target_link_libraries(vcpkg-test PRIVATE Threads::Threads)
 
-foreach(TEST_NAME arguments chrono dependencies paragraph plan specifier supports)
+foreach(TEST_NAME
+    arguments chrono dependencies files
+    paragraph plan specifier statusparagraphs
+    strings supports update
+)
     add_test(${TEST_NAME} vcpkg-test [${TEST_NAME}])
 endforeach()
 
@@ -87,7 +99,3 @@ if(MSVC)
   target_sources(vcpkg PRIVATE src/pch.cpp)
   target_compile_options(vcpkg PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(vcpkg PRIVATE Threads::Threads)

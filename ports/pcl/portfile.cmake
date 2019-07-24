@@ -11,6 +11,7 @@ vcpkg_from_github(
         pcl_config.patch
         use_flann_targets.patch
         boost-1.70.patch
+        cuda_10_1.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
