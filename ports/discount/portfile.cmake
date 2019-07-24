@@ -8,17 +8,15 @@ vcpkg_from_github(
     REPO Orc/discount
     REF v2.2.6
     SHA512 4c5956dea78aacd3a105ddac13f1671d811a5b2b04990cdf8485c36190c8872c4b1b9432a7236f669c34b07564ecd0096632dced54d67de9eaf4f23641417ecc
+    HEAD_REF master
     PATCHES
       cmake.patch
 )
 
-file(COPY ${SOURCE_PATH}/cmake/config.h.in DESTINATION ${SOURCE_PATH})
-file(COPY ${SOURCE_PATH}/cmake/discount-config.cmake.in DESTINATION ${SOURCE_PATH})
-file(COPY ${SOURCE_PATH}/cmake/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
 vcpkg_configure_cmake(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}/cmake"
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DDISCOUNT_ONLY_LIBRARY=ON
 )
@@ -30,5 +28,5 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(READ "${SOURCE_PATH}/COPYRIGHT" copyright)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/discount/copyright" ${copyright})
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/discount" RENAME copyright)
+
