@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         # on osx use the uuid.h that is part of the osx sdk
         builtin-uuid-osx.patch
+        remove-gcov-dependency.patch
 )
 
 vcpkg_configure_cmake(
