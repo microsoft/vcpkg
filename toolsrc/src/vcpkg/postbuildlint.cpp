@@ -128,6 +128,7 @@ namespace vcpkg::PostBuildLint
         {
             System::print2(System::Color::warning,
                            "/debug/share should not exist. Please reorganize any important files, then use\n"
+                           "    vcpkg_fixup_cmake_targets(CONFIG_PATH path/to/config)\n"
                            "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)\n");
             return LintStatus::ERROR_DETECTED;
         }
