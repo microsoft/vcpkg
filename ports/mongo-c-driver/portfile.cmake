@@ -10,6 +10,10 @@ vcpkg_from_github(
     PATCHES fix-uwp.patch
 )
 
+vcpkg_check_features(
+    "snappy" MONGO_ENABLE_SNAPPY
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ENABLE_STATIC ON)
 else()
@@ -34,6 +38,7 @@ vcpkg_configure_cmake(
         -DENABLE_SSL=${ENABLE_SSL}
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DENABLE_SNAPPY=${MONGO_ENABLE_SNAPPY}
         -DBUILD_VERSION=${BUILD_VERSION}
 )
 

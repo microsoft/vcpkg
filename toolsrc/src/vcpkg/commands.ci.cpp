@@ -237,9 +237,8 @@ namespace vcpkg::Commands::CI
                     auto triplet = p->spec.triplet();
 
                     const Build::BuildPackageConfig build_config{
-                        *scfl->source_control_file, 
+                        *scfl,
                         triplet, 
-                        static_cast<fs::path>(scfl->source_location), 
                         build_options, 
                         p->feature_list
                     };
@@ -254,7 +253,14 @@ namespace vcpkg::Commands::CI
                                 return {spec.name(), it->second};
                         });
                     const auto& pre_build_info = pre_build_info_cache.get_lazy(
-                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
+                        triplet,
+                        [&]() {
+                            return Build::PreBuildInfo::from_triplet_file(
+                                    paths,
+                                    triplet,
+                                    *scfl);
+                        }
+                    );
 
                     auto maybe_tag_and_file =
                         Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
