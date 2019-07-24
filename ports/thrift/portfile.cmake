@@ -1,8 +1,10 @@
 include(vcpkg_common_functions)
 
 # We currently insist on static only because:
-# - Thrift doesn't yet support building as a DLL on Windows.
-# - x64-linux only builds static anyway
+# - Thrift doesn't yet support building as a DLL on Windows,
+# - x64-linux only builds static anyway.
+# From https://github.com/apache/thrift/blob/master/CHANGES.md
+# it looks like it will be supported in v0.13.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_find_acquire_program(FLEX)
