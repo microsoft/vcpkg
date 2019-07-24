@@ -100,7 +100,9 @@ namespace vcpkg
                     this->spec);
         }
 
-        for (int i = 0; i < external_files_or_hashes.size(); i += 2)
+        for (decltype(external_files_or_hashes)::size_type i = 0;
+             i < external_files_or_hashes.size();
+             i += 2)
         {
             external_files.emplace(
                     std::move(external_files_or_hashes[i]),
