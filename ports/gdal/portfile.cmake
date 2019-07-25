@@ -45,7 +45,6 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
                 0001-Fix-debug-crt-flags.patch
-                fix-proj-name.patch
       )
     endif()
     vcpkg_apply_patches(
@@ -65,8 +64,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   # Setup proj4 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj_6_1.lib" PROJ_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_6_1_d.lib" PROJ_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj.lib" PROJ_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib" PROJ_LIBRARY_DBG)
 
   # Setup libpng libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)

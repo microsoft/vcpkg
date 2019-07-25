@@ -103,8 +103,8 @@ else()
     set(Module_vtkGUISupportMFC OFF)
 endif()
 
-set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj_6_1.lib")
-set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_6_1_d.lib")
+set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
 
 # =============================================================================
 # Configure & Install

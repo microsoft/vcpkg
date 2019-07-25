@@ -44,7 +44,7 @@ set(LIBS_ALL_DBG
     ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
     ${LIBXML2_LIBS_DBG} \
     ${GEOS_LIBS_DBG} \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/proj_6_1_d.lib"
+    ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib"
    )
 set(LIBS_ALL_REL
     "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
@@ -54,7 +54,7 @@ set(LIBS_ALL_REL
     ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
     ${LIBXML2_LIBS_REL} \
     ${GEOS_LIBS_REL} \
-    ${CURRENT_INSTALLED_DIR}/lib/proj_6_1.lib"
+    ${CURRENT_INSTALLED_DIR}/lib/proj.lib"
    )
 
 ################
