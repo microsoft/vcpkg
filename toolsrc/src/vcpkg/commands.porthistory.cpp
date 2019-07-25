@@ -21,43 +21,36 @@ namespace vcpkg::Commands::PortHistory
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
         const fs::path dot_git_dir = paths.root / ".git";
 
-        const std::string full_cmd = Strings::format(
-            R"("%s" --git-dir="%s" %s)",
-            git_exe.u8string(),
-            dot_git_dir.u8string(),
-            cmd
-        );
+        const std::string full_cmd =
+            Strings::format(R"("%s" --git-dir="%s" %s)", git_exe.u8string(), dot_git_dir.u8string(), cmd);
 
         auto output = System::cmd_execute_and_capture_output(full_cmd);
-        Checks::check_exit(VCPKG_LINE_INFO,
-            output.exit_code == 0,
-            "Failed to run command: %s",
-            full_cmd);
+        Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to run command: %s", full_cmd);
         return output;
     }
 
-    static std::string get_version_from_commit(const VcpkgPaths& paths, const std::string& commit_id, const std::string& port_name)
+    static std::string get_version_from_commit(const VcpkgPaths& paths,
+                                               const std::string& commit_id,
+                                               const std::string& port_name)
     {
         const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
         auto output = run_git_command(paths, cmd);
 
         const auto version = Strings::find_at_most_one_enclosed(output.output, "Version: ", "\n");
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           version.has_value(),
-                           "CONTROL file does not have a 'Version' field");
+        Checks::check_exit(VCPKG_LINE_INFO, version.has_value(), "CONTROL file does not have a 'Version' field");
         return version.get()->to_string();
     }
 
     static std::vector<PortControlVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
     {
-
         const std::string cmd = Strings::format(R"(log --format="%%H %%cd" --date=short -- ports/%s/.)", port_name);
         auto output = run_git_command(paths, cmd);
 
-        auto commits = Util::fmap(Strings::split(output.output, "\n"), [](const std::string& line) -> auto {
-            auto parts = Strings::split(line, " ");
-            return std::make_pair(parts[0], parts[1]);
-        });
+        auto commits = Util::fmap(
+            Strings::split(output.output, "\n"), [](const std::string& line) -> auto {
+                auto parts = Strings::split(line, " ");
+                return std::make_pair(parts[0], parts[1]);
+            });
 
         std::vector<PortControlVersion> ret;
         std::string last_version;
@@ -66,7 +59,7 @@ namespace vcpkg::Commands::PortHistory
             const std::string version = get_version_from_commit(paths, commit_date_pair.first, port_name);
             if (last_version != version)
             {
-                ret.emplace_back(PortControlVersion{ commit_date_pair.first, version, commit_date_pair.second });
+                ret.emplace_back(PortControlVersion{commit_date_pair.first, version, commit_date_pair.second});
                 last_version = version;
             }
         }
