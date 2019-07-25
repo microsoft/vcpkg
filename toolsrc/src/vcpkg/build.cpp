@@ -705,7 +705,8 @@ namespace vcpkg::Build
             }
         }
 
-        //Make a copy of the external files and their hashes, and sort by hash
+        //Make a copy of the external file names and their hashes, and sort by
+        //hash.
         std::vector<std::pair<std::string, std::string>> additional_file_hashes
             = Util::fmap(pre_build_info.external_files,
                          [](const std::pair<fs::path, std::string>& file_hash)
