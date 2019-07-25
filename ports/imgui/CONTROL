@@ -1,4 +1,8 @@
 Source: imgui
-Version: 1.70-1
+Version: 1.70-2
 Homepage: https://github.com/ocornut/imgui
 Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
+
+Feature: sfml
+Description: Build with sfml
+Build-Depends: sfml, opengl
