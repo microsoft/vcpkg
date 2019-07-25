@@ -1,20 +1,34 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index a183836..0dd528d 100644
+index a183836..e9deef5 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -113,12 +113,14 @@ configure_file("${_ROOT}/mkdio.h.in"
+@@ -20,6 +20,8 @@ set(${PROJECT_NAME}_INSTALL_SAMPLES OFF CACHE BOOL
+ set(${PROJECT_NAME}_ONLY_LIBRARY OFF CACHE BOOL
+     "Set to ON to only build markdown library (default is OFF)")
+
++set(GENERATE_BLOCKTAGS ON)
++
+ # Check headers
+ include(CheckIncludeFile)
+ check_include_file(libgen.h HAVE_LIBGEN_H)
+@@ -113,12 +115,19 @@ configure_file("${_ROOT}/mkdio.h.in"
 
  include_directories("${_ROOT}")
 
 -add_executable(mktags
 -    "${_ROOT}/mktags.c")
-+if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "arm64" AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-+    add_executable(mktags
-+        "${_ROOT}/mktags.c")
 
 -add_custom_command(OUTPUT "${_ROOT}/blocktags"
 -    COMMAND mktags > blocktags
 -    WORKING_DIRECTORY "${_ROOT}")
++if(NOT GENERATE_BLOCKTAGS)
++    message(STATUS "Not generating blocktags")
++else()
++    message(STATUS "Using mktags to generate blocktags")
++
++    add_executable(mktags
++        "${_ROOT}/mktags.c")
++
 +    add_custom_command(OUTPUT "${_ROOT}/blocktags"
 +        COMMAND mktags > blocktags
 +        WORKING_DIRECTORY "${_ROOT}")
