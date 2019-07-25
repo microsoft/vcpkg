@@ -4,11 +4,11 @@ index 015a030..33d6894 100644
 +++ b/CMakeLists.txt
 @@ -29,7 +29,7 @@ set(IMGUI_SFML_CONFIG_NAME "imconfig-SFML.h" CACHE STRING "Name of a custom user
  set(IMGUI_SFML_CONFIG_INSTALL_DIR "" CACHE PATH "Path where user's config header will be installed")
- 
+
  # For FindImGui.cmake
 -list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 +# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
- 
+
  if (IMGUI_SFML_FIND_SFML)
  	find_package(SFML 2.5 COMPONENTS graphics system window)
 @@ -42,24 +42,24 @@ endif()
@@ -23,11 +23,11 @@ index 015a030..33d6894 100644
 +  # set(IMGUI_DIR "" CACHE PATH "imgui top-level directory")
 +  # message(FATAL_ERROR "ImGui directory not found. Set IMGUI_ROOT to imgui's top-level path (containing 'imgui.h' and other files).\n")
 +# endif()
- 
+
  # This uses FindImGui.cmake provided in ImGui-SFML repo for now
 -find_package(ImGui 1.68 REQUIRED)
-+find_package(ImGui REQUIRED)
- 
++find_package(imgui REQUIRED)
+
  # these headers will be installed alongside ImGui-SFML
 -set(IMGUI_PUBLIC_HEADERS
 -  ${IMGUI_INCLUDE_DIR}/imconfig.h
@@ -47,11 +47,11 @@ index 015a030..33d6894 100644
 +  # ${IMGUI_INCLUDE_DIR}/imstb_truetype.h
 +  # ${IMGUI_INCLUDE_DIR}/misc/cpp/imgui_stdlib.h
 +# )
- 
+
  # CMake 3.11 and later prefer to choose GLVND, but we choose legacy OpenGL just because it's safer
  # (unless the OpenGL_GL_PREFERENCE was explicitly set)
 @@ -80,6 +80,7 @@ add_library(ImGui-SFML::ImGui-SFML ALIAS ImGui-SFML)
- 
+
  target_link_libraries(ImGui-SFML
    PUBLIC
 +    imgui::imgui
@@ -93,7 +93,7 @@ index cf5e4c9..3cb0fe6 100644
      #define IMGUI_SFML_API
 -    #define IMGUI_API
  #endif
- 
+
  #endif
 \ No newline at end of file
 
