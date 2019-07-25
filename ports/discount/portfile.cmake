@@ -12,6 +12,7 @@ vcpkg_from_github(
     PATCHES
       cmake.patch
       generate-blocktags-command.patch
+      disable-deprecated-warnings.patch
 )
 
 set(GENERATE_BLOCKTAGS ON)
