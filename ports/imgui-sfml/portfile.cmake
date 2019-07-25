@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         static-build-with-vcpkg-imgui.patch
+        require-c++11.patch
 )
 
 vcpkg_configure_cmake(

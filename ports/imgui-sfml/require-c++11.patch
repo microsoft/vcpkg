@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ad59f9c..e03b4d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,9 @@ project(imgui_sfml
+   VERSION 2.0
+ )
+ 
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
+ # In CMake 3.13+ this policy enables you to define normal variables with option names as if you defined
+ # these options. Useful for add_subdirectory(ImGui-SFML)
+ if(POLICY CMP0077)
