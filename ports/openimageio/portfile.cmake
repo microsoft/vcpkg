@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix_libraw.patch
         use-webp.patch
         remove_wrong_dependency.patch
+        fix_libraw_build.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
