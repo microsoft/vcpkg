@@ -18,3 +18,7 @@ Build-Depends: zlib
 Feature: zstd
 Description: Build with zstd
 Build-Depends: zstd
+
+Feature: snappy
+Description: Build with snappy
+Build-Depends: snappy
