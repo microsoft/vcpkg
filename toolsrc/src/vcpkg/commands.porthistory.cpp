@@ -80,7 +80,7 @@ namespace vcpkg::Commands::PortHistory
 
         std::string port_name = args.command_arguments.at(0);
         std::vector<PortControlVersion> versions = read_versions_from_log(paths, port_name);
-        System::print2("             version          date     vcpkg commit\n");
+        System::print2("             version          date    vcpkg commit\n");
         for (auto&& version : versions)
         {
             System::printf("%20.20s    %s    %s\n", version.version, version.date, version.commit_id);
