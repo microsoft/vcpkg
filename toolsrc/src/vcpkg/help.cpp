@@ -91,6 +91,7 @@ namespace vcpkg::Help
                        "  vcpkg list                      List installed packages\n"
                        "  vcpkg update                    Display list of packages for updating\n"
                        "  vcpkg upgrade                   Rebuild all outdated packages\n"
+                       "  vcpkg history <pkg>             Shows the history of CONTROL versions of a package\n"
                        "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
                        "  vcpkg help topics               Display the list of help topics\n"
                        "  vcpkg help <topic>              Display help for a specific topic\n"
