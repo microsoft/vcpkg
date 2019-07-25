@@ -43,6 +43,11 @@ if("tools" IN_LIST FEATURES)
     set(BUILD_TOOLS ON)
 endif()
 
+set(WITH_OPENGL OFF)
+if ("opengl" IN_LIST FEATURES)
+    set(WITH_OPENGL ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -66,6 +71,7 @@ vcpkg_configure_cmake(
         -DWITH_QHULL=ON
         -DWITH_QT=${WITH_QT}
         -DWITH_VTK=ON
+        -DWITH_OPENGL=${WITH_OPENGL}
 )
 
 vcpkg_install_cmake()
