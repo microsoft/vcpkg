@@ -184,4 +184,9 @@ namespace vcpkg::Strings
     const char* search(StringView haystack, StringView needle);
 
     bool contains(StringView haystack, StringView needle);
+
+    // base 32 encoding, since base64 encoding requires lowercase letters,
+    // which are not distinct from uppercase letters on macOS or Windows filesystems.
+    // follows RFC 4648
+    std::string b32_encode(std::uint64_t x) noexcept;
 }

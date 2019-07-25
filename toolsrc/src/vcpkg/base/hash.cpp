@@ -178,9 +178,11 @@ namespace vcpkg::Hash
     static std::string parse_shasum_output(const std::string& shasum_output)
     {
         std::vector<std::string> split = Strings::split(shasum_output, " ");
+        // Checking if >= 3 because filenames with spaces will show up as multiple tokens.
+        // The hash is the first token so we don't need to parse the filename anyway.
         Checks::check_exit(VCPKG_LINE_INFO,
-                           split.size() == 3,
-                           "Expected output of the form [hash filename\n] (3 tokens), but got\n"
+                           split.size() >= 3,
+                           "Expected output of the form [hash filename\n] (3+ tokens), but got\n"
                            "[%s] (%s tokens)",
                            shasum_output,
                            std::to_string(split.size()));
