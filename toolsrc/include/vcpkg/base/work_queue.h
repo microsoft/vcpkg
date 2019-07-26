@@ -10,7 +10,7 @@ namespace vcpkg
     struct WorkQueue
     {
         template<class F>
-        WorkQueue(std::uint16_t num_threads, LineInfo li, const F& tld_init) noexcept
+        WorkQueue(LineInfo li, std::uint16_t num_threads, const F& tld_init) noexcept
         {
             m_line_info = li;
 
