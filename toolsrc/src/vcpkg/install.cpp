@@ -196,28 +196,35 @@ namespace vcpkg::Install
         const Triplet& triplet = bcf.core_paragraph.spec.triplet();
         const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
-        const SortedVector<std::string> package_files =
-            build_list_of_package_files(paths.get_filesystem(), package_dir);
-        const SortedVector<file_pack> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
-
-        struct intersection_compare
-        {
-            bool operator()(const std::string& lhs, const file_pack& rhs) { return lhs < rhs.first; }
-            bool operator()(const file_pack& lhs, const std::string& rhs) { return lhs.first < rhs; }
-        };
-
         std::vector<file_pack> intersection;
+        {
+            const SortedVector<std::string> package_files =
+                build_list_of_package_files(paths.get_filesystem(), package_dir);
+            const SortedVector<file_pack> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
 
-        std::set_intersection(installed_files.begin(),
-                              installed_files.end(),
-                              package_files.begin(),
-                              package_files.end(),
-                              std::back_inserter(intersection),
-                              intersection_compare());
+            auto first1 = installed_files.begin();
+            auto last1 = installed_files.end();
+            auto first2 = package_files.begin();
+            auto last2 = package_files.end();
 
-        std::sort(intersection.begin(), intersection.end(), [](const file_pack& lhs, const file_pack& rhs) {
-            return lhs.second < rhs.second;
-        });
+            while (first1 != last1 && first2 != last2)
+            {
+                if (first1->first < *first2)
+                    ++first1;
+                else if (*first2 < first1->first)
+                    ++first2;
+                else
+                {
+                    intersection.push_back(*first1);
+                    ++first1;
+                    ++first2;
+                }
+            }
+
+            std::sort(intersection.begin(), intersection.end(), [](const file_pack& lhs, const file_pack& rhs) {
+                return lhs.second < rhs.second;
+            });
+        }
 
         if (!intersection.empty())
         {
@@ -331,10 +338,8 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{scfl,
-                                                             action.spec.triplet(),
-                                                             action.build_options,
-                                                             action.feature_list};
+                const Build::BuildPackageConfig build_config{
+                    scfl, action.spec.triplet(), action.build_options, action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
             }();
 
