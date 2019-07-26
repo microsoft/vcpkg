@@ -80,8 +80,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup geos libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
   else()
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
@@ -133,7 +133,15 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup liblzma libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" LZMA_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/lzma.lib" LZMA_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib" LZMA_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib" LZMA_LIBRARY_DBG)
+
+  # Setup openssl libraries path
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/lib/ssleay32.lib" OPENSSL_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/debug/lib/ssleay32.lib" OPENSSL_LIBRARY_DBG)
+
+  # Setup libiconv libraries path
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib" ICONV_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib" ICONV_LIBRARY_DBG)
 
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       # Setup MySQL libraries + include path
@@ -210,39 +218,34 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       CXX_CRT_FLAGS=${LINKAGE_FLAGS}
       PROJ_LIBRARY=${PROJ_LIBRARY_REL}
       PNG_LIB=${PNG_LIBRARY_REL}
-      GEOS_LIB=${GEOS_LIBRARY_REL}
+      "GEOS_LIB=${GEOS_LIBRARY_REL}"
       EXPAT_LIB=${EXPAT_LIBRARY_REL}
       "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
       "SQLITE_LIB=${SQLITE_LIBRARY_REL} ${SPATIALITE_LIBRARY_REL}"
       OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
       WEBP_LIBS=${WEBP_LIBRARY_REL}
-      LIBXML2_LIB=${XML2_LIBRARY_REL}
+      "LIBXML2_LIB=${XML2_LIBRARY_REL} ${ICONV_LIBRARY_REL} ${LZMA_LIBRARY_REL}"
       ZLIB_LIB=${ZLIB_LIBRARY_REL}
+      "PG_LIB=${PGSQL_LIBRARY_REL} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_REL}"
   )
-  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      # Static Build does not like PG_LIB
-      list(APPEND NMAKE_OPTIONS_REL PG_LIB=${PGSQL_LIBRARY_REL})
-  endif()
 
   list(APPEND NMAKE_OPTIONS_DBG
       ${NMAKE_OPTIONS}
       CXX_CRT_FLAGS="${LINKAGE_FLAGS}d"
       PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
       PNG_LIB=${PNG_LIBRARY_DBG}
-      GEOS_LIB=${GEOS_LIBRARY_DBG}
+      "GEOS_LIB=${GEOS_LIBRARY_DBG}"
       EXPAT_LIB=${EXPAT_LIBRARY_DBG}
       "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
       "SQLITE_LIB=${SQLITE_LIBRARY_DBG} ${SPATIALITE_LIBRARY_DBG}"
       OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
       WEBP_LIBS=${WEBP_LIBRARY_DBG}
-      LIBXML2_LIB=${XML2_LIBRARY_DBG}
+      "LIBXML2_LIB=${XML2_LIBRARY_DBG} ${ICONV_LIBRARY_DBG} ${LZMA_LIBRARY_DBG}"
       ZLIB_LIB=${ZLIB_LIBRARY_DBG}
+      "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
       DEBUG=1
   )
-  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      # Static Build does not like PG_LIB
-      list(APPEND NMAKE_OPTIONS_DBG PG_LIB=${PGSQL_LIBRARY_DBG})
-  endif()
+  
   # Begin build process
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
@@ -290,15 +293,14 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+      file(COPY ${SOURCE_PATH_RELEASE}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+      file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_id.lib)
     endif()
 
   else()
