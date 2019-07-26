@@ -1,0 +1,4 @@
+Source: cpp-cmakefiles
+Version: 0.1.1
+Build-Depends: grpc, curl, protobuf
+Description: Google Cloud Platform C++ Proto Libraries used by the C++ Client Libraries.
