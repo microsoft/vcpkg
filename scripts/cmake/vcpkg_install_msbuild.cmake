@@ -92,6 +92,10 @@
 include(vcpkg_clean_msbuild)
 
 function(vcpkg_install_msbuild)
+    if(VCPKG_DOWNLOAD_ONLY)
+        message(FATAL_ERROR "vcpkg is only downloading.  CMake will exit.")
+    endif()
+    
     cmake_parse_arguments(
         _csc
         "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"

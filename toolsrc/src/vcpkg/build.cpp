@@ -84,9 +84,9 @@ namespace vcpkg::Build::Command
 
         Checks::check_exit(VCPKG_LINE_INFO, result.code != BuildResult::EXCLUDED);
 
-        if ((result.code != BuildResult::SUCCEEDED) && (result.code != BuildResult::CACHED))
+        if (result.code != BuildResult::SUCCEEDED)
         {
-            System::print2(System::Color::error, Build::create_error_message(result.code, spec), '\n');
+            System::print2(System::Color::error, Build::create_error_message(result, spec), '\n');
             System::print2(Build::create_user_troubleshooting_message(spec), '\n');
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -404,16 +404,12 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
             {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+            {"VCPKG_DOWNLOAD_ONLY", Util::Enum::to_bool(config.build_package_options.download_only) ? "1" : "0"},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
             variables.push_back({"GIT", git_exe_path});
-        }
-
-        if (config.build_package_options.cache_only == vcpkg::Build::CacheOnly::YES)
-        {
-            variables.push_back({"VCPKG_CACHE_ONLY", "true"});
         }
 
         return variables;
@@ -519,9 +515,11 @@ namespace vcpkg::Build
         const auto timer = Chrono::ElapsedTimer::create_started();
 
         std::string command = make_build_cmd(paths, pre_build_info, config, triplet);
+
         std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
 
-        const auto return_code = System::cmd_execute_clean(command, env);
+        const int return_code = System::cmd_execute_clean(command, env);
+
         const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
 
@@ -529,17 +527,18 @@ namespace vcpkg::Build
             auto locked_metrics = Metrics::g_metrics.lock();
             locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
                                             buildtimeus);
-            if ((return_code != 0) && (config.build_package_options.cache_only == vcpkg::Build::CacheOnly::NO))
+
+            if (config.build_package_options.download_only == Build::DownloadOnly::YES)
+            {
+                return BuildResult::SUCCEEDED;
+            }
+
+            if (return_code != 0)
             {
                 locked_metrics->track_property("error", "build failed");
                 locked_metrics->track_property("build_error", spec_string);
                 return BuildResult::BUILD_FAILED;
             }
-        }
-
-        if (config.build_package_options.cache_only == vcpkg::Build::CacheOnly::YES)
-        {
-            return BuildResult::CACHED;
         }
 
         const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
@@ -758,14 +757,18 @@ namespace vcpkg::Build
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
         Util::sort_unique_erase(dep_pspecs);
 
-        // Find all features that aren't installed. This mutates required_fspecs.
-        Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
-            return status_db.is_installed(fspec) || fspec.name() == name;
-        });
-
-        if (!required_fspecs.empty())
+        // only check for dependencies being installed if we are doing more than downloading packages.
+        if (config.build_package_options.download_only == Build::DownloadOnly::NO)
         {
-            return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+            // Find all features that aren't installed. This mutates required_fspecs.
+            Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
+                return status_db.is_installed(fspec) || fspec.name() == name;
+            });
+
+            if (!required_fspecs.empty())
+            {
+                return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+            }
         }
 
         const PackageSpec spec =
@@ -777,10 +780,19 @@ namespace vcpkg::Build
         for (auto&& pspec : dep_pspecs)
         {
             if (pspec == spec) continue;
+
             const auto status_it = status_db.find_installed(pspec);
-            Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
-            dependency_abis.emplace_back(
-                AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
+
+            // if we are only downlading, then packages may not be installed.
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               (status_it != status_db.end()) ||
+                                   (config.build_package_options.download_only == Build::DownloadOnly::YES));
+
+            if (status_it != status_db.end())
+            {
+                dependency_abis.emplace_back(
+                    AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
+            }
         }
 
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
@@ -895,6 +907,32 @@ namespace vcpkg::Build
             paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
     }
 
+    std::string to_string(const ExtendedBuildResult& build_result)
+    {
+        const auto code = Build::to_string(build_result.code);
+
+        switch (build_result.code)
+        {
+            case BuildResult::NULLVALUE: return code;
+            case BuildResult::SUCCEEDED: return code;
+            case BuildResult::BUILD_FAILED: return code;
+            case BuildResult::POST_BUILD_CHECKS_FAILED: return code;
+            case BuildResult::FILE_CONFLICTS: return code;
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+            {
+                std::string missing;
+                for (auto& d : build_result.unmet_dependencies)
+                {
+                    missing += " " + d.to_string();
+                }
+
+                return code + ":" + missing;
+            }
+            case BuildResult::EXCLUDED: return code;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
     const std::string& to_string(const BuildResult build_result)
     {
         static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string("vcpkg::Commands::Build::BuildResult");
@@ -904,7 +942,6 @@ namespace vcpkg::Build
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
         static const std::string EXCLUDED_STRING = "EXCLUDED";
-        static const std::string CACHED_STRING = "CACHED";
 
         switch (build_result)
         {
@@ -915,12 +952,16 @@ namespace vcpkg::Build
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::EXCLUDED: return EXCLUDED_STRING;
-            case BuildResult::CACHED: return CACHED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec)
+    {
+        return Strings::format("Error: Building package %s failed with: %s", spec, Build::to_string(build_result));
+    }
+
+    std::string create_error_message(const ExtendedBuildResult& build_result, const PackageSpec& spec)
     {
         return Strings::format("Error: Building package %s failed with: %s", spec, Build::to_string(build_result));
     }

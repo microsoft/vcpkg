@@ -178,5 +178,6 @@ function(vcpkg_from_github)
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/head
         PATCHES ${_vdud_PATCHES}
     )
+    
     set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

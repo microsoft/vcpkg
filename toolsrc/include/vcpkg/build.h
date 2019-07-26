@@ -82,7 +82,7 @@ namespace vcpkg::Build
         YES
     };
 
-	enum class CacheOnly
+	enum class DownloadOnly
     {
         NO = 0,
         YES
@@ -98,7 +98,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
-        CacheOnly cache_only;
+        DownloadOnly download_only;
     };
 
     enum class BuildResult
@@ -110,7 +110,6 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
-		CACHED,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -183,6 +182,9 @@ namespace vcpkg::Build
         std::vector<FeatureSpec> unmet_dependencies;
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
+
+	std::string to_string(const ExtendedBuildResult& build_result);
+    std::string create_error_message(const ExtendedBuildResult& build_result, const PackageSpec& spec);
 
     struct BuildPackageConfig
     {

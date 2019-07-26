@@ -324,17 +324,13 @@ namespace vcpkg::Install
 
         if (plan_type == InstallPlanType::BUILD_AND_INSTALL)
         {
-            std::string actionVerb = "Building";
+            std::string verb = "Building";
 
-            if (action.build_options.cache_only == Build::CacheOnly::YES)
-            {
-                actionVerb = "Caching";
-            }
-
-            if (use_head_version)
-                System::printf("%s package %s from HEAD...\n", actionVerb, display_name_with_features);
-            else
-                System::printf("%s package %s...\n", actionVerb, display_name_with_features);
+			if (action.build_options.download_only == Build::DownloadOnly::YES) verb = "Downloading";
+			
+			if (use_head_version)
+                System::printf("%s package %s from HEAD...\n", verb, display_name_with_features);
+            else System::printf("%s package %s...\n", verb, display_name_with_features);
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
@@ -343,19 +339,19 @@ namespace vcpkg::Install
                 return Build::build_package(paths, build_config, status_db);
             }();
 
-            if (result.code == Build::BuildResult::CACHED)
-            {
-                System::printf("Caching package %s... done\n", display_name_with_features);
-                return result;
-            }
-
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
                 System::print2(System::Color::error, Build::create_error_message(result.code, action.spec), "\n");
                 return result;
             }
 
-            System::printf("Building package %s... done\n", display_name_with_features);
+            System::printf("%s package %s... done\n", verb, display_name_with_features);
+
+            // we can stop now if we are only downloading packages.
+            if (action.build_options.download_only == Build::DownloadOnly::YES)
+            {
+                return result;
+            }
 
             auto bcf = std::make_unique<BinaryControlFile>(
                 Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
@@ -479,9 +475,8 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
-    static constexpr StringLiteral OPTION_CACHE_ONLY = "--cache-only";
 
-    static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 7> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
@@ -489,7 +484,6 @@ namespace vcpkg::Install
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
-        {OPTION_CACHE_ONLY, "Download new sources, cache them, but do not build them"},
     }};
     static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
@@ -627,31 +621,10 @@ namespace vcpkg::Install
         // input sanitization
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_full_package_spec(
-                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-        });
-
-        for (auto&& spec : specs)
-        {
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-        }
-
-        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
-        const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
-        const bool is_cache_only = Util::Sets::contains(options.switches, (OPTION_CACHE_ONLY));
-
-        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) ||
-                                                   Util::Sets::contains(options.switches, OPTION_CACHE_ONLY));
-
-        auto& fs = paths.get_filesystem();
-
-        // create the plan
-        StatusParagraphs status_db = database_load_check(paths);
 
         Build::DownloadTool download_tool = Build::DownloadTool::BUILT_IN;
         if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
@@ -665,8 +638,36 @@ namespace vcpkg::Install
             download_tool,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
-            is_cache_only ? Build::CacheOnly::YES : Build::CacheOnly::NO,
+            Build::DownloadOnly::NO,
         };
+
+        perform_and_exit(args, paths, default_triplet, install_plan_options, options);
+    }
+
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          const Triplet& default_triplet,
+                          const Build::BuildPackageOptions& install_plan_options,
+                          const ParsedArguments& options)
+    {
+        const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
+        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
+        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
+
+        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+            return Input::check_and_get_full_package_spec(
+                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+        });
+
+        for (auto&& spec : specs)
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+        }
+
+        auto& fs = paths.get_filesystem();
+
+        // create the plan
+        StatusParagraphs status_db = database_load_check(paths);
 
         //// Load ports from ports dirs
         PathsPortFileProvider provider(paths, args.overlay_ports.get());
@@ -680,6 +681,7 @@ namespace vcpkg::Install
             if (auto p_install = action.install_action.get())
             {
                 p_install->build_options = install_plan_options;
+
                 if (p_install->request_type != RequestType::USER_REQUESTED)
                     p_install->build_options.use_head_version = Build::UseHeadVersion::NO;
             }

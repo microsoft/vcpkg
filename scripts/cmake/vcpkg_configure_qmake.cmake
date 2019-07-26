@@ -14,6 +14,10 @@
 #    The options passed to qmake.
 
 function(vcpkg_configure_qmake)
+    if(VCPKG_DOWNLOAD_ONLY)
+        message(FATAL_ERROR "vcpkg is only downloading.  CMake will exit.")
+    endif()
+    
     cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS" ${ARGN})
 
     # Find qmake executable

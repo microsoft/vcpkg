@@ -98,6 +98,7 @@ namespace vcpkg::Help
                        Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING, // Integration help
                        "\n"
                        "  vcpkg export <pkg>... [opt]...  Exports a package\n"
+                       "  vcpkg download <pkg>...         Download all packages without building\n"
                        "  vcpkg edit <pkg>                Open up a port for editing (uses " ENVVAR(EDITOR) //
                        ", default 'code')\n"
                        "  vcpkg import <pkg>              Import a pre-built library\n"

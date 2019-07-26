@@ -1,4 +1,8 @@
 function(vcpkg_configure_meson)
+    if(VCPKG_DOWNLOAD_ONLY)
+        message(FATAL_ERROR "vcpkg is only downloading.  CMake will exit.")
+    endif()
+    
     cmake_parse_arguments(_vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
     
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
