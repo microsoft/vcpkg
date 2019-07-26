@@ -115,7 +115,9 @@ TEST_CASE ("remove all", "[files]")
 
     fs::path fp;
     fs.remove_all(temp_dir, ec, fp);
-    REQUIRE_FALSE(ec);
+    if (ec) {
+        FAIL("remove_all failure on file: " << fp);
+    }
 
     REQUIRE_FALSE(fs.exists(temp_dir));
 }

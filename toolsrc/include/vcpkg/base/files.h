@@ -31,7 +31,7 @@ namespace fs
         struct symlink_status_t
         {
             file_status operator()(const path& p, std::error_code& ec) const noexcept;
-            file_status operator()(const path& p, vcpkg::LineInfo li) const noexcept;
+            file_status operator()(vcpkg::LineInfo li, const path& p) const noexcept;
         };
         struct is_symlink_t
         {
