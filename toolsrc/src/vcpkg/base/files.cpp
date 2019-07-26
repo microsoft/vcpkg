@@ -85,10 +85,9 @@ namespace vcpkg::Files
             auto dw_attributes = attributes.dwFileAttributes;
             dw_attributes &= ~FILE_ATTRIBUTE_READONLY;
             if (!SetFileAttributesW(file_name, dw_attributes)) {
-                ec = std::error_code(GetLastError(), std::system_category());
+                ec.assign(GetLastError(), std::system_category());
             }
 #else
-            // I hate C
             struct stat s;
             if (lstat(path.c_str(), &s)) {
                 ec.assign(errno, std::system_category());
