@@ -1,4 +1,4 @@
-#include <vcpkg-tests/catch.h>
+#include <vcpkg-test/catch.h>
 
 #include <vcpkg/base/chrono.h>
 

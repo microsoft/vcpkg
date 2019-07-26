@@ -42,6 +42,12 @@ else()
     set(WITH_PYTHON OFF)
 endif()
 
+if("csharp" IN_LIST FEATURES)
+    set(WITH_CSHARP ON)
+else()
+    set(WITH_CSHARP OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -69,6 +75,7 @@ vcpkg_configure_cmake(
 # Optional stuff
         -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
         -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
+        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
         -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre

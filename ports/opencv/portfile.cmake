@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(OPENCV_VERSION "4.1.0")
+set(OPENCV_VERSION "4.1.1")
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
@@ -10,14 +10,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 492168c1260cd30449393c4b266d75202e751493a8f1e184af6c085d8f4a38800ee954d84fe8c36fcceb690b1ebb5e511b68c05901f64be79a0915f3f8a46dc0
+    SHA512 80fa48d992ca06a2a4ab6740df6d8c21f4926165486b393969da2c5bbe2f3a0b799fb76dee5e3654e90c743e49bbd2b5b02ad59a4766896bbf4cd5b4e3251e0f
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0006-fix-missing-openjp2.patch
-      0008-fix-error-c4576.patch
       0009-fix-uwp.patch
 )
 
@@ -70,7 +68,7 @@ if(WITH_CONTRIB)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 68b373dcb149891847927709bd4409711d74adc65c6c79e8d91c61eee673a4a2304535868d7f54324ac6156b2bec9608d4f9c8f24b3378d43893b0734e116c35
+    SHA512 8af13f0a5f350360316662c1ce5e58c21d906a58591acfbd575a8dacde19b6f3bbd694c3c199feb35c33549cf8c37e3fb4c494b586a00ad29fe3b4aeeb2d22ab
     HEAD_REF master
   )
   vcpkg_download_distfile(OCV_DOWNLOAD
@@ -217,6 +215,24 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_opencv_ovis OFF)
   endif()
 endif()
+
+vcpkg_check_features("nonfree" OPENCV_ENABLE_NONFREE
+                     "cuda"    WITH_CUDA
+                     "eigen"   WITH_EIGEN
+                     "ffmpeg"  WITH_FFMPEG
+                     "gdcm"    WITH_GDCM
+                     "jasper"  WITH_JASPER
+                     "jpeg"    WITH_JPEG
+                     "openexr" WITH_OPENEXR
+                     "opengl"  WITH_OPENGL
+                     "png"     WITH_PNG
+                     "qt"      WITH_QT
+                     "sfm"     BUILD_opencv_sfm
+                     "tiff"    WITH_TIFF
+                     "webp"    WITH_WEBP
+                     "world"   BUILD_opencv_world
+                     "ade"     WITH_ADE
+                     "openmp"  WITH_OPENMP)
 
 vcpkg_configure_cmake(
     PREFER_NINJA

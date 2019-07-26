@@ -22,6 +22,7 @@ vcpkg_from_github(
         0002-fix-linux-pkgconfig-dependency.patch
         # Python < 3.6 doesn't allow a WindowsPath object to act as a pathlike in os.path functions
         0003-windows-path-python-fix.patch
+        0004-fix-fatal-errorC1189.patch
 )
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and

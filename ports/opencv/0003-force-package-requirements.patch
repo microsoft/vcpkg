@@ -1,5 +1,5 @@
 diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
-index 91afcc4..76e596f 100644
+index 227cfb2..7a97a19 100644
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
 @@ -6,7 +6,7 @@
@@ -56,25 +56,25 @@ index 91afcc4..76e596f 100644
      if(PNG_FOUND)
        include(CheckIncludeFile)
        check_include_file("${PNG_PNG_INCLUDE_DIR}/libpng/png.h" HAVE_LIBPNG_PNG_H)
-@@ -214,7 +214,7 @@ if(WITH_OPENEXR)
-   if(BUILD_OPENEXR)
-     ocv_clear_vars(OPENEXR_FOUND)
-   else()
+@@ -213,7 +213,7 @@ endif()
+ if(WITH_OPENEXR)
+   ocv_clear_vars(HAVE_OPENEXR)
+   if(NOT BUILD_OPENEXR)
 -    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
 +    find_package(OpenEXR REQUIRED)
    endif()
  
-   if(NOT OPENEXR_FOUND)
-@@ -230,7 +230,7 @@ endif()
+   if(OPENEXR_FOUND)
+@@ -231,7 +231,7 @@ endif()
  
  # --- GDAL (optional) ---
  if(WITH_GDAL)
 -    find_package(GDAL QUIET)
-+    find_package(GDAL REQUIRED)
++  find_package(GDAL REQUIRED)
  
      if(NOT GDAL_FOUND)
          set(HAVE_GDAL NO)
-@@ -242,7 +242,7 @@ if(WITH_GDAL)
+@@ -243,7 +243,7 @@ if(WITH_GDAL)
  endif()
  
  if (WITH_GDCM)
@@ -83,10 +83,46 @@ index 91afcc4..76e596f 100644
    if(NOT GDCM_FOUND)
      set(HAVE_GDCM NO)
      ocv_clear_vars(GDCM_VERSION GDCM_LIBRARIES)
-@@ -272,4 +272,4 @@ if(WITH_IMGCODEC_PFM)
+@@ -273,4 +273,4 @@ if(WITH_IMGCODEC_PFM)
    set(HAVE_IMGCODEC_PFM ON)
  elseif(DEFINED WITH_IMGCODEC_PFM)
    set(HAVE_IMGCODEC_PFM OFF)
 -endif()
 \ No newline at end of file
 +endif()
+diff --git a/cmake/OpenCVFindLibsPerf.cmake b/cmake/OpenCVFindLibsPerf.cmake
+index a658bf6..5c9411a 100644
+--- a/cmake/OpenCVFindLibsPerf.cmake
++++ b/cmake/OpenCVFindLibsPerf.cmake
+@@ -41,14 +41,9 @@ endif(WITH_CUDA)
+ 
+ # --- Eigen ---
+ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+-  find_package(Eigen3 QUIET)
++  find_package(Eigen3 REQUIRED)
+ 
+   if(Eigen3_FOUND)
+-    if(TARGET Eigen3::Eigen)
+-      # Use Eigen3 imported target if possible
+-      list(APPEND OPENCV_LINKER_LIBS Eigen3::Eigen)
+-      set(HAVE_EIGEN 1)
+-    else()
+       if(DEFINED EIGEN3_INCLUDE_DIRS)
+         set(EIGEN_INCLUDE_PATH ${EIGEN3_INCLUDE_DIRS})
+         set(HAVE_EIGEN 1)
+@@ -56,7 +51,6 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+         set(EIGEN_INCLUDE_PATH ${EIGEN3_INCLUDE_DIR})
+         set(HAVE_EIGEN 1)
+       endif()
+-    endif()
+     if(HAVE_EIGEN)
+       if(DEFINED EIGEN3_WORLD_VERSION)  # CMake module
+         set(EIGEN_WORLD_VERSION ${EIGEN3_WORLD_VERSION})
+@@ -67,6 +61,7 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+         set(EIGEN_MAJOR_VERSION ${EIGEN3_VERSION_MINOR})
+         set(EIGEN_MINOR_VERSION ${EIGEN3_VERSION_PATCH})
+       endif()
++      ocv_include_directories(${EIGEN_INCLUDE_PATH})
+     endif()
+   endif()
+ 

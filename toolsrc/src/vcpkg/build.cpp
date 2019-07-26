@@ -586,7 +586,8 @@ namespace vcpkg::Build
                 if (fs.is_directory(file)) // Will only keep the logs
                 {
                     std::error_code ec;
-                    fs.remove_all(file, ec);
+                    fs::path failure_point;
+                    fs.remove_all(file, ec, failure_point);
                 }
             }
         }
@@ -701,8 +702,8 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
 
         auto pkg_path = paths.package_dir(spec);
+        fs.remove_all(pkg_path, VCPKG_LINE_INFO);
         std::error_code ec;
-        fs.remove_all(pkg_path, ec);
         fs.create_directories(pkg_path, ec);
         auto files = fs.get_files_non_recursive(pkg_path);
         Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
@@ -886,7 +887,7 @@ namespace vcpkg::Build
                     fs.rename_or_copy(tmp_failure_zip, archive_tombstone_path, ".tmp", ec);
 
                     // clean up temporary directory
-                    fs.remove_all(tmp_log_path, ec);
+                    fs.remove_all(tmp_log_path, VCPKG_LINE_INFO);
                 }
             }
 
@@ -1053,7 +1054,7 @@ namespace vcpkg::Build
             {
                 switch (maybe_option->second)
                 {
-                case VcpkgTripletVar::TARGET_ARCHITECTURE : 
+                case VcpkgTripletVar::TARGET_ARCHITECTURE :
                     pre_build_info.target_architecture = variable_value;
                     break;
                 case VcpkgTripletVar::CMAKE_SYSTEM_NAME :

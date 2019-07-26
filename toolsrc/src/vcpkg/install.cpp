@@ -354,8 +354,7 @@ namespace vcpkg::Install
             {
                 auto& fs = paths.get_filesystem();
                 const fs::path package_dir = paths.package_dir(action.spec);
-                std::error_code ec;
-                fs.remove_all(package_dir, ec);
+                fs.remove_all(package_dir, VCPKG_LINE_INFO);
             }
 
             if (action.build_options.clean_downloads == Build::CleanDownloads::YES)
