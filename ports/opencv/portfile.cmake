@@ -18,23 +18,54 @@ vcpkg_from_github(
       0003-force-package-requirements.patch
       0006-fix-missing-openjp2.patch
       0008-fix-error-c4576.patch
+      0009-fix-uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
-set(OPENCV_ENABLE_NONFREE OFF)
-if("nonfree" IN_LIST FEATURES)
-  set(OPENCV_ENABLE_NONFREE ON)
+vcpkg_check_features(
+ "nonfree"  OPENCV_ENABLE_NONFREE
+ "cuda"     WITH_CUDA
+ "dnn"      BUILD_opencv_dnn
+ "contrib"  WITH_CONTRIB
+ "eigen"    WITH_EIGEN
+ "ffmpeg"   WITH_FFMPEG
+ "gdcm"     WITH_GDCM
+ "ipp"      WITH_IPP
+ "jasper"   WITH_JASPER
+ "jpeg"     WITH_JPEG
+ "openexr"  WITH_OPENEXR
+ "opengl"   WITH_OPENGL
+ "png"      WITH_PNG
+ "qt"       WITH_QT
+ "sfm"      BUILD_opencv_sfm
+ "tbb"      WITH_TBB
+ "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
+ "webp"     WITH_WEBP
+ "world"    BUILD_opencv_world
+ "ade"      WITH_ADE
+ "openmp"   WITH_OPENMP
+ "ovis"     BUILD_opencv_ovis
+)
+
+set(BUILD_opencv_videoio ON)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  message(WARNING "The video IO module does not build for UWP, the module has been disabled.")
+  set(BUILD_opencv_videoio OFF)
 endif()
 
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(WITH_CUDA ON)
-endif()
+# Build image quality module when building with 'contrib' feature and not UWP.
+set(BUILD_opencv_quality OFF)
+if(WITH_CONTRIB)
+  if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  set(BUILD_opencv_quality ON)
+  else()
+    message(WARNING "The image quality module does not build for UWP, the module has been disabled.")
+  endif()
 
-if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
@@ -105,9 +136,7 @@ if("contrib" IN_LIST FEATURES)
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 endif()
 
-set(BUILD_opencv_dnn OFF)
-if("dnn" IN_LIST FEATURES)
-  set(BUILD_opencv_dnn ON)
+if(BUILD_opencv_dnn)
   vcpkg_download_distfile(TINYDNN_ARCHIVE
     URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
     FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
@@ -115,24 +144,7 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-set(WITH_EIGEN OFF)
-if("eigen" IN_LIST FEATURES)
-  set(WITH_EIGEN ON)
-endif()
-
-set(WITH_FFMPEG OFF)
-if("ffmpeg" IN_LIST FEATURES)
-  set(WITH_FFMPEG ON)
-endif()
-
-set(WITH_GDCM OFF)
-if("gdcm" IN_LIST FEATURES)
-  set(WITH_GDCM ON)
-endif()
-
-set(WITH_IPP OFF)
-if("ipp" IN_LIST FEATURES)
-  set(WITH_IPP ON)
+if(WITH_IPP)
   if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
@@ -184,96 +196,26 @@ if("ipp" IN_LIST FEATURES)
   endif()
 endif()
 
-set(WITH_JASPER OFF)
-if("jasper" IN_LIST FEATURES)
-  set(WITH_JASPER ON)
-endif()
-
-set(WITH_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-  set(WITH_JPEG ON)
-endif()
-
 set(WITH_MSMF ON)
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
 endif()
 
-set(WITH_OPENEXR OFF)
-if("openexr" IN_LIST FEATURES)
-  set(WITH_OPENEXR ON)
-endif()
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  if (WITH_TBB)
+    message(WARNING "TBB is currently unsupported in this build configuration, turning it off")
+    set(WITH_TBB OFF)
+  endif()
 
-set(WITH_OPENGL OFF)
-if("opengl" IN_LIST FEATURES)
-  set(WITH_OPENGL ON)
-endif()
+  if (WITH_VTK)
+    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
+    set(WITH_VTK OFF)
+  endif()
 
-set(WITH_PNG OFF)
-if("png" IN_LIST FEATURES)
-  set(WITH_PNG ON)
-endif()
-
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_QT ON)
-endif()
-
-set(BUILD_opencv_sfm OFF)
-if("sfm" IN_LIST FEATURES)
-  set(BUILD_opencv_sfm ON)
-endif()
-
-set(WITH_TBB OFF)
-if("tbb" IN_LIST FEATURES)
-  set(WITH_TBB ON)
-endif()
-if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND WITH_TBB)
-  message(WARNING "TBB is currently unsupported in this build configuration, turning it off")
-  set(WITH_TBB OFF)
-endif()
-
-set(WITH_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-  set(WITH_TIFF ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
-endif()
-if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND WITH_VTK)
-  message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
-  set(WITH_VTK OFF)
-endif()
-
-set(WITH_WEBP OFF)
-if("webp" IN_LIST FEATURES)
-  set(WITH_WEBP ON)
-endif()
-
-set(BUILD_opencv_world OFF)
-if("world" IN_LIST FEATURES)
-  set(BUILD_opencv_world ON)
-endif()
-
-set(WITH_ADE OFF)
-if("ade" IN_LIST FEATURES)
-  set(WITH_ADE ON)
-endif()
-
-set(WITH_OPENMP OFF)
-if("openmp" IN_LIST FEATURES)
-  set(WITH_OPENMP ON)
-endif()
-
-set(BUILD_opencv_ovis OFF)
-if("ovis" IN_LIST FEATURES)
-  set(BUILD_opencv_ovis ON)
-endif()
-if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND NOT VCPKG_CMAKE_SYSTEM_NAME AND BUILD_opencv_ovis)
-  message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
-  set(BUILD_opencv_ovis OFF)
+  if ((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND BUILD_opencv_ovis)
+    message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
+    set(BUILD_opencv_ovis OFF)
+  endif()
 endif()
 
 vcpkg_configure_cmake(
@@ -361,6 +303,9 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         -DBUILD_opencv_world=${BUILD_opencv_world}
+        ###### The following modules are disabled for UWP
+        -DBUILD_opencv_videoio=${BUILD_opencv_videoio}
+        -DBUILD_opencv_quality=${BUILD_opencv_quality}
 )
 
 vcpkg_install_cmake()
