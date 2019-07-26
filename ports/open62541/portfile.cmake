@@ -37,7 +37,7 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
         vcpkg_download_distfile(GET_PIP
-            URLS "https://bootstrap.pypa.io/get-pip.py"
+            URLS "https://bootstrap.pypa.io/3.3/get-pip.py"
             FILENAME "tools/python/${PYTHON3_DIR_NAME}/get-pip.py"
             SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad
         )
