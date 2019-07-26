@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(OPENCV_VERSION "4.1.0")
+set(OPENCV_VERSION "4.1.1")
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
@@ -16,8 +16,6 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0006-fix-missing-openjp2.patch
-      0008-fix-error-c4576.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
