@@ -82,7 +82,11 @@ namespace vcpkg::Build
         YES
     };
 
+<<<<<<< HEAD
 	enum class DownloadOnly
+=======
+	enum class CacheOnly
+>>>>>>> 96ec06623962b77a2edeb29e591ea91c936d968d
     {
         NO = 0,
         YES
@@ -98,7 +102,11 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
+<<<<<<< HEAD
         DownloadOnly download_only;
+=======
+        CacheOnly cache_only;
+>>>>>>> 96ec06623962b77a2edeb29e591ea91c936d968d
     };
 
     enum class BuildResult
@@ -110,6 +118,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+		CACHED,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {

@@ -339,6 +339,12 @@ namespace vcpkg::Install
                 return Build::build_package(paths, build_config, status_db);
             }();
 
+            if (result.code == Build::BuildResult::CACHED)
+            {
+                System::printf("Caching package %s... done\n", display_name_with_features);
+                return result;
+            }
+
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
                 System::print2(System::Color::error, Build::create_error_message(result.code, action.spec), "\n");
@@ -475,8 +481,9 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
+    static constexpr StringLiteral OPTION_CACHE_ONLY = "--cache-only";
 
-    static constexpr std::array<CommandSwitch, 7> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
@@ -484,6 +491,7 @@ namespace vcpkg::Install
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
+        {OPTION_CACHE_ONLY, "Download new sources, cache them, but do not build them"},
     }};
     static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
