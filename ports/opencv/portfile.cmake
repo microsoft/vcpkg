@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 492168c1260cd30449393c4b266d75202e751493a8f1e184af6c085d8f4a38800ee954d84fe8c36fcceb690b1ebb5e511b68c05901f64be79a0915f3f8a46dc0
+    SHA512 80fa48d992ca06a2a4ab6740df6d8c21f4926165486b393969da2c5bbe2f3a0b799fb76dee5e3654e90c743e49bbd2b5b02ad59a4766896bbf4cd5b4e3251e0f
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -22,22 +22,12 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
-set(OPENCV_ENABLE_NONFREE OFF)
-if("nonfree" IN_LIST FEATURES)
-  set(OPENCV_ENABLE_NONFREE ON)
-endif()
-
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(WITH_CUDA ON)
-endif()
-
 if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 68b373dcb149891847927709bd4409711d74adc65c6c79e8d91c61eee673a4a2304535868d7f54324ac6156b2bec9608d4f9c8f24b3378d43893b0734e116c35
+    SHA512 8af13f0a5f350360316662c1ce5e58c21d906a58591acfbd575a8dacde19b6f3bbd694c3c199feb35c33549cf8c37e3fb4c494b586a00ad29fe3b4aeeb2d22ab
     HEAD_REF master
   )
   vcpkg_download_distfile(OCV_DOWNLOAD
@@ -113,21 +103,6 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-set(WITH_EIGEN OFF)
-if("eigen" IN_LIST FEATURES)
-  set(WITH_EIGEN ON)
-endif()
-
-set(WITH_FFMPEG OFF)
-if("ffmpeg" IN_LIST FEATURES)
-  set(WITH_FFMPEG ON)
-endif()
-
-set(WITH_GDCM OFF)
-if("gdcm" IN_LIST FEATURES)
-  set(WITH_GDCM ON)
-endif()
-
 set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
@@ -182,44 +157,9 @@ if("ipp" IN_LIST FEATURES)
   endif()
 endif()
 
-set(WITH_JASPER OFF)
-if("jasper" IN_LIST FEATURES)
-  set(WITH_JASPER ON)
-endif()
-
-set(WITH_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-  set(WITH_JPEG ON)
-endif()
-
 set(WITH_MSMF ON)
 if(VCPKG_CMAKE_SYSTEM_NAME)
   set(WITH_MSMF OFF)
-endif()
-
-set(WITH_OPENEXR OFF)
-if("openexr" IN_LIST FEATURES)
-  set(WITH_OPENEXR ON)
-endif()
-
-set(WITH_OPENGL OFF)
-if("opengl" IN_LIST FEATURES)
-  set(WITH_OPENGL ON)
-endif()
-
-set(WITH_PNG OFF)
-if("png" IN_LIST FEATURES)
-  set(WITH_PNG ON)
-endif()
-
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_QT ON)
-endif()
-
-set(BUILD_opencv_sfm OFF)
-if("sfm" IN_LIST FEATURES)
-  set(BUILD_opencv_sfm ON)
 endif()
 
 set(WITH_TBB OFF)
@@ -231,10 +171,6 @@ if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND WITH_TBB)
   set(WITH_TBB OFF)
 endif()
 
-set(WITH_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-  set(WITH_TIFF ON)
-endif()
 
 set(WITH_VTK OFF)
 if("vtk" IN_LIST FEATURES)
@@ -245,26 +181,6 @@ if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND WITH_VTK)
   set(WITH_VTK OFF)
 endif()
 
-set(WITH_WEBP OFF)
-if("webp" IN_LIST FEATURES)
-  set(WITH_WEBP ON)
-endif()
-
-set(BUILD_opencv_world OFF)
-if("world" IN_LIST FEATURES)
-  set(BUILD_opencv_world ON)
-endif()
-
-set(WITH_ADE OFF)
-if("ade" IN_LIST FEATURES)
-  set(WITH_ADE ON)
-endif()
-
-set(WITH_OPENMP OFF)
-if("openmp" IN_LIST FEATURES)
-  set(WITH_OPENMP ON)
-endif()
-
 set(BUILD_opencv_ovis OFF)
 if("ovis" IN_LIST FEATURES)
   set(BUILD_opencv_ovis ON)
@@ -273,6 +189,24 @@ if((VCPKG_LIBRARY_LINKAGE STREQUAL static) AND NOT VCPKG_CMAKE_SYSTEM_NAME AND B
   message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
   set(BUILD_opencv_ovis OFF)
 endif()
+
+vcpkg_check_features("nonfree" OPENCV_ENABLE_NONFREE
+                     "cuda"    WITH_CUDA
+                     "eigen"   WITH_EIGEN
+                     "ffmpeg"  WITH_FFMPEG
+                     "gdcm"    WITH_GDCM
+                     "jasper"  WITH_JASPER
+                     "jpeg"    WITH_JPEG
+                     "openexr" WITH_OPENEXR
+                     "opengl"  WITH_OPENGL
+                     "png"     WITH_PNG
+                     "qt"      WITH_QT
+                     "sfm"     BUILD_opencv_sfm
+                     "tiff"    WITH_TIFF
+                     "webp"    WITH_WEBP
+                     "world"   BUILD_opencv_world
+                     "ade"     WITH_ADE
+                     "openmp"  WITH_OPENMP)
 
 vcpkg_configure_cmake(
     PREFER_NINJA
