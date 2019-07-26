@@ -84,7 +84,7 @@ namespace vcpkg::Build::Command
 
         Checks::check_exit(VCPKG_LINE_INFO, result.code != BuildResult::EXCLUDED);
 
-        if ((result.code != BuildResult::SUCCEEDED) && (result.code != BuildResult::CACHED))
+        if (result.code != BuildResult::SUCCEEDED)
         {
             System::print2(System::Color::error, Build::create_error_message(result, spec), '\n');
             System::print2(Build::create_user_troubleshooting_message(spec), '\n');
@@ -412,11 +412,6 @@ namespace vcpkg::Build
             variables.push_back({"GIT", git_exe_path});
         }
 
-        if (config.build_package_options.cache_only == vcpkg::Build::CacheOnly::YES)
-        {
-            variables.push_back({"VCPKG_CACHE_ONLY", "true"});
-        }
-
         return variables;
     }
 
@@ -520,14 +515,7 @@ namespace vcpkg::Build
         const auto timer = Chrono::ElapsedTimer::create_started();
 
         std::string command = make_build_cmd(paths, pre_build_info, config, triplet);
-<<<<<<< HEAD
-
         std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
-
-        const int return_code = System::cmd_execute_clean(command, env);
-=======
-        std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
->>>>>>> 96ec06623962b77a2edeb29e591ea91c936d968d
 
         const auto return_code = System::cmd_execute_clean(command, env);
         const auto buildtimeus = timer.microseconds();
@@ -537,7 +525,6 @@ namespace vcpkg::Build
             auto locked_metrics = Metrics::g_metrics.lock();
             locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
                                             buildtimeus);
-<<<<<<< HEAD
 
             if (config.build_package_options.download_only == Build::DownloadOnly::YES)
             {
@@ -545,19 +532,11 @@ namespace vcpkg::Build
             }
 
             if (return_code != 0)
-=======
-            if ((return_code != 0) && (config.build_package_options.cache_only == vcpkg::Build::CacheOnly::NO))
->>>>>>> 96ec06623962b77a2edeb29e591ea91c936d968d
             {
                 locked_metrics->track_property("error", "build failed");
                 locked_metrics->track_property("build_error", spec_string);
                 return BuildResult::BUILD_FAILED;
             }
-        }
-
-        if (config.build_package_options.cache_only == vcpkg::Build::CacheOnly::YES)
-        {
-            return BuildResult::CACHED;
         }
 
         const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
@@ -972,7 +951,6 @@ namespace vcpkg::Build
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::EXCLUDED: return EXCLUDED_STRING;
-            case BuildResult::CACHED: return CACHED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }

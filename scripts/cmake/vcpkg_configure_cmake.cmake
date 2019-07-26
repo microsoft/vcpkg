@@ -53,17 +53,10 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-<<<<<<< HEAD
     if(VCPKG_DOWNLOAD_ONLY)
         message(FATAL_ERROR "vcpkg is only downloading.  CMake will exit.")
     endif()
 
-=======
-    if(VCPKG_CACHE_ONLY)
-        return()
-    endif()
-    
->>>>>>> 96ec06623962b77a2edeb29e591ea91c936d968d
     cmake_parse_arguments(_csc 
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR"
