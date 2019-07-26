@@ -34,7 +34,7 @@ At this time, the following helpers are deprecated:
 
 ### Avoid excessive comments in portfiles
 
-Ideally, portfiles should be short, simple, and as declarative as possible. Remove any helper comments introduced by the `create` command before submitting a PR.
+Ideally, portfiles should be short, simple, and as declarative as possible. Remove any boiler plate comments introduced by the `create` command before submitting a PR.
 
 ## Build Techniques
 
@@ -84,6 +84,15 @@ vcpkg_configure_cmake(
 ```
 
 Note that `ZLIB` in the above is case-sensitive. See the [cmake documentation](https://cmake.org/cmake/help/v3.15/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) for more details.
+
+### Place conflicting libs in a `manual-link` directory
+
+A lib is considered conflicting if it does any of the following:
++ Define `main`
++ Define malloc
++ Define symbols that are also declared in other libraries
+
+Conflicting libs are typically by design and not considered a defect.  Because some build systems link against everything in the lib directory, these should be moved into a subdirectory named `manual-link`.
 
 ## Versioning
 
@@ -157,7 +166,7 @@ While `portfile.cmake`'s and `CMakeLists.txt`'s share a common syntax and core C
 
 Portfiles have direct access to variables set in the triplet file, but `CMakeLists.txt`s do not (though there is often a translation that happens -- `VCPKG_LIBRARY_LINKAGE` versus `BUILD_SHARED_LIBS`).
 
-Finally, portfiles and CMake builds invoked by portfiles are run in different processes. Conceptually:
+Portfiles and CMake builds invoked by portfiles are run in different processes. Conceptually:
 
 ```no-highlight
 +----------------------------+       +------------------------------------+
