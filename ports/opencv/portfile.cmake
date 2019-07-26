@@ -51,17 +51,21 @@ vcpkg_check_features(
 
 set(BUILD_opencv_videoio ON)
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(WARNING "The video IO module does not build for UWP, the module has been disabled.")
+  message(WARNING "The video IO module (videoio) does not build for UWP, the module has been disabled.")
   set(BUILD_opencv_videoio OFF)
 endif()
 
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
 if(WITH_CONTRIB)
-  if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(BUILD_opencv_quality ON)
+  if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(BUILD_opencv_quality OFF)
+    message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
+    
+    # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected. 
+    message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP, the module has been disabled.")
   else()
-    message(WARNING "The image quality module does not build for UWP, the module has been disabled.")
+    set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
   endif()
 
   vcpkg_from_github(
@@ -195,7 +199,7 @@ if(WITH_IPP)
 endif()
 
 set(WITH_MSMF ON)
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME OR NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
 endif()
 
@@ -215,24 +219,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_opencv_ovis OFF)
   endif()
 endif()
-
-vcpkg_check_features("nonfree" OPENCV_ENABLE_NONFREE
-                     "cuda"    WITH_CUDA
-                     "eigen"   WITH_EIGEN
-                     "ffmpeg"  WITH_FFMPEG
-                     "gdcm"    WITH_GDCM
-                     "jasper"  WITH_JASPER
-                     "jpeg"    WITH_JPEG
-                     "openexr" WITH_OPENEXR
-                     "opengl"  WITH_OPENGL
-                     "png"     WITH_PNG
-                     "qt"      WITH_QT
-                     "sfm"     BUILD_opencv_sfm
-                     "tiff"    WITH_TIFF
-                     "webp"    WITH_WEBP
-                     "world"   BUILD_opencv_world
-                     "ade"     WITH_ADE
-                     "openmp"  WITH_OPENMP)
 
 vcpkg_configure_cmake(
     PREFER_NINJA
