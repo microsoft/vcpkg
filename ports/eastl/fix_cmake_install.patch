@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8171cd..c771e77 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,6 +41,7 @@ add_definitions(-DEASTL_OPENSOURCE=1)
+ #-------------------------------------------------------------------------------------------
+ # Include dirs
+ #-------------------------------------------------------------------------------------------
++include_directories(APPEND test/packages)
+ target_include_directories(EASTL PUBLIC include)
+ 
+ #-------------------------------------------------------------------------------------------
+@@ -48,3 +49,6 @@ target_include_directories(EASTL PUBLIC include)
+ #-------------------------------------------------------------------------------------------
+ target_link_libraries(EASTL EABase)
+ 
++install(TARGETS EASTL DESTINATION lib)
++install(DIRECTORY include/EASTL DESTINATION include)
++install(DIRECTORY test/packages/EABase DESTINATION include)

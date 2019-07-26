@@ -1,0 +1,13 @@
+diff --git a/include/Common/EABase/config/eaplatform.h b/include/Common/EABase/config/eaplatform.h
+index 8b16146..54079ab 100644
+--- a/include/Common/EABase/config/eaplatform.h
++++ b/include/Common/EABase/config/eaplatform.h
+@@ -125,7 +125,7 @@
+ 	#endif
+ 
+ 
+-#elif defined(EA_PLATFORM_XBOXONE) || defined(_DURANGO) || defined(EA_PLATFORM_CAPILANO) || (defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_GAMES || WINAPI_FAMILY == WINAPI_FAMILY_TV_TITLE))
++#elif defined(EA_PLATFORM_XBOXONE) || defined(_DURANGO) || defined(EA_PLATFORM_CAPILANO) || (defined(WINAPI_FAMILY) && WINAPI_FAMILY && (WINAPI_FAMILY == WINAPI_FAMILY_GAMES || WINAPI_FAMILY == WINAPI_FAMILY_TV_TITLE))
+ 	// XBox One
+ 	// Durango was Microsoft's code-name for the platform, which is now obsolete.
+ 	// Microsoft uses _DURANGO instead of some variation of _XBOX, though it's not natively defined by the compiler.

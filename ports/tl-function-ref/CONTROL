@@ -1,0 +1,3 @@
+Source: tl-function-ref
+Version: 1.0.0-1
+Description: A lightweight, non-owning reference to a callable.

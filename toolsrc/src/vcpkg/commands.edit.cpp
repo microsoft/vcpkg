@@ -79,6 +79,7 @@ namespace vcpkg::Commands::Edit
             const auto& fs = paths.get_filesystem();
             auto packages = fs.get_files_non_recursive(paths.packages);
 
+            // TODO: Support edit for --overlay-ports
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
                 const auto portpath = paths.ports / port_name;
                 const auto portfile = portpath / "portfile.cmake";

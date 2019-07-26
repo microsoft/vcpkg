@@ -20,7 +20,7 @@ namespace vcpkg::Build
     namespace Command
     {
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
-                                 const fs::path& port_dir,
+                                 const SourceControlFileLocation& scfl,
                                  const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
@@ -125,7 +125,9 @@ namespace vcpkg::Build
         /// <summary>
         /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
         /// </summary>
-        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
+        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
+                const Triplet& triplet,
+                Optional<const SourceControlFileLocation&> port = nullopt);
 
         std::string triplet_abi_tag;
         std::string target_architecture;
@@ -135,9 +137,33 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        std::vector<std::string> passthrough_env_vars;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+
+    enum class VcpkgTripletVar
+    {
+        TARGET_ARCHITECTURE = 0,
+        CMAKE_SYSTEM_NAME,
+        CMAKE_SYSTEM_VERSION,
+        PLATFORM_TOOLSET,
+        VISUAL_STUDIO_PATH,
+        CHAINLOAD_TOOLCHAIN_FILE,
+        BUILD_TYPE,
+        ENV_PASSTHROUGH,
+    };
+
+    const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
+        {"VCPKG_TARGET_ARCHITECTURE", VcpkgTripletVar::TARGET_ARCHITECTURE},
+        {"VCPKG_CMAKE_SYSTEM_NAME", VcpkgTripletVar::CMAKE_SYSTEM_NAME},
+        {"VCPKG_CMAKE_SYSTEM_VERSION", VcpkgTripletVar::CMAKE_SYSTEM_VERSION},
+        {"VCPKG_PLATFORM_TOOLSET", VcpkgTripletVar::PLATFORM_TOOLSET},
+        {"VCPKG_VISUAL_STUDIO_PATH", VcpkgTripletVar::VISUAL_STUDIO_PATH},
+        {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
+        {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
+        {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+    };
 
     struct ExtendedBuildResult
     {
@@ -152,19 +178,20 @@ namespace vcpkg::Build
 
     struct BuildPackageConfig
     {
-        BuildPackageConfig(const SourceControlFile& src,
+        BuildPackageConfig(const SourceControlFileLocation& scfl,
                            const Triplet& triplet,
-                           fs::path&& port_dir,
                            const BuildPackageOptions& build_package_options,
                            const std::set<std::string>& feature_list)
-            : scf(src)
+            : scfl(scfl)
+            , scf(*scfl.source_control_file)
             , triplet(triplet)
-            , port_dir(std::move(port_dir))
+            , port_dir(scfl.source_location)
             , build_package_options(build_package_options)
             , feature_list(feature_list)
         {
         }
 
+        const SourceControlFileLocation& scfl;
         const SourceControlFile& scf;
         const Triplet& triplet;
         fs::path port_dir;

@@ -209,7 +209,7 @@ namespace vcpkg::Commands::Integrate
         if (should_install_system)
         {
             const fs::path sys_src_path = tmp_dir / "vcpkg.system.targets";
-            fs.write_contents(sys_src_path, create_system_targets_shortcut());
+            fs.write_contents(sys_src_path, create_system_targets_shortcut(), VCPKG_LINE_INFO);
 
             const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)",
                                                       SYSTEM_WIDE_TARGETS_FILE.parent_path().string(),
@@ -248,7 +248,8 @@ namespace vcpkg::Commands::Integrate
 
             const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
             fs.write_contents(appdata_src_path,
-                              create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.u8string()));
+                              create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.u8string()),
+                              VCPKG_LINE_INFO);
             auto appdata_dst_path = get_appdata_targets_path();
 
             const auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
@@ -268,12 +269,7 @@ namespace vcpkg::Commands::Integrate
 
         const auto pathtxt = get_path_txt_path();
         std::error_code ec;
-        fs.write_contents(pathtxt, paths.root.generic_u8string(), ec);
-        if (ec)
-        {
-            System::print2(System::Color::error, "Error: Failed to write file: ", pathtxt.u8string(), "\n");
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
+        fs.write_contents(pathtxt, paths.root.generic_u8string(), VCPKG_LINE_INFO);
 
         System::print2(System::Color::success, "Applied user-wide integration for this vcpkg root.\n");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
@@ -344,9 +340,11 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         const std::string nuget_id = get_nuget_id(paths.root);
         const std::string nupkg_version = "1.0.0";
 
-        fs.write_contents(targets_file_path, create_nuget_targets_file_contents(paths.buildsystems_msbuild_targets));
-        fs.write_contents(props_file_path, create_nuget_props_file_contents());
-        fs.write_contents(nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version));
+        fs.write_contents(
+            targets_file_path, create_nuget_targets_file_contents(paths.buildsystems_msbuild_targets), VCPKG_LINE_INFO);
+        fs.write_contents(props_file_path, create_nuget_props_file_contents(), VCPKG_LINE_INFO);
+        fs.write_contents(
+            nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version), VCPKG_LINE_INFO);
 
         // Using all forward slashes for the command line
         const std::string cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" > nul)",
@@ -382,17 +380,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static constexpr StringLiteral TITLE = "PowerShell Tab-Completion";
         const fs::path script_path = paths.scripts / "addPoshVcpkgToPowershellProfile.ps1";
 
-        // Console font corruption workaround
-        SetConsoleCP(437);
-        SetConsoleOutputCP(437);
-
+        const auto& ps = paths.get_tool_exe("powershell-core");
         const std::string cmd = Strings::format(
-            R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), "");
+            R"("%s" -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' }")", ps.u8string(), script_path.u8string());
         const int rc = System::cmd_execute(cmd);
-
-        SetConsoleCP(CP_UTF8);
-        SetConsoleOutputCP(CP_UTF8);
-
         if (rc)
         {
             System::printf(System::Color::error,
@@ -411,7 +402,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         Checks::exit_with_code(VCPKG_LINE_INFO, rc);
     }
-#elif defined(__unix__)
+#else
     static void integrate_bash(const VcpkgPaths& paths)
     {
         const auto home_path = System::get_environment_variable("HOME").value_or_exit(VCPKG_LINE_INFO);
@@ -449,7 +440,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         System::printf("Adding vcpkg completion entry to %s\n", bashrc_path.u8string());
         bashrc_content.push_back(Strings::format("source %s", completion_script_path.u8string()));
-        fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content) + '\n');
+        fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content) + '\n', VCPKG_LINE_INFO);
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 #endif
@@ -460,11 +451,12 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         "first use\n"
         "  vcpkg integrate remove          Remove user-wide integration\n"
         "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n"
-        "  vcpkg integrate powershell      Enable PowerShell Tab-Completion\n";
+        "  vcpkg integrate powershell      Enable PowerShell tab-completion\n";
 #else
     const char* const INTEGRATE_COMMAND_HELPSTRING =
         "  vcpkg integrate install         Make installed packages available user-wide.\n"
-        "  vcpkg integrate remove          Remove user-wide integration\n";
+        "  vcpkg integrate remove          Remove user-wide integration\n"
+        "  vcpkg integrate bash            Enable bash tab-completion\n";
 #endif
 
     namespace Subcommand
@@ -478,7 +470,15 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths&)
     {
-        return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT, Subcommand::POWERSHELL, Subcommand::BASH};
+        return
+        {
+            Subcommand::INSTALL, Subcommand::REMOVE,
+#if defined(_WIN32)
+                Subcommand::PROJECT, Subcommand::POWERSHELL,
+#else
+                Subcommand::BASH,
+#endif
+        };
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -512,7 +512,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         {
             return integrate_powershell(paths);
         }
-#elif defined(__unix__)
+#else
         if (args.command_arguments[0] == Subcommand::BASH)
         {
             return integrate_bash(paths);
