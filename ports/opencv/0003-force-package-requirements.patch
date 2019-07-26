@@ -90,3 +90,39 @@ index 227cfb2..7a97a19 100644
 -endif()
 \ No newline at end of file
 +endif()
+diff --git a/cmake/OpenCVFindLibsPerf.cmake b/cmake/OpenCVFindLibsPerf.cmake
+index a658bf6..5c9411a 100644
+--- a/cmake/OpenCVFindLibsPerf.cmake
++++ b/cmake/OpenCVFindLibsPerf.cmake
+@@ -41,14 +41,9 @@ endif(WITH_CUDA)
+ 
+ # --- Eigen ---
+ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+-  find_package(Eigen3 QUIET)
++  find_package(Eigen3 REQUIRED)
+ 
+   if(Eigen3_FOUND)
+-    if(TARGET Eigen3::Eigen)
+-      # Use Eigen3 imported target if possible
+-      list(APPEND OPENCV_LINKER_LIBS Eigen3::Eigen)
+-      set(HAVE_EIGEN 1)
+-    else()
+       if(DEFINED EIGEN3_INCLUDE_DIRS)
+         set(EIGEN_INCLUDE_PATH ${EIGEN3_INCLUDE_DIRS})
+         set(HAVE_EIGEN 1)
+@@ -56,7 +51,6 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+         set(EIGEN_INCLUDE_PATH ${EIGEN3_INCLUDE_DIR})
+         set(HAVE_EIGEN 1)
+       endif()
+-    endif()
+     if(HAVE_EIGEN)
+       if(DEFINED EIGEN3_WORLD_VERSION)  # CMake module
+         set(EIGEN_WORLD_VERSION ${EIGEN3_WORLD_VERSION})
+@@ -67,6 +61,7 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+         set(EIGEN_MAJOR_VERSION ${EIGEN3_VERSION_MINOR})
+         set(EIGEN_MINOR_VERSION ${EIGEN3_VERSION_PATCH})
+       endif()
++      ocv_include_directories(${EIGEN_INCLUDE_PATH})
+     endif()
+   endif()
+ 
