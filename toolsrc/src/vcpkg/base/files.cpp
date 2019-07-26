@@ -78,7 +78,7 @@ namespace vcpkg::Files
             auto const file_name = path.c_str();
             WIN32_FILE_ATTRIBUTE_DATA attributes;
             if (!GetFileAttributesExW(file_name, GetFileExInfoStandard, &attributes)) {
-                ec = std::error_code(GetLastError(), std::system_category());
+                ec.assign(GetLastError(), std::system_category());
                 return;
             }
 
@@ -88,7 +88,21 @@ namespace vcpkg::Files
                 ec = std::error_code(GetLastError(), std::system_category());
             }
 #else
-            fs::stdfs::permissions(path, perms::add_perms | perms::owner_write, ec);
+            // I hate C
+            struct stat s;
+            if (lstat(path.c_str(), &s)) {
+                ec.assign(errno, std::system_category());
+                return;
+            }
+
+            auto mode = s.st_mode;
+            // if the file is a symlink, perms don't matter
+            if (!(mode & S_IFLNK)) {
+                mode |= S_IWUSR;
+                if (chmod(path.c_str(), mode)) {
+                    ec.assign(errno, std::system_category());
+                }
+            }
 #endif
         }
     }
