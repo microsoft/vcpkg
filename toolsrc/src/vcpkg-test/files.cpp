@@ -9,9 +9,6 @@
 
 #include <vector>
 
-using vcpkg::Test::SYMLINKS_ALLOWED;
-using vcpkg::Test::TEMPORARY_DIRECTORY;
-
 namespace
 {
     using uid = std::uniform_int_distribution<std::uint64_t>;
@@ -53,7 +50,7 @@ namespace
             file_type = uid{regular_file_tag, regular_symlink_tag}(urbg);
         }
 
-        if (!SYMLINKS_ALLOWED && file_type > regular_file_tag)
+        if (!vcpkg::Test::can_create_symlinks() && file_type > regular_file_tag)
         {
             file_type = regular_file_tag;
         }
@@ -62,7 +59,8 @@ namespace
         if (file_type <= directory_max_tag)
         {
             fs.create_directory(base, ec);
-            if (ec) {
+            if (ec)
+            {
                 INFO("File that failed: " << base);
                 REQUIRE_FALSE(ec);
             }
@@ -100,12 +98,12 @@ TEST_CASE ("remove all", "[files]")
 {
     auto urbg = get_urbg(0);
 
-    fs::path temp_dir = TEMPORARY_DIRECTORY / get_random_filename(urbg);
+    fs::path temp_dir = vcpkg::Test::get_temporary_directory() / get_random_filename(urbg);
 
     auto& fs = vcpkg::Files::get_real_filesystem();
 
     std::error_code ec;
-    fs.create_directory(TEMPORARY_DIRECTORY, ec);
+    fs.create_directory(vcpkg::Test::get_temporary_directory(), ec);
 
     REQUIRE_FALSE(ec);
 

@@ -3,40 +3,40 @@
 
 #include <memory>
 
-namespace vcpkg::Test {
-
-std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
-                                                        const char* depends = "",
-                                                        const char* default_features = "",
-                                                        const char* triplet = "x86-windows");
-
-std::unique_ptr<vcpkg::StatusParagraph> make_status_feature_pgh(const char* name,
-                                                                const char* feature,
-                                                                const char* depends = "",
-                                                                const char* triplet = "x86-windows");
-
-vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);
-
-template<class T, class S>
-T&& unwrap(vcpkg::ExpectedT<T, S>&& p)
+namespace vcpkg::Test
 {
-    REQUIRE(p.has_value());
-    return std::move(*p.get());
-}
+    std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
+                                                            const char* depends = "",
+                                                            const char* default_features = "",
+                                                            const char* triplet = "x86-windows");
 
-template<class T>
-T&& unwrap(vcpkg::Optional<T>&& opt)
-{
-    REQUIRE(opt.has_value());
-    return std::move(*opt.get());
-}
+    std::unique_ptr<vcpkg::StatusParagraph> make_status_feature_pgh(const char* name,
+                                                                    const char* feature,
+                                                                    const char* depends = "",
+                                                                    const char* triplet = "x86-windows");
 
-extern const bool SYMLINKS_ALLOWED;
+    vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);
 
-extern const fs::path TEMPORARY_DIRECTORY;
+    template<class T, class S>
+    T&& unwrap(vcpkg::ExpectedT<T, S>&& p)
+    {
+        REQUIRE(p.has_value());
+        return std::move(*p.get());
+    }
 
-void create_symlink(const fs::path& file, const fs::path& target, std::error_code& ec);
+    template<class T>
+    T&& unwrap(vcpkg::Optional<T>&& opt)
+    {
+        REQUIRE(opt.has_value());
+        return std::move(*opt.get());
+    }
 
-void create_directory_symlink(const fs::path& file, const fs::path& target, std::error_code& ec);
+    bool can_create_symlinks();
+
+    const fs::path& get_temporary_directory();
+
+    void create_symlink(const fs::path& file, const fs::path& target, std::error_code& ec);
+
+    void create_directory_symlink(const fs::path& file, const fs::path& target, std::error_code& ec);
 
 }

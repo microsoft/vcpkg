@@ -77,11 +77,6 @@ namespace vcpkg::Test
     static bool system_allows_symlinks()
     {
 #if defined(_WIN32)
-        if (!__cpp_lib_filesystem)
-        {
-            return false;
-        }
-
         HKEY key;
         bool allow_symlinks = true;
 
@@ -91,7 +86,6 @@ namespace vcpkg::Test
         if (status == ERROR_FILE_NOT_FOUND)
         {
             allow_symlinks = false;
-            std::clog << "Symlinks are not allowed on this system\n";
         }
 
         if (status == ERROR_SUCCESS) RegCloseKey(key);
@@ -122,11 +116,24 @@ namespace vcpkg::Test
 #endif
     }
 
-    const bool SYMLINKS_ALLOWED = system_allows_symlinks();
-    const fs::path TEMPORARY_DIRECTORY = internal_temporary_directory();
+    bool can_create_symlinks()
+    {
+#if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_NONE
+        return false;
+#else
+        static auto ret = system_allows_symlinks();
+        return ret;
+#endif
+    }
 
-#if FILESYSTEM_SYMLINK == FILSYSTEM_SYMLINK_NONE
-    constexpr inline char no_filesystem_message[] =
+    const fs::path& get_temporary_directory()
+    {
+        static const auto ret = internal_temporary_directory();
+        return ret;
+    }
+
+#if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_NONE
+    constexpr char no_filesystem_message[] =
         "<filesystem> doesn't exist; on windows, we don't attempt to use the win32 calls to create symlinks";
 #endif
 

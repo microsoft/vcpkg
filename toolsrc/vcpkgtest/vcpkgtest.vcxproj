@@ -19,28 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\vcpkg-tests\arguments.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\catch.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\chrono.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\dependencies.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\files.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\paragraph.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\plan.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\specifier.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\statusparagraphs.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\strings.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\supports.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\update.cpp" />
-    <ClCompile Include="..\src\vcpkg-tests\util.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">
       <Project>{b98c92b7-2874-4537-9d46-d14e5c237f04}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\vcpkg-tests\catch.h" />
-    <ClInclude Include="..\include\vcpkg-tests\util.h" />
+    <ClInclude Include="..\include\vcpkg-test\catch.h" />
+    <ClInclude Include="..\include\vcpkg-test\util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\vcpkg-test\arguments.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\catch.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\chrono.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\dependencies.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\files.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\paragraph.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\plan.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\specifier.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\statusparagraphs.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\strings.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\supports.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\update.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\util.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}</ProjectGuid>
@@ -70,7 +70,7 @@
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>

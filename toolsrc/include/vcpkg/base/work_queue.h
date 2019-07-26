@@ -7,28 +7,6 @@
 namespace vcpkg
 {
     template<class Action, class ThreadLocalData>
-    struct WorkQueue;
-
-    namespace detail
-    {
-        // for SFINAE purposes, keep out of the class
-        template<class Action, class ThreadLocalData>
-        auto call_moved_action(Action& action,
-                               const WorkQueue<Action, ThreadLocalData>& work_queue,
-                               ThreadLocalData& tld) -> decltype(static_cast<void>(std::move(action)(tld, work_queue)))
-        {
-            std::move(action)(tld, work_queue);
-        }
-
-        template<class Action, class ThreadLocalData>
-        auto call_moved_action(Action& action, const WorkQueue<Action, ThreadLocalData>&, ThreadLocalData& tld)
-            -> decltype(static_cast<void>(std::move(action)(tld)))
-        {
-            std::move(action)(tld);
-        }
-    }
-
-    template<class Action, class ThreadLocalData>
     struct WorkQueue
     {
         template<class F>
@@ -49,7 +27,7 @@ namespace vcpkg
 
         ~WorkQueue()
         {
-            auto lck = std::unique_lock<std::mutex>(m_mutex);
+            std::unique_lock<std::mutex> lck(m_mutex);
             if (!is_joined(m_state))
             {
                 Checks::exit_with_message(m_line_info, "Failed to call join() on a WorkQueue that was destroyed");
@@ -59,16 +37,19 @@ namespace vcpkg
         // should only be called once; anything else is an error
         void run(LineInfo li)
         {
-            // this should _not_ be locked before `run()` is called; however, we
-            // want to terminate if someone screws up, rather than cause UB
-            auto lck = std::unique_lock<std::mutex>(m_mutex);
-
-            if (m_state != State::BeforeRun)
             {
-                Checks::exit_with_message(li, "Attempted to run() twice");
-            }
+                // this should _not_ be locked before `run()` is called; however, we
+                // want to terminate if someone screws up, rather than cause UB
+                std::unique_lock<std::mutex> lck(m_mutex);
 
-            m_state = State::Running;
+                if (m_state != State::BeforeRun)
+                {
+                    Checks::exit_with_message(li, "Attempted to run() twice");
+                }
+
+                m_state = State::Running;
+            }
+            m_cv.notify_all();
         }
 
         // runs all remaining tasks, and blocks on their finishing
@@ -148,7 +129,7 @@ namespace vcpkg
             {
                 // unlocked when waiting, or when in the action
                 // locked otherwise
-                auto lck = std::unique_lock<std::mutex>(work_queue->m_mutex);
+                std::unique_lock<std::mutex> lck(work_queue->m_mutex);
 
                 work_queue->m_cv.wait(lck, [&] { return work_queue->m_state != State::BeforeRun; });
 
@@ -182,7 +163,7 @@ namespace vcpkg
 
                     lck.unlock();
                     work_queue->m_cv.notify_one();
-                    detail::call_moved_action(action, *work_queue, tld);
+                    std::move(action)(tld, *work_queue);
                     lck.lock();
                 }
 
