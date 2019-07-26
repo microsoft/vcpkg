@@ -7,12 +7,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF a591d76ad9a657110368aa422bb00f4010cb6b6e
-    SHA512 24f060597ca99ef7d45fe21764709e0d3bbfca4644bb978a2e49c017d56fb80e952a5101fcfc3e9b05cdd641a68011defdaba3272fbb3ea25df611a9ca60ac5f
+    REF apache-arrow-0.14.1
+    SHA512 f5493a62becaaee9d26e05f33509f51c98e96a5efd5d5bbdffdf70456c254b62075f1c9bc63d1119289a22d00359dfe9862078a284f8e063ecf13bd338a50728
     HEAD_REF master
     PATCHES
-        fix-find-package.patch
-        msvc-libname.patch
+        all.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)

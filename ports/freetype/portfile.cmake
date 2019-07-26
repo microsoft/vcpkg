@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
 
-set(FT_VERSION 2.10.0)
+set(FT_VERSION 2.10.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.bz2"
-    FILENAME "freetype-${FT_VERSION}.tar.bz2"
-    SHA512 dfad66f419ea9577f09932e0730c0c887bdcbdbc8152fa7477a0c39d69a5b68476761deed6864ddcc5cf18d100a7a3f728049768e24afcb04b1a74b25b6acf7e
+    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.xz" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.xz"
+    FILENAME "freetype-${FT_VERSION}.tar.xz"
+    SHA512 c7a565b0ab3dce81927008a6965d5c7540f0dc973fcefdc1677c2e65add8668b4701c2958d25593cb41f706f4488765365d40b93da71dbfa72907394f28b2650
 )
 
 vcpkg_extract_source_archive_ex(
