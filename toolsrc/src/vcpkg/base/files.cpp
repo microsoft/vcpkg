@@ -71,34 +71,41 @@ namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
-    namespace {
+    namespace
+    {
         // does _not_ follow symlinks
-        void set_writeable(const fs::path& path, std::error_code& ec) noexcept {
+        void set_writeable(const fs::path& path, std::error_code& ec) noexcept
+        {
 #if defined(_WIN32)
             auto const file_name = path.c_str();
             WIN32_FILE_ATTRIBUTE_DATA attributes;
-            if (!GetFileAttributesExW(file_name, GetFileExInfoStandard, &attributes)) {
+            if (!GetFileAttributesExW(file_name, GetFileExInfoStandard, &attributes))
+            {
                 ec.assign(GetLastError(), std::system_category());
                 return;
             }
 
             auto dw_attributes = attributes.dwFileAttributes;
             dw_attributes &= ~FILE_ATTRIBUTE_READONLY;
-            if (!SetFileAttributesW(file_name, dw_attributes)) {
+            if (!SetFileAttributesW(file_name, dw_attributes))
+            {
                 ec.assign(GetLastError(), std::system_category());
             }
 #else
             struct stat s;
-            if (lstat(path.c_str(), &s)) {
+            if (lstat(path.c_str(), &s))
+            {
                 ec.assign(errno, std::system_category());
                 return;
             }
 
             auto mode = s.st_mode;
             // if the file is a symlink, perms don't matter
-            if (!(mode & S_IFLNK)) {
+            if (!(mode & S_IFLNK))
+            {
                 mode |= S_IWUSR;
-                if (chmod(path.c_str(), mode)) {
+                if (chmod(path.c_str(), mode))
+                {
                     ec.assign(errno, std::system_category());
                 }
             }
@@ -385,7 +392,7 @@ namespace vcpkg::Files
                 };
 
                 struct actually_remove;
-                using queue = WorkQueue<actually_remove, tld>;
+                using queue = WorkQueue<actually_remove>;
 
                 /*
                     if `current_path` is a directory, first `remove`s all
@@ -408,7 +415,7 @@ namespace vcpkg::Files
                         {
                             for (const auto& entry : fs::stdfs::directory_iterator(current_path))
                             {
-                                remove{}(entry, info, queue);
+                                rename_and_enqueue(entry, info, queue);
                             }
                         }
 
@@ -435,7 +442,7 @@ namespace vcpkg::Files
                     {
                         queue.terminate();
 
-                        auto lck = std::unique_lock<std::mutex>(info.ec_mutex);
+                        std::lock_guard<std::mutex> lck(info.ec_mutex);
                         if (!info.ec)
                         {
                             info.ec = ec;
@@ -450,10 +457,13 @@ namespace vcpkg::Files
                     }
                 }
 
-                void operator()(const fs::path& current_path, tld& info, const queue& queue) const
+                static void rename_and_enqueue(const fs::path& current_path, tld& info, const queue& queue)
                 {
                     std::error_code ec;
 
+                    // base 32 encoding, since base64 encoding requires lowercase letters,
+                    // which are not distinct from uppercase letters on macOS or Windows filesystems.
+                    // follows RFC 4648
                     const auto tmp_name = Strings::b32_encode(info.index++);
                     const auto tmp_path = info.tmp_directory / tmp_name;
 
@@ -478,7 +488,7 @@ namespace vcpkg::Files
                     return remove::tld{path, index, files_deleted, ec_mutex, ec, failure_point};
                 };
 
-                remove::queue queue{VCPKG_LINE_INFO, 4, tld_gen};
+                remove::queue queue;
 
                 // note: we don't actually start the queue running until the
                 // `join()`. This allows us to rename all the top-level files in
@@ -486,10 +496,10 @@ namespace vcpkg::Files
                 auto main_tld = tld_gen();
                 for (const auto& entry : fs::stdfs::directory_iterator(path))
                 {
-                    remove{}(entry, main_tld, queue);
+                    remove::rename_and_enqueue(entry, main_tld, queue);
                 }
 
-                queue.join(VCPKG_LINE_INFO);
+                queue.run_and_join(VCPKG_LINE_INFO, 4, tld_gen);
             }
 
             /*
