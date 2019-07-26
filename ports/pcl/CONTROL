@@ -25,4 +25,4 @@ Description: CUDA support for PCL
 Build-Depends: cuda
 
 Feature: opengl
-Description: CUDA support for OpenGL
+Description: OpenGL support for PCL
