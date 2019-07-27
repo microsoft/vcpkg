@@ -18,6 +18,10 @@
 #
 
 function(vcpkg_fixup_cmake_targets)
+    if(VCPKG_DOWNLOAD_ONLY)
+        return()
+    endif()
+    
     cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
     if(_vfct_UNPARSED_ARGUMENTS)

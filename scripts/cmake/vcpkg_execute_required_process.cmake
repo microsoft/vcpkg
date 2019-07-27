@@ -30,6 +30,10 @@
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process)
+    if(VCPKG_DOWNLOAD_ONLY)
+        message(FATAL_ERROR "vcpkg is only downloading.  CMake will exit.")
+    endif()
+
     cmake_parse_arguments(vcpkg_execute_required_process "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")

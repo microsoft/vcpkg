@@ -1,4 +1,7 @@
 function(vcpkg_install_meson)
+    if(VCPKG_DOWNLOAD_ONLY)
+        message(FATAL_ERROR "vcpkg is only downloading.  CMake will exit.")
+    endif()
 
     vcpkg_find_acquire_program(NINJA)
 

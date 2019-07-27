@@ -5,6 +5,7 @@
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/download.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
 #include <vcpkg/install.h>
@@ -24,6 +25,7 @@ namespace vcpkg::Commands
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},
             {"export", &Export::perform_and_exit},
+            {"download", &Download::perform_and_exit},
         };
         return t;
     }

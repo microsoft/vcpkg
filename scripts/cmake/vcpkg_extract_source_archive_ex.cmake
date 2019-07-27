@@ -51,6 +51,10 @@ include(vcpkg_apply_patches)
 include(vcpkg_extract_source_archive)
 
 function(vcpkg_extract_source_archive_ex)
+    if(VCPKG_DOWNLOAD_ONLY)
+        return()
+    endif()
+
     cmake_parse_arguments(_vesae "NO_REMOVE_ONE_LEVEL" "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY" "PATCHES" ${ARGN})
 
     if(NOT _vesae_ARCHIVE)

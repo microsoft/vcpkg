@@ -218,6 +218,7 @@ namespace vcpkg::Commands::CI
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
+			Build::DownloadOnly::NO,
         };
 
         vcpkg::Cache<Triplet, Build::PreBuildInfo> pre_build_info_cache;
@@ -374,6 +375,7 @@ namespace vcpkg::Commands::CI
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
+            Build::DownloadOnly::NO,
         };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;

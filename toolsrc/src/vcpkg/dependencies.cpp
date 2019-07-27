@@ -947,7 +947,8 @@ namespace vcpkg::Dependencies
                     switch (install_action->plan_type)
                     {
                         case InstallPlanType::ALREADY_INSTALLED:
-                            if (install_action->request_type == RequestType::USER_REQUESTED)
+                            if ((install_action->request_type == RequestType::USER_REQUESTED) ||
+                                (install_action->build_options.download_only == Build::DownloadOnly::YES))
                                 already_installed_plans.emplace_back(install_action);
                             break;
                         case InstallPlanType::BUILD_AND_INSTALL: new_plans.emplace_back(install_action); break;

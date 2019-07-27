@@ -87,7 +87,7 @@ namespace vcpkg::Build::Command
 
         if (result.code != BuildResult::SUCCEEDED)
         {
-            System::print2(System::Color::error, Build::create_error_message(result.code, spec), '\n');
+            System::print2(System::Color::error, Build::create_error_message(result, spec), '\n');
             System::print2(Build::create_user_troubleshooting_message(spec), '\n');
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -411,6 +411,7 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", config.feature_list)},
             {"ALL_FEATURES", all_features},
             {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+            {"VCPKG_DOWNLOAD_ONLY", Util::Enum::to_bool(config.build_package_options.download_only) ? "1" : "0"},
         };
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
@@ -536,6 +537,12 @@ namespace vcpkg::Build
             auto locked_metrics = Metrics::g_metrics.lock();
             locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
                                             buildtimeus);
+
+            if (config.build_package_options.download_only == Build::DownloadOnly::YES)
+            {
+                return BuildResult::SUCCEEDED;
+            }
+
             if (return_code != 0)
             {
                 locked_metrics->track_property("error", "build failed");
@@ -760,6 +767,9 @@ namespace vcpkg::Build
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
         Util::sort_unique_erase(dep_pspecs);
 
+        // only check for dependencies being installed if we are doing more than downloading packages.
+        if (config.build_package_options.download_only == Build::DownloadOnly::NO)
+        {
         // Find all features that aren't installed. This mutates required_fspecs.
         Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
             return status_db.is_installed(fspec) || fspec.name() == name;
@@ -768,6 +778,7 @@ namespace vcpkg::Build
         if (!required_fspecs.empty())
         {
             return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+        }
         }
 
         const PackageSpec spec =
@@ -779,6 +790,10 @@ namespace vcpkg::Build
         for (auto&& pspec : dep_pspecs)
         {
             if (pspec == spec) continue;
+
+			// dependencies may not be installed if we are only downloading
+			if (config.build_package_options.download_only == Build::DownloadOnly::YES) continue;
+
             const auto status_it = status_db.find_installed(pspec);
             Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
             dependency_abis.emplace_back(
@@ -898,6 +913,32 @@ namespace vcpkg::Build
             paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
     }
 
+    std::string to_string(const ExtendedBuildResult& build_result)
+    {
+        const auto code = Build::to_string(build_result.code);
+
+        switch (build_result.code)
+        {
+            case BuildResult::NULLVALUE: return code;
+            case BuildResult::SUCCEEDED: return code;
+            case BuildResult::BUILD_FAILED: return code;
+            case BuildResult::POST_BUILD_CHECKS_FAILED: return code;
+            case BuildResult::FILE_CONFLICTS: return code;
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+            {
+                std::string missing;
+                for (auto& d : build_result.unmet_dependencies)
+                {
+                    missing += " " + d.to_string();
+                }
+
+                return code + ":" + missing;
+            }
+            case BuildResult::EXCLUDED: return code;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
     const std::string& to_string(const BuildResult build_result)
     {
         static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string("vcpkg::Commands::Build::BuildResult");
@@ -922,6 +963,11 @@ namespace vcpkg::Build
     }
 
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec)
+    {
+        return Strings::format("Error: Building package %s failed with: %s", spec, Build::to_string(build_result));
+    }
+
+    std::string create_error_message(const ExtendedBuildResult& build_result, const PackageSpec& spec)
     {
         return Strings::format("Error: Building package %s failed with: %s", spec, Build::to_string(build_result));
     }

@@ -82,6 +82,12 @@ namespace vcpkg::Build
         YES
     };
 
+	enum class DownloadOnly
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -92,6 +98,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
+        DownloadOnly download_only;
     };
 
     enum class BuildResult
@@ -175,6 +182,9 @@ namespace vcpkg::Build
         std::vector<FeatureSpec> unmet_dependencies;
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
+
+	std::string to_string(const ExtendedBuildResult& build_result);
+    std::string create_error_message(const ExtendedBuildResult& build_result, const PackageSpec& spec);
 
     struct BuildPackageConfig
     {

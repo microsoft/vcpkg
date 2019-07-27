@@ -30,6 +30,7 @@
 include(vcpkg_execute_required_process)
 
 function(vcpkg_extract_source_archive ARCHIVE)
+    if(NOT VCPKG_DOWNLOAD_ONLY)
     if(NOT ARGC EQUAL 2)
         set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src")
     else()
@@ -46,5 +47,6 @@ function(vcpkg_extract_source_archive ARCHIVE)
             LOGNAME extract
         )
         file(WRITE ${WORKING_DIRECTORY}/${ARCHIVE_FILENAME}.extracted)
+    endif()
     endif()
 endfunction()
