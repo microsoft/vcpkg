@@ -491,7 +491,7 @@ namespace vcpkg::Files
                 remove::queue queue;
 
                 // note: we don't actually start the queue running until the
-                // `join()`. This allows us to rename all the top-level files in
+                // `run_and_join()`. This allows us to rename all the top-level files in
                 // peace, so that we don't get collisions.
                 auto main_tld = tld_gen();
                 for (const auto& entry : fs::stdfs::directory_iterator(path))

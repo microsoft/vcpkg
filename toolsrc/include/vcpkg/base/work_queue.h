@@ -19,6 +19,9 @@ namespace vcpkg
         template<class F>
         void run_and_join(LineInfo li, std::uint16_t num_threads, const F& tld_init)
         {
+            // Short circuit if there are no actions
+            if (m_actions.empty()) return;
+
             {
                 // this should _not_ be locked before `run()` is called; however, we
                 // want to terminate if someone screws up, rather than cause UB
