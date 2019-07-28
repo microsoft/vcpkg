@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 376c417ad170228fa6d1b9994a6e07a2ac143a51
     SHA512 fd442b895f0be2489d2be099b1faca5c964f1a3880e3867726efb5f5a17192fbf2c2d60cf118e1b68bea73cf328f0b16c0265ec0f0c0fbbb1f62f68a994f5b86
     HEAD_REF master
+    PATCHES
+        fix-include-dir.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" G3_SHARED_LIB)
