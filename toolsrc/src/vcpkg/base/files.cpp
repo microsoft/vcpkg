@@ -28,16 +28,9 @@ namespace fs::detail
 #if defined(_WIN32)
         static_cast<void>(ec);
 
-        /*
-            do not find the permissions of the file -- it's unnecessary for the
-            things that vcpkg does.
-            if one were to add support for this in the future, one should look
-            into GetFileSecurityW
-        */
-        perms permissions = perms::unknown;
-
         WIN32_FILE_ATTRIBUTE_DATA file_attributes;
         file_type ft = file_type::unknown;
+        perms permissions = perms::unknown;
         if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
         {
             ft = file_type::not_found;
@@ -64,7 +57,7 @@ namespace fs::detail
 #endif
     }
 
-    file_status symlink_status_t::operator()(const path& p, vcpkg::LineInfo li) const noexcept
+    file_status symlink_status_t::operator()(vcpkg::LineInfo li, const path& p) const noexcept
     {
         std::error_code ec;
         auto result = symlink_status(p, ec);
@@ -77,6 +70,41 @@ namespace fs::detail
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
+
+    namespace {
+        // does _not_ follow symlinks
+        void set_writeable(const fs::path& path, std::error_code& ec) noexcept {
+#if defined(_WIN32)
+            auto const file_name = path.c_str();
+            WIN32_FILE_ATTRIBUTE_DATA attributes;
+            if (!GetFileAttributesExW(file_name, GetFileExInfoStandard, &attributes)) {
+                ec.assign(GetLastError(), std::system_category());
+                return;
+            }
+
+            auto dw_attributes = attributes.dwFileAttributes;
+            dw_attributes &= ~FILE_ATTRIBUTE_READONLY;
+            if (!SetFileAttributesW(file_name, dw_attributes)) {
+                ec.assign(GetLastError(), std::system_category());
+            }
+#else
+            struct stat s;
+            if (lstat(path.c_str(), &s)) {
+                ec.assign(errno, std::system_category());
+                return;
+            }
+
+            auto mode = s.st_mode;
+            // if the file is a symlink, perms don't matter
+            if (!(mode & S_IFLNK)) {
+                mode |= S_IWUSR;
+                if (chmod(path.c_str(), mode)) {
+                    ec.assign(errno, std::system_category());
+                }
+            }
+#endif
+        }
+    }
 
     std::string Filesystem::read_contents(const fs::path& path, LineInfo linfo) const
     {
@@ -384,6 +412,9 @@ namespace vcpkg::Files
                             }
                         }
 
+                        set_writeable(current_path, ec);
+                        if (check_ec(ec, info, queue, current_path)) return;
+
                         if (fs::stdfs::remove(current_path, ec))
                         {
                             info.files_deleted.fetch_add(1, std::memory_order_relaxed);
@@ -447,7 +478,7 @@ namespace vcpkg::Files
                     return remove::tld{path, index, files_deleted, ec_mutex, ec, failure_point};
                 };
 
-                remove::queue queue{4, VCPKG_LINE_INFO, tld_gen};
+                remove::queue queue{VCPKG_LINE_INFO, 4, tld_gen};
 
                 // note: we don't actually start the queue running until the
                 // `join()`. This allows us to rename all the top-level files in
