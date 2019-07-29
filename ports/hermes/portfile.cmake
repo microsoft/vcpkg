@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+# A high level description of the flow.
+# 1. Clone Hermes source.
+# 2. Run build_llvm.py which clones a specific commit of LLVM and configure it using CMAKE to generate MSBuild scripts.
+# 3. Build LLVM
+# 4. Build Hermes (It takes dependency on the LLVM source and build outputs in #3)
+
 #Find Python and add it to the path
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
@@ -13,8 +19,8 @@ vcpkg_add_to_path("${GIT_EXE_PATH}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mganandraj/Hermes
-    REF 83d11fc7a9c0c22f46274c397c8615de89434293
-    SHA512 06580f1cea77074cb996ee99fab065630203410b0e49174de6f3a2c7c2cabbdbfa0f02147093f78d99b6939609b806e10c83aa27884aadf8a2438af514cfebb5
+    REF c1a63d4f5048a200817272664687e0c5757601b6
+    SHA512 f0e3e1cee801c0bb2f886bce43c9fd07766ca51add8a305f654542908f98082af5c091cd478a2b7d8cc82af40200496ae67c324c0ffabd96bfb85a6cf279ad04
 )
 
 set(HERMES_SOURCE_PATH ${SOURCE_PATH})
@@ -33,19 +39,6 @@ set(BUILD_LLVM_CMAKE_FLAGS -Thost=x64\ -A\ ${BUILD_ARCH})
 set(BUILD_LLVM_FLAGS --build-system "Visual Studio 16 2019" --configure-only)
 set(WINDOWS_CROSSCOMPILE_TO_ARM OFF)
 
-#if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-#    set(BUILD_LLVM_CMAKE_FLAGS ${BUILD_LLVM_CMAKE_FLAGS}\ -A\ Win32)
-#    set(BUILD_LLVM_FLAGS ${BUILD_LLVM_FLAGS} --32-bit)
-#elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-#    set(BUILD_LLVM_CMAKE_FLAGS ${BUILD_LLVM_CMAKE_FLAGS}\ -A\ x64)
-#elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-#    set(BUILD_LLVM_CMAKE_FLAGS ${BUILD_LLVM_CMAKE_FLAGS}\ -A\ ARM)
-#elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-#    set(BUILD_LLVM_CMAKE_FLAGS ${BUILD_LLVM_CMAKE_FLAGS}\ -A\ ARM64)
-#else()
-#    message(FATAL_ERROR "Unsupported architecture")
-#endif()
-
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     # https://github.com/llvm/llvm-project/blob/master/llvm/docs/HowToCrossCompileLLVM.rst
     set(BUILD_LLVM_CMAKE_FLAGS ${BUILD_LLVM_CMAKE_FLAGS}\ -DLLVM_INCLUDE_BENCHMARKS=OFF\ -DLLVM_INCLUDE_TESTS=OFF\ -DLLVM_INCLUDE_TOOLS=OFF\ -DLLVM_INCLUDE_UTILS=OFF)
@@ -61,6 +54,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(BUILD_LLVM_CMAKE_FLAGS ${BUILD_LLVM_CMAKE_FLAGS}\ -DLLVM_BUILD_32_BITS=ON)
     set(BUILD_LLVM_FLAGS ${BUILD_LLVM_FLAGS} --32-bit)
 endif()
 
@@ -70,7 +64,7 @@ message(STATUS "BUILD_LLVM_FLAGS: ${BUILD_LLVM_FLAGS}")
 set (BUILD_LLVM_COMMAND ${PYTHON2} ${HERMES_SOURCE_PATH}/utils/build_llvm.py ${BUILD_LLVM_FLAGS} --cmake-flags ${BUILD_LLVM_CMAKE_FLAGS} ${LLVM_SOURCE_RELATIVE_PATH} ${LLVM_BUILD_RELATIVE_PATH})
 message(STATUS "BUILD_LLVM_COMMAND: ${BUILD_LLVM_COMMAND}")
 
-# Confugure LLVM
+# This cmake confugures LLVM
 # Ref: https://cmake.org/cmake/help/latest/generator/Visual%20Studio%2016%202019.html
 vcpkg_execute_required_process(
    COMMAND ${BUILD_LLVM_COMMAND}
@@ -82,10 +76,10 @@ vcpkg_execute_required_process(
 set(LLVM_SOURCE_PATH ${HERMES_SOURCE_PATH}/${LLVM_SOURCE_RELATIVE_PATH})
 set(LLVM_BUILD_PATH ${HERMES_SOURCE_PATH}/${LLVM_BUILD_RELATIVE_PATH})
 
-# default linkage.
+# default linkage. Without this, the LLVM build tries to create DLLs for each LLVM sub-library.
 set(VCPKG_LIBRARY_LINKAGE static)
 
-# TODO::vcpkg_build_cmake.cmake needs to be fixes so that other release configs (such as MinSize..) can be used.
+# TODO::vcpkg_build_cmake.cmake needs to be fixed so that other release configs (such as MinSize..) can be used. Looks like a bug.
 vcpkg_build_msbuild(
     PROJECT_PATH ${LLVM_BUILD_PATH}/LLVM.sln
     PLATFORM ${BUILD_ARCH}
@@ -116,5 +110,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     ${CURRENT_PACKAGES_DIR}/bin/*.exe
     ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe
 )
-
 file(REMOVE ${EXECUTABLES})
