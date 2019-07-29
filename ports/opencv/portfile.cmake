@@ -49,6 +49,14 @@ vcpkg_check_features(
  "ovis"     BUILD_opencv_ovis
 )
 
+if(WITH_CUDA)
+  vcpkg_download_distfile(OCV_DOWNLOAD
+      URLS "https://github.com/NVIDIA/NVIDIAOpticalFlowSDK/archive/79c6cee80a2df9a196f20afd6b598a9810964c32.zip"
+      FILENAME "opencv-cache/nvidia_optical_flow/ca5acedee6cb45d0ec610a6732de5c15-79c6cee80a2df9a196f20afd6b598a9810964c32.zip"
+      SHA512 d80cdedec588dafaad4ebb8615349f842ecdc64d3ca9480fee7086d606e6f2362606a9a2ce273c5cf507be2840ec24bbcbe32c2962672c3bcfb72d31428ef73d
+  )
+endif()
+
 set(BUILD_opencv_videoio ON)
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   message(WARNING "The video IO module (videoio) does not build for UWP, the module has been disabled.")
@@ -61,8 +69,8 @@ if(WITH_CONTRIB)
   if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(BUILD_opencv_quality OFF)
     message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
-    
-    # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected. 
+
+    # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
     message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP, the module has been disabled.")
   else()
     set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
