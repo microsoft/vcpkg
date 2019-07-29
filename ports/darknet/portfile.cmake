@@ -69,8 +69,9 @@ if("weights-train" IN_LIST FEATURES)
   )
 endif()
 
-#make sure we don't use any integrated pre-built library
+#make sure we don't use any integrated pre-built library nor any unnecessary CMake module
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
