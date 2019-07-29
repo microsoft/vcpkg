@@ -12,17 +12,23 @@ namespace vcpkg
     namespace detail
     {
         // for SFINAE purposes, keep out of the class
-        template<class Action, class ThreadLocalData>
-        auto call_moved_action(Action& action,
+        // also this sfinae is so weird because Backwards Compatibility with VS2015
+        template<class Action,
+                 class ThreadLocalData,
+                 class = decltype(std::declval<Action>()(std::declval<ThreadLocalData&>(),
+                                                         std::declval<const WorkQueue<Action, ThreadLocalData>&>()))>
+        void call_moved_action(Action& action,
                                const WorkQueue<Action, ThreadLocalData>& work_queue,
-                               ThreadLocalData& tld) -> decltype(static_cast<void>(std::move(action)(tld, work_queue)))
+                               ThreadLocalData& tld)
         {
             std::move(action)(tld, work_queue);
         }
 
-        template<class Action, class ThreadLocalData>
-        auto call_moved_action(Action& action, const WorkQueue<Action, ThreadLocalData>&, ThreadLocalData& tld)
-            -> decltype(static_cast<void>(std::move(action)(tld)))
+        template<class Action,
+                 class ThreadLocalData,
+                 class = decltype(std::declval<Action>()(std::declval<ThreadLocalData&>())),
+                 class = void>
+        void call_moved_action(Action& action, const WorkQueue<Action, ThreadLocalData>&, ThreadLocalData& tld)
         {
             std::move(action)(tld);
         }
@@ -32,7 +38,7 @@ namespace vcpkg
     struct WorkQueue
     {
         template<class F>
-        WorkQueue(std::uint16_t num_threads, LineInfo li, const F& tld_init) noexcept
+        WorkQueue(LineInfo li, std::uint16_t num_threads, const F& tld_init) noexcept
         {
             m_line_info = li;
 
