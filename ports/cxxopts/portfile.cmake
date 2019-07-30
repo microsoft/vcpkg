@@ -12,6 +12,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCXXOPTS_BUILD_EXAMPLES=OFF
+		-DCXXOPTS_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
