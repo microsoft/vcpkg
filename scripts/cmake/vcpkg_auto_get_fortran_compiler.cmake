@@ -27,7 +27,11 @@ function(vcpkg_auto_get_fortran_compiler)
         set(_PROGRAMFILESX86 "PROGRAMFILES(x86)")
         file(TO_CMAKE_PATH "$ENV{${_PROGRAMFILESX86}}" _programfiles_x86)
         if(EXISTS ${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/bin/intel64)
-             list(APPEND CMAKE_PROGRAM_PATH "${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/bin/intel64")
+            list(APPEND CMAKE_PROGRAM_PATH "${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/bin/intel64")
+            # Required so that CMake can link a test Fortran program using try_compile
+            if(EXISTS ${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64)
+               vcpkg_add_to_lib("${_programfiles_x86}/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64")
+            endif()
         endif()
     endif()
 
@@ -55,7 +59,8 @@ function(vcpkg_auto_get_fortran_compiler)
     endif()
 
     get_filename_component(_fort_comp_name ${CMAKE_Fortran_COMPILER} NAME)
-
+    get_filename_component(_fort_PATH "${CMAKE_Fortran_COMPILER}" DIRECTORY)
+    
     if(_fort_comp_name MATCHES "^pg")
         set(VCPKG_Fortran_IS_PGI 1 PARENT_SCOPE)
         if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") 
@@ -63,7 +68,28 @@ function(vcpkg_auto_get_fortran_compiler)
             # PGI 2017 is only available for 64-bit operating systems and does not include the ability to compile 32-bit applications
             message(FATAL_ERROR "PGI can only target x64.")
         endif()
+        # This does not work for PGI -> CMake is not able to compile a simple Fortran program. 
+        # Seems like it is overwriting the normal environment which cmakes requires?
+        #if(EXISTS ${_fort_PATH}/../pgi_env.bat)
+        #    vcpkg_load_environment_from_batch(
+        #        BATCH_FILE_PATH "${_fort_PATH}/../pgi_env.bat"
+        #    )
+        #endif()
     elseif(_fort_comp_name MATCHES "^ifort")
         set(VCPKG_Fortran_IS_INTEL 1 PARENT_SCOPE)
+        
+        
+        vcpkg_determine_intel_vs_and_arch(INTEL_VS INTEL_ARCH)
+        if(EXISTS ${_fort_PATH}/../ifortvars.bat)
+            set(_bat_path "${_fort_PATH}/../ifortvars.bat")
+        elseif(EXISTS ${_fort_PATH}/../compilervars.bat)
+            set(_bat_path "${_fort_PATH}/../compilervars.bat") #on windows there is a linux folder which only has compilervars.bat (crosscompiling?)
+        endif()
+        vcpkg_load_environment_from_batch(
+            BATCH_FILE_PATH "${_bat_path}"
+            ARGUMENTS
+                ${INTEL_ARCH}
+                ${INTEL_VS}
+        )
     endif()
 endfunction()

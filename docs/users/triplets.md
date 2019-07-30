@@ -57,8 +57,10 @@ This option also has forms for configuration-specific and C flags:
 - `VCPKG_C_FLAGS`
 - `VCPKG_C_FLAGS_DEBUG`
 - `VCPKG_C_FLAGS_RELEASE`
+- `VCPKG_Fortran_FLAGS`
+- `VCPKG_Fortran_FLAGS_DEBUG`
+- `VCPKG_Fortran_FLAGS_RELEASE`
 
-<<<<<<< HEAD
 ## Windows Variables
 
 <a name="VCPKG_VISUAL_STUDIO_PATH"></a>
@@ -99,7 +101,7 @@ Sets the minimum macOS version for compiled binaries. This also changes what ver
 ### VCPKG_OSX_SYSROOT
 Set the name or path of the macOS platform SDK that will be used by CMake. See the CMake documentation for [CMAKE_OSX_SYSROOT](https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_SYSROOT.html) for more information.
 
-### VCPKG_FORTRAN_COMPILER
+### VCPKG_Fortran_COMPILER
 Specifies the Fortran compiler to use.
 
 This can be set to `Flang`, `GNU`, `Intel`, `PGI` or left blank. If left blank, ports that need a Fortran compiler will fail with an error message.

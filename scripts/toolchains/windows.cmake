@@ -14,7 +14,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         set(CHARSET_FLAG)
     endif()
 
-    if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Intel)
+    if(VCPKG_Fortran_ENABLED AND VCPKG_Fortran_COMPILER STREQUAL Intel)
         # Make sure the name mangling of Intel Fortran generated symbols is all lowercase with underscore suffix
         # because this is assumed by many libraries (that e.g. consume BLAS/LAPACK)
         set(ENV{FFLAGS} "$ENV{FFLAGS} /names:lowercase /assume:underscore")
@@ -30,7 +30,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         endif()
     endif()
  
-    if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Flang)
+    if(VCPKG_Fortran_ENABLED AND VCPKG_Fortran_COMPILER STREQUAL Flang)
         # Make sure that CMake uses the correct compilers:
         # while we want to use flang as Fortran compiler we want to keep cl for C and C++
         set(CMAKE_Fortran_COMPILER "flang" CACHE STRING "")
@@ -40,7 +40,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
 
     # When using GNU gfortran as Fortran compiler CMake requires to use gcc and g++ as C and C++ compilers
     # so we should not set all the other C and C++ compiler flags
-    if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL GNU)
+    if(VCPKG_Fortran_ENABLED AND VCPKG_Fortran_COMPILER STREQUAL GNU)
         set(CMAKE_GNUtoMS "ON" CACHE STRING "")
     else()
         set(CMAKE_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 ${CHARSET_FLAG} /GR /EHsc /MP ${VCPKG_CXX_FLAGS}" CACHE STRING "")
