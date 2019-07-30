@@ -17,7 +17,6 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
         -DBUILD_DEMOS=OFF
