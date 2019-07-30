@@ -18,6 +18,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DWITH_LIBRARY_ARGPARSER=ON
         -DWITH_LIBRARY_COMPRESSION=ON

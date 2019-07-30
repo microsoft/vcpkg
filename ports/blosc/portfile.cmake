@@ -20,6 +20,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/internal-complibs)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DPREFER_EXTERNAL_LZ4=ON
             -DPREFER_EXTERNAL_SNAPPY=ON
             -DPREFER_EXTERNAL_ZLIB=ON

@@ -14,6 +14,7 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
 # Legacy, remove at release of v2.13
 		-DNANODBC_EXAMPLES=OFF

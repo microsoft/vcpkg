@@ -20,6 +20,7 @@ endif()
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DOSG_USE_UTF8_FILENAME=ON
 )
