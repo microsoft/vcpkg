@@ -237,44 +237,11 @@ set(TOMMATH_FILES
 	src/libtommath/bn_s_mp_sub.c
 )
 
-# Needed for Windows
-set(ZLIB_BZIP2_FILES
-	src/bzip2/blocksort.c
-	src/bzip2/bzlib.c
-	src/bzip2/compress.c
-	src/bzip2/crctable.c
-	src/bzip2/decompress.c
-	src/bzip2/huffman.c
-	src/bzip2/randtable.c
-	src/zlib/adler32.c
-	src/zlib/compress.c
-	src/zlib/crc32.c
-	src/zlib/deflate.c
-	src/zlib/inffast.c
-	src/zlib/inflate.c
-	src/zlib/inftrees.c
-	src/zlib/trees.c
-	src/zlib/zutil.c
-)
+find_package(ZLIB REQUIRED)
+find_package(BZip2 REQUIRED)
 
 if(WIN32)
-	set(SRC_ADDITIONAL_FILES ${ZLIB_BZIP2_FILES} ${TOMCRYPT_FILES} ${TOMMATH_FILES})
 	set(LINK_LIBS wininet)
-else()
-	find_package(ZLIB REQUIRED)
-	find_package(BZip2 REQUIRED)
-
-	include_directories(${ZLIB_INCLUDE_DIR} ${BZIP2_INCLUDE_DIR})
-	set(LINK_LIBS ${ZLIB_LIBRARY} ${BZIP2_LIBRARIES})
-
-	add_definitions(-D__SYS_ZLIB -D__SYS_BZLIB)
-
-	option(WITH_LIBTOMCRYPT "Use system LibTomCrypt library" OFF)
-	if(WITH_LIBTOMCRYPT)
-			set(LINK_LIBS ${LINK_LIBS} tomcrypt)
-	else()
-			set(SRC_ADDITIONAL_FILES ${TOMCRYPT_FILES} ${TOMMATH_FILES})
-	endif()
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
@@ -282,7 +249,11 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DO_LARGEFILE=0 -Dstat64=stat -Dlstat64=lstat -Dlseek64=lseek -Doff64_t=off_t -Dfstat64=fstat -Dftruncate64=ftruncate")
 endif()
 
-add_library(stormlib ${LIB_TYPE} ${SRC_FILES} ${SRC_ADDITIONAL_FILES} ${STORM_DEF_FILES})
+add_library(stormlib ${LIB_TYPE} ${SRC_FILES} ${TOMCRYPT_FILES} ${TOMMATH_FILES} ${STORM_DEF_FILES})
+
+
+target_link_libraries(stormlib PRIVATE ZLIB::ZLIB)
+target_link_libraries(stormlib PRIVATE BZip2::BZip2)
 
 target_compile_definitions(stormlib PRIVATE _7ZIP_ST BZ_STRICT_ANSI)
 
