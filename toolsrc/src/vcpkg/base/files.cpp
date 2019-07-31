@@ -202,6 +202,10 @@ namespace vcpkg::Files
             std::string line;
             while (std::getline(file_stream, line))
             {
+                // Remove the trailing \r to accomodate Windows line endings.
+                if ((!line.empty()) && (line.back() == '\r'))
+                    line.pop_back();
+
                 output.push_back(line);
             }
             file_stream.close();
