@@ -1,5 +1,13 @@
 include(vcpkg_common_functions)
 
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+	message(FATAL_ERROR "yasm only supports windows")
+elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm")
+    message(FATAL_ERROR "ARM is currently not supported.")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
+endif()
+
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO yasm/yasm
