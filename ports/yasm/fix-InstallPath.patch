@@ -1,0 +1,91 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8df871c..ccf8a98 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,8 +40,10 @@ ADD_SUBDIRECTORY(libyasm)
+ ADD_SUBDIRECTORY(modules)
+ ADD_SUBDIRECTORY(frontends)
+ 
+-INSTALL(FILES
+-    libyasm.h
+-    ${CMAKE_BINARY_DIR}/libyasm-stdint.h
+-    DESTINATION include
+-    )
++if (CMAKE_BUILD_TYPE MATCHES "Release")
++	INSTALL(FILES
++		libyasm.h
++		${CMAKE_BINARY_DIR}/libyasm-stdint.h
++		DESTINATION include
++		)
++endif()
+diff --git a/libyasm/CMakeLists.txt b/libyasm/CMakeLists.txt
+index bd9b7b2..886242d 100644
+--- a/libyasm/CMakeLists.txt
++++ b/libyasm/CMakeLists.txt
+@@ -48,33 +48,35 @@ INSTALL(TARGETS libyasm
+     ARCHIVE DESTINATION lib
+     )
+ 
+-INSTALL(FILES
+-    arch.h
+-    assocdat.h
+-    bitvect.h
+-    bytecode.h
+-    compat-queue.h
+-    coretype.h
+-    dbgfmt.h
+-    errwarn.h
+-    expr.h
+-    file.h
+-    floatnum.h
+-    hamt.h
+-    insn.h
+-    intnum.h
+-    inttree.h
+-    linemap.h
+-    listfmt.h
+-    md5.h
+-    module.h
+-    objfmt.h
+-    parser.h
+-    phash.h
+-    preproc.h
+-    section.h
+-    symrec.h
+-    valparam.h
+-    value.h
+-    DESTINATION include/libyasm
+-    )
++if (CMAKE_BUILD_TYPE MATCHES "Release")
++	INSTALL(FILES
++		arch.h
++		assocdat.h
++		bitvect.h
++		bytecode.h
++		compat-queue.h
++		coretype.h
++		dbgfmt.h
++		errwarn.h
++		expr.h
++		file.h
++		floatnum.h
++		hamt.h
++		insn.h
++		intnum.h
++		inttree.h
++		linemap.h
++		listfmt.h
++		md5.h
++		module.h
++		objfmt.h
++		parser.h
++		phash.h
++		preproc.h
++		section.h
++		symrec.h
++		valparam.h
++		value.h
++		DESTINATION include/libyasm
++		)
++endif()
+\ No newline at end of file
