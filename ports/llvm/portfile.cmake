@@ -7,23 +7,24 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-8.0.0.src)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-8.0.1.src)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://releases.llvm.org/8.0.0/llvm-8.0.0.src.tar.xz"
-    FILENAME "llvm-8.0.0.src.tar.xz"
-    SHA512 1602343b451b964f5d8c2d6b0654d89384c80d45883498c5f0e2f4196168dd4a1ed2a4dadb752076020243df42ffe46cb31d82ffc145d8e5874163cbb9686a1f
+    URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/llvm-8.0.1.src.tar.xz"
+    FILENAME "llvm-8.0.1.src.tar.xz"
+    SHA512 82e120be5cabdfd5111aebbea68a663fe229c8861d73802d6ab09a3bf48f60de333e07e61f8fb61beaa14ac2bea24fcd74fa6f761acaf62469f536b79fcb1e16
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_download_distfile(CLANG_ARCHIVE
-    URLS "http://releases.llvm.org/8.0.0/cfe-8.0.0.src.tar.xz"
-    FILENAME "cfe-8.0.0.src.tar.xz"
-    SHA512 98e540222719716985e5d8439116e47469cb01201ea91d1da7e46cb6633da099688d9352c3b65e5c5f660cbbae353b3d79bb803fc66b3be663f2b04b1feed1c3
+    URLS "https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/cfe-8.0.1.src.tar.xz"
+    FILENAME "cfe-8.0.1.src.tar.xz"
+    SHA512 1227b2d32052c70b4b494659849000188fce46fc31a71f3352ba8457ac0b0b17e4bc7c8589874c8586d55aa808ee6c1fceb7df501aafa33599f8df7bfd2b791d
 )
 vcpkg_extract_source_archive(${CLANG_ARCHIVE} ${SOURCE_PATH}/tools)
 
 if(NOT EXISTS ${SOURCE_PATH}/tools/clang)
-  file(RENAME ${SOURCE_PATH}/tools/cfe-8.0.0.src ${SOURCE_PATH}/tools/clang)
+  file(RENAME ${SOURCE_PATH}/tools/cfe-8.0.1.src ${SOURCE_PATH}/tools/clang)
 endif()
 
 vcpkg_apply_patches(
@@ -99,6 +100,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs
+    ${CURRENT_PACKAGES_DIR}/include/llvm/TextAPI/MachO
 )
 
 # Remove two empty include subdirectorys if they are indeed empty
