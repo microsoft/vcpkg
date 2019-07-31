@@ -74,7 +74,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if (VCPKG_BUILD_TYPE STREQUAL debug)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include)
+else()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
 
