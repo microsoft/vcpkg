@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed4948f0..40362263 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,6 +38,7 @@ TARGET_LINK_LIBRARIES	( yuvconvert ${ly_lib_static} )
+ INCLUDE ( FindJPEG )
+ if (JPEG_FOUND)
+   include_directories( ${JPEG_INCLUDE_DIR} )
++  target_link_libraries( ${ly_lib_shared} ${JPEG_LIBRARY} )
+   target_link_libraries( yuvconvert ${JPEG_LIBRARY} )
+   add_definitions( -DHAVE_JPEG )
+ endif()
+@@ -81,7 +82,7 @@ endif()
+ 
+ 
+ # install the conversion tool, .so, .a, and all the header files
+-INSTALL ( PROGRAMS ${CMAKE_BINARY_DIR}/yuvconvert			DESTINATION bin )
++INSTALL ( TARGETS yuvconvert			DESTINATION bin )
+ INSTALL ( TARGETS ${ly_lib_static}						DESTINATION lib )
+ INSTALL ( TARGETS ${ly_lib_shared} LIBRARY				DESTINATION lib RUNTIME DESTINATION bin )
+ INSTALL ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/		DESTINATION include )

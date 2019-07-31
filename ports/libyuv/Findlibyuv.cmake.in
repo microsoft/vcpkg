@@ -1,0 +1,48 @@
+find_path(libyuv_INCLUDE_DIR
+  NAMES
+    libyuv.h
+  PATH_SUFFIXES
+    include
+)
+mark_as_advanced(libyuv_INCLUDE_DIR)
+
+find_library(libyuv_LIBRARY_RELEASE
+  NAMES
+    yuv
+  PATH_SUFFIXES
+    lib
+)
+mark_as_advanced(libyuv_LIBRARY_RELEASE)
+
+find_library(libyuv_LIBRARY_DEBUG
+  NAMES
+    yuv@POSTFIX@
+  PATH_SUFFIXES
+    debug/lib
+)
+if(NOT libyuv_LIBRARY_DEBUG)
+  set(libyuv_LIBRARY_DEBUG libyuv_LIBRARY_RELEASE)
+endif()
+mark_as_advanced(libyuv_LIBRARY_DEBUG)
+
+set(libyuv_LIBRARIES optimized ${libyuv_LIBRARY_RELEASE} debug ${libyuv_LIBRARY_DEBUG})
+mark_as_advanced(libyuv_LIBRARIES)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(
+  libyuv DEFAULT_MSG
+  libyuv_LIBRARIES libyuv_INCLUDE_DIR
+)
+
+if(libyuv_FOUND)
+  add_library(libyuv::libyuv @LIBRARY_TYPE@ IMPORTED)
+  set_target_properties(libyuv::libyuv PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${libyuv_INCLUDE_DIR}")
+
+  set_property(TARGET libyuv::libyuv APPEND PROPERTY IMPORTED_CONFIGURATIONS "RELEASE")
+  set_target_properties(libyuv::libyuv PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX")
+  set_target_properties(libyuv::libyuv PROPERTIES IMPORTED_@IMPORT_TYPE@_RELEASE "${libyuv_LIBRARY_RELEASE}")
+
+  set_property(TARGET libyuv::libyuv APPEND PROPERTY IMPORTED_CONFIGURATIONS "DEBUG")
+  set_target_properties(libyuv::libyuv PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX")
+  set_target_properties(libyuv::libyuv PROPERTIES IMPORTED_@IMPORT_TYPE@_DEBUG "${libyuv_LIBRARY_DEBUG}")
+endif()
