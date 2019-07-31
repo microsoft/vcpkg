@@ -24,7 +24,6 @@ file(WRITE "${SOURCE_PATH}/pm_common/CMakeLists.txt" "${PM_CMAKE}")
 # Run cmake configure step
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DJAVA_INCLUDE_PATH=
         -DJAVA_INCLUDE_PATH2=
