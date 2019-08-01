@@ -6,7 +6,7 @@
 
 namespace vcpkg::Parse
 {
-    static Optional<std::string> remove_field(std::unordered_map<std::string, std::string>* fields,
+    static Optional<std::string> remove_field(RawParagraph* fields,
                                               const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
