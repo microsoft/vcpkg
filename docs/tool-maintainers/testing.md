@@ -13,17 +13,15 @@ Before anything else, we should know whether you can actually run the tests!
 All you should need is a way to build vcpkg -- anything will do! All you have to
 do is follow the guide 😄
 
-With `$VCPKG_DIRECTORY` being the directory where you have cloned vcpkg:
+With `$VCPKG_DIRECTORY` being the directory where you have cloned vcpkg, create
+a build directory in `$VCPKG_DIRECTORY/toolsrc` (commonly named `out`), and
+`cd` into it. Make sure to clean it out if it already exists!
 
 ```sh
-cd $VCPKG_DIRECTORY/toolsrc
-mkdir -p out # mkdir -f out if in powershell
-cd out
-rm -r -f ./* # rm -r -fo ./* if in powershell
-cmake .. -DCMAKE_BUILD_TYPE=Debug -G Ninja
-cmake --build .
-./vcpkg-test # ./vcpkg-test [$SPECIFIC_TEST] for a specific set of tests
-# i.e., ./vcpkg-test [arguments]
+$ cmake .. -DCMAKE_BUILD_TYPE=Debug -G Ninja
+$ cmake --build .
+$ ./vcpkg-test # ./vcpkg-test [$SPECIFIC_TEST] for a specific set of tests
+$ # i.e., ./vcpkg-test [arguments]
 ```
 
 If you make any modifications to `vcpkg`, you'll have to do the
@@ -88,12 +86,15 @@ First, we should create a file, `example.cpp`, in `toolsrc/src/vcpkg-test`:
 ```
 
 This is the minimum file needed for tests; let's rebuild our CMake directory.
+You'll have to clean out the existing `out` directory for CMake to rerun
+globbing.
 
 ```sh
-cd $VCPKG_DIRECTORY/toolsrc/out
-rm -rf *
-cmake .. -DCMAKE_BUILD_TYPE=Debug -G Ninja
-cmake --build .
+$ cmake .. -DCMAKE_BUILD_TYPE=Debug -G Ninja
+# ...
+-- Build files have been written to: $VCPKG_DIRECTORY/toolsrc/out
+$ cmake --build .
+[80/80] Linking CXX executable vcpkg.exe
 ```
 
 Okay, now let's make sure this worked; add a test case to `example.cpp`:
@@ -107,8 +108,26 @@ TEST_CASE("Example 1 - fail", "[example]") {
 Now build the tests again, and run them:
 
 ```sh
-cmake --build .
-./vcpkg-test
+$ cmake --build .
+[2/2] Linking CXX executable vcpkg-test.exe
+$ ./vcpkg-test
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vcpkg-test.exe is a Catch v2.9.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Example 1 - fail
+-------------------------------------------------------------------------------
+$VCPKG_DIRECTORY/toolsrc/src/vcpkg-test/example.cpp(3)
+...............................................................................
+
+$VCPKG_DIRECTORY/toolsrc/src/vcpkg-test/example.cpp(14): FAILED:
+  REQUIRE( false )
+
+===============================================================================
+test cases:  102 |  101 passed | 1 failed
+assertions: 3611 | 3610 passed | 1 failed
 ```
 
 Hopefully, that worked! It should compile correctly, and have one failing test.
@@ -128,8 +147,12 @@ TEST_CASE("Example 2 - success", "[example]") {
 Now compile and build the tests, and this time let's only run our example tests:
 
 ```sh
-cmake --build .
-./vcpkg-test [example]
+$ cmake --build .
+[2/2] Linking CXX executable vcpkg-test.exe
+$ ./vcpkg-test [example]
+Filters: [example]
+===============================================================================
+All tests passed (2 assertions in 1 test case)
 ```
 
 Hopefully you have one test running and succeeding! If you have that, you have
