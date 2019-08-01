@@ -6,7 +6,7 @@ endif()
 
 message(".Net framework 4.0 is required, please install it before install easyhook.")
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
