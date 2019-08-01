@@ -1,5 +1,5 @@
 diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 799592b..a506363 100644
+index 799592b..3f44173 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
 @@ -852,7 +852,7 @@ macro(ocv_create_module)
@@ -7,7 +7,7 @@ index 799592b..a506363 100644
    endif()
  
 -  if(WINRT)
-+  if(WINRT AND 0)
++  if(WINRT AND BUILD_TESTS)
      # removing APPCONTAINER from modules to run from console
      # in case of usual starting of WinRT test apps output is missing
      # so starting of console version w/o APPCONTAINER is required to get test results
@@ -16,7 +16,7 @@ index 799592b..a506363 100644
        endif()
  
 -      if(WINRT)
-+      if(WINRT AND 0)
++      if(WINRT AND BUILD_TESTS)
          # removing APPCONTAINER from tests to run from console
          # look for detailed description inside of ocv_create_module macro above
          add_custom_command(TARGET "opencv_perf_${name}"
@@ -42,3 +42,16 @@ index aafbfdf..10543ae 100644
      ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
          reinterpret_cast<LPCTSTR>(addr),
          &m);
+diff --git a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
+index 236e227..eccf97e 100644
+--- a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
++++ b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
+@@ -94,7 +94,7 @@ Media::CaptureFrameGrabber::~CaptureFrameGrabber()
+ 
+ void Media::CaptureFrameGrabber::ShowCameraSettings()
+ {
+-#if WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP
++#if (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY != WINAPI_FAMILY_PC_APP)
+     if (_state == State::Started)
+     {
+         CameraOptionsUI::Show(_capture.Get());

@@ -57,12 +57,6 @@ if(WITH_CUDA)
   )
 endif()
 
-set(BUILD_opencv_videoio ON)
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(WARNING "The video IO module (videoio) does not build for UWP, the module has been disabled.")
-  set(BUILD_opencv_videoio OFF)
-endif()
-
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
 if(WITH_CONTRIB)
@@ -314,7 +308,6 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         -DBUILD_opencv_world=${BUILD_opencv_world}
         ###### The following modules are disabled for UWP
-        -DBUILD_opencv_videoio=${BUILD_opencv_videoio}
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
 )
 
