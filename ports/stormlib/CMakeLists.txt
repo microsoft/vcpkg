@@ -250,7 +250,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
 endif()
 
 add_library(stormlib ${LIB_TYPE} ${SRC_FILES} ${TOMCRYPT_FILES} ${TOMMATH_FILES} ${STORM_DEF_FILES})
-
+add_definitions(-D__SYS_ZLIB -D__SYS_BZLIB)
 
 target_link_libraries(stormlib PRIVATE ZLIB::ZLIB)
 target_link_libraries(stormlib PRIVATE BZip2::BZip2)
