@@ -203,7 +203,7 @@ namespace vcpkg
         }
 
 
-        template <char oper, char other, bool operation(bool left, bool right)>
+        template <char oper, char other, bool operation(bool, bool)>
         bool logic_expression_helper(bool seed)
         {
             do
@@ -222,6 +222,14 @@ namespace vcpkg
 			skip_whitespace();
             return seed;
         }
+		static bool and_helper(bool left, bool right)
+		{
+			return left && right;
+		}
+		static bool or_helper(bool left, bool right)
+		{
+			return left || right;
+		}
 
         //  logic-expression: <- entry point
         //    not-expression
@@ -235,13 +243,11 @@ namespace vcpkg
             {
             case '|':
             {
-                return logic_expression_helper< '|', '&',
-                    [](bool left, bool right) {return left || right; } > (result);
+                return logic_expression_helper< '|', '&', or_helper > (result);
             }
             case '&':
             {
-                return logic_expression_helper< '&', '|',
-                    [](bool left, bool right) {return left && right; } > (result);
+                return logic_expression_helper< '&', '|', and_helper > (result);
             }
             default:
                 return result;
