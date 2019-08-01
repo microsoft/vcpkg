@@ -12,16 +12,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK
-    REF release-0.90.1
-    SHA512 99b16b52511fef740fa7a1e234213310a4490b8d7baf4d1e003b93cf4f37b28abf526f6ed2d1e27e9ee2b4949b1957f15c20d4e0f8d30687806fe782780697af
+    REF release-1.0.0
+    SHA512 423079b841a01f3b51283839c565cfa1b8ff38348c3f3d6f62e9120569d4ad540d8d6bfe8010e74d9bbb76aeaedcf273e5e3b1717bb0b424898793fb4712aa58
     HEAD_REF master
     PATCHES
-        # embedded python uses ignores PYTHONPATH
-        0001-fix-embedded-python-path.patch
-        # Pkg-config is not available on the Vcpkg CI systems, don't depend on it for the xlib backend
-        0002-fix-linux-pkgconfig-dependency.patch
-        # Python < 3.6 doesn't allow a WindowsPath object to act as a pathlike in os.path functions
-        0003-windows-path-python-fix.patch
         0004-fix-fatal-errorC1189.patch
 )
 
@@ -45,6 +39,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_API_LAYERS=OFF
         -DBUILD_TESTS=OFF
+        -DBUILD_CONFORMANCE_TESTS=OFF
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
         -DPYTHON_EXECUTABLE=${PYTHON3}
 )
