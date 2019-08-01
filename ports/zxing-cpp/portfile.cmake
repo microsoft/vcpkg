@@ -1,7 +1,3 @@
-# if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-#     message(FATAL_ERROR "The required Video IO module from OpenCV is not supported in UWP.")
-# endif()
-
 include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
