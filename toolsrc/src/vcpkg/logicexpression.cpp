@@ -7,7 +7,6 @@
 
 #include <string>
 #include <vector>
-#include <optional>
 
 
 namespace vcpkg
@@ -77,7 +76,7 @@ namespace vcpkg
 
         bool has_error() const
         {
-            return err.has_value();
+            return err == nullptr;
         }
 
     private:
@@ -90,7 +89,7 @@ namespace vcpkg
 
 		const std::string& evaluation_context;
 
-		std::optional<ParseError> err;
+		std::unique_ptr<ParseError> err;
 
         void add_error(std::string message, int column = -1)
         {
@@ -101,7 +100,7 @@ namespace vcpkg
                 {
                     column = current_column();
                 }
-                err.emplace(column, raw_text, message);
+                err = std::make_unique<ParseError>(column, raw_text, message);
             }
 
             // Avoid error loops by skipping to the end
