@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
 if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "Xalan-c's buildsystem uses very long paths and may fail on your system.\n"
+    message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
         "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
     )
 endif()
@@ -46,36 +46,87 @@ vcpkg_extract_source_archive_ex(
 )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    set(BITS 32)
 elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+    set(BITS 64)
 else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-set(ENV{CL} "$ENV{CL} \"/I${CURRENT_INSTALLED_DIR}/include\"")
-set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        list(APPEND BUILD_TYPES "release")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        list(APPEND BUILD_TYPES "debug")
+    endif()
 
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH c/projects/Win32/VC10/AllInOne/AllInOne.vcxproj
-    OPTIONS_RELEASE /p:XERCESCROOT=${CURRENT_INSTALLED_DIR}
-    OPTIONS_DEBUG /p:XERCESCROOT=${CURRENT_INSTALLED_DIR}/debug
-    LICENSE_SUBPATH c/LICENSE
-    SKIP_CLEAN
-)
+    set(XALANCROOT ${SOURCE_PATH}/c)
+    set(ENV{XALANCROOT} ${XALANCROOT})
+    foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
+        if(BUILD_TYPE STREQUAL "release")
+            set(P ${CURRENT_PACKAGES_DIR})
+            set(SHORT rel)
+            set(OPTS)
+            set(ENV{XERCESCROOT} ${CURRENT_INSTALLED_DIR})
+        else()
+            set(P ${CURRENT_PACKAGES_DIR}/debug)
+            set(SHORT dbg)
+            set(OPTS -d -z -I${CURRENT_INSTALLED_DIR}/include)
+            set(ENV{XERCESCROOT} ${CURRENT_INSTALLED_DIR}/debug)
+        endif()
+        set(DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT})
+        file(REMOVE_RECURSE ${DIR})
+        file(MAKE_DIRECTORY ${DIR})
+        message(STATUS "Configuring ${TARGET_TRIPLET}-${SHORT}")
+        vcpkg_execute_required_process(
+            COMMAND ${XALANCROOT}/runConfigure -p linux -c gcc -x g++ -b ${BITS} -P ${P} ${OPTS}
+            WORKING_DIRECTORY ${DIR}
+            LOGNAME configure-${TARGET_TRIPLET}-${SHORT}
+        )
+        message(STATUS "Building ${TARGET_TRIPLET}-${SHORT}")
+        vcpkg_execute_required_process(
+            COMMAND make -i -j${VCPKG_CONCURRENCY}
+            WORKING_DIRECTORY ${DIR}
+            LOGNAME make-${TARGET_TRIPLET}-${SHORT}
+        )
+        message(STATUS "Installing ${TARGET_TRIPLET}-${SHORT}")
+        vcpkg_execute_required_process(
+            COMMAND make install
+            WORKING_DIRECTORY ${DIR}
+            LOGNAME install-${TARGET_TRIPLET}-${SHORT}
+        )
+    endforeach()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(COPY ${SOURCE_PATH}/c/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+else()
+    set(ENV{CL} "$ENV{CL} \"/I${CURRENT_INSTALLED_DIR}/include\"")
+    set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
 
-file(COPY ${SOURCE_PATH}/c/src/xalanc DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.hpp)
+    vcpkg_install_msbuild(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH c/projects/Win32/VC10/AllInOne/AllInOne.vcxproj
+        OPTIONS_RELEASE /p:XERCESCROOT=${CURRENT_INSTALLED_DIR}
+        OPTIONS_DEBUG /p:XERCESCROOT=${CURRENT_INSTALLED_DIR}/debug
+        LICENSE_SUBPATH c/LICENSE
+        SKIP_CLEAN
+    )
 
-# LocalMsgIndex.hpp and LocalMsgData.hpp are here
-file(GLOB NLS_INCLUDES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/c/Build/*/VC10/Release/Nls/Include/*.hpp")
-if(NOT NLS_INCLUDES)
-    message(FATAL_ERROR "Could not locate LocalMsgIndex.hpp")
+    file(COPY ${SOURCE_PATH}/c/src/xalanc DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.hpp)
+
+    # LocalMsgIndex.hpp and LocalMsgData.hpp are here
+    file(GLOB NLS_INCLUDES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/c/Build/*/VC10/Release/Nls/Include/*.hpp")
+    if(NOT NLS_INCLUDES)
+        message(FATAL_ERROR "Could not locate LocalMsgIndex.hpp")
+    endif()
+    file(COPY ${NLS_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/xalanc/PlatformSupport)
+
+    vcpkg_clean_msbuild()
+
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/NLS)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/util/MsgLoaders/ICU/resources)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/TestXSLT)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/XalanExe)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/XPathCAPI)
 endif()
-file(COPY ${NLS_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/xalanc/PlatformSupport)
-
-vcpkg_clean_msbuild()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/NLS)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/util/MsgLoaders/ICU/resources)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/TestXSLT)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/XalanExe)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/XPathCAPI)

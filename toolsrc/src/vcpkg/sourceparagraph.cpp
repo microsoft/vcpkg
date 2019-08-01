@@ -24,6 +24,7 @@ namespace vcpkg
         static const std::string SOURCE = "Source";
         static const std::string SUPPORTS = "Supports";
         static const std::string VERSION = "Version";
+        static const std::string HOMEPAGE = "Homepage";
     }
 
     static Span<const std::string> get_list_of_valid_fields()
@@ -34,6 +35,7 @@ namespace vcpkg
             SourceParagraphFields::DESCRIPTION,
             SourceParagraphFields::MAINTAINER,
             SourceParagraphFields::BUILD_DEPENDS,
+            SourceParagraphFields::HOMEPAGE,
         };
 
         return valid_fields;
@@ -107,6 +109,7 @@ namespace vcpkg
 
         spgh->description = parser.optional_field(SourceParagraphFields::DESCRIPTION);
         spgh->maintainer = parser.optional_field(SourceParagraphFields::MAINTAINER);
+        spgh->homepage = parser.optional_field(SourceParagraphFields::HOMEPAGE);
         spgh->depends = expand_qualified_dependencies(
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));
@@ -230,6 +233,28 @@ namespace vcpkg
                 }))
             {
                 ret.emplace_back(dep.name());
+            }
+        }
+        return ret;
+    }
+
+    std::vector<Features> filter_dependencies_to_features(const std::vector<vcpkg::Dependency>& deps,
+                                                          const Triplet& t)
+    {
+        std::vector<Features> ret;
+        for (auto&& dep : deps)
+        {
+            auto qualifiers = Strings::split(dep.qualifier, "&");
+            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
+                    if (qualifier.empty()) return true;
+                    if (qualifier[0] == '!')
+                    {
+                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
+                    }
+                    return t.canonical_name().find(qualifier) != std::string::npos;
+                }))
+            {
+                ret.emplace_back(dep.depend);
             }
         }
         return ret;

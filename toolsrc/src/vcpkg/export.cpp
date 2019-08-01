@@ -141,12 +141,12 @@ namespace vcpkg::Export
         std::error_code ec;
         fs.create_directories(paths.buildsystems / "tmp", ec);
 
-        fs.write_contents(targets_redirect, targets_redirect_content);
+        fs.write_contents(targets_redirect, targets_redirect_content, VCPKG_LINE_INFO);
 
         const std::string nuspec_file_content =
             create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, nuget_version);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
-        fs.write_contents(nuspec_file_path, nuspec_file_content);
+        fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
         const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
@@ -229,10 +229,10 @@ namespace vcpkg::Export
     {
         const std::vector<fs::path> integration_files_relative_to_root = {
             {".vcpkg-root"},
-            {fs::path {"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
-            {fs::path {"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
-            {fs::path {"scripts"} / "buildsystems" / "vcpkg.cmake"},
-            {fs::path {"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
+            {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
+            {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)
@@ -400,8 +400,10 @@ namespace vcpkg::Export
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path export_to_path = paths.root;
         const fs::path raw_exported_dir_path = export_to_path / export_id;
+        fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
+
+        // TODO: error handling
         std::error_code ec;
-        fs.remove_all(raw_exported_dir_path, ec);
         fs.create_directory(raw_exported_dir_path, ec);
 
         // execute the plan
@@ -476,7 +478,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         if (!opts.raw)
         {
-            fs.remove_all(raw_exported_dir_path, ec);
+            fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
         }
     }
 
@@ -488,7 +490,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
-        Dependencies::PathsPortFileProvider provider(paths);
+
+        // Load ports from ports dirs
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 

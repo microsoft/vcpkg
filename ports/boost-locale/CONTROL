@@ -2,6 +2,7 @@
 Source: boost-locale
 Version: 1.70.0-2
 Build-Depends: boost-assert, boost-build, boost-config, boost-function, boost-integer, boost-iterator, boost-modular-build-helper, boost-smart-ptr, boost-static-assert, boost-system, boost-thread, boost-type-traits, boost-unordered, boost-vcpkg-helpers, libiconv (!uwp&!windows)
+Homepage: https://github.com/boostorg/locale
 Description: Boost locale module
 
 Feature: icu

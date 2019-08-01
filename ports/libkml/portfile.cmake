@@ -23,6 +23,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libkml)
+elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libkml)
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libkml RENAME copyright)

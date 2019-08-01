@@ -4,9 +4,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO searchivarius/nmslib
-    REF v1.7.2
-    SHA512 2f910f752bfb1146aa8d1765fd5faf64d718a92ab7edf9d8ac0a2d9c4359d42b07b3cd553e2aff93da8b009add52ab9cce6b841f5175f57163f73f643ff62c19
+    REPO nmslib/nmslib
+    REF 1eda05dccd5ed34df50a243dfc64c5e9187388f8
+    SHA512 e4518c8dd84867bd0ac5dbc5d3b57d8053d1f73588fc0cf1d7c91cc4819f22dc7888d6be587691ebc1fd12b67de16de63b5e0a24847b6f7b49b57d1e6b457ebd
     HEAD_REF master
 )
 
@@ -25,6 +25,7 @@ endif()
 # TODO: check SSE and AVX avability and set corresponding tags
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/similarity_search
+    PREFER_NINJA
     OPTIONS
         -DWITH_EXTRAS=${WITH_EXTRAS}
 )

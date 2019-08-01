@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.3)
 
 project(vcpkg C CXX)
 
+enable_testing()
+
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
 
@@ -20,7 +22,7 @@ If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
     set(CLANG 1)
 elseif(MSVC)
-    add_compile_options(/std:c++17)
+    add_compile_options(/std:c++17 /FC)
 else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
@@ -33,6 +35,7 @@ if(GCC OR CLANG)
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
 
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
@@ -40,9 +43,30 @@ else()
     set(DISABLE_METRICS_VALUE "0")
 endif()
 
-add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
-target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
-target_include_directories(vcpkg PRIVATE include)
+add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+add_executable(vcpkg-test
+    EXCLUDE_FROM_ALL
+    ${VCPKGTEST_SOURCES}
+    $<TARGET_OBJECTS:vcpkglib>)
+
+foreach(TARGET_NAME vcpkglib vcpkg vcpkg-test)
+    target_compile_definitions(${TARGET_NAME} PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+    target_include_directories(${TARGET_NAME} PRIVATE include)
+endforeach()
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(vcpkg PRIVATE Threads::Threads)
+target_link_libraries(vcpkg-test PRIVATE Threads::Threads)
+
+foreach(TEST_NAME
+    arguments chrono dependencies files
+    paragraph plan specifier statusparagraphs
+    strings supports update
+)
+    add_test(${TEST_NAME} vcpkg-test [${TEST_NAME}])
+endforeach()
 
 if(CLANG)
     include(CheckCXXSourceCompiles)
@@ -57,8 +81,10 @@ endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
     target_link_libraries(vcpkg PRIVATE stdc++fs)
+    target_link_libraries(vcpkg-test PRIVATE stdc++fs)
 elseif(CLANG)
     target_link_libraries(vcpkg PRIVATE c++fs)
+    target_link_libraries(vcpkg-test PRIVATE c++fs)
 endif()
 
 if(MSVC)
@@ -73,7 +99,3 @@ if(MSVC)
   target_sources(vcpkg PRIVATE src/pch.cpp)
   target_compile_options(vcpkg PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(vcpkg PRIVATE Threads::Threads)

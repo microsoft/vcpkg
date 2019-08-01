@@ -12,7 +12,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GEOGRAM_VERSION}
-    PATCHES fix-cmake-config-and-install.patch
+    PATCHES
+        fix-cmake-config-and-install.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
@@ -65,7 +66,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/geogram")
+vcpkg_fixup_cmake_targets()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)

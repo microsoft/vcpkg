@@ -11,26 +11,26 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 8c970498a296ed129ffef7d872ccc25d42d1afda
-  SHA512 70dda24656469b8a61a645533ac227b644d365c7d5f4dbc93077a3f46563dd45ae88c563fb1c8f8d02a2021760aba24bea35d81f0f307975d051d0f9bfe92265
+  REF b2d795e34e1d734d0f451ce9847a0e6b68c32351
+  SHA512 1964aa0d768d37fc614983718aede8b29e562fd8120116b7cd7a1331bb8a3256e28c01cdff6f19bbe7b9d6289b3292188205f362bae38393cee33d8a2e6a5273
   HEAD_REF master
-  PATCHES
-    fix_cmakelists.patch
 )
 
-set(ENABLE_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(ENABLE_CUDA ON)
-endif()
-
-set(ENABLE_OPENCV OFF)
-if("opencv" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
+vcpkg_check_features(
+  "cuda"    ENABLE_CUDA
+  "opencv"  ENABLE_OPENCV
+)
 
 if("opencv-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
   set(ENABLE_CUDA ON)
+endif()
+
+if (ENABLE_CUDA)
+  if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
+    #CMake looks for nvcc only in PATH and CUDACXX env vars for the Ninja generator. Since we filter path on vcpkg and CUDACXX env var is not set by CUDA installer on Windows, CMake cannot find CUDA when using Ninja generator, so we need to manually enlight it if necessary (https://gitlab.kitware.com/cmake/cmake/issues/19173). Otherwise we could just disable Ninja and use MSBuild, but unfortunately CUDA installer does not integrate with some distributions of MSBuild (like the ones inside Build Tools), making CUDA unavailable otherwise in those cases, which we want to avoid
+    set(ENV{CUDACXX} "$ENV{CUDA_PATH}/bin/nvcc.exe")
+  endif()
 endif()
 
 if("weights" IN_LIST FEATURES)
@@ -56,19 +56,36 @@ if("weights" IN_LIST FEATURES)
   )
 endif()
 
-#make sure we don't use any integrated pre-built library
+if("weights-train" IN_LIST FEATURES)
+  vcpkg_download_distfile(IMAGENET_CONV_WEIGHTS_V3
+    URLS "https://pjreddie.com/media/files/darknet53.conv.74"
+    FILENAME "darknet-cache/darknet53.conv.74"
+    SHA512 8983e1c129e2d6e8e3da0cc0781ecb7a07813830ef5a87c24b53100df6a5f23db6c6e6a402aec78025a93fe060b75d1958f1b8f7439a04b54a3f19c81e2ae99b
+  )
+  vcpkg_download_distfile(IMAGENET_CONV_WEIGHTS_V2
+    URLS "https://pjreddie.com/media/files/darknet19_448.conv.23"
+    FILENAME "darknet-cache/darknet19_448.conv.23"
+    SHA512 8016f5b7ddc15c5d7dad231592f5351eea65f608ebdb204f545034dde904e11962f693080dfeb5a4510e7b71bdda151a9121ba0f8a243018d680f01b1efdbd31
+  )
+endif()
+
+#make sure we don't use any integrated pre-built library nor any unnecessary CMake module
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  DISABLE_PARALLEL_CONFIGURE  #since darknet configures a file inside source tree, it is better to disable parallel configure
+  PREFER_NINJA
   OPTIONS
+    -DINSTALL_BIN_DIR:STRING=bin
+    -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_CUDA=${ENABLE_CUDA}
     -DENABLE_OPENCV=${ENABLE_OPENCV}
 )
 
 vcpkg_install_cmake()
 
-#somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
 if(CMAKE_HOST_WIN32)
   set(EXECUTABLE_SUFFIX ".exe")
 else()
@@ -97,8 +114,6 @@ endif()
 vcpkg_fixup_cmake_targets()
 
 file(COPY ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
-file(COPY ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
-file(COPY ${SOURCE_PATH}/cmake/Modules/FindStb.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -110,4 +125,9 @@ if("weights" IN_LIST FEATURES)
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
+endif()
+
+if("weights-train" IN_LIST FEATURES)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet53.conv.74 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet19_448.conv.23 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
 endif()

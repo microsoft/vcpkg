@@ -20,6 +20,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/internal-complibs)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DPREFER_EXTERNAL_LZ4=ON
             -DPREFER_EXTERNAL_SNAPPY=ON
             -DPREFER_EXTERNAL_ZLIB=ON
@@ -32,14 +33,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_copy_pdbs()
-
 if (BLOSC_SHARED)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/debug/bin/blosc.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/bin/blosc.dll)
+vcpkg_copy_pdbs()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/blosc.dll")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/bin/blosc.dll)
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/blosc.dll ${CURRENT_PACKAGES_DIR}/debug/bin/blosc.dll)
+    endif()
 endif()
 
 # cleanup

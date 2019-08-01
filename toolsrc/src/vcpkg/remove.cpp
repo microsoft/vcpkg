@@ -111,7 +111,7 @@ namespace vcpkg::Remove
                 }
             }
 
-            fs.remove(paths.listfile_path(ipv.core->package));
+            fs.remove(paths.listfile_path(ipv.core->package), VCPKG_LINE_INFO);
         }
 
         for (auto&& spgh : spghs)
@@ -179,8 +179,7 @@ namespace vcpkg::Remove
         {
             System::printf("Purging package %s...\n", display_name);
             Files::Filesystem& fs = paths.get_filesystem();
-            std::error_code ec;
-            fs.remove_all(paths.packages / action.spec.dir(), ec);
+            fs.remove_all(paths.packages / action.spec.dir(), VCPKG_LINE_INFO);
             System::printf(System::Color::success, "Purging package %s... done\n", display_name);
         }
     }
@@ -229,7 +228,8 @@ namespace vcpkg::Remove
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            Dependencies::PathsPortFileProvider provider(paths);
+            // Load ports from ports dirs
+            Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });

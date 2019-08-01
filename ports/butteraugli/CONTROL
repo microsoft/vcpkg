@@ -1,4 +1,5 @@
 Source: butteraugli
 Version: 2019-05-08
+Homepage: https://github.com/google/butteraugli
 Description: butteraugli estimates the psychovisual difference between two images
 Build-Depends: libpng, libjpeg-turbo

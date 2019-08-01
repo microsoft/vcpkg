@@ -18,10 +18,17 @@ vcpkg_extract_source_archive_ex(
         0003-CMake-configurable-cmake-config-install-location.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
-    -DBUILD_LIBPROJ_SHARED=${BUILD_SHARED_LIBS}
+    -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
     -DPROJ_DATA_SUBDIR=share/proj4
@@ -34,7 +41,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/proj4)
+vcpkg_fixup_cmake_targets()
 
 # Rename library and adapt cmake configuration
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

@@ -40,8 +40,10 @@
 #include <memory>
 #include <random>
 
+#if defined(_WIN32)
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
+#endif
 
 using namespace vcpkg;
 
@@ -114,9 +116,21 @@ static void inner(const VcpkgCmdArguments& args)
 
     Debug::print("Using vcpkg-root: ", vcpkg_root_dir.u8string(), '\n');
 
+    Optional<fs::path> vcpkg_scripts_root_dir = nullopt;
+    if (nullptr != args.scripts_root_dir)
+    {
+        vcpkg_scripts_root_dir = fs::stdfs::canonical(fs::u8path(*args.scripts_root_dir));
+        Debug::print("Using scripts-root: ", vcpkg_scripts_root_dir.value_or_exit(VCPKG_LINE_INFO).u8string(), '\n');
+    }
+
     auto default_vs_path = System::get_environment_variable("VCPKG_VISUAL_STUDIO_PATH").value_or("");
 
-    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
+
+
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, 
+                                                                   vcpkg_scripts_root_dir,
+                                                                   default_vs_path, 
+                                                                   args.overlay_triplets.get());
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",
@@ -129,7 +143,7 @@ static void inner(const VcpkgCmdArguments& args)
 #else
     const int exit_code = chdir(paths.root.c_str());
 #endif
-    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working directory to the vcpkg root directory failed. Did you incorrectly define the VCPKG_ROOT environment variable, or did you mistakenly create a file named .vcpkg-root somewhere?");
 
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
@@ -388,6 +402,6 @@ int main(const int argc, const char* const* const argv)
     }
     fflush(stdout);
 
-    //It is expected that one of the sub-commands will exit cleanly before we get here.
+    // It is expected that one of the sub-commands will exit cleanly before we get here.
     Checks::exit_fail(VCPKG_LINE_INFO);
 }

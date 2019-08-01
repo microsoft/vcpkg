@@ -2,4 +2,5 @@
 Source: boost-compatibility
 Version: 1.70.0
 Build-Depends: boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/compatibility
 Description: Boost compatibility module

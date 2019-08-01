@@ -13,6 +13,8 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 if(CMAKE_HOST_WIN32)
     set(EXECUTABLE_SUFFIX ".exe")
@@ -46,6 +48,7 @@ vcpkg_apply_patches(
 )
 
 vcpkg_configure_cmake(
+    PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
 )
 
