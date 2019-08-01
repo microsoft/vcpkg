@@ -4,9 +4,11 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
 	message(FATAL_ERROR "easyhook only support windows.")
 endif()
 
-message(".Net framework 4.0 is required, please install it before install easyhook.")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "easyhook can only be built as dynamic library.")
+endif()
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+message(".Net framework 4.0 is required, please install it before install easyhook.")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
