@@ -11,20 +11,21 @@ vcpkg_from_github(
 )
 
 file(COPY 
-	${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt 
-	${CMAKE_CURRENT_LIST_DIR}/casclibConfig.cmake.in
-    ${CMAKE_CURRENT_LIST_DIR}/casclibConfigVersion.cmake.in
-
-	DESTINATION ${SOURCE_PATH}
+        ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt 
+        ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in
+    DESTINATION 
+        ${SOURCE_PATH}
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
+    OPTIONS_DEBUG 
+        -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/casclib RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
