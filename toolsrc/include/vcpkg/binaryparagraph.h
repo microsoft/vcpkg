@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vcpkg/packagespec.h>
-#include <vcpkg/sourceparagraph.h>
 #include <vcpkg/parse.h>
+#include <vcpkg/sourceparagraph.h>
 
 #include <unordered_map>
 
