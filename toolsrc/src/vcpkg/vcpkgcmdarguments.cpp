@@ -389,7 +389,7 @@ namespace vcpkg
             System::printf(System::Color::error, "Unknown option(s) for command '%s':\n", this->command);
             for (auto&& option : options_copy)
             {
-                System::print2("    ", option.first, "\n");
+                System::print2("    '", option.first, "'\n");
             }
             System::print2("\n");
             failed = true;

@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 set(OPENCV_VERSION "4.1.1")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
 endif()
 
@@ -24,18 +24,22 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
 vcpkg_check_features(
- "nonfree"  OPENCV_ENABLE_NONFREE
+ "ade"      WITH_ADE
+ "contrib"  WITH_CONTRIB
  "cuda"     WITH_CUDA
  "dnn"      BUILD_opencv_dnn
- "contrib"  WITH_CONTRIB
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "gdcm"     WITH_GDCM
+ "halide"   WITH_HALIDE
  "ipp"      WITH_IPP
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
+ "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
+ "openmp"   WITH_OPENMP
+ "ovis"     BUILD_opencv_ovis
  "png"      WITH_PNG
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
@@ -44,9 +48,6 @@ vcpkg_check_features(
  "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
- "ade"      WITH_ADE
- "openmp"   WITH_OPENMP
- "ovis"     BUILD_opencv_ovis
 )
 
 if(WITH_CUDA)
@@ -60,10 +61,9 @@ endif()
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
 if(WITH_CONTRIB)
-  if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  if (VCPKG_TARGET_IS_UWP)
     set(BUILD_opencv_quality OFF)
     message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
-
     # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
     message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP, the module has been disabled.")
   else()
@@ -149,7 +149,7 @@ if(BUILD_opencv_dnn)
 endif()
 
 if(WITH_IPP)
-  if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  if(VCPKG_TARGET_IS_OSX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_mac_intel64_general_20180723.tgz"
@@ -160,7 +160,7 @@ if(WITH_IPP)
       message(WARNING "This target architecture is not supported IPPICV")
       set(WITH_IPP OFF)
     endif()
-  elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_intel64_general_20180723.tgz"
@@ -177,7 +177,7 @@ if(WITH_IPP)
       message(WARNING "This target architecture is not supported IPPICV")
       set(WITH_IPP OFF)
     endif()
-  elseif(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
+  elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_intel64_20180723_general.zip"
@@ -201,7 +201,7 @@ if(WITH_IPP)
 endif()
 
 set(WITH_MSMF ON)
-if(VCPKG_CMAKE_SYSTEM_NAME OR NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
   set(WITH_MSMF OFF)
 endif()
 
@@ -216,7 +216,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(WITH_VTK OFF)
   endif()
 
-  if ((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND BUILD_opencv_ovis)
+  if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
     message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
     set(BUILD_opencv_ovis OFF)
   endif()
