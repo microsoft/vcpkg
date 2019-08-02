@@ -3,22 +3,8 @@ project(casclib)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
-set(HEADER_FILES
-	src/CascCommon.h
-	src/CascLib.h
-	src/CascLib.def
-	src/CascPort.h
-	src/common/Array.h
-	src/common/Common.h
-	src/common/Csv.h
-	src/common/FileStream.h
-	src/common/FileTree.h
-	src/common/ListFile.h
-	src/common/Map.h
-	src/jenkins/lookup.h
-)
-
 set(SRC_FILES
+	src/CascLib.def
 	src/CascCommon.cpp
 	src/CascDecompress.cpp
 	src/CascDecrypt.cpp
@@ -59,19 +45,20 @@ set(ZLIB_FILES
 	src/zlib/zutil.c
 )
 
-if(WIN32)
-	target_compile_definitions(casclib UNICODE _UNICODE)
-endif()
+add_library(casclib ${SRC_FILES} ${TOMCRYPT_FILES} ${ZLIB_FILES} ${MD5_FILES})
 
-add_library(casclib ${SRC_FILES} ${HEADER_FILES} ${TOMCRYPT_FILES} ${ZLIB_FILES} ${MD5_FILES})
+if(WIN32)
+	target_compile_definitions(casclib PRIVATE UNICODE _UNICODE)
+endif()
 
 set_target_properties(casclib PROPERTIES PUBLIC_HEADER "src/CascLib.h;src/CascPort.h")
 
 if(INSTALL_HEADERS)
 
 	install(TARGETS casclib EXPORT casclibTargets
-	        ARCHIVE DESTINATION lib
-	        LIBRARY DESTINATION lib
+			RUNTIME DESTINATION bin
+			ARCHIVE DESTINATION lib
+			LIBRARY DESTINATION lib
 	)
 
 	set(CASCLIB_VERSION "release-1.50")
@@ -83,17 +70,18 @@ if(INSTALL_HEADERS)
 	configure_file(casclibConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/casclibConfigVersion.cmake" @ONLY)
 
 	install(FILES
-	        "${PROJECT_BINARY_DIR}/casclibConfig.cmake"
-	        "${PROJECT_BINARY_DIR}/casclibConfigVersion.cmake"
-	        DESTINATION share/casclib
+			"${PROJECT_BINARY_DIR}/casclibConfig.cmake"
+			"${PROJECT_BINARY_DIR}/casclibConfigVersion.cmake"
+			DESTINATION share/casclib
 	)
 
 
 	install(EXPORT casclibTargets DESTINATION share/casclib)
 else(INSTALL_HEADERS)
 
-    install(TARGETS casclib EXPORT casclib
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
-    )
+	install(TARGETS casclib EXPORT casclib
+			RUNTIME DESTINATION bin
+			ARCHIVE DESTINATION lib
+			LIBRARY DESTINATION lib
+	)
 endif(INSTALL_HEADERS)
