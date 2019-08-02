@@ -33,19 +33,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/libevent)
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(COPY ${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py DESTINATION ${CURRENT_PACKAGE_DIR}/tools/libevent)
+    endif()
 else ()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py DESTINATION ${CURRENT_PACKAGE_DIR}/tools/libevent)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 vcpkg_copy_pdbs()
 
