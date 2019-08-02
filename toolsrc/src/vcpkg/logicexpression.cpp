@@ -156,7 +156,7 @@ namespace vcpkg
 
         static bool is_alphanum(char ch)
         {
-            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
+            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '-');
         }
 
         bool evaluate_identifier(const std::string name) const
