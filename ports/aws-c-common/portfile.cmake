@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF v0.3.11
-    SHA512 da845f748aecfff61209f542f4eac8d46738af52ce980d5c8315397f859429dfd9e4bf989ddf2fbe938d1efb33dce9c531c92cbe53388b1d1082d5caa97e8750
+    REF v0.4.3
+    SHA512 dadc3e1059a0bb80fee726e87a7154b50bc30c4aa0404ea8d48966981935863d3f0d6ad9f68c7890ba346cb10f75c34b3edc2f1c3e051a1deb615e973f379d97
     HEAD_REF master
     PATCHES
         fix-dependencey-build-error.patch # This patch fixes dependency port compilation failure
