@@ -11,6 +11,20 @@ index 6e91c08..44b6e18 100644
       "${CMAKE_INSTALL_PREFIX}/include")
  
  # Note the LIBEVENT_CMAKE_DIR is defined in LibeventConfig.cmake.in,
+@@ -1477,10 +1477,12 @@ install(EXPORT LibeventTargets
+         COMPONENT dev)
+ 
+ # Install the scripts.
+-install(PROGRAMS
++if (${EVENT_LIBRARY_SHARED})
++	install(PROGRAMS
+        ${CMAKE_CURRENT_SOURCE_DIR}/event_rpcgen.py
+        DESTINATION "bin"
+        COMPONENT runtime)
++endif()
+ 
+ # Create documents with doxygen.
+ find_program(DOXYGEN doxygen)
 diff --git a/cmake/AddEventLibrary.cmake b/cmake/AddEventLibrary.cmake
 index 9de4484..411ca9d 100644
 --- a/cmake/AddEventLibrary.cmake
