@@ -7,11 +7,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
-    REF release-2.1.10-stable
-    SHA512 8c336df258f7a12164da739b0ea68bebcc8b2ea4f4a839300aa1c5edfb673ac5d6517f882ba04ab35d406489ddd682a319e39fa6784ac0cab73227d42e503a55
+    REF release-2.1.11-stable
+    SHA512 a34ca4ad4d55a989a4f485f929d0ed2438d070d0e12a19d90c2b12783a562419c64db6a2603b093d958a75246d14ffefc8730c69c90b1b2f48339bde947f0e02
     PATCHES
         fix-file_path.patch
-        fix-arm_build.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -35,6 +34,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/libevent)
