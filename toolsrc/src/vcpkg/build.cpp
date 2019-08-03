@@ -938,7 +938,7 @@ namespace vcpkg::Build
                                Commands::Version::version());
     }
 
-    static BuildInfo inner_create_buildinfo(std::unordered_map<std::string, std::string> pgh)
+    static BuildInfo inner_create_buildinfo(Parse::RawParagraph pgh)
     {
         Parse::ParagraphParser parser(std::move(pgh));
 
@@ -995,7 +995,7 @@ namespace vcpkg::Build
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath)
     {
-        const Expected<std::unordered_map<std::string, std::string>> pghs =
+        const Expected<Parse::RawParagraph> pghs =
             Paragraphs::get_single_paragraph(fs, filepath);
         Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");
         return inner_create_buildinfo(*pghs.get());
