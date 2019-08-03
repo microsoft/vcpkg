@@ -12,6 +12,10 @@ Feature: cuda
 Build-Depends: cuda
 Description: Build darknet with support for CUDA
 
+Feature: cudnn
+Build-Depends: darknet[cuda]
+Description: Build darknet with support for CUDNN
+
 Feature: weights
 Description: Download pre-built weights for test
 
@@ -21,3 +25,7 @@ Description: Download pre-built weights for training
 Feature: opencv-cuda
 Build-Depends: opencv[ffmpeg], opencv[cuda]
 Description: Build darknet with support for a CUDA-enabled OpenCV
+
+Feature: full
+Build-Depends: darknet[opencv-cuda], darknet[cudnn], darknet[weights], darknet[weights-train]
+Description: Build darknet fully-featured

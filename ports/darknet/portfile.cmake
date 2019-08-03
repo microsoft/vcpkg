@@ -11,13 +11,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF b2d795e34e1d734d0f451ce9847a0e6b68c32351
-  SHA512 1964aa0d768d37fc614983718aede8b29e562fd8120116b7cd7a1331bb8a3256e28c01cdff6f19bbe7b9d6289b3292188205f362bae38393cee33d8a2e6a5273
+  REF 6467dc576a7ca5a7bebd5c6668a7e06749c59cee
+  SHA512 9e2c7ef9867846b4d7e3f6bd6f38eeb7d4f9d05f9d6085d2f2e5aa613fc7ba2941ec8e70fdcf8b3ab4ebbd60ee8cd4552a88e42d673ddb0d330d138230b01c96
   HEAD_REF master
 )
 
 vcpkg_check_features(
   "cuda"    ENABLE_CUDA
+  "cudnn"   ENABLE_CUDNN
   "opencv"  ENABLE_OPENCV
 )
 
@@ -81,6 +82,7 @@ vcpkg_configure_cmake(
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_CUDA=${ENABLE_CUDA}
+    -DENABLE_CUDNN=${ENABLE_CUDNN}
     -DENABLE_OPENCV=${ENABLE_OPENCV}
 )
 
