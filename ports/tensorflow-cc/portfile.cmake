@@ -1,62 +1,123 @@
 include(vcpkg_common_functions)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(FATAL_ERROR "This tensorflow port currently only supports building for Linux")
+if(CMAKE_HOST_WIN32)
+    message(WARNING "This tensorflow port currently is experimental on Windows platforms.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tensorflow/tensorflow
-    REF v1.12.0
-    SHA512 b145a9118856aa00a829ab6af89bff4e1e131371c96d77b07532544112803c4574d97ef224b28a64437a2af8db4286786dc0b4123efe110b2aa734b443a7e238
+    REF v1.14.0
+    SHA512 ac9ea5a2d1c761aaafbdc335259e29c128127b8d069ec5b206067935180490aa95e93c7e13de57f7f54ce4ba4f34a822face22b4a028f60185edb380e5cd4787
     HEAD_REF master
     PATCHES
-        patches/5b14577d42842871f1cb0eb8dfe77d32db1eb654.patch
-        # https://github.com/tensorflow/tensorflow/issues/20950
-        patches/protobuf-version-bump.patch
-        patches/protobuf-python37-apply.patch
-        # https://github.com/tensorflow/tensorflow/issues/23402
-        patches/explicitly_import_bazelrc.patch
+        file-exists.patch # required or otherwise it cant find python lib path on windows
 )
 
-# https://github.com/protocolbuffers/protobuf/issues/4086
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/patches/protobuf-python37.patch DESTINATION ${SOURCE_PATH}/third_party)
-
+# due to https://github.com/bazelbuild/bazel/issues/8028, bazel must be version 25.0 or higher
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
+set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
+set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    message(FATAL_ERROR "Failed to remove ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-endif()
+function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
+    file(REMOVE_RECURSE ${PATH_TO_REMOVE})
+    if (EXISTS "${PATH_TO_REMOVE}")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
+        file(REMOVE_RECURSE ${PATH_TO_REMOVE})
+    endif()
+endfunction()
+
+# we currently only support the release version
+tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 file(GLOB SOURCES ${SOURCE_PATH}/*)
 file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
-set(ENV{TEST_TMPDIR} ${CURRENT_BUILDTREES_DIR}/bazel)
+if(CMAKE_HOST_WIN32)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
+
+    set(ENV{BAZEL_VS} "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools")
+    set(ENV{BAZEL_VC} "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC")
+endif()
+
+# tensorflow has long file names, which will not work on windows
+# we are temporarily putting it here (will be changed later)
+set(ENV{TEST_TMPDIR} ${DOWNLOADS}/bzl)
+
 set(ENV{CURRENT_PACKAGES_DIR} ${CURRENT_PACKAGES_DIR})
 
-message(STATUS "Warning: Building tensorflow can take an hour or more.")
+set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
+#set(ENV{TF_NEED_JEMALLOC} 0)
+set(ENV{TF_NEED_KAFKA} 0)
+set(ENV{TF_NEED_OPENCL_SYCL} 0)
+set(ENV{TF_NEED_AWS} 0)
+set(ENV{TF_NEED_GCP} 0)
+set(ENV{TF_NEED_HDFS} 0)
+set(ENV{TF_NEED_S3} 0)
+set(ENV{TF_ENABLE_XLA} 0)
+set(ENV{TF_NEED_GDR} 0)
+set(ENV{TF_NEED_VERBS} 0)
+set(ENV{TF_NEED_OPENCL} 0)
+set(ENV{TF_NEED_MPI} 0)
+set(ENV{TF_NEED_TENSORRT} 0)
+set(ENV{TF_NEED_NGRAPH} 0)
+set(ENV{TF_NEED_IGNITE} 0)
+set(ENV{TF_NEED_ROCM} 0)
+set(ENV{TF_SET_ANDROID_WORKSPACE} 0)
+set(ENV{TF_DOWNLOAD_CLANG} 0)
+set(ENV{TF_NCCL_VERSION} 2.3)
+set(ENV{NCCL_INSTALL_PATH} "/usr")
+set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+# for gcc only https://gcc.gnu.org/onlinedocs/gcc-4.5.3/gcc/i386-and-x86_002d64-Options.html
+set(ENV{TF_NEED_CUDA} 0)
+
+message(STATUS "Configuring TensorFlow")
+
 vcpkg_execute_required_process(
-    COMMAND sh "${CMAKE_CURRENT_LIST_DIR}/build_tensorflow.sh"
+    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
+    LOGNAME config-${TARGET_TRIPLET}-rel
 )
+message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc
-    RENAME copyright
-)
+if(CMAKE_HOST_WIN32)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -c opt --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true ///tensorflow:libtensorflow_cc.so ///tensorflow:install_headers"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+else()
+    vcpkg_execute_required_process(
+        COMMAND ${BAZEL} build -c opt --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+endif()
 
-file(INSTALL
-    ${CMAKE_CURRENT_LIST_DIR}/TensorflowCCConfig.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc
-    RENAME unofficial-tensorflow-cc-config.cmake
-)
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-genfiles/tensorflow/include DESTINATION ${CURRENT_PACKAGES_DIR})
+
+if(CMAKE_HOST_WIN32)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0.if.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0.if.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+else()
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+endif()
+
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/TensorflowCCConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/TensorflowCCConfig.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-tensorflow-cc/unofficial-tensorflow-cc-config.cmake)
