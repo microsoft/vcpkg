@@ -40,7 +40,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        -DDUTILITY_USE_ANSI_COLORS=ON
+        -DUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
         ${_CUSTOM_BUILD_FLAGS}
         ${_COMPONENT_FLAGS}
