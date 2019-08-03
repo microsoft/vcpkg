@@ -73,6 +73,7 @@ endif()
 #make sure we don't use any integrated pre-built library nor any unnecessary CMake module
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -114,8 +115,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_fixup_cmake_targets()
-
-file(COPY ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
