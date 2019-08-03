@@ -35,16 +35,17 @@ vcpkg_install_cmake()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/libevent)
-    
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py DESTINATION ${CURRENT_PACKAGE_DIR}/tools/libevent)
-    endif()
 else ()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 endif()
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/libevent/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py ${CURRENT_PACKAGES_DIR}/tools/libevent/event_rpcgen.py)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 vcpkg_copy_pdbs()
 
