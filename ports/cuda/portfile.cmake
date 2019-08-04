@@ -1,4 +1,4 @@
-# Due to the complexity involved, this package doesn't install CUDA. It instead verifies that CUDA is installed.
+# This package doesn't install CUDA. It instead verifies that CUDA is installed.
 # Other packages can depend on this package to declare a dependency on CUDA.
 # If this package is installed, we assume that CUDA is properly installed.
 
@@ -19,6 +19,7 @@ if (NVCC)
         RESULT_VARIABLE error_code)
 endif()
 
+#note: this port must be kept in sync with CUDNN port: every time one is upgraded, the other must be too
 set(CUDA_REQUIRED_VERSION "V10.1.0")
 
 if (error_code)

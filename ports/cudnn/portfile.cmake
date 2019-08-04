@@ -10,6 +10,7 @@ endif()
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+#note: this port must be kept in sync with CUDA port: every time one is upgraded, the other must be too
 set(CUDNN_VERSION "7.6.0")
 set(CUDNN_FULL_VERSION "${CUDNN_VERSION}-cuda10.1_0")
 
