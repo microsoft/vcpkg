@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF d2fa086198b77df44e7fa48b25200e118fa81eb0
-    SHA512 fe92b65e44502381d286b6a7c949055d185e56e7c244a5ab3086b2fe7da76ce81a966daa2d8459794ff0a911b426b1c77e1fc9ef0d616e20868621b1bb30cf67
+    REF v0.2.0
+    SHA512 2b891ff162190cf086fd02d85622dcf419dfcfc638911e2111251689aff02af03b5cffba628bb8d7adb6d399a438d0252bbb203209997e80cc09bb80978d48ff
     HEAD_REF master
 )
 
@@ -22,6 +22,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
+    OPTIONS_DEBUG
+        -DSIMDJSON_SANITIZE=ON
 )
 
 vcpkg_install_cmake()
@@ -38,4 +40,4 @@ file(REMOVE_RECURSE
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 # CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+vcpkg_test_cmake(PACKAGE_NAME ${PORT})
