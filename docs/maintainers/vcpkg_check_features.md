@@ -5,16 +5,20 @@ Check if one or more features are a part of the package installation.
 ```cmake
 vcpkg_check_features(
   [OUT_EXPAND_OPTIONS <output_variable>] 
-  CHECK_FEATURES
+  [CHECK_FEATURES
     <feature1> <output_variable1>
     [<feature2> <output_variable2>]
-    ...
+    ...]
+  [UNCHECK_FEATURES
+    <feature3> <output_variable3>
+    [<feature4> <output_variable4>]
+    ...]
 )
 ```
-`vcpkg_check_features()` accepts two parameters: 
+`vcpkg_check_features()` accepts these parameters: 
 
-* `OUT_EXPAND_OPTIONS`:  
-  An output variable that will be set to contain the definitions (`-D<FEATURE_VAR>=ON|OFF`) for each checked ## feature.
+* (Optional) `OUT_EXPAND_OPTIONS`:  
+  An optional output variable that will be set to contain the definitions (`-D<FEATURE_VAR>=ON|OFF`) for each ## checked ## feature.
   
 * `CHECK_FEATURES`:  
   A list of (feature, output variable) pairs. If a feature is specified for installation, the corresponding output 
@@ -22,19 +26,28 @@ vcpkg_check_features(
   
   The syntax is similar to the `PROPERTIES` argument of `set_target_properties`.
 
+* `UNCHECK_FEATURES`:  
+  Reverse logic version of `CHECK_FEATURES`, sets the output variable to `OFF` is the feature is checked for ## installation, and `ON` otherwise.
+
+Both `CHECK_FEATURES` and `UNCHECK_FEATURES` are optional, however at least one of them must be used.
+
+When using `CHECK_FEATURES` or `UNCHECK_FEATURES` parameter, at least a pair of arguments must be provided.
+
 The output variable set in `OUT_EXPAND_OPTIONS` can be passed as a part of the `OPTIONS` argument when calling ## functions like `vcpkg_config_cmake`:
+
 ```cmake
-vcpkg_check_features(OUT_EXPAND_OPTIONS PORT_FEATURE_OPTIONS)
+vcpkg_check_features(OUT_EXPAND_OPTIONS port_OPTIONS)
 vcpkg_config_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        ${PORT_FEATURE_OPTIONS}
+        ${port_OPTIONS}
 )
 ```
+
 ## Notes
 
-The following code:
+The following code
 
 ```cmake
 if(<feature> IN_LIST FEATURES)
@@ -43,9 +56,7 @@ else()
     set(<output_variable> OFF)
 endif()
 ```
-
-can be replaced by: 
-
+can be replaced by
 ```cmake
 vcpkg_check_features(CHECK_FEATURES <feature> <output_variable>)
 ```
@@ -60,8 +71,7 @@ else()
 endif()
 ```
 
-then you should use the `UNCHECK_FEATURES` parameter instead:
-
+use the `UNCHECK_FEATURES` parameter.
 ```cmake
 vcpkg_check_features(UNCHECK_FEATURES non-posix ENABLE_POSIX_API)
 ```
