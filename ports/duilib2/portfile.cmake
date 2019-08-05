@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/duilib2
-    REF v1.13
-    SHA512 9753097e3eddeb9be25d32c893b57398503bffe89cefdd997a2a7d94c2e019014e54e0fc76b2181b0665f2930dad8e49844045cdd544bc21feb995f154a8c947
+    REF v1.18
+    SHA512 449f7806e570b8b952fc922695093c57f006d4f99283271c692641443fbb9b935118636a29e4882dadabbda8c32b38d0d3da3ddcb33ad6a913d89db2065e7fc6
     HEAD_REF master
 )
 
