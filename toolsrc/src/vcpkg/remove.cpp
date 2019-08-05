@@ -179,8 +179,7 @@ namespace vcpkg::Remove
         {
             System::printf("Purging package %s...\n", display_name);
             Files::Filesystem& fs = paths.get_filesystem();
-            std::error_code ec;
-            fs.remove_all(paths.packages / action.spec.dir(), ec);
+            fs.remove_all(paths.packages / action.spec.dir(), VCPKG_LINE_INFO);
             System::printf(System::Color::success, "Purging package %s... done\n", display_name);
         }
     }

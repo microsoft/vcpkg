@@ -2,8 +2,15 @@ cmake_minimum_required(VERSION 3.3)
 
 project(vcpkg C CXX)
 
+OPTION(BUILD_TESTING "Option for enabling testing" ON)
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
+
+if (DEFINE_DISABLE_METRICS)
+    set(DISABLE_METRICS_VALUE "1")
+else()
+    set(DISABLE_METRICS_VALUE "0")
+endif()
 
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
@@ -25,24 +32,12 @@ else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
-if(GCC OR CLANG)
-    add_compile_options(-std=c++1z)
-    if(WERROR)
-        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
-    endif()
-endif()
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
-file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-
-if (DEFINE_DISABLE_METRICS)
-    set(DISABLE_METRICS_VALUE "1")
-else()
-    set(DISABLE_METRICS_VALUE "0")
-endif()
-
-add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
-target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
-target_include_directories(vcpkg PRIVATE include)
+add_definitions(-DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+include_directories(include)
+link_libraries(Threads::Threads)
 
 if(CLANG)
     include(CheckCXXSourceCompiles)
@@ -56,9 +51,32 @@ if(CLANG)
 endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
-    target_link_libraries(vcpkg PRIVATE stdc++fs)
+    link_libraries(stdc++fs)
 elseif(CLANG)
-    target_link_libraries(vcpkg PRIVATE c++fs)
+    link_libraries(c++fs)
+endif()
+
+if(GCC OR CLANG)
+    add_compile_options(-std=c++1z)
+    if(WERROR)
+        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
+    endif()
+endif()
+
+file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+
+add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+
+if (BUILD_TESTING)
+    file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
+
+    enable_testing()
+    add_executable(vcpkg-test
+        ${VCPKGTEST_SOURCES}
+        $<TARGET_OBJECTS:vcpkglib>)
+
+    add_test(NAME default COMMAND vcpkg-test [${TEST_NAME}])
 endif()
 
 if(MSVC)
@@ -73,7 +91,3 @@ if(MSVC)
   target_sources(vcpkg PRIVATE src/pch.cpp)
   target_compile_options(vcpkg PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(vcpkg PRIVATE Threads::Threads)

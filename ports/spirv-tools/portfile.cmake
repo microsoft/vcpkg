@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 7179751b0216368b4a4bf8c9b0c1c1e3b17d6aa4788b4aeaa7fbb2b6d9d50b34cf209082f3531a2e0994b5fc02416373666d4d12cee282cec2c3d02c13a640a8
     PATCHES
         comment-distutils.patch
+        CMake-targets.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

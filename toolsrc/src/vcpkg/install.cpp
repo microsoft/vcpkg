@@ -331,9 +331,8 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{*scfl.source_control_file,
+                const Build::BuildPackageConfig build_config{scfl,
                                                              action.spec.triplet(),
-                                                             static_cast<fs::path>(scfl.source_location),
                                                              action.build_options,
                                                              action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
@@ -355,8 +354,7 @@ namespace vcpkg::Install
             {
                 auto& fs = paths.get_filesystem();
                 const fs::path package_dir = paths.package_dir(action.spec);
-                std::error_code ec;
-                fs.remove_all(package_dir, ec);
+                fs.remove_all(package_dir, VCPKG_LINE_INFO);
             }
 
             if (action.build_options.clean_downloads == Build::CleanDownloads::YES)

@@ -18,6 +18,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
+    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_UTILS=OFF
