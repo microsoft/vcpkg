@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 # https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
 if(TARGET_TRIPLET MATCHES "^(x86|arm-)")
-    #message(FATAL_ERROR "simdjson doesn't support x86 or 32-bit ARM architecture.")
+    message(FATAL_ERROR "simdjson doesn't support x86 or 32-bit ARM architecture.")
 elseif(TARGET_TRIPLET MATCHES "^arm64")
-    #message(FATAL_ERROR "simdjson doesn't support ARM64 architecture currently.")
+    message(FATAL_ERROR "simdjson doesn't support ARM64 architecture currently.")
 endif()
 
 vcpkg_from_github(
