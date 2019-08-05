@@ -39,6 +39,82 @@ namespace vcpkg::PostBuildLint
         }
     };
 
+    static std::string convert_to_relative_path(const fs::path& dir, const fs::path& package_dir)
+    {
+        std::string path_u8 = dir.generic_u8string();
+        std::string package_u8 = package_dir.generic_u8string();
+
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           path_u8.length() > package_u8.length() &&
+                           path_u8.substr(0, package_u8.length()) == package_u8,
+                           "Directory %s is not a part of package directory %s",
+                           path_u8,
+                           package_u8);
+
+        return path_u8.substr(package_u8.length() + 1, path_u8.length() - package_u8.length());
+    }
+
+    static LintStatus check_config_paths(const Files::Filesystem& fs, const fs::path& package_dir)
+    {
+        std::vector<fs::path> files_found = fs.get_files_recursive(package_dir);
+        Util::erase_remove_if(files_found, [&fs](const fs::path& path) {
+            if (fs.is_directory(path))
+            {
+                return true;
+            }
+
+            // if config cmake file is in a shared or debug folder, we want to skip it
+            if (std::regex_search(path.u8string(), std::regex(R"(share[/\\].*)")))
+            {
+                return true;
+            }
+
+            if (std::regex_search(path.u8string(), std::regex(R"(debug[/\\].*)")))
+            {
+                return true;
+            }
+
+            if (std::regex_search(path.u8string(), std::regex(R"(.*-config.cmake)")) ||
+                std::regex_search(path.u8string(), std::regex(R"(.*Config.cmake)")))
+            {
+                return false;
+            }
+            return true;
+        });
+
+        if (!files_found.empty())
+        {
+            std::string config_msg = "Please fixup the cmake targets:\n";
+
+            for (auto&& file : files_found)
+            {
+                std::smatch matches;
+                std::string file_string = file.u8string();
+                std::string target_name;
+                if (std::regex_search(file_string, matches, std::regex("([a-zA-Z0-9]*)Config.cmake")))
+                {
+                    target_name = matches.str(1);
+                }
+                else if (std::regex_search(file_string, matches, std::regex("([a-zA-Z0-9]*)-config.cmake")))
+                {
+                    target_name = matches.str(1);
+                }
+
+                fs::path target_path = fs::path("share") / target_name;
+                std::string config_path = convert_to_relative_path(file.parent_path(), package_dir);
+                config_msg += Strings::format("    vcpkg_fixup_cmake_targets(CONFIG_PATH %s TARGET_PATH %s)\n",
+                                              config_path,
+                                              target_path.generic_u8string());
+            }
+
+            System::print2(System::Color::warning, config_msg);
+
+            Checks::check_exit(VCPKG_LINE_INFO, false, "");
+            return LintStatus::ERROR_DETECTED;
+        }
+        return LintStatus::SUCCESS;
+    }
+
     Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
         static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
@@ -128,7 +204,6 @@ namespace vcpkg::PostBuildLint
         {
             System::print2(System::Color::warning,
                            "/debug/share should not exist. Please reorganize any important files, then use\n"
-                           "    vcpkg_fixup_cmake_targets(CONFIG_PATH path/to/config)\n"
                            "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)\n");
             return LintStatus::ERROR_DETECTED;
         }
@@ -756,6 +831,7 @@ namespace vcpkg::PostBuildLint
 
         error_count += check_for_files_in_include_directory(fs, build_info.policies, package_dir);
         error_count += check_for_files_in_debug_include_directory(fs, package_dir);
+        error_count += check_config_paths(fs, package_dir);
         error_count += check_for_files_in_debug_share_directory(fs, package_dir);
         error_count += check_folder_lib_cmake(fs, package_dir, spec);
         error_count += check_for_misplaced_cmake_files(fs, package_dir, spec);
