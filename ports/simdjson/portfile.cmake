@@ -2,16 +2,16 @@ include(vcpkg_common_functions)
 
 # https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
 if(TARGET_TRIPLET MATCHES "^(x86|arm-)")
-    message(FATAL_ERROR "simdjson doesn't support x86 or 32-bit ARM architecture.")
+    #message(FATAL_ERROR "simdjson doesn't support x86 or 32-bit ARM architecture.")
 elseif(TARGET_TRIPLET MATCHES "^arm64")
-    message(FATAL_ERROR "simdjson doesn't support ARM64 architecture currently.")
+    #message(FATAL_ERROR "simdjson doesn't support ARM64 architecture currently.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/simdjson
-    REF v0.2.0
-    SHA512 2b891ff162190cf086fd02d85622dcf419dfcfc638911e2111251689aff02af03b5cffba628bb8d7adb6d399a438d0252bbb203209997e80cc09bb80978d48ff
+    REF d9a0e2b8f441c20ad46276fdb8ce24f2aebdc07b
+    SHA512 05523c59b95485b93646370ac1ef9f80a72351a5bfe76797c5bbbf249bedd81b962dad19040a7eaac80744aaec18be9bec1120da44a9a1e4328e68b3d671bdaf
     HEAD_REF master
 )
 
