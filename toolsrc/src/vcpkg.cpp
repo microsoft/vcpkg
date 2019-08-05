@@ -178,22 +178,21 @@ static void inner(const VcpkgCmdArguments& args)
         args.command == "upgrade" || args.command == "export" || args.command == "import")
     {
         // always make sure we have an installed directory
-        std::error_code ec;
         auto& fs = paths.get_filesystem();
         auto installed_old = fs::u8path(default_vs_path) / "installed-old";
         auto installed_new = fs::u8path(default_vs_path) / "installed-new";
         if (fs.exists(installed_old) && fs.exists(installed_new) && !fs.exists(paths.installed))
         {
-            fs.rename(installed_new, paths.installed, ec);
-            fs.remove_all(installed_old, ec);
+            fs.rename(installed_new, paths.installed, VCPKG_LINE_INFO);
+            fs.remove_all(installed_old, VCPKG_LINE_INFO);
         }
         else if (!fs.exists(installed_old) && fs.exists(installed_new) && fs.exists(paths.installed))
         {
-            fs.remove_all(installed_new, ec);
+            fs.remove_all(installed_new, VCPKG_LINE_INFO);
         }
         else if (fs.exists(installed_old) && !fs.exists(installed_new) && fs.exists(paths.installed))
         {
-            fs.remove_all(installed_old, ec);
+            fs.remove_all(installed_old, VCPKG_LINE_INFO);
         }
         else
         {

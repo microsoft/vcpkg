@@ -286,7 +286,7 @@ namespace vcpkg::Commands::Upgrade
 
         fs.rename(paths.installed, paths.root / "installed-old", VCPKG_LINE_INFO);
         fs.rename(upgrade_paths.installed, paths.installed, VCPKG_LINE_INFO);
-        fs.remove_all(paths.root / "installed-old", ec);
+        fs.remove_all(paths.root / "installed-old", VCPKG_LINE_INFO);
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
