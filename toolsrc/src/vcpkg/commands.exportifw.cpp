@@ -352,13 +352,15 @@ namespace vcpkg::Export::IFW
         System::print2("Generating repository ", repository_dir.generic_u8string(), "...\n");
 
         std::error_code ec;
+        fs::path failure_point;
         Files::Filesystem& fs = paths.get_filesystem();
 
-        fs.remove_all(repository_dir, ec);
+        fs.remove_all(repository_dir, ec, failure_point);
         Checks::check_exit(VCPKG_LINE_INFO,
                            !ec,
-                           "Could not remove outdated repository directory %s",
-                           repository_dir.generic_u8string());
+                           "Could not remove outdated repository directory %s due to file %s",
+                           repository_dir.generic_u8string(),
+                           failure_point.string());
 
         const auto cmd_line = Strings::format(R"("%s" --packages "%s" "%s" > nul)",
                                               repogen_exe.u8string(),
@@ -414,16 +416,18 @@ namespace vcpkg::Export::IFW
                    const VcpkgPaths& paths)
     {
         std::error_code ec;
+        fs::path failure_point;
         Files::Filesystem& fs = paths.get_filesystem();
 
         // Prepare packages directory
         const fs::path ifw_packages_dir_path = get_packages_dir_path(export_id, ifw_options, paths);
 
-        fs.remove_all(ifw_packages_dir_path, ec);
+        fs.remove_all(ifw_packages_dir_path, ec, failure_point);
         Checks::check_exit(VCPKG_LINE_INFO,
                            !ec,
-                           "Could not remove outdated packages directory %s",
-                           ifw_packages_dir_path.generic_u8string());
+                           "Could not remove outdated packages directory %s due to file %s",
+                           ifw_packages_dir_path.generic_u8string(),
+                           failure_point.string());
 
         fs.create_directory(ifw_packages_dir_path, ec);
         Checks::check_exit(

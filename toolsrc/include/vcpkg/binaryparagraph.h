@@ -2,6 +2,7 @@
 
 #include <vcpkg/packagespec.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/parse.h>
 
 #include <unordered_map>
 
@@ -13,7 +14,7 @@ namespace vcpkg
     struct BinaryParagraph
     {
         BinaryParagraph();
-        explicit BinaryParagraph(std::unordered_map<std::string, std::string> fields);
+        explicit BinaryParagraph(Parse::RawParagraph fields);
         BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet, const std::string& abi_tag);
         BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet);
 

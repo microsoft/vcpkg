@@ -1,0 +1,146 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 02757a9..b2715dd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,6 +15,11 @@ IF(COMMAND CMAKE_POLICY)
+   ENDFOREACH()
+ ENDIF()
+ 
++if (BUILD_SHARED_LIBS)
++	set(DEFAULT_LINKAGE DYNAMIC)
++else()
++	set(DEFAULT_LINKAGE STATIC)
++endif()
+ 
+ PROJECT(mariadb-connector-c C)
+ 
+diff --git a/cmake/install_plugins.cmake b/cmake/install_plugins.cmake
+index cd5616c..d058a5c 100644
+--- a/cmake/install_plugins.cmake
++++ b/cmake/install_plugins.cmake
+@@ -8,7 +8,7 @@
+ # plugin installation
+ 
+ MACRO(INSTALL_PLUGIN name binary_dir)
+-  INSTALL(TARGETS ${name} COMPONENT ClientPlugins DESTINATION ${INSTALL_PLUGINDIR})
++  INSTALL(TARGETS ${name} COMPONENT ClientPlugins DESTINATION ${INSTALL_PLUGINDIR}/../../../bin/plugin)
+   IF(WIN32)
+     FILE(APPEND ${CC_BINARY_DIR}/win/packaging/plugin.conf "<File Id=\"${name}.dll\" Name=\"${name}.dll\" DiskId=\"1\" Source=\"${binary_dir}/${CMAKE_BUILD_TYPE}/${name}.dll\"/>\n")
+     FILE(APPEND ${CC_BINARY_DIR}/win/packaging/plugin.conf "<File Id=\"${name}.pdb\" Name=\"${name}.pdb\" DiskId=\"1\" Source=\"${binary_dir}/${CMAKE_BUILD_TYPE}/${name}.pdb\"/>\n")
+diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
+index a1f039e..03a3a6f 100644
+--- a/libmariadb/CMakeLists.txt
++++ b/libmariadb/CMakeLists.txt
+@@ -386,10 +386,10 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
+ TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
+ 
+ IF(UNIX)
+-  ADD_LIBRARY(libmariadb SHARED ${libmariadb_RC} ${MARIADB_OBJECTS} ${EMPTY_FILE})
++  ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} ${EMPTY_FILE})
+   SET_TARGET_PROPERTIES(libmariadb PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
+ ELSE()
+-  ADD_LIBRARY(libmariadb SHARED ${libmariadb_RC} mariadbclient.def)
++  ADD_LIBRARY(libmariadb ${libmariadb_RC} mariadbclient.def)
+   TARGET_LINK_LIBRARIES(libmariadb  mariadbclient)
+   SET_TARGET_PROPERTIES(libmariadb PROPERTIES LINKER_LANGUAGE C)
+ ENDIF()
+@@ -441,13 +441,14 @@ ENDIF()
+ 
+ INSTALL(TARGETS mariadbclient
+           COMPONENT Development
+-          DESTINATION ${INSTALL_LIBDIR})
++          LIBRARY DESTINATION lib)
+ INSTALL(TARGETS libmariadb
+           COMPONENT SharedLibraries
+-        DESTINATION ${INSTALL_LIBDIR})
++		  RUNTIME DESTINATION bin
++		  LIBRARY DESTINATION lib
++		  ARCHIVE DESTINATION lib)
+ 
+-
+-IF(WIN32)
++IF(0)
+    # On Windows, install PDB
+    INSTALL(FILES $<TARGET_PDB_FILE:libmariadb> DESTINATION "${INSTALL_LIBDIR}"
+            CONFIGURATIONS Debug RelWithDebInfo
+diff --git a/plugins/auth/CMakeLists.txt b/plugins/auth/CMakeLists.txt
+index 42f6f05..9a57146 100644
+--- a/plugins/auth/CMakeLists.txt
++++ b/plugins/auth/CMakeLists.txt
+@@ -14,7 +14,7 @@ REGISTER_PLUGIN(TARGET mysql_native_password
+ REGISTER_PLUGIN(TARGET dialog
+                 TYPE MARIADB_CLIENT_PLUGIN_AUTH
+                 CONFIGURATIONS DYNAMIC STATIC OFF
+-                DEFAULT DYNAMIC
++                DEFAULT ${DEFAULT_LINKAGE}
+                 SOURCES ${CC_SOURCE_DIR}/plugins/auth/dialog.c
+                         ${CC_SOURCE_DIR}/libmariadb/get_password.c)
+ 
+@@ -33,7 +33,7 @@ IF(WITH_SSL)
+   REGISTER_PLUGIN(TARGET caching_sha2_password
+                 TYPE MARIADB_CLIENT_PLUGIN_AUTH
+                 CONFIGURATIONS DYNAMIC STATIC OFF
+-                DEFAULT DYNAMIC
++                DEFAULT ${DEFAULT_LINKAGE}
+                 SOURCES ${CC_SOURCE_DIR}/plugins/auth/caching_sha2_pw.c 
+                         ${CRYPT_SOURCE}
+                 LIBRARIES ${CACHING_SHA2_LIBS})
+@@ -53,7 +53,7 @@ IF(GSSAPI_SOURCES)
+   REGISTER_PLUGIN(TARGET auth_gssapi_client
+                   TYPE MARIADB_CLIENT_PLUGIN_AUTH
+                   CONFIGURATIONS DYNAMIC STATIC OFF
+-                  DEFAULT DYNAMIC
++                  DEFAULT ${DEFAULT_LINKAGE}
+                   SOURCES ${GSSAPI_SOURCES}
+                   INCLUDES ${CC_SOURCE_DIR}/plugins/auth ${GSSAPI_INCS}
+                   LIBRARIES ${GSSAPI_LIBS})
+@@ -68,7 +68,7 @@ IF(${WITH_SSL} STREQUAL "OPENSSL" OR ${WITH_SSL} STREQUAL "SCHANNEL")
+   REGISTER_PLUGIN(TARGET sha256_password
+                   TYPE MARIADB_CLIENT_PLUGIN_AUTH
+                   CONFIGURATIONS DYNAMIC STATIC OFF
+-                  DEFAULT DYNAMIC
++                  DEFAULT ${DEFAULT_LINKAGE}
+                   SOURCES ${AUTH_DIR}/sha256_pw.c
+                   LIBRARIES ${SHA256_LIBS})
+ ENDIF()
+@@ -85,6 +85,6 @@ REGISTER_PLUGIN(TARGET mysql_old_password
+ REGISTER_PLUGIN(TARGET mysql_clear_password
+                 TYPE MARIADB_CLIENT_PLUGIN_AUTH
+                 CONFIGURATIONS DYNAMIC STATIC OFF
+-                DEFAULT DYNAMIC
++                DEFAULT ${DEFAULT_LINKAGE}
+                 SOURCES ${AUTH_DIR}/mariadb_cleartext.c)
+ 
+diff --git a/plugins/io/CMakeLists.txt b/plugins/io/CMakeLists.txt
+index 8c304c9..3547107 100644
+--- a/plugins/io/CMakeLists.txt
++++ b/plugins/io/CMakeLists.txt
+@@ -7,7 +7,7 @@ IF (WITH_CURL)
+     REGISTER_PLUGIN(TARGET remote_io
+                   TYPE MARIADB_CLIENT_PLUGIN_IO
+                   CONFIGURATIONS DYNAMIC STATIC OFF
+-                  DEFAULT DYNAMIC
++                  DEFAULT ${DEFAULT_LINKAGE}
+                   SOURCES ${CC_SOURCE_DIR}/plugins/io/remote_io.c
+                   INCLUDES ${CURL_INCLUDE_DIR}
+                   LIBRARIES ${CURL_LIBRARIES})
+diff --git a/plugins/pvio/CMakeLists.txt b/plugins/pvio/CMakeLists.txt
+index 76eb3ef..3601622 100644
+--- a/plugins/pvio/CMakeLists.txt
++++ b/plugins/pvio/CMakeLists.txt
+@@ -15,13 +15,13 @@ IF(WIN32)
+   REGISTER_PLUGIN(TARGET pvio_npipe
+                 TYPE MARIADB_CLIENT_PLUGIN_PVIO
+                 CONFIGURATIONS STATIC DYNAMIC DEFAULT
+-                DEFAULT DYNAMIC
++                DEFAULT ${DEFAULT_LINKAGE}
+                 SOURCES ${CC_SOURCE_DIR}/plugins/pvio/pvio_npipe.c)
+ 
+   # shared memory
+   REGISTER_PLUGIN(TARGET pvio_shmem
+                 TYPE MARIADB_CLIENT_PLUGIN_PVIO
+                 CONFIGURATIONS STATIC DYNAMIC DEFAULT
+-                DEFAULT DYNAMIC
++                DEFAULT ${DEFAULT_LINKAGE}
+                 SOURCES ${CC_SOURCE_DIR}/plugins/pvio/pvio_shmem.c)
+ ENDIF()
