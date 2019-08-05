@@ -89,8 +89,6 @@ function(vcpkg_check_features)
     endif()
 
     macro(_check_features _vcf_ARGUMENT _set_if _set_else)
-        message(STATUS "_check_features(${_vcf_ARGUMENT} ${_set_if} ${_set_else})")
-
         list(LENGTH ${_vcf_ARGUMENT} FEATURES_SET_LEN)
         math(EXPR _vcf_INCORRECT_ARGN "${FEATURES_SET_LEN} % 2")
         if(_vcf_INCORRECT_ARGN)
