@@ -1,14 +1,10 @@
 option(VCPKG_ENABLE_ADD_LIBRARY "Enables override of the cmake function add_library." ON)
-mark_as_advanced(VCPKG_ENABLE_ADD_LIBRARY)
-CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_ADD_LIBRARY_EXTERNAL_OVERRIDE "Tells VCPKG to use _add_library instead of add_library." OFF "NOT VCPKG_ENABLE_ADD_LIBRARY" OFF)
-mark_as_advanced(VCPKG_ENABLE_ADD_LIBRARY_EXTERNAL_OVERRIDE)
+
+vcpkg_define_function_overwrite_option(add_library)
 
 function(vcpkg_add_library name)
-    if(VCPKG_ENABLE_ADD_LIBRARY OR VCPKG_ENABLE_ADD_LIBRARY_EXTERNAL_OVERRIDE)
-        _add_library(${ARGV})
-    else()
-        add_library(${ARGV})
-    endif()
+    _add_library(${ARGV})
+
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
     list(FIND ARGV "INTERFACE" INTERFACE_IDX)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
@@ -27,16 +23,10 @@ function(vcpkg_add_library name)
     endif()
 endfunction()
 
-if(VCPKG_ENABLE_ADD_LIBRARY)
+if(VCPKG_ENABLE_add_library)
     function(add_library name)
-        if(DEFINED _vcpkg_add_library_guard)
-            vcpkg_msg(FATAL_ERROR "add_library" "INFINIT LOOP DETECTED. Guard _vcpkg_add_library_guard. Did you supply your own add_library override? \n \
-                                    If yes: please set VCPKG_ENABLE_ADD_LIBRARY off and call vcpkg_add_library if you want to have vcpkg corrected behavior. \n \
-                                    If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
-        else()
-            set(_vcpkg_add_library_guard ON)
-        endif()
+        vcpkg_enable_function_overwrite_guard(add_library "")
         vcpkg_add_library(${ARGV})
-        unset(_vcpkg_add_library_guard)
+        vcpkg_disable_function_overwrite_guard(add_library "")
     endfunction()
 endif()

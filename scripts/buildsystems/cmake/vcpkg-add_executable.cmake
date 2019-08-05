@@ -1,9 +1,6 @@
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 
-option(VCPKG_ENABLE_ADD_EXECUTABLE "Enables override of the cmake function add_executable." ON)
-mark_as_advanced(VCPKG_ENABLE_ADD_EXECUTABLE)
-CMAKE_DEPENDENT_OPTION(VCPKG_ADD_EXECUTABLE_EXTERNAL_OVERRIDE "Tells VCPKG to use _add_executable instead of add_executable." OFF "NOT VCPKG_ENABLE_ADD_EXECUTABLE" OFF)
-mark_as_advanced(VCPKG_ADD_EXECUTABLE_EXTERNAL_OVERRIDE)
+vcpkg_define_function_overwrite_option(add_executable)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsPhone")
     set(_VCPKG_TARGET_TRIPLET_PLAT uwp)
@@ -18,11 +15,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
 endif()
 
 function(vcpkg_add_executable name)
-    if(VCPKG_ENABLE_ADD_EXECUTABLE OR VCPKG_ADD_EXECUTABLE_EXTERNAL_OVERRIDE)
-        _add_executable(${ARGV})
-    else()
-        add_executable(${ARGV})
-    endif()
+    _add_executable(${ARGV})
+
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
     list(FIND ARGV "MACOSX_BUNDLE" MACOSX_BUNDLE_IDX)
@@ -50,16 +44,10 @@ function(vcpkg_add_executable name)
     endif()
 endfunction()
 
-if(VCPKG_ENABLE_ADD_EXECUTABLE)
+if(VCPKG_ENABLE_add_executable)
     function(add_executable name)
-        if(DEFINED _vcpkg_add_executable_guard)
-            vcpkg_msg(FATAL_ERROR "add_executable" "INFINIT LOOP DETECTED. Guard _vcpkg_add_executable_guard. Did you supply your own add_executable override? \n \
-                                    If yes: please set VCPKG_ENABLE_ADD_EXECUTABLE off and call vcpkg_add_executable if you want to have vcpkg corrected behavior. You might also want to check VCPKG_ADD_EXECUTABLE_EXTERNAL_OVERRIDE\n \
-                                    If no: please open an issue on GITHUB describe the fail case!" ALWAYS)
-        else()
-            set(_vcpkg_add_executable_guard ON)
-        endif()
+        vcpkg_enable_function_overwrite_guard(add_executable "")
         vcpkg_add_executable(${ARGV})
-        unset(_vcpkg_add_executable_guard)
+        vcpkg_disable_function_overwrite_guard(add_executable "")
     endfunction()
 endif()

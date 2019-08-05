@@ -4,11 +4,6 @@ vcpkg_define_function_overwrite_option(find_library)
 CMAKE_DEPENDENT_OPTION(VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE "Tells VCPKG to use _find_library instead of find_library." OFF "NOT VCPKG_ENABLE_find_library" OFF)
 mark_as_advanced(VCPKG_ENABLE_FIND_LIBRARY_EXTERNAL_OVERRIDE)
 
-#Setup common debug suffix used by ports;
-set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;_d;_debug")
-mark_as_advanced(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES)
-
-
 function(vcpkg_find_library _vcpkg_find_library_imp_output)
     cmake_policy(PUSH)
     cmake_policy(SET CMP0054 NEW)
@@ -139,7 +134,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
             endif()
         endif()           
     elseif("${${_vcpkg_find_library_imp_output}}" MATCHES "NOTFOUND")
-        if("${_vcpkg_find_library_imp_output}" MATCHES "_DEBUG" AND ${VCPKG_DEBUG_AVAILABLE}) #Retry search (probably requires a search without common debug suffixes)
+        if("${_vcpkg_find_library_imp_output}" MATCHES "_DEBUG" AND VCPKG_DEBUG_AVAILABLE) #Retry search (probably requires a search without common debug suffixes)
             vcpkg_search_library_debug(_vcpkg_debug_lib_path NAMES "${_vcpkg_find_lib_NAMES}" PATH_SUFFIXES "${_vcpkg_find_lib_PATH_SUFFIXES}")
             if(${_vcpkg_debug_lib_path})
                 vcpkg_search_library_release(_vcpkg_release_lib_path NAMES ${_vcpkg_find_lib_NAMES} PATH_SUFFIXES ${_vcpkg_find_lib_PATH_SUFFIXES})
@@ -188,7 +183,7 @@ if(VCPKG_ENABLE_find_library)
         vcpkg_enable_function_overwrite_guard(find_library "")
 
         vcpkg_find_library(${_vcpkg_find_library_var_name} ${ARGN})
-        set(${_vcpkg_find_library_var_name} "${${_vcpkg_find_library_var_name}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
+        #set(${_vcpkg_find_library_var_name} "${${_vcpkg_find_library_var_name}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
         
         vcpkg_disable_function_overwrite_guard(find_library "")
     endfunction()
