@@ -34,21 +34,23 @@ vcpkg_config_cmake(
 ```
 ## Notes
 
+The following code:
+
+```cmake
+if(<feature> IN_LIST FEATURES)
+    set(<output_variable> ON)
+else()
+    set(<output_variable> OFF)
+endif()
+```
+
+can be replaced by: 
+
 ```cmake
 vcpkg_check_features(CHECK_FEATURES <feature> <output_variable>)
 ```
 
-can be used as a replacement of:
-
-```cmake
-if(<feature> IN_LIST FEATURES)
-    set(<output_variable> ON)
-else()
-    set(<output_variable> OFF)
-endif()
-```
-
-However, if you have a feature that was checked like this before:
+If reverse logic is required:
 
 ```cmake
 if(<feature> IN_LIST FEATURES)
@@ -58,19 +60,11 @@ else()
 endif()
 ```
 
-then you should not use `vcpkg_check_features` instead. [```oniguruma```](https://github.com/microsoft/vcpkg/blob/## master/ports/oniguruma/portfile.cmake), for example, has a feature named `non-posix` which is checked with:
+then you should use the `UNCHECK_FEATURES` parameter instead:
+
 ```cmake
-if("non-posix" IN_LIST FEATURES)
-    set(ENABLE_POSIX_API OFF)
-else()
-    set(ENABLE_POSIX_API ON)
-endif()
+vcpkg_check_features(UNCHECK_FEATURES non-posix ENABLE_POSIX_API)
 ```
-and by replacing these code with:
-```cmake
-vcpkg_check_features(non-posix ENABLE_POSIX_API)
-```
-is totally wrong.
 
 ## Examples
 * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
