@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libdmusic/riffcpp
-    REF  v2.1.0
-    SHA512 bf41876b2d2305d5ec83dfb2739becf4c9d584248022123c985f5a49ccf051a53f2453b715052ae4fb96e57ab1191001572139803c7c36f37f97c6e21c59d1ba
+    REF  v2.2.1
+    SHA512 646a98e6f6cd3995081a6242a866effab2968e20b2700248e3d19036bed426236e3844ad09d4b542e023f5f280d74575c47abe5e5e94ce0d77536f4f0a33b8c1
     HEAD_REF master
 )
 
@@ -16,6 +16,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
