@@ -18,7 +18,7 @@ vcpkg_check_features(
 `vcpkg_check_features()` accepts these parameters: 
 
 * `OUT_FEATURE_OPTIONS`:  
-  An output variable that will contain a list of definitions for each feature.  
+  An output variable to contain a list of definitions for each feature.  
   This is a required parameter.
   
 * `FEATURES`:  
@@ -41,8 +41,9 @@ The `FEATURES` name parameter can be omitted if no `INVERTED_FEATURES` are used.
 
 At least one (`FEATURE_NAME`, `OPTION_NAME`) pair must be passed to the function call.
 
-Features passed to `FEATURES` and `INVERTED_FEATURES` are not validated against duplication.  
-If the same (`FEATURE_NAME`, `OPTION_NAME`) is passed to both lists, two conflicting ## definitions are added to `OUT_FEATURE_OPTIONS`
+Arguments passed to `FEATURES` and `INVERTED_FEATURES` are not validated to prevent duplication.  
+If the same (`FEATURE_NAME`, `OPTION_NAME`) pair is passed to both lists, 
+two conflicting definitions are added to `OUT_FEATURE_OPTIONS`.
 
 
 ## Examples

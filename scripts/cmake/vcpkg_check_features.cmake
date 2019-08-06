@@ -18,7 +18,7 @@
 ## `vcpkg_check_features()` accepts these parameters: 
 ## 
 ## * `OUT_FEATURE_OPTIONS`:  
-##   An output variable that will contain a list of definitions for each feature.  
+##   An output variable to contain a list of definitions for each feature.  
 ##   This is a required parameter.
 ##   
 ## * `FEATURES`:  
@@ -41,8 +41,9 @@
 ## 
 ## At least one (`FEATURE_NAME`, `OPTION_NAME`) pair must be passed to the function call.
 ## 
-## Features passed to `FEATURES` and `INVERTED_FEATURES` are not validated against duplication.  
-## If the same (`FEATURE_NAME`, `OPTION_NAME`) is passed to both lists, two conflicting ## definitions are added to `OUT_FEATURE_OPTIONS`
+## Arguments passed to `FEATURES` and `INVERTED_FEATURES` are not validated to prevent duplication.  
+## If the same (`FEATURE_NAME`, `OPTION_NAME`) pair is passed to both lists, 
+## two conflicting definitions are added to `OUT_FEATURE_OPTIONS`.
 ## 
 ## 
 ## ## Examples
@@ -122,7 +123,7 @@ function(vcpkg_check_features)
     cmake_parse_arguments(_vcf "" "OUT_FEATURE_OPTIONS" "FEATURES;INVERTED_FEATURES" ${ARGN})
 
     if (NOT DEFINED _vcf_OUT_FEATURE_OPTIONS)
-        message(FATAL_ERROR "OUT_FEATURE_OPTIONS is not defined")
+        message(FATAL_ERROR "OUT_FEATURE_OPTIONS must be specified.")
     endif()
 
     macro(_check_features _vcf_ARGUMENT _set_if _set_else)
@@ -132,7 +133,6 @@ function(vcpkg_check_features)
             message(FATAL_ERROR "Called with incorrect number of arguments.")
         endif()
 
-        # Process (feature, output_var) pairs
         set(_vcf_IS_FEATURE_NAME_ARG ON)
         foreach(_vcf_ARG ${${_vcf_ARGUMENT}})
             if(_vcf_IS_FEATURE_NAME_ARG)
@@ -159,7 +159,7 @@ function(vcpkg_check_features)
         _check_features(_vcf_FEATURES ON OFF)
         _check_features(_vcf_INVERTED_FEATURES OFF ON)
     else() 
-        # Skip the first two parameters that correspond to OUT_FEATURE_OPTIONS and its value 
+        # Skip arguments that correspond to OUT_FEATURE_OPTIONS and its value.
         list(SUBLIST ARGN 2 -1 _vcf_ARGN)
         _check_features(_vcf_ARGN ON OFF)
     endif()
