@@ -81,7 +81,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
                         cmake_policy(POP)
                         vcpkg_msg(FATAL_ERROR "set_property" "Property IMPORTED_IMPLIB_DEBUG: ${_vcpkg_target_implib_loc_dbg}. Not set to vcpkg release library dir!" ALWAYS)
                     else()
-                        vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} IMPORTED_IMPLIB_DEBUG is correct: ${_vcpkg_target_implib_loc_rel}.")
+                        vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} IMPORTED_IMPLIB_DEBUG is correct: ${_vcpkg_target_implib_loc_dbg}.")
                     endif()
                 endif()
                 
@@ -113,7 +113,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
                 
                 #IMPLIB
                 if(_vcpkg_target_implib_loc AND "${_vcpkg_target_implib_loc}" MATCHES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}(/lib|/debug/lib)")
-                    vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} has property IMPLIB_LOCATION: ${_vcpkg_target_implib_loc}. Checking for configuration dependent locations!")                  
+                    vcpkg_msg(STATUS "set_property" "${_vcpkg_target_name} has property IMPLIB_LOCATION: ${_vcpkg_target_implib_loc}. Checking for configuration dependent locations!")
                     #Need VCPKG_LIBTRACK here
                     vcpkg_extract_library_name_from_path(_vcpkg_libtrack_name ${_vcpkg_target_implib_loc})
                     if(NOT ${_vcpkg_target_implib_loc_rel})
