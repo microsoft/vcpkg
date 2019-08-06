@@ -10,7 +10,7 @@ function(vcpkg_target_link_libraries _target_name)
   
   vcpkg_msg(STATUS "vcpkg_target_link_libraries" "Target ${_target_name} links: ${ARGV}")
 
-  cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_tll "" "" "PRIVATE;PUBLIC;INTERFACE;LINK_PUBLIC;LINK_INTERFACE_LIBRARIES")
+  cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_tll "" "" "PRIVATE;PUBLIC;INTERFACE;LINK_PRIVATE;LINK_PUBLIC;LINK_INTERFACE_LIBRARIES")
   
   if(DEFINED _vcpkg_tll_PRIVATE)
     vcpkg_msg(STATUS "vcpkg_target_link_libraries" "Target ${_target_name} links private: ${_vcpkg_tll_PRIVATE}")
