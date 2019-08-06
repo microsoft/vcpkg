@@ -112,6 +112,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
             set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} CACHE INTERNAL "")
         elseif("${_vcpkg_find_library_imp_output}" MATCHES "_RELEASE$|_REL$")
             if(${_vcpkg_release_lib_path} MATCHES "NOTFOUND") # Release must be found. 
+                cmake_policy(POP)
                 vcpkg_msg(FATAL_ERROR "find_library" "Unable to find release library within vcpkg. Release library must always be found! \
                                                       variable: ${_vcpkg_find_library_imp_output} search names: ${_vcpkg_find_lib_NAMES}")
             endif()
@@ -120,6 +121,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
             if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
                 set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} CACHE INTERNAL "")
                 if(${_vcpkg_debug_lib_path} MATCHES "NOTFOUND") # If only release was build we use that instead!
+                    cmake_policy(POP)
                     vcpkg_msg(FATAL_ERROR "find_library" "Build type is debug but vcpkg was unable to find the debug library. \
                                            variable: ${_vcpkg_find_library_imp_output} search names: ${_vcpkg_find_lib_NAMES}")
                     set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} CACHE INTERNAL "")
