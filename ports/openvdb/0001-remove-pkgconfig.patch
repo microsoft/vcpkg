@@ -1,0 +1,129 @@
+diff --git a/cmake/FindBlosc.cmake b/cmake/FindBlosc.cmake
+index 03e361e..b44f46d 100644
+--- a/cmake/FindBlosc.cmake
++++ b/cmake/FindBlosc.cmake
+@@ -104,11 +104,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find blosc
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_Blosc QUIET blosc)
+-
+ # ------------------------------------------------------------------------
+ #  Search for blosc include DIR
+ # ------------------------------------------------------------------------
+diff --git a/cmake/FindCppUnit.cmake b/cmake/FindCppUnit.cmake
+index fb8a28b..fea685e 100644
+--- a/cmake/FindCppUnit.cmake
++++ b/cmake/FindCppUnit.cmake
+@@ -106,11 +106,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find cppunit
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_CppUnit QUIET cppunit)
+-
+ # ------------------------------------------------------------------------
+ #  Search for CppUnit include DIR
+ # ------------------------------------------------------------------------
+diff --git a/cmake/FindIlmBase.cmake b/cmake/FindIlmBase.cmake
+index f0a0d7f..9f31355 100644
+--- a/cmake/FindIlmBase.cmake
++++ b/cmake/FindIlmBase.cmake
+@@ -152,11 +152,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find IlmBase
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_IlmBase QUIET IlmBase)
+-
+ # ------------------------------------------------------------------------
+ #  Search for IlmBase include DIR
+ # ------------------------------------------------------------------------
+diff --git a/cmake/FindLog4cplus.cmake b/cmake/FindLog4cplus.cmake
+index 6890724..10dc931 100644
+--- a/cmake/FindLog4cplus.cmake
++++ b/cmake/FindLog4cplus.cmake
+@@ -106,11 +106,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find log4cplus
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_Log4cplus QUIET log4cplus)
+-
+ # ------------------------------------------------------------------------
+ #  Search for Log4cplus include DIR
+ # ------------------------------------------------------------------------
+diff --git a/cmake/FindOpenEXR.cmake b/cmake/FindOpenEXR.cmake
+index 302c1df..3d00c3d 100644
+--- a/cmake/FindOpenEXR.cmake
++++ b/cmake/FindOpenEXR.cmake
+@@ -145,11 +145,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find OpenEXR
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_OpenEXR QUIET OpenEXR)
+-
+ # ------------------------------------------------------------------------
+ #  Search for OpenEXR include DIR
+ # ------------------------------------------------------------------------
+diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
+index 783dfed..1fd43be 100644
+--- a/cmake/FindOpenVDB.cmake
++++ b/cmake/FindOpenVDB.cmake
+@@ -153,11 +153,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find OpenVDB
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_OpenVDB QUIET OpenVDB)
+-
+ # This CMake module supports being called from external packages AND from
+ # within the OpenVDB repository for building openvdb components with the
+ # core library build disabled. Determine where we are being called from:
+diff --git a/cmake/FindTBB.cmake b/cmake/FindTBB.cmake
+index 01696ce..8fe73e5 100644
+--- a/cmake/FindTBB.cmake
++++ b/cmake/FindTBB.cmake
+@@ -141,11 +141,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find Tbb
+-
+-find_package(PkgConfig)
+-pkg_check_modules(PC_Tbb QUIET tbb)
+-
+ # ------------------------------------------------------------------------
+ #  Search for tbb include DIR
+ # ------------------------------------------------------------------------
+diff --git a/cmake/OpenVDBGLFW3Setup.cmake b/cmake/OpenVDBGLFW3Setup.cmake
+index 3a29dc7..4dc6269 100644
+--- a/cmake/OpenVDBGLFW3Setup.cmake
++++ b/cmake/OpenVDBGLFW3Setup.cmake
+@@ -77,12 +77,6 @@ else()
+   endif()
+ endif()
+ 
+-# Additionally try and use pkconfig to find glfw, though we only use
+-# pkg-config to re-direct to the cmake. In other words, glfw's cmake is
+-# expected to be installed
+-find_package(PkgConfig)
+-pkg_check_modules(PC_glfw3 QUIET glfw3)
+-
+ if(PC_glfw3_FOUND)
+   foreach(DIR ${PC_glfw3_LIBRARY_DIRS})
+     list(APPEND _GLFW3_ROOT_SEARCH_DIR ${DIR})

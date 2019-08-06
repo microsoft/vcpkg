@@ -30,7 +30,6 @@ vcpkg_configure_cmake(
         -DFL_BUILD_TESTS=OFF
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 

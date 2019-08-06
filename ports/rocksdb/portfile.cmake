@@ -3,20 +3,22 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v5.17.2
-  SHA512 c9f9bff747d0d2c97f8adb71d6a3bd5dc206c2fc567a47d0400abac61fec7f2a386d16cda5447bcf592cca006fd6d4c5ae1a68d122e2e2a03d3ebcc002dae147
+  REF v6.1.2
+  SHA512 3d9e994b202c9f1c1c188e37a4f781bb97af5ba72f2f3f59091b79f402b819c9765dcd1e7d0851b5119c0bf510aa3f5bed44a542798ee81795a8328d71554b38
   HEAD_REF master
   PATCHES
     0001-disable-gtest.patch
     0002-only-build-one-flavor.patch
     0003-zlib-findpackage.patch
     0004-use-find-package.patch
+    0005-static-linking-in-linux.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")
 file(COPY
   "${CMAKE_CURRENT_LIST_DIR}/Findlz4.cmake"
   "${CMAKE_CURRENT_LIST_DIR}/Findsnappy.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/Findzstd.cmake"
   DESTINATION "${SOURCE_PATH}/cmake/modules"
 )
 
@@ -39,6 +41,11 @@ if("zlib" IN_LIST FEATURES)
   set(WITH_ZLIB ON)
 endif()
 
+set(WITH_ZLIB OFF)
+if("zstd" IN_LIST FEATURES)
+  set(WITH_ZLIB ON)
+endif()
+
 set(WITH_TBB OFF)
 set(ROCKSDB_IGNORE_PACKAGE_TBB TRUE)
 if("tbb" IN_LIST FEATURES)
@@ -56,6 +63,7 @@ vcpkg_configure_cmake(
   -DWITH_LZ4=${WITH_LZ4}
   -DWITH_ZLIB=${WITH_ZLIB}
   -DWITH_TBB=${WITH_TBB}
+  -DWITH_ZSTD=${WITH_ZSTD}
   -DWITH_TESTS=OFF
   -DUSE_RTTI=1
   -DROCKSDB_INSTALL_ON_WINDOWS=ON

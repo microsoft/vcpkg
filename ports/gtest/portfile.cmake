@@ -37,6 +37,7 @@ file(
         "${SOURCE_PATH}/googletest/src/gtest-death-test.cc"
         "${SOURCE_PATH}/googletest/src/gtest-filepath.cc"
         "${SOURCE_PATH}/googletest/src/gtest-internal-inl.h"
+        "${SOURCE_PATH}/googletest/src/gtest-matchers.cc"
         "${SOURCE_PATH}/googletest/src/gtest-port.cc"
         "${SOURCE_PATH}/googletest/src/gtest-printers.cc"
         "${SOURCE_PATH}/googletest/src/gtest-test-part.cc"

@@ -6,37 +6,26 @@ vcpkg_from_github(
     REF pcl-1.9.1
     SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
     HEAD_REF master
-    PATCHES pcl_utils.patch
-            pcl_config.patch
-            find_flann.patch
+    PATCHES
+        pcl_utils.patch
+        pcl_config.patch
+        use_flann_targets.patch
+        boost-1.70.patch
+        cuda_10_1.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
-set(WITH_OPENNI2 OFF)
-if("openni2" IN_LIST FEATURES)
-    set(WITH_OPENNI2 ON)
-endif()
-
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-    set(WITH_QT ON)
-endif()
-
-set(WITH_PCAP OFF)
-if("pcap" IN_LIST FEATURES)
-    set(WITH_PCAP ON)
-endif()
-
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-    set(WITH_CUDA ON)
-endif()
-
-set(BUILD_TOOLS OFF)
-if("tools" IN_LIST FEATURES)
-    set(BUILD_TOOLS ON)
-endif()
+vcpkg_check_features(
+    openni2 WITH_OPENNI2
+    qt WITH_QT
+    pcap WITH_PCAP
+    cuda WITH_CUDA
+    tools BUILD_TOOLS
+    opengl WITH_OPENGL
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -61,10 +50,11 @@ vcpkg_configure_cmake(
         -DWITH_QHULL=ON
         -DWITH_QT=${WITH_QT}
         -DWITH_VTK=ON
+        -DWITH_OPENGL=${WITH_OPENGL}
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/pcl)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

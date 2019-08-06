@@ -2,11 +2,15 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	message(FATAL_ERROR "Cross-compiling is not supported")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ampl/mp
-    REF d305155b047b69fc5c6e5fda8630c753d7973b9a
-    SHA512 2c8ffd6de946a6f8ea94a8e0c00f03f67753ad99534e0d5fcaaaeb472fe76a3383324bcb628a31d8c01bc5f60254790f5508c8394096a4f05672f814dbd6fe2e
+    REF 67875b71ef68511277ec2dc8224f613487cefce9
+    SHA512 fad2496c10b843ddad7c4dba1eea1b4cd22e90be12dec2ad598fbd1ed5e1c492d92c5130490c7045ea608bc9ea2af191661c39b3bee3bc5159663f306ce50950
     HEAD_REF master
     PATCHES
     disable-matlab-mex.patch
@@ -16,6 +20,7 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
     -DBUILD=asl
     -DBUILD_TESTING=OFF

@@ -1,14 +1,28 @@
---- a/src/asl/CMakeLists.txt	2019-02-07 22:45:15.191909400 -0600
-+++ b/src/asl/CMakeLists.txt	2019-02-07 22:47:10.364936600 -0600
-@@ -216,6 +216,11 @@ add_mp_library(asl-core OBJECT ${ASL_COR
-   COMPILE_DEFINITIONS ${ASL_COMPILE_DEFINITIONS}
-   INCLUDE_DIRECTORIES ${CMAKE_CURRENT_BINARY_DIR})
+diff --git a/src/asl/solvers/avltree.c b/src/asl/solvers/avltree.c
+index 7a9adaba..4dd97054 100644
+--- a/src/asl/solvers/avltree.c
++++ b/src/asl/solvers/avltree.c
+@@ -54,6 +54,9 @@ AVL_Tree {
+ 	void (*Free)(void*);
+ 	};
  
-+if (MSVC)
-+  set_source_files_properties(solvers/avltree.c solvers/sphes.c
-+    PROPERTIES COMPILE_OPTIONS /Od)
-+endif ()
-+
- # Public ASL headers.
- set(ASL_HEADERS aslbuilder.h aslexpr.h aslexpr-visitor.h
-   aslproblem.h aslinterface.h ${CMAKE_CURRENT_BINARY_DIR}/stdio1.h)
++#if defined(_MSC_VER) && _MSC_VER < 1917
++#pragma optimize("", off)
++#endif
+  AVL_Tree*
+ AVL_Tree_alloc2(void *v, AVL_Elcomp cmp, void *(*Malloc)(size_t), void (*Free)(void*))
+ {
+diff --git a/src/asl/solvers/sphes.c b/src/asl/solvers/sphes.c
+index 326d997f..ae8952ed 100644
+--- a/src/asl/solvers/sphes.c
++++ b/src/asl/solvers/sphes.c
+@@ -452,6 +452,9 @@ compar(const void *a, const void *b)
+ #undef del_mblk
+ #define del_mblk(b,c) Del_mblk_ASL(a,b,(Char*)(c))
+ 
++#if defined(_MSC_VER) && _MSC_VER < 1917
++#pragma optimize("", off)
++#endif
+  static void
+ new_Hesoprod(ASL_pfgh *asl, ograd *L, ograd *R, real coef)
+ {

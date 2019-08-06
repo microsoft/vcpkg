@@ -6,7 +6,7 @@ index 6f4ccf8..14a3743 100644
  
  set(netCDF_LIBRARIES netcdf)
  
-+find_package(HDF5 REQUIRED)
++find_package(HDF5 COMPONENTS C HL CONFIG REQUIRED)
 +
  # include target information
  include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")

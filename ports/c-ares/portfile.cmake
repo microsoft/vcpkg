@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_15_0
-    SHA512 3c925e0b3a25f3b656a145966ca763f77ae4ccefd87f2d9ae01cae786eeca0ce8397af4ab21da64f516b4603850638f969056184c310372d22aeb5cbfd2704c8
+    REF 9f1fdbf5dd633f81352fac0d6bc0d0c4d45be459
+    SHA512 2bb3696e839e37c6f2be4b979ae6d0eab2914d6f0ca043f688e3bb3071d2348cb64424049f019c16bc05d472dd61d5071e865edd229dce023a50f556a1961766
     HEAD_REF master
 )
 
@@ -30,7 +30,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/c-ares")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/c-ares)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)

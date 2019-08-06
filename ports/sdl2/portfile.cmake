@@ -10,11 +10,17 @@ vcpkg_from_github(
         export-symbols-only-in-shared-build.patch
         fix-x86-windows.patch
         enable-winrt-cmake.patch
+        SDL-2.0.9-bug-4391-fix.patch # See: https://bugzilla.libsdl.org/show_bug.cgi?id=4391 # Can be removed once SDL 2.0.10 is released
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
+
+set(VULKAN_VIDEO OFF)
+if("vulkan" IN_LIST FEATURES)
+    set(VULKAN_VIDEO ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,7 +28,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
-        -DVIDEO_VULKAN=OFF
+        -DVIDEO_VULKAN=${VULKAN_VIDEO}
         -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DLIBC=ON
 )
@@ -30,11 +36,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/SDL2")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SDL2)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/SDL2.framework/Resources")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "SDL2.framework/Resources")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH SDL2.framework/Resources)
 endif()
 
 file(REMOVE_RECURSE

@@ -6,8 +6,8 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF 773980d7882e4d5f1e7c9be2a0797d61fbc19da1
-        SHA512 fa374db336f5d186bcfd6ba70660167fdc87a1847376579cee894af3d2810aba097b3468e75c0b4213b68423cc07215032eeae6ee07590378237606112286ac4
+        REF f0642196af85aeb4f2717d9cc11176290f321fb8
+        SHA512 fd8ee6e2be11c13f7388e57eb9c98397b6cb026ca370131db55b6118908701cdff2a1eaabb89bfe84591d6ee17163d06b7b86ad615216203bcbf0c8595d45452
         HEAD_REF master
         PATCHES no-double-expand-cmake.patch
     )
@@ -15,8 +15,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF 6229ecb0d49b7e75fdb88d2c477e94e5b5394c43
-        SHA512 b0426702dd7a79e149dd4f6c2b8d0b43cd06a82ce014112dcaba1de4e669157fe08a5f3748d431a9e2f559e066f658c1a62f5ac08d2da0bd1f5cf04dca2e52c2
+        REF f0642196af85aeb4f2717d9cc11176290f321fb8
+        SHA512 fd8ee6e2be11c13f7388e57eb9c98397b6cb026ca370131db55b6118908701cdff2a1eaabb89bfe84591d6ee17163d06b7b86ad615216203bcbf0c8595d45452
         HEAD_REF master
         PATCHES no-double-expand-cmake.patch
     )
@@ -43,3 +43,4 @@ file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRE
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+

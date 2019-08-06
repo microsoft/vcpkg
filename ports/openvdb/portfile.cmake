@@ -2,17 +2,14 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO dreamworksanimation/openvdb
-    REF v5.0.0
-    SHA512 8916d54683d81144114e57f8332be43b7547e6da5d194f6147bcefd4ee9e8e7ec817f27b65adb129dfd149e6b308f4bab30591ee953ee2c319636491bf051a2b
+    REPO AcademySoftwareFoundation/openvdb
+    REF v6.1.0
+    SHA512 99ebbb50104ef87792ab73989e8714c4f283fb02d04c3033126b5f0d927ff7bbdebe35c8214ded841692941d8ed8ae551fd6d1bf90ad7dc07bedc3b38b9c4b38
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/UseGLEWOnWindowsForViewer.patch
-    ${CMAKE_CURRENT_LIST_DIR}/AddLinkageAndToolsChoice.patch
+        0001-remove-pkgconfig.patch
+        0002-fix-cmake-modules.patch
+        0003-fix-cmake.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -24,94 +21,51 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENVDB_BUILD_TOOLS ON)
-    set(OPENVDB_SHARED ON) # tools require shared version of the library
-else()
-    set(OPENVDB_BUILD_TOOLS OFF)
+  else()
+    message(ERROR "Unable to build tools if static libraries are required")
+  endif()
 endif()
-
-file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}" INSTALL_LOCATION)
-
-file(TO_NATIVE_PATH "${INSTALL_LOCATION}/include" INCLUDE_LOCATION)
-file(TO_NATIVE_PATH "${INSTALL_LOCATION}/lib/" LIB_LOCATION)
-file(TO_NATIVE_PATH "${INSTALL_LOCATION}/debug/lib/" LIB_LOCATION_DEBUG)
-
-file(TO_NATIVE_PATH "${LIB_LOCATION}/zlib.lib" ZLIB_LIBRARY)
-file(TO_NATIVE_PATH "${LIB_LOCATION}/tbb.lib" Tbb_TBB_LIBRARY)
-file(TO_NATIVE_PATH "${LIB_LOCATION}/tbbmalloc.lib" Tbb_TBBMALLOC_LIBRARY)
-file(TO_NATIVE_PATH "${LIB_LOCATION_DEBUG}/tbb_debug.lib" Tbb_TBB_LIBRARY_DEBUG)
-file(TO_NATIVE_PATH "${LIB_LOCATION_DEBUG}/tbbmalloc_debug.lib" Tbb_TBBMALLOC_LIBRARY_DEBUG)
-
-file(TO_NATIVE_PATH "${LIB_LOCATION}/Half.lib" Ilmbase_HALF_LIBRARY)
-file(TO_NATIVE_PATH "${LIB_LOCATION}/Iex-2_2.lib" Ilmbase_IEX_LIBRARY)
-file(TO_NATIVE_PATH "${LIB_LOCATION}/IlmThread-2_2.lib" Ilmbase_ILMTHREAD_LIBRARY)
-
-if (OPENVDB_STATIC)
-    file(TO_NATIVE_PATH "${LIB_LOCATION}/glfw3.lib" GLFW3_LIBRARY)
-else()
-    file(TO_NATIVE_PATH "${LIB_LOCATION}/glfw3dll.lib" GLFW3_LIBRARY)
-endif()
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DOPENVDB_BUILD_UNITTESTS=OFF
-            -DOPENVDB_BUILD_PYTHON_MODULE=OFF
-            -DOPENVDB_ENABLE_3_ABI_COMPATIBLE=OFF
-            -DUSE_GLFW3=ON
-            -DGLFW3_USE_STATIC_LIBS=${OPENVDB_STATIC}
-            -DBlosc_USE_STATIC_LIBS=${OPENVDB_STATIC}
-            -DOpenexr_USE_STATIC_LIBS=${OPENVDB_STATIC}
-            -DIlmbase_USE_STATIC_LIBS=${OPENVDB_STATIC}
-            -DGLFW3_glfw_LIBRARY=${GLFW3_LIBRARY}
-
-            -DIlmbase_HALF_LIBRARY=${Ilmbase_HALF_LIBRARY}
-            -DIlmbase_IEX_LIBRARY=${Ilmbase_IEX_LIBRARY}
-            -DIlmbase_ILMTHREAD_LIBRARY=${Ilmbase_ILMTHREAD_LIBRARY}
-
-            -DOPENVDB_STATIC=${OPENVDB_STATIC}
-            -DOPENVDB_SHARED=${OPENVDB_SHARED}
-            -DOPENVDB_BUILD_TOOLS=${OPENVDB_BUILD_TOOLS}
-
-            -DZLIB_INCLUDE_DIR=${INCLUDE_LOCATION}
-            -DTBB_INCLUDE_DIR=${INCLUDE_LOCATION}
-            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-
-            -DGLFW3_LOCATION=${INSTALL_LOCATION}
-            -DGLEW_LOCATION=${INSTALL_LOCATION}
-            -DILMBASE_LOCATION=${INSTALL_LOCATION}
-            -DOPENEXR_LOCATION=${INSTALL_LOCATION}
-            -DTBB_LOCATION=${INSTALL_LOCATION}
-            -DBLOSC_LOCATION=${INSTALL_LOCATION}
-    OPTIONS_RELEASE
-        -DTBB_LIBRARY_PATH=${LIB_LOCATION}
-        -DTbb_TBB_LIBRARY=${Tbb_TBB_LIBRARY}
-        -DTbb_TBBMALLOC_LIBRARY=${Tbb_TBBMALLOC_LIBRARY}
-    OPTIONS_DEBUG
-        -DTBB_LIBRARY_PATH=${LIB_LOCATION_DEBUG}
-        -DTbb_TBB_LIBRARY=${Tbb_TBB_LIBRARY_DEBUG}
-        -DTbb_TBBMALLOC_LIBRARY=${Tbb_TBBMALLOC_LIBRARY_DEBUG}
+    OPTIONS
+        -DOPENVDB_BUILD_UNITTESTS=OFF
+        -DOPENVDB_BUILD_PYTHON_MODULE=OFF
+        -DOPENVDB_ENABLE_3_ABI_COMPATIBLE=OFF
+        -DUSE_GLFW3=ON
+        -DOPENVDB_CORE_STATIC=${OPENVDB_STATIC}
+        -DOPENVDB_CORE_SHARED=${OPENVDB_SHARED}
+        -DOPENVDB_BUILD_VDB_PRINT=${OPENVDB_BUILD_TOOLS}
+        -DOPENVDB_BUILD_VDB_VIEW=${OPENVDB_BUILD_TOOLS}
+        #-DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS} # Enable vdb_render when https://github.com/openexr/openexr/issues/302 is fixed
+        -DOPENVDB_BUILD_VDB_LOD=${OPENVDB_BUILD_TOOLS}
 )
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenVDB TARGET_PATH share/openvdb)
+
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if (OPENVDB_BUILD_TOOLS)
     # copy tools to tools/openvdb directory
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_print.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_print.exe)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_render.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_render.exe)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_view.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_view.exe)
+    #file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_render.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_render.exe)
+    #file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_view.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_view.exe) # vdb_view does not support win32 currently.
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_lod.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_lod.exe)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
     # remove debug versions of tools
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_render.exe)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_print.exe)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_view.exe)
+    #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_render.exe)
+    #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_view.exe) # vdb_view does not support win32 currently.
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_lod.exe)
 endif()
 
 # Handle copyright

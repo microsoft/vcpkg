@@ -3,12 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tessil/ordered-map
-    REF v0.8.0
-    SHA512 9e0cc8ea4d5731e89cb6d58a54394b4ab0378cb2488d9e462ad80facd8aa06e21aaa0f9b969fbd7ac22c99bae09ab7c6e7980857784aa0b1a3a2b0c216ffa79a
+    REF v0.8.1
+    SHA512 c776fc82c971ec507f12fa071c5831bbbf94a0351f7ae936f60b73b91be2a264737b606a6be7bae0cc6b971f01c619a78dad3072ac603b26a2a13836184a8f3a
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
