@@ -1,5 +1,5 @@
 #Setup common debug suffix used by ports;
-set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;D;_d;_D;_debug;_Debug;_DEBUG")
+set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;D;_d;_D;-gd;_debug;_Debug;_DEBUG")
 mark_as_advanced(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES)
 
 function(vcpkg_search_library_debug OUTPUT_VAR)
