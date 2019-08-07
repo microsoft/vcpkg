@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(stormlib)
 
-option(INSTALL_HEADERS "Install header files" ON)
-
 set(SRC_FILES
 	stormlib_dll/StormLib.def
 	src/adpcm/adpcm.cpp
@@ -259,35 +257,25 @@ target_compile_definitions(stormlib PRIVATE _7ZIP_ST BZ_STRICT_ANSI)
 
 set_target_properties(stormlib PROPERTIES PUBLIC_HEADER "src/StormLib.h;src/StormPort.h")
 
-if(INSTALL_HEADERS)
+install(TARGETS stormlib EXPORT stormlibTargets
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+)
 
-	install(TARGETS stormlib EXPORT stormlibTargets
-			RUNTIME DESTINATION bin
-			ARCHIVE DESTINATION lib
-			LIBRARY DESTINATION lib
-	)
+set(STORMLIB_VERSION "9.22")
 
-	set(STORMLIB_VERSION "9.22")
+export(TARGETS stormlib FILE "${PROJECT_BINARY_DIR}/stormlibTargets.cmake")
+export(PACKAGE stormlib)
 
-	export(TARGETS stormlib FILE "${PROJECT_BINARY_DIR}/stormlibTargets.cmake")
-	export(PACKAGE stormlib)
+configure_file(stormlibConfig.cmake.in        "${PROJECT_BINARY_DIR}/stormlibConfig.cmake"        @ONLY)
+configure_file(stormlibConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/stormlibConfigVersion.cmake" @ONLY)
 
-	configure_file(stormlibConfig.cmake.in        "${PROJECT_BINARY_DIR}/stormlibConfig.cmake"        @ONLY)
-	configure_file(stormlibConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/stormlibConfigVersion.cmake" @ONLY)
-
-	install(FILES
-		"${PROJECT_BINARY_DIR}/stormlibConfig.cmake"
-		"${PROJECT_BINARY_DIR}/stormlibConfigVersion.cmake"
-		DESTINATION share/stormlib
-	)
+install(FILES
+	"${PROJECT_BINARY_DIR}/stormlibConfig.cmake"
+	"${PROJECT_BINARY_DIR}/stormlibConfigVersion.cmake"
+	DESTINATION share/stormlib
+)
 
 
-	install(EXPORT stormlibTargets DESTINATION share/stormlib)
-else(INSTALL_HEADERS)
-
-	install(TARGETS stormlib EXPORT stormlib
-			RUNTIME DESTINATION bin
-			ARCHIVE DESTINATION lib
-			LIBRARY DESTINATION lib
-	)
-endif(INSTALL_HEADERS)
+install(EXPORT stormlibTargets DESTINATION share/stormlib)
