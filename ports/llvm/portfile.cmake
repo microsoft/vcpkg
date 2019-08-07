@@ -39,7 +39,6 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DLLVM_TARGETS_TO_BUILD=X86
         -DLLVM_INCLUDE_TOOLS=ON
@@ -111,6 +110,20 @@ file(GLOB MACHOFILES ${CURRENT_PACKAGES_DIR}/include/llvm/TextAPI/MachO/*)
 if(NOT MACHOFILES)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/TextAPI/MachO)
 endif()
+
+set(CLANG_MODULE_LIST AST Basic Driver Parse Sema Serialization StaticAnalyzer/Checkers)
+foreach(MODULE_NAME ${CLANG_MODULE_LIST})
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/clang/${MODULE_NAME}/Release)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/clang/${MODULE_NAME}/Win32)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/clang/${MODULE_NAME}/x64)
+endforeach()
+
+set(LLVM_MODULE_LIST IR Support)
+foreach(MODULE_NAME ${LLVM_MODULE_LIST})
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/${MODULE_NAME}/Release)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/${MODULE_NAME}/Win32)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/${MODULE_NAME}/x64)
+endforeach()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
