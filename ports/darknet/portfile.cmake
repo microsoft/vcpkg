@@ -20,7 +20,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   "cuda"  ENABLE_CUDA
   "opencv" ENABLE_OPENCV
 )
-message(STATUS "Enabled features: ${FEATURE_OPTIONS}")
 
 if ("cuda" IN_LIST FEATURES)
   if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})

@@ -139,9 +139,9 @@ vcpkg_configure_cmake(
 
 ## Examples in portfiles
 
-* [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
-* [xsimd](https://github.com/microsoft/vcpkg/blob/master/ports/xsimd/portfile.cmake)
-* [xtensor](https://github.com/microsoft/vcpkg/blob/master/ports/xtensor/portfile.cmake)
+* [cpprestsdk](https://github.com/microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+* [pcl](https://github.com/microsoft/vcpkg/blob/master/ports/pcl/portfile.cmake)
+* [rocksdb](https://github.com/microsoft/vcpkg/blob/master/ports/rocksdb/portfile.cmake)
 
 
 ## Source

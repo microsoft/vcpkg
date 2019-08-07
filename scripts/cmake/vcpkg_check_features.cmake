@@ -139,9 +139,9 @@
 ## 
 ## ## Examples in portfiles
 ## 
-## * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
-## * [xsimd](https://github.com/microsoft/vcpkg/blob/master/ports/xsimd/portfile.cmake)
-## * [xtensor](https://github.com/microsoft/vcpkg/blob/master/ports/xtensor/portfile.cmake)
+## * [cpprestsdk](https://github.com/microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+## * [pcl](https://github.com/microsoft/vcpkg/blob/master/ports/pcl/portfile.cmake)
+## * [rocksdb](https://github.com/microsoft/vcpkg/blob/master/ports/rocksdb/portfile.cmake)
 ## 
 function(vcpkg_check_features)
     cmake_parse_arguments(_vcf "" "OUT_FEATURE_OPTIONS" "FEATURES;INVERTED_FEATURES" ${ARGN})
