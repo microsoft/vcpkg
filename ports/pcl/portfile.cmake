@@ -25,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda        WITH_CUDA
     cuda        BUILD_CUDA
     cuda        BUILD_GPU
-    tools       BUILD_TOOLS
+    tools       BUILD_tools
     opengl      WITH_OPENGL
 )
 
