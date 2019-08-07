@@ -35,6 +35,14 @@ set(SRC_FILES
 	src/libtomcrypt/src/misc/crypt_libc.c
 )
 
+if(MSVC)
+    # This file is used to create a DLL on windows
+    # Use BUILD_SHARED_LIBS to create StormLib.dll
+    set(STORM_DEF_FILES
+           stormlib_dll/StormLib.def
+    )
+endif()
+
 set(TOMCRYPT_FILES
 	src/libtomcrypt/src/hashes/hash_memory.c
 	src/libtomcrypt/src/hashes/md5.c
@@ -242,7 +250,9 @@ if(WIN32)
 	set(LINK_LIBS wininet)
 endif()
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+list(APPEND LINK_LIBS ZLIB::ZLIB BZip2::BZip2)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 	message(STATUS "Using FreeBSD port")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DO_LARGEFILE=0 -Dstat64=stat -Dlstat64=lstat -Dlseek64=lseek -Doff64_t=off_t -Dfstat64=fstat -Dftruncate64=ftruncate")
 endif()
@@ -250,32 +260,16 @@ endif()
 add_library(stormlib ${LIB_TYPE} ${SRC_FILES} ${TOMCRYPT_FILES} ${TOMMATH_FILES} ${STORM_DEF_FILES})
 add_definitions(-D__SYS_ZLIB -D__SYS_BZLIB)
 
-target_link_libraries(stormlib PRIVATE ZLIB::ZLIB)
-target_link_libraries(stormlib PRIVATE BZip2::BZip2)
+target_link_libraries(stormlib PRIVATE ${LINK_LIBS})
 
 target_compile_definitions(stormlib PRIVATE _7ZIP_ST BZ_STRICT_ANSI)
 
 set_target_properties(stormlib PROPERTIES PUBLIC_HEADER "src/StormLib.h;src/StormPort.h")
 
-install(TARGETS stormlib EXPORT stormlibTargets
+install(TARGETS stormlib EXPORT stormlibConfig
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
 )
 
-set(STORMLIB_VERSION "9.22")
-
-export(TARGETS stormlib FILE "${PROJECT_BINARY_DIR}/stormlibTargets.cmake")
-export(PACKAGE stormlib)
-
-configure_file(stormlibConfig.cmake.in        "${PROJECT_BINARY_DIR}/stormlibConfig.cmake"        @ONLY)
-configure_file(stormlibConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/stormlibConfigVersion.cmake" @ONLY)
-
-install(FILES
-	"${PROJECT_BINARY_DIR}/stormlibConfig.cmake"
-	"${PROJECT_BINARY_DIR}/stormlibConfigVersion.cmake"
-	DESTINATION share/stormlib
-)
-
-
-install(EXPORT stormlibTargets DESTINATION share/stormlib)
+install(EXPORT stormlibConfig NAMESPACE stormlib:: DESTINATION share/stormlib)

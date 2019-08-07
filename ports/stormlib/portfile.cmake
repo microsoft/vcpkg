@@ -9,10 +9,7 @@ vcpkg_from_github(
 )
 
 file(COPY 
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt 
-    ${CMAKE_CURRENT_LIST_DIR}/stormlibConfig.cmake.in
-    ${CMAKE_CURRENT_LIST_DIR}/stormlibConfigVersion.cmake.in
-
+    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
     DESTINATION ${SOURCE_PATH}
 )
 
