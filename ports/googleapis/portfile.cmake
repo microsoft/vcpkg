@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_TARGET_IS_UWP)
+    message(FATAL_ERROR "Package `googleapis` doesn't support UWP")
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
