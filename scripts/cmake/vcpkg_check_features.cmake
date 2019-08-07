@@ -4,22 +4,24 @@
 ## ## Usage
 ## ```cmake
 ## vcpkg_check_features(
-##   OUT_FEATURE_OPTIONS <output_variable>  
+##   OUT_FEATURE_OPTIONS <FEATURE_OPTIONS>  
 ##   [FEATURES
-##     <feature1> <output_variable1>
-##     [<feature2> <output_variable2>]
+##     <cuda> <WITH_CUDA>
+##     [<opencv> <WITH_OPENCV>]
 ##     ...]
 ##   [INVERTED_FEATURES
-##     <feature3> <output_variable3>
-##     [<feature4> <output_variable4>]
+##     <cuda> <IGNORE_PACKAGE_CUDA>
+##     [<opencv> <IGNORE_PACKAGE_OPENCV>]
 ##     ...]
 ## )
 ## ```
 ## `vcpkg_check_features()` accepts these parameters: 
 ## 
 ## * `OUT_FEATURE_OPTIONS`:  
-##   An output variable to contain a list of definitions for each feature.  
-##   This is a required parameter.
+##   An output variable, the function will clear the variable passed to `OUT_FEATURE_OPTIONS` 
+##   and then set it to contain a list of option definitions (`-D<OPTION_NAME>=ON|OFF`).
+##   
+##   This should be set to `FEATURE_OPTIONS` by convention.
 ##   
 ## * `FEATURES`:  
 ##   A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs.  
@@ -34,6 +36,7 @@
 ##     
 ##     * `-D<OPTION_NAME>=OFF`, if a feature is specified for installation,
 ##     * `-D<OPTION_NAME>=ON`, otherwise. 
+## 
 ## 
 ## ## Notes
 ## 
@@ -54,19 +57,19 @@
 ## $ ./vcpkg install mimalloc[asm,secure]
 ## 
 ## # ports/mimalloc/portfile.cmake
-## vcpkg_check_features(OUT_FEATURE_OPTIONS mimalloc_FEATURE_OPTIONS
+## vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 ##   # Keyword FEATURES is optional if INVERTED_FEATURES are not used
 ##     asm       MI_SEE_ASM
 ##     override  MI_OVERRIDE
 ##     secure    MI_SECURE
 ## )
 ## 
-## vcpkg_config_cmake(
+## vcpkg_configure_cmake(
 ##   SOURCE_PATH ${SOURCE_PATH}
 ##   PREFER_NINJA
 ##   OPTIONS
 ##     # Expands to "-DMI_SEE_ASM=ON; -DMI_OVERRIDE=OFF; -DMI_SECURE=ON"
-##     ${mimalloc_FEATURE_OPTIONS}
+##     ${FEATURE_OPTIONS}
 ## )
 ## ```
 ## 
@@ -76,40 +79,61 @@
 ## $ ./vcpkg install cpprestsdk[websockets]
 ## 
 ## # ports/cpprestsdk/portfile.cmake
-## vcpkg_check_features(OUT_FEATURE_OPTIONS cpprestsdk_FEATURE_OPTIONS
+## vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 ##   INVERTED_FEATURES # <- Keyword INVERTED_FEATURES required
 ##     brotli      CPPREST_EXCLUDE_BROTLI
 ##     websockets  CPPREST_EXCLUDE_WEBSOCKETS
 ## )
 ## 
-## vcpkg_config_cmake(
+## vcpkg_configure_cmake(
 ##   SOURCE_PATH ${SOURCE_PATH}
 ##   PREFER_NINJA
 ##   OPTIONS
 ##     # Expands to "-DCPPREST_EXCLUDE_BROTLI=ON; -DCPPREST_EXCLUDE_WEBSOCKETS=OFF"
-##     ${cpprestsdk_FEATURE_OPTIONS}
+##     ${FEATURE_OPTIONS}
 ## )
 ## ```
 ## 
-## ### Example 3: Mixed regular and inverted features
+## ### Example 3: Set multiple options for same feature
+## 
+## ```cmake
+## $ ./vcpkg install pcl[cuda]
+## 
+## # ports/pcl/portfile.cmake
+## vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+##     cuda  WITH_CUDA
+##     cuda  BUILD_CUDA
+##     cuda  BUILD_GPU
+## )
+## 
+## vcpkg_configure_cmake(
+##   SOURCE_PATH ${SOURCE_PATH}
+##   PREFER_NINJA
+##   OPTIONS
+##     # Expands to "-DWITH_CUDA=ON; -DBUILD_CUDA=ON; -DBUILD_GPU=ON"
+##     ${FEATURE_OPTIONS}
+## )
+## ``` 
+## 
+## ### Example 4: Use regular and inverted features
 ## 
 ## ```cmake
 ## $ ./vcpkg install rocksdb[tbb]
 ## 
 ## # ports/rocksdb/portfile.cmake
-## vcpkg_check_features(OUT_FEATURE_OPTIONS rocksdb_FEATURE_OPTIONS
+## vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 ##   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
 ##     tbb   WITH_TBB
 ##   INVERTED_FEATURES
 ##     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 ## )
 ## 
-## vcpkg_config_cmake(
+## vcpkg_configure_cmake(
 ##   SOURCE_PATH ${SOURCE_PATH}
 ##   PREFER_NINJA
 ##   OPTIONS
 ##     # Expands to "-DWITH_TBB=ON; -DROCKSDB_IGNORE_PACKAGE_TBB=OFF"
-##     ${rocksdb_FEATURE_OPTIONS}
+##     ${FEATURE_OPTIONS}
 ## )
 ## ``` 
 ## 
