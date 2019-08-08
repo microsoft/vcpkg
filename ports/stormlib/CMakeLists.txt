@@ -262,7 +262,7 @@ add_definitions(-D__SYS_ZLIB -D__SYS_BZLIB)
 
 target_link_libraries(stormlib PRIVATE ${LINK_LIBS})
 
-target_compile_definitions(stormlib PRIVATE _7ZIP_ST BZ_STRICT_ANSI)
+target_compile_definitions(stormlib PRIVATE _7ZIP_ST BZ_STRICT_ANSI UNICODE _UNICODE)
 
 set_target_properties(stormlib PROPERTIES PUBLIC_HEADER "src/StormLib.h;src/StormPort.h")
 
