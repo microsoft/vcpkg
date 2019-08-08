@@ -12,8 +12,6 @@
 
 include(vcpkg_common_functions)
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR})
-
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(BUILD_ARCH "Win32")
     set(ARCH "32")
