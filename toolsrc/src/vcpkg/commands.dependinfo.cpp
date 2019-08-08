@@ -5,12 +5,12 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
-#include <vcpkg/paragraphs.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphs.h>
 
-#include <vector>
 #include <memory>
 #include <vcpkg/dependencies.h>
+#include <vector>
 
 using vcpkg::Dependencies::PathsPortFileProvider;
 
@@ -171,14 +171,14 @@ namespace vcpkg::Commands::DependInfo
                 {
                     if (requested_feature_name == "*")
                     {
-                        for (auto &&feature_paragraph : (*source_control_file)->feature_paragraphs)
+                        for (auto&& feature_paragraph : (*source_control_file)->feature_paragraphs)
                         {
                             collected_features.insert(std::addressof(Util::as_const(*feature_paragraph)));
                         }
                         continue;
                     }
                     auto maybe_feature = (*source_control_file)->find_feature(requested_feature_name);
-                    if (auto &&feature_paragraph = maybe_feature.get())
+                    if (auto&& feature_paragraph = maybe_feature.get())
                     {
                         collected_features.insert(std::addressof(Util::as_const(*feature_paragraph)));
                     }
@@ -197,7 +197,8 @@ namespace vcpkg::Commands::DependInfo
                 {
                     for (const auto& dependency : feature_paragraph->depends)
                     {
-                        build_dependencies_list(packages_to_keep, dependency.depend.name, source_control_files, switches);
+                        build_dependencies_list(
+                            packages_to_keep, dependency.depend.name, source_control_files, switches);
                     }
                 }
             }
@@ -214,9 +215,9 @@ namespace vcpkg::Commands::DependInfo
 
         // TODO: Optimize implementation, current implementation needs to load all ports from disk which is too slow.
         PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        auto source_control_files = Util::fmap(provider.load_all_control_files(), [](auto&& scfl) -> const SourceControlFile * {
-            return scfl->source_control_file.get();
-        });
+        auto source_control_files =
+            Util::fmap(provider.load_all_control_files(),
+                       [](auto&& scfl) -> const SourceControlFile* { return scfl->source_control_file.get(); });
 
         if (args.command_arguments.size() >= 1)
         {

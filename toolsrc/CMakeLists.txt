@@ -2,10 +2,16 @@ cmake_minimum_required(VERSION 3.3)
 
 project(vcpkg C CXX)
 
-enable_testing()
-
+OPTION(BUILD_TESTING "Option for enabling testing" ON)
+OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF)
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
+
+if (DEFINE_DISABLE_METRICS)
+    set(DISABLE_METRICS_VALUE "1")
+else()
+    set(DISABLE_METRICS_VALUE "0")
+endif()
 
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
@@ -27,46 +33,12 @@ else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
-if(GCC OR CLANG)
-    add_compile_options(-std=c++1z)
-    if(WERROR)
-        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
-    endif()
-endif()
-
-file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
-
-if (DEFINE_DISABLE_METRICS)
-    set(DISABLE_METRICS_VALUE "1")
-else()
-    set(DISABLE_METRICS_VALUE "0")
-endif()
-
-add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
-add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
-add_executable(vcpkg-test
-    EXCLUDE_FROM_ALL
-    ${VCPKGTEST_SOURCES}
-    $<TARGET_OBJECTS:vcpkglib>)
-
-foreach(TARGET_NAME vcpkglib vcpkg vcpkg-test)
-    target_compile_definitions(${TARGET_NAME} PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
-    target_include_directories(${TARGET_NAME} PRIVATE include)
-endforeach()
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(vcpkg PRIVATE Threads::Threads)
-target_link_libraries(vcpkg-test PRIVATE Threads::Threads)
 
-foreach(TEST_NAME
-    arguments chrono dependencies files
-    paragraph plan specifier statusparagraphs
-    strings supports update
-)
-    add_test(${TEST_NAME} vcpkg-test [${TEST_NAME}])
-endforeach()
+add_definitions(-DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+include_directories(include)
+link_libraries(Threads::Threads)
 
 if(CLANG)
     include(CheckCXXSourceCompiles)
@@ -80,11 +52,36 @@ if(CLANG)
 endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
-    target_link_libraries(vcpkg PRIVATE stdc++fs)
-    target_link_libraries(vcpkg-test PRIVATE stdc++fs)
+    link_libraries(stdc++fs)
 elseif(CLANG)
-    target_link_libraries(vcpkg PRIVATE c++fs)
-    target_link_libraries(vcpkg-test PRIVATE c++fs)
+    link_libraries(c++fs)
+endif()
+
+if(GCC OR CLANG)
+    add_compile_options(-std=c++1z)
+    if(WERROR)
+        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
+    endif()
+endif()
+
+file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+
+add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+
+if (BUILD_TESTING)
+    file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
+
+    enable_testing()
+    add_executable(vcpkg-test
+        ${VCPKGTEST_SOURCES}
+        $<TARGET_OBJECTS:vcpkglib>)
+
+    add_test(NAME default COMMAND vcpkg-test [${TEST_NAME}])
+
+    if (VCPKG_BUILD_BENCHMARKING)
+        target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
+    endif()
 endif()
 
 if(MSVC)
