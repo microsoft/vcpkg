@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 if(CMAKE_HOST_WIN32)
-    message(WARNING "This tensorflow port currently is experimental on Windows platforms.")
+    message(WARNING "This tensorflow port currently is experimental on Windows and Linux platforms.")
 endif()
 
 vcpkg_from_github(
@@ -44,8 +44,8 @@ if(CMAKE_HOST_WIN32)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
 
-    set(ENV{BAZEL_VS} "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools")
-    set(ENV{BAZEL_VC} "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC")
+    set(ENV{BAZEL_VS} $ENV{VSInstallDir})
+    set(ENV{BAZEL_VC} $ENV{VCInstallDir})
 endif()
 
 # tensorflow has long file names, which will not work on windows
@@ -89,20 +89,20 @@ vcpkg_execute_required_process(
 message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 
 if(CMAKE_HOST_WIN32)
-    vcpkg_execute_required_process(
+    vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -c opt --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true ///tensorflow:libtensorflow_cc.so ///tensorflow:install_headers"
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
 else()
-    vcpkg_execute_required_process(
+    vcpkg_execute_build_process(
         COMMAND ${BAZEL} build -c opt --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
 endif()
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-genfiles/tensorflow/include DESTINATION ${CURRENT_PACKAGES_DIR})
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-genfiles/tensorflow/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external)
 
 if(CMAKE_HOST_WIN32)
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/libtensorflow_cc.so.1.14.0 DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
