@@ -4,22 +4,20 @@ find_path(
     PATH_SUFFIXES include/tensorflow/cc/client
 )
 
-if (TENSORFLOW_CC_INCLUDE_DIR_)
-    set(TENSORFLOW_CC_INCLUDE_DIR ${TENSORFLOW_CC_INCLUDE_DIR_}/../../../)
-endif()
+set(TENSORFLOW_CC_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../include/)
 
 if (NOT TENSORFLOW_CC_LIBRARY)
     set(libraries
-        libtensorflow_framework.so libtensorflow_cc.so)
+        libtensorflow_framework.so.1.14.0 libtensorflow_cc.so.1.14.0)
     find_library(
         TENSORFLOW_LIBRARY_FRAMEWORK
         NAMES
-            libtensorflow_framework.so
+            libtensorflow_framework.so.1.14.0
         PATH_SUFFIXES lib)
     find_library(
         TENSORFLOW_LIBRARY_CC
         NAMES
-            libtensorflow_cc.so
+            libtensorflow_cc.so.1.14.0
         PATH_SUFFIXES lib)
     if (NOT TENSORFLOW_LIBRARY_CC OR NOT TENSORFLOW_LIBRARY_FRAMEWORK)
         message(FATAL_ERROR "Can't find ${libraries}")
@@ -47,9 +45,10 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(
 if (TENSORFLOW_CC_FOUND)
     set(TENSORFLOW_CC_INCLUDE_DIRS
         ${TENSORFLOW_CC_INCLUDE_DIR}
-        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow
-        ${TENSORFLOW_CC_INCLUDE_DIR}/external/com_google_absl
-        ${TENSORFLOW_CC_INCLUDE_DIR}/external/protobuf_archive/src/
+        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external
+        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external/tensorflow
+        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external/external/com_google_absl
+        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external/bazel-out/k8-opt/bin/
     )
 
     if (NOT TARGET tensorflow_cc::tensorflow_framework)
