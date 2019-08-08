@@ -2,11 +2,6 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 PROJECT(Mecab)
                           
-if(MSVC)
-	set(CMAKE_CONFIGURATION_TYPES Debug;Release)
-	set(VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>")
-	
-endif(MSVC)
 file(GLOB SOURCE_FILE
 	"*.cpp"
 	"*.c"
