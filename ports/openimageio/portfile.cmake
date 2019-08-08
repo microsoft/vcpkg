@@ -71,6 +71,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/openimageio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openimageio/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/openimageio/copyright)
