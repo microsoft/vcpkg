@@ -42,7 +42,7 @@ for f in files:
             builder += "    else()"
             builder += "\n    " + line.replace("/plugins/", "/debug/plugins/")
             builder += "    endif()\n"
-        elif "_install_prefix}/lib/qtmaind.lib" in line:
+        #elif "_install_prefix}/lib/qtmaind.lib" in line:
             # qtmaind.lib has been moved to manual-link:
             # builder += line.replace("/lib/", "/debug/lib/manual-link/")
         elif "_install_prefix}/lib/qtmain.lib" in line:
