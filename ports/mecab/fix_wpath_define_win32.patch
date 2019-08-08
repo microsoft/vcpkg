@@ -1,0 +1,14 @@
+diff --git a/mecab/src/common.h b/mecab/src/common.h
+index d1fc459..2951d5a 100644
+--- a/mecab/src/common.h
++++ b/mecab/src/common.h
+@@ -86,7 +86,8 @@
+ #define WPATH_FORCE(path) (MeCab::Utf8ToWide(path).c_str())
+ #define WPATH(path) (path)
+ #else
+-#define WPATH(path) WPATH_FORCE(path)
++#define WPATH_FORCE(path) (MeCab::Utf8ToWide(path).c_str())
++#define WPATH(path) (path)
+ #endif
+ #else
+ #define WPATH_FORCE(path) (path)
