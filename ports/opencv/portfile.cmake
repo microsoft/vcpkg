@@ -232,6 +232,7 @@ vcpkg_configure_cmake(
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
+        -DCMAKE_DEBUG_POSTFIX=d
         ###### Ungrouped Entries
         -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
         -DBUILD_opencv_java=OFF
