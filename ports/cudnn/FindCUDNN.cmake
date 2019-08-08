@@ -33,10 +33,7 @@ if(NOT CUDNN_LIBRARY)
     PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64)
 endif()
 
-find_package_handle_standard_args(
-    CUDNN DEFAULT_MSG CUDNN_INCLUDE_DIR CUDNN_LIBRARY)
-
-if(CUDNN_FOUND)
+if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
     string(REGEX MATCH "define CUDNN_MAJOR * +([0-9]+)"
                  CUDNN_VERSION_MAJOR "${CUDNN_HEADER_CONTENTS}")
@@ -59,15 +56,17 @@ endif()
 
 set(CUDNN_INCLUDE_DIRS ${CUDNN_INCLUDE_DIR})
 set(CUDNN_LIBRARIES ${CUDNN_LIBRARY})
-if(CUDNN_FOUND)
-  message(STATUS "Found cuDNN: v${CUDNN_VERSION}  (include: ${CUDNN_INCLUDE_DIR}, library: ${CUDNN_LIBRARY})")
-endif()
 mark_as_advanced(CUDNN_LIBRARY CUDNN_INCLUDE_DIR)
+
+find_package_handle_standard_args(CUDNN
+      REQUIRED_VARS  CUDNN_INCLUDE_DIR CUDNN_LIBRARY
+      VERSION_VAR    CUDNN_VERSION
+)
 
 if(WIN32)
   set(CUDNN_DLL_DIR ${CUDNN_INCLUDE_DIR})
   list(TRANSFORM CUDNN_DLL_DIR APPEND "/../bin")
-  find_file(CUDNN_LIBRARY_DLL NAMES cudnn64_7.dll PATHS ${CUDNN_DLL_DIR})
+  find_file(CUDNN_LIBRARY_DLL NAMES cudnn64_${CUDNN_VERSION_MAJOR}.dll PATHS ${CUDNN_DLL_DIR})
 endif()
 
 if( CUDNN_FOUND AND NOT TARGET CuDNN::CuDNN )
