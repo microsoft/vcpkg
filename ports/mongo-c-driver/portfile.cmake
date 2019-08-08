@@ -10,6 +10,10 @@ vcpkg_from_github(
     PATCHES fix-uwp.patch
 )
 
+vcpkg_check_features(
+    "snappy" MONGO_ENABLE_SNAPPY
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ENABLE_STATIC ON)
 else()
@@ -34,6 +38,7 @@ vcpkg_configure_cmake(
         -DENABLE_SSL=${ENABLE_SSL}
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DENABLE_SNAPPY=${MONGO_ENABLE_SNAPPY}
         -DBUILD_VERSION=${BUILD_VERSION}
 )
 
@@ -121,6 +126,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFI
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/libmongoc-${PORT_POSTFIX}-config-version.cmake ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver/mongo-c-driver-config-version.cmake)
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-1.0.pc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libbson-static-1.0.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libbson-static-1.0.pc)

@@ -87,6 +87,10 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     )
 
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if (NOT EXISTS "/usr/include/GL/glu.h")
+        message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\"")
+    endif()
+
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
         PLATFORM "linux-g++"

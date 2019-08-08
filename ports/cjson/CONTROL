@@ -1,5 +1,5 @@
 Source: cjson
-Version: 1.7.10-1
+Version: 1.7.12
 Description: Ultralightweight JSON parser in ANSI C
 
 Feature: utils

@@ -13,6 +13,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH}/libraries/
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/libraries/liblmdb
+    PREFER_NINJA
     OPTIONS_DEBUG
         -DLMDB_INSTALL_HEADERS=OFF
 )
