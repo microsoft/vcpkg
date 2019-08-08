@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
 if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
     message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
@@ -24,6 +22,10 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE_FILE}"
     REF ${FULL_VERSION}
+    PATCHES
+        winmain_pro.patch   #Moves qtmain to manual-link
+        windows_prf.patch   #fixes the qtmain dependency due to the above move
+        bootstrap_pro.patch #Moves location of bootstrap to tools/qt5 since it is only used to bootstrap qmake dependencies
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -60,7 +62,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     set(PLATFORM "win32-msvc")
 
     configure_qt(
@@ -86,7 +88,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
             FREETYPE_LIBS="-lfreetyped"
     )
 
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\"")
     endif()
@@ -116,7 +118,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
     )
 
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(VCPKG_TARGET_IS_OSX)
 configure_qt(
     SOURCE_PATH ${SOURCE_PATH}
     PLATFORM "macx-clang"
@@ -145,15 +147,14 @@ configure_qt(
 )
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX)
     install_qt(DISABLE_PARALLEL) # prevent race condition on Mac
 else()
     install_qt()
 endif()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-
+#TODO: PATCH QTs buildsystem so that all binary targets get installed in tools/qt5
+# e.g. by patching mkspecs/features/qt_tools.prf somehow
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
@@ -175,6 +176,9 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 endif()
 
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost 
+#TODO: Replace python script with cmake script
 vcpkg_execute_required_process(
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
@@ -184,49 +188,6 @@ vcpkg_execute_required_process(
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5)
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
-    #---------------------------------------------------------------------------
-    # qtmain(d) vs. Qt5AxServer(d)
-    #---------------------------------------------------------------------------
-    # Qt applications have to either link to qtmain(d) or to Qt5AxServer(d),
-    # never both. See http://doc.qt.io/qt-5/activeqt-server.html for more info.
-    #
-    # Create manual-link folders:
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    endif()
-    #
-    # Either have users explicitly link against qtmain.lib, qtmaind.lib:
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-        file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-        file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
-    endif()
-
-    #---------------------------------------------------------------------------
-    # Qt5Bootstrap: only used to bootstrap qmake dependencies
-    #---------------------------------------------------------------------------
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl ${CURRENT_PACKAGES_DIR}/tools/qt5/Qt5Bootstrap.prl)
-    endif()
-    #---------------------------------------------------------------------------
-endif()
-
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
@@ -234,6 +195,7 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
 endif()
+
 foreach(PRL_FILE IN LISTS PRL_FILES)
     file(READ "${PRL_FILE}" _contents)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
