@@ -1,0 +1,32 @@
+diff --git a/mecab/src/common.h b/mecab/src/common.h
+index 2951d5a..d1fc459 100644
+--- a/mecab/src/common.h
++++ b/mecab/src/common.h
+@@ -86,8 +86,7 @@
+ #define WPATH_FORCE(path) (MeCab::Utf8ToWide(path).c_str())
+ #define WPATH(path) (path)
+ #else
+-#define WPATH_FORCE(path) (MeCab::Utf8ToWide(path).c_str())
+-#define WPATH(path) (path)
++#define WPATH(path) WPATH_FORCE(path)
+ #endif
+ #else
+ #define WPATH_FORCE(path) (path)
+diff --git a/mecab/src/string_buffer.h b/mecab/src/string_buffer.h
+index 09d3f42..7fa86e3 100644
+--- a/mecab/src/string_buffer.h
++++ b/mecab/src/string_buffer.h
+@@ -43,10 +43,10 @@ class StringBuffer {
+   StringBuffer& operator<<(long int n)           { _ITOA(n); }
+   StringBuffer& operator<<(unsigned short int n) { _UITOA(n); }
+   StringBuffer& operator<<(unsigned int n)       { _UITOA(n); }
+-  //StringBuffer& operator<<(unsigned long int n)  { _UITOA(n); }
+-//#ifdef HAVE_UNSIGNED_LONG_LONG_INT
++  StringBuffer& operator<<(unsigned long int n)  { _UITOA(n); }
++#ifdef HAVE_UNSIGNED_LONG_LONG_INT
+   StringBuffer& operator<<(unsigned long long int n) { _UITOA(n); }
+-//#endif
++#endif
+ 
+   StringBuffer& operator<< (char n) {
+     return this->write(n);

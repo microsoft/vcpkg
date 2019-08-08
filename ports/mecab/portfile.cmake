@@ -32,7 +32,7 @@ vcpkg_extract_source_archive_ex(
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch
 	PATCHES
-		fix_wpath_define_win32.patch
+		fix_wpath_unsigned.patch
 )
 message(STATUS "source path is : ${SOURCE_PATH}")
 
