@@ -15,10 +15,10 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 endif()
 
 #Helper variable to identify the host path seperator. 
-if(WIN32)
+if(CMAKE_HOST_WIN32)
     set(VCPKG_HOST_PATH_SEPARATOR ";")
     set(VCPKG_HOST_PATH_SEPARATOR_ESCAPED "\\;") #sometimes needed to differentiate between the cmake list separator
-elseif(UNIX)
+elseif(CMAKE_HOST_UNIX)
     set(VCPKG_HOST_PATH_SEPARATOR ":")
     set(VCPKG_HOST_PATH_SEPARATOR_ESCAPED ":")
 endif()
