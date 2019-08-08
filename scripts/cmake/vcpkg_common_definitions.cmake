@@ -5,6 +5,8 @@
 ## ## The following variables are available:
 ## ```cmake
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
+## VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
+## VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
 ## ```
 ##
 
@@ -23,3 +25,18 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(VCPKG_TARGET_IS_FREEBSD 1)
 endif()
+
+#Helper variables to identify executables on host/target
+if(CMAKE_HOST_WIN32)
+    set(VCPKG_HOST_EXECUTABLE_SUFFIX ".exe")
+else()
+    set(VCPKG_HOST_EXECUTABLE_SUFFIX "")
+endif()
+#set(CMAKE_EXECUTABLE_SUFFIX ${VCPKG_HOST_EXECUTABLE_SUFFIX}) not required by find_program
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_TARGET_EXECUTABLE_SUFFIX ".exe")
+else()
+    set(VCPKG_TARGET_EXECUTABLE_SUFFIX "")
+endif()
+
