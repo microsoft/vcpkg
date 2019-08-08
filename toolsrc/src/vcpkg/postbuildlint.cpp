@@ -50,8 +50,16 @@ namespace vcpkg::PostBuildLint
                            "Directory %s is not a part of package directory %s",
                            path_u8,
                            package_u8);
-
-        return path_u8.substr(package_u8.length() + 1, path_u8.length() - package_u8.length());
+        std::string relative_path = path_u8.substr(package_u8.length(), path_u8.length() - package_u8.length());
+        if(relative_path.front() == '/') {
+            //relative paths cannot begin with '/'
+            Checks::check_exit(VCPKG_LINE_INFO,
+                           relative_path.length() > 1,
+                           "Unable to find relative path of %s",
+                           relative_path);
+            return relative_path.substr(1, relative_path.length());
+        }
+        return relative_path;
     }
 
     static LintStatus check_config_paths(const Files::Filesystem& fs, const fs::path& package_dir)
@@ -64,18 +72,18 @@ namespace vcpkg::PostBuildLint
             }
 
             // if config cmake file is in a shared or debug folder, we want to skip it
-            if (std::regex_search(path.u8string(), std::regex(R"(share[/\\].*)")))
+            if (std::regex_search(path.generic_u8string(), std::regex(R"(share/[^/]*)")))
             {
                 return true;
             }
 
-            if (std::regex_search(path.u8string(), std::regex(R"(debug[/\\].*)")))
+            if (std::regex_search(path.generic_u8string(), std::regex(R"(debug/[^/]*)")))
             {
                 return true;
             }
 
-            if (std::regex_search(path.u8string(), std::regex(R"(.*-config.cmake)")) ||
-                std::regex_search(path.u8string(), std::regex(R"(.*Config.cmake)")))
+            if (std::regex_search(path.generic_u8string(), std::regex(R"([^/]*-config.cmake)")) ||
+                std::regex_search(path.generic_u8string(), std::regex(R"([^/]*Config.cmake)")))
             {
                 return false;
             }
@@ -89,13 +97,13 @@ namespace vcpkg::PostBuildLint
             for (auto&& file : files_found)
             {
                 std::smatch matches;
-                std::string file_string = file.u8string();
+                std::string file_string = file.generic_u8string();
                 std::string target_name;
-                if (std::regex_search(file_string, matches, std::regex("([a-zA-Z0-9]*)Config.cmake")))
+                if (std::regex_search(file_string, matches, std::regex("([^/]*)Config.cmake")))
                 {
                     target_name = matches.str(1);
                 }
-                else if (std::regex_search(file_string, matches, std::regex("([a-zA-Z0-9]*)-config.cmake")))
+                else if (std::regex_search(file_string, matches, std::regex("([^/]*)-config.cmake")))
                 {
                     target_name = matches.str(1);
                 }
