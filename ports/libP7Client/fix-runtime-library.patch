@@ -46,7 +46,7 @@ index 3b46bab..725f8a4 100644
        <AdditionalIncludeDirectories>$(ProjectDir)\..\Shared\;$(ProjectDir)\..\Shared\Platforms\Windows_x86;$(ProjectDir)\..\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <ShowIncludes>false</ShowIncludes>
        <EnablePREfast>false</EnablePREfast>
-+	  <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
      </ClCompile>
      <Link>
        <SubSystem>Windows</SubSystem>
@@ -54,7 +54,7 @@ index 3b46bab..725f8a4 100644
        <Optimization>Disabled</Optimization>
        <PreprocessorDefinitions>_WIN64;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <AdditionalIncludeDirectories>$(ProjectDir)\..\Shared\;$(ProjectDir)\..\Shared\Platforms\Windows_x86;$(ProjectDir)\..\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-+	  <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
      </ClCompile>
      <Link>
        <SubSystem>Windows</SubSystem>
@@ -62,7 +62,7 @@ index 3b46bab..725f8a4 100644
        <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <AdditionalIncludeDirectories>$(ProjectDir)\..\Shared\;$(ProjectDir)\..\Shared\Platforms\Windows_x86;$(ProjectDir)\..\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-+	  <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
      </ClCompile>
      <Link>
        <SubSystem>Windows</SubSystem>
@@ -70,7 +70,7 @@ index 3b46bab..725f8a4 100644
        <PreprocessorDefinitions>_WIN64;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <AdditionalIncludeDirectories>$(ProjectDir)\..\Shared\;$(ProjectDir)\..\Shared\Platforms\Windows_x86;$(ProjectDir)\..\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-+	  <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
      </ClCompile>
      <Link>
        <SubSystem>Windows</SubSystem>
