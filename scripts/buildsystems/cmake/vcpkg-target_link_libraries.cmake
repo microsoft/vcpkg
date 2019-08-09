@@ -8,7 +8,7 @@ function(vcpkg_target_link_libraries _target_name)
 #	 return()
  # endif()
   
-  vcpkg_msg(STATUS "vcpkg_target_link_libraries" "Target ${_target_name} links: ${ARGV}")
+  vcpkg_msg(STATUS "vcpkg_target_link_libraries" "Target ${_target_name} links: ${ARGN}")
 
   cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_tll "" "" "PRIVATE;PUBLIC;INTERFACE;LINK_PRIVATE;LINK_PUBLIC;LINK_INTERFACE_LIBRARIES")
   
