@@ -549,6 +549,14 @@ namespace vcpkg::Build
                                                 const BuildPackageConfig& config)
     {
         auto& fs = paths.get_filesystem();
+#if defined(_WIN32)
+        const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
+        if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
+        {
+            fs.copy(powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
+        }
+#endif
+
         const Triplet& triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
@@ -566,8 +574,12 @@ namespace vcpkg::Build
         std::string command = make_build_cmd(paths, pre_build_info, config, triplet);
         std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
 
+#if defined(_WIN32)
+        const int return_code =
+            System::cmd_execute_clean(command, env, powershell_exe_path.parent_path().u8string() + ";");
+#else
         const int return_code = System::cmd_execute_clean(command, env);
-
+#endif
         const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
 
@@ -718,6 +730,10 @@ namespace vcpkg::Build
         }
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
+      
+#if defined(_WIN32)
+        abi_tag_entries.emplace_back(AbiEntry{"powershell", paths.get_tool_version("powershell-core")});
+#endif
 
         abi_tag_entries.emplace_back(AbiEntry{
             "vcpkg_fixup_cmake_targets",

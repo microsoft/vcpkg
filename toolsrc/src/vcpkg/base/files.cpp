@@ -78,7 +78,7 @@ namespace fs::detail
 #else
         auto result = symlink ? stdfs::symlink_status(p, ec) : stdfs::status(p, ec);
         // libstdc++ doesn't correctly not-set ec on nonexistent paths
-        if (ec.value() == ENOENT)
+        if (ec.value() == ENOENT || ec.value() == ENOTDIR)
         {
             ec.clear();
             result = file_status(file_type::not_found, perms::unknown);
