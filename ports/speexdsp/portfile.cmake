@@ -16,6 +16,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CMAKE_PATH}
+    PREFER_NINJA
     OPTIONS -DSOURCE_PATH=${SOURCE_PATH} -DUSE_SSE=${USE_SSE}
 )
 

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO msgpack/msgpack-c
-    REF 29b9505cb76710802e130d5b8403ec1b40de1c8d
-    SHA512 d36d5e4429a21ea8b7a6aee00fc27d0d3cb1111f0da8a0d7e1ab30bab7adb0df4bc65239211821615703f42a6d124129e224fe5bea66d1d55f61b28826b64615
+    REF cpp-3.2.0
+    SHA512 698fcdd5b427373997d0c89ff2cd09c44cf3b165defd381ff3cd9e14ecb83841064754a42aab99441a3b17aa26e3daec8f83e40d6d482c4b443b21b313278d14
     HEAD_REF master)
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}

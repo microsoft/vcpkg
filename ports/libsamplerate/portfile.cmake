@@ -15,6 +15,7 @@ file(COPY ${SOURCE_PATH}/Win32/config.h DESTINATION ${SOURCE_PATH}/src)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()

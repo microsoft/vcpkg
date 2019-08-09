@@ -25,6 +25,7 @@ endif()
 # TODO: check SSE and AVX avability and set corresponding tags
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/similarity_search
+    PREFER_NINJA
     OPTIONS
         -DWITH_EXTRAS=${WITH_EXTRAS}
 )

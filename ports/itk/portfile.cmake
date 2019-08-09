@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF v5.0.0
-    SHA512 7eecd62ab3124147f0abce482699dfdc43610703959d4a3f667c8ce12a6ecacf836a863d146f3cc7d5220b4aa05adf70a0d4dc6fa8e87bac215565badc96acff
+    REF v5.0.1
+    SHA512 242ce66cf83f82d26f20d2099108295e28c8875e7679126ba023834bf0e94454460ba86452a94c8ddaea93d2314befc399f2b151d7294370d4b47f0e9798e77f
     HEAD_REF master
     PATCHES
         fix_openjpeg_search.patch
@@ -35,8 +35,6 @@ vcpkg_configure_cmake(
         -DITK_INSTALL_DATA_DIR=share/itk/data
         -DITK_INSTALL_DOC_DIR=share/itk/doc
         -DITK_INSTALL_PACKAGE_DIR=share/itk
-        -DITK_LEGACY_REMOVE=ON
-        -DITK_FUTURE_LEGACY_REMOVE=ON
         -DITK_USE_64BITS_IDS=ON
         -DITK_USE_CONCEPT_CHECKING=ON
         #-DITK_USE_SYSTEM_LIBRARIES=ON # enables USE_SYSTEM for all third party libraries, some of which do not have vcpkg ports such as CastXML, SWIG, MINC etc
