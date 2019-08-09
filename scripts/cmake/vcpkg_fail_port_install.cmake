@@ -85,7 +85,7 @@ function(vcpkg_fail_port_install)
 		endforeach()
 	endif()
 	
-	if(_fail_port OR DEFINED _csc_ALWAYS)
+	if(_fail_port OR _csc_ALWAYS)
 		message(FATAL_ERROR ${_csc_MESSAGE})
 	endif()
 
