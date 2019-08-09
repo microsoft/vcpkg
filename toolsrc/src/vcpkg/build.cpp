@@ -675,6 +675,15 @@ namespace vcpkg::Build
         const std::string features = Strings::join(";", config.feature_list);
         abi_tag_entries.emplace_back(AbiEntry{"features", features});
 
+        if (pre_build_info.public_abi_override)
+        {
+            abi_tag_entries.emplace_back(
+                AbiEntry{
+                    "public_abi_override",
+                    pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO)
+                });
+        }
+
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
             abi_tag_entries.emplace_back(AbiEntry{"head", ""});
 
