@@ -1120,7 +1120,8 @@ namespace vcpkg::Build
                         pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
                         break;
                     case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE :
-                        pre_build_info.public_abi_override = variable_value;
+                        pre_build_info.public_abi_override =
+                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                         break;
                 }
             }
