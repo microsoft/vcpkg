@@ -13,7 +13,7 @@ vcpkg_from_github(
 vcpkg_find_acquire_program(PYTHON3)
 
 get_filename_component(PYPATH ${PYTHON3} PATH)
-set(ENV{PATH} "$ENV{PATH};${PYPATH}")
+set(ENV{PATH} "$ENV{PATH};${PYPATH}") #TODO: Use vcpkg_add_to_path
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,13 +22,13 @@ vcpkg_configure_cmake(
         -DPYBIND11_TEST=OFF
         -DPYTHONLIBS_FOUND=ON
         -DPYTHON_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
-        -DPYTHON_MODULE_EXTENSION=.dll
+        -DPYTHON_MODULE_EXTENSION=.dll # TODO: Use VCPKG_SHARED_LIBRARY_SUFFIX if introduced
+        -DPYTHON_LIBRARIES="optimized\\\\\\\\;${CURRENT_INSTALLED_DIR}/lib/python36.lib\\\\\\\\;debug\\\\\\\\;${CURRENT_INSTALLED_DIR}/debug/lib/python36_d.lib"
+        -DVCPKG_LIBTRACK_DEACTIVATE=ON
     OPTIONS_RELEASE
         -DPYTHON_IS_DEBUG=OFF
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/python36.lib
     OPTIONS_DEBUG
         -DPYTHON_IS_DEBUG=ON
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/python36_d.lib
 )
 
 vcpkg_install_cmake()
