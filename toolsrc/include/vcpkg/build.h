@@ -126,8 +126,8 @@ namespace vcpkg::Build
         /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
         /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
-                const Triplet& triplet,
-                Optional<const SourceControlFileLocation&> port = nullopt);
+                                              const Triplet& triplet,
+                                              Optional<const SourceControlFileLocation&> port = nullopt);
 
         std::string triplet_abi_tag;
         std::string target_architecture;

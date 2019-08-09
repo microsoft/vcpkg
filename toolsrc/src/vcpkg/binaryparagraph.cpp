@@ -56,7 +56,7 @@ namespace vcpkg
 
     BinaryParagraph::BinaryParagraph() = default;
 
-    BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
+    BinaryParagraph::BinaryParagraph(Parse::RawParagraph fields)
     {
         using namespace vcpkg::Parse;
 
