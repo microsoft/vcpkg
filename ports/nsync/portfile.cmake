@@ -14,6 +14,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
