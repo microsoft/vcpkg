@@ -13,7 +13,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
-if(WIN32)
+if(WIN32 AND NOT TARGET_TRIPLET STREQUAL "x64-windows-static")
     vcpkg_install_cmake()
 else()
     vcpkg_build_cmake()
