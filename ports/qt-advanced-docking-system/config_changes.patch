@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 289e108..c907c90 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt 
+@@ -79,8 +79,8 @@ install(FILES
+     DESTINATION license 
+     COMPONENT license
+ )
+-install(TARGETS qtadvanceddocking
+-    EXPORT adsBinary
++install(TARGETS qtadvanceddocking 
++    EXPORT qt-advanced-docking-systemConfig
+     RUNTIME DESTINATION bin COMPONENT library
+     LIBRARY DESTINATION lib COMPONENT library
+     ARCHIVE DESTINATION lib COMPONENT library
+@@ -93,7 +93,6 @@ target_link_libraries(qtadvanceddocking PUBLIC ${ads_LIBS})
+ target_compile_definitions(qtadvanceddocking PRIVATE ${ads_COMPILE_DEFINE})
+ set_target_properties(qtadvanceddocking PROPERTIES 
+     VERSION ${ads_VERSION}
+-    EXPORT_NAME "Qt Advanced Docking System"
+     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
+     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
+     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/bin"
+@@ -103,3 +102,5 @@ if(BUILD_EXAMPLES)
+     add_subdirectory(demo)
+ endif()
+ 
++
++install(EXPORT qt-advanced-docking-systemConfig NAMESPACE qt-advanced-docking-system:: DESTINATION share/qt-advanced-docking-system)
+\ No newline at end of file
