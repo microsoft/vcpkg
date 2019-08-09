@@ -1,5 +1,5 @@
 Source: tesseract
-Version: 4.1.0-1
+Version: 4.1.0-2
 Homepage: https://github.com/tesseract-ocr/tesseract
 Description: An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.
 Build-Depends: leptonica
@@ -10,3 +10,7 @@ Build-Depends: icu, pango, cairo, fontconfig
 
 Feature: cpu_independed
 Description: build on any cpu extension commands support
+
+Feature: libarchive
+Build-Depends: bzip2, libxml2, lz4, lzo, openssl
+Description: libarchive support

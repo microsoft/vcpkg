@@ -9,7 +9,8 @@ vcpkg_from_github(
     SHA512 d617f5c5b826640b2871dbe3d7973bcc5e66fafd837921a20e009d683806ed50f0f258aa455019d99fc54f5cb65c2fa0380e3a3c92b39ab0684b8799c730b09d
     PATCHES
         fix-tiff-linkage.patch
-		fix-text2image.patch
+        fix-text2image.patch
+        fix-libarchive.patch
 )
 
 # The built-in cmake FindICU is better
@@ -31,16 +32,20 @@ if("independed_architecture" IN_LIST FEATURES)
 else()
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
 endif()
-
+if("libarchive" IN_LIST FEATURES)
+    list(APPEND OPTIONS_LIST -DBUILD_LIBARCHIVE=ON)
+else()
+    list(APPEND OPTIONS_LIST -DBUILD_LIBARCHIVE=OFF)
+endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSTATIC=ON
         -DUSE_SYSTEM_ICU=True
-	#any value for vcpkg leptonica link cmake branch select
-	-DLeptonica_DIR=YES
-	${OPTIONS_LIST}
+        #any value for vcpkg leptonica link cmake branch select
+        -DLeptonica_DIR=YES
+        ${OPTIONS_LIST}
 )
 
 vcpkg_install_cmake()
