@@ -137,8 +137,9 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        Optional<std::string> public_abi_override;
+        Optional<const SourceControlFileLocation&> port;
         std::vector<std::string> passthrough_env_vars;
-        std::vector<std::pair<fs::path, std::string>> external_files;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
@@ -153,7 +154,7 @@ namespace vcpkg::Build
         CHAINLOAD_TOOLCHAIN_FILE,
         BUILD_TYPE,
         ENV_PASSTHROUGH,
-        EXTERNAL_FILES,
+        PUBLIC_ABI_OVERRIDE,
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -165,7 +166,7 @@ namespace vcpkg::Build
         {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
         {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
-        {"VCPKG_EXTERNAL_FILES", VcpkgTripletVar::EXTERNAL_FILES},
+        {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
     };
 
     struct ExtendedBuildResult

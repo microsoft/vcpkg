@@ -663,16 +663,13 @@ namespace vcpkg::Dependencies
 
         if (auto p_installed = cluster.installed.get())
         {
-            if (p_installed->original_features.find(feature) != p_installed->original_features.end() &&
-                p_installed->ipv.core->package.is_consistent())
+            if (p_installed->original_features.find(feature) != p_installed->original_features.end())
             {
                 return MarkPlusResult::SUCCESS;
             }
         }
 
-        //The feature was not previously installed or the external files of the
-        //port are no longer consistent with the last installation of this port
-        //(they've either been modified or removed). Mark the cluster
+        //The feature was not previously installed. Mark the cluster
         //(aka the entire port) to be removed before re-adding it.
         mark_minus(cluster, graph, graph_plan, prevent_default_features);
 

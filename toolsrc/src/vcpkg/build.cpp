@@ -277,13 +277,6 @@ namespace vcpkg::Build
             bpgh.version = *p_ver;
         }
 
-        for (auto& file_hash : pre_build_info.external_files)
-        {
-            bpgh.external_files.emplace(
-                file_hash.first.u8string(),
-                std::move(file_hash.second));
-        }
-
         bcf->core_paragraph = std::move(bpgh);
         return bcf;
     }
@@ -451,45 +444,6 @@ namespace vcpkg::Build
         return command;
     }
 
-    static std::vector<std::pair<fs::path, std::string>> get_external_file_hashes(
-        const VcpkgPaths& paths,
-        const std::vector<fs::path>& files)
-    {
-        static std::map<fs::path, std::string> s_hash_cache;
-
-        const auto& fs = paths.get_filesystem();
-
-        std::vector<std::pair<fs::path, std::string>> hashes;
-        for (const fs::path& external_file : files)
-        {
-            auto it_hash = s_hash_cache.find(external_file);
-
-            if (it_hash != s_hash_cache.end())
-            {
-                hashes.emplace_back(external_file, it_hash->second);
-            }
-            else if (Files::get_real_filesystem().is_regular_file(external_file))
-            {
-                auto emp = s_hash_cache.emplace(
-                        external_file.u8string(),
-                        Hash::get_file_hash(
-                            Files::get_real_filesystem(),
-                            external_file, "SHA1"));
-
-                hashes.emplace_back(external_file.u8string(), emp.first->second);
-            }
-            else
-            {
-                Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        external_file.u8string() +
-                        " was listed as an additional file for calculating the abi, but was not found.");
-            }
-        }
-
-        return hashes;
-    }
-
     static std::string get_triplet_abi(const VcpkgPaths& paths,
                                        const PreBuildInfo& pre_build_info,
                                        const Triplet& triplet)
@@ -645,6 +599,15 @@ namespace vcpkg::Build
                                             const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis)
     {
+        if (pre_build_info.public_abi_override)
+        {
+            return AbiTagAndFile
+            {
+                "override",
+                pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO)
+            };
+        }
+
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
@@ -692,29 +655,6 @@ namespace vcpkg::Build
                         std::move(hash_file.first)
                     });
             }
-        }
-
-        //Make a copy of the external file names and their hashes, and sort by
-        //hash.
-        std::vector<std::pair<std::string, std::string>> additional_file_hashes
-            = Util::fmap(pre_build_info.external_files,
-                         [](const std::pair<fs::path, std::string>& file_hash)
-                         {
-                             return std::pair<std::string, std::string>{
-                                 file_hash.second,
-                                 file_hash.first.filename().u8string()
-                             };
-                         });
-
-        std::sort(additional_file_hashes.begin(), additional_file_hashes.end());
-
-        for (auto& hash_file : additional_file_hashes)
-        {
-            abi_tag_entries.emplace_back(
-                AbiEntry{
-                    std::move(hash_file.second),
-                    std::move(hash_file.first)
-                });
         }
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
@@ -835,11 +775,16 @@ namespace vcpkg::Build
 
         if (!required_fspecs.empty())
         {
-            return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+            return {
+                BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+                std::move(required_fspecs)
+            };
         }
 
         const PackageSpec spec =
-            PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, triplet).value_or_exit(VCPKG_LINE_INFO);
+            PackageSpec::from_name_and_triplet(
+                config.scf.core_paragraph->name,
+                triplet).value_or_exit(VCPKG_LINE_INFO);
 
         std::vector<AbiEntry> dependency_abis;
 
@@ -856,15 +801,27 @@ namespace vcpkg::Build
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
 
         auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
+        if (!maybe_abi_tag_and_file)
+        {
+            return do_build_package_and_clean_buildtrees(
+                paths,
+                pre_build_info,
+                spec,
+                AbiTagAndFile{}.tag,
+                config);
+        }
 
+        std::error_code ec;
         const auto abi_tag_and_file = maybe_abi_tag_and_file.get();
         const fs::path archives_root_dir = paths.root / "archives";
         const std::string archive_name = abi_tag_and_file->tag + ".zip";
         const fs::path archive_subpath = fs::u8path(abi_tag_and_file->tag.substr(0, 2)) / archive_name;
         const fs::path archive_path = archives_root_dir / archive_subpath;
         const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+        const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
+        const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
 
-        if (config.build_package_options.binary_caching == BinaryCaching::YES && abi_tag_and_file)
+        if (config.build_package_options.binary_caching == BinaryCaching::YES)
         {
             if (fs.exists(archive_path))
             {
@@ -900,19 +857,18 @@ namespace vcpkg::Build
             System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
         }
 
+        fs.create_directories(abi_package_dir, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Coud not create directory %s", abi_package_dir.u8string());
+        fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
+
         ExtendedBuildResult result =
             do_build_package_and_clean_buildtrees(
                     paths,
                     pre_build_info,
                     spec,
-                    maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag,
+                    maybe_abi_tag_and_file.value_or_exit(VCPKG_LINE_INFO).tag,
                     config);
-
-        std::error_code ec;
-        fs.create_directories(paths.package_dir(spec) / "share" / spec.name(), ec);
-        auto abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-        fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
         if (config.build_package_options.binary_caching == BinaryCaching::YES &&
             result.code == BuildResult::SUCCEEDED)
@@ -1098,6 +1054,8 @@ namespace vcpkg::Build
 
         PreBuildInfo pre_build_info;
 
+        pre_build_info.port = port;
+
         const auto e = lines.cend();
         auto cur = std::find(lines.cbegin(), e, FLAG_GUID);
         if (cur != e) ++cur;
@@ -1154,15 +1112,9 @@ namespace vcpkg::Build
                     case VcpkgTripletVar::ENV_PASSTHROUGH :
                         pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
                         break;
-                    case VcpkgTripletVar::EXTERNAL_FILES :
-                        pre_build_info.external_files = 
-                            get_external_file_hashes(
-                                paths,
-                                Util::fmap(Strings::split(variable_value, ";"),
-                                [](const std::string& path)
-                                {
-                                    return fs::path{path};
-                                }));
+                    case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE :
+                        pre_build_info.public_abi_override =
+                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                         break;
                 }
             }

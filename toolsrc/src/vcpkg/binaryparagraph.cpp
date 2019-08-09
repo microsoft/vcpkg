@@ -25,33 +25,6 @@ namespace vcpkg
         static const std::string MAINTAINER = "Maintainer";
         static const std::string DEPENDS = "Depends";
         static const std::string DEFAULTFEATURES = "Default-Features";
-        static const std::string EXTERNALFILES = "External-Files";
-    }
-
-    bool BinaryParagraph::is_consistent() const
-    {
-        switch (consistency)
-        {
-        case ConsistencyState::UNKNOWN :
-            for (const auto& file_hash : external_files)
-            {
-                const auto& realfs = Files::get_real_filesystem();
-
-                if (!realfs.is_regular_file(file_hash.first) ||
-                    Hash::get_file_hash(realfs, file_hash.first, "SHA1") != file_hash.second)
-                {
-                    consistency = ConsistencyState::INCONSISTENT;
-                    return false;
-                }
-            }
-
-            consistency = ConsistencyState::CONSISTENT;
-            return true;
-        case ConsistencyState::CONSISTENT : return true;
-        case ConsistencyState::INCONSISTENT : return false;
-        }
-
-        Checks::unreachable(VCPKG_LINE_INFO);
     }
 
     BinaryParagraph::BinaryParagraph() = default;
@@ -87,26 +60,6 @@ namespace vcpkg
         if (this->feature.empty())
         {
             this->default_features = parse_comma_list(parser.optional_field(Fields::DEFAULTFEATURES));
-        }
-
-        std::vector<std::string> external_files_or_hashes =
-            parse_comma_list(parser.optional_field(Fields::EXTERNALFILES));
-
-        if (external_files_or_hashes.size() % 2 != 0)
-        {
-            Checks::exit_with_message(
-                    VCPKG_LINE_INFO,
-                    "The External-Files field is not composed of key-value pairs for ",
-                    this->spec);
-        }
-
-        for (decltype(external_files_or_hashes)::size_type i = 0;
-             i < external_files_or_hashes.size();
-             i += 2)
-        {
-            external_files.emplace(
-                    std::move(external_files_or_hashes[i]),
-                    std::move(external_files_or_hashes[i+1]));
         }
 
         if (const auto err = parser.error_info(this->spec.to_string()))
@@ -168,17 +121,5 @@ namespace vcpkg
         if (!pgh.maintainer.empty()) out_str.append("Maintainer: ").append(pgh.maintainer).push_back('\n');
         if (!pgh.abi.empty()) out_str.append("Abi: ").append(pgh.abi).push_back('\n');
         if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
-
-        if (!pgh.external_files.empty())
-        {
-            out_str.append("External-Files: ");
-            out_str.append(Strings::join(",",
-                        Util::fmap(
-                            pgh.external_files,
-                            [](const std::pair<fs::path, std::string>& kv)
-                            {
-                                return kv.first.u8string() + "," + kv.second;
-                            }))).push_back('\n');
-        }
     }
 }
