@@ -82,14 +82,14 @@ namespace vcpkg::Files
             return fs::file_status(ft, permissions);
 
 #else
-            auto result = symlink ? stdfs::symlink_status(p, ec) : stdfs::status(p, ec);
+            auto result = symlink ? fs::stdfs::symlink_status(p, ec) : fs::stdfs::status(p, ec);
             // libstdc++ doesn't correctly not-set ec on nonexistent paths
             if (ec.value() == ENOENT || ec.value() == ENOTDIR)
             {
                 ec.clear();
-                result = fs::file_status(file_type::not_found, perms::unknown);
+                return fs::file_status(file_type::not_found, perms::unknown);
             }
-            return result;
+            return fs::file_status(result.type(), result.permissions());
 #endif
         }
 
