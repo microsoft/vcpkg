@@ -1,0 +1,3 @@
+Source: nsync
+Version: 1.21.0
+Description: nsync is a C library that exports various synchronization primitives, such as mutexes
