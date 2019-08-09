@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         disable-tests.patch
         remove-dll-export-macro.patch
+        no-symlinks-in-static-build.patch
 )
 
 set(DISABLE_ICU ON)

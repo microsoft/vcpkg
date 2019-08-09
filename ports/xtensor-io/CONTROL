@@ -1,0 +1,5 @@
+Source: xtensor-io
+Version: 0.7.0
+Description: xtensor plugin to read and write images, audio files, numpy (compressed) npz and HDF5
+Build-Depends: xtensor, xtl
+

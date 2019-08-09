@@ -11,8 +11,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF a1abd07e23fc5b143a6197de9908fe4f33791c6a
-  SHA512 df91bf595666a4db5beb5cc55f6c60be19667ab987a784faef04cf2215317c9a340cfc0a200640741fcc88c29cff077d5153b86ff497c31ad5ad132f05987516
+  REF b2d795e34e1d734d0f451ce9847a0e6b68c32351
+  SHA512 1964aa0d768d37fc614983718aede8b29e562fd8120116b7cd7a1331bb8a3256e28c01cdff6f19bbe7b9d6289b3292188205f362bae38393cee33d8a2e6a5273
   HEAD_REF master
 )
 
@@ -56,8 +56,22 @@ if("weights" IN_LIST FEATURES)
   )
 endif()
 
-#make sure we don't use any integrated pre-built library
+if("weights-train" IN_LIST FEATURES)
+  vcpkg_download_distfile(IMAGENET_CONV_WEIGHTS_V3
+    URLS "https://pjreddie.com/media/files/darknet53.conv.74"
+    FILENAME "darknet-cache/darknet53.conv.74"
+    SHA512 8983e1c129e2d6e8e3da0cc0781ecb7a07813830ef5a87c24b53100df6a5f23db6c6e6a402aec78025a93fe060b75d1958f1b8f7439a04b54a3f19c81e2ae99b
+  )
+  vcpkg_download_distfile(IMAGENET_CONV_WEIGHTS_V2
+    URLS "https://pjreddie.com/media/files/darknet19_448.conv.23"
+    FILENAME "darknet-cache/darknet19_448.conv.23"
+    SHA512 8016f5b7ddc15c5d7dad231592f5351eea65f608ebdb204f545034dde904e11962f693080dfeb5a4510e7b71bdda151a9121ba0f8a243018d680f01b1efdbd31
+  )
+endif()
+
+#make sure we don't use any integrated pre-built library nor any unnecessary CMake module
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -72,7 +86,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-#somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
 if(CMAKE_HOST_WIN32)
   set(EXECUTABLE_SUFFIX ".exe")
 else()
@@ -101,8 +114,6 @@ endif()
 vcpkg_fixup_cmake_targets()
 
 file(COPY ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
-file(COPY ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
-file(COPY ${SOURCE_PATH}/cmake/Modules/FindStb.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/darknet)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -114,4 +125,9 @@ if("weights" IN_LIST FEATURES)
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov3-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
   file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/yolov2-tiny.weights DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
+endif()
+
+if("weights-train" IN_LIST FEATURES)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet53.conv.74 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
+  file(COPY ${VCPKG_ROOT_DIR}/downloads/darknet-cache/darknet19_448.conv.23 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/darknet)
 endif()
