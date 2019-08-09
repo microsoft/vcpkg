@@ -611,15 +611,6 @@ namespace vcpkg::Build
                                             const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis)
     {
-        if (pre_build_info.public_abi_override)
-        {
-            return AbiTagAndFile
-            {
-                "override",
-                pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO)
-            };
-        }
-
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
@@ -823,7 +814,7 @@ namespace vcpkg::Build
                 paths,
                 pre_build_info,
                 spec,
-                AbiTagAndFile{}.tag,
+                pre_build_info.public_abi_override.value_or(AbiTagAndFile{}.tag),
                 config);
         }
 
@@ -883,7 +874,7 @@ namespace vcpkg::Build
                     paths,
                     pre_build_info,
                     spec,
-                    maybe_abi_tag_and_file.value_or_exit(VCPKG_LINE_INFO).tag,
+                    pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag),
                     config);
 
         if (config.build_package_options.binary_caching == BinaryCaching::YES &&
@@ -1129,8 +1120,7 @@ namespace vcpkg::Build
                         pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
                         break;
                     case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE :
-                        pre_build_info.public_abi_override =
-                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                        pre_build_info.public_abi_override = variable_value;
                         break;
                 }
             }
