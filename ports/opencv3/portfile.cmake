@@ -1,3 +1,7 @@
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
+  message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
+endif()
+
 include(vcpkg_common_functions)
 
 set(OPENCV_PORT_VERSION "3.4.3")
