@@ -1,3 +1,7 @@
+if(TARGET_TRIPLET STREQUAL "x64-windows-static")
+    message(FATAL_ERROR "nsync does not support")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
