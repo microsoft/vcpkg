@@ -6,19 +6,12 @@ vcpkg_from_github(
     REF Beta7
     SHA512 f3365c0823fa63f7e6b82bd2dc84f8871eb58ffd9485753a60ea8f956856cbec7c5da3929ab8fe8b5902a7c840334a1d421417984124adf109f96756490ac437
     HEAD_REF master
-    PATCHES fix-install-headers.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA   
-)
-
-vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+# Install include directory
+file(INSTALL ${SOURCE_PATH}/external DESTINATION ${CURRENT_PACKAGES_DIR}/include) 
+file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 
