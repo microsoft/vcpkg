@@ -141,7 +141,7 @@ namespace vcpkg::Test
             std::filesystem::path targetp = target.native();
             std::filesystem::path filep = file.native();
 
-            std::filesystem::create_symlink(targetp, filep);
+            std::filesystem::create_symlink(targetp, filep, ec);
         }
         else
         {
@@ -153,6 +153,7 @@ namespace vcpkg::Test
             ec.assign(errno, std::system_category());
         }
 #else
+        std::ignore = ec;
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
@@ -165,7 +166,7 @@ namespace vcpkg::Test
             std::filesystem::path targetp = target.native();
             std::filesystem::path filep = file.native();
 
-            std::filesystem::create_directory_symlink(targetp, filep);
+            std::filesystem::create_directory_symlink(targetp, filep, ec);
         }
         else
         {
@@ -174,6 +175,7 @@ namespace vcpkg::Test
 #elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
 #else
+        std::ignore = ec;
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }

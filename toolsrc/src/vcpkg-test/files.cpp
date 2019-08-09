@@ -145,7 +145,7 @@ namespace
         CHECK_EC_ON_FILE(base, ec);
     }
 
-    vcpkg::Files::Filesystem& setup(urbg_t& urbg)
+    vcpkg::Files::Filesystem& setup()
     {
         auto& fs = vcpkg::Files::get_real_filesystem();
 
@@ -161,7 +161,7 @@ TEST_CASE ("remove all", "[files]")
 {
     auto urbg = get_urbg(0);
 
-    auto& fs = setup(urbg);
+    auto& fs = setup();
 
     fs::path temp_dir = base_temporary_directory() / get_random_filename(urbg);
     INFO("temp dir is: " << temp_dir);
@@ -181,7 +181,7 @@ TEST_CASE ("remove all", "[files]")
 TEST_CASE ("remove all -- benchmarks", "[files][!benchmark]")
 {
     auto urbg = get_urbg(1);
-    auto& fs = setup(urbg);
+    auto& fs = setup();
 
     struct
     {
