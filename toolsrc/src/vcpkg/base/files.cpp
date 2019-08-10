@@ -82,7 +82,7 @@ namespace vcpkg::Files
             return fs::file_status(ft, permissions);
 
 #else
-            auto result = symlink ? fs::stdfs::symlink_status(p, ec) : fs::stdfs::status(p, ec);
+            auto result = follow_symlinks ? fs::stdfs::status(p, ec) : fs::stdfs::symlink_status(p, ec);
             // libstdc++ doesn't correctly not-set ec on nonexistent paths
             if (ec.value() == ENOENT || ec.value() == ENOTDIR)
             {
@@ -95,7 +95,7 @@ namespace vcpkg::Files
 
         fs::file_status status(const fs::path& p, std::error_code& ec) noexcept
         {
-            return status_implementation(false, p, ec);
+            return status_implementation(true, p, ec);
         }
         fs::file_status symlink_status(const fs::path& p, std::error_code& ec) noexcept
         {
