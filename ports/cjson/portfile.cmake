@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaveGamble/cJSON
-    REF v1.7.10
-    SHA512 f8d7c9fe798b51ec3c69cabe4124d2f6372f0e6d282285e3ca951c58c971a9a520d87550530d750ff7f8055c0b6ff566f237b9af9eb345cf4f4fc4ff8c910740
+    REF v1.7.12
+    SHA512 d767b7261eff3a1a50ea46cc5573f9504f5734a891ea211ad348835bfb4b80acf7f744da2d34bb1fa270cd4d44576c21bc6f52c0604b7e6ffdeb61ecb396b376
     HEAD_REF master
     PATCHES
         fix-install-path.patch

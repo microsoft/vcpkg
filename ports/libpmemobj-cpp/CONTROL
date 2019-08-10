@@ -1,0 +1,4 @@
+Source: libpmemobj-cpp
+Version: 1.7
+#Build-Depends: pmdk
+Description: C++ bindings for libpmemobj (https://github.com/pmem/pmdk).

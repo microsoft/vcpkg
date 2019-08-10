@@ -368,7 +368,7 @@ foreach ($library in $libraries)
         }
         elseif ($library -eq "mpi")
         {
-            $deps += @("msmpi")
+            $deps += @("mpi")
         }
 
         Generate `

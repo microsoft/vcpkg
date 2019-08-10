@@ -11,11 +11,20 @@ vcpkg_from_github(
     PATCHES cmake.patch
 )
 
+set(USE_OPENSSL OFF)
+if("openssl" IN_LIST FEATURES)
+	vcpkg_apply_patches(
+	SOURCE_PATH ${SOURCE_PATH}
+    PATCHES add_openssl_support.patch
+	)
+    set(USE_OPENSSL ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SSL=OFF
+        -DBUILD_SSL=${USE_OPENSSL}
         -DDISABLE_TESTS=ON
 )
 

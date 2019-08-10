@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a35e885..76b6f60 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -105,7 +105,7 @@ else()
+   list(APPEND mi_libraries pthread)
+ endif()
+ 
+-
++if(BUILD_SHARED_LIBS)
+ # shared library
+ add_library(mimalloc SHARED ${mi_sources})
+ set_target_properties(mimalloc PROPERTIES VERSION ${mi_version} NO_SONAME "YES" OUTPUT_NAME ${mi_basename} )
+@@ -116,7 +116,7 @@ endif()
+ target_compile_options(mimalloc PRIVATE ${mi_cflags})
+ target_include_directories(mimalloc PRIVATE include PUBLIC $<INSTALL_INTERFACE:${mi_install_dir}/include>)
+ target_link_libraries(mimalloc PUBLIC ${mi_libraries})
+-
++else()
+ # static library
+ add_library(mimalloc-static STATIC ${mi_sources})
+ if(WIN32)
+@@ -135,15 +135,18 @@ endif()
+ target_compile_options(mimalloc-static PRIVATE ${mi_cflags})
+ target_include_directories(mimalloc-static PRIVATE include PUBLIC $<INSTALL_INTERFACE:${mi_install_dir}/include>)
+ target_link_libraries(mimalloc-static PUBLIC ${mi_libraries})
++endif()
+ 
+ # install static and shared library, and the include files
+-install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_dir} LIBRARY NAMELINK_SKIP)
+-install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION ${mi_install_dir})
++if(BUILD_SHARED_LIBS)
++install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION lib RUNTIME DESTINATION bin LIBRARY DESTINATION lib NAMELINK_SKIP)
++else()
++install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION lib)
++endif()
+ install(FILES include/mimalloc.h DESTINATION ${mi_install_dir}/include)
+ install(FILES cmake/mimalloc-config.cmake DESTINATION ${mi_install_dir}/cmake)
+ install(FILES cmake/mimalloc-config-version.cmake DESTINATION ${mi_install_dir}/cmake)
+ install(EXPORT mimalloc DESTINATION ${mi_install_dir}/cmake)
+-install(FILES "$<TARGET_FILE:mimalloc>" DESTINATION lib)  # duplicate the .so in the lib directory (unversioned)
+ 
+ # single object file for more predictable static overriding
+ add_library(mimalloc-obj OBJECT src/static.c)
+@@ -154,7 +157,3 @@ if(NOT WIN32 AND MI_OVERRIDE MATCHES "ON")
+ endif()
+ target_compile_options(mimalloc-obj PRIVATE ${mi_cflags})
+ target_include_directories(mimalloc-obj PRIVATE include PUBLIC $<INSTALL_INTERFACE:include>)
+-
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/mimalloc-obj.dir/src/static.c${CMAKE_C_OUTPUT_EXTENSION}
+-        DESTINATION ${mi_install_dir}
+-        RENAME ${mi_basename}${CMAKE_C_OUTPUT_EXTENSION} )

@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
     HEAD_REF 9.400.x
     PATCHES
         remove_custom_modules.patch
+		fix-CMakePath.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindBLAS.cmake)
@@ -25,11 +26,19 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/armadillo/CMake TARGET_PATH share/armadillo)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/Armadillo/CMake)
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(GLOB SHARE_CONTENT ${CURRENT_PACKAGES_DIR}/share/Armadillo)
+list(LENGTH SHARE_CONTENT SHARE_LEN)
+if(SHARE_LEN EQUAL 0)
+    # On case sensitive file system there is an extra empty directory created that should be removed
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
+endif()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/armadillo)
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/armadillo RENAME copyright)

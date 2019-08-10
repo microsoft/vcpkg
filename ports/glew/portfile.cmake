@@ -18,14 +18,14 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
+    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_UTILS=OFF
     )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/glew")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glew)
 
 set(_targets_cmake_files)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")

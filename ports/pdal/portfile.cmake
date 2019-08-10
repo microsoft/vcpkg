@@ -27,26 +27,26 @@ file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
 endforeach()
-foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules. 
+foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/${_module}.cmake
         DESTINATION ${SOURCE_PATH}/cmake/modules/
     )
 endforeach()
 
-# NOTE: CMake native BUILD_SHARED_LIBS option will be set by vcpkg_configure_cmake
-# TODO: Remove this as soon as PDAL switches to use BUILD_SHARED_LIBS
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(PDAL_BUILD_STATIC OFF)
+  set(VCPKG_BUILD_SHARED_LIBS ON)
+  set(VCPKG_BUILD_STATIC_LIBS OFF)
 else()
-    set(PDAL_BUILD_STATIC ON)
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+  set(VCPKG_BUILD_STATIC_LIBS ON)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DPDAL_BUILD_STATIC:BOOL=${PDAL_BUILD_STATIC}
+        -DPDAL_BUILD_STATIC:BOOL=${VCPKG_BUILD_STATIC_LIBS}
         -DWITH_TESTS:BOOL=OFF
         -DWITH_COMPLETION:BOOL=OFF
 )

@@ -188,12 +188,17 @@ namespace vcpkg
     }
 
 #if defined(_WIN32)
-    static std::wstring compute_clean_environment(const std::unordered_map<std::string, std::string>& extra_env)
+    static std::wstring compute_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
+                                                  const std::string& prepend_to_path)
     {
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
-        std::string new_path = Strings::format(
-            R"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
+        std::string new_path = Strings::format(R"(Path=%s%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)",
+                                               prepend_to_path,
+                                               SYSTEM_32,
+                                               SYSTEM_ROOT,
+                                               SYSTEM_32,
+                                               SYSTEM_32);
 
         std::vector<std::wstring> env_wstrings = {
             L"ALLUSERSPROFILE",
@@ -348,7 +353,8 @@ namespace vcpkg
 #endif
 
     int System::cmd_execute_clean(const ZStringView cmd_line,
-                                  const std::unordered_map<std::string, std::string>& extra_env)
+                                  const std::unordered_map<std::string, std::string>& extra_env,
+                                  const std::string& prepend_to_path)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
@@ -357,7 +363,7 @@ namespace vcpkg
         memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 
         g_ctrl_c_state.transition_to_spawn_process();
-        auto clean_env = compute_clean_environment(extra_env);
+        auto clean_env = compute_clean_environment(extra_env, prepend_to_path);
         windows_create_process(cmd_line, clean_env.data(), process_info, NULL);
 
         CloseHandle(process_info.hThread);
@@ -388,6 +394,7 @@ namespace vcpkg
         // Flush stdout before launching external process
         fflush(nullptr);
 
+        auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
         // We are wrap the command line in quotes to cause cmd.exe to correctly process it
         auto actual_cmd_line = Strings::concat('"', cmd_line, '"');
@@ -395,11 +402,19 @@ namespace vcpkg
         g_ctrl_c_state.transition_to_spawn_process();
         const int exit_code = _wsystem(Strings::to_utf16(actual_cmd_line).c_str());
         g_ctrl_c_state.transition_from_spawn_process();
-        Debug::print("_wsystem() returned ", exit_code, '\n');
+        Debug::print("_wsystem() returned ",
+                     exit_code,
+                     " after ",
+                     Strings::format("%8d", static_cast<int>(timer.microseconds())),
+                     " us\n");
 #else
         Debug::print("_system(", cmd_line, ")\n");
         const int exit_code = system(cmd_line.c_str());
-        Debug::print("_system() returned ", exit_code, '\n');
+        Debug::print("_system() returned ",
+                     exit_code,
+                     " after ",
+                     Strings::format("%8d", static_cast<int>(timer.microseconds())),
+                     " us\n");
 #endif
         return exit_code;
     }
@@ -599,10 +614,7 @@ namespace vcpkg
     void System::register_console_ctrl_handler() {}
 #endif
 
-    int System::get_num_logical_cores()
-    {
-        return std::thread::hardware_concurrency();
-    }
+    int System::get_num_logical_cores() { return std::thread::hardware_concurrency(); }
 }
 
 namespace vcpkg::Debug

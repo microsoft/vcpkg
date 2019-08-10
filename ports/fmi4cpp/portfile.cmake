@@ -18,6 +18,8 @@ vcpkg_from_github(
     REF v0.7.0
     SHA512 5846f5b28badb5b4836ffd9d284f602dd243df20d3c82cab5e2b62b8be37e0ab05b7422bca066f37ca67ee0d5b35abd2febe87f623fc3b9854d245e86e1e21fe
     HEAD_REF master
+    PATCHES
+        fix-build_error.patch
 )
 
 set(WITH_CURL OFF)

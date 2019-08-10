@@ -1,5 +1,5 @@
 Source: fmi4cpp
-Version: 0.7.0
+Version: 0.7.0-1
 Description: FMI 2.0 implementation written in modern C++
 Build-Depends: boost-property-tree, libzip[openssl]
 

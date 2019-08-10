@@ -13,6 +13,7 @@ vcpkg_from_github(
 # Use sqlpp11-connector-mysql's own build process, skipping tests
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DENABLE_TESTS:BOOL=OFF
         -DDATE_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
