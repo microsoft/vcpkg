@@ -10,11 +10,51 @@ namespace fs
     namespace stdfs = std::experimental::filesystem;
 
     using stdfs::copy_options;
-    using stdfs::file_status;
-    using stdfs::file_type;
     using stdfs::path;
     using stdfs::perms;
     using stdfs::u8path;
+
+#if defined(_WIN32)
+    enum class file_type
+    {
+        none = 0,
+        not_found = -1,
+        regular = 1,
+        directory = 2,
+        symlink = 3,
+        block = 4,
+        character = 5,
+        fifo = 6,
+        socket = 7,
+        unknown = 8,
+        // also stands for a junction
+        directory_symlink = 42
+    };
+
+    struct file_status
+    {
+        explicit file_status(file_type type = file_type::none, perms permissions = perms::unknown) noexcept
+            : m_type(type), m_permissions(permissions)
+        {
+        }
+
+        file_type type() const noexcept { return m_type; }
+        void type(file_type type) noexcept { m_type = type; }
+
+        perms permissions() const noexcept { return m_permissions; }
+        void permissions(perms perm) noexcept { m_permissions = perm; }
+
+    private:
+        file_type m_type;
+        perms m_permissions;
+    };
+
+#else
+
+    using stdfs::file_status;
+    using stdfs::file_type;
+
+#endif
 
     /*
         std::experimental::filesystem's file_status and file_type are broken in
@@ -22,35 +62,73 @@ namespace fs
         to for `symlink_status` and `symlink_type`
     */
 
-    using stdfs::status;
-
     // we want to poison ADL with these niebloids
 
     namespace detail
     {
+        struct status_t
+        {
+            file_status operator()(const path& p, std::error_code& ec) const noexcept;
+            file_status operator()(vcpkg::LineInfo li, const path& p) const noexcept;
+            file_status operator()(const path& p) const;
+        };
         struct symlink_status_t
         {
             file_status operator()(const path& p, std::error_code& ec) const noexcept;
-            file_status operator()(const path& p, vcpkg::LineInfo li) const noexcept;
+            file_status operator()(vcpkg::LineInfo li, const path& p) const noexcept;
         };
         struct is_symlink_t
         {
-            inline bool operator()(file_status s) const { return stdfs::is_symlink(s); }
+            bool operator()(file_status s) const
+            {
+#if defined(_WIN32)
+                return s.type() == file_type::directory_symlink || s.type() == file_type::symlink;
+#else
+                return stdfs::is_symlink(s);
+#endif
+            }
         };
         struct is_regular_file_t
         {
-            inline bool operator()(file_status s) const { return stdfs::is_regular_file(s); }
+            inline bool operator()(file_status s) const
+            {
+#if defined(_WIN32)
+                return s.type() == file_type::regular;
+#else
+                return stdfs::is_regular_file(s);
+#endif
+            }
         };
         struct is_directory_t
         {
-            inline bool operator()(file_status s) const { return stdfs::is_directory(s); }
+            inline bool operator()(file_status s) const
+            {
+#if defined(_WIN32)
+                return s.type() == file_type::directory;
+#else
+                return stdfs::is_directory(s);
+#endif
+            }
+        };
+        struct exists_t
+        {
+            inline bool operator()(file_status s) const
+            {
+#if defined(_WIN32)
+                return s.type() != file_type::not_found && s.type() != file_type::none;
+#else
+                return stdfs::exists(s);
+#endif
+            }
         };
     }
 
+    constexpr detail::status_t status{};
     constexpr detail::symlink_status_t symlink_status{};
     constexpr detail::is_symlink_t is_symlink{};
     constexpr detail::is_regular_file_t is_regular_file{};
     constexpr detail::is_directory_t is_directory{};
+    constexpr detail::exists_t exists{};
 }
 
 /*
@@ -59,12 +137,14 @@ namespace fs
     Therefore, put `symlink_status` in the global namespace, so that they get
     our symlink_status.
 
-    We also want to poison the ADL on is_regular_file and is_directory, because
+    We also want to poison the ADL on the other functions, because
     we don't want people calling these functions on paths
 */
+using fs::exists;
 using fs::is_directory;
 using fs::is_regular_file;
 using fs::is_symlink;
+using fs::status;
 using fs::symlink_status;
 
 namespace vcpkg::Files
@@ -92,9 +172,13 @@ namespace vcpkg::Files
         bool remove(const fs::path& path, LineInfo linfo);
         virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
 
-        virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
-        std::uintmax_t remove_all(const fs::path& path, LineInfo li);
-        virtual bool exists(const fs::path& path) const = 0;
+        virtual void remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
+        void remove_all(const fs::path& path, LineInfo li);
+        bool exists(const fs::path& path, std::error_code& ec) const;
+        bool exists(LineInfo li, const fs::path& path) const;
+        // this should probably not exist, but would require a pass through of
+        // existing code to fix
+        bool exists(const fs::path& path) const;
         virtual bool is_directory(const fs::path& path) const = 0;
         virtual bool is_regular_file(const fs::path& path) const = 0;
         virtual bool is_empty(const fs::path& path) const = 0;

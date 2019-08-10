@@ -82,6 +82,10 @@ Feature: eigen
 Build-Depends: eigen3
 Description: Eigen support for opencv
 
+Feature: halide
+Build-Depends: halide, opencv[dnn]
+Description: Halide support for opencv
+
 Feature: world
 Description: Compile to a single package support for opencv
 
