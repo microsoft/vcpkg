@@ -1,0 +1,6 @@
+The package openvdb provides CMake integration:
+
+    find_package(TBB CONFIG REQUIRED)
+    find_package(OPENVDB REQUIRED)
+    target_include_directories(main PRIVATE ${OPENVDB_INCLUDE_DIRS} ${TBB_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE TBB::tbb ${OpenVDB_LIBRARIES})
