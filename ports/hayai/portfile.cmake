@@ -28,8 +28,8 @@ vcpkg_install_cmake()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
     vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CMake)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/CMake/${PORT})
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CMake/${PORT})
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
