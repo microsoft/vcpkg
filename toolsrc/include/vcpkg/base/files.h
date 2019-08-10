@@ -54,21 +54,14 @@ namespace fs
     using stdfs::file_type;
     // to set up ADL correctly on `file_status` objects, we are defining
     // this in our own namespace
-    struct file_status : private stdfs::file_status {
+    struct file_status : private stdfs::file_status
+    {
         using stdfs::file_status::file_status;
-        using stdfs::file_status::type;
         using stdfs::file_status::permissions;
+        using stdfs::file_status::type;
     };
 
 #endif
-
-    /*
-        std::experimental::filesystem's file_status and file_type are broken in
-        the presence of symlinks -- a symlink is treated as the object it points
-        to for `symlink_status` and `symlink_type`
-    */
-    #if 0
-    #endif
 
     inline bool is_symlink(file_status s) noexcept
     {
@@ -77,18 +70,9 @@ namespace fs
 #endif
         return s.type() == file_type::symlink;
     }
-    inline bool is_regular_file(file_status s)
-    {
-        return s.type() == file_type::regular;
-    }
-    inline bool is_directory(file_status s)
-    {
-        return s.type() == file_type::directory;
-    }
-    inline bool exists(file_status s)
-    {
-        return s.type() != file_type::not_found && s.type() != file_type::none;
-    }
+    inline bool is_regular_file(file_status s) { return s.type() == file_type::regular; }
+    inline bool is_directory(file_status s) { return s.type() == file_type::directory; }
+    inline bool exists(file_status s) { return s.type() != file_type::not_found && s.type() != file_type::none; }
 }
 
 /*
