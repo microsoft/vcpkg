@@ -153,7 +153,7 @@ namespace vcpkg::Test
             ec.assign(errno, std::system_category());
         }
 #else
-        std::ignore = ec;
+        static_cast<void>(ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
@@ -175,7 +175,7 @@ namespace vcpkg::Test
 #elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
 #else
-        std::ignore = ec;
+        static_cast<void>(ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
