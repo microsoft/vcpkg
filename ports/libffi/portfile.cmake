@@ -3,10 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF e0b4f84fb71c6760068c9d1306e77c9382e76d8d
-    SHA512 52469ab02acd7f7ee6b6234bcfd579a859ecc1dbdab945c8ba3e0c694c0c15abc825fe9418e4e995b349803c62cffbab96884678fa28b558ba6eb8a882cd348d
+    REF c2a6859012d928b67a83619bd5087674a96b9254
+    SHA512 8639ec9b979bcc59e5a3c063663aedbfb6c1ff0f49a0207ee8a7168d0deebec57255cfff5972c50027ca8276afb6079f0c144a862733de4d3e5a4a917337d007
     HEAD_REF master
-    PATCHES arm64-crash-fix.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
