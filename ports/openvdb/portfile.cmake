@@ -70,3 +70,7 @@ endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/openvdb RENAME copyright)
+
+# Handle FindOpenVDB
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOpenVDB.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
