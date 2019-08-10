@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a89030d..2ca8185 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,11 +169,11 @@ else()
+   # Otherwise, auto-run the tests on build.
+   add_custom_command(OUTPUT "${tests_run_file}"
+                      DEPENDS "${tests_executable}"
+-                     COMMAND cmake
++                     COMMAND ${CMAKE_COMMAND}
+                      ARGS -E remove "${tests_run_file}"
+-                     COMMAND ctest
++                     COMMAND ${CMAKE_CTEST_COMMAND}
+                      ARGS -C $<CONFIGURATION> --output-on-failure
+-                     COMMAND cmake
++                     COMMAND ${CMAKE_COMMAND}
+                      ARGS -E touch "${tests_run_file}"
+                      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+   add_custom_target("${tests_run_target}" ALL DEPENDS "${tests_run_file}")
+@@ -186,7 +186,7 @@ set(arduino_package_file "${PROJECT_BINARY_DIR}/hydrogen-crypto.zip")
+ # Use the relative versions of the file path lists or else the full paths will end up in the
+ # generated archive.
+ add_custom_command(OUTPUT "${arduino_package_file}"
+-                   COMMAND cmake
++                   COMMAND ${CMAKE_COMMAND}
+                    ARGS -E
+                         tar
+                         cf

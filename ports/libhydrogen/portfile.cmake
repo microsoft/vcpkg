@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF b3a2a30211bbc21998c336a0801604a1d93becec
     SHA512 a436055e54aae5e34f4679eea91b2c797b06ddd562360c1d031f9df64b5a5f590021aba754a823cbeee33b59469e157f4807a0d28e186560f6e04e16337a73b4
     HEAD_REF master
+    PATCHES
+        fix-cmake-not-found.patch
 )
 
 vcpkg_configure_cmake(
