@@ -11,7 +11,11 @@ target_include_directories(
     PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-
+target_compile_definitions(
+    tiny-bignum-c
+    PRIVATE
+        $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
 set_target_properties(tiny-bignum-c PROPERTIES PUBLIC_HEADER bn.h)
 
 install(TARGETS tiny-bignum-c EXPORT unofficial-tiny-bignum-c-config)
