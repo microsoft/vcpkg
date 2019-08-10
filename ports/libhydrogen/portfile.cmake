@@ -5,11 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libhydrogen
-    REF 01c3ec04079f93b0f7b798ab7616ac483efea132
-    SHA512 ba7e1fcf6e2d93c4234bb175b5e1db2369cefd4e360fe50592c1fbb3a3689cde9c6a120e182c4f767e20b1ee3fd4cdc6d66afc52b18e3968b7c6f76d1f97bd8e
+    REF b3a2a30211bbc21998c336a0801604a1d93becec
+    SHA512 a436055e54aae5e34f4679eea91b2c797b06ddd562360c1d031f9df64b5a5f590021aba754a823cbeee33b59469e157f4807a0d28e186560f6e04e16337a73b4
     HEAD_REF master
-    PATCHES
-        disable-wx-flag.patch
 )
 
 vcpkg_configure_cmake(
