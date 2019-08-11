@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
         -DSZIP_INSTALL_CMAKE_DIR=share/szip

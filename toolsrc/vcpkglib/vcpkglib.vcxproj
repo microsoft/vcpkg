@@ -249,6 +249,7 @@
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />
     <ClCompile Include="..\src\vcpkg\install.cpp" />
+    <ClCompile Include="..\src\vcpkg\logicexpression.cpp" />
     <ClCompile Include="..\src\vcpkg\metrics.cpp" />
     <ClCompile Include="..\src\vcpkg\packagespec.cpp" />
     <ClCompile Include="..\src\vcpkg\packagespecparseresult.cpp" />

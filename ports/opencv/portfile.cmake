@@ -218,6 +218,11 @@ if("eigen" IN_LIST FEATURES)
   set(WITH_EIGEN ON)
 endif()
 
+set(WITH_HALIDE OFF)
+if("halide" IN_LIST FEATURES)
+  set(WITH_HALIDE ON)
+endif()
+
 set(OPENCV_ENABLE_NONFREE OFF)
 if("nonfree" IN_LIST FEATURES)
   set(OPENCV_ENABLE_NONFREE ON)
