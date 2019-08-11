@@ -10,7 +10,7 @@
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
 
-if (UWP OR ARM OR ARM64)
+if (TARGET_TRIPLET STREQUAL "x64-uwp" OR TARGET_TRIPLET STREQUAL "arm64-windows" OR TARGET_TRIPLET STREQUAL "arm-uwp")
     message(FATAL_ERROR "mecab does not support on this platform")
 endif()
 
@@ -27,27 +27,6 @@ vcpkg_from_github(
 		fix_wpath_unsigned.patch
 )
 
-# vcpkg_download_distfile(ARCHIVE
-    # URLS "https://github.com/taku910/mecab/archive/master.zip"
-    # FILENAME "mecab-${MECAB_VERSION}.zip"
-    # SHA512 28782e6cacff49fdafa6896c660462587c5aa7e26fe249f55d5c23472353e4ee19473eda5368c5f2cc37e85f7797c7bba4fb31bd151f715ed99ad7b61d39f068
-# )
-
-# #set(ARCHIVE "D:/software/vcpkg/downloads/mecabsrc.zip")
-# message(STATUS "Begin to extract files ...")
-# vcpkg_extract_source_archive_ex(
-    # OUT_SOURCE_PATH SOURCE_PATH
-    # ARCHIVE ${ARCHIVE} 
-    # # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
-    # # REF 1.0.0
-    # # (Optional) Read the docs for how to generate patches at: 
-    # # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
-    # # PATCHES
-    # #   001_port_fixes.patch
-    # #   002_more_port_fixes.patch
-	# PATCHES
-		# fix_wpath_unsigned.patch
-# )
 message(STATUS "source path is : ${SOURCE_PATH}")
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/mecab/src)
