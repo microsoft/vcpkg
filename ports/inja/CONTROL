@@ -1,4 +1,4 @@
 Source: inja
-Version: 2.1.0
+Version: 2.1.0-1
 Build-Depends: nlohmann-json
 Description: Inja - A Template Engine for Modern C++
