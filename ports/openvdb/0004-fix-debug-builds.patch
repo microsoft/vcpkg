@@ -1,0 +1,179 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 846bb6a..e761ecb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -235,9 +235,7 @@ if(OPENVDB_INSTALL_CMAKE_MODULES)
+     cmake/FindCppUnit.cmake
+     cmake/FindIlmBase.cmake
+     cmake/FindLog4cplus.cmake
+-    cmake/FindOpenEXR.cmake
+     cmake/FindOpenVDB.cmake
+-    cmake/FindTBB.cmake
+     cmake/OpenVDBGLFW3Setup.cmake
+     cmake/OpenVDBHoudiniSetup.cmake
+     cmake/OpenVDBMayaSetup.cmake
+diff --git a/cmake/FindBlosc.cmake b/cmake/FindBlosc.cmake
+index e5e8bf1..464bbdd 100644
+--- a/cmake/FindBlosc.cmake
++++ b/cmake/FindBlosc.cmake
+@@ -1,74 +1,33 @@
+-# Copyright (c) 2012-2016 DreamWorks Animation LLC
+-#
+-# All rights reserved. This software is distributed under the
+-# Mozilla Public License 2.0 ( http://www.mozilla.org/MPL/2.0/ )
+-#
+-# Redistributions of source code must retain the above copyright
+-# and license notice and the following restrictions and disclaimer.
+-#
+-# *     Neither the name of DreamWorks Animation nor the names of
+-# its contributors may be used to endorse or promote products derived
+-# from this software without specific prior written permission.
+-#
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
+-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-# IN NO EVENT SHALL THE COPYRIGHT HOLDERS' AND CONTRIBUTORS' AGGREGATE
+-# LIABILITY FOR ALL CLAIMS REGARDLESS OF THEIR BASIS EXCEED US$250.00.
+-#
+-
+-# -*- cmake -*-
+-# - Find Blosc
+-#
+-# Author : Nicholas Yue yue.nicholas@gmail.com
+-#
+-# BLOSC_FOUND            set if Blosc is found.
+-# BLOSC_INCLUDE_DIR      Blosc's include directory
+-# BLOSC_LIBRARYDIR      Blosc's library directory
+-# BLOSC_LIBRARIES        all Blosc libraries
+-
+-FIND_PACKAGE ( PackageHandleStandardArgs )
+-
+-FIND_PATH( BLOSC_LOCATION include/blosc.h)
+-
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS ( Blosc
+-  REQUIRED_VARS BLOSC_LOCATION
+-  )
+-
+-IF ( BLOSC_FOUND )
+-
+-#  SET ( BLOSC_LIBRARYDIR ${BLOSC_LOCATION}/lib
+-#    CACHE STRING "Blosc library directories")
+-
+-  SET ( _blosc_library_name "blosc" )
+-
+-  # Static library setup
+-  IF (Blosc_USE_STATIC_LIBS)
+-    SET(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
+-	IF (WIN32)
+-	  SET ( _blosc_library_name "libblosc" )
+-	ELSE ()
+-	  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+-	ENDIF ()
+-  ENDIF()
+-
+-  FIND_LIBRARY ( BLOSC_blosc_LIBRARY ${_blosc_library_name}
+-    NO_SYSTEM_ENVIRONMENT_PATH
+-    )
+-
+-  # Static library tear down
+-  IF (Blosc_USE_STATIC_LIBS)
+-    SET( CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP} )
+-  ENDIF()
+-
+-  SET( BLOSC_INCLUDE_DIR "${BLOSC_LOCATION}/include" CACHE STRING "Blosc include directory" )
+-
+-ENDIF ( BLOSC_FOUND )
++include(FindPackageHandleStandardArgs)
++
++find_path(
++  BLOSC_INCLUDE_DIRS
++  blosc.h
++)
++
++get_filename_component(_prefix_path ${BLOSC_INCLUDE_DIRS} PATH)
++
++find_library(
++    BLOSC_LIBRARY_DEBUG
++    NAMES blosc
++    PATHS ${_prefix_path}/debug/lib
++    NO_DEFAULT_PATH
++)
++
++find_library(
++    BLOSC_LIBRARY_RELEASE
++    NAMES blosc
++    PATHS ${_prefix_path}/lib
++    NO_DEFAULT_PATH
++)
++
++unset(_prefix_path)
++
++include(SelectLibraryConfigurations)
++select_library_configurations(BLOSC)
++message("BLOSC LIBS ${BLOSC_LIBRARIES}")
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(
++    BLOSC
++    REQUIRED_VARS BLOSC_LIBRARIES BLOSC_INCLUDE_DIRS
++)
+\ No newline at end of file
+diff --git a/openvdb/CMakeLists.txt b/openvdb/CMakeLists.txt
+index 524a59e..d2f916b 100644
+--- a/openvdb/CMakeLists.txt
++++ b/openvdb/CMakeLists.txt
+@@ -71,10 +71,9 @@ message(STATUS "----------------------------------------------------")
+ # Collect and configure lib dependencies
+ 
+ if(USE_EXR)
+-  find_package(IlmBase REQUIRED)
+   find_package(OpenEXR REQUIRED)
+ else()
+-  find_package(IlmBase REQUIRED COMPONENTS Half)
++  find_package(OpenEXR REQUIRED COMPONENTS Half)
+ endif()
+ 
+ find_package(TBB CONFIG REQUIRED)
+@@ -115,14 +114,14 @@ endif()
+ set(OPENVDB_CORE_DEPENDENT_LIBS
+   Boost::iostreams
+   Boost::system
+-  ${Ilmbase_HALF_LIBRARY}
++  ${OpenEXR_HALF_LIBRARY}
+ )
+ 
+ if(USE_EXR)
+   list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
+-    ${Ilmbase_ILMTHREAD_LIBRARY}
+-    ${Ilmbase_IEX_LIBRARY}
+-    ${Ilmbase_IMATH_LIBRARY}
++    ${OpenEXR_ILMTHREAD_LIBRARY}
++    ${OpenEXR_IEX_LIBRARY}
++    ${OpenEXR_IMATH_LIBRARY}
+     ${OPENEXR_ILMIMF_LIBRARY}
+   )
+ endif()
+@@ -135,7 +134,7 @@ endif()
+ # See FindOpenVDB.cmake
+ 
+ if(USE_BLOSC)
+-  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS ${BLOSC_blosc_LIBRARY})
++  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS ${BLOSC_LIBRARIES})
+ endif()
+ 
+ list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
+@@ -443,7 +442,6 @@ if(OPENVDB_CORE_SHARED)
+     # @todo There is probably a better way to do this for imported targets
+     list(APPEND RPATHS
+       ${Boost_LIBRARY_DIRS}
+-      ${IlmBase_LIBRARY_DIRS}
+       ${OpenEXR_LIBRARY_DIRS}
+       ${Log4cplus_LIBRARY_DIRS}
+       ${Blosc_LIBRARY_DIRS}
