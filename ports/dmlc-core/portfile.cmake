@@ -23,7 +23,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}    
+    OPTIONS 
+        -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}    
 )
 
 vcpkg_install_cmake()
