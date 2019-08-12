@@ -20,15 +20,15 @@ namespace vcpkg::Commands::DependInfo
 {
     constexpr StringLiteral OPTION_DOT = "--dot";
     constexpr StringLiteral OPTION_DGML = "--dgml";
+    constexpr StringLiteral OPTION_SHOW_DEPTH = "--show-depth";
     constexpr StringLiteral OPTION_MAX_RECURSE = "--max-recurse";
     constexpr StringLiteral OPTION_SORT = "--sort";
 
     constexpr int NO_RECURSE_LIMIT_VALUE = -1;
 
-    constexpr std::array<CommandSwitch, 2> DEPEND_SWITCHES = {{
-        {OPTION_DOT, "Creates graph on basis of dot"},
-        {OPTION_DGML, "Creates graph on basis of dgml"},
-    }};
+    constexpr std::array<CommandSwitch, 3> DEPEND_SWITCHES = {{{OPTION_DOT, "Creates graph on basis of dot"},
+                                                               {OPTION_DGML, "Creates graph on basis of dgml"},
+                                                               {OPTION_SHOW_DEPTH, "Show recursion depth in output"}}};
 
     constexpr std::array<CommandSetting, 2> DEPEND_SETTINGS = {
         {{OPTION_MAX_RECURSE, "Set max recursion depth, a value of -1 indicates no limit"},
@@ -228,7 +228,7 @@ namespace vcpkg::Commands::DependInfo
             const std::vector<std::string> dependencies =
                 Util::fmap(install_action.computed_dependencies, [](const PackageSpec& spec) { return spec.name(); });
 
-            std::set<std::string> features { install_action.feature_list };
+            std::set<std::string> features{install_action.feature_list};
             features.erase("core");
 
             std::string port_name = install_action.spec.name();
@@ -251,6 +251,7 @@ namespace vcpkg::Commands::DependInfo
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const int max_depth = get_max_depth(options);
         const SortMode sort_mode = get_sort_mode(options);
+        const bool show_depth = Util::Sets::contains(options.switches, OPTION_SHOW_DEPTH);
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
             return Input::check_and_get_full_package_spec(
@@ -321,14 +322,18 @@ namespace vcpkg::Commands::DependInfo
                 std::string features = Strings::join(", ", info.features);
                 const std::string dependencies = Strings::join(", ", info.dependencies);
 
-                System::printf(System::Color::success, "%s", info.package);
+                if (show_depth)
+                {
+                    System::print2(System::Color::error, "(", info.depth, ") ");
+                }
+                System::print2(System::Color::success, info.package);
                 if (!features.empty())
                 {
                     System::print2("[");
-                    System::printf(System::Color::warning, "%s", features);
+                    System::print2(System::Color::warning, features);
                     System::print2("]");
                 }
-                System::printf(": %s\n", dependencies);
+                System::print2(": ", dependencies, "\n");
             }
         }
         Checks::exit_success(VCPKG_LINE_INFO);
