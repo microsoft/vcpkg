@@ -4,14 +4,11 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/paragraphs.h>
-
-#include <memory>
-#include <vcpkg/dependencies.h>
 #include <vector>
 
 using vcpkg::Dependencies::AnyAction;
@@ -34,13 +31,13 @@ namespace vcpkg::Commands::DependInfo
     }};
 
     constexpr std::array<CommandSetting, 2> DEPEND_SETTINGS = {
-        {{OPTION_MAX_RECURSE, "Set max recursion depth when following dependencies, a value of -1 indicates no limit"},
+        {{OPTION_MAX_RECURSE, "Set max recursion depth, a value of -1 indicates no limit"},
          {OPTION_SORT,
-          "Specify ordering for list of dependencies, possible values are: lexicographical, topological (default), "
+          "Set sort order for the list of dependencies, accepted values are: lexicographical, topological (default), "
           "reverse"}}};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string(R"###(depend-info [pat])###"),
+        Help::create_example_string("depend-info sqlite3"),
         0,
         SIZE_MAX,
         {DEPEND_SWITCHES, DEPEND_SETTINGS},
@@ -231,8 +228,12 @@ namespace vcpkg::Commands::DependInfo
             const std::vector<std::string> dependencies =
                 Util::fmap(install_action.computed_dependencies, [](const PackageSpec& spec) { return spec.name(); });
 
+            std::set<std::string> features { install_action.feature_list };
+            features.erase("core");
+
             std::string port_name = install_action.spec.name();
-            PackageDependInfo info{port_name, -1, install_action.feature_list, dependencies};
+
+            PackageDependInfo info{port_name, -1, features, dependencies};
             package_dependencies.emplace(port_name, std::move(info));
         }
 
@@ -293,41 +294,41 @@ namespace vcpkg::Commands::DependInfo
         std::vector<PackageDependInfo> depend_info = extract_depend_info(install_actions, max_depth);
 
         // TODO: Improve this code
-        auto lex = [](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool 
-        {
+        auto lex = [](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool {
             return lhs.package < rhs.package;
         };
-        auto topo = [](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool 
-        { 
-            return lhs.depth > rhs.depth; 
+        auto topo = [](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool {
+            return lhs.depth > rhs.depth;
         };
-        auto reverse = [topo](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool 
-        { 
+        auto reverse = [topo](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool {
             return lhs.depth < rhs.depth;
         };
-        
+
         switch (sort_mode)
         {
-        case SortMode::Lexicographical:
-            std::sort(std::begin(depend_info), std::end(depend_info), lex);
-            break;
-        case SortMode::ReverseTopological:
-            std::sort(std::begin(depend_info), std::end(depend_info), reverse);
-            break;
-        case SortMode::Topological:
-            std::sort(std::begin(depend_info), std::end(depend_info), topo);
-            break;
-        default:
-            Checks::unreachable(VCPKG_LINE_INFO);
+            case SortMode::Lexicographical: std::sort(std::begin(depend_info), std::end(depend_info), lex); break;
+            case SortMode::ReverseTopological:
+                std::sort(std::begin(depend_info), std::end(depend_info), reverse);
+                break;
+            case SortMode::Topological: std::sort(std::begin(depend_info), std::end(depend_info), topo); break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         for (auto&& info : depend_info)
         {
             if (info.depth >= 0)
             {
-                const std::string features = Strings::join(", ", info.features);
+                std::string features = Strings::join(", ", info.features);
                 const std::string dependencies = Strings::join(", ", info.dependencies);
-                System::printf("%s[%s]: %s\n", info.package, features, dependencies);
+
+                System::printf(System::Color::success, "%s", info.package);
+                if (!features.empty())
+                {
+                    System::print2("[");
+                    System::printf(System::Color::warning, "%s", features);
+                    System::print2("]");
+                }
+                System::printf(": %s\n", dependencies);
             }
         }
         Checks::exit_success(VCPKG_LINE_INFO);
