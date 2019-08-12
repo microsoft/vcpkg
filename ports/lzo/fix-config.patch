@@ -1,8 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98c0a1a..5f86dd2 100644
+index 98c0a1a..1661060 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -279,6 +279,7 @@ if(ENABLE_STATIC)
+@@ -275,10 +275,11 @@ set(f include/lzo/lzo1.h include/lzo/lzo1a.h include/lzo/lzo1b.h
+ install(FILES ${f} DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}/lzo")
+ 
+ if(ENABLE_STATIC)
+-    install(TARGETS lzo_static_lib ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
++    install(TARGETS lzo_static_lib EXPORT lzoTargets ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
  endif()
  if(ENABLE_SHARED)
      install(TARGETS lzo_shared_lib
