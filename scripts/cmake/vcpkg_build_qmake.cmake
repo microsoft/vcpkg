@@ -56,9 +56,15 @@ function(vcpkg_build_qmake)
 
     #First generate the makefiles so we can modify them
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/bin${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_HOST_PATH_SEPARATOR}${ENV_PATH_BACKUP}")
+        set(_BUILD_PREFIX "/debug")
+        set(_int_build_type dbg)
+
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/tools/qt5")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/bin")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/lib")
+
         if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles dbg)
+            run_jom(qmake_all makefiles ${_int_build_type})
 
             #Store debug makefiles path
             file(GLOB_RECURSE DEBUG_MAKEFILES ${DEBUG_DIR}/*Makefile*)
@@ -77,13 +83,18 @@ function(vcpkg_build_qmake)
             endforeach()
         endif()
 
-        run_jom("${_csc_DEBUG_TARGETS}" ${_csc_BUILD_LOGNAME} dbg)
+        run_jom("${_csc_DEBUG_TARGETS}" ${_csc_BUILD_LOGNAME} ${_int_build_type})
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/bin${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/tools/qt5${VCPKG_HOST_PATH_SEPARATOR}${ENV_PATH_BACKUP}")
+        set(_int_build_type rel)
+
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/tools/qt5")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/bin")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/lib")
+
         if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles rel)
+            run_jom(qmake_all makefiles ${_int_build_type})
 
             #Store release makefile path
             file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
@@ -100,7 +111,7 @@ function(vcpkg_build_qmake)
             endforeach()
         endif()
 
-        run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} rel)
+        run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} ${_int_build_type})
     endif()
     
     # Restore the original value of ENV{PATH}
