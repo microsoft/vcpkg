@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98c0a1a..5f86dd2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -279,6 +279,7 @@ if(ENABLE_STATIC)
+ endif()
+ if(ENABLE_SHARED)
+     install(TARGETS lzo_shared_lib
++        EXPORT lzoTargets
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
+         RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}"
+@@ -290,6 +291,29 @@ if(1)
+     install(TARGETS ${f} DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/lzo/examples")
+ endif()
+ 
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++    "${PROJECT_BINARY_DIR}/lzoConfigVersion.cmake"
++    COMPATIBILITY SameMajorVersion
++)
++install(
++    EXPORT lzoTargets
++    NAMESPACE lzo::
++    DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/cmake/lzo"
++)
++configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/lzoConfig.cmake.in
++              lzoConfig.cmake
++              INSTALL_DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/lzo
++              NO_CHECK_REQUIRED_COMPONENTS_MACRO
++              PATH_VARS CMAKE_INSTALL_INCLUDEDIR
++              )
++install(
++  FILES
++    "${PROJECT_BINARY_DIR}/lzoConfig.cmake"
++    "${PROJECT_BINARY_DIR}/lzoConfigVersion.cmake"
++  DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/cmake/lzo"
++)
++
+ if(PKG_CONFIG_FOUND)
+     configure_file(lzo2.pc.cmakein lzo2.pc @ONLY)
+     #if(EXISTS "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")

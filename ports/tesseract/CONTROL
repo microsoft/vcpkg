@@ -12,5 +12,5 @@ Feature: cpu_independed
 Description: build on any cpu extension commands support
 
 Feature: libarchive
-Build-Depends: bzip2, libxml2, lz4, lzo, openssl
+Build-Depends: libarchive[core]
 Description: libarchive support
