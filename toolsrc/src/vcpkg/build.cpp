@@ -263,12 +263,11 @@ namespace vcpkg::Build
         return BinaryParagraph(source_paragraph, feature_paragraph, triplet);
     }
 
-    static std::unique_ptr<BinaryControlFile> create_binary_control_file(
-        const SourceParagraph& source_paragraph,
-        const Triplet& triplet,
-        const BuildInfo& build_info,
-        const PreBuildInfo& pre_build_info,
-        const std::string& abi_tag)
+    static std::unique_ptr<BinaryControlFile> create_binary_control_file(const SourceParagraph& source_paragraph,
+                                                                         const Triplet& triplet,
+                                                                         const BuildInfo& build_info,
+                                                                         const PreBuildInfo& pre_build_info,
+                                                                         const std::string& abi_tag)
     {
         auto bcf = std::make_unique<BinaryControlFile>();
         BinaryParagraph bpgh(source_paragraph, triplet, abi_tag);
@@ -554,12 +553,7 @@ namespace vcpkg::Build
             PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
 
         std::unique_ptr<BinaryControlFile> bcf =
-            create_binary_control_file(
-                *config.scf.core_paragraph,
-                triplet,
-                build_info,
-                std::move(pre_build_info),
-                abi_tag);
+            create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, pre_build_info, abi_tag);
 
         if (error_count != 0)
         {
@@ -632,9 +626,8 @@ namespace vcpkg::Build
         {
             if (fs::is_regular_file(status(port_file)))
             {
-                hashes_files.emplace_back(
-                    vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"),
-                    port_file.path().filename().u8string());
+                hashes_files.emplace_back(vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"),
+                                          port_file.path().filename().u8string());
 
                 if (hashes_files.size() > max_port_file_count)
                 {
@@ -652,16 +645,12 @@ namespace vcpkg::Build
             {
                 // We've already sorted by hash so it's safe to write down the
                 // filename, which will be consistent across machines.
-                abi_tag_entries.emplace_back(
-                    AbiEntry{
-                        std::move(hash_file.second),
-                        std::move(hash_file.first)
-                    });
+                abi_tag_entries.emplace_back(AbiEntry{std::move(hash_file.second), std::move(hash_file.first)});
             }
         }
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
-      
+
 #if defined(_WIN32)
         abi_tag_entries.emplace_back(AbiEntry{"powershell", paths.get_tool_version("powershell-core")});
 #endif
@@ -677,11 +666,9 @@ namespace vcpkg::Build
 
         if (pre_build_info.public_abi_override)
         {
-            abi_tag_entries.emplace_back(
-                AbiEntry{
-                    "public_abi_override",
-                    pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO)
-                });
+            abi_tag_entries.emplace_back(AbiEntry{
+                "public_abi_override",
+                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO), "SHA1")});
         }
 
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
@@ -791,16 +778,11 @@ namespace vcpkg::Build
 
         if (!required_fspecs.empty())
         {
-            return {
-                BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES,
-                std::move(required_fspecs)
-            };
+            return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
         }
 
         const PackageSpec spec =
-            PackageSpec::from_name_and_triplet(
-                config.scf.core_paragraph->name,
-                triplet).value_or_exit(VCPKG_LINE_INFO);
+            PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, triplet).value_or_exit(VCPKG_LINE_INFO);
 
         std::vector<AbiEntry> dependency_abis;
 
@@ -820,11 +802,7 @@ namespace vcpkg::Build
         if (!maybe_abi_tag_and_file)
         {
             return do_build_package_and_clean_buildtrees(
-                paths,
-                pre_build_info,
-                spec,
-                pre_build_info.public_abi_override.value_or(AbiTagAndFile{}.tag),
-                config);
+                paths, pre_build_info, spec, pre_build_info.public_abi_override.value_or(AbiTagAndFile{}.tag), config);
         }
 
         std::error_code ec;
@@ -878,16 +856,10 @@ namespace vcpkg::Build
         fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
-        ExtendedBuildResult result =
-            do_build_package_and_clean_buildtrees(
-                    paths,
-                    pre_build_info,
-                    spec,
-                    pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag),
-                    config);
+        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
+            paths, pre_build_info, spec, pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag), config);
 
-        if (config.build_package_options.binary_caching == BinaryCaching::YES &&
-            result.code == BuildResult::SUCCEEDED)
+        if (config.build_package_options.binary_caching == BinaryCaching::YES && result.code == BuildResult::SUCCEEDED)
         {
             const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
 
@@ -898,16 +870,15 @@ namespace vcpkg::Build
             if (ec)
             {
                 System::printf(System::Color::warning,
-                        "Failed to store binary cache %s: %s\n",
-                        archive_path.u8string(),
-                        ec.message());
+                               "Failed to store binary cache %s: %s\n",
+                               archive_path.u8string(),
+                               ec.message());
             }
             else
                 System::printf("Stored binary cache: %s\n", archive_path.u8string());
         }
         else if (config.build_package_options.binary_caching == BinaryCaching::YES &&
-                 (result.code == BuildResult::BUILD_FAILED ||
-                 result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
+                 (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
         {
             if (!fs.exists(archive_tombstone_path))
             {
@@ -922,9 +893,9 @@ namespace vcpkg::Build
                     if (log_file.path().extension() == ".log")
                     {
                         fs.copy_file(log_file.path(),
-                                tmp_log_path_destination / log_file.path().filename(),
-                                fs::stdfs::copy_options::none,
-                                ec);
+                                     tmp_log_path_destination / log_file.path().filename(),
+                                     fs::stdfs::copy_options::none,
+                                     ec);
                     }
                 }
 
@@ -1125,10 +1096,10 @@ namespace vcpkg::Build
                             Checks::exit_with_message(
                                 VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
                         break;
-                    case VcpkgTripletVar::ENV_PASSTHROUGH :
+                    case VcpkgTripletVar::ENV_PASSTHROUGH:
                         pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
                         break;
-                    case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE :
+                    case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE:
                         pre_build_info.public_abi_override =
                             variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                         break;
