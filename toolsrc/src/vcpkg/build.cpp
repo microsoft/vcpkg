@@ -266,7 +266,6 @@ namespace vcpkg::Build
     static std::unique_ptr<BinaryControlFile> create_binary_control_file(const SourceParagraph& source_paragraph,
                                                                          const Triplet& triplet,
                                                                          const BuildInfo& build_info,
-                                                                         const PreBuildInfo& pre_build_info,
                                                                          const std::string& abi_tag)
     {
         auto bcf = std::make_unique<BinaryControlFile>();
@@ -553,7 +552,7 @@ namespace vcpkg::Build
             PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info, config.port_dir);
 
         std::unique_ptr<BinaryControlFile> bcf =
-            create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, pre_build_info, abi_tag);
+            create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
 
         if (error_count != 0)
         {
