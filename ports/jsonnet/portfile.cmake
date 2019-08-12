@@ -15,6 +15,7 @@ vcpkg_from_github(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_execute_required_process(
     COMMAND Powershell -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME "std.jsonnet"
