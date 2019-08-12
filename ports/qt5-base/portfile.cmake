@@ -30,13 +30,13 @@ vcpkg_extract_source_archive_ex(
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
-    if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
-        file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
-    endif()
-endforeach()
+#foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
+#    if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
+#        file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
+#    endif()
+#endforeach()
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
 set(ENV{_CL_} "/utf-8")
@@ -88,7 +88,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             PCRE2_LIBS="-lpcre2-16d"
             FREETYPE_LIBS="-lfreetyped"
     )
-
+    
 elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\"")
@@ -156,30 +156,58 @@ endif()
 
 #TODO: PATCH QTs buildsystem so that all binary targets get installed in tools/qt5
 # e.g. by patching mkspecs/features/qt_tools.prf somehow
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
-    list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
-    file(INSTALL ${BINARY_TOOLS}
-         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
-    file(REMOVE ${BINARY_TOOLS})
+file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/*.prl")
 
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+#    file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
+#    list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
+#    file(INSTALL ${BINARY_TOOLS}
+#        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+#         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
+#    file(REMOVE ${BINARY_TOOLS})
+#
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_release.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*")
-    list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
-    file(REMOVE ${BINARY_TOOLS})
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    foreach(PRL_FILE IN LISTS PRL_FILES)
+        file(READ "${PRL_FILE}" _contents)
+        string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
+        file(WRITE "${PRL_FILE}" "${_contents}")
+    endforeach()
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        file(APPEND ${CURRENT_PACKAGES_DIR}/share/qt5/debug/mkspecs/modules/qt_lib_bootstrap_private.pri "LIBS += -luser32 -lole32 -ladvapi32 -lshell32 -lnetapi32 -lzlib")
+    else()
+        file(APPEND ${CURRENT_PACKAGES_DIR}/share/qt5/debug/mkspecs/modules/qt_lib_bootstrap_private.pri "LIBS += -lz")
     endif()
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+#    file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*")
+#    list(FILTER BINARY_TOOLS EXCLUDE REGEX "\\.dll\$")
+#    file(REMOVE ${BINARY_TOOLS})
+#    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+#        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+#    endif()
 
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
+    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    foreach(PRL_FILE IN LISTS PRL_FILES)
+        file(READ "${PRL_FILE}" _contents)
+        string(REPLACE "${CMAKE_DEBUG_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
+        file(WRITE "${PRL_FILE}" "${_contents}")
+    endforeach()
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        file(APPEND ${CURRENT_PACKAGES_DIR}/share/qt5/debug/mkspecs/modules/qt_lib_bootstrap_private.pri "LIBS += -luser32 -lole32 -ladvapi32 -lshell32 -lnetapi32 -lzlibd")
+    else()
+        file(APPEND ${CURRENT_PACKAGES_DIR}/share/qt5/debug/mkspecs/modules/qt_lib_bootstrap_private.pri "LIBS += -lz")
+    endif()
 endif()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost 
 #TODO: Replace python script with cmake script
+
 vcpkg_execute_required_process(
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
@@ -188,32 +216,6 @@ vcpkg_execute_required_process(
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5)
-
-file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
-endif()
-
-foreach(PRL_FILE IN LISTS PRL_FILES)
-    file(READ "${PRL_FILE}" _contents)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        string(REPLACE "${CMAKE_DEBUG_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
-    endif()
-    file(WRITE "${PRL_FILE}" "${_contents}")
-endforeach()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
-endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
