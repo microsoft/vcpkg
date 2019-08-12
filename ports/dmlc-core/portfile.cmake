@@ -1,25 +1,36 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} currently doesn't supports UWP.")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dmlc/dmlc-core
-    REF v0.3
-    SHA512 eddec2e79ce2dc6da79cf310fe2985bc5097698342003fd0a799ae23a8f248ad0f84ade39edbd9c35dd8ec0f89d655684e7d3d474c17791df7293aedd67a856d
+    REF d3fd7c5e9b9c280d3081ada3fb62705547c00bf1
+    SHA512 6887d52ddd00949866c27bea3c860abb8a7ecf61feeac79d67d260635e9c3e490b6f0538cbc0ccc1f03e90ab4094bfc0fcb938adb3fb5afe9fea813d47cc7430
     HEAD_REF master
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+   set(DMLC_FORCE_SHARED_CRT ON)
+else()
+   set(DMLC_FORCE_SHARED_CRT OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA       
+    PREFER_NINJA
+    OPTIONS -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}    
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/dmlc)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
