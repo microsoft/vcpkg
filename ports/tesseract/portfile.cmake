@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 d617f5c5b826640b2871dbe3d7973bcc5e66fafd837921a20e009d683806ed50f0f258aa455019d99fc54f5cb65c2fa0380e3a3c92b39ab0684b8799c730b09d
     PATCHES
         fix-tiff-linkage.patch
-		fix-text2image.patch
+        fix-text2image.patch
 )
 
 # The built-in cmake FindICU is better
@@ -38,9 +38,10 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSTATIC=ON
         -DUSE_SYSTEM_ICU=True
-	#any value for vcpkg leptonica link cmake branch select
-	-DLeptonica_DIR=YES
-	${OPTIONS_LIST}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
+        -DLeptonica_DIR=YES
+        ${OPTIONS_LIST}
 )
 
 vcpkg_install_cmake()
