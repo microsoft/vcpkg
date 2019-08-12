@@ -34,7 +34,7 @@ if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
             FILENAME "tools/python/${PYTHON2_DIR_NAME}/get-pip.py"
             SHA512 1436215d2bc45a8019503aaf6c0e5f7da142108dee0fa2db282e22670eca84beff487ec45f1e6b8968c481f7009afb211a76ac93b637b48ba83f099831db33ff
         )
-        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
+        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${DOWNLOADS}/tools/python/${PYTHON2_DIR_NAME}/get-pip.py)
     endif()
     execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
 else()
