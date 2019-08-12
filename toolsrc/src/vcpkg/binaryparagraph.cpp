@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/parse.h>
