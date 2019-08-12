@@ -15,7 +15,7 @@
 
 function(vcpkg_configure_qmake)
     cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS" ${ARGN})
-
+     
     # Find qmake executable
     find_program(QMAKE_COMMAND NAMES qmake PATHS ${CURRENT_INSTALLED_DIR}/tools/qt5)
 
@@ -24,8 +24,12 @@ function(vcpkg_configure_qmake)
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND _csc_OPTIONS CONFIG+=staticlib)
+        list(APPEND _csc_OPTIONS CONFIG+=static)
+    else()
+        list(APPEND _csc_OPTIONS CONFIG+=shared)
     endif()
+    
+    list(APPEND _csc_OPTIONS CONFIG+=separate_debug_info)
 
     # Cleanup build directories
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
