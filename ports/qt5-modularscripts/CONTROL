@@ -1,3 +1,4 @@
 Source: qt5-modularscripts
 Version: 2019-04-30-2
 Description: Vcpkg helpers to package qt5 modules
+Build-Depends: qt5-base

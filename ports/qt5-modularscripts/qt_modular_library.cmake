@@ -53,11 +53,7 @@ function(qt_modular_build_library SOURCE_PATH)
     #Configure debug+release
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
     #Build debug+release
-    if (CMAKE_HOST_WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        vcpkg_build_qmake()
-    else()
-        vcpkg_build_qmake(SKIP_MAKEFILES)
-    endif()
+    vcpkg_build_qmake(SKIP_MAKEFILES)
 
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
