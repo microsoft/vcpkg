@@ -4,7 +4,7 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(OPENCV_PORT_VERSION "3.4.3")
+set(OPENCV_PORT_VERSION "3.4.7")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,20 +23,33 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
-set(CMAKE_MODULE_PATH)
+vcpkg_check_features(
+ "contrib"  WITH_CONTRIB
+ "cuda"     WITH_CUDA
+ "dnn"      BUILD_opencv_dnn
+ "eigen"    WITH_EIGEN
+ "ffmpeg"   WITH_FFMPEG
+ "flann"    BUILD_opencv_flann
+ "gdcm"     WITH_GDCM
+ "halide"   WITH_HALIDE
+ "ipp"      WITH_IPP
+ "jasper"   WITH_JASPER
+ "jpeg"     WITH_JPEG
+ "nonfree"  OPENCV_ENABLE_NONFREE
+ "openexr"  WITH_OPENEXR
+ "opengl"   WITH_OPENGL
+ "ovis"     BUILD_opencv_ovis
+ "png"      WITH_PNG
+ "qt"       WITH_QT
+ "sfm"      BUILD_opencv_sfm
+ "tbb"      WITH_TBB
+ "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
+ "webp"     WITH_WEBP
+ "world"    BUILD_opencv_world
+)
 
-set(BUILD_opencv_world OFF)
-if("world" IN_LIST FEATURES)
-  set(BUILD_opencv_world ON)
-endif()
-
-set(BUILD_opencv_dnn OFF)
-set(WITH_PROTOBUF OFF)
-if("dnn" IN_LIST FEATURES)
-  set(BUILD_opencv_dnn ON)
-  set(WITH_PROTOBUF ON)
-  set(PROTOBUF_UPDATE_FILES ON)
-  set(UPDATE_PROTO_FILES ON)
+if(BUILD_opencv_dnn)
   vcpkg_download_distfile(TINYDNN_ARCHIVE
     URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
     FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
@@ -44,25 +57,7 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-set(BUILD_opencv_flann OFF)
-if("flann" IN_LIST FEATURES)
-  set(BUILD_opencv_flann ON)
-endif()
-
-set(BUILD_opencv_ovis OFF)
-if("ovis" IN_LIST FEATURES)
-  set(BUILD_opencv_ovis ON)
-endif()
-
-set(BUILD_opencv_sfm OFF)
-if("sfm" IN_LIST FEATURES)
-  set(BUILD_opencv_sfm ON)
-endif()
-
-set(BUILD_opencv_contrib OFF)
-if("contrib" IN_LIST FEATURES)
-  set(BUILD_opencv_contrib ON)
-
+if(WITH_CONTRIB)
   # Used for opencv's face module
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
@@ -111,35 +106,9 @@ if("contrib" IN_LIST FEATURES)
   )
 endif()
 
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(WITH_CUDA ON)
-endif()
 
-set(WITH_FFMPEG OFF)
-if("ffmpeg" IN_LIST FEATURES)
-  set(WITH_FFMPEG ON)
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/opencv_ffmpeg.dll"
-    FILENAME "opencv-cache/ffmpeg/fa5a2a4e2f37defcb95bde8ed145c2b3-opencv_ffmpeg.dll"
-    SHA512 875f922e1d9fc2fe7c8e879ede35b1001b6ad8b3c4d71feb3823421ce861f580df3418c791315b23870fcb0378d297b01e0761d3f65277ff11ec2fef8c0b08b7
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/opencv_ffmpeg_64.dll"
-    FILENAME "opencv-cache/ffmpeg/2cc08fc4fef8199fe80e0f126684834f-opencv_ffmpeg_64.dll"
-    SHA512 4e74aa4cb115f103b929f93bbc8dcf675de7d0c7916f8f0a80ac46761134b088634be95f959ce5827753ae9ecb2365ca40440dfbb9a9bf89f22ee11b6c8342b3
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8041bd6f5ad37045c258904ba3030bb3442e3911/ffmpeg/ffmpeg_version.cmake"
-    FILENAME "opencv-cache/ffmpeg/3b90f67f4b429e77d3da36698cef700c-ffmpeg_version.cmake"
-    SHA512 7d0142c30ac6f6260c1bcabc22753030fd25a708477fa28053e8df847c366967d3b93a8ac14af19a2b7b73d9f8241749a431458faf21a0c8efc7d6d99eecfdcf
-  )
-endif()
 
-set(WITH_IPP OFF)
-if("ipp" IN_LIST FEATURES)
-  set(WITH_IPP ON)
-
+if(WITH_IPP)
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_download_distfile(OCV_DOWNLOAD
       URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_intel64_general_20180518.zip"
@@ -155,81 +124,9 @@ if("ipp" IN_LIST FEATURES)
   endif()
 endif()
 
-set(WITH_TBB OFF)
-if("tbb" IN_LIST FEATURES)
-  set(WITH_TBB ON)
-endif()
-
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_QT ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
-endif()
-
-set(WITH_WEBP OFF)
-if("webp" IN_LIST FEATURES)
-  set(WITH_WEBP ON)
-  list(APPEND CMAKE_MODULE_PATH ${CURRENT_INSTALLED_DIR}/share/libwebp)
-endif()
-
-set(WITH_GDCM OFF)
-if("gdcm" IN_LIST FEATURES)
-  set(WITH_GDCM ON)
-endif()
-
-set(WITH_OPENGL OFF)
-if("opengl" IN_LIST FEATURES)
-  set(WITH_OPENGL ON)
-endif()
-
-set(WITH_OPENEXR OFF)
-if("openexr" IN_LIST FEATURES)
-  set(WITH_OPENEXR ON)
-  list(APPEND CMAKE_MODULE_PATH ${CURRENT_INSTALLED_DIR}/share/openexr)
-endif()
-
 set(WITH_MSMF ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
-endif()
-
-set(WITH_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-  set(WITH_TIFF ON)
-endif()
-
-set(WITH_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-  set(WITH_JPEG ON)
-endif()
-
-set(WITH_JASPER OFF)
-if("jasper" IN_LIST FEATURES)
-  set(WITH_JASPER ON)
-endif()
-
-set(WITH_PNG OFF)
-if("png" IN_LIST FEATURES)
-  set(WITH_PNG ON)
-endif()
-
-set(WITH_EIGEN OFF)
-if("eigen" IN_LIST FEATURES)
-  set(WITH_EIGEN ON)
-endif()
-
-set(WITH_HALIDE OFF)
-if("halide" IN_LIST FEATURES)
-  set(WITH_HALIDE ON)
-endif()
-
-set(OPENCV_ENABLE_NONFREE OFF)
-if("nonfree" IN_LIST FEATURES)
-  set(OPENCV_ENABLE_NONFREE ON)
 endif()
 
 if(BUILD_opencv_contrib)
@@ -252,14 +149,21 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_saliency OFF)
   set(BUILD_opencv_bgsegm OFF)
 endif()
-
-string(REPLACE ";" "\\\\\;" CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
+if (VCPKG_TARGET_IS_UWP)
+  set(BUILD_opencv_quality OFF)
+endif()
 
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # Ungrouped Entries
+        ###### ocv_options
+        -DOpenCV_INSTALL_BINARIES_PREFIX=
+        -DOPENCV_LIB_INSTALL_PATH=lib
+        -DOPENCV_3P_LIB_INSTALL_PATH=lib
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
+        -DCMAKE_DEBUG_POSTFIX=d
         -DOpenCV_DISABLE_ARCH_PATH=ON
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
@@ -291,12 +195,12 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
         -DBUILD_opencv_world=${BUILD_opencv_world}
         # PROTOBUF
-        -DPROTOBUF_UPDATE_FILES=${PROTOBUF_UPDATE_FILES}
-        -DUPDATE_PROTO_FILES=${UPDATE_PROTO_FILES}
+        -DPROTOBUF_UPDATE_FILES=ON
+        -DUPDATE_PROTO_FILES=ON
+        -DWITH_PROTOBUF=ON
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        "-DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}"
         # ENABLE
         -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
@@ -306,6 +210,7 @@ vcpkg_configure_cmake(
         -DINSTALL_LICENSE=OFF
         # OPENCV
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
@@ -326,7 +231,6 @@ vcpkg_configure_cmake(
         -DWITH_OPENEXR=${WITH_OPENEXR}
         -DWITH_OPENGL=${WITH_OPENGL}
         -DWITH_PNG=${WITH_PNG}
-        -DWITH_PROTOBUF=${WITH_PROTOBUF}
         -DWITH_QT=${WITH_QT}
         -DWITH_TBB=${WITH_TBB}
         -DWITH_TIFF=${WITH_TIFF}
@@ -340,84 +244,49 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-if(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-  set(OpenCV_RUNTIME vc15)
-else()
-  set(OpenCV_RUNTIME vc14)
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(OpenCV_ARCH x64)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  set(OpenCV_ARCH ARM)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OpenCV_ARCH ARM64)
-else()
-  set(OpenCV_ARCH x86)
-endif()
-
-file(GLOB BIN_AND_LIB ${CURRENT_PACKAGES_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/*)
-file(COPY ${BIN_AND_LIB} DESTINATION ${CURRENT_PACKAGES_DIR})
-file(GLOB DEBUG_BIN_AND_LIB ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH}/${OpenCV_RUNTIME}/*)
-file(COPY ${DEBUG_BIN_AND_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${OpenCV_ARCH})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH})
-
-file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/staticlib/*)
-if(STATICLIB)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
-  file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/staticlib)
-endif()
-file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/debug/staticlib/*)
-if(STATICLIB)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/staticlib)
-endif()
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake OPENCV_CONFIG)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/lib"
-               "PREFIX}/debug/lib" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/bin"
-               "PREFIX}/debug/bin" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake)
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
-string(REPLACE "${CURRENT_INSTALLED_DIR}"
-               "\${_VCPKG_INSTALLED_DIR}/\${VCPKG_TARGET_TRIPLET}" OPENCV_MODULES "${OPENCV_MODULES}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
+vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
-                 find_package(TIFF REQUIRED)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_package(Protobuf REQUIRED)
+if(Protobuf_FOUND)
+  if(TARGET protobuf::libprotobuf)
+    add_library(libprotobuf INTERFACE IMPORTED)
+    set_target_properties(libprotobuf PROPERTIES
+      INTERFACE_LINK_LIBRARIES protobuf::libprotobuf
+    )
+  else()
+    add_library(libprotobuf UNKNOWN IMPORTED)
+    set_target_properties(libprotobuf PROPERTIES
+      IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"
+      INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
+      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
+    )
+  endif()
+endif()
+find_package(TIFF QUIET)
+find_package(HDF5 QUIET)
+find_package(Freetype QUIET)
+find_package(Ogre QUIET)
+find_package(gflags QUIET)
+find_package(Ceres QUIET)
+find_package(ade QUIET)
+find_package(VTK QUIET)
+find_package(OpenMP QUIET)
+find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
-
-vcpkg_copy_pdbs()
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv3/LICENSE ${CURRENT_PACKAGES_DIR}/share/opencv3/copyright)
-
-set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/setup_vars_opencv3.cmd)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv3.cmd)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv3 RENAME copyright)

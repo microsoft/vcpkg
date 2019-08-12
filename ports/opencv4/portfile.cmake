@@ -270,14 +270,13 @@ vcpkg_configure_cmake(
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
-	-DUPDATE_PROTO_FILES=ON
+        -DUPDATE_PROTO_FILES=ON
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         # ENABLE
         -DENABLE_CXX11=ON
         ###### OPENCV vars
@@ -321,15 +320,10 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
-# OpenCV does not list TIFF as a dependency. 
-# We explicitly add it to the module file, 
-# in order to fix unresolved symbols linking problems 
-# for downstream projects using OpenCV as static library
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(TIFF REQUIRED)
 find_package(Protobuf REQUIRED)
 if(Protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
@@ -346,6 +340,7 @@ if(Protobuf_FOUND)
     )
   endif()
 endif()
+find_package(TIFF QUIET)
 find_package(HDF5 QUIET)
 find_package(Freetype QUIET)
 find_package(Ogre QUIET)
