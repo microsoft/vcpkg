@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/ade
-    REF v0.1.1d
-    SHA512 c493cb57e59ba859ca0cbf5d48bae4233f22104dfb4a96864d07e9422bb700c27af2d53a602f2230d68b7bcc598920d0652c3d9fdf8fad94a7e5b4d21664a44e
+    REF v0.1.1e
+    SHA512 6271b3a6d23b155757a47b21f70cb169b0469501bd1a7c99aa91a76117387840e02b4c70dc4069b7c50408f760b9a7ea77527a30b4691048a1ee55dd94988dd5
     HEAD_REF master
 )
 

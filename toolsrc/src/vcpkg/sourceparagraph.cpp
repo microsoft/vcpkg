@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/logicexpression.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/triplet.h>
@@ -142,7 +143,7 @@ namespace vcpkg
     }
 
     ParseExpected<SourceControlFile> SourceControlFile::parse_control_file(
-        std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs)
+        std::vector<Parse::RawParagraph>&& control_paragraphs)
     {
         if (control_paragraphs.size() == 0)
         {
@@ -222,15 +223,8 @@ namespace vcpkg
         std::vector<std::string> ret;
         for (auto&& dep : deps)
         {
-            auto qualifiers = Strings::split(dep.qualifier, "&");
-            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
-                    if (qualifier.empty()) return true;
-                    if (qualifier[0] == '!')
-                    {
-                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
-                    }
-                    return t.canonical_name().find(qualifier) != std::string::npos;
-                }))
+            const auto& qualifier = dep.qualifier;
+            if (qualifier.empty() || evaluate_expression(qualifier, t.canonical_name()))
             {
                 ret.emplace_back(dep.name());
             }
@@ -238,21 +232,13 @@ namespace vcpkg
         return ret;
     }
 
-    std::vector<Features> filter_dependencies_to_features(const std::vector<vcpkg::Dependency>& deps,
-                                                          const Triplet& t)
+    std::vector<Features> filter_dependencies_to_features(const std::vector<vcpkg::Dependency>& deps, const Triplet& t)
     {
         std::vector<Features> ret;
         for (auto&& dep : deps)
         {
-            auto qualifiers = Strings::split(dep.qualifier, "&");
-            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
-                    if (qualifier.empty()) return true;
-                    if (qualifier[0] == '!')
-                    {
-                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
-                    }
-                    return t.canonical_name().find(qualifier) != std::string::npos;
-                }))
+            const auto& qualifier = dep.qualifier;
+            if (qualifier.empty() || evaluate_expression(qualifier, t.canonical_name()))
             {
                 ret.emplace_back(dep.depend);
             }

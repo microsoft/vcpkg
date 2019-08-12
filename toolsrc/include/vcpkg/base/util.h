@@ -3,19 +3,19 @@
 #include <algorithm>
 #include <map>
 #include <mutex>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <type_traits>
 
 namespace vcpkg::Util
 {
-    template <class T>
+    template<class T>
     constexpr std::add_const_t<T>& as_const(T& t) noexcept
     {
         return t;
     }
-    template <class T>
+    template<class T>
     void as_const(const T&&) = delete;
 
     template<class Container>
