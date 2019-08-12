@@ -63,8 +63,7 @@ namespace vcpkg::Build::Command
         std::set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
         features_as_set.emplace("core");
 
-        const Build::BuildPackageConfig build_config{
-            scfl, spec.triplet(), build_package_options, features_as_set};
+        const Build::BuildPackageConfig build_config{scfl, spec.triplet(), build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -293,19 +292,17 @@ namespace vcpkg::Build
                                                   const std::set<std::string>& feature_list,
                                                   const Triplet& triplet)
     {
-        return Util::fmap_flatten(
-            feature_list,
-            [&](std::string const& feature) -> std::vector<Features> {
-                if (feature == "core")
-                {
-                    return filter_dependencies_to_features(scf.core_paragraph->depends, triplet);
-                }
+        return Util::fmap_flatten(feature_list, [&](std::string const& feature) -> std::vector<Features> {
+            if (feature == "core")
+            {
+                return filter_dependencies_to_features(scf.core_paragraph->depends, triplet);
+            }
 
-                auto maybe_feature = scf.find_feature(feature);
-                Checks::check_exit(VCPKG_LINE_INFO, maybe_feature.has_value());
+            auto maybe_feature = scf.find_feature(feature);
+            Checks::check_exit(VCPKG_LINE_INFO, maybe_feature.has_value());
 
-                return filter_dependencies_to_features(maybe_feature.get()->depends, triplet);
-            });
+            return filter_dependencies_to_features(maybe_feature.get()->depends, triplet);
+        });
     }
 
     static std::vector<std::string> get_dependency_names(const SourceControlFile& scf,
@@ -313,10 +310,7 @@ namespace vcpkg::Build
                                                          const Triplet& triplet)
     {
         return Util::fmap(get_dependencies(scf, feature_list, triplet),
-            [&](const Features& feat) {
-                return feat.name;
-            }
-        );
+                          [&](const Features& feat) { return feat.name; });
     }
 
     static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
@@ -324,8 +318,7 @@ namespace vcpkg::Build
     {
         const Triplet& triplet = config.triplet;
 
-        const std::vector<std::string> dep_strings =
-            get_dependency_names(config.scf, config.feature_list, triplet);
+        const std::vector<std::string> dep_strings = get_dependency_names(config.scf, config.feature_list, triplet);
 
         auto dep_fspecs = FeatureSpec::from_strings_and_triplet(dep_strings, triplet);
         Util::sort_unique_erase(dep_fspecs);
@@ -428,8 +421,7 @@ namespace vcpkg::Build
     {
         const Toolset& toolset = paths.get_toolset(pre_build_info);
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
-        std::vector<System::CMakeVariable> variables =
-            get_cmake_vars(paths, config, triplet, toolset);
+        std::vector<System::CMakeVariable> variables = get_cmake_vars(paths, config, triplet, toolset);
 
         const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
 
@@ -507,6 +499,14 @@ namespace vcpkg::Build
                                                 const BuildPackageConfig& config)
     {
         auto& fs = paths.get_filesystem();
+#if defined(_WIN32)
+        const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
+        if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
+        {
+            fs.copy(powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
+        }
+#endif
+
         const Triplet& triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
@@ -521,14 +521,15 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        std::string command =
-            make_build_cmd(paths, pre_build_info, config, triplet);
-        std::unordered_map<std::string, std::string> env =
-            make_env_passthrough(pre_build_info);
+        std::string command = make_build_cmd(paths, pre_build_info, config, triplet);
+        std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
 
+#if defined(_WIN32)
         const int return_code =
-            System::cmd_execute_clean(command, env);
-
+            System::cmd_execute_clean(command, env, powershell_exe_path.parent_path().u8string() + ";");
+#else
+        const int return_code = System::cmd_execute_clean(command, env);
+#endif
         const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
 
@@ -608,6 +609,9 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
+#if defined(_WIN32)
+        abi_tag_entries.emplace_back(AbiEntry{"powershell", paths.get_tool_version("powershell-core")});
+#endif
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
         // If there is an unusually large number of files in the port then
@@ -619,7 +623,7 @@ namespace vcpkg::Build
         std::vector<fs::path> port_files;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
-            if (fs::is_regular_file(status(port_file)))
+            if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
                 port_files.push_back(port_file);
                 if (port_files.size() > max_port_file_count)
@@ -785,8 +789,7 @@ namespace vcpkg::Build
                 AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
         }
 
-        const auto pre_build_info =
-            PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
+        const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet, config.scfl);
 
         auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
 
@@ -938,7 +941,7 @@ namespace vcpkg::Build
                                Commands::Version::version());
     }
 
-    static BuildInfo inner_create_buildinfo(std::unordered_map<std::string, std::string> pgh)
+    static BuildInfo inner_create_buildinfo(Parse::RawParagraph pgh)
     {
         Parse::ParagraphParser parser(std::move(pgh));
 
@@ -995,8 +998,7 @@ namespace vcpkg::Build
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath)
     {
-        const Expected<std::unordered_map<std::string, std::string>> pghs =
-            Paragraphs::get_single_paragraph(fs, filepath);
+        const Expected<Parse::RawParagraph> pghs = Paragraphs::get_single_paragraph(fs, filepath);
         Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");
         return inner_create_buildinfo(*pghs.get());
     }
@@ -1015,14 +1017,11 @@ namespace vcpkg::Build
 
         if (port)
         {
-            args.emplace_back(
-                    "CMAKE_ENV_OVERRIDES_FILE",
-                    port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
+            args.emplace_back("CMAKE_ENV_OVERRIDES_FILE",
+                              port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
         }
 
-        const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
-                                                             ports_cmake_script_path,
-                                                             args);
+        const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, ports_cmake_script_path, args);
 
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
@@ -1054,41 +1053,39 @@ namespace vcpkg::Build
             {
                 switch (maybe_option->second)
                 {
-                case VcpkgTripletVar::TARGET_ARCHITECTURE :
-                    pre_build_info.target_architecture = variable_value;
-                    break;
-                case VcpkgTripletVar::CMAKE_SYSTEM_NAME :
-                    pre_build_info.cmake_system_name = variable_value;
-                    break;
-                case VcpkgTripletVar::CMAKE_SYSTEM_VERSION :
-                    pre_build_info.cmake_system_version = variable_value;
-                    break;
-                case VcpkgTripletVar::PLATFORM_TOOLSET :
-                    pre_build_info.platform_toolset =
-                        variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
-                    break;
-                case VcpkgTripletVar::VISUAL_STUDIO_PATH :
-                    pre_build_info.visual_studio_path =
-                        variable_value.empty() ? nullopt : Optional<fs::path>{variable_value};
-                    break;
-                case VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE :
-                    pre_build_info.external_toolchain_file =
-                        variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
-                    break;
-                case VcpkgTripletVar::BUILD_TYPE :
-                    if (variable_value.empty())
-                        pre_build_info.build_type = nullopt;
-                    else if (Strings::case_insensitive_ascii_equals(variable_value, "debug"))
-                        pre_build_info.build_type = ConfigurationType::DEBUG;
-                    else if (Strings::case_insensitive_ascii_equals(variable_value, "release"))
-                        pre_build_info.build_type = ConfigurationType::RELEASE;
-                    else
-                        Checks::exit_with_message(
+                    case VcpkgTripletVar::TARGET_ARCHITECTURE:
+                        pre_build_info.target_architecture = variable_value;
+                        break;
+                    case VcpkgTripletVar::CMAKE_SYSTEM_NAME: pre_build_info.cmake_system_name = variable_value; break;
+                    case VcpkgTripletVar::CMAKE_SYSTEM_VERSION:
+                        pre_build_info.cmake_system_version = variable_value;
+                        break;
+                    case VcpkgTripletVar::PLATFORM_TOOLSET:
+                        pre_build_info.platform_toolset =
+                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                        break;
+                    case VcpkgTripletVar::VISUAL_STUDIO_PATH:
+                        pre_build_info.visual_studio_path =
+                            variable_value.empty() ? nullopt : Optional<fs::path>{variable_value};
+                        break;
+                    case VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE:
+                        pre_build_info.external_toolchain_file =
+                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                        break;
+                    case VcpkgTripletVar::BUILD_TYPE:
+                        if (variable_value.empty())
+                            pre_build_info.build_type = nullopt;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "debug"))
+                            pre_build_info.build_type = ConfigurationType::DEBUG;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "release"))
+                            pre_build_info.build_type = ConfigurationType::RELEASE;
+                        else
+                            Checks::exit_with_message(
                                 VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
-                    break;
-                case VcpkgTripletVar::ENV_PASSTHROUGH :
-                    pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
-                    break;
+                        break;
+                    case VcpkgTripletVar::ENV_PASSTHROUGH:
+                        pre_build_info.passthrough_env_vars = Strings::split(variable_value, ";");
+                        break;
                 }
             }
             else
@@ -1097,8 +1094,7 @@ namespace vcpkg::Build
             }
         }
 
-        pre_build_info.triplet_abi_tag =
-            get_triplet_abi(paths, pre_build_info, triplet);
+        pre_build_info.triplet_abi_tag = get_triplet_abi(paths, pre_build_info, triplet);
 
         return pre_build_info;
     }

@@ -18,30 +18,14 @@ file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
-set(WITH_OPENNI2 OFF)
-if("openni2" IN_LIST FEATURES)
-    set(WITH_OPENNI2 ON)
-endif()
-
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-    set(WITH_QT ON)
-endif()
-
-set(WITH_PCAP OFF)
-if("pcap" IN_LIST FEATURES)
-    set(WITH_PCAP ON)
-endif()
-
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-    set(WITH_CUDA ON)
-endif()
-
-set(BUILD_TOOLS OFF)
-if("tools" IN_LIST FEATURES)
-    set(BUILD_TOOLS ON)
-endif()
+vcpkg_check_features(
+    openni2 WITH_OPENNI2
+    qt WITH_QT
+    pcap WITH_PCAP
+    cuda WITH_CUDA
+    tools BUILD_TOOLS
+    opengl WITH_OPENGL
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -66,6 +50,7 @@ vcpkg_configure_cmake(
         -DWITH_QHULL=ON
         -DWITH_QT=${WITH_QT}
         -DWITH_VTK=ON
+        -DWITH_OPENGL=${WITH_OPENGL}
 )
 
 vcpkg_install_cmake()
