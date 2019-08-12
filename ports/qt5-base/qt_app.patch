@@ -6,8 +6,7 @@ index 8354f30e..8f24b72e 100644
          QT -= core core-private xml
          QT += bootstrap-private
      }
--    target.path = $$[QT_HOST_BINS]
-+    target.path = $$[QT_HOST_BINS]/../tools/qt5
+     target.path = $$[QT_HOST_BINS]
 +    CONFIG += relative_qt_rpath  # Qt's tools and apps should be relocatable
  } else {
      !build_pass:qtConfig(debug_and_release): CONFIG += release
