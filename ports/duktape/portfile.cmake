@@ -48,6 +48,7 @@ vcpkg_apply_patches(
 )
 
 vcpkg_configure_cmake(
+    PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
 )
 

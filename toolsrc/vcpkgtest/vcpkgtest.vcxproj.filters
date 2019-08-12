@@ -15,37 +15,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\vcpkg-tests\arguments.cpp">
+    <ClCompile Include="..\src\vcpkg-test\arguments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\catch.cpp">
+    <ClCompile Include="..\src\vcpkg-test\catch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\chrono.cpp">
+    <ClCompile Include="..\src\vcpkg-test\chrono.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\dependencies.cpp">
+    <ClCompile Include="..\src\vcpkg-test\dependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\paragraph.cpp">
+    <ClCompile Include="..\src\vcpkg-test\paragraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\plan.cpp">
+    <ClCompile Include="..\src\vcpkg-test\plan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\specifier.cpp">
+    <ClCompile Include="..\src\vcpkg-test\specifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\statusparagraphs.cpp">
+    <ClCompile Include="..\src\vcpkg-test\statusparagraphs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\supports.cpp">
+    <ClCompile Include="..\src\vcpkg-test\supports.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\update.cpp">
+    <ClCompile Include="..\src\vcpkg-test\update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-tests\util.cpp">
+    <ClCompile Include="..\src\vcpkg-test\util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg-test\files.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg-test\strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

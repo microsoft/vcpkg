@@ -21,6 +21,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DSFML_BUILD_FRAMEWORKS=OFF
         -DSFML_USE_SYSTEM_DEPS=ON
