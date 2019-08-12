@@ -166,8 +166,7 @@ namespace vcpkg::Paragraphs
 
     Expected<RawParagraph> parse_single_paragraph(const std::string& str)
     {
-        const std::vector<RawParagraph> p =
-            Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        const std::vector<RawParagraph> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
 
         if (p.size() == 1)
         {
@@ -177,8 +176,7 @@ namespace vcpkg::Paragraphs
         return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
     }
 
-    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs,
-                                                                                const fs::path& control_path)
+    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -189,8 +187,7 @@ namespace vcpkg::Paragraphs
         return contents.error();
     }
 
-    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs,
-                                                                                       const fs::path& control_path)
+    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())

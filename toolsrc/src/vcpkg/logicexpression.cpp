@@ -1,21 +1,18 @@
 
 #include "pch.h"
 
-#include <vcpkg/logicexpression.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/logicexpression.h>
 
 #include <string>
 #include <vector>
-
 
 namespace vcpkg
 {
     struct ParseError
     {
-        ParseError(int column, std::string line, std::string message)
-            :column(column), line(line), message(message)
-        {}
+        ParseError(int column, std::string line, std::string message) : column(column), line(line), message(message) {}
 
         const int column;
         const std::string line;
@@ -24,9 +21,15 @@ namespace vcpkg
         void print_error() const
         {
             System::print2(System::Color::error,
-                "Error: ", message, "\n"
-                "   on expression: \"", line, "\"\n",
-                "                   ", std::string(column, ' '), "^\n");
+                           "Error: ",
+                           message,
+                           "\n"
+                           "   on expression: \"",
+                           line,
+                           "\"\n",
+                           "                   ",
+                           std::string(column, ' '),
+                           "^\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
     };
@@ -36,7 +39,7 @@ namespace vcpkg
     //    ( logic-expression )
     //    identifier
     //  identifier:
-    //    alpha-numeric string of characters   
+    //    alpha-numeric string of characters
     //  logic-expression: <- this is the entry point
     //    not-expression
     //    not-expression | logic-expression
@@ -69,27 +72,20 @@ namespace vcpkg
             }
         }
 
-        bool get_result() const
-        {
-            return final_result;
-        }
+        bool get_result() const { return final_result; }
 
-        bool has_error() const
-        {
-            return err == nullptr;
-        }
+        bool has_error() const { return err == nullptr; }
 
     private:
-
         bool final_result;
 
         std::string::const_iterator current_iter;
         const std::string& raw_text;
-		char current_char;
+        char current_char;
 
-		const std::string& evaluation_context;
+        const std::string& evaluation_context;
 
-		std::unique_ptr<ParseError> err;
+        std::unique_ptr<ParseError> err;
 
         void add_error(std::string message, int column = -1)
         {
@@ -107,10 +103,7 @@ namespace vcpkg
             skip_to_end();
         }
 
-        int current_column() const
-        {
-            return static_cast<int>(current_iter - raw_text.begin());
-        }
+        int current_column() const { return static_cast<int>(current_iter - raw_text.begin()); }
 
         void go_to_begin()
         {
@@ -127,10 +120,7 @@ namespace vcpkg
             current_iter = raw_text.end();
             current_char = '\0';
         }
-        char current() const
-        {
-            return current_char;
-        }
+        char current() const { return current_char; }
         char next()
         {
             if (current_char != '\0')
@@ -165,7 +155,7 @@ namespace vcpkg
         }
 
         //  identifier:
-        //    alpha-numeric string of characters   
+        //    alpha-numeric string of characters
         bool identifier_expression()
         {
             auto curr = current();
@@ -181,7 +171,7 @@ namespace vcpkg
                 add_error("Invalid logic expression, unexpected character");
                 return false;
             }
-            
+
             bool result = evaluate_identifier(name);
             skip_whitespace();
             return result;
@@ -201,14 +191,15 @@ namespace vcpkg
             return primary_expression();
         }
 
-
-        template <char oper, char other, bool operation(bool, bool)>
+        template<char oper, char other, bool operation(bool, bool)>
         bool logic_expression_helper(bool seed)
         {
             do
             {
                 // Support chains of the operator to avoid breaking backwards compatability
-                while (next() == oper) {};
+                while (next() == oper)
+                {
+                };
                 seed = operation(not_expression(), seed);
 
             } while (current() == oper);
@@ -218,17 +209,11 @@ namespace vcpkg
                 add_error("Mixing & and | is not allowed, Use () to specify order of operations.");
             }
 
-			skip_whitespace();
+            skip_whitespace();
             return seed;
         }
-		static bool and_helper(bool left, bool right)
-		{
-			return left && right;
-		}
-		static bool or_helper(bool left, bool right)
-		{
-			return left || right;
-		}
+        static bool and_helper(bool left, bool right) { return left && right; }
+        static bool or_helper(bool left, bool right) { return left || right; }
 
         //  logic-expression: <- entry point
         //    not-expression
@@ -240,16 +225,15 @@ namespace vcpkg
 
             switch (current())
             {
-            case '|':
-            {
-                return logic_expression_helper< '|', '&', or_helper > (result);
-            }
-            case '&':
-            {
-                return logic_expression_helper< '&', '|', and_helper > (result);
-            }
-            default:
-                return result;
+                case '|':
+                {
+                    return logic_expression_helper<'|', '&', or_helper>(result);
+                }
+                case '&':
+                {
+                    return logic_expression_helper<'&', '|', and_helper>(result);
+                }
+                default: return result;
             }
         }
 
@@ -274,7 +258,6 @@ namespace vcpkg
             return identifier_expression();
         }
     };
-
 
     bool evaluate_expression(const std::string& expression, const std::string& evaluation_context)
     {

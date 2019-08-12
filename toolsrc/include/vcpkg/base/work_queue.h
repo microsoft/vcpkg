@@ -1,114 +1,46 @@
 #pragma once
 
+#include <vcpkg/base/checks.h>
+
 #include <condition_variable>
 #include <memory>
-#include <queue>
+#include <vector>
 
 namespace vcpkg
 {
-    template<class Action, class ThreadLocalData>
-    struct WorkQueue;
-
-    namespace detail
-    {
-        // for SFINAE purposes, keep out of the class
-        // also this sfinae is so weird because Backwards Compatibility with VS2015
-        template<class Action,
-                 class ThreadLocalData,
-                 class = decltype(std::declval<Action>()(std::declval<ThreadLocalData&>(),
-                                                         std::declval<const WorkQueue<Action, ThreadLocalData>&>()))>
-        void call_moved_action(Action& action,
-                               const WorkQueue<Action, ThreadLocalData>& work_queue,
-                               ThreadLocalData& tld)
-        {
-            std::move(action)(tld, work_queue);
-        }
-
-        template<class Action,
-                 class ThreadLocalData,
-                 class = decltype(std::declval<Action>()(std::declval<ThreadLocalData&>())),
-                 class = void>
-        void call_moved_action(Action& action, const WorkQueue<Action, ThreadLocalData>&, ThreadLocalData& tld)
-        {
-            std::move(action)(tld);
-        }
-    }
-
-    template<class Action, class ThreadLocalData>
+    template<class Action>
     struct WorkQueue
     {
-        template<class F>
-        WorkQueue(LineInfo li, std::uint16_t num_threads, const F& tld_init) noexcept
-        {
-            m_line_info = li;
-
-            set_unjoined_workers(num_threads);
-            m_threads.reserve(num_threads);
-            for (std::size_t i = 0; i < num_threads; ++i)
-            {
-                m_threads.push_back(std::thread(Worker{this, tld_init()}));
-            }
-        }
-
-        WorkQueue(WorkQueue const&) = delete;
-        WorkQueue(WorkQueue&&) = delete;
+        WorkQueue(LineInfo li) : m_line_info(li) {}
+        WorkQueue(const WorkQueue&) = delete;
 
         ~WorkQueue()
         {
-            auto lck = std::unique_lock<std::mutex>(m_mutex);
-            if (!is_joined(m_state))
+            auto lck = std::unique_lock<std::mutex>(m_mutex, std::try_to_lock);
+            /*
+                if we don't own the lock, there isn't much we can do
+                it is likely a spurious failure
+            */
+            if (lck && m_running_workers != 0)
             {
-                Checks::exit_with_message(m_line_info, "Failed to call join() on a WorkQueue that was destroyed");
+                Checks::exit_with_message(
+                    m_line_info, "Internal error -- outstanding workers (%u) at destruct point", m_running_workers);
             }
         }
 
-        // should only be called once; anything else is an error
-        void run(LineInfo li)
+        template<class F>
+        void run_and_join(unsigned num_threads, const F& tld_init) noexcept
         {
-            // this should _not_ be locked before `run()` is called; however, we
-            // want to terminate if someone screws up, rather than cause UB
-            auto lck = std::unique_lock<std::mutex>(m_mutex);
+            if (m_actions.empty()) return;
 
-            if (m_state != State::BeforeRun)
+            std::vector<std::thread> threads;
+            threads.reserve(num_threads);
+            for (unsigned i = 0; i < num_threads; ++i)
             {
-                Checks::exit_with_message(li, "Attempted to run() twice");
+                threads.emplace_back(Worker<decltype(tld_init())>{this, tld_init()});
             }
 
-            m_state = State::Running;
-        }
-
-        // runs all remaining tasks, and blocks on their finishing
-        // if this is called in an existing task, _will block forever_
-        // DO NOT DO THAT
-        // thread-unsafe
-        void join(LineInfo li)
-        {
-            {
-                auto lck = std::unique_lock<std::mutex>(m_mutex);
-                if (is_joined(m_state))
-                {
-                    Checks::exit_with_message(li, "Attempted to call join() more than once");
-                }
-                else if (m_state == State::Terminated)
-                {
-                    m_state = State::TerminatedJoined;
-                }
-                else
-                {
-                    m_state = State::Joined;
-                }
-            }
-
-            while (unjoined_workers())
-            {
-                if (!running_workers())
-                {
-                    m_cv.notify_one();
-                }
-            }
-
-            // wait for all threads to join
-            for (auto& thrd : m_threads)
+            for (auto& thrd : threads)
             {
                 thrd.join();
             }
@@ -117,18 +49,12 @@ namespace vcpkg
         // useful in the case of errors
         // doesn't stop any existing running tasks
         // returns immediately, so that one can call this in a task
-        void terminate() const
+        void cancel() const
         {
             {
-                auto lck = std::unique_lock<std::mutex>(m_mutex);
-                if (is_joined(m_state))
-                {
-                    m_state = State::TerminatedJoined;
-                }
-                else
-                {
-                    m_state = State::Terminated;
-                }
+                auto lck = std::lock_guard<std::mutex>(m_mutex);
+                m_cancelled = true;
+                m_actions.clear();
             }
             m_cv.notify_all();
         }
@@ -136,15 +62,16 @@ namespace vcpkg
         void enqueue_action(Action a) const
         {
             {
-                auto lck = std::unique_lock<std::mutex>(m_mutex);
-                m_actions.push_back(std::move(a));
+                auto lck = std::lock_guard<std::mutex>(m_mutex);
+                if (m_cancelled) return;
 
-                if (m_state == State::BeforeRun) return;
+                m_actions.push_back(std::move(a));
             }
             m_cv.notify_one();
         }
 
     private:
+        template<class ThreadLocalData>
         struct Worker
         {
             const WorkQueue* work_queue;
@@ -152,85 +79,62 @@ namespace vcpkg
 
             void operator()()
             {
-                // unlocked when waiting, or when in the action
-                // locked otherwise
                 auto lck = std::unique_lock<std::mutex>(work_queue->m_mutex);
-
-                work_queue->m_cv.wait(lck, [&] { return work_queue->m_state != State::BeforeRun; });
-
-                work_queue->increment_running_workers();
                 for (;;)
                 {
-                    const auto state = work_queue->m_state;
+                    const auto& w = *work_queue;
+                    work_queue->m_cv.wait(lck, [&w] {
+                        if (w.m_cancelled)
+                            return true;
+                        else if (!w.m_actions.empty())
+                            return true;
+                        else if (w.m_running_workers == 0)
+                            return true;
+                        else
+                            return false;
+                    });
 
-                    if (is_terminated(state))
+                    if (work_queue->m_cancelled || work_queue->m_actions.empty())
                     {
+                        /*
+                            if we've been cancelled, or if the work queue is empty
+                            and there are no other workers, we want to return
+                            immediately; we don't check for the latter condition
+                            since if we're at this point, then either the queue
+                            is not empty, or there are no other workers, or both.
+                            We can't have an empty queue, and other workers, or
+                            we would still be in the wait.
+                        */
                         break;
                     }
 
-                    if (work_queue->m_actions.empty())
-                    {
-                        if (state == State::Running || work_queue->running_workers() > 1)
-                        {
-                            work_queue->decrement_running_workers();
-                            work_queue->m_cv.wait(lck);
-                            work_queue->increment_running_workers();
-                            continue;
-                        }
+                    ++work_queue->m_running_workers;
 
-                        // the queue is joining, and we are the only worker running
-                        // no more work!
-                        break;
-                    }
-
-                    Action action = std::move(work_queue->m_actions.back());
+                    auto action = std::move(work_queue->m_actions.back());
                     work_queue->m_actions.pop_back();
 
                     lck.unlock();
                     work_queue->m_cv.notify_one();
-                    detail::call_moved_action(action, *work_queue, tld);
+                    std::move(action)(tld, *work_queue);
                     lck.lock();
-                }
 
-                work_queue->decrement_running_workers();
-                work_queue->decrement_unjoined_workers();
+                    const auto after = --work_queue->m_running_workers;
+                    if (work_queue->m_actions.empty() && after == 0)
+                    {
+                        work_queue->m_cv.notify_all();
+                        return;
+                    }
+                }
             }
         };
 
-        enum class State : std::int16_t
-        {
-            // can only exist upon construction
-            BeforeRun = -1,
-
-            Running,
-            Joined,
-            Terminated,
-            TerminatedJoined,
-        };
-
-        static bool is_terminated(State st) { return st == State::Terminated || st == State::TerminatedJoined; }
-
-        static bool is_joined(State st) { return st == State::Joined || st == State::TerminatedJoined; }
-
         mutable std::mutex m_mutex{};
         // these are all under m_mutex
-        mutable State m_state = State::BeforeRun;
+        mutable bool m_cancelled = false;
         mutable std::vector<Action> m_actions{};
         mutable std::condition_variable m_cv{};
+        mutable unsigned long m_running_workers = 0;
 
-        mutable std::atomic<std::uint32_t> m_workers;
-        // = unjoined_workers << 16 | running_workers
-
-        void set_unjoined_workers(std::uint16_t threads) { m_workers = std::uint32_t(threads) << 16; }
-        void decrement_unjoined_workers() const { m_workers -= 1 << 16; }
-
-        std::uint16_t unjoined_workers() const { return std::uint16_t(m_workers >> 16); }
-
-        void increment_running_workers() const { ++m_workers; }
-        void decrement_running_workers() const { --m_workers; }
-        std::uint16_t running_workers() const { return std::uint16_t(m_workers); }
-
-        std::vector<std::thread> m_threads{};
         LineInfo m_line_info;
     };
 }
