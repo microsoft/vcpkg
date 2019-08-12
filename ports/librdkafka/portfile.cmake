@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     ssl     WITH_SSL
     zlib    WITH_ZLIB
     zstd    WITH_ZSTD
+    snappy WITH_SNAPPY
 )
 
 vcpkg_configure_cmake(
