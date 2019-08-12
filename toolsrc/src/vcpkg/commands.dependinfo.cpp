@@ -47,7 +47,7 @@ namespace vcpkg::Commands::DependInfo
     struct PackageDependInfo
     {
         std::string package;
-        int depth = -1;
+        int depth;
         std::set<std::string> features;
         std::vector<std::string> dependencies;
     };
@@ -233,7 +233,7 @@ namespace vcpkg::Commands::DependInfo
 
             std::string port_name = install_action.spec.name();
 
-            PackageDependInfo info{port_name, -1, features, dependencies};
+            PackageDependInfo info {port_name, -1, features, dependencies};
             package_dependencies.emplace(port_name, std::move(info));
         }
 
