@@ -324,6 +324,10 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   # Copy over PDBs
   vcpkg_copy_pdbs()
+  
+  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
+  endif()
 
 elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Build in UNIX
   # Check build system first

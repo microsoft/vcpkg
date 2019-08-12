@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         # This patch can be removed when stxxl/stxxl/#95 is accepted
         fix-include-dir.patch
+        0001-fix-visual-studio.patch
 )
 
 vcpkg_configure_cmake(
@@ -32,7 +33,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DSTXXL_DEBUG_ASSERTIONS=ON
     OPTIONS_RELEASE
-        -DSTXXL_DEBUG_ASSERTIONS=OFF    
+        -DSTXXL_DEBUG_ASSERTIONS=OFF
 )
 
 vcpkg_install_cmake()

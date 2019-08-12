@@ -16,8 +16,6 @@ vcpkg_from_github(
     SHA512 94b9c218a2fe6e2e24205aff4a2f6bab784851c2aa15592fb60ea91f0e8038b0c0656a118f3a5cba0d3de8917dd90b74d0e2d1c4ac034b9ee3f5d0741d9f6b70
     HEAD_REF master
     PATCHES
-        fix-hdf5link.patch
-        bypass-findhdf5.patch
         fix-C1083.patch
 )
 
@@ -26,7 +24,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
     -DUSE_HDF5=ON
-    -DHDF5_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()

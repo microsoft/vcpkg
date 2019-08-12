@@ -11,12 +11,12 @@ vcpkg_from_github(
   SHA512 d9f84c39929e9e80272e2b834f68a13b48c1cb4d64b70f5b6fa16e677555d947f7cf57372453e23066a330faa6a429b9aa750271b46f763581977a223d238785
   HEAD_REF master
   PATCHES
-	001-enable-msvc.patch
+  001-enable-msvc.patch
 )
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   vcpkg_execute_required_process(
-    COMMAND Powershell -Command "((Get-Content -Encoding Byte \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' > \"${SOURCE_PATH}/core/std.jsonnet.h\""
+    COMMAND Powershell -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME "std.jsonnet"
   )
@@ -31,7 +31,7 @@ endif()
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS -DBUILD_JSONNET=OFF -DBUILD_TESTS=OFF
+  OPTIONS -DBUILD_JSONNET=OFF -DBUILD_JSONNETFMT=OFF -DBUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
