@@ -12,8 +12,9 @@ Feature: flann
 Description: opencv_flann module
 
 Feature: contrib
-Build-Depends: hdf5 (!uwp) #opencv3[flann]
+Build-Depends: hdf5 (!uwp)
 Description: opencv_contrib module
+#opencv3[flann]
 
 Feature: cuda
 Build-Depends: opencv3[contrib], cuda

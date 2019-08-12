@@ -17,8 +17,6 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-disable-downloading.patch
       0004-use-find-package-required.patch
-      0005-remove-custom-protobuf-find-package.patch
-      0006-fix-missing-openjp2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
