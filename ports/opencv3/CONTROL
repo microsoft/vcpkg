@@ -14,14 +14,13 @@ Description: opencv_flann module
 Feature: contrib
 Build-Depends: hdf5 (!uwp)
 Description: opencv_contrib module
-#opencv3[flann]
 
 Feature: cuda
 Build-Depends: opencv3[contrib], cuda
 Description: CUDA support for opencv
 
 Feature: dnn
-Description: opencv_dnn module
+Description: Enable dnn module
 
 Feature: eigen
 Build-Depends: eigen3
