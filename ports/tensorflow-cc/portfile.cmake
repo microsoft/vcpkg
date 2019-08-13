@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 if(CMAKE_HOST_WIN32)
-    message(WARNING "This tensorflow port currently is experimental on Windows and Linux platforms.")
+    message(FATAL_ERROR "This tensorflow port currently is experimental on Windows and Linux platforms.")
 endif()
 
 vcpkg_from_github(
@@ -49,10 +49,7 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 # tensorflow has long file names, which will not work on windows
-# we are temporarily putting it here (will be changed later)
-set(ENV{TEST_TMPDIR} ${DOWNLOADS}/bzl)
-
-set(ENV{CURRENT_PACKAGES_DIR} ${CURRENT_PACKAGES_DIR})
+set(ENV{TEST_TMPDIR} ${BUILDTREES}/.bzl)
 
 set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
 #set(ENV{TF_NEED_JEMALLOC} 0)
