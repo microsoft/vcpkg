@@ -66,10 +66,6 @@ function(vcpkg_build_qmake)
                 string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
                 string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
                 
-                #string(REPLACE "debug\\lib\\Qt5Bootstrapd.lib" "debug\\lib\\Qt5Bootstrap.lib" _contents "${_contents}")
-                #string(REPLACE "debug\\lib\\Qt5Bootstrap.lib" "debug\\tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-               # string(REPLACE "lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-
                 file(WRITE "${DEBUG_MAKEFILE}" "${_contents}")
             endforeach()
         endif()
@@ -97,11 +93,8 @@ function(vcpkg_build_qmake)
                 file(READ "${RELEASE_MAKEFILE}" _contents)
 
                 string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
-                string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
-                
-                #string(REPLACE "debug\\lib\\Qt5Bootstrapd.lib" "debug\\lib\\Qt5Bootstrap.lib" _contents "${_contents}")
-                #string(REPLACE "debug\\lib\\Qt5Bootstrap.lib" "debug\\tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-                #string(REPLACE "lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
+                string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")              
+
                 file(WRITE "${RELEASE_MAKEFILE}" "${_contents}")
             endforeach()
         endif()
