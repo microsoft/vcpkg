@@ -202,6 +202,12 @@ namespace vcpkg::Install
 
         struct intersection_compare
         {
+            // The VS2015 standard library requires comparison operators of T and U
+            // to also support comparison of T and T, and of U and U, due to debug checks.
+#if _MSC_VER < 1910
+            bool operator()(const std::string& lhs, const std::string& rhs) { return lhs < rhs; }
+            bool operator()(const file_pack& lhs, const file_pack& rhs) { return lhs.first < rhs.first; }
+#endif
             bool operator()(const std::string& lhs, const file_pack& rhs) { return lhs < rhs.first; }
             bool operator()(const file_pack& lhs, const std::string& rhs) { return lhs.first < rhs; }
         };
@@ -331,10 +337,8 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{scfl,
-                                                             action.spec.triplet(),
-                                                             action.build_options,
-                                                             action.feature_list};
+                const Build::BuildPackageConfig build_config{
+                    scfl, action.spec.triplet(), action.build_options, action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
             }();
 

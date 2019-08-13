@@ -145,7 +145,7 @@ namespace vcpkg::Dependencies
 
     struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
     {
-        explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths, 
+        explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
                                        const std::vector<std::string>* ports_dirs_paths);
         Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
         std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
@@ -186,9 +186,10 @@ namespace vcpkg::Dependencies
     std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFileLocation>& map,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+    std::vector<AnyAction> create_feature_install_plan(
+        const std::unordered_map<std::string, SourceControlFileLocation>& map,
+        const std::vector<FeatureSpec>& specs,
+        const StatusParagraphs& status_db);
 
     /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
     /// <param name="provider">Contains the ports of the current environment.</param>
@@ -199,7 +200,7 @@ namespace vcpkg::Dependencies
                                                        const StatusParagraphs& status_db,
                                                        const CreateInstallPlanOptions& options = {});
 
-    void print_plan(const std::vector<AnyAction>& action_plan, 
+    void print_plan(const std::vector<AnyAction>& action_plan,
                     const bool is_recursive = true,
                     const fs::path& default_ports_dir = "");
 }

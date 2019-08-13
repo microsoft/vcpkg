@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.3)
 project(vcpkg C CXX)
 
 OPTION(BUILD_TESTING "Option for enabling testing" ON)
+OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF)
 OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
 
@@ -77,6 +78,10 @@ if (BUILD_TESTING)
         $<TARGET_OBJECTS:vcpkglib>)
 
     add_test(NAME default COMMAND vcpkg-test [${TEST_NAME}])
+
+    if (VCPKG_BUILD_BENCHMARKING)
+        target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
+    endif()
 endif()
 
 if(MSVC)

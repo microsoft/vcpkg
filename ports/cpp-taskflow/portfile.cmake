@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-taskflow/cpp-taskflow
-    REF 97252f7d782c6e896122645175c08131ce10e649
-    SHA512 df8ae9ea449663cb548f3c37346c2e0c785add2d86b9c618aea2741d81fe88c34b0d3d0e610a4b571973f9bc18631becedfe28e029ecf0c0cc87e4c35a280a29
+    REF v2.2.0
+    SHA512 c075f1b7e4dd6ed6d9561b860b660ee4b28eddb321d8aa8746fbec45b1039ab686700156e4273da5a4ac7af0707975331befd9bf3e51f18925ea3a9a60083549
     HEAD_REF master
 )
 
