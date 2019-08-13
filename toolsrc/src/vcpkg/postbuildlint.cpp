@@ -46,17 +46,13 @@ namespace vcpkg::PostBuildLint
 
         Checks::check_exit(VCPKG_LINE_INFO,
                            path_u8.length() > package_u8.length() &&
-                           path_u8.substr(0, package_u8.length()) == package_u8,
+                               path_u8.substr(0, package_u8.length()) == package_u8,
                            "Directory %s is not a part of package directory %s",
                            path_u8,
                            package_u8);
         std::string relative_path = path_u8.substr(package_u8.length(), path_u8.length() - package_u8.length());
-        if(relative_path.front() == '/') {
-            //relative paths cannot begin with '/'
-            Checks::check_exit(VCPKG_LINE_INFO,
-                           relative_path.length() > 1,
-                           "Unable to find relative path of %s",
-                           relative_path);
+        if (relative_path.front() == '/')
+        {
             return relative_path.substr(1, relative_path.length());
         }
         return relative_path;
@@ -64,62 +60,72 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_config_paths(const Files::Filesystem& fs, const fs::path& package_dir)
     {
-        std::vector<fs::path> files_found = fs.get_files_recursive(package_dir);
-        Util::erase_remove_if(files_found, [&fs](const fs::path& path) {
-            if (fs.is_directory(path))
+        std::vector<fs::path> files_list = fs.get_files_recursive(package_dir);
+        std::string config_msg = "Please fixup the cmake targets:\n";
+        bool config_files_found = false;
+        for (auto&& file : files_list)
+        {
+            if (fs.is_directory(file))
             {
-                return true;
+                continue;
             }
+
+            auto relative_path = convert_to_relative_path(file, package_dir);
 
             // if config cmake file is in a shared or debug folder, we want to skip it
-            if (std::regex_search(path.generic_u8string(), std::regex(R"(share/[^/]*)")))
+
+            if (Strings::starts_with(relative_path, "share/"))
             {
-                return true;
+                continue;
             }
 
-            if (std::regex_search(path.generic_u8string(), std::regex(R"(debug/[^/]*)")))
+            if (Strings::starts_with(relative_path, "debug/"))
             {
-                return true;
+                continue;
             }
 
-            if (std::regex_search(path.generic_u8string(), std::regex(R"([^/]*-config.cmake)")) ||
-                std::regex_search(path.generic_u8string(), std::regex(R"([^/]*Config.cmake)")))
+            auto maybe_config = fs::path(relative_path).filename().generic_u8string();
+            auto parent_path = fs::path(relative_path).parent_path().generic_u8string();
+            std::string config;
+            if (Strings::ends_with(maybe_config, "Config.cmake"))
             {
-                return false;
+                config = maybe_config.substr(0, maybe_config.size() - 12);
             }
-            return true;
-        });
+            else if (Strings::ends_with(maybe_config, "-config.cmake"))
+            {
+                config = maybe_config.substr(0, maybe_config.size() - 13);
+            }
 
-        if (!files_found.empty())
+#if defined(_WIN32)
+            else if (Strings::ends_with(maybe_config, "config.cmake"))
+            {
+                config = maybe_config.substr(0, maybe_config.size() - 12);
+            }
+            else if (Strings::ends_with(maybe_config, "-Config.cmake"))
+            {
+                config = maybe_config.substr(0, maybe_config.size() - 13);
+            }
+#endif
+            else
+            {
+                continue;
+            }
+
+            config_files_found = true;
+            auto target_path = fs::path("share") / Strings::ascii_to_lowercase(std::move(config));
+
+            config_msg += Strings::format("    vcpkg_fixup_cmake_targets(CONFIG_PATH %s TARGET_PATH %s)\n",
+                                          parent_path,
+                                          target_path.generic_u8string());
+        }
+
+        if (config_files_found)
         {
-            std::string config_msg = "Please fixup the cmake targets:\n";
-
-            for (auto&& file : files_found)
-            {
-                std::smatch matches;
-                std::string file_string = file.generic_u8string();
-                std::string target_name;
-                if (std::regex_search(file_string, matches, std::regex("([^/]*)Config.cmake")))
-                {
-                    target_name = matches.str(1);
-                }
-                else if (std::regex_search(file_string, matches, std::regex("([^/]*)-config.cmake")))
-                {
-                    target_name = matches.str(1);
-                }
-
-                fs::path target_path = fs::path("share") / target_name;
-                std::string config_path = convert_to_relative_path(file.parent_path(), package_dir);
-                config_msg += Strings::format("    vcpkg_fixup_cmake_targets(CONFIG_PATH %s TARGET_PATH %s)\n",
-                                              config_path,
-                                              target_path.generic_u8string());
-            }
-
             System::print2(System::Color::warning, config_msg);
 
-            Checks::check_exit(VCPKG_LINE_INFO, false, "");
             return LintStatus::ERROR_DETECTED;
         }
+
         return LintStatus::SUCCESS;
     }
 
@@ -286,6 +292,32 @@ namespace vcpkg::PostBuildLint
         }
 
         return LintStatus::SUCCESS;
+    }
+
+    static LintStatus cmake_checks(const Files::Filesystem& fs, const fs::path& package_dir, const PackageSpec& spec)
+    {
+        if (check_config_paths(fs, package_dir) == LintStatus::ERROR_DETECTED)
+        {
+            return LintStatus::ERROR_DETECTED;
+        }
+
+        auto status = LintStatus::SUCCESS;
+        if (check_for_files_in_debug_share_directory(fs, package_dir) == LintStatus::ERROR_DETECTED)
+        {
+            status = LintStatus::ERROR_DETECTED;
+        }
+
+        if (check_folder_lib_cmake(fs, package_dir, spec) == LintStatus::ERROR_DETECTED)
+        {
+            status = LintStatus::ERROR_DETECTED;
+        }
+
+        if (check_for_misplaced_cmake_files(fs, package_dir, spec) == LintStatus::ERROR_DETECTED)
+        {
+            status = LintStatus::ERROR_DETECTED;
+        }
+
+        return status;
     }
 
     static LintStatus check_for_dlls_in_lib_dir(const Files::Filesystem& fs, const fs::path& package_dir)
@@ -837,13 +869,11 @@ namespace vcpkg::PostBuildLint
             return error_count;
         }
 
+        error_count += cmake_checks(fs, package_dir, spec);
+
         error_count += check_for_files_in_include_directory(fs, build_info.policies, package_dir);
         error_count += check_for_files_in_debug_include_directory(fs, package_dir);
-        error_count += check_config_paths(fs, package_dir);
-        error_count += check_for_files_in_debug_share_directory(fs, package_dir);
-        error_count += check_folder_lib_cmake(fs, package_dir, spec);
         error_count += check_for_misplaced_cmake_files(fs, package_dir, spec);
-        error_count += check_folder_debug_lib_cmake(fs, package_dir, spec);
         error_count += check_for_dlls_in_lib_dir(fs, package_dir);
         error_count += check_for_dlls_in_lib_dir(fs, package_dir / "debug");
         error_count += check_for_copyright_file(fs, spec, paths);
