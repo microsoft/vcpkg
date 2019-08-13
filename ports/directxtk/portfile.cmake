@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXTK only supports dynamic CRT linkage")
+    message(FATAL_ERROR "DirectXTK only supports dynamic CRT linkage")
 endif()
 
 vcpkg_from_github(
@@ -55,16 +55,14 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
-  file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
-
-  file(INSTALL
-	  ${SOURCE_PATH}/MakeSpriteFont/bin/Release/MakeSpriteFont.exe
-	  DESTINATION ${DXTK_TOOL_PATH})
-
-  file(INSTALL
-	  ${SOURCE_PATH}/XWBTool/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/XWBTool.exe
-	  DESTINATION ${DXTK_TOOL_PATH})
+    set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
+    file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/MakeSpriteFont/bin/Release/MakeSpriteFont.exe
+        DESTINATION ${DXTK_TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/XWBTool/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/XWBTool.exe
+        DESTINATION ${DXTK_TOOL_PATH})
 endif()
 
 # Handle copyright

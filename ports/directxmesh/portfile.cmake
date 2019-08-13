@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
+    message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
 endif()
 
 vcpkg_from_github(
@@ -54,10 +54,13 @@ file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools)
-file(INSTALL
-    ${SOURCE_PATH}/Meshconvert/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Meshconvert.exe
-    DESTINATION ${TOOL_PATH})
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxmesh)
+    file(MAKE_DIRECTORY ${TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/Meshconvert/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Meshconvert.exe
+        DESTINATION ${TOOL_PATH})
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxmesh)

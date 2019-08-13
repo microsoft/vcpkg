@@ -53,17 +53,19 @@ file(INSTALL
     ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools)
-file(MAKE_DIRECTORY ${TOOL_PATH})
-file(INSTALL
-    ${SOURCE_PATH}/Texdiag/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/texdiag.exe
-    DESTINATION ${TOOL_PATH})
-file(INSTALL
-    ${SOURCE_PATH}/Texconv/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texconv.exe
-    DESTINATION ${TOOL_PATH})
-file(INSTALL
-    ${SOURCE_PATH}/Texassemble/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texassemble.exe
-    DESTINATION ${TOOL_PATH})
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtex)
+    file(MAKE_DIRECTORY ${TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/Texdiag/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/texdiag.exe
+        DESTINATION ${TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/Texconv/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texconv.exe
+        DESTINATION ${TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/Texassemble/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texassemble.exe
+        DESTINATION ${TOOL_PATH})
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/DirectXTex)
