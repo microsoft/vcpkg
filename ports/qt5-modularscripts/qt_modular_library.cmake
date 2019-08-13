@@ -8,6 +8,7 @@ function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
         )
     endif()
 
+
     set(MAJOR_MINOR 5.12)
     set(FULL_VERSION ${MAJOR_MINOR}.4)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
@@ -21,6 +22,7 @@ function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
         REF ${FULL_VERSION}
+        PATCHES ${_csc_PATCHES}
     )
 
     set(${TARGET_SOURCE_PATH} ${SOURCE_PATH} PARENT_SCOPE)
@@ -180,6 +182,7 @@ function(qt_modular_build_library SOURCE_PATH)
 endfunction()
 
 function(qt_modular_library NAME HASH)
+    cmake_parse_arguments(_csc "" "" "PATCHES" ${ARGN})
     qt_modular_fetch_library(${NAME} ${HASH} TARGET_SOURCE_PATH)
     qt_modular_build_library(${TARGET_SOURCE_PATH})
 endfunction()
