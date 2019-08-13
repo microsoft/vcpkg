@@ -28,9 +28,9 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
         vcpkg_download_distfile(GET_PIP
-            URLS "https://bootstrap.pypa.io/get-pip.py"
+            URLS "https://bootstrap.pypa.io/3.3/get-pip.py"
             FILENAME "tools/python/python2/get-pip.py"
-            SHA512 5af99e9ccfcf3db2c97880448e9e92424b9b2af2cd0c888fb31107555809caf03fde28eec6f17f125bd3eca77bec2e353bcc7116525c17c8bdf85abe8973cc44
+            SHA512 92e68525830bb23955a31cb19ebc3021ef16b6337eab83d5db2961b791283d2867207545faf83635f6027f2f7b7f8fee2c85f2cfd8e8267df25406474571c741
         )
         execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
     endif()
