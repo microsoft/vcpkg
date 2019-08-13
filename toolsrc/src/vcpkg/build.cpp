@@ -623,7 +623,7 @@ namespace vcpkg::Build
         std::vector<fs::path> port_files;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
-            if (fs::is_regular_file(status(port_file)))
+            if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
                 port_files.push_back(port_file);
                 if (port_files.size() > max_port_file_count)
