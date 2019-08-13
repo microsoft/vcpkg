@@ -312,6 +312,7 @@ namespace vcpkg::Dependencies
                                                  const std::vector<std::string>* ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
+        auto& fs = Files::get_real_filesystem();
         if (ports_dirs_paths)
         {
             for (auto&& overlay_path : *ports_dirs_paths)
@@ -326,7 +327,7 @@ namespace vcpkg::Dependencies
                                        overlay.string());
 
                     Checks::check_exit(VCPKG_LINE_INFO,
-                                       fs::is_directory(status(overlay)),
+                                       fs::is_directory(fs.status(VCPKG_LINE_INFO, overlay)),
                                        "Error: Path \"%s\" must be a directory",
                                        overlay.string());
 

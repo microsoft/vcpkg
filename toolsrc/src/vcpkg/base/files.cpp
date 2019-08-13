@@ -21,114 +21,87 @@
 #include <copyfile.h>
 #endif
 
-namespace fs::detail
-{
-    static file_status status_implementation(bool follow_symlinks, const path& p, std::error_code& ec)
-    {
-#if defined(_WIN32)
-        WIN32_FILE_ATTRIBUTE_DATA file_attributes;
-        file_type ft = file_type::unknown;
-        perms permissions = perms::unknown;
-        if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
-        {
-            const auto err = GetLastError();
-            if (err == ERROR_FILE_NOT_FOUND || err == ERROR_PATH_NOT_FOUND)
-            {
-                ft = file_type::not_found;
-            }
-            else
-            {
-                ec.assign(err, std::system_category());
-            }
-        }
-        else if (!follow_symlinks && file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
-        {
-            // this also gives junctions file_type::directory_symlink
-            if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            {
-                ft = file_type::directory_symlink;
-            }
-            else
-            {
-                ft = file_type::symlink;
-            }
-        }
-        else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-        {
-            ft = file_type::directory;
-        }
-        else
-        {
-            // otherwise, the file is a regular file
-            ft = file_type::regular;
-        }
-
-        if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
-        {
-            constexpr auto all_write = perms::group_write | perms::owner_write | perms::others_write;
-            permissions = perms::all & ~all_write;
-        }
-        else if (ft != file_type::none && ft != file_type::none)
-        {
-            permissions = perms::all;
-        }
-
-        return file_status(ft, permissions);
-
-#else
-        auto result = symlink ? stdfs::symlink_status(p, ec) : stdfs::status(p, ec);
-        // libstdc++ doesn't correctly not-set ec on nonexistent paths
-        if (ec.value() == ENOENT)
-        {
-            ec.clear();
-            result = file_status(file_type::not_found, perms::unknown);
-        }
-        return result;
-#endif
-    }
-
-    file_status status_t::operator()(const path& p, std::error_code& ec) const noexcept
-    {
-        return status_implementation(false, p, ec);
-    }
-    file_status status_t::operator()(vcpkg::LineInfo li, const path& p) const noexcept
-    {
-        std::error_code ec;
-        auto result = (*this)(p, ec);
-        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
-
-        return result;
-    }
-    file_status status_t::operator()(const path& p) const
-    {
-#if defined(_WIN32)
-        return (*this)(VCPKG_LINE_INFO, p);
-#else
-        return fs::stdfs::status(p);
-#endif
-    }
-
-    file_status symlink_status_t::operator()(const path& p, std::error_code& ec) const noexcept
-    {
-        return status_implementation(true, p, ec);
-    }
-
-    file_status symlink_status_t::operator()(vcpkg::LineInfo li, const path& p) const noexcept
-    {
-        std::error_code ec;
-        auto result = (*this)(p, ec);
-        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
-
-        return result;
-    }
-}
-
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
     namespace
     {
+        fs::file_status status_implementation(bool follow_symlinks, const fs::path& p, std::error_code& ec) noexcept
+        {
+            using fs::file_type;
+            using fs::perms;
+#if defined(_WIN32)
+            WIN32_FILE_ATTRIBUTE_DATA file_attributes;
+            auto ft = file_type::unknown;
+            auto permissions = perms::unknown;
+            if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
+            {
+                const auto err = GetLastError();
+                if (err == ERROR_FILE_NOT_FOUND || err == ERROR_PATH_NOT_FOUND)
+                {
+                    ft = file_type::not_found;
+                }
+                else
+                {
+                    ec.assign(err, std::system_category());
+                }
+            }
+            else if (!follow_symlinks && file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+            {
+                // this also gives junctions file_type::directory_symlink
+                if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                {
+                    ft = file_type::directory_symlink;
+                }
+                else
+                {
+                    ft = file_type::symlink;
+                }
+            }
+            else if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            {
+                ft = file_type::directory;
+            }
+            else
+            {
+                // otherwise, the file is a regular file
+                ft = file_type::regular;
+            }
+
+            if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+            {
+                constexpr auto all_write = perms::group_write | perms::owner_write | perms::others_write;
+                permissions = perms::all & ~all_write;
+            }
+            else if (ft != file_type::none && ft != file_type::none)
+            {
+                permissions = perms::all;
+            }
+
+            return fs::file_status(ft, permissions);
+
+#else
+            auto result = follow_symlinks ? fs::stdfs::status(p, ec) : fs::stdfs::symlink_status(p, ec);
+            // libstdc++ doesn't correctly not-set ec on nonexistent paths
+            if (ec.value() == ENOENT || ec.value() == ENOTDIR)
+            {
+                ec.clear();
+                return fs::file_status(file_type::not_found, perms::unknown);
+            }
+            return fs::file_status(result.type(), result.permissions());
+#endif
+        }
+
+        fs::file_status status(const fs::path& p, std::error_code& ec) noexcept
+        {
+            return status_implementation(true, p, ec);
+        }
+        fs::file_status symlink_status(const fs::path& p, std::error_code& ec) noexcept
+        {
+            return status_implementation(false, p, ec);
+        }
+
         // does _not_ follow symlinks
         void set_writeable(const fs::path& path, std::error_code& ec) noexcept
         {
@@ -220,6 +193,24 @@ namespace vcpkg::Files
         return exists(path, ec);
     }
 
+    fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
+    {
+        std::error_code ec;
+        auto result = this->status(p, ec);
+        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
+
+        return result;
+    }
+
+    fs::file_status Filesystem::symlink_status(vcpkg::LineInfo li, const fs::path& p) const noexcept
+    {
+        std::error_code ec;
+        auto result = this->symlink_status(p, ec);
+        if (ec) vcpkg::Checks::exit_with_message(li, "error getting status of path %s: %s", p.string(), ec.message());
+
+        return result;
+    }
+
     void Filesystem::write_lines(const fs::path& path, const std::vector<std::string>& lines, LineInfo linfo)
     {
         std::error_code ec;
@@ -242,6 +233,16 @@ namespace vcpkg::Files
                                       failure_point.string(),
                                       ec.message());
         }
+    }
+
+    fs::path Filesystem::canonical(LineInfo li, const fs::path& path) const
+    {
+        std::error_code ec;
+
+        const auto result = this->canonical(path, ec);
+
+        if (ec) Checks::exit_with_message(li, "Error getting canonicalization of %s: %s", path.string(), ec.message());
+        return result;
     }
 
     struct RealFilesystem final : Filesystem
@@ -463,7 +464,7 @@ namespace vcpkg::Files
                 static void do_remove(const fs::path& current_path, ErrorInfo& err)
                 {
                     std::error_code ec;
-                    const auto path_status = fs::symlink_status(current_path, ec);
+                    const auto path_status = Files::symlink_status(current_path, ec);
                     if (check_ec(ec, current_path, err)) return;
                     if (!fs::exists(path_status)) return;
 
@@ -593,11 +594,11 @@ namespace vcpkg::Files
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
         {
-            return fs::status(path, ec);
+            return Files::status(path, ec);
         }
         virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const override
         {
-            return fs::symlink_status(path, ec);
+            return Files::symlink_status(path, ec);
         }
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {
@@ -626,6 +627,11 @@ namespace vcpkg::Files
                     ec = std::make_error_code(std::errc::no_space_on_device);
                 }
             }
+        }
+
+        virtual fs::path canonical(const fs::path& path, std::error_code& ec) const override
+        {
+            return fs::stdfs::canonical(path, ec);
         }
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override

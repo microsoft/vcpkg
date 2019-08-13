@@ -18,8 +18,9 @@ namespace vcpkg
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs)
     {
+        auto& fs = Files::get_real_filesystem();
         std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
+        const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
         if (ec)
         {
             return ec;
@@ -42,7 +43,7 @@ namespace vcpkg
         if (auto odp = overriddenDownloadsPath.get())
         {
             auto asPath = fs::u8path(*odp);
-            if (!fs::is_directory(status(asPath)))
+            if (!fs::is_directory(fs.status(VCPKG_LINE_INFO, asPath)))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
                 Checks::exit_with_message(

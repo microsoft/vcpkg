@@ -43,7 +43,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSTATIC=ON
         -DUSE_SYSTEM_ICU=True
-        #any value for vcpkg leptonica link cmake branch select
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         ${OPTIONS_LIST}
 )
