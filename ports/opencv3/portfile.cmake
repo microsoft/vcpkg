@@ -4,19 +4,19 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(OPENCV_PORT_VERSION "3.4.7")
+set(OPENCV_VERSION "3.4.7")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF ${OPENCV_PORT_VERSION}
-    SHA512 d653a58eb5e3939b9fdb7438ac35f77cf4385cf72d5d22bfd21722a109e1b3283dbb9407985061b7548114f0d05c9395aac9bb62b4d2bc1f68da770a49987fef
+    REF ${OPENCV_VERSION}
+    SHA512 ba1336ad4e5208748aa09c99770392cc71ef72688560d0b03287ddafd36093ef30cbdf6422f87f8f878663ab8085cc0ff8a8c65fd1ff0ec6800855ea01309beb
     HEAD_REF master
     PATCHES
-      0001-winrt-fixes.patch
+      0001-disable-downloading.patch
       0002-install-options.patch
-      0003-disable-downloading.patch
-      0004-use-find-package-required.patch
+      0003-force-package-requirements.patch
+      0009-fix-uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -56,6 +56,14 @@ if(BUILD_opencv_dnn)
 endif()
 
 if(WITH_CONTRIB)
+  vcpkg_from_github(
+      OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
+      REPO opencv/opencv_contrib
+      REF ${OPENCV_VERSION}
+      SHA512 922620f3e8754fc15dedf8993bdc1f00c06b623cbeeb72afb984ddaad6e0e04f46561a0ee4d20f5e260616c1f32c6dc0dd7248355d417873ae72bd03cb5d57fd
+      HEAD_REF master
+  )
+  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
   # Used for opencv's face module
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
@@ -104,8 +112,6 @@ if(WITH_CONTRIB)
   )
 endif()
 
-
-
 if(WITH_IPP)
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_download_distfile(OCV_DOWNLOAD
@@ -125,17 +131,6 @@ endif()
 set(WITH_MSMF ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
-endif()
-
-if(BUILD_opencv_contrib)
-  vcpkg_from_github(
-      OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
-      REPO opencv/opencv_contrib
-      REF ${OPENCV_PORT_VERSION}
-      SHA512 456c6f878fb3bd5459f6430405cf05c609431f8d7db743aa699fc75c305d019682ee3a804bf0cf5107597dd1dbbb69b08be3535a0e6c717e4773ed7c05d08e59
-      HEAD_REF master
-  )
-  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 endif()
 
 set(WITH_ZLIB ON)

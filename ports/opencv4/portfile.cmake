@@ -6,10 +6,6 @@ include(vcpkg_common_functions)
 
 set(OPENCV_VERSION "4.1.1")
 
-if(VCPKG_TARGET_IS_LINUX)
-    message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
