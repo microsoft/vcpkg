@@ -22,12 +22,8 @@ function(configure_qt)
     endif()
 
     list(APPEND _csc_OPTIONS "-verbose")
-    #list(APPEND _csc_OPTIONS -optimized-tools)
     
-    
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND _csc_OPTIONS "-R \"../bin\"")
-    endif()
+    #list(APPEND _csc_OPTIONS -optimized-tools)    
     list(APPEND _csc_OPTIONS_RELEASE -force-debug-info)
     list(APPEND _csc_OPTIONS_RELEASE -ltcg)
     
