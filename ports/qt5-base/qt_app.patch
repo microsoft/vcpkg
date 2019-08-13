@@ -11,7 +11,7 @@ index 8354f30e..8f24b72e 100644
  } else {
      !build_pass:qtConfig(debug_and_release): CONFIG += release
 -    target.path = $$[QT_INSTALL_BINS]
-+    target.path = $$[QT_INSTALL_BINS]/../tools/qt5
++    target.path = $$[QT_HOST_BINS]
      CONFIG += relative_qt_rpath  # Qt's tools and apps should be relocatable
  }
  INSTALLS += target

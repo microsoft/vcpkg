@@ -22,7 +22,7 @@ function(configure_qt)
     list(APPEND _csc_OPTIONS -verbose)
     #list(APPEND _csc_OPTIONS -optimized-tools)
     list(APPEND _csc_OPTIONS -separate-debug-info)
-  
+    
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         list(APPEND _csc_OPTIONS "-R \"../bin\"")
     endif()
