@@ -1,8 +1,12 @@
 function(configure_qt)
-    cmake_parse_arguments(_csc "" "SOURCE_PATH;PLATFORM" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+    cmake_parse_arguments(_csc "" "SOURCE_PATH;TARGET_PLATFORM;HOST_PLATFORM" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
-    if(NOT _csc_PLATFORM)
-        message(FATAL_ERROR "configure_qt requires a PLATFORM argument.")
+    if(NOT _csc_TARGET_PLATFORM)
+        message(FATAL_ERROR "configure_qt requires a TARGET_PLATFORM argument.")
+    endif()
+    
+    if(DEFINED _csc_HOST_PLATFORM)
+        list(APPEND _csc_OPTIONS "-platform ${HOST_PLATFORM}")
     endif()
 
     vcpkg_find_acquire_program(PERL)
@@ -58,7 +62,7 @@ function(configure_qt)
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
-                -xplatform ${_csc_PLATFORM}
+                -xplatform ${_csc_TARGET_PLATFORM}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME config-${TARGET_TRIPLET}-dbg
         )
@@ -88,7 +92,7 @@ function(configure_qt)
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
-                -xplatform ${_csc_PLATFORM}
+                -xplatform ${_csc_TARGET_PLATFORM}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME config-${TARGET_TRIPLET}-rel
         )
