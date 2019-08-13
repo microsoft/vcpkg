@@ -1,0 +1,5 @@
+Source: mgnlibs
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: Single-file public domain libraries for C/C++
+Build-Depends: mgnlibs-app, mgnlibs-assetsys, mgnlibs-hashtable, mgnlibs-http, mgnlibs-ini, mgnlibs-rnd, mgnlibs-strpool, mgnlibs-thread

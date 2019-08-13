@@ -1,0 +1,4 @@
+Source: mgnlibs-assetsys
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: File system abstraction to read from zip-files, for C/C++.

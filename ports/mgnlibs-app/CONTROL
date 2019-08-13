@@ -1,0 +1,4 @@
+Source: mgnlibs-app
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: Small cross-platform base framework for graphical apps, for C/C++.

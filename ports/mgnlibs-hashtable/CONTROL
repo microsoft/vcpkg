@@ -1,0 +1,4 @@
+Source: mgnlibs-hashtable
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: Cache efficient hash table implementation for C/C++.

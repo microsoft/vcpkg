@@ -1,0 +1,4 @@
+Source: mgnlibs-ini
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: Simple ini-file reader for C/C++.

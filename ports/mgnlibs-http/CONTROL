@@ -1,0 +1,4 @@
+Source: mgnlibs-http
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: Basic HTTP protocol implementation over sockets (no https).

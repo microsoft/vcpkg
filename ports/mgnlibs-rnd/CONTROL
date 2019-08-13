@@ -1,0 +1,4 @@
+Source: mgnlibs-rnd
+Version: 2019-08-13
+Homepage: https://github.com/mattiasgustavsson/libs
+Description: Pseudo-random number generators for C/C++.
