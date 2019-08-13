@@ -9,10 +9,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF apr2019
-    SHA512 811ed222c1650d34a8475e44719cca8972a85d96f9ccb10548e1501eb9d28fd8685de90832b517cdcbf21ae8c9160dea69000e8dca06fab745a15a7acc14ba98
+    REF jun2019
+    SHA512 211b18ee0755802a5d44b58da2485276cabdee222d2f5fd7b42bad0bf75810e3ac1bd319b90891d9cc0345b124631ad37588422af9120cece9fa0ed769033e77
     HEAD_REF master
-    PATCHES fix-invalid-configuration.patch
 )
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
@@ -21,15 +20,30 @@ ELSE()
     SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(SLN_NAME "Windows10")
+if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+    set(VS_VERSION "2015")
+elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    set(VS_VERSION "2017")
+elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    set(VS_VERSION "2019")
 else()
-  set(SLN_NAME "Desktop_2017")
+    message(FATAL_ERROR "Unsupported platform toolset.")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(SLN_NAME "Windows10_${VS_VERSION}")
+else()
+    set(SLN_NAME "Desktop_${VS_VERSION}")
 endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
     PLATFORM ${BUILD_ARCH}
+)
+
+file(INSTALL
+	${SOURCE_PATH}/Inc/
+	DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
 )
 
 file(INSTALL
@@ -49,14 +63,9 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 	  DESTINATION ${DXTK_TOOL_PATH})
 
   file(INSTALL
-	  ${SOURCE_PATH}/XWBTool/Bin/Desktop_2017/${BUILD_ARCH}/Release/XWBTool.exe
+	  ${SOURCE_PATH}/XWBTool/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/XWBTool.exe
 	  DESTINATION ${DXTK_TOOL_PATH})
 endif()
-
-file(INSTALL
-	${SOURCE_PATH}/Inc/
-	DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
-)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxtk RENAME copyright)
