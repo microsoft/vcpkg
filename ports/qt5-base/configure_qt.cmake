@@ -20,8 +20,9 @@ function(configure_qt)
     endif()
 
     list(APPEND _csc_OPTIONS -verbose)
-    list(APPEND _csc_OPTIONS -optimized-tools)
+    #list(APPEND _csc_OPTIONS -optimized-tools)
     list(APPEND _csc_OPTIONS -separate-debug-info)
+  
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         list(APPEND _csc_OPTIONS "-R \"../bin\"")
     endif()
@@ -42,18 +43,20 @@ function(configure_qt)
         set(_path_suffix "/debug")
         vcpkg_execute_required_process(
             COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
-                -debug
-                -prefix ${CURRENT_INSTALLED_DIR}${_path_suffix}
-                -extprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
-                -hostprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}/host/tools/qt5
-                -hostbindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}/host/tools/qt5
-                -archdatadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
-                -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
-                -plugindir ${CURRENT_INSTALLED_DIR}/${_path_suffix}/plugins
-                -qmldir ${CURRENT_INSTALLED_DIR}/${_path_suffix}/qml
-                -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/include
+                -debug  
+                -prefix ${CURRENT_PACKAGES_DIR}
+                -extprefix ${CURRENT_PACKAGES_DIR}
+                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/bin
+                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
+                -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
+                -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/plugins
+                -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/qml
+                -headerdir ${CURRENT_PACKAGES_DIR}/include
                 -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
+                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/bin
+                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
@@ -71,17 +74,19 @@ function(configure_qt)
         vcpkg_execute_required_process(
             COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
                 -release
-                -prefix ${CURRENT_INSTALLED_DIR}${_path_suffix}
-                -extprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
-                -hostprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}/host/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}/host/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
-                -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
-                -plugindir ${CURRENT_INSTALLED_DIR}/${_path_suffix}/plugins
-                -qmldir ${CURRENT_INSTALLED_DIR}/${_path_suffix}/qml
-                -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/include
+                -prefix ${CURRENT_PACKAGES_DIR}
+                -extprefix ${CURRENT_PACKAGES_DIR}
+                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/bin
+                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
+                -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
+                -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/plugins
+                -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/qml
+                -headerdir ${CURRENT_PACKAGES_DIR}/include
                 -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
+                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/bin
+                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
