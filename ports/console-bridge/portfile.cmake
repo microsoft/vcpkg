@@ -36,6 +36,8 @@ string(SUBSTRING "${_contents}" 0 2000 license)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/console-bridge)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/console-bridge/copyright "${license}")
 
+file(READ ${CURRENT_PACKAGES_DIR}/include/console_bridge_export.h _contents)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     string(REPLACE "ifdef CONSOLE_BRIDGE_STATIC" "if 1" _contents "${_contents}")
 else()
