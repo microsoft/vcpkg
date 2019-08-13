@@ -113,18 +113,54 @@ if(WITH_CONTRIB)
 endif()
 
 if(WITH_IPP)
-  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_intel64_general_20180518.zip"
-      FILENAME "opencv-cache/ippicv/915ff92958089ede8ea532d3c4fe7187-ippicv_2017u3_win_intel64_general_20180518.zip"
-      SHA512 8aa08292d542d521c042864446e47a7a6bdbf3896d86fc7b43255459c24a2e9f34a4e9b177023d178fed7a2e82a9db410f89d81375a542d049785d263f46c64d
+  if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_mac_intel64_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/fe6b2bb75ae0e3f19ad3ae1a31dfa4a2-ippicv_2019_mac_intel64_general_20180723.tgz"
+        SHA512 266fe3fecf8e95e1f51c09b65330a577743ef72b423b935d4d1fe8d87f1b4f258c282fe6a18fc805d489592f137ebed37c9f1d1b34026590d9f1ba107015132e
     )
+    else()
+      message(WARNING "This target architecture is not supported IPPICV")
+      set(WITH_IPP OFF)
+    endif()
+  elseif(VCPKG_TARGET_IS_LINUX)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_intel64_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/c0bd78adb4156bbf552c1dfe90599607-ippicv_2019_lnx_intel64_general_20180723.tgz"
+        SHA512 e4ec6b3b9fc03d7b3ae777c2a26f57913e83329fd2f7be26c259b07477ca2a641050b86979e0c96e25aa4c1f9f251b28727690358a77418e76dd910d0f4845c9
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_lnx_ia32_general_20180723.tgz"
+        FILENAME "opencv-cache/ippicv/4f38432c30bfd6423164b7a24bbc98a0-ippicv_2019_lnx_ia32_general_20180723.tgz"
+        SHA512 d96d3989928ff11a18e631bf5ecfdedf88fd350162a23fa2c8f7dbc3bf878bf442aff7fb2a07dc56671d7268cc20682055891be75b9834e9694d20173e92b6a3
+      )
+    else()
+      message(WARNING "This target architecture is not supported IPPICV")
+      set(WITH_IPP OFF)
+    endif()
+  elseif(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_intel64_20180723_general.zip"
+        FILENAME "opencv-cache/ippicv/1d222685246896fe089f88b8858e4b2f-ippicv_2019_win_intel64_20180723_general.zip"
+        SHA512 b6c4f2696e2004b8f5471efd9bdc6c684b77830e0533d8880310c0b665b450d6f78e10744c937f5592ab900e187c475e46cb49e98701bb4bcbbc7da77723011d
+      )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+      vcpkg_download_distfile(OCV_DOWNLOAD
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/32e315a5b106a7b89dbed51c28f8120a48b368b4/ippicv/ippicv_2019_win_ia32_20180723_general.zip"
+        FILENAME "opencv-cache/ippicv/0157251a2eb9cd63a3ebc7eed0f3e59e-ippicv_2019_win_ia32_20180723_general.zip"
+        SHA512 c33fd4019c71b064b153e1b25e0307f9c7ada693af8ec910410edeab471c6f14df9b11bf9f5302ceb0fcd4282f5c0b6c92fb5df0e83eb50ed630c45820d1e184
+      )
+    else()
+      message(WARNING "This target architecture is not supported IPPICV")
+      set(WITH_IPP OFF)
+    endif()
   else()
-    vcpkg_download_distfile(OCV_DOWNLOAD
-      URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/bdb7bb85f34a8cb0d35e40a81f58da431aa1557a/ippicv/ippicv_2017u3_win_ia32_general_20180518.zip"
-      FILENAME "opencv-cache/ippicv/928168c2d99ab284047dfcfb7a821d91-ippicv_2017u3_win_ia32_general_20180518.zip"
-      SHA512 b89b0fb739152303cafc9fb064fa8b24fd94850697137ccbb5c1e344e0f5094115603a5e3be3a25f85d0faefc5c53429a7d65da0142d012ada41e8db2bcdd6b7
-    )
+    message(WARNING "This target architecture is not supported IPPICV")
+    set(WITH_IPP OFF)
   endif()
 endif()
 
