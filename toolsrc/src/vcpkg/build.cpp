@@ -311,8 +311,8 @@ namespace vcpkg::Build
                                                          const std::set<std::string>& feature_list,
                                                          const Triplet& triplet)
     {
-        return Util::fmap(get_dependencies(scf, feature_list, triplet),
-                          [&](const Features& feat) { return feat.name; });
+        return Util::sort_unique_erase(
+            Util::fmap(get_dependencies(scf, feature_list, triplet), [&](const Features& feat) { return feat.name; }));
     }
 
     static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
@@ -765,6 +765,7 @@ namespace vcpkg::Build
         const std::string& name = config.scf.core_paragraph->name;
 
         std::vector<FeatureSpec> required_fspecs = compute_required_feature_specs(config, status_db);
+        std::vector<FeatureSpec> required_fspecs_copy = required_fspecs;
 
         // extract out the actual package ids
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
@@ -1027,8 +1028,17 @@ namespace vcpkg::Build
 
         if (port)
         {
-            args.emplace_back("CMAKE_ENV_OVERRIDES_FILE",
-                              port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
+            const SourceControlFileLocation& scfl = port.value_or_exit(VCPKG_LINE_INFO);
+            std::vector<Dependency> dependencies =
+                filter_dependencies(scfl.source_control_file->core_paragraph->depends, triplet);
+
+            args.emplace_back("CMAKE_ENV_OVERRIDES_FILE", scfl.source_location / "environment-overrides.cmake");
+
+            std::vector<std::string> port_toolchains;
+            for (const std::string& dependency : dependencies)
+            {
+                if (paths.get_filesystem().is_regular_file(paths.installed / triplet.
+            }
         }
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, ports_cmake_script_path, args);

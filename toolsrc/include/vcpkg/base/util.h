@@ -122,20 +122,14 @@ namespace vcpkg::Util
     }
 
     template<class Range>
-    void sort(Range& cont)
-    {
-        using std::begin;
-        using std::end;
-        std::sort(begin(cont), end(cont));
-    }
-
-    template<class Range>
-    void sort_unique_erase(Range& cont)
+    Range& sort_unique_erase(Range&& cont)
     {
         using std::begin;
         using std::end;
         std::sort(begin(cont), end(cont));
         cont.erase(std::unique(begin(cont), end(cont)), end(cont));
+
+        return cont;
     }
 
     template<class Range1, class Range2>
