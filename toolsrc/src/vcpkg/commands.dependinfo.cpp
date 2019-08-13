@@ -107,27 +107,26 @@ namespace vcpkg::Commands::DependInfo
         return Default;
     }
 
-    std::string create_dot_as_string(const std::vector<const SourceControlFile*>& source_control_files)
+    std::string create_dot_as_string(const std::vector<PackageDependInfo>& depend_info)
     {
         int empty_node_count = 0;
 
         std::string s;
         s.append("digraph G{ rankdir=LR; edge [minlen=3]; overlap=false;");
 
-        for (const auto& source_control_file : source_control_files)
+        for (const auto& package : depend_info)
         {
-            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
-            if (source_paragraph.depends.empty())
+            if (package.dependencies.empty())
             {
                 empty_node_count++;
                 continue;
             }
 
-            const std::string name = Strings::replace_all(std::string{source_paragraph.name}, "-", "_");
+            const std::string name = Strings::replace_all(std::string{ package.package }, "-", "_");
             s.append(Strings::format("%s;", name));
-            for (const Dependency& d : source_paragraph.depends)
+            for (const auto &d : package.dependencies)
             {
-                const std::string dependency_name = Strings::replace_all(std::string{d.depend.name}, "-", "_");
+                const std::string dependency_name = Strings::replace_all(std::string{ d }, "-", "_");
                 s.append(Strings::format("%s -> %s;", name, dependency_name));
             }
         }
@@ -136,39 +135,22 @@ namespace vcpkg::Commands::DependInfo
         return s;
     }
 
-    std::string create_dgml_as_string(const std::vector<const SourceControlFile*>& source_control_files)
+    std::string create_dgml_as_string(const std::vector<PackageDependInfo>& depend_info)
     {
         std::string s;
         s.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         s.append("<DirectedGraph xmlns=\"http://schemas.microsoft.com/vs/2009/dgml\">");
 
         std::string nodes, links;
-        for (const auto& source_control_file : source_control_files)
+        for (const auto& package : depend_info)
         {
-            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
-            const std::string name = source_paragraph.name;
+            const std::string name = package.package;
             nodes.append(Strings::format("<Node Id=\"%s\" />", name));
 
             // Iterate over dependencies.
-            for (const Dependency& d : source_paragraph.depends)
+            for (const auto& d : package.dependencies)
             {
-                if (d.qualifier.empty())
-                    links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" />", name, d.depend.name));
-                else
-                    links.append(Strings::format(
-                        "<Link Source=\"%s\" Target=\"%s\" StrokeDashArray=\"4\" />", name, d.depend.name));
-            }
-
-            // Iterate over feature dependencies.
-            const std::vector<std::unique_ptr<FeatureParagraph>>& feature_paragraphs =
-                source_control_file->feature_paragraphs;
-            for (const auto& feature_paragraph : feature_paragraphs)
-            {
-                for (const Dependency& d : feature_paragraph->depends)
-                {
-                    links.append(Strings::format(
-                        "<Link Source=\"%s\" Target=\"%s\" StrokeDashArray=\"4\" />", name, d.depend.name));
-                }
+                links.append(Strings::format("<Link Source=\"%s\" Target=\"%s\" />", name, d));
             }
         }
 
@@ -181,15 +163,15 @@ namespace vcpkg::Commands::DependInfo
     }
 
     std::string create_graph_as_string(const std::unordered_set<std::string>& switches,
-                                       const std::vector<const SourceControlFile*>& source_control_files)
+                                       const std::vector<PackageDependInfo>& depend_info)
     {
         if (Util::Sets::contains(switches, OPTION_DOT))
         {
-            return create_dot_as_string(source_control_files);
+            return create_dot_as_string(depend_info);
         }
         else if (Util::Sets::contains(switches, OPTION_DGML))
         {
-            return create_dgml_as_string(source_control_files);
+            return create_dgml_as_string(depend_info);
         }
         return "";
     }
@@ -278,6 +260,8 @@ namespace vcpkg::Commands::DependInfo
             Checks::exit_with_message(VCPKG_LINE_INFO, "Only install actions should exist in the plan");
         });
 
+        std::vector<PackageDependInfo> depend_info = extract_depend_info(install_actions, max_depth);
+
         if (Util::Sets::contains(options.switches, OPTION_DOT) || Util::Sets::contains(options.switches, OPTION_DGML))
         {
             const std::vector<const SourceControlFile*> source_control_files =
@@ -287,12 +271,11 @@ namespace vcpkg::Commands::DependInfo
                     return const_cast<const SourceControlFile*>(scfl.source_control_file.get());
                 });
 
-            const std::string graph_as_string = create_graph_as_string(options.switches, source_control_files);
+            const std::string graph_as_string = create_graph_as_string(options.switches, depend_info);
             System::print2(graph_as_string, '\n');
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        std::vector<PackageDependInfo> depend_info = extract_depend_info(install_actions, max_depth);
 
         // TODO: Improve this code
         auto lex = [](const PackageDependInfo& lhs, const PackageDependInfo& rhs) -> bool {
