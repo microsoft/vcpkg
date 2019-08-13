@@ -25,7 +25,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         winmain_pro.patch   #Moves qtmain to manual-link
         windows_prf.patch   #fixes the qtmain dependency due to the above move
-        bootstrap_pro.patch #Moves location of bootstrap to tools/qt5 since it is only used to bootstrap qmake dependencies
+#        bootstrap_pro.patch #Moves location of bootstrap to tools/qt5 since it is only used to bootstrap qmake dependencies
         qt_app.patch       #Moves the target location of qt5 tools from bin to tools/qt5
 )
 
