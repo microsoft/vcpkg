@@ -38,7 +38,6 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
 )
 
 file(INSTALL
