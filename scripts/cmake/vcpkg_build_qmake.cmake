@@ -64,7 +64,7 @@ function(vcpkg_build_qmake)
         if(NOT _csc_SKIP_MAKEFILES)
             run_jom(qmake_all makefiles ${_short_name_${_buildname}})
         endif()
-        run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_int_build_type})
+        run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_short_name_${_buildname}})
     endforeach()
       
     # Restore the original value of ENV{PATH}
