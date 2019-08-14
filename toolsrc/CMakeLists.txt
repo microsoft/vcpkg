@@ -47,7 +47,6 @@ else()
     set(DISABLE_METRICS_VALUE "0")
 endif()
 
-add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg PRIVATE include)
