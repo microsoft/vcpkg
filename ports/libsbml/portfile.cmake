@@ -23,6 +23,7 @@ if (VCPKG_LIBRARY_LINKAGE AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     expat       WITH_EXPAT
     libxml2     WITH_LIBXML
     comp        ENABLE_COMP
@@ -32,22 +33,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     multi       ENABLE_MULTI
     qual        ENABLE_QUAL
     render      ENABLE_RENDER
+    render      ENABLE_LAYOUT
     bzip2       WITH_BZIP2
     zlib        WITH_ZLIB
     check       WITH_CHECK
+    INVERTED_FEATURES
+    libxml2     WITH_EXPAT
 )
 
-if (WITH_EXPAT AND WITH_LIBXML)
-    message("Feature expat conflicts with feature libxml2, only use feature libxml2.")
-    set(WITH_EXPAT OFF)
-endif()
-
-if (ENABLE_RENDER AND NOT ENABLE_LAYOUT)
-    message("Feature render must use feature layout. Enable layout.")
-    set(ENABLE_LAYOUT ON)
-endif()
-
-if (WITH_CHECK AND WIN32)
+if ("check" IN_LIST FEATURES AND WIN32)
     message(FATAL_ERROR "Feature check only support UNIX.")
 endif()
 
