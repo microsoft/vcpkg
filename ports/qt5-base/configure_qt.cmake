@@ -27,9 +27,13 @@ function(configure_qt)
 
     list(APPEND _csc_OPTIONS "-verbose")
     
-    #list(APPEND _csc_OPTIONS -optimized-tools)    
+    #list(APPEND _csc_OPTIONS -optimized-tools)
+
+    list(APPEND _csc_OPTIONS_RELEASE -release)
     list(APPEND _csc_OPTIONS_RELEASE -force-debug-info)
     list(APPEND _csc_OPTIONS_RELEASE -ltcg)
+    
+    list(APPEND _csc_OPTIONS_DEBUG -debug)
     
     if(CMAKE_HOST_WIN32)
         set(CONFIGURE_BAT "configure.bat")
@@ -38,65 +42,49 @@ function(configure_qt)
     endif()
     
     #-external-hostbindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
-    
+    unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(_path_suffix "/debug")
-        vcpkg_execute_required_process(
-            COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
-                -debug  
-                -prefix ${CURRENT_PACKAGES_DIR}
-                -extprefix ${CURRENT_PACKAGES_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
-                -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
-                -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/plugins
-                -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/qml
-                -headerdir ${CURRENT_PACKAGES_DIR}/include
-                -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
-                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/bin
-                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/lib
-                -I ${CURRENT_INSTALLED_DIR}/include
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
-                -xplatform ${_csc_TARGET_PLATFORM}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+        set(_buildname "DEBUG")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "dbg")
+        set(_path_suffix_${_buildname} "/debug")        
     endif()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(_path_suffix "")
+        set(_buildname "RELEASE")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "rel")
+        set(_path_suffix_${_buildname} "")   
+    endif()
+    unset(_buildname)
+    
+    foreach(_buildname ${BUILDTYPES})
+        set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
+        message(STATUS "Configuring ${_build_triplet}")
+        set(_build_dir ${CURRENT_BUILDTREES_DIR}/${_build_triplet}))
+        file(MAKE_DIRECTORY ${_build_dir})
         vcpkg_execute_required_process(
-            COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
-                -release
+            COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
                 -prefix ${CURRENT_PACKAGES_DIR}
                 -extprefix ${CURRENT_PACKAGES_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
-                -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
-                -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/plugins
-                -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/qml
+                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}/host
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}/host/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}/host/bin
+                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}
+                -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}
+                -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix_${_buildname}}/plugins
+                -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix_${_buildname}}/qml
                 -headerdir ${CURRENT_PACKAGES_DIR}/include
-                -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
-                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/bin
-                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/lib
+                -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/tools/qt5
+                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/bin
+                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
                 -xplatform ${_csc_TARGET_PLATFORM}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME config-${TARGET_TRIPLET}-rel
+            WORKING_DIRECTORY ${_build_dir}
+            LOGNAME config-${_build_triplet}
         )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-    endif()
+        message(STATUS "Configuring ${_build_triplet} done")
+    endforeach()  
 
 endfunction()

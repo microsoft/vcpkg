@@ -40,68 +40,33 @@ function(vcpkg_build_qmake)
     set(ENV_CL_BACKUP "$ENV{_CL_}")
     set(ENV{_CL_} "/utf-8")
 
-    #First generate the makefiles so we can modify them
+    #Should probably be moved to a more general location. This pattern is used often in different scripts
+    unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(_BUILD_PREFIX "/debug")
-        set(_BUILD_PREFIX_WINDOWS "\\debug")
-        set(_int_build_type dbg)
-
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/tools/qt5")
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/bin")
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/lib")
-
-        list(APPEND _csc_DEBUG_TARGETS ${_csc_TARGETS})
-        
-        if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles ${_int_build_type})
-
-            #Store debug makefiles path
-
-            set(DEBUG_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-            file(GLOB_RECURSE DEBUG_MAKEFILES ${DEBUG_DIR}/*Makefile*)
-
-            foreach(DEBUG_MAKEFILE ${DEBUG_MAKEFILES})
-                file(READ "${DEBUG_MAKEFILE}" _contents)
-
-                string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
-                string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
-                
-                file(WRITE "${DEBUG_MAKEFILE}" "${_contents}")
-            endforeach()
-        endif()
-
-        run_jom("${_csc_DEBUG_TARGETS}" ${_csc_BUILD_LOGNAME} ${_int_build_type})
+        set(_buildname "DEBUG")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "dbg")
+        set(_path_suffix_${_buildname} "/debug")        
     endif()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(_int_build_type rel)
-
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/tools/qt5")
+        set(_buildname "RELEASE")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "rel")
+        set(_path_suffix_${_buildname} "")        
+    endif()
+    unset(_buildname)
+    
+    foreach(_buildname ${BUILDTYPES})
+        set(_BUILD_PREFIX "${_path_suffix_${_buildname}}")
         vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/bin")
         vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/lib")
-
-        list(APPEND _csc_RELEASE_TARGETS ${_csc_TARGETS})
-        
+        list(APPEND _csc_${_buildname}_TARGETS ${_csc_TARGETS})
         if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles ${_int_build_type})
-
-            #Store release makefile path
-            set(RELEASE_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-            file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
-
-            foreach(RELEASE_MAKEFILE ${RELEASE_MAKEFILES})
-                file(READ "${RELEASE_MAKEFILE}" _contents)
-
-                string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
-                string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")              
-
-                file(WRITE "${RELEASE_MAKEFILE}" "${_contents}")
-            endforeach()
+            run_jom(qmake_all makefiles ${_short_name_${_buildname}})
         endif()
-
-        run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} ${_int_build_type})
-    endif()
-    
+        run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_int_build_type})
+    endforeach()
+      
     # Restore the original value of ENV{PATH}
     set(ENV{PATH} "${ENV_PATH_BACKUP}")
     set(ENV{_CL_} "${ENV_CL_BACKUP}")
