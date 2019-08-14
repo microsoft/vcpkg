@@ -23,9 +23,6 @@ if (VCPKG_LIBRARY_LINKAGE AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-    expat       WITH_EXPAT
-    libxml2     WITH_LIBXML
     comp        ENABLE_COMP
     fbc         ENABLE_FBC
     groups      ENABLE_GROUPS
@@ -37,9 +34,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     bzip2       WITH_BZIP2
     zlib        WITH_ZLIB
     check       WITH_CHECK
-    INVERTED_FEATURES
-    libxml2     WITH_EXPAT
 )
+
+# Handle conflict features
+set(WITH_EXPAT OFF)
+if ("expat" IN_LIST FEATURES)
+    set(WITH_EXPAT ON)
+endif()
+
+set(WITH_LIBXML OFF)
+if ("libxml2" IN_LIST FEATURES)
+    set(WITH_LIBXML ON)
+endif()
+
+if (WITH_EXPAT AND WITH_LIBXML)
+    message("Feature expat conflict with feature libxml2, currently using libxml2...")
+    set(WITH_EXPAT OFF)
+endif()
 
 if ("check" IN_LIST FEATURES AND WIN32)
     message(FATAL_ERROR "Feature check only support UNIX.")
@@ -49,6 +60,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS ${FEATURE_OPTIONS}
+            -DWITH_EXPAT=${WITH_EXPAT}
+            -DWITH_LIBXML=${WITH_LIBXML}
             -DENABLE_L3V2EXTENDEDMATH:BOOL=ON
             -DWITH_STATIC_RUNTIME=${STATIC_RUNTIME}
             -DLIBSBML_SKIP_SHARED_LIBRARY=${STATIC_LIBRARY}
