@@ -27,10 +27,8 @@ function(vcpkg_configure_qmake)
         list(APPEND _csc_OPTIONS CONFIG+=static)
     else()
         list(APPEND _csc_OPTIONS CONFIG+=shared)
+        list(APPEND _csc_OPTIONS CONFIG+=separate_debug_info)
     endif()
-    
-    list(APPEND _csc_OPTIONS CONFIG+=separate_debug_info)
-
     # Cleanup build directories
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
