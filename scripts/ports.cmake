@@ -68,11 +68,11 @@ if(CMD MATCHES "^BUILD$")
 
     include(${CMAKE_TRIPLET_FILE})
 
-    if (DEFINED ${ENV_OVERRIDES_FILE})
-        include(${ENV_OVERRIDES_FILE})
+    if (DEFINED VCPKG_ENV_OVERRIDES_FILE)
+        include(${VCPKG_ENV_OVERRIDES_FILE})
     endif()
 
-    if (DEFINED ${VCPKG_PORT_TOOLCHAINS})
+    if (DEFINED VCPKG_PORT_TOOLCHAINS)
         foreach(VCPKG_PORT_TOOLCHAIN ${VCPKG_PORT_TOOLCHAINS})
             include(${VCPKG_PORT_TOOLCHAIN})
         endforeach()

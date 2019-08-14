@@ -412,9 +412,31 @@ namespace vcpkg::Build
             variables.push_back({"GIT", git_exe_path});
         }
 
-        if (paths.get_filesystem().is_regular_file(config.port_dir / "environment-overrides.cmake"))
+        const Files::Filesystem& fs = paths.get_filesystem();
+        if (fs.is_regular_file(config.port_dir / "environment-overrides.cmake"))
         {
-            variables.push_back({"VCPKG_ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake"});
+            variables.emplace_back("VCPKG_ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake");
+        }
+
+        std::vector<FeatureSpec> dependencies =
+            filter_dependencies_to_specs(config.scfl.source_control_file->core_paragraph->depends, triplet);
+
+        std::vector<std::string> port_toolchains;
+        for (const FeatureSpec& dependency : dependencies)
+        {
+            const fs::path port_toolchain_path = paths.installed / dependency.triplet().canonical_name() / "share" /
+                                                 dependency.spec().name() / "port-toolchain.cmake";
+
+            if (fs.is_regular_file(port_toolchain_path))
+            {
+                System::print2(port_toolchain_path.u8string());
+                port_toolchains.emplace_back(port_toolchain_path.u8string());
+            }
+        }
+
+        if (!port_toolchains.empty())
+        {
+            variables.emplace_back("VCPKG_PORT_TOOLCHAINS", Strings::join(";", port_toolchains));
         }
 
         return variables;
@@ -1033,30 +1055,10 @@ namespace vcpkg::Build
         if (port)
         {
             const SourceControlFileLocation& scfl = port.value_or_exit(VCPKG_LINE_INFO);
-            std::vector<FeatureSpec> dependencies =
-                filter_dependencies_to_specs(scfl.source_control_file->core_paragraph->depends, triplet);
-            const Files::Filesystem& fs = paths.get_filesystem();
 
-            if (fs.is_regular_file(scfl.source_location / "environment-overrides.cmake"))
+            if (paths.get_filesystem().is_regular_file(scfl.source_location / "environment-overrides.cmake"))
             {
                 args.emplace_back("VCPKG_ENV_OVERRIDES_FILE", scfl.source_location / "environment-overrides.cmake");
-            }
-
-            std::vector<std::string> port_toolchains;
-            for (const FeatureSpec& dependency : dependencies)
-            {
-                const fs::path port_toolchain_path =
-                    paths.installed / dependency.triplet().canonical_name() / "share" / dependency.spec().name();
-
-                if (fs.is_regular_file(port_toolchain_path))
-                {
-                    port_toolchains.emplace_back(port_toolchain_path.u8string());
-                }
-            }
-
-            if (!port_toolchains.empty())
-            {
-                args.emplace_back("VCPKG_PORT_TOOLCHAINS", Strings::join(";", port_toolchains));
             }
         }
 
