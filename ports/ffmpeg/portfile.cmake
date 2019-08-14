@@ -125,6 +125,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
 endif()
 
+if("avresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avresample")
+endif()
+
 set(OPTIONS_CROSS "")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
