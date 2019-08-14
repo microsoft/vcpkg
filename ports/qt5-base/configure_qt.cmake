@@ -74,8 +74,8 @@ function(configure_qt)
                 -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
                 -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}
-                -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}
+                -archdatadir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -datadir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix_${_buildname}}/plugins
                 -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix_${_buildname}}/qml
                 -headerdir ${CURRENT_PACKAGES_DIR}/include
@@ -89,7 +89,18 @@ function(configure_qt)
             WORKING_DIRECTORY ${_build_dir}
             LOGNAME config-${_build_triplet}
         )
+        # Note archdatadir and datadir are required to be prefixed with the hostprefix? 
         message(STATUS "Configuring ${_build_triplet} done")
+        
+        # Copy configuration dependent qt.conf
+        file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR_PATH)
+        file(TO_CMAKE_PATH "${VCPKG_QT_HOST_TOOLS_ROOT_DIR}" CMAKE_VCPKG_QT_HOST_ROOT_PATH)
+        file(READ "${CURRENT_BUILDTREES_DIR}/${_build_triplet}/bin/qt.conf" _contents)
+        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
+        string(REPLACE "[EffectiveSourcePaths]" "" _contents ${_contents})
+        string(REGEX REPLACE "[EffectivePaths][ \t\r\n]+Prefix=\.\." "" _contents ${_contents})
+        string(REGEX REPLACE "[EffectiveSourcePaths][ \t\r\n]+Prefix=.+$" "" _contents ${_contents})
+        file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     
     endforeach()  
 
 endfunction()

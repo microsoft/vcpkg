@@ -75,15 +75,6 @@ function(install_qt)
         )
         message(STATUS "Package ${_build_triplet} done")
         
-        # Copy configuration dependent qt.conf
-        file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR_PATH)
-        file(TO_CMAKE_PATH "${VCPKG_QT_HOST_TOOLS_ROOT_DIR}" CMAKE_VCPKG_QT_HOST_ROOT_PATH)
-        file(READ "${CURRENT_BUILDTREES_DIR}/${_build_triplet}/bin/qt.conf" _contents)
-        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
-        string(REPLACE "[EffectiveSourcePaths]" "" _contents ${_contents})
-        string(REGEX REPLACE "[EffectivePaths]\\nPrefix=\.\." "" _contents ${_contents})
-        string(REGEX REPLACE "[EffectiveSourcePaths]\\nPrefix=.+$" "" _contents ${_contents})
-        file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     
     endforeach()
     
     set(ENV{PATH} "${_path}")
