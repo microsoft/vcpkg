@@ -60,7 +60,7 @@ function(configure_qt)
     foreach(_buildname ${BUILDTYPES})
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
         message(STATUS "Configuring ${_build_triplet}")
-        set(_build_dir ${CURRENT_BUILDTREES_DIR}/${_build_triplet}))
+        set(_build_dir ${CURRENT_BUILDTREES_DIR}/${_build_triplet})
         file(MAKE_DIRECTORY ${_build_dir})
         vcpkg_execute_required_process(
             COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
