@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    #PATCHES fix-linkage-type.patch
+    PATCHES fix-linkage-type.patch
 )
 
 SET(STATIC_RUNTIME OFF)
@@ -32,7 +32,6 @@ vcpkg_check_features(
     multi ENABLE_MULTI
     qual ENABLE_QUAL
     render ENABLE_RENDER
-    render ENABLE_LAYOUT
     bzip2 WITH_BZIP2
     zlib WITH_ZLIB
     check WITH_CHECK
