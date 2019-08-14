@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     message(FATAL_ERROR "qt5-activeqt only support Windows.")

@@ -1,5 +1,4 @@
-include(vcpkg_common_functions)
-
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
 
 qt_modular_library(qtcharts d9c46f59d15377098427647cbd3c3fc2d7ff33fb9940581360db3be5e895b50bee0fe23a41c0af6b157e905b04b1bc13666c1736b047a405b21aab3a2bdbe60b)
