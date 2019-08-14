@@ -52,7 +52,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
-# As the respective value of their valuables can be unset conditionally.
+# As the respective value of their variables can be unset conditionally.
 set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
