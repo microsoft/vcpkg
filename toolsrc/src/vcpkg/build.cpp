@@ -397,7 +397,6 @@ namespace vcpkg::Build
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake"},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
@@ -411,6 +410,11 @@ namespace vcpkg::Build
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
             variables.push_back({"GIT", git_exe_path});
+        }
+
+        if (paths.get_filesystem().is_regular_file(config.port_dir / "environment-overrides.cmake"))
+        {
+            variables.push_back({"VCPKG_ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake"});
         }
 
         return variables;
@@ -1029,15 +1033,30 @@ namespace vcpkg::Build
         if (port)
         {
             const SourceControlFileLocation& scfl = port.value_or_exit(VCPKG_LINE_INFO);
-            std::vector<Dependency> dependencies =
-                filter_dependencies(scfl.source_control_file->core_paragraph->depends, triplet);
+            std::vector<FeatureSpec> dependencies =
+                filter_dependencies_to_specs(scfl.source_control_file->core_paragraph->depends, triplet);
+            const Files::Filesystem& fs = paths.get_filesystem();
 
-            args.emplace_back("CMAKE_ENV_OVERRIDES_FILE", scfl.source_location / "environment-overrides.cmake");
+            if (fs.is_regular_file(scfl.source_location / "environment-overrides.cmake"))
+            {
+                args.emplace_back("VCPKG_ENV_OVERRIDES_FILE", scfl.source_location / "environment-overrides.cmake");
+            }
 
             std::vector<std::string> port_toolchains;
-            for (const std::string& dependency : dependencies)
+            for (const FeatureSpec& dependency : dependencies)
             {
-                if (paths.get_filesystem().is_regular_file(paths.installed / triplet.
+                const fs::path port_toolchain_path =
+                    paths.installed / dependency.triplet().canonical_name() / "share" / dependency.spec().name();
+
+                if (fs.is_regular_file(port_toolchain_path))
+                {
+                    port_toolchains.emplace_back(port_toolchain_path.u8string());
+                }
+            }
+
+            if (!port_toolchains.empty())
+            {
+                args.emplace_back("VCPKG_PORT_TOOLCHAINS", Strings::join(";", port_toolchains));
             }
         }
 

@@ -1,6 +1,6 @@
 include(${CMAKE_TRIPLET_FILE})
 if (DEFINED CMAKE_ENV_OVERRIDES_FILE)
-    include(${CMAKE_ENV_OVERRIDES_FILE} OPTIONAL)
+    include(${CMAKE_ENV_OVERRIDES_FILE})
 endif()
 
 # GUID used as a flag - "cut here line"
