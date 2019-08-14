@@ -8,7 +8,13 @@ function(configure_qt)
     if(DEFINED _csc_HOST_PLATFORM)
         list(APPEND _csc_OPTIONS "-platform ${HOST_PLATFORM}")
     endif()
-
+    
+    if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR)
+        ## vcpkg internal file struture assumed here!
+        vcpkg_add_to_path("${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin")        
+        list(APPEND _csc_OPTIONS "-external-hostbindir ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/tools/qt5/bin") # we only use release binaries for building
+    endif()
+    
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
@@ -41,7 +47,6 @@ function(configure_qt)
         set(CONFIGURE_BAT "configure")
     endif()
     
-    #-external-hostbindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
     unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(_buildname "DEBUG")
@@ -66,9 +71,9 @@ function(configure_qt)
             COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
                 -prefix ${CURRENT_PACKAGES_DIR}
                 -extprefix ${CURRENT_PACKAGES_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}/host/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}/host/bin
+                -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
                 -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}
                 -datadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix_${_buildname}}/plugins

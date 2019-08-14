@@ -1,8 +1,15 @@
+vcpkg_find_qt_platforms()
+
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
 if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
     message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
         "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
     )
+endif()
+
+set(QT_PLATFORM_CONFIGURE_OPTIONS TARGET_PLATFORM ${VCPKG_QT_TARGET_PLATFORM})
+if(DEFINED VCPKG_QT_HOST_PLATFORM)
+    list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${VCPKG_QT_HOST_PLATFORM})
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
@@ -56,11 +63,9 @@ set(CORE_OPTIONS
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(PLATFORM "win32-msvc")
-
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
-        TARGET_PLATFORM ${PLATFORM}
+        ${QT_PLATFORM_CONFIGURE_OPTIONS}
         OPTIONS
             ${CORE_OPTIONS}
             -mp
@@ -79,8 +84,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             PSQL_LIBS="-llibpqd"
             PCRE2_LIBS="-lpcre2-16d"
             FREETYPE_LIBS="-lfreetyped"
-    )
-    
+    )    
 elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\"")
@@ -88,7 +92,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
-        TARGET_PLATFORM "linux-g++"
+        ${QT_PLATFORM_CONFIGURE_OPTIONS}
         OPTIONS
             ${CORE_OPTIONS}
         OPTIONS_RELEASE
@@ -110,34 +114,33 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
             "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
     )
-
 elseif(VCPKG_TARGET_IS_OSX)
-configure_qt(
-    SOURCE_PATH ${SOURCE_PATH}
-    TARGET_PLATFORM "macx-clang"
-    OPTIONS
-        ${CORE_OPTIONS}
-    OPTIONS_RELEASE
-        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
-        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
-        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
-        "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/lib/libharfbuzz.a -framework ApplicationServices"
-    OPTIONS_DEBUG
-        "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-        "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-        "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-        "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-        "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
-        "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
-        "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
-        "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libharfbuzz.a -framework ApplicationServices"
-)
+    configure_qt(
+        SOURCE_PATH ${SOURCE_PATH}
+        ${QT_PLATFORM_CONFIGURE_OPTIONS}
+        OPTIONS
+            ${CORE_OPTIONS}
+        OPTIONS_RELEASE
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
+            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
+            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
+            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
+            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
+            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
+            "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/lib/libharfbuzz.a -framework ApplicationServices"
+        OPTIONS_DEBUG
+            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
+            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
+            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
+            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
+            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
+            "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libharfbuzz.a -framework ApplicationServices"
+    )
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -149,10 +152,9 @@ endif()
 #TODO: PATCH QTs buildsystem so that all binary targets get installed in tools/qt5
 # e.g. by patching mkspecs/features/qt_tools.prf somehow
 #TODO: Patch HOST libs PRL files. 
-file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/*.prl")
+file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/lib/*.prl")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_release.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5) #TODO: Use and fix the one generated by configure qt
     file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
     foreach(PRL_FILE IN LISTS PRL_FILES)
         file(READ "${PRL_FILE}" _contents)
@@ -163,7 +165,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5) #TODO: Use and fix the one generated by configure qt
     file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
     foreach(PRL_FILE IN LISTS PRL_FILES)
         file(READ "${PRL_FILE}" _contents)
