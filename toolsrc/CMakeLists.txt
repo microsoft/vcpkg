@@ -39,8 +39,6 @@ if(GCC OR (CLANG AND NOT MSVC))
     endif()
 endif()
 
-file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-
 if (DEFINE_DISABLE_METRICS)
     set(DISABLE_METRICS_VALUE "1")
 else()
