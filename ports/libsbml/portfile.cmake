@@ -22,24 +22,29 @@ if (VCPKG_LIBRARY_LINKAGE AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
     SET(STATIC_LIBRARY ON)
 endif()
 
-vcpkg_check_features(
-    expat ENABLE_EXPAT
-    libxml2 ENABLE_LIBXML
-    comp ENABLE_COMP
-    fbc ENABLE_FBC
-    groups ENABLE_GROUPS
-    layout ENABLE_LAYOUT
-    multi ENABLE_MULTI
-    qual ENABLE_QUAL
-    render ENABLE_RENDER
-    bzip2 WITH_BZIP2
-    zlib WITH_ZLIB
-    check WITH_CHECK
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    expat       ENABLE_EXPAT
+    libxml2     ENABLE_LIBXML
+    comp        ENABLE_COMP
+    fbc         ENABLE_FBC
+    groups      ENABLE_GROUPS
+    layout      ENABLE_LAYOUT
+    multi       ENABLE_MULTI
+    qual        ENABLE_QUAL
+    render      ENABLE_RENDER
+    bzip2       WITH_BZIP2
+    zlib        WITH_ZLIB
+    check       WITH_CHECK
 )
 
 if (ENABLE_EXPAT AND ENABLE_LIBXML)
     message("Feature expat conflicts with feature libxml2, only use feature libxml2.")
     set(ENABLE_EXPAT OFF)
+endif()
+
+if (ENABLE_RENDER AND NOT ENABLE_LAYOUT)
+    message("Feature render must use feature layout. Enable layout.")
+    set(ENABLE_LAYOUT ON)
 endif()
 
 if (WITH_CHECK AND WIN32)
@@ -59,7 +64,6 @@ vcpkg_configure_cmake(
             -DENABLE_MULTI=${ENABLE_MULTI}
             -DENABLE_QUAL=${ENABLE_QUAL}
             -DENABLE_RENDER=${ENABLE_RENDER}
-            -DLIBSBML_SKIP_SHARED_LIBRARY=ON
             -DWITH_ZLIB=${WITH_ZLIB}
             -DWITH_BZIP2=${WITH_BZIP2}
             -DWITH_STATIC_RUNTIME=${STATIC_RUNTIME}
