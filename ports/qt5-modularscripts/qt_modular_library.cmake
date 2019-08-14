@@ -30,9 +30,23 @@ function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
             "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
         )
     endif()
+    
+    if(NOT DEFINED VCPKG_QT_MAJOR_MINOR_VER)
+        set(MAJOR_MINOR 5.12)
+    else()
+        message(STATUS "Qt5 hash checks disabled!")
+        set(MAJOR_MINOR ${VCPKG_QT_MAJOR_MINOR_VER})
+        
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
+    endif()
 
-    set(MAJOR_MINOR 5.12)
-    set(FULL_VERSION ${MAJOR_MINOR}.4)
+    if(NOT DEFINED VCPKG_QT_PATCH_VER)
+        set(PATCH 4)
+    else()
+        set(PATCH ${VCPKG_QT_PATCH_VER})
+    endif()
+    
+    set(FULL_VERSION ${MAJOR_MINOR}.${PATCH})
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
