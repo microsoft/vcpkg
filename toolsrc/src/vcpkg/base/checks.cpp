@@ -27,9 +27,8 @@ namespace vcpkg
 
 #if defined(_WIN32)
         ::TerminateProcess(::GetCurrentProcess(), exit_code);
-#else
-        std::exit(exit_code);
 #endif
+        std::exit(exit_code);
     }
 
     void Checks::unreachable(const LineInfo& line_info)

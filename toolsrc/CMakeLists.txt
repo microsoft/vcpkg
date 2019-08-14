@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.14)
 
 project(vcpkg C CXX)
 
@@ -28,10 +28,31 @@ If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
     set(CLANG 1)
 elseif(MSVC)
-    add_compile_options(/std:c++17 /FC)
+    add_compile_options(/FC)
 else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
+
+if(GCC OR (CLANG AND NOT MSVC))
+    if(WERROR)
+        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
+    endif()
+endif()
+
+if (DEFINE_DISABLE_METRICS)
+    set(DISABLE_METRICS_VALUE "1")
+else()
+    set(DISABLE_METRICS_VALUE "0")
+endif()
+
+file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+
+add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+
+target_compile_features(vcpkg PRIVATE cxx_std_17)
+target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
+target_include_directories(vcpkg PRIVATE include)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -52,9 +73,9 @@ if(CLANG)
 endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
-    link_libraries(stdc++fs)
-elseif(CLANG)
-    link_libraries(c++fs)
+    target_link_libraries(vcpkg PRIVATE stdc++fs)
+elseif(CLANG AND NOT MSVC)
+    target_link_libraries(vcpkg PRIVATE c++fs)
 endif()
 
 if(GCC OR CLANG)
@@ -63,11 +84,6 @@ if(GCC OR CLANG)
         add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
     endif()
 endif()
-
-file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-
-add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
-add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
 
 if (BUILD_TESTING)
     file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
