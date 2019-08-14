@@ -1,7 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 289e108..c907c90 100644
 --- a/CMakeLists.txt
-+++ b/CMakeLists.txt 
++++ b/CMakeLists.txt
 @@ -79,8 +79,8 @@ install(FILES
      DESTINATION license 
      COMPONENT license
