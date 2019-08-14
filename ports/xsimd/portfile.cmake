@@ -10,16 +10,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(xcomplex ENABLE_XTL_COMPLEX)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    xcomplex ENABLE_XTL_COMPLEX
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DENABLE_FALLBACK=OFF
-        -DENABLE_XTL_COMPLEX=${ENABLE_XTL_COMPLEX}
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_GTEST=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
