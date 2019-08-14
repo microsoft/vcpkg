@@ -148,6 +148,7 @@ endif()
 
 #TODO: PATCH QTs buildsystem so that all binary targets get installed in tools/qt5
 # e.g. by patching mkspecs/features/qt_tools.prf somehow
+#TODO: Patch HOST libs PRL files. 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/*.prl")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
