@@ -1,5 +1,4 @@
-include(vcpkg_common_functions)
-
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER ON)
 include(
   ${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
 
