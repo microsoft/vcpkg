@@ -23,8 +23,8 @@ if (VCPKG_LIBRARY_LINKAGE AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    expat       ENABLE_EXPAT
-    libxml2     ENABLE_LIBXML
+    expat       WITH_EXPAT
+    libxml2     WITH_LIBXML
     comp        ENABLE_COMP
     fbc         ENABLE_FBC
     groups      ENABLE_GROUPS
@@ -37,9 +37,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     check       WITH_CHECK
 )
 
-if (ENABLE_EXPAT AND ENABLE_LIBXML)
+if (WITH_EXPAT AND WITH_LIBXML)
     message("Feature expat conflicts with feature libxml2, only use feature libxml2.")
-    set(ENABLE_EXPAT OFF)
+    set(WITH_EXPAT OFF)
 endif()
 
 if (ENABLE_RENDER AND NOT ENABLE_LAYOUT)
@@ -54,21 +54,10 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DWITH_LIBXML=${ENABLE_LIBXML}
-            -DWITH_EXPAT=${ENABLE_EXPAT}
+    OPTIONS ${FEATURE_OPTIONS}
             -DENABLE_L3V2EXTENDEDMATH:BOOL=ON
-            -DENABLE_COMP=${ENABLE_COMP}
-            -DENABLE_FBC=${ENABLE_FBC}
-            -DENABLE_GROUPS=${ENABLE_GROUPS}
-            -DENABLE_LAYOUT=${ENABLE_LAYOUT}
-            -DENABLE_MULTI=${ENABLE_MULTI}
-            -DENABLE_QUAL=${ENABLE_QUAL}
-            -DENABLE_RENDER=${ENABLE_RENDER}
-            -DWITH_ZLIB=${WITH_ZLIB}
-            -DWITH_BZIP2=${WITH_BZIP2}
             -DWITH_STATIC_RUNTIME=${STATIC_RUNTIME}
             -DLIBSBML_SKIP_SHARED_LIBRARY=${STATIC_LIBRARY}
-            -DWITH_CHECK=${WITH_CHECK}
 )
 
 vcpkg_install_cmake()
