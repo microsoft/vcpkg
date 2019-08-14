@@ -47,7 +47,12 @@ else()
     set(DISABLE_METRICS_VALUE "0")
 endif()
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
+
+add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
+add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+
+target_compile_features(vcpkg PRIVATE cxx_std_17)
 target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg PRIVATE include)
 
@@ -81,11 +86,6 @@ if(GCC OR CLANG)
         add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
     endif()
 endif()
-
-file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
-
-add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
-add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
 
 if (BUILD_TESTING)
     file(GLOB_RECURSE VCPKGTEST_SOURCES src/vcpkg-test/*.cpp)
