@@ -20,6 +20,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DGLFW_BUILD_EXAMPLES=OFF
         -DGLFW_BUILD_TESTS=OFF

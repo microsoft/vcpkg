@@ -161,7 +161,7 @@ function(vcpkg_from_github)
 
     # Parse the github refs response with regex.
     # TODO: use some JSON swiss-army-knife utility instead.
-    file(READ "${ARCHIVE_VERSION}" _contents)
+    file(READ "${downloaded_file_path}.version" _contents)
     string(REGEX MATCH "\"sha\": \"[a-f0-9]+\"" x "${_contents}")
     string(REGEX REPLACE "\"sha\": \"([a-f0-9]+)\"" "\\1" _version ${x})
 

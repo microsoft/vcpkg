@@ -7,12 +7,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svaarala/duktape
-    REF v2.0.3
-    SHA512 6ad189f6f9291cbd7eb7227113302fd0c204018611bb37bf4acd7f6b0eb2a75837dac8fb9fba441a0d76e6f1dbad62e4750a6645f65de31611b089f6922bad26
+    REF v2.3.0
+    SHA512 dd715eab481b948cf71d3ad16d2544166eb53da0df8936a4ac9c33e1f1277ef6efe542782a4c7f689f6c0c8963d7094749af455ff6a8c59593aa56ebb57e5c6f
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 if(CMAKE_HOST_WIN32)
     set(EXECUTABLE_SUFFIX ".exe")
@@ -46,6 +48,7 @@ vcpkg_apply_patches(
 )
 
 vcpkg_configure_cmake(
+    PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
 )
 

@@ -1,6 +1,6 @@
 --- a/cmake/modules/FindLibRaw.cmake	2016-11-02 07:09:50.000000000 +0100
-+++ b/cmake/modules/FindLibRaw.cmake	2018-06-02 02:50:10.501142400 +0200
-@@ -31,18 +31,34 @@
++++ b/cmake/modules/FindLibRaw.cmake	2019-06-03 22:05:28.759307500 +0200
+@@ -31,18 +31,36 @@
            PATH_SUFFIXES libraw
           )
  
@@ -17,6 +17,8 @@
 +             ${PC_LIBRAW_LIBDIR}
 +             ${PC_LIBRAW_LIBRARY_DIRS}
 +            )
++
++INCLUDE(SelectLibraryConfigurations)
 +
 +select_library_configurations(LibRaw)
 +

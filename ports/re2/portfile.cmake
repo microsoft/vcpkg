@@ -10,11 +10,12 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DRE2_BUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/re2 TARGET_PATH share/re2)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/re2)
 
 vcpkg_copy_pdbs()
 

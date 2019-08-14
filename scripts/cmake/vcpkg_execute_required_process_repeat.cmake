@@ -1,4 +1,5 @@
 # Usage: vcpkg_execute_required_process_repeat(COUNT <num> COMMAND <cmd> [<args>...] WORKING_DIRECTORY </path/to/dir> LOGNAME <my_log_name>)
+include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process_repeat)
     cmake_parse_arguments(vcpkg_execute_required_process_repeat "" "COUNT;WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
     #debug_message("vcpkg_execute_required_process_repeat(${vcpkg_execute_required_process_repeat_COMMAND})")
@@ -18,8 +19,9 @@ function(vcpkg_execute_required_process_repeat)
         endif()
     endforeach(loop_count)
     if (NOT SUCCESSFUL_EXECUTION)
+        vcpkg_prettify_command(vcpkg_execute_required_process_repeat_COMMAND vcpkg_execute_required_process_repeat_COMMAND_PRETTY)
         message(FATAL_ERROR
-            "  Command failed: ${vcpkg_execute_required_process_repeat_COMMAND}\n"
+            "  Command failed: ${vcpkg_execute_required_process_repeat_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_repeat_WORKING_DIRECTORY}\n"
             "  See logs for more information:\n"
             "    ${NATIVE_BUILDTREES_DIR}\\${vcpkg_execute_required_process_repeat_LOGNAME}-out.log\n"

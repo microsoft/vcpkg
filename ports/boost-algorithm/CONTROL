@@ -2,4 +2,5 @@
 Source: boost-algorithm
 Version: 1.70.0
 Build-Depends: boost-array, boost-assert, boost-bind, boost-concept-check, boost-config, boost-core, boost-detail, boost-exception, boost-function, boost-iterator, boost-mpl, boost-range, boost-regex, boost-static-assert, boost-throw-exception, boost-tuple, boost-type-traits, boost-unordered, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/algorithm
 Description: Boost algorithm module

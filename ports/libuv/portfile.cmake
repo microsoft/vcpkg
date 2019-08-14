@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
-    REF v1.28.0
-    SHA512 5f49b980b69011897bbb7a00d779fe0e71528d106626bc13fc130cd09afb7c8188007f354cd6320b1eba67f77c938ae3e83f3bd4a3ef5b9ea65a3adf51f66a53
+    REF d16e6094e1eb3b0b5981ef1dd7e03ec4d466944d
+    SHA512 338d25fec26ab69d300141086de825edabc5e65c50b6d9cf0e2f8f1937a930e4ecf4460ba2789cef64a85ad4a63c9b5f2a482ee2498c542f73e5915bbff6170f
     HEAD_REF v1.x
 )
 

@@ -13,7 +13,9 @@ vcpkg_from_github(
   REF v${OPENEXR_VERSION}
   SHA512 ${OPENEXR_HASH}
   HEAD_REF master
-  PATCHES "fix_install_ilmimf.patch"
+  PATCHES
+    fix_clang_not_setting_modern_cplusplus.patch
+    fix_install_ilmimf.patch
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
@@ -32,7 +34,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # NOTE: Only use ".exe" extension on Windows executables.
 # Is there a cleaner way to do this?
-if(WIN32)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(EXECUTABLE_SUFFIX ".exe")
 else()
     set(EXECUTABLE_SUFFIX "")
@@ -60,13 +62,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(OPENEXR_PORT_DIR "openexr")
-else()
-  set(OPENEXR_PORT_DIR "OpenEXR")
-endif()
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR}/copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${OPENEXR_PORT_DIR})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

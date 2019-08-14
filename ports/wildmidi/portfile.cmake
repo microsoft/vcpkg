@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Mindwerks/wildmidi
-    REF wildmidi-0.4.1
-    SHA512 ac95b901d2eca88118d70ec5f8ddb4a52ed9ffbd90ae1c8837352d22e27da0d5f56e4e79615cbac9683303b3488a9fa45b60d77e28f698277f1e4c3fc9e3d165
+    REF wildmidi-0.4.3
+    SHA512 7e86e998ee97cdf57328e4cf5ef52a64926fd01999879c0eae5b6c823be4e6d116f7026230bd15d209e6616fbc7ba1c29ebd1f3be04735e341ce5c83298f956f
     HEAD_REF master
     PATCHES
         0001-add-install-target.patch
