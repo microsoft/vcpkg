@@ -75,6 +75,8 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(GLOB TXT_FILES ${CURRENT_PACKAGES_DIR}/debug/*.txt)
