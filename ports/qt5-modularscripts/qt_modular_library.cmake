@@ -76,6 +76,27 @@ function(qt_modular_build_library SOURCE_PATH)
 
     vcpkg_build_qmake(SKIP_MAKEFILES)
 
+    #Fix the installation location
+    if(WIN32)
+        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    else()
+        set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
+        set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
+    endif()
+
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
+    
+    file(GLOB_RECURSE MAKEFILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"/*Makefile* "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"/*Makefile*)
+
+    foreach(MAKEFILE ${MAKEFILES})
+        file(READ "${MAKEFILE}" _contents)
+        #Set the correct install directory to packages
+        string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
+        file(WRITE "${MAKEFILE}" "${_contents}")
+    endforeach()
+    
     #Install the module files
     vcpkg_build_qmake(TARGETS install SKIP_MAKEFILES BUILD_LOGNAME install)
     
@@ -98,7 +119,6 @@ function(qt_modular_build_library SOURCE_PATH)
 
     foreach(_buildname ${BUILDTYPES})
         set(CURRENT_BUILD_PACKAGE_DIR "${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}")
-    
         #Fix PRL files 
         file(GLOB_RECURSE PRL_FILES "${CURRENT_BUILD_PACKAGE_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib")
         file(TO_CMAKE_PATH "${CURRENT_BUILD_PACKAGE_DIR}/lib" CMAKE_LIB_PATH)
