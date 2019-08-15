@@ -74,13 +74,13 @@ function(configure_qt)
         set(_build_dir "${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         file(MAKE_DIRECTORY ${_build_dir})
         set(BUILD_OPTIONS ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
-                -prefix ${CURRENT_INSTALLED_DIR}${_path_suffix}
+                -prefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
                 -extprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
                 ${EXT_BIN_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
+                -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}/bin
+                -archdatadir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}
                 -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
                 -plugindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/plugins
                 -qmldir ${CURRENT_PACKAGES_DIR}${_path_suffix}/qml
@@ -96,7 +96,7 @@ function(configure_qt)
         
         if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR) #use qmake          
             vcpkg_execute_required_process(
-                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" -- ${BUILD_OPTIONS}
+                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "QMAKE_MSC_VER=1911" -- ${BUILD_OPTIONS}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )
