@@ -88,9 +88,11 @@ function(configure_qt)
                 -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/qml
                 -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/include
                 -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
+                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/bin
+                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib 
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/manual-link
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
                 -xplatform ${VCPKG_QT_TARGET_PLATFORM}
             )
         
