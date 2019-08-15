@@ -1,0 +1,13 @@
+diff --git a/physx/source/foundation/include/windows/PsWindowsInlineAoS.h b/physx/source/foundation/include/windows/PsWindowsInlineAoS.h
+index 881dffb..7111189 100644
+--- a/physx/source/foundation/include/windows/PsWindowsInlineAoS.h
++++ b/physx/source/foundation/include/windows/PsWindowsInlineAoS.h
+@@ -363,7 +363,7 @@
+ PX_FORCE_INLINE Vec3V V3LoadA(const PxF32* const f)
+ {
+ 	ASSERT_ISALIGNED16(f);
+-   return V4ClearW(_mm_load_ps(f));
++   return [ & ](){ return V4ClearW(_mm_load_ps(f)); }(); // MSVC 142 bug workaround
+ }
+ 
+ PX_FORCE_INLINE Vec3V V3LoadU(const PxF32* const i)

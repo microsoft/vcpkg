@@ -1,0 +1,39 @@
+diff --git a/extern/butteraugli/butteraugli.h b/extern/butteraugli/butteraugli.h
+index 31824b8..c116a73 100644
+--- a/extern/butteraugli/butteraugli.h
++++ b/extern/butteraugli/butteraugli.h
+@@ -134,7 +134,14 @@ bool ButteraugliAdaptiveQuantization(size_t xsize, size_t ysize,
+ // The conventional syntax uint8_t* const RESTRICT is more confusing - it is
+ // not immediately obvious that the pointee is non-const.
+ template <typename T>
++#ifdef _MSC_VER
++// Due to MSVC bug:
++// https://developercommunity.visualstudio.com/content/problem/32196/msvc-cant-compile-a-templated-using-without-instan.html
++// , we cannot use __restrict now. Loss some performance instead of can't use this code.
++using ConstRestrict = T const;
++#else
+ using ConstRestrict = T const BUTTERAUGLI_RESTRICT;
++#endif
+ 
+ // Functions that depend on the cache line size.
+ class CacheAligned {
+diff --git a/src/nvthread/Atomic.h b/src/nvthread/Atomic.h
+index 212b9cb..b8eaedb 100644
+--- a/src/nvthread/Atomic.h
++++ b/src/nvthread/Atomic.h
+@@ -183,7 +183,6 @@ namespace nv {
+ 
+ 
+ #elif NV_CC_CLANG && (NV_OS_IOS || NV_OS_DARWIN)
+-    NV_COMPILER_CHECK(sizeof(uint32) == sizeof(long));
+ 
+     //ACS: Use Apple's atomics instead? I don't know if these are better in any way; there are non-barrier versions too. There's no OSAtomicSwap32 tho'
+     /*
+@@ -254,7 +253,6 @@ namespace nv {
+ 
+ 
+ #elif NV_CC_CLANG && POSH_CPU_STRONGARM
+-    NV_COMPILER_CHECK(sizeof(uint32) == sizeof(long));
+     
+     inline uint32 atomicIncrement(uint32 * value)
+     {

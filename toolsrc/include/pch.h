@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/pragmas.h>
+
 #if defined(_WIN32)
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
@@ -27,12 +29,9 @@
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
-#if defined(_WIN32)
-#include <filesystem>
-#else
-#include <experimental/filesystem>
-#endif
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <cstring>
+#include <experimental/filesystem>
 #include <fstream>
 #include <functional>
 #include <iomanip>
@@ -46,7 +45,11 @@
 #include <set>
 #include <stdexcept>
 #include <string>
+#if defined(_WIN32)
 #include <sys/timeb.h>
+#else
+#include <sys/time.h>
+#endif
 #include <sys/types.h>
 #include <system_error>
 #include <thread>

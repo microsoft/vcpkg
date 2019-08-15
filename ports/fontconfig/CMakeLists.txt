@@ -1,20 +1,12 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
 project(fontconfig C)
 
-add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS)
-add_definitions(-FI"${FC_INCLUDE_DIR}/config.h")
-
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(LIB_SUFFIX d)
-endif()
+add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -DHAVE_CONFIG_H)
 
 # find dependencies
-find_path(ICONV_INCLUDE_DIR iconv.h)
-find_library(ICONV_LIBRARY NAMES iconv libiconv)
-find_path(FREETYPE_INCLUDE_DIR ft2build.h)
-find_library(FREETYPE_LIBRARY freetype${LIB_SUFFIX})
-find_path(EXPAT_INCLUDE_DIR expat.h)
-find_library(EXPAT_LIBRARY expat)
+find_package(unofficial-iconv CONFIG REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(EXPAT REQUIRED)
 
 add_library(fontconfig
     src/fcatomic.c
@@ -45,20 +37,25 @@ add_library(fontconfig
     src/fcxml.c
     src/ftglue.c)
 
-set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__declspec(dllexport)")
+if(WIN32)
+    set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__declspec(dllexport)")
+else()
+    set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__attribute__((visibility(\"default\")))")
+endif()
 
 target_include_directories(fontconfig PRIVATE .
-    ${FC_INCLUDE_DIR}
-    ${FREETYPE_INCLUDE_DIR}
-    ${EXPAT_INCLUDE_DIR}
-    ${ICONV_INCLUDE_DIR})
+    ${FC_INCLUDE_DIR}/alias
+    ${EXPAT_INCLUDE_DIR})
+if(WIN32)
+    target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/win32)
+else()
+    target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/unix)
+endif()
 
-target_link_libraries(fontconfig
-    ${FREETYPE_LIBRARY}
-    ${ICONV_LIBRARY}
-    ${EXPAT_LIBRARY})
+target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype EXPAT::EXPAT)
 
 install(TARGETS fontconfig
+    EXPORT fontconfig-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib)
@@ -80,3 +77,20 @@ if(NOT FC_SKIP_TOOLS)
     install(FILES fonts.conf DESTINATION tools/fontconfig/fonts)
     install(DIRECTORY conf.d DESTINATION tools/fontconfig/fonts FILES_MATCHING PATTERN "*.conf")
 endif()
+
+install(
+    EXPORT fontconfig-targets
+    NAMESPACE unofficial::fontconfig::
+    FILE unofficial-fontconfig-targets.cmake
+    DESTINATION share/unofficial-fontconfig
+)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-fontconfig-config.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-iconv CONFIG)
+find_dependency(Freetype)
+find_dependency(EXPAT)
+
+include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-fontconfig-targets.cmake)
+")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-fontconfig-config.cmake DESTINATION share/unofficial-fontconfig)

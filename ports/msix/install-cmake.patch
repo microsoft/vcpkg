@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8ee0443..8c0a868 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -266,3 +266,5 @@ message(STATUS "sample processed")
+ add_subdirectory(test)
+ message(STATUS "tests processed")
+ message(STATUS "DONE!")
++
++install(TARGETS msix)
+diff --git a/src/msix/CMakeLists.txt b/src/msix/CMakeLists.txt
+index 817040b..6b16b69 100644
+--- a/src/msix/CMakeLists.txt
++++ b/src/msix/CMakeLists.txt
+@@ -164,9 +164,9 @@ message(STATUS "PAL: Compression     = ${CompressionObject}")
+ include(msix_resources)
+ 
+ set(LIB_PUBLIC_HEADERS
+-    ../inc/AppxPackaging.hpp
+-    ../inc/MSIXWindows.hpp
+-    ../inc/MsixErrors.hpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/../inc/AppxPackaging.hpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/../inc/MSIXWindows.hpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/../inc/MsixErrors.hpp
+ )
+ 
+ # Bundle specific files

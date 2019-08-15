@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.66.0
-    SHA512 0fbeea0cb3303fe66e42b54d3db81e92d6b05a5dec90bd36e1365db738b33790e9bc6ff56a8ead0a2e2d578606702eb364d023bce0f1f42a454f60d0626e8737
+    REF boost-1.70.0
+    SHA512 5573dc445196383ddb622514b5ea645076e1b2b94165d885c7c8924fc5d469d5f1c030817b36d9e7be78b47785a69bbcdac2da8f88817f1cd33ff47ded33dc70
     HEAD_REF master
 )
 

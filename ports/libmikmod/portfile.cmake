@@ -11,13 +11,26 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libmikmod-3.3.11.1)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/mikmod/libmikmod/3.3.11.1/libmikmod-3.3.11.1.tar.gz"
     FILENAME "libmikmod-3.3.11.1.tar.gz"
     SHA512 f2439e2b691613847cd0787dd4e050116683ce7b05c215b8afecde5c6add819ea6c18e678e258c0a80786bef463f406072de15127f64368f694287a5e8e1a9de
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES 
+        fix-missing-dll.patch
+        name_conflict.patch
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(ENABLE_STATIC ON)
+else()
+    set(ENABLE_STATIC OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -35,6 +48,7 @@ vcpkg_configure_cmake(
         -DENABLE_STDOUT=ON
         -DENABLE_WAV=ON
         -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DENABLE_STATIC=${ENABLE_STATIC}
     OPTIONS_RELEASE -DENABLE_SIMD=ON
     OPTIONS_DEBUG -DENABLE_SIMD=OFF
 )

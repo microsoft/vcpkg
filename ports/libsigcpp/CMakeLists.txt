@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(libsigc++)
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(SIGCPP_API_VERSION 2.0)
 
 add_definitions(-DSIGC_BUILD)

@@ -1,19 +1,16 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
 include(vcpkg_common_functions)
-set(PHYSFS_VERSION 2.0.3)
+set(PHYSFS_VERSION 3.0.2)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/physfs-${PHYSFS_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://icculus.org/physfs/downloads/physfs-${PHYSFS_VERSION}.tar.bz2"
     FILENAME "physfs-${PHYSFS_VERSION}.tar.bz2"
-    SHA512 47eff0c81b8dc3bb526766b0a8ad2437d2951867880116d6e6e8f2ec1490e263541fb741867fed6517cc3fa8a9c5651b36e3e02a499f19cfdc5c7261c9707e80
+    SHA512 4024b6c3348e0b6fc1036aac330192112dfe17de3e3d14773be9f06e9a062df5a1006869f21162b4e0b584989f463788a35e64186b1913225c073fea62754472
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/export-symbols-in-shared-build-only.patch)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${PHYSFS_VERSION}
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PHYSFS_SHARED) 

@@ -1,11 +1,5 @@
-option(SUFFIX_D "Add d Suffix to lib" ${SUFFIX_D})
-if(NOT SUFFIX_D)
-    find_library(SPIRVTOOLSOPT spirv-tools-opt)
-    find_library(SPIRVTOOLS spirv-tools)
-ELSE()
-    find_library(SPIRVTOOLSOPT spirv-tools-opt)
-    find_library(SPIRVTOOLS spirv-tools)
-ENDIF()
+find_library(SPIRVTOOLSOPT SPIRV-Tools-opt)
+find_library(SPIRVTOOLS SPIRV-Tools)
 
 add_library(SPIRV-Tools-opt STATIC IMPORTED GLOBAL)
 set_property(TARGET SPIRV-Tools-opt PROPERTY IMPORTED_LOCATION "${SPIRVTOOLSOPT}")

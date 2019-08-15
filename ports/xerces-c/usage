@@ -1,0 +1,4 @@
+The package xerces-c is compatible with built-in CMake targets:
+
+    find_package(XercesC REQUIRED)
+    target_link_libraries(main PRIVATE XercesC::XercesC)

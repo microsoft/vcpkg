@@ -4,38 +4,31 @@ if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
 find_program(NMAKE nmake)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/pdcurses/pdcurses/3.4/pdcurs34.zip"
-    FILENAME "pdcurs34.zip"
-    SHA512 0b916bfe37517abb80df7313608cc4e1ed7659a41ce82763000dfdfa5b8311ffd439193c74fc84a591f343147212bf1caf89e7db71f1f7e4fa70f534834cb039
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO wmcbrine/PDCurses
+    REF 2467ab2b6c07163d0171b80ad6c252c29da28173
+    SHA512 4d729a4e0ffa1b5d1fd35ed73329d08886e1e565936a008cd7b45f8e5fbaabcb86c65377fd1e33acef6271f828cd4158e8a56ed15cd664b2a8c8e1d66cf8c00a
+    HEAD_REF master
 )
 
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/src)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
-endif()
+file(REMOVE_RECURSE
+    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
+)
 
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
+file(GLOB SOURCES ${SOURCE_PATH}/*)
 
-file(READ ${SOURCE_PATH}/win32/vcwin32.mak PDC_MAK_ORIG)
-string(REPLACE " -pdb:none" "" PDC_MAK_ORIG ${PDC_MAK_ORIG})
+file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    string(REPLACE "/MACHINE:IX86 " "/MACHINE:X64 " PDC_MAK_X64 ${PDC_MAK_ORIG})
-    file(WRITE ${SOURCE_PATH}/win32/vcpkg_x64.mak ${PDC_MAK_X64})
-    set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg_x64.mak WIDE=Y UTF8=Y)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    string(REPLACE "/MACHINE:IX86 " "/MACHINE:X86 " PDC_MAK_X86 ${PDC_MAK_ORIG})
-    file(WRITE ${SOURCE_PATH}/win32/vcpkg_x86.mak ${PDC_MAK_X86})
-    set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg_x86.mak WIDE=Y UTF8=Y)
-else()
-    message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
-set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
-set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
+set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)                                                          
+
+
+set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)                                                                                                   
+set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)   
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
@@ -80,7 +73,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 file(
-    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h ${SOURCE_PATH}/term.h
+    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h 
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)

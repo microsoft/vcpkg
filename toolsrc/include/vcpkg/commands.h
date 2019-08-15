@@ -7,6 +7,8 @@
 #include <vcpkg/vcpkgpaths.h>
 
 #include <array>
+#include <map>
+#include <vector>
 
 namespace vcpkg::Commands
 {
@@ -53,7 +55,8 @@ namespace vcpkg::Commands
 
     namespace DependInfo
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
     namespace Search
@@ -117,10 +120,20 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args);
     }
 
+    namespace X_VSInstances
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Hash
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-        std::string get_file_hash(fs::path const& cmake_exe_path, fs::path const& path, std::string const& hash_type);
+    }
+
+    namespace Fetch
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     template<class T>

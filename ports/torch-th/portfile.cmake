@@ -1,17 +1,12 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  message(FATAL_ERROR "scintilla only supports dynamic linkage")
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-  message(FATAL_ERROR "scintilla only supports dynamic crt")
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO torch/torch7
-    REF 89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8
-    SHA512 0b28762768129f5e59e24d505e271418bb4513db0e99acb293f01095949700711116463b299fe42d65ca07c1f0a9f6d0d1d72e21275a2825a4a9fb0197525e72
+    REF dde9e56fb61eee040d7f3dba2331c6d6c095aee8
+    SHA512 ef813e6f583f26019da362be1e5d9886ecf3306a2b41e5f7a73d432872eacd2745e0cf26bfcc691452f87611e02e302c54f07b2f3a3288744535e57d154a73db
     HEAD_REF master
 )
 

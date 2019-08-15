@@ -3,12 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/rs-core-lib
-    REF 5c53913b93ac4109795d5098dabcd241162cd401
-    SHA512 ee9ca3071c2bc4c5a5fa44fbdbc1ecca36de96a1bde30ea272772434387bd96e72206a8b91ef2938cab4b1b00363d2838a1715bd524ec6ba7d4a36d328b4ad44
+    REF 4828e0dc8b7e7ed76935865cfe99181da0da211b
+    SHA512 97298d94c1cc4cd4cb580bde6c1413a2f429544dc80cae58bc436aad25e385d9ced611a2512a45f1e3d10fd613f26958fc5d3a03ea9bfaefd5170a4b2d1ac124
     HEAD_REF master
 )
 
 file(INSTALL ${SOURCE_PATH}/rs-core DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hpp")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/rs-core-lib RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rs-core-lib RENAME copyright)

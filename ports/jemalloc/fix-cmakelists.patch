@@ -35,7 +35,7 @@ index 06e83ef..229e17a 100644
             ${PROJECT_BINARY_DIR}/Debug
             CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY_RELEASE
 @@ -754,6 +752,9 @@ if(WIN32)
-            COMPILE_PDB_NAME
+            COMPILE_PDB_NAME 
             ${LIBJEMALLOCLIB}
    )
 +  if(NOT BUILD_SHARED_LIBS)

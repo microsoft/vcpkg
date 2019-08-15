@@ -1,0 +1,12 @@
+diff --git a/drivers/wxwidgets_dev.cpp b/drivers/wxwidgets_dev.cpp
+index f025bd8..f5881b1 100644
+--- a/drivers/wxwidgets_dev.cpp
++++ b/drivers/wxwidgets_dev.cpp
+@@ -31,6 +31,7 @@
+ 
+ // Headers needed for Rand
+ #ifdef WIN32
++#define _WINSOCKAPI_
+ // This include must occur before any other include of stdlib.h due to
+ // the #define _CRT_RAND_S
+ #define _CRT_RAND_S

@@ -11,10 +11,17 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/option-build-test.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_TEST=OFF)
+    OPTIONS
+        -DBUILD_TEST=OFF
+)
 
 vcpkg_install_cmake()
 
@@ -22,15 +29,19 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/shapelib)
-file(REMOVE ${EXES})
+if(EXES)
+    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/shapelib)
+    file(REMOVE ${EXES})
+endif()
 
 file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-file(REMOVE ${DEBUG_EXES})
+if(DEBUG_EXES)
+    file(REMOVE ${DEBUG_EXES})
+endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/shapelib)

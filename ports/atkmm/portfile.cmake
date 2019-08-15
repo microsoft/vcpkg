@@ -1,10 +1,7 @@
-# ATK uses DllMain, so atkmm also
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/atkmm-2.24.2)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/atkmm/2.24/atkmm-2.24.2.tar.xz"
@@ -28,8 +25,7 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/MSVC_Net2013/atkmm.sln
     TARGET atkmm
     PLATFORM ${VS_PLATFORM}
-    # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
-    OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets
+    USE_VCPKG_INTEGRATION
 )
 
 # Handle headers

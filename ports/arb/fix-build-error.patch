@@ -1,0 +1,24 @@
+diff --git a/acb_dirichlet/stieltjes.c b/acb_dirichlet/stieltjes.c
+index ad6937b..4ca9690 100644
+--- a/acb_dirichlet/stieltjes.c
++++ b/acb_dirichlet/stieltjes.c
+@@ -340,16 +340,16 @@ stieltjes_mag(double n)
+     return t;
+ }
+ 
+-static double _hypot(double x, double y) { return sqrt(x * x + y * y); }
++static double __hypot(double x, double y) { return sqrt(x * x + y * y); }
+ 
+ /* log2 magnitude of integrand at z = x+yi; alpha = a+bi */
+ static double
+ integrand_mag(double n, double x, double y, double a, double b)
+ {
+     double t, u;
+-    t = log(_hypot(a - y, b + x));
++    t = log(__hypot(a - y, b + x));
+     u = atan2(b + x, a - y);
+-    t = log(_hypot(t,u)) * (n+1) - 2.0 * 3.1415926535897932 * x;
++    t = log(__hypot(t,u)) * (n+1) - 2.0 * 3.1415926535897932 * x;
+     return t * 1.44269504088896341;
+ }
+ 

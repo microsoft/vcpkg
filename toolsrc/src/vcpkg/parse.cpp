@@ -2,13 +2,11 @@
 
 #include <vcpkg/parse.h>
 
-#include <vcpkg/base/checks.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg::Parse
 {
-    static Optional<std::string> remove_field(std::unordered_map<std::string, std::string>* fields,
-                                              const std::string& fieldname)
+    static Optional<std::string> remove_field(RawParagraph* fields, const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
         if (it == fields->end())

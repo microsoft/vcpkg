@@ -1,21 +1,14 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rougier/freetype-gl
-    REF bcd2b5fb5d19f1ea5d384d0edbdda2f6d0590fa0
-    SHA512 10bd8e874598e796c3123c8bc277ecb6f5d95c924c6d6bab1bec4700864c83e2f71bf9ac45c15eadba9e150660cbe9debe3509428b10264eb6a8ba64a80f3651
+    REF a91a3dda326ceaf66b7279bf64ba07014d3f81b8
+    SHA512 8e04573dfb400e14e2c1d3a2cd851a66f8218ccfdaa4f701ed9369d7f040d7028582e72af9b236af42d9d3c6c128014670e8ae0261c6f4770affd1aea1454b1e
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Use-external-Glew-and-Freetype.patch"
+    PATCHES 0001-Use-external-Glew-and-Freetype.patch
 )
 
 # make sure that no "internal" libraries are used by removing them
