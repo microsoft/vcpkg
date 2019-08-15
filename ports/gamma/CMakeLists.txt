@@ -8,8 +8,6 @@ find_library(LIBSNDFILE_LIB NAMES libsndfile-1 libsndfile)
 find_path(PORTAUDIO_H portaudio.h)
 find_library(PORTAUDIO_LIB NAMES portaudio)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 set(SOURCEFILES
         src/arr.cpp
         src/AudioIO.cpp

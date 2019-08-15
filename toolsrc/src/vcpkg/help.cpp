@@ -111,14 +111,20 @@ namespace vcpkg::Help
                        "  vcpkg contact                   Display contact information to send feedback\n"
                        "\n"
                        "Options:\n"
-                       "  --triplet <t>                   Specify the target architecture triplet.\n"
+                       "  --triplet <t>                   Specify the target architecture triplet\n"
                        "                                  (default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) //
                        ", see 'vcpkg help triplet')\n"
+                       "\n"
+                       "  --overlay-ports=<path>          Specify directories to be used when searching for ports\n"
+                       "\n"
+                       "  --overlay-triplets=<path>       Specify directories containing triplets files\n"
                        "\n"
                        "  --vcpkg-root <path>             Specify the vcpkg root "
                        "directory\n"
                        "                                  (default: " ENVVAR(VCPKG_ROOT) //
                        ")\n"
+                       "\n"
+                       "  --scripts-root=<path>             Specify the scripts root directory\n"
                        "\n"
                        "  @response_file                  Specify a "
                        "response file to provide additional parameters\n"
@@ -137,7 +143,7 @@ namespace vcpkg::Help
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         if (args.command_arguments.empty())
         {

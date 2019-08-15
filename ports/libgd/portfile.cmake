@@ -19,34 +19,34 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.c
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPNG.cmake)
 
 set(ENABLE_PNG OFF)
-if("png" IN_LIST FEATURES) 
-    set(ENABLE_PNG ON) 
+if("png" IN_LIST FEATURES)
+    set(ENABLE_PNG ON)
 endif()
 
 set(ENABLE_JPEG OFF)
-if("jpeg" IN_LIST FEATURES) 
-    set(ENABLE_JPEG ON) 
-endif() 
+if("jpeg" IN_LIST FEATURES)
+    set(ENABLE_JPEG ON)
+endif()
 
 set(ENABLE_TIFF OFF)
-if("tiff" IN_LIST FEATURES) 
-    set(ENABLE_TIFF ON) 
+if("tiff" IN_LIST FEATURES)
+    set(ENABLE_TIFF ON)
 endif()
 
 set(ENABLE_FREETYPE OFF)
-if("freetype" IN_LIST FEATURES) 
-    set(ENABLE_FREETYPE ON) 
+if("freetype" IN_LIST FEATURES)
+    set(ENABLE_FREETYPE ON)
 endif()
 
 set(ENABLE_WEBP OFF)
-if("webp" IN_LIST FEATURES) 
-    set(ENABLE_WEBP ON) 
+if("webp" IN_LIST FEATURES)
+    set(ENABLE_WEBP ON)
 endif()
 
 set(ENABLE_FONTCONFIG OFF)
-if("fontconfig" IN_LIST FEATURES) 
-    set(ENABLE_FONTCONFIG ON) 
-endif() 
+if("fontconfig" IN_LIST FEATURES)
+    set(ENABLE_FONTCONFIG ON)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(LIBGD_SHARED_LIBS ON)
@@ -65,11 +65,9 @@ vcpkg_configure_cmake(
             -DENABLE_FREETYPE=${ENABLE_FREETYPE}
             -DENABLE_WEBP=${ENABLE_WEBP}
             -DENABLE_FONTCONFIG=${ENABLE_FONTCONFIG}
-            -DBUILD_SHARED_LIBS=${LIBGD_SHARED_LIBS}
             -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 

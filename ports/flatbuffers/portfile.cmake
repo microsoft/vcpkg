@@ -1,18 +1,17 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Building DLLs not supported. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v1.10.0
-    SHA512 b8382c8e9a45d6aca83270e93704b9ef2938e4ef9bb5165edbd8f286329e86353037ad6e54a99fd3d70b0c893d06cfd8766e00f05497e69be4b9e6c0506133d2
+    REF v1.11.0
+    SHA512 cbb2e1e6885255cc950e2fa8248b56a8bc2c6e52f6fc7ed9066e6ae5a1d53f1263594b83f4b944a672cf9d0e1e800e51ce7fa423eff45abf5056269879c286fe
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/ignore_use_of_cmake_toolchain_file.patch
-        ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
+        ignore_use_of_cmake_toolchain_file.patch
+        no-werror.patch
+		fix-uwp-build.patch
 )
 
 set(OPTIONS)
@@ -30,7 +29,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flatbuffers")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/flatbuffers)
 
 file(GLOB flatc_path ${CURRENT_PACKAGES_DIR}/bin/flatc*)
 if(flatc_path)
@@ -50,4 +49,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bi
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/flatbuffers)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/flatbuffers/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/flatbuffers/copyright)
-

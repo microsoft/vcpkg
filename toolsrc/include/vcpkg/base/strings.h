@@ -5,6 +5,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
+#include <vcpkg/pragmas.h>
 
 #include <vector>
 
@@ -43,7 +44,7 @@ namespace vcpkg::Strings::details
         t.to_string(into);
     }
 
-    template<class T, class=void, class = decltype(to_string(std::declval<std::string&>(), std::declval<const T&>()))>
+    template<class T, class = void, class = decltype(to_string(std::declval<std::string&>(), std::declval<const T&>()))>
     void append_internal(std::string& into, const T& t)
     {
         to_string(into, t);
@@ -66,7 +67,8 @@ namespace vcpkg::Strings
     }
 
     template<class... Args>
-    [[nodiscard]] std::string concat(const Args&... args) {
+    [[nodiscard]] std::string concat(const Args&... args)
+    {
         std::string ret;
         append(ret, args...);
         return ret;
@@ -113,8 +115,7 @@ namespace vcpkg::Strings
     bool starts_with(StringView s, StringView pattern);
 
     template<class InputIterator, class Transformer>
-    std::string join(const char* delimiter, InputIterator begin, InputIterator end,
-                     Transformer transformer)
+    std::string join(const char* delimiter, InputIterator begin, InputIterator end, Transformer transformer)
     {
         if (begin == end)
         {
@@ -145,8 +146,7 @@ namespace vcpkg::Strings
     std::string join(const char* delimiter, InputIterator begin, InputIterator end)
     {
         using Element = decltype(*begin);
-        return join(delimiter, begin, end,
-                    [](const Element& x) -> const Element& { return x; });
+        return join(delimiter, begin, end, [](const Element& x) -> const Element& { return x; });
     }
 
     template<class Container>
@@ -164,7 +164,7 @@ namespace vcpkg::Strings
 
     std::vector<std::string> split(const std::string& s, const std::string& delimiter);
 
-    std::vector<std::string> split(const std::string& s, const std::string& delimiter, int max_count);
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter, size_t max_count);
 
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
 
@@ -185,4 +185,7 @@ namespace vcpkg::Strings
     const char* search(StringView haystack, StringView needle);
 
     bool contains(StringView haystack, StringView needle);
+
+    // base 32 encoding, following IETC RFC 4648
+    std::string b32_encode(std::uint64_t x) noexcept;
 }

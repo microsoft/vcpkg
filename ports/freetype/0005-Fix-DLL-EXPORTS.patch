@@ -1,13 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dd8a878..75f9ab7 100644
+index ede5daf..46c1e55 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -141,7 +141,7 @@ set(VERSION_PATCH "1")
- #     Increment REVISION.
- set(LIBRARY_VERSION "6.16.0")
- set(LIBRARY_SOVERSION "6")
--
-+ADD_DEFINITIONS(-DDLL_EXPORT)
- # These options mean "require x and complain if not found". They'll get
+@@ -151,6 +151,9 @@ set(LIBRARY_SOVERSION "6")
  # optionally found anyway. Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to disable
  # searching for a packge entirely (x is the CMake package name, so "BZip2"
+ # instead of "BZIP2").
++if (ENABLE_DLL_EXPORT)
++  ADD_DEFINITIONS(-DDLL_EXPORT)
++endif()
+ option(FT_WITH_ZLIB "Use system zlib instead of internal library." OFF)
+ option(FT_WITH_BZIP2 "Support bzip2 compressed fonts." OFF)
+ option(FT_WITH_PNG "Support PNG compressed OpenType embedded bitmaps." OFF)

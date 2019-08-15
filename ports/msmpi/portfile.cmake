@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    message(FATAL_ERROR "This port is only for building msmpi on Windows Desktop")
+endif()
+
 set(MSMPI_VERSION "10.0.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
@@ -95,40 +99,28 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/include
 )
 
-# Install release libraries
-file(INSTALL
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
-)
-if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
-    file(INSTALL
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/lib
-    )
-endif()
-
-# Install debug libraries
-# NOTE: since the binary distribution does not include any debug libraries we simply install the release libraries
+# NOTE: since the binary distribution does not include any debug libraries we always install the release libraries
 SET(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
+
+file(GLOB STATIC_LIBS
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib
+)
+
 file(INSTALL
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
-if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
-    file(INSTALL
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
+file(INSTALL
+        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+)
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    file(INSTALL ${STATIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${STATIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 endif()
 
 # Handle copyright

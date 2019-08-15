@@ -1,9 +1,8 @@
 
 include(vcpkg_common_functions)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      message(WARNING "Warning: Dynamic building not supported. Building static.")
-      set(VCPKG_LIBRARY_LINKAGE static)
-  endif()
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cgicc-3.2.19)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnu.org/gnu/cgicc/cgicc-3.2.19.tar.gz"
@@ -16,6 +15,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  PREFER_NINJA
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON -DDISABLE_INSTALL_TOOLS=ON
 )
 

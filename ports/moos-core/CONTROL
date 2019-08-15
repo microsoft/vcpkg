@@ -1,4 +1,4 @@
 Source: moos-core
-Version: 10.4.0
-Description: A very light weight, easy to use middleware. See the MOOS homepage at https://sites.google.com/site/moossoftware/ for more information and documentation.
-Build-Depends:
+Version: 10.4.0-3
+Description: A very light weight, easy to use middleware.
+Homepage: https://sites.google.com/site/moossoftware/

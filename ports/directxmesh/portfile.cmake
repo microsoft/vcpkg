@@ -1,19 +1,16 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
+    message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF feb2019
-    SHA512 341870f6a66626ec78ac283434e568fd664d3331468ac06554d6403c9b1a34a737895ca3bc8c073a01b983db31cc1e398ef4828a0e794a7382cba04a6cf28f05
+    REF jun2019
+    SHA512 6d42cd4d3e34e7f3bd5cee1a9ad90c9f89eafa55951a0a8d776034a05caa06b0fd17629547d14c8f2b4d0c5fafdbd24ae05c2a6582b5d069093d6b4dadac09a0
     HEAD_REF master
 )
 
@@ -23,8 +20,24 @@ ELSE()
     SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
 
+if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+    set(VS_VERSION "2015")
+elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    set(VS_VERSION "2017")
+elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    set(VS_VERSION "2019")
+else()
+    message(FATAL_ERROR "Unsupported platform toolset.")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(SLN_NAME "Windows10_${VS_VERSION}")
+else()
+    set(SLN_NAME "Desktop_${VS_VERSION}")
+endif()
+
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_Desktop_2017.sln
+    PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_${SLN_NAME}.sln
     PLATFORM ${BUILD_ARCH}
 )
 
@@ -33,17 +46,21 @@ file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/DirectXMesh.inl
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
+
 file(INSTALL
-    ${SOURCE_PATH}/DirectXMesh/Bin/Desktop_2017/${BUILD_ARCH}/Debug/DirectXMesh.lib
+    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
-    ${SOURCE_PATH}/DirectXMesh/Bin/Desktop_2017/${BUILD_ARCH}/Release/DirectXMesh.lib
+    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools)
-file(INSTALL
-    ${SOURCE_PATH}/Meshconvert/Bin/Desktop_2017/${BUILD_ARCH}/Release/Meshconvert.exe
-    DESTINATION ${TOOL_PATH})
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxmesh)
+    file(MAKE_DIRECTORY ${TOOL_PATH})
+    file(INSTALL
+        ${SOURCE_PATH}/Meshconvert/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Meshconvert.exe
+        DESTINATION ${TOOL_PATH})
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxmesh)

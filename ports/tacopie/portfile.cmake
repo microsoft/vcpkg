@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Cylix/tacopie
@@ -28,7 +30,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DMSVC_RUNTIME_LIBRARY_CONFIG=${MSVC_RUNTIME_LIBRARY_CONFIG}
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE
 )
 
 vcpkg_install_cmake()

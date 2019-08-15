@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-    message("CAF only supports static library linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF 2cc4377715afc3d3c35848f9d59b9e6876afd875
-    SHA512 7e7962bf5a30122bde8be63f6de0058f865bd890e2d10f4d90f4885b7953467fb6532f69c1a77a35802de7c531f6aac192a2993b53a8dc0b05f503c3f4083a31
+    REF 0.16.3
+    SHA512 f7e567264ea1686a431eacbf2a62f49c0f4467df073ec983ae622d9417c28124eb456eb40d6a70dbe062ad58333944924f04f7e3fee5a7b76917890d98bedce1
     HEAD_REF master
 	PATCHES
 		openssl-version-override.patch

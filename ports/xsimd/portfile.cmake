@@ -5,25 +5,23 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xsimd
-    REF 7.1.3
-    SHA512 9f0e2babee9a3a80e16440466277bd635a26197f80cdf806312f7e1cc616db59062887566d50b4cdebe3c3ba4d60155b477684177607428aee53e1d5a95de926
+    REF 7.2.3
+    SHA512 fb34eeb585f6820499734f10f03a4efd0d9a9b4be56f9bee21f3564eb92be56e7abe7682e476fafaff4733939f33f91cb4ab9209140b19f7b740538853433532
     HEAD_REF master
 )
 
-if("xcomplex" IN_LIST FEATURES)
-    set(ENABLE_XTL_COMPLEX ON)
-else()
-    set(ENABLE_XTL_COMPLEX OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    xcomplex ENABLE_XTL_COMPLEX
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DENABLE_FALLBACK=OFF
-        -DENABLE_XTL_COMPLEX=${ENABLE_XTL_COMPLEX}
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_GTEST=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
