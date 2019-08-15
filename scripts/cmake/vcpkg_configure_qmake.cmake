@@ -6,15 +6,17 @@
 #  ::
 #  vcpkg_configure_qmake(SOURCE_PATH <pro_file_path>
 #                        [OPTIONS arg1 [arg2 ...]]
+#                        [OPTIONS_RELEASE arg1 [arg2 ...]]
+#                        [OPTIONS_DEBUG arg1 [arg2 ...]]
 #                        )
 #
 #  ``SOURCE_PATH``
 #    The path to the *.pro qmake project file.
-#  ``OPTIONS``
+#  ``OPTIONS[_RELEASE|_DEBUG]``
 #    The options passed to qmake.
 
 function(vcpkg_configure_qmake)
-    cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS" ${ARGN})
+    cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
      
     # Find qmake executable
 
@@ -32,7 +34,7 @@ function(vcpkg_configure_qmake)
         list(APPEND _csc_OPTIONS "DEFINES+=QT_STATIC_BUILD")
     else()
         list(APPEND _csc_OPTIONS "CONFIG+=shared")
-        list(APPEND _csc_OPTIONS "CONFIG+=separate_debug_info")
+        list(APPEND _csc_OPTIONS_DEBUG "CONFIG+=separate_debug_info")
     endif()
     
     if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_CRT_LINKAGE} STREQUAL "static")
@@ -48,7 +50,7 @@ function(vcpkg_configure_qmake)
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release ${_csc_OPTIONS} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
+            COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME config-${TARGET_TRIPLET}-rel
         )
@@ -61,7 +63,7 @@ function(vcpkg_configure_qmake)
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug ${_csc_OPTIONS} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf"
+            COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf"
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME config-${TARGET_TRIPLET}-dbg
         )
