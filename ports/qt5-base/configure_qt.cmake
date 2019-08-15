@@ -77,15 +77,15 @@ function(configure_qt)
                 -prefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
                 -extprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
                 ${EXT_BIN_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}
-                -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix}
-                -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
-                -plugindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/plugins
-                -qmldir ${CURRENT_PACKAGES_DIR}${_path_suffix}/qml
-                -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/include
-                -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
+                -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
+                -archdatadir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
+                -plugindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/plugins
+                -qmldir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/qml
+                -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/include
+                -libexecdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/bin
                 -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include

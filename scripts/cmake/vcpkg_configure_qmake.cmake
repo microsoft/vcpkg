@@ -19,7 +19,7 @@ function(vcpkg_configure_qmake)
     # Find qmake executable
 
     set(_triplet_hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin)
-    find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/tools/qt5/host/bin ${_triplet_hostbindir})
+    find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin ${_triplet_hostbindir})
 
 
     if(NOT QMAKE_COMMAND)
