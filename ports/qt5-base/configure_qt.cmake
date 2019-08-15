@@ -1,5 +1,5 @@
 function(configure_qt)
-    cmake_parse_arguments(_csc "" "SOURCE_PATH;TARGET_PLATFORM;HOST_PLATFORM" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+    cmake_parse_arguments(_csc "" "SOURCE_PATH;TARGET_PLATFORM;HOST_PLATFORM;HOST_TOOLS_ROOT" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
     if(NOT _csc_TARGET_PLATFORM)
         message(FATAL_ERROR "configure_qt requires a TARGET_PLATFORM argument.")
@@ -9,12 +9,14 @@ function(configure_qt)
     #    list(APPEND _csc_OPTIONS -platform ${VCPKG_QT_HOST_PLATFORM})
     #endif()
     
-    if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR)
+    if(DEFINED _csc_HOST_TOOLS_ROOT)
         ## vcpkg internal file struture assumed here!
-        message(STATUS "Building Qt with prepared host tools from ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}!")
-        vcpkg_add_to_path("${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin")
-        set(EXT_BIN_DIR -external-hostbindir ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/tools/qt5/bin) # we only use release binaries for building
-        set(INVOKE "${QMAKE_PATH}" )
+        message(STATUS "Building Qt with prepared host tools from ${_csc_HOST_TOOLS_ROOT}!")
+        vcpkg_add_to_path("${_csc_HOST_TOOLS_ROOT}/bin")
+        vcpkg_add_to_path("${_csc_HOST_TOOLS_ROOT}")
+        set(EXT_BIN_DIR -external-hostbindir ${_csc_HOST_TOOLS_ROOT}/bin) # we only use release binaries for building
+        find_program(QMAKE_COMMAND NAMES qmake PATHS ${_csc_HOST_TOOLS_ROOT}/bin NO_DEFAULT_PATH)
+        set(INVOKE "${QMAKE_COMMAND}" )
     else()
         if(CMAKE_HOST_WIN32)
             set(CONFIGURE_BAT "configure.bat")
@@ -49,10 +51,6 @@ function(configure_qt)
     list(APPEND _csc_OPTIONS_RELEASE -force-debug-info)
     list(APPEND _csc_OPTIONS_RELEASE -ltcg)
     
-
-    
-
-    
     unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(_buildname "DEBUG")
@@ -76,16 +74,16 @@ function(configure_qt)
         set(_build_dir "${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         file(MAKE_DIRECTORY ${_build_dir})
         set(BUILD_OPTIONS ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
-                -prefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
+                -prefix ${CURRENT_INSTALLED_DIR}${_path_suffix}
                 -extprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
                 ${EXT_BIN_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5${_path_suffix}/host
-                -hostlibdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5${_path_suffix}/host/bin
-                -hostbindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5${_path_suffix}/host/lib
-                -archdatadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5${_path_suffix}
+                -hostprefix ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host
+                -hostlibdir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/lib
+                -hostbindir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}/host/bin
+                -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5${_path_suffix}
                 -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix}
-                -plugindir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/plugins
-                -qmldir ${CURRENT_PACKAGES_DIR}/${_path_suffix}/qml
+                -plugindir ${CURRENT_PACKAGES_DIR}${_path_suffix}/plugins
+                -qmldir ${CURRENT_PACKAGES_DIR}${_path_suffix}/qml
                 -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/include
                 -libexecdir ${CURRENT_PACKAGES_DIR}${_path_suffix}/tools/qt5
                 -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/bin
@@ -115,11 +113,14 @@ function(configure_qt)
         
         # Copy configuration dependent qt.conf
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR_PATH)
+        file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}" CMAKE_CURRENT_INSTALLED_DIR_PATH)
         file(TO_CMAKE_PATH "${VCPKG_QT_HOST_TOOLS_ROOT_DIR}" CMAKE_VCPKG_QT_HOST_ROOT_PATH)
         file(READ "${CURRENT_BUILDTREES_DIR}/${_build_triplet}/bin/qt.conf" _contents)
         string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
+        string(REPLACE "${CMAKE_CURRENT_INSTALLED_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
         #string(REPLACE "HostPrefix=\${CURRENT_PACKAGES_DIR}" "HostPrefix=\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
         string(REPLACE "[EffectivePaths]\nPrefix=..\n" "" _contents ${_contents})
+        string(REPLACE "[EffectiveSourcePaths]\nPrefix=${_csc_SOURCE_PATH}\n" "" _contents ${_contents})
         string(REPLACE "Sysroot=\n" "" _contents ${_contents})
         string(REPLACE "SysrootifyPrefix=false\n" "" _contents ${_contents})
         file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     
