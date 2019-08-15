@@ -73,16 +73,23 @@ set(CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
-    -no-fontconfig
+    #-no-fontconfig
     -nomake examples
     -nomake tests
+    #-simulator_and_device
+    #-ltcg
+    #-combined-angle-lib
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_UWP)
+        list(APPEND CORE_OPTIONS -appstore-compliant)
+    endif()
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-        set(opengl_opt -opengl dynamic)
+        list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
     else()
-        set(opengl_opt -opengl es2)
+        list(APPEND CORE_OPTIONS -opengl es2) # dynamic will generate angle dll and the angle port has been explicitly deleted. 
+                                              # es2 is the Windows automatic default. desktop is the unix default.
     endif()
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
@@ -90,7 +97,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         OPTIONS
             ${CORE_OPTIONS}
             -mp
-            ${opengl_opt} # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
