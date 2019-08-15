@@ -6,7 +6,7 @@ index 3e44906..ae8fe6e 100644
  
  # TODO: Currently only bundled is supported, in future this should also be possible
  # with an unbundled version of libpng
-+find_package(png REQUIRED)
++find_package(PNG REQUIRED)
 +if (0)
  POCO_SOURCES( SRCS libpng
      src/png.c
