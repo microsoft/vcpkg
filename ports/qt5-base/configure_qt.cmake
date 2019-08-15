@@ -91,7 +91,7 @@ function(configure_qt)
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
-                -xplatform ${VCPKG_QT_TARGET_PLATFORM}
+                -xplatform ${_csc_TARGET_PLATFORM}
             )
         
         if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR) #use qmake          
