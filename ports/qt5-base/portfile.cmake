@@ -77,13 +77,18 @@ set(CORE_OPTIONS
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        set(opengl_opt -opengl dynamic)
+    else()
+        set(opengl_opt -opengl es2)
+    endif()
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
         ${QT_PLATFORM_CONFIGURE_OPTIONS}
         OPTIONS
             ${CORE_OPTIONS}
             -mp
-            -opengl dynamic # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+            ${opengl_opt} # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
         OPTIONS_RELEASE
             LIBJPEG_LIBS="-ljpeg"
             ZLIB_LIBS="-lzlib"
