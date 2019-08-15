@@ -167,7 +167,7 @@ function(qt_modular_build_library SOURCE_PATH)
             file(REMOVE_RECURSE ${CURRENT_BUILD_PACKAGE_DIR}/bin)
         endif()
         
-        vcpkg_copy_tool_dependencies(${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5/bin)
+        #vcpkg_copy_tool_dependencies(${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5/bin)
         vcpkg_copy_tool_dependencies(${CURRENT_BUILD_PACKAGE_DIR}/tools/${PORT})
     endforeach()
 endfunction()
