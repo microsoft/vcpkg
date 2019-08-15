@@ -35,7 +35,7 @@ function(configure_qt)
     if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
         list(APPEND _csc_OPTIONS -static)
     else()
-        list(APPEND _csc_OPTIONS -separate-debug-info)
+        list(APPEND _csc_OPTIONS_DEBUG -separate-debug-info)
     endif()
    
     if(VCPKG_TARGET_IS_WINDOWS AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
