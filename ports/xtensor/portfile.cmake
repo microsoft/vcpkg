@@ -10,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     xsimd XTENSOR_USE_XSIMD
     tbb XTENSOR_USE_TBB
 )

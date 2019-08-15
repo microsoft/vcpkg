@@ -133,6 +133,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(
         vcpkg_root_dir, install_root_dir, vcpkg_scripts_root_dir, default_vs_path, args.overlay_triplets.get());
+
     Checks::check_exit(VCPKG_LINE_INFO,
                        !expected_paths.error(),
                        "Error: Invalid vcpkg root directory %s: %s",
@@ -145,7 +146,11 @@ static void inner(const VcpkgCmdArguments& args)
 #else
     const int exit_code = chdir(paths.root.c_str());
 #endif
-    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working directory to the vcpkg root directory failed. Did you incorrectly define the VCPKG_ROOT environment variable, or did you mistakenly create a file named .vcpkg-root somewhere?");
+    Checks::check_exit(
+        VCPKG_LINE_INFO,
+        exit_code == 0,
+        "Changing the working directory to the vcpkg root directory failed. Did you incorrectly define the VCPKG_ROOT "
+        "environment variable, or did you mistakenly create a file named .vcpkg-root somewhere?");
 
     if (args.command == "install" || args.command == "remove" || args.command == "export" || args.command == "update")
     {
