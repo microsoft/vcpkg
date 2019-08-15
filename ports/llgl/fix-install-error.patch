@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f0441c5..c182923 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -613,6 +613,12 @@ if(LLGL_BUILD_RENDERER_OPENGL)
+         target_link_libraries(LLGL_OpenGL LLGL ${OPENGL_LIBRARIES})
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_OPENGL)
++        
++        install(TARGETS LLGL_OpenGL
++                RUNTIME DESTINATION bin
++                LIBRARY DESTINATION lib
++                ARCHIVE DESTINATION lib
++        )
+     else()
+         message("Missing OpenGL -> LLGL_OpenGL renderer will be excluded from project")
+     endif()
+@@ -635,6 +641,12 @@ if(NOT APPLE AND LLGL_BUILD_RENDERER_VULKAN)
+         target_link_libraries(LLGL_Vulkan LLGL ${VULKAN_LIBRARY})
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_VULKAN)
++        
++        install(TARGETS LLGL_Vulkan
++                RUNTIME DESTINATION bin
++                LIBRARY DESTINATION lib
++                ARCHIVE DESTINATION lib
++        )
+     else()
+         message("Missing Vulkan -> LLGL_Vulkan renderer will be excluded from project")
+     endif()
+@@ -661,6 +673,12 @@ if(APPLE AND LLGL_BUILD_RENDERER_METAL)
+         target_link_libraries(LLGL_Metal LLGL ${METAL_LIBRARY} ${METALKIT_LIBRARY})
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_METAL)
++        
++        install(TARGETS LLGL_Metal
++                RUNTIME DESTINATION bin
++                LIBRARY DESTINATION lib
++                ARCHIVE DESTINATION lib
++        )
+     else()
+         message("Missing Metal/MetalKit -> LLGL_Metal renderer will be excluded from project")
+     endif()
+@@ -680,6 +698,12 @@ if(WIN32)
+         target_link_libraries(LLGL_Direct3D11 LLGL d3d11 dxgi D3DCompiler)
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_DIRECT3D11)
++        
++        install(TARGETS LLGL_Direct3D11
++                RUNTIME DESTINATION bin
++                LIBRARY DESTINATION lib
++                ARCHIVE DESTINATION lib
++        )
+     endif()
+     
+     if(LLGL_BUILD_RENDERER_DIRECT3D12)
+@@ -818,5 +842,11 @@ endif()
+ if(LLGL_ENABLE_SPIRV_REFLECT)
+     message("Including Submodule: SPIRV")
+ endif()
+-
+-
++# Install targets
++install(TARGETS ${PROJECT_NAME}
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++# Install headers
++install(DIRECTORY ${PROJECT_INCLUDE_DIR} DESTINATION include)
