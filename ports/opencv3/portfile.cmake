@@ -21,33 +21,52 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "contrib"  WITH_CONTRIB
  "cuda"     WITH_CUDA
+ "cuda"     WITH_CUBLAS
  "dnn"      BUILD_opencv_dnn
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "flann"    BUILD_opencv_flann
  "gdcm"     WITH_GDCM
  "halide"   WITH_HALIDE
- "ipp"      WITH_IPP
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
- "ovis"     BUILD_opencv_ovis
  "png"      WITH_PNG
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
- "tbb"      WITH_TBB
  "tiff"     WITH_TIFF
- "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
 )
 
-if(BUILD_opencv_dnn)
+# Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
+# As the respective value of their variables can be unset conditionally.
+set(WITH_IPP OFF)
+if("ipp" IN_LIST FEATURES)
+  set(WITH_IPP ON)
+endif()
+
+set(BUILD_opencv_ovis OFF)
+if("ovis" IN_LIST FEATURES)
+  set(BUILD_opencv_ovis ON)
+endif()
+
+set(WITH_TBB OFF)
+if("tbb" IN_LIST FEATURES)
+  set(WITH_TBB ON)
+endif()
+
+set(WITH_VTK OFF)
+if("vtk" IN_LIST FEATURES)
+  set(WITH_VTK ON)
+endif()
+
+if("dnn" IN_LIST FEATURES)
   vcpkg_download_distfile(TINYDNN_ARCHIVE
     URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
     FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
@@ -55,7 +74,7 @@ if(BUILD_opencv_dnn)
   )
 endif()
 
-if(WITH_CONTRIB)
+if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
@@ -165,7 +184,7 @@ if(WITH_IPP)
 endif()
 
 set(WITH_MSMF ON)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
   set(WITH_MSMF OFF)
 endif()
 
@@ -214,15 +233,11 @@ vcpkg_configure_cmake(
         # Select which OpenCV modules should be built
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_bgsegm=${BUILD_opencv_bgsegm}
-        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
-        -DBUILD_opencv_flann=${BUILD_opencv_flann}
         -DBUILD_opencv_line_descriptor=${BUILD_opencv_line_descriptor}
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
-        -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
-        -DBUILD_opencv_world=${BUILD_opencv_world}
         # PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
         -DUPDATE_PROTO_FILES=ON
@@ -244,27 +259,14 @@ vcpkg_configure_cmake(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
-        -DWITH_CUBLAS=${WITH_CUDA}
-        -DWITH_CUDA=${WITH_CUDA}
-        -DWITH_EIGEN=${WITH_EIGEN}
-        -DWITH_FFMPEG=${WITH_FFMPEG}
-        -DWITH_GDCM=${WITH_GDCM}
-        -DWITH_HALIDE=${WITH_HALIDE}
+        ${FEATURE_OPPTIONS}
         -DWITH_IPP=${WITH_IPP}
-        -DWITH_JASPER=${WITH_JASPER}
-        -DWITH_JPEG=${WITH_JPEG}
         -DWITH_LAPACK=OFF
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
-        -DWITH_OPENEXR=${WITH_OPENEXR}
-        -DWITH_OPENGL=${WITH_OPENGL}
-        -DWITH_PNG=${WITH_PNG}
-        -DWITH_QT=${WITH_QT}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
-        -DWITH_WEBP=${WITH_WEBP}
         -DWITH_ZLIB=${WITH_ZLIB}
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
     OPTIONS_DEBUG
