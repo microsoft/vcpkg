@@ -26,14 +26,19 @@ function(vcpkg_configure_qmake)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
     endif()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND _csc_OPTIONS CONFIG+=static)
-        list(APPEND _csc_OPTIONS CONFIG+=staticlib)
-        list(APPEND _csc_OPTIONS DEFINES += QT_STATIC_BUILD)
+    if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+        list(APPEND _csc_OPTIONS "CONFIG+=static")
+        list(APPEND _csc_OPTIONS "CONFIG+=staticlib")
+        list(APPEND _csc_OPTIONS "DEFINES+=QT_STATIC_BUILD")
     else()
-        list(APPEND _csc_OPTIONS CONFIG+=shared)
-        list(APPEND _csc_OPTIONS CONFIG+=separate_debug_info)
+        list(APPEND _csc_OPTIONS "CONFIG+=shared")
+        list(APPEND _csc_OPTIONS "CONFIG+=separate_debug_info")
     endif()
+    
+    if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_CRT_LINKAGE} STREQUAL "static")
+        list(APPEND _csc_OPTIONS "CONFIG+=static-runtime")
+    endif()
+    
     # Cleanup build directories
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 

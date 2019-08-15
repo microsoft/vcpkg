@@ -68,7 +68,7 @@ function(vcpkg_find_qt_platforms TARGET_PLATFORM_MKSPEC_OUT HOST_PLATFORM_MKSPEC
                 elseif($ENV{PROCESSOR_ARCHITECTURE} MATCHES "x86")
                     list(APPEND _test_triplets x86-windows x86-windows-static)
                 else()
-                    #message(FATAL_ERROR "Unknown host processor! Cannot figure out VCPKG_QT_HOST_TOOLS_ROOT_TEST_TRIPLETS. Host Processor ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+                    message(FATAL_ERROR "Unknown host processor! Host Processor $ENV{PROCESSOR_ARCHITECTURE}")
                 endif()
             elseif(CMAKE_HOST_SYSTEM STREQUAL "Linux")
                 list(APPEND _test_triplets "x64-linux")

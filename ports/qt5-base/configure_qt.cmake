@@ -32,34 +32,34 @@ function(configure_qt)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     vcpkg_add_to_path("${PERL_EXE_PATH}")
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
         list(APPEND _csc_OPTIONS -static)
     else()
         list(APPEND _csc_OPTIONS -separate-debug-info)
     endif()
    
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
+    if(VCPKG_TARGET_IS_WINDOWS AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
         list(APPEND _csc_OPTIONS -static-runtime)
     endif()
 
-    list(APPEND _csc_OPTIONS -verbose)
+    #list(APPEND _csc_OPTIONS -verbose)
     
     #list(APPEND _csc_OPTIONS -optimized-tools)
 
     list(APPEND _csc_OPTIONS_RELEASE -release)
     list(APPEND _csc_OPTIONS_DEBUG -debug)
-    list(APPEND _csc_OPTIONS_RELEASE -force-debug-info)
-    list(APPEND _csc_OPTIONS_RELEASE -ltcg)
+    #list(APPEND _csc_OPTIONS_RELEASE -force-debug-info)
+    #list(APPEND _csc_OPTIONS_RELEASE -ltcg)
     
     unset(BUILDTYPES)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
         set(_buildname "DEBUG")
         list(APPEND BUILDTYPES ${_buildname})
         set(_short_name_${_buildname} "dbg")
         set(_path_suffix_${_buildname} "/debug")
         set(_build_type_${_buildname} "debug")        
     endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
         set(_buildname "RELEASE")
         list(APPEND BUILDTYPES ${_buildname})
         set(_short_name_${_buildname} "rel")
@@ -96,7 +96,7 @@ function(configure_qt)
         
         if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR) #use qmake          
             vcpkg_execute_required_process(
-                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "QMAKE_MSC_VER=1911" -- ${BUILD_OPTIONS}
+                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911" -- ${BUILD_OPTIONS}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )

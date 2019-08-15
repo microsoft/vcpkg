@@ -79,7 +79,7 @@ set(CORE_OPTIONS
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
         set(opengl_opt -opengl dynamic)
     else()
         set(opengl_opt -opengl es2)
