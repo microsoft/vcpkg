@@ -11,16 +11,12 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    -DNSYNC_ENABLE_TESTS=OFF
 )
 
-if(WIN32 AND NOT TARGET_TRIPLET STREQUAL "x64-windows-static")
-    vcpkg_install_cmake()
-else()
-    vcpkg_build_cmake()
-endif()
+vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
