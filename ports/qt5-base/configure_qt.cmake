@@ -33,7 +33,7 @@ function(configure_qt)
     vcpkg_add_to_path("${PERL_EXE_PATH}")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        list(APPEND _csc_OPTIONS -static -staticlib)
+        list(APPEND _csc_OPTIONS -static)
     else()
         list(APPEND _csc_OPTIONS -separate-debug-info)
     endif()
