@@ -18,7 +18,7 @@ function(vcpkg_configure_qmake)
      
     # Find qmake executable
 
-    find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/tools/qt5/bin ${CURRENT_INSTALLED_DIR}/tools/qt5/bin)
+    find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/tools/qt5/bin/host ${CURRENT_INSTALLED_DIR}/tools/qt5/bin/host)
 
     if(NOT QMAKE_COMMAND)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
