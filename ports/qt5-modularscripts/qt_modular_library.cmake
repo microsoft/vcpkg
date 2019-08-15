@@ -123,11 +123,14 @@ function(qt_modular_build_library SOURCE_PATH)
     foreach(_buildname ${BUILDTYPES})
         set(CURRENT_BUILD_PACKAGE_DIR "${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}")
         #Fix PRL files 
-        file(GLOB_RECURSE PRL_FILES "${CURRENT_BUILD_PACKAGE_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/mkspecs/*.pri")
+        file(GLOB_RECURSE PRL_FILES "${CURRENT_BUILD_PACKAGE_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib/*.prl" 
+                                    "${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/mkspecs/*.pri")
         file(TO_CMAKE_PATH "${CURRENT_BUILD_PACKAGE_DIR}/lib" CMAKE_LIB_PATH)
+        file(TO_CMAKE_PATH "${CURRENT_BUILD_PACKAGE_DIR}/include" CMAKE_INCLUDE_PATH)
         foreach(PRL_FILE IN LISTS PRL_FILES)
             file(READ "${PRL_FILE}" _contents)
             string(REPLACE "${CMAKE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
+            string(REPLACE "${CMAKE_INCLUDE_PATH}" "\$\$[QT_INSTALL_HEADERS]" _contents "${_contents}")
         file(WRITE "${PRL_FILE}" "${_contents}")
         endforeach()
         

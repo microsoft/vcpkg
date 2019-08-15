@@ -74,8 +74,8 @@ function(configure_qt)
         set(_build_dir "${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         file(MAKE_DIRECTORY ${_build_dir})
         set(BUILD_OPTIONS ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
-                -prefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
-                -extprefix ${CURRENT_PACKAGES_DIR}${_path_suffix}
+                -prefix ${CURRENT_PACKAGES_DIR}
+                -extprefix ${CURRENT_PACKAGES_DIR}
                 ${EXT_BIN_DIR}
                 -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
