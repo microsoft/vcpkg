@@ -276,7 +276,8 @@ namespace vcpkg::Commands::Integrate
 
             const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
             fs.write_contents(appdata_src_path2,
-                              create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()));
+                              create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()),
+			      VCPKG_LINE_INFO);
             auto appdata_dst_path2 = get_appdata_props_path();
 
             const auto rc2 = fs.copy_file(appdata_src_path2, appdata_dst_path2, fs::copy_options::overwrite_existing, ec);
