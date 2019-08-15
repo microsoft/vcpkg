@@ -84,7 +84,7 @@ function(configure_qt)
                 -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/plugins
                 -qmldir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/qml
-                -headerdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/include
+                -headerdir ${CURRENT_PACKAGES_DIR}/include
                 -libexecdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/bin
                 -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/lib
