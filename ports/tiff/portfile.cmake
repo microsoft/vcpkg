@@ -33,6 +33,8 @@ vcpkg_configure_cmake(
         -Djpeg12=OFF
         -Dwebp=OFF
         -Dzstd=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         ${TIFF_CXX_TARGET}
 )
 
