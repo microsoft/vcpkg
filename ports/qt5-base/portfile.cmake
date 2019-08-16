@@ -68,7 +68,7 @@ set(CORE_OPTIONS
     -system-zlib
     -system-libjpeg
     -system-libpng
-    -system-freetype
+    -system-freetype # static builds require to also link its dependent bzip!
     -system-pcre
     -system-doubleconversion
     -system-sqlite
@@ -98,19 +98,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
             ${CORE_OPTIONS}
             -mp
         OPTIONS_RELEASE
-            LIBJPEG_LIBS="-ljpeg"
-            ZLIB_LIBS="-lzlib"
-            LIBPNG_LIBS="-llibpng16"
-            PSQL_LIBS="-llibpq"
-            PCRE2_LIBS="-lpcre2-16"
-            FREETYPE_LIBS="-lfreetype"
+            "LIBJPEG_LIBS=-ljpeg"
+            "ZLIB_LIBS=-lzlib"
+            "LIBPNG_LIBS=-llibpng16"
+            "PSQL_LIBS=-llibpq"
+            "PCRE2_LIBS=-lpcre2-16"
+            "FREETYPE_LIBS=-lfreetype -lbz2"
+            #"QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/bz2.lib"
         OPTIONS_DEBUG
-            LIBJPEG_LIBS="-ljpegd"
-            ZLIB_LIBS="-lzlibd"
-            LIBPNG_LIBS="-llibpng16d"
-            PSQL_LIBS="-llibpqd"
-            PCRE2_LIBS="-lpcre2-16d"
-            FREETYPE_LIBS="-lfreetyped"
+            "LIBJPEG_LIBS=-ljpegd"
+            "ZLIB_LIBS=-lzlibd"
+            "LIBPNG_LIBS=-llibpng16d"
+            "PSQL_LIBS=-llibpqd"
+            "PCRE2_LIBS=-lpcre2-16d"
+            "FREETYPE_LIBS=-lfreetyped -lbz2d"
+           # "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/bz2d.lib"
     )    
 elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
