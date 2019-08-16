@@ -1,8 +1,6 @@
 include(vcpkg_common_functions)
 
-if(CMAKE_HOST_WIN32)
-    message(FATAL_ERROR "This tensorflow port currently is experimental on Windows and Linux platforms.")
-endif()
+message(WARNING "This tensorflow port currently is experimental on Windows and Linux platforms.")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -49,10 +47,10 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 # tensorflow has long file names, which will not work on windows
-set(ENV{TEST_TMPDIR} ${BUILDTREES}/.bzl)
+set(ENV{TEST_TMPDIR} ${CURRENT_BUILDTREES_DIR}/../.bzl)
 
 set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
-#set(ENV{TF_NEED_JEMALLOC} 0)
+set(ENV{TF_NEED_JEMALLOC} 0)
 set(ENV{TF_NEED_KAFKA} 0)
 set(ENV{TF_NEED_OPENCL_SYCL} 0)
 set(ENV{TF_NEED_AWS} 0)
@@ -71,9 +69,8 @@ set(ENV{TF_NEED_ROCM} 0)
 set(ENV{TF_SET_ANDROID_WORKSPACE} 0)
 set(ENV{TF_DOWNLOAD_CLANG} 0)
 set(ENV{TF_NCCL_VERSION} 2.3)
-set(ENV{NCCL_INSTALL_PATH} "/usr")
-set(ENV{CC_OPT_FLAGS} "/arch:AVX")
-# for gcc only https://gcc.gnu.org/onlinedocs/gcc-4.5.3/gcc/i386-and-x86_002d64-Options.html
+set(ENV{NCCL_INSTALL_PATH} "")
+set(ENV{CC_OPT_FLAGS} "")
 set(ENV{TF_NEED_CUDA} 0)
 
 message(STATUS "Configuring TensorFlow")

@@ -1,79 +1,29 @@
-find_path(
-    TENSORFLOW_CC_INCLUDE_DIR_
-    NAMES client_session.h
-    PATH_SUFFIXES include/tensorflow/cc/client
+set(tensorflow_cc_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../include")
+
+message(WARNING "Tensorflow has vendored dependencies. You may need to manually include files from tensorflow-external")
+set(tensorflow_cc_INCLUDE_DIRS
+	${tensorflow_cc_INCLUDE_DIR}
+	${tensorflow_cc_INCLUDE_DIR}/tensorflow-external/
+	${tensorflow_cc_INCLUDE_DIR}/tensorflow-external/tensorflow/
+	${tensorflow_cc_INCLUDE_DIR}/tensorflow-external/external/com_google_absl
+	${tensorflow_cc_INCLUDE_DIR}/tensorflow-external/bazel-out/k8-opt/bin/
+	${tensorflow_cc_INCLUDE_DIR}/tensorflow-external/external/protobuf_archive/src/
 )
 
-set(TENSORFLOW_CC_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../include/)
 
-if (NOT TENSORFLOW_CC_LIBRARY)
-    set(libraries
-        libtensorflow_framework.so.1.14.0 libtensorflow_cc.so.1.14.0)
-    find_library(
-        TENSORFLOW_LIBRARY_FRAMEWORK
-        NAMES
-            libtensorflow_framework.so.1.14.0
-        PATH_SUFFIXES lib)
-    find_library(
-        TENSORFLOW_LIBRARY_CC
-        NAMES
-            libtensorflow_cc.so.1.14.0
-        PATH_SUFFIXES lib)
-    if (NOT TENSORFLOW_LIBRARY_CC OR NOT TENSORFLOW_LIBRARY_FRAMEWORK)
-        message(FATAL_ERROR "Can't find ${libraries}")
-    endif()
+add_library(tensorflow_cc::tensorflow_framework SHARED IMPORTED)
+set_target_properties(tensorflow_cc::tensorflow_framework 
+	PROPERTIES
+	IMPORTED_LOCATION ${CMAKE_CURRENT_LIST_DIR}/../../lib/libtensorflow_framework.so.1.14.0
+	INTERFACE_INCLUDE_DIRECTORIES "${tensorflow_cc_INCLUDE_DIRS}"
+)
 
-    set(TENSORFLOW_CC_LIBRARY_RELEASE
-        ${TENSORFLOW_LIBRARY_CC}
-        ${TENSORFLOW_LIBRARY_FRAMEWORK})
+add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED)
+set_target_properties(tensorflow_cc::tensorflow_cc
+	PROPERTIES 
+	IMPORTED_LOCATION ${CMAKE_CURRENT_LIST_DIR}/../../lib/libtensorflow_cc.so.1.14.0
+	INTERFACE_INCLUDE_DIRECTORIES "${tensorflow_cc_INCLUDE_DIRS}"
+)
 
-    set(TENSORFLOW_CC_LIBRARY
-            optimized "${TENSORFLOW_CC_LIBRARY_RELEASE}")
-endif()
-
-
-mark_as_advanced(TENSORFLOW_CC_INCLUDE_DIR)
-
-include(FindPackageHandleStandardArgs)
-
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
-    TENSORFLOW_CC
-        REQUIRED_VARS
-        TENSORFLOW_CC_LIBRARY TENSORFLOW_CC_INCLUDE_DIR
-        VERSION_VAR)
-
-if (TENSORFLOW_CC_FOUND)
-    set(TENSORFLOW_CC_INCLUDE_DIRS
-        ${TENSORFLOW_CC_INCLUDE_DIR}
-        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external
-        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external/tensorflow
-        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external/external/com_google_absl
-        ${TENSORFLOW_CC_INCLUDE_DIR}/tensorflow-external/bazel-out/k8-opt/bin/
-    )
-
-    if (NOT TARGET tensorflow_cc::tensorflow_framework)
-        add_library(tensorflow_cc::tensorflow_framework UNKNOWN IMPORTED)
-        set_target_properties(tensorflow_cc::tensorflow_framework
-            PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${TENSORFLOW_CC_INCLUDE_DIRS}")
-
-        set_target_properties(tensorflow_cc::tensorflow_framework PROPERTIES
-            IMPORTED_LOCATION_RELEASE ${TENSORFLOW_LIBRARY_FRAMEWORK})
-        set_property(TARGET tensorflow_cc::tensorflow_framework APPEND PROPERTY
-            IMPORTED_CONFIGURATIONS RELEASE)
-    endif()
-
-    if (NOT TARGET tensorflow_cc::tensorflow_cc)
-        add_library(tensorflow_cc::tensorflow_cc UNKNOWN IMPORTED)
-        set_target_properties(tensorflow_cc::tensorflow_cc
-            PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${TENSORFLOW_CC_INCLUDE_DIRS}")
-
-        set_target_properties(tensorflow_cc::tensorflow_cc PROPERTIES
-            IMPORTED_LOCATION_RELEASE ${TENSORFLOW_LIBRARY_CC})
-        set_property(TARGET tensorflow_cc::tensorflow_cc APPEND PROPERTY
-            IMPORTED_CONFIGURATIONS RELEASE)
-        set_property(TARGET tensorflow_cc::tensorflow_cc APPEND PROPERTY
-            INTERFACE_LINK_LIBRARIES tensorflow_cc::tensorflow_framework)
-    endif()
-endif()
+set(tensorflow_cc_FOUND TRUE)
+set(tensorflow_framework_FOUND TRUE)
