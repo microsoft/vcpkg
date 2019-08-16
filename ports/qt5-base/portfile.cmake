@@ -50,6 +50,7 @@ vcpkg_extract_source_archive_ex(
         windows_prf.patch   #fixes the qtmain dependency due to the above move
         qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
         gui_configure.patch #Patches the gui configure.json to include the correct fonttype dependencies
+        static_opengl.patch #Let the Khronos headers define the required preprocessor definitions. Qt5 you know nothing. 
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -87,10 +88,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND CORE_OPTIONS -appstore-compliant)
     endif()
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-        list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
+        list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengeles2"
     else()
         list(APPEND CORE_OPTIONS -opengl es2) # dynamic will generate angle dll and the angle port has been explicitly deleted. 
-                                              # es2 is the Windows automatic default. desktop is the unix default.
+                                              # es2 is the Windows automatic default. (might make problems with older qt projects due to including angle.)
+                                              # use QT -= core gui if that happens or we need to switch this one to desktop
     endif()
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
