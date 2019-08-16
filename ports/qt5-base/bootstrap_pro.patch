@@ -1,9 +1,0 @@
-diff --git a/src/tools/bootstrap/bootstrap.pro b/src/tools/bootstrap/bootstrap.pro
-index 83e44ff9..55568dcd 100644
---- a/src/tools/bootstrap/bootstrap.pro
-+++ b/src/tools/bootstrap/bootstrap.pro
-@@ -151,3 +151,4 @@ load(qt_module)
- 
- lib.CONFIG = dummy_install
- INSTALLS += lib
-+target.path = $$[QT_INSTALL_LIBS]/../tools/qt5

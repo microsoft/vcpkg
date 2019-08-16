@@ -1,0 +1,13 @@
+diff --git a/mkspecs/features/win32/opengl.prf b/mkspecs/features/win32/opengl.prf
+index f21848f94..202c49688 100644
+--- a/mkspecs/features/win32/opengl.prf	
++++ b/mkspecs/features/win32/opengl.prf
+@@ -30,7 +30,7 @@ qtConfig(opengles2) {
+         LIBS += $$QMAKE_LIBS_OPENGL_ES2
+         QMAKE_LIBDIR += $$QMAKE_LIBDIR_OPENGL_ES2_RELEASE
+     }
+-    qtConfig(static): DEFINES += GL_APICALL= EGLAPI=
++    #qtConfig(static): DEFINES += GL_APICALL= EGLAPI=
+ } else {
+     !qtConfig(dynamicgl) {
+         QMAKE_LIBS += $$QMAKE_LIBS_OPENGL
