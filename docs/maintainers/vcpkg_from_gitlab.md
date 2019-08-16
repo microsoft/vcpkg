@@ -57,8 +57,10 @@ At least one of `REF` and `HEAD_REF` must be specified, however it is preferable
 This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
 ## Examples:
+* [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
+* [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
+* [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 
-* [tiny-process-library](https://github.com/Microsoft/vcpkg/blob/master/ports/tiny-process-library/portfile.cmake#L3)
 
 ## Source
 [scripts/cmake/vcpkg_from_gitlab.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_gitlab.cmake)

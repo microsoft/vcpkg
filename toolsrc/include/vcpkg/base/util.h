@@ -3,14 +3,24 @@
 #include <algorithm>
 #include <map>
 #include <mutex>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
 namespace vcpkg::Util
 {
+    template<class T>
+    constexpr std::add_const_t<T>& as_const(T& t) noexcept
+    {
+        return t;
+    }
+    template<class T>
+    void as_const(const T&&) = delete;
+
     template<class Container>
-    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
+    using ElementT =
+        std::remove_reference_t<decltype(*std::declval<typename std::remove_reference_t<Container>::iterator>())>;
 
     namespace Vectors
     {
@@ -41,11 +51,11 @@ namespace vcpkg::Util
         }
     }
 
-    template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
+    template<class Range, class Func>
+    using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
 
-    template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
-    std::vector<Out> fmap(Cont&& xs, Func&& f)
+    template<class Range, class Func, class Out = FmapOut<Range, Func>>
+    std::vector<Out> fmap(Range&& xs, Func&& f)
     {
         std::vector<Out> ret;
         ret.reserve(xs.size());
@@ -91,12 +101,6 @@ namespace vcpkg::Util
         using std::begin;
         using std::end;
         return std::find_if(begin(cont), end(cont), pred);
-    }
-
-    template<class Container, class T = ElementT<Container>>
-    std::vector<T*> element_pointers(Container&& cont)
-    {
-        return fmap(cont, [](auto&& x) { return &x; });
     }
 
     template<class Container, class Pred>

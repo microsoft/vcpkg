@@ -2,11 +2,12 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
 #include <bcrypt.h>
+#pragma comment(lib, "bcrypt")
 
 #ifndef NT_SUCCESS
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
@@ -94,13 +95,13 @@ namespace vcpkg::Hash
             }
 
         public:
-            explicit BCryptHasher(const std::string& hash_type)
+            explicit BCryptHasher(std::string hash_type)
             {
-                NTSTATUS error_code =
-                    BCryptOpenAlgorithmProvider(&this->algorithm_handle.handle,
-                                                Strings::to_utf16(Strings::ascii_to_uppercase(hash_type)).c_str(),
-                                                nullptr,
-                                                0);
+                NTSTATUS error_code = BCryptOpenAlgorithmProvider(
+                    &this->algorithm_handle.handle,
+                    Strings::to_utf16(Strings::ascii_to_uppercase(std::move(hash_type))).c_str(),
+                    nullptr,
+                    0);
                 Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to open the algorithm provider");
 
                 DWORD hash_buffer_bytes;
@@ -177,9 +178,11 @@ namespace vcpkg::Hash
     static std::string parse_shasum_output(const std::string& shasum_output)
     {
         std::vector<std::string> split = Strings::split(shasum_output, " ");
+        // Checking if >= 3 because filenames with spaces will show up as multiple tokens.
+        // The hash is the first token so we don't need to parse the filename anyway.
         Checks::check_exit(VCPKG_LINE_INFO,
-                           split.size() == 3,
-                           "Expected output of the form [hash filename\n] (3 tokens), but got\n"
+                           split.size() >= 3,
+                           "Expected output of the form [hash filename\n] (3+ tokens), but got\n"
                            "[%s] (%s tokens)",
                            shasum_output,
                            std::to_string(split.size()));

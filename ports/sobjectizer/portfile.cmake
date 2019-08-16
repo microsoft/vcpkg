@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(VERSION 5.5.24.3)
+set(VERSION 5.6.0.2)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/so-${VERSION}/dev)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/SObjectizer%20Core%20v.5.5/so-${VERSION}.zip"
-    FILENAME "so-${VERSION}.zip"
-    SHA512 b3421dd2c84d9143a425f2144ce8810a75a55182316107f72513ee931d737e7f86867640010cab0e67ff6d3ea79ebe9eda22b7f1876b632b1575dfc52de3eeef
+    URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/SObjectizer%20Core%20v.5.6/so-${VERSION}.tar.bz2"
+    FILENAME "so-${VERSION}.tar.bz2"
+    SHA512 8f330c757fe401d715584da224925158d97ab5bba59e442af29ac64cb6feeae00434bd9bf11601f0796737f901a4f8ada1728b60d5706294d607d4d365c2d6da
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -29,7 +29,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/sobjectizer")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/../LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sobjectizer)

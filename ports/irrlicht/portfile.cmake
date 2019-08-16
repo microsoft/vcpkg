@@ -22,6 +22,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF "1.8.4"
+    PATCHES
+        "support-unicode-on-windows.patch"
     # [NO_REMOVE_ONE_LEVEL]
     # [WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/src>]
     # [PATCHES <a.patch>...]
@@ -90,5 +92,8 @@ freely, subject to the following restrictions:
 
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/irrlicht)
+endif()
 # Post-build test for cmake libraries
 vcpkg_test_cmake(PACKAGE_NAME irrlicht)

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yixuan/spectra
-    REF v0.7.0
-    SHA512 2a1cd9eed6cebabb551cc2f662d38d75c6b24edc8f19ee4feb122958653ecb4533b936447d36712225b48a4f1aa6590b17ca5076d78d506a515e8701752bf32d
+    REF v0.8.0
+    SHA512 186bcd8efd5dc6cf0aa81b909184e056d1df1e55870c700f0ca060f504fa997e3ce27c3d15d7b4c74422e4d18bcbd471558392a89e307693b89cc1f480fecc71
     HEAD_REF master
 )
 

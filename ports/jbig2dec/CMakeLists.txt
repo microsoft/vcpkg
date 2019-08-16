@@ -3,8 +3,6 @@ project(jbig2dec C)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 file(GLOB SOURCES jbig2*.c)
 list(REMOVE_ITEM SOURCES
   "${CMAKE_CURRENT_SOURCE_DIR}/jbig2dec.c"

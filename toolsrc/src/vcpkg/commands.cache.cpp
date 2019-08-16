@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Cache
         std::vector<BinaryParagraph> output;
         for (auto&& path : paths.get_filesystem().get_files_non_recursive(paths.packages))
         {
-            const Expected<std::unordered_map<std::string, std::string>> pghs =
+            const Expected<Parse::RawParagraph> pghs =
                 Paragraphs::get_single_paragraph(paths.get_filesystem(), path / "CONTROL");
             if (const auto p = pghs.get())
             {
@@ -43,7 +43,7 @@ namespace vcpkg::Commands::Cache
         const std::vector<BinaryParagraph> binary_paragraphs = read_all_binary_paragraphs(paths);
         if (binary_paragraphs.empty())
         {
-            System::println("No packages are cached.");
+            System::print2("No packages are cached.\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
@@ -51,8 +51,7 @@ namespace vcpkg::Commands::Cache
         {
             for (const BinaryParagraph& binary_paragraph : binary_paragraphs)
             {
-                const std::string displayname = binary_paragraph.displayname();
-                System::println(displayname);
+                System::print2(binary_paragraph.displayname(), '\n');
             }
         }
         else
@@ -66,7 +65,7 @@ namespace vcpkg::Commands::Cache
                     continue;
                 }
 
-                System::println(displayname);
+                System::print2(displayname, '\n');
             }
         }
 
