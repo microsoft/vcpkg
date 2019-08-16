@@ -130,7 +130,7 @@ namespace vcpkg::Util
     }
 
     template<class Range>
-    Range& sort_unique_erase(Range&& cont)
+    Range&& sort_unique_erase(Range&& cont)
     {
         using std::begin;
         using std::end;
