@@ -1,3 +1,5 @@
+include(qt_fix_makefile_install)
+
 function(install_qt)
     cmake_parse_arguments(_bc "DISABLE_PARALLEL" "" "" ${ARGN})
 
@@ -42,38 +44,43 @@ function(install_qt)
 
    set(_path "$ENV{PATH}")
 
+    unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        message(STATUS "Package ${TARGET_TRIPLET}-dbg")
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
-        vcpkg_execute_required_process(
-            COMMAND ${INVOKE}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME build-${TARGET_TRIPLET}-dbg
-        )
-        vcpkg_execute_required_process(
-            COMMAND ${INVOKE} install
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME package-${TARGET_TRIPLET}-dbg
-        )
-        message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
+        set(_buildname "DEBUG")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "dbg")
+        set(_path_suffix_${_buildname} "/debug")
+        set(_build_type_${_buildname} "debug")
     endif()
-    
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        message(STATUS "Package ${TARGET_TRIPLET}-rel")
-        set(ENV{PATH} "${_path}")
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
+        set(_buildname "RELEASE")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "rel")
+        set(_path_suffix_${_buildname} "")
+        set(_build_type_${_buildname} "release")
+    endif()
+    unset(_buildname)
+    
+    foreach(_buildname ${BUILDTYPES})
+        set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
+        message(STATUS "Package ${_build_triplet}")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
+        #Create Makefiles
         vcpkg_execute_required_process(
             COMMAND ${INVOKE}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME build-${TARGET_TRIPLET}-rel
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+            LOGNAME build-${_build_triplet}
         )
+        qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
+        
         vcpkg_execute_required_process(
             COMMAND ${INVOKE} install
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME package-${TARGET_TRIPLET}-rel
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+            LOGNAME package-${_build_triplet}
         )
-        message(STATUS "Package ${TARGET_TRIPLET}-rel done")
-    endif()
+        message(STATUS "Package ${_build_triplet} done")
+        
+    endforeach()
     
     set(ENV{PATH} "${_path}")
     

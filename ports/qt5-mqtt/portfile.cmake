@@ -19,3 +19,4 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 qt_modular_build_library(${SOURCE_PATH})
+qt_modular_install_license(${SOURCE_PATH})

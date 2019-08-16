@@ -6,6 +6,6 @@ endif()
 
 include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
 
-qt_modular_library(qtactiveqt 477c42653a59739aeeb17ab54bdd5cc50bc72a117250926e940c34d3f81d1b92356074056fb49f3cd811a88840377836b2d97cea8cbc62ae1d895168e7860753)
+qt_modular_library(qtactiveqt  1a1560424ed8f6075ffe371efaff63ae9aa52377aa84f806a39d7e995960a7d7eeb1eb575470b13569293d2623c5e247204397d8b6698c1ce2ff9f206850a912)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-activeqt/plugins/platforminputcontexts)
