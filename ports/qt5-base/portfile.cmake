@@ -48,7 +48,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         winmain_pro.patch   #Moves qtmain to manual-link
         windows_prf.patch   #fixes the qtmain dependency due to the above move
-        qt_app.patch       #Moves the target location of qt5 host apps to always install into the host dir. 
+        qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
+        gui_configure.patch #Patches the gui configure.json to include the correct fonttype dependencies
 )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
