@@ -1,45 +1,88 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index a7a3796..2e21403 100755
+index a7a3796..7e41f57 100755
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
-@@ -13,10 +13,12 @@
+@@ -13,13 +13,15 @@
  # directory, but can also be used for custom projects.
  #############################################################
  
--if(WIN32 OR APPLE)
--	set(OGRE_CMAKE_DIR "CMake")
--else()
--	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
 +if(NOT DEFINED OGRE_CMAKE_DIR)
-+  if(WIN32 OR APPLE)
-+    set(OGRE_CMAKE_DIR "CMake")
-+  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
-+  endif()
+ if(WIN32 OR APPLE)
+ 	set(OGRE_CMAKE_DIR "CMake")
+ else()
+ 	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
+ endif()
++endif()
+ 
+-set(INST_FILES Utils/FindPkgMacros.cmake) 
++set(INST_FILES Utils/FindPkgMacros.cmake)
+ 
+ if (OGRE_CONFIG_THREAD_PROVIDER STREQUAL "poco")
+   set(INST_FILES ${INST_FILES} Packages/FindPOCO.cmake)
+diff --git a/CMake/ConfigureBuild.cmake b/CMake/ConfigureBuild.cmake
+index 26c384f..131e238 100644
+--- a/CMake/ConfigureBuild.cmake
++++ b/CMake/ConfigureBuild.cmake
+@@ -68,7 +68,7 @@ if (OGRE_CONFIG_THREADS)
+ 
  endif()
  
- set(INST_FILES Utils/FindPkgMacros.cmake) 
+-set(OGRE_ASSERT_MODE 1 CACHE STRING 
++set(OGRE_ASSERT_MODE 1 CACHE STRING
+ 	"Enable Ogre asserts and exceptions. Possible values:
+ 	0 - Standard asserts in debug builds, nothing in release builds.
+ 	1 - Standard asserts in debug builds, exceptions in release builds.
+@@ -197,7 +197,7 @@ if (UNIX)
+     configure_file(${OGRE_TEMPLATES_DIR}/OGRE-MeshLodGenerator.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/OGRE-MeshLodGenerator.pc @ONLY)
+     install(FILES ${PROJECT_BINARY_DIR}/pkgconfig/OGRE-MeshLodGenerator.pc DESTINATION ${OGRE_LIB_DIRECTORY}/pkgconfig)
+   endif ()
+-  
++
+   if (OGRE_BUILD_COMPONENT_TERRAIN)
+     if (OGRE_BUILD_COMPONENT_PAGING)
+       set(OGRE_PAGING_ADDITIONAL_PACKAGES ", OGRE-Paging = ${OGRE_VERSION}")
 diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
-index 783755e..79f7514 100644
+index 783755e..bd7fd3d 100644
 --- a/CMake/InstallResources.cmake
 +++ b/CMake/InstallResources.cmake
-@@ -208,10 +208,12 @@ endif ()
+@@ -131,7 +131,7 @@ configure_file(${OGRE_TEMPLATES_DIR}/tests.cfg.in ${PROJECT_BINARY_DIR}/inst/bin
+ 
+ 
+ # install resource files
+-install(FILES 
++install(FILES
+   ${PROJECT_BINARY_DIR}/inst/bin/resources.cfg
+   ${PROJECT_BINARY_DIR}/inst/bin/plugins.cfg
+   ${PROJECT_BINARY_DIR}/inst/bin/samples.cfg
+@@ -208,17 +208,19 @@ endif ()
  # Create the CMake package files
  include(CMakePackageConfigHelpers)
  
--if(WIN32 OR APPLE)
--  set(OGRE_CMAKE_DIR "CMake")
--else()
--  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
 +if(NOT DEFINED OGRE_CMAKE_DIR)
-+  if(WIN32 OR APPLE)
-+    set(OGRE_CMAKE_DIR "CMake")
-+  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
-+  endif()
+ if(WIN32 OR APPLE)
+   set(OGRE_CMAKE_DIR "CMake")
+ else()
+   set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
  endif()
++endif()
  configure_package_config_file(${OGRE_TEMPLATES_DIR}/OGREConfig.cmake.in ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
      INSTALL_DESTINATION ${OGRE_CMAKE_DIR}
+     PATH_VARS CMAKE_INSTALL_PREFIX)
+ write_basic_package_version_file(
+-    ${PROJECT_BINARY_DIR}/cmake/OGREConfigVersion.cmake 
+-    VERSION ${OGRE_VERSION} 
++    ${PROJECT_BINARY_DIR}/cmake/OGREConfigVersion.cmake
++    VERSION ${OGRE_VERSION}
+     COMPATIBILITY SameMajorVersion)
+ install(FILES
+    ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
+@@ -228,4 +230,4 @@ install(FILES
+ install(EXPORT OgreTargetsRelease CONFIGURATIONS Release None "" DESTINATION ${OGRE_CMAKE_DIR} FILE OgreTargets.cmake)
+ install(EXPORT OgreTargetsRelWithDebInfo CONFIGURATIONS RelWithDebInfo DESTINATION ${OGRE_CMAKE_DIR} FILE OgreTargets.cmake)
+ install(EXPORT OgreTargetsMinSizeRel CONFIGURATIONS MinSizeRel DESTINATION ${OGRE_CMAKE_DIR} FILE OgreTargets.cmake)
+-install(EXPORT OgreTargetsDebug CONFIGURATIONS Debug DESTINATION ${OGRE_CMAKE_DIR} FILE OgreTargets.cmake)
+\ No newline at end of file
++install(EXPORT OgreTargetsDebug CONFIGURATIONS Debug DESTINATION ${OGRE_CMAKE_DIR} FILE OgreTargets.cmake)
 diff --git a/CMake/Packages/FindCg.cmake b/CMake/Packages/FindCg.cmake
 index 4501cf9..e91bfd0 100644
 --- a/CMake/Packages/FindCg.cmake
@@ -131,7 +174,7 @@ index 7125895..f73c928 100644
  add_parent_dir(HLSL2GLSL_INCLUDE_DIRS HLSL2GLSL_INCLUDE_DIR)
 -
 diff --git a/CMake/Packages/FindNVAPI.cmake b/CMake/Packages/FindNVAPI.cmake
-index 95c70cd..17dabb8 100644
+index 2b9deba..6d8fb37 100644
 --- a/CMake/Packages/FindNVAPI.cmake
 +++ b/CMake/Packages/FindNVAPI.cmake
 @@ -11,7 +11,7 @@
@@ -313,6 +356,66 @@ index e97951e..1c7cf00 100644
  
  findpkg_finish(ZZip)
 -
+diff --git a/CMake/Templates/OGREConfig.cmake.in b/CMake/Templates/OGREConfig.cmake.in
+index 79c5394..7b22a0d 100644
+--- a/CMake/Templates/OGREConfig.cmake.in
++++ b/CMake/Templates/OGREConfig.cmake.in
+@@ -10,12 +10,12 @@
+ # Find OGRE includes and library
+ #
+ # This module defines
+-#  OGRE_INCLUDE_DIRS - the OGRE include directories 
++#  OGRE_INCLUDE_DIRS - the OGRE include directories
+ #  OGRE_LIBRARIES - link these to use the OGRE
+ #  OGRE_LIBRARY_DIRS, the location of the libraries
+ #  OGRE_STATIC - whther ogre was build as static lib
+ #  OGRE_${COMPONENT}_FOUND - ${COMPONENT} is available
+-#  OGRE_${COMPONENT}_LIBRARIES - link these to only use ${COMPONENT} 
++#  OGRE_${COMPONENT}_LIBRARIES - link these to only use ${COMPONENT}
+ #  OGRE_PLUGIN_DIR - The directory where the OGRE plugins are located
+ #  OGRE_MEDIA_DIR - The directory where the OGRE sample media is located
+ #  OGRE_CONFIG_DIR - The directory where the OGRE config files are located
+@@ -25,7 +25,7 @@
+ set(OGRE_STATIC @OGRE_STATIC@)
+ set(OGRE_MEDIA_DIR "@PACKAGE_CMAKE_INSTALL_PREFIX@/@OGRE_MEDIA_PATH@")
+ set(OGRE_PLUGIN_DIR "@PACKAGE_CMAKE_INSTALL_PREFIX@/lib/OGRE")
+-set(OGRE_CONFIG_DIR "@PACKAGE_CMAKE_INSTALL_PREFIX@/@OGRE_CFG_INSTALL_PATH@") 
++set(OGRE_CONFIG_DIR "@PACKAGE_CMAKE_INSTALL_PREFIX@/@OGRE_CFG_INSTALL_PATH@")
+ 
+ set(OGRE_PREFIX_DIR "@PACKAGE_CMAKE_INSTALL_PREFIX@")
+ get_filename_component(OGRE_LIBRARY_DIRS "${OGRE_PREFIX_DIR}/lib" ABSOLUTE)
+@@ -47,7 +47,7 @@ set(OGRE_PLUGINS)
+ macro(ogre_declare_component COMPONENT)
+     set(OGRE_${COMPONENT}_FOUND TRUE)
+     set(OGRE_${COMPONENT}_LIBRARIES Ogre${COMPONENT}) # backwards compatibility
+-    
++
+     list(APPEND OGRE_COMPONENTS ${COMPONENT})
+     list(APPEND OGRE_LIBRARIES Ogre${COMPONENT})
+ endmacro()
+@@ -55,11 +55,11 @@ endmacro()
+ macro(ogre_declare_plugin TYPE COMPONENT)
+     set(OGRE_${TYPE}_${COMPONENT}_FOUND TRUE)
+     set(OGRE_${TYPE}_${COMPONENT}_LIBRARIES ${TYPE}_${COMPONENT})
+-    
++
+     if(@OGRE_STATIC@)
+         list(APPEND OGRE_LIBRARIES ${TYPE}_${COMPONENT})
+     endif()
+-    
++
+     list(APPEND OGRE_PLUGINS ${TYPE}_${COMPONENT})
+ endmacro()
+ 
+@@ -149,7 +149,7 @@ endif()
+ cmake_policy(POP)
+ 
+ if(@OGRE_STATIC@)
+-    list(APPEND OGRE_LIBRARIES OgreGLSupport@OGRE_LIB_SUFFIX@ @CMAKE_DL_LIBS@) # glXXw uses dlopen
++    list(APPEND OGRE_LIBRARIES OgreGLSupport @CMAKE_DL_LIBS@) # glXXw uses dlopen
+     list(APPEND OGRE_LIBRARY_DIRS "${OGRE_LIBRARY_DIRS}/OGRE") # plugins folder
+ endif()
+ 
 diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
 index 374f84b..dc7066d 100644
 --- a/CMake/Utils/FindPkgMacros.cmake
@@ -349,7 +452,7 @@ index 374f84b..dc7066d 100644
  
  # Generate debug names from given release names
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d2819f0..8b54b38 100644
+index d2819f0..f40239f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -142,7 +142,7 @@ if (MSVC)
@@ -361,7 +464,7 @@ index d2819f0..8b54b38 100644
      # Turn on the ability to create folders to organize projects (.vcproj)
      # It creates "CMakePredefinedTargets" folder by default and adds CMake
      # defined projects like INSTALL.vcproj and ZERO_CHECK.vcproj
-@@ -274,14 +274,9 @@ elseif(EMSCRIPTEN)
+@@ -274,12 +274,8 @@ elseif(EMSCRIPTEN)
  elseif (APPLE AND NOT APPLE_IOS)
  
    set(XCODE_ATTRIBUTE_SDKROOT macosx)
@@ -372,11 +475,9 @@ index d2819f0..8b54b38 100644
 -    set(CMAKE_OSX_SYSROOT macosx)
 -  endif()
  
--  # Make sure that the OpenGL render system is selected for non-iOS Apple builds
+   # Make sure that the OpenGL render system is selected for non-iOS Apple builds
    set(OGRE_BUILD_RENDERSYSTEM_GLES2 FALSE)
- endif ()
- 
-@@ -310,7 +305,7 @@ include(Dependencies)
+@@ -310,7 +306,7 @@ include(Dependencies)
  # Customise what to build
  option(OGRE_STATIC "Static build" FALSE)
  option(OGRE_ENABLE_PRECOMPILED_HEADERS "Use precompiled headers to speed up build" TRUE)
@@ -385,7 +486,7 @@ index d2819f0..8b54b38 100644
    "Make ResourceManager strict for faster operation. Possible values:
    0 - OFF search in all groups twice - for case sensitive and insensitive lookup [DEPRECATED]
    1 - PEDANTIC require an explicit resource group. Case sensitive lookup.
-@@ -352,7 +347,7 @@ cmake_dependent_option(OGRE_BUILD_LIBS_AS_FRAMEWORKS "Build frameworks for libra
+@@ -352,7 +348,7 @@ cmake_dependent_option(OGRE_BUILD_LIBS_AS_FRAMEWORKS "Build frameworks for libra
  option(OGRE_BUILD_TESTS "Build the unit tests & PlayPen" FALSE)
  option(OGRE_CONFIG_DOUBLE "Use doubles instead of floats in Ogre" FALSE)
  option(OGRE_CONFIG_NODE_INHERIT_TRANSFORM "Tells the node whether it should inherit full transform from it's parent node or derived position, orientation and scale" FALSE)
@@ -437,7 +538,7 @@ index bdb303d..e8031d1 100644
 \ No newline at end of file
 +)
 diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
-index 6ec4e34..666a736 100644
+index 6ec4e34..2803a8a 100644
 --- a/OgreMain/CMakeLists.txt
 +++ b/OgreMain/CMakeLists.txt
 @@ -188,21 +188,21 @@ if (WINDOWS_STORE OR WINDOWS_PHONE)
@@ -475,12 +576,13 @@ index 6ec4e34..666a736 100644
  	  list(APPEND LIBRARIES "atomic")
  	else()
  	  list(APPEND LIBRARIES "-latomic")
-@@ -226,8 +226,6 @@ if (APPLE)
+@@ -226,8 +226,7 @@ if (APPLE)
          LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
      )
  
 -    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
 -  
++
      if(OGRE_BUILD_LIBS_AS_FRAMEWORKS)
        add_custom_command(TARGET OgreMain POST_BUILD
            COMMAND mkdir ARGS -p ${PROJECT_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading

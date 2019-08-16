@@ -12,10 +12,10 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         create-lib-libraries.patch
         detect-openssl.patch
-        configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
         fix_libvpx_windows_linking.patch
+        fix-debug-build.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -25,7 +25,7 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     set(SEP ";")
     #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
@@ -36,7 +36,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
@@ -162,44 +162,51 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd --debug")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
     else()
-        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd --debug")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
     endif()
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_RELEASE}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
+# Relase build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+    message(STATUS "Building Relase Options: ${OPTIONS_RELEASE}")
+    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+            "${OPTIONS} ${OPTIONS_RELEASE}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+endif()
 
-set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
-
-message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_DEBUG}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
+# Debug build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+    message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
+    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
+            "${OPTIONS} ${OPTIONS_DEBUG}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
+endif()
 
 file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
 

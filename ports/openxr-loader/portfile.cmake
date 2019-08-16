@@ -15,8 +15,6 @@ vcpkg_from_github(
     REF release-1.0.0
     SHA512 423079b841a01f3b51283839c565cfa1b8ff38348c3f3d6f62e9120569d4ad540d8d6bfe8010e74d9bbb76aeaedcf273e5e3b1717bb0b424898793fb4712aa58
     HEAD_REF master
-    PATCHES
-        0004-fix-fatal-errorC1189.patch
 )
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and

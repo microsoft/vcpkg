@@ -51,7 +51,7 @@ namespace vcpkg
             {
                 const auto& pghs = *p_pghs;
 
-				Parse::RawParagraph keys;
+                Parse::RawParagraph keys;
                 if (pghs.size() > 0) keys = pghs[0];
 
                 for (size_t x = 1; x < pghs.size(); ++x)

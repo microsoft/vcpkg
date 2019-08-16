@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-2.0.8
-    SHA512 412d240916780b784b89d9eeb36b5b9451e8448100fce494c0d95f0b274506d2946cae0eb929dbe8118b8b04a8bd2a926270a971aad7d0542abcff5f35404953
+    REF ad1ab61a56c63d770e4beb335efe8b1f1a9e36cd
+    SHA512 48ee7862583e7adb86b56b20634c34aebf83ef0a3a14ad96182494ce6a84cb027334840a6c4c335e9342110c3a36532e3eeae22a3ed7363cd91b27cb7ca58154
     HEAD_REF master
     PATCHES
         fix_libraw.patch
@@ -70,6 +70,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/openimageio)
