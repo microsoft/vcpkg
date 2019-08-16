@@ -2,7 +2,6 @@ Source: libsbml
 Version: 5.18.0
 Description: A library for reading / writing SBML files
 Default-Features: expat, comp, fbc, groups, layout, render
-Build-Depends: libsbml[expat] or libsbml[libxml2]
 
 Feature: check
 Description: Unit testing of libSBMLs implementation
