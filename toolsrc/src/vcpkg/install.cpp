@@ -174,7 +174,7 @@ namespace vcpkg::Install
         const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path) {
-            return std::move(std::string(path.generic_string(), package_remove_char_count));
+        return std::move(std::string(path.generic_string(), package_remove_char_count));
         });
 
         return SortedVector<std::string>(std::move(package_files));
@@ -202,6 +202,12 @@ namespace vcpkg::Install
 
         struct intersection_compare
         {
+            // The VS2015 standard library requires comparison operators of T and U
+            // to also support comparison of T and T, and of U and U, due to debug checks.
+#if _MSC_VER < 1910
+            bool operator()(const std::string& lhs, const std::string& rhs) { return lhs < rhs; }
+            bool operator()(const file_pack& lhs, const file_pack& rhs) { return lhs.first < rhs.first; }
+#endif
             bool operator()(const std::string& lhs, const file_pack& rhs) { return lhs < rhs.first; }
             bool operator()(const file_pack& lhs, const std::string& rhs) { return lhs.first < rhs; }
         };
@@ -331,11 +337,8 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{*scfl.source_control_file,
-                                                             action.spec.triplet(),
-                                                             static_cast<fs::path>(scfl.source_location),
-                                                             action.build_options,
-                                                             action.feature_list};
+                const Build::BuildPackageConfig build_config{
+                    scfl, action.spec.triplet(), action.build_options, action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
             }();
 
@@ -355,8 +358,7 @@ namespace vcpkg::Install
             {
                 auto& fs = paths.get_filesystem();
                 const fs::path package_dir = paths.package_dir(action.spec);
-                std::error_code ec;
-                fs.remove_all(package_dir, ec);
+                fs.remove_all(package_dir, VCPKG_LINE_INFO);
             }
 
             if (action.build_options.clean_downloads == Build::CleanDownloads::YES)

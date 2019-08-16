@@ -1,3 +1,625 @@
+vcpkg (2019.7.31)
+---
+#### Total port count: 1105
+#### Total port count per triplet (tested): 
+|triplet|ports available|
+|---|---|
+|**x64-windows**|1039|
+|x86-windows|1009|
+|x64-windows-static|928|
+|**x64-linux**|866|
+|**x64-osx**|788|
+|arm64-windows|678|
+|x64-uwp|546|
+|arm-uwp|522|
+
+#### The following commands and options have been updated:
+- --scripts-root ***[NEW OPTION]***
+    - Specify a directory to use in place of `<vcpkg root>/scripts`. Enables a shared script directory for those using a single vcpkg instance to manage distributed port directories
+        - [(#6552)](https://github.com/microsoft/vcpkg/pull/6552) Allow redirection of the scripts folder.
+- depend-info
+    - Allow `vcpkg depend-info port[feature]` to display port-dependency information for a given port and the specified feature.
+        - [(#6797)](https://github.com/microsoft/vcpkg/pull/6797) Make `depend-info` subcommand able to handle features
+
+#### The following documentation has been updated:
+- [Overlay triplets example: build dynamic libraries on Linux](docs/examples/overlay-triplets-linux-dynamic.md) ***[NEW]***
+    - [(#7291)](https://github.com/microsoft/vcpkg/pull/7291) Example: Building dynamic libraries on Linux using overlay triplets
+- [vcpkg_from_git](docs/maintainers/vcpkg_from_git.md)
+    - [(#7082)](https://github.com/microsoft/vcpkg/pull/7082) Fix vcpkg_from_git
+- [Maintainer Guidelines and Policies](docs/maintainers/maintainer-guide.md)
+    - [(#7390)](https://github.com/microsoft/vcpkg/pull/7390) [docs] add notes about manual-link
+
+#### The following *remarkable* changes have been made to vcpkg's infrastructure:
+- `VCPKG_ENV_PASSTHROUGH` triplet variable and `environment-overrides.cmake`
+    -  Port authors can add an `environment-overrides.cmake` file to a port to override triplet settings globally or to define behavior of the vpckg binary on a per port basis
+        - [(#7290)](https://github.com/microsoft/vcpkg/pull/7290) [vcpkg] Environment Variable Passthrough
+        - [(#7292)](https://github.com/microsoft/vcpkg/pull/7292) [vcpkg] Portfile Settings
+- Testing overhaul
+    - Tests have been migrated from the Visual Studio unit testing framework to the cross-platform [Catch2](https://github.com/catchorg/Catch2)
+        - [(#7315)](https://github.com/microsoft/vcpkg/pull/7315) Rewrite the tests! now they're cross-platform!
+
+#### The following *additional* changes have been made to vcpkg's infrastructure:
+- [(#7080)](https://github.com/microsoft/vcpkg/pull/7080) [vcpkg] Use spaces instead of semicolons in the output
+- [(#6791)](https://github.com/microsoft/vcpkg/pull/6791) Update python2, python3, perl, aria2, ninja, ruby, 7z
+- [(#7082)](https://github.com/microsoft/vcpkg/pull/7082) Fix vcpkg_from_git
+- [(#7117)](https://github.com/microsoft/vcpkg/pull/7117) Revert Visual Studio projects versions
+- [(#7051)](https://github.com/microsoft/vcpkg/pull/7051) Fix Python3 tool on Windows
+- [(#7135)](https://github.com/microsoft/vcpkg/pull/7135) revert ninja update
+- [(#7136)](https://github.com/microsoft/vcpkg/pull/7136) Bump version to warn of outdated vcpkg sources
+- [(#7094)](https://github.com/microsoft/vcpkg/pull/7094) [vcpkg] Fix powershell font corruption bug
+- [(#7158)](https://github.com/microsoft/vcpkg/pull/7158) [vcpkg] Fix incorrect setting of FEATURE_OPTIONS
+- [(#6792)](https://github.com/microsoft/vcpkg/pull/6792) Cleanup vcpkg_configure_cmake.cmake
+- [(#7175)](https://github.com/microsoft/vcpkg/pull/7175) Added nasm mirror as nasm.us is down again
+- [(#7216)](https://github.com/microsoft/vcpkg/pull/7216) [vcpkg] allow spaces in pathname on linux
+- [(#7243)](https://github.com/microsoft/vcpkg/pull/7243) Testing for --overlay-ports and --overlay-triplets args
+- [(#7294)](https://github.com/microsoft/vcpkg/pull/7294) Add June changelog
+- [(#7229)](https://github.com/microsoft/vcpkg/pull/7229) Better error message when VCPKG_ROOT is independently defined
+- [(#7336)](https://github.com/microsoft/vcpkg/pull/7336) Create issue templates
+- [(#7322)](https://github.com/microsoft/vcpkg/pull/7322) Resolves "project is never up-to-date" problem (issue 6179)
+- [(#7228)](https://github.com/microsoft/vcpkg/pull/7228) Parallel file operations
+- [(#7403)](https://github.com/microsoft/vcpkg/pull/7403) Add third party notices -- copied from chakracore
+- [(#7407)](https://github.com/microsoft/vcpkg/pull/7407) Modify CMakeLists to split up vcpkglib
+- [(#7430)](https://github.com/microsoft/vcpkg/pull/7430) [vcpkg] Fix RealFilesystem::remove_all
+
+<details>
+<summary><b>The following 37 ports have been added:</b></summary>
+
+|port|version|
+|---|---|
+|[septag-sx](https://github.com/microsoft/vcpkg/pull/6327)| 2019-05-07-1
+|[librdkafka](https://github.com/microsoft/vcpkg/pull/5921)| 1.1.0
+|[soxr](https://github.com/microsoft/vcpkg/pull/6478)| 0.1.3.
+|[czmq](https://github.com/microsoft/vcpkg/pull/4979)<sup>[#7186](https://github.com/microsoft/vcpkg/pull/7186) </sup>| 2019-06-10-1
+|[cppmicroservices](https://github.com/microsoft/vcpkg/pull/6388)| 4.0.0-pre1
+|[zookeeper](https://github.com/microsoft/vcpkg/pull/7000)| 3.5.5
+|[xmlsec](https://github.com/microsoft/vcpkg/pull/7196)| 1.2.28
+|[librsvg](https://github.com/microsoft/vcpkg/pull/6807)| 2.40.20
+|[7zip](https://github.com/microsoft/vcpkg/pull/6920)| 19.00
+|[genann](https://github.com/microsoft/vcpkg/pull/7195)| 2019-07-10
+|[offscale-libetcd-cpp](https://github.com/microsoft/vcpkg/pull/6999)| 2019-07-10
+|[rabit](https://github.com/microsoft/vcpkg/pull/7234)| 0.1
+|[zyre](https://github.com/microsoft/vcpkg/pull/7189)| 2019-07-07
+|[cpp-peglib](https://github.com/microsoft/vcpkg/pull/7254)| 0.1.0
+|[paho-mqttpp3](https://github.com/microsoft/vcpkg/pull/7033)| 1.0.1
+|[openxr-loader](https://github.com/microsoft/vcpkg/pull/6339)<sup>[#7376](https://github.com/microsoft/vcpkg/pull/7376) [#7488](https://github.com/microsoft/vcpkg/pull/7488) </sup>| 1.0.0-1
+|[wintoast](https://github.com/microsoft/vcpkg/pull/7006)| 1.2.0
+|[scnlib](https://github.com/microsoft/vcpkg/pull/7014)| 0.1.2
+|[mongoose](https://github.com/microsoft/vcpkg/pull/7089)| 6.15-1
+|[nameof](https://github.com/microsoft/vcpkg/pull/7250)| 2019-07-13
+|[leaf](https://github.com/microsoft/vcpkg/pull/7319)<sup>[#7468](https://github.com/microsoft/vcpkg/pull/7468) </sup>| 0.2.1-2
+|[otl](https://github.com/microsoft/vcpkg/pull/7272)| 4.0.442
+|[dbg-macro](https://github.com/microsoft/vcpkg/pull/7237)| 2019-07-11
+|[p-ranav-csv](https://github.com/microsoft/vcpkg/pull/7236)| 2019-07-11
+|[lastools](https://github.com/microsoft/vcpkg/pull/7220)| 2019-07-10
+|[basisu](https://github.com/microsoft/vcpkg/pull/6995)<sup>[#7468](https://github.com/microsoft/vcpkg/pull/7468) </sup>| 0.0.1-1
+|[cmcstl2](https://github.com/microsoft/vcpkg/pull/7348)| 2019-07-20
+|[libconfuse](https://github.com/microsoft/vcpkg/pull/7252)| 2019-07-14
+|[boolinq](https://github.com/microsoft/vcpkg/pull/7362)| 2019-07-22
+|[libzippp](https://github.com/microsoft/vcpkg/pull/6801)| 2019-07-22
+|[mimalloc](https://github.com/microsoft/vcpkg/pull/7011)| 2019-06-25
+|[liblas](https://github.com/microsoft/vcpkg/pull/6746)| 1.8.1
+|[xtensor-io](https://github.com/microsoft/vcpkg/pull/7398)| 0.7.0
+|[easycl](https://github.com/microsoft/vcpkg/pull/7387)| 0.3
+|[nngpp](https://github.com/microsoft/vcpkg/pull/7417)| 2019-07-25
+|[mpi](https://github.com/microsoft/vcpkg/pull/7142)| 1
+|[openmpi](https://github.com/microsoft/vcpkg/pull/7142)| 4.0.1
+</details>
+
+<details>
+<summary><b>The following 160 ports have been updated:</b></summary>
+
+- openssl-unix `1.0.2q` -> `1.0.2s-1`
+    - [(#6854)](https://github.com/microsoft/vcpkg/pull/6854) Openssl version bump 1.0.2s
+    - [(#6512)](https://github.com/microsoft/vcpkg/pull/6512) [openssl-unix] Shared library support
+
+- openssl-windows `1.0.2q-2` -> `1.0.2s-1`
+    - [(#6854)](https://github.com/microsoft/vcpkg/pull/6854) Openssl version bump 1.0.2s
+
+- mongo-cxx-driver `3.4.0-2` -> `3.4.0-3`
+    - [(#7050)](https://github.com/microsoft/vcpkg/pull/7050) [mongo-cxx-driver] Do not delete the third_party include folder when building with mnmlstc
+
+- fdlibm `5.3-3` -> `5.3-4`
+    - [(#7082)](https://github.com/microsoft/vcpkg/pull/7082) Fix vcpkg_from_git
+
+- azure-iot-sdk-c `2019-05-16.1` -> `2019-07-01.1`
+    - [(#7123)](https://github.com/microsoft/vcpkg/pull/7123) [azure] Update azure-iot-sdk-c for public-preview release of 2019-07-01
+
+- open62541 `0.3.0-1` -> `0.3.0-2`
+    - [(#7051)](https://github.com/microsoft/vcpkg/pull/7051) Fix Python3 tool on Windows
+
+- lua `5.3.5-1` -> `5.3.5-2`
+    - [(#7101)](https://github.com/microsoft/vcpkg/pull/7101) [lua] Add [cpp] feature to additionally build lua-c++
+
+- flann `1.9.1-1` -> `2019-04-07-1`
+    - [(#7125)](https://github.com/microsoft/vcpkg/pull/7125) [flann]Change the version tag to the corresponding time of commit id.
+
+- tbb `2019_U7` -> `2019_U7-1`
+    - [(#6510)](https://github.com/microsoft/vcpkg/pull/6510) [tbb] Add shared library support for Linux and OSX
+
+- dcmtk `3.6.4` -> `3.6.4-1`
+    - [(#7059)](https://github.com/microsoft/vcpkg/pull/7059) [dcmtk] support wchar_t* filename
+
+- libmupdf `1.15.0` -> `1.15.0-1`
+    - [(#7107)](https://github.com/microsoft/vcpkg/pull/7107) [libmupdf] Enable the old patch for fixing C2169
+
+- mongo-c-driver `1.14.0-2` -> `1.14.0-3`
+    - [(#7048)](https://github.com/microsoft/vcpkg/pull/7048) [mongo-c-driver] Add usage
+    - [(#7338)](https://github.com/microsoft/vcpkg/pull/7338) [mongo-c-driver] Disable snappy auto-detection
+
+- openimageio `1.8.16` -> `2.0.8`
+    - [(#7173)](https://github.com/microsoft/vcpkg/pull/7173) [openimageio] Upgrade to version 2.0.8
+
+- duktape `2.3.0` -> `2.3.0-2`
+    - [(#7170)](https://github.com/microsoft/vcpkg/pull/7170) [duktape] Fix package not found by find_package.
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- poco `2.0.0-pre-2` -> `2.0.0-pre-3`
+    - [(#7169)](https://github.com/microsoft/vcpkg/pull/7169) [Poco] Add missing ipjlpapi.lib to foundation library
+
+- gsoap `2.8.84-1` -> `2.8.87-1`
+    - [(#7145)](https://github.com/microsoft/vcpkg/pull/7145) [gsoap] Update to 2.8.87
+
+- qt5-mqtt `5.12.3` -> `5.12.3-1`
+    - [(#7130)](https://github.com/microsoft/vcpkg/pull/7130) [qt5-mqtt] crossplatform add to path
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- botan `2.9.0-1` -> `2.9.0-2`
+    - [(#7140)](https://github.com/microsoft/vcpkg/pull/7140) [botan] Fix build error C2039 with Visual Studio 2019 and C++17
+    - [(#7303)](https://github.com/microsoft/vcpkg/pull/7303) [botan] Fix parallel build
+
+- kinectsdk2 `2.0` -> `2.0-1`
+    - [(#7143)](https://github.com/microsoft/vcpkg/pull/7143) kinectsdk2: fix missing header files
+
+- civetweb `1.11-1` -> `2019-07-05`
+    - [(#7166)](https://github.com/microsoft/vcpkg/pull/7166) [civetweb] Upgrade and enable feature websocket
+
+- curl `7.65.0-2` -> `7.65.2-1`
+    - [(#7156)](https://github.com/microsoft/vcpkg/pull/7156) [curl] Add features.
+    - [(#7093)](https://github.com/microsoft/vcpkg/pull/7093) [curl] Update to 7.65.2
+
+- aws-checksums `0.1.2` -> `0.1.3`
+    - [(#7154)](https://github.com/microsoft/vcpkg/pull/7154) [aws-checksums]Upgrade version to 0.1.3
+
+- rapidjson `1.1.0-3` -> `d87b698-1`
+    - [(#7152)](https://github.com/microsoft/vcpkg/pull/7152) [rapidjson] Update to the latest commit and also fix #3401.
+    - [(#7273)](https://github.com/microsoft/vcpkg/pull/7273) [rapidjson] Fix path RapidJSON_INCLUDE_DIRS
+
+- freetype `2.10.0` -> `2.10.1-1`
+    - [(#7141)](https://github.com/microsoft/vcpkg/pull/7141) [freetype]Re-fixed the issue of exporting symbols when building dynamic library.
+    - [(#7341)](https://github.com/microsoft/vcpkg/pull/7341) [freetype] Update to 2.10.1
+
+- llvm `7.0.0-3` -> `8.0.0`
+    - [(#7209)](https://github.com/microsoft/vcpkg/pull/7209) [llvm] Update to 8.0.0
+
+- reproc `6.0.0-1` -> `6.0.0-2`
+    - [(#7208)](https://github.com/microsoft/vcpkg/pull/7208) [reproc] Fix reproc++ installation path
+
+- wil `2019-06-10` -> `2019-07-16`
+    - [(#7215)](https://github.com/microsoft/vcpkg/pull/7215) [wil] Update
+    - [(#7285)](https://github.com/microsoft/vcpkg/pull/7285)  Update wil port to match the commit used for NuGet package 1.0.190716.2
+
+- tesseract `4.0.0-3` -> `4.1.0-1`
+    - [(#7144)](https://github.com/microsoft/vcpkg/pull/7144) [tesseract] Fix Port. Making it crossplatform
+    - [(#7227)](https://github.com/microsoft/vcpkg/pull/7227) [tesseract] port update to 4.1.0 release
+    - [(#7360)](https://github.com/microsoft/vcpkg/pull/7360) [tesseract[training_tools]] Fix build error
+
+- zeromq `2019-05-07` -> `2019-07-09`
+    - [(#7203)](https://github.com/microsoft/vcpkg/pull/7203) [zeromq] Update to 4.3.2
+
+- spirv-tools `2019.3-dev` -> `2019.3-dev-1`
+    - [(#7204)](https://github.com/microsoft/vcpkg/pull/7204) [spirv-tools] Fix removed patch
+
+- libraqm `0.6.0` -> `0.7.0`
+    - [(#7149)](https://github.com/microsoft/vcpkg/pull/7149) [libraqm] Update libraqm to 0.7.0
+    - [(#7263)](https://github.com/microsoft/vcpkg/pull/7263) [libraqm] Fix copying raqm-version.h to include directory
+
+- pthreads `3.0.0-1` -> `3.0.0-2`
+    - [(#7178)](https://github.com/microsoft/vcpkg/pull/7178) [pthreads4W] vcpkg wrapper fixes
+
+- libkml `1.3.0-2` -> `1.3.0-3`
+    - [(#7194)](https://github.com/microsoft/vcpkg/pull/7194) [libkml] Fix install path
+    - [(#7282)](https://github.com/microsoft/vcpkg/pull/7282) [minizip] Make BZip2 an optional feature
+
+- gherkin-c `4.1.2` -> `2019-10-07-1`
+    - [(#7231)](https://github.com/microsoft/vcpkg/pull/7231) [gherkin-b] update to latest
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- google-cloud-cpp `0.10.0` -> `0.11.0`
+    - [(#7134)](https://github.com/microsoft/vcpkg/pull/7134) Upgrade google-cloud-cpp to v0.11.0.
+
+- sqlite3 `3.28.0-1` -> `3.29.0-1`
+    - [(#7202)](https://github.com/microsoft/vcpkg/pull/7202) [sqlite3-tool]Fix build error on arm/uwp platform.
+    - [(#7342)](https://github.com/microsoft/vcpkg/pull/7342) [sqlite3] Update to 3.29.0
+
+- nonius `2019-04-20` -> `2019-04-20-1`
+    - [(#7258)](https://github.com/microsoft/vcpkg/pull/7258) [nonius] properly install noniusConfig.cmake
+
+- leveldb `1.22` -> `1.22-1`
+    - [(#7245)](https://github.com/microsoft/vcpkg/pull/7245) [leveldb] Fix cmake config
+
+- bond `8.1.0` -> `8.1.0-2`
+    - [(#7273)](https://github.com/microsoft/vcpkg/pull/7273) [rapidjson] Fix path RapidJSON_INCLUDE_DIRS
+    - [(#7306)](https://github.com/microsoft/vcpkg/pull/7306) [bond] make haskell an external dependency
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+- cpprestsdk `2.10.13-1` -> `2.10.14`
+    - [(#7286)](https://github.com/microsoft/vcpkg/pull/7286) Update cpprestsdk to v2.10.14.
+
+- qt5-base `5.12.3-1` -> `5.12.3-3`
+    - [(#6983)](https://github.com/microsoft/vcpkg/pull/6983) [qt5-base]Add a print message to inform the user to install the dependency package.
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-3d `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-activeqt `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-charts `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-connectivity `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-datavis3d `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-declarative `5.12.3-1` -> `5.12.3-2`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-gamepad `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-graphicaleffects `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-imageformats `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-location `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-macextras `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-modularscripts `2019-04-30` -> `2019-04-30-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-multimedia `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-networkauth `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-purchasing `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-quickcontrols `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-quickcontrols2 `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-remoteobjects `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-script `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-scxml `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-sensors `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-serialport `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-speech `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-svg `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-tools `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-virtualkeyboard `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-webchannel `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-websockets `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-webview `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- qt5-winextras `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+    - [(#7298)](https://github.com/microsoft/vcpkg/pull/7298) [qt5-winextras, ecsutil, soundtouch] Fix build-depends
+
+- qt5-xmlpatterns `5.12.3` -> `5.12.3-1`
+    - [(#7230)](https://github.com/microsoft/vcpkg/pull/7230) [qt5]Fix build failure in linux
+
+- rocksdb `6.0.2` -> `6.1.2`
+    - [(#7304)](https://github.com/microsoft/vcpkg/pull/7304) [rocksdb] Update rocksdb to 6.1.2, adds optional zstd feature
+
+- metis `5.1.0-3` -> `5.1.0-5`
+    - [(#7299)](https://github.com/microsoft/vcpkg/pull/7299) [metis] Fix linux build error.
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- ecsutil `1.0.6.1` -> `1.0.7.2`
+    - [(#7298)](https://github.com/microsoft/vcpkg/pull/7298) [qt5-winextras, ecsutil, soundtouch] Fix build-depends
+    - [(#7427)](https://github.com/microsoft/vcpkg/pull/7427) [ECSUtil] update library to v1.0.7.2
+
+- soundtouch `2.0.0-2` -> `2.0.0-3`
+    - [(#7298)](https://github.com/microsoft/vcpkg/pull/7298) [qt5-winextras, ecsutil, soundtouch] Fix build-depends
+
+- libsodium `1.0.18` -> `1.0.18-1`
+    - [(#7297)](https://github.com/microsoft/vcpkg/pull/7297) [libsodium] Fix Linux build error.
+
+- irrlicht `1.8.4` -> `1.8.4-2`
+    - [(#7296)](https://github.com/microsoft/vcpkg/pull/7296) [irrlicht] add vcpkg-cmake-wrapper
+    - [(#7354)](https://github.com/microsoft/vcpkg/pull/7354) [irrlicht] use unicode path on windows
+
+- libyaml `0.2.2` -> `0.2.2-1`
+    - [(#7277)](https://github.com/microsoft/vcpkg/pull/7277) [libyaml] Fix build error
+
+- eastl `3.13.05-1` -> `3.14.00`
+    - [(#7276)](https://github.com/microsoft/vcpkg/pull/7276) [eastl] Upgrade to 3.14
+
+- boost-asio `1.70.0-1` -> `1.70.0-2`
+    - [(#7267)](https://github.com/microsoft/vcpkg/pull/7267) Fixed boost-asio on Windows
+
+- minizip `1.2.11-4` -> `1.2.11-5`
+    - [(#7282)](https://github.com/microsoft/vcpkg/pull/7282) [minizip] Make BZip2 an optional feature
+
+- blend2d `beta_2019-04-30` -> `beta_2019-07-16`
+    - [(#7239)](https://github.com/microsoft/vcpkg/pull/7239) [blend2d] Port update
+
+- so5extra `1.2.3-1` -> `1.3.1`
+    - [(#7238)](https://github.com/microsoft/vcpkg/pull/7238) [sobjectizer, so5extra] updates
+
+- sobjectizer `5.5.24.4-1` -> `5.6.0.2`
+    - [(#7238)](https://github.com/microsoft/vcpkg/pull/7238) [sobjectizer, so5extra] updates
+
+- directxtk `apr2019` -> `apr2019-1`
+    - [(#7233)](https://github.com/microsoft/vcpkg/pull/7233) [DirectXTK] Fix UWP build error
+
+- restbed `4.16-07-28-2018` -> `4.16-07-28-2018-1`
+    - [(#7232)](https://github.com/microsoft/vcpkg/pull/7232) [restbed] Add openssl feature
+
+- clapack `3.2.1-9` -> `3.2.1-10`
+    - [(#6786)](https://github.com/microsoft/vcpkg/pull/6786) [openblas/clapack] FindLapack/FindBLAS was not working.
+
+- geogram `1.6.9-6` -> `1.6.9-7`
+    - [(#6786)](https://github.com/microsoft/vcpkg/pull/6786) [openblas/clapack] FindLapack/FindBLAS was not working.
+
+- mlpack `3.1.1` -> `3.1.1-1`
+    - [(#6786)](https://github.com/microsoft/vcpkg/pull/6786) [openblas/clapack] FindLapack/FindBLAS was not working.
+
+- openblas `0.3.6-4` -> `0.3.6-5`
+    - [(#6786)](https://github.com/microsoft/vcpkg/pull/6786) [openblas/clapack] FindLapack/FindBLAS was not working.
+
+- pprint `2019-06-01` -> `2019-07-19`
+    - [(#7317)](https://github.com/microsoft/vcpkg/pull/7317) [pprint] Fix #7301
+
+- boost-type-erasure `1.70.0` -> `1.70.0-1`
+    - [(#7325)](https://github.com/microsoft/vcpkg/pull/7325) [boost-type-erasure] fix depends on arm
+
+- armadillo `2019-04-16-3` -> `2019-04-16-4`
+    - [(#7041)](https://github.com/microsoft/vcpkg/pull/7041)  [armadillo] Fix installation path
+
+- cutelyst2 `2.7.0` -> `2.8.0`
+    - [(#7327)](https://github.com/microsoft/vcpkg/pull/7327) [cutelyst2]Upgrade version to 2.8.0
+
+- sdl2-image `2.0.4-3` -> `2.0.5`
+    - [(#7355)](https://github.com/microsoft/vcpkg/pull/7355) [sdl2-image] Updated to 2.0.5
+
+- qhull `7.2.1-3` -> `7.3.2`
+    - [(#7340)](https://github.com/microsoft/vcpkg/pull/7340) [qhull] Update to 7.3.2 and fix postbuild validation
+
+- libexif `0.6.21-1` -> `0.6.21-2`
+    - [(#7344)](https://github.com/microsoft/vcpkg/pull/7344) [Libexif] update download location
+
+- arrow `0.13.0-4` -> `0.14.1`
+    - [(#7211)](https://github.com/microsoft/vcpkg/pull/7211) [Arrow] Update to Arrow v0.14.1
+
+- date `ed0368f` -> `2019-05-18-1`
+    - [(#7399)](https://github.com/microsoft/vcpkg/pull/7399) [date] Fix issue with feature remote-api
+
+- libmariadb `3.0.10-1` -> `3.0.10-3`
+    - [(#7396)](https://github.com/microsoft/vcpkg/pull/7396) [libmariadb] Fix build library type and install path
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- inja `2.1.0` -> `2.1.0-1`
+    - [(#7402)](https://github.com/microsoft/vcpkg/pull/7402) [inja] Use inja CMakeLists.txt
+
+- pcl `1.9.1-4` -> `1.9.1-5`
+    - [(#7388)](https://github.com/microsoft/vcpkg/pull/7388) [pcl] Fix cuda building compatability issues with cuda 10.1
+
+- thrift `2019-05-07-2` -> `2019-05-07-3`
+    - [(#7302)](https://github.com/microsoft/vcpkg/pull/7302) [Thrift] Make Thrift static again
+
+- forest `12.0.0` -> `12.0.3`
+    - [(#7410)](https://github.com/microsoft/vcpkg/pull/7410) [forest] Update to Version 12.0.3
+
+- nlohmann-json `3.6.1` -> `3.7.0`
+    - [(#7459)](https://github.com/microsoft/vcpkg/pull/7459) [nlohmann-json] Update to 3.7.0
+
+- ecm `5.58.0` -> `5.60.0-1`
+    - [(#7457)](https://github.com/microsoft/vcpkg/pull/7457) [ecm] Update library to v5.60.0
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- gl2ps `1.4.0-1` -> `1.4.0-3`
+    - [(#7453)](https://github.com/microsoft/vcpkg/pull/7453) [gl2ps]Update to use vcpkg new functions(vcpkg_from_gitlab).
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- darknet `0.2.5-4` -> `0.2.5-5`
+    - [(#7450)](https://github.com/microsoft/vcpkg/pull/7450) [darknet] add training feature
+
+- g3log `2019-05-14-1` -> `2019-07-29`
+    - [(#7448)](https://github.com/microsoft/vcpkg/pull/7448) [g3log] Fix https://github.com/KjellKod/g3log/issues/319
+
+- azure-storage-cpp `6.1.0` -> `6.1.0-2`
+    - [(#7404)](https://github.com/microsoft/vcpkg/pull/7404) [azure-storage-cpp] Removed gcov dependency in debug Linux build (#7311)
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- ace `6.5.5-1` -> `6.5.6`
+    - [(#7466)](https://github.com/microsoft/vcpkg/pull/7466) [ace] ace 6.5.6
+
+- bullet3 `2.88` -> `2.88-1`
+    - [(#7474)](https://github.com/microsoft/vcpkg/pull/7474) [Bullet3] feature for multithreading
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- alembic `1.7.11-2` -> `1.7.11-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- ampl-mp `2019-03-21` -> `2019-03-21-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- anax `2.1.0-5` -> `2.1.0-6`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- apr `1.6.5-1` -> `1.6.5-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- blosc `1.16.3-1` -> `1.16.3-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- capnproto `0.7.0-2` -> `0.7.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- cgicc `3.2.19-1` -> `3.2.19-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- charls `2.0.0-1` -> `2.0.0-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- collada-dom `2.5.0-1` -> `2.5.0-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- ctemplate `2017-06-23-44b7c5-3` -> `2017-06-23-44b7c5-4`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- dlfcn-win32 `1.1.1-1` -> `1.1.1-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- easyloggingpp `9.96.7` -> `9.96.7-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- fastfeat `391d5e9` -> `391d5e9-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- fastlz `1.0-2` -> `1.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- freeglut `3.0.0-6` -> `3.0.0-7`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- glbinding `3.1.0-1` -> `3.1.0-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- glew `2.1.0-4` -> `2.1.0-5`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- glfw3 `3.3` -> `3.3-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- graphicsmagick `1.3.32` -> `1.3.32-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- hypre `2.11.2-1` -> `2.11.2-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+- jack2 `1.9.12-1` -> `1.9.12-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- jxrlib `1.1-7` -> `1.1-8`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- kangaru `4.1.3-1` -> `4.1.3-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libconfig `1.7.2` -> `1.7.2-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libfreenect2 `0.2.0-2` -> `0.2.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libmad `0.15.1-2` -> `0.15.1-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libmspack `0.10.1` -> `0.10.1-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libnice `0.1.15` -> `0.1.15-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libodb-boost `2.4.0-2` -> `2.4.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libodb-mysql `2.4.0-2` -> `2.4.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libodb-pgsql `2.4.0-2` -> `2.4.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libodb-sqlite `2.4.0-3` -> `2.4.0-4`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libodb `2.4.0-4` -> `2.4.0-5`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- librabbitmq `0.9.0` -> `0.9.0-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libsamplerate `0.1.9.0` -> `0.1.9.0-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- libwebsockets `3.1.0-2` -> `3.1.0-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- lmdb `0.9.23-1` -> `0.9.23-2`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- mozjpeg `3.2-2` -> `3.2-3`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- nanodbc `2.12.4-3` -> `2.12.4-4`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- nmslib `1.7.3.6` -> `1.7.3.6-1`
+    - [(#7468)](https://github.com/microsoft/vcpkg/pull/7468) Add PREFER_NINJA to many ports
+
+- amqpcpp `4.1.4` -> `4.1.5`
+    - [(#7475)](https://github.com/microsoft/vcpkg/pull/7475) [amqpcpp] Update library to v4.1.5
+
+- cxxopts `2.1.2-1` -> `2.2.0`
+    - [(#7473)](https://github.com/microsoft/vcpkg/pull/7473) [cxxopts] Bumped to v2.2.0
+
+- boost-mpi `1.70.0-1` -> `1.70.0-2`
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+- hdf5 `1.10.5-7` -> `1.10.5-8`
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+- kealib `1.4.11` -> `1.4.11-1`
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+- parmetis `4.0.3-2` -> `4.0.3-3`
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+- vtk `8.2.0-4` -> `8.2.0-5`
+    - [(#7142)](https://github.com/microsoft/vcpkg/pull/7142) [OpenMPI] add a new port
+
+</details>
+
+-- vcpkg team vcpkg@microsoft.com THU, 01 Aug 07:00:00 -0800
+
 vcpkg (2019.6.30)
 ---
 #### Total port count: 1068
@@ -7,8 +629,8 @@ vcpkg (2019.6.30)
 |**x64-windows**|1006|
 |x86-windows|977|
 |x64-windows-static|895|
-|**x64-osx**|823|
-|**x64-linux**|755|
+|**x64-osx**|755|
+|**x64-linux**|823|
 |arm64-windows|654|
 |x64-uwp|532|
 |arm-uwp|504|

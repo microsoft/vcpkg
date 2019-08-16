@@ -10,6 +10,10 @@ vcpkg_from_github(
     PATCHES fix-uwp.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "snappy" ENABLE_SNAPPY
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ENABLE_STATIC ON)
 else()
@@ -35,6 +39,7 @@ vcpkg_configure_cmake(
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DBUILD_VERSION=${BUILD_VERSION}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
