@@ -4,6 +4,5 @@ file(COPY
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5modularscripts
 )
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/qt5modularscripts/copyright "")
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
