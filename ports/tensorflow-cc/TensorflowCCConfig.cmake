@@ -10,7 +10,6 @@ set(tensorflow_cc_INCLUDE_DIRS
 	${tensorflow_cc_INCLUDE_DIR}/tensorflow-external/external/protobuf_archive/src/
 )
 
-
 add_library(tensorflow_cc::tensorflow_framework SHARED IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_framework 
 	PROPERTIES
