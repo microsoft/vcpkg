@@ -19,10 +19,8 @@ function(vcpkg_configure_qmake)
     cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
      
     # Find qmake executable
-
     set(_triplet_hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin)
     find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin ${_triplet_hostbindir})
-
 
     if(NOT QMAKE_COMMAND)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
@@ -30,8 +28,6 @@ function(vcpkg_configure_qmake)
 
     if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
         list(APPEND _csc_OPTIONS "CONFIG+=static")
-        list(APPEND _csc_OPTIONS "CONFIG+=staticlib")
-        list(APPEND _csc_OPTIONS "DEFINES+=QT_STATIC_BUILD")
     else()
         list(APPEND _csc_OPTIONS "CONFIG+=shared")
         list(APPEND _csc_OPTIONS_DEBUG "CONFIG+=separate_debug_info")
