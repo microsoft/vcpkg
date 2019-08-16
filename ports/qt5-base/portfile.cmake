@@ -104,7 +104,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "PSQL_LIBS=-llibpq"
             "PCRE2_LIBS=-lpcre2-16"
             "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/freetype.lib ${CURRENT_INSTALLED_DIR}/lib/bz2.lib ${CURRENT_INSTALLED_DIR}/lib/libpng16.lib" # for some strange reason the -l version is not extended in the generated files. 
-            #"QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/bz2.lib"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/bz2.lib"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.lib"
         OPTIONS_DEBUG
             "LIBJPEG_LIBS=-ljpegd"
             "ZLIB_LIBS=-lzlibd"
@@ -112,8 +113,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "PSQL_LIBS=-llibpqd"
             "PCRE2_LIBS=-lpcre2-16d"
             "FREETYPE_LIBS=-lfreetyped -lbz2d -llibpng16d"
-           # "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/bz2d.lib"
-    )    
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/bz2d.lib"
+            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib"
+            )    
 elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\"")

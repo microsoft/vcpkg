@@ -73,21 +73,23 @@ function(configure_qt)
         message(STATUS "Configuring ${_build_triplet}")
         set(_build_dir "${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         file(MAKE_DIRECTORY ${_build_dir})
+        # These paths get hardcoded into qmake. So point them into the CURRENT_INSTALLED_DIR instead of CURRENT_PACKAGES_DIR
+        # makefiles will be fixed to install into CURRENT_PACKAGES_DIR in install_qt
         set(BUILD_OPTIONS ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildname}}
-                -prefix ${CURRENT_PACKAGES_DIR}
-                -extprefix ${CURRENT_PACKAGES_DIR}
+                -prefix ${CURRENT_INSTALLED_DIR}
+                -extprefix ${CURRENT_INSTALLED_DIR}
                 ${EXT_BIN_DIR}
-                -hostprefix ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
-                -hostlibdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
-                -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
-                -archdatadir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
-                -datadir ${CURRENT_PACKAGES_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
-                -plugindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/plugins
-                -qmldir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/qml
-                -headerdir ${CURRENT_PACKAGES_DIR}/include
-                -libexecdir ${CURRENT_PACKAGES_DIR}/tools/qt5${_path_suffix_${_buildname}}
-                -bindir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/bin
-                -libdir ${CURRENT_PACKAGES_DIR}${_path_suffix_${_buildname}}/lib
+                -hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -hostlibdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
+                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
+                -archdatadir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
+                -plugindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/plugins
+                -qmldir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/qml
+                -headerdir ${CURRENT_INSTALLED_DIR}/include
+                -libexecdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
+                -bindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin
+                -libdir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link

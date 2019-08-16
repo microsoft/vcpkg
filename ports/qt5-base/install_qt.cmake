@@ -1,3 +1,5 @@
+include(qt_fix_makefile_install)
+
 function(install_qt)
     cmake_parse_arguments(_bc "DISABLE_PARALLEL" "" "" ${ARGN})
 
@@ -63,11 +65,14 @@ function(install_qt)
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
         message(STATUS "Package ${_build_triplet}")
         vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
+        #Create Makefiles
         vcpkg_execute_required_process(
             COMMAND ${INVOKE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
             LOGNAME build-${_build_triplet}
         )
+        qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
+        
         vcpkg_execute_required_process(
             COMMAND ${INVOKE} install
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
