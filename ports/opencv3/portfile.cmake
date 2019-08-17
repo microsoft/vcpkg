@@ -316,6 +316,7 @@ vcpkg_configure_cmake(
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_GDCM=${WITH_GDCM}
         -DWITH_HALIDE=${WITH_HALIDE}
+        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_JASPER=${WITH_JASPER}
         -DWITH_JPEG=${WITH_JPEG}
