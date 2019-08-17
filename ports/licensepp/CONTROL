@@ -1,0 +1,5 @@
+Source: licensepp
+Version: 2019-08-17
+Description: Cross platform software licensing library
+Build-Depends: cryptopp[pem-pack]
+Homepage: https://github.com/zuhd-org/licensepp
