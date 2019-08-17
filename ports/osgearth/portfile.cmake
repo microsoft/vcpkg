@@ -9,20 +9,14 @@ if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
 endif()
 string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OSG_PLUGINS_SUBDIR}")
 
-vcpkg_download_distfile(
-    VS2017PATCH
-    URLS "https://github.com/remoe/osgearth/commit/f7081cc4f9991c955c6a0ef7b7b50e48360d14fd.diff"
-    FILENAME "osgearth-f7081cc4f9991c955c6a0ef7b7b50e48360d14fd.patch"
-    SHA512 eadb47a5713c00c05add8627e5cad22844db041da34081d59104151a1a1e2d5ac9552909d67171bfc0449a3e4d2930dd3a7914d3ec7ef7ff1015574e9c9a6105
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF osgearth-2.10.1
-    SHA512 a74e6922ae29f85b4227b23a83dbccba92e08b7880533c281ceb244703c38b51a02823fdee3199c975c969db963b35ebad0e3bfed3c1e218a36d130b20a48e5b
+    REF osgearth-2.10.2
+    SHA512 fa306a82374716dafae9d834ed0fb07a7369ae0961696de36b6e2af45bc150040295985d9b9781ab713fd0707691451a6a8f173b34253749ab22764f51e60045
     HEAD_REF master
-    PATCHES ${VS2017PATCH}
+    PATCHES 
+		RocksDB.patch
 )
 
 vcpkg_configure_cmake(

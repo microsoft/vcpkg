@@ -4,8 +4,6 @@
 #include <vcpkg/parse.h>
 #include <vcpkg/sourceparagraph.h>
 
-#include <unordered_map>
-
 namespace vcpkg
 {
     /// <summary>
