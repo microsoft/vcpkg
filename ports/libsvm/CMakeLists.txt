@@ -16,7 +16,10 @@ add_library(libsvm ${libsvm_sources})
 target_compile_definitions(
     libsvm
     PRIVATE
-        $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+        $<$<C_COMPILER_ID:MSVC>:
+            _CRT_SECURE_NO_WARNINGS
+            strdup=_strdup
+        >
 )
 
 target_include_directories(
