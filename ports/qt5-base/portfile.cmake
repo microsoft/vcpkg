@@ -1,3 +1,4 @@
+
 vcpkg_find_qt_platforms(TARGET_MKSPEC HOST_MKSPEC HOST_TOOLS)
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
@@ -15,31 +16,18 @@ if(DEFINED HOST_TOOLS)
     list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_TOOLS_ROOT ${HOST_TOOLS})
 endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+include(qt_port_hashes)
 include(configure_qt)
 include(install_qt)
 
-if(NOT DEFINED QT_MAJOR_MINOR_VER)
-    set(MAJOR_MINOR 5.12)
-else()
-    message(STATUS "Qt5 hash checks disabled!")
-    set(MAJOR_MINOR ${QT_MAJOR_MINOR_VER})    
-    set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
-endif()
-
-if(NOT DEFINED QT_PATCH_VER)
-    set(PATCH 4)
-else()
-    set(PATCH ${QT_PATCH_VER})
-endif()
-    
-set(MAJOR_MINOR 5.12)
-set(FULL_VERSION ${MAJOR_MINOR}.4)
+set(FULL_VERSION "${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}")
 set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     FILENAME ${ARCHIVE_NAME}
-    SHA512 28b029a0d3621477f625d474b8bc38ddcc7173df6adb274b438e290b6c50bd0891e5b62c04b566a281781acee3a353a6a3b0bc88228e996994f92900448d7946
+    SHA512 ${QT_HASH_${PORT}}
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -121,7 +109,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             )    
 elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
-        message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev\" and \"apt-get install libglu1-mesa-dev\"")
+        message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
 
     configure_qt(
@@ -223,9 +211,6 @@ vcpkg_execute_required_process(
     LOGNAME fix-cmake
 )
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5)
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
@@ -233,8 +218,9 @@ file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/
 #install scripts for other qt ports
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
-    ${CMAKE_CURRENT_LIST_DIR}/qt_modular_library.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/qt_ports_helper.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/qt_port_hashes.cmake
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/qt5modularscripts
+        ${CURRENT_PACKAGES_DIR}/share/qt5
 )
 #

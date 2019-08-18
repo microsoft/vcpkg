@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
 
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
 
-qt_modular_library(qtmultimedia  28eaaf4a704649616cd77ae5560ddd6298c82e525f59fa4d5a0178826fe2d6c9b77dcb067f2b5b56e88da7d6043a3f8e34b5c810d12751c74fdc65e5440586fa)
+qt_ports_helper(qtmultimedia  28eaaf4a704649616cd77ae5560ddd6298c82e525f59fa4d5a0178826fe2d6c9b77dcb067f2b5b56e88da7d6043a3f8e34b5c810d12751c74fdc65e5440586fa)

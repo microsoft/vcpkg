@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

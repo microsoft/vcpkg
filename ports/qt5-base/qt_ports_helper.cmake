@@ -1,3 +1,5 @@
+include(qt_port_hashes.cmake)
+
 set(_qt5base_port_dir "${CMAKE_CURRENT_LIST_DIR}")
 
 function(qt_modular_fix_cmake)
@@ -31,28 +33,13 @@ function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
         )
     endif()
     
-    if(NOT DEFINED QT_MAJOR_MINOR_VER)
-        set(MAJOR_MINOR 5.12)
-    else()
-        message(STATUS "Qt5 hash checks disabled!")
-        set(MAJOR_MINOR ${QT_MAJOR_MINOR_VER})
-        
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
-    endif()
-
-    if(NOT DEFINED QT_PATCH_VER)
-        set(PATCH 4)
-    else()
-        set(PATCH ${QT_PATCH_VER})
-    endif()
-    
-    set(FULL_VERSION ${MAJOR_MINOR}.${PATCH})
+    set(FULL_VERSION "${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}")
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
         URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
         FILENAME ${ARCHIVE_NAME}
-        SHA512 ${HASH}
+        SHA512 ${QT_HASH_${PORT}}
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -166,9 +153,6 @@ function(qt_modular_build_library SOURCE_PATH)
         if(NOT PACKAGE_BINS)
             file(REMOVE_RECURSE ${CURRENT_BUILD_PACKAGE_DIR}/bin)
         endif()
-        
-        #vcpkg_copy_tool_dependencies(${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5/bin)
-        vcpkg_copy_tool_dependencies(${CURRENT_BUILD_PACKAGE_DIR}/tools/${PORT})
     endforeach()
 endfunction()
 
@@ -188,7 +172,7 @@ function(qt_modular_install_license SOURCE_PATH)
     file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endfunction()
 
-function(qt_modular_library NAME HASH)
+function(qt_ports_helper NAME HASH)
     cmake_parse_arguments(_csc "" "" "PATCHES" ${ARGN}) 
   
     qt_modular_fetch_library(${NAME} ${HASH} TARGET_SOURCE_PATH)
