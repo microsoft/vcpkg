@@ -31,19 +31,19 @@ function(qt_modular_fetch_library NAME HASH TARGET_SOURCE_PATH)
         )
     endif()
     
-    if(NOT DEFINED VCPKG_QT_MAJOR_MINOR_VER)
+    if(NOT DEFINED QT_MAJOR_MINOR_VER)
         set(MAJOR_MINOR 5.12)
     else()
         message(STATUS "Qt5 hash checks disabled!")
-        set(MAJOR_MINOR ${VCPKG_QT_MAJOR_MINOR_VER})
+        set(MAJOR_MINOR ${QT_MAJOR_MINOR_VER})
         
         set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
     endif()
 
-    if(NOT DEFINED VCPKG_QT_PATCH_VER)
+    if(NOT DEFINED QT_PATCH_VER)
         set(PATCH 4)
     else()
-        set(PATCH ${VCPKG_QT_PATCH_VER})
+        set(PATCH ${QT_PATCH_VER})
     endif()
     
     set(FULL_VERSION ${MAJOR_MINOR}.${PATCH})
