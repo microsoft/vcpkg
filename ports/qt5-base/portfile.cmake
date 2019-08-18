@@ -229,4 +229,12 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+#install scripts for other qt ports
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
+    ${CMAKE_CURRENT_LIST_DIR}/qt_modular_library.cmake
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/qt5modularscripts
+)
 #
