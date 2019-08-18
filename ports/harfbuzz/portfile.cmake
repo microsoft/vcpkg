@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.5.3
-    SHA512 d541463b3647fc2c7ddaa29aedcea1c3bde5e26e0d529384d66d630af3aaf2a4befb3c4d47c93833f099339a0f951fb132011a02c57fc00ba543bd1b17026ffa
+    REF 2.6.0
+    SHA512 5a7d455f5f590521cc757487d21c1c92b5379b370410b181a6cbc03685f756fabad8af6cedd79cb82adea0e676e9b6385c2a123cb2e570be5dec2f13f3db3c33
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
@@ -15,16 +15,6 @@ vcpkg_from_github(
         # This patch is required for propagating the full list of dependencies from glib
         glib-cmake.patch
 )
-
-file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
-
-if("${_contents}" MATCHES "include \\(FindFreetype\\)")
-    message(FATAL_ERROR "Harfbuzz's cmake must not directly include() FindFreetype.")
-endif()
-
-if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
-    message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
-endif()
 
 SET(HB_HAVE_ICU "OFF")
 if("icu" IN_LIST FEATURES)
