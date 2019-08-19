@@ -203,6 +203,7 @@ qt_install_copyright(${SOURCE_PATH})
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_functions.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_fix_makefile_install.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_fix_cmake.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_fix_prl.cmake
