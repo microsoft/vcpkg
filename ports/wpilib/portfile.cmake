@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wpilibsuite/allwpilib
-    REF 3dfb01d45b971ffdfeea50ce58653eff592807d9
-    SHA512 188923cbe166f5812a24a06d8af56bda289aaed38231d45583d423e51e9cd23bb257ade02fdc26e8d0fdd6cdcb793282c04ac80ebad76f29fdbd0a3c1a10f05c
+    REF 7e95010a298f132d4f3ccc105ce296c4b69203ad
+    SHA512 94b68b33b08a6ec058c375a774f9f382bd10611942a5be5f6faeeb33bdc530510d2a9070b8a63a6ff5e24c4aab6a0ced0fcf0f6b5ccbbaf18e4b83fe7da73713
 )
 
 set(WITHOUT_JAVA ON)
