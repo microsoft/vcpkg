@@ -24,4 +24,5 @@
 - [vcpkg\_from\_gitlab](vcpkg_from_gitlab.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md)
 - [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)
+- [vcpkg\_prettify\_command](vcpkg_prettify_command.md)
 - [vcpkg\_test\_cmake](vcpkg_test_cmake.md)
