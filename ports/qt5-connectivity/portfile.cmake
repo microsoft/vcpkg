@@ -1,4 +1,2 @@
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
-
-qt_ports_helper(qtconnectivity e1076c5883f29cb394d9929a52c3bfce97952cef11b1f82d1fcca59440354d1a29ab19d628f6359ca02f3318fb526b3ca78d691af6dc0f4c06741b2306c8e571)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

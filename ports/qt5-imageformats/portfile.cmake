@@ -1,7 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
-
-qt_ports_helper(qtimageformats e9adab3b7e1f5a0679e1924eb08718f2c6c53073f83018c9243886f7e1b084940bb9a642f46d76fae21552c4a76c655482536ae873cd4cfead4876a3561ebe8f)
-
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

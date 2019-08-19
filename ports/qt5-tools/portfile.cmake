@@ -1,7 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
-
-qt_ports_helper(qttools 072d09315fc73ec610d2e0d9a1380e5539a79fa1d73104a801e0f8b9afe489b735fefcc46d7c9e519ee8c1b14975386260239be24183933281dead2fec00f466)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-tools/plugins/platforminputcontexts)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

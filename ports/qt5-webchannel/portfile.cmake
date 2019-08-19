@@ -1,5 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
-
-qt_ports_helper(qtwebchannel 956c57c019623a2ccc4b4a7fc8ca2404a04862b7a3fdb8d1317dfd0d24d00f73db4698df22a9758667256646129163ea1b3a588435aa01f28e72e35300637458)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

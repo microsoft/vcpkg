@@ -1,3 +1,2 @@
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_ports_helper.cmake)
-
-qt_ports_helper(qtgamepad e84e637e3b2ced01e92ceb2b54b829a1e2346a4c96b15044f59bcc9764a24c91df6fcd0165f454143cfad87c05471b7d84567d9c6ea8fd3b4c753e5e771e8947)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()
