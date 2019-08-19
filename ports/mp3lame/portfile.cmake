@@ -1,10 +1,12 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported.")
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  message(FATAL_ERROR "mp3lame does not support ARM")
 endif()
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  message(FATAL_ERROR "mp3lame does not support UWP")
+endif()
+
+include(vcpkg_common_functions)
 
 set(VERSION 3.100)
 
