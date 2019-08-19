@@ -5,13 +5,21 @@
 ## ## The following variables are available:
 ## ```cmake
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
+## VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
+## VCPKG_TARGET_STATIC_LIBRARY_SUFFIX       static library suffix for target (same as CMAKE_STATIC_LIBRARY_SUFFIX)
+## VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
+## VCPKG_TARGET_SHARED_LIBRARY_SUFFIX       shared library suffix for target (same as CMAKE_SHARED_LIBRARY_SUFFIX)
 ## VCPKG_BUILD_LIST                         List of VCPKG_BUILD_TYPE which the current port will build (uppercase)
 ## VCPKG_BUILD_SHORT_NAME_<BUILDTYPE>       Short name of the buildtype (e.g. DEBUG=dbg; RELEASE=rel)
 ## VCPKG_PATH_SUFFIX_<BUILDTYPE>            Path suffix used for the buildtype (e.g. /debug)
 ## VCPKG_BUILDTREE_TRIPLET_DIR_<BUILDTYPE>  Path to current buildtype buildtree (e.g. CURRENT_BUILDTREES_DIR/TRIPLET-rel )
 ## ```
 ## 
+## CMAKE_STATIC_LIBRARY_PREFIX, CMAKE_STATIC_LIBRARY_SUFFIX, CMAKE_SHARED_LIBRARY_PREFIX, CMAKE_SHARED_LIBRARY_SUFFIX are defined for the target so that 
+## portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports. 
+##
 
+# Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(VCPKG_TARGET_IS_WINDOWS 1)
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -26,6 +34,25 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(VCPKG_TARGET_IS_FREEBSD 1)
 endif()
+
+# Helper variables for libraries 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".lib")
+    set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dll")
+    set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "")
+    set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "")
+else()
+    set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
+    set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".so")
+    set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "lib")
+    set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "lib")
+endif()
+#Setting these variables allows find_library to work in script mode and thus in portfiles!
+#This allows us scale down on hardcoded target dependent paths in portfiles
+set(CMAKE_STATIC_LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+set(CMAKE_SHARED_LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+set(CMAKE_STATIC_LIBRARY_PREFIX ${VCPKG_TARGET_STATIC_LIBRARY_PREFIX})
+set(CMAKE_SHARED_LIBRARY_PREFIX ${VCPKG_TARGET_SHARED_LIBRARY_PREFIX})
 
 # Script helpers for looping over the different buildtypes
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
