@@ -5,9 +5,9 @@ function(configure_qt)
         message(FATAL_ERROR "configure_qt requires a TARGET_PLATFORM argument.")
     endif()
     
-    #if(DEFINED _csc_HOST_PLATFORM)
-    #    list(APPEND _csc_OPTIONS -platform ${VCPKG_QT_HOST_PLATFORM})
-    #endif()
+    if(DEFINED _csc_HOST_PLATFORM)
+        list(APPEND _csc_OPTIONS -platform ${_csc_HOST_PLATFORM})
+    endif()
     
     if(DEFINED _csc_HOST_TOOLS_ROOT)
         ## vcpkg internal file struture assumed here!
@@ -42,15 +42,10 @@ function(configure_qt)
         list(APPEND _csc_OPTIONS -static-runtime)
     endif()
 
-    #list(APPEND _csc_OPTIONS -verbose)
-    
-    #list(APPEND _csc_OPTIONS -optimized-tools)
-
     list(APPEND _csc_OPTIONS_RELEASE -release)
     list(APPEND _csc_OPTIONS_DEBUG -debug)
-    #list(APPEND _csc_OPTIONS_RELEASE -force-debug-info)
-    #list(APPEND _csc_OPTIONS_RELEASE -ltcg)
-    
+
+    #Replace with VCPKG variables if PR #7733 is merged
     unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
         set(_buildname "DEBUG")
@@ -80,8 +75,10 @@ function(configure_qt)
                 -extprefix ${CURRENT_INSTALLED_DIR}
                 ${EXT_BIN_DIR}
                 -hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
-                -hostlibdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib
-                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
+                -hostlibdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib # could probably be move to manual-link
+                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin 
+                # Qt VS Plugin requires a /bin subfolder with the executables in the root dir. But to use the wizard a correctly setup lib folder is also required
+                # So with the vcpkg layout there is no way to make it work unless all dll are are copied to tools/qt5/bin and all libs to tools/qt5/lib
                 -archdatadir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/plugins
@@ -96,9 +93,12 @@ function(configure_qt)
                 -xplatform ${_csc_TARGET_PLATFORM}
             )
         
-        if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR) #use qmake          
+        if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake          
+            if(WIN32)
+                set(INVOKE_OPTIONS "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911")
+            endif()
             vcpkg_execute_required_process(
-                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911" -- ${BUILD_OPTIONS}
+                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "${INVOKE_OPTIONS}" -- ${BUILD_OPTIONS}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )
@@ -116,7 +116,6 @@ function(configure_qt)
         # Copy configuration dependent qt.conf
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR_PATH)
         file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}" CMAKE_CURRENT_INSTALLED_DIR_PATH)
-        file(TO_CMAKE_PATH "${VCPKG_QT_HOST_TOOLS_ROOT_DIR}" CMAKE_VCPKG_QT_HOST_ROOT_PATH)
         file(READ "${CURRENT_BUILDTREES_DIR}/${_build_triplet}/bin/qt.conf" _contents)
         string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
         string(REPLACE "${CMAKE_CURRENT_INSTALLED_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})

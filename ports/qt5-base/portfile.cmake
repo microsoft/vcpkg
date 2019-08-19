@@ -1,13 +1,16 @@
+vcpkg_buildpath_length_warning(37)
 
-vcpkg_find_qt_platforms(TARGET_MKSPEC HOST_MKSPEC HOST_TOOLS)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
-        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
-    )
-endif()
+include(qt_port_functions)
+include(configure_qt)
+include(install_qt)
 
+#########################
+## Find Host and Target mkspec name for configure
+include(find_qt_mkspec)
+find_qt_mkspec(TARGET_MKSPEC HOST_MKSPEC HOST_TOOLS)
 set(QT_PLATFORM_CONFIGURE_OPTIONS TARGET_PLATFORM ${TARGET_MKSPEC})
 if(DEFINED HOST_MKSPEC)
     list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${HOST_MKSPEC})
@@ -15,31 +18,18 @@ endif()
 if(DEFINED HOST_TOOLS)
     list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_TOOLS_ROOT ${HOST_TOOLS})
 endif()
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-include(qt_port_hashes)
-include(configure_qt)
-include(install_qt)
+#########################
+## Downloading Qt5-Base
 
-set(FULL_VERSION "${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}")
-set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
-
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
-    FILENAME ${ARCHIVE_NAME}
-    SHA512 ${QT_HASH_${PORT}}
-)
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE_FILE}"
-    REF ${FULL_VERSION}
-    PATCHES
-        winmain_pro.patch   #Moves qtmain to manual-link
-        windows_prf.patch   #fixes the qtmain dependency due to the above move
-        qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-        gui_configure.patch #Patches the gui configure.json to include the correct fonttype dependencies
-        static_opengl.patch #Let the Khronos headers define the required preprocessor definitions. Qt5 you know nothing. 
-)
+qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
+                        PATCHES
+                            patches/winmain_pro.patch   #Moves qtmain to manual-link
+                            patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
+                            patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
+                            patches/gui_configure.patch #Patches the gui configure.json to include the correct fonttype dependencies
+                            patches/static_opengl.patch #Let the Khronos headers define the required preprocessor definitions. Qt5 you know nothing. 
+                    )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
 foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
@@ -48,6 +38,9 @@ foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sql
     endif()
 endforeach()
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
+
+#########################
+## Setup Configure options
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
 set(ENV{_CL_} "/utf-8")
@@ -69,6 +62,9 @@ set(CORE_OPTIONS
     #-simulator_and_device
     #-ltcg
     #-combined-angle-lib
+    #-optimized-tools
+    #-force-debug-info
+    #-verbose
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -76,11 +72,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND CORE_OPTIONS -appstore-compliant)
     endif()
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-        list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengeles2"
+        list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
     else()
         list(APPEND CORE_OPTIONS -opengl es2) # dynamic will generate angle dll and the angle port has been explicitly deleted. 
-                                              # es2 is the Windows automatic default. (might make problems with older qt projects due to including angle.)
-                                              # use QT -= core gui if that happens or we need to switch this one to desktop
+                                              # es2 is the Windows automatic default.
     endif()
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
@@ -171,6 +166,7 @@ else()
     install_qt()
 endif()
 
+#########################
 #TODO: Make this a function since it is also done by modular scripts!
 # e.g. by patching mkspecs/features/qt_tools.prf somehow
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/mkspecs/*.pri" 
@@ -179,24 +175,12 @@ file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKA
 file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/include" CMAKE_INCLUDE_PATH)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
-    foreach(PRL_FILE IN LISTS PRL_FILES)
-        file(READ "${PRL_FILE}" _contents)
-        string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
-        string(REPLACE "${CMAKE_INCLUDE_PATH}" "\$\$[QT_INSTALL_HEADERS]" _contents "${_contents}")
-        file(WRITE "${PRL_FILE}" "${_contents}")
-    endforeach()
+    qt_fix_prl("${CURRENT_INSTALLED_DIR}" "${PRL_FILES}")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
-    foreach(PRL_FILE IN LISTS PRL_FILES)
-        file(READ "${PRL_FILE}" _contents)
-        string(REPLACE "${CMAKE_DEBUG_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
-        string(REPLACE "${CMAKE_INCLUDE_PATH}" "\$\$[QT_INSTALL_HEADERS]" _contents "${_contents}")
-        file(WRITE "${PRL_FILE}" "${_contents}")
-    endforeach()
+    qt_fix_prl("${CURRENT_INSTALLED_DIR}/debug" "${PRL_FILES}")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
 endif()
 
@@ -213,14 +197,19 @@ vcpkg_execute_required_process(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+qt_install_copyright(${SOURCE_PATH})
 
 #install scripts for other qt ports
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
-    ${CMAKE_CURRENT_LIST_DIR}/qt_ports_helper.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/qt_port_hashes.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_fix_makefile_install.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_fix_cmake.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_fix_prl.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_download_submodule.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_build_submodule.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_submodule_installation.cmake
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
 )
-#

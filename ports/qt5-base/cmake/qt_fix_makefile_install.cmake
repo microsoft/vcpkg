@@ -1,3 +1,4 @@
+#Could probably be a vcpkg_fix_makefile_install for other ports?
 function(qt_fix_makefile_install BUILD_DIR)
     #Fix the installation location
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
