@@ -1,8 +1,9 @@
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 #include <vcpkg-test/util.h>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/statusparagraph.h>
 
 // used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
@@ -153,7 +154,7 @@ namespace vcpkg::Test
             ec.assign(errno, std::system_category());
         }
 #else
-        static_cast<void>(ec);
+        Util::unused(target, file, ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
@@ -175,7 +176,7 @@ namespace vcpkg::Test
 #elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
 #else
-        static_cast<void>(ec);
+        Util::unused(target, file, ec);
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }

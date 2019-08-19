@@ -164,7 +164,7 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    Expected<RawParagraph> parse_single_paragraph(const std::string& str)
+    static Expected<RawParagraph> parse_single_paragraph(const std::string& str)
     {
         const std::vector<RawParagraph> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
 

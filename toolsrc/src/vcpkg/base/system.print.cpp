@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/base/util.h>
 
 namespace vcpkg::System
 {
@@ -21,6 +22,9 @@ namespace vcpkg::System
             System::print2(message);
             SetConsoleTextAttribute(console_handle, original_color);
 #else
+            // TODO: add color handling code
+            // it should probably use VT-220 codes
+            Util::unused(c);
             System::print2(message);
 #endif
         }

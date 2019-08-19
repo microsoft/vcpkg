@@ -10,10 +10,10 @@ vcpkg_from_github(
         fix-cmake.patch
 )
 
-vcpkg_check_features(
-    asm MI_SEE_ASM
-    secure MI_SECURE
-    override MI_OVERRIDE
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    asm         MI_SEE_ASM
+    secure      MI_SECURE
+    override    MI_OVERRIDE
 )
 
 vcpkg_configure_cmake(
@@ -24,11 +24,9 @@ vcpkg_configure_cmake(
     OPTIONS_RELEASE
         -DMI_CHECK_FULL=OFF
     OPTIONS
-        -DMI_OVERRIDE=${MI_OVERRIDE}
         -DMI_INTERPOSE=ON
-        -DMI_SEE_ASM=${MI_SEE_ASM}
         -DMI_USE_CXX=OFF
-        -DMI_SECURE=${MI_SECURE}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

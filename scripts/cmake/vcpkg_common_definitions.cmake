@@ -7,7 +7,14 @@
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
 ## VCPKG_HOST_PATH_SEPARATOR                Host specific path separator
 ## VCPKG_HOST_PATH_SEPARATOR_ESCAPED        Escaped version of VCPKG_HOST_PATH_SEPARATOR if necessary (e.g. symbol with special meaning in cmake like ";")
+## VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
+## VCPKG_TARGET_STATIC_LIBRARY_SUFFIX       static library suffix for target (same as CMAKE_STATIC_LIBRARY_SUFFIX)
+## VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
+## VCPKG_TARGET_SHARED_LIBRARY_SUFFIX       shared library suffix for target (same as CMAKE_SHARED_LIBRARY_SUFFIX)
 ## ```
+## 
+## CMAKE_STATIC_LIBRARY_PREFIX, CMAKE_STATIC_LIBRARY_SUFFIX, CMAKE_SHARED_LIBRARY_PREFIX, CMAKE_SHARED_LIBRARY_SUFFIX are defined for the target so that 
+## portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports. 
 ##
 
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
@@ -34,3 +41,22 @@ elseif(CMAKE_HOST_UNIX)
     set(VCPKG_HOST_PATH_SEPARATOR ":")
     set(VCPKG_HOST_PATH_SEPARATOR_ESCAPED ":")
 endif()
+
+#Helper variables for libraries 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".lib")
+    set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dll")
+    set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "")
+    set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "")
+else()
+    set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
+    set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".so")
+    set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "lib")
+    set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "lib")
+endif()
+#Setting these variables allows find_library to work in script mode and thus in portfiles!
+#This allows us scale down on hardcoded target dependent paths in portfiles
+set(CMAKE_STATIC_LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+set(CMAKE_SHARED_LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+set(CMAKE_STATIC_LIBRARY_PREFIX ${VCPKG_TARGET_STATIC_LIBRARY_PREFIX})
+set(CMAKE_SHARED_LIBRARY_PREFIX ${VCPKG_TARGET_SHARED_LIBRARY_PREFIX})
