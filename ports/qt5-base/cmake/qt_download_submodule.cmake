@@ -17,7 +17,7 @@ function(qt_download_submodule)
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
 
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+        URLS "http://download.qt.io/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
         FILENAME ${ARCHIVE_NAME}
         SHA512 ${QT_HASH_${PORT}}
     )
