@@ -137,7 +137,7 @@ namespace vcpkg::Util
         std::sort(begin(cont), end(cont));
         cont.erase(std::unique(begin(cont), end(cont)), end(cont));
 
-        return cont;
+        return std::forward<Range>(cont);
     }
 
     template<class Range1, class Range2>
