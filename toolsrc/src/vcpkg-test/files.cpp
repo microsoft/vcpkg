@@ -1,4 +1,4 @@
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 #include <vcpkg-test/util.h>
 
 #include <vcpkg/base/files.h>
@@ -107,7 +107,7 @@ namespace
                 CHECK_EC_ON_FILE(base, ec);
             }
 
-            for (int i = 0; i < width; ++i)
+            for (std::uint64_t i = 0; i < width; ++i)
             {
                 create_directory_tree(urbg,
                                       fs,

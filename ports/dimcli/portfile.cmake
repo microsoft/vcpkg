@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v4.1.0
     SHA512 5de010b5abfda9e6996bba8c621e03ae0cf81dbc2f69cd859e2ebf7b1706c451f7f8e142299784646d89ca3c3e5803e8711215680b8bdb8eb663158bff3b4f3d
     HEAD_REF master
+	PATCHES
+		fix-NameBoolean.patch
 )
 set(staticCrt OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

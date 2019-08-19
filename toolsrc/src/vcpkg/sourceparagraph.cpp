@@ -26,6 +26,7 @@ namespace vcpkg
         static const std::string SUPPORTS = "Supports";
         static const std::string VERSION = "Version";
         static const std::string HOMEPAGE = "Homepage";
+        static const std::string TYPE = "Type";
     }
 
     static Span<const std::string> get_list_of_valid_fields()
@@ -37,6 +38,7 @@ namespace vcpkg
             SourceParagraphFields::MAINTAINER,
             SourceParagraphFields::BUILD_DEPENDS,
             SourceParagraphFields::HOMEPAGE,
+            SourceParagraphFields::TYPE,
         };
 
         return valid_fields;

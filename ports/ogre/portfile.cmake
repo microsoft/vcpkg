@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
@@ -38,6 +42,12 @@ else()
     set(WITH_PYTHON OFF)
 endif()
 
+if("csharp" IN_LIST FEATURES)
+    set(WITH_CSHARP ON)
+else()
+    set(WITH_CSHARP OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -65,6 +75,7 @@ vcpkg_configure_cmake(
 # Optional stuff
         -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
         -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
+        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
         -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
@@ -92,7 +103,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+#Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
+#manual-link subfolder is here to the rescue!
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
