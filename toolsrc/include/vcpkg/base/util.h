@@ -224,9 +224,8 @@ namespace vcpkg::Util
         }
     }
 
-    template<class T>
-    void unused(T&& param)
+    template<class... Ts>
+    void unused(const Ts&...)
     {
-        (void)param;
     }
 }

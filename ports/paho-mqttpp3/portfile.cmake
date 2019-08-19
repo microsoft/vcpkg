@@ -9,7 +9,9 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-vcpkg_check_features("ssl" PAHO_WITH_SSL)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
+  "ssl" PAHO_WITH_SSL
+)
 
 # Link with 'paho-mqtt3as' library
 set(PAHO_C_LIBNAME paho-mqtt3as)
@@ -48,8 +50,8 @@ vcpkg_configure_cmake(
   OPTIONS
   -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
   -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
-  -DPAHO_WITH_SSL=${PAHO_WITH_SSL}
   -DPAHO_MQTT_C_INCLUDE_DIRS=${PAHO_C_INC}
+  ${FEATURE_OPTIONS}
   ${PAHO_OPTIONS}
 )
 

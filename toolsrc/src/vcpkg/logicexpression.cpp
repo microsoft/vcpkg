@@ -54,9 +54,12 @@ namespace vcpkg
     {
     public:
         ExpressionParser(const std::string& str, const std::string& evaluation_context)
-            : raw_text(str), evaluation_context(evaluation_context)
+            : raw_text(str)
+            , evaluation_context(evaluation_context)
+            , current_iter(raw_text.begin())
+            , current_char(get_current_char())
         {
-            go_to_begin();
+            skip_whitespace();
 
             final_result = logic_expression();
 
@@ -77,15 +80,16 @@ namespace vcpkg
         bool has_error() const { return err == nullptr; }
 
     private:
-        bool final_result;
-
-        std::string::const_iterator current_iter;
         const std::string& raw_text;
+        const std::string& evaluation_context;
+        std::string::const_iterator current_iter;
         char current_char;
 
-        const std::string& evaluation_context;
+        bool final_result;
 
         std::unique_ptr<ParseError> err;
+
+        char get_current_char() const { return (current_iter != raw_text.end() ? *current_iter : '\0'); }
 
         void add_error(std::string message, int column = -1)
         {
@@ -105,16 +109,6 @@ namespace vcpkg
 
         int current_column() const { return static_cast<int>(current_iter - raw_text.begin()); }
 
-        void go_to_begin()
-        {
-            current_iter = raw_text.begin();
-            current_char = (current_iter != raw_text.end() ? *current_iter : current_char);
-
-            if (current_char == ' ' || current_char == '\t')
-            {
-                next_skip_whitespace();
-            }
-        }
         void skip_to_end()
         {
             current_iter = raw_text.end();
@@ -126,7 +120,7 @@ namespace vcpkg
             if (current_char != '\0')
             {
                 current_iter++;
-                current_char = (current_iter != raw_text.end() ? *current_iter : '\0');
+                current_char = get_current_char();
             }
             return current();
         }

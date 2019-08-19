@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF b6cd405286ed8635ece71c72f118e659f4ade3fb
-    SHA512 1642a9cf1923d00c52c346399941517787431dad3e6d3a5da07bc02243a231a95e30e0a9568ffd29bb9b9757f15c1c47d2d811c2bedb301f2d27cf912be0a534
+    REF 90a443f9c2437ca8a682a1ac625eba64e1d74a8a
+    SHA512 fc874a7977f11be58dc63993b520b4ae6ca43654fb5250c8b56df62a21f4dca8fcbdc81dfa106374b2bb7c59bc88952fbfc0e3ae4c7d63fdb502afbaeb39c822
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
