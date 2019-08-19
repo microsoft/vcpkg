@@ -18,7 +18,7 @@ function(qt_build_submodule SOURCE_PATH)
     #Install the module files
     vcpkg_build_qmake(TARGETS install SKIP_MAKEFILES BUILD_LOGNAME install)
     
-    qt_modular_fix_cmake()
+    qt_fix_cmake(${CURRENT_PACKAGES_DIR} ${PORT})
 
     #Replace with VCPKG variables if PR #7733 is merged
     unset(BUILDTYPES)
