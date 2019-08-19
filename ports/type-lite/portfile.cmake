@@ -8,12 +8,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    test BUILD_TESTS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
+    PREFER_NINJA
     OPTIONS
-        -DTYPE_LITE_OPT_BUILD_TESTS=OFF
-        -DTYPE_LITE_OPT_BUILD_EXAMPLES=OFF      
+        -DTYPE_LITE_OPT_BUILD_TESTS=${BUILD_TESTS}
+        -DTYPE_LITE_OPT_BUILD_EXAMPLES=OFF           
 )
 
 vcpkg_install_cmake()
@@ -26,4 +30,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
