@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <mutex>
 #include <type_traits>
@@ -121,12 +122,12 @@ namespace vcpkg::Util
         }
     }
 
-    template<class Range>
-    void sort(Range& cont)
+    template<class Range, class Comp = std::less<typename Range::value_type>>
+    void sort(Range& cont, Comp comp = Comp())
     {
         using std::begin;
         using std::end;
-        std::sort(begin(cont), end(cont));
+        std::sort(begin(cont), end(cont), comp);
     }
 
     template<class Range>

@@ -669,8 +669,8 @@ namespace vcpkg::Dependencies
             }
         }
 
-        //The feature was not previously installed. Mark the cluster
-        //(aka the entire port) to be removed before re-adding it.
+        // The feature was not previously installed. Mark the cluster
+        // (aka the entire port) to be removed before re-adding it.
         mark_minus(cluster, graph, graph_plan, prevent_default_features);
 
         return follow_plus_dependencies(feature, cluster, graph, graph_plan, prevent_default_features);

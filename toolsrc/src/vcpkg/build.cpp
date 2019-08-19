@@ -646,15 +646,15 @@ namespace vcpkg::Build
         const int max_port_file_count = 100;
 
         // the order of recursive_directory_iterator is undefined so save the names to sort
-        std::vector<std::pair<std::string, std::string>> hashes_files;
+        std::vector<AbiEntry> port_files;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
             if (fs::is_regular_file(status(port_file)))
             {
-                hashes_files.emplace_back(vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"),
-                                          port_file.path().filename().u8string());
+                port_files.emplace_back(port_file.path().filename().u8string(),
+                                        vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"));
 
-                if (hashes_files.size() > max_port_file_count)
+                if (port_files.size() > max_port_file_count)
                 {
                     abi_tag_entries.emplace_back(AbiEntry{"no_hash_max_portfile", ""});
                     break;
@@ -662,16 +662,13 @@ namespace vcpkg::Build
             }
         }
 
-        if (hashes_files.size() <= max_port_file_count)
+        if (port_files.size() <= max_port_file_count)
         {
-            Util::sort(hashes_files);
+            Util::sort(port_files, [](const AbiEntry& l, const AbiEntry& r) {
+                return l.value < r.value || (l.value == r.value && l.key < r.key);
+            });
 
-            for (auto& hash_file : hashes_files)
-            {
-                // We've already sorted by hash so it's safe to write down the
-                // filename, which will be consistent across machines.
-                abi_tag_entries.emplace_back(AbiEntry{std::move(hash_file.second), std::move(hash_file.first)});
-            }
+            std::move(port_files.begin(), port_files.end(), std::back_inserter(abi_tag_entries));
         }
 
         abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
