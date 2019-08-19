@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm")
+    message(FATAL_ERROR "ARM is currently not supported.")
+endif()
+
 set(VERSION 3.100)
 
 vcpkg_download_distfile(ARCHIVE_FILE
