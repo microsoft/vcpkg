@@ -27,14 +27,17 @@ function(vcpkg_configure_qmake)
     endif()
 
     if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-        list(APPEND _csc_OPTIONS "CONFIG+=static")
+        list(APPEND _csc_OPTIONS "CONFIG-=shared")
+        list(APPEND _csc_OPTIONS "CONFIG*=static")
     else()
-        list(APPEND _csc_OPTIONS "CONFIG+=shared")
-        list(APPEND _csc_OPTIONS_DEBUG "CONFIG+=separate_debug_info")
+        list(APPEND _csc_OPTIONS "CONFIG-=static")
+        list(APPEND _csc_OPTIONS "CONFIG*=shared")
+        list(APPEND _csc_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
     
     if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_CRT_LINKAGE} STREQUAL "static")
-        list(APPEND _csc_OPTIONS "CONFIG+=static-runtime")
+        list(APPEND _csc_OPTIONS "CONFIG*=static-runtime")
+        
     endif()
     
     # Cleanup build directories

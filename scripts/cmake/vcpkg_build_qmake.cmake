@@ -40,7 +40,7 @@ function(vcpkg_build_qmake)
     set(ENV_CL_BACKUP "$ENV{_CL_}")
     set(ENV{_CL_} "/utf-8")
 
-    #Should probably be moved to a more general location. This pattern is used often in different scripts
+    #Replace with VCPKG variables if PR #7733 is merged
     unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(_buildname "DEBUG")
