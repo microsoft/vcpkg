@@ -14,6 +14,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    openmp    ENABLE_OPENMP
+)
+
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
    set(DMLC_FORCE_SHARED_CRT ON)
 else()
@@ -24,7 +28,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-       -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}    
+       -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}   
+       -DUSE_OPENMP=${ENABLE_OPENMP}       
 )
 
 vcpkg_install_cmake()
@@ -36,4 +41,3 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/dmlc)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
