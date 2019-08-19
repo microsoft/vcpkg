@@ -305,6 +305,7 @@ vcpkg_configure_cmake(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
+        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_PROTOBUF=ON

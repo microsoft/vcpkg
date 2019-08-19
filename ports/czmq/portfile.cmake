@@ -69,7 +69,7 @@ else()
     set(EXECUTABLE_SUFFIX "")
 endif()
 
-if (BUILD_TOOLS)
+if ("tool" IN_LIST FEATURES)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
