@@ -1,0 +1,19 @@
+diff --git  a/src/python/qgspythonutilsimpl.cpp  b/src/python/qgspythonutilsimpl.cpp
+index e72acca2..20f5325e 100644
+--- a/src/python/qgspythonutilsimpl.cpp
++++ b/src/python/qgspythonutilsimpl.cpp
+@@ -1,4 +1,4 @@
+-/***************************************************************************
++﻿/***************************************************************************
+     qgspythonutils.cpp - routines for interfacing Python
+     ---------------------
+     begin                : October 2006
+@@ -17,7 +17,7 @@
+ // otherwise issues some warnings
+ #ifdef _MSC_VER
+ #ifdef _DEBUG
+-#undef _DEBUG
++//#undef _DEBUG
+ #endif
+ #endif
+ #include <Python.h>

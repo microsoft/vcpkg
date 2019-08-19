@@ -1,0 +1,51 @@
+diff --git a/src/providers/postgres/CMakeLists.txt b/src/providers/postgres/CMakeLists.txt
+index f5650394..52e337ca 100644
+--- a/src/providers/postgres/CMakeLists.txt
++++ b/src/providers/postgres/CMakeLists.txt
+@@ -96,6 +96,9 @@ IF (WITH_GUI)
+   )
+ ENDIF ()
+ 
++TARGET_LINK_LIBRARIES (postgresprovider
++  postgresprovider_a
++)
+ 
+ # clang-tidy
+ IF(CLANG_TIDY_EXE)
+-
+-
+
+diff --git a/src/providers/ogr/CMakeLists.txt b/src/providers/ogr/CMakeLists.txt
+index c05ef755..695d4b8f 100644
+--- a/src/providers/ogr/CMakeLists.txt
++++ b/src/providers/ogr/CMakeLists.txt
+@@ -87,6 +87,9 @@ IF (WITH_GUI)
+   )
+ ENDIF ()
+ 
++TARGET_LINK_LIBRARIES (ogrprovider
++  ogrprovider_a
++)
+ 
+ IF (MSVC)
+   #needed for linking to gdal which needs odbc
+-
+-
+
+diff --git a/src/providers/wms/CMakeLists.txt b/src/providers/wms/CMakeLists.txt
+index d5bf8d72..1e2f16c0 100644
+--- a/src/providers/wms/CMakeLists.txt
++++ b/src/providers/wms/CMakeLists.txt
+@@ -74,6 +74,10 @@ IF (WITH_GUI)
+   )
+ ENDIF ()
+ 
++TARGET_LINK_LIBRARIES(wmsprovider
++  wmsprovider_a
++)
++
+ TARGET_COMPILE_DEFINITIONS(wmsprovider PRIVATE "-DQT_NO_FOREACH")
+ 
+ INSTALL (TARGETS wmsprovider
+-
+-

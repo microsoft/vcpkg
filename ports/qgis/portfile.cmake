@@ -1,0 +1,292 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO qgis/QGIS
+    REF final-3_8_1
+    SHA512   5a68c1841735f52ba468fb9079b6d4967b1470240aa6e95e418ef2349db72b74184aad9b440e5d75626fe028039b6315a2d66e466600678fb2018617f5b0c5d5
+    HEAD_REF master
+	PATCHES
+		qgspython.patch
+		qca.patch
+		#The postgres, ogr, wms providers plugin will be compiled into a static library and a dynamic library at the same time. It is possible to use the moc to generate the same file at compile time, which will cause compilation errors. Use TARGET_LINK_LIBRARIES to make dynamic libraries dependent on static libraries to control the compilation order (if there is a better way, replace it)
+		providers_a.patch
+)
+
+#Fix UTF-8 to UTF-8-BOM For Chinese
+if("utf8bom" IN_LIST FEATURES)
+	vcpkg_apply_patches(
+		SOURCE_PATH ${SOURCE_PATH}
+		PATCHES "${CMAKE_CURRENT_LIST_DIR}/Fix-process_function_template.patch"
+		QUIET
+	)
+endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+
+set(PYTHON_EXECUTABLE ${PYTHON3})
+get_filename_component(PYTHON_PATH ${PYTHON3} PATH)
+set(ENV{PATH} "$ENV{PATH};${PYTHON_PATH};${PYTHON_PATH}/Scripts")
+set(PYTHONHOME ${PYTHON_PATH})
+
+if(NOT EXISTS "${PYTHON_PATH}/Scripts/pip.exe")
+	MESSAGE(STATUS  "Install pip for Python Begin ...")
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_CURRENT_LIST_DIR}/enableInstallPIP.py "${PYTHON_PATH}"
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME pip
+	)
+
+	vcpkg_download_distfile(
+		GET_PIP_PATH
+		URLS https://bootstrap.pypa.io/3.3/get-pip.py
+		FILENAME get-pip.py
+		SHA512  92e68525830bb23955a31cb19ebc3021ef16b6337eab83d5db2961b791283d2867207545faf83635f6027f2f7b7f8fee2c85f2cfd8e8267df25406474571c741
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" "${GET_PIP_PATH}"
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME pip
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" -m pip install --upgrade pip
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME pip
+	)
+	MESSAGE(STATUS  "Install pip for Python End")
+endif (NOT EXISTS "${PYTHON_PATH}/Scripts/pip.exe")
+
+##############################################################################
+#Install pyqt sip
+if(NOT EXISTS "${PYTHON_PATH}/Lib/site-packages/sip.pyd")
+	MESSAGE(STATUS  "Install sip for Python Begin ...")
+	set(SIP_VERSION "4.19.18")
+	vcpkg_download_distfile(
+		SIP_PATH
+		URLS https://www.riverbankcomputing.com/static/Downloads/sip/${SIP_VERSION}/sip-${SIP_VERSION}.tar.gz
+		FILENAME sip-${SIP_VERSION}.tar.gz
+		SHA512  e3c58cc6c38b277b3b9fd7adf33df91b47e0385e59d52c543e630a194d73d04d91e0a3845cb3973d1955f77049e75246fa7e6f544e02e1efe0086a297cf1d887
+	)
+	
+	vcpkg_extract_source_archive(
+		 ${SIP_PATH} ${PYTHON_PATH}
+	)
+	
+	set(SIP_PATH ${PYTHON_PATH}/sip-${SIP_VERSION})
+	file(COPY "${SIP_PATH}/siputils.py" DESTINATION "${PYTHON_PATH}")
+	file(GLOB PYTHON_INCLUDE ${CURRENT_INSTALLED_DIR}/include/python3.7/*.h)
+	file(COPY ${PYTHON_INCLUDE} DESTINATION "${PYTHON_PATH}/Include")
+	file(COPY "${CURRENT_INSTALLED_DIR}/lib/python37.lib" DESTINATION "${PYTHON_PATH}/libs")
+	
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" configure.py
+		WORKING_DIRECTORY ${SIP_PATH}
+		LOGNAME pip
+	)
+	
+	find_program(NMAKE nmake REQUIRED)
+	vcpkg_execute_required_process(
+		COMMAND ${NMAKE} -f Makefile install
+		WORKING_DIRECTORY ${SIP_PATH}
+		LOGNAME pip
+	)
+	
+	file(REMOVE_RECURSE "${PYTHON_PATH}/siputils.py")
+	file(REMOVE_RECURSE "${PYTHON_PATH}/sip-${SIP_VERSION}.tar.gz.extracted")
+	file(REMOVE_RECURSE "${SIP_PATH}")
+	MESSAGE(STATUS  "Install sip for Python End")
+endif (NOT EXISTS "${PYTHON_PATH}/Lib/site-packages/sip.pyd")
+
+if(NOT EXISTS "${PYTHON_PATH}/Scripts/pyuic5.exe")
+	MESSAGE(STATUS  "Install PyQt5 for Python Begin ...")
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" -m pip install PyQt5
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME pip
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" -m pip install PyQt5-sip
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME pip
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" -m pip install QScintilla
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME pip
+	)
+	
+	if("3d" IN_LIST FEATURES)
+		vcpkg_execute_required_process(
+			COMMAND "${PYTHON_EXECUTABLE}" -m pip install PyQt3D
+			WORKING_DIRECTORY ${PYTHON_PATH}
+			LOGNAME pip
+		)
+	endif()
+	MESSAGE(STATUS  "Install PyQt5 for Python End")
+endif (NOT EXISTS "${PYTHON_PATH}/Scripts/pyuic5.exe")
+
+if("bindings" IN_LIST FEATURES)
+	if(NOT EXISTS "${PYTHON_PATH}/sip/QtCore/QtCoremod.sip")
+		MESSAGE(STATUS  "Install PyQt5 sip for Python Begin ...")
+		set(PYQT5_VERSION "5.13.0")
+		vcpkg_download_distfile(
+			PYQT5_PATH
+			URLS https://www.riverbankcomputing.com/static/Downloads/PyQt5/${PYQT5_VERSION}/PyQt5_gpl-${PYQT5_VERSION}.tar.gz
+			FILENAME PyQt5_gpl-${PYQT5_VERSION}.tar.gz
+			SHA512  72cdd700956f8a5791fd38cac6a348f189eec9e69f3fd79a0c711ff49c770d4982fe62ec9057830d26abc4c12133922df915be0844449212f0bdf338fe1e4cb0
+		)
+		
+		vcpkg_extract_source_archive(
+			 ${PYQT5_PATH} ${PYTHON_PATH}
+		)
+		
+		set(PYQT5_PATH ${PYTHON_PATH}/PyQt5_gpl-${PYQT5_VERSION})
+		file(COPY ${PYQT5_PATH}/sip DESTINATION "${PYTHON_PATH}" )
+			
+		file(REMOVE_RECURSE ${PYTHON_PATH}/PyQt5_gpl-${PYQT5_VERSION}.tar.gz.extracted)
+		file(REMOVE_RECURSE ${PYQT5_PATH})
+		MESSAGE(STATUS  "Install PyQt5 sip for Python End")
+	endif (NOT EXISTS "${PYTHON_PATH}/sip/QtCore/QtCoremod.sip")
+
+	if("3d" IN_LIST FEATURES)
+		if(NOT EXISTS "${PYTHON_PATH}/sip/Qt3DCore/Qt3DCoremod.sip")
+			MESSAGE(STATUS  "Install PyQt3D sip for Python Begin ...")
+			set(PYQT3D_VERSION "5.13.0")
+			vcpkg_download_distfile(
+				PYQT3D_PATH
+				URLS https://www.riverbankcomputing.com/static/Downloads/PYQT3D/${PYQT3D_VERSION}/PYQT3D_gpl-${PYQT3D_VERSION}.tar.gz
+				FILENAME PYQT3D_gpl-${PYQT3D_VERSION}.tar.gz
+				SHA512  49916c4eacf0373530500de217bac15716437347e16e6d93f4db4b064703d3181bad554f8f619729ec1de500c2bc15c6e52982a0dc53f3c0fc6792570e2eba44
+			)
+			
+			vcpkg_extract_source_archive(
+				 ${PYQT3D_PATH} ${PYTHON_PATH}
+			)
+			
+			set(PYQT3D_PATH ${PYTHON_PATH}/PYQT3D_gpl-${PYQT3D_VERSION})
+			file(COPY ${PYQT3D_PATH}/sip DESTINATION "${PYTHON_PATH}" )
+				
+			file(REMOVE_RECURSE ${PYTHON_PATH}/PYQT3D_gpl-${PYQT3D_VERSION}.tar.gz.extracted)
+			file(REMOVE_RECURSE ${PYQT3D_PATH})
+			MESSAGE(STATUS  "Install PyQt3D sip for Python End")
+		endif (NOT EXISTS "${PYTHON_PATH}/sip/Qt3DCore/Qt3DCoremod.sip")
+	endif()
+endif()
+##############################################################################
+
+##############################################################################
+#Fix UTF-8 to UTF-8-BOM For Chinese
+if("utf8bom" IN_LIST FEATURES)
+	if(NOT EXISTS "${PYTHON_PATH}/Scripts/chardetect.exe")
+		MESSAGE(STATUS  "Install chardet for Python Begin ...")
+		vcpkg_execute_required_process(
+			COMMAND "${PYTHON_EXECUTABLE}" -m pip install chardet
+			WORKING_DIRECTORY ${PYTHON_PATH}
+			LOGNAME pip
+		)
+		MESSAGE(STATUS  "Install chardet for Python End")
+	endif (NOT EXISTS "${PYTHON_PATH}/Scripts/chardetect.exe")
+
+	MESSAGE(STATUS  "Change SourceFile Encoding to UTF-8-BOM Begin ...")
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_CURRENT_LIST_DIR}/UTF82UTF8-BOM.py "${SOURCE_PATH}/src"
+		WORKING_DIRECTORY ${PYTHON_PATH}
+		LOGNAME UTF82UTF8-BOM
+	)
+
+	vcpkg_execute_required_process(
+		COMMAND "${PYTHON_EXECUTABLE}" UTF82UTF8-BOM.py "${SOURCE_PATH}/tests/src"
+		WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+		LOGNAME UTF82UTF8-BOM
+	)
+	MESSAGE(STATUS  "Change SourceFile Encoding to UTF-8-BOM End")
+endif()
+##############################################################################
+
+if (CMAKE_HOST_WIN32)
+	# flex and bison for ANGLE library
+	vcpkg_find_acquire_program(FLEX)
+	get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
+	get_filename_component(FLEX_DIR ${FLEX_EXE_PATH} NAME)
+
+	file(COPY ${FLEX_EXE_PATH} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools" )
+	set(FLEX_TEMP "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools/${FLEX_DIR}")
+	file(RENAME "${FLEX_TEMP}/win_bison.exe" "${FLEX_TEMP}/bison.exe")
+	file(RENAME "${FLEX_TEMP}/win_flex.exe" "${FLEX_TEMP}/flex.exe")
+	list(APPEND QGIS_OPTIONS -DBISON_EXECUTABLE="${FLEX_TEMP}/bison.exe")
+	list(APPEND QGIS_OPTIONS -DFLEX_EXECUTABLE="${FLEX_TEMP}/flex.exe")
+endif(CMAKE_HOST_WIN32)
+
+list(APPEND QGIS_OPTIONS -DENABLE_TESTS:BOOL=OFF)
+list(APPEND QGIS_OPTIONS -DWITH_QTWEBKIT:BOOL=OFF)
+list(APPEND QGIS_OPTIONS -DWITH_GRASS7:BOOL=OFF)
+list(APPEND QGIS_OPTIONS -DWITH_QUICK:BOOL=OFF)
+list(APPEND QGIS_OPTIONS -DWITH_QSPATIALITE:BOOL=ON)
+list(APPEND QGIS_OPTIONS -DWITH_CUSTOM_WIDGETS:BOOL=ON)
+
+if("server" IN_LIST FEATURES)
+	list(APPEND QGIS_OPTIONS -DWITH_SERVER:BOOL=ON)
+else()
+	list(APPEND QGIS_OPTIONS -DWITH_SERVER:BOOL=OFF)
+endif()
+
+if("bindings" IN_LIST FEATURES)
+	list(APPEND QGIS_OPTIONS -DWITH_BINDINGS:BOOL=ON)
+else()
+	list(APPEND QGIS_OPTIONS -DWITH_BINDINGS:BOOL=OFF)
+endif()
+
+if("3d" IN_LIST FEATURES)
+	list(APPEND QGIS_OPTIONS -DWITH_3D:BOOL=ON)
+else()
+	list(APPEND QGIS_OPTIONS -DWITH_3D:BOOL=OFF)
+endif()
+
+list(APPEND QGIS_OPTIONS -DPYUIC_PROGRAM=${PYTHON_PATH}/Scripts/pyuic5.exe)
+list(APPEND QGIS_OPTIONS -DPYRCC_PROGRAM=${PYTHON_PATH}/Scripts/pyrcc5.exe)
+
+# Configure debug and release library paths
+macro(FIND_LIB_OPTIONS basename relname debname suffix)
+   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/${relname}.lib" ${basename}_LIBRARY_RELEASE)
+   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/${debname}.lib" ${basename}_LIBRARY_DEBUG)
+   if( ${basename}_LIBRARY_DEBUG AND ${basename}_LIBRARY_RELEASE AND NOT ${basename}_LIBRARY_DEBUG STREQUAL ${basename}_LIBRARY_RELEASE )
+		list(APPEND QGIS_OPTIONS_RELEASE -D${basename}_${suffix}="${${basename}_LIBRARY_RELEASE}")
+		list(APPEND QGIS_OPTIONS_DEBUG -D${basename}_${suffix}="${${basename}_LIBRARY_DEBUG}")
+   elseif( ${basename}_LIBRARY_RELEASE )
+	    list(APPEND QGIS_OPTIONS -D${basename}_${suffix}="${${basename}_LIBRARY_RELEASE}")
+   elseif( ${basename}_LIBRARY_DEBUG )
+	    list(APPEND QGIS_OPTIONS -D${basename}_${suffix}="${${basename}_LIBRARY_DEBUG}")
+   endif()
+endmacro()
+
+FIND_LIB_OPTIONS(GDAL gdal gdald LIBRARY)
+FIND_LIB_OPTIONS(GEOS geos_c geos_cd LIBRARY)
+FIND_LIB_OPTIONS(GSL gsl gsld LIB)
+FIND_LIB_OPTIONS(GSLCBLAS gslcblas gslcblasd LIB)
+FIND_LIB_OPTIONS(POSTGRES libpq libpqd LIBRARY)
+FIND_LIB_OPTIONS(PROJ proj projd LIBRARY)
+FIND_LIB_OPTIONS(PYTHON python37 python37_d LIBRARY)
+FIND_LIB_OPTIONS(QCA qca qcad LIBRARY)
+FIND_LIB_OPTIONS(QWT qwt qwtd LIBRARY)
+FIND_LIB_OPTIONS(QTKEYCHAIN qt5keychain qt5keychaind LIBRARY)
+FIND_LIB_OPTIONS(SPATIALINDEX spatialindex-64 spatialindex-64d LIBRARY)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${QGIS_OPTIONS} 
+	OPTIONS_DEBUG ${QGIS_OPTIONS_DEBUG}
+	OPTIONS_RELEASE ${QGIS_OPTIONS_RELEASE}
+)
+
+vcpkg_install_cmake()
+
+#Debug
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# Handle copyright
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/qgis)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/qgis/COPYING ${CURRENT_PACKAGES_DIR}/share/qgis/copyright)
