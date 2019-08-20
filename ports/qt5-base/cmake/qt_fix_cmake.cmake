@@ -1,5 +1,5 @@
 function(qt_fix_cmake PACKAGE_DIR_TO_FIX PORT_TO_FIX)
-    set(BACKUP_PATH $ENV{PATH})
+    set(BACKUP_PATH "$ENV{PATH}")
     #Find Python and add it to the path
     vcpkg_find_acquire_program(PYTHON2)
     get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
@@ -23,5 +23,5 @@ function(qt_fix_cmake PACKAGE_DIR_TO_FIX PORT_TO_FIX)
     if(EXISTS ${PACKAGE_DIR_TO_FIX}/debug/lib/cmake)
         file(REMOVE_RECURSE ${PACKAGE_DIR_TO_FIX}/debug/lib/cmake)
     endif()
-    set(ENV{PATH} ${BACKUP_PATH})
+    set(ENV{PATH} "${BACKUP_PATH}")
 endfunction()
