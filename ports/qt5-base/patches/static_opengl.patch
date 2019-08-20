@@ -2,7 +2,7 @@ diff --git a/mkspecs/features/win32/opengl.prf b/mkspecs/features/win32/opengl.p
 index f21848f94..202c49688 100644
 --- a/mkspecs/features/win32/opengl.prf	
 +++ b/mkspecs/features/win32/opengl.prf
-@@ -30,7 +30,7 @@ qtConfig(opengles2) {
+@@ -30,7 +30,8 @@ qtConfig(opengles2) {
          LIBS += $$QMAKE_LIBS_OPENGL_ES2
          QMAKE_LIBDIR += $$QMAKE_LIBDIR_OPENGL_ES2_RELEASE
      }
@@ -11,3 +11,18 @@ index f21848f94..202c49688 100644
  } else {
      !qtConfig(dynamicgl) {
          QMAKE_LIBS += $$QMAKE_LIBS_OPENGL
+diff --git a/src/angle/src/common/gles_common.pri b/src/angle/src/common/gles_common.pri
+index 70b65dd4c..1dcc96af5 100644
+--- a/src/angle/src/common/gles_common.pri	
++++ b/src/angle/src/common/gles_common.pri
+@@ -23,7 +23,7 @@ for(libname, STATICLIBS) {
+     PRE_TARGETDEPS += $$staticlib
+ }
+ 
+-DEFINES += LIBANGLE_IMPLEMENTATION LIBGLESV2_IMPLEMENTATION GL_APICALL= GL_GLEXT_PROTOTYPES= EGLAPI=
++DEFINES += LIBANGLE_IMPLEMENTATION LIBGLESV2_IMPLEMENTATION 
++qtConfig(static): DEFINES += ANGLE_EXPORT= 
+ !winrt: DEFINES += ANGLE_ENABLE_D3D9 ANGLE_SKIP_DXGI_1_2_CHECK
+ 
+ QT_FOR_CONFIG += gui-private
+
