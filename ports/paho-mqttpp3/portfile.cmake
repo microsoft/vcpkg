@@ -7,6 +7,8 @@ vcpkg_from_github(
   REF v1.0.1
   SHA512 be612197fae387b9f1d8f10944d451ec9e7ebec6045beed365e642089c0a5fde882ed5c734f2b46a5008f98b8445a51114492f0f36fdc684b8a8fe4b71fe31a4
   HEAD_REF master
+  PATCHES
+    fix-include-path.patch  
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
@@ -24,7 +26,7 @@ else()
 endif()
 
 # Setting the include path where MqttClient.h is present
-set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include/paho-mqtt")
+set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include")
 
 # Set the generator to Ninja
 set(PAHO_CMAKE_GENERATOR "Ninja")
