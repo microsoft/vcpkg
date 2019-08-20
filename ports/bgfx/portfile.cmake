@@ -59,6 +59,7 @@ endif()
 
 # GENie does not allow cmake+msvc, so we use msbuild in windows
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --with-amalgamated)  # Compiles much faster
     if(VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
         set(GENIE_ACTION vs2015)
     elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
@@ -77,7 +78,7 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
     set(GENIE "${BX_DIR}/tools/bin/darwin/genie")
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-    set(GENIE "${SOURCE_DIR}/tools/bin/linux/genie")
+    set(GENIE "${BX_DIR}/tools/bin/linux/genie")
 else()
     message(FATAL_ERROR "Unsupported host platform: ${CMAKE_HOST_SYSTEM_NAME}")
 endif()
@@ -90,13 +91,12 @@ vcpkg_execute_required_process(
     LOGNAME "genie-${TARGET_TRIPLET}"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(PROJ bgfx-shared-lib)
-else()
-    set(PROJ bgfx)
-endif()
-
 if(GENIE_ACTION STREQUAL cmake)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(PROJ bgfx-shared-lib)
+    else()
+        set(PROJ bgfx)
+    endif()
     vcpkg_configure_cmake(
         SOURCE_PATH "${SOURCE_DIR}/.build/projects/cmake"
         PREFER_NINJA
@@ -119,7 +119,7 @@ if(GENIE_ACTION STREQUAL cmake)
 else()
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_DIR}"
-        PROJECT_SUBPATH ".build/projects/${GENIE_ACTION}/${PROJ}.vcxproj"
+        PROJECT_SUBPATH ".build/projects/${GENIE_ACTION}/bgfx.sln"
         LICENSE_SUBPATH "LICENSE"
         INCLUDES_SUBPATH "include"
     )
