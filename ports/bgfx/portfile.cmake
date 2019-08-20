@@ -57,9 +57,29 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(GENIE_OPTIONS ${GENIE_OPTIONS} --with-shared-lib)
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=x32)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=x64)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=ARM)
+else()
+    message(WARNING "Architecture may be not supported: ${VCPKG_TARGET_ARCHITECTURE}")
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=${VCPKG_TARGET_ARCHITECTURE})
+endif()
+
+if(VCPKG_TRIPLET MATCHES osx)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --os=macosx)
+elseif(VCPKG_TRIPLET MATCHES linux)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --os=linux)
+elseif(VCPKG_TRIPLET MATCHES windows)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --os=windows)
+elseif(VCPKG_TRIPLET MATCHES uwp)
+    set(GENIE_OPTIONS ${GENIE_OPTIONS} --vs=winstore100)
+endif()
+
 # GENie does not allow cmake+msvc, so we use msbuild in windows
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(GENIE_OPTIONS ${GENIE_OPTIONS} --with-amalgamated)  # Compiles much faster
     if(VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
         set(GENIE_ACTION vs2015)
     elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
@@ -69,8 +89,13 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     else()
         message(FATAL_ERROR "Unsupported Visual Studio toolset: ${VCPKG_PLATFORM_TOOLSET}")
     endif()
+    set(PROJ_FOLDER ${GENIE_ACTION})
+    if(VCPKG_TRIPLET MATCHES uwp)
+        set(PROJ_FOLDER ${PROJ_FOLDER}-winstore100)
+    endif()
 else()
     set(GENIE_ACTION cmake)
+    set(PROJ_FOLDER ${GENIE_ACTION})
 endif()
 
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
@@ -98,7 +123,7 @@ if(GENIE_ACTION STREQUAL cmake)
         set(PROJ bgfx)
     endif()
     vcpkg_configure_cmake(
-        SOURCE_PATH "${SOURCE_DIR}/.build/projects/cmake"
+        SOURCE_PATH "${SOURCE_DIR}/.build/projects/${PROJ_FOLDER}"
         PREFER_NINJA
         OPTIONS_RELEASE -DCMAKE_BUILD_TYPE=Release
         OPTIONS_DEBUG -DCMAKE_BUILD_TYPE=Debug
@@ -119,7 +144,7 @@ if(GENIE_ACTION STREQUAL cmake)
 else()
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_DIR}"
-        PROJECT_SUBPATH ".build/projects/${GENIE_ACTION}/bgfx.sln"
+        PROJECT_SUBPATH ".build/projects/${PROJ_FOLDER}/bgfx.sln"
         LICENSE_SUBPATH "LICENSE"
         INCLUDES_SUBPATH "include"
     )
