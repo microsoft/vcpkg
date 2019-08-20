@@ -1,0 +1,37 @@
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO quickfix/quickfix
+    REF v1.15.1
+    SHA512 6c3dc53f25932c9b7516ab9228f634511ae0f399719f87f0ec2b38c380c0a7d1c808f0f9a14a70a063e1956118550d1121222283a9139f23cd4f8f038f595f70
+    HEAD_REF master
+    PATCHES 
+        00001-fix-build.patch
+        00002-fix-dynamic-exception-specifications.patch
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DHAVE_EMX=OFF
+        -DHAVE_MYSQL=OFF
+        -DHAVE_POSTGRESQL=OFF
+        -DHAVE_PYTHON=OFF
+        -DHAVE_PYTHON2=OFF
+        -DHAVE_PYTHON3=OFF
+        -DHAVE_SSL=ON
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/quickfix)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/quickfix/copyright COPYONLY)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/quickfix)

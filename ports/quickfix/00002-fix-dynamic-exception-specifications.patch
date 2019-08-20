@@ -1,0 +1,3228 @@
+diff --git a/src/C++/Acceptor.cpp b/src/C++/Acceptor.cpp
+index b4235084..b899a151 100644
+--- a/src/C++/Acceptor.cpp
++++ b/src/C++/Acceptor.cpp
+@@ -36,7 +36,7 @@ namespace FIX
+ Acceptor::Acceptor( Application& application,
+                     MessageStoreFactory& messageStoreFactory,
+                     const SessionSettings& settings )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+   : m_threadid( 0 ),
+   m_application( application ),
+   m_messageStoreFactory( messageStoreFactory ),
+@@ -53,7 +53,7 @@ Acceptor::Acceptor( Application& application,
+                     MessageStoreFactory& messageStoreFactory,
+                     const SessionSettings& settings,
+                     LogFactory& logFactory )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : m_threadid( 0 ),
+   m_application( application ),
+   m_messageStoreFactory( messageStoreFactory ),
+@@ -66,7 +66,7 @@ throw( ConfigError )
+   initialize();
+ }
+ 
+-void Acceptor::initialize() throw ( ConfigError )
++void Acceptor::initialize() QUICKFIX_THROW( ConfigError )
+ {
+   std::set < SessionID > sessions = m_settings.getSessions();
+   std::set < SessionID > ::iterator i;
+@@ -155,7 +155,7 @@ const Dictionary* const Acceptor::getSessionSettings( const SessionID& sessionID
+   }
+ }
+ 
+-void Acceptor::start() throw ( ConfigError, RuntimeError )
++void Acceptor::start() QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   m_stop = false;
+   onConfigure( m_settings );
+@@ -167,7 +167,7 @@ void Acceptor::start() throw ( ConfigError, RuntimeError )
+     throw RuntimeError("Unable to spawn thread");
+ }
+ 
+-void Acceptor::block() throw ( ConfigError, RuntimeError )
++void Acceptor::block() QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   m_stop = false;
+   onConfigure( m_settings );
+@@ -176,7 +176,7 @@ void Acceptor::block() throw ( ConfigError, RuntimeError )
+   startThread(this);
+ }
+ 
+-bool Acceptor::poll( double timeout ) throw ( ConfigError, RuntimeError )
++bool Acceptor::poll( double timeout ) QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   if( m_firstPoll )
+   {
+diff --git a/src/C++/Acceptor.h b/src/C++/Acceptor.h
+index 30b23dce..4e76ab39 100644
+--- a/src/C++/Acceptor.h
++++ b/src/C++/Acceptor.h
+@@ -50,9 +50,9 @@ class Acceptor
+ {
+ public:
+   Acceptor( Application&, MessageStoreFactory&,
+-            const SessionSettings& ) throw( ConfigError );
++            const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   Acceptor( Application&, MessageStoreFactory&,
+-            const SessionSettings&, LogFactory& ) throw( ConfigError );
++            const SessionSettings&, LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~Acceptor();
+ 
+@@ -63,11 +63,11 @@ public:
+   }
+ 
+   /// Start acceptor.
+-  void start() throw ( ConfigError, RuntimeError );
++  void start() QUICKFIX_THROW( ConfigError, RuntimeError );
+   /// Block on the acceptor
+-  void block() throw ( ConfigError, RuntimeError );
++  void block() QUICKFIX_THROW( ConfigError, RuntimeError );
+   /// Poll the acceptor
+-  bool poll( double timeout = 0.0 ) throw ( ConfigError, RuntimeError );
++  bool poll( double timeout = 0.0 ) QUICKFIX_THROW( ConfigError, RuntimeError );
+ 
+   /// Stop acceptor.
+   void stop( bool force = false );
+@@ -91,12 +91,12 @@ public:
+   { return m_messageStoreFactory; }
+ 
+ private:
+-  void initialize() throw ( ConfigError );
++  void initialize() QUICKFIX_THROW( ConfigError );
+ 
+   /// Implemented to configure acceptor
+-  virtual void onConfigure( const SessionSettings& ) throw ( ConfigError ) {};
++  virtual void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError ) {};
+   /// Implemented to initialize acceptor
+-  virtual void onInitialize( const SessionSettings& ) throw ( RuntimeError ) {};
++  virtual void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError ) {};
+   /// Implemented to start listening for connections.
+   virtual void onStart() = 0;
+   /// Implemented to connect and poll for events.
+diff --git a/src/C++/Application.h b/src/C++/Application.h
+index d53ab0af..c0d51356 100644
+--- a/src/C++/Application.h
++++ b/src/C++/Application.h
+@@ -54,13 +54,13 @@ public:
+   virtual void toAdmin( Message&, const SessionID& ) = 0;
+   /// Notification of app message being sent to target
+   virtual void toApp( Message&, const SessionID& )
+-  throw( DoNotSend ) = 0;
++  QUICKFIX_THROW( DoNotSend ) = 0;
+   /// Notification of admin message being received from target
+   virtual void fromAdmin( const Message&, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon ) = 0;
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon ) = 0;
+   /// Notification of app message being received from target
+   virtual void fromApp( const Message&, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType ) = 0;
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType ) = 0;
+ };
+ 
+ /**
+@@ -87,13 +87,13 @@ public:
+   void toAdmin( Message& message, const SessionID& sessionID )
+   { Locker l( m_mutex ); app().toAdmin( message, sessionID ); }
+   void toApp( Message& message, const SessionID& sessionID )
+-  throw( DoNotSend )
++  QUICKFIX_THROW( DoNotSend )
+   { Locker l( m_mutex ); app().toApp( message, sessionID ); }
+   void fromAdmin( const Message& message, const SessionID& sessionID )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon )
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon )
+   { Locker l( m_mutex ); app().fromAdmin( message, sessionID ); }
+   void fromApp( const Message& message, const SessionID& sessionID )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType )
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType )
+   { Locker l( m_mutex ); app().fromApp( message, sessionID ); }
+ 
+   Mutex m_mutex;
+@@ -115,11 +115,11 @@ class NullApplication : public Application
+   void onLogout( const SessionID& ) {}
+   void toAdmin( Message&, const SessionID& ) {}
+   void toApp( Message&, const SessionID& )
+-  throw( DoNotSend ) {}
++  QUICKFIX_THROW( DoNotSend ) {}
+   void fromAdmin( const Message&, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon ) {}
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon ) {}
+   void fromApp( const Message&, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType ) {}
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType ) {}
+ };
+ /*! @} */
+ }
+diff --git a/src/C++/DataDictionary.cpp b/src/C++/DataDictionary.cpp
+index 09aaa538..02d402b0 100644
+--- a/src/C++/DataDictionary.cpp
++++ b/src/C++/DataDictionary.cpp
+@@ -44,7 +44,7 @@ DataDictionary::DataDictionary()
+ {}
+ 
+ DataDictionary::DataDictionary( std::istream& stream, bool preserveMsgFldsOrder )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : m_hasVersion( false ), m_checkFieldsOutOfOrder( true ),
+   m_checkFieldsHaveValues( true ), m_checkUserDefinedFields( true ), m_allowUnknownMessageFields( false ), m_storeMsgFieldsOrder(preserveMsgFldsOrder)
+ {
+@@ -52,7 +52,7 @@ throw( ConfigError )
+ }
+ 
+ DataDictionary::DataDictionary( const std::string& url, bool preserveMsgFldsOrder )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : m_hasVersion( false ), m_checkFieldsOutOfOrder( true ),
+   m_checkFieldsHaveValues( true ), m_checkUserDefinedFields( true ), m_allowUnknownMessageFields( false ), m_storeMsgFieldsOrder(preserveMsgFldsOrder), m_orderedFieldsArray(0)
+ {
+@@ -123,7 +123,7 @@ DataDictionary& DataDictionary::operator=( const DataDictionary& rhs )
+ void DataDictionary::validate( const Message& message,
+                                const DataDictionary* const pSessionDD,
+                                const DataDictionary* const pAppDD )
+-throw( FIX::Exception )
++QUICKFIX_THROW( FIX::Exception )
+ {  
+   const Header& header = message.getHeader();
+   const BeginString& beginString = FIELD_GET_REF( header, BeginString );
+@@ -203,7 +203,7 @@ void DataDictionary::iterate( const FieldMap& map, const MsgType& msgType ) cons
+ }
+ 
+ void DataDictionary::readFromURL( const std::string& url )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   DOMDocumentPtr pDoc(new PUGIXML_DOMDocument());
+ 
+@@ -221,7 +221,7 @@ throw( ConfigError )
+ }
+ 
+ void DataDictionary::readFromStream( std::istream& stream )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   DOMDocumentPtr pDoc(new PUGIXML_DOMDocument());
+ 
+@@ -232,7 +232,7 @@ throw( ConfigError )
+ }
+ 
+ void DataDictionary::readFromDocument( const DOMDocumentPtr &pDoc )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   // VERSION
+   DOMNodePtr pFixNode = pDoc->getNode("/fix");
+@@ -455,7 +455,7 @@ message_order const& DataDictionary::getOrderedFields() const
+   return m_orderedFieldsArray;
+ }
+ 
+-message_order const& DataDictionary::getHeaderOrderedFields() const throw( ConfigError )
++message_order const& DataDictionary::getHeaderOrderedFields() const QUICKFIX_THROW( ConfigError )
+ {
+   if( m_headerOrder ) return m_headerOrder;
+ 
+@@ -475,7 +475,7 @@ message_order const& DataDictionary::getHeaderOrderedFields() const throw( Confi
+   return m_headerOrder;
+ }
+ 
+-message_order const& DataDictionary::getTrailerOrderedFields() const throw( ConfigError )
++message_order const& DataDictionary::getTrailerOrderedFields() const QUICKFIX_THROW( ConfigError )
+ {
+   if( m_trailerOrder ) return m_trailerOrder;
+ 
+@@ -495,7 +495,7 @@ message_order const& DataDictionary::getTrailerOrderedFields() const throw( Conf
+   return m_trailerOrder;
+ }
+ 
+-const message_order &DataDictionary::getMessageOrderedFields(const std::string & msgType) const throw( ConfigError )
++const message_order &DataDictionary::getMessageOrderedFields(const std::string & msgType) const QUICKFIX_THROW( ConfigError )
+ {
+   MsgTypeToOrderedFields::const_iterator iter = m_messageOrderedFields.find(msgType);
+   if (iter == m_messageOrderedFields.end())
+diff --git a/src/C++/DataDictionary.h b/src/C++/DataDictionary.h
+index 323ef53e..f6d80adf 100644
+--- a/src/C++/DataDictionary.h
++++ b/src/C++/DataDictionary.h
+@@ -112,18 +112,18 @@ class DataDictionary
+ public:
+   DataDictionary();
+   DataDictionary( const DataDictionary& copy );
+-  DataDictionary(std::istream& stream , bool preserveMsgFldsOrder = false) throw( ConfigError );
+-  DataDictionary(const std::string& url , bool preserveMsgFldsOrder = false) throw( ConfigError );
++  DataDictionary(std::istream& stream , bool preserveMsgFldsOrder = false) QUICKFIX_THROW( ConfigError );
++  DataDictionary(const std::string& url , bool preserveMsgFldsOrder = false) QUICKFIX_THROW( ConfigError );
+   virtual ~DataDictionary();
+ 
+-  void readFromURL( const std::string& url ) throw( ConfigError );
+-  void readFromDocument( const DOMDocumentPtr &pDoc ) throw( ConfigError );
+-  void readFromStream( std::istream& stream ) throw( ConfigError );
++  void readFromURL( const std::string& url ) QUICKFIX_THROW( ConfigError );
++  void readFromDocument( const DOMDocumentPtr &pDoc ) QUICKFIX_THROW( ConfigError );
++  void readFromStream( std::istream& stream ) QUICKFIX_THROW( ConfigError );
+ 
+   message_order const& getOrderedFields() const;
+-  message_order const& getHeaderOrderedFields() const throw( ConfigError );
+-  message_order const& getTrailerOrderedFields() const throw( ConfigError );
+-  message_order const& getMessageOrderedFields(const std::string & msgType) const throw( ConfigError );
++  message_order const& getHeaderOrderedFields() const QUICKFIX_THROW( ConfigError );
++  message_order const& getTrailerOrderedFields() const QUICKFIX_THROW( ConfigError );
++  message_order const& getMessageOrderedFields(const std::string & msgType) const QUICKFIX_THROW( ConfigError );
+ 
+   // storage functions
+   void setVersion( const std::string& beginString )
+@@ -371,11 +371,11 @@ public:
+   /// Validate a message.
+   static void validate( const Message& message,
+                         const DataDictionary* const pSessionDD,
+-                        const DataDictionary* const pAppID ) throw( FIX::Exception );
++                        const DataDictionary* const pAppID ) QUICKFIX_THROW( FIX::Exception );
+ 
+-  void validate( const Message& message ) const throw ( FIX::Exception )
++  void validate( const Message& message ) const QUICKFIX_THROW( FIX::Exception )
+   { validate( message, false ); }
+-  void validate( const Message& message, bool bodyOnly ) const throw( FIX::Exception )
++  void validate( const Message& message, bool bodyOnly ) const QUICKFIX_THROW( FIX::Exception )
+   { validate( message, bodyOnly ? (DataDictionary*)0 : this, this ); }
+ 
+   DataDictionary& operator=( const DataDictionary& rhs );
+@@ -404,14 +404,14 @@ private:
+ 
+   /// Check if field tag number is defined in spec.
+   void checkValidTagNumber( const FieldBase& field ) const
+-  throw( InvalidTagNumber )
++  QUICKFIX_THROW( InvalidTagNumber )
+   {
+     if( m_fields.find( field.getTag() ) == m_fields.end() )
+       throw InvalidTagNumber( field.getTag() );
+   }
+ 
+   void checkValidFormat( const FieldBase& field ) const
+-  throw( IncorrectDataFormat )
++  QUICKFIX_THROW( IncorrectDataFormat )
+   {
+     try
+     {
+@@ -487,7 +487,7 @@ private:
+   }
+ 
+   void checkValue( const FieldBase& field ) const
+-  throw( IncorrectTagValue )
++  QUICKFIX_THROW( IncorrectTagValue )
+   {
+     if ( !hasFieldValue( field.getTag() ) ) return ;
+ 
+@@ -498,7 +498,7 @@ private:
+ 
+   /// Check if a field has a value.
+   void checkHasValue( const FieldBase& field ) const
+-  throw( NoTagValue )
++  QUICKFIX_THROW( NoTagValue )
+   {
+     if ( m_checkFieldsHaveValues && !field.getString().length() )
+       throw NoTagValue( field.getTag() );
+@@ -507,7 +507,7 @@ private:
+   /// Check if a field is in this message type.
+   void checkIsInMessage
+   ( const FieldBase& field, const MsgType& msgType ) const
+-  throw( TagNotDefinedForMessage )
++  QUICKFIX_THROW( TagNotDefinedForMessage )
+   {
+     if ( !isMsgField( msgType, field.getTag() ) )
+       throw TagNotDefinedForMessage( field.getTag() );
+@@ -516,7 +516,7 @@ private:
+   /// Check if group count matches number of groups in
+   void checkGroupCount
+   ( const FieldBase& field, const FieldMap& fieldMap, const MsgType& msgType ) const
+-  throw( RepeatingGroupCountMismatch )
++  QUICKFIX_THROW( RepeatingGroupCountMismatch )
+   {
+     int fieldNum = field.getTag();
+     if( isGroup(msgType, fieldNum) )
+@@ -531,7 +531,7 @@ private:
+   void checkHasRequired
+   ( const FieldMap& header, const FieldMap& body, const FieldMap& trailer,
+     const MsgType& msgType ) const
+-  throw( RequiredTagMissing )
++  QUICKFIX_THROW( RequiredTagMissing )
+   {
+     NonBodyFields::const_iterator iNBF;
+     for( iNBF = m_headerFields.begin(); iNBF != m_headerFields.end(); ++iNBF )
+diff --git a/src/C++/DataDictionaryProvider.cpp b/src/C++/DataDictionaryProvider.cpp
+index 20aa0f82..b5bf030b 100644
+--- a/src/C++/DataDictionaryProvider.cpp
++++ b/src/C++/DataDictionaryProvider.cpp
+@@ -35,7 +35,7 @@ DataDictionaryProvider::DataDictionaryProvider( const DataDictionaryProvider& co
+ }
+ 
+ const DataDictionary& DataDictionaryProvider::getSessionDataDictionary
+-(const BeginString& beginString) const throw( DataDictionaryNotFound )
++(const BeginString& beginString) const QUICKFIX_THROW( DataDictionaryNotFound )
+ {
+   std::map<std::string, ptr::shared_ptr<DataDictionary> >::const_iterator find =
+     m_transportDictionaries.find(beginString);
+@@ -46,7 +46,7 @@ const DataDictionary& DataDictionaryProvider::getSessionDataDictionary
+ }
+ 
+ const DataDictionary& DataDictionaryProvider::getApplicationDataDictionary
+-(const ApplVerID& applVerID) const throw( DataDictionaryNotFound )
++(const ApplVerID& applVerID) const QUICKFIX_THROW( DataDictionaryNotFound )
+ {
+   std::map<std::string, ptr::shared_ptr<DataDictionary> >::const_iterator find =
+     m_applicationDictionaries.find(applVerID);
+diff --git a/src/C++/DataDictionaryProvider.h b/src/C++/DataDictionaryProvider.h
+index bd88aa40..66858856 100644
+--- a/src/C++/DataDictionaryProvider.h
++++ b/src/C++/DataDictionaryProvider.h
+@@ -46,10 +46,10 @@ public:
+   DataDictionaryProvider( const DataDictionaryProvider& copy );
+ 
+   const DataDictionary& getSessionDataDictionary(const BeginString& beginString) const
+-  throw( DataDictionaryNotFound );
++  QUICKFIX_THROW( DataDictionaryNotFound );
+ 
+   const DataDictionary& getApplicationDataDictionary(const ApplVerID& applVerID) const
+-  throw( DataDictionaryNotFound );
++  QUICKFIX_THROW( DataDictionaryNotFound );
+ 
+   void addTransportDataDictionary(const BeginString& beginString, ptr::shared_ptr<DataDictionary>);
+   void addApplicationDataDictionary(const ApplVerID& applVerID, ptr::shared_ptr<DataDictionary>);
+diff --git a/src/C++/Dictionary.cpp b/src/C++/Dictionary.cpp
+index 6469a5ba..c5f412d3 100644
+--- a/src/C++/Dictionary.cpp
++++ b/src/C++/Dictionary.cpp
+@@ -30,7 +30,7 @@
+ namespace FIX
+ {
+ std::string Dictionary::getString( const std::string& key, bool capitalize ) const
+-throw( ConfigError, FieldConvertError )
++QUICKFIX_THROW( ConfigError, FieldConvertError )
+ {
+   Data::const_iterator i = m_data.find( string_toUpper(key) );
+   if ( i == m_data.end() ) throw ConfigError( key + " not defined" );
+@@ -43,7 +43,7 @@ throw( ConfigError, FieldConvertError )
+ }
+ 
+ int Dictionary::getInt( const std::string& key ) const
+-throw( ConfigError, FieldConvertError )
++QUICKFIX_THROW( ConfigError, FieldConvertError )
+ {
+   try
+   {
+@@ -56,7 +56,7 @@ throw( ConfigError, FieldConvertError )
+ }
+ 
+ double Dictionary::getDouble( const std::string& key ) const
+-throw( ConfigError, FieldConvertError )
++QUICKFIX_THROW( ConfigError, FieldConvertError )
+ {
+   try
+   {
+@@ -69,7 +69,7 @@ throw( ConfigError, FieldConvertError )
+ }
+ 
+ bool Dictionary::getBool( const std::string& key ) const
+-throw( ConfigError, FieldConvertError )
++QUICKFIX_THROW( ConfigError, FieldConvertError )
+ {
+   try
+   {
+@@ -82,7 +82,7 @@ throw( ConfigError, FieldConvertError )
+ }
+ 
+ int Dictionary::getDay( const std::string& key ) const
+-throw( ConfigError, FieldConvertError )
++QUICKFIX_THROW( ConfigError, FieldConvertError )
+ {
+   try
+   {
+diff --git a/src/C++/Dictionary.h b/src/C++/Dictionary.h
+index e043b03d..31d4ee23 100644
+--- a/src/C++/Dictionary.h
++++ b/src/C++/Dictionary.h
+@@ -51,19 +51,19 @@ public:
+ 
+   /// Get a value as a string.
+   std::string getString( const std::string&, bool capitalize = false ) const
+-  throw( ConfigError, FieldConvertError );
++  QUICKFIX_THROW( ConfigError, FieldConvertError );
+   /// Get a value as a int.
+   int getInt( const std::string& ) const
+-  throw( ConfigError, FieldConvertError );
++  QUICKFIX_THROW( ConfigError, FieldConvertError );
+   /// Get a value as a double.
+   double getDouble( const std::string& ) const
+-  throw( ConfigError, FieldConvertError );
++  QUICKFIX_THROW( ConfigError, FieldConvertError );
+   /// Get a value as a bool
+   bool getBool( const std::string& ) const
+-  throw( ConfigError, FieldConvertError );
++  QUICKFIX_THROW( ConfigError, FieldConvertError );
+   /// Get a value as a day of week
+   int getDay( const std::string& ) const
+-  throw( ConfigError, FieldConvertError );
++  QUICKFIX_THROW( ConfigError, FieldConvertError );
+ 
+   /// Set a value from a string.
+   void setString( const std::string&, const std::string& );
+diff --git a/src/C++/Field.h b/src/C++/Field.h
+index 6df7129c..388d908f 100644
+--- a/src/C++/Field.h
++++ b/src/C++/Field.h
+@@ -370,7 +370,7 @@ public:
+ 
+   void setValue( char value )
+     { setString( CharConvertor::convert( value ) ); }
+-  char getValue() const throw ( IncorrectDataFormat )
++  char getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return CharConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -390,7 +390,7 @@ public:
+ 
+   void setValue( double value, int padding = 0 )
+     { setString( DoubleConvertor::convert( value, padding ) ); }
+-  double getValue() const throw ( IncorrectDataFormat )
++  double getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return DoubleConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -410,7 +410,7 @@ public:
+ 
+   void setValue( int value )
+     { setString( IntConvertor::convert( value ) ); }
+-  int getValue() const throw ( IncorrectDataFormat )
++  int getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return IntConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -430,7 +430,7 @@ public:
+ 
+   void setValue( bool value )
+     { setString( BoolConvertor::convert( value ) ); }
+-  bool getValue() const throw ( IncorrectDataFormat )
++  bool getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return BoolConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -450,7 +450,7 @@ public:
+ 
+   void setValue( const UtcTimeStamp& value )
+     { setString( UtcTimeStampConvertor::convert( value ) ); }
+-  UtcTimeStamp getValue() const throw ( IncorrectDataFormat )
++  UtcTimeStamp getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return UtcTimeStampConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -477,7 +477,7 @@ public:
+ 
+   void setValue( const UtcDate& value )
+     { setString( UtcDateConvertor::convert( value ) ); }
+-  UtcDate getValue() const throw ( IncorrectDataFormat )
++  UtcDate getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return UtcDateConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -504,7 +504,7 @@ public:
+ 
+   void setValue( const UtcTimeOnly& value )
+     { setString( UtcTimeOnlyConvertor::convert( value ) ); }
+-  UtcTimeOnly getValue() const throw ( IncorrectDataFormat )
++  UtcTimeOnly getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return UtcTimeOnlyConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+@@ -531,7 +531,7 @@ public:
+ 
+   void setValue( int value )
+     { setString( CheckSumConvertor::convert( value ) ); }
+-  int getValue() const throw ( IncorrectDataFormat )
++  int getValue() const QUICKFIX_THROW( IncorrectDataFormat )
+     { try
+       { return CheckSumConvertor::convert( getString() ); }
+       catch( FieldConvertError& )
+diff --git a/src/C++/FieldConvertors.h b/src/C++/FieldConvertors.h
+index 14971e9a..a1a46675 100644
+--- a/src/C++/FieldConvertors.h
++++ b/src/C++/FieldConvertors.h
+@@ -198,7 +198,7 @@ struct IntConvertor
+   }
+ 
+   static signed_int convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     signed_int result = 0;
+     if( !convert( value.begin(), value.end(), result ) )
+@@ -212,7 +212,7 @@ struct IntConvertor
+ struct CheckSumConvertor
+ {
+   static std::string convert( int value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     if ( value > 255 || value < 0 ) throw FieldConvertError();
+     char result[3];
+@@ -229,7 +229,7 @@ struct CheckSumConvertor
+   }
+ 
+   static int convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     return IntConvertor::convert( value );
+   }
+@@ -358,7 +358,7 @@ static bool convert( const std::string& value, double& result )
+ }
+ 
+   static double convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     double result = 0.0;
+     if( !convert( value, result ) )
+@@ -385,7 +385,7 @@ struct CharConvertor
+   }
+ 
+   static char convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     char result = '\0';
+     if( !convert( value, result ) )
+@@ -418,7 +418,7 @@ struct BoolConvertor
+   }
+ 
+   static bool convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     bool result = false;
+     if( !convert( value, result ) )
+@@ -433,7 +433,7 @@ struct UtcTimeStampConvertor
+ {
+   static std::string convert( const UtcTimeStamp& value,
+                               int precision = 0 )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     char result[ 17+10 ]; // Maximum
+     int year, month, day, hour, minute, second, fraction;
+@@ -465,7 +465,7 @@ struct UtcTimeStampConvertor
+   }
+ 
+   static UtcTimeStamp convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     size_t len = value.size();
+     if (len < 17 || len > 27) throw FieldConvertError(value);
+@@ -547,7 +547,7 @@ struct UtcTimeOnlyConvertor
+ {
+   static std::string convert( const UtcTimeOnly& value,
+                               int precision = 0 )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     char result[ 8+10 ]; // Maximum
+     int hour, minute, second, fraction;
+@@ -572,7 +572,7 @@ struct UtcTimeOnlyConvertor
+   }
+ 
+   static UtcTimeOnly convert( const std::string& value)
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     size_t len = value.size();
+     if (len < 8 || len > 18) throw FieldConvertError(value);
+@@ -633,7 +633,7 @@ struct UtcTimeOnlyConvertor
+ struct UtcDateConvertor
+ {
+   static std::string convert( const UtcDate& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     int year, month, day;
+     value.getYMD( year, month, day );
+@@ -648,7 +648,7 @@ struct UtcDateConvertor
+   }
+ 
+   static UtcDate convert( const std::string& value )
+-  throw( FieldConvertError )
++  QUICKFIX_THROW( FieldConvertError )
+   {
+     if( value.size() != 8 ) throw FieldConvertError(value);
+ 
+diff --git a/src/C++/FieldMap.h b/src/C++/FieldMap.h
+index 9fb09967..29123f3a 100644
+--- a/src/C++/FieldMap.h
++++ b/src/C++/FieldMap.h
+@@ -114,7 +114,7 @@ public:
+ 
+   /// Set a field without type checking
+   void setField( const FieldBase& field, bool overwrite = true )
+-  throw( RepeatedTag )
++  QUICKFIX_THROW( RepeatedTag )
+   {
+     if( !overwrite )
+     {
+@@ -136,7 +136,7 @@ public:
+ 
+   /// Set a field without a field class
+   void setField( int tag, const std::string& value )
+-  throw( RepeatedTag, NoTagValue )
++  QUICKFIX_THROW( RepeatedTag, NoTagValue )
+   {
+     FieldBase fieldBase( tag, value );
+     setField( fieldBase );
+@@ -154,7 +154,7 @@ public:
+ 
+   /// Get a field without type checking
+   FieldBase& getField( FieldBase& field )
+-  const throw( FieldNotFound )
++  const QUICKFIX_THROW( FieldNotFound )
+   {
+     field = getFieldRef( field.getTag() );
+     return field;
+@@ -162,14 +162,14 @@ public:
+ 
+   /// Get a field without a field class
+   const std::string& getField( int tag )
+-  const throw( FieldNotFound )
++  const QUICKFIX_THROW( FieldNotFound )
+   {
+     return getFieldRef( tag ).getString();
+   }
+ 
+   /// Get direct access to a field through a reference
+   const FieldBase& getFieldRef( int tag )
+-  const throw( FieldNotFound )
++  const QUICKFIX_THROW( FieldNotFound )
+   {
+     Fields::const_iterator iter = findTag( tag );
+     if ( iter == m_fields.end() )
+@@ -179,7 +179,7 @@ public:
+ 
+   /// Get direct access to a field through a pointer
+   const FieldBase* const getFieldPtr( int tag )
+-  const throw( FieldNotFound )
++  const QUICKFIX_THROW( FieldNotFound )
+   {
+     return &getFieldRef( tag );
+   }
+@@ -205,14 +205,14 @@ public:
+ 
+   /// Get a specific instance of a group.
+   FieldMap& getGroup( int num, int tag, FieldMap& group ) const
+-  throw( FieldNotFound )
++  QUICKFIX_THROW( FieldNotFound )
+   {
+     return group = getGroupRef( num, tag );
+   }
+ 
+   /// Get direct access to a field through a reference
+   FieldMap& getGroupRef( int num, int tag ) const
+-  throw( FieldNotFound )
++  QUICKFIX_THROW( FieldNotFound )
+   {
+     Groups::const_iterator i = m_groups.find( tag );
+     if( i == m_groups.end() ) throw FieldNotFound( tag );
+@@ -223,7 +223,7 @@ public:
+ 
+   /// Get direct access to a field through a pointer
+   FieldMap* getGroupPtr( int num, int tag ) const
+-  throw( FieldNotFound )
++  QUICKFIX_THROW( FieldNotFound )
+   {
+     return &getGroupRef( num, tag );
+   }
+diff --git a/src/C++/FileStore.cpp b/src/C++/FileStore.cpp
+index 3fc814c3..3724ee04 100644
+--- a/src/C++/FileStore.cpp
++++ b/src/C++/FileStore.cpp
+@@ -190,7 +190,7 @@ void FileStoreFactory::destroy( MessageStore* pStore )
+ }
+ 
+ bool FileStore::set( int msgSeqNum, const std::string& msg )
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   if ( fseek( m_msgFile, 0, SEEK_END ) ) 
+     throw IOException( "Cannot seek to end of " + m_msgFileName );
+@@ -222,7 +222,7 @@ throw ( IOException )
+ 
+ void FileStore::get( int begin, int end,
+                      std::vector < std::string > & result ) const
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   result.clear();
+   std::string msg;
+@@ -233,46 +233,46 @@ throw ( IOException )
+   }
+ }
+ 
+-int FileStore::getNextSenderMsgSeqNum() const throw ( IOException )
++int FileStore::getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextSenderMsgSeqNum();
+ }
+ 
+-int FileStore::getNextTargetMsgSeqNum() const throw ( IOException )
++int FileStore::getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextTargetMsgSeqNum();
+ }
+ 
+-void FileStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
++void FileStore::setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   m_cache.setNextSenderMsgSeqNum( value );
+   setSeqNum();
+ }
+ 
+-void FileStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
++void FileStore::setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   m_cache.setNextTargetMsgSeqNum( value );
+   setSeqNum();
+ }
+ 
+-void FileStore::incrNextSenderMsgSeqNum() throw ( IOException )
++void FileStore::incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextSenderMsgSeqNum();
+   setSeqNum();
+ }
+ 
+-void FileStore::incrNextTargetMsgSeqNum() throw ( IOException )
++void FileStore::incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextTargetMsgSeqNum();
+   setSeqNum();
+ }
+ 
+-UtcTimeStamp FileStore::getCreationTime() const throw ( IOException )
++UtcTimeStamp FileStore::getCreationTime() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getCreationTime();
+ }
+ 
+-void FileStore::reset() throw ( IOException )
++void FileStore::reset() QUICKFIX_THROW( IOException )
+ {
+   try
+   {
+@@ -286,7 +286,7 @@ void FileStore::reset() throw ( IOException )
+   }
+ }
+ 
+-void FileStore::refresh() throw ( IOException )
++void FileStore::refresh() QUICKFIX_THROW( IOException )
+ {
+   try
+   {
+@@ -322,7 +322,7 @@ void FileStore::setSession()
+ }
+ 
+ bool FileStore::get( int msgSeqNum, std::string& msg ) const
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   NumToOffset::const_iterator find = m_offsets.find( msgSeqNum );
+   if ( find == m_offsets.end() ) return false;
+diff --git a/src/C++/FileStore.h b/src/C++/FileStore.h
+index e5e60522..66d7204a 100644
+--- a/src/C++/FileStore.h
++++ b/src/C++/FileStore.h
+@@ -84,20 +84,20 @@ public:
+   FileStore( std::string, const SessionID& s );
+   virtual ~FileStore();
+ 
+-  bool set( int, const std::string& ) throw ( IOException );
+-  void get( int, int, std::vector < std::string > & ) const throw ( IOException );
++  bool set( int, const std::string& ) QUICKFIX_THROW( IOException );
++  void get( int, int, std::vector < std::string > & ) const QUICKFIX_THROW( IOException );
+ 
+-  int getNextSenderMsgSeqNum() const throw ( IOException );
+-  int getNextTargetMsgSeqNum() const throw ( IOException );
+-  void setNextSenderMsgSeqNum( int value ) throw ( IOException );
+-  void setNextTargetMsgSeqNum( int value ) throw ( IOException );
+-  void incrNextSenderMsgSeqNum() throw ( IOException );
+-  void incrNextTargetMsgSeqNum() throw ( IOException );
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException );
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException );
++  void setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException );
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException );
+ 
+-  UtcTimeStamp getCreationTime() const throw ( IOException );
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException );
+ 
+-  void reset() throw ( IOException );
+-  void refresh() throw ( IOException );
++  void reset() QUICKFIX_THROW( IOException );
++  void refresh() QUICKFIX_THROW( IOException );
+ 
+ private:
+ #ifdef _MSC_VER
+@@ -113,7 +113,7 @@ private:
+   void setSeqNum();
+   void setSession();
+ 
+-  bool get( int, std::string& ) const throw ( IOException );
++  bool get( int, std::string& ) const QUICKFIX_THROW( IOException );
+ 
+   MemoryStore m_cache;
+   NumToOffset m_offsets;
+diff --git a/src/C++/Group.cpp b/src/C++/Group.cpp
+index 9703f832..49232552 100644
+--- a/src/C++/Group.cpp
++++ b/src/C++/Group.cpp
+@@ -37,7 +37,7 @@ void Group::replaceGroup( unsigned num, const FIX::Group& group )
+   FieldMap::replaceGroup( num, group.field(), group ); 
+ }
+ 
+-Group& Group::getGroup( unsigned num, Group& group ) const throw( FieldNotFound )
++Group& Group::getGroup( unsigned num, Group& group ) const QUICKFIX_THROW( FieldNotFound )
+ {
+   return static_cast < Group& > ( FieldMap::getGroup( num, group.field(), group ) );
+ }
+diff --git a/src/C++/Group.h b/src/C++/Group.h
+index 64111dc8..a71d0845 100644
+--- a/src/C++/Group.h
++++ b/src/C++/Group.h
+@@ -58,7 +58,7 @@ public:
+ 
+   void addGroup( const Group& group );
+   void replaceGroup( unsigned num, const Group& group );
+-  Group& getGroup( unsigned num, Group& group ) const throw( FieldNotFound );
++  Group& getGroup( unsigned num, Group& group ) const QUICKFIX_THROW( FieldNotFound );
+   void removeGroup( unsigned num, const Group& group );
+   void removeGroup( const Group& group );
+   bool hasGroup( const Group& group );
+diff --git a/src/C++/HttpConnection.cpp b/src/C++/HttpConnection.cpp
+index 4cefc438..dcb50d5f 100644
+--- a/src/C++/HttpConnection.cpp
++++ b/src/C++/HttpConnection.cpp
+@@ -91,7 +91,7 @@ bool HttpConnection::read()
+ }
+ 
+ bool HttpConnection::readMessage( std::string& msg )
+-throw( SocketRecvFailed )
++QUICKFIX_THROW( SocketRecvFailed )
+ {
+   try
+   {
+diff --git a/src/C++/HttpConnection.h b/src/C++/HttpConnection.h
+index 203b445e..3a2b9be0 100644
+--- a/src/C++/HttpConnection.h
++++ b/src/C++/HttpConnection.h
+@@ -43,7 +43,7 @@ public:
+   bool read();
+ 
+ private:
+-  bool readMessage( std::string& msg ) throw( SocketRecvFailed );
++  bool readMessage( std::string& msg ) QUICKFIX_THROW( SocketRecvFailed );
+   void processStream();
+   void processRequest( const HttpMessage& );
+   void processRoot( const HttpMessage&, std::stringstream& h, std::stringstream& b );
+diff --git a/src/C++/HttpMessage.cpp b/src/C++/HttpMessage.cpp
+index 4d6996a7..16168ee8 100644
+--- a/src/C++/HttpMessage.cpp
++++ b/src/C++/HttpMessage.cpp
+@@ -34,7 +34,7 @@ namespace FIX
+ HttpMessage::HttpMessage() {}
+ 
+ HttpMessage::HttpMessage( const std::string& string )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ {
+   setString( string );
+ }
+@@ -52,7 +52,7 @@ std::string& HttpMessage::toString( std::string& str ) const
+ }
+ 
+ void HttpMessage::setString( const std::string& string )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ {
+   clear();
+ 
+diff --git a/src/C++/HttpMessage.h b/src/C++/HttpMessage.h
+index bccbde70..6dbd9c43 100644
+--- a/src/C++/HttpMessage.h
++++ b/src/C++/HttpMessage.h
+@@ -43,7 +43,7 @@ public:
+ 
+   /// Construct a message from a string
+   HttpMessage( const std::string& string )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   HttpMessage( const HttpMessage& copy )
+   {
+@@ -58,7 +58,7 @@ public:
+   std::string& toString( std::string& ) const;
+ 
+   void setString( const std::string& string )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   void clear()
+   {
+@@ -95,7 +95,7 @@ public:
+   }
+ 
+   const std::string& getParameter( const std::string& key ) const
+-  throw( std::logic_error )
++  QUICKFIX_THROW( std::logic_error )
+   {
+     Parameters::const_iterator find = m_parameters.find( key );
+     if( find == m_parameters.end() )
+diff --git a/src/C++/HttpParser.cpp b/src/C++/HttpParser.cpp
+index d2a61396..2908449f 100644
+--- a/src/C++/HttpParser.cpp
++++ b/src/C++/HttpParser.cpp
+@@ -30,7 +30,7 @@
+ namespace FIX
+ {
+ bool HttpParser::readHttpMessage( std::string& str )
+-throw( MessageParseError )
++QUICKFIX_THROW( MessageParseError )
+ {
+   std::string::size_type pos = 0;
+ 
+diff --git a/src/C++/HttpParser.h b/src/C++/HttpParser.h
+index a79640f7..5222eb51 100644
+--- a/src/C++/HttpParser.h
++++ b/src/C++/HttpParser.h
+@@ -40,7 +40,7 @@ public:
+   ~HttpParser() {}
+ 
+   bool readHttpMessage( std::string& str )
+-  throw ( MessageParseError );
++  QUICKFIX_THROW( MessageParseError );
+ 
+   void addToStream( const char* str, size_t len )
+   { m_buffer.append( str, len ); }
+diff --git a/src/C++/HttpServer.cpp b/src/C++/HttpServer.cpp
+index 5bafa0fd..a081fb55 100644
+--- a/src/C++/HttpServer.cpp
++++ b/src/C++/HttpServer.cpp
+@@ -35,7 +35,7 @@ int HttpServer::s_count = 0;
+ HttpServer* HttpServer::s_pServer = 0;
+ 
+ void HttpServer::startGlobal( const SessionSettings& s ) 
+-throw ( ConfigError, RuntimeError )
++QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   Locker l( s_mutex );
+ 
+@@ -63,17 +63,17 @@ void HttpServer::stopGlobal()
+   }  
+ }
+ 
+-HttpServer::HttpServer( const SessionSettings& settings ) throw( ConfigError )
++HttpServer::HttpServer( const SessionSettings& settings ) QUICKFIX_THROW( ConfigError )
+ : m_pServer( 0 ), m_settings( settings ), m_threadid( 0 ), m_port( 0 ), m_stop( false ) {}
+ 
+ void HttpServer::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {  
+   m_port = s.get().getInt( HTTP_ACCEPT_PORT );
+ }
+ 
+ void HttpServer::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+   try
+   {
+@@ -86,7 +86,7 @@ throw ( RuntimeError )
+   }
+ }
+ 
+-void HttpServer::start() throw ( ConfigError, RuntimeError )
++void HttpServer::start() QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   m_stop = false;
+   onConfigure( m_settings );
+diff --git a/src/C++/HttpServer.h b/src/C++/HttpServer.h
+index 88287e50..08a130f7 100644
+--- a/src/C++/HttpServer.h
++++ b/src/C++/HttpServer.h
+@@ -37,17 +37,17 @@ namespace FIX
+ class HttpServer : public SocketServer::Strategy
+ {
+ public:
+-  HttpServer( const SessionSettings& ) throw( ConfigError );
++  HttpServer( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+ 
+-  static void startGlobal( const SessionSettings& ) throw ( ConfigError, RuntimeError );
++  static void startGlobal( const SessionSettings& ) QUICKFIX_THROW( ConfigError, RuntimeError );
+   static void stopGlobal();
+ 
+-  void start() throw ( ConfigError, RuntimeError );
++  void start() QUICKFIX_THROW( ConfigError, RuntimeError );
+   void stop();
+ 
+ private:
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll();
+diff --git a/src/C++/Initiator.cpp b/src/C++/Initiator.cpp
+index 8c91effd..bba52f89 100644
+--- a/src/C++/Initiator.cpp
++++ b/src/C++/Initiator.cpp
+@@ -35,7 +35,7 @@ namespace FIX
+ {
+ Initiator::Initiator( Application& application,
+                       MessageStoreFactory& messageStoreFactory,
+-                      const SessionSettings& settings ) throw( ConfigError )
++                      const SessionSettings& settings ) QUICKFIX_THROW( ConfigError )
+ : m_threadid( 0 ),
+   m_application( application ),
+   m_messageStoreFactory( messageStoreFactory ),
+@@ -49,7 +49,7 @@ Initiator::Initiator( Application& application,
+ Initiator::Initiator( Application& application,
+                       MessageStoreFactory& messageStoreFactory,
+                       const SessionSettings& settings,
+-                      LogFactory& logFactory ) throw( ConfigError )
++                      LogFactory& logFactory ) QUICKFIX_THROW( ConfigError )
+ : m_threadid( 0 ),
+   m_application( application ),
+   m_messageStoreFactory( messageStoreFactory ),
+@@ -60,7 +60,7 @@ Initiator::Initiator( Application& application,
+   m_stop( true )
+ { initialize(); }
+ 
+-void Initiator::initialize() throw ( ConfigError )
++void Initiator::initialize() QUICKFIX_THROW( ConfigError )
+ {
+   std::set < SessionID > sessions = m_settings.getSessions();
+   std::set < SessionID > ::iterator i;
+@@ -187,7 +187,7 @@ bool Initiator::isDisconnected( const SessionID& sessionID )
+   return m_disconnected.find( sessionID ) != m_disconnected.end();
+ }
+ 
+-void Initiator::start() throw ( ConfigError, RuntimeError )
++void Initiator::start() QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   m_stop = false;
+   onConfigure( m_settings );
+@@ -200,7 +200,7 @@ void Initiator::start() throw ( ConfigError, RuntimeError )
+ }
+ 
+ 
+-void Initiator::block() throw ( ConfigError, RuntimeError )
++void Initiator::block() QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   m_stop = false;
+   onConfigure( m_settings );
+@@ -209,7 +209,7 @@ void Initiator::block() throw ( ConfigError, RuntimeError )
+   startThread(this);
+ }
+ 
+-bool Initiator::poll( double timeout ) throw ( ConfigError, RuntimeError )
++bool Initiator::poll( double timeout ) QUICKFIX_THROW( ConfigError, RuntimeError )
+ {
+   if( m_firstPoll )
+   {
+diff --git a/src/C++/Initiator.h b/src/C++/Initiator.h
+index b077c0e7..198b2bcd 100644
+--- a/src/C++/Initiator.h
++++ b/src/C++/Initiator.h
+@@ -52,18 +52,18 @@ class Initiator
+ {
+ public:
+   Initiator( Application&, MessageStoreFactory&,
+-             const SessionSettings& ) throw( ConfigError );
++             const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   Initiator( Application&, MessageStoreFactory&,
+-             const SessionSettings&, LogFactory& ) throw( ConfigError );
++             const SessionSettings&, LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~Initiator();
+ 
+   /// Start initiator.
+-  void start() throw ( ConfigError, RuntimeError );
++  void start() QUICKFIX_THROW( ConfigError, RuntimeError );
+   /// Block on the initiator
+-  void block() throw ( ConfigError, RuntimeError );
++  void block() QUICKFIX_THROW( ConfigError, RuntimeError );
+   /// Poll the initiator
+-  bool poll( double timeout = 0.0 ) throw ( ConfigError, RuntimeError );
++  bool poll( double timeout = 0.0 ) QUICKFIX_THROW( ConfigError, RuntimeError );
+ 
+   /// Stop initiator.
+   void stop( bool force = false );
+@@ -104,12 +104,12 @@ protected:
+   void connect();
+ 
+ private:
+-  void initialize() throw ( ConfigError );
++  void initialize() QUICKFIX_THROW( ConfigError );
+ 
+   /// Implemented to configure acceptor
+-  virtual void onConfigure( const SessionSettings& ) throw ( ConfigError ) {};
++  virtual void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError ) {};
+   /// Implemented to initialize initiator
+-  virtual void onInitialize( const SessionSettings& ) throw ( RuntimeError ) {};
++  virtual void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError ) {};
+   /// Implemented to start connecting to targets.
+   virtual void onStart() = 0;
+   /// Implemented to connect and poll for events.
+diff --git a/src/C++/Message.cpp b/src/C++/Message.cpp
+index c8303111..c154a20b 100644
+--- a/src/C++/Message.cpp
++++ b/src/C++/Message.cpp
+@@ -52,7 +52,7 @@ Message::Message(const message_order &hdrOrder, const message_order &trlOrder, c
+   m_trailer(trlOrder), m_validStructure( true ) {}
+ 
+ Message::Message( const std::string& string, bool validate )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ : m_validStructure( true )
+ , m_tag( 0 )
+ {
+@@ -62,7 +62,7 @@ throw( InvalidMessage )
+ Message::Message( const std::string& string,
+                   const DataDictionary& dataDictionary,
+                   bool validate )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ : m_validStructure( true )
+ , m_tag( 0 )
+ {
+@@ -73,7 +73,7 @@ Message::Message( const std::string& string,
+                   const DataDictionary& sessionDataDictionary,
+                   const DataDictionary& applicationDataDictionary,
+                   bool validate )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ : m_validStructure( true )
+ , m_tag( 0 )
+ {
+@@ -86,7 +86,7 @@ Message::Message( const message_order &hdrOrder,
+                   const std::string& string,
+                   const DataDictionary& dataDictionary,
+                   bool validate )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ : FieldMap(order), m_header(hdrOrder),
+   m_trailer(trlOrder), m_validStructure( true )
+ {
+@@ -100,7 +100,7 @@ Message::Message( const message_order &hdrOrder,
+                   const DataDictionary& sessionDataDictionary,
+                   const DataDictionary& applicationDataDictionary,
+                   bool validate )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ : FieldMap(order), m_header(hdrOrder),
+   m_trailer(trlOrder), m_validStructure( true )
+ {
+@@ -337,7 +337,7 @@ void Message::setString( const std::string& string,
+                          bool doValidation,
+                          const DataDictionary* pSessionDataDictionary,
+                          const DataDictionary* pApplicationDataDictionary )
+-throw( InvalidMessage )
++QUICKFIX_THROW( InvalidMessage )
+ {
+   clear();
+ 
+@@ -574,7 +574,7 @@ bool Message::isTrailerField( int field, const DataDictionary * pD )
+ }
+ 
+ SessionID Message::getSessionID( const std::string& qualifier ) const
+-throw( FieldNotFound )
++QUICKFIX_THROW( FieldNotFound )
+ {
+   BeginString beginString;
+   SenderCompID senderCompID;
+diff --git a/src/C++/Message.h b/src/C++/Message.h
+index 7abe9c43..69c218b1 100644
+--- a/src/C++/Message.h
++++ b/src/C++/Message.h
+@@ -55,7 +55,7 @@ public:
+   void replaceGroup( unsigned num, const FIX::Group& group )
+   { FieldMap::replaceGroup( num, group.field(), group ); }
+ 
+-  Group& getGroup( unsigned num, FIX::Group& group ) const throw( FieldNotFound )
++  Group& getGroup( unsigned num, FIX::Group& group ) const QUICKFIX_THROW( FieldNotFound )
+   { group.clear();
+     return static_cast < Group& >
+       ( FieldMap::getGroup( num, group.field(), group ) );
+@@ -90,7 +90,7 @@ public:
+   void replaceGroup( unsigned num, const FIX::Group& group )
+   { FieldMap::replaceGroup( num, group.field(), group ); }
+ 
+-  Group& getGroup( unsigned num, FIX::Group& group ) const throw( FieldNotFound )
++  Group& getGroup( unsigned num, FIX::Group& group ) const QUICKFIX_THROW( FieldNotFound )
+   { group.clear();
+     return static_cast < Group& >
+       ( FieldMap::getGroup( num, group.field(), group ) );
+@@ -129,27 +129,27 @@ public:
+ 
+   /// Construct a message from a string
+   Message( const std::string& string, bool validate = true )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   /// Construct a message from a string using a data dictionary
+   Message( const std::string& string, const FIX::DataDictionary& dataDictionary,
+            bool validate = true )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   /// Construct a message from a string using a session and application data dictionary
+   Message( const std::string& string, const FIX::DataDictionary& sessionDataDictionary,
+            const FIX::DataDictionary& applicationDataDictionary, bool validate = true )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   /// Construct a message from a string using a data dictionary
+   Message( const message_order& hdrOrder, const message_order& trlOrder,  const message_order& order, const std::string& string, const FIX::DataDictionary& dataDictionary,
+            bool validate = true )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   /// Construct a message from a string using a session and application data dictionary
+   Message( const message_order& hdrOrder, const message_order& trlOrder,  const message_order& order, const std::string& string, const FIX::DataDictionary& sessionDataDictionary,
+            const FIX::DataDictionary& applicationDataDictionary, bool validate = true )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   Message( const Message& copy );
+ 
+@@ -164,7 +164,7 @@ public:
+   void replaceGroup( unsigned num, const FIX::Group& group )
+   { FieldMap::replaceGroup( num, group.field(), group ); }
+ 
+-  Group& getGroup( unsigned num, FIX::Group& group ) const throw( FieldNotFound )
++  Group& getGroup( unsigned num, FIX::Group& group ) const QUICKFIX_THROW( FieldNotFound )
+   { group.clear();
+     return static_cast < Group& >
+       ( FieldMap::getGroup( num, group.field(), group ) );
+@@ -213,22 +213,22 @@ public:
+    * on failure.
+    */
+   void setString( const std::string& string )
+-  throw( InvalidMessage )
++  QUICKFIX_THROW( InvalidMessage )
+   { setString(string, true); }
+   void setString( const std::string& string, bool validate )
+-  throw( InvalidMessage )
++  QUICKFIX_THROW( InvalidMessage )
+   { setString(string, validate, 0); }
+   void setString( const std::string& string,
+                   bool validate,
+                   const FIX::DataDictionary* pDataDictionary )
+-  throw( InvalidMessage )
++  QUICKFIX_THROW( InvalidMessage )
+   { setString(string, validate, pDataDictionary, pDataDictionary); }
+ 
+   void setString( const std::string& string,
+                   bool validate,
+                   const FIX::DataDictionary* pSessionDataDictionary,
+                   const FIX::DataDictionary* pApplicationDataDictionary )
+-  throw( InvalidMessage );
++  QUICKFIX_THROW( InvalidMessage );
+ 
+   void setGroup( const std::string& msg, const FieldBase& field,
+                  const std::string& string, std::string::size_type& pos,
+@@ -361,7 +361,7 @@ public:
+ 
+   /// Returns the session ID of the intended recipient
+   SessionID getSessionID( const std::string& qualifier = "" ) const
+-  throw( FieldNotFound );
++  QUICKFIX_THROW( FieldNotFound );
+   /// Sets the session ID of the intended recipient
+   void setSessionID( const SessionID& sessionID );
+ 
+@@ -415,7 +415,7 @@ inline std::ostream& operator <<
+ 
+ /// Parse the type of a message from a string.
+ inline MsgType identifyType( const std::string& message )
+-throw( MessageParseError )
++QUICKFIX_THROW( MessageParseError )
+ {
+   std::string::size_type pos = message.find( "\001" "35=" );
+   if ( pos == std::string::npos ) throw MessageParseError();
+diff --git a/src/C++/MessageStore.cpp b/src/C++/MessageStore.cpp
+index dd821aad..8d9fa048 100644
+--- a/src/C++/MessageStore.cpp
++++ b/src/C++/MessageStore.cpp
+@@ -38,7 +38,7 @@ void MemoryStoreFactory::destroy( MessageStore* pStore )
+ }
+ 
+ bool MemoryStore::set( int msgSeqNum, const std::string& msg )
+-throw( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   m_messages[ msgSeqNum ] = msg;
+   return true;
+@@ -46,7 +46,7 @@ throw( IOException )
+ 
+ void MemoryStore::get( int begin, int end,
+                        std::vector < std::string > & messages ) const
+-throw( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   messages.clear();
+   Messages::const_iterator find = m_messages.find( begin );
+diff --git a/src/C++/MessageStore.h b/src/C++/MessageStore.h
+index bd00a3af..2da2c758 100644
+--- a/src/C++/MessageStore.h
++++ b/src/C++/MessageStore.h
+@@ -69,21 +69,21 @@ public:
+   virtual ~MessageStore() {}
+ 
+   virtual bool set( int, const std::string& )
+-  throw ( IOException ) = 0;
++  QUICKFIX_THROW( IOException ) = 0;
+   virtual void get( int, int, std::vector < std::string > & ) const
+-  throw ( IOException ) = 0;
++  QUICKFIX_THROW( IOException ) = 0;
+ 
+-  virtual int getNextSenderMsgSeqNum() const throw ( IOException ) = 0;
+-  virtual int getNextTargetMsgSeqNum() const throw ( IOException ) = 0;
+-  virtual void setNextSenderMsgSeqNum( int ) throw ( IOException ) = 0;
+-  virtual void setNextTargetMsgSeqNum( int ) throw ( IOException ) = 0;
+-  virtual void incrNextSenderMsgSeqNum() throw ( IOException ) = 0;
+-  virtual void incrNextTargetMsgSeqNum() throw ( IOException ) = 0;
++  virtual int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException ) = 0;
++  virtual int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException ) = 0;
++  virtual void setNextSenderMsgSeqNum( int ) QUICKFIX_THROW( IOException ) = 0;
++  virtual void setNextTargetMsgSeqNum( int ) QUICKFIX_THROW( IOException ) = 0;
++  virtual void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException ) = 0;
++  virtual void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException ) = 0;
+ 
+-  virtual UtcTimeStamp getCreationTime() const throw ( IOException ) = 0;
++  virtual UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException ) = 0;
+ 
+-  virtual void reset() throw ( IOException ) = 0;
+-  virtual void refresh() throw ( IOException ) = 0;
++  virtual void reset() QUICKFIX_THROW( IOException ) = 0;
++  virtual void refresh() QUICKFIX_THROW( IOException ) = 0;
+ };
+ /*! @} */
+ 
+@@ -98,33 +98,33 @@ class MemoryStore : public MessageStore
+ public:
+   MemoryStore() : m_nextSenderMsgSeqNum( 1 ), m_nextTargetMsgSeqNum( 1 ) {}
+ 
+-  bool set( int, const std::string& ) throw ( IOException );
+-  void get( int, int, std::vector < std::string > & ) const throw ( IOException );
++  bool set( int, const std::string& ) QUICKFIX_THROW( IOException );
++  void get( int, int, std::vector < std::string > & ) const QUICKFIX_THROW( IOException );
+ 
+-  int getNextSenderMsgSeqNum() const throw ( IOException )
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+   { return m_nextSenderMsgSeqNum; }
+-  int getNextTargetMsgSeqNum() const throw ( IOException )
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+   { return m_nextTargetMsgSeqNum; }
+-  void setNextSenderMsgSeqNum( int value ) throw ( IOException )
++  void setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+   { m_nextSenderMsgSeqNum = value; }
+-  void setNextTargetMsgSeqNum( int value ) throw ( IOException )
++  void setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+   { m_nextTargetMsgSeqNum = value; }
+-  void incrNextSenderMsgSeqNum() throw ( IOException )
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+   { ++m_nextSenderMsgSeqNum; }
+-  void incrNextTargetMsgSeqNum() throw ( IOException )
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+   { ++m_nextTargetMsgSeqNum; }
+ 
+-  void setCreationTime( const UtcTimeStamp& creationTime ) throw ( IOException )
++  void setCreationTime( const UtcTimeStamp& creationTime ) QUICKFIX_THROW( IOException )
+   { m_creationTime = creationTime; }
+-  UtcTimeStamp getCreationTime() const throw ( IOException )
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException )
+   { return m_creationTime; }
+ 
+-  void reset() throw ( IOException )
++  void reset() QUICKFIX_THROW( IOException )
+   {
+     m_nextSenderMsgSeqNum = 1; m_nextTargetMsgSeqNum = 1;
+     m_messages.clear(); m_creationTime.setCurrent();
+   }
+-  void refresh() throw ( IOException ) {}
++  void refresh() QUICKFIX_THROW( IOException ) {}
+ 
+ private:
+   typedef std::map < int, std::string > Messages;
+diff --git a/src/C++/MySQLConnection.h b/src/C++/MySQLConnection.h
+index 024edeb2..1d5fffcd 100644
+--- a/src/C++/MySQLConnection.h
++++ b/src/C++/MySQLConnection.h
+@@ -100,7 +100,7 @@ public:
+     return m_rows[row][column];
+   }
+ 
+-  void throwException() throw( IOException )
++  void throwException() QUICKFIX_THROW( IOException )
+   {
+     if( !success() )
+       throw IOException( "Query failed [" + m_query + "] " + reason() );
+diff --git a/src/C++/MySQLStore.cpp b/src/C++/MySQLStore.cpp
+index 91b3c8ae..867353c4 100644
+--- a/src/C++/MySQLStore.cpp
++++ b/src/C++/MySQLStore.cpp
+@@ -167,7 +167,7 @@ void MySQLStoreFactory::destroy( MessageStore* pStore )
+ }
+ 
+ bool MySQLStore::set( int msgSeqNum, const std::string& msg )
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   char* msgCopy = new char[ (msg.size() * 2) + 1 ];
+   mysql_escape_string( msgCopy, msg.c_str(), msg.size() );
+@@ -204,7 +204,7 @@ throw ( IOException )
+ 
+ void MySQLStore::get( int begin, int end,
+                       std::vector < std::string > & result ) const
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   result.clear();
+   std::stringstream queryString;
+@@ -225,17 +225,17 @@ throw ( IOException )
+     result.push_back( query.getValue( row, 0 ) );
+ }
+ 
+-int MySQLStore::getNextSenderMsgSeqNum() const throw ( IOException )
++int MySQLStore::getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextSenderMsgSeqNum();
+ }
+ 
+-int MySQLStore::getNextTargetMsgSeqNum() const throw ( IOException )
++int MySQLStore::getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextTargetMsgSeqNum();
+ }
+ 
+-void MySQLStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
++void MySQLStore::setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "UPDATE sessions SET outgoing_seqnum=" << value << " WHERE "
+@@ -249,7 +249,7 @@ void MySQLStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
+   m_cache.setNextSenderMsgSeqNum( value );
+ }
+ 
+-void MySQLStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
++void MySQLStore::setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "UPDATE sessions SET incoming_seqnum=" << value << " WHERE "
+@@ -265,24 +265,24 @@ void MySQLStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
+   m_cache.setNextTargetMsgSeqNum( value );
+ }
+ 
+-void MySQLStore::incrNextSenderMsgSeqNum() throw ( IOException )
++void MySQLStore::incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextSenderMsgSeqNum();
+   setNextSenderMsgSeqNum( m_cache.getNextSenderMsgSeqNum() );
+ }
+ 
+-void MySQLStore::incrNextTargetMsgSeqNum() throw ( IOException )
++void MySQLStore::incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextTargetMsgSeqNum();
+   setNextTargetMsgSeqNum( m_cache.getNextTargetMsgSeqNum() );
+ }
+ 
+-UtcTimeStamp MySQLStore::getCreationTime() const throw ( IOException )
++UtcTimeStamp MySQLStore::getCreationTime() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getCreationTime();
+ }
+ 
+-void MySQLStore::reset() throw ( IOException )
++void MySQLStore::reset() QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "DELETE FROM messages WHERE "
+@@ -320,7 +320,7 @@ void MySQLStore::reset() throw ( IOException )
+     query2.throwException();
+ }
+ 
+-void MySQLStore::refresh() throw ( IOException )
++void MySQLStore::refresh() QUICKFIX_THROW( IOException )
+ {
+   m_cache.reset();
+   populateCache(); 
+diff --git a/src/C++/MySQLStore.h b/src/C++/MySQLStore.h
+index 33102c71..76ae2d07 100644
+--- a/src/C++/MySQLStore.h
++++ b/src/C++/MySQLStore.h
+@@ -113,20 +113,20 @@ public:
+                    const std::string& password, const std::string& host, short port );
+   ~MySQLStore();
+ 
+-  bool set( int, const std::string& ) throw ( IOException );
+-  void get( int, int, std::vector < std::string > & ) const throw ( IOException );
++  bool set( int, const std::string& ) QUICKFIX_THROW( IOException );
++  void get( int, int, std::vector < std::string > & ) const QUICKFIX_THROW( IOException );
+ 
+-  int getNextSenderMsgSeqNum() const throw ( IOException );
+-  int getNextTargetMsgSeqNum() const throw ( IOException );
+-  void setNextSenderMsgSeqNum( int value ) throw ( IOException );
+-  void setNextTargetMsgSeqNum( int value ) throw ( IOException );
+-  void incrNextSenderMsgSeqNum() throw ( IOException );
+-  void incrNextTargetMsgSeqNum() throw ( IOException );
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException );
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException );
++  void setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException );
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException );
+ 
+-  UtcTimeStamp getCreationTime() const throw ( IOException );
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException );
+ 
+-  void reset() throw ( IOException );
+-  void refresh() throw ( IOException );
++  void reset() QUICKFIX_THROW( IOException );
++  void refresh() QUICKFIX_THROW( IOException );
+ 
+ private:
+   void populateCache();
+diff --git a/src/C++/NullStore.cpp b/src/C++/NullStore.cpp
+index bafa25a2..3ad411a2 100644
+--- a/src/C++/NullStore.cpp
++++ b/src/C++/NullStore.cpp
+@@ -39,14 +39,14 @@ void NullStoreFactory::destroy( MessageStore* pStore )
+ }
+ 
+ bool NullStore::set( int msgSeqNum, const std::string& msg )
+-throw( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   return true;
+ }
+ 
+ void NullStore::get( int begin, int end,
+                        std::vector < std::string > & messages ) const
+-throw( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   messages.clear();
+ }
+diff --git a/src/C++/NullStore.h b/src/C++/NullStore.h
+index 43d00891..7d921558 100644
+--- a/src/C++/NullStore.h
++++ b/src/C++/NullStore.h
+@@ -60,33 +60,33 @@ class NullStore : public MessageStore
+ public:
+   NullStore() : m_nextSenderMsgSeqNum( 1 ), m_nextTargetMsgSeqNum( 1 ) {}
+ 
+-  bool set( int, const std::string& ) throw ( IOException );
+-  void get( int, int, std::vector < std::string > & ) const throw ( IOException );
++  bool set( int, const std::string& ) QUICKFIX_THROW( IOException );
++  void get( int, int, std::vector < std::string > & ) const QUICKFIX_THROW( IOException );
+ 
+-  int getNextSenderMsgSeqNum() const throw ( IOException )
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+   { return m_nextSenderMsgSeqNum; }
+-  int getNextTargetMsgSeqNum() const throw ( IOException )
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+   { return m_nextTargetMsgSeqNum; }
+-  void setNextSenderMsgSeqNum( int value ) throw ( IOException )
++  void setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+   { m_nextSenderMsgSeqNum = value; }
+-  void setNextTargetMsgSeqNum( int value ) throw ( IOException )
++  void setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+   { m_nextTargetMsgSeqNum = value; }
+-  void incrNextSenderMsgSeqNum() throw ( IOException )
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+   { ++m_nextSenderMsgSeqNum; }
+-  void incrNextTargetMsgSeqNum() throw ( IOException )
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+   { ++m_nextTargetMsgSeqNum; }
+ 
+-  void setCreationTime( const UtcTimeStamp& creationTime ) throw ( IOException )
++  void setCreationTime( const UtcTimeStamp& creationTime ) QUICKFIX_THROW( IOException )
+   { m_creationTime = creationTime; }
+-  UtcTimeStamp getCreationTime() const throw ( IOException )
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException )
+   { return m_creationTime; }
+ 
+-  void reset() throw ( IOException )
++  void reset() QUICKFIX_THROW( IOException )
+   {
+     m_nextSenderMsgSeqNum = 1; m_nextTargetMsgSeqNum = 1;
+     m_creationTime.setCurrent();
+   }
+-  void refresh() throw ( IOException ) {}
++  void refresh() QUICKFIX_THROW( IOException ) {}
+ 
+ private:
+   int m_nextSenderMsgSeqNum;
+diff --git a/src/C++/OdbcConnection.h b/src/C++/OdbcConnection.h
+index d8358d31..461eae6e 100644
+--- a/src/C++/OdbcConnection.h
++++ b/src/C++/OdbcConnection.h
+@@ -134,7 +134,7 @@ public:
+     return m_statement;
+   }
+ 
+-  void throwException() throw( IOException )
++  void throwException() QUICKFIX_THROW( IOException )
+   {
+     if( !success() )
+       throw IOException( "Query failed [" + m_query + "] " + reason() );
+diff --git a/src/C++/OdbcStore.cpp b/src/C++/OdbcStore.cpp
+index ea85a8b4..1277408d 100644
+--- a/src/C++/OdbcStore.cpp
++++ b/src/C++/OdbcStore.cpp
+@@ -162,7 +162,7 @@ MessageStore* OdbcStoreFactory::create( const SessionID& s, const Dictionary& se
+ }
+ 
+ bool OdbcStore::set( int msgSeqNum, const std::string& msg )
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   std::string msgCopy = msg;
+   string_replace( "'", "''", msgCopy );
+@@ -198,7 +198,7 @@ throw ( IOException )
+ 
+ void OdbcStore::get( int begin, int end,
+                     std::vector < std::string > & result ) const
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   result.clear();
+   std::stringstream queryString;
+@@ -231,17 +231,17 @@ throw ( IOException )
+   }
+ }
+ 
+-int OdbcStore::getNextSenderMsgSeqNum() const throw ( IOException )
++int OdbcStore::getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextSenderMsgSeqNum();
+ }
+ 
+-int OdbcStore::getNextTargetMsgSeqNum() const throw ( IOException )
++int OdbcStore::getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextTargetMsgSeqNum();
+ }
+ 
+-void OdbcStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
++void OdbcStore::setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "UPDATE sessions SET outgoing_seqnum=" << value << " WHERE "
+@@ -255,7 +255,7 @@ void OdbcStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
+   m_cache.setNextSenderMsgSeqNum( value );
+ }
+ 
+-void OdbcStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
++void OdbcStore::setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "UPDATE sessions SET incoming_seqnum=" << value << " WHERE "
+@@ -271,24 +271,24 @@ void OdbcStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
+   m_cache.setNextTargetMsgSeqNum( value );
+ }
+ 
+-void OdbcStore::incrNextSenderMsgSeqNum() throw ( IOException )
++void OdbcStore::incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextSenderMsgSeqNum();
+   setNextSenderMsgSeqNum( m_cache.getNextSenderMsgSeqNum() );
+ }
+ 
+-void OdbcStore::incrNextTargetMsgSeqNum() throw ( IOException )
++void OdbcStore::incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextTargetMsgSeqNum();
+   setNextTargetMsgSeqNum( m_cache.getNextTargetMsgSeqNum() );
+ }
+ 
+-UtcTimeStamp OdbcStore::getCreationTime() const throw ( IOException )
++UtcTimeStamp OdbcStore::getCreationTime() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getCreationTime();
+ }
+ 
+-void OdbcStore::reset() throw ( IOException )
++void OdbcStore::reset() QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "DELETE FROM messages WHERE "
+@@ -327,7 +327,7 @@ void OdbcStore::reset() throw ( IOException )
+     query2.throwException();
+ }
+ 
+-void OdbcStore::refresh() throw ( IOException )
++void OdbcStore::refresh() QUICKFIX_THROW( IOException )
+ {
+   m_cache.reset();
+   populateCache(); 
+diff --git a/src/C++/OdbcStore.h b/src/C++/OdbcStore.h
+index a89ab29b..a7514108 100644
+--- a/src/C++/OdbcStore.h
++++ b/src/C++/OdbcStore.h
+@@ -85,20 +85,20 @@ public:
+              const std::string& connectionString );
+   ~OdbcStore();
+ 
+-  bool set( int, const std::string& ) throw ( IOException );
+-  void get( int, int, std::vector < std::string > & ) const throw ( IOException );
++  bool set( int, const std::string& ) QUICKFIX_THROW( IOException );
++  void get( int, int, std::vector < std::string > & ) const QUICKFIX_THROW( IOException );
+ 
+-  int getNextSenderMsgSeqNum() const throw ( IOException );
+-  int getNextTargetMsgSeqNum() const throw ( IOException );
+-  void setNextSenderMsgSeqNum( int value ) throw ( IOException );
+-  void setNextTargetMsgSeqNum( int value ) throw ( IOException );
+-  void incrNextSenderMsgSeqNum() throw ( IOException );
+-  void incrNextTargetMsgSeqNum() throw ( IOException );
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException );
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException );
++  void setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException );
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException );
+ 
+-  UtcTimeStamp getCreationTime() const throw ( IOException );
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException );
+ 
+-  void reset() throw ( IOException );
+-  void refresh() throw ( IOException );
++  void reset() QUICKFIX_THROW( IOException );
++  void refresh() QUICKFIX_THROW( IOException );
+ 
+ private:
+   void populateCache();
+diff --git a/src/C++/PUGIXML_DOMDocument.cpp b/src/C++/PUGIXML_DOMDocument.cpp
+index 32338fcd..62b033f7 100644
+--- a/src/C++/PUGIXML_DOMDocument.cpp
++++ b/src/C++/PUGIXML_DOMDocument.cpp
+@@ -70,7 +70,7 @@ namespace FIX
+     return m_pNode.value();
+   }
+ 
+-  PUGIXML_DOMDocument::PUGIXML_DOMDocument() throw( ConfigError )
++  PUGIXML_DOMDocument::PUGIXML_DOMDocument() QUICKFIX_THROW( ConfigError )
+   {
+   }
+ 
+diff --git a/src/C++/PUGIXML_DOMDocument.h b/src/C++/PUGIXML_DOMDocument.h
+index 088b9d64..00ee1736 100644
+--- a/src/C++/PUGIXML_DOMDocument.h
++++ b/src/C++/PUGIXML_DOMDocument.h
+@@ -64,7 +64,7 @@ namespace FIX
+   class PUGIXML_DOMDocument : public DOMDocument
+   {
+   public:
+-    PUGIXML_DOMDocument() throw( ConfigError );
++    PUGIXML_DOMDocument() QUICKFIX_THROW( ConfigError );
+     ~PUGIXML_DOMDocument();
+ 
+     bool load( std::istream& );
+diff --git a/src/C++/Parser.cpp b/src/C++/Parser.cpp
+index 415031ac..5f9467af 100644
+--- a/src/C++/Parser.cpp
++++ b/src/C++/Parser.cpp
+@@ -32,7 +32,7 @@ namespace FIX
+ {
+ bool Parser::extractLength( int& length, std::string::size_type& pos,
+                             const std::string& buffer )
+-throw( MessageParseError )
++QUICKFIX_THROW( MessageParseError )
+ {
+   if( !buffer.size() ) return false;
+ 
+@@ -57,7 +57,7 @@ throw( MessageParseError )
+ }
+ 
+ bool Parser::readFixMessage( std::string& str )
+-throw( MessageParseError )
++QUICKFIX_THROW( MessageParseError )
+ {
+   std::string::size_type pos = 0;
+ 
+diff --git a/src/C++/Parser.h b/src/C++/Parser.h
+index 10f07d7e..e02a327c 100644
+--- a/src/C++/Parser.h
++++ b/src/C++/Parser.h
+@@ -41,9 +41,9 @@ public:
+ 
+   bool extractLength( int& length, std::string::size_type& pos,
+                       const std::string& buffer )
+-  throw ( MessageParseError );
++  QUICKFIX_THROW( MessageParseError );
+   bool readFixMessage( std::string& str )
+-  throw ( MessageParseError );
++  QUICKFIX_THROW( MessageParseError );
+ 
+   void addToStream( const char* str, size_t len )
+   { m_buffer.append( str, len ); }
+diff --git a/src/C++/PostgreSQLConnection.h b/src/C++/PostgreSQLConnection.h
+index 0782fe8f..07e66f14 100644
+--- a/src/C++/PostgreSQLConnection.h
++++ b/src/C++/PostgreSQLConnection.h
+@@ -89,7 +89,7 @@ public:
+     return PQgetvalue( m_result, row, column );
+   }
+ 
+-  void throwException() throw( IOException )
++  void throwException() QUICKFIX_THROW( IOException )
+   {
+     if( !success() )
+       throw IOException( "Query failed [" + m_query + "] " );
+diff --git a/src/C++/PostgreSQLStore.cpp b/src/C++/PostgreSQLStore.cpp
+index d3fde6ff..094b8542 100644
+--- a/src/C++/PostgreSQLStore.cpp
++++ b/src/C++/PostgreSQLStore.cpp
+@@ -167,7 +167,7 @@ void PostgreSQLStoreFactory::destroy( MessageStore* pStore )
+ }
+ 
+ bool PostgreSQLStore::set( int msgSeqNum, const std::string& msg )
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   char* msgCopy = new char[ (msg.size() * 2) + 1 ];
+   PQescapeString( msgCopy, msg.c_str(), msg.size() );
+@@ -205,7 +205,7 @@ throw ( IOException )
+ 
+ void PostgreSQLStore::get( int begin, int end,
+                       std::vector < std::string > & result ) const
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   result.clear();
+   std::stringstream queryString;
+@@ -226,17 +226,17 @@ throw ( IOException )
+     result.push_back( query.getValue( row, 0 ) );
+ }
+ 
+-int PostgreSQLStore::getNextSenderMsgSeqNum() const throw ( IOException )
++int PostgreSQLStore::getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextSenderMsgSeqNum();
+ }
+ 
+-int PostgreSQLStore::getNextTargetMsgSeqNum() const throw ( IOException )
++int PostgreSQLStore::getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getNextTargetMsgSeqNum();
+ }
+ 
+-void PostgreSQLStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
++void PostgreSQLStore::setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "UPDATE sessions SET outgoing_seqnum=" << value << " WHERE "
+@@ -252,7 +252,7 @@ void PostgreSQLStore::setNextSenderMsgSeqNum( int value ) throw ( IOException )
+   m_cache.setNextSenderMsgSeqNum( value );
+ }
+ 
+-void PostgreSQLStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
++void PostgreSQLStore::setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "UPDATE sessions SET incoming_seqnum=" << value << " WHERE "
+@@ -268,24 +268,24 @@ void PostgreSQLStore::setNextTargetMsgSeqNum( int value ) throw ( IOException )
+   m_cache.setNextTargetMsgSeqNum( value );
+ }
+ 
+-void PostgreSQLStore::incrNextSenderMsgSeqNum() throw ( IOException )
++void PostgreSQLStore::incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextSenderMsgSeqNum();
+   setNextSenderMsgSeqNum( m_cache.getNextSenderMsgSeqNum() );
+ }
+ 
+-void PostgreSQLStore::incrNextTargetMsgSeqNum() throw ( IOException )
++void PostgreSQLStore::incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+ {
+   m_cache.incrNextTargetMsgSeqNum();
+   setNextTargetMsgSeqNum( m_cache.getNextTargetMsgSeqNum() );
+ }
+ 
+-UtcTimeStamp PostgreSQLStore::getCreationTime() const throw ( IOException )
++UtcTimeStamp PostgreSQLStore::getCreationTime() const QUICKFIX_THROW( IOException )
+ {
+   return m_cache.getCreationTime();
+ }
+ 
+-void PostgreSQLStore::reset() throw ( IOException )
++void PostgreSQLStore::reset() QUICKFIX_THROW( IOException )
+ {
+   std::stringstream queryString;
+   queryString << "DELETE FROM messages WHERE "
+@@ -323,7 +323,7 @@ void PostgreSQLStore::reset() throw ( IOException )
+     query2.throwException();
+ }
+ 
+-void PostgreSQLStore::refresh() throw ( IOException )
++void PostgreSQLStore::refresh() QUICKFIX_THROW( IOException )
+ {
+   m_cache.reset();
+   populateCache(); 
+diff --git a/src/C++/PostgreSQLStore.h b/src/C++/PostgreSQLStore.h
+index de436048..94e1a6c9 100644
+--- a/src/C++/PostgreSQLStore.h
++++ b/src/C++/PostgreSQLStore.h
+@@ -112,20 +112,20 @@ public:
+                    const std::string& password, const std::string& host, short port );
+   ~PostgreSQLStore();
+ 
+-  bool set( int, const std::string& ) throw ( IOException );
+-  void get( int, int, std::vector < std::string > & ) const throw ( IOException );
++  bool set( int, const std::string& ) QUICKFIX_THROW( IOException );
++  void get( int, int, std::vector < std::string > & ) const QUICKFIX_THROW( IOException );
+ 
+-  int getNextSenderMsgSeqNum() const throw ( IOException );
+-  int getNextTargetMsgSeqNum() const throw ( IOException );
+-  void setNextSenderMsgSeqNum( int value ) throw ( IOException );
+-  void setNextTargetMsgSeqNum( int value ) throw ( IOException );
+-  void incrNextSenderMsgSeqNum() throw ( IOException );
+-  void incrNextTargetMsgSeqNum() throw ( IOException );
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException );
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException );
++  void setNextSenderMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void setNextTargetMsgSeqNum( int value ) QUICKFIX_THROW( IOException );
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException );
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException );
+ 
+-  UtcTimeStamp getCreationTime() const throw ( IOException );
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException );
+ 
+-  void reset() throw ( IOException );
+-  void refresh() throw ( IOException );
++  void reset() QUICKFIX_THROW( IOException );
++  void refresh() QUICKFIX_THROW( IOException );
+ 
+ private:
+   void populateCache();
+diff --git a/src/C++/SSLSocketAcceptor.cpp b/src/C++/SSLSocketAcceptor.cpp
+index 6b647519..053817b8 100644
+--- a/src/C++/SSLSocketAcceptor.cpp
++++ b/src/C++/SSLSocketAcceptor.cpp
+@@ -138,7 +138,7 @@ int SSLSocketAcceptor::passPhraseHandleCB(char *buf, int bufsize, int verify, vo
+ 
+ SSLSocketAcceptor::SSLSocketAcceptor( Application& application,
+                                 MessageStoreFactory& factory,
+-                                const SessionSettings& settings ) throw( ConfigError )
++                                const SessionSettings& settings ) QUICKFIX_THROW( ConfigError )
+ : Acceptor( application, factory, settings ),
+   m_pServer( 0 ), m_sslInit(false),
+   m_verify(SSL_CLIENT_VERIFY_NOTSET), m_ctx(0), m_revocationStore(0)
+@@ -149,7 +149,7 @@ SSLSocketAcceptor::SSLSocketAcceptor( Application& application,
+ SSLSocketAcceptor::SSLSocketAcceptor( Application& application,
+                                 MessageStoreFactory& factory,
+                                 const SessionSettings& settings,
+-                                LogFactory& logFactory ) throw( ConfigError )
++                                LogFactory& logFactory ) QUICKFIX_THROW( ConfigError )
+ : Acceptor( application, factory, settings, logFactory ),
+   m_pServer( 0 ), m_sslInit(false),
+   m_verify(SSL_CLIENT_VERIFY_NOTSET), m_ctx(0), m_revocationStore(0)
+@@ -172,7 +172,7 @@ SSLSocketAcceptor::~SSLSocketAcceptor()
+ }
+ 
+ void SSLSocketAcceptor::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   std::set<SessionID> sessions = s.getSessions();
+   std::set<SessionID>::iterator i;
+@@ -188,7 +188,7 @@ throw ( ConfigError )
+ }
+ 
+ void SSLSocketAcceptor::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+   if (!m_sslInit)
+   {
+diff --git a/src/C++/SSLSocketAcceptor.h b/src/C++/SSLSocketAcceptor.h
+index ee86d712..75070040 100644
+--- a/src/C++/SSLSocketAcceptor.h
++++ b/src/C++/SSLSocketAcceptor.h
+@@ -135,9 +135,9 @@ class SSLSocketAcceptor : public Acceptor, SocketServer::Strategy
+   friend class SSLSocketConnection;
+ public:
+   SSLSocketAcceptor( Application&, MessageStoreFactory&,
+-                  const SessionSettings& ) throw( ConfigError );
++                  const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   SSLSocketAcceptor( Application&, MessageStoreFactory&,
+-                  const SessionSettings&, LogFactory& ) throw( ConfigError );
++                  const SessionSettings&, LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~SSLSocketAcceptor();
+ 
+@@ -154,8 +154,8 @@ private:
+   typedef std::map < int, Sessions > PortToSessions;
+   typedef std::map < int, SSLSocketConnection* > SocketConnections;
+ 
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll( double timeout );
+diff --git a/src/C++/SSLSocketConnection.cpp b/src/C++/SSLSocketConnection.cpp
+index 76e47688..790baf89 100644
+--- a/src/C++/SSLSocketConnection.cpp
++++ b/src/C++/SSLSocketConnection.cpp
+@@ -328,7 +328,7 @@ bool SSLSocketConnection::isValidSession()
+ }
+ 
+ void SSLSocketConnection::readFromSocket()
+-throw( SocketRecvFailed )
++QUICKFIX_THROW( SocketRecvFailed )
+ {
+   bool pending = false;
+ 
+diff --git a/src/C++/SSLSocketConnection.h b/src/C++/SSLSocketConnection.h
+index 1607fe8b..cfba4b76 100644
+--- a/src/C++/SSLSocketConnection.h
++++ b/src/C++/SSLSocketConnection.h
+@@ -180,7 +180,7 @@ private:
+     Queue;
+ 
+   bool isValidSession();
+-  void readFromSocket() throw( SocketRecvFailed );
++  void readFromSocket() QUICKFIX_THROW( SocketRecvFailed );
+   bool readMessage( std::string& msg );
+   void readMessages( SocketMonitor& s );
+   bool send( const std::string& );
+diff --git a/src/C++/SSLSocketInitiator.cpp b/src/C++/SSLSocketInitiator.cpp
+index 52a52308..e87027a3 100644
+--- a/src/C++/SSLSocketInitiator.cpp
++++ b/src/C++/SSLSocketInitiator.cpp
+@@ -137,7 +137,7 @@ int SSLSocketInitiator::passwordHandleCB(char *buf, int bufsize, int verify, voi
+ SSLSocketInitiator::SSLSocketInitiator( Application& application,
+                                   MessageStoreFactory& factory,
+                                   const SessionSettings& settings )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : Initiator( application, factory, settings ),
+   m_connector( 1 ), m_lastConnect( 0 ),
+   m_reconnectInterval( 30 ), m_noDelay( false ), m_sendBufSize( 0 ),
+@@ -150,7 +150,7 @@ SSLSocketInitiator::SSLSocketInitiator( Application& application,
+                                   MessageStoreFactory& factory,
+                                   const SessionSettings& settings,
+                                   LogFactory& logFactory )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : Initiator( application, factory, settings, logFactory ),
+   m_connector( 1 ), m_lastConnect( 0 ),
+   m_reconnectInterval( 30 ), m_noDelay( false ), m_sendBufSize( 0 ),
+@@ -179,7 +179,7 @@ SSLSocketInitiator::~SSLSocketInitiator()
+ }
+ 
+ void SSLSocketInitiator::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   const Dictionary& dict = s.get();
+ 
+@@ -194,7 +194,7 @@ throw ( ConfigError )
+ }
+ 
+ void SSLSocketInitiator::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+   if (m_sslInit)
+     return;
+diff --git a/src/C++/SSLSocketInitiator.h b/src/C++/SSLSocketInitiator.h
+index e6a44933..751fc769 100644
+--- a/src/C++/SSLSocketInitiator.h
++++ b/src/C++/SSLSocketInitiator.h
+@@ -134,9 +134,9 @@ class SSLSocketInitiator : public Initiator, SocketConnector::Strategy
+ {
+ public:
+   SSLSocketInitiator( Application&, MessageStoreFactory&,
+-                   const SessionSettings& ) throw( ConfigError );
++                   const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   SSLSocketInitiator( Application&, MessageStoreFactory&,
+-                   const SessionSettings&, LogFactory& ) throw( ConfigError );
++                   const SessionSettings&, LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~SSLSocketInitiator();
+ 
+@@ -156,8 +156,8 @@ private:
+   typedef std::map < int, SSLSocketConnection* > SocketConnections;
+   typedef std::map < SessionID, int > SessionToHostNum;
+ 
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll( double timeout );
+diff --git a/src/C++/Session.cpp b/src/C++/Session.cpp
+index 7eaf703c..2203c066 100644
+--- a/src/C++/Session.cpp
++++ b/src/C++/Session.cpp
+@@ -661,7 +661,7 @@ bool Session::resend( Message& message )
+ }
+ 
+ void Session::persist( const Message& message,  const std::string& messageString ) 
+-throw ( IOException )
++QUICKFIX_THROW( IOException )
+ {
+   MsgSeqNum msgSeqNum;
+   message.getHeader().getField( msgSeqNum );
+@@ -1442,7 +1442,7 @@ void Session::next( const Message& message, const UtcTimeStamp& timeStamp, bool
+ }
+ 
+ bool Session::sendToTarget( Message& message, const std::string& qualifier )
+-throw( SessionNotFound )
++QUICKFIX_THROW( SessionNotFound )
+ {
+   try
+   {
+@@ -1453,7 +1453,7 @@ throw( SessionNotFound )
+ }
+ 
+ bool Session::sendToTarget( Message& message, const SessionID& sessionID )
+-throw( SessionNotFound )
++QUICKFIX_THROW( SessionNotFound )
+ {
+   message.setSessionID( sessionID );
+   Session* pSession = lookupSession( sessionID );
+@@ -1466,7 +1466,7 @@ bool Session::sendToTarget
+   const SenderCompID& senderCompID,
+   const TargetCompID& targetCompID,
+   const std::string& qualifier )
+-throw( SessionNotFound )
++QUICKFIX_THROW( SessionNotFound )
+ {
+   message.getHeader().setField( senderCompID );
+   message.getHeader().setField( targetCompID );
+@@ -1476,7 +1476,7 @@ throw( SessionNotFound )
+ bool Session::sendToTarget
+ ( Message& message, const std::string& sender, const std::string& target,
+   const std::string& qualifier )
+-throw( SessionNotFound )
++QUICKFIX_THROW( SessionNotFound )
+ {
+   return sendToTarget( message, SenderCompID( sender ),
+                        TargetCompID( target ), qualifier );
+diff --git a/src/C++/Session.h b/src/C++/Session.h
+index 2b3005e2..2a85b4d6 100644
+--- a/src/C++/Session.h
++++ b/src/C++/Session.h
+@@ -63,13 +63,13 @@ public:
+   bool sentLogout() { return m_state.sentLogout(); }
+   bool receivedLogon() { return m_state.receivedLogon(); }
+   bool isLoggedOn() { return receivedLogon() && sentLogon(); }
+-  void reset() throw( IOException ) 
++  void reset() QUICKFIX_THROW( IOException ) 
+   { generateLogout(); disconnect(); m_state.reset(); }
+-  void refresh() throw( IOException )
++  void refresh() QUICKFIX_THROW( IOException )
+   { m_state.refresh(); }
+-  void setNextSenderMsgSeqNum( int num ) throw( IOException )
++  void setNextSenderMsgSeqNum( int num ) QUICKFIX_THROW( IOException )
+   { m_state.setNextSenderMsgSeqNum( num ); }
+-  void setNextTargetMsgSeqNum( int num ) throw( IOException )
++  void setNextTargetMsgSeqNum( int num ) QUICKFIX_THROW( IOException )
+   { m_state.setNextTargetMsgSeqNum( num ); }
+ 
+   const SessionID& getSessionID() const
+@@ -81,19 +81,19 @@ public:
+ 
+   static bool sendToTarget( Message& message,
+                             const std::string& qualifier = "" )
+-  throw( SessionNotFound );
++  QUICKFIX_THROW( SessionNotFound );
+   static bool sendToTarget( Message& message, const SessionID& sessionID )
+-  throw( SessionNotFound );
++  QUICKFIX_THROW( SessionNotFound );
+   static bool sendToTarget( Message&,
+                             const SenderCompID& senderCompID,
+                             const TargetCompID& targetCompID,
+                             const std::string& qualifier = "" )
+-  throw( SessionNotFound );
++  QUICKFIX_THROW( SessionNotFound );
+   static bool sendToTarget( Message& message,
+                             const std::string& senderCompID,
+                             const std::string& targetCompID,
+                             const std::string& qualifier = "" )
+-  throw( SessionNotFound );
++  QUICKFIX_THROW( SessionNotFound );
+ 
+   static std::set<SessionID> getSessions();
+   static bool doesSessionExist( const SessionID& );
+@@ -237,7 +237,7 @@ private:
+   bool send( const std::string& );
+   bool sendRaw( Message&, int msgSeqNum = 0 );
+   bool resend( Message& message );
+-  void persist( const Message&, const std::string& ) throw ( IOException );
++  void persist( const Message&, const std::string& ) QUICKFIX_THROW( IOException );
+ 
+   void insertSendingTime( Header& );
+   void insertOrigSendingTime( Header&,
+diff --git a/src/C++/SessionFactory.cpp b/src/C++/SessionFactory.cpp
+index 13ffa7a4..867b352d 100644
+--- a/src/C++/SessionFactory.cpp
++++ b/src/C++/SessionFactory.cpp
+@@ -39,7 +39,7 @@ SessionFactory::~SessionFactory()
+ }
+ 
+ Session* SessionFactory::create( const SessionID& sessionID,
+-                                 const Dictionary& settings ) throw( ConfigError )
++                                 const Dictionary& settings ) QUICKFIX_THROW( ConfigError )
+ {
+   std::string connectionType = settings.getString( CONNECTION_TYPE );
+   if ( connectionType != "acceptor" && connectionType != "initiator" )
+@@ -207,7 +207,7 @@ void SessionFactory::destroy( Session* pSession )
+ 
+ ptr::shared_ptr<DataDictionary> SessionFactory::createDataDictionary(const SessionID& sessionID, 
+                                                                      const Dictionary& settings, 
+-                                                                     const std::string& settingsKey) throw(ConfigError)
++                                                                     const std::string& settingsKey) QUICKFIX_THROW(ConfigError)
+ {
+   ptr::shared_ptr<DataDictionary> pDD;
+   std::string path = settings.getString( settingsKey );
+@@ -241,7 +241,7 @@ ptr::shared_ptr<DataDictionary> SessionFactory::createDataDictionary(const Sessi
+ 
+ void SessionFactory::processFixtDataDictionaries(const SessionID& sessionID, 
+                                                  const Dictionary& settings, 
+-                                                 DataDictionaryProvider& provider) throw(ConfigError)
++                                                 DataDictionaryProvider& provider) QUICKFIX_THROW(ConfigError)
+ {
+   ptr::shared_ptr<DataDictionary> pDataDictionary = createDataDictionary(sessionID, settings, TRANSPORT_DATA_DICTIONARY);
+   provider.addTransportDataDictionary(sessionID.getBeginString(), pDataDictionary);
+@@ -272,7 +272,7 @@ void SessionFactory::processFixtDataDictionaries(const SessionID& sessionID,
+ 
+ void SessionFactory::processFixDataDictionary(const SessionID& sessionID, 
+                                               const Dictionary& settings, 
+-                                              DataDictionaryProvider& provider) throw(ConfigError)
++                                              DataDictionaryProvider& provider) QUICKFIX_THROW(ConfigError)
+ {
+   ptr::shared_ptr<DataDictionary> pDataDictionary = createDataDictionary(sessionID, settings, DATA_DICTIONARY);
+   provider.addTransportDataDictionary(sessionID.getBeginString(), pDataDictionary);
+diff --git a/src/C++/SessionFactory.h b/src/C++/SessionFactory.h
+index 1cc0f42b..9fb11375 100644
+--- a/src/C++/SessionFactory.h
++++ b/src/C++/SessionFactory.h
+@@ -56,7 +56,7 @@ public:
+   ~SessionFactory();
+ 
+   Session* create( const SessionID& sessionID,
+-                   const Dictionary& settings ) throw( ConfigError );
++                   const Dictionary& settings ) QUICKFIX_THROW( ConfigError );
+   void destroy( Session* pSession );
+ 
+ private:
+@@ -64,15 +64,15 @@ private:
+ 
+   ptr::shared_ptr<DataDictionary> createDataDictionary(const SessionID& sessionID, 
+                                                        const Dictionary& settings, 
+-                                                       const std::string& settingsKey) throw(ConfigError);
++                                                       const std::string& settingsKey) QUICKFIX_THROW(ConfigError);
+ 
+   void processFixtDataDictionaries(const SessionID& sessionID, 
+                                    const Dictionary& settings, 
+-                                   DataDictionaryProvider& provider) throw(ConfigError);
++                                   DataDictionaryProvider& provider) QUICKFIX_THROW(ConfigError);
+ 
+   void processFixDataDictionary(const SessionID& sessionID, 
+                                 const Dictionary& settings, 
+-                                DataDictionaryProvider& provider) throw(ConfigError);
++                                DataDictionaryProvider& provider) QUICKFIX_THROW(ConfigError);
+ 
+   std::string toApplVerID(const std::string& value);
+ 
+diff --git a/src/C++/SessionSettings.cpp b/src/C++/SessionSettings.cpp
+index 0240ed6f..36896a59 100644
+--- a/src/C++/SessionSettings.cpp
++++ b/src/C++/SessionSettings.cpp
+@@ -31,14 +31,14 @@
+ namespace FIX
+ {
+ SessionSettings::SessionSettings( std::istream& stream, bool resolveEnvVars )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : m_resolveEnvVars( resolveEnvVars )
+ {
+   stream >> *this;
+ }
+ 
+ SessionSettings::SessionSettings( const std::string& file, bool resolveEnvVars )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : m_resolveEnvVars( resolveEnvVars )
+ {
+   std::ifstream fstream( file.c_str() );
+@@ -48,7 +48,7 @@ throw( ConfigError )
+ }
+ 
+ std::istream& operator>>( std::istream& stream, SessionSettings& s )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   Settings settings(s.m_resolveEnvVars);
+   stream >> settings;
+@@ -125,7 +125,7 @@ const bool SessionSettings::has( const SessionID& sessionID ) const
+ }
+ 
+ const Dictionary& SessionSettings::get( const SessionID& sessionID ) const
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   Dictionaries::const_iterator i;
+   i = m_settings.find( sessionID );
+@@ -135,7 +135,7 @@ throw( ConfigError )
+ 
+ void SessionSettings::set( const SessionID& sessionID,
+                            Dictionary settings )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   if( has(sessionID) )
+     throw ConfigError( "Duplicate Session " + sessionID.toString() );
+@@ -149,7 +149,7 @@ throw( ConfigError )
+   m_settings[ sessionID ] = settings;
+ }
+ 
+-void SessionSettings::set( const Dictionary& defaults ) throw( ConfigError ) 
++void SessionSettings::set( const Dictionary& defaults ) QUICKFIX_THROW( ConfigError ) 
+ { 
+   m_defaults = defaults;
+   Dictionaries::iterator i = m_settings.begin();
+@@ -167,7 +167,7 @@ std::set < SessionID > SessionSettings::getSessions() const
+ }
+ 
+ void SessionSettings::validate( const Dictionary& dictionary ) const
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   std::string beginString = dictionary.getString( BEGINSTRING );
+   if( beginString != BeginString_FIX40 &&
+diff --git a/src/C++/SessionSettings.h b/src/C++/SessionSettings.h
+index f9b52979..2a8faa15 100644
+--- a/src/C++/SessionSettings.h
++++ b/src/C++/SessionSettings.h
+@@ -221,21 +221,21 @@ class SessionSettings
+ {
+ public:
+   SessionSettings() { m_resolveEnvVars = false; }
+-  SessionSettings( std::istream& stream, bool resolveEnvVars = false ) throw( ConfigError );
+-  SessionSettings( const std::string& file, bool resolveEnvVars = false ) throw( ConfigError );
++  SessionSettings( std::istream& stream, bool resolveEnvVars = false ) QUICKFIX_THROW( ConfigError );
++  SessionSettings( const std::string& file, bool resolveEnvVars = false ) QUICKFIX_THROW( ConfigError );
+ 
+   /// Check if session setings are present
+   const bool has( const SessionID& ) const;
+ 
+   /// Get a dictionary for a session.
+-  const Dictionary& get( const SessionID& ) const throw( ConfigError );
++  const Dictionary& get( const SessionID& ) const QUICKFIX_THROW( ConfigError );
+   /// Set a dictionary for a session
+-  void set( const SessionID&, Dictionary ) throw( ConfigError );
++  void set( const SessionID&, Dictionary ) QUICKFIX_THROW( ConfigError );
+ 
+   /// Get global default settings
+   const Dictionary& get() const { return m_defaults; }
+   /// Set global default settings
+-  void set( const Dictionary& defaults ) throw( ConfigError );
++  void set( const Dictionary& defaults ) QUICKFIX_THROW( ConfigError );
+ 
+   /// Number of session settings
+   size_t size() const { return m_settings.size(); }
+@@ -244,19 +244,19 @@ public:
+   std::set < SessionID > getSessions() const;
+ 
+ private:
+-  void validate( const Dictionary& ) const throw( ConfigError );
++  void validate( const Dictionary& ) const QUICKFIX_THROW( ConfigError );
+ 
+   Dictionaries m_settings;
+   Dictionary m_defaults;
+   bool m_resolveEnvVars;  // while reading, replace $var, $(var) and ${var} by environment variable var
+ 
+-  friend std::istream& operator>>( std::istream&, SessionSettings& ) throw( ConfigError );
++  friend std::istream& operator>>( std::istream&, SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   friend std::ostream& operator<<( std::ostream&, const SessionSettings& );
+ };
+ /*! @} */
+ 
+ std::istream& operator>>( std::istream&, SessionSettings& )
+-throw( ConfigError );
++QUICKFIX_THROW( ConfigError );
+ std::ostream& operator<<( std::ostream&, const SessionSettings& );
+ }
+ 
+diff --git a/src/C++/SessionState.h b/src/C++/SessionState.h
+index d3c049b1..bbf4f324 100644
+--- a/src/C++/SessionState.h
++++ b/src/C++/SessionState.h
+@@ -169,28 +169,28 @@ public:
+   void clearQueue()
+   { Locker l( m_mutex ); m_queue.clear(); }
+ 
+-  bool set( int s, const std::string& m ) throw ( IOException )
++  bool set( int s, const std::string& m ) QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); return m_pStore->set( s, m ); }
+   void get( int b, int e, std::vector < std::string > &m ) const
+-  throw ( IOException )
++  QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->get( b, e, m ); }
+-  int getNextSenderMsgSeqNum() const throw ( IOException )
++  int getNextSenderMsgSeqNum() const QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); return m_pStore->getNextSenderMsgSeqNum(); }
+-  int getNextTargetMsgSeqNum() const throw ( IOException )
++  int getNextTargetMsgSeqNum() const QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); return m_pStore->getNextTargetMsgSeqNum(); }
+-  void setNextSenderMsgSeqNum( int n ) throw ( IOException )
++  void setNextSenderMsgSeqNum( int n ) QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->setNextSenderMsgSeqNum( n ); }
+-  void setNextTargetMsgSeqNum( int n ) throw ( IOException )
++  void setNextTargetMsgSeqNum( int n ) QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->setNextTargetMsgSeqNum( n ); }
+-  void incrNextSenderMsgSeqNum() throw ( IOException )
++  void incrNextSenderMsgSeqNum() QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->incrNextSenderMsgSeqNum(); }
+-  void incrNextTargetMsgSeqNum() throw ( IOException )
++  void incrNextTargetMsgSeqNum() QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->incrNextTargetMsgSeqNum(); }
+-  UtcTimeStamp getCreationTime() const throw ( IOException )
++  UtcTimeStamp getCreationTime() const QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); return m_pStore->getCreationTime(); }
+-  void reset() throw ( IOException )
++  void reset() QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->reset(); }
+-  void refresh() throw ( IOException )
++  void refresh() QUICKFIX_THROW( IOException )
+   { Locker l( m_mutex ); m_pStore->refresh(); }
+ 
+   void clear()
+diff --git a/src/C++/SocketAcceptor.cpp b/src/C++/SocketAcceptor.cpp
+index 434f1a0c..80f3819f 100644
+--- a/src/C++/SocketAcceptor.cpp
++++ b/src/C++/SocketAcceptor.cpp
+@@ -33,14 +33,14 @@ namespace FIX
+ {
+ SocketAcceptor::SocketAcceptor( Application& application,
+                                 MessageStoreFactory& factory,
+-                                const SessionSettings& settings ) throw( ConfigError )
++                                const SessionSettings& settings ) QUICKFIX_THROW( ConfigError )
+ : Acceptor( application, factory, settings ),
+   m_pServer( 0 ) {}
+ 
+ SocketAcceptor::SocketAcceptor( Application& application,
+                                 MessageStoreFactory& factory,
+                                 const SessionSettings& settings,
+-                                LogFactory& logFactory ) throw( ConfigError )
++                                LogFactory& logFactory ) QUICKFIX_THROW( ConfigError )
+ : Acceptor( application, factory, settings, logFactory ),
+   m_pServer( 0 ) 
+ {
+@@ -54,7 +54,7 @@ SocketAcceptor::~SocketAcceptor()
+ }
+ 
+ void SocketAcceptor::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   std::set<SessionID> sessions = s.getSessions();
+   std::set<SessionID>::iterator i;
+@@ -70,7 +70,7 @@ throw ( ConfigError )
+ }
+ 
+ void SocketAcceptor::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+   short port = 0;
+ 
+diff --git a/src/C++/SocketAcceptor.h b/src/C++/SocketAcceptor.h
+index de3efd3a..9acab0c0 100644
+--- a/src/C++/SocketAcceptor.h
++++ b/src/C++/SocketAcceptor.h
+@@ -38,9 +38,9 @@ class SocketAcceptor : public Acceptor, SocketServer::Strategy
+   friend class SocketConnection;
+ public:
+   SocketAcceptor( Application&, MessageStoreFactory&,
+-                  const SessionSettings& ) throw( ConfigError );
++                  const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   SocketAcceptor( Application&, MessageStoreFactory&,
+-                  const SessionSettings&, LogFactory& ) throw( ConfigError );
++                  const SessionSettings&, LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~SocketAcceptor();
+ 
+@@ -51,8 +51,8 @@ private:
+   typedef std::map < int, Sessions > PortToSessions;
+   typedef std::map < int, SocketConnection* > SocketConnections;
+ 
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll( double timeout );
+diff --git a/src/C++/SocketConnection.cpp b/src/C++/SocketConnection.cpp
+index e5778a22..c8341482 100644
+--- a/src/C++/SocketConnection.cpp
++++ b/src/C++/SocketConnection.cpp
+@@ -195,7 +195,7 @@ bool SocketConnection::isValidSession()
+ }
+ 
+ void SocketConnection::readFromSocket()
+-throw( SocketRecvFailed )
++QUICKFIX_THROW( SocketRecvFailed )
+ {
+   ssize_t size = socket_recv( m_socket, m_buffer, sizeof(m_buffer) );
+   if( size <= 0 ) throw SocketRecvFailed( size );
+diff --git a/src/C++/SocketConnection.h b/src/C++/SocketConnection.h
+index ec7d9e2d..9733153b 100644
+--- a/src/C++/SocketConnection.h
++++ b/src/C++/SocketConnection.h
+@@ -80,7 +80,7 @@ private:
+     Queue;
+ 
+   bool isValidSession();
+-  void readFromSocket() throw( SocketRecvFailed );
++  void readFromSocket() QUICKFIX_THROW( SocketRecvFailed );
+   bool readMessage( std::string& msg );
+   void readMessages( SocketMonitor& s );
+   bool send( const std::string& );
+diff --git a/src/C++/SocketInitiator.cpp b/src/C++/SocketInitiator.cpp
+index f4d7e145..b33a6ad2 100644
+--- a/src/C++/SocketInitiator.cpp
++++ b/src/C++/SocketInitiator.cpp
+@@ -32,7 +32,7 @@ namespace FIX
+ SocketInitiator::SocketInitiator( Application& application,
+                                   MessageStoreFactory& factory,
+                                   const SessionSettings& settings )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : Initiator( application, factory, settings ),
+   m_connector( 1 ), m_lastConnect( 0 ),
+   m_reconnectInterval( 30 ), m_noDelay( false ), m_sendBufSize( 0 ),
+@@ -44,7 +44,7 @@ SocketInitiator::SocketInitiator( Application& application,
+                                   MessageStoreFactory& factory,
+                                   const SessionSettings& settings,
+                                   LogFactory& logFactory )
+-throw( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ : Initiator( application, factory, settings, logFactory ),
+   m_connector( 1 ), m_lastConnect( 0 ),
+   m_reconnectInterval( 30 ), m_noDelay( false ), m_sendBufSize( 0 ),
+@@ -65,7 +65,7 @@ SocketInitiator::~SocketInitiator()
+ }
+ 
+ void SocketInitiator::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   const Dictionary& dict = s.get();
+ 
+@@ -80,7 +80,7 @@ throw ( ConfigError )
+ }
+ 
+ void SocketInitiator::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+ }
+ 
+diff --git a/src/C++/SocketInitiator.h b/src/C++/SocketInitiator.h
+index 338de386..518607d6 100644
+--- a/src/C++/SocketInitiator.h
++++ b/src/C++/SocketInitiator.h
+@@ -37,9 +37,9 @@ class SocketInitiator : public Initiator, SocketConnector::Strategy
+ {
+ public:
+   SocketInitiator( Application&, MessageStoreFactory&,
+-                   const SessionSettings& ) throw( ConfigError );
++                   const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   SocketInitiator( Application&, MessageStoreFactory&,
+-                   const SessionSettings&, LogFactory& ) throw( ConfigError );
++                   const SessionSettings&, LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~SocketInitiator();
+ 
+@@ -47,8 +47,8 @@ private:
+   typedef std::map < int, SocketConnection* > SocketConnections;
+   typedef std::map < SessionID, int > SessionToHostNum;
+ 
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll( double timeout );
+diff --git a/src/C++/SocketServer.cpp b/src/C++/SocketServer.cpp
+index ba65d035..d962fc44 100644
+--- a/src/C++/SocketServer.cpp
++++ b/src/C++/SocketServer.cpp
+@@ -96,7 +96,7 @@ SocketServer::SocketServer( int timeout )
+ 
+ int SocketServer::add( int port, bool reuse, bool noDelay, 
+                        int sendBufSize, int rcvBufSize )
+-  throw( SocketException& )
++  QUICKFIX_THROW( SocketException& )
+ {
+   if( m_portToInfo.find(port) != m_portToInfo.end() )
+     return m_portToInfo[port].m_socket;
+diff --git a/src/C++/SocketServer.h b/src/C++/SocketServer.h
+index 6a596790..255ad260 100644
+--- a/src/C++/SocketServer.h
++++ b/src/C++/SocketServer.h
+@@ -61,7 +61,7 @@ public:
+   SocketServer( int timeout = 0 );
+ 
+   int add( int port, bool reuse = false, bool noDelay = false, 
+-           int sendBufSize = 0, int rcvBufSize = 0 ) throw( SocketException& );
++           int sendBufSize = 0, int rcvBufSize = 0 ) QUICKFIX_THROW( SocketException& );
+   int accept( int socket );
+   void close();
+   bool block( Strategy& strategy, bool poll = 0, double timeout = 0.0 );
+diff --git a/src/C++/ThreadedSSLSocketAcceptor.cpp b/src/C++/ThreadedSSLSocketAcceptor.cpp
+index 7425657b..65dc061c 100644
+--- a/src/C++/ThreadedSSLSocketAcceptor.cpp
++++ b/src/C++/ThreadedSSLSocketAcceptor.cpp
+@@ -136,7 +136,7 @@ int ThreadedSSLSocketAcceptor::passPhraseHandleCB(char *buf, int bufsize, int ve
+ 
+ ThreadedSSLSocketAcceptor::ThreadedSSLSocketAcceptor(
+     Application &application, MessageStoreFactory &factory,
+-    const SessionSettings &settings) throw(ConfigError)
++    const SessionSettings &settings) QUICKFIX_THROW(ConfigError)
+     : Acceptor(application, factory, settings), m_sslInit(false),
+       m_verify(SSL_CLIENT_VERIFY_NOTSET), m_ctx(0), m_revocationStore(0)
+ {
+@@ -146,7 +146,7 @@ ThreadedSSLSocketAcceptor::ThreadedSSLSocketAcceptor(
+ 
+ ThreadedSSLSocketAcceptor::ThreadedSSLSocketAcceptor(
+     Application &application, MessageStoreFactory &factory,
+-    const SessionSettings &settings, LogFactory &logFactory) throw(ConfigError)
++    const SessionSettings &settings, LogFactory &logFactory) QUICKFIX_THROW(ConfigError)
+     : Acceptor(application, factory, settings, logFactory), m_sslInit(false),
+       m_verify(SSL_CLIENT_VERIFY_NOTSET), m_ctx(0), m_revocationStore(0)
+ {
+@@ -166,7 +166,7 @@ ThreadedSSLSocketAcceptor::~ThreadedSSLSocketAcceptor()
+   socket_term();
+ }
+ 
+-void ThreadedSSLSocketAcceptor::onConfigure(const SessionSettings &s) throw(
++void ThreadedSSLSocketAcceptor::onConfigure(const SessionSettings &s) QUICKFIX_THROW(
+     ConfigError)
+ {
+   std::set< SessionID > sessions = s.getSessions();
+@@ -182,7 +182,7 @@ void ThreadedSSLSocketAcceptor::onConfigure(const SessionSettings &s) throw(
+   }
+ }
+ 
+-void ThreadedSSLSocketAcceptor::onInitialize(const SessionSettings &s) throw(
++void ThreadedSSLSocketAcceptor::onInitialize(const SessionSettings &s) QUICKFIX_THROW(
+     RuntimeError)
+ {
+   if (!m_sslInit)
+diff --git a/src/C++/ThreadedSSLSocketAcceptor.h b/src/C++/ThreadedSSLSocketAcceptor.h
+index 7b74d826..de34b4f2 100644
+--- a/src/C++/ThreadedSSLSocketAcceptor.h
++++ b/src/C++/ThreadedSSLSocketAcceptor.h
+@@ -135,10 +135,10 @@ class ThreadedSSLSocketAcceptor : public Acceptor
+ 
+ public:
+   ThreadedSSLSocketAcceptor(Application &, MessageStoreFactory &,
+-                            const SessionSettings &) throw(ConfigError);
++                            const SessionSettings &) QUICKFIX_THROW(ConfigError);
+   ThreadedSSLSocketAcceptor(Application &, MessageStoreFactory &,
+                             const SessionSettings &,
+-                            LogFactory &) throw(ConfigError);
++                            LogFactory &) QUICKFIX_THROW(ConfigError);
+ 
+   virtual ~ThreadedSSLSocketAcceptor();
+ 
+@@ -183,8 +183,8 @@ private:
+   typedef std::pair< int, SSL * > SocketKey;
+   typedef std::map< SocketKey, thread_id > SocketToThread;
+ 
+-  void onConfigure(const SessionSettings &) throw(ConfigError);
+-  void onInitialize(const SessionSettings &) throw(RuntimeError);
++  void onConfigure(const SessionSettings &) QUICKFIX_THROW(ConfigError);
++  void onInitialize(const SessionSettings &) QUICKFIX_THROW(RuntimeError);
+ 
+   void onStart();
+   bool onPoll(double timeout);
+diff --git a/src/C++/ThreadedSSLSocketConnection.cpp b/src/C++/ThreadedSSLSocketConnection.cpp
+index fbcac8d4..0ccda0cf 100644
+--- a/src/C++/ThreadedSSLSocketConnection.cpp
++++ b/src/C++/ThreadedSSLSocketConnection.cpp
+@@ -323,7 +323,7 @@ bool ThreadedSSLSocketConnection::read()
+   }
+ }
+ 
+-bool ThreadedSSLSocketConnection::readMessage(std::string &msg) throw(
++bool ThreadedSSLSocketConnection::readMessage(std::string &msg) QUICKFIX_THROW(
+     SocketRecvFailed)
+ {
+   try
+diff --git a/src/C++/ThreadedSSLSocketConnection.h b/src/C++/ThreadedSSLSocketConnection.h
+index f7848826..cabb0183 100644
+--- a/src/C++/ThreadedSSLSocketConnection.h
++++ b/src/C++/ThreadedSSLSocketConnection.h
+@@ -161,7 +161,7 @@ public:
+ private:
+   typedef std::pair< int, SSL * > SocketKey;
+ 
+-  bool readMessage(std::string &msg) throw(SocketRecvFailed);
++  bool readMessage(std::string &msg) QUICKFIX_THROW(SocketRecvFailed);
+   void processStream();
+   bool send(const std::string &);
+   bool setSession(const std::string &msg);
+diff --git a/src/C++/ThreadedSSLSocketInitiator.cpp b/src/C++/ThreadedSSLSocketInitiator.cpp
+index 3bf029fd..c8b2195d 100644
+--- a/src/C++/ThreadedSSLSocketInitiator.cpp
++++ b/src/C++/ThreadedSSLSocketInitiator.cpp
+@@ -135,7 +135,7 @@ int ThreadedSSLSocketInitiator::passwordHandleCB(char *buf, int bufsize, int ver
+ 
+ ThreadedSSLSocketInitiator::ThreadedSSLSocketInitiator(
+     Application &application, MessageStoreFactory &factory,
+-    const SessionSettings &settings) throw(ConfigError)
++    const SessionSettings &settings) QUICKFIX_THROW(ConfigError)
+     : Initiator(application, factory, settings), m_lastConnect(0),
+       m_reconnectInterval(30), m_noDelay(false), m_sendBufSize(0),
+       m_rcvBufSize(0), m_sslInit(false), m_ctx(0), m_cert(0), m_key(0)
+@@ -146,7 +146,7 @@ ThreadedSSLSocketInitiator::ThreadedSSLSocketInitiator(
+ 
+ ThreadedSSLSocketInitiator::ThreadedSSLSocketInitiator(
+     Application &application, MessageStoreFactory &factory,
+-    const SessionSettings &settings, LogFactory &logFactory) throw(ConfigError)
++    const SessionSettings &settings, LogFactory &logFactory) QUICKFIX_THROW(ConfigError)
+     : Initiator(application, factory, settings, logFactory), m_lastConnect(0),
+       m_reconnectInterval(30), m_noDelay(false), m_sendBufSize(0),
+       m_rcvBufSize(0), m_sslInit(false), m_ctx(0), m_cert(0), m_key(0)
+@@ -167,7 +167,7 @@ ThreadedSSLSocketInitiator::~ThreadedSSLSocketInitiator()
+   socket_term();
+ }
+ 
+-void ThreadedSSLSocketInitiator::onConfigure(const SessionSettings &s) throw(
++void ThreadedSSLSocketInitiator::onConfigure(const SessionSettings &s) QUICKFIX_THROW(
+     ConfigError)
+ {
+   const Dictionary &dict = s.get();
+@@ -182,7 +182,7 @@ void ThreadedSSLSocketInitiator::onConfigure(const SessionSettings &s) throw(
+     m_rcvBufSize = dict.getInt(SOCKET_RECEIVE_BUFFER_SIZE);
+ }
+ 
+-void ThreadedSSLSocketInitiator::onInitialize(const SessionSettings &s) throw(
++void ThreadedSSLSocketInitiator::onInitialize(const SessionSettings &s) QUICKFIX_THROW(
+     RuntimeError)
+ {
+   if (m_sslInit)
+diff --git a/src/C++/ThreadedSSLSocketInitiator.h b/src/C++/ThreadedSSLSocketInitiator.h
+index 1041b582..f18da490 100644
+--- a/src/C++/ThreadedSSLSocketInitiator.h
++++ b/src/C++/ThreadedSSLSocketInitiator.h
+@@ -137,10 +137,10 @@ class ThreadedSSLSocketInitiator : public Initiator
+ {
+ public:
+   ThreadedSSLSocketInitiator(Application &, MessageStoreFactory &,
+-                             const SessionSettings &) throw(ConfigError);
++                             const SessionSettings &) QUICKFIX_THROW(ConfigError);
+   ThreadedSSLSocketInitiator(Application &, MessageStoreFactory &,
+                              const SessionSettings &,
+-                             LogFactory &) throw(ConfigError);
++                             LogFactory &) QUICKFIX_THROW(ConfigError);
+ 
+   virtual ~ThreadedSSLSocketInitiator();
+ 
+@@ -163,8 +163,8 @@ private:
+   typedef std::pair< ThreadedSSLSocketInitiator *,
+                      ThreadedSSLSocketConnection * > ThreadPair;
+ 
+-  void onConfigure(const SessionSettings &) throw(ConfigError);
+-  void onInitialize(const SessionSettings &) throw(RuntimeError);
++  void onConfigure(const SessionSettings &) QUICKFIX_THROW(ConfigError);
++  void onInitialize(const SessionSettings &) QUICKFIX_THROW(RuntimeError);
+ 
+   void onStart();
+   bool onPoll(double timeout);
+diff --git a/src/C++/ThreadedSocketAcceptor.cpp b/src/C++/ThreadedSocketAcceptor.cpp
+index ec421848..3c336554 100644
+--- a/src/C++/ThreadedSocketAcceptor.cpp
++++ b/src/C++/ThreadedSocketAcceptor.cpp
+@@ -32,7 +32,7 @@ namespace FIX
+ ThreadedSocketAcceptor::ThreadedSocketAcceptor(
+   Application& application,
+   MessageStoreFactory& factory,
+-  const SessionSettings& settings ) throw( ConfigError )
++  const SessionSettings& settings ) QUICKFIX_THROW( ConfigError )
+ : Acceptor( application, factory, settings )
+ { socket_init(); }
+ 
+@@ -40,7 +40,7 @@ ThreadedSocketAcceptor::ThreadedSocketAcceptor(
+   Application& application,
+   MessageStoreFactory& factory,
+   const SessionSettings& settings,
+-  LogFactory& logFactory ) throw( ConfigError )
++  LogFactory& logFactory ) QUICKFIX_THROW( ConfigError )
+ : Acceptor( application, factory, settings, logFactory )
+ { 
+   socket_init(); 
+@@ -52,7 +52,7 @@ ThreadedSocketAcceptor::~ThreadedSocketAcceptor()
+ }
+ 
+ void ThreadedSocketAcceptor::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   std::set<SessionID> sessions = s.getSessions();
+   std::set<SessionID>::iterator i;
+@@ -68,7 +68,7 @@ throw ( ConfigError )
+ }
+ 
+ void ThreadedSocketAcceptor::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+   short port = 0;
+   std::set<int> ports;
+diff --git a/src/C++/ThreadedSocketAcceptor.h b/src/C++/ThreadedSocketAcceptor.h
+index 63d4f7ef..2eb4d428 100644
+--- a/src/C++/ThreadedSocketAcceptor.h
++++ b/src/C++/ThreadedSocketAcceptor.h
+@@ -38,10 +38,10 @@ class ThreadedSocketAcceptor : public Acceptor
+   friend class SocketConnection;
+ public:
+   ThreadedSocketAcceptor( Application&, MessageStoreFactory&,
+-                          const SessionSettings& ) throw( ConfigError );
++                          const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   ThreadedSocketAcceptor( Application&, MessageStoreFactory&,
+                           const SessionSettings&,
+-                          LogFactory& ) throw( ConfigError );
++                          LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~ThreadedSocketAcceptor();
+ 
+@@ -74,8 +74,8 @@ private:
+   typedef std::map < int, int > SocketToPort;
+   typedef std::map < int, thread_id > SocketToThread;
+ 
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll( double timeout );
+diff --git a/src/C++/ThreadedSocketConnection.cpp b/src/C++/ThreadedSocketConnection.cpp
+index 57116f5a..2367be69 100644
+--- a/src/C++/ThreadedSocketConnection.cpp
++++ b/src/C++/ThreadedSocketConnection.cpp
+@@ -143,7 +143,7 @@ bool ThreadedSocketConnection::read()
+ }
+ 
+ bool ThreadedSocketConnection::readMessage( std::string& msg )
+-throw( SocketRecvFailed )
++QUICKFIX_THROW( SocketRecvFailed )
+ {
+   try
+   {
+diff --git a/src/C++/ThreadedSocketConnection.h b/src/C++/ThreadedSocketConnection.h
+index 13172aaa..5aadc6fd 100644
+--- a/src/C++/ThreadedSocketConnection.h
++++ b/src/C++/ThreadedSocketConnection.h
+@@ -60,7 +60,7 @@ public:
+   bool read();
+ 
+ private:
+-  bool readMessage( std::string& msg ) throw( SocketRecvFailed );
++  bool readMessage( std::string& msg ) QUICKFIX_THROW( SocketRecvFailed );
+   void processStream();
+   bool send( const std::string& );
+   bool setSession( const std::string& msg );
+diff --git a/src/C++/ThreadedSocketInitiator.cpp b/src/C++/ThreadedSocketInitiator.cpp
+index 2ada1e29..8b5d1ea5 100644
+--- a/src/C++/ThreadedSocketInitiator.cpp
++++ b/src/C++/ThreadedSocketInitiator.cpp
+@@ -32,7 +32,7 @@ namespace FIX
+ ThreadedSocketInitiator::ThreadedSocketInitiator(
+   Application& application,
+   MessageStoreFactory& factory,
+-  const SessionSettings& settings ) throw( ConfigError )
++  const SessionSettings& settings ) QUICKFIX_THROW( ConfigError )
+ : Initiator( application, factory, settings ),
+   m_lastConnect( 0 ), m_reconnectInterval( 30 ), m_noDelay( false ), 
+   m_sendBufSize( 0 ), m_rcvBufSize( 0 ) 
+@@ -44,7 +44,7 @@ ThreadedSocketInitiator::ThreadedSocketInitiator(
+   Application& application,
+   MessageStoreFactory& factory,
+   const SessionSettings& settings,
+-  LogFactory& logFactory ) throw( ConfigError )
++  LogFactory& logFactory ) QUICKFIX_THROW( ConfigError )
+ : Initiator( application, factory, settings, logFactory ),
+   m_lastConnect( 0 ), m_reconnectInterval( 30 ), m_noDelay( false ), 
+   m_sendBufSize( 0 ), m_rcvBufSize( 0 ) 
+@@ -58,7 +58,7 @@ ThreadedSocketInitiator::~ThreadedSocketInitiator()
+ }
+ 
+ void ThreadedSocketInitiator::onConfigure( const SessionSettings& s )
+-throw ( ConfigError )
++QUICKFIX_THROW( ConfigError )
+ {
+   const Dictionary& dict = s.get();
+ 
+@@ -73,7 +73,7 @@ throw ( ConfigError )
+ }
+ 
+ void ThreadedSocketInitiator::onInitialize( const SessionSettings& s )
+-throw ( RuntimeError )
++QUICKFIX_THROW( RuntimeError )
+ {
+ }
+ 
+diff --git a/src/C++/ThreadedSocketInitiator.h b/src/C++/ThreadedSocketInitiator.h
+index 1a634c1c..1f6d7e06 100644
+--- a/src/C++/ThreadedSocketInitiator.h
++++ b/src/C++/ThreadedSocketInitiator.h
+@@ -40,10 +40,10 @@ class ThreadedSocketInitiator : public Initiator
+ {
+ public:
+   ThreadedSocketInitiator( Application&, MessageStoreFactory&,
+-                           const SessionSettings& ) throw( ConfigError );
++                           const SessionSettings& ) QUICKFIX_THROW( ConfigError );
+   ThreadedSocketInitiator( Application&, MessageStoreFactory&,
+                            const SessionSettings&,
+-                           LogFactory& ) throw( ConfigError );
++                           LogFactory& ) QUICKFIX_THROW( ConfigError );
+ 
+   virtual ~ThreadedSocketInitiator();
+ 
+@@ -52,8 +52,8 @@ private:
+   typedef std::map < SessionID, int > SessionToHostNum;
+   typedef std::pair < ThreadedSocketInitiator*, ThreadedSocketConnection* > ThreadPair;
+ 
+-  void onConfigure( const SessionSettings& ) throw ( ConfigError );
+-  void onInitialize( const SessionSettings& ) throw ( RuntimeError );
++  void onConfigure( const SessionSettings& ) QUICKFIX_THROW( ConfigError );
++  void onInitialize( const SessionSettings& ) QUICKFIX_THROW( RuntimeError );
+ 
+   void onStart();
+   bool onPoll( double timeout );
+diff --git a/src/C++/Utility.h b/src/C++/Utility.h
+index 0aa2cd3e..2829e110 100644
+--- a/src/C++/Utility.h
++++ b/src/C++/Utility.h
+@@ -242,4 +242,10 @@ using std::strtol;
+ using std::strerror;
+ #endif
+ 
++#ifdef __cpp_noexcept_function_type
++#define QUICKFIX_THROW(...) noexcept(false)
++#else
++#define QUICKFIX_THROW(...) throw(__VA_ARGS__)
++#endif
++
+ #endif
+diff --git a/src/C++/test/SessionTestCase.cpp b/src/C++/test/SessionTestCase.cpp
+index 174d55ca..36d64cd7 100644
+--- a/src/C++/test/SessionTestCase.cpp
++++ b/src/C++/test/SessionTestCase.cpp
+@@ -104,7 +104,7 @@ public:
+   }
+ 
+   void fromAdmin( const FIX::Message& message, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon )
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon )
+   {
+     MsgType msgType;
+     message.getHeader().getField( msgType );
+@@ -124,7 +124,7 @@ public:
+   }
+ 
+   void fromApp( const FIX::Message& message, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType )
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType )
+   {
+     MsgType msgType;
+     message.getHeader().getField( msgType );
+@@ -133,7 +133,7 @@ public:
+   }
+ 
+   void toApp( FIX::Message& message, const SessionID& )
+-  throw( DoNotSend )
++  QUICKFIX_THROW( DoNotSend )
+   {
+     PossDupFlag possDupFlag(false);
+     if( message.getHeader().isSetField(possDupFlag) )
+diff --git a/src/C++/test/TestHelper.h b/src/C++/test/TestHelper.h
+index 020f4dea..b8d1d6d9 100644
+--- a/src/C++/test/TestHelper.h
++++ b/src/C++/test/TestHelper.h
+@@ -16,7 +16,7 @@ class TestApplication : public NullApplication
+ {
+ public:
+   void fromApp( const Message&, const SessionID& )
+-  throw( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType ) {}
++  QUICKFIX_THROW( FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType ) {}
+   void onRun() {}
+ };
+ 
+diff --git a/src/at_application.h b/src/at_application.h
+index 6d07c5b5..b701c63c 100644
+--- a/src/at_application.h
++++ b/src/at_application.h
+@@ -167,7 +167,7 @@ class Application : public FIX::Application
+   }
+ 
+   void onLogon( const FIX::SessionID& sessionID )
+-  throw( FIX::RejectLogon )
++  QUICKFIX_THROW( FIX::RejectLogon )
+ {}
+ 
+   void onLogout( const FIX::SessionID& sessionID )
+@@ -179,11 +179,11 @@ class Application : public FIX::Application
+   {}
+ 
+   void toApp( FIX::Message& message, const FIX::SessionID& )
+-  throw( FIX::DoNotSend )
++  QUICKFIX_THROW( FIX::DoNotSend )
+   {}
+ 
+   void fromAdmin( const FIX::Message& message, const FIX::SessionID& sessionID )
+-  throw( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon ) 
++  QUICKFIX_THROW( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon ) 
+   {
+     FIX::MsgType msgType;
+     message.getHeader().getField( msgType );
+@@ -199,7 +199,7 @@ class Application : public FIX::Application
+   }
+ 
+   void fromApp( const FIX::Message& message, const FIX::SessionID& sessionID )
+-  throw( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType )
++  QUICKFIX_THROW( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType )
+   {
+     FIX::MsgType msgType;
+     message.getHeader().getField( msgType );
+diff --git a/src/pt.cpp b/src/pt.cpp
+index 9be0667a..f18bde36 100644
+--- a/src/pt.cpp
++++ b/src/pt.cpp
+@@ -741,7 +741,7 @@ public:
+   TestApplication() : m_count(0) {}
+ 
+   void fromApp( const FIX::Message& m, const FIX::SessionID& )
+-  throw( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType )
++  QUICKFIX_THROW( FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType )
+   {
+     m_count++; 
+   }
+diff --git a/src/python/QuickfixPython.cpp b/src/python/QuickfixPython.cpp
+index 891caa87..6837b620 100644
+--- a/src/python/QuickfixPython.cpp
++++ b/src/python/QuickfixPython.cpp
+@@ -6079,7 +6079,7 @@ void SwigDirector_Application::toAdmin(FIX::Message &arg0, FIX::SessionID const
+ }
+ 
+ 
+-void SwigDirector_Application::toApp(FIX::Message &arg0, FIX::SessionID const &arg1) throw(FIX::DoNotSend) {
++void SwigDirector_Application::toApp(FIX::Message &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::DoNotSend) {
+   SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+   {
+     swig::SwigVar_PyObject obj0;
+@@ -6135,7 +6135,7 @@ void SwigDirector_Application::toApp(FIX::Message &arg0, FIX::SessionID const &a
+ }
+ 
+ 
+-void SwigDirector_Application::fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon) {
++void SwigDirector_Application::fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon) {
+   SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+   {
+     swig::SwigVar_PyObject obj0;
+@@ -6197,7 +6197,7 @@ void SwigDirector_Application::fromAdmin(FIX::Message const &arg0, FIX::SessionI
+ }
+ 
+ 
+-void SwigDirector_Application::fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType) {
++void SwigDirector_Application::fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType) {
+   SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+   {
+     swig::SwigVar_PyObject obj0;
+diff --git a/src/python/QuickfixPython.h b/src/python/QuickfixPython.h
+index ec6b0d51..dc5eb1f5 100644
+--- a/src/python/QuickfixPython.h
++++ b/src/python/QuickfixPython.h
+@@ -24,9 +24,9 @@ public:
+     virtual void onLogon(FIX::SessionID const &arg0);
+     virtual void onLogout(FIX::SessionID const &arg0);
+     virtual void toAdmin(FIX::Message &arg0, FIX::SessionID const &arg1);
+-    virtual void toApp(FIX::Message &arg0, FIX::SessionID const &arg1) throw(FIX::DoNotSend);
+-    virtual void fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon);
+-    virtual void fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType);
++    virtual void toApp(FIX::Message &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::DoNotSend);
++    virtual void fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon);
++    virtual void fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType);
+ 
+ /* Internal director utilities */
+ public:
+diff --git a/src/ruby/QuickfixRuby.cpp b/src/ruby/QuickfixRuby.cpp
+index 62b81883..8ea8de5c 100644
+--- a/src/ruby/QuickfixRuby.cpp
++++ b/src/ruby/QuickfixRuby.cpp
+@@ -4752,7 +4752,7 @@ void SwigDirector_Application::toAdmin(FIX::Message &arg0, FIX::SessionID const
+ }
+ 
+ 
+-void SwigDirector_Application::toApp(FIX::Message &arg0, FIX::SessionID const &arg1) throw(FIX::DoNotSend) {
++void SwigDirector_Application::toApp(FIX::Message &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::DoNotSend) {
+   VALUE obj0 = Qnil ;
+   VALUE obj1 = Qnil ;
+   VALUE result;
+@@ -4776,7 +4776,7 @@ void SwigDirector_Application::toApp(FIX::Message &arg0, FIX::SessionID const &a
+ }
+ 
+ 
+-void SwigDirector_Application::fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon) {
++void SwigDirector_Application::fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon) {
+   VALUE obj0 = Qnil ;
+   VALUE obj1 = Qnil ;
+   VALUE result;
+@@ -4800,7 +4800,7 @@ void SwigDirector_Application::fromAdmin(FIX::Message const &arg0, FIX::SessionI
+ }
+ 
+ 
+-void SwigDirector_Application::fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType) {
++void SwigDirector_Application::fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType) {
+   VALUE obj0 = Qnil ;
+   VALUE obj1 = Qnil ;
+   VALUE result;
+diff --git a/src/ruby/QuickfixRuby.h b/src/ruby/QuickfixRuby.h
+index 544b98c1..7fcb1273 100644
+--- a/src/ruby/QuickfixRuby.h
++++ b/src/ruby/QuickfixRuby.h
+@@ -25,9 +25,9 @@ public:
+     virtual void onLogon(FIX::SessionID const &arg0);
+     virtual void onLogout(FIX::SessionID const &arg0);
+     virtual void toAdmin(FIX::Message &arg0, FIX::SessionID const &arg1);
+-    virtual void toApp(FIX::Message &arg0, FIX::SessionID const &arg1) throw(FIX::DoNotSend);
+-    virtual void fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon);
+-    virtual void fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) throw(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType);
++    virtual void toApp(FIX::Message &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::DoNotSend);
++    virtual void fromAdmin(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::RejectLogon);
++    virtual void fromApp(FIX::Message const &arg0, FIX::SessionID const &arg1) QUICKFIX_THROW(FIX::FieldNotFound, FIX::IncorrectDataFormat, FIX::IncorrectTagValue, FIX::UnsupportedMessageType);
+ };
+ 
+ 
