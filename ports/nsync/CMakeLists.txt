@@ -397,7 +397,7 @@ if (NSYNC_ENABLE_TESTS)
 	endforeach (t)
 endif ()
 
-if(WIN32 AND NOT TARGET_TRIPLET STREQUAL "x64-windows-static")
+if(WIN32 AND NOT ${TARGET_TRIPLET} STREQUAL "x64-windows-static")
     set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
 endif()
 
