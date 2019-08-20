@@ -47,7 +47,7 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=x32)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=x64)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
     set(GENIE_OPTIONS ${GENIE_OPTIONS} --platform=ARM)
 else()
     message(WARNING "Architecture may be not supported: ${VCPKG_TARGET_ARCHITECTURE}")
@@ -105,7 +105,7 @@ vcpkg_execute_required_process(
 if(GENIE_ACTION STREQUAL cmake)
     # Run CMake
     vcpkg_configure_cmake(
-        SOURCE_PATH "${SOURCE_DIR}/.build/projects/cmake"
+        SOURCE_PATH "${SOURCE_DIR}/.build/projects/${PROJ_FOLDER}"
         PREFER_NINJA
         OPTIONS_RELEASE -DCMAKE_BUILD_TYPE=Release
         OPTIONS_DEBUG -DCMAKE_BUILD_TYPE=Debug
@@ -139,7 +139,7 @@ else()
     foreach(PROJ bimg bimg_decode bimg_encode)
         vcpkg_install_msbuild(
             SOURCE_PATH "${SOURCE_DIR}"
-            PROJECT_SUBPATH ".build/projects/${GENIE_ACTION}/${PROJ}.vcxproj"
+            PROJECT_SUBPATH ".build/projects/${PROJ_FOLDER}/${PROJ}.vcxproj"
             LICENSE_SUBPATH "LICENSE"
             INCLUDES_SUBPATH "include"
         )
