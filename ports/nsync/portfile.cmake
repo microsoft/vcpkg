@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/nsync
-    REF 1.21.0
-    SHA512 39df3820d22f0c1c4dd0322601e82cb1feacc811ff3e5269c1339254fc87514046492a8565d634613b52459e8953e814786632c6d382a4d3f5e0cbaf25af09ad
+    REF 1.22.0
+    SHA512 e62e3f1ee736da871c7d6bd579ed1e22c5be23045372eec11e9d48f09e2b6822e026d846d864a94b4b0112c67643afab2e9ac04cee26138677eddc31d7d48c23
     HEAD_REF master
 )
 
