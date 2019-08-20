@@ -38,4 +38,25 @@ index aa1221a86..a49ee4f6d 100644
  #   if !defined(LIBANGLE_IMPLEMENTATION)
  #       define ANGLE_PLATFORM_EXPORT __declspec(dllimport)
  #   else
-
+diff --git a/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp b/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp
+index d4459ec28..d1416041e 100644
+--- a/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp	
++++ b/src/3rdparty/angle/src/libGLESv2/entry_points_gles_2_0_ext.cpp
+@@ -3505,7 +3505,7 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
+     }
+ }
+ 
+-GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum target,
++ANGLE_EXPORT void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum target,
+                                                                     GLenum attachment,
+                                                                     GLuint texture,
+                                                                     GLint level,
+@@ -3530,7 +3530,7 @@ GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum targe
+     }
+ }
+ 
+-GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewSideBySideANGLE(GLenum target,
++ANGLE_EXPORT void GL_APIENTRY FramebufferTextureMultiviewSideBySideANGLE(GLenum target,
+                                                                        GLenum attachment,
+                                                                        GLuint texture,
+                                                                        GLint level,
