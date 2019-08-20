@@ -30,10 +30,17 @@
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process)
-    cmake_parse_arguments(vcpkg_execute_required_process "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
+    cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
+
+    set(ALLOW_IN_DOWNLOAD_MODE_OPTION)
+    if (vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
+        set(ALLOW_IN_DOWNLOAD_MODE_OPTION ALLOW_IN_DOWNLOAD_MODE)
+    endif()
+
     execute_process(
+        ${ALLOW_IN_DOWNLOAD_MODE_OPTION}
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}

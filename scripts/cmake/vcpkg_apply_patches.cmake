@@ -41,6 +41,7 @@ function(vcpkg_apply_patches)
         message(STATUS "Applying patch ${PATCH}")
         set(LOGNAME patch-${TARGET_TRIPLET}-${PATCHNUM})
         execute_process(
+            ALLOW_IN_DOWNLOAD_MODE
             COMMAND ${GIT} --work-tree=. --git-dir=.git apply "${ABSOLUTE_PATCH}" --ignore-whitespace --whitespace=nowarn --verbose
             OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-out.log
             ERROR_FILE ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-err.log
