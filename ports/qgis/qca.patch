@@ -1,0 +1,13 @@
+diff --git a/cmake/FindQCA.cmake b/cmake/FindQCA.cmake
+index 5b9c9f5..111b32b 100644
+--- a/cmake/FindQCA.cmake
++++ b/cmake/FindQCA.cmake
+@@ -20,7 +20,7 @@ if(QCA_INCLUDE_DIR AND QCA_LIBRARY)
+ 
+ else(QCA_INCLUDE_DIR AND QCA_LIBRARY)
+ 
+-  set(QCA_LIBRARY_NAMES qca-qt5 qca2-qt5)
++  set(QCA_LIBRARY_NAMES qca-qt5 qca2-qt5 qca)
+ 
+   find_library(QCA_LIBRARY
+     NAMES ${QCA_LIBRARY_NAMES}
