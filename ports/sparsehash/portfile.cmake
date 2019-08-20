@@ -24,7 +24,7 @@ else()
 	)
 
 	vcpkg_execute_required_process(
-		COMMAND make -j install
+		COMMAND make -j ${VCPKG_CONCURRENCY} install
 		WORKING_DIRECTORY ${SOURCE_PATH}
 		LOGNAME install-${TARGET_TRIPLET}
 	)
