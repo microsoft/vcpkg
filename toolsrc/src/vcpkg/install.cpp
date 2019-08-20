@@ -174,7 +174,7 @@ namespace vcpkg::Install
         const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path) {
-        return std::move(std::string(path.generic_string(), package_remove_char_count));
+            return std::string(path.generic_string(), package_remove_char_count);
         });
 
         return SortedVector<std::string>(std::move(package_files));

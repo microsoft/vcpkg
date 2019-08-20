@@ -22,8 +22,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF "1.8.4"
-    PATCHES
-        "support-unicode-on-windows.patch"
     # [NO_REMOVE_ONE_LEVEL]
     # [WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/src>]
     # [PATCHES <a.patch>...]
