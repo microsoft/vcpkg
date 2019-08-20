@@ -81,6 +81,8 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 
+set(TF_SYSTEM_LIBS "protobuf_archive,com_google_protobuf,com_google_protobuf_cc")
+
 if(CMAKE_HOST_WIN32)
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures -c opt --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true ///tensorflow:libtensorflow_cc.so ///tensorflow:install_headers"
@@ -89,7 +91,7 @@ if(CMAKE_HOST_WIN32)
     )
 else()
     vcpkg_execute_build_process(
-        COMMAND ${BAZEL} build --verbose_failures -c opt --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+        COMMAND ${BAZEL} build --verbose_failures --action_env TF_SYSTEM_LIBS=${TF_SYSTEM_LIBS} -c opt --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
