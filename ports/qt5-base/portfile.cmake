@@ -27,12 +27,12 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/winmain_pro.patch   #Moves qtmain to manual-link
                             patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch #Patches the gui configure.json to include the correct fonttype dependencies
+                            patches/gui_configure.patch #Patches the gui configure.json to break freetype autodetection because it does not include its dependencies.
                             patches/static_opengl.patch #Let the Khronos headers define the required preprocessor definitions. Qt5 you know nothing. 
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
+foreach(DEPENDENCY freetype zlib harfbuzz-ng libjpeg libpng double-conversion sqlite pcre2)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
@@ -48,6 +48,18 @@ set(ENV{_CL_} "/utf-8")
 set(CORE_OPTIONS
     -confirm-license
     -opensource
+    #-no-fontconfig
+    #-simulator_and_device
+    #-ltcg
+    #-combined-angle-lib 
+    # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
+    #-optimized-tools
+    #-force-debug-info
+    -verbose
+)
+
+## 3rd Party Libs
+list(APPEND CORE_OPTIONS
     -system-zlib
     -system-libjpeg
     -system-libpng
@@ -55,17 +67,57 @@ set(CORE_OPTIONS
     -system-pcre
     -system-doubleconversion
     -system-sqlite
-    -system-harfbuzz
-    #-no-fontconfig
-    -nomake examples
-    -nomake tests
-    #-simulator_and_device
-    #-ltcg
-    #-combined-angle-lib
-    #-optimized-tools
-    #-force-debug-info
-    #-verbose
-)
+    -system-harfbuzz)
+
+#Workaround for errors until PR fixing the issue is merged
+set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX};${CMAKE_SHARED_LIBRARY_SUFFIX}" CACHE INTERNAL "")
+set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX};${CMAKE_SHARED_LIBRARY_PREFIX}" CACHE INTERNAL "")
+
+find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(JPEG_RELEASE NAMES jpeg jpeg-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(JPEG_DEBUG NAMES jpeg jpeg-static jpegd jpeg-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(LIBPNG_RELEASE NAMES libpng16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #Depends on zlib
+find_library(LIBPNG_DEBUG NAMES libpng16 libpng16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(PSQL_RELEASE NAMES pq libpq PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+find_library(PSQL_DEBUG NAMES pq libpq pqd libpqd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(PCRE2_RELEASE NAMES pcre2-16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #zlib, bzip2, libpng
+find_library(FREETYPE_DEBUG NAMES freetype freetyped PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(DOUBLECONVERSION_DEBUG NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(HARFBUZZ_RELEASE NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(HARFBUZZ_DEBUG NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+#Dependent libraries
+find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(SSL_RELEASE ssl ssleay32 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(SSL_DEBUG ssl ssleay32 ssld ssleay32d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(EAY_RELEASE libeay32 crypto libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+set(RELEASE_OPTIONS
+            "LIBJPEG_LIBS=${JPEG_RELEASE}"
+            "ZLIB_LIBS=${ZLIB_RELEASE}"
+            "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "PCRE2_LIBS=${PCRE2_RELEASE}"
+            "FREETYPE_LIBS=${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
+            )
+set(DEBUG_OPTIONS
+            "LIBJPEG_LIBS=${JPEG_DEBUG}"
+            "ZLIB_LIBS=${ZLIB_DEBUG}"
+            "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "PCRE2_LIBS=${PCRE2_DEBUG}"
+            "FREETYPE_LIBS=${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
+            )
+
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_IS_UWP)
@@ -77,88 +129,56 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND CORE_OPTIONS -opengl es2) # dynamic will generate angle dll and the angle port has been explicitly deleted. 
                                               # es2 is the Windows automatic default.
     endif()
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        ${QT_PLATFORM_CONFIGURE_OPTIONS}
-        OPTIONS
-            ${CORE_OPTIONS}
-            -mp
-        OPTIONS_RELEASE
-            "LIBJPEG_LIBS=-ljpeg"
-            "ZLIB_LIBS=-lzlib"
-            "LIBPNG_LIBS=-llibpng16"
-            "PSQL_LIBS=-llibpq"
-            "PCRE2_LIBS=-lpcre2-16"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/freetype.lib ${CURRENT_INSTALLED_DIR}/lib/bz2.lib ${CURRENT_INSTALLED_DIR}/lib/libpng16.lib" # for some strange reason the -l version is not extended in the generated files. 
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/bz2.lib"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.lib"
-        OPTIONS_DEBUG
-            "LIBJPEG_LIBS=-ljpegd"
-            "ZLIB_LIBS=-lzlibd"
-            "LIBPNG_LIBS=-llibpng16d"
-            "PSQL_LIBS=-llibpqd"
-            "PCRE2_LIBS=-lpcre2-16d"
-            "FREETYPE_LIBS=-lfreetyped -lbz2d -llibpng16d"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/bz2d.lib"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib"
-            )    
+    list(APPEND RELEASE_OPTIONS
+            "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
+            "SQLITE_LIBS=${SQLITE_RELEASE}"
+            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
+        )
+        
+    list(APPEND DEBUG_OPTIONS
+            "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
+            "SQLITE_LIBS=${SQLITE_DEBUG}"
+            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
+        )
 elseif(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
-
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        ${QT_PLATFORM_CONFIGURE_OPTIONS}
-        OPTIONS
-            ${CORE_OPTIONS}
-        OPTIONS_RELEASE
-            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
-        OPTIONS_DEBUG
-            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
-    )
+    list(APPEND RELEASE_OPTIONS
+            "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
+            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
+        )
+    list(APPEND DEBUG_OPTIONS
+            "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
+            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
+        )
 elseif(VCPKG_TARGET_IS_OSX)
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        ${QT_PLATFORM_CONFIGURE_OPTIONS}
-        OPTIONS
-            ${CORE_OPTIONS}
-        OPTIONS_RELEASE
-            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libjpeg.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/lib/libz.a"
-            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpng16.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libfreetype.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/lib/libpq.a ${CURRENT_INSTALLED_DIR}/lib/libssl.a ${CURRENT_INSTALLED_DIR}/lib/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/lib/libsqlite3.a -ldl -lpthread"
-            "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/lib/libharfbuzz.a -framework ApplicationServices"
-        OPTIONS_DEBUG
-            "LIBJPEG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libjpeg.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "QMAKE_LIBS_PRIVATE+=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "ZLIB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libz.a"
-            "LIBPNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.a"
-            "FREETYPE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libfreetyped.a"
-            "PSQL_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.a ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a ${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a -ldl -lpthread"
-            "SQLITE_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libsqlite3.a -ldl -lpthread"
-            "HARFBUZZ_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/libharfbuzz.a -framework ApplicationServices"
-    )
+    list(APPEND RELEASE_OPTIONS
+            "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
+            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} -framework ApplicationServices"
+        )
+    list(APPEND DEBUG_OPTIONS
+            "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
+            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} -framework ApplicationServices"
+        )
 endif()
+
+## Do not build tests or examples
+list(APPEND CORE_OPTIONS
+    -nomake examples
+    -nomake tests)
+
+configure_qt(
+    SOURCE_PATH ${SOURCE_PATH}
+    ${QT_PLATFORM_CONFIGURE_OPTIONS}
+    OPTIONS ${CORE_OPTIONS}
+    OPTIONS_RELEASE ${RELEASE_OPTIONS}
+    OPTIONS_DEBUG ${DEBUG_OPTIONS}
+    )
 
 if(VCPKG_TARGET_IS_OSX)
     install_qt(DISABLE_PARALLEL) # prevent race condition on Mac
