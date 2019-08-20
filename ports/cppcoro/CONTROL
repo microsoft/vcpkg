@@ -1,0 +1,4 @@
+Source: cppcoro
+Version: 2019-05-28
+Description: A library of C++ coroutine abstractions for the coroutines TS
+Homepage: https://github.com/lewissbaker/cppcoro
