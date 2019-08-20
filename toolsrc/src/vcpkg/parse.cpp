@@ -66,7 +66,7 @@ namespace vcpkg::Parse
 
             // skip comma and space
             ++pos;
-            if (str[pos] == ' ')
+            while (str[pos] == ' ')
             {
                 ++pos;
             }

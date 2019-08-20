@@ -5,6 +5,7 @@
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
+#include <vcpkg/pragmas.h>
 
 #include <vector>
 

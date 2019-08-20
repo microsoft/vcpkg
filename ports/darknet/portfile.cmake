@@ -16,17 +16,12 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-vcpkg_check_features(
-  "cuda"    ENABLE_CUDA
-  "opencv"  ENABLE_OPENCV
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  "cuda"  ENABLE_CUDA
+  "opencv" ENABLE_OPENCV
 )
 
-if("opencv-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-  set(ENABLE_CUDA ON)
-endif()
-
-if (ENABLE_CUDA)
+if ("cuda" IN_LIST FEATURES)
   if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
     #CMake looks for nvcc only in PATH and CUDACXX env vars for the Ninja generator. Since we filter path on vcpkg and CUDACXX env var is not set by CUDA installer on Windows, CMake cannot find CUDA when using Ninja generator, so we need to manually enlight it if necessary (https://gitlab.kitware.com/cmake/cmake/issues/19173). Otherwise we could just disable Ninja and use MSBuild, but unfortunately CUDA installer does not integrate with some distributions of MSBuild (like the ones inside Build Tools), making CUDA unavailable otherwise in those cases, which we want to avoid
     set(ENV{CUDACXX} "$ENV{CUDA_PATH}/bin/nvcc.exe")
@@ -80,8 +75,7 @@ vcpkg_configure_cmake(
   OPTIONS
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
-    -DENABLE_CUDA=${ENABLE_CUDA}
-    -DENABLE_OPENCV=${ENABLE_OPENCV}
+    ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

@@ -184,7 +184,7 @@ namespace vcpkg::Build
         static const std::string LIBRARY_LINKAGE = "LibraryLinkage";
     }
 
-    CStringView to_vcvarsall_target(const std::string& cmake_system_name)
+    static CStringView to_vcvarsall_target(const std::string& cmake_system_name)
     {
         if (cmake_system_name.empty()) return "";
         if (cmake_system_name == "Windows") return "";
@@ -193,7 +193,7 @@ namespace vcpkg::Build
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
     }
 
-    CStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
+    static CStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
         auto maybe_target_arch = System::to_cpu_architecture(target_architecture);
         Checks::check_exit(
@@ -217,7 +217,7 @@ namespace vcpkg::Build
                                   }));
     }
 
-    std::unordered_map<std::string, std::string> make_env_passthrough(const PreBuildInfo& pre_build_info)
+    static auto make_env_passthrough(const PreBuildInfo& pre_build_info) -> std::unordered_map<std::string, std::string>
     {
         std::unordered_map<std::string, std::string> env;
 
@@ -649,7 +649,7 @@ namespace vcpkg::Build
         std::vector<AbiEntry> port_files;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
-            if (fs::is_regular_file(status(port_file)))
+            if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
                 port_files.emplace_back(port_file.path().filename().u8string(),
                                         vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"));
