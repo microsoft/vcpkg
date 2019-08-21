@@ -15,10 +15,16 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/upgrade_projects.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/inherit_from_parent_or_project_defaults.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch"
+    PATCHES upgrade_projects.patch
+            inherit_from_parent_or_project_defaults.patch
+            replace_environment_variable.patch
 )
+
+find_path(COR_H_PATH cor.h)
+if(COR_H_PATH MATCHES "NOTFOUND")
+    message(FATAL_ERROR "Could not find <cor.h>. Ensure the NETFXSDK is installed.")
+endif()
+get_filename_component(NETFXSDK_PATH "${COR_H_PATH}/../.." ABSOLUTE)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
@@ -34,6 +40,7 @@ configure_file("${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" "${SOURCE_P
 # Build OpenNI2
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/OpenNI.sln"
+    OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
 )
 
 # Install OpenNI2
