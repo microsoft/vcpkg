@@ -39,7 +39,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
+    static Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
         static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -462,7 +462,7 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-
+        Util::unused(expected_architecture, files);
         return LintStatus::SUCCESS;
     }
 

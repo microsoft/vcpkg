@@ -46,7 +46,11 @@ endif()
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if (VCPKG_TARGET_IS_WINDOWS)
+	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+endif()
 vcpkg_copy_pdbs()
 
 file(COPY ${CURRENT_PACKAGES_DIR}/lib/pkgconfig DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib)

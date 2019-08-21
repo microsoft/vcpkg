@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gdabah/distorm
-    REF 16e6f43509616234b8478187c00569a65f15287c
-    SHA512 2ecbacaaf07a07cf725adf25732807476fdaa1d3a44994a90c70ddbd2ec3db4c75c88b28188f8a48a0fb7b4fe79ae4f7b717cf72b3a0154232310ed56677a9a3
+    REF v3.4.1
+    SHA512 0e9f8b62bc190ef7d516f1902b6003adef9c7d5d4a5f985fb0bdfc5d4838b2805e2b8836b02d5eccdb3401e814417de615dec675aed9e606c93122ca8a0d2083
     HEAD_REF master
 )
 

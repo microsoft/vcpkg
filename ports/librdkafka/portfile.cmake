@@ -12,11 +12,12 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
-vcpkg_check_features(
-    lz4 ENABLE_LZ4_EXT
-    ssl WITH_SSL
-    zlib WITH_ZLIB
-    zstd WITH_ZSTD
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    lz4     ENABLE_LZ4_EXT
+    ssl     WITH_SSL
+    zlib    WITH_ZLIB
+    zstd    WITH_ZSTD
+    snappy WITH_SNAPPY
 )
 
 vcpkg_configure_cmake(
@@ -49,7 +50,7 @@ vcpkg_fixup_cmake_targets(
     TARGET_PATH share/rdkafka
 )
 
-if(ENABLE_LZ4_EXT)
+if("lz4" IN_LIST FEATURES)
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/share/rdkafka/RdKafkaConfig.cmake
         "find_dependency(LZ4)"

@@ -33,6 +33,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 if(VCPKG_BUILD_TYPE STREQUAL "debug")
     # move headers
     file(RENAME
