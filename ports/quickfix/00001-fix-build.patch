@@ -66,3 +66,19 @@ index 0aa2cd3e..2829e110 100644
 +#endif
 +
  #endif
+diff --git a/src/C++/UtilitySSL.cpp b/src/C++/UtilitySSL.cpp
+index a01606ac..aee41bbf 100644
+--- a/src/C++/UtilitySSL.cpp
++++ b/src/C++/UtilitySSL.cpp
+@@ -498,7 +498,11 @@ static void ssl_rand_seed(void)
+   /*
+   * seed in the current process id (usually just 4 bytes)
+   */
++#ifdef _MSC_VER
++  pid = GetCurrentProcessId();
++#else
+   pid = getpid();
++#endif
+   l = sizeof(pid);
+   RAND_seed((unsigned char *)&pid, l);
+   /*
