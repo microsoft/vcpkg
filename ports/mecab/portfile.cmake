@@ -11,6 +11,7 @@
 #
 
 if (VCPKG_TARGET_TRIPLET STREQUAL "x64-uwp" OR VCPKG_TARGET_TRIPLET STREQUAL "arm64-windows" OR VCPKG_TARGET_TRIPLET STREQUAL "arm-uwp")
+    message(FATAL_ERROR "mecab does not support on this platform")
 endif()
 
 include(vcpkg_common_functions)
