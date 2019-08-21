@@ -314,33 +314,51 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # handle qgis tools and plugins
-function(copy_path basepath)
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qgis/${basepath})
+function(copy_path basepath)	
 	file(GLOB ${basepath}_PATH ${CURRENT_PACKAGES_DIR}/${basepath}/*)
-	file(COPY ${${basepath}_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qgis/${basepath})
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${basepath}/)
+	if( ${basepath}_PATH )
+		file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qgis/${basepath})
+		file(COPY ${${basepath}_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qgis/${basepath})		
+	endif()
 	
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/${basepath})
+	if(EXISTS "${CURRENT_PACKAGES_DIR}/${basepath}/")
+		file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${basepath}/)
+	endif()
+		
 	file(GLOB ${basepath}_DEBUG_PATH ${CURRENT_PACKAGES_DIR}/debug/${basepath}/*)
-	file(COPY ${${basepath}_DEBUG_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/${basepath})
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${basepath}/)
+	if( ${basepath}_DEBUG_PATH )
+		file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/${basepath})
+		file(COPY ${${basepath}_DEBUG_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/${basepath})		
+	endif()
+	
+	if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/${basepath}/")
+		file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${basepath}/)
+	endif()
 endfunction()
 
 file(GLOB QGIS_CMAKE_PATH ${CURRENT_PACKAGES_DIR}/*.cmake)
-file(COPY ${QGIS_CMAKE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmake/qgis)
-file(REMOVE_RECURSE ${QGIS_CMAKE_PATH})
+if(QGIS_CMAKE_PATH)
+	file(COPY ${QGIS_CMAKE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmake/qgis)
+	file(REMOVE_RECURSE ${QGIS_CMAKE_PATH})
+endif()
 file(GLOB QGIS_CMAKE_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/*.cmake)
-file(REMOVE_RECURSE ${QGIS_CMAKE_PATH_DEBUG})
+if( QGIS_CMAKE_PATH_DEBUG )
+	file(REMOVE_RECURSE ${QGIS_CMAKE_PATH_DEBUG})
+endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qgis/bin)
 file(GLOB QGIS_TOOL_PATH ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/*.exe)
-file(COPY ${QGIS_TOOL_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qgis/bin)
-file(REMOVE_RECURSE ${QGIS_TOOL_PATH})
+if(QGIS_TOOL_PATH)
+	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qgis/bin)
+	file(COPY ${QGIS_TOOL_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qgis/bin)
+	file(REMOVE_RECURSE ${QGIS_TOOL_PATH})
+endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/bin)
 file(GLOB QGIS_TOOL_PATH_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/*.exe)
-file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/bin)
-file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
+if(QGIS_TOOL_PATH_DEBUG)
+	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/bin)
+	file(COPY ${QGIS_TOOL_PATH_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qgis/bin)
+	file(REMOVE_RECURSE ${QGIS_TOOL_PATH_DEBUG})
+endif()
 
 copy_path(doc)
 copy_path(i18n)
@@ -351,15 +369,8 @@ copy_path(python)
 copy_path(resources)
 copy_path(svg)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	file(REMOVE_RECURSE
-		${CURRENT_PACKAGES_DIR}/tools
-		${CURRENT_PACKAGES_DIR}/debug/tools
-	)
-endif()
-
 file(REMOVE_RECURSE
-		${CURRENT_PACKAGES_DIR}/debug/include
+	${CURRENT_PACKAGES_DIR}/debug/include
 )
 
 # Handle copyright
