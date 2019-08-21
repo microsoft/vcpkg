@@ -6,10 +6,6 @@ include(vcpkg_common_functions)
 
 set(OPENCV_VERSION "4.1.1")
 
-if(VCPKG_TARGET_IS_LINUX)
-    message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -20,6 +16,7 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-fix-policy-CMP0057.patch
       0009-fix-uwp.patch
 )
 
@@ -245,6 +242,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   endif()
 endif()
 
+if("ffmpeg" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_UWP)
+    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
+    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
+  endif()
+endif()
+
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
@@ -288,7 +292,7 @@ vcpkg_configure_cmake(
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
-	-DUPDATE_PROTO_FILES=ON
+        -DUPDATE_PROTO_FILES=ON
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
@@ -323,10 +327,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
-# OpenCV does not list TIFF as a dependency. 
-# We explicitly add it to the module file, 
-# in order to fix unresolved symbols linking problems 
-# for downstream projects using OpenCV as static library
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
@@ -377,4 +377,4 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv4.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv4 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
