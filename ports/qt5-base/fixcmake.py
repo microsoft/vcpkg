@@ -8,7 +8,7 @@ if len(sys.argv) > 1:
     port=sys.argv[1]
 
 files = [y for x in os.walk('.') for y in glob(os.path.join(x[0], '*.cmake'))]
-tooldir="/tools/"+port+"/bin/"
+tooldir="/tools/qt5/bin/"
 
 for f in files:
     openedfile = open(f, "r")
