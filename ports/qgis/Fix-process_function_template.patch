@@ -1,0 +1,22 @@
+diff --git "a/scripts/process_function_template.py" "b/scripts/process_function_template.py"
+index 6e1fdf77..34b3884b 100644
+--- "a/scripts/process_function_template.py"
++++ "b/scripts/process_function_template.py"	
+@@ -10,7 +10,7 @@ sys.path.append(
+         os.path.dirname(os.path.realpath(__file__)),
+         '../python/ext-libs'))
+ 
+-cpp = open(sys.argv[1], "w", encoding="utf-8")
++cpp = open(sys.argv[1], "w", encoding="utf_8_sig")
+ cpp.write(
+     "#include \"qgsexpression.h\"\n"
+     "\n"
+@@ -42,7 +42,7 @@ def quote(v):
+ 
+ 
+ for f in sorted(glob.glob('resources/function_help/json/*')):
+-    with open(f, encoding="utf-8") as function_file:
++    with open(f, encoding="utf_8_sig") as function_file:
+         try:
+             json_params = json.load(function_file)
+         except:
