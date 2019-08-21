@@ -339,26 +339,27 @@ namespace vcpkg::Export
 
         struct OptionPair
         {
-            const std::string& name;
+            const StringLiteral& name;
             Optional<std::string>& out_opt;
         };
-        const auto options_implies =
-            [&](const std::string& main_opt_name, bool main_opt, Span<const OptionPair> implying_opts) {
-                if (main_opt)
-                {
-                    for (auto&& opt : implying_opts)
-                        opt.out_opt = maybe_lookup(options.settings, opt.name);
-                }
-                else
-                {
-                    for (auto&& opt : implying_opts)
-                        Checks::check_exit(VCPKG_LINE_INFO,
-                                           !maybe_lookup(options.settings, opt.name),
-                                           "%s is only valid with %s",
-                                           opt.name,
-                                           main_opt_name);
-                }
-            };
+        const auto options_implies = [&](const StringLiteral& main_opt_name,
+                                         bool is_main_opt,
+                                         const std::initializer_list<OptionPair>& implying_opts) {
+            if (is_main_opt)
+            {
+                for (auto&& opt : implying_opts)
+                    opt.out_opt = maybe_lookup(options.settings, opt.name);
+            }
+            else
+            {
+                for (auto&& opt : implying_opts)
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       !maybe_lookup(options.settings, opt.name),
+                                       "%s is only valid with %s",
+                                       opt.name,
+                                       main_opt_name);
+            }
+        };
 
 #if defined(_MSC_VER) && _MSC_VER <= 1900
 // there's a bug in VS 2015 that causes a bunch of "unreferenced local variable" warnings
