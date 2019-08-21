@@ -53,6 +53,7 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageOptions build_package_options{
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
@@ -406,6 +407,11 @@ namespace vcpkg::Build
             {"ALL_FEATURES", all_features},
             {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
         };
+
+        if (Util::Enum::to_bool(config.build_package_options.only_downloads))
+        {
+            variables.push_back({ "VCPKG_DOWNLOAD_MODE", "true" });
+        }
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {

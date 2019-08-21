@@ -467,6 +467,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
     static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
+    static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "--only-downloads";
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
@@ -477,6 +478,7 @@ namespace vcpkg::Install
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
+        {OPTION_ONLY_DOWNLOADS, "Downloads sources but doesn't build the pacakge"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
@@ -631,6 +633,7 @@ namespace vcpkg::Install
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
+        const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
@@ -647,6 +650,7 @@ namespace vcpkg::Install
         const Build::BuildPackageOptions install_plan_options = {
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
+            Util::Enum::to_enum<Build::OnlyDownloads>(only_downloads),
             clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,

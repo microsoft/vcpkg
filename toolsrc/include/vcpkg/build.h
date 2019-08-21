@@ -39,6 +39,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class OnlyDownloads
+    {
+        NO = 0,
+        YES
+    };
+
     enum class CleanBuildtrees
     {
         NO = 0,
@@ -86,6 +92,7 @@ namespace vcpkg::Build
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
+        OnlyDownloads only_downloads;
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
