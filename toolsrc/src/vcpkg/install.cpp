@@ -474,7 +474,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
 
-    static constexpr std::array<CommandSwitch, 7> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},

@@ -303,11 +303,13 @@ function(vcpkg_find_acquire_program VAR)
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
         file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
+          ALLOW_IN_DOWNLOAD_MODE
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
         )
       else()
         execute_process(
+          ALLOW_IN_DOWNLOAD_MODE
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
           WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
@@ -316,6 +318,7 @@ function(vcpkg_find_acquire_program VAR)
 
     if(DEFINED POST_INSTALL_COMMAND)
       vcpkg_execute_required_process(
+        ALLOW_IN_DOWNLOAD_MODE
         COMMAND ${POST_INSTALL_COMMAND}
         WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         LOGNAME ${VAR}-tool-post-install
