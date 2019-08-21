@@ -19,9 +19,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite.exe)
-
+if (VCPKG_TARGET_IS_WINDOWS)
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke.exe)
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite.exe)
+else()
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke)
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite)
+endif()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/MOOS) 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
