@@ -342,10 +342,10 @@ namespace vcpkg::Export
             const StringLiteral& name;
             Optional<std::string>& out_opt;
         };
-        const auto options_implies = [&](const std::string& main_opt_name,
-                                         bool main_opt,
+        const auto options_implies = [&](const StringLiteral& main_opt_name,
+                                         bool is_main_opt,
                                          const std::initializer_list<OptionPair>& implying_opts) {
-            if (main_opt)
+            if (is_main_opt)
             {
                 for (auto&& opt : implying_opts)
                     opt.out_opt = maybe_lookup(options.settings, opt.name);
