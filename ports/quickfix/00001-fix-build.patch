@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 48908ead..e4c1eb72 100644
+index 48908ead..5022a019 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -96,9 +96,11 @@ add_subdirectory(UnitTest++)
+@@ -96,9 +96,12 @@ add_subdirectory(UnitTest++)
  endif()
  
  add_subdirectory(src)
@@ -13,6 +13,7 @@ index 48908ead..e4c1eb72 100644
 +#add_subdirectory(test)
 +target_compile_definitions(TestUnitTest++ PRIVATE _CRT_SECURE_NO_WARNINGS)
 +target_compile_definitions(UnitTest++ PRIVATE _CRT_SECURE_NO_WARNINGS)
++target_compile_definitions(ut PRIVATE _WINSOCK_DEPRECATED_NO_WARNINGS)
  endif()
  
  install(DIRECTORY ${CMAKE_SOURCE_DIR}/spec/ DESTINATION share/quickfix
