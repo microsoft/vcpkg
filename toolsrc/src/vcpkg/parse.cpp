@@ -44,6 +44,11 @@ namespace vcpkg::Parse
         return nullptr;
     }
 
+	static bool is_whitespace(char c)
+	{
+		return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+	}
+
     std::vector<std::string> parse_comma_list(const std::string& str)
     {
         if (str.empty())
@@ -66,7 +71,7 @@ namespace vcpkg::Parse
 
             // skip comma and space
             ++pos;
-            while (str[pos] == ' ')
+            while (is_whitespace(str[pos]))
             {
                 ++pos;
             }
