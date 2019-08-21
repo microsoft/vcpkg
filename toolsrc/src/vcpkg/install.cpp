@@ -342,6 +342,14 @@ namespace vcpkg::Install
                 return Build::build_package(paths, build_config, status_db);
             }();
 
+
+            if (action.build_options.only_downloads == Build::OnlyDownloads::YES)
+            {
+                System::print2(System::Color::success, "Downloaded sources for package ", display_name_with_features, "\n");
+                result.code = Build::BuildResult::SUCCEEDED;
+                return result;
+            }
+
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
                 System::print2(System::Color::error, Build::create_error_message(result.code, action.spec), "\n");
@@ -349,11 +357,6 @@ namespace vcpkg::Install
             }
 
             System::printf("Building package %s... done\n", display_name_with_features);
-
-            if (action.build_options.only_downloads != Build::OnlyDownloads::YES)
-            {
-                // TODO: Fail but not really
-            }
 
             auto bcf = std::make_unique<BinaryControlFile>(
                 Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
@@ -660,7 +663,7 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            (GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO) && !only_downloads,
+            (GlobalState::g_binary_caching && !only_downloads)? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
