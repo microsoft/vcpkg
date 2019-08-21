@@ -28,7 +28,9 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
                             patches/gui_configure.patch #Patches the gui configure.json to break freetype autodetection because it does not include its dependencies.
-                            patches/static_opengl.patch #Let the Khronos headers define the required preprocessor definitions. Qt5 you know nothing. 
+                            #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
+                                                         #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
+                                                         #the windows supplied gl.h header and the angle gl.h otherwise. 
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -122,8 +124,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
         list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
     else()
-        list(APPEND CORE_OPTIONS -opengl es2) # dynamic will generate angle dll and the angle port has been explicitly deleted. 
-                                              # es2 is the Windows automatic default.
+        list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch 
     endif()
     list(APPEND RELEASE_OPTIONS
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
@@ -151,6 +152,10 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
         )
 elseif(VCPKG_TARGET_IS_OSX)
+    if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+        set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
+    endif()
+    list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
@@ -203,6 +208,17 @@ endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost 
+
+#This needs a new VCPKG policy. 
+if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
+    message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+    endif()
+endif()
 
 #TODO: Replace python script with cmake script
 vcpkg_execute_required_process(
