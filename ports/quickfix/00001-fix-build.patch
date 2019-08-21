@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 48908ead..fd8c55ce 100644
+index 48908ead..e4c1eb72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -96,9 +96,11 @@ add_subdirectory(UnitTest++)
@@ -9,14 +9,15 @@ index 48908ead..fd8c55ce 100644
 -add_subdirectory(examples)
 +#add_subdirectory(examples)
  if( WIN32)
- add_subdirectory(test)
+-add_subdirectory(test)
++#add_subdirectory(test)
++target_compile_definitions(TestUnitTest++ PRIVATE _CRT_SECURE_NO_WARNINGS)
 +target_compile_definitions(UnitTest++ PRIVATE _CRT_SECURE_NO_WARNINGS)
-+target_compile_definitions(atrun PRIVATE _CRT_SECURE_NO_WARNINGS)
  endif()
  
  install(DIRECTORY ${CMAKE_SOURCE_DIR}/spec/ DESTINATION share/quickfix
 diff --git a/src/C++/CMakeLists.txt b/src/C++/CMakeLists.txt
-index 07774c97..432d71fc 100644
+index 07774c97..27692631 100644
 --- a/src/C++/CMakeLists.txt
 +++ b/src/C++/CMakeLists.txt
 @@ -1,3 +1,4 @@
@@ -30,7 +31,7 @@ index 07774c97..432d71fc 100644
    add_library(${PROJECT_NAME} STATIC  ${quickfix_SOURCES})
 -  set_target_properties (${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX d)
    target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES} ${MYSQL_CLIENT_LIBS} ${PostgreSQL_LIBRARIES} ws2_32)
-+  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
++  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
  else()
 -  add_library(${PROJECT_NAME} SHARED  ${quickfix_SOURCES})
 +  add_library(${PROJECT_NAME} STATIC  ${quickfix_SOURCES})
