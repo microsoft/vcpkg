@@ -12,14 +12,14 @@ index 3574df8..c4ef4e1 100644
  // #define BOOST_LIB_DIAGNOSTIC
  
 diff --git a/src/Communication/AsioService.h b/src/Communication/AsioService.h
-index 4f61915..e2e1933 100644
+index 4f61915..96f2198 100644
 --- a/src/Communication/AsioService.h
 +++ b/src/Communication/AsioService.h
 @@ -99,6 +99,7 @@ namespace QuickFAST
        {
          return ioService_;
        }
-+      boost::asio::io_service::executor_type get_executor() noexcept { return ioService_.get_executor();}
++      boost::asio::io_service::executor_type get_executor() BOOST_ASIO_NOEXCEPT { return ioService_.get_executor();}
  
        ///@brief Post a completion handler for later processing (usually in a different thread)
        /// @param handler is the handler to be posted
