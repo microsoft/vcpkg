@@ -110,6 +110,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        DOWNLOADED
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {

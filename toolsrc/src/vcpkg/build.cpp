@@ -792,20 +792,24 @@ namespace vcpkg::Build
         const std::string& name = config.scf.core_paragraph->name;
 
         std::vector<FeatureSpec> required_fspecs = compute_required_feature_specs(config, status_db);
-        std::vector<FeatureSpec> required_fspecs_copy = required_fspecs;
 
         // extract out the actual package ids
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
         Util::sort_unique_erase(dep_pspecs);
 
         // Find all features that aren't installed. This mutates required_fspecs.
-        Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
-            return status_db.is_installed(fspec) || fspec.name() == name;
-        });
-
-        if (!required_fspecs.empty())
+        // Skip this validation when running in Download Mode.
+        if (config.build_package_options.only_downloads != Build::OnlyDownloads::YES)
         {
-            return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+            Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
+                return status_db.is_installed(fspec) || fspec.name() == name;
+                });
+
+            if (!required_fspecs.empty())
+            {
+                return { BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs) };
+            }
+
         }
 
         const PackageSpec spec =
@@ -816,7 +820,8 @@ namespace vcpkg::Build
         // dep_pspecs was not destroyed
         for (auto&& pspec : dep_pspecs)
         {
-            if (pspec == spec) continue;
+            if (pspec == spec) { continue; }
+            if (config.build_package_options.only_downloads == Build::OnlyDownloads::YES) { continue; }
             const auto status_it = status_db.find_installed(pspec);
             Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
             dependency_abis.emplace_back(

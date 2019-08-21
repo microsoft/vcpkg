@@ -350,6 +350,11 @@ namespace vcpkg::Install
 
             System::printf("Building package %s... done\n", display_name_with_features);
 
+            if (action.build_options.only_downloads != Build::OnlyDownloads::YES)
+            {
+                // TODO: Fail but not really
+            }
+
             auto bcf = std::make_unique<BinaryControlFile>(
                 Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
             auto code = aux_install(display_name_with_features, *bcf);
@@ -478,7 +483,7 @@ namespace vcpkg::Install
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
-        {OPTION_ONLY_DOWNLOADS, "Downloads sources but doesn't build the pacakge"},
+        {OPTION_ONLY_DOWNLOADS, "Downloads sources but doesn't build the pacakge, implies --keep-going and --no-binarycaching"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
@@ -637,7 +642,7 @@ namespace vcpkg::Install
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
-        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
+        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
 
         auto& fs = paths.get_filesystem();
 
@@ -655,7 +660,7 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            (GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO) && !only_downloads,
             Build::FailOnTombstone::NO,
         };
 
