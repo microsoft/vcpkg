@@ -339,7 +339,7 @@ namespace vcpkg::Export
 
         struct OptionPair
         {
-            const StringLiteral name;
+            const StringLiteral& name;
             Optional<std::string>& out_opt;
         };
         const auto options_implies = [&](const std::string& main_opt_name,
