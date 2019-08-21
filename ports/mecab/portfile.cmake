@@ -10,8 +10,7 @@
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
 
-if (TARGET_TRIPLET STREQUAL "x64-uwp" OR TARGET_TRIPLET STREQUAL "arm64-windows" OR TARGET_TRIPLET STREQUAL "arm-uwp")
-    message(FATAL_ERROR "mecab does not support on this platform")
+if (VCPKG_TARGET_TRIPLET STREQUAL "x64-uwp" OR VCPKG_TARGET_TRIPLET STREQUAL "arm64-windows" OR VCPKG_TARGET_TRIPLET STREQUAL "arm-uwp")
 endif()
 
 include(vcpkg_common_functions)
