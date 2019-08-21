@@ -1,0 +1,85 @@
+diff --git a/configure b/configure
+index ccbd629..9c12028 100644
+--- a/configure
++++ b/configure
+@@ -6501,7 +6501,7 @@ if ${ac_cv_lib_pcre_pcre_version+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lpcre  $LIBS"
++LIBS="pcre.lib  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -6544,7 +6544,7 @@ if ${ac_cv_lib_pcre_pcre_version+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lpcre  $LIBS"
++LIBS="pcre.lib  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -6614,7 +6614,7 @@ fi
+ 
+ done
+ 
+-  LIBPCRE_LIBS="-lpcre"
++  LIBPCRE_LIBS="pcre.lib"
+   PCRE_BUILD=""
+   PCRE_CLEAN=""
+   PCRE_DIST_CLEAN=""
+@@ -6669,7 +6669,7 @@ if ${ac_cv_lib_z_gzread+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="zlib.lib  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -6733,7 +6733,7 @@ if ${ac_cv_lib_z_gzread+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz -lm $LIBS"
++LIBS="zlib.lib -lm $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -6789,7 +6789,7 @@ fi
+ $as_echo "#define ZLIB_INCLUDED 1" >>confdefs.h
+ 
+   else
+-    ZLIB_LIBS="-lz"
++    ZLIB_LIBS="zlib.lib"
+     ZLIB_BUILD=""
+     ZLIB_CLEAN=""
+     ZLIB_DIST_CLEAN=""
+@@ -6845,7 +6845,7 @@ if ${ac_cv_lib_ssh2_libssh2_version+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lssh2 -lm $LIBS"
++LIBS="libssh2.lib -lm $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -6909,7 +6909,7 @@ if ${ac_cv_lib_ssh2_libssh2_version+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lssh2 -lm $LIBS"
++LIBS="libssh2.lib -lm $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -6963,7 +6963,7 @@ fi
+ $as_echo "#define LIBSSH2_INCLUDED 1" >>confdefs.h
+ 
+   else
+-    LIBSSH2_LIBS="-lssh2"
++    LIBSSH2_LIBS="libssh2.lib"
+     LIBSSH2_BUILD=""
+     LIBSSH2_CLEAN=""
+     LIBSSH2_DIST_CLEAN=""

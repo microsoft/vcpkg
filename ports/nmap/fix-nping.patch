@@ -1,0 +1,31 @@
+diff --git a/nping/configure b/nping/configure
+index 0cb0b40..3617466 100644
+--- a/nping/configure
++++ b/nping/configure
+@@ -4987,7 +4987,7 @@ if ${ac_cv_lib_crypto_BIO_int_ctrl+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lcrypto  $LIBS"
++LIBS="ssleay32.lib libeay32.lib  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -5038,7 +5038,7 @@ if ${ac_cv_lib_ssl_SSL_new+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lssl  -lcrypto  $LIBS"
++LIBS="ssleay32.lib libeay32.lib  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -5087,7 +5087,7 @@ if test "$use_openssl" = "yes"; then
+ 
+ $as_echo "#define HAVE_OPENSSL 1" >>confdefs.h
+ 
+-  OPENSSL_LIBS="-lssl -lcrypto"
++  OPENSSL_LIBS="ssleay32.lib libeay32.lib"
+   LIBS_TMP="$LIBS"
+   LIBS="$OPENSSL_LIBS $LIBS"
+   # Check whether the installed OpenSSL supports SHA-256 (ver 0.9.8 or later).

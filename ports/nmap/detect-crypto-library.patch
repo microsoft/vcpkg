@@ -13,7 +13,7 @@
  else
    ac_check_lib_save_LIBS=$LIBS
 -LIBS="-lcrypto  $LIBS"
-+LIBS="-llibeay32 $LIBS"
++LIBS="libeay32.lib $LIBS"
  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
@@ -43,7 +43,7 @@
  else
    ac_check_lib_save_LIBS=$LIBS
 -LIBS="-lssl  -lcrypto  $LIBS"
-+LIBS="-lssleay32 -llibeay32  $LIBS"
++LIBS="ssleay32.lib libeay32.lib  $LIBS"
  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
@@ -60,7 +60,7 @@
  else
    ac_check_lib_save_LIBS=$LIBS
 -LIBS="-lcrypto  $LIBS"
-+LIBS="-llibeay32  $LIBS"
++LIBS="libeay32.lib  $LIBS"
  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
@@ -69,7 +69,7 @@
  $as_echo "#define HAVE_OPENSSL 1" >>confdefs.h
  
 -  OPENSSL_LIBS="-lssl -lcrypto"
-+  OPENSSL_LIBS="-lssleay32 -llibeay32"
++  OPENSSL_LIBS="ssleay32.lib libeay32.lib"
  else
    trace_no_use="$trace_no_use openssl"
  fi

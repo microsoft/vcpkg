@@ -8,15 +8,10 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${SQLITE_VERSION}
-)
-
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/detect-crypto-library.patch
+        detect-crypto-library.patch
+        fix-nping.patch
+        fix-zlib-pcre.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -51,12 +46,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 
-set(OPTIONS "--with-openssl=${VCPKG_ROOT_DIR}/installed/x64-windows/bin/ --with-libssh2=${VCPKG_ROOT_DIR}/installed/x64-windows/bin/")
-
-message(STATUS "Building Options: ${OPTIONS}")
-
-set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
-set(OPTIONS_RELEASE "")
+set(OPTIONS "--without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
@@ -67,29 +57,35 @@ endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_RELEASE}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
+if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL Release)
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    file(COPY ${SOURCE_PATH}/nmap.h ${SOURCE_PATH}/Makefile.in ${SOURCE_PATH}/configure DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+            "${OPTIONS}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+endif()
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_DEBUG}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
+if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL Debug)
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+    file(COPY ${SOURCE_PATH}/nmap.h ${SOURCE_PATH}/Makefile.in ${SOURCE_PATH}/configure DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
+            "${OPTIONS}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
+endif()
 
 file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
 
