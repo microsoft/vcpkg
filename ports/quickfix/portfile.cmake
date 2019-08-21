@@ -11,12 +11,19 @@ vcpkg_from_github(
     PATCHES 00001-fix-build.patch
 )
 
-file(GLOB_RECURSE SRC_FILES  "${SOURCE_PATH}/src/*.cpp" "${SOURCE_PATH}/src/*.h")
+file(GLOB_RECURSE SRC_FILES RELATIVE ${SOURCE_PATH} 
+	"${SOURCE_PATH}/src/*.cpp" 
+	"${SOURCE_PATH}/src/*.h"
+)
+
+list(REMOVE_ITEM SRC_FILES "src/C++/Utility.h")
+list(REMOVE_ITEM SRC_FILES "src/C++/pugixml.cpp")
+
 foreach(SRC_FILE IN LISTS SRC_FILES)
-    file(READ "${SRC_FILE}" _contents)
+    file(READ "${SOURCE_PATH}/${SRC_FILE}" _contents)
 	string(REPLACE "throw("  "QUICKFIX_THROW(" _contents "${_contents}")
 	string(REPLACE "throw (" "QUICKFIX_THROW(" _contents "${_contents}")
-    file(WRITE "${SRC_FILE}" "${_contents}")
+    file(WRITE "${SOURCE_PATH}/${SRC_FILE}" "${_contents}")
 endforeach()
 
 vcpkg_configure_cmake(
