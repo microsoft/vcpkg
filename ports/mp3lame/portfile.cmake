@@ -17,35 +17,51 @@ vcpkg_extract_source_archive_ex(
 
 if(VCPKG_TARGET_IS_WINDOWS)
 
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(MSBUILD_PLATFORM "Win32")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(MSBUILD_PLATFORM "x64")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(MSBUILD_PLATFORM "ARM")
-    endif()
+	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+		set(platform "ARM")
+		set(machine "ARM64")
+	elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+		set(platform "ARM")
+		set(machine "ARM")
+	elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+		set(platform "x64")
+		set(machine "x64")
+	else()
+		set(platform "Win32")
+		set(machine "x86")
+	endif()
+
+	file(READ "${SOURCE_PATH}/vc_solution/vc11_lame.sln" sln_con)
+	string(REPLACE "|Win32" "|${platform}" sln_con "${sln_con}")
+	string(REPLACE "\"vc11_" "\"${machine}_vc11_" sln_con "${sln_con}")
+	file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_vc11_lame.sln" "${sln_con}")
+
     
-    file(GLOB vcxprojs ${SOURCE_PATH}/vc_solution/vc11_*.vcxproj)
+    file(GLOB vcxprojs RELATIVE "${SOURCE_PATH}/vc_solution" "${SOURCE_PATH}/vc_solution/vc11_*.vcxproj")
     foreach(vcxproj ${vcxprojs})
-        file(READ ${vcxproj} vcxproj_orig)
+        file(READ "${SOURCE_PATH}/vc_solution/${vcxproj}" vcxproj_con)
         
         if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-            string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_orig "${vcxproj_orig}")
+            string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_con "${vcxproj_con}")
         endif()
-        
+
+		string(REPLACE "/machine:x86" "/machine:${machine}" vcxproj_con "${vcxproj_con}")
+		string(REPLACE "<Platform>Win32</Platform>" "<Platform>${platform}</Platform>" vcxproj_con "${vcxproj_con}")
+		string(REPLACE "|Win32" "|${platform}" vcxproj_con "${vcxproj_con}")
+		string(REPLACE "Include=\"vc11_" "Include=\"${machine}_vc11_" vcxproj_con "${vcxproj_con}")
+ 
         if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-            string(REPLACE "/APPCONTAINER" "" vcxproj_orig "${vcxproj_orig}")
+            string(REPLACE "/APPCONTAINER" "" vcxproj_con "${vcxproj_con}")
         endif()
         
-        file(WRITE ${vcxproj} "${vcxproj_orig}")
+        file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_${vcxproj}" "${vcxproj_con}")
     endforeach()
 
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH "vc_solution/vc11_lame.sln"
+        PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
         TARGET "lame"
-        PLATFORM ${MSBUILD_PLATFORM}
-        USE_VCPKG_INTEGRATION
+        PLATFORM "${platform}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
