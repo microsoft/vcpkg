@@ -343,10 +343,9 @@ namespace vcpkg::Install
             }();
 
 
-            if (action.build_options.only_downloads == Build::OnlyDownloads::YES)
+            if (BuildResult::DOWNLOADED == result.code)
             {
                 System::print2(System::Color::success, "Downloaded sources for package ", display_name_with_features, "\n");
-                result.code = Build::BuildResult::SUCCEEDED;
                 return result;
             }
 

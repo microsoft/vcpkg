@@ -533,6 +533,7 @@ namespace vcpkg::Build
                                                 const BuildPackageConfig& config)
     {
         auto& fs = paths.get_filesystem();
+
 #if defined(_WIN32)
         const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
         if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
@@ -564,6 +565,14 @@ namespace vcpkg::Build
 #else
         const int return_code = System::cmd_execute_clean(command, env);
 #endif
+        // With the exception of empty packages, builds in "Download Mode" always result in failure.
+        if (config.build_package_options.only_downloads == Build::OnlyDownloads::YES)
+        {
+            // TODO: Capture executed command output and evaluate whether the failure was intended.
+            // If an unintended error occurs then return a BuildResult::DOWNLOAD_FAILURE status.
+            return BuildResult::DOWNLOADED;
+        }
+
         const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
 
@@ -953,6 +962,7 @@ namespace vcpkg::Build
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
         static const std::string EXCLUDED_STRING = "EXCLUDED";
+        static const std::string DOWNLOADED_STRING = "DOWNLOADED";
 
         switch (build_result)
         {
@@ -963,6 +973,7 @@ namespace vcpkg::Build
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::EXCLUDED: return EXCLUDED_STRING;
+            case BuildResult::DOWNLOADED: return DOWNLOADED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }

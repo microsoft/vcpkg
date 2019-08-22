@@ -6,7 +6,11 @@ function(execute_process)
   
   if (NOT overriden_execute_process_ALLOW_IN_DOWNLOAD_MODE)
     if (DEFINED VCPKG_DOWNLOAD_MODE)
-        message(FATAL_ERROR "Cannot execute command in download only mode.\n\n")
+        message(FATAL_ERROR 
+[[
+  This command cannot be executed in Download Mode.
+  Halting portfile execution.
+]])
     endif()
 
     set(overriden_execute_process_ARGV ${ARGV})
