@@ -1,0 +1,205 @@
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index 55d7eb93..3493633c 100644
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -556,6 +556,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
+ 
+     tf_http_archive(
+         name = "boringssl",
++        patch_file = clean_dep("//third_party/boringssl:boringssl-werror.patch"),
+         sha256 = "1188e29000013ed6517168600fc35a010d58c5d321846d6a6dfee74e4c788b45",
+         strip_prefix = "boringssl-7f634429a04abc48e2eb041c81c5235816c96514",
+         system_build_file = clean_dep("//third_party/systemlibs:boringssl.BUILD"),
+diff --git a/third_party/systemlibs/protobuf.BUILD b/third_party/systemlibs/protobuf.BUILD
+index e1f7c3ae..f8126196 100644
+--- a/third_party/systemlibs/protobuf.BUILD
++++ b/third_party/systemlibs/protobuf.BUILD
+@@ -13,33 +13,126 @@ filegroup(
+ )
+ 
+ HEADERS = [
++    "google/protobuf/any.h",
+     "google/protobuf/any.pb.h",
+     "google/protobuf/any.proto",
++    "google/protobuf/api.pb.h",
++    "google/protobuf/api.proto",
+     "google/protobuf/arena.h",
+-    "google/protobuf/compiler/importer.h",
++    "google/protobuf/arenastring.h",
++    "google/protobuf/arena_impl.h",
+     "google/protobuf/descriptor.h",
+     "google/protobuf/descriptor.pb.h",
+     "google/protobuf/descriptor.proto",
++    "google/protobuf/descriptor_database.h",
+     "google/protobuf/duration.pb.h",
+     "google/protobuf/duration.proto",
+     "google/protobuf/dynamic_message.h",
+     "google/protobuf/empty.pb.h",
+     "google/protobuf/empty.proto",
++    "google/protobuf/extension_set.h",
++    "google/protobuf/extension_set_inl.h",
+     "google/protobuf/field_mask.pb.h",
+     "google/protobuf/field_mask.proto",
+-    "google/protobuf/io/coded_stream.h",
+-    "google/protobuf/io/zero_copy_stream.h",
+-    "google/protobuf/io/zero_copy_stream_impl_lite.h",
++    "google/protobuf/generated_enum_reflection.h",
++    "google/protobuf/generated_enum_util.h",
++    "google/protobuf/generated_message_reflection.h",
++    "google/protobuf/generated_message_table_driven.h",
++    "google/protobuf/generated_message_util.h",
++    "google/protobuf/has_bits.h",
++    "google/protobuf/implicit_weak_message.h",
++    "google/protobuf/inlined_string_field.h",
+     "google/protobuf/map.h",
++    "google/protobuf/map_entry.h",
++    "google/protobuf/map_entry_lite.h",
++    "google/protobuf/map_field.h",
++    "google/protobuf/map_field_inl.h",
++    "google/protobuf/map_field_lite.h",
++    "google/protobuf/map_type_handler.h",
++    "google/protobuf/message.h",
++    "google/protobuf/message_lite.h",
++    "google/protobuf/metadata.h",
++    "google/protobuf/metadata_lite.h",
++    "google/protobuf/parse_context.h",
++    "google/protobuf/port.h",
+     "google/protobuf/port_def.inc",
++    "google/protobuf/port_undef.inc",
++    "google/protobuf/reflection.h",
++    "google/protobuf/reflection_ops.h",
+     "google/protobuf/repeated_field.h",
++    "google/protobuf/service.h",
++    "google/protobuf/source_context.pb.h",
++    "google/protobuf/source_context.proto",
++    "google/protobuf/struct.pb.h",
++    "google/protobuf/struct.proto",
+     "google/protobuf/text_format.h",
+     "google/protobuf/timestamp.pb.h",
+     "google/protobuf/timestamp.proto",
+-    "google/protobuf/util/json_util.h",
+-    "google/protobuf/util/type_resolver_util.h",
++    "google/protobuf/type.pb.h",
++    "google/protobuf/type.proto",
++    "google/protobuf/unknown_field_set.h",
++    "google/protobuf/wire_format.h",
++    "google/protobuf/wire_format_lite.h",
+     "google/protobuf/wrappers.pb.h",
+     "google/protobuf/wrappers.proto",
++
++    "google/protobuf/stubs/bytestream.h",
++    "google/protobuf/stubs/callback.h",
++    "google/protobuf/stubs/casts.h",
++    "google/protobuf/stubs/common.h",
++    "google/protobuf/stubs/fastmem.h",
++    "google/protobuf/stubs/hash.h",
++    "google/protobuf/stubs/logging.h",
++    "google/protobuf/stubs/macros.h",
++    "google/protobuf/stubs/mutex.h",
++    "google/protobuf/stubs/once.h",
++    "google/protobuf/stubs/platform_macros.h",
++    "google/protobuf/stubs/port.h",
++    "google/protobuf/stubs/status.h",
++    "google/protobuf/stubs/stl_util.h",
++    "google/protobuf/stubs/stringpiece.h",
++    "google/protobuf/stubs/strutil.h",
++    "google/protobuf/stubs/template_util.h",
++
++    "google/protobuf/compiler/importer.h",
++    "google/protobuf/compiler/parser.h",
++    "google/protobuf/compiler/code_generator.h",
++    "google/protobuf/compiler/plugin.h",
++    "google/protobuf/compiler/plugin.proto",
++    "google/protobuf/compiler/plugin.pb.h",
++    "google/protobuf/compiler/command_line_interface.h",
++    "google/protobuf/compiler/cpp/cpp_generator.h",
++    "google/protobuf/compiler/csharp/csharp_generator.h",
++    "google/protobuf/compiler/csharp/csharp_names.h",
++    "google/protobuf/compiler/java/java_generator.h",
++    "google/protobuf/compiler/java/java_names.h",
++    "google/protobuf/compiler/js/js_generator.h",
++    "google/protobuf/compiler/js/well_known_types_embed.h",
++    "google/protobuf/compiler/objectivec/objectivec_generator.h",
++    "google/protobuf/compiler/objectivec/objectivec_helpers.h",
++    "google/protobuf/compiler/php/php_generator.h",
++    "google/protobuf/compiler/python/python_generator.h",
++    "google/protobuf/compiler/ruby/ruby_generator.h",
++
++
++    "google/protobuf/util/delimited_message_util.h",
++    "google/protobuf/util/field_comparator.h",
++    "google/protobuf/util/field_mask_util.h",
++    "google/protobuf/util/json_util.h",
++    "google/protobuf/util/message_differencer.h",
++    "google/protobuf/util/time_util.h",
++    "google/protobuf/util/type_resolver.h",
++    "google/protobuf/util/type_resolver_util.h",
++
++    "google/protobuf/io/coded_stream.h",
++    "google/protobuf/io/gzip_stream.h",
++    "google/protobuf/io/io_win32.h",
++    "google/protobuf/io/printer.h",
++    "google/protobuf/io/strtod.h",
++    "google/protobuf/io/tokenizer.h",
++    "google/protobuf/io/zero_copy_stream.h",
++    "google/protobuf/io/zero_copy_stream_impl.h",
++    "google/protobuf/io/zero_copy_stream_impl_lite.h",
+ ]
+ 
+ genrule(
+@@ -49,7 +142,7 @@ genrule(
+       for i in $(OUTS); do
+         f=$${i#$(@D)/}
+         mkdir -p $(@D)/$${f%/*}
+-        ln -sf $(INCLUDEDIR)/$$f $(@D)/$$f
++        ln -sf $(VCPKG_INCLUDE_DIR)/$$f $(@D)/$$f
+       done
+     """,
+ )
+@@ -57,27 +150,29 @@ genrule(
+ cc_library(
+     name = "protobuf",
+     hdrs = HEADERS,
+-    linkopts = ["-lprotobuf"],
++    includes = ["."],
++    linkopts = ["-lprotobuf -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
+ 
+ cc_library(
+     name = "protobuf_headers",
+     hdrs = HEADERS,
+-    linkopts = ["-lprotobuf"],
++    includes = ["."],
++    linkopts = ["-lprotobuf -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
+ 
+ cc_library(
+     name = "protoc_lib",
+-    linkopts = ["-lprotoc"],
++    linkopts = ["-lprotoc -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
+ 
+ genrule(
+     name = "protoc",
+     outs = ["protoc.bin"],
+-    cmd = "ln -s $$(which protoc) $@",
++    cmd = "ln -s $(VCPKG_PROTOBUF_PROTOC) $@",
+     executable = 1,
+     visibility = ["//visibility:public"],
+ )
+diff --git a/third_party/systemlibs/protobuf.bzl b/third_party/systemlibs/protobuf.bzl
+index 774514f3..c7ed45db 100644
+--- a/third_party/systemlibs/protobuf.bzl
++++ b/third_party/systemlibs/protobuf.bzl
+@@ -76,7 +76,7 @@ def _proto_gen_impl(ctx):
+     source_dir = _SourceDir(ctx)
+     gen_dir = _GenDir(ctx)
+     if source_dir:
+-        import_flags = ["-I" + source_dir, "-I" + gen_dir]
++        import_flags = ["-I" + source_dir, "-I" + gen_dir, "-I" + ctx.var["VCPKG_INCLUDE_DIR"]]
+     else:
+         import_flags = ["-I."]
+ 

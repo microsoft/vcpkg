@@ -10,6 +10,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         file-exists.patch # required or otherwise it cant find python lib path on windows
+        vendor-protobuf.patch
+        boringssl-werror.patch
 )
 
 # due to https://github.com/bazelbuild/bazel/issues/8028, bazel must be version 25.0 or higher
@@ -91,7 +93,16 @@ if(CMAKE_HOST_WIN32)
     )
 else()
     vcpkg_execute_build_process(
-        COMMAND ${BAZEL} build --verbose_failures --action_env TF_SYSTEM_LIBS=${TF_SYSTEM_LIBS} -c opt --python_path=${PYTHON3} --incompatible_disable_deprecated_attr_params=false --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+        COMMAND ${BAZEL} build 
+        --verbose_failures 
+        --define VCPKG_PROTOBUF_PROTOC=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc 
+        --define VCPKG_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        --define VCPKG_LIB_DIR=${CURRENT_INSTALLED_DIR}/lib
+        --action_env TF_SYSTEM_LIBS=${TF_SYSTEM_LIBS} 
+        -c opt 
+	--python_path=${PYTHON3} 
+        --incompatible_disable_deprecated_attr_params=false 
+        --define=no_tensorflow_py_deps=true //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )

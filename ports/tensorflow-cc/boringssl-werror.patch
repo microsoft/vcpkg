@@ -1,0 +1,18 @@
+diff --git a/third_party/boringssl/boringssl-werror.patch b/third_party/boringssl/boringssl-werror.patch
+new file mode 100644
+index 00000000..5b4bb639
+--- /dev/null
++++ b/third_party/boringssl/boringssl-werror.patch
+@@ -0,0 +1,12 @@
++diff --git a/BUILD b/BUILD
++index d7c731b..885ec19 100644
++--- a/BUILD
+++++ b/BUILD
++@@ -67,7 +67,6 @@ posix_copts = [
++ 
++     # This list of warnings should match those in the top-level CMakeLists.txt.
++     "-Wall",
++-    "-Werror",
++     "-Wformat=2",
++     "-Wsign-compare",
++     "-Wmissing-field-initializers",
