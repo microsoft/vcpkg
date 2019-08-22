@@ -12,6 +12,7 @@ vcpkg_from_github(
         file-exists.patch # required or otherwise it cant find python lib path on windows
         vendor-protobuf.patch
         boringssl-werror.patch
+        vendor-double-conversion.patch
 )
 
 # due to https://github.com/bazelbuild/bazel/issues/8028, bazel must be version 25.0 or higher
@@ -83,7 +84,7 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Warning: Building TensorFlow can take an hour or more.")
 
-set(TF_SYSTEM_LIBS "protobuf_archive,com_google_protobuf,com_google_protobuf_cc")
+set(TF_SYSTEM_LIBS "protobuf_archive,com_google_protobuf,com_google_protobuf_cc,double_conversion")
 
 if(CMAKE_HOST_WIN32)
     vcpkg_execute_build_process(

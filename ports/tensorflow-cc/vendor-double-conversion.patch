@@ -1,0 +1,39 @@
+diff --git a/third_party/systemlibs/double_conversion.BUILD b/third_party/systemlibs/double_conversion.BUILD
+index b4abe4b4..114a370a 100644
+--- a/third_party/systemlibs/double_conversion.BUILD
++++ b/third_party/systemlibs/double_conversion.BUILD
+@@ -5,8 +5,34 @@ filegroup(
+     visibility = ["//visibility:public"],
+ )
+ 
++HEADERS = [
++    "double-conversion/bignum.h",
++    "double-conversion/cached-powers.h",
++    "double-conversion/diy-fp.h",
++    "double-conversion/double-conversion.h",
++    "double-conversion/fast-dtoa.h",
++    "double-conversion/fixed-dtoa.h",
++    "double-conversion/ieee.h",
++    "double-conversion/strtod.h",
++    "double-conversion/utils.h",
++]
++
++genrule(
++    name = "link_headers",
++    outs = HEADERS,
++    cmd = """
++      for i in $(OUTS); do
++        f=$${i#$(@D)/}
++        mkdir -p $(@D)/$${f%/*}
++        ln -sf $(VCPKG_INCLUDE_DIR)/$$f $(@D)/$$f
++      done
++    """,
++)
++
+ cc_library(
+     name = "double-conversion",
++    hdrs = HEADERS,
++    includes = ["."],
+     linkopts = ["-ldouble-conversion -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
