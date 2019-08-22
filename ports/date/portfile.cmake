@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   message(WARNING
-    "You will need to also install http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml into your install location.\n"
+    "You will need to also install https://raw.githubusercontent.com/unicode-org/cldr/master/common/supplemental/windowsZones.xml into your install location.\n"
     "See https://howardhinnant.github.io/date/tz.html"
   )
 endif()
@@ -10,14 +10,9 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF v2.4.1
-  SHA512 ce7d1c4518558d3690b3a33cd3da1066b43a5f641282c331c60be73e9b010227d4998bca5f34694215ae52f6514a2f5eccd6b0a5ee3dcf8cef2f2d1644c8beee
+  REF ed0368fc75427ef05cefdf19a39b60d7bed2f039
+  SHA512 5f6a0d7e094fd1ab7b6a1ea9a96e467138220e9207e2eda68f71b68d6c56759e7470fabdfa920d92876e9c9b466e56ea8102333f407a46bb4cba43a2dfeb5e3a
   HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-date.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

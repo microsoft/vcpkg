@@ -8,14 +8,18 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c
-    REF v3.0.2
-    SHA512 a5086ff149b1ca0e1b652013475c5f3793824416a60ec35018b6dcd502bd38b50fa040271ff8d308520dadecc9601671fccf67046fcda2425f1d7c59e1c6c52f
+    REF v3.0.10
+    SHA512 43f89ead531d1b2f6ede943486bf39f606124762309c294b0f3e185937aef7439cb345103fc065e7940ed64c01ca1bf16940cd2fb0d80da60f39009c3b5a910b
     HEAD_REF master
-    PATCHES md.patch
+    PATCHES
+            md.patch
+            disable-test-build.patch
+			fix-InstallPath.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DWITH_UNITTEST=OFF
         -DWITH_SSL=OFF
@@ -29,6 +33,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 if(VCPKG_BUILD_TYPE STREQUAL "debug")
     # move headers
     file(RENAME
@@ -36,45 +44,8 @@ if(VCPKG_BUILD_TYPE STREQUAL "debug")
         ${CURRENT_PACKAGES_DIR}/include)
 endif()
 
-# fix libmariadb lib & dll directory.
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mariadb/mariadbclient.lib
-            ${CURRENT_PACKAGES_DIR}/lib/mariadbclient.lib)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/mariadbclient.lib
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadbclient.lib)
-    endif()
-else()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.dll
-            ${CURRENT_PACKAGES_DIR}/bin/libmariadb.dll)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.lib
-            ${CURRENT_PACKAGES_DIR}/lib/libmariadb.lib)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.dll
-            ${CURRENT_PACKAGES_DIR}/debug/bin/libmariadb.dll)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.lib
-            ${CURRENT_PACKAGES_DIR}/debug/lib/libmariadb.lib)
-    endif()
-endif()
-
 # remove plugin folder
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/lib/plugin
-    ${CURRENT_PACKAGES_DIR}/debug/lib/plugin
     ${CURRENT_PACKAGES_DIR}/lib/mariadb
     ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb)
 

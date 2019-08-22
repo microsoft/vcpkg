@@ -1,4 +1,4 @@
 Source: xtensor-blas
-Version: 0.15.1
+Version: 0.16.1
 Description: BLAS extension to xtensor
 Build-Depends: xtensor

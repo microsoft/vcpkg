@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO benhoyt/inih
-    REF r42
-    SHA512 bb414bf03e2055f47149d69bd373923cc663f5e044cd021fd34ac646effc485db8cedb128123aaac7e2abc16c98bee98f34d89108a4bab9af50b8cd05eb7af8d
+    REF r45
+    SHA512 bbec8b798b2ca32741e58467bcb843f991eaa6d687e7ed14dfaf412a9ddea8086b3088267bd30ef6c775d7a81593e181c561f320f8466e38f4ecbbdce9ce26df
     HEAD_REF master
 )
 
@@ -13,8 +15,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()

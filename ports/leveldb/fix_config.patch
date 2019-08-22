@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1409c06..98b87dc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -437,6 +437,12 @@ if(LEVELDB_INSTALL)
+       "${PROJECT_BINARY_DIR}/leveldbConfigVersion.cmake"
+       COMPATIBILITY SameMajorVersion
+   )
++  configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/leveldbConfig.cmake.in
++              leveldbConfig.cmake
++              INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/leveldb
++              NO_CHECK_REQUIRED_COMPONENTS_MACRO
++              PATH_VARS CMAKE_INSTALL_INCLUDEDIR
++              )
+   install(
+     EXPORT leveldbTargets
+     NAMESPACE leveldb::
+@@ -444,7 +450,7 @@ if(LEVELDB_INSTALL)
+   )
+   install(
+     FILES
+-      "${PROJECT_SOURCE_DIR}/cmake/leveldbConfig.cmake"
++      "${PROJECT_BINARY_DIR}/leveldbConfig.cmake"
+       "${PROJECT_BINARY_DIR}/leveldbConfigVersion.cmake"
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/leveldb"
+   )

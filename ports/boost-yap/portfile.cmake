@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/yap
-    REF boost-1.69.0
-    SHA512 12a6d5ed8491a9ebd258fa83ef752af88db38a9517a4da43fd20dd63a244271c7b889f92a32fc67f098230c7cbf530578c8ef163d6427144173183dc2fdc1156
+    REF boost-1.70.0
+    SHA512 f6211eed15eb28418513a525efc250993eed9aa940a20ed989e5f7af6c0890c06e3a0aa571e6825a8b15c62a7f238c7e269872f7b6c3bc3ab2e097a9f101fcf6
     HEAD_REF master
 )
 

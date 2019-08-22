@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -23,6 +24,7 @@ namespace vcpkg::Commands
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},
             {"export", &Export::perform_and_exit},
+            {"depend-info", &DependInfo::perform_and_exit},
         };
         return t;
     }
@@ -37,7 +39,6 @@ namespace vcpkg::Commands
             {"integrate", &Integrate::perform_and_exit},
             {"owns", &Owns::perform_and_exit},
             {"update", &Update::perform_and_exit},
-            {"depend-info", &DependInfo::perform_and_exit},
             {"edit", &Edit::perform_and_exit},
             {"create", &Create::perform_and_exit},
             {"import", &Import::perform_and_exit},
@@ -77,7 +78,7 @@ namespace vcpkg::Commands::Fetch
 
         const std::string tool = args.command_arguments[0];
         const fs::path tool_path = paths.get_tool_exe(tool);
-        System::println(tool_path.u8string());
+        System::print2(tool_path.u8string(), '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
@@ -100,7 +101,7 @@ namespace vcpkg::Commands::Hash
         const fs::path file_to_hash = args.command_arguments[0];
         const std::string algorithm = args.command_arguments.size() == 2 ? args.command_arguments[1] : "SHA512";
         const std::string hash = vcpkg::Hash::get_file_hash(paths.get_filesystem(), file_to_hash, algorithm);
-        System::println(hash);
+        System::print2(hash, '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

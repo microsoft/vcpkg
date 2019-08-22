@@ -37,7 +37,6 @@ namespace vcpkg::Install
         std::string total_elapsed_time;
 
         void print() const;
-        static std::string xunit_result(const PackageSpec& spec, Chrono::ElapsedTime time, Build::BuildResult code);
         std::string xunit_results() const;
     };
 

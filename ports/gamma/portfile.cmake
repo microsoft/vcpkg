@@ -1,16 +1,16 @@
-# Instead of official release, base on commit hash for now.
-set(GAMMA_RELEASE_TAG "cc442ad0c5da369966cd937a96925c7b9a04e9e5")
-
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Gamma-${GAMMA_RELEASE_TAG})
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/LancePutnam/Gamma/archive/cc442ad0c5da369966cd937a96925c7b9a04e9e5.zip"
-    FILENAME "gamma-${GAMMA_RELEASE_TAG}.zip"
-    SHA512 de44f4d07db0b2cf09e77508d993273d09788dfa919d549393bb77534922b65e9d8a1b8193b4b02c72e6bc4dd060b41b18ff3520a36d4c28f6e2fb4b1e859ee7
+set(GAMMA_RELEASE_TAG "cc442ad0c5da369966cd937a96925c7b9a04e9e5")
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "LancePutnam/Gamma"
+    REF ${GAMMA_RELEASE_TAG}
+    SHA512 431f17f053ca1c5ba0117b7ae7af8efae9df454593437de00dfea8ee04991b5701bee99d79deb074e60e397981a7fc1ce3476ec118d0f369e71e2cbaa696383d
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

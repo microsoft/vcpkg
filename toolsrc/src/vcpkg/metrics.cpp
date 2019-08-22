@@ -7,10 +7,12 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 
+#if defined(_WIN32)
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
+#endif
 
 namespace vcpkg::Metrics
 {
@@ -305,7 +307,9 @@ namespace vcpkg::Metrics
 
     void Metrics::upload(const std::string& payload)
     {
-#if defined(_WIN32)
+#if !defined(_WIN32)
+        Util::unused(payload);
+#else
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 
