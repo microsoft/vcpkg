@@ -1,5 +1,5 @@
 diff --git a/src/windows/WinMiniFB.c b/src/windows/WinMiniFB.c
-index 84ed0cb..498720b 100644
+index 84ed0cb..b33f252 100644
 --- a/src/windows/WinMiniFB.c
 +++ b/src/windows/WinMiniFB.c
 @@ -19,7 +19,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -7,7 +7,7 @@ index 84ed0cb..498720b 100644
      LRESULT res = 0;
  
 -    SWindowData     *window_data     = (SWindowData *) GetWindowLongPtr(hWnd, GWL_USERDATA);
-+    SWindowData     *window_data     = (SWindowData *) GetWindowLong(hWnd, GWLP_USERDATA);
++    SWindowData     *window_data     = (SWindowData *) GetWindowLongPtr(hWnd, GWLP_USERDATA);
      SWindowData_Win *window_data_win = 0x0;
      if(window_data != 0x0) {
          window_data_win = (SWindowData_Win *) window_data->specific;

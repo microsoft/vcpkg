@@ -2,10 +2,6 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(TRIPLET_SYSTEM_ARCH STREQUAL "arm" OR TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-    message(FATAL_ERROR "${PORT} currently doesn't support ARM and ARM64.")
-endif()
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} currently doesn't supports UWP.")
 endif()
@@ -19,6 +15,7 @@ vcpkg_from_github(
     PATCHES 
         fix-install-error.patch
         fix-build-error.patch
+        fix-arm-build-error.patch
 )
 
 vcpkg_configure_cmake(
