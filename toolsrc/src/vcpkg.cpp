@@ -53,7 +53,7 @@ static constexpr int SURVEY_INTERVAL_IN_HOURS = 24 * 30 * 6;
 // Initial survey appears after 10 days. Therefore, subtract 24 hours/day * 10 days
 static constexpr int SURVEY_INITIAL_OFFSET_IN_HOURS = SURVEY_INTERVAL_IN_HOURS - 24 * 10;
 
-void invalid_command(const std::string& cmd)
+static void invalid_command(const std::string& cmd)
 {
     System::print2(System::Color::error, "invalid command: ", cmd, '\n');
     Help::print_usage();
@@ -285,6 +285,8 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
 #endif
 
 #if defined(_WIN32)
+// note: this prevents a false positive for -Wmissing-prototypes on clang-cl
+int wmain(int, const wchar_t* const*);
 int wmain(const int argc, const wchar_t* const* const argv)
 #else
 int main(const int argc, const char* const* const argv)

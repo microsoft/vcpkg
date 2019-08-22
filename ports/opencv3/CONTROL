@@ -87,7 +87,7 @@ Build-Depends: libwebp
 Description: WebP support for opencv
 
 Feature: halide
-Build-Depends: halide, opencv3[dnn]
+Build-Depends: halide, opencv3[core], opencv3[dnn]
 Description: Halide support for opencv
 
 Feature: world
