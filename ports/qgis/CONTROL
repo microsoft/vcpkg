@@ -8,6 +8,7 @@ Description: Fix UTF-8 to UTF-8-BOM For Chinese
 
 Feature: server
 Description: Determines whether QGIS server should be built
+Build-Depends: fastcgi
 
 Feature: bindings
 Description: Determines whether python bindings should be built
