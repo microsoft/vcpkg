@@ -24,6 +24,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 ### Tool Maintainer Help
 
 - [Testing](tool-maintainers/testing.md)
+- [Benchmarking](tool-maintainers/benchmarking.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 
 ### Specifications
