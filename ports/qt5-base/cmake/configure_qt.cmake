@@ -25,17 +25,19 @@ function(configure_qt)
         endif()
         set(INVOKE "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}")
     endif()
-    
+
+    #Cleanup previous build folders
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+
+    #Find and ad Perl to PATH
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     vcpkg_add_to_path("${PERL_EXE_PATH}")
 
     if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
         list(APPEND _csc_OPTIONS -static)
     else()
-        list(APPEND _csc_OPTIONS_DEBUG -separate-debug-info)
+        #list(APPEND _csc_OPTIONS_DEBUG -separate-debug-info)
     endif()
    
     if(VCPKG_TARGET_IS_WINDOWS AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
