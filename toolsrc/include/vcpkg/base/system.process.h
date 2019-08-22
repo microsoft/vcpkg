@@ -21,7 +21,7 @@ namespace vcpkg::System
     std::string make_cmake_cmd(const fs::path& cmake_exe,
                                const fs::path& cmake_script,
                                const std::vector<CMakeVariable>& pass_variables,
-                               const std::string& toolset = std::string{});
+                               const std::string& toolset = {});
 
     fs::path get_exe_path_of_current_process();
 

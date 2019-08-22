@@ -448,7 +448,7 @@ namespace vcpkg::Build
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         std::vector<System::CMakeVariable> variables = get_cmake_vars(paths, config, triplet, toolset);
 
-        const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
+        const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables,toolset.name);
 
         std::string command = make_build_env_cmd(pre_build_info, toolset);
 
@@ -1126,28 +1126,20 @@ namespace vcpkg::Build
                         pre_build_info.public_abi_override =
                             variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                         break;
+                    case VcpkgTripletVar::SKIP_POST_BUILD_LIB_ARCH_CHECK:
+                        pre_build_info.skip_post_build_lib_arch_check =
+                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                        break;
+                    case VcpkgTripletVar::CMAKE_VS_GENERATOR:
+                        pre_build_info.cmake_vs_generator =
+                             variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                        break;
                 }
             }
             else
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
             }
-
-            if (variable_name == "VCPKG_CMAKE_VS_GENERATOR")
-            {
-                pre_build_info.cmake_vs_generator =
-                    variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
-                continue;
-            }
-
-            if (variable_name == "VCPKG_SKIP_POST_BUILD_LIB_ARCH_CHECK")
-            {
-                pre_build_info.skip_post_build_lib_arch_check =
-                    variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
-                continue;
-            }
-        
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
         }
 
         pre_build_info.triplet_abi_tag = get_triplet_abi(paths, pre_build_info, triplet);
