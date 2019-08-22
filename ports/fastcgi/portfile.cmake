@@ -115,11 +115,11 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     set(OUT_PATH_RELEASE ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-release)
     file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
-	vcpkg_execute_required_process(
-      COMMAND "${SOURCE_PATH_RELEASE}/autogen.sh"
-      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-      LOGNAME config-${TARGET_TRIPLET}-rel
-    )
+	#vcpkg_execute_required_process(
+    #  COMMAND "${SOURCE_PATH_RELEASE}/autogen.sh"
+    #  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    #  LOGNAME config-${TARGET_TRIPLET}-rel
+    #)
 	
     vcpkg_execute_required_process(
       COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE}
@@ -153,11 +153,11 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
     set(OUT_PATH_DEBUG ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-debug)
     file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
-	vcpkg_execute_required_process(
-      COMMAND "${SOURCE_PATH_DEBUG}/autogen.sh"
-      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-      LOGNAME config-${TARGET_TRIPLET}-debug
-    )
+	#vcpkg_execute_required_process(
+    #  COMMAND "${SOURCE_PATH_DEBUG}/autogen.sh"
+    #  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    #  LOGNAME config-${TARGET_TRIPLET}-debug
+    #)
 	
     vcpkg_execute_required_process(
       COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG}
