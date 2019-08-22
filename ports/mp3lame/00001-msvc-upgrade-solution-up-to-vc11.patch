@@ -244,7 +244,7 @@ index 0000000..fd60017
 \ No newline at end of file
 diff --git a/vc_solution/vc11_lame_lame.vcxproj b/vc_solution/vc11_lame_lame.vcxproj
 new file mode 100644
-index 0000000..d93c1b3
+index 0000000..92bdfd2
 --- /dev/null
 +++ b/vc_solution/vc11_lame_lame.vcxproj
 @@ -0,0 +1,498 @@
@@ -445,7 +445,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -469,7 +469,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -493,7 +493,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -513,7 +513,7 @@ index 0000000..d93c1b3
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../;../mpglib;../libmp3lame;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 +    </ClCompile>
 +    <ResourceCompile>
@@ -536,7 +536,7 @@ index 0000000..d93c1b3
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../;../mpglib;../libmp3lame;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 +    </ClCompile>
 +    <ResourceCompile>
@@ -559,7 +559,7 @@ index 0000000..d93c1b3
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../;../mpglib;../libmp3lame;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 +    </ClCompile>
 +    <ResourceCompile>
@@ -584,7 +584,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -608,7 +608,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -632,7 +632,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -655,7 +655,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -679,7 +679,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -703,7 +703,7 @@ index 0000000..d93c1b3
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -749,7 +749,7 @@ index 0000000..d93c1b3
 \ No newline at end of file
 diff --git a/vc_solution/vc11_libmp3lame.vcxproj b/vc_solution/vc11_libmp3lame.vcxproj
 new file mode 100644
-index 0000000..958faac
+index 0000000..6cadf5d
 --- /dev/null
 +++ b/vc_solution/vc11_libmp3lame.vcxproj
 @@ -0,0 +1,624 @@
@@ -947,7 +947,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -964,7 +964,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -981,7 +981,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -998,7 +998,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -1015,7 +1015,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -1032,7 +1032,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -1046,7 +1046,7 @@ index 0000000..958faac
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
 +      <DebugInformationFormat>OldStyle</DebugInformationFormat>
 +    </ClCompile>
@@ -1062,7 +1062,7 @@ index 0000000..958faac
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
 +      <DebugInformationFormat>OldStyle</DebugInformationFormat>
 +    </ClCompile>
@@ -1078,7 +1078,7 @@ index 0000000..958faac
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
 +      <DebugInformationFormat>OldStyle</DebugInformationFormat>
 +    </ClCompile>
@@ -1097,7 +1097,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -1114,7 +1114,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -1131,7 +1131,7 @@ index 0000000..958faac
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -1380,10 +1380,10 @@ index 0000000..958faac
 \ No newline at end of file
 diff --git a/vc_solution/vc11_libmp3lame_dll.vcxproj b/vc_solution/vc11_libmp3lame_dll.vcxproj
 new file mode 100644
-index 0000000..ea93f45
+index 0000000..05bcb37
 --- /dev/null
 +++ b/vc_solution/vc11_libmp3lame_dll.vcxproj
-@@ -0,0 +1,536 @@
+@@ -0,0 +1,548 @@
 +﻿<?xml version="1.0" encoding="utf-8"?>
 +<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +  <ItemGroup Label="ProjectConfigurations">
@@ -1582,7 +1582,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1595,6 +1595,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -1610,7 +1611,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1623,6 +1624,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -1638,7 +1640,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1651,6 +1653,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'">
@@ -1665,7 +1668,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1678,6 +1681,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|ARM'">
@@ -1693,7 +1697,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1706,6 +1710,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|x64'">
@@ -1721,7 +1726,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1734,6 +1739,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -1745,7 +1751,7 @@ index 0000000..ea93f45
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 +    </ClCompile>
 +    <ResourceCompile>
@@ -1760,6 +1766,7 @@ index 0000000..ea93f45
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <GenerateDebugInformation>true</GenerateDebugInformation>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -1772,7 +1779,7 @@ index 0000000..ea93f45
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 +    </ClCompile>
 +    <ResourceCompile>
@@ -1787,6 +1794,7 @@ index 0000000..ea93f45
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <GenerateDebugInformation>true</GenerateDebugInformation>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -1799,7 +1807,7 @@ index 0000000..ea93f45
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 +    </ClCompile>
 +    <ResourceCompile>
@@ -1814,6 +1822,7 @@ index 0000000..ea93f45
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <GenerateDebugInformation>true</GenerateDebugInformation>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'">
@@ -1828,7 +1837,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1838,6 +1847,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|ARM'">
@@ -1853,7 +1863,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1863,6 +1873,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|x64'">
@@ -1878,7 +1889,7 @@ index 0000000..ea93f45
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../;../mpglib;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;_WINDOWS;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1888,6 +1899,7 @@ index 0000000..ea93f45
 +      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
 +    </Link>
 +  </ItemDefinitionGroup>
 +  <ItemGroup>
@@ -1923,7 +1935,7 @@ index 0000000..ea93f45
 \ No newline at end of file
 diff --git a/vc_solution/vc11_mpglib.vcxproj b/vc_solution/vc11_mpglib.vcxproj
 new file mode 100644
-index 0000000..2e4c2fb
+index 0000000..f1d51ec
 --- /dev/null
 +++ b/vc_solution/vc11_mpglib.vcxproj
 @@ -0,0 +1,464 @@
@@ -2120,7 +2132,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2137,7 +2149,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2154,7 +2166,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2171,7 +2183,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2188,7 +2200,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2205,7 +2217,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2219,7 +2231,7 @@ index 0000000..2e4c2fb
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_LAYER_2;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
 +      <DebugInformationFormat>OldStyle</DebugInformationFormat>
 +    </ClCompile>
@@ -2235,7 +2247,7 @@ index 0000000..2e4c2fb
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_LAYER_2;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
 +      <DebugInformationFormat>OldStyle</DebugInformationFormat>
 +    </ClCompile>
@@ -2251,7 +2263,7 @@ index 0000000..2e4c2fb
 +      <Optimization>Disabled</Optimization>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_LAYER_2;HAVE_MPGLIB;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
 +      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
 +      <DebugInformationFormat>OldStyle</DebugInformationFormat>
 +    </ClCompile>
@@ -2270,7 +2282,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2287,7 +2299,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>
@@ -2304,7 +2316,7 @@ index 0000000..2e4c2fb
 +      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 +      <AdditionalIncludeDirectories>../libmp3lame;../include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +      <PreprocessorDefinitions>NDEBUG;HAVE_MPGLIB;_WINDOWS;USE_LAYER_2;WIN32;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
 +    </ClCompile>
 +    <ResourceCompile>
 +      <Culture>0x0409</Culture>

@@ -25,16 +25,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(GLOB vcxprojs ${SOURCE_PATH}/vc_solution/vc11_*.vcxproj)
         foreach(vcxproj ${vcxprojs})
             file(READ ${vcxproj} vcxproj_orig)
-            string(REPLACE 
-                "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" 
-                "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" 
-                vcxproj_orig "${vcxproj_orig}"
-            )
-            string(REPLACE 
-                "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" 
-                "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" 
-                vcxproj_orig "${vcxproj_orig}"
-            )
+            string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_orig "${vcxproj_orig}")
+			if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+				string(REPLACE "/APPCONTAINER" "" vcxproj_orig "${vcxproj_orig}")
+			endif()
             file(WRITE ${vcxproj} "${vcxproj_orig}")
         endforeach()
     endif()
