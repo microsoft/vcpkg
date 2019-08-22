@@ -155,10 +155,10 @@ elseif(VCPKG_TARGET_IS_OSX)
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()
-        execute_process(COMMAND SDK_VER=$(xcrun --show-sdk-version) && echo $SDK_VER 
-        OUTPUT_VARIABLE VCPKG_OSX_DEPLOYMENT_TARGET 
-        OUTPUT_FILE SDK_VER.txt
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
+        execute_process(COMMAND xcrun --show-sdk-version
+                            OUTPUT_FILE OSX_SDK_VER.txt
+                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
+        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SDK_VER.txt" VCPKG_OSX_DEPLOYMENT_TARGET REGEX "^[0-9][0-9]\.[0-9][0-9]*")
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Detected OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
     endif()
