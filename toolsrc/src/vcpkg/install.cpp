@@ -485,7 +485,7 @@ namespace vcpkg::Install
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
-        {OPTION_ONLY_DOWNLOADS, "Downloads sources but doesn't build the pacakge, implies --keep-going and --no-binarycaching"},
+        {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},

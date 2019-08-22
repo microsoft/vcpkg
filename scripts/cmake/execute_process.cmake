@@ -1,3 +1,10 @@
+# Intercepts all calls to execute_process() inside portfiles.
+#
+# The purpose of this override is to fail unqualified calls to
+# execute_process() when VCPKG_DOWNLOAD_MODE is defined.
+#
+# Only commands that explicitly use the ALLOW_IN_DOWNLOAD_MODE option
+# are executed.
 if (NOT DEFINED OVERRIDEN_EXECUTE_PROCESS)
 set(OVERRIDEN_EXECUTE_PROCESS ON)
 

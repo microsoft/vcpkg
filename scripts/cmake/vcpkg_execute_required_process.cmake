@@ -11,6 +11,10 @@
 ## )
 ## ```
 ## ## Parameters
+## ### ALLOW_IN_DOWNLOAD_MODE
+## Allows the command to execute in Download Mode.
+## [See execute_process()](execute_process.cmake).
+##
 ## ### COMMAND
 ## The command to be executed, along with its arguments.
 ##
