@@ -6,8 +6,8 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF f3f9538960d9b29033e52522dd63e985ba970504
-        SHA512 f8ce98d62425da4bec1c9e99b7b662a615d90a9407e03f7ce31a56fb8848f6bda1a39156bbabf351383e490dc3438d842136220dcf08efb1560e21d9ac76a0ba
+        REF 8b7cc18456f377b7f0df42dcdefb24ae81d9e7fc
+        SHA512 0386889fc3d32a795998a35a382cce6d11f6712416f3a1a49de6ea7d9c0c973ca05989353ee9a3ec5ca02dc55c2b59dc803cbf4866b918274667e52d03d1490f
         HEAD_REF public-preview
         PATCHES improve-external-deps.patch
     )
