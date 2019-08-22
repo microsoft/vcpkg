@@ -18,7 +18,7 @@ vcpkg_extract_source_archive_ex(
 if(VCPKG_TARGET_IS_WINDOWS)
 
 	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-		set(platform "ARM")
+		set(platform "ARM64")
 		set(machine "ARM64")
 	elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
 		set(platform "ARM")
