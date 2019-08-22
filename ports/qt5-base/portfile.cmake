@@ -157,7 +157,7 @@ elseif(VCPKG_TARGET_IS_OSX)
     else()
         execute_process(COMMAND "QMAKE_MACOSX_DEPLOYMENT_TARGET=\$(xcrun --show-sdk-version)")
         set(VCPKG_OSX_DEPLOYMENT_TARGET $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} )
-        message(STATUS "Detected OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET})
+        message(STATUS "Detected OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
     endif()
     list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
