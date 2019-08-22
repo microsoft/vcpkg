@@ -108,6 +108,7 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
       if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 		vcpkg_execute_required_process(
 		  COMMAND brew install automake
+		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 		  LOGNAME config-${TARGET_TRIPLET}-rel
 		)
 	  else()
