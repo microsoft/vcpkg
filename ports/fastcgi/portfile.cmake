@@ -107,12 +107,25 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
   if (NOT AUTORECONF)
       if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 		vcpkg_execute_required_process(
-		  COMMAND brew install automake
+		  COMMAND sudo apt-get install automake
 		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 		  LOGNAME config-${TARGET_TRIPLET}-rel
 		)
 	  else()
 		message(FATAL_ERROR "AUTORECONF not found")
+	  endif()
+  endif()
+  
+  find_program(LIBTOOL libtool)
+  if (NOT LIBTOOL)
+      if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+		vcpkg_execute_required_process(
+		  COMMAND brew install libtool
+		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+		  LOGNAME config-${TARGET_TRIPLET}-rel
+		)
+	  else()
+		message(FATAL_ERROR "LIBTOOL not found")
 	  endif()
   endif()
   
