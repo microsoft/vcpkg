@@ -1,31 +1,40 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6dc7988..6534900 100644
+index 06ba472..0f5874c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -68,22 +68,22 @@ add_library(minifb STATIC
+@@ -54,6 +54,27 @@ add_library(minifb STATIC
+     ${SrcLib}
+ )
+ 
++if (WIN32)
++add_executable(noise 
++    tests/noise.c
++)
++target_link_libraries(noise minifb Gdi32.lib)
++
++add_executable(input_events 
++    tests/input_events.c
++)
++target_link_libraries(input_events minifb Gdi32.lib)
++
++add_executable(input_events_cpp
++    tests/input_events_cpp.cpp
++)
++target_link_libraries(input_events_cpp minifb Gdi32.lib)
++
++add_executable(multiple_windows
++    tests/multiple_windows.c
++)
++target_link_libraries(multiple_windows minifb Gdi32.lib)
++else()
  add_executable(noise 
      tests/noise.c
  )
--target_link_libraries(noise minifb)
-+target_link_libraries(noise minifb Gdi32.lib)
- 
- add_executable(input_events 
-     tests/input_events.c
- )
--target_link_libraries(input_events minifb)
-+target_link_libraries(input_events minifb Gdi32.lib)
- 
- add_executable(input_events_cpp
-     tests/input_events_cpp.cpp
- )
--target_link_libraries(input_events_cpp minifb)
-+target_link_libraries(input_events_cpp minifb Gdi32.lib)
- 
- add_executable(multiple_windows
+@@ -73,6 +94,7 @@ add_executable(multiple_windows
      tests/multiple_windows.c
  )
--target_link_libraries(multiple_windows minifb)
-+target_link_libraries(multiple_windows minifb Gdi32.lib)
+ target_link_libraries(multiple_windows minifb)
++endif()
  
  if (MSVC)
  elseif (MINGW)
