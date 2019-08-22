@@ -16,17 +16,25 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE_FILE}
     REF ${VERSION}
-	PATCHES 00001-msvc-upgrade-solution-up-to-vc11.patch
+    PATCHES 00001-msvc-upgrade-solution-up-to-vc11.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
 
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        # replace "<RuntimeLibrary>...</RuntimeLibrary>" to "<RuntimeLibrary>...DLL</RuntimeLibrary>" in vcxproj
         file(GLOB vcxprojs ${SOURCE_PATH}/vc_solution/vc11_*.vcxproj)
         foreach(vcxproj ${vcxprojs})
             file(READ ${vcxproj} vcxproj_orig)
-            string(REPLACE "</RuntimeLibrary>" "DLL</RuntimeLibrary>" vcxproj_orig "${vcxproj_orig}")
+            string(REPLACE 
+                "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" 
+                "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" 
+                vcxproj_orig "${vcxproj_orig}"
+            )
+            string(REPLACE 
+                "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" 
+                "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" 
+                vcxproj_orig "${vcxproj_orig}"
+            )
             file(WRITE ${vcxproj} "${vcxproj_orig}")
         endforeach()
     endif()
