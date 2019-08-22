@@ -80,9 +80,9 @@ function(install_qt)
             LOGNAME package-${_build_triplet}
         )
         message(STATUS "Package ${_build_triplet} done")
-        
+        set(ENV{PATH} "${_path}")
     endforeach()
     
-    set(ENV{PATH} "${_path}")
+
     
 endfunction()
