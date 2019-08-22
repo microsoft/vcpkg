@@ -1,5 +1,5 @@
 diff --git a/third_party/systemlibs/double_conversion.BUILD b/third_party/systemlibs/double_conversion.BUILD
-index b4abe4b4..114a370a 100644
+index 56846018..114a370a 100644
 --- a/third_party/systemlibs/double_conversion.BUILD
 +++ b/third_party/systemlibs/double_conversion.BUILD
 @@ -5,8 +5,34 @@ filegroup(
@@ -32,8 +32,9 @@ index b4abe4b4..114a370a 100644
 +
  cc_library(
      name = "double-conversion",
+-    linkopts = ["-ldouble-conversion"],
 +    hdrs = HEADERS,
 +    includes = ["."],
-     linkopts = ["-ldouble-conversion -L$(VCPKG_LIB_DIR)"],
++    linkopts = ["-ldouble-conversion -L$(VCPKG_LIB_DIR)"],
      visibility = ["//visibility:public"],
  )
