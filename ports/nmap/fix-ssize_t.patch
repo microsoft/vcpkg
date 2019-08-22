@@ -1,0 +1,13 @@
+diff --git a/libdnet-stripped/include/dnet/os.h b/libdnet-stripped/include/dnet/os.h
+index 55a21b9..78543ff 100644
+--- a/libdnet-stripped/include/dnet/os.h
++++ b/libdnet-stripped/include/dnet/os.h
+@@ -23,7 +23,7 @@
+   typedef u_short	uint16_t;
+   typedef u_int		uint32_t;
+ # ifndef __CYGWIN__
+-  typedef long		ssize_t;
++  typedef __int64		ssize_t;
+ # endif
+ #else
+ # include <sys/param.h>
