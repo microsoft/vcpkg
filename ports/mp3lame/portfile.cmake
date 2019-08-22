@@ -21,24 +21,35 @@ vcpkg_extract_source_archive_ex(
 
 if(VCPKG_TARGET_IS_WINDOWS)
 
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB vcxprojs ${SOURCE_PATH}/vc_solution/vc11_*.vcxproj)
-        foreach(vcxproj ${vcxprojs})
-            file(READ ${vcxproj} vcxproj_orig)
-            string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_orig "${vcxproj_orig}")
-			if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-				string(REPLACE "/APPCONTAINER" "" vcxproj_orig "${vcxproj_orig}")
-			endif()
-            file(WRITE ${vcxproj} "${vcxproj_orig}")
-        endforeach()
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(MSBUILD_PLATFORM "Win32")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(MSBUILD_PLATFORM "x64")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(MSBUILD_PLATFORM "ARM")
     endif()
+    
+    file(GLOB vcxprojs ${SOURCE_PATH}/vc_solution/vc11_*.vcxproj)
+    foreach(vcxproj ${vcxprojs})
+        file(READ ${vcxproj} vcxproj_orig)
+        
+        if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_orig "${vcxproj_orig}")
+        endif()
+        
+        if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            string(REPLACE "/APPCONTAINER" "" vcxproj_orig "${vcxproj_orig}")
+        endif()
+        
+        file(WRITE ${vcxproj} "${vcxproj_orig}")
+    endforeach()
 
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH "vc_solution/vc11_lame.sln"
         TARGET "lame"
-        RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
-        DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
+        PLATFORM ${MSBUILD_PLATFORM}
+        USE_VCPKG_INTEGRATION
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
