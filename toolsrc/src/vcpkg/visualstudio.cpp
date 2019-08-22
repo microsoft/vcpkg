@@ -31,6 +31,11 @@ namespace vcpkg::VisualStudio
     static constexpr CStringView cmake_V_141_ARM = "Visual Studio 15 2017 ARM";
     static constexpr CStringView cmake_V_141_ARM64 = "Visual Studio 15 2017";
 
+    static constexpr CStringView cmake_V_142_x86 = "Visual Studio 16 2019 -A x86";
+    static constexpr CStringView cmake_V_142_x64 = "Visual Studio 16 2019 ";
+    static constexpr CStringView cmake_V_142_ARM = "Visual Studio 16 2019 -A ARM";
+    static constexpr CStringView cmake_V_142_ARM64 = "Visual Studio 16 2019 -A ARM64";
+
     static constexpr CStringView unknown = "unknown";
 
     const std::array<CStringView, 4>& get_preferred_toolset_names() noexcept { return preferred_toolsets; }
@@ -246,9 +251,28 @@ namespace vcpkg::VisualStudio
                             default: return unknown; //<- Please update if you see that;
                         };
                     };
+                    const auto vs16_cmake = [](const ArchOption& arch) noexcept
+                    {
+                        switch (arch.target_arch)
+                        {
+                            case CPU::X86: return cmake_V_142_x86;
+                            case CPU::X64: return cmake_V_142_x64;
+                            case CPU::ARM: return cmake_V_142_ARM;
+                            case CPU::ARM64: return cmake_V_142_ARM64;
+                            default: return unknown; //<- Please update if you see that;
+                        };
+                    };
 
-                    const fs::path platformpath = vs_instance.root_path / "Common7" / "IDE" / "VC" / "VCTargets" /
-                                                  "Platforms" / vs_arch(arch) / "PlatformToolsets";
+                    //Should probably create a map of lambdas with all those paths using major_version as a key
+                    const fs::path platformpath = [&](){
+                        if(major_version > "15") {
+                            return vs_instance.root_path / "MSBuild" / "Microsoft" / "VC" / "v160" /
+                                                  "Platforms" / vs_arch(arch) / "PlatformToolsets"; }
+                        else {
+                            return vs_instance.root_path / "Common7" / "IDE" / "VC" / "VCTargets" /
+                                                  "Platforms" / vs_arch(arch) / "PlatformToolsets"; }
+                        }();
+                    
                     if (fs.exists(platformpath))
                     {
                         std::vector<fs::path> platformsubdirs = fs.get_files_non_recursive(platformpath);
@@ -258,7 +282,8 @@ namespace vcpkg::VisualStudio
                         for (const fs::path& platform : platformsubdirs)
                         {
                             const auto tmp = platform.filename();
-                            const ToolsetMinimal Toolmin{tmp.u8string(), major_version, vs15_cmake(arch).c_str()};
+
+                            const ToolsetMinimal Toolmin{tmp.u8string(), major_version, major_version > "15" ? vs16_cmake(arch).c_str() : vs15_cmake(arch).c_str()};
                             arch.supported_toolsets.push_back(Toolmin);
                         }
                     }
@@ -278,7 +303,6 @@ namespace vcpkg::VisualStudio
 
                 for (const fs::path& subdir : msvc_subdirectories)
                 {
-//<<<<<<< HEAD
                     auto toolset_version_full = subdir.filename().u8string();
                     auto toolset_version_prefix = toolset_version_full.substr(0, 4);
                     CStringView toolset_version;
@@ -303,40 +327,15 @@ namespace vcpkg::VisualStudio
                         // unknown toolset minor version
                         continue;
                     }
-//                    const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
-//                    paths_examined.push_back(dumpbin_path);
-//                    if (fs.exists(dumpbin_path))
-//                    {
-//                        Toolset toolset{vs_instance.root_path,
-//                                        dumpbin_path,
-//                                        vcvarsall_bat,
-//                                        {vcvars_option},
-//                                        toolset_version,
-//                                        supported_architectures};
-//
-//                        const auto english_language_pack = dumpbin_path.parent_path() / "1033";
-//=======
                     for (const ArchOption& arch : supported_architectures)
                     {
                         const std::string Host_arch = "Host" + System::to_string(arch.host_arch);
                         const fs::path dumpbin_path = subdir / "bin" / Host_arch.c_str() /
                                                       System::to_string(arch.target_arch).c_str() / "dumpbin.exe";
-//>>>>>>> Allows vcpkg to compile cmake ports with all installed costum toolset. (Only VS2017)
 
                         paths_examined.push_back(dumpbin_path);
                         if (fs.exists(dumpbin_path))
                         {
-//<<<<<<< HEAD
-//                            excluded_toolsets.push_back(std::move(toolset));
-//                            continue;
-//                        }
-//
-//                        found_toolsets.push_back(std::move(toolset));
-//
-
-//
-//                        continue;
-//=======
                             for (const ToolsetMinimal& MinTool : arch.supported_toolsets)
                             {
                                 const auto english_language_pack = dumpbin_path.parent_path() / "1033";
@@ -378,7 +377,6 @@ namespace vcpkg::VisualStudio
                                 found_toolsets.push_back(toolset);
                             }
                         }
-//>>>>>>> Allows vcpkg to compile cmake ports with all installed costum toolset. (Only VS2017)
                     }
                 }
             }
