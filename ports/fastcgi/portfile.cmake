@@ -182,8 +182,11 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
   endif()
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	file(GLOB FCGI_INCLUDE_FILES ${SOURCE_PATH_RELEASE}/include/*.h)
+	file(COPY ${FCGI_INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/fastcgi)
 else() # Other build system
-  message(FATAL_ERROR "Unsupport build system.")
+  message(STATUS "Unsupport build system.")
 endif()
 
 # Handle copyright
