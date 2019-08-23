@@ -1,0 +1,25 @@
+diff --git a/src/LLVM_Output.cpp b/src/LLVM_Output.cpp
+index 7d6223d..a95a548 100644
+--- a/src/LLVM_Output.cpp
++++ b/src/LLVM_Output.cpp
+@@ -378,7 +378,7 @@ void emit_file(const llvm::Module &module_in, Internal::LLVMOStream& out, llvm::
+     target_machine->Options.MCOptions.AsmVerbose = true;
+ 
+     // Ask the target to add backend passes as necessary.
+-    target_machine->addPassesToEmitFile(pass_manager, out, file_type);
++    target_machine->addPassesToEmitFile(pass_manager, out, NULL, file_type);
+ 
+     pass_manager.run(*module);
+ }
+diff --git a/src/Target.cpp b/src/Target.cpp
+index b616128..98e430e 100644
+--- a/src/Target.cpp
++++ b/src/Target.cpp
+@@ -23,6 +23,7 @@ using std::vector;
+ namespace {
+ 
+ #ifdef _MSC_VER
++#include <intrin.h>
+ static void cpuid(int info[4], int infoType, int extra) {
+     __cpuidex(info, infoType, extra);
+ }

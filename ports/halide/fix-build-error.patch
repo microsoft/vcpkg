@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 87d76a6..afa2db3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -207,9 +207,14 @@ else()
+   add_compile_options(/wd4018)  # disable "signed/unsigned mismatch"
+   add_compile_options(/wd4503)  # disable "decorated name length exceeded, name was truncated"
+   add_compile_options(/wd4267)  # disable "conversion from 'size_t' to 'int', possible loss of data"
++  add_compile_options(/wd4005)  # disable "'BLASFUNC': macro redefinition"
+   if (WARNINGS_AS_ERRORS)
+     add_compile_options(/WX)
+   endif()
++  if (TRIPLET_SYSTEM_ARCH STREQUAL x64)
++    # used by openblas
++    add_definitions(-DOS_WINNT -D__64BIT__)
++  endif()
+ endif()
+ 
+ # These tools are needed by several subdirectories
+diff --git a/apps/linear_algebra/benchmarks/CMakeLists.txt b/apps/linear_algebra/benchmarks/CMakeLists.txt
+index 461232e..0beb2b6 100644
+--- a/apps/linear_algebra/benchmarks/CMakeLists.txt
++++ b/apps/linear_algebra/benchmarks/CMakeLists.txt
+@@ -42,7 +42,10 @@ else()
+     eigen_benchmarks.cpp
+   )
+   target_compile_definitions(eigen_benchmarks PRIVATE -DEIGEN_DONT_PARALLELIZE ${MISC_DEFINITIONS})
+-  target_compile_options(eigen_benchmarks PRIVATE -Wno-error=unused-variable)
++  if (MSVC)
++  else()
++    target_compile_options(eigen_benchmarks PRIVATE -Wno-error=unused-variable)
++  endif()
+   target_link_libraries(eigen_benchmarks
+     PRIVATE
+       Eigen3::Eigen
+@@ -71,7 +74,9 @@ else()
+       )
+       string(TOUPPER ${BLAS_VENDOR} DEFINE_SUFFIX)
+       target_compile_definitions(${TARGET} PRIVATE -DUSE_${DEFINE_SUFFIX} ${MISC_DEFINITIONS})
+-      target_compile_options(${TARGET} PRIVATE -Wno-error=unused-variable)
++      if (NOT MSVC)
++        target_compile_options(${TARGET} PRIVATE -Wno-error=unused-variable)
++      endif()
+       target_link_libraries(${TARGET}
+         PRIVATE
+          ${BLAS_${NAME}_LIBRARY}
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e1edd98..1bf0785 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -120,7 +120,9 @@ endif()
+ 
+ # Commands to build initial module objects.
+ file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.build")
+-set (CXX_WARNING_FLAGS -Wall -Werror -Wno-unused-function -Wcast-qual)
++if (NOT MSVC)
++  set (CXX_WARNING_FLAGS -Wall -Werror -Wno-unused-function -Wcast-qual)
++endif()
+ set (INITMOD_PREFIX "_initmod_")
+ set (ARCHS 32 64)
+ set(INITIAL_MODULES )
