@@ -3,6 +3,7 @@
 #include <vcpkg/parse.h>
 
 #include <vcpkg/base/util.h>
+#include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Parse
 {
@@ -58,26 +59,73 @@ namespace vcpkg::Parse
 
         std::vector<std::string> out;
 
-        size_t cur = 0;
-        do
-        {
-            auto pos = str.find(',', cur);
-            if (pos == std::string::npos)
-            {
-                out.push_back(str.substr(cur));
-                break;
-            }
-            out.push_back(str.substr(cur, pos - cur));
+		auto iter = str.cbegin();
 
-            // skip comma and space
-            ++pos;
-            while (is_whitespace(str[pos]))
-            {
-                ++pos;
-            }
+		do {
+			// Trim leading whitespace of each element
+			while (iter != str.cend() && is_whitespace(*iter))
+			{
+				++iter;
+			}
 
-            cur = pos;
-        } while (cur != std::string::npos);
+			// Allow commas inside of [].
+			bool bracket_nesting = false;
+
+			auto element_begin = iter;
+			auto element_end = iter;
+			while (iter != str.cend() && (*iter != ',' || bracket_nesting))
+			{
+				char value = *iter;
+
+				// do not support nested []
+				if (value == '[')
+				{
+					bracket_nesting = true;
+				}
+				else if (value == ']')
+				{
+					bracket_nesting = false;
+				}
+
+				++iter;
+
+				// Trim ending whitespace
+				if (!is_whitespace(value))
+				{
+					// Update element_end after iter is incremented so it will be one past.
+					element_end = iter;
+				}
+			}
+
+			if (element_begin == element_end)
+			{
+				System::print2(	System::Color::warning, 
+					"Warning: empty element in list\n"
+					">    '", str, "'\n"
+					">     ", std::string(static_cast<int>(element_begin - str.cbegin()), ' '), "^\n"
+				);
+			}
+			else
+			{
+				out.push_back({ element_begin, element_end });
+			}
+
+			if (iter != str.cend())
+			{
+				//Not at the end, must be at a comma that needs to be stepped over
+				++iter;
+
+				if (iter == str.end())
+				{
+					System::print2(System::Color::warning,
+						"Warning: empty element in list\n"
+						">    '", str, "'\n"
+						">     ", std::string(str.length(), ' '), "^\n"
+					);
+				}
+			}
+
+		} while (iter != str.cend());
 
         return out;
     }
