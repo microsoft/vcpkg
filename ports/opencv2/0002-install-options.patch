@@ -287,10 +287,10 @@ index d9de52d..be604dc 100644
  
  ocv_module_include_directories("${OpenCV_SOURCE_DIR}/modules/dynamicuda/include/" ${ZLIB_INCLUDE_DIR})
 diff --git a/modules/highgui/CMakeLists.txt b/modules/highgui/CMakeLists.txt
-index d59e95a..901aa18 100644
+index d59e95a..ce7f87b 100644
 --- a/modules/highgui/CMakeLists.txt
 +++ b/modules/highgui/CMakeLists.txt
-@@ -15,7 +15,7 @@ endif()
+@@ -15,23 +15,23 @@ endif()
  
  if(HAVE_PNG OR HAVE_TIFF OR HAVE_OPENEXR)
    ocv_include_directories(${ZLIB_INCLUDE_DIR})
@@ -299,6 +299,25 @@ index d59e95a..901aa18 100644
  endif()
  
  if(HAVE_JPEG)
+   ocv_include_directories(${JPEG_INCLUDE_DIR})
+-  list(APPEND GRFMT_LIBS ${JPEG_LIBRARIES})
++  list(APPEND GRFMT_LIBS JPEG::JPEG)
+ endif()
+ 
+ if(HAVE_PNG)
+   add_definitions(${PNG_DEFINITIONS})
+   ocv_include_directories(${PNG_INCLUDE_DIR})
+-  list(APPEND GRFMT_LIBS ${PNG_LIBRARIES})
++  list(APPEND GRFMT_LIBS PNG::PNG)
+ endif()
+ 
+ if(HAVE_TIFF)
+   ocv_include_directories(${TIFF_INCLUDE_DIR})
+-  list(APPEND GRFMT_LIBS ${TIFF_LIBRARIES})
++  list(APPEND GRFMT_LIBS TIFF::TIFF)
+ endif()
+ 
+ if(HAVE_JASPER)
 @@ -296,38 +296,5 @@ endif()
  ocv_add_precompiled_headers(${the_module})
  ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-deprecated-declarations -Wno-clobbered)
