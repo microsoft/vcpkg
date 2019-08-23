@@ -94,15 +94,15 @@ function(install_qt)
             LOGNAME build-${_build_triplet}
         )
         
-        #if(VCPKG_TARGET_IS_OSX)
-            # For some reason there will be an error on MacOSX without this clean!
-        #    message(STATUS "Cleaning after build before install ${_build_triplet}")
-        #    vcpkg_execute_required_process(
-        #        COMMAND ${INVOKE_SINGLE} clean
-        #        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
-        #        LOGNAME cleaning-2-${_build_triplet}
-        #    )
-        #endif()
+        if(VCPKG_TARGET_IS_OSX)
+           # For some reason there will be an error on MacOSX without this clean!
+            message(STATUS "Cleaning after build before install ${_build_triplet}")
+            vcpkg_execute_required_process(
+                COMMAND ${INVOKE_SINGLE} clean
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+                LOGNAME cleaning-2-${_build_triplet}
+            )
+        endif()
         
         message(STATUS "Fixig makefile installation path ${_build_triplet}")
         qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
