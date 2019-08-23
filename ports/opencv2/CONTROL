@@ -1,8 +1,8 @@
 Source: opencv2
-Version: 2.4.13.6
+Version: 2.4.13.7
 Build-Depends: protobuf, zlib
 Description: computer vision library, version 2
-Default-Features: eigen, ffmpeg, jasper, jpeg, openexr, opengl, png, tiff
+Default-Features: eigen, jpeg, opengl, png, tiff
 
 Feature: cuda
 Build-Depends: cuda
