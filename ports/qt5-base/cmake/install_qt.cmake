@@ -85,21 +85,21 @@ function(install_qt)
         #    )
         #endif()
         #Create Makefiles
-        if(VCPKG_TARGET_IS_OSX)
+        #if(VCPKG_TARGET_IS_OSX)
             # For some reason there will be an error on MacOSX without this clean!
-            message(STATUS "Cleaning before build ${_build_triplet}")
-            vcpkg_execute_required_process(
-                COMMAND ${INVOKE_SINGLE} sub-qmake-qmake-aux-pro-clean
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
-                LOGNAME cleaning-1-${_build_triplet}
-            )
-        endif()
-        message(STATUS "Building ${_build_triplet}")
-        vcpkg_execute_required_process(
-            COMMAND ${INVOKE}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
-            LOGNAME build-${_build_triplet}
-        )
+        #    message(STATUS "Cleaning before build ${_build_triplet}")
+        #    vcpkg_execute_required_process(
+        #        COMMAND ${INVOKE_SINGLE} sub-qmake-qmake-aux-pro-clean
+        #        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+        #        LOGNAME cleaning-1-${_build_triplet}
+        #    )
+        #endif()
+        #message(STATUS "Building ${_build_triplet}")
+        #vcpkg_execute_required_process(
+        #    COMMAND ${INVOKE}
+        #    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+        #    LOGNAME build-${_build_triplet}
+        #)
         if(VCPKG_TARGET_IS_OSX)
             # For some reason there will be an error on MacOSX without this clean!
             message(STATUS "Cleaning after build before install ${_build_triplet}")
