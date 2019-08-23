@@ -1,0 +1,407 @@
+diff --git a/Cbc/src/CbcCbcParam.cpp b/Cbc/src/CbcCbcParam.cpp
+index 9423d5f..7117f42 100644
+--- a/Cbc/src/CbcCbcParam.cpp
++++ b/Cbc/src/CbcCbcParam.cpp
+@@ -7,7 +7,7 @@
+ #ifndef COIN_HAS_CBC
+ #define COIN_HAS_CBC
+ #endif
+-#include "CbcOrClpParam.cpp"
++#include "CbcOrClpParam.hpp"
+ 
+ /* vi: softtabstop=2 shiftwidth=2 expandtab tabstop=2
+ */
+diff --git a/Cbc/src/CbcCutGenerator.cpp b/Cbc/src/CbcCutGenerator.cpp
+index 995315a..67db8b1 100644
+--- a/Cbc/src/CbcCutGenerator.cpp
++++ b/Cbc/src/CbcCutGenerator.cpp
+@@ -26,7 +26,7 @@
+ #include "CbcMessage.hpp"
+ #include "CbcCutGenerator.hpp"
+ #include "CbcBranchDynamic.hpp"
+-#include "CglProbing.hpp"
++#include "CglProbing/CglProbing.hpp"
+ #include "CoinTime.hpp"
+ 
+ // Default Constructor
+diff --git a/Cbc/src/CbcCutModifier.cpp b/Cbc/src/CbcCutModifier.cpp
+index 87a6a63..ec28c7b 100644
+--- a/Cbc/src/CbcCutModifier.cpp
++++ b/Cbc/src/CbcCutModifier.cpp
+@@ -24,7 +24,7 @@
+ #include "CbcMessage.hpp"
+ #include "CbcCutGenerator.hpp"
+ #include "CbcBranchDynamic.hpp"
+-#include "CglProbing.hpp"
++#include "CglProbing/CglProbing.hpp"
+ #include "CoinTime.hpp"
+ #include "CbcCutModifier.hpp"
+ 
+diff --git a/Cbc/src/CbcCutSubsetModifier.cpp b/Cbc/src/CbcCutSubsetModifier.cpp
+index 69afac7..06f0bf9 100644
+--- a/Cbc/src/CbcCutSubsetModifier.cpp
++++ b/Cbc/src/CbcCutSubsetModifier.cpp
+@@ -24,7 +24,7 @@
+ #include "CbcMessage.hpp"
+ #include "CbcCutGenerator.hpp"
+ #include "CbcBranchDynamic.hpp"
+-#include "CglProbing.hpp"
++#include "CglProbing/CglProbing.hpp"
+ #include "CoinTime.hpp"
+ #include "CbcCutSubsetModifier.hpp"
+ 
+diff --git a/Cbc/src/CbcGenBaB.cpp b/Cbc/src/CbcGenBaB.cpp
+index be33bf9..3c82552 100644
+--- a/Cbc/src/CbcGenBaB.cpp
++++ b/Cbc/src/CbcGenBaB.cpp
+@@ -17,7 +17,7 @@
+ #include "OsiSolverInterface.hpp"
+ #include "OsiChooseVariable.hpp"
+ 
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ #include "CbcModel.hpp"
+ #include "CbcCutGenerator.hpp"
+diff --git a/Cbc/src/CbcGenCtlBlk.hpp b/Cbc/src/CbcGenCtlBlk.hpp
+index c2fb207..0aee37e 100644
+--- a/Cbc/src/CbcGenCtlBlk.hpp
++++ b/Cbc/src/CbcGenCtlBlk.hpp
+@@ -21,15 +21,15 @@
+ #include "CoinMessageHandler.hpp"
+ 
+ #include "CglCutGenerator.hpp"
+-#include "CglProbing.hpp"
+-#include "CglClique.hpp"
+-#include "CglFlowCover.hpp"
+-#include "CglGomory.hpp"
+-#include "CglKnapsackCover.hpp"
+-#include "CglMixedIntegerRounding2.hpp"
+-#include "CglOddHole.hpp"
+-#include "CglRedSplit.hpp"
+-#include "CglTwomir.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglClique/CglClique.hpp"
++#include "CglFlowCover/CglFlowCover.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglKnapsackCover/CglKnapsackCover.hpp"
++#include "CglMixedIntegerRounding2/CglMixedIntegerRounding2.hpp"
++#include "CglOddHole/CglOddHole.hpp"
++#include "CglRedSplit/CglRedSplit.hpp"
++#include "CglTwomir/CglTwomir.hpp"
+ 
+ #include "CbcModel.hpp"
+ 
+diff --git a/Cbc/src/CbcGeneric.cpp b/Cbc/src/CbcGeneric.cpp
+index 04f80a6..574d0e2 100644
+--- a/Cbc/src/CbcGeneric.cpp
++++ b/Cbc/src/CbcGeneric.cpp
+@@ -33,17 +33,17 @@
+ #include "OsiColCut.hpp"
+ 
+ #include "CglCutGenerator.hpp"
+-#include "CglProbing.hpp"
+-#include "CglClique.hpp"
+-#include "CglFlowCover.hpp"
+-#include "CglGomory.hpp"
+-#include "CglKnapsackCover.hpp"
+-#include "CglMixedIntegerRounding2.hpp"
+-#include "CglOddHole.hpp"
+-#include "CglRedSplit.hpp"
+-#include "CglTwomir.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglClique/CglClique.hpp"
++#include "CglFlowCover/CglFlowCover.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglKnapsackCover/CglKnapsackCover.hpp"
++#include "CglMixedIntegerRounding2/CglMixedIntegerRounding2.hpp"
++#include "CglOddHole/CglOddHole.hpp"
++#include "CglRedSplit/CglRedSplit.hpp"
++#include "CglTwomir/CglTwomir.hpp"
+ 
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ #include "CbcModel.hpp"
+ #include "CbcEventHandler.hpp"
+diff --git a/Cbc/src/CbcHeuristic.cpp b/Cbc/src/CbcHeuristic.cpp
+index add9425..af6b457 100644
+--- a/Cbc/src/CbcHeuristic.cpp
++++ b/Cbc/src/CbcHeuristic.cpp
+@@ -26,9 +26,9 @@
+ #include "CbcHeuristicRINS.hpp"
+ #include "CbcEventHandler.hpp"
+ #include "CbcStrategy.hpp"
+-#include "CglPreProcess.hpp"
+-#include "CglGomory.hpp"
+-#include "CglProbing.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglProbing/CglProbing.hpp"
+ #include "OsiAuxInfo.hpp"
+ #include "OsiRowCutDebugger.hpp"
+ #include "OsiPresolve.hpp"
+diff --git a/Cbc/src/CbcHeuristicDINS.cpp b/Cbc/src/CbcHeuristicDINS.cpp
+index 3fa5890..21ef4cc 100644
+--- a/Cbc/src/CbcHeuristicDINS.cpp
++++ b/Cbc/src/CbcHeuristicDINS.cpp
+@@ -20,7 +20,7 @@
+ #include "CbcHeuristicDINS.hpp"
+ #include "CbcBranchActual.hpp"
+ #include "CbcStrategy.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ // Default Constructor
+ CbcHeuristicDINS::CbcHeuristicDINS()
+diff --git a/Cbc/src/CbcHeuristicDW.cpp b/Cbc/src/CbcHeuristicDW.cpp
+index c25edf5..103a776 100644
+--- a/Cbc/src/CbcHeuristicDW.cpp
++++ b/Cbc/src/CbcHeuristicDW.cpp
+@@ -19,7 +19,7 @@
+ #include "CbcHeuristicDW.hpp"
+ #include "CbcStrategy.hpp"
+ #include "ClpPresolve.hpp"
+-#include "CglProbing.hpp"
++#include "CglProbing/CglProbing.hpp"
+ 
+ static int dummyCallBack(CbcHeuristicDW * /*heuristic*/,
+   CbcModel * /*thisModel*/, int /*whereFrom*/)
+diff --git a/Cbc/src/CbcHeuristicGreedy.cpp b/Cbc/src/CbcHeuristicGreedy.cpp
+index 6b71ce0..57efd05 100644
+--- a/Cbc/src/CbcHeuristicGreedy.cpp
++++ b/Cbc/src/CbcHeuristicGreedy.cpp
+@@ -17,7 +17,7 @@
+ #include "CbcStrategy.hpp"
+ #include "CbcHeuristicGreedy.hpp"
+ #include "CoinSort.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ // Default Constructor
+ CbcHeuristicGreedyCover::CbcHeuristicGreedyCover()
+   : CbcHeuristic()
+diff --git a/Cbc/src/CbcHeuristicLocal.cpp b/Cbc/src/CbcHeuristicLocal.cpp
+index 9756f6f..c087cd1 100644
+--- a/Cbc/src/CbcHeuristicLocal.cpp
++++ b/Cbc/src/CbcHeuristicLocal.cpp
+@@ -19,7 +19,7 @@
+ #include "CbcHeuristicFPump.hpp"
+ #include "CbcBranchActual.hpp"
+ #include "CbcStrategy.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ // Default Constructor
+ CbcHeuristicLocal::CbcHeuristicLocal()
+diff --git a/Cbc/src/CbcHeuristicRENS.cpp b/Cbc/src/CbcHeuristicRENS.cpp
+index 518e484..b352192 100644
+--- a/Cbc/src/CbcHeuristicRENS.cpp
++++ b/Cbc/src/CbcHeuristicRENS.cpp
+@@ -22,7 +22,7 @@
+ #include "CoinSort.hpp"
+ #include "CbcBranchActual.hpp"
+ #include "CbcStrategy.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ // Default Constructor
+ CbcHeuristicRENS::CbcHeuristicRENS()
+diff --git a/Cbc/src/CbcHeuristicRINS.cpp b/Cbc/src/CbcHeuristicRINS.cpp
+index 30d5ac7..4a90984 100644
+--- a/Cbc/src/CbcHeuristicRINS.cpp
++++ b/Cbc/src/CbcHeuristicRINS.cpp
+@@ -18,7 +18,7 @@
+ #include "CbcHeuristicRINS.hpp"
+ #include "CbcBranchActual.hpp"
+ #include "CbcStrategy.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ // Default Constructor
+ CbcHeuristicRINS::CbcHeuristicRINS()
+diff --git a/Cbc/src/CbcHeuristicVND.cpp b/Cbc/src/CbcHeuristicVND.cpp
+index 8f7b863..b87e6af 100644
+--- a/Cbc/src/CbcHeuristicVND.cpp
++++ b/Cbc/src/CbcHeuristicVND.cpp
+@@ -20,7 +20,7 @@
+ #include "CbcHeuristicVND.hpp"
+ #include "CbcBranchActual.hpp"
+ #include "CbcStrategy.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ 
+ // Default Constructor
+ CbcHeuristicVND::CbcHeuristicVND()
+diff --git a/Cbc/src/CbcLinked.cpp b/Cbc/src/CbcLinked.cpp
+index 7fba55e..f62c2b2 100644
+--- a/Cbc/src/CbcLinked.cpp
++++ b/Cbc/src/CbcLinked.cpp
+@@ -108,16 +108,16 @@ static int decodeBit(char *phrase, char *&nextPhrase, double &coefficient, bool
+ #include "CbcModel.hpp"
+ #include "CbcCutGenerator.hpp"
+ #include "CglStored.hpp"
+-#include "CglPreProcess.hpp"
+-#include "CglGomory.hpp"
+-#include "CglProbing.hpp"
+-#include "CglKnapsackCover.hpp"
+-#include "CglRedSplit.hpp"
+-#include "CglClique.hpp"
+-#include "CglFlowCover.hpp"
+-#include "CglMixedIntegerRounding2.hpp"
+-#include "CglTwomir.hpp"
+-#include "CglDuplicateRow.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglKnapsackCover/CglKnapsackCover.hpp"
++#include "CglRedSplit/CglRedSplit.hpp"
++#include "CglClique/CglClique.hpp"
++#include "CglFlowCover/CglFlowCover.hpp"
++#include "CglMixedIntegerRounding2/CglMixedIntegerRounding2.hpp"
++#include "CglTwomir/CglTwomir.hpp"
++#include "CglDuplicateRow/CglDuplicateRow.hpp"
+ #include "CbcHeuristicFPump.hpp"
+ #include "CbcHeuristic.hpp"
+ #include "CbcHeuristicLocal.hpp"
+diff --git a/Cbc/src/CbcMipStartIO.cpp b/Cbc/src/CbcMipStartIO.cpp
+index 3da999f..411bf15 100644
+--- a/Cbc/src/CbcMipStartIO.cpp
++++ b/Cbc/src/CbcMipStartIO.cpp
+@@ -11,7 +11,7 @@
+ #include <OsiSolverInterface.hpp>
+ #include "CbcMessage.hpp"
+ #include "CbcHeuristic.hpp"
+-#include <CbcModel.hpp>
++#include "CbcModel.hpp"
+ #include "CbcMipStartIO.hpp"
+ #include "CbcSOS.hpp"
+ #include "CoinTime.hpp"
+diff --git a/Cbc/src/CbcModel.cpp b/Cbc/src/CbcModel.cpp
+index fc455bf..da3d751 100644
+--- a/Cbc/src/CbcModel.cpp
++++ b/Cbc/src/CbcModel.cpp
+@@ -65,15 +65,15 @@ extern int gomory_try;
+ #include "CbcSymmetry.hpp"
+ #endif
+ // include Probing
+-#include "CglProbing.hpp"
+-#include "CglGomory.hpp"
+-#include "CglTwomir.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglTwomir/CglTwomir.hpp"
+ // include preprocessing
+-#include "CglPreProcess.hpp"
+-#include "CglDuplicateRow.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
++#include "CglDuplicateRow/CglDuplicateRow.hpp"
+ #include "CglStored.hpp"
+-#include "CglClique.hpp"
+-#include "CglKnapsackCover.hpp"
++#include "CglClique/CglClique.hpp"
++#include "CglKnapsackCover/CglKnapsackCover.hpp"
+ 
+ #include "CoinTime.hpp"
+ #include "CoinMpsIO.hpp"
+diff --git a/Cbc/src/CbcSolver.cpp b/Cbc/src/CbcSolver.cpp
+index c33e397..3eb64ff 100644
+--- a/Cbc/src/CbcSolver.cpp
++++ b/Cbc/src/CbcSolver.cpp
+@@ -200,23 +200,23 @@ static int initialPumpTune = -1;
+ #include "CbcLinked.hpp"
+ #endif
+ 
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ #include "CglCutGenerator.hpp"
+-#include "CglGomory.hpp"
+-#include "CglProbing.hpp"
+-#include "CglKnapsackCover.hpp"
+-#include "CglRedSplit.hpp"
+-#include "CglRedSplit2.hpp"
+-#include "CglGMI.hpp"
+-#include "CglClique.hpp"
+-#include "CglFlowCover.hpp"
+-#include "CglMixedIntegerRounding2.hpp"
+-#include "CglTwomir.hpp"
+-#include "CglDuplicateRow.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglKnapsackCover/CglKnapsackCover.hpp"
++#include "CglRedSplit/CglRedSplit.hpp"
++#include "CglRedSplit2/CglRedSplit2.hpp"
++#include "CglGMI/CglGMI.hpp"
++#include "CglClique/CglClique.hpp"
++#include "CglFlowCover/CglFlowCover.hpp"
++#include "CglMixedIntegerRounding2/CglMixedIntegerRounding2.hpp"
++#include "CglTwomir/CglTwomir.hpp"
++#include "CglDuplicateRow/CglDuplicateRow.hpp"
+ #include "CglStored.hpp"
+-#include "CglLandP.hpp"
+-#include "CglResidualCapacity.hpp"
+-#include "CglZeroHalf.hpp"
++#include "CglLandP/CglLandP.hpp"
++#include "CglResidualCapacity/CglResidualCapacity.hpp"
++#include "CglZeroHalf/CglZeroHalf.hpp"
+ //#define CGL_WRITEMPS
+ #ifdef CGL_WRITEMPS
+ extern double *debugSolution;
+diff --git a/Cbc/src/CbcStrategy.cpp b/Cbc/src/CbcStrategy.cpp
+index 87a2af4..0f9d939 100644
+--- a/Cbc/src/CbcStrategy.cpp
++++ b/Cbc/src/CbcStrategy.cpp
+@@ -26,16 +26,16 @@
+ #include "CbcBranchActual.hpp"
+ #include "CbcNode.hpp"
+ #include "CoinWarmStart.hpp"
+-#include "CglPreProcess.hpp"
++#include "CglPreProcess/CglPreProcess.hpp"
+ // Cuts
+ 
+-#include "CglGomory.hpp"
+-#include "CglProbing.hpp"
+-#include "CglKnapsackCover.hpp"
+-#include "CglOddHole.hpp"
+-#include "CglClique.hpp"
+-#include "CglFlowCover.hpp"
+-#include "CglMixedIntegerRounding2.hpp"
++#include "CglGomory/CglGomory.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglKnapsackCover/CglKnapsackCover.hpp"
++#include "CglOddHole/CglOddHole.hpp"
++#include "CglClique/CglClique.hpp"
++#include "CglFlowCover/CglFlowCover.hpp"
++#include "CglMixedIntegerRounding2/CglMixedIntegerRounding2.hpp"
+ 
+ // Heuristics
+ 
+diff --git a/Cbc/src/OsiCbc/OsiCbcSolverInterface.hpp b/Cbc/src/OsiCbc/OsiCbcSolverInterface.hpp
+index eebba5c..73f8f7c 100644
+--- a/Cbc/src/OsiCbc/OsiCbcSolverInterface.hpp
++++ b/Cbc/src/OsiCbc/OsiCbcSolverInterface.hpp
+@@ -9,10 +9,10 @@
+ #include <string>
+ #include <cfloat>
+ #include <map>
+-#include "CbcModel.hpp"
++#include "../CbcModel.hpp"
+ #include "CoinPackedMatrix.hpp"
+ #include "OsiSolverInterface.hpp"
+-#include "CbcStrategy.hpp"
++#include "../CbcStrategy.hpp"
+ #include "CoinWarmStartBasis.hpp"
+ 
+ class OsiRowCut;
+diff --git a/Cbc/src/unitTestClp.cpp b/Cbc/src/unitTestClp.cpp
+index 910467a..1d0d6ff 100644
+--- a/Cbc/src/unitTestClp.cpp
++++ b/Cbc/src/unitTestClp.cpp
+@@ -14,7 +14,7 @@
+ #include "CbcHeuristic.hpp"
+ #include "CbcCutGenerator.hpp"
+ #include "CbcBranchCut.hpp"
+-#include "CglProbing.hpp"
++#include "CglProbing/CglProbing.hpp"
+ #include "OsiClpSolverInterface.hpp"
+ #include "ClpFactorization.hpp"
+ #include "OsiRowCutDebugger.hpp"
