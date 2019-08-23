@@ -7,6 +7,8 @@
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
 ## VCPKG_HOST_PATH_SEPARATOR                Host specific path separator
 ## VCPKG_HOST_PATH_SEPARATOR_ESCAPED        Escaped version of VCPKG_HOST_PATH_SEPARATOR if necessary (e.g. symbol with special meaning in cmake like ";")
+## VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
+## VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
 ## VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
 ## VCPKG_TARGET_STATIC_LIBRARY_SUFFIX       static library suffix for target (same as CMAKE_STATIC_LIBRARY_SUFFIX)
 ## VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
@@ -40,6 +42,19 @@ if(CMAKE_HOST_WIN32)
 elseif(CMAKE_HOST_UNIX)
     set(VCPKG_HOST_PATH_SEPARATOR ":")
     set(VCPKG_HOST_PATH_SEPARATOR_ESCAPED ":")
+
+#Helper variables to identify executables on host/target
+if(CMAKE_HOST_WIN32)
+    set(VCPKG_HOST_EXECUTABLE_SUFFIX ".exe")
+else()
+    set(VCPKG_HOST_EXECUTABLE_SUFFIX "")
+endif()
+#set(CMAKE_EXECUTABLE_SUFFIX ${VCPKG_HOST_EXECUTABLE_SUFFIX}) not required by find_program
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_TARGET_EXECUTABLE_SUFFIX ".exe")
+else()
+    set(VCPKG_TARGET_EXECUTABLE_SUFFIX "")
 endif()
 
 #Helper variables for libraries 
