@@ -27,11 +27,17 @@ set(ENABLE_OPENCV OFF)
 if("opencv-base" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
+if("opencv3-base" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+endif()
 
 # enable OPENCV (with its own CUDA feature enabled) inside DARKNET
 # (note: this does not mean that DARKNET itself will have CUDA support since by design it is independent, to have it you must require both opencv-cuda and cuda features!)
 # DARKNET will be automatically able to distinguish an OpenCV that is built with or without CUDA support.
 if("opencv-cuda" IN_LIST FEATURES)
+  set(ENABLE_OPENCV ON)
+endif()
+if("opencv3-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV ON)
 endif()
 
