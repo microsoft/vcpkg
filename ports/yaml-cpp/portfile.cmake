@@ -6,7 +6,8 @@ vcpkg_from_github(
     SHA512 fea8ce0a20a00cbc75023d1db442edfcd32d0ac57a3c41b32ec8d56f87cc1d85d7dd7a923ce662f5d3a315f91a736d6be0d649997acd190915c1d68cc93795e4
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-noexcept.patch
+        0001-noexcept.patch
+        0002-fix-include-path.patch
 )
 
 vcpkg_configure_cmake(
@@ -27,11 +28,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/yaml-cpp)
 endif()
 
 # Adjust paths and remove hardcoded ones from the config files
-file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-config.cmake YAML_CONFIG)
-string(REPLACE "set(YAML_CPP_INCLUDE_DIR \"\${YAML_CPP_CMAKE_DIR}/../include\")"
-               "set(YAML_CPP_INCLUDE_DIR \"\${YAML_CPP_CMAKE_DIR}/../../include\")" YAML_CONFIG "${YAML_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-config.cmake "${YAML_CONFIG}")
-
 file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets.cmake YAML_CONFIG)
 string(REPLACE "set(_IMPORT_PREFIX \"${CURRENT_PACKAGES_DIR}\")"
 "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)
