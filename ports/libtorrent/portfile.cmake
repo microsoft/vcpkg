@@ -19,13 +19,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(READ ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp EXPORT_H)
+string(REPLACE "defined TORRENT_BUILDING_SHARED" "0" EXPORT_H "${EXPORT_H}")
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    # Defines for shared lib
-    file(READ ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp EXPORT_H)
-    string(REPLACE "defined TORRENT_BUILDING_SHARED" "0" EXPORT_H "${EXPORT_H}")
     string(REPLACE "defined TORRENT_LINKING_SHARED" "1" EXPORT_H "${EXPORT_H}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp "${EXPORT_H}")
+else()
+    string(REPLACE "defined TORRENT_LINKING_SHARED" "0" EXPORT_H "${EXPORT_H}")
 endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp "${EXPORT_H}")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/LibtorrentRasterbar TARGET_PATH share/libtorrentrasterbar)
 
