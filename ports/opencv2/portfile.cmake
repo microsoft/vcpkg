@@ -1,76 +1,43 @@
-# in case of errors on Ubuntu, please try installing first
-# sudo apt-get install libv4l-dev
-
 include(vcpkg_common_functions)
 
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/OpenCV")
-    message(FATAL_ERROR "FATAL ERROR: opencv and opencv2 are incompatible.")
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
+  message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_PORT_VERSION "2.4.13.6")
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
+  message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
+endif()
+
+set(OPENCV_PORT_VERSION "2.4.13.7")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_PORT_VERSION}
-    SHA512 022b131ea90aa69c580a9ebe34f9db565a0312b36ec69684d21436534fd8fc8bd76f90d155c4a5adc11d484a6eda52825e04443d2ec6f232d15d7f82617931ca
+    SHA512 de7d24ac7ed78ac14673011cbecc477cae688b74222a972e553c95a557b5cb8e5913f97db525421d6a72af30998ca300112fa0b285daed65f65832eb2cf7241a
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-      "${CMAKE_CURRENT_LIST_DIR}/0001-fix-path.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0002-add-ffmpeg-missing-defines.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0003-fix-cuda.patch"
+      0002-install-options.patch
+      0003-force-package-requirements.patch
+      0004-add-ffmpeg-missing-defines.patch
+      0005-fix-cuda.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
-
-set(WITH_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(WITH_CUDA ON)
-endif()
-
-set(WITH_FFMPEG OFF)
-if("ffmpeg" IN_LIST FEATURES)
-  set(WITH_FFMPEG ON)
-endif()
-
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_QT ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
-endif()
-
-set(WITH_OPENGL OFF)
-if("opengl" IN_LIST FEATURES)
-  set(WITH_OPENGL ON)
-endif()
-
-set(WITH_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-  set(WITH_JPEG ON)
-endif()
-
-set(WITH_JASPER OFF)
-if("jasper" IN_LIST FEATURES)
-  set(WITH_JASPER ON)
-endif()
-
-set(WITH_PNG OFF)
-if("png" IN_LIST FEATURES)
-  set(WITH_PNG ON)
-endif()
-
-set(WITH_EIGEN OFF)
-if("eigen" IN_LIST FEATURES)
-  set(WITH_EIGEN ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+ "cuda"     WITH_CUDA
+ "cuda"     WITH_CUBLAS
+ "eigen"    WITH_EIGEN
+ "ffmpeg"   WITH_FFMPEG
+ "jasper"   WITH_JASPER
+ "jpeg"     WITH_JPEG
+ "openexr"  WITH_OPENEXR
+ "opengl"   WITH_OPENGL
+ "png"      WITH_PNG
+ "qt"       WITH_QT
+ "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
+ "world"    BUILD_opencv_world
+)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
   set(WITH_MSMF ON)
@@ -85,14 +52,16 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # Do not build docs/examples/tests
+        ###### OpenCV options
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_PACKAGE=OFF
-        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_WITH_DEBUG_INFO=ON
+        -DCMAKE_DEBUG_POSTFIX=d
+        ###### CMake options
+        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # Do not build integrated libraries, use external ones
         -DBUILD_ZLIB=OFF
         -DBUILD_TIFF=OFF
@@ -104,89 +73,60 @@ vcpkg_configure_cmake(
         # Select which OpenCV modules should be built
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_python=OFF
+        -DBUILD_opencv_world=${BUILD_opencv_world}
         # WITH
-        -DWITH_CUBLAS=OFF
-        -DWITH_CUDA=${WITH_CUDA}
-        -DWITH_EIGEN=${WITH_EIGEN}
-        -DWITH_FFMPEG=${WITH_FFMPEG}
+        ${FEATURE_OPTIONS}
+        -DWITH_1394=OFF
         -DWITH_IPP=OFF
-        -DWITH_JASPER=${WITH_JASPER}
-        -DWITH_JPEG=${WITH_JPEG}
         -DWITH_LAPACK=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
-        -DWITH_OPENEXR=OFF
-        -DWITH_OPENGL=${WITH_OPENGL}
-        -DWITH_PNG=${WITH_PNG}
-        -DWITH_PROTOBUF=${WITH_PROTOBUF}
-        -DWITH_QT=${WITH_QT}
-        -DWITH_TIFF=OFF
-        -DWITH_VTK=${WITH_VTK}
+        -DWITH_OPENMP=OFF
+        -DWITH_PROTOBUF=ON
         -DWITH_ZLIB=ON
 )
 
 vcpkg_install_cmake(DISABLE_PARALLEL)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
+vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv2/LICENSE ${CURRENT_PACKAGES_DIR}/share/opencv2/copyright)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/staticlib/*)
-  if(STATICLIB)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/staticlib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)
+find_package(TIFF REQUIRED)
+find_package(Protobuf REQUIRED)
+if(Protobuf_FOUND)
+  if(TARGET protobuf::libprotobuf)
+    add_library(libprotobuf INTERFACE IMPORTED)
+    set_target_properties(libprotobuf PROPERTIES
+      INTERFACE_LINK_LIBRARIES protobuf::libprotobuf
+    )
+  else()
+    add_library(libprotobuf UNKNOWN IMPORTED)
+    set_target_properties(libprotobuf PROPERTIES
+      IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"
+      INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
+      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
+    )
   endif()
-  file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/debug/staticlib/*)
-  if(STATICLIB)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/staticlib)
-  endif()
+endif()
+find_package(HDF5 QUIET)
+find_package(Freetype QUIET)
+find_package(Ogre QUIET)
+find_package(gflags QUIET)
+find_package(Ceres QUIET)
+find_package(VTK QUIET)
+find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/OpenCVConfig.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/OpenCVConfig-version.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/OpenCVModules.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/OpenCVConfig.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/OpenCVConfig-version.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/OpenCVConfig.cmake)
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OpenCVConfig.cmake ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVConfig.cmake)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules.cmake)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OpenCVModules-release.cmake ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-release.cmake)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OpenCVModules-debug.cmake ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-debug.cmake)
-
-  file(READ ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-debug.cmake OPENCV_MODULES)
-  string(REPLACE "PREFIX}/lib" "PREFIX}/../debug/lib" OPENCV_MODULES "${OPENCV_MODULES}")
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-debug.cmake "${OPENCV_MODULES}")
-
-  file(READ ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-release.cmake OPENCV_MODULES)
-  string(REPLACE "PREFIX}/lib" "PREFIX}/../lib" OPENCV_MODULES "${OPENCV_MODULES}")
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-release.cmake "${OPENCV_MODULES}")
-
-  file(READ ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVConfig.cmake OPENCV_CONFIG)
-  string(REPLACE "${OpenCV_CONFIG_PATH}/include" "${OpenCV_CONFIG_PATH}/../../include" OPENCV_CONFIG "${OPENCV_CONFIG}")
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVConfig.cmake "${OPENCV_CONFIG}")
-else()
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVConfig.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVConfig-version.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/OpenCV/OpenCVConfig.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/OpenCV/OpenCVConfig-version.cmake)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/OpenCV/OpenCVConfig.cmake)
-
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/OpenCV/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules.cmake)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/OpenCV/OpenCVModules-debug.cmake ${CURRENT_PACKAGES_DIR}/share/OpenCV/OpenCVModules-debug.cmake)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
-vcpkg_copy_pdbs()
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set(VCPKG_LIBRARY_LINKAGE "dynamic")
-  set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
-endif()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
