@@ -27,27 +27,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/yaml-cpp)
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/yaml-cpp)
 endif()
 
-# Adjust paths and remove hardcoded ones from the config files
-file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets.cmake YAML_CONFIG)
-string(REPLACE "set(_IMPORT_PREFIX \"${CURRENT_PACKAGES_DIR}\")"
-"get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)
-get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)
-get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)" YAML_CONFIG "${YAML_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets.cmake "${YAML_CONFIG}")
-
-set(_targets_cmake_conf)
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    list(APPEND _targets_cmake_conf "debug")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    list(APPEND _targets_cmake_conf "release")
-endif()
-foreach(CONF ${_targets_cmake_conf})
-    file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets-${CONF}.cmake YAML_CONFIG)
-    string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${_IMPORT_PREFIX}" YAML_CONFIG "${YAML_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets-${CONF}.cmake "${YAML_CONFIG}")
-endforeach()
-
 # Remove debug include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
