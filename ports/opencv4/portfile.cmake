@@ -299,7 +299,6 @@ vcpkg_configure_cmake(
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         # ENABLE
         -DENABLE_CXX11=ON
         ###### OPENCV vars
@@ -331,7 +330,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(TIFF REQUIRED)
 find_package(Protobuf REQUIRED)
 if(Protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
@@ -348,6 +346,7 @@ if(Protobuf_FOUND)
     )
   endif()
 endif()
+find_package(TIFF QUIET)
 find_package(HDF5 QUIET)
 find_package(Freetype QUIET)
 find_package(Ogre QUIET)

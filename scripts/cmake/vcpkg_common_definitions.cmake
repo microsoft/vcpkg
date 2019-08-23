@@ -5,6 +5,8 @@
 ## ## The following variables are available:
 ## ```cmake
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
+## VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
+## VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
 ## VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
 ## VCPKG_TARGET_STATIC_LIBRARY_SUFFIX       static library suffix for target (same as CMAKE_STATIC_LIBRARY_SUFFIX)
 ## VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
@@ -31,6 +33,20 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(VCPKG_TARGET_IS_FREEBSD 1)
 endif()
 
+#Helper variables to identify executables on host/target
+if(CMAKE_HOST_WIN32)
+    set(VCPKG_HOST_EXECUTABLE_SUFFIX ".exe")
+else()
+    set(VCPKG_HOST_EXECUTABLE_SUFFIX "")
+endif()
+#set(CMAKE_EXECUTABLE_SUFFIX ${VCPKG_HOST_EXECUTABLE_SUFFIX}) not required by find_program
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_TARGET_EXECUTABLE_SUFFIX ".exe")
+else()
+    set(VCPKG_TARGET_EXECUTABLE_SUFFIX "")
+endif()
+
 #Helper variables for libraries 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".lib")
@@ -51,5 +67,4 @@ set(CMAKE_STATIC_LIBRARY_PREFIX ${VCPKG_TARGET_STATIC_LIBRARY_PREFIX})
 set(CMAKE_SHARED_LIBRARY_PREFIX ${VCPKG_TARGET_SHARED_LIBRARY_PREFIX})
 set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX};${CMAKE_SHARED_LIBRARY_SUFFIX}" CACHE INTERNAL "") # Required by find_library
 set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX};${CMAKE_SHARED_LIBRARY_PREFIX}" CACHE INTERNAL "") # Required by find_library
-
 

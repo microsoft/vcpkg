@@ -1,6 +1,8 @@
+diff --git a/cmake/OpenCVDownload.cmake b/cmake/OpenCVDownload.cmake
+index cdc47ad..175aaf3 100644
 --- a/cmake/OpenCVDownload.cmake
 +++ b/cmake/OpenCVDownload.cmake
-@@ -151,6 +151,8 @@ function(ocv_download)
+@@ -154,6 +154,8 @@ function(ocv_download)
    # Download
    if(NOT EXISTS "${CACHE_CANDIDATE}")
      ocv_download_log("#cmake_download \"${CACHE_CANDIDATE}\" \"${DL_URL}\"")
