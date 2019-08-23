@@ -12,7 +12,7 @@ index fd8ef32..fe571a2 100644
      message(FATAL_ERROR "Failed to download TBB sources (${__statvar}): ${tbb_url}")
    endif()
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 90e16c2..fa4f529 100644
+index 90e16c2..6601820 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -275,23 +275,10 @@ if (ANDROID)
@@ -104,6 +104,18 @@ index 90e16c2..fa4f529 100644
  
  # --- Java Support ---
  include(cmake/OpenCVDetectApacheAnt.cmake)
+@@ -885,11 +853,7 @@ if(ANDROID)
+ endif()
+ 
+ if(DEFINED WITH_FFMPEG OR HAVE_FFMPEG)
+-  if(WIN32)
+-    status("    FFMPEG:"       WITH_FFMPEG         THEN "YES (prebuilt binaries)"                  ELSE NO)
+-  else()
+     status("    FFMPEG:"       HAVE_FFMPEG         THEN YES ELSE NO)
+-  endif()
+   status("      avcodec:"      FFMPEG_libavcodec_FOUND    THEN "YES (ver ${FFMPEG_libavcodec_VERSION})"    ELSE NO)
+   status("      avformat:"     FFMPEG_libavformat_FOUND   THEN "YES (ver ${FFMPEG_libavformat_VERSION})"   ELSE NO)
+   status("      avutil:"       FFMPEG_libavutil_FOUND     THEN "YES (ver ${FFMPEG_libavutil_VERSION})"     ELSE NO)
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
 index e61059a..ec6f34f 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
@@ -167,18 +179,51 @@ index dacfbb1..3760866 100644
    set(OpenCV2_INCLUDE_DIRS_CONFIGCMAKE "\"\"")
  
 diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 6f9fb0b..f552a81 100644
+index 6f9fb0b..56f8879 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
-@@ -582,7 +582,7 @@ macro(ocv_create_module)
-     target_link_libraries(${the_module} LINK_PUBLIC ${OPENCV_MODULE_${the_module}_DEPS})
-     set(extra_deps ${OPENCV_MODULE_${the_module}_DEPS_EXT} ${OPENCV_LINKER_LIBS} ${IPP_LIBS} ${ARGN})
-     ocv_extract_simple_libs(extra_deps _simple_deps _other_deps)
--    target_link_libraries(${the_module} LINK_PRIVATE ${_simple_deps}) # this list goes to "export"
-+    target_link_libraries(${the_module} LINK_PRIVATE "${_simple_deps}") # this list goes to "export"
-     target_link_libraries(${the_module} LINK_PRIVATE ${extra_deps})
-   endif()
+@@ -86,10 +86,10 @@ macro(ocv_add_dependencies full_modname)
+   endforeach()
+   unset(__depsvar)
  
+-  ocv_list_unique(OPENCV_MODULE_${full_modname}_REQ_DEPS)
+-  ocv_list_unique(OPENCV_MODULE_${full_modname}_OPT_DEPS)
+-  ocv_list_unique(OPENCV_MODULE_${full_modname}_PRIVATE_REQ_DEPS)
+-  ocv_list_unique(OPENCV_MODULE_${full_modname}_PRIVATE_OPT_DEPS)
++  #ocv_list_unique(OPENCV_MODULE_${full_modname}_REQ_DEPS)
++  #ocv_list_unique(OPENCV_MODULE_${full_modname}_OPT_DEPS)
++  #ocv_list_unique(OPENCV_MODULE_${full_modname}_PRIVATE_REQ_DEPS)
++  #ocv_list_unique(OPENCV_MODULE_${full_modname}_PRIVATE_OPT_DEPS)
+ 
+   set(OPENCV_MODULE_${full_modname}_REQ_DEPS ${OPENCV_MODULE_${full_modname}_REQ_DEPS}
+     CACHE INTERNAL "Required dependencies of ${full_modname} module")
+@@ -277,7 +277,7 @@ endfunction()
+ 
+ # sort modules by dependencies
+ function(__ocv_sort_modules_by_deps __lst)
+-  ocv_list_sort(${__lst})
++  #ocv_list_sort(${__lst})
+   set(${__lst}_ORDERED ${${__lst}} CACHE INTERNAL "")
+   set(__result "")
+   foreach (m ${${__lst}})
+@@ -382,7 +382,7 @@ function(__ocv_resolve_dependencies)
+     endforeach()
+   endforeach()
+ 
+-  ocv_list_sort(OPENCV_MODULES_BUILD)
++  #ocv_list_sort(OPENCV_MODULES_BUILD)
+ 
+   foreach(m ${OPENCV_MODULES_BUILD})
+ #    message(STATUS "FULL deps of ${m}: ${deps_${m}}")
+@@ -397,7 +397,7 @@ function(__ocv_resolve_dependencies)
+   # reorder dependencies
+   foreach(m ${OPENCV_MODULES_BUILD})
+     __ocv_sort_modules_by_deps(OPENCV_MODULE_${m}_DEPS)
+-    ocv_list_sort(OPENCV_MODULE_${m}_DEPS_EXT)
++    #ocv_list_sort(OPENCV_MODULE_${m}_DEPS_EXT)
+ 
+     set(OPENCV_MODULE_${m}_DEPS ${OPENCV_MODULE_${m}_DEPS} CACHE INTERNAL "Flattened dependencies of ${m} module")
+     set(OPENCV_MODULE_${m}_DEPS_EXT ${OPENCV_MODULE_${m}_DEPS_EXT} CACHE INTERNAL "Extra dependencies of ${m} module")
 diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
 index e3177bd..f902b2b 100644
 --- a/data/CMakeLists.txt

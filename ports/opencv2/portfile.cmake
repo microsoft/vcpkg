@@ -24,8 +24,6 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
- "cuda"     WITH_CUDA
- "cuda"     WITH_CUBLAS
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "jasper"   WITH_JASPER
@@ -38,6 +36,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "vtk"      WITH_VTK
  "world"    BUILD_opencv_world
 )
+
+set(WITH_CUDA OFF)
+if("cuda" IN_LIST FEATURES)
+  set(WITH_CUDA ON)
+  set(FLAG_DISABLE_PARALLEL "DISABLE_PARALLEL") #otherwise CUDA fails to build!
+endif()
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
   set(WITH_MSMF ON)
@@ -76,6 +80,8 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_world=${BUILD_opencv_world}
         # WITH
         ${FEATURE_OPTIONS}
+        -DWITH_CUDA=${WITH_CUDA}
+        -DWITH_CUBLAS=${WITH_CUDA}
         -DWITH_1394=OFF
         -DWITH_IPP=OFF
         -DWITH_LAPACK=OFF
@@ -86,7 +92,7 @@ vcpkg_configure_cmake(
         -DWITH_ZLIB=ON
 )
 
-vcpkg_install_cmake(DISABLE_PARALLEL)
+vcpkg_install_cmake(${FLAG_DISABLE_PARALLEL})
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
