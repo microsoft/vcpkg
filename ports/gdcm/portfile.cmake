@@ -43,6 +43,12 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
+file(READ ${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMTargets.cmake GDCM_TARGETS)
+string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+               "set(CMAKE_IMPORT_FILE_VERSION 1)
+find_package(OpenJPEG QUIET)" GDCM_TARGETS "${GDCM_TARGETS}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMTargets.cmake "${GDCM_TARGETS}")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

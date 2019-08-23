@@ -9,18 +9,16 @@ vcpkg_from_github(
     PATCHES export-symbols-only-in-shared-build.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL1_2017.sln DESTINATION ${SOURCE_PATH}/VisualC/ )
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDL )
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDLmain.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain )
-
 configure_file(${SOURCE_PATH}/include/SDL_config.h.default ${SOURCE_PATH}/include/SDL_config.h COPYONLY)
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL1_2017.sln DESTINATION ${SOURCE_PATH}/VisualC/ )
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/static-build.patch
-    )
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDL_static.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDL RENAME SDL.vcxproj)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDLmain_static.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain RENAME SDLmain.vcxproj)
+else()
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDL_dynamic.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDL RENAME SDL.vcxproj)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/SDLmain_dynamic.vcxproj DESTINATION ${SOURCE_PATH}/VisualC/SDLmain RENAME SDLmain.vcxproj)
 endif()
 
 # This text file gets copied as a library, and included as one in the package 

@@ -28,3 +28,11 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Angelscript)
 
 # Handle copyright
 file(INSTALL ${CURRENT_PORT_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/angelscript RENAME copyright)
+
+# Copy the addon files
+if("addons" IN_LIST FEATURES)
+	file(INSTALL ${SOURCE_PATH}/add_on/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/angelscript FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp")
+endif()
+
+# Post-build test for cmake libraries
+# vcpkg_test_cmake(PACKAGE_NAME angelscript)

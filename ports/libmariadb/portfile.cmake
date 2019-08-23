@@ -14,10 +14,12 @@ vcpkg_from_github(
     PATCHES
             md.patch
             disable-test-build.patch
+			fix-InstallPath.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DWITH_UNITTEST=OFF
         -DWITH_SSL=OFF
@@ -31,6 +33,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 if(VCPKG_BUILD_TYPE STREQUAL "debug")
     # move headers
     file(RENAME
@@ -38,45 +44,8 @@ if(VCPKG_BUILD_TYPE STREQUAL "debug")
         ${CURRENT_PACKAGES_DIR}/include)
 endif()
 
-# fix libmariadb lib & dll directory.
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mariadb/mariadbclient.lib
-            ${CURRENT_PACKAGES_DIR}/lib/mariadbclient.lib)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/mariadbclient.lib
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadbclient.lib)
-    endif()
-else()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.dll
-            ${CURRENT_PACKAGES_DIR}/bin/libmariadb.dll)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.lib
-            ${CURRENT_PACKAGES_DIR}/lib/libmariadb.lib)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.dll
-            ${CURRENT_PACKAGES_DIR}/debug/bin/libmariadb.dll)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.lib
-            ${CURRENT_PACKAGES_DIR}/debug/lib/libmariadb.lib)
-    endif()
-endif()
-
 # remove plugin folder
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/lib/plugin
-    ${CURRENT_PACKAGES_DIR}/debug/lib/plugin
     ${CURRENT_PACKAGES_DIR}/lib/mariadb
     ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb)
 
