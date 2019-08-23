@@ -57,7 +57,7 @@ set(CORE_OPTIONS
     # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
     #-optimized-tools
     #-force-debug-info
-    -verbose
+    #-verbose
 )
 
 ## 3rd Party Libs
@@ -162,21 +162,18 @@ elseif(VCPKG_TARGET_IS_OSX)
         message(STATUS "Detected OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
         string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" VCPKG_OSX_DEPLOYMENT_TARGET ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Major.Minor OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
-        message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.14") # Max Version supported by QT
+            message(STATUS "Qt 5.12.4 only support OSX_DEPLOYMENT_TARGET up to 10.14")
             set(VCPKG_OSX_DEPLOYMENT_TARGET "10.14")
         endif()
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
-        message(STATUS "DUMP macx.conf:\n ${_tmp_contents}") #just for CI
         string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
-        string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14.4" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents}) # just for CI
-        
         FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     endif()
-    list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
+    #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
             "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
@@ -202,11 +199,7 @@ configure_qt(
     OPTIONS_DEBUG ${DEBUG_OPTIONS}
     )
 
-if(VCPKG_TARGET_IS_OSX)
-    install_qt(DISABLE_PARALLEL) # prevent race condition on Mac
-else()
-    install_qt()
-endif()
+install_qt()
 
 #########################
 #TODO: Make this a function since it is also done by modular scripts!
