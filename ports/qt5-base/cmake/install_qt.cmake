@@ -10,7 +10,7 @@ function(install_qt)
             set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
         elseif(VCPKG_TARGET_IS_OSX)
             execute_process(
-                COMMAND sysctl -n hw.cpu
+                COMMAND sysctl -n hw.ncpu
                 OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
             )
             string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
