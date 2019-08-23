@@ -270,6 +270,9 @@ namespace vcpkg::Build
         std::string key;
         std::string value;
 
+        AbiEntry() = default;
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
+
         bool operator<(const AbiEntry& other) const
         {
             return key < other.key || (key == other.key && value < other.value);

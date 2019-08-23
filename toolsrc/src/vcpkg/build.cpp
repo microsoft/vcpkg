@@ -311,8 +311,8 @@ namespace vcpkg::Build
                                                          const std::set<std::string>& feature_list,
                                                          const Triplet& triplet)
     {
-        return Util::fmap(get_dependencies(scf, feature_list, triplet),
-                          [&](const Features& feat) { return feat.name; });
+        return Util::sort_unique_erase(
+            Util::fmap(get_dependencies(scf, feature_list, triplet), [&](const Features& feat) { return feat.name; }));
     }
 
     static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
@@ -397,7 +397,6 @@ namespace vcpkg::Build
             {"CURRENT_PORT_DIR", config.port_dir},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
-            {"ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake"},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
             {"DOWNLOADS", paths.downloads},
@@ -411,6 +410,33 @@ namespace vcpkg::Build
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
             variables.push_back({"GIT", git_exe_path});
+        }
+
+        const Files::Filesystem& fs = paths.get_filesystem();
+        if (fs.is_regular_file(config.port_dir / "environment-overrides.cmake"))
+        {
+            variables.emplace_back("VCPKG_ENV_OVERRIDES_FILE", config.port_dir / "environment-overrides.cmake");
+        }
+
+        std::vector<FeatureSpec> dependencies =
+            filter_dependencies_to_specs(config.scfl.source_control_file->core_paragraph->depends, triplet);
+
+        std::vector<std::string> port_toolchains;
+        for (const FeatureSpec& dependency : dependencies)
+        {
+            const fs::path port_toolchain_path = paths.installed / dependency.triplet().canonical_name() / "share" /
+                                                 dependency.spec().name() / "port-toolchain.cmake";
+
+            if (fs.is_regular_file(port_toolchain_path))
+            {
+                System::print2(port_toolchain_path.u8string());
+                port_toolchains.emplace_back(port_toolchain_path.u8string());
+            }
+        }
+
+        if (!port_toolchains.empty())
+        {
+            variables.emplace_back("VCPKG_PORT_TOOLCHAINS", Strings::join(";", port_toolchains));
         }
 
         return variables;
@@ -620,58 +646,53 @@ namespace vcpkg::Build
         const int max_port_file_count = 100;
 
         // the order of recursive_directory_iterator is undefined so save the names to sort
-        std::vector<std::pair<std::string, std::string>> hashes_files;
+        std::vector<AbiEntry> port_files;
         for (auto& port_file : fs::stdfs::recursive_directory_iterator(config.port_dir))
         {
             if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
-                hashes_files.emplace_back(vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"),
-                                          port_file.path().filename().u8string());
+                port_files.emplace_back(port_file.path().filename().u8string(),
+                                        vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"));
 
-                if (hashes_files.size() > max_port_file_count)
+                if (port_files.size() > max_port_file_count)
                 {
-                    abi_tag_entries.emplace_back(AbiEntry{"no_hash_max_portfile", ""});
+                    abi_tag_entries.emplace_back("no_hash_max_portfile", "");
                     break;
                 }
             }
         }
 
-        if (hashes_files.size() <= max_port_file_count)
+        if (port_files.size() <= max_port_file_count)
         {
-            Util::sort(hashes_files);
+            Util::sort(port_files, [](const AbiEntry& l, const AbiEntry& r) {
+                return l.value < r.value || (l.value == r.value && l.key < r.key);
+            });
 
-            for (auto& hash_file : hashes_files)
-            {
-                // We've already sorted by hash so it's safe to write down the
-                // filename, which will be consistent across machines.
-                abi_tag_entries.emplace_back(AbiEntry{std::move(hash_file.second), std::move(hash_file.first)});
-            }
+            std::move(port_files.begin(), port_files.end(), std::back_inserter(abi_tag_entries));
         }
 
-        abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
+        abi_tag_entries.emplace_back("cmake", paths.get_tool_version(Tools::CMAKE));
 
 #if defined(_WIN32)
-        abi_tag_entries.emplace_back(AbiEntry{"powershell", paths.get_tool_version("powershell-core")});
+        abi_tag_entries.emplace_back("powershell", paths.get_tool_version("powershell-core"));
 #endif
 
-        abi_tag_entries.emplace_back(AbiEntry{
+        abi_tag_entries.emplace_back(
             "vcpkg_fixup_cmake_targets",
-            vcpkg::Hash::get_file_hash(fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", "SHA1")});
+            vcpkg::Hash::get_file_hash(fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", "SHA1"));
 
-        abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
-
-        const std::string features = Strings::join(";", config.feature_list);
-        abi_tag_entries.emplace_back(AbiEntry{"features", features});
+        abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
+        abi_tag_entries.emplace_back("features", Strings::join(";", config.feature_list));
 
         if (pre_build_info.public_abi_override)
         {
-            abi_tag_entries.emplace_back(AbiEntry{
+            abi_tag_entries.emplace_back(
                 "public_abi_override",
-                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO), "SHA1")});
+                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO), "SHA1"));
         }
 
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
-            abi_tag_entries.emplace_back(AbiEntry{"head", ""});
+            abi_tag_entries.emplace_back("head", "");
 
         const std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
@@ -765,6 +786,7 @@ namespace vcpkg::Build
         const std::string& name = config.scf.core_paragraph->name;
 
         std::vector<FeatureSpec> required_fspecs = compute_required_feature_specs(config, status_db);
+        std::vector<FeatureSpec> required_fspecs_copy = required_fspecs;
 
         // extract out the actual package ids
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
@@ -1027,8 +1049,12 @@ namespace vcpkg::Build
 
         if (port)
         {
-            args.emplace_back("CMAKE_ENV_OVERRIDES_FILE",
-                              port.value_or_exit(VCPKG_LINE_INFO).source_location / "environment-overrides.cmake");
+            const SourceControlFileLocation& scfl = port.value_or_exit(VCPKG_LINE_INFO);
+
+            if (paths.get_filesystem().is_regular_file(scfl.source_location / "environment-overrides.cmake"))
+            {
+                args.emplace_back("VCPKG_ENV_OVERRIDES_FILE", scfl.source_location / "environment-overrides.cmake");
+            }
         }
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, ports_cmake_script_path, args);
