@@ -2,6 +2,7 @@
 
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/tools.h>
 
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/expected.h>
@@ -46,16 +47,18 @@ namespace vcpkg
 
     struct VcpkgPaths
     {
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path);
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const Optional<fs::path>& vcpkg_scripts_root_dir,
+                                           const std::string& default_vs_path,
+                                           const std::vector<std::string>* triplets_dirs);
 
         fs::path package_dir(const PackageSpec& spec) const;
-        fs::path port_dir(const PackageSpec& spec) const;
-        fs::path port_dir(const std::string& name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
-        const std::vector<std::string>& get_available_triplets() const;
         bool is_valid_triplet(const Triplet& t) const;
+        const std::vector<std::string>& get_available_triplets() const;
+        const fs::path get_triplet_file_path(const Triplet& triplet) const;
 
         fs::path root;
         fs::path packages;
@@ -66,6 +69,7 @@ namespace vcpkg
         fs::path triplets;
         fs::path scripts;
 
+        fs::path tools;
         fs::path buildsystems;
         fs::path buildsystems_msbuild_targets;
 
@@ -77,6 +81,7 @@ namespace vcpkg
         fs::path ports_cmake;
 
         const fs::path& get_tool_exe(const std::string& tool) const;
+        const std::string& get_tool_version(const std::string& tool) const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
@@ -88,10 +93,13 @@ namespace vcpkg
 
     private:
         Lazy<std::vector<std::string>> available_triplets;
-        Cache<std::string, fs::path> tool_paths;
         Lazy<std::vector<Toolset>> toolsets;
         Lazy<std::vector<Toolset>> toolsets_vs2013;
 
         fs::path default_vs_path;
+        std::vector<fs::path> triplets_dirs;
+
+        mutable std::unique_ptr<ToolCache> m_tool_cache;
+        mutable vcpkg::Cache<Triplet, fs::path> m_triplets_cache;
     };
 }

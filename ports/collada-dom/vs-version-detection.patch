@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2596a23..3ec1527 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required (VERSION 2.6.0)
++cmake_minimum_required (VERSION 3.7.0)
+ project (collada-dom)
+ set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
+ 
+@@ -89,14 +89,22 @@ string(TOUPPER ${COMPONENT_PREFIX} COMPONENT_PREFIX_UPPER)
+ set(CPACK_COMPONENTS_ALL ${COMPONENT_PREFIX}-base ${COMPONENT_PREFIX}-dev)
+ 
+ if( MSVC )
+-  if( MSVC70 OR MSVC71 )
+-    set(MSVC_PREFIX "vc70")
+-  elseif( MSVC80 )
+-    set(MSVC_PREFIX "vc80")
+-  elseif( MSVC90 )
++  if( MSVC_VERSION GREATER_EQUAL 1910 )
++    set(MSVC_PREFIX "vc140")
++  elseif( MSVC_VERSION GREATER_EQUAL 1900 )
++    set(MSVC_PREFIX "vc130")
++  elseif( MSVC_VERSION GREATER_EQUAL 1800 )
++    set(MSVC_PREFIX "vc120")
++  elseif( MSVC_VERSION GREATER_EQUAL 1700 )
++    set(MSVC_PREFIX "vc110")
++  elseif( MSVC_VERSION GREATER_EQUAL 1600 )
++    set(MSVC_PREFIX "vc100")
++  elseif( MSVC_VERSION GREATER_EQUAL 1500 )
+     set(MSVC_PREFIX "vc90")
++  elseif( MSVC_VERSION GREATER_EQUAL 1400 )
++    set(MSVC_PREFIX "vc80")
+   else()
+-    set(MSVC_PREFIX "vc100")
++    set(MSVC_PREFIX "vc70")
+   endif()
+   set(COLLADA_DOM_LIBRARY_SUFFIX "${COLLADA_DOM_SOVERSION}-${COLLADA_PRECISION}-${MSVC_PREFIX}-mt")
+ else()

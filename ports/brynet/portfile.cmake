@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "brynet does not support dynamic linkage. Building statically.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IronsDu/brynet
-    REF v0.9.0
-    SHA512 49543833be0d8eb2dce2b00a85d48087e9756b93febaae0c7cd83b7f44f9cd8d81976069f8b84344807bee2df785b80fbb65a1a93e8c6a9c942f9554063a05c1
+    REF v1.0.3
+    SHA512 8759b522da34be68a7ba0959ed3d85382965efe5080e4cdd403001f3911d36398b7fe9d039fd9fb485a0d557cec0fa53863a512eb88f13f3ff222b6e30642baf
     HEAD_REF master
 )
 

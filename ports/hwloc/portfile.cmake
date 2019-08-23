@@ -28,6 +28,8 @@ else()
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/hwloc/autogen/config.h "${PUBLIC_CONFIG_H}")
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/tools)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/hwloc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/hwloc/COPYING ${CURRENT_PACKAGES_DIR}/share/hwloc/copyright)

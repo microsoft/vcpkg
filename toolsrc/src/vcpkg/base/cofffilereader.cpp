@@ -33,11 +33,13 @@ namespace vcpkg::CoffFileReader
         return data;
     }
 
-    static void verify_equal_strings(
-        const LineInfo& line_info, const char* expected, const char* actual, int size, const char* label)
+    static void verify_equal_strings(const LineInfo& line_info,
+                                     StringView expected,
+                                     StringView actual,
+                                     const char* label)
     {
         Checks::check_exit(line_info,
-                           memcmp(expected, actual, size) == 0,
+                           expected == actual,
                            "Incorrect string (%s) found. Expected: (%s) but found (%s)",
                            label,
                            expected,
@@ -57,7 +59,7 @@ namespace vcpkg::CoffFileReader
         fs.seekg(offset_to_pe_signature);
         char signature[PE_SIGNATURE_SIZE];
         fs.read(signature, PE_SIGNATURE_SIZE);
-        verify_equal_strings(VCPKG_LINE_INFO, PE_SIGNATURE.c_str(), signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
+        verify_equal_strings(VCPKG_LINE_INFO, PE_SIGNATURE, {signature, PE_SIGNATURE_SIZE}, "PE_SIGNATURE");
         fs.seekg(offset_to_pe_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
@@ -113,8 +115,7 @@ namespace vcpkg::CoffFileReader
             if (ret.data[0] != '\0') // Due to freeglut. github issue #223
             {
                 const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
-                verify_equal_strings(
-                    VCPKG_LINE_INFO, HEADER_END.c_str(), header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
+                verify_equal_strings(VCPKG_LINE_INFO, HEADER_END, header_end, "LIB HEADER_END");
             }
 
             return ret;
@@ -229,7 +230,7 @@ namespace vcpkg::CoffFileReader
 
         char file_start[FILE_START_SIZE];
         fs.read(file_start, FILE_START_SIZE);
-        verify_equal_strings(VCPKG_LINE_INFO, FILE_START.c_str(), file_start, FILE_START_SIZE, "LIB FILE_START");
+        verify_equal_strings(VCPKG_LINE_INFO, FILE_START, {file_start, FILE_START_SIZE}, "LIB FILE_START");
     }
 
     DllInfo read_dll(const fs::path& path)

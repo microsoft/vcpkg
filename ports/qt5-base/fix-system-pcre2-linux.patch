@@ -1,8 +1,7 @@
-diff --git a/src/corelib/configure.json b/src/corelib/configure.json
-index a5a1b66..5a48a05 100644
---- a/src/corelib/configure.json
-+++ b/src/corelib/configure.json
-@@ -163,8 +163,10 @@
+diff -Naur a/src/corelib/configure.json b/src/corelib/configure.json
+--- a/src/corelib/configure.json	2018-08-23 02:58:54.544949500 -0400
++++ b/src/corelib/configure.json	2018-08-23 02:59:31.481175300 -0400
+@@ -181,8 +181,10 @@
                      "builds": {
                          "debug": "-lpcre2-16d",
                          "release": "-lpcre2-16"

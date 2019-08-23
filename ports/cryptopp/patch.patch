@@ -1,8 +1,8 @@
 diff --git a/config.h b/config.h
-index b96b7aa..3f004ac 100644
+index f06992a2..be6eda31 100644
 --- a/config.h
 +++ b/config.h
-@@ -795,6 +795,7 @@ NAMESPACE_END
+@@ -814,6 +814,7 @@ NAMESPACE_END
  #endif
  
  #ifdef CRYPTOPP_WIN32_AVAILABLE

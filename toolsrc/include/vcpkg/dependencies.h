@@ -7,7 +7,13 @@
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgpaths.h>
 
+#include <functional>
 #include <vector>
+
+namespace vcpkg::Graphs
+{
+    struct Randomizer;
+}
 
 namespace vcpkg::Dependencies
 {
@@ -42,7 +48,7 @@ namespace vcpkg::Dependencies
                           const RequestType& request_type);
 
         InstallPlanAction(const PackageSpec& spec,
-                          const SourceControlFile& scf,
+                          const SourceControlFileLocation& scfl,
                           const std::set<std::string>& features,
                           const RequestType& request_type,
                           std::vector<PackageSpec>&& dependencies);
@@ -51,7 +57,7 @@ namespace vcpkg::Dependencies
 
         PackageSpec spec;
 
-        Optional<const SourceControlFile&> source_control_file;
+        Optional<const SourceControlFileLocation&> source_control_file_location;
         Optional<InstalledPackageView> installed_package;
 
         InstallPlanType plan_type;
@@ -123,30 +129,40 @@ namespace vcpkg::Dependencies
 
     struct PortFileProvider
     {
-        virtual Optional<const SourceControlFile&> get_control_file(const std::string& src_name) const = 0;
+        virtual Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
+        virtual std::vector<const SourceControlFileLocation*> load_all_control_files() const = 0;
     };
 
     struct MapPortFileProvider : Util::ResourceBase, PortFileProvider
     {
-        explicit MapPortFileProvider(const std::unordered_map<std::string, SourceControlFile>& map);
-        Optional<const SourceControlFile&> get_control_file(const std::string& src_name) const override;
+        explicit MapPortFileProvider(const std::unordered_map<std::string, SourceControlFileLocation>& map);
+        Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
+        std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
-        const std::unordered_map<std::string, SourceControlFile>& ports;
+        const std::unordered_map<std::string, SourceControlFileLocation>& ports;
     };
 
     struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
     {
-        explicit PathsPortFileProvider(const VcpkgPaths& paths);
-        Optional<const SourceControlFile&> get_control_file(const std::string& src_name) const override;
+        explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
+                                       const std::vector<std::string>* ports_dirs_paths);
+        Optional<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
+        std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
 
     private:
-        const VcpkgPaths& ports;
-        mutable std::unordered_map<std::string, SourceControlFile> cache;
+        Files::Filesystem& filesystem;
+        std::vector<fs::path> ports_dirs;
+        mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
 
     struct ClusterGraph;
     struct GraphPlan;
+
+    struct CreateInstallPlanOptions
+    {
+        Graphs::Randomizer* randomizer = nullptr;
+    };
 
     struct PackageGraph
     {
@@ -157,7 +173,7 @@ namespace vcpkg::Dependencies
                      const std::unordered_set<std::string>& prevent_default_features = {}) const;
         void upgrade(const PackageSpec& spec) const;
 
-        std::vector<AnyAction> serialize() const;
+        std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
 
     private:
         std::unique_ptr<GraphPlan> m_graph_plan;
@@ -170,13 +186,21 @@ namespace vcpkg::Dependencies
     std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+    std::vector<AnyAction> create_feature_install_plan(
+        const std::unordered_map<std::string, SourceControlFileLocation>& map,
+        const std::vector<FeatureSpec>& specs,
+        const StatusParagraphs& status_db);
 
+    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+                                                       const StatusParagraphs& status_db,
+                                                       const CreateInstallPlanOptions& options = {});
 
-    void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive = true);
+    void print_plan(const std::vector<AnyAction>& action_plan,
+                    const bool is_recursive = true,
+                    const fs::path& default_ports_dir = "");
 }

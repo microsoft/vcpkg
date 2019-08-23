@@ -17,12 +17,28 @@ include_directories(
   libyara/include
 )
 
+set(PROC_PLATFORM_SOURCE "libyara/proc/none.c")
+set(PROC_PLATFORM_INTERFACE "USE_NO_PROC")
+
+if(APPLE AND CMAKE_SYSTEM_NAME MATCHES "Darwin")
+  set(PROC_PLATFORM_SOURCE "libyara/proc/mach.c")
+  set(PROC_PLATFORM_INTERFACE "USE_MACH_PROC")
+elseif(WIN32 OR MINGW OR CYGWIN)
+  set(PROC_PLATFORM_SOURCE "libyara/proc/windows.c")
+  set(PROC_PLATFORM_INTERFACE "USE_WINDOWS_PROC")
+elseif(UNIX AND CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+  set(PROC_PLATFORM_SOURCE "libyara/proc/linux.c")
+  set(PROC_PLATFORM_INTERFACE "USE_LINUX_PROC")
+endif()
+
 set(
   libyara_sources
   libyara/ahocorasick.c
   libyara/arena.c
   libyara/atoms.c
   libyara/compiler.c
+  libyara/endian.c
   libyara/exec.c
   libyara/exefiles.c
   libyara/filemap.c
@@ -47,13 +63,14 @@ set(
   libyara/object.c
   libyara/parser.c
   libyara/proc.c
-  libyara/proc/windows.c
+  ${PROC_PLATFORM_SOURCE}  
   libyara/re.c
   libyara/re_grammar.c
   libyara/re_lexer.c
   libyara/rules.c
   libyara/scan.c
   libyara/sizedstr.c
+  libyara/stopwatch.c
   libyara/stream.c
   libyara/strutils.c
   libyara/threading.c
@@ -70,22 +87,40 @@ set( yarac_sources
   yarac.c
 )
 
-add_library(libyara ${libyara_sources})
 
-target_link_libraries(libyara PRIVATE OpenSSL::SSL OpenSSL::Crypto ${JANSSON_LIBRARY})
-target_compile_definitions(
-  libyara
-  PRIVATE
-  -DHAVE_LIBCRYPTO -DUSE_WINDOWS_PROC
-  -DCUCKOO_MODULE- DHASH_MODULE -DDOTNET_MODULE
+find_package(Threads REQUIRED)
+
+set(
+  libyara_dependencies 
+  OpenSSL::SSL
+  OpenSSL::Crypto 
+  Threads::Threads
+  ${JANSSON_LIBRARY}
 )
+
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+  list(APPEND libyara_dependencies m)
+endif()
+
+set(
+  libyara_definitions
+  -DHAVE_LIBCRYPTO
+  -D${PROC_PLATFORM_INTERFACE}
+  -DCUCKOO_MODULE
+  -DHASH_MODULE
+  -DDOTNET_MODULE
+)
+
+add_library(libyara ${libyara_sources})
+target_link_libraries(libyara PRIVATE ${libyara_dependencies})
+target_compile_definitions(libyara PRIVATE ${libyara_definitions})
 
 
 add_executable(yara  ${yara_sources})
 add_executable(yarac  ${yarac_sources})
 
-target_link_libraries(yarac PRIVATE libyara OpenSSL::SSL OpenSSL::Crypto ${JANSSON_LIBRARY})
-target_link_libraries(yara PRIVATE libyara OpenSSL::SSL OpenSSL::Crypto ${JANSSON_LIBRARY})
+target_link_libraries(yarac PRIVATE libyara ${libyara_dependencies})
+target_link_libraries(yara PRIVATE libyara ${libyara_dependencies})
 
 install(
   TARGETS libyara

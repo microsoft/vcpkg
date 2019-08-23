@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df947af..6a894d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,7 +113,7 @@ install(
+     "${CMAKE_CURRENT_BINARY_DIR}/minhook-config.cmake"
+     "${CMAKE_CURRENT_BINARY_DIR}/minhook-config-version.cmake"
+   DESTINATION 
+-    "lib/minhook"
++    share/minhook
+ )
+ 
+ ###################
+@@ -133,7 +133,7 @@ install(
+   NAMESPACE 
+     minhook::
+   DESTINATION 
+-    "lib/minhook"
++    share/minhook
+ )
+ 
+ install(

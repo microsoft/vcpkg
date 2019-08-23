@@ -31,11 +31,17 @@ target_link_libraries(libmatio PRIVATE ZLIB::ZLIB)
 target_compile_definitions(libmatio PRIVATE -DHAVE_ZLIB=1)
 
 find_package(hdf5 CONFIG REQUIRED)
-target_link_libraries(libmatio PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared)
+
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(libmatio PRIVATE -DHAVE_HDF5=1 -DH5_BUILT_AS_DYNAMIC_LIB)
+  if(HDF5_USE_STATIC_LIBRARIES)
+    target_link_libraries(libmatio PRIVATE hdf5::hdf5-static hdf5::hdf5_hl-static)
+  else()
+    target_link_libraries(libmatio PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared)
+  endif()
 else()
   target_compile_definitions(libmatio PRIVATE -DHAVE_HDF5=1 -DH5_BUILT_AS_STATIC_LIB)
+  target_link_libraries(libmatio PRIVATE hdf5::hdf5-static hdf5::hdf5_hl-static)
 endif()
 
 install(

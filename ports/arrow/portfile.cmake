@@ -7,51 +7,43 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.6.0
-    SHA512  c0e89b959dfe75e895a3427edd4eee663be5ee542e9ea13f7311d0775fe7a00188eafa07ba524e3d3c0a71fc8e11213f10fe4ebfdf451754816062249ffa7f3d
+    REF apache-arrow-0.14.1
+    SHA512 f5493a62becaaee9d26e05f33509f51c98e96a5efd5d5bbdffdf70456c254b62075f1c9bc63d1119289a22d00359dfe9862078a284f8e063ecf13bd338a50728
     HEAD_REF master
-)
-
-set(CPP_SOURCE_PATH "${SOURCE_PATH}/cpp")
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CPP_SOURCE_PATH}
     PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/all.patch"
+        all.patch
 )
-
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CPP_SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
     OPTIONS
-    -DARROW_BUILD_TESTS=off
-    -DRAPIDJSON_HOME=${CURRENT_INSTALLED_DIR}
-    -DFLATBUFFERS_HOME=${CURRENT_INSTALLED_DIR}
-    -DARROW_ZLIB_VENDORED=ON
-    -DBROTLI_HOME=${CURRENT_INSTALLED_DIR}
-    -DLZ4_HOME=${CURRENT_INSTALLED_DIR}
-    -DZSTD_HOME=${CURRENT_INSTALLED_DIR}
-    -DSNAPPY_HOME=${CURRENT_INSTALLED_DIR}
-    -DBOOST_ROOT=${CURRENT_INSTALLED_DIR}
-    -DGFLAGS_HOME=${CURRENT_INSTALLED_DIR}
-    -DZLIB_HOME=${CURRENT_INSTALLED_DIR}
-    -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
-    -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_DEPENDENCY_SOURCE=SYSTEM
+        -Duriparser_SOURCE=SYSTEM
+        -DARROW_BUILD_TESTS=off
+        -DARROW_PARQUET=ON
+        -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
+        -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_GFLAGS_USE_SHARED=off
+        -DARROW_JEMALLOC=off
+        -DARROW_BUILD_UTILITIES=OFF
 )
 
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/lib/arrow.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow.lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/arrow_static.lib)
+vcpkg_copy_pdbs()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
+    message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/arrow RENAME copyright)
 

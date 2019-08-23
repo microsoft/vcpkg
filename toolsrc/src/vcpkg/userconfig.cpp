@@ -29,15 +29,17 @@ namespace
 
 namespace vcpkg
 {
-    static fs::path get_config_path()
+    fs::path get_user_dir()
     {
 #if defined(_WIN32)
-        return get_localappdata() / "vcpkg" / "config";
+        return get_localappdata() / "vcpkg";
 #else
         auto maybe_home = System::get_environment_variable("HOME");
-        return fs::path(maybe_home.value_or("/var")) / ".vcpkg" / "config";
+        return fs::path(maybe_home.value_or("/var")) / ".vcpkg";
 #endif
     }
+
+    static fs::path get_config_path() { return get_user_dir() / "config"; }
 
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)
     {
@@ -49,7 +51,7 @@ namespace vcpkg
             {
                 const auto& pghs = *p_pghs;
 
-                std::unordered_map<std::string, std::string> keys;
+                Parse::RawParagraph keys;
                 if (pghs.size() > 0) keys = pghs[0];
 
                 for (size_t x = 1; x < pghs.size(); ++x)

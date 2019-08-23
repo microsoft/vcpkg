@@ -1,0 +1,88 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cdd5367..e982ee5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,6 +13,8 @@ set(GLOBAL_OUTPUT_PATH_SUFFIX "" CACHE STRING
+ 
+ project(jsonnet C CXX)
+ 
++add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++
+ # Discourage in-source builds because they overwrite the hand-written Makefile.
+ # Use `cmake . -B<dir>` or the CMake GUI to do an out-of-source build.
+ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} AND
+@@ -76,6 +78,7 @@ elseif (BUILD_TESTS AND USE_SYSTEM_GTEST)
+ endif()
+ 
+ # Compiler flags.
++if (0)
+ if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR
+         ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+     set(OPT "-O3")
+@@ -85,6 +88,7 @@ else()
+     # TODO: Windows support.
+     message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER_ID} not supported")
+ endif()
++endif()
+ 
+ # Look for libraries in global output path.
+ link_directories(${GLOBAL_OUTPUT_PATH})
+diff --git a/cmd/CMakeLists.txt b/cmd/CMakeLists.txt
+index 66e6aa0..aedc87e 100644
+--- a/cmd/CMakeLists.txt
++++ b/cmd/CMakeLists.txt
+@@ -13,5 +13,5 @@ if (BUILD_JSONNETFMT OR BUILD_TESTS)
+     add_dependencies(jsonnetfmt libjsonnet_static)
+     target_link_libraries(jsonnetfmt libjsonnet_static)
+ 
+-	install(TARGETS jsonnetfmt DESTINATION "${CMAKE_INSTALL_BINDIR}")
++	install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
+ endif()
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index e877015..5ec328b 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -28,7 +28,7 @@ set(LIBJSONNET_SOURCE
+     string_utils.cpp
+     vm.cpp)
+ 
+-add_library(libjsonnet SHARED ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
++add_library(libjsonnet ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
+ add_dependencies(libjsonnet md5 stdlib)
+ target_link_libraries(libjsonnet md5)
+ 
+@@ -41,13 +41,13 @@ set_target_properties(libjsonnet PROPERTIES OUTPUT_NAME jsonnet
+ install(TARGETS libjsonnet
+ 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+ 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+ 	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+ 
+ # Static library for jsonnet command-line tool.
+ add_library(libjsonnet_static STATIC ${LIBJSONNET_SOURCE})
+ add_dependencies(libjsonnet_static md5 stdlib)
+ target_link_libraries(libjsonnet_static md5)
+-set_target_properties(libjsonnet_static PROPERTIES OUTPUT_NAME jsonnet)
+ install(TARGETS libjsonnet_static DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ 
+ # Tests
+diff --git a/stdlib/CMakeLists.txt b/stdlib/CMakeLists.txt
+index a481d9f..bb8e418 100644
+--- a/stdlib/CMakeLists.txt
++++ b/stdlib/CMakeLists.txt
+@@ -2,6 +2,7 @@
+ 
+ add_executable(to_c_array to_c_array.cpp)
+ 
++if (0)
+ # Custom command that will only build stdlib when it changes.
+ add_custom_command(
+ 	OUTPUT ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
+@@ -9,6 +10,7 @@ add_custom_command(
+ 			    ${PROJECT_SOURCE_DIR}/stdlib/std.jsonnet
+ 					${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
+ 	DEPENDS to_c_array std.jsonnet)
++endif()
+ 
+ # Standard library build target that libjsonnet can depend on.
+ add_custom_target(stdlib ALL

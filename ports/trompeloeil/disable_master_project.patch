@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e59ab8..615a6cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,9 +34,6 @@ target_include_directories(
+ )
+ 
+ set(MASTER_PROJECT OFF)
+-if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+-  set(MASTER_PROJECT ON)
+-endif()
+ 
+ if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
+ 

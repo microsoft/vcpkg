@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
@@ -14,13 +14,13 @@ namespace vcpkg::Commands::Autocomplete
                                                             std::vector<std::string>&& results)
     {
         const SortedVector<std::string> sorted_results(results);
-        System::println(Strings::join("\n", sorted_results));
+        System::print2(Strings::join("\n", sorted_results), '\n');
 
         Checks::exit_success(line_info);
     }
 
-    std::vector<std::string> combine_port_with_triplets(const std::string& port,
-                                                        const std::vector<std::string>& triplets)
+    static std::vector<std::string> combine_port_with_triplets(const std::string& port,
+                                                               const std::vector<std::string>& triplets)
     {
         return Util::fmap(triplets,
                           [&](const std::string& triplet) { return Strings::format("%s:%s", port, triplet); });
@@ -40,26 +40,25 @@ namespace vcpkg::Commands::Autocomplete
             const std::string requested_command = match[1].str();
 
             // First try public commands
-            std::vector<std::string> public_commands = {
-                "install",
-                "search",
-                "remove",
-                "list",
-                "update",
-                "hash",
-                "help",
-                "integrate",
-                "export",
-                "edit",
-                "create",
-                "owns",
-                "cache",
-                "version",
-                "contact",
-            };
+            std::vector<std::string> public_commands = {"install",
+                                                        "search",
+                                                        "remove",
+                                                        "list",
+                                                        "update",
+                                                        "hash",
+                                                        "help",
+                                                        "integrate",
+                                                        "export",
+                                                        "edit",
+                                                        "create",
+                                                        "owns",
+                                                        "cache",
+                                                        "version",
+                                                        "contact",
+                                                        "upgrade"};
 
-            Util::unstable_keep_if(public_commands, [&](const std::string& s) {
-                return Strings::case_insensitive_ascii_starts_with(s, requested_command);
+            Util::erase_remove_if(public_commands, [&](const std::string& s) {
+                return !Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
             if (!public_commands.empty())
@@ -78,8 +77,8 @@ namespace vcpkg::Commands::Autocomplete
                 "portsdiff",
             };
 
-            Util::unstable_keep_if(private_commands, [&](const std::string& s) {
-                return Strings::case_insensitive_ascii_starts_with(s, requested_command);
+            Util::erase_remove_if(private_commands, [&](const std::string& s) {
+                return !Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
             output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(private_commands));
@@ -91,15 +90,16 @@ namespace vcpkg::Commands::Autocomplete
             const auto port_name = match[2].str();
             const auto triplet_prefix = match[3].str();
 
-            auto maybe_port = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(port_name));
+            // TODO: Support autocomplete for ports in --overlay-ports
+            auto maybe_port = Paragraphs::try_load_port(paths.get_filesystem(), paths.ports / port_name);
             if (maybe_port.error())
             {
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
 
             std::vector<std::string> triplets = paths.get_available_triplets();
-            Util::unstable_keep_if(triplets, [&](const std::string& s) {
-                return Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
+            Util::erase_remove_if(triplets, [&](const std::string& s) {
+                return !Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
             });
 
             auto result = combine_port_with_triplets(port_name, triplets);
@@ -124,6 +124,7 @@ namespace vcpkg::Commands::Autocomplete
             CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
             CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
             CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
+            CommandEntry{"upgrade", R"###(^upgrade(\s+)(\S*)$)###", Upgrade::COMMAND_STRUCTURE},
         };
 
         for (auto&& command : COMMANDS)
@@ -137,7 +138,7 @@ namespace vcpkg::Commands::Autocomplete
                 if (is_option)
                 {
                     results = Util::fmap(command.structure.options.switches,
-                                         [](const CommandSwitch& s) -> std::string { return s.name; });
+                                         [](const CommandSwitch& s) -> std::string { return s.name.to_string(); });
 
                     auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
                     results.insert(results.end(), settings.begin(), settings.end());
@@ -150,8 +151,8 @@ namespace vcpkg::Commands::Autocomplete
                     }
                 }
 
-                Util::unstable_keep_if(results, [&](const std::string& s) {
-                    return Strings::case_insensitive_ascii_starts_with(s, prefix);
+                Util::erase_remove_if(results, [&](const std::string& s) {
+                    return !Strings::case_insensitive_ascii_starts_with(s, prefix);
                 });
 
                 if (command.name == "install" && results.size() == 1 && !is_option)

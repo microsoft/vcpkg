@@ -1,9 +1,9 @@
 diff --git a/Source/FreeImage.h b/Source/FreeImage.h
-index cc66b7d..cc66812 100644
+index 12182cd..86a1e68 100644
 --- a/Source/FreeImage.h
 +++ b/Source/FreeImage.h
 @@ -32,6 +32,11 @@
- #define FREEIMAGE_MINOR_VERSION   17
+ #define FREEIMAGE_MINOR_VERSION   18
  #define FREEIMAGE_RELEASE_SERIAL  0
  
 +// vcpkg specific includes --------------------------------------------------
