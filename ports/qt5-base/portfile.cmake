@@ -170,7 +170,10 @@ elseif(VCPKG_TARGET_IS_OSX)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
+        message(STATUS "DUMP macx.conf:\n ${_tmp_contents}") #just for CI
         string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
+        string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14.4" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents}) # just for CI
+        
         FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     endif()
     list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
