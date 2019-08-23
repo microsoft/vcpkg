@@ -25,7 +25,7 @@ function(install_qt)
         endif()
     endif()
 
-    message(STATUS "Building with ${NUMBER_OF_PROCESSORS}")
+    message(STATUS "NUMBER_OF_PROCESSORS is ${NUMBER_OF_PROCESSORS}")
 
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)
@@ -85,6 +85,15 @@ function(install_qt)
         #    )
         #endif()
         #Create Makefiles
+        if(VCPKG_TARGET_IS_OSX)
+            # For some reason there will be an error on MacOSX without this clean!
+            message(STATUS "Cleaning before build ${_build_triplet}")
+            vcpkg_execute_required_process(
+                COMMAND ${INVOKE_SINGLE} sub-qmake-qmake-aux-pro-clean
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+                LOGNAME cleaning-1-${_build_triplet}
+            )
+        endif()
         message(STATUS "Building ${_build_triplet}")
         vcpkg_execute_required_process(
             COMMAND ${INVOKE}
@@ -93,7 +102,7 @@ function(install_qt)
         )
         if(VCPKG_TARGET_IS_OSX)
             # For some reason there will be an error on MacOSX without this clean!
-            message(STATUS "Cleaning 2 ${_build_triplet}")
+            message(STATUS "Cleaning after build before install ${_build_triplet}")
             vcpkg_execute_required_process(
                 COMMAND ${INVOKE_SINGLE} sub-qmake-qmake-aux-pro-clean
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
