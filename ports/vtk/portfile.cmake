@@ -10,9 +10,9 @@ set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # Options:
 
 if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON )
+    set(VTK_WITH_QT ON)
 else()
-    set(VTK_WITH_QT                      OFF )
+    set(VTK_WITH_QT OFF)
 endif()
 
 if ("mpi" IN_LIST FEATURES)
@@ -22,9 +22,9 @@ else()
 endif()
 
 if ("python" IN_LIST FEATURES)
-    set(VTK_WITH_PYTHON                  ON)
+    set(VTK_WITH_PYTHON ON)
 else()
-    set(VTK_WITH_PYTHON                  OFF)
+    set(VTK_WITH_PYTHON OFF)
 endif()
 
 if("openvr" IN_LIST FEATURES)
@@ -33,8 +33,8 @@ else()
     set(Module_vtkRenderingOpenVR OFF)
 endif()
 
-set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
-                                              #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
+set(VTK_WITH_ALL_MODULES OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
+                              #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
 
 # =============================================================================
 # Clone & patch
@@ -117,6 +117,9 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
 
+        # Temporary fix to avoid an error while compiling VTK with system-wide GLEW.
+        -DVTK_USE_SYSTEM_GLEW=OFF
+
         # We set all libraries to "system" and explicitly list the ones that should use embedded copies
         -DVTK_USE_SYSTEM_LIBRARIES=ON
         -DVTK_USE_SYSTEM_GL2PS=OFF
@@ -158,8 +161,8 @@ endif()
 
 #file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
 # Remove unset of _IMPORT_PREFIX in VTKTargets.cmake
-#_IMPORT_PREFIX is required by vtkModules due to vcpkg_fixup_cmake_targets changing all cmake files (to use _IMPORT_PREFIX). 
-#STRING(REPLACE [[set(_IMPORT_PREFIX)]] 
+#_IMPORT_PREFIX is required by vtkModules due to vcpkg_fixup_cmake_targets changing all cmake files (to use _IMPORT_PREFIX).
+#STRING(REPLACE [[set(_IMPORT_PREFIX)]]
 #[[
 # VCPKG: The value of _IMPORT_PREFIX should not be unset.
 #set(_IMPORT_PREFIX)
