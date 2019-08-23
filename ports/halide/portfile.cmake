@@ -11,11 +11,44 @@ vcpkg_from_github(
         fix-build-error.patch
 )
 
+set(TARGET_X86 OFF)
+set(TARGET_ARM OFF)
+set(TARGET_AARCH64 OFF)
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    set(TARGET_X86 ON)
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(TARGET_X86 OFF)
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    if (TARGET_TRIPLET STREQUAL arm64)
+        set(TARGET_AARCH64 ON)
+    else()
+        set(TARGET_ARM ON)
+    endif()
+endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(HALIDE_SHARED_LIBRARY ON)
 else()
     set(HALIDE_SHARED_LIBRARY OFF)
 endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    app WITH_APPS
+    test WITH_TESTS
+    tutorials WITH_TUTORIALS
+    docs WITH_DOCS
+    utils WITH_UTILS
+    nativeclient TARGET_NATIVE_CLIENT
+    hexagon TARGET_HEXAGON
+    metal TARGET_METAL
+    mips TARGET_MIPS
+    powerpc TARGET_POWERPC
+    ptx TARGET_PTX
+    opencl TARGET_OPENCL
+    opengl TARGET_OPENGL
+    opengl TARGET_OPENGLCOMPUTE
+    rtti HALIDE_ENABLE_RTTI
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -23,26 +56,11 @@ vcpkg_configure_cmake(
     OPTIONS
         -DTRIPLET_SYSTEM_ARCH=${TRIPLET_SYSTEM_ARCH}
         -DHALIDE_SHARED_LIBRARY=${HALIDE_SHARED_LIBRARY}
-        #-DTARGET_X86
-        #-DTARGET_ARM
-        #-DTARGET_AARCH64
-        #-DTARGET_HEXAGON
-        #-DTARGET_METAL
-        #-DTARGET_MIPS
-        #-DTARGET_POWERPC
-        #-DTARGET_PTX
+        -DTARGET_X86=${TARGET_X86}
+        -DTARGET_ARM=${TARGET_ARM}
+        -DTARGET_AARCH64=${TARGET_AARCH64}
         #-DTARGET_AMDGPU
-        #-DTARGET_OPENCL
-        #-DTARGET_OPENGL
-        #-DTARGET_OPENGLCOMPUTE
-        #-DHALIDE_ENABLE_RTTI
-        -DTARGET_NATIVE_CLIENT=OFF
         -DWARNINGS_AS_ERRORS=OFF
-        -DWITH_TESTS=OFF
-        -DWITH_APPS=OFF
-        -DWITH_TUTORIALS=OFF
-        -DWITH_DOCS=OFF
-        -DWITH_UTILS=OFF
 )
 
 vcpkg_install_cmake()
