@@ -8,6 +8,13 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
+if (VCPKG_TARGET_IS_UWP)
+  # - opengl feature is broken on UWP
+  # - jasper and openexr are not available on UWP due to missing dependencies
+  # - opencv2 code itself fails if previous conditions are avoided
+  message(FATAL_ERROR "${PORT} doesn't support UWP")
+endif()
+
 set(OPENCV_PORT_VERSION "2.4.13.7")
 
 vcpkg_from_github(

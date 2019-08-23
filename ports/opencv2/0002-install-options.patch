@@ -1,3 +1,29 @@
+diff --git a/3rdparty/libtiff/CMakeLists.txt b/3rdparty/libtiff/CMakeLists.txt
+index b0e076f..3f7ade1 100644
+--- a/3rdparty/libtiff/CMakeLists.txt
++++ b/3rdparty/libtiff/CMakeLists.txt
+@@ -102,7 +102,7 @@ if(UNIX AND (CMAKE_COMPILER_IS_GNUCXX OR CV_ICC))
+ endif()
+ 
+ add_library(${TIFF_LIBRARY} STATIC ${lib_srcs})
+-target_link_libraries(${TIFF_LIBRARY} ${ZLIB_LIBRARIES})
++target_link_libraries(${TIFF_LIBRARY} ZLIB::ZLIB)
+ 
+ set_target_properties(${TIFF_LIBRARY}
+     PROPERTIES
+diff --git a/3rdparty/openexr/CMakeLists.txt b/3rdparty/openexr/CMakeLists.txt
+index 9387616..54ecc1a 100644
+--- a/3rdparty/openexr/CMakeLists.txt
++++ b/3rdparty/openexr/CMakeLists.txt
+@@ -55,7 +55,7 @@ if(MSVC AND CV_ICC)
+ endif()
+ 
+ add_library(IlmImf STATIC ${lib_hdrs} ${lib_srcs})
+-target_link_libraries(IlmImf ${ZLIB_LIBRARIES})
++target_link_libraries(IlmImf ZLIB::ZLIB)
+ 
+ set_target_properties(IlmImf
+     PROPERTIES
 diff --git a/3rdparty/tbb/CMakeLists.txt b/3rdparty/tbb/CMakeLists.txt
 index fd8ef32..fe571a2 100644
 --- a/3rdparty/tbb/CMakeLists.txt
@@ -244,10 +270,35 @@ index e3177bd..f902b2b 100644
 -endif()
 \ No newline at end of file
 +endif()
+diff --git a/modules/core/CMakeLists.txt b/modules/core/CMakeLists.txt
+index d9de52d..be604dc 100644
+--- a/modules/core/CMakeLists.txt
++++ b/modules/core/CMakeLists.txt
+@@ -1,9 +1,9 @@
+ set(the_description "The Core Functionality")
+ 
+ if (NOT HAVE_CUDA OR ENABLE_DYNAMIC_CUDA)
+-  ocv_add_module(core PRIVATE_REQUIRED ${ZLIB_LIBRARIES})
++  ocv_add_module(core PRIVATE_REQUIRED ZLIB::ZLIB)
+ else()
+-  ocv_add_module(core PRIVATE_REQUIRED ${ZLIB_LIBRARIES} ${CUDA_LIBRARIES} ${CUDA_npp_LIBRARY})
++  ocv_add_module(core PRIVATE_REQUIRED ZLIB::ZLIB ${CUDA_LIBRARIES} ${CUDA_npp_LIBRARY})
+ endif()
+ 
+ ocv_module_include_directories("${OpenCV_SOURCE_DIR}/modules/dynamicuda/include/" ${ZLIB_INCLUDE_DIR})
 diff --git a/modules/highgui/CMakeLists.txt b/modules/highgui/CMakeLists.txt
-index d59e95a..029a390 100644
+index d59e95a..901aa18 100644
 --- a/modules/highgui/CMakeLists.txt
 +++ b/modules/highgui/CMakeLists.txt
+@@ -15,7 +15,7 @@ endif()
+ 
+ if(HAVE_PNG OR HAVE_TIFF OR HAVE_OPENEXR)
+   ocv_include_directories(${ZLIB_INCLUDE_DIR})
+-  list(APPEND GRFMT_LIBS ${ZLIB_LIBRARIES})
++  list(APPEND GRFMT_LIBS ZLIB::ZLIB)
+ endif()
+ 
+ if(HAVE_JPEG)
 @@ -296,38 +296,5 @@ endif()
  ocv_add_precompiled_headers(${the_module})
  ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-deprecated-declarations -Wno-clobbered)
