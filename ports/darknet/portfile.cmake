@@ -11,8 +11,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 6467dc576a7ca5a7bebd5c6668a7e06749c59cee
-  SHA512 9e2c7ef9867846b4d7e3f6bd6f38eeb7d4f9d05f9d6085d2f2e5aa613fc7ba2941ec8e70fdcf8b3ab4ebbd60ee8cd4552a88e42d673ddb0d330d138230b01c96
+  REF 35346d2ef80dc46b9eb4fba57da1737a49f4743e
+  SHA512 a905a5e42c4ecfdf2b8276fc565b82e30c97e249c0530b403d149a8e6276bb3852a956869c21efbe092799f3743cf529a577fb03275cfcfcc8322b92e9de0ff6
   HEAD_REF master
 )
 
@@ -97,7 +97,7 @@ file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
-  DISABLE_PARALLEL_CONFIGURE  #since darknet configures a file inside source tree, it is better to disable parallel configure
+  DISABLE_PARALLEL_CONFIGURE
   PREFER_NINJA
   OPTIONS
     -DINSTALL_BIN_DIR:STRING=bin
