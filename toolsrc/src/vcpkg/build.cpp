@@ -872,13 +872,13 @@ namespace vcpkg::Build
             System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
         }
 
+        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
+            paths, pre_build_info, spec, pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag), config);
+
         fs.create_directories(abi_package_dir, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Coud not create directory %s", abi_package_dir.u8string());
         fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
-
-        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
-            paths, pre_build_info, spec, pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag), config);
 
         if (config.build_package_options.binary_caching == BinaryCaching::YES && result.code == BuildResult::SUCCEEDED)
         {
