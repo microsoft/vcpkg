@@ -70,6 +70,14 @@ if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
 endif()
 
+if("dnn" IN_LIST FEATURES)
+  vcpkg_download_distfile(TINYDNN_ARCHIVE
+    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
+    FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
+    SHA512 5f2c1a161771efa67e85b1fea395953b7744e29f61187ac5a6c54c912fb195b3aef9a5827135c3668bd0eeea5ae04a33cc433e1f6683e2b7955010a2632d168b
+  )
+endif()
+
 if("cuda" IN_LIST FEATURES)
   vcpkg_download_distfile(OCV_DOWNLOAD
       URLS "https://github.com/NVIDIA/NVIDIAOpticalFlowSDK/archive/79c6cee80a2df9a196f20afd6b598a9810964c32.zip"
@@ -97,6 +105,8 @@ if("contrib" IN_LIST FEATURES)
     SHA512 8af13f0a5f350360316662c1ce5e58c21d906a58591acfbd575a8dacde19b6f3bbd694c3c199feb35c33549cf8c37e3fb4c494b586a00ad29fe3b4aeeb2d22ab
     HEAD_REF master
   )
+  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
+
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_bgm.i"
     FILENAME "opencv-cache/xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i"
@@ -156,15 +166,6 @@ if("contrib" IN_LIST FEATURES)
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
     FILENAME "opencv-cache/data/7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat"
     SHA512 c16e60a6c4bb4de3ab39b876ae3c3f320ea56f69c93e9303bd2dff8760841dcd71be4161fff8bc71e8fe4fe8747fa8465d49d6bd8f5ebcdaea161f4bc2da7c93
-  )
-  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
-endif()
-
-if("dnn" IN_LIST FEATURES)
-  vcpkg_download_distfile(TINYDNN_ARCHIVE
-    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
-    FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
-    SHA512 5f2c1a161771efa67e85b1fea395953b7744e29f61187ac5a6c54c912fb195b3aef9a5827135c3668bd0eeea5ae04a33cc433e1f6683e2b7955010a2632d168b
   )
 endif()
 
@@ -260,8 +261,9 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DCMAKE_DEBUG_POSTFIX=d
-        ###### Ungrouped Entries
-        -DBUILD_opencv_java=OFF
+        # Do not build docs/examples
+        -DBUILD_DOCS=OFF
+        -DBUILD_EXAMPLES=OFF
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
@@ -278,11 +280,10 @@ vcpkg_configure_cmake(
         -DBUILD_PROTOBUF=OFF
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
+        -DBUILD_opencv_java=OFF
         -DBUILD_opencv_js=OFF
         -DBUILD_ANDROID_PROJECT=OFF
         -DBUILD_ANDROID_EXAMPLES=OFF
-        -DBUILD_DOCS=OFF
-        -DBUILD_EXAMPLES=OFF
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_TESTS=OFF
