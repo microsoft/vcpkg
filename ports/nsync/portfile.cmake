@@ -6,9 +6,9 @@ vcpkg_from_github(
     REF 1.22.0
     SHA512 e62e3f1ee736da871c7d6bd579ed1e22c5be23045372eec11e9d48f09e2b6822e026d846d864a94b4b0112c67643afab2e9ac04cee26138677eddc31d7d48c23
     HEAD_REF master
+    PATCHES
+        fix-install.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
