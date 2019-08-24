@@ -10,13 +10,13 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO apache/avro
-  REF 3c76495e9524ef322726d03d7ee406be89e8fde0
-  SHA512 05cd16d4281c11e891132bae4853064ded0c9b630b41ef90e2940f16fde97640de4b0393c6f257c6f52b91b38595a849051e2f2bde29271198c1a44378e52400
+  REF release-1.8.2
+  SHA512 a48cc353aadd45ad2c8593bf89ec3f1ddb0fcd364b79dd002a60a54d49cab714b46eee8bd6dc47b13588b9eead49c754dfe05f6aff735752fca8d2cd35ae8649
   HEAD_REF master
   PATCHES
         avro.patch
+        avro-pr-217.patch
         fix-build-error.patch # Since jansson updated, use jansson::jansson instead of the macro ${JANSSON_LIBRARIES}
-        fix_ssize_t.patch
 )
 
 vcpkg_configure_cmake(

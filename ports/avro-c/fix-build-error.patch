@@ -1,5 +1,5 @@
 diff --git a/lang/c/src/CMakeLists.txt b/lang/c/src/CMakeLists.txt
-index 330d546..aa9b30e 100644
+index c21f1ce..accb0e3 100644
 --- a/lang/c/src/CMakeLists.txt
 +++ b/lang/c/src/CMakeLists.txt
 @@ -85,13 +85,13 @@ source_group(Avro FILES ${AVRO_SRC})
@@ -17,4 +17,4 @@ index 330d546..aa9b30e 100644
 +target_link_libraries(avro-shared jansson::jansson ${CODEC_LIBRARIES} ${THREADS_LIBRARIES})
  set_target_properties(avro-shared PROPERTIES
          OUTPUT_NAME avro
-         VERSION ${LIBAVRO_DOT_VERSION}
+         SOVERSION ${LIBAVRO_DOT_VERSION})
