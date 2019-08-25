@@ -1,0 +1,13 @@
+diff --git a/cmake_admin/FluidUnitTest.cmake b/cmake_admin/FluidUnitTest.cmake
+index 367a406c5..77f5703a9 100644
+--- a/cmake_admin/FluidUnitTest.cmake	
++++ b/cmake_admin/FluidUnitTest.cmake
+@@ -8,7 +8,7 @@ macro ( ADD_FLUID_TEST _test )
+     if ( FLUID_CPPFLAGS )
+         set_target_properties ( ${_test} PROPERTIES COMPILE_FLAGS ${FLUID_CPPFLAGS} )
+     endif ( FLUID_CPPFLAGS )
+-    TARGET_LINK_LIBRARIES(${_test} $<TARGET_PROPERTY:libfluidsynth,INTERFACE_LINK_LIBRARIES>)
++    TARGET_LINK_LIBRARIES(${_test} $<GENEX_EVAL:$<TARGET_PROPERTY:libfluidsynth,INTERFACE_LINK_LIBRARIES>>)
+ 
+     # use the local include path to look for fluidsynth.h, as we cannot be sure fluidsynth is already installed
+     target_include_directories(${_test}
