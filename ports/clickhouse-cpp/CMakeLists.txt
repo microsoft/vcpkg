@@ -9,6 +9,8 @@ file(GLOB_RECURSE HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "clickhouse/*.h
 
 add_library(clickhouse-cpp STATIC ${SOURCES})
 
+target_compile_definitions(clickhouse-cpp PRIVATE LZ4_DISABLE_DEPRECATE_WARNINGS)
+
 target_include_directories(clickhouse-cpp PUBLIC
 	$<INSTALL_INTERFACE:include>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
