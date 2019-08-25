@@ -110,6 +110,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
         
         if("${_vcpkg_find_library_imp_output}" MATCHES "_DEBUG$|_DBG$")
             set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} CACHE INTERNAL "")
+			set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} PARENT_SCOPE)
         elseif("${_vcpkg_find_library_imp_output}" MATCHES "_RELEASE$|_REL$")
             if(${_vcpkg_release_lib_path} MATCHES "NOTFOUND") # Release must be found. 
                 cmake_policy(POP)
@@ -117,17 +118,21 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
                                                       variable: ${_vcpkg_find_library_imp_output} search names: ${_vcpkg_find_lib_NAMES}")
             endif()
            set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} CACHE INTERNAL "")
+		   set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} PARENT_SCOPE) 
         else() #these are the cases which are ambigous! Sometimes also used as synonym for the release version
             if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
                 set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} CACHE INTERNAL "")
+				set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} PARENT_SCOPE)
                 if(${_vcpkg_debug_lib_path} MATCHES "NOTFOUND") # If only release was build we use that instead!
                     cmake_policy(POP)
                     vcpkg_msg(FATAL_ERROR "find_library" "Build type is debug but vcpkg was unable to find the debug library. \
                                            variable: ${_vcpkg_find_library_imp_output} search names: ${_vcpkg_find_lib_NAMES}")
                     set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} CACHE INTERNAL "")
+					set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} PARENT_SCOPE) 
                 endif()
             else() # Not debug and multi config generator
                 set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} CACHE INTERNAL "") 
+				set(${_vcpkg_find_library_imp_output} ${_vcpkg_release_lib_path} PARENT_SCOPE) 
                 # For a multi configuration generator this selection might be wrong and there is no way to change it here because
                 # it is unknown in which way the value might be used. Injecting a configuration dependent generator expressions here 
                 # does not work everywhere (e.g. try_compile or func_exists checks) and also injecting debug/optimized keywords here does not work. 
@@ -141,6 +146,7 @@ function(vcpkg_find_library _vcpkg_find_library_imp_output)
             if(${_vcpkg_debug_lib_path})
                 vcpkg_search_library_release(_vcpkg_release_lib_path NAMES ${_vcpkg_find_lib_NAMES} PATH_SUFFIXES ${_vcpkg_find_lib_PATH_SUFFIXES})
                 set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} CACHE INTERNAL "")
+				set(${_vcpkg_find_library_imp_output} ${_vcpkg_debug_lib_path} PARENT_SCOPE)
             endif()
         else()
             vcpkg_msg(STATUS "find_library" "${_vcpkg_find_library_imp_output} was not found!")
@@ -185,7 +191,7 @@ if(VCPKG_ENABLE_find_library)
         vcpkg_enable_function_overwrite_guard(find_library "")
 
         vcpkg_find_library(${_vcpkg_find_library_var_name} ${ARGN})
-        #set(${_vcpkg_find_library_var_name} "${${_vcpkg_find_library_var_name}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
+        set(${_vcpkg_find_library_var_name} "${${_vcpkg_find_library_var_name}}" PARENT_SCOPE) #Propagate the variable into the parent scope!
         
         vcpkg_disable_function_overwrite_guard(find_library "")
     endfunction()
