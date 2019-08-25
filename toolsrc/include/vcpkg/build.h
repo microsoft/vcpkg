@@ -126,8 +126,8 @@ namespace vcpkg::Build
         /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
         /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
-                const Triplet& triplet,
-                Optional<const SourceControlFileLocation&> port = nullopt);
+                                              const Triplet& triplet,
+                                              Optional<const SourceControlFileLocation&> port = nullopt);
 
         std::string triplet_abi_tag;
         std::string target_architecture;
@@ -137,6 +137,8 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        Optional<std::string> public_abi_override;
+        Optional<const SourceControlFileLocation&> port;
         std::vector<std::string> passthrough_env_vars;
     };
 
@@ -152,6 +154,7 @@ namespace vcpkg::Build
         CHAINLOAD_TOOLCHAIN_FILE,
         BUILD_TYPE,
         ENV_PASSTHROUGH,
+        PUBLIC_ABI_OVERRIDE,
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -163,6 +166,7 @@ namespace vcpkg::Build
         {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
         {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+        {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
     };
 
     struct ExtendedBuildResult
@@ -265,6 +269,9 @@ namespace vcpkg::Build
     {
         std::string key;
         std::string value;
+
+        AbiEntry() = default;
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
 
         bool operator<(const AbiEntry& other) const
         {
