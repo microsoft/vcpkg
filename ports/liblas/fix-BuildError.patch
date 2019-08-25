@@ -41,7 +41,7 @@ index e35de06..f7c25d2 100644
    ${LASZIP_LIBRARY}
 -  ${Boost_LIBRARIES})
 +  ${Boost_LIBRARIES}
-+  proj)
++  ${PROJ4_LIBRARY})
  
  target_link_libraries(${LIBLAS_C_LIB_NAME}
    ${LIBLAS_LIB_NAME} )
