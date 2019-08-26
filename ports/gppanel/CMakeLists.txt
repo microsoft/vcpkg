@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(gpPanel CXX)
 
+set(wxWidgets_EXCLUDE_COMMON_LIBRARIES TRUE)
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include(${wxWidgets_USE_FILE})
 
