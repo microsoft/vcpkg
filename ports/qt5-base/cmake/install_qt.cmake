@@ -25,7 +25,7 @@ function(install_qt)
         endif()
     endif()
 
-    message(STATUS "Building with ${NUMBER_OF_PROCESSORS}")
+    message(STATUS "NUMBER_OF_PROCESSORS is ${NUMBER_OF_PROCESSORS}")
 
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)
@@ -76,30 +76,34 @@ function(install_qt)
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
         
         vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
-        #if(VCPKG_TARGET_IS_OSX)
-        #    message(STATUS "Cleaning build 1 ${_build_triplet}")
-        #    vcpkg_execute_required_process(
-        #        COMMAND ${INVOKE} sub-qmake-qmake-aux-pro-clean
-        #        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
-        #        LOGNAME cleaning-1-${_build_triplet}
-        #    )
-        #endif()
-        #Create Makefiles
+
+        if(VCPKG_TARGET_IS_OSX)
+           # For some reason there will be an error on MacOSX without this clean!
+            message(STATUS "Cleaning before build ${_build_triplet}")
+            vcpkg_execute_required_process(
+                COMMAND ${INVOKE_SINGLE} clean
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+                LOGNAME cleaning-1-${_build_triplet}
+            )
+        endif()
+        
         message(STATUS "Building ${_build_triplet}")
         vcpkg_execute_required_process(
             COMMAND ${INVOKE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
             LOGNAME build-${_build_triplet}
         )
+        
         if(VCPKG_TARGET_IS_OSX)
-            # For some reason there will be an error on MacOSX without this clean!
-            message(STATUS "Cleaning 2 ${_build_triplet}")
+           # For some reason there will be an error on MacOSX without this clean!
+            message(STATUS "Cleaning after build before install ${_build_triplet}")
             vcpkg_execute_required_process(
-                COMMAND ${INVOKE_SINGLE} sub-qmake-qmake-aux-pro-clean
+                COMMAND ${INVOKE_SINGLE} clean
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
                 LOGNAME cleaning-2-${_build_triplet}
             )
         endif()
+        
         message(STATUS "Fixig makefile installation path ${_build_triplet}")
         qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         message(STATUS "Installing ${_build_triplet}")
