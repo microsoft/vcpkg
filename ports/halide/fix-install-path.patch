@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index afa2db3..e49047d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -404,7 +404,7 @@ install(FILES
+         )
+ 
+ install(DIRECTORY tutorial
+-        DESTINATION tutorial
++        DESTINATION share/halide
+         FILES_MATCHING
+         PATTERN "*.h"
+         PATTERN "*.sh"
+@@ -429,17 +429,17 @@ endforeach()
+ # ---- README
+ file(GLOB FILES "${CMAKE_SOURCE_DIR}/*.md")
+ install(FILES ${FILES}
+-        DESTINATION .)
++        DESTINATION share/halide)
+ 
+ # ---- Bazel
+ file(GLOB FILES "${CMAKE_SOURCE_DIR}/bazel/*")
+ install(FILES ${FILES}
+-        DESTINATION .)
++        DESTINATION share/halide)
+ 
+ # ---- CMake
+ file(GLOB FILES "${CMAKE_SOURCE_DIR}/*.cmake")
+ install(FILES ${FILES}
+-        DESTINATION .)
++        DESTINATION share/halide)
+ 
+ # ---- halide_config
+ file(GLOB FILES "${CMAKE_SOURCE_DIR}/tools/halide_config.*.tpl")
+@@ -448,7 +448,7 @@ foreach(F ${FILES})
+   string(REGEX REPLACE "\\.tpl$" "" FNAME "${FNAME}")  # Strip .tpl extension
+   configure_file("${F}" "${CMAKE_BINARY_DIR}/${FNAME}" @ONLY)
+   install(FILES "${CMAKE_BINARY_DIR}/${FNAME}"
+-          DESTINATION .)
++          DESTINATION share/halide)
+ endforeach()
+ 
+ if (NOT WIN32)

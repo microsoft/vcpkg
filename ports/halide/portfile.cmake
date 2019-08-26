@@ -9,16 +9,17 @@ vcpkg_from_github(
     PATCHES
         fix-code-error.patch
         fix-build-error.patch
+        fix-install-path.patch
 )
 
 set(TARGET_X86 OFF)
 set(TARGET_ARM OFF)
 set(TARGET_AARCH64 OFF)
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    # llvm x86 components are required for llvm x64
     set(TARGET_X86 ON)
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    set(TARGET_X86 OFF)
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    set(TARGET_X86 OFF)
     if (TARGET_TRIPLET STREQUAL arm64)
         set(TARGET_AARCH64 ON)
     else()
@@ -53,7 +54,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DTRIPLET_SYSTEM_ARCH=${TRIPLET_SYSTEM_ARCH}
         -DHALIDE_SHARED_LIBRARY=${HALIDE_SHARED_LIBRARY}
         -DTARGET_X86=${TARGET_X86}
@@ -65,6 +66,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/halide)
+
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURTH_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
