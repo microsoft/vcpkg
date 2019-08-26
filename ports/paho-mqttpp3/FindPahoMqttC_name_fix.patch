@@ -1,0 +1,24 @@
+diff --git a/cmake/FindPahoMqttC.cmake b/cmake/FindPahoMqttC.cmake
+index 10c2bfa62..afbf7f9c5 100644
+--- a/cmake/FindPahoMqttC.cmake	
++++ b/cmake/FindPahoMqttC.cmake
+@@ -1,9 +1,17 @@
+ # find the Paho MQTT C library
+ if(PAHO_WITH_SSL)
+-    set(_PAHO_MQTT_C_LIB_NAME paho-mqtt3as)
++    if(PAHO_MQTTPP3_SHARED)
++        set(_PAHO_MQTT_C_LIB_NAME paho-mqtt3as)
++    else()
++        set(_PAHO_MQTT_C_LIB_NAME paho-mqtt3as-static paho-mqtt3as)
++    endif()
+     find_package(OpenSSL REQUIRED)
+ else()
+-    set(_PAHO_MQTT_C_LIB_NAME paho-mqtt3a)
++    if(PAHO_MQTTPP3_SHARED)
++        set(_PAHO_MQTT_C_LIB_NAME paho-mqtt3a)
++    else()
++        set(_PAHO_MQTT_C_LIB_NAME paho-mqtt3a-static paho-mqtt3a)
++    endif()
+ endif()
+ 
+ find_library(PAHO_MQTT_C_LIBRARIES NAMES ${_PAHO_MQTT_C_LIB_NAME})

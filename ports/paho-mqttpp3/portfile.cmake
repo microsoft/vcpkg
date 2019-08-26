@@ -9,6 +9,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     fix-include-path.patch  
+    FindPahoMqttC_name_fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
