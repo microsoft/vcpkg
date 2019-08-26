@@ -17,7 +17,7 @@ function(vcpkg_set_property _vcpkg_set_property_mode_impl)
         vcpkg_msg(STATUS "set_property" "Forwarding to set_property: ${ARGV}")
         set_property(${ARGV})
     endif()
-    if("${_vcpkg_set_property_mode_impl}" MATCHES "TARGET" AND "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_IMPLIB")
+    if(NOT _CMAKE_IN_TRY_COMPILE AND "${_vcpkg_set_property_mode_impl}" MATCHES "TARGET" AND "${ARGV}" MATCHES "IMPORTED_LOCATION|IMPORTED_IMPLIB" )
         cmake_parse_arguments(PARSE_ARGV 0 _vcpkg_set_property "APPEND;APPEND_STRING" "" "TARGET;PROPERTY")
         
         foreach(_vcpkg_target_name ${_vcpkg_set_property_TARGET})
