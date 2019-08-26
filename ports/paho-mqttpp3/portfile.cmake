@@ -16,7 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Link with 'paho-mqtt3as' library
-set(PAHO_C_LIBNAME paho-mqtt3as)
+
 
 # Setting the library path
 if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -35,11 +35,13 @@ set(PAHO_CMAKE_GENERATOR "Ninja")
 # It uses two different options PAHO_BUILD_STATIC and PAHO_BUILD_SHARED instead of just using one variable.
 # Unless the open source community cleans up the cmake files, we are stuck with setting both of them.
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(PAHO_C_LIBNAME paho-mqtt3as-static)
   set(PAHO_MQTTPP3_STATIC ON)
   set(PAHO_MQTTPP3_SHARED OFF)
   set(PAHO_C_LIB "${PAHO_C_LIBRARY_PATH}/${PAHO_C_LIBNAME}")
   set(PAHO_OPTIONS -DPAHO_MQTT_C_LIBRARIES=${PAHO_C_LIB})
 else()
+  set(PAHO_C_LIBNAME paho-mqtt3as)
   set(PAHO_MQTTPP3_STATIC OFF)
   set(PAHO_MQTTPP3_SHARED ON)
   set(PAHO_OPTIONS)
