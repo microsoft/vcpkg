@@ -12,10 +12,6 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-file(READ "${SOURCE_PATH}/wxdemo/helloworld/helloworldapp.cpp" _contents)
-string(REPLACE "IMPLEMENT_APP(" "IMPLEMENT_APP_CONSOLE(" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/wxdemo/helloworld/helloworldapp.cpp" "${_contents}")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH VCPKG_WX_FIND_SOURCE_PATH
     REPO CaeruleusAqua/vcpkg-wx-find
