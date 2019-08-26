@@ -1,5 +1,5 @@
 #pragma once
-#include "openblas_config.h"
+#include "openblas/openblas_config.h"
 
 #if defined(OPENBLAS_OS_WINNT) || defined(OPENBLAS_OS_CYGWIN_NT) || defined(OPENBLAS_OS_INTERIX)
 #define OPENBLAS_WINDOWS_ABI
