@@ -78,24 +78,28 @@ namespace vcpkg::Parse
                 // do not support nested []
                 if (value == '[')
                 {
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       !bracket_nesting,
-                                       "Lists do not support nested brackets, Did you forget a ']'?\n"
-                                       ">    '%s'\n"
-                                       ">     %s^\n",
-                                       str,
-                                       std::string(static_cast<int>(iter - str.cbegin()), ' '));
+                    if (bracket_nesting)
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Lists do not support nested brackets, Did you forget a ']'?\n"
+                                                  ">    '%s'\n"
+                                                  ">     %s^\n",
+                                                  str,
+                                                  std::string(static_cast<int>(iter - str.cbegin()), ' '));
+                    }
                     bracket_nesting = true;
                 }
                 else if (value == ']')
                 {
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       bracket_nesting,
-                                       "Found unmatched ']'.  Did you forget a '['?\n"
-                                       ">    '%s'\n"
-                                       ">     %s^\n",
-                                       str,
-                                       std::string(static_cast<int>(iter - str.cbegin()), ' '));
+                    if (!bracket_nesting)
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Found unmatched ']'.  Did you forget a '['?\n"
+                                                  ">    '%s'\n"
+                                                  ">     %s^\n",
+                                                  str,
+                                                  std::string(static_cast<int>(iter - str.cbegin()), ' '));
+                    }
                     bracket_nesting = false;
                 }
 
@@ -109,14 +113,15 @@ namespace vcpkg::Parse
                 }
             }
 
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               element_begin != element_end,
-                               "Empty element in list\n"
-                               ">    '%s'\n"
-                               ">     %s^\n",
-                               str,
-                               std::string(static_cast<int>(element_begin - str.cbegin()), ' '));
-
+            if (element_begin == element_end)
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Empty element in list\n"
+                                          ">    '%s'\n"
+                                          ">     %s^\n",
+                                          str,
+                                          std::string(static_cast<int>(element_begin - str.cbegin()), ' '));
+            }
             out.push_back({element_begin, element_end});
 
             if (iter != str.cend())
@@ -126,13 +131,15 @@ namespace vcpkg::Parse
                 // Not at the end, must be at a comma that needs to be stepped over
                 ++iter;
 
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   iter != str.end(),
-                                   "Empty element in list\n"
-                                   ">    '%s'\n"
-                                   ">     %s^\n",
-                                   str,
-                                   std::string(str.length(), ' '));
+                if (iter == str.end())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Empty element in list\n"
+                                              ">    '%s'\n"
+                                              ">     %s^\n",
+                                              str,
+                                              std::string(str.length(), ' '));
+                }
             }
 
         } while (iter != str.cend());
