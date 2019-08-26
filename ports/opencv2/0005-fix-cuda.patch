@@ -51,3 +51,88 @@
        endif()
        set(__cuda_arch_ptx "3.0")
      endif()
+diff --git a/cmake/templates/OpenCVConfig.cmake.in b/cmake/templates/OpenCVConfig.cmake.in
+index fe85571..0f9d2f5 100644
+--- a/cmake/templates/OpenCVConfig.cmake.in
++++ b/cmake/templates/OpenCVConfig.cmake.in
+@@ -256,7 +256,7 @@ if(OpenCV_CUDA_VERSION)
+ 
+   set(OpenCV_CUDA_LIBS_ABSPATH ${CUDA_LIBRARIES})
+ 
+-  if(${CUDA_VERSION} VERSION_LESS "5.5")
++  if(CUDA_VERSION VERSION_LESS "5.5")
+     list(APPEND OpenCV_CUDA_LIBS_ABSPATH ${CUDA_npp_LIBRARY})
+   else()
+     find_cuda_helper_libs(nppc)
+@@ -281,14 +281,16 @@ if(OpenCV_CUDA_VERSION)
+     list(APPEND OpenCV_CUDA_LIBS_ABSPATH ${CUDA_nvcuvenc_LIBRARIES})
+   endif()
+ 
++  set(OpenCV_CUDA_LIBS_RELPATH "")
+   foreach(l ${OpenCV_CUDA_LIBS_ABSPATH})
+-    get_filename_component(_tmp "${l}" NAME_WE)
+-    string(REGEX REPLACE "^lib" "" _tmp "${_tmp}")
+-    if(NOT TARGET "opencv_dep_${_tmp}") # protect against repeated inclusions
+-      add_library("opencv_dep_${_tmp}" UNKNOWN IMPORTED)
+-      set_target_properties("opencv_dep_${_tmp}" PROPERTIES IMPORTED_LOCATION "${l}")
++    get_filename_component(_tmp ${l} PATH)
++    if(NOT ${_tmp} MATCHES "-Wl.*")
++      list(APPEND OpenCV_CUDA_LIBS_RELPATH ${_tmp})
+     endif()
+   endforeach()
++
++  list(REMOVE_DUPLICATES OpenCV_CUDA_LIBS_RELPATH)
++  link_directories(${OpenCV_CUDA_LIBS_RELPATH})
+ endif()
+ 
+ # ==============================================================
+diff --git a/cmake/OpenCVDetectCUDA.cmake b/cmake/OpenCVDetectCUDA.cmake
+index 30b5093..50dcdc9 100644
+--- a/cmake/OpenCVDetectCUDA.cmake
++++ b/cmake/OpenCVDetectCUDA.cmake
+@@ -229,18 +229,40 @@ else()
+ endif()
+ 
+ if(HAVE_CUDA)
++  set(CUDA_LIBS_PATH "")
++  foreach(p ${CUDA_LIBRARIES} ${CUDA_npp_LIBRARY})
++    get_filename_component(_tmp ${p} PATH)
++    list(APPEND CUDA_LIBS_PATH ${_tmp})
++  endforeach()
++
++  if(HAVE_CUBLAS)
++    foreach(p ${CUDA_cublas_LIBRARY})
++      get_filename_component(_tmp ${p} PATH)
++      list(APPEND CUDA_LIBS_PATH ${_tmp})
++    endforeach()
++  endif()
++
++  if(HAVE_CUFFT)
++    foreach(p ${CUDA_cufft_LIBRARY})
++      get_filename_component(_tmp ${p} PATH)
++      list(APPEND CUDA_LIBS_PATH ${_tmp})
++    endforeach()
++  endif()
++
++  list(REMOVE_DUPLICATES CUDA_LIBS_PATH)
++  link_directories(${CUDA_LIBS_PATH})
++
+   set(CUDA_LIBRARIES_ABS ${CUDA_LIBRARIES})
+-  ocv_create_imported_targets(CUDA_LIBRARIES ${CUDA_LIBRARIES})
++  ocv_convert_to_lib_name(CUDA_LIBRARIES ${CUDA_LIBRARIES})
+   set(CUDA_npp_LIBRARY_ABS ${CUDA_npp_LIBRARY})
+-  ocv_create_imported_targets(CUDA_npp_LIBRARY ${CUDA_npp_LIBRARY})
+-
++  ocv_convert_to_lib_name(CUDA_npp_LIBRARY ${CUDA_npp_LIBRARY})
+   if(HAVE_CUBLAS)
+     set(CUDA_cublas_LIBRARY_ABS ${CUDA_cublas_LIBRARY})
+-    ocv_create_imported_targets(CUDA_cublas_LIBRARY ${CUDA_cublas_LIBRARY})
++    ocv_convert_to_lib_name(CUDA_cublas_LIBRARY ${CUDA_cublas_LIBRARY})
+   endif()
+ 
+   if(HAVE_CUFFT)
+     set(CUDA_cufft_LIBRARY_ABS ${CUDA_cufft_LIBRARY})
+-    ocv_create_imported_targets(CUDA_cufft_LIBRARY ${CUDA_cufft_LIBRARY})
++    ocv_convert_to_lib_name(CUDA_cufft_LIBRARY ${CUDA_cufft_LIBRARY})
+   endif()
+ endif()
