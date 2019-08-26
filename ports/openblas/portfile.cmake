@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         uwp.patch
         fix-space-path.patch
+        fix-redefinition-function.patch
 )
 
 find_program(GIT NAMES git git.cmd)
