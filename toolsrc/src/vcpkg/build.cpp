@@ -829,8 +829,10 @@ namespace vcpkg::Build
         // dep_pspecs was not destroyed
         for (auto&& pspec : dep_pspecs)
         {
-            if (pspec == spec) { continue; }
-            if (config.build_package_options.only_downloads == Build::OnlyDownloads::YES) { continue; }
+            if (pspec == spec || Util::Enum::to_bool(config.build_package_options.only_downloads)) 
+            { 
+                continue; 
+            }
             const auto status_it = status_db.find_installed(pspec);
             Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
             dependency_abis.emplace_back(
