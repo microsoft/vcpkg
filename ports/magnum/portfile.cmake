@@ -13,6 +13,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch
         ${CMAKE_CURRENT_LIST_DIR}/002-tools-path.patch
         ${CMAKE_CURRENT_LIST_DIR}/003-glfw-find-module.patch
+        ${CMAKE_CURRENT_LIST_DIR}/004-khrplatform-include.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
