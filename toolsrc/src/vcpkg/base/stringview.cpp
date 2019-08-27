@@ -78,7 +78,7 @@ namespace vcpkg
 
     bool operator==(StringView lhs, StringView rhs) noexcept
     {
-        return lhs.size() == lhs.size() && memcmp(lhs.data(), rhs.data(), lhs.size()) == 0;
+        return lhs.size() == rhs.size() && memcmp(lhs.data(), rhs.data(), lhs.size()) == 0;
     }
 
     bool operator!=(StringView lhs, StringView rhs) noexcept { return !(lhs == rhs); }
