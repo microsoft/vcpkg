@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaptainCrowbar/unicorn-lib
-    REF 3e4e014bbf6fe24721a14c63f2a4f7ebfa401e7c
-    SHA512 f73f288fb50f9f727edfc84810a15f1fdde76df9030c4b0d5292351e84ec8cd6c8a7e670b2a62301a77521bf60ebcf1bf7c8c9d97ddb77385ed945b55075c927
+    REF ba11f5930dbeb5f8e04b2ee727b6dd3932fd6b03
+    SHA512 2b1c8f12c3d29bfcff7209763000f2b9db612cefd384d9f015cc07a1ebeb498ba3e8b13dba4d94a86828d3f7eafc17eede21be9926080426f0417d3ad2cee396
     HEAD_REF master
 )
 
