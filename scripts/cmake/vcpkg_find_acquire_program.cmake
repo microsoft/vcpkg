@@ -302,14 +302,12 @@ function(vcpkg_find_acquire_program VAR)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
         file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-        execute_process(
-          ALLOW_IN_DOWNLOAD_MODE
+        _execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
         )
       else()
-        execute_process(
-          ALLOW_IN_DOWNLOAD_MODE
+        _execute_process(
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
           WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )

@@ -38,13 +38,16 @@ function(vcpkg_execute_required_process)
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
-    set(ALLOW_IN_DOWNLOAD_MODE_OPTION)
-    if (vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
-        set(ALLOW_IN_DOWNLOAD_MODE_OPTION ALLOW_IN_DOWNLOAD_MODE)
+    set(execute_process_function execute_process)
+    if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
+        message(FATAL_ERROR 
+[[
+This command cannot be executed in Download Mode.
+Halting portfile execution.
+]])
     endif()
 
-    execute_process(
-        ${ALLOW_IN_DOWNLOAD_MODE_OPTION}
+    _execute_process(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}
