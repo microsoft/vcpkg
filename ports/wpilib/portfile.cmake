@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thadhouse/allwpilib
-    REF 34dc343c3beb3401172e81d099d30f6bd09c4724
-    SHA512 a3583ca8f40b32915d5173d8b39c9321427f6c09ca716b5714ff5081dfa4cbcd2dc367ddf514f8292d405a8c99b029cb14f99d49302b5bc5216159fdbd7a520f
+    REF 177b8761017e8307e04863adf54bfb3bf1aa22af
+    SHA512 1d79290dd941b5009575ee1e7a00dc52adcb32d3e7e6f077870aac1fb88d06e8dc77423d1cbda3ecc6b67348a9bebbe54b937de2ab38ef090e19ce07ed8aaafc
 )
 
 set(WITHOUT_JAVA ON)
