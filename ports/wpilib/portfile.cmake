@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO thadhouse/allwpilib
-    REF 177b8761017e8307e04863adf54bfb3bf1aa22af
-    SHA512 1d79290dd941b5009575ee1e7a00dc52adcb32d3e7e6f077870aac1fb88d06e8dc77423d1cbda3ecc6b67348a9bebbe54b937de2ab38ef090e19ce07ed8aaafc
+    REPO wpilibsuite/allwpilib
+    REF d10a1a797720014197c21dee38fdced73454dca4
+    SHA512 a76e8652b6d6a921d466e08bcf162ee1b28c06af031b616b2333f8a9479ffd12d1c301182dac86e5d7d59909a21cbee4e551028393df80671336546c14ecf606
 )
 
 set(WITHOUT_JAVA ON)
