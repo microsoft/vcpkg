@@ -1,0 +1,33 @@
+diff --git a/CMakeModules/FindFreeImage.cmake b/CMakeModules/FindFreeImage.cmake
+index f305d7f41..94bf04117 100644
+--- a/CMakeModules/FindFreeImage.cmake	
++++ b/CMakeModules/FindFreeImage.cmake
+@@ -65,9 +65,8 @@ find_library(FreeImage_LINK_LIBRARY
+ 
+ find_library(FreeImage_STATIC_LIBRARY
+   NAMES
+-    ${CMAKE_STATIC_LIBRARY_PREFIX}FreeImageLIB${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    ${CMAKE_STATIC_LIBRARY_PREFIX}FreeImage${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    ${CMAKE_STATIC_LIBRARY_PREFIX}freeimage${CMAKE_STATIC_LIBRARY_SUFFIX}
++    ${CMAKE_STATIC_LIBRARY_PREFIX}FreeImageLIB
++    ${CMAKE_STATIC_LIBRARY_PREFIX}FreeImage
+   PATHS
+     /usr
+     /usr/local
+@@ -83,14 +82,11 @@ find_library(FreeImage_STATIC_LIBRARY
+ if (WIN32)
+   find_file(FreeImage_DLL_LIBRARY
+     NAMES
+-      ${CMAKE_SHARED_LIBRARY_PREFIX}FreeImage${CMAKE_SHARED_LIBRARY_SUFFIX}
+-      ${CMAKE_SHARED_LIBRARY_PREFIX}freeimage${CMAKE_SHARED_LIBRARY_SUFFIX}
++      ${CMAKE_SHARED_LIBRARY_PREFIX}FreeImage
++      ${CMAKE_SHARED_LIBRARY_PREFIX}freeimage
+     PATHS
+       ${FreeImage_ROOT}
+     PATH_SUFFIXES
+-      lib
+-      lib64
+-      x64/lib
+       bin
+       x64/bin
+     DOC "The FreeImage dll")

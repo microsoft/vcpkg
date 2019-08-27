@@ -11,6 +11,7 @@ vcpkg_from_github(
     SHA512 2093464db0f3a7f0178f65bed37986a4df1117f1d7ad65157d525584490cdf234475f01ed1a2003a9e54bdc3b9e2e450808044a264c2284d67b8c2a353400027
     HEAD_REF master
 	PATCHES fix-static_build.patch
+            FindFreeImage.patch
 )
 
 vcpkg_configure_cmake(
