@@ -59,10 +59,11 @@ vcpkg_from_github(
 #    PATCHES "${CMAKE_CURRENT_LIST_DIR}/do-not-enforce-dynamic-library.patch"
 #)
 
-#if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+     set(REQUIRE_WDK_ARG "-DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF")
 #    message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
 #    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-#endif()
+endif()
 
 #if(VCPKG_LIBRARY_LINKAGE MATCHES static)
 #  set(ICD_SHARED OFF)
@@ -75,6 +76,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
+        ${REQUIRE_WDK_ARG} 
 #        -DBUILD_SHARED_LIBS=${ICD_SHARED}
 )
 
