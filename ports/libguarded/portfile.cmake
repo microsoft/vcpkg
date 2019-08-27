@@ -1,0 +1,15 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO copperspice/libguarded
+    REF 1f159aa866a50f5d2952de41d8a99821b8ec37df
+    SHA512 3ff138719b895a9c45492aee0a30e9f9eff2c3b3510de01dad59123fac6bdc1c7479518f5a81a61e4d25c0f9679b21b5018953d99809f52aafa7729599a3282a
+    HEAD_REF master
+)
+
+File(COPY ${SOURCE_PATH}/src/libguarded DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+
