@@ -1,5 +1,11 @@
 include(vcpkg_common_functions)
 
+file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
+
 #vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 # OpenCL C headers
@@ -64,11 +70,18 @@ vcpkg_from_github(
 #    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 #endif()
 
+#if(VCPKG_LIBRARY_LINKAGE MATCHES static)
+#  set(ICD_SHARED OFF)
+#else()
+#  set(ICD_SHARED ON)
+#endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
+#        -DBUILD_SHARED_LIBS=${ICD_SHARED}
 )
 
 vcpkg_build_cmake(TARGET OpenCL)
