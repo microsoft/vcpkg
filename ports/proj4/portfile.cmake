@@ -18,15 +18,35 @@ else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
 endif()
 
-set(BUILD_PROJ_DATABASE ON)
-if (${TARGET_TRIPLET} MATCHES "uwp" OR ${TARGET_TRIPLET} MATCHES "arm")
-    message("Proj4 database cannot be built in arm/uwp currently.")
-    set(BUILD_PROJ_DATABASE OFF)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    database BUILD_PROJ_DATABASE
+)
+
+if ("database" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        set(BIN_SUFFIX .exe)
+        if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3-bin.exe)
+                message(FATAL_ERROR "Proj4 database need to install sqlite3[tools]:x86-windows first.")
+            endif()
+            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
+        elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3-bin.exe)
+                message(FATAL_ERROR "Proj4 database need to install sqlite3[tools]:x64-windows first.")
+            endif()
+            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
+        else()
+            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
+        endif()
+    else()
+        set(BIN_SUFFIX)
+        set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
+    endif()
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
     -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
@@ -38,7 +58,7 @@ vcpkg_configure_cmake(
     -DBUILD_PROJ=OFF
     -DBUILD_PROJINFO=OFF
     -DPROJ_TESTS=OFF
-    -DBUILD_PROJ_DATABASE=${BUILD_PROJ_DATABASE}
+    -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3-bin${BIN_SUFFIX}
 )
 
 vcpkg_install_cmake()
