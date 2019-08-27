@@ -201,7 +201,6 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   endif()
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
   else()
       # Enables PDBs for release and debug builds
@@ -253,6 +252,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     # Release build
     ################
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
+    message(STATUS "Release Options: ${NMAKE_OPTIONS_REL}")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} -f makefile.vc
       "${NMAKE_OPTIONS_REL}"
@@ -268,6 +268,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     ################
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+    message(STATUS "Debug Options: ${NMAKE_OPTIONS_DBG}")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} /G -f makefile.vc
       "${NMAKE_OPTIONS_DBG}"
