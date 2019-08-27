@@ -43,16 +43,20 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/share/clblas
     RENAME copyright
 )
+if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+    file(REMOVE
+            ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb
+            ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
+            ${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe
+            ${CURRENT_PACKAGES_DIR}/debug/bin/concrt140d.dll
+            ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp140d.dll
+            ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140d.dll
+    )
 
-file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb
-        ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
-        ${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe
-        ${CURRENT_PACKAGES_DIR}/debug/bin/concrt140d.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp140d.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140d.dll
-)
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+endif()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clBLAS")
+endif()
 
 vcpkg_copy_pdbs()
