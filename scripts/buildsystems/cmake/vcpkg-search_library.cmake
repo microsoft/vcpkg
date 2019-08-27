@@ -1,5 +1,11 @@
 #Setup common debug suffix used by ports;
-set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;D;_d;_D;-d;-D;-gd;_debug;_Debug;_DEBUG")
+set(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "d;D;_d;_D;-d;-D;-gd;-debug;_debug;_Debug;_DEBUG")
+#foreach(_dbg_suffix ${VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES})
+#	list(APPEND VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "${_dbg_suffix}.lib")
+#	list(APPEND VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "${_dbg_suffix}.a")
+#	list(APPEND VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "${_dbg_suffix}.dll")
+#	list(APPEND VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES "${_dbg_suffix}.so")
+#endforeach()
 mark_as_advanced(VCPKG_ADDITIONAL_DEBUG_LIBNAME_SEARCH_SUFFIXES)
 
 function(vcpkg_search_library_debug OUTPUT_VAR)
