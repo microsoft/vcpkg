@@ -16,18 +16,19 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
     find_package(PNG)
     find_package(Freetype)
     find_package(sqlite3 CONFIG)
-    find_package(PostgreSQL MODULE REQUIRED)
+    #find_package(PostgreSQL MODULE REQUIRED)
     find_package(double-conversion CONFIG)
     find_package(OpenSSL)
     find_package(harfbuzz CONFIG)
 
     set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
         ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
-        ${PostgreSQL_LIBRARY} double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
+        double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
     )
 
     add_qt_library(Qt5::Core
         pcre2-16
+        libpq
         Qt5ThemeSupport
         Qt5EventDispatcherSupport
         Qt5PlatformCompositorSupport
