@@ -3,11 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF v0.3.11
-    SHA512 da845f748aecfff61209f542f4eac8d46738af52ce980d5c8315397f859429dfd9e4bf989ddf2fbe938d1efb33dce9c531c92cbe53388b1d1082d5caa97e8750
+    REF b2e7ca47449571beaca4a507c65ac3ee39d8eefc
+    SHA512 c9dc394bf3ef8eb33d36b81bae5a2002a8fccc7d876ad9c631da818aae7d06846615791c2311e8baa6efa7fcd9d565effabfec6f01767ca0099c6fa64d58e2fa
     HEAD_REF master
     PATCHES
-        fix-dependencey-build-error.patch # This patch fixes dependency port compilation failure
+        disable-error-4068.patch # This patch fixes dependency port compilation failure
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
 )
 

@@ -73,7 +73,7 @@ namespace vcpkg::Remove
                     if (ec)
                     {
 #if defined(_WIN32)
-                        fs::stdfs::permissions(target, fs::stdfs::perms::owner_all | fs::stdfs::perms::group_all, ec);
+                        fs::stdfs::permissions(target, fs::perms::owner_all | fs::perms::group_all, ec);
                         fs.remove(target, ec);
                         if (ec)
                         {
@@ -86,7 +86,7 @@ namespace vcpkg::Remove
 #endif
                     }
                 }
-                else if (!fs::stdfs::exists(status))
+                else if (!fs::exists(status))
                 {
                     System::printf(System::Color::warning, "Warning: %s: file not found\n", target.u8string());
                 }
@@ -179,8 +179,7 @@ namespace vcpkg::Remove
         {
             System::printf("Purging package %s...\n", display_name);
             Files::Filesystem& fs = paths.get_filesystem();
-            std::error_code ec;
-            fs.remove_all(paths.packages / action.spec.dir(), ec);
+            fs.remove_all(paths.packages / action.spec.dir(), VCPKG_LINE_INFO);
             System::printf(System::Color::success, "Purging package %s... done\n", display_name);
         }
     }

@@ -13,45 +13,48 @@
 
 namespace vcpkg::Dependencies
 {
-    struct ClusterInstalled
+    namespace
     {
-        InstalledPackageView ipv;
-        std::set<PackageSpec> remove_edges;
-        std::set<std::string> original_features;
-    };
+        struct ClusterInstalled
+        {
+            InstalledPackageView ipv;
+            std::set<PackageSpec> remove_edges;
+            std::set<std::string> original_features;
+        };
 
-    struct ClusterSource
-    {
-        const SourceControlFileLocation* scfl = nullptr;
-        std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
-    };
+        struct ClusterSource
+        {
+            const SourceControlFileLocation* scfl = nullptr;
+            std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
+        };
 
-    /// <summary>
-    /// Representation of a package and its features in a ClusterGraph.
-    /// </summary>
-    struct Cluster : Util::MoveOnlyBase
-    {
-        PackageSpec spec;
+        /// <summary>
+        /// Representation of a package and its features in a ClusterGraph.
+        /// </summary>
+        struct Cluster : Util::MoveOnlyBase
+        {
+            PackageSpec spec;
 
-        Optional<ClusterInstalled> installed;
-        Optional<ClusterSource> source;
+            Optional<ClusterInstalled> installed;
+            Optional<ClusterSource> source;
 
-        // Note: this map can contain "special" strings such as "" and "*"
-        std::unordered_map<std::string, bool> plus;
-        std::set<std::string> to_install_features;
-        bool minus = false;
-        bool transient_uninstalled = true;
-        RequestType request_type = RequestType::AUTO_SELECTED;
-    };
+            // Note: this map can contain "special" strings such as "" and "*"
+            std::unordered_map<std::string, bool> plus;
+            std::set<std::string> to_install_features;
+            bool minus = false;
+            bool transient_uninstalled = true;
+            RequestType request_type = RequestType::AUTO_SELECTED;
+        };
 
-    struct ClusterPtr
-    {
-        Cluster* ptr;
+        struct ClusterPtr
+        {
+            Cluster* ptr;
 
-        Cluster* operator->() const { return ptr; }
-    };
+            Cluster* operator->() const { return ptr; }
+        };
 
-    bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
+        bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
+    }
 }
 
 namespace std
@@ -108,9 +111,8 @@ namespace vcpkg::Dependencies
         static ClusterSource cluster_from_scf(const SourceControlFileLocation& scfl, Triplet t)
         {
             ClusterSource ret;
-            ret.build_edges.emplace("core", 
-                filter_dependencies_to_specs(scfl.source_control_file->core_paragraph->depends, 
-                    t));
+            ret.build_edges.emplace("core",
+                                    filter_dependencies_to_specs(scfl.source_control_file->core_paragraph->depends, t));
 
             for (const auto& feature : scfl.source_control_file->feature_paragraphs)
                 ret.build_edges.emplace(feature->name, filter_dependencies_to_specs(feature->depends, t));
@@ -123,22 +125,23 @@ namespace vcpkg::Dependencies
         const PortFileProvider& m_provider;
     };
 
-    std::string to_output_string(RequestType request_type, 
-                                 const CStringView s, 
-                                 const Build::BuildPackageOptions& options, 
-                                 const fs::path& install_port_path,
-                                 const fs::path& default_port_path)
+    static std::string to_output_string(RequestType request_type,
+                                        const CStringView s,
+                                        const Build::BuildPackageOptions& options,
+                                        const fs::path& install_port_path,
+                                        const fs::path& default_port_path)
     {
-        if (!default_port_path.empty()
-            && !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(),
-                                                            default_port_path.u8string()))
+        if (!default_port_path.empty() &&
+            !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(), default_port_path.u8string()))
         {
             const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
             switch (request_type)
             {
-            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s%s -- %s", s, from_head, install_port_path.u8string());
-            case RequestType::USER_REQUESTED: return Strings::format("    %s%s -- %s", s, from_head, install_port_path.u8string());
-            default: Checks::unreachable(VCPKG_LINE_INFO);
+                case RequestType::AUTO_SELECTED:
+                    return Strings::format("  * %s%s -- %s", s, from_head, install_port_path.u8string());
+                case RequestType::USER_REQUESTED:
+                    return Strings::format("    %s%s -- %s", s, from_head, install_port_path.u8string());
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
         return to_output_string(request_type, s, options);
@@ -152,7 +155,7 @@ namespace vcpkg::Dependencies
 
         switch (request_type)
         {
-            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s%s", s, from_head);
+            case RequestType::AUTO_SELECTED: return Strings::format("  * %s%s", s, from_head);
             case RequestType::USER_REQUESTED: return Strings::format("    %s%s", s, from_head);
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
@@ -162,7 +165,7 @@ namespace vcpkg::Dependencies
     {
         switch (request_type)
         {
-            case RequestType::AUTO_SELECTED:  return Strings::format("  * %s", s);
+            case RequestType::AUTO_SELECTED: return Strings::format("  * %s", s);
             case RequestType::USER_REQUESTED: return Strings::format("    %s", s);
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
@@ -293,7 +296,8 @@ namespace vcpkg::Dependencies
 
     MapPortFileProvider::MapPortFileProvider(const std::unordered_map<std::string, SourceControlFileLocation>& map)
         : ports(map)
-    {}
+    {
+    }
 
     Optional<const SourceControlFileLocation&> MapPortFileProvider::get_control_file(const std::string& spec) const
     {
@@ -304,13 +308,14 @@ namespace vcpkg::Dependencies
 
     std::vector<const SourceControlFileLocation*> MapPortFileProvider::load_all_control_files() const
     {
-        return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation * { return &kvpair.second; });
+        return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation* { return &kvpair.second; });
     }
 
     PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths,
-                                                 const std::vector<std::string>* ports_dirs_paths) 
+                                                 const std::vector<std::string>* ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
+        auto& fs = Files::get_real_filesystem();
         if (ports_dirs_paths)
         {
             for (auto&& overlay_path : *ports_dirs_paths)
@@ -325,7 +330,7 @@ namespace vcpkg::Dependencies
                                        overlay.string());
 
                     Checks::check_exit(VCPKG_LINE_INFO,
-                                       fs::stdfs::is_directory(overlay),
+                                       fs::is_directory(fs.status(VCPKG_LINE_INFO, overlay)),
                                        "Error: Path \"%s\" must be a directory",
                                        overlay.string());
 
@@ -354,7 +359,7 @@ namespace vcpkg::Dependencies
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
+                        SourceControlFileLocation scfl{std::move(*scf), ports_dir};
                         auto it = cache.emplace(spec, std::move(scfl));
                         return it.first->second;
                     }
@@ -362,9 +367,8 @@ namespace vcpkg::Dependencies
                 else
                 {
                     vcpkg::print_error_message(maybe_scf.error());
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: Failed to load port from %s",
-                                              spec, ports_dir.u8string());
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, ports_dir.u8string());
                 }
             }
 
@@ -373,7 +377,7 @@ namespace vcpkg::Dependencies
             {
                 if (scf->get()->core_paragraph->name == spec)
                 {
-                    SourceControlFileLocation scfl{ std::move(*scf), ports_dir / spec };
+                    SourceControlFileLocation scfl{std::move(*scf), ports_dir / spec};
                     auto it = cache.emplace(spec, std::move(scfl));
                     return it.first->second;
                 }
@@ -399,7 +403,7 @@ namespace vcpkg::Dependencies
                     auto port_name = scf->get()->core_paragraph->name;
                     if (cache.find(port_name) == cache.end())
                     {
-                        SourceControlFileLocation scfl{ std::move(*scf), ports_dir };
+                        SourceControlFileLocation scfl{std::move(*scf), ports_dir};
                         auto it = cache.emplace(port_name, std::move(scfl));
                         ret.emplace_back(&it.first->second);
                     }
@@ -407,9 +411,8 @@ namespace vcpkg::Dependencies
                 else
                 {
                     vcpkg::print_error_message(maybe_scf.error());
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: Failed to load port from %s",
-                                              ports_dir.u8string());
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Failed to load port from %s", ports_dir.u8string());
                 }
                 continue;
             }
@@ -421,7 +424,7 @@ namespace vcpkg::Dependencies
                 auto port_name = scf->core_paragraph->name;
                 if (cache.find(port_name) == cache.end())
                 {
-                    SourceControlFileLocation scfl{ std::move(scf), ports_dir / port_name };
+                    SourceControlFileLocation scfl{std::move(scf), ports_dir / port_name};
                     auto it = cache.emplace(port_name, std::move(scfl));
                     ret.emplace_back(&it.first->second);
                 }
@@ -670,7 +673,8 @@ namespace vcpkg::Dependencies
             }
         }
 
-        // This feature was or will be uninstalled, therefore we need to rebuild
+        // The feature was not previously installed. Mark the cluster
+        // (aka the entire port) to be removed before re-adding it.
         mark_minus(cluster, graph, graph_plan, prevent_default_features);
 
         return follow_plus_dependencies(feature, cluster, graph, graph_plan, prevent_default_features);
@@ -768,9 +772,10 @@ namespace vcpkg::Dependencies
     /// <param name="map">Map of all source control files in the current environment.</param>
     /// <param name="specs">Feature specifications to resolve dependencies for.</param>
     /// <param name="status_db">Status of installed packages in the current environment.</param>
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFileLocation>& map,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db)
+    std::vector<AnyAction> create_feature_install_plan(
+        const std::unordered_map<std::string, SourceControlFileLocation>& map,
+        const std::vector<FeatureSpec>& specs,
+        const StatusParagraphs& status_db)
     {
         MapPortFileProvider provider(map);
         return create_feature_install_plan(provider, specs, status_db);
@@ -832,9 +837,8 @@ namespace vcpkg::Dependencies
             {
                 // If it will be transiently uninstalled, we need to issue a full installation command
                 auto* pscfl = p_cluster->source.value_or_exit(VCPKG_LINE_INFO).scfl;
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   pscfl != nullptr,
-                                   "Error: Expected a SourceControlFileLocation to exist");
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, pscfl != nullptr, "Error: Expected a SourceControlFileLocation to exist");
                 auto&& scfl = *pscfl;
 
                 auto dep_specs = Util::fmap(m_graph_plan->install_graph.adjacency_list(p_cluster),
@@ -914,7 +918,9 @@ namespace vcpkg::Dependencies
 
     PackageGraph::~PackageGraph() = default;
 
-    void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive, const fs::path& default_ports_dir)
+    void print_plan(const std::vector<AnyAction>& action_plan,
+                    const bool is_recursive,
+                    const fs::path& default_ports_dir)
     {
         std::vector<const RemovePlanAction*> remove_plans;
         std::vector<const InstallPlanAction*> rebuilt_plans;
@@ -971,13 +977,10 @@ namespace vcpkg::Dependencies
 
         static auto actions_to_output_string = [&](const std::vector<const InstallPlanAction*>& v) {
             return Strings::join("\n", v, [&](const InstallPlanAction* p) {
-                if (auto * pscfl = p->source_control_file_location.get())
+                if (auto* pscfl = p->source_control_file_location.get())
                 {
-                    return to_output_string(p->request_type, 
-                                            p->displayname(), 
-                                            p->build_options, 
-                                            pscfl->source_location, 
-                                            default_ports_dir);
+                    return to_output_string(
+                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, default_ports_dir);
                 }
 
                 return to_output_string(p->request_type, p->displayname(), p->build_options);

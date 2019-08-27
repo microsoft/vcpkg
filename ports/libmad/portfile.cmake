@@ -24,6 +24,7 @@ file(COPY ${SOURCE_PATH}/msvc++/mad.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
