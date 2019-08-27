@@ -1,11 +1,5 @@
 include(vcpkg_common_functions)
 
-file(COPY
-        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)
-
 #vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 # OpenCL C headers
