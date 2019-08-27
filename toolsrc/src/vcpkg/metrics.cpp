@@ -266,7 +266,7 @@ namespace vcpkg::Metrics
             const auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                return vcpkg::Hash::get_string_hash(match[0], "SHA256");
+                return vcpkg::Hash::get_string_hash(match[0].str(), Hash::Algorithm::Sha256);
             }
             ++next;
         }
@@ -307,7 +307,9 @@ namespace vcpkg::Metrics
 
     void Metrics::upload(const std::string& payload)
     {
-#if defined(_WIN32)
+#if !defined(_WIN32)
+        Util::unused(payload);
+#else
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 

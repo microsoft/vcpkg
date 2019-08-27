@@ -155,9 +155,9 @@ namespace vcpkg
     {
         return m_triplets_cache.get_lazy(
             triplet, [&]() -> auto {
-                for (auto&& triplet_dir : triplets_dirs)
+                for (const auto& triplet_dir : triplets_dirs)
                 {
-                    auto&& path = triplet_dir / (triplet.canonical_name() + ".cmake");
+                    auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
                     if (this->get_filesystem().exists(path))
                     {
                         return path;

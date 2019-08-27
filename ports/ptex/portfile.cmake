@@ -1,23 +1,39 @@
+include(vcpkg_common_functions)
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "UWP build not supported")
 endif()
 
-include(vcpkg_common_functions)
+set(PTEX_VER 2.3.2)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wdas/ptex
-    REF v2.1.28
-    SHA512 ddce3c79f14d196e550c1e8a5b371482f88190cd667a2e2aa84601de1639f7cabb8571c1b3a49b48df46ce550d27088a00a67b1403c3bfec2ed73437c3dca3e8
-    HEAD_REF master)
+    REF 1b8bc985a71143317ae9e4969fa08e164da7c2e5
+    SHA512 37f2df9ec195f3d69d9526d0dea6a93ef49d69287bfae6ccd9671477491502ea760ed14e3b206b4f488831ab728dc749847b7d176c9b8439fb58b0a0466fe6c5
+    HEAD_REF master
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-build.patch
+)
 
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-build.patch)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_SHARED_LIB ON)
+    set(BUILD_STATIC_LIB OFF)
+else()
+    set(BUILD_SHARED_LIB OFF)
+    set(BUILD_STATIC_LIB ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA)
+    PREFER_NINJA
+    OPTIONS
+        -DPTEX_VER="v${PTEX_VER}"
+        -DPTEX_BUILD_SHARED_LIBS=${BUILD_SHARED_LIB}
+        -DPTEX_BUILD_STATIC_LIBS=${BUILD_STATIC_LIB}
+)
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Ptex)
 vcpkg_copy_pdbs()
 
 foreach(HEADER PtexHalf.h Ptexture.h)
@@ -30,6 +46,6 @@ foreach(HEADER PtexHalf.h Ptexture.h)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/${HEADER} "${PTEX_HEADER}")
 endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 file(COPY ${SOURCE_PATH}/src/doc/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ptex)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ptex/license.txt ${CURRENT_PACKAGES_DIR}/share/ptex/copyright)

@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_RUNNER
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 
 #include <vcpkg/base/system.debug.h>
 
