@@ -344,7 +344,8 @@ namespace vcpkg::Install
 
             if (BuildResult::DOWNLOADED == result.code)
             {
-                System::print2(System::Color::success, "Downloaded sources for package ", display_name_with_features, "\n");
+                System::print2(
+                    System::Color::success, "Downloaded sources for package ", display_name_with_features, "\n");
                 return result;
             }
 
@@ -643,7 +644,8 @@ namespace vcpkg::Install
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
-        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
+        const KeepGoing keep_going =
+            to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
 
         auto& fs = paths.get_filesystem();
 
@@ -661,7 +663,7 @@ namespace vcpkg::Install
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            (GlobalState::g_binary_caching && !only_downloads)? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            (GlobalState::g_binary_caching && !only_downloads) ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 

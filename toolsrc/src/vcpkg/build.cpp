@@ -410,7 +410,7 @@ namespace vcpkg::Build
 
         if (Util::Enum::to_bool(config.build_package_options.only_downloads))
         {
-            variables.push_back({ "VCPKG_DOWNLOAD_MODE", "true" });
+            variables.push_back({"VCPKG_DOWNLOAD_MODE", "true"});
         }
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
@@ -812,13 +812,12 @@ namespace vcpkg::Build
         {
             Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
                 return status_db.is_installed(fspec) || fspec.name() == name;
-                });
+            });
 
             if (!required_fspecs.empty())
             {
-                return { BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs) };
+                return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
             }
-
         }
 
         const PackageSpec spec =
@@ -829,9 +828,9 @@ namespace vcpkg::Build
         // dep_pspecs was not destroyed
         for (auto&& pspec : dep_pspecs)
         {
-            if (pspec == spec || Util::Enum::to_bool(config.build_package_options.only_downloads)) 
-            { 
-                continue; 
+            if (pspec == spec || Util::Enum::to_bool(config.build_package_options.only_downloads))
+            {
+                continue;
             }
             const auto status_it = status_db.find_installed(pspec);
             Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
