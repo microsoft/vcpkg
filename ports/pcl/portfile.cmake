@@ -18,13 +18,15 @@ file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
-vcpkg_check_features(
-    openni2 WITH_OPENNI2
-    qt WITH_QT
-    pcap WITH_PCAP
-    cuda WITH_CUDA
-    tools BUILD_TOOLS
-    opengl WITH_OPENGL
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    openni2     WITH_OPENNI2
+    qt          WITH_QT
+    pcap        WITH_PCAP
+    cuda        WITH_CUDA
+    cuda        BUILD_CUDA
+    cuda        BUILD_GPU
+    tools       BUILD_tools
+    opengl      WITH_OPENGL
 )
 
 vcpkg_configure_cmake(
@@ -33,24 +35,18 @@ vcpkg_configure_cmake(
     OPTIONS
         # BUILD
         -DBUILD_surface_on_nurbs=ON
-        -DBUILD_tools=${BUILD_TOOLS}
-        -DBUILD_CUDA=${WITH_CUDA}
-        -DBUILD_GPU=${WITH_CUDA} # build GPU when use CUDA
         # PCL
         -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         # WITH
-        -DWITH_CUDA=${WITH_CUDA}
         -DWITH_LIBUSB=OFF
-        -DWITH_OPENNI2=${WITH_OPENNI2}
-        -DWITH_PCAP=${WITH_PCAP}
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_QT=${WITH_QT}
         -DWITH_VTK=ON
-        -DWITH_OPENGL=${WITH_OPENGL}
+        # FEATURES
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -60,7 +56,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(BUILD_TOOLS)
+if("tools" IN_LIST FEATURES)
     file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pcl)

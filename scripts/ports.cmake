@@ -6,8 +6,9 @@ macro(debug_message)
     endif()
 endmacro()
 
-#Detect .vcpkg-root to figure VCPKG_ROOT_DIR
-SET(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+#Detect .vcpkg-root to figure VCPKG_ROOT_DIR, starting from triplet folder.
+get_filename_component(TARGET_TRIPLET_DIR ${TARGET_TRIPLET_FILE} DIRECTORY)
+SET(VCPKG_ROOT_DIR_CANDIDATE ${TARGET_TRIPLET_DIR})
 while(IS_DIRECTORY ${VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
     get_filename_component(VCPKG_ROOT_DIR_TEMP ${VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
     if (VCPKG_ROOT_DIR_TEMP STREQUAL VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
@@ -19,7 +20,7 @@ endwhile()
 
 set(VCPKG_ROOT_DIR ${VCPKG_ROOT_DIR_CANDIDATE})
 
-list(APPEND CMAKE_MODULE_PATH ${VCPKG_ROOT_DIR}/scripts/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(CURRENT_INSTALLED_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
 set(DOWNLOADS ${VCPKG_ROOT_DIR}/downloads CACHE PATH "Location to download sources and tools")
 set(PACKAGES_DIR ${VCPKG_ROOT_DIR}/packages CACHE PATH "Location to store package images")
@@ -67,7 +68,17 @@ if(CMD MATCHES "^BUILD$")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR} ${CURRENT_PACKAGES_DIR})
 
     include(${CMAKE_TRIPLET_FILE})
-    include(${ENV_OVERRIDES_FILE} OPTIONAL)
+
+    if (DEFINED VCPKG_ENV_OVERRIDES_FILE)
+        include(${VCPKG_ENV_OVERRIDES_FILE})
+    endif()
+
+    if (DEFINED VCPKG_PORT_TOOLCHAINS)
+        foreach(VCPKG_PORT_TOOLCHAIN ${VCPKG_PORT_TOOLCHAINS})
+            include(${VCPKG_PORT_TOOLCHAIN})
+        endforeach()
+    endif()
+
     set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
     include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_definitions.cmake)
     include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_functions.cmake)

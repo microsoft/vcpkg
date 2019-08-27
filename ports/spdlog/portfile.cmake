@@ -27,7 +27,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/spdlog)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/${PORT}/cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${PORT}/cmake)
+endif()
 
 vcpkg_copy_pdbs()
 
