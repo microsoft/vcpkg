@@ -43,7 +43,8 @@ namespace vcpkg::Commands::PortHistory
 
     static std::vector<PortControlVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
     {
-        const std::string cmd = Strings::format(R"(log --format="%%H %%cd" --date=short -- ports/%s/.)", port_name);
+        const std::string cmd =
+            Strings::format(R"(log --format="%%H %%cd" --date=short --left-only -- ports/%s/.)", port_name);
         auto output = run_git_command(paths, cmd);
 
         auto commits = Util::fmap(
