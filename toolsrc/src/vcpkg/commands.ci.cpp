@@ -212,7 +212,6 @@ namespace vcpkg::Commands::CI
         const Build::BuildPackageOptions build_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
@@ -357,7 +356,6 @@ namespace vcpkg::Commands::CI
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
-            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,

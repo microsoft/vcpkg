@@ -39,12 +39,6 @@ namespace vcpkg::Build
         YES
     };
 
-    enum class OnlyDownloads
-    {
-        NO = 0,
-        YES
-    };
-
     enum class CleanBuildtrees
     {
         NO = 0,
@@ -92,7 +86,6 @@ namespace vcpkg::Build
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
-        OnlyDownloads only_downloads;
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
@@ -110,7 +103,6 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
-        DOWNLOADED
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
