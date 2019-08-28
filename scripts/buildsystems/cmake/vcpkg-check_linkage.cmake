@@ -31,32 +31,34 @@ function(vcpkg_check_linkage OUTPUT_LINK_LIST)
     endif()
     
     #Generator expressions list guard
-    if(${_vcpkg_link_lib} MATCHES ${_vcpkg_genexp_start})       
-        vcpkg_msg(STATUS "vcpkg_check_linkage" "Detected opening generator expression!")    
-        string(REGEX MATCH ${_vcpkg_genexp_closing_begin} _vcpkg_link_lib_genexp_begin ${_vcpkg_link_lib})
-        vcpkg_msg(STATUS "vcpkg_check_linkage" "Found expression ${_vcpkg_link_lib_genexp_begin} at the start.")
-        string(REGEX MATCHALL ${_vcpkg_genexp_start} _vcpkg_genexp_opening_match ${_vcpkg_link_lib_genexp_begin})
-        string(REGEX MATCHALL ${_vcpkg_genexp_close} _vcpkg_genexp_close_match   ${_vcpkg_link_lib_genexp_begin})
-        list(LENGTH _vcpkg_genexp_opening_match _vcpkg_genexp_opening_counter)
-        list(LENGTH _vcpkg_genexp_close_match _vcpkg_genexp_closing_counter)
-        unset(_vcpkg_genexp_opening_match)
-        unset(_vcpkg_genexp_close_match)
-        #string(CONCAT _vcpkg_link_lib_genexp_begin ${_vcpkg_genexp_start_out})
-        
-        vcpkg_msg(STATUS "vcpkg_check_linkage" "Found ${_vcpkg_genexp_opening_counter} opening and ${_vcpkg_genexp_closing_counter} closing expressions.")
+    if(${_vcpkg_link_lib} MATCHES ${_vcpkg_genexp_start})
+        while(${_vcpkg_link_lib} MATCHES ${_vcpkg_genexp_start})
+            vcpkg_msg(STATUS "vcpkg_check_linkage" "Detected opening generator expression!")    
+            string(REGEX MATCH ${_vcpkg_genexp_closing_begin} _vcpkg_link_lib_genexp_begin_tmp ${_vcpkg_link_lib})
+            vcpkg_msg(STATUS "vcpkg_check_linkage" "Found expression ${_vcpkg_link_lib_genexp_begin_tmp} at the start.")
+            string(REGEX MATCHALL ${_vcpkg_genexp_start} _vcpkg_genexp_opening_match ${_vcpkg_link_lib_genexp_begin_tmp})
+            string(REGEX MATCHALL ${_vcpkg_genexp_close} _vcpkg_genexp_close_match   ${_vcpkg_link_lib_genexp_begin_tmp})
+            list(LENGTH _vcpkg_genexp_opening_match _vcpkg_genexp_opening_counter)
+            list(LENGTH _vcpkg_genexp_close_match _vcpkg_genexp_closing_counter)
+            unset(_vcpkg_genexp_opening_match)
+            unset(_vcpkg_genexp_close_match)
+            string(CONCAT _vcpkg_link_lib_genexp_begin ${_vcpkg_link_lib_genexp_begin} ${_vcpkg_link_lib_genexp_begin_tmp})
+            
+            vcpkg_msg(STATUS "vcpkg_check_linkage" "Found ${_vcpkg_genexp_opening_counter} opening and ${_vcpkg_genexp_closing_counter} closing expressions.")
 
-        math(EXPR _genexp_counter "${_genexp_counter} + ${_vcpkg_genexp_opening_counter} - ${_vcpkg_genexp_closing_counter}")    
-        unset(_vcpkg_genexp_opening_counter)
-        unset(_vcpkg_genexp_closing_counter)
-        
-        vcpkg_msg(STATUS "vcpkg_check_linkage" "Genexpression remaining counter ${_genexp_counter}")       
+            math(EXPR _genexp_counter "${_genexp_counter} + ${_vcpkg_genexp_opening_counter} - ${_vcpkg_genexp_closing_counter}")    
+            unset(_vcpkg_genexp_opening_counter)
+            unset(_vcpkg_genexp_closing_counter)
+            
+            vcpkg_msg(STATUS "vcpkg_check_linkage" "Genexpression remaining counter ${_genexp_counter}")       
 
-        string(REPLACE "${_vcpkg_link_lib_genexp_begin}" "" _vcpkg_link_lib ${_vcpkg_link_lib}) # Remove starting genexp
-        
-        set(_tmp_cur_list _tmp_gen_list)      
-        vcpkg_msg(STATUS "vcpkg_check_linkage" "Link element to check changed to ${_vcpkg_link_lib} due to opening generator expression")
+            string(REPLACE "${_vcpkg_link_lib_genexp_begin_tmp}" "" _vcpkg_link_lib ${_vcpkg_link_lib}) # Remove starting genexp
+            
+            set(_tmp_cur_list _tmp_gen_list)      
+            vcpkg_msg(STATUS "vcpkg_check_linkage" "Link element to check changed to ${_vcpkg_link_lib} due to opening generator expression")
+        endwhile()
     endif()
-
+    
     if(${_vcpkg_link_lib} MATCHES ${_vcpkg_genexp_close_end})
         string(REGEX MATCH ${_vcpkg_genexp_close_end} _vcpkg_link_lib_genexp_close ${_vcpkg_link_lib})
         string(REGEX MATCHALL ${_vcpkg_genexp_close} _vcpkg_genexp_close_match ${_vcpkg_link_lib_genexp_close})
