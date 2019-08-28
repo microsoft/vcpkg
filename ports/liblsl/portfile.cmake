@@ -27,7 +27,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/lslver.exe)
 	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/lslver/)
 	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/lslver.exe ${CURRENT_PACKAGES_DIR}/tools/lslver/lslver.exe)
