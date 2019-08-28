@@ -492,32 +492,33 @@ namespace vcpkg::Build
         }
         else
         {
-            hash = Hash::get_file_hash(fs, triplet_file_path, "SHA1");
+            const auto algo = Hash::Algorithm::Sha1;
+            hash = Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, algo);
 
             if (auto p = pre_build_info.external_toolchain_file.get())
             {
                 hash += "-";
-                hash += Hash::get_file_hash(fs, *p, "SHA1");
+                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, *p, algo);
             }
             else if (pre_build_info.cmake_system_name == "Linux")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "linux.cmake", "SHA1");
+                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "linux.cmake", algo);
             }
             else if (pre_build_info.cmake_system_name == "Darwin")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "osx.cmake", "SHA1");
+                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "osx.cmake", algo);
             }
             else if (pre_build_info.cmake_system_name == "FreeBSD")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "freebsd.cmake", "SHA1");
+                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "freebsd.cmake", algo);
             }
             else if (pre_build_info.cmake_system_name == "Android")
             {
                 hash += "-";
-                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "android.cmake", "SHA1");
+                hash += Hash::get_file_hash(VCPKG_LINE_INFO, fs, paths.scripts / "toolchains" / "android.cmake", algo);
             }
 
             s_hash_cache.emplace(triplet_file_path, hash);
@@ -666,8 +667,9 @@ namespace vcpkg::Build
         {
             if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
-                port_files.emplace_back(port_file.path().filename().u8string(),
-                                        vcpkg::Hash::get_file_hash(fs, port_file, "SHA1"));
+                port_files.emplace_back(
+                    port_file.path().filename().u8string(),
+                    vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, port_file, Hash::Algorithm::Sha1));
 
                 if (port_files.size() > max_port_file_count)
                 {
@@ -694,7 +696,10 @@ namespace vcpkg::Build
 
         abi_tag_entries.emplace_back(
             "vcpkg_fixup_cmake_targets",
-            vcpkg::Hash::get_file_hash(fs, paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake", "SHA1"));
+            vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO,
+                                       fs,
+                                       paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake",
+                                       Hash::Algorithm::Sha1));
 
         abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
         abi_tag_entries.emplace_back("features", Strings::join(";", config.feature_list));
@@ -703,7 +708,8 @@ namespace vcpkg::Build
         {
             abi_tag_entries.emplace_back(
                 "public_abi_override",
-                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO), "SHA1"));
+                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO),
+                                      Hash::Algorithm::Sha1));
         }
 
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
@@ -732,7 +738,8 @@ namespace vcpkg::Build
             const auto abi_file_path = paths.buildtrees / name / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
-            return AbiTagAndFile{Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
+            return AbiTagAndFile{Hash::get_file_hash(VCPKG_LINE_INFO, fs, abi_file_path, Hash::Algorithm::Sha1),
+                                 abi_file_path};
         }
 
         System::print2(
@@ -893,13 +900,13 @@ namespace vcpkg::Build
             System::printf("Could not locate cached archive: %s\n", archive_path.u8string());
         }
 
+        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
+            paths, pre_build_info, spec, pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag), config);
+
         fs.create_directories(abi_package_dir, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Coud not create directory %s", abi_package_dir.u8string());
         fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
-
-        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
-            paths, pre_build_info, spec, pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag), config);
 
         if (config.build_package_options.binary_caching == BinaryCaching::YES && result.code == BuildResult::SUCCEEDED)
         {
