@@ -1,5 +1,5 @@
-
 include(vcpkg_common_functions)
+
 set(GTK_VERSION 3.22.19)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gtk+-${GTK_VERSION})
 vcpkg_download_distfile(ARCHIVE
@@ -12,14 +12,22 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
 
 # generate sources using python script installed with glib
+vcpkg_find_acquire_program(PYTHON3)
 if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.c)
-    vcpkg_find_acquire_program(PYTHON3)
     set(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib)
 
     vcpkg_execute_required_process(
         COMMAND ${PYTHON3} ${GLIB_TOOL_DIR}/gdbus-codegen --interface-prefix org.Gtk. --c-namespace _Gtk --generate-c-code gtkdbusgenerated ./gtkdbusinterfaces.xml
         WORKING_DIRECTORY ${SOURCE_PATH}/gtk
-        LOGNAME source-gen)
+        LOGNAME source-gen
+    )
+endif()
+
+if (NOT EXISTS ${SOURCE_PATH}/gtk/libgtk3.manifest)
+    vcpkg_execute_required_process(
+        COMMAND ${PYTHON3} ${SOURCE_PATH}/build/win32/replace.py --action=replace-var --input=libgtk3.manifest.in --output=libgtk3.manifest --var=EXE_MANIFEST_ARCHITECTURE --outstring=*
+        WORKING_DIRECTORY ${SOURCE_PATH}/gtk
+        LOGNAME manifest-gen)
 endif()
 
 vcpkg_configure_cmake(
@@ -27,8 +35,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DGTK_VERSION=${GTK_VERSION}
+        -DGTK_RESOURCE_FILE=${SOURCE_PATH}/gtk/libgtk3.manifest
     OPTIONS_DEBUG
-        -DGTK_SKIP_HEADERS=ON)
+        -DGTK_SKIP_HEADERS=ON
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

@@ -163,6 +163,7 @@ target_compile_definitions(gtk-3 PRIVATE
     ISOLATION_AWARE_ENABLED)
 target_link_libraries(gtk-3 gdk-3 winspool comctl32 imm32)
 target_compile_options(gtk-3 PRIVATE "/wd4828" PRIVATE "/wd4244" PRIVATE "/wd4305" PRIVATE "/wd4018")
+set_target_properties(gtk-3 PROPERTIES ${GTK_RESOURCE_FILE})
 
 extract_vcproj_sources(build/win32/vs14/gailutil-3.vcxproj GAILUTIL_SOURCES)
 gtk_add_module(gailutil-3 ${GAILUTIL_SOURCES})
