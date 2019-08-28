@@ -7,8 +7,11 @@ macro(debug_message)
 endmacro()
 
 #Detect .vcpkg-root to figure VCPKG_ROOT_DIR, starting from triplet folder.
-get_filename_component(TARGET_TRIPLET_DIR ${TARGET_TRIPLET_FILE} DIRECTORY)
-SET(VCPKG_ROOT_DIR_CANDIDATE ${TARGET_TRIPLET_DIR})
+SET(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+if(DEFINED TARGET_TRIPLET_FILE)
+    get_filename_component(TARGET_TRIPLET_DIR ${TARGET_TRIPLET_FILE} DIRECTORY)
+    SET(VCPKG_ROOT_DIR_CANDIDATE ${TARGET_TRIPLET_DIR})
+endif()
 while(IS_DIRECTORY ${VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
     get_filename_component(VCPKG_ROOT_DIR_TEMP ${VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
     if (VCPKG_ROOT_DIR_TEMP STREQUAL VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
@@ -23,6 +26,7 @@ set(VCPKG_ROOT_DIR ${VCPKG_ROOT_DIR_CANDIDATE})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(CURRENT_INSTALLED_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
 set(DOWNLOADS ${VCPKG_ROOT_DIR}/downloads CACHE PATH "Location to download sources and tools")
+set(SCRIPTS ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "Location to stored scripts")
 set(PACKAGES_DIR ${VCPKG_ROOT_DIR}/packages CACHE PATH "Location to store package images")
 set(BUILDTREES_DIR ${VCPKG_ROOT_DIR}/buildtrees CACHE PATH "Location to perform actual extract+config+build")
 
@@ -80,8 +84,8 @@ if(CMD MATCHES "^BUILD$")
     endif()
 
     set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
-    include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_definitions.cmake)
-    include(${CMAKE_CURRENT_LIST_DIR}/cmake/vcpkg_common_functions.cmake)
+    include(${SCRIPTS}/cmake/vcpkg_common_definitions.cmake)
+    include(${SCRIPTS}/cmake/vcpkg_common_functions.cmake)
     include(${CURRENT_PORT_DIR}/portfile.cmake)
 
     set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)
@@ -131,8 +135,8 @@ elseif(CMD MATCHES "^CREATE$")
     file(SHA512 ${DOWNLOADS}/${FILENAME} SHA512)
 
     file(MAKE_DIRECTORY ports/${PORT})
-    configure_file(scripts/templates/portfile.in.cmake ports/${PORT}/portfile.cmake @ONLY)
-    configure_file(scripts/templates/CONTROL.in ports/${PORT}/CONTROL @ONLY)
+    configure_file(${SCRIPTS}/templates/portfile.in.cmake ports/${PORT}/portfile.cmake @ONLY)
+    configure_file(${SCRIPTS}/templates/CONTROL.in ports/${PORT}/CONTROL @ONLY)
 
     message(STATUS "Generated portfile: ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\portfile.cmake")
     message(STATUS "Generated CONTROL: ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}\\CONTROL")
