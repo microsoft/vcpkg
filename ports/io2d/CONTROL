@@ -1,0 +1,4 @@
+Source: io2d
+Version: 2019-07-11
+Description: a lightweight, cross platform drawing library
+Build-Depends: cairo (!osx), graphicsmagick (!osx)

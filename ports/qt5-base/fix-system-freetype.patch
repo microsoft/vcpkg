@@ -1,12 +1,17 @@
+---
+ src/gui/configure.json | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
 diff --git a/src/gui/configure.json b/src/gui/configure.json
-index 28c8034..4c7c0a7 100644
+index 0332631e..bd64b7b1 100644
 --- a/src/gui/configure.json
 +++ b/src/gui/configure.json
-@@ -157,7 +157,7 @@
+@@ -164,8 +164,7 @@
              },
              "sources": [
                  { "type": "pkgConfig", "args": "freetype2" },
--                { "type": "freetype", "libs": "-lfreetype" }
+-                { "type": "freetype", "libs": "-lfreetype", "condition": "!config.wasm" },
+-                { "type": "freetype", "libs": "-s USE_FREETYPE=1", "condition": "config.wasm" }
 +                { "libs": "-lfreetype" }
              ]
          },

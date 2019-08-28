@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 011577a..e52d19d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,11 +42,13 @@ include(cmake/GenerateTemplateExportHeader.cmake)
+ # 
+ 
+ # Get git revision
++if(NOT DEFINED GIT_REV)
+ get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+ string(SUBSTRING "${GIT_SHA1}" 0 12 GIT_REV)
+ if(NOT GIT_SHA1)
+     set(GIT_REV "0")
+ endif()
++endif()
+ 
+ # Meta information about the project
+ set(META_PROJECT_NAME        "glbinding")
+@@ -135,7 +137,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr" OR "${CMAKE_INSTALL_PREFIX}" STREQU
+ endif()
+ 
+ # Installation paths
+-if(UNIX AND SYSTEM_DIR_INSTALL)
++if(1)
+     # Install into the system (/usr/bin or /usr/local/bin)
+     set(INSTALL_ROOT      "share/${project}")       # /usr/[local]/share/<project>
+     set(INSTALL_CMAKE     "share/${project}/cmake") # /usr/[local]/share/<project>/cmake
+@@ -148,7 +150,7 @@ if(UNIX AND SYSTEM_DIR_INSTALL)
+     set(INSTALL_DOC       "share/doc/${project}")   # /usr/[local]/share/doc/<project>
+     set(INSTALL_SHORTCUTS "share/applications")     # /usr/[local]/share/applications
+     set(INSTALL_ICONS     "share/pixmaps")          # /usr/[local]/share/pixmaps
+-    set(INSTALL_INIT      "/etc/init")              # /etc/init (upstart init scripts)
++    set(INSTALL_INIT      "etc/init")              # /etc/init (upstart init scripts)
+ else()
+     # Install into local directory
+     set(INSTALL_ROOT      ".")                      # ./

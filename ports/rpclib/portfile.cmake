@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rpclib/rpclib
-    REF v2.2.0
-    SHA512 73d2344debb3a6ced6a045ba3bf8839a6f91d8f43dfac8760c65d19d1fc7960e778457a20fddbd771d7dd4b12e32d8a925f1fc008d11ccc5654dbeb08ba0f50a
+    REF v2.2.1
+    SHA512 a63c6d09a411fb6b87d0df7c4f75a189f775ff0208f5f1c67333a85030a47efe60d5518e5939e98abc683a6063afb6cfed51f118f594a2a08be32330a9691051
     HEAD_REF master
 )
 

@@ -1,19 +1,17 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Sciter is only available under a free license as DLLs.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Sciter only supports Windows Desktop")
 endif()
 
-include(vcpkg_common_functions)
 
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION e7f7663ad85ec41223c4888e679df72e1d7c4835)
-set(SCITER_SHA d76cd7e59d0768fa3ab61c04d1a73c0ea893ad420f672aa974e8038c6e2ca713cae625e3c0ea5d866ee229408bd5707deb5226ee4d7b93a270866c8a79de64ec)
+set(SCITER_REVISION c926703b2cce972875e7f6379c525eef66c95986)
+set(SCITER_SHA 9a87ce12db9b2ef1e3abce3e475a9413a8a9301bab3d17341c94d4281e3bf616347ba8a4089f756ec38fed311bb4ee9045c8f85d0c40039ed3c0b96413aceeb4)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH 64)

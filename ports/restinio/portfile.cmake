@@ -1,15 +1,11 @@
 include(vcpkg_common_functions)
 
-set(RESTINIO_VERSION 0.4.5.1)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/restinio-${RESTINIO_VERSION}-vcpkg)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/sobjectizerteam/restinio-0.4/downloads/restinio-${RESTINIO_VERSION}-vcpkg.zip"
-    FILENAME "restinio-${RESTINIO_VERSION}-vcpkg.zip"
-    SHA512 198153f9b8d866c2aa57932720b31ff1f8e523d9640ad0c8becb911afed1fa12caa636847234cfc83d584a15bdc4b05fb98cbc4730af2520b453c5de468eb7fa
+vcpkg_from_bitbucket(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO sobjectizerteam/restinio
+    REF v.0.5.1.1
+    SHA512 f5eedd53f4459936d4b32a4243c703a350a611bfc7b0c17c2bb047944cc054f8a93f9fd4904f76d601eb2ce0c9b078c33a6a545b5698ddaf63c3f5327dabd5f6
 )
-
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/vcpkg
@@ -17,8 +13,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/restinio")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restinio)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 

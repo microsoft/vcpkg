@@ -1,56 +1,37 @@
 include(vcpkg_common_functions)
 
-set(PROTOBUF_VERSION 3.5.1)
-set(PROTOC_VERSION 3.5.1)
-
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    SHA512 195ccb210229e0a1080dcdb0a1d87b2e421ad55f6b036c56db3183bd50a942c75b4cc84e6af8a10ad88022a247781a06f609a145a461dfbb8f04051b7dd714b3
-)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
-
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
-
-# Add a flag that can be set to disable the protobuf compiler
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO protocolbuffers/protobuf
+    REF v3.9.1
+    SHA512 9accb56c1aadef83bf27280e15a99809a3561cbd4b39d6605dec730cc112bf4fd2e9f1ac39127b32a1b87253e712be4b4f12afe4061a8f7be76266b3f4bca314
+    HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
+        fix-uwp.patch
 )
 
-if(CMAKE_HOST_WIN32)
-    set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
-    vcpkg_download_distfile(TOOL_ARCHIVE_FILE
-        URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
-        FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
-        SHA512 27b1b82e92d82c35158362435a29f590961b91f68cda21bffe46e52271340ea4587c4e3177668809af0d053b61e6efa69f0f62156ea11393cd9e6eb4474a3049
-    )
-
-    vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
+if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
+    set(protobuf_BUILD_PROTOC_BINARIES OFF)
+else()
+    set(protobuf_BUILD_PROTOC_BINARIES ON)
 endif()
 
-
-# Disable the protobuf compiler when targeting UWP
-if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
-  set(protobuf_BUILD_COMPILER OFF)
-else()
-  set(protobuf_BUILD_COMPILER ON)
+if(NOT protobuf_BUILD_PROTOC_BINARIES AND NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/protobuf)
+    message(FATAL_ERROR "Cross-targetting protobuf requires the x86-windows protoc to be available. Please install protobuf:x86-windows first.")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(protobuf_BUILD_SHARED_LIBS ON)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
-    set(protobuf_BUILD_SHARED_LIBS OFF)
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
 endif()
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(protobuf_MSVC_STATIC_RUNTIME ON)
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  set(VCPKG_BUILD_STATIC_CRT OFF)
 else()
-    set(protobuf_MSVC_STATIC_RUNTIME OFF)
+  set(VCPKG_BUILD_STATIC_CRT ON)
 endif()
 
 if("zlib" IN_LIST FEATURES)
@@ -63,12 +44,12 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
     PREFER_NINJA
     OPTIONS
-        -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
-        -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
+        -Dprotobuf_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
+        -Dprotobuf_MSVC_STATIC_RUNTIME=${VCPKG_BUILD_STATIC_CRT}
         -Dprotobuf_WITH_ZLIB=${protobuf_WITH_ZLIB}
         -Dprotobuf_BUILD_TESTS=OFF
-        -Dprotobuf_BUILD_COMPILER=${protobuf_BUILD_COMPILER}
-        -DCMAKE_INSTALL_CMAKEDIR=share/protobuf
+        -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
+        -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
 )
 
 vcpkg_install_cmake()
@@ -86,23 +67,36 @@ endfunction()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/include)
 
+if(CMAKE_HOST_WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
-    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${CMAKE_EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protoc${CMAKE_EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
+    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake "${RELEASE_MODULE}")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(READ ${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake DEBUG_MODULE)
     string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${CMAKE_EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protoc${CMAKE_EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "${DEBUG_MODULE}")
 endif()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(CMAKE_HOST_WIN32)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    if(protobuf_BUILD_PROTOC_BINARIES)
+        file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    else()
+        file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
     else()
@@ -110,20 +104,20 @@ if(CMAKE_HOST_WIN32)
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
     endif()
 else()
+    file(GLOB EXECUTABLES ${CURRENT_PACKAGES_DIR}/bin/protoc*)
+    foreach(E IN LISTS EXECUTABLES)
+        file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
+    endforeach()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc DESTINATION ${CURRENT_PACKAGES_DIR}/tools
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(READ ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h _contents)
     string(REPLACE "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" "\#define PROTOBUF_USE_DLLS\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" _contents "${_contents}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h "${_contents}")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
-if(CMAKE_HOST_WIN32)
-    file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-endif()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()

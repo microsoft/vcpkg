@@ -1,15 +1,9 @@
- CMakeLists.txt                     | 45 ++++++++++++++++++++++----------------
- cartographer/common/math.h         |  4 +++-
- cartographer/common/thread_pool.cc |  2 +-
- cmake/functions.cmake              | 10 ++++-----
- 4 files changed, 35 insertions(+), 26 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55e9adc..bc92e9b 100644
+index 2e3a686..f36f15a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,18 +26,23 @@ option(BUILD_GRPC "build Cartographer gRPC support" false)
- set(GRPC_PLUGIN_PATH "/usr/local/bin/grpc_cpp_plugin")
+@@ -25,27 +25,33 @@ option(BUILD_GRPC "build Cartographer gRPC support" false)
+ option(BUILD_PROMETHEUS "build Prometheus monitoring support" false)
  
  include("${PROJECT_SOURCE_DIR}/cmake/functions.cmake")
 -google_initialize_cartographer_project()
@@ -18,7 +12,7 @@ index 55e9adc..bc92e9b 100644
 +#google_enable_testing()
  
  find_package(Boost REQUIRED COMPONENTS iostreams)
- find_package(Ceres REQUIRED COMPONENTS SparseLinearAlgebraLibrary)
+ find_package(Ceres REQUIRED COMPONENTS SuiteSparse)
  find_package(Eigen3 REQUIRED)
 -find_package(LuaGoogle REQUIRED)
 +find_package(Lua REQUIRED)
@@ -26,19 +20,32 @@ index 55e9adc..bc92e9b 100644
 +find_package(glog REQUIRED)
 +find_package(gflags REQUIRED)
  
+ if (${BUILD_GRPC})
+   find_package(async_grpc REQUIRED)
+ endif()
+ 
 -include(FindPkgConfig)
 -PKG_SEARCH_MODULE(CAIRO REQUIRED cairo>=1.12.16)
--
 +#include(FindPkgConfig)
 +#PKG_SEARCH_MODULE(CAIRO REQUIRED cairo>=1.12.16)
 +if(CMAKE_BUILD_TYPE STREQUAL Debug)
 +    set(CAIRO_LIB_SUFFIX d)
 +endif()
 +find_library(CAIRO_LIBRARY cairo${CAIRO_LIB_SUFFIX})
+ 
  # Only build the documentation if we can find Sphinx.
- find_package(Sphinx)
- if(SPHINX_FOUND)
-@@ -144,15 +149,15 @@ configure_file(
+-find_package(Sphinx)
+-if(SPHINX_FOUND)
+-  add_subdirectory("docs")
+-endif()
++#find_package(Sphinx)
++#if(SPHINX_FOUND)
++#  add_subdirectory("docs")
++#endif()
+ 
+ # Install catkin package.xml
+ install(FILES package.xml DESTINATION share/cartographer)
+@@ -169,20 +175,20 @@ configure_file(
    ${PROJECT_SOURCE_DIR}/cartographer/common/config.h.cmake
    ${PROJECT_BINARY_DIR}/cartographer/common/config.h)
  
@@ -51,6 +58,11 @@ index 55e9adc..bc92e9b 100644
 -  SRCS
 -    cartographer/ground_truth/compute_relations_metrics_main.cc
 -)
+-
+-google_binary(cartographer_migrate_serialization_format
+-  SRCS
+-    cartographer/io/migrate_serialization_format_main.cc
+-)
 +#google_binary(cartographer_autogenerate_ground_truth
 +#  SRCS
 +#    cartographer/ground_truth/autogenerate_ground_truth_main.cc
@@ -60,19 +72,15 @@ index 55e9adc..bc92e9b 100644
 +#  SRCS
 +#    cartographer/ground_truth/compute_relations_metrics_main.cc
 +#)
++#
++#google_binary(cartographer_migrate_serialization_format
++#  SRCS
++#    cartographer/io/migrate_serialization_format_main.cc
++#)
  
  if(${BUILD_GRPC})
    google_binary(cartographer_grpc_server
-@@ -167,7 +172,7 @@ foreach(ABS_FIL ${ALL_TESTS})
-   get_filename_component(FIL_WE ${REL_FIL} NAME_WE)
-   # Replace slashes as required for CMP0037.
-   string(REPLACE "/" "." TEST_TARGET_NAME "${DIR}/${FIL_WE}")
--  google_test("${TEST_TARGET_NAME}" ${ABS_FIL})
-+  #google_test("${TEST_TARGET_NAME}" ${ABS_FIL})
-   if(${BUILD_GRPC})
-     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC grpc++)
-   endif()
-@@ -190,8 +195,9 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+@@ -213,8 +219,9 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
  target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
  
  # We expect find_package(Ceres) to have located these for us.
@@ -84,7 +92,7 @@ index 55e9adc..bc92e9b 100644
  
  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
    "${CAIRO_INCLUDE_DIRS}")
-@@ -201,7 +207,8 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+@@ -224,7 +231,8 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
    ${PROTOBUF_INCLUDE_DIR})
  # TODO(hrapp): This should not explicitly list pthread and use
  # PROTOBUF_LIBRARIES, but that failed on first try.
@@ -93,24 +101,51 @@ index 55e9adc..bc92e9b 100644
 +target_link_libraries(${PROJECT_NAME} PUBLIC ${PROTOBUF_LIBRARY})
  if(${BUILD_GRPC})
    target_link_libraries(${PROJECT_NAME} PUBLIC grpc++)
+   target_link_libraries(${PROJECT_NAME} PUBLIC async_grpc)
+@@ -234,7 +242,7 @@ if(${BUILD_PROMETHEUS})
+   target_compile_definitions(${PROJECT_NAME} PUBLIC USE_PROMETHEUS=1)
  endif()
+ 
+-set(TARGET_COMPILE_FLAGS "${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
++set(TARGET_COMPILE_FLAGS "-D_DISABLE_EXTENDED_ALIGNED_STORAGE ${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
+ set_target_properties(${PROJECT_NAME} PROPERTIES
+   COMPILE_FLAGS ${TARGET_COMPILE_FLAGS})
+ 
+@@ -255,7 +263,7 @@ foreach(ABS_FIL ${ALL_TESTS})
+   get_filename_component(FIL_WE ${REL_FIL} NAME_WE)
+   # Replace slashes as required for CMP0037.
+   string(REPLACE "/" "." TEST_TARGET_NAME "${DIR}/${FIL_WE}")
+-  google_test("${TEST_TARGET_NAME}" ${ABS_FIL})
++  #google_test("${TEST_TARGET_NAME}" ${ABS_FIL})
+   if(${BUILD_GRPC})
+     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC grpc++)
+     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC async_grpc)
+@@ -263,7 +271,7 @@ foreach(ABS_FIL ${ALL_TESTS})
+   if(${BUILD_PROMETHEUS})
+     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC prometheus-cpp)
+   endif()
+-  target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
++  #target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
+ endforeach()
+ 
+ # Add the binary directory first, so that port.h is included after it has
 diff --git a/cartographer/common/math.h b/cartographer/common/math.h
-index f0ae9e2..d32bdbe 100644
+index c4a77ef..0248f66 100644
 --- a/cartographer/common/math.h
 +++ b/cartographer/common/math.h
-@@ -16,7 +16,9 @@
- 
+@@ -17,6 +17,10 @@
  #ifndef CARTOGRAPHER_COMMON_MATH_H_
  #define CARTOGRAPHER_COMMON_MATH_H_
--
-+ #ifndef M_PI
-+ #define M_PI 3.14159265358979323846
-+ #endif
+ 
++#ifndef M_PI
++#define M_PI 3.14159265358979323846
++#endif
++
  #include <cmath>
  #include <vector>
  
 diff --git a/cartographer/common/thread_pool.cc b/cartographer/common/thread_pool.cc
-index fdda166..178472f 100644
+index bc3c743..db424d1 100644
 --- a/cartographer/common/thread_pool.cc
 +++ b/cartographer/common/thread_pool.cc
 @@ -16,7 +16,7 @@
@@ -123,7 +158,7 @@ index fdda166..178472f 100644
  #include <chrono>
  #include <numeric>
 diff --git a/cmake/functions.cmake b/cmake/functions.cmake
-index 3bfd343..b41a84e 100644
+index 3bfd343..3d961b0 100644
 --- a/cmake/functions.cmake
 +++ b/cmake/functions.cmake
 @@ -118,12 +118,12 @@ macro(google_initialize_cartographer_project)
@@ -140,7 +175,7 @@ index 3bfd343..b41a84e 100644
 +  #)
    if(NOT EXISTS ${FILES_LIST_PATH})
 -    execute_process(COMMAND ${DETECT_CHANGES_CMD})
-+   # execute_process(COMMAND ${DETECT_CHANGES_CMD})
++    #execute_process(COMMAND ${DETECT_CHANGES_CMD})
    endif()
    include(${FILES_LIST_PATH})
  endmacro()

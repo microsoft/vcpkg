@@ -36,23 +36,23 @@ else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
-# The build system of ode outputs its artifacts in this subdirectory 
-# of the source directory 
+# The build system of ode outputs its artifacts in this subdirectory
+# of the source directory
 set(DEBUG_ARTIFACTS_PATH ${SOURCE_PATH}/lib/Debug)
 set(RELEASE_ARTIFACTS_PATH ${SOURCE_PATH}/lib/Release)
 
-# To avoid contamination from previous build, we clean the directory 
+# To avoid contamination from previous build, we clean the directory
 file(REMOVE_RECURSE ${DEBUG_ARTIFACTS_PATH} ${RELEASE_ARTIFACTS_PATH})
 
-# Configure the project using the embedded premake4 
+# Configure the project using the embedded premake4
 message(STATUS "Configuring ${TARGET_TRIPLET}")
-# Consistently with the debian package we only ship ODE built with double precision 
+# Consistently with the debian package we only ship ODE built with double precision
 set(premake_OPTIONS "--only-double")
-# TODO: use vcpkg's libccd 
+# TODO: use vcpkg's libccd
 list(APPEND premake_OPTIONS --with-libccd)
-if(DEFINED VCPKG_LIBRARY_LINKAGE AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND premake_OPTIONS --only-shared)
-elseif(DEFINED VCPKG_LIBRARY_LINKAGE AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND premake_OPTIONS --only-static)
 endif()
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
@@ -75,11 +75,11 @@ vcpkg_build_msbuild(PROJECT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/ode
                     PLATFORM ${MSBUILD_PLATFORM}
                     WORKING_DIRECTORY ${SOURCE_PATH}/build)
 
-# Install headers 
+# Install headers
 file(GLOB HEADER_FILES ${SOURCE_PATH}/include/ode/*.h)
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ode)
-    
-# Install libraries 
+
+# Install libraries
 file(GLOB LIB_DEBUG_FILES ${DEBUG_ARTIFACTS_PATH}/*.lib ${DEBUG_ARTIFACTS_PATH}/*.exp)
 file(INSTALL ${LIB_DEBUG_FILES}
      DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
@@ -89,7 +89,7 @@ if (DEFINED VCPKG_LIBRARY_LINKAGE AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
    file(INSTALL ${BIN_DEBUG_FILES}
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif ()
-     
+
 file(GLOB LIB_RELEASE_FILES ${RELEASE_ARTIFACTS_PATH}/*.lib ${RELEASE_ARTIFACTS_PATH}/*.exp)
 file(INSTALL ${LIB_RELEASE_FILES}
      DESTINATION ${CURRENT_PACKAGES_DIR}/lib)

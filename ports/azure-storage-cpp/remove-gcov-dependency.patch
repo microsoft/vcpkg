@@ -1,0 +1,14 @@
+diff --git a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
+index 6443f8e..db20749 100644
+--- a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
++++ b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
+@@ -63,9 +63,6 @@ if(UNIX OR WIN32)
+     )
+ endif()
+ 
+-if ("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+-endif()
+ if (APPLE)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNINGS}")
+ else()

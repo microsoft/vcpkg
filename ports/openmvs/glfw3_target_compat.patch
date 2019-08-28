@@ -1,0 +1,43 @@
+diff --git a/apps/Viewer/CMakeLists.txt b/apps/Viewer/CMakeLists.txt
+index f1690a6..78466cd 100644
+--- a/apps/Viewer/CMakeLists.txt
++++ b/apps/Viewer/CMakeLists.txt
+@@ -16,28 +16,7 @@ else()
+ 	MESSAGE("-- Can't find GLEW. Continuing without it.")
+ 	RETURN()
+ endif()
+-if(CMAKE_COMPILER_IS_GNUCXX)
+-	FIND_PACKAGE(PkgConfig QUIET)
+-	pkg_search_module(GLFW QUIET glfw3)
+-	if(GLFW_FOUND)
+-		INCLUDE_DIRECTORIES(${GLFW_INCLUDE_DIRS})
+-		ADD_DEFINITIONS(${GLFW_DEFINITIONS})
+-		MESSAGE(STATUS "GLFW3 ${GLFW_VERSION} found (include: ${GLFW_INCLUDE_DIRS})")
+-	else()
+-		MESSAGE("-- Can't find GLFW3. Continuing without it.")
+-		RETURN()
+-	endif()
+-else()
+-	FIND_PACKAGE(glfw3 QUIET)
+-	if(glfw3_FOUND)
+-		INCLUDE_DIRECTORIES(${glfw3_INCLUDE_DIRS})
+-		ADD_DEFINITIONS(${glfw3_DEFINITIONS})
+-		MESSAGE(STATUS "GLFW3 ${glfw3_VERSION} found (include: ${glfw3_INCLUDE_DIRS})")
+-	else()
+-		MESSAGE("-- Can't find GLFW3. Continuing without it.")
+-		RETURN()
+-	endif()
+-endif()
++FIND_PACKAGE(glfw3 REQUIRED)
+ 
+ # List sources files
+ FILE(GLOB PCH_C "Common.cpp")
+@@ -54,7 +33,7 @@ FILE(GLOB LIBRARY_FILES_H "*.h" "*.inl")
+ LIST(REMOVE_ITEM LIBRARY_FILES_C ${PCH_C})
+ SET(LIBRARY_FILES_C "${PCH_C};${LIBRARY_FILES_C}")
+ 
+-cxx_executable_with_flags_no_pch(${VIEWER_NAME} "Apps" "${cxx_default}" "MVS;${OPENGL_LIBRARIES};${GLEW_LIBRARY};${GLFW_STATIC_LIBRARIES};GLEW::GLEW;${glfw3_LIBRARY};${GLFW3_LIBRARY};glfw" ${LIBRARY_FILES_C} ${LIBRARY_FILES_H})
++cxx_executable_with_flags_no_pch(${VIEWER_NAME} "Apps" "${cxx_default}" "MVS;${OPENGL_LIBRARIES};${GLEW_LIBRARY};GLEW::GLEW;glfw" ${LIBRARY_FILES_C} ${LIBRARY_FILES_H})
+ 
+ # Manually set Common.h as the precompiled header
+ set_target_pch(${VIEWER_NAME} Common.h)

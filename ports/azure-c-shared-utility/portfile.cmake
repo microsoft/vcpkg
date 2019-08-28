@@ -1,19 +1,26 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("azure-c-shared-utility only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE "static")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if("public-preview" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-c-shared-utility
+        REF 1f3fd807c8c47b6607d349469301afb64643aa89
+        SHA512 312ef2668ad62cb676c51474ba08307bacf9843d661233f7a6145e565ae58dcecb7bfa2e8a157efef1b54e8c07621bf2ec47b4d76ea180d77767b1ad44b951c2
+        HEAD_REF master
+        PATCHES no-double-expand-cmake.patch
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-c-shared-utility
+        REF 1f3fd807c8c47b6607d349469301afb64643aa89
+        SHA512 312ef2668ad62cb676c51474ba08307bacf9843d661233f7a6145e565ae58dcecb7bfa2e8a157efef1b54e8c07621bf2ec47b4d76ea180d77767b1ad44b951c2
+        HEAD_REF master
+        PATCHES no-double-expand-cmake.patch
+    )
 endif()
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Azure/azure-c-shared-utility
-    REF 1.1.3
-    SHA512 8c69f39ccca30d11a7e665a46e3ec33826af062657a87d32f68e80c6182b15d5e02839f9e541f5dc840219e3256ac090452f4873b6a1a62b3fe6682780314056
-    HEAD_REF master
-)
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_AS_DYNAMIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,7 +29,7 @@ vcpkg_configure_cmake(
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Duse_default_uuid=ON
-        -Dbuild_as_dynamic=${BUILD_AS_DYNAMIC}
+        -Dbuild_as_dynamic=OFF
 )
 
 vcpkg_install_cmake()
@@ -33,8 +40,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
 file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility)
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+

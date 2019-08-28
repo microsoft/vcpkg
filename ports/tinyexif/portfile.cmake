@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/TinyEXIF
-    REF 1.0.1
-    SHA512 d018d882adbcebf9fa8ad67a78304a1dd21ffd3a01e3cf2d269fa34efedc5ec5f293767f3a21d62cb1bb9b88b2c364977a9125e9b88b2eac7866a8d6b27c2f23
+    REF c57a5fec1a847ec0e7b482b2da72e1f04fc2e147
+    SHA512 a968e79b4b7a6f5f189328a8dc493da5c0d568526b5dca46b9bfc0cf85295fb348bd0b38828fedbb7b6e4467fc8932d0d7b435b4acbfe662e954cbed1d0ea914
     HEAD_REF master
 )
 
@@ -20,7 +20,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/tinyexif")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TinyEXIF)
 
 vcpkg_copy_pdbs()
 

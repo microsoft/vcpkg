@@ -1,34 +1,36 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported. Building static.") # See note below
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH CMAKE_SOURCE_PATH
   REPO noloader/cryptopp-cmake
-  REF aab149932675e4bb777a9d3d6b3f8b8182583fd7
-  SHA512 748c77e936888d042bf4a72cc7ee3b7b2ecf16c003cb23296c1af413c9a0cba00cc942ecace26274fc8ac8bd4d848946beb9d7bf2253c5eab3315a4419ef5f1f
+  REF 6d0666c457fbbf6f81819fd2b80f0cb5b6646593
+  SHA512 0341f14ce734afaee8bcc1db1716684f241499c692a5478c83a3df3fd2e5331cd04b2f4f51d43cce231ca1d9fbe76220639573c05ef06be0cf33081a1ef7ab30
   HEAD_REF master
+  PATCHES
+    cmake.patch
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_6_1_0
-  SHA512 4bc02fef33f1859a07434a4752c2575afd781056e9a91eed99a13cebe2c91d66cbc7173e34d362da63dad6d38f9594ff291accd27e111232996ccd536bba0f39
+  REF CRYPTOPP_8_2_0
+  SHA512 d2dcc107091d00800de243abdce8286ccd7fcc5707eebf88b97675456a021e62002e942b862db0465f72142951f631c0c1f0b2ba56028b96461780a17f2dfdf9
   HEAD_REF master
+  PATCHES patch.patch
 )
 
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_apply_patches(
-  SOURCE_PATH "${SOURCE_PATH}"
-  PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/patch.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake.patch"
-)
+# disable assembly on OSX to fix broken build
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CRYPTOPP_DISABLE_ASM "ON")
+else()
+    set(CRYPTOPP_DISABLE_ASM "OFF")
+endif()
+
 
 # Dynamic linking should be avoided for Crypto++ to reduce the attack surface,
 # so generate a static lib for both dynamic and static vcpkg targets.
@@ -44,6 +46,7 @@ vcpkg_configure_cmake(
         -DBUILD_STATIC=ON
         -DBUILD_TESTING=OFF
         -DBUILD_DOCUMENTATION=OFF
+        -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
 )
 
 vcpkg_install_cmake()

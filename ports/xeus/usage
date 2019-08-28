@@ -1,0 +1,4 @@
+The package xeus provides CMake targets:
+
+    find_package(xeus CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE xeus xeus_static)

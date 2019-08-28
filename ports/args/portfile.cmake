@@ -4,18 +4,26 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Taywee/args
-    REF bd0429e91f5bb140271870d5421e412bf78b9f31
-    SHA512 585314e572b97d9b1689f71617f33562da46652141f094a3845eeace7acedc8560e010e5b7fb7afa4ff2dc37a62724445f5c8650c0c6270d42c4b5fd271a5e76
+    REF 401663c1d57006566db6d8e5b37a21018fbd0bc3
+    SHA512 2e0506f41ee8527e7fb67c0b926ff892fafe79db90920624c84eb603e374eb74c5640e4d0d0d88554db7a57424095b0da96238b4182ac515ae96dc202df95013
     HEAD_REF master
 )
 
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+    -DARGS_BUILD_UNITTESTS=OFF
+    -DARGS_BUILD_EXAMPLE=OFF
+)
+
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
 # Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/args)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/args/license ${CURRENT_PACKAGES_DIR}/share/args/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/args)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/args/LICENSE ${CURRENT_PACKAGES_DIR}/share/args/copyright)
 
-# Copy the args header files
-file(INSTALL ${SOURCE_PATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hxx")
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/examples ${CURRENT_PACKAGES_DIR}/include/test)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
 vcpkg_copy_pdbs()

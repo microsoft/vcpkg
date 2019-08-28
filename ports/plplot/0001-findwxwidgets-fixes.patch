@@ -1,0 +1,59 @@
+diff --git a/cmake/modules/FindwxWidgets.cmake b/cmake/modules/FindwxWidgets.cmake
+index 4d3a2d1..eaaa358 100644
+--- a/cmake/modules/FindwxWidgets.cmake
++++ b/cmake/modules/FindwxWidgets.cmake
+@@ -515,7 +515,16 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+         set(_WX_ARCH _x64)
+       endif()
+     endif()
+-    if(BUILD_SHARED_LIBS)
++    if(VCPKG_TARGET_TRIPLET)
++          find_library(wxWidgets_LIB_DIR
++        NAMES
++          wxmsw31ud_core.lib
++          wxmsw31u_core.lib
++        PATHS
++        DOC "Path to wxWidgets libraries"
++        )
++      get_filename_component(wxWidgets_LIB_DIR ${wxWidgets_LIB_DIR} DIRECTORY)
++    elseif(BUILD_SHARED_LIBS)
+       find_path(wxWidgets_LIB_DIR
+         NAMES
+           msw/wx/setup.h
+@@ -571,6 +580,9 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+         set(wxWidgets_DEFINITIONS WXUSINGDLL)
+         DBG_MSG_V("detected SHARED/DLL tree WX_LIB_DIR=${WX_LIB_DIR}")
+       endif()
++      if(VCPKG_TARGET_TRIPLET)
++        set(wxWidgets_DEFINITIONS WXUSINGDLL)
++      endif(VCPKG_TARGET_TRIPLET)
+ 
+       # Search for available configuration types.
+       foreach(CFG mswunivud mswunivd mswud mswd mswunivu mswuniv mswu msw)
+@@ -582,6 +594,15 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+         endif()
+       endforeach()
+       DBG_MSG_V("WX_CONFIGURATION_LIST=${WX_CONFIGURATION_LIST}")
++	  
++      if(VCPKG_TARGET_TRIPLET)
++        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++          set(WX_CONFIGURATION "mswud")
++        else()
++          set(WX_CONFIGURATION "mswu")
++        endif()
++        set(WX_${WX_CONFIGURATION}_FOUND TRUE)
++      endif(VCPKG_TARGET_TRIPLET)
+ 
+       if(WX_CONFIGURATION)
+         set(wxWidgets_FOUND TRUE)
+@@ -616,7 +637,9 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+         WX_GET_NAME_COMPONENTS(${wxWidgets_CONFIGURATION} UNV UCD DBG)
+ 
+         # Set wxWidgets lib setup include directory.
+-        if(EXISTS ${WX_LIB_DIR}/${wxWidgets_CONFIGURATION}/wx/setup.h)
++        if(VCPKG_TARGET_TRIPLET)
++          set(wxWidgets_INCLUDE_DIRS "${wxWidgets_ROOT_DIR}/include")
++        elseif(EXISTS ${WX_LIB_DIR}/${wxWidgets_CONFIGURATION}/wx/setup.h)
+           set(wxWidgets_INCLUDE_DIRS
+             ${WX_LIB_DIR}/${wxWidgets_CONFIGURATION})
+         else()
