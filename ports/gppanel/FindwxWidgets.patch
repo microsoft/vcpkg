@@ -1,0 +1,36 @@
+diff --git a/FindwxWidgets.cmake b/FindwxWidgets.cmake
+index 22d7e7315..74c91d0fd 100644
+--- a/FindwxWidgets.cmake	
++++ b/FindwxWidgets.cmake
+@@ -281,6 +281,7 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+     find_library(WX_base${_DBG}
+       NAMES
+       wxbase31${_UCD}${_DBG}
++      wxbase31${_UCD}
+       wxbase30${_UCD}${_DBG}
+       wxbase29${_UCD}${_DBG}
+       wxbase28${_UCD}${_DBG}
+@@ -295,6 +296,7 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+       find_library(WX_${LIB}${_DBG}
+         NAMES
+         wxbase31${_UCD}${_DBG}_${LIB}
++        wxbase31${_UCD}_${LIB}
+         wxbase30${_UCD}${_DBG}_${LIB}
+         wxbase29${_UCD}${_DBG}_${LIB}
+         wxbase28${_UCD}${_DBG}_${LIB}
+@@ -311,6 +313,7 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+     find_library(WX_mono${_DBG}
+       NAMES
+       wxmsw${_UNV}31${_UCD}${_DBG}
++      wxmsw${_UNV}31${_UCD}
+       wxmsw${_UNV}30${_UCD}${_DBG}
+       wxmsw${_UNV}29${_UCD}${_DBG}
+       wxmsw${_UNV}28${_UCD}${_DBG}
+@@ -328,6 +331,7 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
+       find_library(WX_${LIB}${_DBG}
+         NAMES
+         wxmsw${_UNV}31${_UCD}${_DBG}_${LIB}
++        wxmsw${_UNV}31${_UCD}_${LIB}
+         wxmsw${_UNV}30${_UCD}${_DBG}_${LIB}
+         wxmsw${_UNV}29${_UCD}${_DBG}_${LIB}
+         wxmsw${_UNV}28${_UCD}${_DBG}_${LIB}
