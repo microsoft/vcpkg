@@ -11,7 +11,6 @@ vcpkg_from_github(
 )
 
 file(GLOB_RECURSE OUTCOME_HEADERS "${SOURCE_PATH}/single-header/*.hpp")
-
 file(INSTALL  ${OUTCOME_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(INSTALL ${SOURCE_PATH}/Licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
