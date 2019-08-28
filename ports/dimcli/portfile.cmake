@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 	PATCHES
 		fix-NameBoolean.patch
+		fix-VS2019_BuildError.patch
 )
 set(staticCrt OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
