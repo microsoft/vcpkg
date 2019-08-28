@@ -1,6 +1,7 @@
 <!-- Run regenerate.ps1 to extract documentation from scripts\cmake\*.cmake -->
 
 # Portfile helper functions
+- [execute\_process](execute_process.md)
 - [vcpkg\_acquire\_msys](vcpkg_acquire_msys.md)
 - [vcpkg\_add\_to\_path](vcpkg_add_to_path.md)
 - [vcpkg\_apply\_patches](vcpkg_apply_patches.md)
@@ -9,6 +10,7 @@
 - [vcpkg\_check\_features](vcpkg_check_features.md)
 - [vcpkg\_check\_linkage](vcpkg_check_linkage.md)
 - [vcpkg\_clean\_msbuild](vcpkg_clean_msbuild.md)
+- [vcpkg\_common\_definitions](vcpkg_common_definitions.md)
 - [vcpkg\_configure\_cmake](vcpkg_configure_cmake.md)
 - [vcpkg\_copy\_pdbs](vcpkg_copy_pdbs.md)
 - [vcpkg\_copy\_tool\_dependencies](vcpkg_copy_tool_dependencies.md)
@@ -17,6 +19,7 @@
 - [vcpkg\_execute\_required\_process](vcpkg_execute_required_process.md)
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
 - [vcpkg\_extract\_source\_archive\_ex](vcpkg_extract_source_archive_ex.md)
+- [vcpkg\_fail\_port\_install](vcpkg_fail_port_install.md)
 - [vcpkg\_find\_acquire\_program](vcpkg_find_acquire_program.md)
 - [vcpkg\_from\_bitbucket](vcpkg_from_bitbucket.md)
 - [vcpkg\_from\_git](vcpkg_from_git.md)
