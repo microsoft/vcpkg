@@ -16,7 +16,7 @@ index 52dd49d..239219d 100644
    #define openblas_complex_xdouble_imag(z)           (cimag(z))
 +  #endif
  #else
-+  #ifned OPENBLAS_COMPLEX_STRUCT
++  #ifndef OPENBLAS_COMPLEX_STRUCT
    #define OPENBLAS_COMPLEX_STRUCT
    typedef struct { float real, imag; } openblas_complex_float;
    typedef struct { double real, imag; } openblas_complex_double;
