@@ -13,10 +13,12 @@ vcpkg_from_github(
     PATCHES
         # on osx use the uuid.h that is part of the osx sdk
         builtin-uuid-osx.patch
+        remove-gcov-dependency.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Microsoft.WindowsAzure.Storage
+    PREFER_NINJA
     OPTIONS
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF

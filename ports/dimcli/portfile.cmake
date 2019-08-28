@@ -3,9 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF v4.1.0
-    SHA512 5de010b5abfda9e6996bba8c621e03ae0cf81dbc2f69cd859e2ebf7b1706c451f7f8e142299784646d89ca3c3e5803e8711215680b8bdb8eb663158bff3b4f3d
+    REF v5.0.0
+    SHA512 504e6f53e83ce17e8e4b59ecf1a610c2249c2bf48a308b1ee5db0e0e85d3cb08178d24534b5dee8bfaac83fd44c68cbbe8d300283d0023467b724a9340b56e4c
     HEAD_REF master
+	PATCHES
+		fix-NameBoolean.patch
 )
 set(staticCrt OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

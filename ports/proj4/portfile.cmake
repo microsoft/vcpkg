@@ -26,6 +26,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
     -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib

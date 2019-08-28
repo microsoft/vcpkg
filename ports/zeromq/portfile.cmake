@@ -11,7 +11,9 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_check_features(sodium WITH_LIBSODIUM)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    sodium WITH_LIBSODIUM
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -21,8 +23,8 @@ vcpkg_configure_cmake(
         -DPOLLER=select
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
-        -DWITH_LIBSODIUM=${WITH_LIBSODIUM}
         -DWITH_PERF_TOOL=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
 )
