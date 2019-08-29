@@ -11,7 +11,18 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/src)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+	file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/src)
+else()
+	file(MAKE_DIRECTORY ${SOURCE_PATH}/out)
+	vcpkg_execute_required_process(
+		COMMAND ${SOURCE_PATH}/configure 
+		WORKING_DIRECTORY ${SOURCE_PATH}/out
+		LOGNAME configure-${TARGET_TRIPLET}
+	)
+	file(COPY ${SOURCE_PATH}/out/config.h DESTINATION ${SOURCE_PATH}/src)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
