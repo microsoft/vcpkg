@@ -132,6 +132,7 @@ target_include_directories(gdk-3 PRIVATE ./gdk/win32 ./gdk/broadway)
 target_link_libraries(gdk-3 gdk-3-win32 gdk-3-broadway winmm dwmapi setupapi imm32 ws2_32)
 
 extract_vcproj_sources(build/win32/vs14/gtk-3.vcxproj GTK_SOURCES)
+list(APPEND GTK_SOURCES ${GTK_RESOURCE_FILE})
 set_source_files_properties(gtk/inspector/visual.c PROPERTIES COMPILE_FLAGS "/FImath.h")
 gtk_add_module(gtk-3 ${GTK_SOURCES})
 target_compile_definitions(gtk-3 PRIVATE
@@ -163,7 +164,6 @@ target_compile_definitions(gtk-3 PRIVATE
     ISOLATION_AWARE_ENABLED)
 target_link_libraries(gtk-3 gdk-3 winspool comctl32 imm32)
 target_compile_options(gtk-3 PRIVATE "/wd4828" PRIVATE "/wd4244" PRIVATE "/wd4305" PRIVATE "/wd4018")
-set_target_properties(gtk-3 PROPERTIES ${GTK_RESOURCE_FILE})
 
 extract_vcproj_sources(build/win32/vs14/gailutil-3.vcxproj GAILUTIL_SOURCES)
 gtk_add_module(gailutil-3 ${GAILUTIL_SOURCES})
