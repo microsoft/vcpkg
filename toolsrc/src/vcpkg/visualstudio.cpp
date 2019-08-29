@@ -263,27 +263,34 @@ namespace vcpkg::VisualStudio
                         };
                     };
 
-                    //Should probably create a map of lambdas with all those paths using major_version as a key
-                    const fs::path platformpath = [&](){
-                        if(major_version > "15") {
-                            return vs_instance.root_path / "MSBuild" / "Microsoft" / "VC" / "v160" /
-                                                  "Platforms" / vs_arch(arch) / "PlatformToolsets"; }
-                        else {
-                            return vs_instance.root_path / "Common7" / "IDE" / "VC" / "VCTargets" /
-                                                  "Platforms" / vs_arch(arch) / "PlatformToolsets"; }
-                        }();
-                    
+                    // Should probably create a map of lambdas with all those paths using major_version as a key
+                    const fs::path platformpath = [&]() {
+                        if (major_version > "15")
+                        {
+                            return vs_instance.root_path / "MSBuild" / "Microsoft" / "VC" / "v160" / "Platforms" /
+                                   vs_arch(arch) / "PlatformToolsets";
+                        }
+                        else
+                        {
+                            return vs_instance.root_path / "Common7" / "IDE" / "VC" / "VCTargets" / "Platforms" /
+                                   vs_arch(arch) / "PlatformToolsets";
+                        }
+                    }();
+
                     if (fs.exists(platformpath))
                     {
                         std::vector<fs::path> platformsubdirs = fs.get_files_non_recursive(platformpath);
                         Util::erase_remove_if(platformsubdirs,
-                                               [&fs](const fs::path& path) { return !fs.is_directory(path); });
+                                              [&fs](const fs::path& path) { return !fs.is_directory(path); });
 
                         for (const fs::path& platform : platformsubdirs)
                         {
                             const auto tmp = platform.filename();
 
-                            const ToolsetMinimal Toolmin{tmp.u8string(), major_version, major_version > "15" ? vs16_cmake(arch).c_str() : vs15_cmake(arch).c_str()};
+                            const ToolsetMinimal Toolmin{tmp.u8string(),
+                                                         major_version,
+                                                         major_version > "15" ? vs16_cmake(arch).c_str()
+                                                                              : vs15_cmake(arch).c_str()};
                             arch.supported_toolsets.push_back(Toolmin);
                         }
                     }
@@ -366,7 +373,7 @@ namespace vcpkg::VisualStudio
                                                       MinTool.name,
                                                       MinTool.vsversion,
                                                       MinTool.cmake_generator,
-                                                      arch};                                
+                                                      arch};
 
                                 if (!english_language_pack_available)
                                 {

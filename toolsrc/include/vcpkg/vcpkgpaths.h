@@ -25,9 +25,9 @@ namespace vcpkg
 
     struct ToolsetMinimal
     {
-            std::string name; 
-            std::string vsversion;
-            std::string cmake_generator;
+        std::string name;
+        std::string vsversion;
+        std::string cmake_generator;
     };
 
     struct ArchOption
@@ -35,7 +35,7 @@ namespace vcpkg
         CStringView name;
         System::CPUArchitecture host_arch;
         System::CPUArchitecture target_arch;
-        std::vector<ToolsetMinimal> supported_toolsets; 
+        std::vector<ToolsetMinimal> supported_toolsets;
     };
 
     struct Toolset

@@ -21,8 +21,8 @@ namespace vcpkg::System
 
     Optional<CPUArchitecture> to_cpu_architecture(StringView arch);
 
-    inline CStringView to_string(const CPUArchitecture& arch) noexcept 
-	{
+    inline CStringView to_string(const CPUArchitecture& arch) noexcept
+    {
         switch (arch)
         {
             case CPUArchitecture::X86: return "x86";
@@ -31,7 +31,7 @@ namespace vcpkg::System
             case CPUArchitecture::ARM64: return "ARM64";
             default: return "unknown"; //<- Please update if you see that
         }
-	};
+    };
 
     CPUArchitecture get_host_processor();
 

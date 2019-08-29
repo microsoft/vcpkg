@@ -201,16 +201,19 @@ namespace vcpkg::Build
         auto target_arch = maybe_target_arch.value_or_exit(VCPKG_LINE_INFO);
         auto host_architectures = System::get_supported_host_architectures();
 
-         const auto it = Util::find_if(host_architectures, [&](const System::CPUArchitecture& arch) {
+        const auto it = Util::find_if(host_architectures, [&](const System::CPUArchitecture& arch) {
             return (arch == toolset.arch.host_arch && target_arch == toolset.arch.target_arch);
         });
         if (it != host_architectures.end())
         {
             return to_string(*it);
         };
-        Checks::exit_with_message(VCPKG_LINE_INFO,
-                              "Unsupported host/target/toolset combination. Toolset was: %s with Host: %s and Target: %s:\n%s",
-                              toolset.name,to_string(toolset.arch.host_arch),target_architecture);
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO,
+            "Unsupported host/target/toolset combination. Toolset was: %s with Host: %s and Target: %s:\n%s",
+            toolset.name,
+            to_string(toolset.arch.host_arch),
+            target_architecture);
     }
 
     static auto make_env_passthrough(const PreBuildInfo& pre_build_info) -> std::unordered_map<std::string, std::string>
@@ -448,7 +451,8 @@ namespace vcpkg::Build
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         std::vector<System::CMakeVariable> variables = get_cmake_vars(paths, config, triplet, toolset);
 
-        const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables,toolset.name);
+        const std::string cmd_launch_cmake =
+            System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables, toolset.name);
 
         std::string command = make_build_env_cmd(pre_build_info, toolset);
 
@@ -1132,7 +1136,7 @@ namespace vcpkg::Build
                         break;
                     case VcpkgTripletVar::CMAKE_VS_GENERATOR:
                         pre_build_info.cmake_vs_generator =
-                             variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                            variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
                         break;
                 }
             }

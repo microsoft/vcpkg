@@ -172,8 +172,7 @@ namespace vcpkg::Build
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
         {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
         {"VCPKG_SKIP_POST_BUILD_LIB_ARCH_CHECK", VcpkgTripletVar::SKIP_POST_BUILD_LIB_ARCH_CHECK},
-        {"VCPKG_CMAKE_VS_GENERATOR", VcpkgTripletVar::CMAKE_VS_GENERATOR}
-    };
+        {"VCPKG_CMAKE_VS_GENERATOR", VcpkgTripletVar::CMAKE_VS_GENERATOR}};
 
     struct ExtendedBuildResult
     {

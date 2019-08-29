@@ -180,14 +180,17 @@ namespace vcpkg
     }
 
     std::string System::make_cmake_cmd(const fs::path& cmake_exe,
-                               const fs::path& cmake_script,
-                               const std::vector<CMakeVariable>& pass_variables,
-                               const std::string& toolset)
+                                       const fs::path& cmake_script,
+                                       const std::vector<CMakeVariable>& pass_variables,
+                                       const std::string& toolset)
     {
         const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
         if (!toolset.empty())
-            return Strings::format(
-                R"("%s" -T%s %s -P "%s")", cmake_exe.u8string(), toolset, cmd_cmake_pass_variables, cmake_script.generic_u8string());
+            return Strings::format(R"("%s" -T%s %s -P "%s")",
+                                   cmake_exe.u8string(),
+                                   toolset,
+                                   cmd_cmake_pass_variables,
+                                   cmake_script.generic_u8string());
         return Strings::format(
             R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
     }

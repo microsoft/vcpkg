@@ -211,8 +211,8 @@ namespace vcpkg
         const auto tsv = prebuildinfo.platform_toolset.get();
         auto vsp = prebuildinfo.visual_studio_path.get();
 
-		//Filter by host and target architecture
-		Util::erase_remove_if(candidates, [&](const Toolset* t) {
+        // Filter by host and target architecture
+        Util::erase_remove_if(candidates, [&](const Toolset* t) {
             return t->arch.host_arch != host_arch || t->arch.target_arch != target_arch;
         });
 
@@ -221,7 +221,8 @@ namespace vcpkg
             vsp = &default_vs_path;
         }
 
-		// Filter by CMake VS Generator (Allows to overwrite our preferences! -> Makes triplets like: x86-windows-vs2012 possible)
+        // Filter by CMake VS Generator (Allows to overwrite our preferences! -> Makes triplets like: x86-windows-vs2012
+        // possible)
         if (const auto cmake_vs_gen = prebuildinfo.cmake_vs_generator.get(); cmake_vs_gen)
         {
             Util::erase_remove_if(candidates, [&](const Toolset* t) { return t->cmake_generator != *cmake_vs_gen; });
@@ -232,7 +233,7 @@ namespace vcpkg
                                *tsv);
         }
 
-		//Filter by toolset and VS path => Should only ever return a single toolset
+        // Filter by toolset and VS path => Should only ever return a single toolset
         if (tsv && vsp)
         {
             Util::erase_remove_if(
@@ -247,8 +248,8 @@ namespace vcpkg
             return *candidates.back();
         }
 
-		//Filter by toolset (Allows triplets like x86-windows-llvm or triplets like x86-windows-v141_xp)
-		//If used together with cmake_vs_gen x86-windows-vs120_xp should be possible
+        // Filter by toolset (Allows triplets like x86-windows-llvm or triplets like x86-windows-v141_xp)
+        // If used together with cmake_vs_gen x86-windows-vs120_xp should be possible
         if (tsv)
         {
             Util::erase_remove_if(candidates, [&](const Toolset* t) { return *tsv != t->name; });
@@ -257,7 +258,7 @@ namespace vcpkg
             return *candidates.front();
         }
 
-		//Filter by Path
+        // Filter by Path
         if (vsp)
         {
             const fs::path vs_root_path = *vsp;
@@ -270,24 +271,23 @@ namespace vcpkg
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
-       
-		// Last but not least: filter by preferred toolset selection. 
-		// Requires candidates to be sorted in: a) major version b) toolset versions. (newer > older)
-		// Maybe candidates should be sorted that way to make sure it is sorted. 
-		// Currently the code relies on the fact that VisualStudio::find_toolset_instances_preferred_first
-		// pushes it back in that way (hoepfully; not fully tested <- please make better)
-		auto preferred_pred =
-            [](const Toolset* set, const CStringView prename) noexcept {
-                return (set->name == prename.c_str());
+
+        // Last but not least: filter by preferred toolset selection.
+        // Requires candidates to be sorted in: a) major version b) toolset versions. (newer > older)
+        // Maybe candidates should be sorted that way to make sure it is sorted.
+        // Currently the code relies on the fact that VisualStudio::find_toolset_instances_preferred_first
+        // pushes it back in that way (hoepfully; not fully tested <- please make better)
+        auto preferred_pred = [](const Toolset* set, const CStringView prename) noexcept
+        {
+            return (set->name == prename.c_str());
         };
         const auto preferred = std::find_first_of(candidates.begin(),
-                                                 candidates.end(),
-                                                 VisualStudio::get_preferred_toolset_names().cbegin(),
-                                                 VisualStudio::get_preferred_toolset_names().cend(),
-                                                 preferred_pred);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           preferred!=candidates.cend(),
-                           "Could not find a preferred Visual Studio toolset!");
+                                                  candidates.end(),
+                                                  VisualStudio::get_preferred_toolset_names().cbegin(),
+                                                  VisualStudio::get_preferred_toolset_names().cend(),
+                                                  preferred_pred);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, preferred != candidates.cend(), "Could not find a preferred Visual Studio toolset!");
         return **preferred;
 
 #endif

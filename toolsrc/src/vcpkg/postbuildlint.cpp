@@ -395,11 +395,12 @@ namespace vcpkg::PostBuildLint
                            "\n\n");
         }
     }
+#endif
 
     static LintStatus check_dll_architecture(const std::string& expected_architecture,
                                              const std::vector<fs::path>& files)
     {
-#if defined(_WIN32) 
+#if defined(_WIN32)
         std::vector<FileAndArch> binaries_with_invalid_architecture;
 
         for (const fs::path& file : files)
@@ -425,7 +426,6 @@ namespace vcpkg::PostBuildLint
 #endif
         return LintStatus::SUCCESS;
     }
-#endif
 
     static LintStatus check_lib_architecture(const std::string& expected_architecture,
                                              const std::vector<fs::path>& files)
@@ -818,7 +818,7 @@ namespace vcpkg::PostBuildLint
                 }
 
                 if (!pre_build_info.skip_post_build_lib_arch_check.has_value())
-                {              
+                {
                     error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
                 }
 
