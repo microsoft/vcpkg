@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.70.0"
+    $version = "1.71.0"
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
