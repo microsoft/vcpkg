@@ -1,0 +1,39 @@
+diff --git a/libdnet-stripped/include/dnet_winconfig.h b/libdnet-stripped/include/dnet_winconfig.h
+index e41907c..82bc595 100644
+--- a/libdnet-stripped/include/dnet_winconfig.h
++++ b/libdnet-stripped/include/dnet_winconfig.h
+@@ -277,7 +277,7 @@ int	strlcpy(char *, const char *, int);
+ char	*strsep(char **, const char *);
+ #endif
+ 
+-#define snprintf _snprintf
++//#define snprintf _snprintf
+ 
+ /* Without this, Windows will give us all sorts of crap about using functions
+    like strcpy() even if they are done safely */
+diff --git a/nbase/nbase.h b/nbase/nbase.h
+index 0ecd9bc..c0eb395 100644
+--- a/nbase/nbase.h
++++ b/nbase/nbase.h
+@@ -359,7 +359,7 @@ extern "C" int vsnprintf (char *, size_t, const char *, va_list);
+ #define putenv _putenv
+ 
+ #if !defined(__GNUC__)
+-#define snprintf _snprintf
++//#define snprintf _snprintf
+ #endif
+ 
+ #define strcasecmp _stricmp
+diff --git a/nse_libssh2.cc b/nse_libssh2.cc
+index bf721b6..1fafe7f 100644
+--- a/nse_libssh2.cc
++++ b/nse_libssh2.cc
+@@ -58,7 +58,7 @@ struct ssh_userdata {
+ 
+ 
+ #if defined(_MSC_VER) && _MSC_VER < 1900
+-#define snprintf c99_snprintf
++//#define snprintf c99_snprintf
+ #define vsnprintf c99_vsnprintf
+ 
+ __inline int c99_vsnprintf(char *outBuf, size_t size, const char *format, va_list ap) {

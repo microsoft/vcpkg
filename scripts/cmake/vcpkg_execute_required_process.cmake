@@ -11,6 +11,10 @@
 ## )
 ## ```
 ## ## Parameters
+## ### ALLOW_IN_DOWNLOAD_MODE
+## Allows the command to execute in Download Mode.  
+## [See execute_process() override](../../scripts/cmake/execute_process.cmake).
+##
 ## ### COMMAND
 ## The command to be executed, along with its arguments.
 ##
@@ -30,10 +34,20 @@
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process)
-    cmake_parse_arguments(vcpkg_execute_required_process "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
+    cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
-    execute_process(
+
+    set(execute_process_function execute_process)
+    if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
+        message(FATAL_ERROR 
+[[
+This command cannot be executed in Download Mode.
+Halting portfile execution.
+]])
+    endif()
+
+    _execute_process(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${LOG_OUT}
         ERROR_FILE ${LOG_ERR}
