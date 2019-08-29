@@ -14,13 +14,46 @@ vcpkg_from_github(
 set(ENV{_CL_} "$ENV{_CL_} /GL-")
 set(ENV{_LINK_} "$ENV{_LINK_} /LTCG:OFF")
 
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH libplist.sln
-    INCLUDES_SUBPATH include
-    LICENSE_SUBPATH COPYING.lesser
-    REMOVE_ROOT_INCLUDES
-)
+
+if (VCPKG_TARGET_IS_WINDOWS)
+	vcpkg_install_msbuild(
+		SOURCE_PATH ${SOURCE_PATH}
+		PROJECT_SUBPATH libplist.sln
+		INCLUDES_SUBPATH include
+		LICENSE_SUBPATH COPYING.lesser
+		REMOVE_ROOT_INCLUDES
+	)
+else()
+	message("libplist need to install automake first.")
+	vcpkg_find_acquire_program(PYTHON3)
+	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+	set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+	
+	vcpkg_execute_required_process_repeat(
+		COUNT 1
+		COMMAND autogen.sh
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME autogen-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND ./configure
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME configure-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND make
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME make-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}
+	)
+	
+	vcpkg_execute_required_process(
+		COMMAND make install
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}
+	)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
