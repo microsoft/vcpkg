@@ -18,22 +18,21 @@ index 87d76a6..afa2db3 100644
  
  # These tools are needed by several subdirectories
 diff --git a/apps/linear_algebra/benchmarks/CMakeLists.txt b/apps/linear_algebra/benchmarks/CMakeLists.txt
-index 461232e..0beb2b6 100644
+index 461232e..fc56dba 100644
 --- a/apps/linear_algebra/benchmarks/CMakeLists.txt
 +++ b/apps/linear_algebra/benchmarks/CMakeLists.txt
-@@ -42,7 +42,10 @@ else()
+@@ -42,7 +42,9 @@ else()
      eigen_benchmarks.cpp
    )
    target_compile_definitions(eigen_benchmarks PRIVATE -DEIGEN_DONT_PARALLELIZE ${MISC_DEFINITIONS})
 -  target_compile_options(eigen_benchmarks PRIVATE -Wno-error=unused-variable)
-+  if (MSVC)
-+  else()
++  if (NOT MSVC)
 +    target_compile_options(eigen_benchmarks PRIVATE -Wno-error=unused-variable)
 +  endif()
    target_link_libraries(eigen_benchmarks
      PRIVATE
        Eigen3::Eigen
-@@ -71,7 +74,9 @@ else()
+@@ -71,7 +73,9 @@ else()
        )
        string(TOUPPER ${BLAS_VENDOR} DEFINE_SUFFIX)
        target_compile_definitions(${TARGET} PRIVATE -DUSE_${DEFINE_SUFFIX} ${MISC_DEFINITIONS})
