@@ -139,11 +139,15 @@ namespace vcpkg
     {
         return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
             std::vector<std::string> output;
+            Files::Filesystem& fs = this->get_filesystem();
             for (auto&& triplets_dir : triplets_dirs)
             {
-                for (auto&& path : this->get_filesystem().get_files_non_recursive(triplets_dir))
+                for (auto&& path : fs.get_files_non_recursive(triplets_dir))
                 {
-                    output.push_back(path.stem().filename().string());
+                    if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, path)))
+                    {
+                        output.push_back(path.stem().filename().string());
+                    }
                 }
             }
             Util::sort_unique_erase(output);

@@ -294,15 +294,15 @@ __pycache__/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
+!triplets/community/arm64-uwp.cmake
+!triplets/community/arm-windows.cmake
+!triplets/community/x86-uwp.cmake
+!triplets/community/x86-windows-static.cmake
 !triplets/arm-uwp.cmake
-!triplets/arm-windows.cmake
 !triplets/x64-uwp.cmake
 !triplets/x64-windows.cmake
 !triplets/x64-windows-static.cmake
-!triplets/x86-uwp.cmake
 !triplets/x86-windows.cmake
-!triplets/x86-windows-static.cmake
-!triplets/arm64-uwp.cmake
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
