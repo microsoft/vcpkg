@@ -9,17 +9,20 @@ vcpkg_from_github(
     PATCHES move-cmake-min-req.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(
 "GLFW3 currently requires the following libraries from the system package manager:
     xinerama
     xcursor
+    xorg
+    libglu1-mesa
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev")
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DGLFW_BUILD_EXAMPLES=OFF
         -DGLFW_BUILD_TESTS=OFF

@@ -1,3 +1,5 @@
-"shaderc v2016.2-dev unknown hash, 2016-12-02\n"
-"spirv-tools v2016.6-dev unknown hash, 2016-12-02\n"
-"glslang unknown hash, 2016-12-02\n"
+"shaderc v2019.0-dev unknown hash, 2019-05-08\n" 
+"spirv-tools v2019.3-dev unknown hash, 2019-04-03\n" 
+"glslang unknown hash, 2019-03-05\n"
+
+

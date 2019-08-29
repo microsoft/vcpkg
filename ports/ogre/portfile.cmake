@@ -1,15 +1,20 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF c14f8847f743f4dc1b3abc947b1725c87d8b10ce
-    SHA512 a2fd7ffd653c1578bc860b58cf4c899f27cc967f75e2254dc3e372044f118d5951e42b35bfc711aa8996e1885f372d3cfa5a768b8674e0b3d844811990eb87fc 
+    REF 8083067c1835147de5d82015347d95c710e36bc0
+    SHA512 0690aaff0bea74c38598894939396cab8077b84bda166deb4790fba87566114bc5267660e8efc4de9babeb1b8bddf73530e1a1dbbc63c7e24b14bc012b033bc8
     HEAD_REF master
     PATCHES
-        001-cmake-install-dir.patch
-        002-link-optimized-lib-workaround.patch
+        toolchain_fixes.patch
 )
+
+file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OGRE_STATIC ON)
@@ -35,6 +40,12 @@ if("python" IN_LIST FEATURES)
     set(WITH_PYTHON ON)
 else()
     set(WITH_PYTHON OFF)
+endif()
+
+if("csharp" IN_LIST FEATURES)
+    set(WITH_CSHARP ON)
+else()
+    set(WITH_CSHARP OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -64,33 +75,38 @@ vcpkg_configure_cmake(
 # Optional stuff
         -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
         -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
+        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
         -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-# Remove unwanted files
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ogre)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
 file(GLOB REL_CFGS ${CURRENT_PACKAGES_DIR}/bin/*.cfg)
-file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if(REL_CFGS)
+  file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+  file(REMOVE ${REL_CFGS})
+endif()
 
 file(GLOB DBG_CFGS ${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg)
-file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-file(REMOVE ${REL_CFGS} ${DBG_CFGS})
+if(DBG_CFGS)
+  file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  file(REMOVE ${DBG_CFGS})
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+#Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
+#manual-link subfolder is here to the rescue!
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
@@ -98,7 +114,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
             file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
         endif()
     endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)

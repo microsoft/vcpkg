@@ -26,7 +26,7 @@ elseif ("boost" IN_LIST FEATURES)
 elseif("std-experimental" IN_LIST FEATURES)
     set(BSONCXX_POLY STD_EXPERIMENTAL)
 else()
-  if (WIN32)
+  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(BSONCXX_POLY BOOST)
   else()
     set(BSONCXX_POLY MNMLSTC)
@@ -83,13 +83,16 @@ set(LIBMONGOCXX_LIBRARIES optimized \${LIBMONGOCXX_LIBRARY_PATH_RELEASE} debug \
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
+if (NOT BSONCXX_POLY STREQUAL MNMLSTC)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bsoncxx/third_party)
+endif()
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/cmake
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/config/private
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/private
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/test
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/test_util
-    ${CURRENT_PACKAGES_DIR}/include/bsoncxx/third_party
 
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/cmake
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/config/private

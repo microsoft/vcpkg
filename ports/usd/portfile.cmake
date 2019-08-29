@@ -17,6 +17,7 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
@@ -35,7 +36,7 @@ file(
         "${CURRENT_PACKAGES_DIR}/pxrConfig.cmake"
         "${CURRENT_PACKAGES_DIR}/cmake/pxrConfig.cmake")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 vcpkg_copy_pdbs()
 

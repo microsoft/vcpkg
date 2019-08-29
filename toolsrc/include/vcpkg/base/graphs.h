@@ -44,9 +44,9 @@ namespace vcpkg::Graphs
         void shuffle(Container& c, Randomizer* r)
         {
             if (!r) return;
-            for (int i = static_cast<int>(c.size()); i > 1; --i)
+            for (auto i = c.size(); i > 1; --i)
             {
-                auto j = r->random(i);
+                std::size_t j = r->random(static_cast<int>(i));
                 if (j != i - 1)
                 {
                     std::swap(c[i - 1], c[j]);

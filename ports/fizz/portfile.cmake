@@ -5,10 +5,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF 6d26a1be8d7a20d8d89c374ee3dc5c452d18c18d
-    SHA512 bc6aa17a97fdfc53d0a247b876cbd1fea8214608b7e463dcf21e34df65015fe77e617c5a6c6bfa84b87e60e56b6aeb89aa2d8d774f97fc1f76f415869948a48a
+    REF 5a2cbf77381b2489ff636b836c26fde26a66cd7d
+    SHA512 6f6583dae05c95feb521396d932a263984f3b56c4ce18a672214ce5ece960cfb82203f7f6d23fa7b00dca62da640e4294f5f1cd6a6b0459d950c8997b71f3ce1
     HEAD_REF master
-    PATCHES find-zlib.patch
+    PATCHES
+        find-zlib.patch
+        fix-build_error.patch
 )
 
 # Prefer installed config files
@@ -28,7 +30,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/fizz")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fizz)
 vcpkg_copy_pdbs()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)

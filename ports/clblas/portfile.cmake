@@ -43,7 +43,8 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/share/clblas
     RENAME copyright
 )
-if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+
+if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE
             ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb
             ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
@@ -53,9 +54,8 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
             ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140d.dll
     )
 
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
-endif()
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clBLAS")
 endif()
 

@@ -5,10 +5,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF v2018.1
-    SHA512 0637c413dafd931e8222f9bf70a024f8b64116f0300c7732b86bcaff321188a0e746f79c1385ae23a7692e83194586b57692960d5be607fb2d7960731b6cd63f
-    HEAD_REF master
+    REF d0a1f5a05a2b0f8315e5b3f17b8e34c730861b31
+    SHA512 7179751b0216368b4a4bf8c9b0c1c1e3b17d6aa4788b4aeaa7fbb2b6d9d50b34cf209082f3531a2e0994b5fc02416373666d4d12cee282cec2c3d02c13a640a8
     PATCHES
+        comment-distutils.patch
         CMake-targets.patch
 )
 
