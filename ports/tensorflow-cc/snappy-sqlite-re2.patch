@@ -1,0 +1,136 @@
+diff --git a/third_party/systemlibs/jsoncpp.BUILD b/third_party/systemlibs/jsoncpp.BUILD
+index 526fd0c4..1fb6b712 100644
+--- a/third_party/systemlibs/jsoncpp.BUILD
++++ b/third_party/systemlibs/jsoncpp.BUILD
+@@ -7,6 +7,8 @@ filegroup(
+ 
+ HEADERS = [
+     "include/json/autolink.h",
++    "include/json/allocator.h",
++    "include/json/assertions.h",
+     "include/json/config.h",
+     "include/json/features.h",
+     "include/json/forwards.h",
+@@ -23,7 +25,7 @@ genrule(
+     cmd = """
+       for i in $(OUTS); do
+         i=$${i##*/}
+-        ln -sf $(INCLUDEDIR)/jsoncpp/json/$$i $(@D)/include/json/$$i
++        ln -sf $(VCPKG_INCLUDE_DIR)/json/$$i $(@D)/include/json/$$i
+       done
+     """,
+ )
+@@ -32,6 +34,6 @@ cc_library(
+     name = "jsoncpp",
+     hdrs = HEADERS,
+     includes = ["."],
+-    linkopts = ["-ljsoncpp"],
++    linkopts = ["-ljsoncpp -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
+diff --git a/third_party/systemlibs/re2.BUILD b/third_party/systemlibs/re2.BUILD
+index c18e252d..0e6c612e 100644
+--- a/third_party/systemlibs/re2.BUILD
++++ b/third_party/systemlibs/re2.BUILD
+@@ -1,5 +1,24 @@
+ licenses(["notice"])  # BSD/MIT-like license
+ 
++HEADERS = [
++    "re2/re2.h",
++    "re2/set.h",
++    "re2/stringpiece.h",
++    "re2/filtered_re2.h",
++]
++
++genrule(
++    name = "link_headers",
++    outs = HEADERS,
++    cmd = """
++      for i in $(OUTS); do
++        f=$${i#$(@D)/}
++        mkdir -p $(@D)/$${f%/*}
++        ln -sf $(VCPKG_INCLUDE_DIR)/$$f $(@D)/$$f
++      done
++    """,
++)
++
+ filegroup(
+     name = "LICENSE",
+     visibility = ["//visibility:public"],
+@@ -7,6 +26,7 @@ filegroup(
+ 
+ cc_library(
+     name = "re2",
+-    linkopts = ["-lre2"],
++    hdrs = HEADERS,
++    linkopts = ["-lre2 -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
+diff --git a/third_party/systemlibs/snappy.BUILD b/third_party/systemlibs/snappy.BUILD
+index fd2db9e2..8cad098e 100644
+--- a/third_party/systemlibs/snappy.BUILD
++++ b/third_party/systemlibs/snappy.BUILD
+@@ -1,5 +1,23 @@
+ licenses(["notice"])  # BSD 3-Clause
+ 
++HEADERS = [
++    "snappy-c.h",
++    "snappy-sinksource.h",
++    "snappy-stubs-public.h",
++    "snappy.h",
++]
++
++genrule(
++    name = "link_headers",
++    outs = HEADERS,
++    cmd = """
++      for i in $(OUTS); do
++        f=$${i#$(@D)/}
++        ln -sf $(VCPKG_INCLUDE_DIR)/$$f $(@D)/$$f
++      done
++    """,
++)
++
+ filegroup(
+     name = "COPYING",
+     visibility = ["//visibility:public"],
+@@ -7,6 +25,7 @@ filegroup(
+ 
+ cc_library(
+     name = "snappy",
++    hdrs = HEADERS,
+     linkopts = ["-lsnappy"],
+     visibility = ["//visibility:public"],
+ )
+diff --git a/third_party/systemlibs/sqlite.BUILD b/third_party/systemlibs/sqlite.BUILD
+index 20ee1ebb..a5e28c73 100644
+--- a/third_party/systemlibs/sqlite.BUILD
++++ b/third_party/systemlibs/sqlite.BUILD
+@@ -1,9 +1,26 @@
+ licenses(["unencumbered"])  # Public Domain
+ 
++HEADERS = [
++    "sqlite3.h",
++    "sqlite3ext.h",
++]
++
++genrule(
++    name = "link_headers",
++    outs = HEADERS,
++    cmd = """
++      for i in $(OUTS); do
++        f=$${i#$(@D)/}
++        ln -sf $(VCPKG_INCLUDE_DIR)/$$f $(@D)/$$f
++      done
++    """,
++)
++
+ # Production build of SQLite library that's baked into TensorFlow.
+ cc_library(
+     name = "org_sqlite",
+-    linkopts = ["-lsqlite3"],
++    hdrs = HEADERS,
++    linkopts = ["-lsqlite3 -L$(VCPKG_LIB_DIR)"],
+     visibility = ["//visibility:public"],
+ )
+ 

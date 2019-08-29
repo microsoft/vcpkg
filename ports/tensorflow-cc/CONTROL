@@ -1,4 +1,4 @@
 Source: tensorflow-cc
 Version: 1.14
 Description: Library for computation using data flow graphs for scalable machine learning
-Build-Depends: c-ares, protobuf, double-conversion
+Build-Depends: c-ares, protobuf, double-conversion, jsoncpp, re2, sqlite3, snappy
