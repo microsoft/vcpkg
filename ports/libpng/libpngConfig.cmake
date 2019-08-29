@@ -1,6 +1,6 @@
-# The upstream CMake exports its targets to a file named libpng.cmake
-# however, find_package(libpng CONFIG) doesn't work with that name.
+# The upstream CMakeLists.txt exports libpng's targets to a file named `libpng16.cmake`.
+# However, `find_package(libpng CONFIG)` expects a file named `libpngConfig.cmake` to exist instead.
 #
-# By includeing `libpng.cmake` form this file, find_package() will be 
-# able to find the exports `libpngConfig.cmake`.
-include(libpng16)
+# By including `libpng.cmake` from this file, `find_package(libpng CONFIG)` will work.
+get_filename_component(_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include("${_DIR}/libpng16.cmake")
