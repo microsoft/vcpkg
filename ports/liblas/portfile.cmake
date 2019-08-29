@@ -39,22 +39,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/cmake/libLAS/liblas-depends.cmake)
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/share/cmake/libLAS)
-    file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/cmake/libLAS/liblas-depends-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libLAS)
-endif()
-
-if (EXISTS ${CURRENT_PACKAGES_DIR}/share/${PORT}/liblas-depends-release.cmake)
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/liblas-depends-release.cmake RELEASE_CONFIG)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" RELEASE_CONFIG "${RELEASE_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/liblas-depends-release.cmake "${RELEASE_CONFIG}")
-endif()
-
-if (EXISTS ${CURRENT_PACKAGES_DIR}/share/${PORT}/liblas-depends-debug.cmake)
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/liblas-depends-debug.cmake DEBUG_CONFIG)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" DEBUG_CONFIG "${DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/liblas-depends-debug.cmake "${DEBUG_CONFIG}")
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libLAS)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
