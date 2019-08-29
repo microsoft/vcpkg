@@ -120,7 +120,7 @@ function(vcpkg_download_distfile VAR)
                     list(APPEND request_headers "--header=${header}")
                 endforeach()
             endif()
-            execute_process(
+            _execute_process(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
