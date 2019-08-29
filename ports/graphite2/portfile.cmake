@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO silnrsi/graphite
-    REF 1.3.12
-    SHA512 d0aed05b54445a9664435d5aef9d78fc07a89be23d18b7b1339d37412b09faca6da3dc1e72524e4b114724b76aa6f36934e8ab1a01bd0752e353efa075c9e643
+    REF b45f9b271214b95f3b42e5c9863eae4b0bfb7fd7
+    SHA512 5bd1052c1e21ab523ce17804b7123858d17ca9893cbd972f0af58119c5419d771df13d374569a14dd82605536674d9b1a4787300eac4bd89a177a40df5a05282
     HEAD_REF master
     PATCHES disable-tests.patch
 )

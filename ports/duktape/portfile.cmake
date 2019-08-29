@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svaarala/duktape
-    REF v2.3.0
-    SHA512 dd715eab481b948cf71d3ad16d2544166eb53da0df8936a4ac9c33e1f1277ef6efe542782a4c7f689f6c0c8963d7094749af455ff6a8c59593aa56ebb57e5c6f
+    REF v2.4.0
+    SHA512 5f42ff6faab8d49531423e199c032fd2de49524bab71f39d1cf822e6f9ee82a6089c9a93837ae7849d19a95693318a8480986e4672f6f73f3182b4902e6b2daa
     HEAD_REF master
 )
 
@@ -22,23 +22,23 @@ else()
     set(EXECUTABLE_SUFFIX "")
 endif()
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
-if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
-    if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
-        get_filename_component(PYTHON2_DIR_NAME "${PYTHON2_DIR}" NAME)
+if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
+    if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
+        get_filename_component(PYTHON3_DIR_NAME "${PYTHON3_DIR}" NAME)
         vcpkg_download_distfile(GET_PIP
-            URLS "https://bootstrap.pypa.io/get-pip.py"
-            FILENAME "tools/python/${PYTHON2_DIR_NAME}/get-pip.py"
-            SHA512 1436215d2bc45a8019503aaf6c0e5f7da142108dee0fa2db282e22670eca84beff487ec45f1e6b8968c481f7009afb211a76ac93b637b48ba83f099831db33ff
+            URLS "https://bootstrap.pypa.io/3.3/get-pip.py"
+            FILENAME "tools/python/${PYTHON3_DIR_NAME}/get-pip.py"
+            SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad
         )
-        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${DOWNLOADS}/tools/python/${PYTHON2_DIR_NAME}/get-pip.py)
+        execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${DOWNLOADS}/tools/python/${PYTHON3_DIR_NAME}/get-pip.py)
     endif()
-    execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
+    execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
 else()
-    execute_process(COMMAND ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX} pyyaml)
+    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX} pyyaml)
 endif()
 
 execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)

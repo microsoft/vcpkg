@@ -1,3 +1,4 @@
+include(execute_process)
 include(vcpkg_acquire_msys)
 include(vcpkg_add_to_path)
 include(vcpkg_check_features)
