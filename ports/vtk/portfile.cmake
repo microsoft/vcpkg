@@ -51,12 +51,9 @@ vcpkg_from_github(
         hdf5_static.patch
 )
 
-# Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
-# since they do not detect the debug libraries correctly.
 # The default files distributed with CMake (>= 3.9) should be superior by all means.
 # For GDAL, the one distributed with CMake does not detect the debug libraries correctly,
 # so we provide an own one.
-file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
