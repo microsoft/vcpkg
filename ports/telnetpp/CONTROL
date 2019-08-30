@@ -1,7 +1,7 @@
 Source: telnetpp
-Version: 2.0
+Version: 2.0-1
 Homepage: https://github.com/KazDragon/telnetpp
-Description:  Telnet++ is an implementation of the Telnet Session Layer protocol using C++14
+Description: Telnet++ is an implementation of the Telnet Session Layer protocol using C++14
 Build-Depends: boost-container, boost-signals2, boost-variant, gtest, gsl-lite
 Default-Features: zlib
 
