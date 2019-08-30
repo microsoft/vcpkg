@@ -251,9 +251,9 @@ target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_D
 if(WIN32)
     target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi advapi32 shell32)
 elseif(APPLE)
-    target_link_libraries(gio PRIVATE xdgmime kqueue)
+    target_link_libraries(gio PRIVATE xdgmime kqueue selinux)
 else()
-    target_link_libraries(gio PRIVATE xdgmime inotify)
+    target_link_libraries(gio PRIVATE xdgmime inotify selinux)
 endif()
 list(APPEND GLIB_TARGETS gio)
 

@@ -10,6 +10,10 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    message("glib needs to install selinux first.")
+endif()
+
 set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
