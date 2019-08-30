@@ -10,22 +10,26 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         glfw3_target_compat.patch
+        boost-1.71.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DOpenMVS_USE_BREAKPAD=OFF
+        -DOpenMVS_USE_CUDA=OFF
+        -DINSTALL_CMAKE_DIR:STRING=share/openmvs
+        -DINSTALL_BIN_DIR:STRING=bin
+        -DINSTALL_LIB_DIR:STRING=lib
+        -DINSTALL_INCLUDE_DIR:STRING=include
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
-else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CMake/OpenMVS)
-endif()
+vcpkg_fixup_cmake_targets()
 
 #somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
 if(CMAKE_HOST_WIN32)
