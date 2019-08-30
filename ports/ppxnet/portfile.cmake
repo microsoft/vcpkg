@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/ppxnet
-    REF v1.13
-    SHA512 c785e298ecd65b90eea965fc1cf6cbf76b2d0b32cc676b82b28c91443863d37881b0bc5558f77966e8965dadeb0377b909721b85eddd1192dc322d0623555753
+    REF v1.14
+    SHA512 ac23e738036b4236ebc19a4c944ef2d71fd1ed5b4f15efc522d9d76e3f60c857e5c6f9c999790f31cf4a2e3b58996435c084f0ff5b1348300b8d444f40ee981e
     HEAD_REF master
 )
 
