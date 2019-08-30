@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-abort-on-all-platforms.patch
+        0001-Fix-CMake-build-with-Emscripten.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

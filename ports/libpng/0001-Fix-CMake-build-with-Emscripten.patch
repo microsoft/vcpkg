@@ -1,0 +1,29 @@
+From 72e52d914836805f2c1aeab964859b72d69d65a1 Mon Sep 17 00:00:00 2001
+From: Simon Hausmann <simon.hausmann@qt.io>
+Date: Fri, 30 Aug 2019 10:07:09 +0200
+Subject: [PATCH] Fix CMake build with Emscripten
+
+When building with Emscripten, linkage to libm is neither required nor
+does it will. As find_library will fail, M_LIBRARY will be set to
+NOTFOUND and the build would fail later. The build works just fine
+without libm linkage.
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 471949d0e..a53b4a00a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ if(NOT PNG_BUILD_ZLIB)
+   include_directories(${ZLIB_INCLUDE_DIR})
+ endif()
+ 
+-if(UNIX AND NOT APPLE AND NOT BEOS AND NOT HAIKU)
++if(UNIX AND NOT APPLE AND NOT BEOS AND NOT HAIKU AND NOT EMSCRIPTEN)
+   find_library(M_LIBRARY m)
+ else()
+   # libm is not needed and/or not available
+-- 
+2.20.1
+
