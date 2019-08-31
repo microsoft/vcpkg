@@ -1,0 +1,11 @@
+The package directx-shader-compiler provides the dxc tool:
+
+    find_package(directx-shader-compiler CONFIG REQUIRED)
+
+    # Example usage
+    add_custom_command(OUTPUT <spirv-bin-file>
+                       COMMAND directx-shader-compiler::dxc -spirv -T <target-profile> -E <entry-point> <hlsl-src-file> -Fo <spirv-bin-file>
+                       MAIN_DEPENDENCY <hlsl-src-file>)
+    add_custom_target(hlsl-to-spirv
+                      DEPENDS <spirv-bin-file>
+                      VERBATIM)

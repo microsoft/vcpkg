@@ -1,0 +1,10 @@
+get_filename_component(_tools_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_tools_root "${_tools_root}" PATH)
+get_filename_component(_tools_root "${_tools_root}" PATH)
+set(_tools_root "${_tools_root}/tools")
+
+add_executable(directx-shader-compiler::dxc IMPORTED GLOBAL)
+set_target_properties(directx-shader-compiler::dxc
+	PROPERTIES IMPORTED_LOCATION "${_tools_root}/dxc")
+
+unset(_tools_root)
