@@ -39,7 +39,7 @@ index 57bd7a1..e19e677 100644
 +
  add_subdirectory(examples)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 429b143..5ceb0b7 100644
+index 429b143..f45c071 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -28,9 +28,19 @@
@@ -65,15 +65,15 @@ index 429b143..5ceb0b7 100644
  
  add_definitions(-D_XOPEN_SOURCE=700)
  
-@@ -52,13 +62,26 @@ endif()
- target_include_directories(argtable3 PRIVATE ${PROJECT_SOURCE_DIR}/src)
- 
- add_library(argtable3_static STATIC ${ARGTABLE3_SRC_FILES})
-+if(WIN32)
-+  target_compile_definitions(argtable3_static PUBLIC argtable3_IMPORTS)
-+endif()
- target_include_directories(argtable3 PRIVATE ${PROJECT_SOURCE_DIR}/src)
- 
+@@ -46,6 +56,7 @@ if(WIN32)
+     "${PROJECT_BINARY_DIR}/src/version.rc"
+   )
+   add_library(argtable3 SHARED ${ARGTABLE3_SRC_FILES} "${PROJECT_BINARY_DIR}/src/version.rc")
++  target_compile_definitions(argtable3 INTERFACE argtable3_IMPORTS)
+ else()
+   add_library(argtable3 SHARED ${ARGTABLE3_SRC_FILES})
+ endif()
+@@ -57,8 +68,18 @@ target_include_directories(argtable3 PRIVATE ${PROJECT_SOURCE_DIR}/src)
  set_target_properties(argtable3 argtable3_static PROPERTIES
    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
    SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
