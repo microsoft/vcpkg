@@ -1,0 +1,24 @@
+diff --git a/gpPanel/gpPanel.cpp b/gpPanel/gpPanel.cpp
+index 7af20b5..908523c 100644
+--- a/gpPanel/gpPanel.cpp
++++ b/gpPanel/gpPanel.cpp
+@@ -720,8 +720,8 @@ void gpPanel::OnMenuItemPrintPreview(wxCommandEvent& event)
+     gpLayer_s *gp = GetLayerByMenuId(event.GetId() );
+     if(gp==NULL)return;
+ 
+-    mpPrintout *plotPrint = new mpPrintout(gp->m_plot, gp->layer->GetName());
+-    mpPrintout *plotPrintPreview = new mpPrintout(gp->m_plot, gp->layer->GetName());
++    mpPrintout *plotPrint = new mpPrintout(gp->m_plot, gp->layer->GetName().c_str());
++    mpPrintout *plotPrintPreview = new mpPrintout(gp->m_plot, gp->layer->GetName().c_str());
+ 
+     wxPrintPreview *preview = new wxPrintPreview(plotPrintPreview, plotPrint);
+ 
+@@ -765,7 +765,7 @@ void gpPanel::OnMenuItemSaveScreenshot(wxCommandEvent& event)
+         if(index!=-1)
+         {
+             wxString reso = aChoices.Item(index);
+-            if( reso.CompareTo(_("custom")) == 0 ){
++            if( reso.CompareTo(_("custom").c_str()) == 0 ){
+                 reso = wxGetTextFromUser(_("Write image resolution (format: [width]x[height]"), _("Custom resolution for image"), _("640x480"), this);
+             }
+             if(reso.Find('x') != -1)

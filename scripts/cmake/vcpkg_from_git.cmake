@@ -74,16 +74,18 @@ function(vcpkg_from_git)
     find_program(GIT NAMES git git.cmd)
     # Note: git init is safe to run multiple times
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} init git-tmp
       WORKING_DIRECTORY ${DOWNLOADS}
       LOGNAME git-init-${TARGET_TRIPLET}
     )
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --depth 1 -n
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
-    execute_process(
+    _execute_process(
       COMMAND ${GIT} rev-parse FETCH_HEAD
       OUTPUT_VARIABLE REV_PARSE_HEAD
       ERROR_VARIABLE REV_PARSE_HEAD
@@ -100,6 +102,7 @@ function(vcpkg_from_git)
 
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} archive FETCH_HEAD -o "${TEMP_ARCHIVE}"
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-archive

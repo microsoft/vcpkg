@@ -6,8 +6,8 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF f0642196af85aeb4f2717d9cc11176290f321fb8
-        SHA512 fd8ee6e2be11c13f7388e57eb9c98397b6cb026ca370131db55b6118908701cdff2a1eaabb89bfe84591d6ee17163d06b7b86ad615216203bcbf0c8595d45452
+        REF 1f3fd807c8c47b6607d349469301afb64643aa89
+        SHA512 312ef2668ad62cb676c51474ba08307bacf9843d661233f7a6145e565ae58dcecb7bfa2e8a157efef1b54e8c07621bf2ec47b4d76ea180d77767b1ad44b951c2
         HEAD_REF master
         PATCHES no-double-expand-cmake.patch
     )
@@ -15,8 +15,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF f0642196af85aeb4f2717d9cc11176290f321fb8
-        SHA512 fd8ee6e2be11c13f7388e57eb9c98397b6cb026ca370131db55b6118908701cdff2a1eaabb89bfe84591d6ee17163d06b7b86ad615216203bcbf0c8595d45452
+        REF 1f3fd807c8c47b6607d349469301afb64643aa89
+        SHA512 312ef2668ad62cb676c51474ba08307bacf9843d661233f7a6145e565ae58dcecb7bfa2e8a157efef1b54e8c07621bf2ec47b4d76ea180d77767b1ad44b951c2
         HEAD_REF master
         PATCHES no-double-expand-cmake.patch
     )

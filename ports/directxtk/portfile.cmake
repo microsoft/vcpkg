@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF jun2019
-    SHA512 211b18ee0755802a5d44b58da2485276cabdee222d2f5fd7b42bad0bf75810e3ac1bd319b90891d9cc0345b124631ad37588422af9120cece9fa0ed769033e77
+    REF aug2019
+    SHA512 acd8ccd56ffec13749b62ec59fa3fe4c771d12b1a595595ba73bda8e63f14b45342e251d4dec6d1d918b6b4e3b4e0e6f6bfef91b03b09f034ee978c64c7fe3b8
     HEAD_REF master
 )
 
