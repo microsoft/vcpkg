@@ -39,17 +39,16 @@ index 57bd7a1..e19e677 100644
 +
  add_subdirectory(examples)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 429b143..45ed508 100644
+index 429b143..5ceb0b7 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -28,9 +28,37 @@
+@@ -28,9 +28,19 @@
  # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ################################################################################
  
 -set(CMAKE_C_FLAGS                   "${CMAKE_C_FLAGS} -std=c89 -Wpedantic")
 -set(CMAKE_C_FLAGS                   "${CMAKE_C_FLAGS} -Wall")
 -set(CMAKE_C_FLAGS                   "${CMAKE_C_FLAGS} -Wextra")
-+include(CheckCCompilerFlag)
 +include(GNUInstallDirs)
 +
 +if(UNIX)
@@ -58,32 +57,15 @@ index 429b143..45ed508 100644
 +  set(ARGTABLE3_INSTALL_CMAKEDIR "cmake")
 +endif(UNIX)
 +
-+function(add_c_compiler_flag flag)
-+    set(required_quiet_old_value ${CMAKE_REQUIRED_QUIET})
-+    set(CMAKE_REQUIRED_QUIET ON)
-+
-+    check_c_compiler_flag(${flag} IS_KNOWN_FLAG)
-+
-+    if(IS_KNOWN_FLAG)
-+        message(STATUS "Check compiler flag: ${flag} - Success")
-+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
-+    else()
-+        message(STATUS "Check compiler flag: ${flag} - Failed")
-+    endif()
-+    
-+    unset(IS_KNOWN_FLAG CACHE)
-+
-+    set(CMAKE_REQUIRED_QUIET ${required_quiet_old_value})
-+endfunction()
-+
-+add_c_compiler_flag(-std=c89)
-+add_c_compiler_flag(-Wpedantic)
-+add_c_compiler_flag(-Wall)
-+add_c_compiler_flag(-Wextra)
++if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -Wpedantic")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
++endif()
  
  add_definitions(-D_XOPEN_SOURCE=700)
  
-@@ -52,13 +80,26 @@ endif()
+@@ -52,13 +62,26 @@ endif()
  target_include_directories(argtable3 PRIVATE ${PROJECT_SOURCE_DIR}/src)
  
  add_library(argtable3_static STATIC ${ARGTABLE3_SRC_FILES})
