@@ -20,7 +20,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 else()
     find_program(autoreconf autoreconf)
     if (NOT autoreconf OR NOT EXISTS "/usr/share/doc/libgles2/copyright")
-        message(FATAL_ERROR "autoreconf and libgles2-mesa-dev must be installed before libepoxy can build. Install them with \"apt-get dh-autoreconf libgles2-mesa-dev\".")
+        message(FATAL_ERROR "autoreconf and libgles2-mesa-dev must be installed before libepoxy can build. Install them with \"apt-get install dh-autoreconf libgles2-mesa-dev\".")
     endif()
     
     find_program(MAKE make)
