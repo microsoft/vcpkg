@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svaarala/duktape
-    REF v2.3.0
-    SHA512 dd715eab481b948cf71d3ad16d2544166eb53da0df8936a4ac9c33e1f1277ef6efe542782a4c7f689f6c0c8963d7094749af455ff6a8c59593aa56ebb57e5c6f
+    REF v2.4.0
+    SHA512 5f42ff6faab8d49531423e199c032fd2de49524bab71f39d1cf822e6f9ee82a6089c9a93837ae7849d19a95693318a8480986e4672f6f73f3182b4902e6b2daa
     HEAD_REF master
 )
 
@@ -30,7 +30,7 @@ if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
         vcpkg_download_distfile(GET_PIP
             URLS "https://bootstrap.pypa.io/3.3/get-pip.py"
             FILENAME "tools/python/python2/get-pip.py"
-            SHA512 92e68525830bb23955a31cb19ebc3021ef16b6337eab83d5db2961b791283d2867207545faf83635f6027f2f7b7f8fee2c85f2cfd8e8267df25406474571c741
+            SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad 
         )
         execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
     endif()

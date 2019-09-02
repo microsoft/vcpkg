@@ -15,11 +15,13 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-BuildError.patch
 )
 
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake) # remove outdated module. There are probably more
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS 
+  
 	-DBUILD_OSGEO4W=OFF # Disable osgeo4w
 	-DWITH_TESTS=OFF
 	-DWITH_UTILITIES=OFF
