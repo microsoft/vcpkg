@@ -10,8 +10,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    message("glib needs to install selinux first.")
+if (NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
+    message(FATAL_ERROR "selinux must be installed before glib can build. Install them with \"apt-get install selinux\".")
 endif()
 
 set(GLIB_VERSION 2.52.3)
