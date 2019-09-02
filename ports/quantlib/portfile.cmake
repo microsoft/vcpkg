@@ -16,6 +16,13 @@ set(QL_MSVC_RUNTIME ${VCPKG_LIBRARY_LINKAGE})
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# TODO: Fix it in the upstream
+vcpkg_replace_string(
+    "${SOURCE_PATH}/ql/userconfig.hpp"
+    "//#    define QL_USE_STD_UNIQUE_PTR"
+    "#    define QL_USE_STD_UNIQUE_PTR"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
