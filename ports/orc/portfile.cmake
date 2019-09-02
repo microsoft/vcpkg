@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       0003-dependencies-from-vcpkg.patch
+      0004-update-tzdata.patch
       no-werror.patch
 )
 

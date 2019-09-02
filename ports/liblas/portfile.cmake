@@ -20,11 +20,13 @@ find_library(PROJ_LIBRARY_REL NAMES proj PATHS ${CURRENT_INSTALLED_DIR}/lib REQU
 find_library(PROJ_LIBRARY_DBG NAMES proj_d PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
 find_library(SQLITE3_LIBRARY_REL NAMES sqlite3 PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
 find_library(SQLITE3_LIBRARY_DBG NAMES sqlite3 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake) # remove outdated module. There are probably more
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS 
+  
 	-DBUILD_OSGEO4W=OFF # Disable osgeo4w
 	-DWITH_TESTS=OFF
 	-DWITH_UTILITIES=OFF
