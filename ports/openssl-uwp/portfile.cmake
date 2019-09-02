@@ -1,10 +1,16 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "This portfile only supports UWP")
 endif()
+
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
+endif()
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(UWP_PLATFORM  "arm")

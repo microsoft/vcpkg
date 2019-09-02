@@ -16,6 +16,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/DuiLib
     PREFER_NINJA
+    NO_CHARSET_FLAG
 )
 
 vcpkg_build_cmake()

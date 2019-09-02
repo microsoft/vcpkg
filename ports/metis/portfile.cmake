@@ -21,10 +21,12 @@ vcpkg_extract_source_archive_ex(
         fix-runtime-install-destination.patch
         fix-metis-vs14-math.patch
         fix-gklib-vs14-math.patch
+        fix-linux-build-error.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS ${OPTIONS}
 )
 

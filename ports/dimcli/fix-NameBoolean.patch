@@ -1,0 +1,63 @@
+diff --git a/libs/dimcli/cli.cpp b/libs/dimcli/cli.cpp
+index 9e67c12..c96bd24 100644
+--- a/libs/dimcli/cli.cpp
++++ b/libs/dimcli/cli.cpp
+@@ -388,8 +388,8 @@ GroupConfig const & Cli::Config::findGrpOrDie(Cli const & cli) {
+ ***/
+ 
+ //===========================================================================
+-Cli::OptBase::OptBase(string const & names, bool boolean)
+-    : m_bool{boolean}
++Cli::OptBase::OptBase(string const & names, bool in_boolean)
++    : m_bool{in_boolean}
+     , m_names{names}
+ {
+     // set m_fromName and assert if names is malformed
+@@ -486,12 +486,12 @@ static bool includeName(
+     OptName const & name,
+     NameListType type,
+     Cli::OptBase const & opt,
+-    bool boolean,
++    bool in_boolean,
+     bool inverted
+ ) {
+     if (name.opt != &opt)
+         return false;
+-    if (boolean) {
++    if (in_boolean) {
+         if (type == kNameEnable)
+             return !name.invert;
+         if (type == kNameDisable)
+diff --git a/libs/dimcli/cli.h b/libs/dimcli/cli.h
+index 2c1615c..3e4f405 100644
+--- a/libs/dimcli/cli.h
++++ b/libs/dimcli/cli.h
+@@ -818,7 +818,7 @@ public:
+     };
+ 
+ public:
+-    OptBase(std::string const & keys, bool boolean);
++    OptBase(std::string const & keys, bool in_boolean);
+     virtual ~OptBase() {}
+ 
+     //-----------------------------------------------------------------------
+@@ -952,7 +952,7 @@ inline void Cli::OptBase::setValueDesc<DIMCLI_LIB_FILESYSTEM_PATH>() {
+ template <typename A, typename T>
+ class Cli::OptShim : public OptBase {
+ public:
+-    OptShim(std::string const & keys, bool boolean);
++    OptShim(std::string const & keys, bool in_boolean);
+     OptShim(OptShim const &) = delete;
+     OptShim & operator=(OptShim const &) = delete;
+ 
+@@ -1100,8 +1100,8 @@ protected:
+ 
+ //===========================================================================
+ template <typename A, typename T>
+-Cli::OptShim<A, T>::OptShim(std::string const & keys, bool boolean)
+-    : OptBase(keys, boolean)
++Cli::OptShim<A, T>::OptShim(std::string const & keys, bool in_boolean)
++    : OptBase(keys, in_boolean)
+ {
+     setValueDesc<T>();
+ }

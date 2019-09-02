@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
         -DSZIP_INSTALL_CMAKE_DIR=share/szip
@@ -24,8 +25,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/szip)
+vcpkg_fixup_cmake_targets()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING ${CURRENT_PACKAGES_DIR}/share/szip/copyright)
 

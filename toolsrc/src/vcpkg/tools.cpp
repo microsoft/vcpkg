@@ -131,7 +131,10 @@ namespace vcpkg
         virtual const std::string& exe_stem() const = 0;
         virtual std::array<int, 3> default_min_version() const = 0;
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const {}
+        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const
+        {
+            Util::unused(out_candidate_paths);
+        }
         virtual Optional<std::string> get_version(const fs::path& path_to_exe) const = 0;
     };
 
@@ -271,6 +274,9 @@ namespace vcpkg
             const auto& program_files_32_bit = System::get_program_files_32_bit();
             if (const auto pf = program_files_32_bit.get())
                 out_candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
+#else
+            // TODO: figure out if this should do anything on non-Windows
+            Util::unused(out_candidate_paths);
 #endif
         }
         virtual Optional<std::string> get_version(const fs::path& path_to_exe) const override
@@ -290,20 +296,6 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
             return StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string();
         }
     };
-
-    static fs::path get_7za_path(const VcpkgPaths& paths)
-    {
-#if defined(_WIN32)
-        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "7zip").value_or_exit(VCPKG_LINE_INFO);
-        if (!paths.get_filesystem().exists(TOOL_DATA.exe_path))
-        {
-            return fetch_tool(paths, "7zip", TOOL_DATA);
-        }
-        return TOOL_DATA.exe_path;
-#else
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot download 7zip for non-Windows platforms.");
-#endif
-    }
 
     struct NinjaProvider : ToolProvider
     {
@@ -373,6 +365,9 @@ Type 'NuGet help <command>' for help on a specific command.
             const auto& program_files_32_bit = System::get_program_files_32_bit();
             if (const auto pf = program_files_32_bit.get())
                 out_candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
+#else
+            // TODO: figure out if this should do anything on non-windows
+            Util::unused(out_candidate_paths);
 #endif
         }
 
@@ -406,6 +401,7 @@ git version 2.17.1.windows.2
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
+            Util::unused(out_candidate_paths);
             // TODO: Uncomment later
             // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
             // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
@@ -439,31 +435,21 @@ git version 2.17.1.windows.2
         virtual const fs::path& get_tool_path(const VcpkgPaths& paths, const std::string& tool) const override
         {
             return path_only_cache.get_lazy(tool, [&]() {
-                // First deal with specially handled tools.
-                // For these we may look in locations like Program Files, the PATH etc as well as the auto-downloaded
-                // location.
-                if (tool == Tools::SEVEN_ZIP) return get_7za_path(paths);
-                if (tool == Tools::CMAKE || tool == Tools::GIT || tool == Tools::NINJA || tool == Tools::NUGET ||
-                    tool == Tools::IFW_INSTALLER_BASE)
-                    return get_tool_pathversion(paths, tool).path;
                 if (tool == Tools::IFW_BINARYCREATOR)
                     return get_tool_path(paths, Tools::IFW_INSTALLER_BASE).parent_path() / "binarycreator.exe";
                 if (tool == Tools::IFW_REPOGEN)
                     return get_tool_path(paths, Tools::IFW_INSTALLER_BASE).parent_path() / "repogen.exe";
 
-                // For other tools, we simply always auto-download them.
-                const ToolData tool_data = parse_tool_data_from_xml(paths, tool).value_or_exit(VCPKG_LINE_INFO);
-                if (paths.get_filesystem().exists(tool_data.exe_path))
-                {
-                    return tool_data.exe_path;
-                }
-                return fetch_tool(paths, tool, tool_data);
+                return get_tool_pathversion(paths, tool).path;
             });
         }
 
         const PathAndVersion& get_tool_pathversion(const VcpkgPaths& paths, const std::string& tool) const
         {
             return path_version_cache.get_lazy(tool, [&]() -> PathAndVersion {
+                // First deal with specially handled tools.
+                // For these we may look in locations like Program Files, the PATH etc as well as the auto-downloaded
+                // location.
                 if (tool == Tools::CMAKE)
                 {
                     if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
@@ -491,7 +477,18 @@ git version 2.17.1.windows.2
                 if (tool == Tools::NUGET) return get_path(paths, NuGetProvider());
                 if (tool == Tools::IFW_INSTALLER_BASE) return get_path(paths, IfwInstallerBaseProvider());
 
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Finding version for %s is not implemented yet.", tool);
+                // For other tools, we simply always auto-download them.
+                auto maybe_tool_data = parse_tool_data_from_xml(paths, tool);
+                if (auto p_tool_data = maybe_tool_data.get())
+                {
+                    if (paths.get_filesystem().exists(p_tool_data->exe_path))
+                    {
+                        return {p_tool_data->exe_path, p_tool_data->sha512};
+                    }
+                    return {fetch_tool(paths, tool, *p_tool_data), p_tool_data->sha512};
+                }
+
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown or unavailable tool: %s", tool);
             });
         }
 

@@ -47,16 +47,18 @@ namespace vcpkg
 
     struct VcpkgPaths
     {
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path);
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const Optional<fs::path>& vcpkg_scripts_root_dir,
+                                           const std::string& default_vs_path,
+                                           const std::vector<std::string>* triplets_dirs);
 
         fs::path package_dir(const PackageSpec& spec) const;
-        fs::path port_dir(const PackageSpec& spec) const;
-        fs::path port_dir(const std::string& name) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
-        const std::vector<std::string>& get_available_triplets() const;
         bool is_valid_triplet(const Triplet& t) const;
+        const std::vector<std::string>& get_available_triplets() const;
+        const fs::path get_triplet_file_path(const Triplet& triplet) const;
 
         fs::path root;
         fs::path packages;
@@ -95,7 +97,9 @@ namespace vcpkg
         Lazy<std::vector<Toolset>> toolsets_vs2013;
 
         fs::path default_vs_path;
+        std::vector<fs::path> triplets_dirs;
 
         mutable std::unique_ptr<ToolCache> m_tool_cache;
+        mutable vcpkg::Cache<Triplet, fs::path> m_triplets_cache;
     };
 }

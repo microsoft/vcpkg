@@ -32,10 +32,9 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/share/clfft/copyright
 )
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
-endif()
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clFFT")
 endif()
 

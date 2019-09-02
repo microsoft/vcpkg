@@ -1,0 +1,6 @@
+Source: libspatialindex
+Version: 1.9.0
+Homepage: http://libspatialindex.github.com
+Description: C++ implementation of R*-tree, an MVR-tree and a TPR-tree with C API.
+Build-Depends: zlib
+

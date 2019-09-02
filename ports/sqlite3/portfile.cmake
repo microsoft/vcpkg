@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(SQLITE_VERSION 3270200)
-set(SQLITE_HASH f84a6a3101c989164f17b85a6c2674ae2728a75d70daf5e33627a6eaa399adaf763deb968d891ad0660f1ebe660d27fbd55ace379d807f3bb8af4e95c01b68c4)
+set(SQLITE_VERSION 3290000)
+set(SQLITE_HASH 3306ac3e37ec46f1b2ac74155756c82afadff7bf5b8b4c9b5516f5e8c1c785b5f50ec9b840482292f2f6c5d72cf6d9a78a0dfb727f0a9cf134b6c5522606e9b3 )
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2019/sqlite-amalgamation-${SQLITE_VERSION}.zip"
@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${SQLITE_VERSION}
+    PATCHES fix-arm-uwp.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
