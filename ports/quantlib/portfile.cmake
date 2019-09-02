@@ -3,14 +3,16 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
-    REF 33d92b874836bc0b955def9fd3f14626a9dab829
-    SHA512 fd129d71569a6d99ee1b818f942875a535a6e1426847bf3bdea5ad555d8934532cf45261cd38dadaeddaefb489cd02f08ab8563059685e5dde82fc1df4186a94
+    REF f09141b5cce9134c0bcdbaf36e81359e6ba30705
+    SHA512 d4b19d33594a7072a0d90b7eac3d74fb27c526269713a9223b84c0451b1e06a58f0c98350305d68a55086d1971260ff249049112aaadea59397ec195a3291490
     HEAD_REF master
     PATCHES
         disable-examples-tests.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" USE_BOOST_DYNAMIC_LIBRARIES)
+
+set(QL_MSVC_RUNTIME ${VCPKG_LIBRARY_LINKAGE})
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -19,6 +21,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DUSE_BOOST_DYNAMIC_LIBRARIES=${USE_BOOST_DYNAMIC_LIBRARIES}
+        -DMSVC_RUNTIME=${QL_MSVC_RUNTIME}
 )
 
 vcpkg_install_cmake()
