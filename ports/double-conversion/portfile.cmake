@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/double-conversion
-    REF v3.1.4
-    SHA512 715a34ace2ff74b79d80a8c003c16cfbf958ebc92264e28cc572e1a12a786e1df9678abb46f032c2be387495e1a3d02957b12fa4a245ec6cfe19ca637519ac3c
+    REF v3.1.5
+    SHA512 0aeabdbfa06c3c4802905ac4bf8c2180840577677b47d45e1c91034fe07746428c9db79260ce6bdbdf8b584746066cea9247ba43a9c38155caf1ef44e214180a
     HEAD_REF master
 )
 

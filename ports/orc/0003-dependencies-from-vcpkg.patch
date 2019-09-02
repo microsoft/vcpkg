@@ -1,65 +1,44 @@
 diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
-index 235ced8..0042a88 100644
+index fae9be0..35cfb5f 100644
 --- a/c++/src/CMakeLists.txt
 +++ b/c++/src/CMakeLists.txt
-@@ -218,12 +218,13 @@ endif(BUILD_LIBHDFSPP)
+@@ -215,11 +215,12 @@ endif(ORC_CXX_HAS_THREAD_LOCAL AND BUILD_LIBHDFSPP)
  add_library (orc STATIC ${SOURCE_FILES})
-
+ 
  target_link_libraries (orc
 -  protobuf
 -  zlib
 -  snappy
 -  lz4
--  zstd
 -  ${LIBHDFSPP_LIBRARIES}
 +  PRIVATE
 +    protobuf::libprotobuf
 +    ZLIB::ZLIB
 +    Snappy::snappy
 +    ${LZ4_STATIC_LIB}
-+    ${ZSTD_STATIC_LIB}
 +    ${LIBHDFSPP_LIBRARIES}
    )
-
+ 
  install(TARGETS orc DESTINATION lib)
-diff --git a/c++/test/CMakeLists.txt b/c++/test/CMakeLists.txt
-index db68578..709ad07 100644
---- a/c++/test/CMakeLists.txt
-+++ b/c++/test/CMakeLists.txt
-@@ -50,10 +50,10 @@ add_executable (orc-test
-
- target_link_libraries (orc-test
-   orc
--  lz4
--  protobuf
--  snappy
--  zlib
-+  protobuf::libprotobuf
-+  ZLIB::ZLIB
-+  Snappy::snappy
-+  ${LZ4_STATIC_LIB}
-   ${GTEST_LIBRARIES}
- )
-
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index 1a28b1a..89f57d8 100644
+index f8584c0..fe48340 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -59,8 +59,8 @@ endif ()
+@@ -51,8 +51,8 @@ endif ()
  # ----------------------------------------------------------------------
  # Snappy
-
+ 
 -if (NOT "${SNAPPY_HOME}" STREQUAL "")
 -  find_package (Snappy REQUIRED)
-+if (NOT "${SNAPPY_HOME}" STREQUAL "" OR 1)
++if (1)
 +  find_package (Snappy CONFIG REQUIRED)
    set(SNAPPY_VENDORED FALSE)
  else ()
    set(SNAPPY_HOME "${THIRDPARTY_DIR}/snappy_ep-install")
-@@ -78,10 +78,6 @@ else ()
+@@ -70,10 +70,6 @@ else ()
    set(SNAPPY_VENDORED TRUE)
  endif ()
-
+ 
 -include_directories (SYSTEM ${SNAPPY_INCLUDE_DIR})
 -add_library (snappy STATIC IMPORTED)
 -set_target_properties (snappy PROPERTIES IMPORTED_LOCATION ${SNAPPY_STATIC_LIB})
@@ -67,20 +46,19 @@ index 1a28b1a..89f57d8 100644
  if (SNAPPY_VENDORED)
    add_dependencies (snappy snappy_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -93,7 +89,8 @@ endif ()
+@@ -85,7 +81,7 @@ endif ()
  # ----------------------------------------------------------------------
  # ZLIB
-
+ 
 -if (NOT "${ZLIB_HOME}" STREQUAL "")
-+
-+if (NOT "${ZLIB_HOME}" STREQUAL "" OR 1)
++if (1)
    find_package (ZLIB REQUIRED)
    set(ZLIB_VENDORED FALSE)
  else ()
-@@ -120,10 +117,6 @@ else ()
+@@ -112,10 +108,6 @@ else ()
    set(ZLIB_VENDORED TRUE)
  endif ()
-
+ 
 -include_directories (SYSTEM ${ZLIB_INCLUDE_DIR})
 -add_library (zlib STATIC IMPORTED)
 -set_target_properties (zlib PROPERTIES IMPORTED_LOCATION ${ZLIB_STATIC_LIB})
@@ -88,45 +66,21 @@ index 1a28b1a..89f57d8 100644
  if (ZLIB_VENDORED)
    add_dependencies (zlib zlib_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -134,9 +127,8 @@ endif ()
-
- # ----------------------------------------------------------------------
- # Zstd
--
--if (NOT "${ZSTD_HOME}" STREQUAL "")
--  find_package (zstd REQUIRED)
-+if (NOT "${ZSTD_HOME}" STREQUAL "" OR 1)
-+  find_library(ZSTD_STATIC_LIB NAMES zstd zstd_static)
-   set(ZSTD_VENDORED FALSE)
- else ()
-   set(ZSTD_HOME "${THIRDPARTY_DIR}/zstd_ep-install")
-@@ -169,10 +161,6 @@ else ()
-   set(ZSTD_VENDORED TRUE)
- endif ()
-
--include_directories (SYSTEM ${ZSTD_INCLUDE_DIR})
--add_library (zstd STATIC IMPORTED)
--set_target_properties (zstd PROPERTIES IMPORTED_LOCATION ${ZSTD_STATIC_LIB})
--
- if (ZSTD_VENDORED)
-   add_dependencies (zstd zstd_ep)
-   if (INSTALL_VENDORED_LIBS)
-@@ -183,9 +171,8 @@ endif ()
-
+@@ -127,8 +119,8 @@ endif ()
  # ----------------------------------------------------------------------
  # LZ4
--
+ 
 -if (NOT "${LZ4_HOME}" STREQUAL "")
 -  find_package (LZ4 REQUIRED)
-+if (NOT "${LZ4_HOME}" STREQUAL "" OR 1)
-+  find_library(LZ4_STATIC_LIB NAMES lz4d lz4)
++if (1)
++  find_library (LZ4_STATIC_LIB NAMES lz4d lz4)
    set(LZ4_VENDORED FALSE)
  else ()
    set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
-@@ -211,10 +198,6 @@ else ()
+@@ -154,10 +146,6 @@ else ()
    set(LZ4_VENDORED TRUE)
  endif ()
-
+ 
 -include_directories (SYSTEM ${LZ4_INCLUDE_DIR})
 -add_library (lz4 STATIC IMPORTED)
 -set_target_properties (lz4 PROPERTIES IMPORTED_LOCATION ${LZ4_STATIC_LIB})
@@ -134,22 +88,21 @@ index 1a28b1a..89f57d8 100644
  if (LZ4_VENDORED)
    add_dependencies (lz4 lz4_ep)
    if (INSTALL_VENDORED_LIBS)
-@@ -287,9 +270,8 @@ endif ()
-
+@@ -231,8 +219,8 @@ endif ()
  # ----------------------------------------------------------------------
  # Protobuf
--
+ 
 -if (NOT "${PROTOBUF_HOME}" STREQUAL "")
 -  find_package (Protobuf REQUIRED)
-+if (NOT "${PROTOBUF_HOME}" STREQUAL "" OR 1)
-+  find_package (protobuf CONFIG REQUIRED)
++if (1)
++  find_package (Protobuf CONFIG REQUIRED)
    set(PROTOBUF_VENDORED FALSE)
  else ()
    set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
-@@ -325,14 +307,6 @@ else ()
+@@ -268,14 +256,6 @@ else ()
    set(PROTOBUF_VENDORED TRUE)
  endif ()
-
+ 
 -include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
 -
 -add_library (protobuf STATIC IMPORTED)
@@ -162,18 +115,18 @@ index 1a28b1a..89f57d8 100644
    add_dependencies (protoc protobuf_ep)
    add_dependencies (protobuf protobuf_ep)
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
-index f5a53ca..15391bf 100644
+index 667fab4..7745fe0 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
-@@ -51,7 +51,6 @@ add_executable (orc-metadata
-
+@@ -49,7 +49,6 @@ add_executable (orc-metadata
+ 
  target_link_libraries (orc-metadata
    orc
 -  protobuf
-   ${CMAKE_THREAD_LIBS_INIT}
    )
-
-@@ -95,4 +94,7 @@ install(TARGETS
+ 
+  add_executable (orc-statistics
+@@ -88,4 +87,7 @@ install(TARGETS
     orc-contents
     orc-metadata
     orc-statistics

@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v1.17.0
     SHA512 7fe517e9d050a36839ddf963e718881533cc10a7c8963222b3167fd48ec84455614206c1cc2c248f52042a019262fa0419c4c1a828eb1ae64294c55bbaf56f6e
     HEAD_REF master
+    PATCHES
+      0001-find-deps.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -51,3 +53,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSES/BLOSC.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/blosc RENAME copyright)
 
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/FindBlosc.cmake"
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
