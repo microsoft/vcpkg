@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix_find_package.patch
         0002-fix_imgui_config.patch
+        0003-fix_osx.patch
 )
 
 vcpkg_configure_cmake(
