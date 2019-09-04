@@ -6,8 +6,9 @@ vcpkg_from_github(
     REF  v1.1.33
     SHA512 2c20b2af3c19952b25b10dca0d95fe227602f7f815db352b04dd061c52c458d745f92c597ce08ac9207ba0fbe0169ea2fb78263d8590743717553f84463fe1d9
     HEAD_REF master
-    PATCHES
-    0001-Fix-makefile.patch
+  	PATCHES
+	      0001-Fix-makefile.patch
+        0002-Fix-lzma.patch
 )
 
 find_program(NMAKE nmake)

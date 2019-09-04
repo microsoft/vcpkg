@@ -13,7 +13,6 @@ vcpkg_from_github(
     PATCHES
         0002-Fix-z7-override.patch
         fix-main-lib-path.patch
-        fix-gmock-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
@@ -30,7 +29,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/GMock)
 
 file(
     INSTALL
@@ -51,12 +49,6 @@ file(
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
-
-# Install gmock cmake files.
-file(GLOB GMOCK_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/gtest/GMock*.cmake)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gmock)
-file(COPY ${GMOCK_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/gmock)
-file(REMOVE ${GMOCK_CMAKE_FILES})
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
