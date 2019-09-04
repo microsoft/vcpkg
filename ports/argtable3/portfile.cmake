@@ -29,6 +29,11 @@ elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
