@@ -1,6 +1,6 @@
 Source: wampcc
 Build-Depends: openssl, libuv, jansson
-Version: 1.6
+Version: 2019-09-04
 Description: Wampcc is C++ library that implements the Web Application Messaging Protocol (WAMP) protocol.
 
 Feature: utils
