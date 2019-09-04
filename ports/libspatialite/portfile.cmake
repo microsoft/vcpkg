@@ -6,7 +6,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 adfd63e8dde0f370b07e4e7bb557647d2bfb5549205b60bdcaaca69ff81298a3d885e7c1ca515ef56dd0aca152ae940df8b5dbcb65bb61ae0a9337499895c3c0
 )
 
-if (CMAKE_HOST_WIN32)
+if (VCPKG_TARGET_IS_WINDOWS)
 	set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libspatialite-${LIBSPATIALITE_VERSION_STR})
 	vcpkg_extract_source_archive(${ARCHIVE})
 	find_program(NMAKE nmake)
@@ -114,7 +114,7 @@ if (CMAKE_HOST_WIN32)
 	endif()
 
 	message(STATUS "Packaging ${TARGET_TRIPLET} done")
-elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
+elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   # Extract source into architecture specific directory, because libspatialites' nmake based build currently does not
   # support out of source builds.
   set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/libspatialite-${LIBSPATIALITE_VERSION_STR})
