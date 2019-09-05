@@ -1,5 +1,0 @@
-Source: volk
-Version: 2019-09-03
-Description: Meta loader for Vulkan API
-Homepage: https://github.com/zeux/volk
-Build-Depends: vulkan
