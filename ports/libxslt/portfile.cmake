@@ -16,6 +16,7 @@ vcpkg_from_github(
     HEAD_REF master
 	PATCHES
 	0001-Fix-makefile.patch
+    0002-Fix-lzma.patch
 )
 
 find_program(NMAKE nmake)
