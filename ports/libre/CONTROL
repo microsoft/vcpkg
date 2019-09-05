@@ -1,0 +1,5 @@
+Source: libre
+Version: 0.6.0
+Homepage: https://github.com/creytiv/re
+Description: libre is a Generic library for real-time communications with async IO support.
+Build-Depends: openssl
