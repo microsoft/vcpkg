@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-sqlite3-bin.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
+        fix-sqlite-dependency-export.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
