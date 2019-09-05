@@ -1,4 +1,4 @@
 Source: yoga
-Version: 1.14.0
+Version: commit-a04a6b5e8f2f02a2c4b57af726f8ef116e03d7a6
 Homepage: https://github.com/facebook/yoga
 Description: Yoga is a cross-platform layout engine which implements Flexbox

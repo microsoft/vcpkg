@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF 1.14.0
-    SHA512 c634cb9be08a4f4f478c50de9f26a2e1a18b9c6313b78665cd3a28047bd04e14aac2f06702c3bc9f55dba605177b787424a405c4043f052a94d311c76e38bef1
+    REF a04a6b5e8f2f02a2c4b57af726f8ef116e03d7a6
+    SHA512 dc86c1280089f736055f368fbe913ab98671a61aa54d9b544052c8da6d16e7e014f4c7a9a259f34aeb70e12baf8f96680757eeb0b92ee96ebbe4d22dc3eb5613
     HEAD_REF master
 )
 
@@ -19,7 +19,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_build_cmake()
-vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/yoga DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
