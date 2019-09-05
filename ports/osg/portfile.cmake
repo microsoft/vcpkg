@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO openscenegraph/OpenSceneGraph
@@ -10,6 +8,9 @@ vcpkg_from_github(
 	HEAD_REF master
     PATCHES
         collada.patch
+        static.patch
+        fix-example-application.patch
+        fix-sdl.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -17,11 +18,24 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     set(OSG_DYNAMIC ON)
 endif()
+
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
+
+set(OSG_USE_UTF8_FILENAME ON)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message("Build osg requires gcc with version higher than 4.7.")
+    # Enable OSG_USE_UTF8_FILENAME will call some windows-only functions.
+    set(OSG_USE_UTF8_FILENAME OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DOSG_USE_UTF8_FILENAME=ON
+        -DOSG_USE_UTF8_FILENAME=${OSG_USE_UTF8_FILENAME}
+        -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
+        -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
+        -DBUILD_OSG_EXAMPLES=ON
+        -DBUILD_OSG_APPLICATIONS=ON
 )
 
 vcpkg_install_cmake()

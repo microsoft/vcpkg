@@ -1,0 +1,30 @@
+diff --git a/applications/present3D/CMakeLists.txt b/applications/present3D/CMakeLists.txt
+index df859d0..3fb885d 100644
+--- a/applications/present3D/CMakeLists.txt
++++ b/applications/present3D/CMakeLists.txt
+@@ -114,4 +114,9 @@ ELSE()
+    ENDIF()
+ ENDIF()
+ 
++find_package(EXPAT REQUIRED)
++find_package(unofficial-iconv CONFIG REQUIRED)
++
++list(APPEND TARGET_ADDED_LIBRARIES EXPAT::EXPAT unofficial::iconv::libiconv unofficial::iconv::libcharset)
++
+ SETUP_APPLICATION(present3D)
+diff --git a/examples/osgstaticviewer/CMakeLists.txt b/examples/osgstaticviewer/CMakeLists.txt
+index 071ab26..5477bb9 100644
+--- a/examples/osgstaticviewer/CMakeLists.txt
++++ b/examples/osgstaticviewer/CMakeLists.txt
+@@ -19,6 +19,11 @@ IF(FREETYPE_FOUND)
+     SET(TARGET_ADDED_LIBRARIES ${TARGET_ADDED_LIBRARIES} osgdb_freetype)
+ ENDIF(FREETYPE_FOUND)
+ 
++find_package(EXPAT REQUIRED)
++find_package(unofficial-iconv CONFIG REQUIRED)
++
++list(APPEND TARGET_ADDED_LIBRARIES EXPAT::EXPAT unofficial::iconv::libiconv unofficial::iconv::libcharset)
++
+ SET(TARGET_SRC osgstaticviewer.cpp )
+ #### end var setup  ###
+ SETUP_EXAMPLE(osgstaticviewer)
