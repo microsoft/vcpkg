@@ -134,7 +134,7 @@ set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(libpq ${pg_port_src} ${pg_backend_src} ${pg_libpq_src})
 
-target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -D_CRT_SECURE_NO_WARNINGS)
+target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -DHAVE_CRYPTO_LOCK -D_CRT_SECURE_NO_WARNINGS)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_compile_definitions(libpq PRIVATE -D_GNU_SOURCE)
 endif()
