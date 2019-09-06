@@ -30,7 +30,7 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
 	)
 endforeach()
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   # Check build system first
   find_program(NMAKE nmake REQUIRED)
 
