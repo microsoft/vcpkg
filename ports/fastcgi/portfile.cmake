@@ -22,12 +22,21 @@ endif()
 foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
-	vcpkg_apply_patches(
-	  SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/fcgi2-${FASTCGI_VERSION_STR}
-	  PATCHES
-	  # from fastcgi.com patched for win64 by hoshino, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.
-	  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-x64.patch
-	)
+	if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+		vcpkg_apply_patches(
+		  SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/fcgi2-${FASTCGI_VERSION_STR}
+		  PATCHES
+		  # from fastcgi.com patched for win64 by hoshino, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.	  
+		  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-x64-uwp.patch
+		)
+	else()
+		vcpkg_apply_patches(
+		  SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/fcgi2-${FASTCGI_VERSION_STR}
+		  PATCHES
+		  # from fastcgi.com patched for win64 by hoshino, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.	  
+		  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-x64.patch
+		)
+	endif()	
 endforeach()
 
 if (VCPKG_TARGET_IS_WINDOWS)
