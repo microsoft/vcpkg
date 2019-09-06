@@ -11,6 +11,7 @@ vcpkg_from_github(
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
+        fix-linux-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
