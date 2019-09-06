@@ -25,12 +25,12 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
 	vcpkg_apply_patches(
 	  SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/fcgi2-${FASTCGI_VERSION_STR}
 	  PATCHES
-	  # Thanks to the libfastcgi.zip provided by Voskrese, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.
+	  # from fastcgi.com patched for win64 by hoshino, the patch supporting x64 is made according to the contents of fcgi-2.4.0-x64.patch.
 	  ${CMAKE_CURRENT_LIST_DIR}/fastcgi-x64.patch
 	)
 endforeach()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME)
+if (VCPKG_TARGET_IS_WINDOWS)
   # Check build system first
   find_program(NMAKE nmake REQUIRED)
 
@@ -101,19 +101,44 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
 
   message(STATUS "Packaging ${TARGET_TRIPLET}")
 
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Build in UNIX
+elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   # Check build system first
-  find_program(AUTORECONF autoreconf)
-  if (NOT AUTORECONF)
-      if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-		vcpkg_execute_required_process(
-		  COMMAND sudo apt-get install gettext automake
-		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-		  LOGNAME config-${TARGET_TRIPLET}-rel
-		)
-	  else()
-		message(FATAL_ERROR "AUTORECONF not found")
-	  endif()
+  find_program(AUTOMAKE automake)
+  if (NOT AUTOMAKE)
+  	if(VCPKG_TARGET_IS_OSX)
+  		message(STATUS "brew install gettext automake")
+  		vcpkg_execute_required_process(
+  		  COMMAND brew install gettext automake
+  		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+  		  LOGNAME config-${TARGET_TRIPLET}-rel
+  		)
+  	else()
+  		message(STATUS "sudo apt-get install gettext automake")
+  		vcpkg_execute_required_process(
+  		  COMMAND sudo apt-get install -y gettext automake
+  		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+  		  LOGNAME config-${TARGET_TRIPLET}-rel
+  		)
+  	endif()
+  endif()
+  
+  if(VCPKG_TARGET_IS_OSX)
+  	message(STATUS "brew install libtool")
+  	vcpkg_execute_required_process(
+  	  COMMAND brew install libtool
+  	  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+  	  LOGNAME config-${TARGET_TRIPLET}-rel
+  	)
+  else()
+  	find_program(LIBTOOL libtool)
+  	if (NOT LIBTOOL)
+  		message(STATUS "sudo apt-get install libtool libtool-bin")
+  		vcpkg_execute_required_process(
+  		  COMMAND sudo apt-get install -y libtool libtool-bin
+  		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+  		  LOGNAME config-${TARGET_TRIPLET}-rel
+  		)
+  	endif()
   endif()
   
   find_program(MAKE make)
@@ -164,7 +189,7 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     # Debug build
     ################
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    set(OUT_PATH_DEBUG ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-debug)
+    set(OUT_PATH_DEBUG ${SOURCE_PATH_DEBUG}/../../make-build-${TARGET_TRIPLET}-debug)
     file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
 	vcpkg_execute_required_process(
       COMMAND "${SOURCE_PATH_DEBUG}/autogen.sh"
@@ -195,9 +220,6 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
   endif()
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	file(GLOB FCGI_INCLUDE_FILES ${SOURCE_PATH_RELEASE}/include/*.h)
-	file(COPY ${FCGI_INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/fastcgi)
 else() # Other build system
   message(STATUS "Unsupport build system.")
 endif()
