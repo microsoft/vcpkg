@@ -66,8 +66,6 @@ else()
     file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
     file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
     
-    set(SDL1_CONFIG_ARGS "--bindir=../bin --sbindir=../sbin --libexecdir=../tools --libdir=../lib --includedir=../include")
-    
     vcpkg_execute_required_process(
         COMMAND "./autogen.sh"
         WORKING_DIRECTORY ${SOURCE_PATH}
@@ -81,7 +79,7 @@ else()
     file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
     
     vcpkg_execute_required_process(
-        COMMAND "./configure" --prefix=${OUT_PATH_RELEASE} "${SDL1_CONFIG_ARGS}"
+        COMMAND "./configure" --prefix=${OUT_PATH_RELEASE}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME config-${TARGET_TRIPLET}
     )
