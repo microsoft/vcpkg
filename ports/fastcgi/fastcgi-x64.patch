@@ -863,7 +863,7 @@ index 1aab4108..db2e7e2d 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=Ws2_32.lib /nologo /dll /pdb:none /machine:I386 /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
-+LINK32_FLAGS=Ws2_32.lib /nologo /dll /pdb:none  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
++LINK32_FLAGS=Ws2_32.lib Kernel32.lib /nologo /dll /pdb:none  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
  LINK32_OBJS= \
  	"$(INTDIR)\fcgi_stdio.obj" \
  	"$(INTDIR)\fcgiapp.obj" \
@@ -892,7 +892,7 @@ index 1aab4108..db2e7e2d 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=Ws2_32.lib /nologo /dll /profile /map:"$(INTDIR)\libfcgi.map" /debug /machine:I386 /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
-+LINK32_FLAGS=Ws2_32.lib /nologo /dll /profile /map:"$(INTDIR)\libfcgi.map" /debug  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
++LINK32_FLAGS=Ws2_32.lib Kernel32.lib /nologo /dll /profile /map:"$(INTDIR)\libfcgi.map" /debug  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
  LINK32_OBJS= \
  	"$(INTDIR)\fcgi_stdio.obj" \
  	"$(INTDIR)\fcgiapp.obj" \
