@@ -863,7 +863,7 @@ index 1aab4108..db2e7e2d 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=Ws2_32.lib /nologo /dll /pdb:none /machine:I386 /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
-+LINK32_FLAGS=Windowsapp.lib /nologo /dll /pdb:none  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
++LINK32_FLAGS=Ws2_32.lib Kernel32.lib Windowsapp.lib /APPCONTAINER /nologo /dll /pdb:none  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
  LINK32_OBJS= \
  	"$(INTDIR)\fcgi_stdio.obj" \
  	"$(INTDIR)\fcgiapp.obj" \
@@ -892,7 +892,7 @@ index 1aab4108..db2e7e2d 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=Ws2_32.lib /nologo /dll /profile /map:"$(INTDIR)\libfcgi.map" /debug /machine:I386 /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
-+LINK32_FLAGS=Windowsapp.lib /nologo /dll /profile /map:"$(INTDIR)\libfcgi.map" /debug  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
++LINK32_FLAGS=Ws2_32.lib Kernel32.lib Windowsapp.lib /APPCONTAINER /nologo /dll /profile /map:"$(INTDIR)\libfcgi.map" /debug  /out:"$(OUTDIR)\libfcgi.dll" /implib:"$(OUTDIR)\libfcgi.lib" 
  LINK32_OBJS= \
  	"$(INTDIR)\fcgi_stdio.obj" \
  	"$(INTDIR)\fcgiapp.obj" \
@@ -1161,7 +1161,7 @@ index c5b58d15..d9da5a61 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /pdb:none /machine:IX86 /out:"$(OUTDIR)\cgi-fcgi.exe" /libpath:"..\libfcgi\Release" 
-+LINK32_FLAGS=libfcgi.lib /nologo /pdb:none  /out:"$(OUTDIR)\cgi-fcgi.exe" /libpath:"..\libfcgi\Release" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /pdb:none  /out:"$(OUTDIR)\cgi-fcgi.exe" /libpath:"..\libfcgi\Release" 
  LINK32_OBJS= \
  	"$(INTDIR)\cgi-fcgi.obj" \
  	"..\libfcgi\Release\libfcgi.lib"
@@ -1190,7 +1190,7 @@ index c5b58d15..d9da5a61 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /profile /debug /machine:IX86 /out:"$(OUTDIR)\cgi-fcgi.exe" /libpath:"..\libfcgi\Debug" 
-+LINK32_FLAGS=libfcgi.lib /nologo /profile /debug  /out:"$(OUTDIR)\cgi-fcgi.exe" /libpath:"..\libfcgi\Debug" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /profile /debug  /out:"$(OUTDIR)\cgi-fcgi.exe" /libpath:"..\libfcgi\Debug" 
  LINK32_OBJS= \
  	"$(INTDIR)\cgi-fcgi.obj" \
  	"..\libfcgi\Debug\libfcgi.lib"
@@ -1358,7 +1358,7 @@ index 084b3f8a..40b6ff68 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /pdb:none /machine:IX86 /out:"$(OUTDIR)\authorizer.exe" /libpath:"..\libfcgi\Release" 
-+LINK32_FLAGS=libfcgi.lib /nologo /pdb:none  /out:"$(OUTDIR)\authorizer.exe" /libpath:"..\libfcgi\Release" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /pdb:none  /out:"$(OUTDIR)\authorizer.exe" /libpath:"..\libfcgi\Release" 
  LINK32_OBJS= \
  	"$(INTDIR)\authorizer.obj" \
  	"..\libfcgi\Release\libfcgi.lib"
@@ -1387,7 +1387,7 @@ index 084b3f8a..40b6ff68 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /profile /debug /machine:IX86 /out:"$(OUTDIR)\authorizer.exe" /libpath:"..\libfcgi\Debug" 
-+LINK32_FLAGS=libfcgi.lib /nologo /profile /debug  /out:"$(OUTDIR)\authorizer.exe" /libpath:"..\libfcgi\Debug" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /profile /debug  /out:"$(OUTDIR)\authorizer.exe" /libpath:"..\libfcgi\Debug" 
  LINK32_OBJS= \
  	"$(INTDIR)\authorizer.obj" \
  	"..\libfcgi\Debug\libfcgi.lib"
@@ -1420,7 +1420,7 @@ index cf3e7e63..d63e3c91 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /pdb:none /machine:IX86 /out:"$(OUTDIR)\echo.exe" /libpath:"..\libfcgi\Release" 
-+LINK32_FLAGS=libfcgi.lib /nologo /pdb:none  /out:"$(OUTDIR)\echo.exe" /libpath:"..\libfcgi\Release" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /pdb:none  /out:"$(OUTDIR)\echo.exe" /libpath:"..\libfcgi\Release" 
  LINK32_OBJS= \
  	"$(INTDIR)\echo.obj" \
  	"..\libfcgi\Release\libfcgi.lib"
@@ -1449,7 +1449,7 @@ index cf3e7e63..d63e3c91 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /profile /map:"$(INTDIR)\echo.map" /debug /machine:IX86 /out:"$(OUTDIR)\echo.exe" /libpath:"..\libfcgi\Debug" 
-+LINK32_FLAGS=libfcgi.lib /nologo /profile /map:"$(INTDIR)\echo.map" /debug  /out:"$(OUTDIR)\echo.exe" /libpath:"..\libfcgi\Debug" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /profile /map:"$(INTDIR)\echo.map" /debug  /out:"$(OUTDIR)\echo.exe" /libpath:"..\libfcgi\Debug" 
  LINK32_OBJS= \
  	"$(INTDIR)\echo.obj" \
  	"..\libfcgi\Debug\libfcgi.lib"
@@ -1483,7 +1483,7 @@ index 62910ad9..d20b6520 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /pdb:none /machine:IX86 /out:"$(OUTDIR)\echo-cpp.exe" /libpath:"..\libfcgi\Release" 
-+LINK32_FLAGS=libfcgi.lib /nologo /pdb:none  /out:"$(OUTDIR)\echo-cpp.exe" /libpath:"..\libfcgi\Release" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /pdb:none  /out:"$(OUTDIR)\echo-cpp.exe" /libpath:"..\libfcgi\Release" 
  LINK32_OBJS= \
  	"$(INTDIR)\echo-cpp.obj"
  
@@ -1512,7 +1512,7 @@ index 62910ad9..d20b6520 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /profile /debug /machine:IX86 /out:"$(OUTDIR)\echo-cpp.exe" /libpath:"..\libfcgi\Debug" 
-+LINK32_FLAGS=libfcgi.lib /nologo /profile /debug  /out:"$(OUTDIR)\echo-cpp.exe" /libpath:"..\libfcgi\Debug" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /profile /debug  /out:"$(OUTDIR)\echo-cpp.exe" /libpath:"..\libfcgi\Debug" 
  LINK32_OBJS= \
  	"$(INTDIR)\echo-cpp.obj"
  
@@ -1546,7 +1546,7 @@ index 37876e2d..7a9f94bc 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /pdb:none /machine:IX86 /out:"$(OUTDIR)\echo-x.exe" /libpath:"..\libfcgi\Release" 
-+LINK32_FLAGS=libfcgi.lib /nologo /pdb:none  /out:"$(OUTDIR)\echo-x.exe" /libpath:"..\libfcgi\Release" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /pdb:none  /out:"$(OUTDIR)\echo-x.exe" /libpath:"..\libfcgi\Release" 
  LINK32_OBJS= \
  	"$(INTDIR)\echo-x.obj" \
  	"..\libfcgi\Release\libfcgi.lib"
@@ -1575,7 +1575,7 @@ index 37876e2d..7a9f94bc 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /profile /debug /machine:IX86 /out:"$(OUTDIR)\echo-x.exe" /libpath:"..\libfcgi\Debug" 
-+LINK32_FLAGS=libfcgi.lib /nologo /profile /debug  /out:"$(OUTDIR)\echo-x.exe" /libpath:"..\libfcgi\Debug" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /profile /debug  /out:"$(OUTDIR)\echo-x.exe" /libpath:"..\libfcgi\Debug" 
  LINK32_OBJS= \
  	"$(INTDIR)\echo-x.obj" \
  	"..\libfcgi\Debug\libfcgi.lib"
@@ -1609,7 +1609,7 @@ index 6c11177e..c3ade6a1 100644
  	
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /pdb:none /machine:IX86 /out:"$(OUTDIR)\size.exe" /libpath:"..\libfcgi\Release" 
-+LINK32_FLAGS=libfcgi.lib /nologo /pdb:none  /out:"$(OUTDIR)\size.exe" /libpath:"..\libfcgi\Release" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /pdb:none  /out:"$(OUTDIR)\size.exe" /libpath:"..\libfcgi\Release" 
  LINK32_OBJS= \
  	"$(INTDIR)\size.obj" \
  	"..\libfcgi\Release\libfcgi.lib"
@@ -1638,7 +1638,7 @@ index 6c11177e..c3ade6a1 100644
  
  LINK32=link.exe
 -LINK32_FLAGS=libfcgi.lib /nologo /profile /debug /machine:IX86 /out:"$(OUTDIR)\size.exe" /libpath:"..\libfcgi\Debug" 
-+LINK32_FLAGS=libfcgi.lib /nologo /profile /debug  /out:"$(OUTDIR)\size.exe" /libpath:"..\libfcgi\Debug" 
++LINK32_FLAGS=libfcgi.lib Windowsapp.lib /APPCONTAINER /nologo /profile /debug  /out:"$(OUTDIR)\size.exe" /libpath:"..\libfcgi\Debug" 
  LINK32_OBJS= \
  	"$(INTDIR)\size.obj" \
  	"..\libfcgi\Debug\libfcgi.lib"
