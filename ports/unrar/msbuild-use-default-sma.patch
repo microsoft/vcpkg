@@ -1,0 +1,52 @@
+diff --git a/UnRARDll.vcxproj b/UnRARDll.vcxproj
+index ec5c17b00..7d3d91bc6 100644
+--- a/UnRARDll.vcxproj
++++ b/UnRARDll.vcxproj
+@@ -138,7 +138,6 @@
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+-      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+       <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+@@ -168,7 +167,6 @@
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+-      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+       <PrecompiledHeader>Use</PrecompiledHeader>
+       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
+@@ -198,7 +196,6 @@
+       <MinimalRebuild>false</MinimalRebuild>
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+-      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+@@ -239,7 +236,6 @@
+       <MinimalRebuild>false</MinimalRebuild>
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+-      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+@@ -274,7 +270,6 @@
+       <MinimalRebuild>false</MinimalRebuild>
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+-      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+@@ -315,7 +310,6 @@
+       <MinimalRebuild>false</MinimalRebuild>
+       <ExceptionHandling>Sync</ExceptionHandling>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+-      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+       <BufferSecurityCheck>true</BufferSecurityCheck>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
