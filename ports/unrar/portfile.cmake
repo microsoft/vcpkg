@@ -3,7 +3,6 @@ set(UNRAR_VERSION "5.5.8")
 set(UNRAR_SHA512 9eac83707fa47a03925e5f3e8adf47889064d748304b732d12a2d379ab525b441f1aa33216377d4ef445f45c4e8ad73d2cd0b560601ceac344c60571b77fd6aa)
 set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
 set(UNRAR_URL http://www.rarlab.com/rar/${UNRAR_FILENAME})
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/unrar)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
@@ -13,7 +12,12 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME ${UNRAR_FILENAME}
     SHA512 ${UNRAR_SHA512}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${UNRAR_VERSION}
+    PATCHES msbuild-use-default-sma.patch
+)
 
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/UnRARDll.vcxproj"
