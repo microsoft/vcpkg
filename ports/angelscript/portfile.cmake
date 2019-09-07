@@ -15,10 +15,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/angelscript/projects/cmake
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
@@ -26,13 +23,9 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Angelscript)
 
-# Handle copyright
-file(INSTALL ${CURRENT_PORT_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/angelscript RENAME copyright)
-
 # Copy the addon files
 if("addons" IN_LIST FEATURES)
 	file(INSTALL ${SOURCE_PATH}/add_on/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/angelscript FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp")
 endif()
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME angelscript)
+file(INSTALL ${CURRENT_PORT_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
