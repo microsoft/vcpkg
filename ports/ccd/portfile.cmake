@@ -6,12 +6,9 @@ vcpkg_from_github(
     REF v2.1
     SHA512 ff037d9c4df50f09600cf9b3514b259b2850ff43f74817853f5665d22812891168f70bd3cc3969b2c9e3c706f6254991a65421476349607fbd04d894b217456d
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001_fix_symbols_export.patch)
+        0001_fix_symbols_export.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
