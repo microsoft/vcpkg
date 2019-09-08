@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
 	PATCHES
         Fix-error-C2169.patch
-        remove_opj_defines.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
