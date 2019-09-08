@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b1f1dc..bd623b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -396,8 +396,6 @@ if (NSYNC_ENABLE_TESTS)
+ 	endforeach (t)
+ endif ()
+ 
+-set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
+-
+ install (TARGETS nsync
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Development)
