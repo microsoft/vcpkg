@@ -1,0 +1,108 @@
+diff --git a/external/CMakeLists.txt b/external/CMakeLists.txt
+index b55b58b6..878c7ce3 100644
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -21,23 +21,26 @@ if (${ENABLE_SPIRV_CODEGEN})
+     set(SPIRV_HEADER_INCLUDE_DIR ${SPIRV-Headers_SOURCE_DIR}/include PARENT_SCOPE)
+   endif()
+ 
+-  if (NOT TARGET SPIRV-Tools)
++  find_package(spirv-tools CONFIG)
++  if (NOT TARGET spirv-tools::SPIRV-Tools)
+     if (IS_DIRECTORY ${DXC_SPIRV_TOOLS_DIR})
+       # We only need the library from SPIRV-Tools.
+       set(SPIRV_SKIP_EXECUTABLES ON CACHE BOOL "Skip building SPIRV-Tools executables")
+       set(SPIRV_TOOLS_EXTRA_DEFINITIONS /D_ITERATOR_DEBUG_LEVEL=0)
+-      add_subdirectory(${DXC_SPIRV_TOOLS_DIR} EXCLUDE_FROM_ALL)
++      add_subdirectory(${DXC_SPIRV_TOOLS_DIR} EXCLUDE_FROM_ALL)      
++      add_library(spirv-tools::SPIRV-Tools ALIAS SPIRV-Tools)
++      add_library(spirv-tools::SPIRV-Tools-opt ALIAS SPIRV-Tools-opt)
+     endif()
+   endif()
+-  if (NOT TARGET SPIRV-Tools)
++  if (NOT TARGET spirv-tools::SPIRV-Tools)
+     message(FATAL_ERROR "SPIRV-Tools was not found - required for SPIR-V codegen")
+   else()
+     set(SPIRV_TOOLS_INCLUDE_DIR ${spirv-tools_SOURCE_DIR}/include PARENT_SCOPE)
+   endif()
+ 
+   set(SPIRV_DEP_TARGETS
+-    SPIRV-Tools
+-    SPIRV-Tools-opt
++    spirv-tools::SPIRV-Tools
++    spirv-tools::SPIRV-Tools-opt
+   )
+ 
+   # Organize these targets better in Visual Studio
+diff --git a/tools/clang/lib/SPIRV/CMakeLists.txt b/tools/clang/lib/SPIRV/CMakeLists.txt
+index 714641b1..3aac7efa 100644
+--- a/tools/clang/lib/SPIRV/CMakeLists.txt
++++ b/tools/clang/lib/SPIRV/CMakeLists.txt
+@@ -2,6 +2,8 @@ set(LLVM_LINK_COMPONENTS
+   Support
+   )
+ 
++find_package(spirv-tools CONFIG)
++
+ add_clang_library(clangSPIRV
+   AlignmentSizeCalculator.cpp
+   AstTypeProbe.cpp
+@@ -33,7 +35,7 @@ add_clang_library(clangSPIRV
+   clangBasic
+   clangFrontend
+   clangLex
+-  SPIRV-Tools-opt
++  spirv-tools::SPIRV-Tools-opt
+   )
+ 
+ target_include_directories(clangSPIRV PUBLIC ${SPIRV_HEADER_INCLUDE_DIR})
+diff --git a/tools/clang/tools/dxc/CMakeLists.txt b/tools/clang/tools/dxc/CMakeLists.txt
+index 376adf42..16f417b1 100644
+--- a/tools/clang/tools/dxc/CMakeLists.txt
++++ b/tools/clang/tools/dxc/CMakeLists.txt
+@@ -28,7 +28,8 @@ target_link_libraries(dxc
+   )
+ 
+ if(ENABLE_SPIRV_CODEGEN)
+-  target_link_libraries(dxc SPIRV-Tools)
++  find_package(spirv-tools CONFIG)
++  target_link_libraries(dxc spirv-tools::SPIRV-Tools)
+ endif()
+ 
+ set_target_properties(dxc PROPERTIES VERSION ${CLANG_EXECUTABLE_VERSION})
+diff --git a/tools/clang/tools/dxclib/CMakeLists.txt b/tools/clang/tools/dxclib/CMakeLists.txt
+index 6fdbe118..de56aade 100644
+--- a/tools/clang/tools/dxclib/CMakeLists.txt
++++ b/tools/clang/tools/dxclib/CMakeLists.txt
+@@ -21,7 +21,8 @@ add_clang_library(dxclib
+   )
+ 
+ if(ENABLE_SPIRV_CODEGEN)
+-  target_link_libraries(dxclib PRIVATE SPIRV-Tools)
++  find_package(spirv-tools CONFIG)
++  target_link_libraries(dxclib PRIVATE spirv-tools::SPIRV-Tools)
+ endif()
+ 
+ if (WIN32)
+diff --git a/tools/clang/unittests/SPIRV/CMakeLists.txt b/tools/clang/unittests/SPIRV/CMakeLists.txt
+index 59d813b8..24258c3c 100644
+--- a/tools/clang/unittests/SPIRV/CMakeLists.txt
++++ b/tools/clang/unittests/SPIRV/CMakeLists.txt
+@@ -20,6 +20,8 @@ add_clang_unittest(clang-spirv-tests
+   WholeFileTestFixture.cpp
+   )
+ 
++find_package(spirv-tools CONFIG)
++
+ target_link_libraries(clang-spirv-tests
+   clangAST
+   clangBasic
+@@ -29,7 +31,7 @@ target_link_libraries(clang-spirv-tests
+   clangTooling
+   dxcompiler
+   effcee
+-  SPIRV-Tools
++  spirv-tools::SPIRV-Tools
+   )
+ 
+ # This is necessary so that the linked dxcompiler is loaded into memory space

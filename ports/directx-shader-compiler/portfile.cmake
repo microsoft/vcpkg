@@ -8,29 +8,8 @@ vcpkg_from_github(
     REF 0a32799e58261bbef658a7d62a60fc05a12eabeb
     SHA512 9b96489d0a60f2015d14f9dbb85977b52142937e0836cb1a24d5df8b685a631d5347737b38cb6841d402eb6e8669429dcd37116897519e00378b563e1818e217
     HEAD_REF master
+    PATCHES "handle-imported-spirv-tools.patch"
 )
-
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SPIRV-Headers_SOURCE_PATH
-    REPO KhronosGroup/SPIRV-Headers
-    REF 29c11140baaf9f7fdaa39a583672c556bf1795a1
-    SHA512 9b6b7671ca9a5eaa121650b615d392841950bf0a199f474b52451a20666025fe9acc10bf3e5095f715432ed18bb070788f6c70a4a6fa5a58d6c2d464225a644b
-    HEAD_REF master
-)
-file(REMOVE_RECURSE "${SOURCE_PATH}/external/SPIRV-Headers")
-file(RENAME "${SPIRV-Headers_SOURCE_PATH}" "${SOURCE_PATH}/external/SPIRV-Headers")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SPIRV-Tools_SOURCE_PATH
-    REPO KhronosGroup/SPIRV-Tools
-    REF bbd80462f5c89e9a225edabaca1215032c62e459
-    SHA512 fbe4665ba58c9bbf9fc23cb7856bb2beaf034a15d26a3ef0d45687a2964622d2422c683519144989fadaa036d9b04fa8059040a73f68df0a5dc07fec0cf16715
-    HEAD_REF master
-)
-file(REMOVE_RECURSE "${SOURCE_PATH}/external/SPIRV-Tools")
-file(RENAME "${SPIRV-Tools_SOURCE_PATH}" "${SOURCE_PATH}/external/SPIRV-Tools")
-
 
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -41,6 +20,12 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+
+        -DSPIRV_BUILD_TESTS=OFF
+        -DLLVM_BUILD_TESTS=OFF
+
+        -DSPIRV-Headers_SOURCE_DIR="${CURRENT_INSTALLED_DIR}"
+        -Dspirv-tools_SOURCE_DIR="${CURRENT_INSTALLED_DIR}"
 
         # These should be equal to the options specified in `<dxc-src-dir>/utils/cmake-predefined-config-params`
         -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON 
@@ -63,8 +48,6 @@ vcpkg_configure_cmake(
         -DCLANG_INCLUDE_TESTS:BOOL=OFF
         -DHLSL_INCLUDE_TESTS:BOOL=ON
         -DENABLE_SPIRV_CODEGEN:BOOL=ON
-
-        -DSPIRV_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
@@ -98,4 +81,3 @@ configure_file(
     "${CURRENT_PACKAGES_DIR}/share/directx-shader-compiler/directx-shader-compiler-config.cmake" 
     @ONLY
 )
-
