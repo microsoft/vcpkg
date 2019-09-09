@@ -18,10 +18,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO darrenjs/wampcc
-    
-    # master on 27/08/2019
     REF 43d10a7ccf37ec1b895742712dd4a05577b73ff1
-    
     SHA512 e830d26de00e8f5f378145f06691cb16121c40d3bd2cd663fad9a97db37251a11b56053178b619e3a2627f0cd518b6290a8381b26e517a9f16f0246d2f91958e
     HEAD_REF master
 )
