@@ -1,4 +1,0 @@
-The package clickhouse-cpp provides CMake targets:
-
-    find_package(clickhouse-cpp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE clickhouse-cpp)
