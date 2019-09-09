@@ -12,14 +12,14 @@ function TransformReference()
         [string]$library
     )
 
-    if ($library -match "python|fiber")
+    if ($library -match "fiber")
     {
-        # These two only work on windows desktop
+        # these only work on windows desktop
         "$library (windows)"
     }
     elseif ($library -match "thread|type[_-]erasure|contract")
     {
-        # thread only works on x86-based processors
+        # these only work on x86-based architectures
         "$library (!arm)"
     }
     elseif ($library -match "iostreams|filesystem|context|stacktrace|coroutine`$|locale|test|wave|log`$")
@@ -46,12 +46,12 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "python" -or $Name -eq "asio" -or $Name -eq "mpi")
+    if ($Name -eq "asio" -or $Name -eq "mpi")
     {
         $versionsuffix = "-1"
     }
 
-    if ($Name -eq "test")
+    if ($Name -eq "python" -or $Name -eq "test")
     {
         $versionsuffix = "-2"
     }
@@ -351,7 +351,7 @@ foreach ($library in $libraries)
 
         if ($library -eq "python")
         {
-            $deps += @("python3")
+            $deps += @("python3 (!osx&!linux)")
             $needsBuild = $true
         }
         elseif ($library -eq "iostreams")
