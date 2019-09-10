@@ -19,6 +19,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake
         DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
+    message(FATAL_ERROR "ARM builds are currently not supported!")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "UWP builds are currently not supported!")
 else()
-    # todo
+    message(FATAL_ERROR "Non-Windows builds are currently not supported!")
 endif()
