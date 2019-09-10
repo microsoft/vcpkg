@@ -79,9 +79,7 @@ set(CXX_STANDARD c++17
     CACHE STRING "The language standard to target for C++."
    )
 
-set(CXX_WARNINGS "-Wall -Wextra -Wconversion")
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=${CXX_STANDARD} ${CXX_WARNINGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=${CXX_STANDARD}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -DZKPP_DEBUG=1")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
@@ -89,7 +87,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 # External Libraries                                                           #
 ################################################################################
 
-find_package(zookeeper_mt)
+find_package(zookeeper REQUIRED)
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
@@ -98,11 +96,9 @@ build_module(NAME zkpp
              NO_RECURSE
             )
 
-
-
 target_include_directories(zkpp INTERFACE 
         "${CMAKE_INSTALL_PREFIX}/include")
-target_link_libraries(zkpp PRIVATE zookeeper_mt)
+target_link_libraries(zkpp PRIVATE zookeeper::zookeeper)
 
 install(TARGETS zkpp EXPORT zkpp DESTINATION lib/)
 
