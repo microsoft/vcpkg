@@ -49,7 +49,7 @@ function(vcpkg_apply_patches)
         )
 
         if(error_code AND NOT _ap_QUIET)
-            message(FATAL_ERROR "Applying patch failed. Port needs fixing or update!")
+            message(FATAL_ERROR "Applying patch failed. Patch needs to be updated to work with source being used by vcpkg!")
         endif()
 
         math(EXPR PATCHNUM "${PATCHNUM}+1")
