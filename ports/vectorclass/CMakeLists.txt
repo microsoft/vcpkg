@@ -1,6 +1,6 @@
     
 cmake_minimum_required(VERSION 3.8.0)
-project(vectorclass VERSION 2.0 LANGUAGES CXX)
+project(vectorclass VERSION 2.00.01 LANGUAGES CXX)
 
 add_library(${PROJECT_NAME} STATIC instrset_detect.cpp)
 
