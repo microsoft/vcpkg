@@ -86,13 +86,13 @@ else()
     
     message(STATUS "Building ${TARGET_TRIPLET}")
     vcpkg_execute_build_process(
-        COMMAND "make"
+        COMMAND "make -j ${VCPKG_CONCURRENCY}"
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "build-${TARGET_TRIPLET}-release"
     )
     
     message(STATUS "Installing ${TARGET_TRIPLET}")
-    vcpkg_execute_build_process(
+    vcpkg_execute_required_process(
         COMMAND "make install"
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "install-${TARGET_TRIPLET}-release"
