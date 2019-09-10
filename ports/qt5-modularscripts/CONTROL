@@ -1,0 +1,3 @@
+Source: qt5-modularscripts
+Version: deprecated
+Description: now part of qt5-base, formerly vcpkg helpers to package qt5 modules
