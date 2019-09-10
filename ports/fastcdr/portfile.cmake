@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-CDR
-    REF v1.0.9
-    SHA512 2825e61fc4736c9364fc3130f649798cec11fcb56dc5e202c17731121ad8a2795f0fbf8acb5d8d662181bc470e7a3e95a5027283872714be505bb2562c2e2312
+    REF v1.0.10
+    SHA512 b79439b1d8be12e10c761b42cadce4b5e9e51be23a553a0276bcf84504e222149c6543cde149073f272f0374e82a3e0db6b7ad25e81858f744a8ce72512c47de
     HEAD_REF master
     PATCHES install-cmake.patch
 )

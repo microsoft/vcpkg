@@ -12,7 +12,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         create-lib-libraries.patch
         detect-openssl.patch
-        configure_opencv.patch
         fix_windowsinclude-in-ffmpegexe-1.patch
         fix_windowsinclude-in-ffmpegexe-2.patch
         fix_libvpx_windows_linking.patch
@@ -124,6 +123,10 @@ if("bzip2" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-bzlib")
 else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
+
+if("avresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avresample")
 endif()
 
 set(OPTIONS_CROSS "")

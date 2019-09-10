@@ -12,6 +12,12 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-space.patch
             fix-arm64-config.patch)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    set(JIT OFF)
+else()
+    set(JIT ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -19,7 +25,7 @@ vcpkg_configure_cmake(
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
-        -DPCRE2_SUPPORT_JIT=ON
+        -DPCRE2_SUPPORT_JIT=${JIT}
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF)
