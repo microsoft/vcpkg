@@ -1,0 +1,19 @@
+diff --git a/server_wss.hpp b/server_wss.hpp
+index 534e845..7e07d8a 100644
+--- a/server_wss.hpp
++++ b/server_wss.hpp
+@@ -33,6 +33,14 @@ namespace SimpleWeb {
+       }
+     }
+ 
++    SocketServer(unsigned short port, const std::string &certIn, const std::string &keyIn)
++        : SocketServerBase<WSS>(port), context(asio::ssl::context::tlsv12) {
++      context.use_certificate_chain(asio::const_buffer(certIn.c_str(), certIn.length()));
++      context.use_private_key(asio::const_buffer(keyIn.c_str(), keyIn.length()), asio::ssl::context::pem);
++
++      context.set_verify_mode(asio::ssl::verify_peer);
++    }
++
+   protected:
+     asio::ssl::context context;
+ 

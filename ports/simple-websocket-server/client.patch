@@ -1,0 +1,31 @@
+diff --git a/client_wss.hpp b/client_wss.hpp
+index 914afb8..2a4f0d2 100644
+--- a/client_wss.hpp
++++ b/client_wss.hpp
+@@ -27,10 +27,23 @@ namespace SimpleWeb {
+       if(verify_certificate)
+         context.set_verify_callback(asio::ssl::rfc2818_verification(host));
+ 
+-      if(verify_file.size() > 0)
+-        context.load_verify_file(verify_file);
+-      else
++      if(verify_file.size() > 0) {
++        if(verify_file.find("-----BEGIN CERTIFICATE") == 0) {
++          BIO *cbio = BIO_new_mem_buf(reinterpret_cast<const void*>(verify_file.c_str()), -1);
++          X509 *cert = PEM_read_bio_X509(cbio, nullptr, nullptr, nullptr);
++          assert(cert != nullptr);
++
++          //auto *store = SSL_CTX_get_cert_store(context.native_handle());
++          auto *store = X509_STORE_new();
++          X509_STORE_add_cert(store, cert);
++          SSL_CTX_set_cert_store(context.native_handle(), store);
++          BIO_free(cbio);
++        } else {
++          context.load_verify_file(verify_file);
++        }
++      } else {
+         context.set_default_verify_paths();
++      }
+ 
+       if(verify_file.size() > 0 || verify_certificate)
+         context.set_verify_mode(asio::ssl::verify_peer);

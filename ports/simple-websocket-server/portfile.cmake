@@ -7,6 +7,9 @@ vcpkg_from_gitlab(
     REF a4d0d06460f9b16edbfa87fac2862d9941824aaa
     SHA512 57d8e207d29c91074e8829e1995be63790a30e672bcaeaaa7266dd3a4035a08bb236caff2ed3b6c7d7dbef578c7ea921e27f158c62cb1e8a8e80123dadba8b74
     HEAD_REF master
+    PATCHES
+        "client.patch"
+        "server.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

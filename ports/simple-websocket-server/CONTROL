@@ -1,4 +1,4 @@
 Source: simple-websocket-server
-Version: 2.0.0
+Version: 2.0.0-1
 Build-Depends: asio, openssl
 Description: A very simple, fast, multithreaded, platform independent WebSocket (WS) and WebSocket Secure (WSS) server and client library implemented using C++11, Asio (both Boost.Asio and standalone Asio can be used) and OpenSSL.
