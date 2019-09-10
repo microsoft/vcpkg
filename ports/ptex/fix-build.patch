@@ -1,35 +1,40 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dd327d0..5043452 100644
+index c708153..0e004da 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -6,15 +6,6 @@ include(CTest)
- include(FindZLIB)
+@@ -60,10 +60,11 @@ include(GNUInstallDirs)
+ include(CTest)
  include(FindThreads)
  
--enable_testing()
++find_package(ZLIB REQUIRED)
++if (0)
+ # Use pkg-config to create a PkgConfig::Ptex_ZLIB imported target
+ find_package(PkgConfig REQUIRED)
+ pkg_checK_modules(Ptex_ZLIB REQUIRED zlib IMPORTED_TARGET)
 -
--# Detect the build type from the $FLAVOR environment variable
--if ("$ENV{FLAVOR}" MATCHES "debug")
--    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "type of build" FORCE)
--else ()
--    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "type of build" FORCE)
--endif ()
--
- if (NOT WIN32)
-     set(CMAKE_CXX_FLAGS "-std=c++98 -Wall -Wextra -pedantic")
+ enable_testing()
+ 
+ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+@@ -77,6 +78,7 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+         set(CMAKE_BUILD_TYPE "Release" CACHE STRING "type of build" FORCE)
+     endif ()
  endif ()
-@@ -40,6 +31,6 @@ include_directories(src/ptex)
- include_directories(${ZLIB_INCLUDE_DIR})
++endif()
+ 
+ if (NOT WIN32)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+@@ -99,7 +101,9 @@ endif ()
+ include_directories(src/ptex)
  
  add_subdirectory(src/ptex)
--add_subdirectory(src/utils)
--add_subdirectory(src/tests)
--add_subdirectory(src/doc)
-+#add_subdirectory(src/utils)
-+#add_subdirectory(src/tests)
-+#add_subdirectory(src/doc)
++if (0)
+ add_subdirectory(src/utils)
+ add_subdirectory(src/tests)
+ add_subdirectory(src/doc)
++endif()
+ add_subdirectory(src/build)
 diff --git a/src/ptex/CMakeLists.txt b/src/ptex/CMakeLists.txt
-index c926d98..ac2c71d 100644
+index ba3a3cc..1619ff1 100644
 --- a/src/ptex/CMakeLists.txt
 +++ b/src/ptex/CMakeLists.txt
 @@ -1,6 +1,8 @@
@@ -42,24 +47,53 @@ index c926d98..ac2c71d 100644
 +    add_definitions(-DPTEX_STATIC)  
 +endif ()
  
- set(SRCS
-     PtexCache.cpp
-@@ -14,15 +16,11 @@ set(SRCS
-     PtexUtils.cpp
+ configure_file(PtexVersion.h.in
+     ${CMAKE_CURRENT_SOURCE_DIR}/PtexVersion.h @ONLY)
+@@ -18,29 +20,35 @@ set(SRCS
      PtexWriter.cpp)
  
--add_library(Ptex_static STATIC ${SRCS})
--set_target_properties(Ptex_static PROPERTIES OUTPUT_NAME Ptex)
-+add_library(Ptex ${SRCS})
+ if(PTEX_BUILD_STATIC_LIBS)
+-    add_library(Ptex_static STATIC ${SRCS})
+-    set_target_properties(Ptex_static PROPERTIES OUTPUT_NAME Ptex)
+-    target_include_directories(Ptex_static
++    add_library(Ptex STATIC ${SRCS})
++    target_include_directories(Ptex
+     PUBLIC
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+     PRIVATE
+         ${CMAKE_CURRENT_SOURCE_DIR})
+-    target_link_libraries(Ptex_static
+-        PUBLIC ${CMAKE_THREAD_LIBS_INIT} PkgConfig::Ptex_ZLIB)
+-    install(TARGETS Ptex_static EXPORT Ptex DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    target_link_libraries(Ptex
++        PUBLIC ${CMAKE_THREAD_LIBS_INIT} ZLIB::ZLIB)
++    install(TARGETS Ptex EXPORT Ptex
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib
++    )
+ endif()
  
--add_library(Ptex_dynamic SHARED ${SRCS})
--set_target_properties(Ptex_dynamic PROPERTIES OUTPUT_NAME Ptex)
-+target_link_libraries(Ptex ${CMAKE_THREAD_LIBS_INIT} ${ZLIB_LIBRARIES})
- 
--target_link_libraries(Ptex_dynamic ${CMAKE_THREAD_LIBS_INIT} ${ZLIB_LIBRARIES})
--
--install(TARGETS Ptex_static Ptex_dynamic DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(TARGETS Ptex RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ if(PTEX_BUILD_SHARED_LIBS)
+-    add_library(Ptex_dynamic SHARED ${SRCS})
+-    set_target_properties(Ptex_dynamic PROPERTIES OUTPUT_NAME Ptex)
+-    target_include_directories(Ptex_dynamic
++    add_library(Ptex SHARED ${SRCS})
++    target_include_directories(Ptex
+         PUBLIC
+             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+         PRIVATE
+             ${CMAKE_CURRENT_SOURCE_DIR})
+-    target_link_libraries(Ptex_dynamic
+-        PUBLIC ${CMAKE_THREAD_LIBS_INIT} PkgConfig::Ptex_ZLIB)
+-    install(TARGETS Ptex_dynamic EXPORT Ptex DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    target_link_libraries(Ptex
++        PUBLIC ${CMAKE_THREAD_LIBS_INIT} ZLIB::ZLIB)
++    install(TARGETS Ptex EXPORT Ptex
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib
++    )
+ endif()
  
  install(FILES
-         PtexHalf.h

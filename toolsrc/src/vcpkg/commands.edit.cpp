@@ -9,11 +9,11 @@
 
 namespace vcpkg::Commands::Edit
 {
+#if defined(_WIN32)
     static std::vector<fs::path> find_from_registry()
     {
         std::vector<fs::path> output;
 
-#if defined(_WIN32)
         struct RegKey
         {
             HKEY root;
@@ -42,9 +42,9 @@ namespace vcpkg::Commands::Edit
                 output.push_back(install_path / "Code.exe");
             }
         }
-#endif
         return output;
     }
+#endif
 
     static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 

@@ -47,14 +47,15 @@ namespace vcpkg
 
     struct VcpkgPaths
     {
-        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir, 
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir,
+                                           const Optional<fs::path>& vcpkg_scripts_root_dir,
                                            const std::string& default_vs_path,
                                            const std::vector<std::string>* triplets_dirs);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
-        
+
         bool is_valid_triplet(const Triplet& t) const;
         const std::vector<std::string>& get_available_triplets() const;
         const fs::path get_triplet_file_path(const Triplet& triplet) const;

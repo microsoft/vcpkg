@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_65_0
-    SHA512 436b6b42654c1db2b3f69df410a7f28401a50faf18e74f328a93585c147541e697664b0e9e7df03239fd76c797c1bb4f435f4c668a6b0ad28bdd67e17f786491
+    REF curl-7_65_2
+    SHA512 8e06377a6d8837a4c2cd96f978f0ac848b9472500fd25983bb1f9e5f52d9d6f7ff0c71d443587a979cf80fd19412bb64b9362b774cf91e02479fdfad7e085b16
     HEAD_REF master
     PATCHES
         0001_cmake.patch
@@ -73,6 +73,24 @@ if("tool" IN_LIST FEATURES)
     set(BUILD_CURL_EXE ON)
 endif()
 
+# c-ares
+set(USE_ARES OFF)
+if("c-ares" IN_LIST FEATURES)
+    set(USE_ARES ON)
+endif()
+
+# SSPI
+set(USE_WINDOWS_SSPI OFF)
+if("sspi" IN_LIST FEATURES)
+    set(USE_WINDOWS_SSPI ON)
+endif()
+
+# brotli
+set(HAVE_BROTLI OFF) 
+if("brotli" IN_LIST FEATURES)
+    set(HAVE_BROTLI ON)
+endif()
+
 # UWP targets
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -101,6 +119,9 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_SECTRANSP=${USE_SECTRANSP}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
+        -DENABLE_ARES=${USE_ARES}
+        -DCURL_WINDOWS_SSPI=${USE_WINDOWS_SSPI}
+        -DCURL_BROTLI=${HAVE_BROTLI}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_RELEASE
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
