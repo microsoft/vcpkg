@@ -12,9 +12,9 @@
 ## VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
 ## VCPKG_TARGET_SHARED_LIBRARY_SUFFIX       shared library suffix for target (same as CMAKE_SHARED_LIBRARY_SUFFIX)
 ## ```
-## 
-## CMAKE_STATIC_LIBRARY_PREFIX, CMAKE_STATIC_LIBRARY_SUFFIX, CMAKE_SHARED_LIBRARY_PREFIX, CMAKE_SHARED_LIBRARY_SUFFIX are defined for the target so that 
-## portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports. 
+##
+## CMAKE_STATIC_LIBRARY_PREFIX, CMAKE_STATIC_LIBRARY_SUFFIX, CMAKE_SHARED_LIBRARY_PREFIX, CMAKE_SHARED_LIBRARY_SUFFIX are defined for the target so that
+## portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 ##
 
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
@@ -47,14 +47,22 @@ else()
     set(VCPKG_TARGET_EXECUTABLE_SUFFIX "")
 endif()
 
-#Helper variables for libraries 
+#Helper variables for libraries
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".lib")
+    set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX ".lib")
     set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dll")
     set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "")
     set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "")
+elseif(VCPKG_TARGET_IS_OSX)
+    set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
+    set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX "")
+    set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dylib")
+    set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "lib")
+    set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "lib")
 else()
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
+    set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX "")
     set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".so")
     set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "lib")
     set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "lib")
@@ -62,9 +70,9 @@ endif()
 #Setting these variables allows find_library to work in script mode and thus in portfiles!
 #This allows us scale down on hardcoded target dependent paths in portfiles
 set(CMAKE_STATIC_LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+set(CMAKE_IMPORT_LIBRARY_SUFFIX ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX})
 set(CMAKE_SHARED_LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
 set(CMAKE_STATIC_LIBRARY_PREFIX ${VCPKG_TARGET_STATIC_LIBRARY_PREFIX})
 set(CMAKE_SHARED_LIBRARY_PREFIX ${VCPKG_TARGET_SHARED_LIBRARY_PREFIX})
 set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX};${CMAKE_SHARED_LIBRARY_SUFFIX}" CACHE INTERNAL "") # Required by find_library
 set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX};${CMAKE_SHARED_LIBRARY_PREFIX}" CACHE INTERNAL "") # Required by find_library
-
