@@ -10,6 +10,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
            remove-tools-and-fix-version.patch
+           fix-usage.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -37,7 +38,7 @@ vcpkg_install_cmake()
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GeographicLib)
 endif()
 vcpkg_copy_pdbs()
 
