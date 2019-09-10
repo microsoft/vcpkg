@@ -13,11 +13,11 @@ tooldir="/tools/"+port+"/bin/"
 for f in files:
     openedfile = open(f, "r")
     builder = ""
-    dllpattern = re.compile("_install_prefix}/bin/Qt5.*d.dll")
-    libpattern = re.compile("_install_prefix}/lib/Qt5.*d.lib")
-    exepattern = re.compile("_install_prefix}/bin/[a-z]+.exe")
-    toolexepattern = re.compile("_install_prefix}/tools/qt5/bin/[a-z]+.exe")
-    tooldllpattern = re.compile("_install_prefix}/tools/qt5/bin/Qt5.*d.dll")
+    dllpattern = re.compile("_install_prefix}/bin/Qt5.*d+(.dll|.so)")
+    libpattern = re.compile("_install_prefix}/lib/Qt5.*d+(.lib|.a)")
+    exepattern = re.compile("_install_prefix}/bin/[a-z]+(.exe|)")
+    toolexepattern = re.compile("_install_prefix}/tools/qt5/bin/[a-z]+(.exe|)")
+    tooldllpattern = re.compile("_install_prefix}/tools/qt5/bin/Qt5.*d+(.dll|.so)")
     for line in openedfile:
         if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
