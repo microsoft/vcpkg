@@ -9,6 +9,12 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    if(TRIPLET_SYSTEM_ARCH MATCHES "arm")
+        message(FATAL_ERROR "ARM builds are currently not supported!")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+        message(FATAL_ERROR "UWP builds are currently not supported!")
+    endif()
+
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH windows/hidapi.sln
@@ -19,10 +25,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake
         DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM builds are currently not supported!")
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "UWP builds are currently not supported!")
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 else()
     message(FATAL_ERROR "Non-Windows builds are currently not supported!")
 endif()
