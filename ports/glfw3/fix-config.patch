@@ -13,15 +13,12 @@ index 3c0f625..0c985cf 100644
  write_basic_package_version_file(src/glfw3ConfigVersion.cmake
                                   VERSION ${GLFW_VERSION_FULL}
 diff --git a/src/glfw3Config.cmake.in b/src/glfw3Config.cmake.in
-index 1fa200e..5831dc5 100644
+index 1fa200e..861df93 100644
 --- a/src/glfw3Config.cmake.in
 +++ b/src/glfw3Config.cmake.in
-@@ -1 +1,6 @@
--include("${CMAKE_CURRENT_LIST_DIR}/glfw3Targets.cmake")
+@@ -1 +1,5 @@
 +@PACKAGE_INIT@
-+include(CMakeFindDependencyMacro)
 +
 +set_and_check(glfw_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
 +
-+include("${CMAKE_CURRENT_LIST_DIR}/glfw3Targets.cmake")
-\ No newline at end of file
+ include("${CMAKE_CURRENT_LIST_DIR}/glfw3Targets.cmake")
