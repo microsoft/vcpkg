@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(
     pull_22_patch_file
-    URLS "https://patch-diff.githubusercontent.com/raw/pytorch/cpuinfo/pull/22.patch"
+    URLS "https://github.com/pytorch/cpuinfo/compare/d5e37adf1406cf899d7d9ec1d317c47506ccb970...868bd113ed496a01cd030ab4d5b8853561f919a3.diff"
     FILENAME "cpuinfo-pull-22-868bd11.patch"
     SHA512 c8fbbad1bc4a01b7c8aa10c9e395d1d9e8a1c48c95fca511bfa7ca36b69450e3804281bebcf6f2abacd92592d20abd08df26a32792eca33294380f1b8d68f9ac
 )
@@ -20,7 +20,10 @@ vcpkg_from_github(
         ${pull_22_patch_file}
 )
 
-vcpkg_check_features(tools CPUINFO_BUILD_TOOLS)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tools CPUINFO_BUILD_TOOLS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,7 +31,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DCPUINFO_BUILD_TOOLS=OFF
     OPTIONS_RELEASE
-        -DCPUINFO_BUILD_TOOLS=${CPUINFO_BUILD_TOOLS}
+        ${FEATURE_OPTIONS}
     OPTIONS
         -DCPUINFO_BUILD_UNIT_TESTS=OFF
         -DCPUINFO_BUILD_MOCK_TESTS=OFF
