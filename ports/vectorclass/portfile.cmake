@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vectorclass/version2
-    REF 78cb733dc2ec23d59f2d93f510ca514407bb0a50
-    SHA512 d14221075e79928b9a146c615e322a786f9a9b06ddd015bc343368816f104eb5c22b235e2013bcacdb801602d8d5f56673ec808ed8dda8c32b85959fb5107311
+    REF v2.00.01
+    SHA512 2e1f714cf0e23cf7986f0e78b4c1eeab4da6434ac92449b81990931e19ae189df6fbbef50f11e9532a41dc6eaff0a4fea840349a3747621ff537bbd7519f2c3d
     HEAD_REF master
 )
 
