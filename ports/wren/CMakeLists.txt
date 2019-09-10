@@ -20,7 +20,7 @@ file(GLOB vm_SRCS ${vm_DIR}/*.c)
 
 set(wren_SRCS ${vm_SRCS} ${opt_SRCS})
 
-add_library(wren STATIC ${wren_SRCS})
+add_library(wren ${wren_SRCS})
 
 target_include_directories(wren PUBLIC src/include PRIVATE src/vm src/optional)
 
