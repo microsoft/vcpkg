@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-util-1.6.0)
+
 vcpkg_download_distfile(ARCHIVE
   URLS "https://archive.apache.org/dist/apr/apr-util-1.6.0-win32-src.zip"
   FILENAME "apr-util-1.6.0-win32-src.zip"
