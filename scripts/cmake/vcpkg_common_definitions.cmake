@@ -55,11 +55,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_TARGET_STATIC_LIBRARY_PREFIX "")
     set(VCPKG_TARGET_SHARED_LIBRARY_PREFIX "")
     set(VCPKG_TARGET_IMPORT_LIBRARY_PREFIX "")
+    set(VCPKG_FIND_LIBRARY_SUFFIXES ".lib" ".dll") #This is a slight modification to CMakes value which does not include ".dll".
+    set(VCPKG_FIND_LIBRARY_PREFIXES "" "lib") #This is a slight modification to CMakes value which does not include "lib".
     ## For CYGWIN and Windows GNU, maybe VCPKG will support that in the future?
     #set(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX ".dll.a")
     #set(VCPKG_TARGET_IMPORT_LIBRARY_PREFIX "lib")
-    set(VCPKG_FIND_LIBRARY_SUFFIXES ".dll" ".dll.a" ".a" ".lib") #includes Windows-Clang, Windows-GNU and CYGWIN
-    set(VCPKG_FIND_LIBRARY_PREFIXES "lib" "")
+    #set(VCPKG_FIND_LIBRARY_SUFFIXES ".dll" ".dll.a" ".a" ".lib")
+    #set(VCPKG_FIND_LIBRARY_PREFIXES "lib" "")
 elseif(VCPKG_TARGET_IS_OSX)
     set(VCPKG_TARGET_STATIC_LIBRARY_SUFFIX ".a")
     set(VCPKG_TARGET_SHARED_LIBRARY_SUFFIX ".dylib")
