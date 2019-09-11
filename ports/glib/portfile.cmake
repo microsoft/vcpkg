@@ -10,10 +10,6 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
-if (NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
-    message(FATAL_ERROR "selinux must be installed before glib can build. Install them with \"apt-get install selinux\".")
-endif()
-
 set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
@@ -36,10 +32,18 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/glib/pcre)
 file(WRITE ${SOURCE_PATH}/glib/pcre/Makefile.in)
 file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
 
+if (selinux IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
+    message("selinux may not found. You can install them with \"apt-get install selinux\".")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    selinux HAVE_SELINUX
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DGLIB_VERSION=${GLIB_VERSION}
     OPTIONS_DEBUG
         -DGLIB_SKIP_HEADERS=ON
