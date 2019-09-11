@@ -1,5 +1,14 @@
 include(vcpkg_common_functions)
 
+if("wdk" IN_LIST FEATURES)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Windows Driver Kit support is only available builds targeting Windows")
+    endif()
+    set(WITH_WDK ON)
+else()
+    set(WITH_WDK OFF)
+endif()
+
 # OpenCL C headers
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -52,16 +61,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-     set(REQUIRE_WDK_ARG "-DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF")
-endif(VCPKG_TARGET_IS_WINDOWS)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
-        ${REQUIRE_WDK_ARG} 
+        -DOPENCL_ICD_LOADER_REQUIRE_WDK=${WITH_WDK} 
 )
 
 vcpkg_build_cmake(TARGET OpenCL)
