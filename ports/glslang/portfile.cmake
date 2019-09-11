@@ -16,15 +16,20 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS -DCMAKE_DEBUG_POSTFIX=d -DSKIP_GLSLANG_INSTALL=OFF
+  OPTIONS
+    -DCMAKE_DEBUG_POSTFIX=d
+    -DSKIP_GLSLANG_INSTALL=OFF
 )
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/glslang)
+
+vcpkg_copy_pdbs()
+
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/glslang)

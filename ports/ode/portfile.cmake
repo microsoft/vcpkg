@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 set(SOURCE_VERSION 0.15.1)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ode-${SOURCE_VERSION})
@@ -24,7 +12,6 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-add-static-runtime-option.patch"
 )
-
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -100,8 +87,4 @@ if (DEFINED VCPKG_LIBRARY_LINKAGE AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
          DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 endif ()
 
-
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE-BSD.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/ode)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ode/LICENSE-BSD.TXT ${CURRENT_PACKAGES_DIR}/share/ode/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE-BSD.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

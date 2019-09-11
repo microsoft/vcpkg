@@ -32,6 +32,10 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/share/clfft/copyright
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+elseif(VCPKG_TARGET_IS_LINUX)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clFFT")
+endif()
 
 vcpkg_copy_pdbs()
