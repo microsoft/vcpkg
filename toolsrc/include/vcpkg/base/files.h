@@ -123,7 +123,7 @@ namespace vcpkg::Files
         virtual void remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
         void remove_all(const fs::path& path, LineInfo li);
         bool exists(const fs::path& path, std::error_code& ec) const;
-        bool exists(LineInfo li, const fs::path& path) const;
+        bool exists(LineInfo li, const fs::path& path, bool ignore = false) const;
         // this should probably not exist, but would require a pass through of
         // existing code to fix
         bool exists(const fs::path& path) const;

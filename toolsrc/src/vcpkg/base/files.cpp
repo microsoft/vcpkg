@@ -178,11 +178,11 @@ namespace vcpkg::Files
         return fs::exists(this->symlink_status(path, ec));
     }
 
-    bool Filesystem::exists(LineInfo li, const fs::path& path) const
+    bool Filesystem::exists(LineInfo li, const fs::path& path, bool ignore) const
     {
         std::error_code ec;
         auto result = this->exists(path, ec);
-        if (ec) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
+        if (ec && !ignore) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
         return result;
     }
     bool Filesystem::exists(const fs::path& path) const
@@ -673,7 +673,7 @@ namespace vcpkg::Files
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(VCPKG_LINE_INFO, p))
+                    if (Util::find(ret, p) == ret.end() && this->exists(VCPKG_LINE_INFO, p, true))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", p.u8string(), '\n');
