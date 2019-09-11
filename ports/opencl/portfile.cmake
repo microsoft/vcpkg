@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-#vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 # OpenCL C headers
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -54,22 +52,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-#vcpkg_apply_patches(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PATCHES "${CMAKE_CURRENT_LIST_DIR}/do-not-enforce-dynamic-library.patch"
-#)
-
 if(VCPKG_TARGET_IS_WINDOWS)
      set(REQUIRE_WDK_ARG "-DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF")
-#    message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
-#    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif(VCPKG_TARGET_IS_WINDOWS)
-
-#if(VCPKG_LIBRARY_LINKAGE MATCHES static)
-#  set(ICD_SHARED OFF)
-#else()
-#  set(ICD_SHARED ON)
-#endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -77,7 +62,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
         ${REQUIRE_WDK_ARG} 
-#        -DBUILD_SHARED_LIBS=${ICD_SHARED}
 )
 
 vcpkg_build_cmake(TARGET OpenCL)
