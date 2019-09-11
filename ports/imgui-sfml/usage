@@ -1,0 +1,10 @@
+The package imgui-sfml provides CMake targets:
+
+    find_package(imgui CONFIG REQUIRED)
+    find_package(SFML CONFIG REQUIRED COMPONENTS graphics system window)
+    find_package(ImGui-SFML CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE
+        imgui::imgui
+        sfml-graphics sfml-system sfml-window
+        ImGui-SFML::ImGui-SFML
+    )

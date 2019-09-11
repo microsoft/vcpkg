@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v5.0.4
-    SHA512 8e8f0050251ba71fa3bba01adbf6fd1a797518115ac8207481b89aebcadc310b98451cc141f3c8f69a0b8397f35b6e0fe51c65fbdc3d7d5e2a4271472f422b13
+    REF v6.1.0
+    SHA512 5f19f2b220b87f9300a1d67e527ee2ee26d459e185357c2c121a2ce359fc8e5f04bd714c225b0f309ebcb6e416d7ca15ca93a88409fa09f88f065dec0a37bbe2
 )
 
 vcpkg_configure_cmake(

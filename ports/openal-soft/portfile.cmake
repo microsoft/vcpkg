@@ -11,7 +11,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
-        cmake-3-11.patch
         fix-arm-builds.patch
 )
 
