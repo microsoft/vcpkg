@@ -70,6 +70,10 @@ function(vcpkg_build_msbuild)
         ${ARGN}
     )
 
+    if(NOT DEFINED _csc_TARGET)
+        set(_csc_TARGET Rebuild)
+    endif()
+    
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
         set(_csc_RELEASE_CONFIGURATION Release)
     endif()
@@ -79,26 +83,29 @@ function(vcpkg_build_msbuild)
     if(NOT DEFINED _csc_PLATFORM)
         set(_csc_PLATFORM ${TRIPLET_SYSTEM_ARCH})
     endif()
-    if(NOT DEFINED _csc_PLATFORM_TOOLSET)
+    if(NOT DEFINED _csc_PLATFORM_TOOLSET AND DEFINED VCPKG_PLATFORM_TOOLSET)
         set(_csc_PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
     endif()
     if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
         vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
     endif()
-    if(NOT DEFINED _csc_TARGET)
-        set(_csc_TARGET Rebuild)
-    endif()
+
 
     list(APPEND _csc_OPTIONS
         /t:${_csc_TARGET}
         /p:Platform=${_csc_PLATFORM}
-        /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
         /m
     )
 
+    if(DEFINED _csc_PLATFORM_TOOLSET)
+        list(APPEND _csc_OPTIONS
+            /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
+        )
+    endif()
+    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
         # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
