@@ -1,26 +1,28 @@
 include(vcpkg_common_functions)
 set(FREEXL_VERSION_STR "1.0.4")
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freexl-${FREEXL_VERSION_STR})
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-${FREEXL_VERSION_STR}.tar.gz"
     FILENAME "freexl-${FREEXL_VERSION_STR}.tar.gz"
     SHA512 d72561f7b82e0281cb211fbf249e5e45411a7cdd009cfb58da3696f0a0341ea7df210883bfde794be28738486aeb4ffc67ec2c98fd2acde5280e246e204ce788
 )
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        fix-makefiles.patch
+        fix-sources.patch
+)
+
 if (CMAKE_HOST_WIN32)
-  vcpkg_extract_source_archive(${ARCHIVE})
-  vcpkg_apply_patches(
-      SOURCE_PATH ${SOURCE_PATH}
-      PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/fix-makefiles.patch
-          ${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
-  )
   find_program(NMAKE nmake)
 
-  set(LIBS_ALL_DBG 
+  set(LIBS_ALL_DBG
     "\"${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib\" \
     \"${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib\""
     )
-  set(LIBS_ALL_REL 
+  set(LIBS_ALL_REL
     "\"${CURRENT_INSTALLED_DIR}/lib/libiconv.lib\" \
     \"${CURRENT_INSTALLED_DIR}/lib/libcharset.lib\""
     )
