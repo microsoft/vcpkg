@@ -7,12 +7,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-	set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libspatialite-${LIBSPATIALITE_VERSION_STR})
-	vcpkg_extract_source_archive(${ARCHIVE})
 	find_program(NMAKE nmake)
 
-	vcpkg_apply_patches(
-		SOURCE_PATH ${SOURCE_PATH}
+	vcpkg_extract_source_archive_ex(
+		OUT_SOURCE_PATH SOURCE_PATH
+		ARCHIVE ${ARCHIVE}
 		PATCHES
 			${CMAKE_CURRENT_LIST_DIR}/fix-makefiles.patch
 			${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
@@ -115,18 +114,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
 	message(STATUS "Packaging ${TARGET_TRIPLET} done")
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
-  # Extract source into architecture specific directory, because libspatialites' nmake based build currently does not
-  # support out of source builds.
-  set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/libspatialite-${LIBSPATIALITE_VERSION_STR})
-  set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/libspatialite-${LIBSPATIALITE_VERSION_STR})
-  
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  	list(APPEND BUILD_TYPES "release")
-  endif()
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  	list(APPEND BUILD_TYPES "debug")
-  endif()
-
   # Check build system first
   find_program(MAKE make)
   if (NOT MAKE)
@@ -137,23 +124,29 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     ################
     # Release build
     ################    
-	file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release)
-  	vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release)
-  	vcpkg_apply_patches(
-  		SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/libspatialite-${LIBSPATIALITE_VERSION_STR}
-  		PATCHES
-  		${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
-  		${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
-  	)
+	vcpkg_extract_source_archive_ex(
+		OUT_SOURCE_PATH SOURCE_PATH_RELEASE
+		ARCHIVE ${ARCHIVE}
+		REF  release
+		PATCHES
+			${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
+			${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
+	)
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     set(OUT_PATH_RELEASE ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-release)
+	file(REMOVE_RECURSE ${OUT_PATH_RELEASE})
     file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
     set(prefix ${CURRENT_INSTALLED_DIR})
     set(exec_prefix ${prefix}/bin)
     set(includedir ${prefix}/include)
     set(libdir ${prefix}/lib)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/geos-config.in
+	configure_file(${CMAKE_CURRENT_LIST_DIR}/geos-config.in
                    ${SOURCE_PATH_RELEASE}/geos-config @ONLY)
+	vcpkg_execute_required_process(
+      COMMAND chmod -R 777 ${SOURCE_PATH_RELEASE}/geos-config
+      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+      LOGNAME config-${TARGET_TRIPLET}-rel
+    )
     vcpkg_execute_required_process(
       COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE} "CFLAGS=-I${includedir} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}" "LDFLAGS=-L${libdir}" "LIBS=-lpthread -ldl" "--with-geosconfig=${SOURCE_PATH_RELEASE}/geos-config" "LIBXML2_LIBS=-lxml2 -llzma" "LIBXML2_CFLAGS=${includedir}"
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
@@ -174,17 +167,11 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       LOGNAME make-install-${TARGET_TRIPLET}-release
     )
 
-    set(prefix ${CURRENT_INSTALLED_DIR})
-    set(exec_prefix ${prefix}/bin)
-    set(libdir ${prefix}/lib)
-    set(includedir ${prefix}/include)
     set(VERSION ${LIBSPATIALITE_VERSION_STR})
     configure_file(${SOURCE_PATH_RELEASE}/spatialite.pc.in
-                   ${OUT_PATH_RELEASE}/share/libspatialite/pkgconfig/spatialite.pc @ONLY)
-    file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
+                   ${OUT_PATH_RELEASE}/lib/pkgconfig/spatialite.pc @ONLY)
     file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
     file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(COPY ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
     file(INSTALL ${SOURCE_PATH_RELEASE}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libspatialite RENAME copyright)
     message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
   endif()
@@ -193,17 +180,18 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     ################
     # Debug build
     ################    
-	file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug)
-	vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug)
-	vcpkg_apply_patches(
-		SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/libspatialite-${LIBSPATIALITE_VERSION_STR}
+	vcpkg_extract_source_archive_ex(
+		OUT_SOURCE_PATH SOURCE_PATH_DEBUG
+		ARCHIVE ${ARCHIVE}
+		REF  debug
 		PATCHES
-		${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
-		${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
-		${CMAKE_CURRENT_LIST_DIR}/fix-configure-debug.patch
+			${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
+			${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
+			${CMAKE_CURRENT_LIST_DIR}/fix-configure-debug.patch
 	)
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
     set(OUT_PATH_DEBUG ${SOURCE_PATH_DEBUG}/../../make-build-${TARGET_TRIPLET}-debug)
+	file(REMOVE_RECURSE ${OUT_PATH_DEBUG})
     file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
 	set(prefix ${CURRENT_INSTALLED_DIR})
     set(exec_prefix ${prefix}/debug/bin)
@@ -211,6 +199,11 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     set(libdir ${prefix}/debug/lib)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/geos-config-debug.in
                    ${SOURCE_PATH_DEBUG}/geos-config @ONLY)
+	vcpkg_execute_required_process(
+      COMMAND chmod -R 777 ${SOURCE_PATH_DEBUG}/geos-config
+      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+      LOGNAME config-${TARGET_TRIPLET}-debug
+    )
     vcpkg_execute_required_process(
       COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG}  "CFLAGS=-I${includedir} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}" "LDFLAGS=-L${libdir}" "LIBS=-lpthread -ldl" "--with-geosconfig=${SOURCE_PATH_DEBUG}/geos-config" "LIBXML2_LIBS=-lxml2 -llzmad" "LIBXML2_CFLAGS=${includedir}"
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
@@ -231,7 +224,9 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       LOGNAME make-install-${TARGET_TRIPLET}-debug
     )
 
-    file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
+    set(VERSION ${LIBSPATIALITE_VERSION_STR})
+    configure_file(${SOURCE_PATH_DEBUG}/spatialite.pc.in
+                   ${OUT_PATH_DEBUG}/lib/pkgconfig/spatialite.pc @ONLY)
     file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
   endif()
