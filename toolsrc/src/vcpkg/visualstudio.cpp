@@ -31,10 +31,10 @@ namespace vcpkg::VisualStudio
     static constexpr CStringView cmake_V_141_ARM = "Visual Studio 15 2017 ARM";
     static constexpr CStringView cmake_V_141_ARM64 = "Visual Studio 15 2017";
 
-    static constexpr CStringView cmake_V_142_x86 = "Visual Studio 16 2019 -A x86";
-    static constexpr CStringView cmake_V_142_x64 = "Visual Studio 16 2019 ";
-    static constexpr CStringView cmake_V_142_ARM = "Visual Studio 16 2019 -A ARM";
-    static constexpr CStringView cmake_V_142_ARM64 = "Visual Studio 16 2019 -A ARM64";
+    static constexpr CStringView cmake_V_142_x86 = "Visual Studio 16 2019;-A;Win32"; //CMake needs to properly parse this string on the command line
+    static constexpr CStringView cmake_V_142_x64 = "Visual Studio 16 2019";
+    static constexpr CStringView cmake_V_142_ARM = "Visual Studio 16 2019;-A;ARM";
+    static constexpr CStringView cmake_V_142_ARM64 = "Visual Studio 16 2019;-A;ARM64";
 
     static constexpr CStringView unknown = "unknown";
 
