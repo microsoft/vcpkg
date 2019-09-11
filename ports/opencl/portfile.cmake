@@ -59,11 +59,11 @@ vcpkg_from_github(
 #    PATCHES "${CMAKE_CURRENT_LIST_DIR}/do-not-enforce-dynamic-library.patch"
 #)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+if(VCPKG_TARGET_IS_WINDOWS)
      set(REQUIRE_WDK_ARG "-DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF")
 #    message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
 #    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
+endif(VCPKG_TARGET_IS_WINDOWS)
 
 #if(VCPKG_LIBRARY_LINKAGE MATCHES static)
 #  set(ICD_SHARED OFF)
@@ -82,7 +82,7 @@ vcpkg_configure_cmake(
 
 vcpkg_build_cmake(TARGET OpenCL)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+if(VCPKG_TARGET_IS_WINDOWS)
   file(INSTALL
           "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.lib"
       DESTINATION
@@ -94,8 +94,8 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
       DESTINATION
           ${CURRENT_PACKAGES_DIR}/debug/lib
   )
-endif()
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+endif(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_LINUX)
   file(INSTALL
           "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libOpenCL.a"
       DESTINATION
@@ -107,7 +107,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
       DESTINATION
           ${CURRENT_PACKAGES_DIR}/debug/lib
   )
-endif()
+endif(VCPKG_TARGET_IS_LINUX)
 
 file(INSTALL
         "${SOURCE_PATH}/LICENSE"
