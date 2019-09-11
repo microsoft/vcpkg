@@ -1,0 +1,13 @@
+diff --git a/gtsam/CMakeLists.txt b/gtsam/CMakeLists.txt
+index 9fac3b0..6ff7fc5 100644
+--- a/gtsam/CMakeLists.txt
++++ b/gtsam/CMakeLists.txt
+@@ -91,6 +91,8 @@ set(gtsam_version   ${GTSAM_VERSION_MAJOR}.${GTSAM_VERSION_MINOR}.${GTSAM_VERSIO
+ set(gtsam_soversion ${GTSAM_VERSION_MAJOR})
+ message(STATUS "GTSAM Version: ${gtsam_version}")
+ message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
++
++add_definitions("-DBOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES")
+  
+ # build shared and static versions of the library
+ if (GTSAM_BUILD_STATIC_LIBRARY)

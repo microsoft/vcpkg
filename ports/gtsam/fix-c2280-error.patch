@@ -1,0 +1,13 @@
+diff --git a/gtsam/3rdparty/Eigen/Eigen/src/Core/util/Macros.h b/gtsam/3rdparty/Eigen/Eigen/src/Core/util/Macros.h
+index 3a010ec..aeedd36 100644
+--- a/gtsam/3rdparty/Eigen/Eigen/src/Core/util/Macros.h
++++ b/gtsam/3rdparty/Eigen/Eigen/src/Core/util/Macros.h
+@@ -306,7 +306,7 @@ namespace Eigen {
+ // just an empty macro !
+ #define EIGEN_EMPTY
+ 
+-#if defined(_MSC_VER) && (!defined(__INTEL_COMPILER))
++#if defined(_MSC_VER) && (_MSC_VER < 1900) && (!defined(__INTEL_COMPILER))
+ #define EIGEN_INHERIT_ASSIGNMENT_EQUAL_OPERATOR(Derived) \
+   using Base::operator =;
+ #elif defined(__clang__) // workaround clang bug (see http://forum.kde.org/viewtopic.php?f=74&t=102653)
