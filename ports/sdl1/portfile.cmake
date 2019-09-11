@@ -87,6 +87,7 @@ else()
     message(STATUS "Building ${TARGET_TRIPLET}")
     vcpkg_execute_build_process(
         COMMAND "make -j ${VCPKG_CONCURRENCY}"
+        NO_PARALLEL_COMMAND "make"
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "build-${TARGET_TRIPLET}-release"
     )
