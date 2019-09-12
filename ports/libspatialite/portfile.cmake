@@ -130,6 +130,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
         PATCHES
             fix-sources.patch
             fix-latin-literals.patch
+            fix-linux-configure.patch
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     set(OUT_PATH_RELEASE ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-release)
@@ -188,6 +189,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
             fix-sources.patch
             fix-latin-literals.patch
             fix-configure-debug.patch
+            fix-linux-configure.patch
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
     set(OUT_PATH_DEBUG ${SOURCE_PATH_DEBUG}/../../make-build-${TARGET_TRIPLET}-debug)
