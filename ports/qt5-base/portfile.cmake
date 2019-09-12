@@ -164,7 +164,7 @@ elseif(VCPKG_TARGET_IS_OSX)
         message(STATUS "Major.Minor OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.14") # Max Version supported by QT
-            message(STATUS "Qt 5.12.4 only support OSX_DEPLOYMENT_TARGET up to 10.14")
+            message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.14")
             set(VCPKG_OSX_DEPLOYMENT_TARGET "10.14")
         endif()
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
