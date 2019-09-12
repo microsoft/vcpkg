@@ -11,8 +11,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/sizeofvoid.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -26,4 +24,4 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright
-file(INSTALL ${BASE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libdisasm RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
