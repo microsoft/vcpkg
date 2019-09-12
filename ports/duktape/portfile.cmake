@@ -34,7 +34,15 @@ if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
 			SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
 			HEAD_REF master
 		)
-		file(COPY ${PYFILE_PATH}/get-pip.py DESTINATION ${PYTHON2_DIR})
+		if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+			vcpkg_execute_required_process(
+			  COMMAND sudo cp ${PYFILE_PATH}/get-pip.py ${PYTHON2_DIR}
+			  WORKING_DIRECTORY ${PYFILE_PATH}
+			  LOGNAME copy-pip
+			)
+		else()
+			file(COPY ${PYFILE_PATH}/get-pip.py DESTINATION ${PYTHON2_DIR})
+		endif()
 		execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
     endif()
     execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
