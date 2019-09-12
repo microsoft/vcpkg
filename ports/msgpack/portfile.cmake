@@ -5,8 +5,6 @@ vcpkg_from_github(
     REF cpp-3.2.0
     SHA512 698fcdd5b427373997d0c89ff2cd09c44cf3b165defd381ff3cd9e14ecb83841064754a42aab99441a3b17aa26e3daec8f83e40d6d482c4b443b21b313278d14
     HEAD_REF master
-    PATCHES
-        add-static-lib-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
