@@ -8,7 +8,6 @@ vcpkg_from_github(
     REF boost-1.71.0
     SHA512 0b78db2d0fda09298092cfbe7580d67db015aac7d5fac44c363dcc025f61d043fe4a87446b3f8f1fa76ae685838a98b0ed68609ecd945328f5fc4b12a493ee6a
     HEAD_REF master
-    PATCHES unwind-type.patch # Fails to apply
 )
 
 # Find Python. Can't use find_package here, but we already know where everything is

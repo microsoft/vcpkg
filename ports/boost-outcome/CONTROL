@@ -2,4 +2,5 @@
 Source: boost-outcome
 Version: 1.71.0
 Build-Depends: boost-config, boost-throw-exception, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/outcome
 Description: Boost outcome module
