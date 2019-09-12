@@ -1,5 +1,5 @@
 Source: gtsam
-Version: 3.2.3-1
+Version: 3.2.3
 Homepage: https://github.com/borglab/gtsam
 Description: GTSAM is a library of C++ classes that implement smoothing and mapping (SAM) in robotics and vision, using factor graphs and Bayes networks as the underlying computing paradigm rather than sparse matrices.
 Build-Depends: boost-serialization, boost-system, boost-filesystem, boost-thread, boost-program-options, boost-date-time, boost-regex, boost-timer, boost-chrono, boost-format, boost-graph, boost-assign
