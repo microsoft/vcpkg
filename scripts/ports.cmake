@@ -7,23 +7,21 @@ macro(debug_message)
 endmacro()
 
 #Detect .vcpkg-root to figure VCPKG_ROOT_DIR, starting from triplet folder.
-set(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+set(VCPKG_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 if(DEFINED VCPKG_ROOT_PATH)
-    set(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_PATH})
-elseif(DEFINED TARGET_TRIPLET_FILE)
-    get_filename_component(TARGET_TRIPLET_DIR ${TARGET_TRIPLET_FILE} DIRECTORY)
-    set(VCPKG_ROOT_DIR_CANDIDATE ${TARGET_TRIPLET_DIR})
+    set(VCPKG_ROOT_DIR ${VCPKG_ROOT_PATH})
+else()
+    message(FATAL_ERROR [[
+        Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
+        Please re-build vcpkg by running bootstrap-vcpkg.
+    ]])
 endif()
 
 # Validate VCPKG_ROOT_DIR_CANDIDATE
-while(IS_DIRECTORY ${VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
-    get_filename_component(VCPKG_ROOT_DIR_TEMP ${VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
-    if (VCPKG_ROOT_DIR_TEMP STREQUAL VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-        message(FATAL_ERROR "Could not find .vcpkg-root")
-    else()
-        set(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_TEMP})
-    endif()
-endwhile()
+if (NOT EXISTS "${VCPKG_ROOT_DIR}/.vcpkg-root")
+    message(FATAL_ERROR "Could not find .vcpkg-root")
+endif()
 
 set(VCPKG_ROOT_DIR ${VCPKG_ROOT_DIR_CANDIDATE})
 
