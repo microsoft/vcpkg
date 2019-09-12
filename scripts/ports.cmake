@@ -7,10 +7,10 @@ macro(debug_message)
 endmacro()
 
 #Detect .vcpkg-root to figure VCPKG_ROOT_DIR, starting from triplet folder.
-set(VCPKG_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
 
 if(DEFINED VCPKG_ROOT_PATH)
-    set(VCPKG_ROOT_DIR ${VCPKG_ROOT_PATH})
+    set(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_PATH})
 else()
     message(FATAL_ERROR [[
         Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
@@ -19,7 +19,7 @@ else()
 endif()
 
 # Validate VCPKG_ROOT_DIR_CANDIDATE
-if (NOT EXISTS "${VCPKG_ROOT_DIR}/.vcpkg-root")
+if (NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
     message(FATAL_ERROR "Could not find .vcpkg-root")
 endif()
 
