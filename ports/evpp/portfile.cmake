@@ -1,6 +1,7 @@
 include(vcpkg_common_functions)
 
 set(EVPP_VERSION 0.7.0)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Qihoo360/evpp
@@ -9,8 +10,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-rapidjson-1-1.patch
+        fix-linux-build.patch
 )
-
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/rapidjson ${SOURCE_PATH}/3rdparty/concurrentqueue)
 
 vcpkg_configure_cmake(
@@ -23,4 +24,5 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+# Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
