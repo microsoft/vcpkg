@@ -11,8 +11,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/use_fpm_default.patch"
 )
 
 #The archive only contains a Visual Studio 6.0 era DSP project file, so use a custom CMakeLists.txt
