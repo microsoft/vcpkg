@@ -18,7 +18,7 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
     SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
 )
@@ -140,12 +140,26 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 endif()
 
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/private)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/private)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+
+
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
     ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
     ${CURRENT_PACKAGES_DIR}/openssl.cnf
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/openssl.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/openssl/)
