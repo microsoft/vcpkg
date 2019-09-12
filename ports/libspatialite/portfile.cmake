@@ -154,15 +154,15 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
 
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
-      COMMAND "make -j ${VCPKG_CONCURRENCY}"
-      NO_PARALLEL_COMMAND "make"
+      COMMAND make -j ${VCPKG_CONCURRENCY}
+      NO_PARALLEL_COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-build-${TARGET_TRIPLET}-release
     )
 
     message(STATUS "Installing ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
-      COMMAND "make install"
+      COMMAND make install
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-install-${TARGET_TRIPLET}-release
     )
@@ -212,15 +212,15 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
-      COMMAND "make -j ${VCPKG_CONCURRENCY}"
-      NO_PARALLEL_COMMAND "make"
+      COMMAND make -j ${VCPKG_CONCURRENCY}
+      NO_PARALLEL_COMMAND make
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-build-${TARGET_TRIPLET}-debug
     )
 
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
-      COMMAND "make -j install"
+      COMMAND make -j install
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-install-${TARGET_TRIPLET}-debug
     )
