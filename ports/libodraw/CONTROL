@@ -1,0 +1,4 @@
+Source: libodraw
+Version: 2019-01-18
+Build-Depends: openssl,zlib
+Description: Library and tools to access to optical disc (split) RAW image files (BIN/CUE, ISO/CUE).
