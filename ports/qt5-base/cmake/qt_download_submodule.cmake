@@ -21,6 +21,13 @@ function(qt_download_submodule)
         FILENAME ${ARCHIVE_NAME}
         SHA512 ${QT_HASH_${PORT}}
     )
+
+    if(QT_UPDATE_VERSION)
+        file(SHA512 "${ARCHIVE_FILE}" ARCHIVE_HASH)
+        message(STATUS "${PORT} new hash is ${ARCHIVE_HASH}")
+        file(APPEND "${VCPKG_ROOT_DIR}/ports/qt5-base/cmake/qt_new_hashes.cmake" "set(QT_HASH_${PORT} ${ARCHIVE_HASH})\n")
+    endif()
+    
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
