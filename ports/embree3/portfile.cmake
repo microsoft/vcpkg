@@ -6,8 +6,8 @@ vcpkg_from_github(
     REF v3.5.2
     SHA512 f00403c8bc76428088a38990117245b5b11ac90a2df21fa12c2d5c2e8af45fb3708abb705c612e0d9d7b0cfe4edb51c8b9630b60081b39fcb4370f31ee37acc7
     HEAD_REF master
-	PATCHES
-		fix-InstallPath.patch
+    PATCHES
+        fix-InstallPath.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/common/cmake/FindTBB.cmake)
@@ -33,17 +33,19 @@ vcpkg_configure_cmake(
 # just wait, the release build of embree is insanely slow in MSVC
 # a single file will took about 2-10 min
 vcpkg_install_cmake()
-vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree3/doc)
+vcpkg_copy_pdbs()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/embree3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/embree3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/embree3/copyright)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
