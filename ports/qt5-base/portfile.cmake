@@ -163,9 +163,9 @@ elseif(VCPKG_TARGET_IS_OSX)
         string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" VCPKG_OSX_DEPLOYMENT_TARGET ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Major.Minor OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
-        if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.14") # Max Version supported by QT
-            message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.14")
-            set(VCPKG_OSX_DEPLOYMENT_TARGET "10.14")
+        if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.15") # Max Version supported by QT. This version is defined in mkspecs/common/macx.conf as QT_MAC_SDK_VERSION_MAX
+            message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.15")
+            set(VCPKG_OSX_DEPLOYMENT_TARGET "10.15")
         endif()
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
