@@ -131,15 +131,15 @@ function(vcpkg_configure_cmake)
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         if(VCPKG_TARGET_IS_WINDOWS)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         elseif(VCPKG_TARGET_IS_LINUX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/linux.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
         elseif(VCPKG_TARGET_IS_ANDROID)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
         elseif(VCPKG_TARGET_IS_OSX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
         elseif(VCPKG_TARGET_IS_FREEBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/freebsd.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
         endif()
     endif()
 
@@ -158,7 +158,7 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
         "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
-        "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
+        "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
         "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"

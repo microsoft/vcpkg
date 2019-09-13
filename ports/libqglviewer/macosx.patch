@@ -1,0 +1,13 @@
+diff --git a/QGLViewer/QGLViewer.pro b/QGLViewer/QGLViewer.pro
+index 702925cb6..fc3cb7118 100644
+--- a/QGLViewer/QGLViewer.pro
++++ b/QGLViewer/QGLViewer.pro
+@@ -224,7 +224,7 @@ macx|darwin-g++ {
+ 		QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+ 
+ 		# So that the path QGLViewer/*.h exists
+-		QMAKE_POST_LINK=cd $$DESTDIR/QGLViewer.framework/Headers && (test -L QGLViewer || ln -s . QGLViewer)
++		#QMAKE_POST_LINK=cd $$DESTDIR/QGLViewer.framework/Headers && (test -L QGLViewer || ln -s . QGLViewer)
+ 
+ 		# Specific paths for the installation of the framework.
+ 		!isEmpty( LIB_DIR ) {

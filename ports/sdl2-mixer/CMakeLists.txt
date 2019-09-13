@@ -10,53 +10,6 @@ set(SDL_MIXER_LIBRARIES SDL2::SDL2)
 # builtin formats
 set(SDL_MIXER_DEFINES MUSIC_WAV)
 
-# MP3 support
-if(SDL_MIXER_ENABLE_MP3)
-    find_path(MPG123_INCLUDE_DIR mpg123.h)
-    find_library(MPG123_LIBRARY NAMES libmpg123 mpg123)
-    list(APPEND SDL_MIXER_INCLUDES ${MPG123_INCLUDE_DIR})
-    list(APPEND SDL_MIXER_LIBRARIES ${MPG123_LIBRARY})
-    list(APPEND SDL_MIXER_DEFINES MUSIC_MP3_MPG123)
-endif()
-
-# FLAC support
-if(SDL_MIXER_ENABLE_FLAC)
-    find_path(FLAC_INCLUDE_DIR FLAC/all.h)
-    find_library(FLAC_LIBRARY FLAC)
-    list(APPEND SDL_MIXER_INCLUDES ${FLAC_INCLUDE_DIR})
-    list(APPEND SDL_MIXER_LIBRARIES ${FLAC_LIBRARY})
-    list(APPEND SDL_MIXER_DEFINES MUSIC_FLAC)
-endif()
-
-# MOD support
-if(SDL_MIXER_ENABLE_MOD)
-    find_path(MODPLUG_INCLUDE_DIR libmodplug/modplug.h)
-    find_library(MODPLUG_LIBRARY modplug)
-    list(APPEND SDL_MIXER_INCLUDES ${MODPLUG_INCLUDE_DIR})
-    list(APPEND SDL_MIXER_LIBRARIES ${MODPLUG_LIBRARY})
-    list(APPEND SDL_MIXER_DEFINES MUSIC_MOD_MODPLUG)
-endif()
-
-# Ogg-Vorbis support
-if(SDL_MIXER_ENABLE_OGGVORBIS)
-    find_path(VORBIS_INCLUDE_DIR vorbis/codec.h)
-    find_library(VORBISFILE_LIBRARY vorbisfile)
-    list(APPEND SDL_MIXER_INCLUDES ${VORBIS_INCLUDE_DIR})
-    list(APPEND SDL_MIXER_LIBRARIES ${VORBISFILE_LIBRARY})
-    list(APPEND SDL_MIXER_DEFINES MUSIC_OGG)
-endif()
-
-# Opus support
-if(SDL_MIXER_ENABLE_OPUS)
-    find_path(OPUS_INCLUDE_DIR opus/opusfile.h)
-    find_package(ogg CONFIG REQUIRED)
-    find_package(Opus CONFIG REQUIRED)
-    find_library(OPUSFILE_LIBRARY opusfile)
-    list(APPEND SDL_MIXER_INCLUDES ${OPUS_INCLUDE_DIR})
-    list(APPEND SDL_MIXER_LIBRARIES ${OPUSFILE_LIBRARY} Ogg::ogg Opus::opus)
-    list(APPEND SDL_MIXER_DEFINES MUSIC_OPUS)
-endif()
-
 add_library(SDL2_mixer
     effect_position.c
     effect_stereoreverse.c

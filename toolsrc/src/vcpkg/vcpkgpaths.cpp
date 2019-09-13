@@ -76,7 +76,7 @@ namespace vcpkg
                 Checks::exit_with_message(
                     VCPKG_LINE_INFO,
                     "Invalid scripts override directory: %s; "
-                    "create that directory or unset --scripts-root to use the default scripts location.",
+                    "create that directory or unset --x-scripts-root to use the default scripts location.",
                     scripts_dir->u8string());
             }
 
