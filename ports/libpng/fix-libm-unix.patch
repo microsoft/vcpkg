@@ -1,0 +1,12 @@
+diff -ur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2019-04-14 20:10:32.000000000 +0200
++++ b/CMakeLists.txt	2019-09-06 14:14:39.425498139 +0200
+@@ -44,7 +44,7 @@
+ endif()
+ 
+ if(UNIX AND NOT APPLE AND NOT BEOS AND NOT HAIKU)
+-  find_library(M_LIBRARY m)
++  set(M_LIBRARY m)
+ else()
+   # libm is not needed and/or not available
+   set(M_LIBRARY "")
