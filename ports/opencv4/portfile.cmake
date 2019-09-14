@@ -250,6 +250,10 @@ if("ffmpeg" IN_LIST FEATURES)
   endif()
 endif()
 
+if("qt" IN_LIST FEATURES)
+  list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
+endif()
+
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
@@ -321,6 +325,8 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        ###### Additional build flags
+        ${ADDITIONAL_BUILD_FLAGS}
 )
 
 vcpkg_install_cmake()
