@@ -1,0 +1,5 @@
+Source: gazebo10
+Version: 10.1.0
+Build-Depends: boost-asio, boost-date-time, boost-filesystem, boost-format, boost-interprocess, boost-iostreams, boost-program-options, boost-property-tree, boost-regex, boost-smart-ptr, boost-system, boost-thread, boost-uuid, bullet3, freeimage, ignition-fuel-tools1, ignition-math4, ignition-msgs1, ignition-transport4, ogre, protobuf, qt5-base, qwt, sdformat6, tbb, tinyxml, tinyxml2, zeromq
+Homepage: http://gazebosim.org/
+Description: Gazebo robot simulator

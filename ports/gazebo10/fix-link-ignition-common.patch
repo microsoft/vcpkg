@@ -1,0 +1,11 @@
+diff -r 7c4281fe1229 -r 735535193dd2 gazebo/common/CMakeLists.txt
+--- a/gazebo/common/CMakeLists.txt
++++ b/gazebo/common/CMakeLists.txt
+@@ -262,6 +262,7 @@
+   ${TBB_LIBRARIES}
+   ${SDFormat_LIBRARIES}
+   ${IGNITION-FUEL_TOOLS_LIBRARIES}
++  ${IGNITION-COMMON_LIBRARIES}
+ )
+ 
+ if (UNIX)

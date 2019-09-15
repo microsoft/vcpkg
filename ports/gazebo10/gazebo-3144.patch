@@ -1,0 +1,146 @@
+diff -r 13b71990d544 -r f0c77c4ef2bb CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -154,7 +154,13 @@
+ # 2. In the generation of cmake/setup.sh from cmake/setup.sh.in
+ set(GAZEBO_DEFAULT_MASTER_HOST localhost)
+ set(GAZEBO_DEFAULT_MASTER_PORT 11345)
+-set(GAZEBO_PLUGIN_PATH ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/gazebo-${GAZEBO_MAJOR_VERSION}/plugins)
++set(GAZEBO_PLUGIN_LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/gazebo-${GAZEBO_MAJOR_VERSION}/plugins)
++set(GAZEBO_PLUGIN_BIN_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}/gazebo-${GAZEBO_MAJOR_VERSION}/plugins)
++if(WIN32)
++  set(GAZEBO_PLUGIN_PATH ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
++else()
++  set(GAZEBO_PLUGIN_PATH ${GAZEBO_PLUGIN_LIB_INSTALL_DIR})
++endif()
+ FILE(TO_NATIVE_PATH "${GAZEBO_PLUGIN_PATH}" GAZEBO_PLUGIN_PATH)
+ set(GAZEBO_MODEL_PATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/gazebo-${GAZEBO_MAJOR_VERSION}/models)
+ FILE(TO_NATIVE_PATH "${GAZEBO_MODEL_PATH}" GAZEBO_MODEL_PATH)
+diff -r 13b71990d544 -r f0c77c4ef2bb cmake/GazeboUtils.cmake
+--- a/cmake/GazeboUtils.cmake
++++ b/cmake/GazeboUtils.cmake
+@@ -115,7 +115,10 @@
+ #################################################
+ macro (gz_install_library _name)
+   set_target_properties(${_name} PROPERTIES SOVERSION ${GAZEBO_MAJOR_VERSION} VERSION ${GAZEBO_VERSION_FULL})
+-  install (TARGETS ${_name} DESTINATION ${LIB_INSTALL_DIR} COMPONENT shlib)
++  install (TARGETS ${_name}
++           LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT shlib
++           ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT shlib
++           RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT shlib)
+ endmacro ()
+ 
+ #################################################
+diff -r 13b71990d544 -r f0c77c4ef2bb plugins/CMakeLists.txt
+--- a/plugins/CMakeLists.txt
++++ b/plugins/CMakeLists.txt
+@@ -159,8 +159,5 @@
+   GravityCompensationPlugin
+ )
+ 
+-set(GAZEBO_PLUGIN_INSTALL_DIR
+-  ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/gazebo-${GAZEBO_MAJOR_VERSION}/plugins/
+-)
+ 
+ foreach (src ${plugins_single_header})
+@@ -179,7 +178,10 @@
+     ${ogre_libraries}
+     ${IGNITION-TRANSPORT_LIBRARIES}
+   )
+-  install (TARGETS ${src} DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++  install (TARGETS ${src}
++           LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++           ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++           RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+   gz_install_includes("plugins" ${src}.hh)
+ endforeach ()
+ 
+@@ -198,7 +200,10 @@
+     ${ogre_libraries}
+     ${IGNITION-TRANSPORT_LIBRARIES}
+   )
+-  install (TARGETS ${src} DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++  install (TARGETS ${src}
++           LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++           ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++           RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+   gz_install_includes("plugins" ${src}.hh)
+   gz_install_includes("plugins" ${src}Private.hh)
+ endforeach ()
+@@ -214,7 +219,10 @@
+                         ${Qt5Widgets_LIBRARIES}
+                         ${IGNITION-TRANSPORT_LIBRARIES}
+ )
+-  install (TARGETS ${src} DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++  install (TARGETS ${src}
++           LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++           ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++           RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+   gz_install_includes("plugins" ${src}.hh)
+ endforeach ()
+ 
+@@ -225,7 +233,10 @@
+       libgazebo
+       ${DART_LIBRARIES}
+     )
+-    install (TARGETS ${src} DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++    install (TARGETS ${src}
++             LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++             ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++             RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+     gz_install_includes("plugins" ${src}.hh)
+   endforeach ()
+ endif()
+@@ -234,7 +245,7 @@
+ # Plus, set RPATH to the directory so they can dynamically link.
+ target_link_libraries(LedPlugin FlashLightPlugin)
+ set_target_properties(
+-  LedPlugin PROPERTIES INSTALL_RPATH ${GAZEBO_PLUGIN_INSTALL_DIR})
++  LedPlugin PROPERTIES INSTALL_RPATH ${GAZEBO_PLUGIN_LIB_INSTALL_DIR})
+ 
+ add_subdirectory(events)
+ 
+diff -r 13b71990d544 -r f0c77c4ef2bb plugins/events/CMakeLists.txt
+--- a/plugins/events/CMakeLists.txt
++++ b/plugins/events/CMakeLists.txt
+@@ -46,10 +46,16 @@
+ 
+ add_library(SimEventsPlugin SHARED ${sim_event_src})
+ target_link_libraries(SimEventsPlugin gazebo_physics gazebo_msgs)
+-install (TARGETS SimEventsPlugin DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++install (TARGETS SimEventsPlugin
++         LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+ gz_install_includes("plugins/events" ${sim_event_include})
+ 
+ add_library(RegionEventBoxPlugin SHARED ${src})
+ target_link_libraries(RegionEventBoxPlugin gazebo_physics gazebo_msgs)
+-install (TARGETS RegionEventBoxPlugin DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++install (TARGETS RegionEventBoxPlugin
++         LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+ gz_install_includes("plugins/events" ${inc})
+diff -r 13b71990d544 -r f0c77c4ef2bb plugins/rest_web/CMakeLists.txt
+--- a/plugins/rest_web/CMakeLists.txt
++++ b/plugins/rest_web/CMakeLists.txt
+@@ -42,10 +42,16 @@
+ 
+ add_library(RestWebPlugin SHARED ${server_src} )
+ target_link_libraries(RestWebPlugin ${GAZEBO_libraries} gazebo_msgs)
+-install (TARGETS RestWebPlugin DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++install (TARGETS RestWebPlugin
++         LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+ gz_install_includes("plugins" ${server_inc})
+ 
+ add_library(RestUiPlugin SHARED ${client_src} ${headers_MOC})
+ target_link_libraries(RestUiPlugin ${GAZEBO_libraries} gazebo_msgs)
+-install (TARGETS RestUiPlugin DESTINATION ${GAZEBO_PLUGIN_INSTALL_DIR})
++install (TARGETS RestUiPlugin
++         LIBRARY DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         ARCHIVE DESTINATION ${GAZEBO_PLUGIN_LIB_INSTALL_DIR}
++         RUNTIME DESTINATION ${GAZEBO_PLUGIN_BIN_INSTALL_DIR})
+ gz_install_includes("plugins" ${client_inc})

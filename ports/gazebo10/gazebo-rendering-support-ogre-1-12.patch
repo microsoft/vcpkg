@@ -1,0 +1,723 @@
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/gui/ModelSnap.cc
+--- a/gazebo/gui/ModelSnap.cc
++++ b/gazebo/gui/ModelSnap.cc
+@@ -416,7 +416,8 @@
+         this->dataPtr->snapHighlight =
+             this->dataPtr->highlightVisual->CreateDynamicLine(
+             rendering::RENDERING_TRIANGLE_FAN);
+-        this->dataPtr->snapHighlight->setMaterial("Gazebo/RedTransparent");
++        GZ_OGRE_SET_MATERIAL_BY_NAME(this->dataPtr->snapHighlight,
++            "Gazebo/RedTransparent");
+         this->dataPtr->snapHighlight->AddPoint(hoverTriangle[0]);
+         this->dataPtr->snapHighlight->AddPoint(hoverTriangle[1]);
+         this->dataPtr->snapHighlight->AddPoint(hoverTriangle[2]);
+@@ -480,7 +481,7 @@
+       this->dataPtr->snapLines =
+           this->dataPtr->snapVisual->CreateDynamicLine(
+           rendering::RENDERING_LINE_STRIP);
+-      this->dataPtr->snapLines->setMaterial("Gazebo/RedGlow");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(this->dataPtr->snapLines, "Gazebo/RedGlow");
+       this->dataPtr->snapLines->AddPoint(triangle[0]);
+       this->dataPtr->snapLines->AddPoint(triangle[1]);
+       this->dataPtr->snapLines->AddPoint(triangle[2]);
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/gui/model/JointMaker.cc
+--- a/gazebo/gui/model/JointMaker.cc
++++ b/gazebo/gui/model/JointMaker.cc
+@@ -506,7 +506,8 @@
+   jointData->parent = _parent;
+   jointData->line = jointLine;
+   jointData->type = this->dataPtr->jointType;
+-  jointData->line->setMaterial(this->jointMaterials[jointData->type]);
++  GZ_OGRE_SET_MATERIAL_BY_NAME(jointData->line,
++                               this->jointMaterials[jointData->type]);
+ 
+   return jointData;
+ }
+@@ -1221,7 +1222,7 @@
+   // Line
+   if (this->line)
+   {
+-    this->line->setMaterial(material);
++    GZ_OGRE_SET_MATERIAL_BY_NAME(this->line, material);
+ 
+     // Parent - child
+     if (this->child && this->jointVisual)
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/ApplyWrenchVisual.cc
+--- a/gazebo/rendering/ApplyWrenchVisual.cc
++++ b/gazebo/rendering/ApplyWrenchVisual.cc
+@@ -175,7 +175,7 @@
+   // Torque line
+   dPtr->torqueLine = dPtr->torqueVisual->
+       CreateDynamicLine(rendering::RENDERING_LINE_LIST);
+-  dPtr->torqueLine->setMaterial(dPtr->unselectedMaterial);
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->torqueLine, dPtr->unselectedMaterial);
+   dPtr->torqueLine->AddPoint(0, 0, 0);
+   dPtr->torqueLine->AddPoint(0, 0, 0.1);
+ 
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/COMVisual.cc
+--- a/gazebo/rendering/COMVisual.cc
++++ b/gazebo/rendering/COMVisual.cc
+@@ -183,7 +183,7 @@
+   p6 += dPtr->inertiaPose.Pos();
+ 
+   dPtr->crossLines = this->CreateDynamicLine(rendering::RENDERING_LINE_LIST);
+-  dPtr->crossLines->setMaterial("Gazebo/Green");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->crossLines, "Gazebo/Green");
+   dPtr->crossLines->AddPoint(p1);
+   dPtr->crossLines->AddPoint(p2);
+   dPtr->crossLines->AddPoint(p3);
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/Camera.cc
+--- a/gazebo/rendering/Camera.cc
++++ b/gazebo/rendering/Camera.cc
+@@ -1793,7 +1793,11 @@
+     box.setMinimum(bbox.Min().X(), bbox.Min().Y(), bbox.Min().Z());
+     box.setMaximum(bbox.Max().X(), bbox.Max().Y(), bbox.Max().Z());
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    box.transform(_visual->GetSceneNode()->_getFullTransform());
++#else
+     box.transformAffine(_visual->GetSceneNode()->_getFullTransform());
++#endif
+ 
+     // update cam node to ensure transform is update-to-date
+     this->cameraNode->_update(false, true);
+@@ -2020,15 +2024,27 @@
+ float Camera::AvgFPS() const
+ {
+   if (this->renderTarget)
++  {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    return this->renderTarget->getStatistics().avgFPS;
++#else
+     return this->renderTarget->getAverageFPS();
++#endif
++  }
+   else
++  {
+     return 0.0f;
++  }
+ }
+ 
+ //////////////////////////////////////////////////
+ unsigned int Camera::TriangleCount() const
+ {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++  return this->renderTarget->getStatistics().triangleCount;
++#else
+   return this->renderTarget->getTriangleCount();
++#endif
+ }
+ 
+ //////////////////////////////////////////////////
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/CameraVisual.cc
+--- a/gazebo/rendering/CameraVisual.cc
++++ b/gazebo/rendering/CameraVisual.cc
+@@ -114,7 +114,7 @@
+   line->AddPoint(ignition::math::Vector3d(0, 0, 0));
+   line->AddPoint(ignition::math::Vector3d(dist, width*0.5, -height*0.5));
+ 
+-  line->setMaterial("Gazebo/WhiteGlow");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(line, "Gazebo/WhiteGlow");
+   line->setVisibilityFlags(GZ_VISIBILITY_GUI);
+ 
+   this->AttachObject(planeEnt);
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/ContactVisual.cc
+--- a/gazebo/rendering/ContactVisual.cc
++++ b/gazebo/rendering/ContactVisual.cc
+@@ -120,8 +120,8 @@
+       dPtr->points[c]->normal->SetPoint(1, (normal*normalScale));
+       dPtr->points[c]->depth->SetPoint(1, (normal*-depth*10));
+ 
+-      dPtr->points[c]->normal->setMaterial("Gazebo/LightOn");
+-      dPtr->points[c]->depth->setMaterial("Gazebo/LightOff");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->points[c]->normal, "Gazebo/LightOn");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->points[c]->depth, "Gazebo/LightOff");
+       dPtr->points[c]->depth->Update();
+       dPtr->points[c]->normal->Update();
+       c++;
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/CustomPSSMShadowCameraSetup.cc
+--- a/gazebo/rendering/CustomPSSMShadowCameraSetup.cc
++++ b/gazebo/rendering/CustomPSSMShadowCameraSetup.cc
+@@ -64,11 +64,33 @@
+ //////////////////////////////////////////////////
+ bool CustomPSSM3::resolveParameters(Ogre::RTShader::ProgramSet *_programSet)
+ {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++  Ogre::RTShader::Program* vsProgram =
++      _programSet->getCpuProgram(Ogre::GPT_VERTEX_PROGRAM);
++  Ogre::RTShader::Program* psProgram =
++      _programSet->getCpuProgram(Ogre::GPT_FRAGMENT_PROGRAM);
++#else
+   Ogre::RTShader::Program* vsProgram = _programSet->getCpuVertexProgram();
+   Ogre::RTShader::Program* psProgram = _programSet->getCpuFragmentProgram();
++#endif
+   Ogre::RTShader::Function* vsMain = vsProgram->getEntryPointFunction();
+   Ogre::RTShader::Function* psMain = psProgram->getEntryPointFunction();
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 12
++  // getParameterBySemantic was deprecated in
++  // https://github.com/OGRECave/ogre/pull/930/files
++  // All the changes for OGRE 1.12 in this file were inspired
++  // by the modifications to the OgreShaderExIntegratedPSSM3.cpp
++  // in that PR
++
++  // Get input position parameter.
++  mVSInPos = vsMain->getInputParameter(
++      Ogre::RTShader::Parameter::SPC_POSITION_OBJECT_SPACE);
++
++  // Get output position parameter.
++  mVSOutPos = vsMain->getOutputParameter(
++      Ogre::RTShader::Parameter::SPC_POSITION_PROJECTIVE_SPACE);
++#else
+   // Get input position parameter.
+   mVSInPos = vsMain->getParameterBySemantic(vsMain->getInputParameters(),
+       Ogre::RTShader::Parameter::SPS_POSITION, 0);
+@@ -76,6 +98,7 @@
+   // Get output position parameter.
+   mVSOutPos = vsMain->getParameterBySemantic(vsMain->getOutputParameters(),
+       Ogre::RTShader::Parameter::SPS_POSITION, 0);
++#endif
+ 
+   // Resolve vertex shader output depth.
+   mVSOutDepth = vsMain->resolveOutputParameter(
+@@ -90,6 +113,17 @@
+       mVSOutDepth->getContent(),
+       Ogre::GCT_FLOAT1);
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 12
++  // Get in/local diffuse parameter.
++  mPSDiffuse = psMain->getInputParameter(
++      Ogre::RTShader::Parameter::SPC_COLOR_DIFFUSE);
++
++  if (mPSDiffuse.get() == NULL)
++  {
++    mPSDiffuse = psMain->getLocalParameter(
++        Ogre::RTShader::Parameter::SPC_COLOR_DIFFUSE);
++  }
++#else
+   // Get in/local diffuse parameter.
+   mPSDiffuse = psMain->getParameterBySemantic(psMain->getInputParameters(),
+       Ogre::RTShader::Parameter::SPS_COLOR, 0);
+@@ -99,12 +133,23 @@
+         psMain->getLocalParameters(), Ogre::RTShader::Parameter::SPS_COLOR,
+         0);
+   }
++#endif
+ 
+   // Resolve output diffuse parameter.
+   mPSOutDiffuse = psMain->resolveOutputParameter(
+       Ogre::RTShader::Parameter::SPS_COLOR, 0,
+       Ogre::RTShader::Parameter::SPC_COLOR_DIFFUSE, Ogre::GCT_FLOAT4);
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 12
++  // Get in/local specular parameter.
++  mPSSpecualr = psMain->getInputParameter(
++      Ogre::RTShader::Parameter::SPC_COLOR_SPECULAR);
++  if (mPSSpecualr.get() == nullptr)
++  {
++    mPSSpecualr = psMain->getLocalParameter(
++        Ogre::RTShader::Parameter::SPC_COLOR_SPECULAR);
++  }
++#else
+   // Get in/local specular parameter.
+   mPSSpecualr = psMain->getParameterBySemantic(
+       psMain->getInputParameters(), Ogre::RTShader::Parameter::SPS_COLOR,
+@@ -115,6 +160,7 @@
+         psMain->getLocalParameters(), Ogre::RTShader::Parameter::SPS_COLOR,
+         1);
+   }
++#endif
+ 
+   // Resolve computed local shadow colour parameter.
+   mPSLocalShadowFactor = psMain->resolveLocalParameter(
+@@ -126,8 +172,13 @@
+       (Ogre::uint16)Ogre::GPV_GLOBAL, "pssm_split_points");
+ 
+   // Get derived scene colour.
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 12
++  mPSDerivedSceneColour = psProgram->resolveParameter(
++      Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR, 0);
++#else
+   mPSDerivedSceneColour = psProgram->resolveAutoParameterInt(
+       Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR, 0);
++#endif
+ 
+   auto it = mShadowTextureParamsList.begin();
+   int lightIndex = 0;
+@@ -310,7 +361,12 @@
+     // generate projection matrix if requested
+     if (_outProj != nullptr)
+     {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++// Matrix4/Affine3 changes are due to https://github.com/OGRECave/ogre/pull/661
++      *_outProj = Ogre::Matrix4(Ogre::Affine3::getScale(1, 1, -1));
++#else
+       *_outProj = Ogre::Matrix4::getScale(1, 1, -1);
++#endif
+     }
+ 
+     // set up camera if requested
+@@ -461,7 +517,11 @@
+   // return the standard shadow mapping matrix
+   if (sceneBB.isNull())
+   {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    _texCam->setCustomViewMatrix(true, Ogre::Affine3(LView));
++#else
+     _texCam->setCustomViewMatrix(true, LView);
++#endif
+     _texCam->setCustomProjectionMatrix(true, LProj);
+     return;
+   }
+@@ -475,7 +535,11 @@
+   // simply return the standard shadow mapping matrix
+   if (mPointListBodyB.getPointCount() == 0)
+   {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    _texCam->setCustomViewMatrix(true, Ogre::Affine3(LView));
++#else
+     _texCam->setCustomViewMatrix(true, LView);
++#endif
+     _texCam->setCustomProjectionMatrix(true, LProj);
+     return;
+   }
+@@ -511,8 +575,12 @@
+   // LProj = msLightSpaceToNormal * LProj;
+ 
+   // set the two custom matrices
+-  _texCam->setCustomViewMatrix(true, LView);
+-  _texCam->setCustomProjectionMatrix(true, LProj);
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    _texCam->setCustomViewMatrix(true, Ogre::Affine3(LView));
++#else
++    _texCam->setCustomViewMatrix(true, LView);
++#endif
++    _texCam->setCustomProjectionMatrix(true, LProj);
+ }
+ 
+ //////////////////////////////////////////////////
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/Distortion.cc
+--- a/gazebo/rendering/Distortion.cc
++++ b/gazebo/rendering/Distortion.cc
+@@ -218,7 +218,17 @@
+   // fill the distortion map, while interpolating to fill dead pixels
+   pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL);
+   const Ogre::PixelBox &pixelBox = pixelBuffer->getCurrentLock();
++
++#if OGRE_VERSION_MAJOR > 1 || OGRE_VERSION_MINOR >= 11
++  // Ogre 1.11 changed Ogre::PixelBox::data from void* to uchar*, hence
++  // reinterpret_cast is required here. static_cast is not allowed between
++  // pointers of unrelated types (see, for instance, Standard ยง 3.9.1
++  // Fundamental types)
++  float *pDest = reinterpret_cast<float *>(pixelBox.data);
++#else
+   float *pDest = static_cast<float *>(pixelBox.data);
++#endif
++
+   for (unsigned int i = 0; i < this->dataPtr->distortionTexHeight; ++i)
+   {
+     for (unsigned int j = 0; j < this->dataPtr->distortionTexWidth; ++j)
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/InertiaVisual.cc
+--- a/gazebo/rendering/InertiaVisual.cc
++++ b/gazebo/rendering/InertiaVisual.cc
+@@ -104,7 +104,7 @@
+   p6 += _pose.Pos();
+ 
+   dPtr->crossLines = this->CreateDynamicLine(rendering::RENDERING_LINE_LIST);
+-  dPtr->crossLines->setMaterial("Gazebo/Green");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->crossLines, "Gazebo/Green");
+   dPtr->crossLines->AddPoint(p1);
+   dPtr->crossLines->AddPoint(p2);
+   dPtr->crossLines->AddPoint(p3);
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/LaserVisual.cc
+--- a/gazebo/rendering/LaserVisual.cc
++++ b/gazebo/rendering/LaserVisual.cc
+@@ -132,25 +132,27 @@
+       // intersected an object.
+       dPtr->rayStrips.push_back(
+           this->CreateDynamicLine(rendering::RENDERING_TRIANGLE_STRIP));
+-      dPtr->rayStrips[j]->setMaterial("Gazebo/BlueLaser");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->rayStrips[j], "Gazebo/BlueLaser");
+ 
+       // No hit ray strips fill in-between the ray lines in areas that have
+       // not intersected an object.
+       dPtr->noHitRayStrips.push_back(
+           this->CreateDynamicLine(rendering::RENDERING_TRIANGLE_STRIP));
+-      dPtr->noHitRayStrips[j]->setMaterial("Gazebo/LightBlueLaser");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->noHitRayStrips[j],
++          "Gazebo/LightBlueLaser");
+ 
+       // Deadzone ray fans display areas that are between the sensor's origin
+       // and start of the rays.
+       dPtr->deadzoneRayFans.push_back(
+           this->CreateDynamicLine(rendering::RENDERING_TRIANGLE_FAN));
+-      dPtr->deadzoneRayFans[j]->setMaterial("Gazebo/BlackTransparent");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->deadzoneRayFans[j],
++          "Gazebo/BlackTransparent");
+       dPtr->deadzoneRayFans[j]->AddPoint(ignition::math::Vector3d(0, 0, 0));
+ 
+       // Individual ray lines
+       dPtr->rayLines.push_back(
+           this->CreateDynamicLine(rendering::RENDERING_LINE_LIST));
+-      dPtr->rayLines[j]->setMaterial("Gazebo/BlueLaser");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->rayLines[j], "Gazebo/BlueLaser");
+ 
+       this->SetVisibilityFlags(GZ_VISIBILITY_GUI);
+     }
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/Light.cc
+--- a/gazebo/rendering/Light.cc
++++ b/gazebo/rendering/Light.cc
+@@ -219,7 +219,7 @@
+     this->dataPtr->line =
+         this->dataPtr->visual->CreateDynamicLine(RENDERING_LINE_LIST);
+ 
+-    this->dataPtr->line->setMaterial("Gazebo/LightOn");
++    GZ_OGRE_SET_MATERIAL_BY_NAME(this->dataPtr->line, "Gazebo/LightOn");
+ 
+     this->dataPtr->line->setVisibilityFlags(GZ_VISIBILITY_GUI);
+ 
+@@ -400,9 +400,9 @@
+   if (this->dataPtr->light->getType() != Ogre::Light::LT_DIRECTIONAL)
+   {
+     if (_s)
+-      this->dataPtr->line->setMaterial("Gazebo/PurpleGlow");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(this->dataPtr->line, "Gazebo/PurpleGlow");
+     else
+-      this->dataPtr->line->setMaterial("Gazebo/LightOn");
++      GZ_OGRE_SET_MATERIAL_BY_NAME(this->dataPtr->line, "Gazebo/LightOn");
+   }
+ 
+   return true;
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/LogicalCameraVisual.cc
+--- a/gazebo/rendering/LogicalCameraVisual.cc
++++ b/gazebo/rendering/LogicalCameraVisual.cc
+@@ -117,7 +117,8 @@
+   line->AddPoint(ignition::math::Vector3d(
+         _msg.far_clip(), farWidth, -farHeight));
+ 
+-  line->setMaterial("Gazebo/WhiteGlow");
++
++  GZ_OGRE_SET_MATERIAL_BY_NAME(line, "Gazebo/WhiteGlow");
+   line->setVisibilityFlags(GZ_VISIBILITY_GUI);
+ 
+   // Draw green lines from the near clipping plane to the origin
+@@ -138,7 +139,7 @@
+   sourceLine->AddPoint(ignition::math::Vector3d(
+         _msg.near_clip(), nearWidth, -nearHeight));
+ 
+-  sourceLine->setMaterial("Gazebo/PurpleGlow");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(sourceLine, "Gazebo/PurpleGlow");
+   sourceLine->setVisibilityFlags(GZ_VISIBILITY_GUI);
+ 
+   this->SetVisibilityFlags(GZ_VISIBILITY_GUI);
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/OriginVisual.cc
+--- a/gazebo/rendering/OriginVisual.cc
++++ b/gazebo/rendering/OriginVisual.cc
+@@ -54,19 +54,19 @@
+ 
+   dPtr->xLine = this->CreateDynamicLine(
+       rendering::RENDERING_LINE_LIST);
+-  dPtr->xLine->setMaterial("Gazebo/Red");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->xLine, "Gazebo/Red");
+   dPtr->xLine->AddPoint(ignition::math::Vector3d::Zero);
+   dPtr->xLine->AddPoint(ignition::math::Vector3d::UnitX*dPtr->length);
+ 
+   dPtr->yLine = this->CreateDynamicLine(
+       rendering::RENDERING_LINE_LIST);
+-  dPtr->yLine->setMaterial("Gazebo/Green");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->yLine, "Gazebo/Green");
+   dPtr->yLine->AddPoint(ignition::math::Vector3d::Zero);
+   dPtr->yLine->AddPoint(ignition::math::Vector3d::UnitY*dPtr->length);
+ 
+   dPtr->zLine = this->CreateDynamicLine(
+       rendering::RENDERING_LINE_LIST);
+-  dPtr->zLine->setMaterial("Gazebo/Blue");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->zLine, "Gazebo/Blue");
+   dPtr->zLine->AddPoint(ignition::math::Vector3d::Zero);
+   dPtr->zLine->AddPoint(ignition::math::Vector3d::UnitZ*dPtr->length);
+ 
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/RTShaderSystem.cc
+--- a/gazebo/rendering/RTShaderSystem.cc
++++ b/gazebo/rendering/RTShaderSystem.cc
+@@ -419,12 +419,19 @@
+     for (; it != itEnd; ++it)
+     {
+       struct stat st;
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++      if (stat((*it).archive->getName().c_str(), &st) == 0)
++      {
++        if ((*it).archive->getName().find("rtshaderlib") != Ogre::String::npos)
++        {
++          coreLibsPath = (*it).archive->getName() + "/";
++#else
+       if (stat((*it)->archive->getName().c_str(), &st) == 0)
+       {
+         if ((*it)->archive->getName().find("rtshaderlib") != Ogre::String::npos)
+         {
+           coreLibsPath = (*it)->archive->getName() + "/";
+-
++#endif
+           // setup patch name for rt shader cache in tmp
+           char *tmpdir;
+           char *user;
+@@ -562,7 +569,12 @@
+   // OGRE samples. They should be compared and tested.
+   // Set up caster material - this is just a standard depth/shadow map caster
+   // sceneMgr->setShadowTextureCasterMaterial("PSSM/shadow_caster");
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++  sceneMgr->setShadowTextureCasterMaterial(
++      Ogre::MaterialManager::getSingleton().getByName("Gazebo/shadow_caster"));
++#else
+   sceneMgr->setShadowTextureCasterMaterial("Gazebo/shadow_caster");
++#endif
+ 
+   // Disable fog on the caster pass.
+   //  Ogre::MaterialPtr passCaterMaterial =
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/RenderEngine.cc
+--- a/gazebo/rendering/RenderEngine.cc
++++ b/gazebo/rendering/RenderEngine.cc
+@@ -802,7 +802,13 @@
+   // int multiRenderTargetCount = capabilities->getNumMultiRenderTargets();
+ 
+   bool hasFBO =
+-    capabilities->hasCapability(Ogre::RSC_FBO);
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++  // All APIs targeted by OGRE supported this capability,
++  // see https://ogrecave.github.io/ogre/api/1.10/group___render_system.html#gga3d2965b7f378ebdcfe8a4a6cf74c3de7a8a0ececdc95122ac3063fc4f27d6402c
++  true;
++#else
++  capabilities->hasCapability(Ogre::RSC_FBO);
++#endif
+ 
+   bool hasGLSL =
+     std::find(profiles.begin(), profiles.end(), "glsl") != profiles.end();
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/Scene.cc
+--- a/gazebo/rendering/Scene.cc
++++ b/gazebo/rendering/Scene.cc
+@@ -3136,8 +3136,14 @@
+ #if OGRE_VERSION_MAJOR >= 1 && OGRE_VERSION_MINOR >= 8
+     this->dataPtr->manager->setShadowTechnique(
+         Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    this->dataPtr->manager->setShadowTextureCasterMaterial(
++        Ogre::MaterialManager::getSingleton().getByName(
++            "DeferredRendering/Shadows/RSMCaster_Spot"));
++#else
+     this->dataPtr->manager->setShadowTextureCasterMaterial(
+         "DeferredRendering/Shadows/RSMCaster_Spot");
++#endif
+     this->dataPtr->manager->setShadowTextureCount(1);
+     this->dataPtr->manager->setShadowFarDistance(150);
+     // Use a value of "2" to use a different depth buffer pool and
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/Scene.hh
+--- a/gazebo/rendering/Scene.hh
++++ b/gazebo/rendering/Scene.hh
+@@ -25,6 +25,8 @@
+ #include <boost/enable_shared_from_this.hpp>
+ #include <boost/shared_ptr.hpp>
+ 
++#include <OGRE/OgrePrerequisites.h>
++
+ #include <sdf/sdf.hh>
+ 
+ #include <ignition/math/Color.hh>
+@@ -44,16 +46,6 @@
+   class SkyX;
+ }
+ 
+-namespace Ogre
+-{
+-  class SceneManager;
+-  class Node;
+-  class Entity;
+-  class Mesh;
+-  class Vector3;
+-  class Quaternion;
+-}
+-
+ namespace gazebo
+ {
+   namespace rendering
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/SonarVisual.cc
+--- a/gazebo/rendering/SonarVisual.cc
++++ b/gazebo/rendering/SonarVisual.cc
+@@ -73,7 +73,7 @@
+       reinterpret_cast<SonarVisualPrivate *>(this->dataPtr);
+ 
+   dPtr->sonarRay = this->CreateDynamicLine(rendering::RENDERING_LINE_LIST);
+-  dPtr->sonarRay->setMaterial("Gazebo/RedGlow");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->sonarRay, "Gazebo/RedGlow");
+   dPtr->sonarRay->AddPoint(0, 0, 0);
+   dPtr->sonarRay->AddPoint(0, 0, 0);
+ 
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/TransmitterVisual.cc
+--- a/gazebo/rendering/TransmitterVisual.cc
++++ b/gazebo/rendering/TransmitterVisual.cc
+@@ -75,7 +75,7 @@
+   TransmitterVisualPrivate *dPtr =
+       reinterpret_cast<TransmitterVisualPrivate *>(this->dataPtr);
+   dPtr->points = this->CreateDynamicLine(rendering::RENDERING_POINT_LIST);
+-  dPtr->points->setMaterial("Gazebo/PointCloud");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->points, "Gazebo/PointCloud");
+ }
+ 
+ /////////////////////////////////////////////////
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/Visual.cc
+--- a/gazebo/rendering/Visual.cc
++++ b/gazebo/rendering/Visual.cc
+@@ -1092,7 +1092,8 @@
+         Ogre::SimpleRenderable *simpleRenderable =
+             dynamic_cast<Ogre::SimpleRenderable *>(obj);
+         if (simpleRenderable)
+-          simpleRenderable->setMaterial(this->dataPtr->myMaterialName);
++          GZ_OGRE_SET_MATERIAL_BY_NAME(simpleRenderable,
++              this->dataPtr->myMaterialName);
+       }
+     }
+   }
+@@ -2189,7 +2190,11 @@
+         transform[3][0] = transform[3][1] = transform[3][2] = 0;
+         transform[3][3] = 1;
+         // get oriented bounding box in object's local space
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++        bb.transform(transform);
++#else
+         bb.transformAffine(transform);
++#endif
+ 
+         min = Conversions::ConvertIgn(bb.getMinimum());
+         max = Conversions::ConvertIgn(bb.getMaximum());
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/WindowManager.cc
+--- a/gazebo/rendering/WindowManager.cc
++++ b/gazebo/rendering/WindowManager.cc
+@@ -188,9 +188,14 @@
+ 
+   if (_windowId < this->dataPtr->windows.size())
+   {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    auto stats = this->dataPtr->windows[_windowId]->getStatistics();
++    avgFPS = stats.avgFPS;
++#else
+     float lastFPS, bestFPS, worstFPS = 0;
+     this->dataPtr->windows[_windowId]->getStatistics(
+         lastFPS, avgFPS, bestFPS, worstFPS);
++#endif
+   }
+ 
+   return avgFPS;
+@@ -200,9 +205,18 @@
+ uint32_t WindowManager::TriangleCount(const uint32_t _windowId) const
+ {
+   if (_windowId < this->dataPtr->windows.size())
++  {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    auto stats = this->dataPtr->windows[_windowId]->getStatistics();
++    return stats.triangleCount;
++#else
+     return this->dataPtr->windows[_windowId]->getTriangleCount();
++#endif
++  }
+   else
++  {
+     return 0;
++  }
+ }
+ 
+ //////////////////////////////////////////////////
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/WireBox.cc
+--- a/gazebo/rendering/WireBox.cc
++++ b/gazebo/rendering/WireBox.cc
+@@ -28,7 +28,7 @@
+ {
+   this->dataPtr->parent = _parent;
+   this->dataPtr->lines = new DynamicLines(RENDERING_LINE_LIST);
+-  this->dataPtr->lines->setMaterial("BaseWhiteNoLighting");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(this->dataPtr->lines, "BaseWhiteNoLighting");
+   this->dataPtr->parent->AttachObject(this->dataPtr->lines);
+   this->dataPtr->lines->setVisibilityFlags(GZ_VISIBILITY_GUI);
+ 
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/WrenchVisual.cc
+--- a/gazebo/rendering/WrenchVisual.cc
++++ b/gazebo/rendering/WrenchVisual.cc
+@@ -150,7 +150,8 @@
+   dPtr->forceLine = dPtr->forceVisual->CreateDynamicLine(RENDERING_LINE_LIST);
+   dPtr->forceLine->AddPoint(ignition::math::Vector3d::Zero);
+   dPtr->forceLine->AddPoint(ignition::math::Vector3d(0, 0, 0.1));
+-  dPtr->forceLine->setMaterial("__GAZEBO_TRANS_PURPLE_MATERIAL__");
++  GZ_OGRE_SET_MATERIAL_BY_NAME(dPtr->forceLine,
++      "__GAZEBO_TRANS_PURPLE_MATERIAL__");
+ 
+   this->SetVisibilityFlags(GZ_VISIBILITY_GUI);
+ 
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/ogre_gazebo.h
+--- a/gazebo/rendering/ogre_gazebo.h
++++ b/gazebo/rendering/ogre_gazebo.h
+@@ -31,7 +31,6 @@
+ #include <OGRE/OgrePlugin.h>
+ #include <OGRE/OgreDataStream.h>
+ #include <OGRE/OgreLogManager.h>
+-#include <OGRE/OgreWindowEventUtilities.h>
+ #include <OGRE/OgreSceneQuery.h>
+ #include <OGRE/OgreRoot.h>
+ #include <OGRE/OgreSceneManager.h>
+@@ -83,4 +82,26 @@
+ #include <OGRE/OgreFontManager.h>
+ #endif
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
++// The  <OGRE/OgreWindowEventUtilities.h> header has always been included in
++// public headers for Gazebo <= 10, but was moved to the Bites component in
++// Ogre 1.11 (see  https://github.com/OGRECave/ogre/pull/647). As it is not
++// used at all in Gazebo, we can just include it for Ogre <= 1.10 to avoid
++// breaking transitive includes in downstream projects.
++// In Gazebo 11, this can be removed.
++#include <OGRE/OgreWindowEventUtilities.h>
+ #endif
++
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++#define GZ_OGRE_SET_MATERIAL_BY_NAME(ptr, name) \
++  (ptr)->setMaterial(Ogre::MaterialManager::getSingleton().getByName(name))
++#define GZ_OGRE_SET_MATERIAL_BY_NAME_UPPER(ptr, name) \
++  (ptr)->SetMaterial(Ogre::MaterialManager::getSingleton().getByName(name))
++#else
++#define GZ_OGRE_SET_MATERIAL_BY_NAME(ptr, name) \
++  (ptr)->setMaterial(name)
++#define GZ_OGRE_SET_MATERIAL_BY_NAME_UPPER(ptr, name) \
++  (ptr)->SetMaterial(name)
++#endif
++
++#endif
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/skyx/src/VClouds/DataManager.cpp
+--- a/gazebo/rendering/skyx/src/VClouds/DataManager.cpp
++++ b/gazebo/rendering/skyx/src/VClouds/DataManager.cpp
+@@ -682,7 +682,15 @@
+     buffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+     const Ogre::PixelBox &pb = buffer->getCurrentLock();
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++    // Ogre 1.11 changed Ogre::PixelBox::data from void* to uchar*, hence
++    // reinterpret_cast is required here. static_cast is not allowed between
++    // pointers of unrelated types (see, for instance, Standard ง 3.9.1
++    // Fundamental types).
++    Ogre::uint32 *pbptr = reinterpret_cast < Ogre::uint32*>(pb.data);
++#else
+     Ogre::uint32 *pbptr = static_cast < Ogre::uint32*>(pb.data);
++#endif
+     size_t x, y, z;
+ 
+     for (z = pb.front; z < pb.back; z++)
+diff -r 7c4281fe1229 -r bdc1dc86f080 gazebo/rendering/skyx/src/VClouds/LightningManager.cpp
+--- a/gazebo/rendering/skyx/src/VClouds/LightningManager.cpp
++++ b/gazebo/rendering/skyx/src/VClouds/LightningManager.cpp
+@@ -283,7 +283,11 @@
+       if (k < mLightnings.size())
+       {
+         pos = mVClouds->getGeometryManager()->getSceneNode()->
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++          _getFullTransform().inverse() *
++#else
+           _getFullTransform().inverseAffine() *
++#endif
+           mSceneNodes.at(k)->_getDerivedPosition();
+ 
+         mVolCloudsLightningMaterial->

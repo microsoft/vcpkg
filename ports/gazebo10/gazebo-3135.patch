@@ -1,0 +1,34 @@
+diff -r 783ca3ec62b8 -r ed9e0e54dc86 cmake/SearchForStuff.cmake
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -312,13 +312,23 @@
+     message(STATUS "TBB not found, attempting to detect manually")
+     set (TBB_PKG_CONFIG "")
+ 
+-    find_library(tbb_library tbb ENV LD_LIBRARY_PATH)
+-    if (tbb_library)
+-      set(TBB_FOUND true)
+-      set(TBB_LIBRARIES ${tbb_library})
+-    else (tbb_library)
+-      BUILD_ERROR ("Missing: TBB - Threading Building Blocks")
+-    endif(tbb_library)
++    # Workaround for CMake bug https://gitlab.kitware.com/cmake/cmake/issues/17135
++    unset(TBB_FOUND CACHE)
++
++    find_package(TBB CONFIG)
++    if (TBB_FOUND)
++      set(TBB_LIBRARIES TBB::tbb)
++    endif()
++
++    if (NOT TBB_FOUND)
++      find_library(tbb_library tbb ENV LD_LIBRARY_PATH)
++      if (tbb_library)
++        set(TBB_FOUND true)
++        set(TBB_LIBRARIES ${tbb_library})
++      else (tbb_library)
++        BUILD_ERROR ("Missing: TBB - Threading Building Blocks")
++      endif(tbb_library)
++    endif (NOT TBB_FOUND)
+   endif (NOT TBB_FOUND)
+ 
+   #################################################

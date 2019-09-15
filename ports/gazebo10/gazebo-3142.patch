@@ -1,0 +1,27 @@
+diff -r 783ca3ec62b8 -r e94dd55a2a26 gazebo/rendering/deferred_shading/GBufferMaterialGenerator.cc
+--- a/gazebo/rendering/deferred_shading/GBufferMaterialGenerator.cc
++++ b/gazebo/rendering/deferred_shading/GBufferMaterialGenerator.cc
+@@ -255,9 +255,6 @@
+   Ogre::String programName = this->baseName + "FP_" +
+                              Ogre::StringConverter::toString(_permutation);
+ 
+-#if OGRE_DEBUG_MODE
+-  Ogre::LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
+-#endif
+ 
+   // Create shader object
+   Ogre::HighLevelGpuProgramPtr ptrProgram =
+diff -r 783ca3ec62b8 -r e94dd55a2a26 gazebo/rendering/deferred_shading/MergeMaterialGenerator.cc
+--- a/gazebo/rendering/deferred_shading/MergeMaterialGenerator.cc
++++ b/gazebo/rendering/deferred_shading/MergeMaterialGenerator.cc
+@@ -289,10 +289,6 @@
+   Ogre::String programName = this->baseName + "FP_" +
+     Ogre::StringConverter::toString(_permutation);
+ 
+-#if OGRE_DEBUG_MODE
+-  Ogre::LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
+-#endif
+-
+   // Create shader object
+   Ogre::HighLevelGpuProgramPtr ptrProgram =
+     Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(

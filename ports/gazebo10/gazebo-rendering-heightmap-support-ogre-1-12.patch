@@ -1,0 +1,163 @@
+# HG changeset patch
+# User Silvio Traversaro <silvio@traversaro.it>
+# Date 1569227706 -7200
+# Branch ogre_1_12_heightmap
+# Node ID 152a77d545b2e51cf7809760558578df36331b52
+# Parent  c28f9609823b3d7d7b1aef37fd7ebe1445e1418c
+Change HeightMap class to compile with Ogre 1.11/1.12
+
+diff --git a/gazebo/rendering/Heightmap.cc b/gazebo/rendering/Heightmap.cc
+--- a/gazebo/rendering/Heightmap.cc
++++ b/gazebo/rendering/Heightmap.cc
+@@ -53,6 +53,13 @@
+ using namespace gazebo;
+ using namespace rendering;
+ 
++#if OGRE_VERSION_MAJOR > 1 || OGRE_VERSION_MINOR >= 11
++using Ogre::TechniqueType;
++using Ogre::HIGH_LOD;
++using Ogre::RENDER_COMPOSITE_MAP;
++using Ogre::LOW_LOD;
++#endif
++
+ const double HeightmapPrivate::loadRadiusFactor = 1.0;
+ const double HeightmapPrivate::holdRadiusFactor = 1.15;
+ const boost::filesystem::path HeightmapPrivate::pagingDirname = "paging";
+@@ -1163,8 +1170,13 @@
+   Ogre::TerrainMaterialGeneratorPtr matGen =
+       this->dataPtr->terrainGlobals->getDefaultMaterialGenerator();
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
+   matProfile = static_cast<GzTerrainMatGen::SM2Profile*>(
+       matGen->getActiveProfile());
++#else
++  matProfile = static_cast<Ogre::TerrainMaterialGeneratorA::SM2Profile*>(
++      matGen->getActiveProfile());
++#endif
+   if (!matProfile)
+   {
+     // using custom material script so ignore setting shadows
+@@ -1270,6 +1282,7 @@
+   }
+   else
+   {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
+     // use default material
+     // RTSS PSSM shadows compatible terrain material
+     if (!this->dataPtr->gzMatGen)
+@@ -1279,6 +1292,16 @@
+     ptr.bind(this->dataPtr->gzMatGen);
+ 
+     this->dataPtr->terrainGlobals->setDefaultMaterialGenerator(ptr);
++#else
++    // init custom material generator
++    Ogre::TerrainMaterialGeneratorPtr terrainMaterialGenerator;
++    TerrainMaterial *terrainMaterial = OGRE_NEW TerrainMaterial("Gazebo/Grey");
++    if (this->dataPtr->splitTerrain)
++      terrainMaterial->setGridSize(this->dataPtr->numTerrainSubdivisions);
++    terrainMaterialGenerator.bind(terrainMaterial);
++    this->dataPtr->terrainGlobals->setDefaultMaterialGenerator(
++        terrainMaterialGenerator);
++#endif
+ 
+     this->SetupShadows(true);
+   }
+@@ -1296,6 +1319,7 @@
+ /////////////////////////////////////////////////
+ /////////////////////////////////////////////////
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
+ 
+ /////////////////////////////////////////////////
+ GzTerrainMatGen::GzTerrainMatGen()
+@@ -1376,10 +1400,11 @@
+     // }
+ 
+     // check SM3 features
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 8
+     this->mSM3Available =
+       Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("ps_3_0");
+-
+-#if OGRE_VERSION_MAJOR >= 1 && OGRE_VERSION_MINOR >= 8
++#endif
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 8 && OGRE_VERSION_MINOR <= 11
+     this->mSM4Available =
+       Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("ps_4_0");
+ #endif
+@@ -1608,6 +1633,7 @@
+ void GzTerrainMatGen::SM2Profile::UpdateParamsForCompositeMap(
+     const Ogre::MaterialPtr &_mat, const Ogre::Terrain *_terrain)
+ {
++  // Only tested for Ogre 1.11 & 1.12
+   static_cast<GzTerrainMatGen::SM2Profile::ShaderHelperGLSL*>(
+       this->mShaderGen)->updateParams(this, _mat, _terrain, true);
+ }
+@@ -3221,6 +3247,9 @@
+   return ret;
+ }
+ 
++// #if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
++#endif
++
+ /////////////////////////////////////////////////
+ /////////////////////////////////////////////////
+ // TerrainMaterial
+diff --git a/gazebo/rendering/HeightmapPrivate.hh b/gazebo/rendering/HeightmapPrivate.hh
+--- a/gazebo/rendering/HeightmapPrivate.hh
++++ b/gazebo/rendering/HeightmapPrivate.hh
+@@ -25,6 +25,19 @@
+ 
+ #include "gazebo/rendering/RenderTypes.hh"
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR >= 11
++// Since OGRE 1.11, the once public Ogre::TerrainMaterialGeneratorA::SM2Profile::ShaderHelper
++// class and its descentent are now private classes of OGRE, see
++// * https://github.com/OGRECave/ogre/blob/master/Docs/1.11-Notes.md#other
++// * https://github.com/OGRECave/ogre/pull/722/commits/88d6903a0b6e3d47d477f2a18ea755804f990a2f
++//
++// As these classes are heavily used in the  Heightmap class implementation
++// (by accessing a protected Ogre class) we need to disable the definition of the custom terrain  generator,
++// and just use the Ogre default one.
++using Ogre::TechniqueType;
++#endif
++
++
+ namespace Ogre
+ {
+   class PageManager;
+@@ -43,6 +56,7 @@
+ 
+   namespace rendering
+   {
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
+     /// \internal
+     /// \brief Custom terrain material generator for GLSL terrains.
+     /// A custom material generator that lets Gazebo use GLSL shaders
+@@ -184,6 +198,7 @@
+         /// Original implementation from Ogre that generates Cg shaders
+         protected: class ShaderHelperCg :
+             public Ogre::TerrainMaterialGeneratorA::SM2Profile::ShaderHelperCg
++
+         {
+           public: virtual Ogre::HighLevelGpuProgramPtr generateFragmentProgram(
+                       const SM2Profile *_prof, const Ogre::Terrain *_terrain,
+@@ -232,6 +247,8 @@
+ #endif
+       };
+     };
++// #if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
++#endif
+ 
+     /// \internal
+     /// \brief Custom terrain material generator.
+@@ -405,8 +422,10 @@
+       /// \brief The raw height values received from physics.
+       public: std::vector<float> heights;
+ 
++#if OGRE_VERSION_MAJOR == 1 && OGRE_VERSION_MINOR < 11
+       /// \brief Pointer to the terrain material generator.
+       public: GzTerrainMatGen *gzMatGen = nullptr;
++#endif
+ 
+       /// \brief A page provider is needed to use the paging system.
+       public: DummyPageProvider dummyPageProvider;

@@ -1,0 +1,14 @@
+diff -r 783ca3ec62b8 -r d1dc82f1cf81 deps/opende/CMakeLists.txt
+--- a/deps/opende/CMakeLists.txt
++++ b/deps/opende/CMakeLists.txt
+@@ -269,7 +269,9 @@
+   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWIN32 -DODE_DLL")
+ endif()
+ 
+-set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_LINK_FLAGS_${CMAKE_BUILD_TYPE}} -MF -MT -fno-strict-aliasing -DPIC ")
++if (NOT MSVC)
++  set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_LINK_FLAGS_${CMAKE_BUILD_TYPE}} -MF -MT -fno-strict-aliasing -DPIC ")
++endif()
+ 
+ if (WIN32)
+   add_library(gazebo_ode SHARED ${sources})
