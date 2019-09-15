@@ -15,7 +15,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DINSTALL_CMAKE_DIR="share/yaml"
+        -DINSTALL_CMAKE_DIR=share/yaml
 )
 
 vcpkg_install_cmake()
