@@ -27,14 +27,12 @@ get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
-		vcpkg_download_distfile(GET_PIP
-			URLS "https://github.com/pypa/get-pip/archive/309a56c5fd94bd1134053a541cb4657a4e47e09d.tar.gz"
-			FILENAME "get-pip.tar.gz"
-			SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a 
-		)
-		vcpkg_extract_source_archive_ex(
-			ARCHIVE ${GET_PIP}
+		vcpkg_from_github(
 			OUT_SOURCE_PATH PYFILE_PATH
+			REPO pypa/get-pip
+			REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+			SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+			HEAD_REF master
 		)
 		execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py)
     endif()
