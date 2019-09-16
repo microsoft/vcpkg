@@ -8,9 +8,8 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/base/work_queue.h>
 
-#if defined(__linux__) || defined(__APPLE__)
+#if !defined(_WIN32)
 #include <fcntl.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -396,7 +395,7 @@ namespace vcpkg::Files
         {
             this->rename(oldpath, newpath, ec);
             Util::unused(temp_suffix);
-#if defined(__linux__) || defined(__APPLE__)
+#if !defined(_WIN32)
             if (ec)
             {
                 auto dst = newpath;
@@ -419,6 +418,33 @@ namespace vcpkg::Files
                 auto written_bytes = sendfile(o_fd, i_fd, &bytes, info.st_size);
 #elif defined(__APPLE__)
                 auto written_bytes = fcopyfile(i_fd, o_fd, 0, COPYFILE_ALL);
+#else
+                ssize_t written_bytes = 0;
+                {
+                    constexpr std::size_t buffer_length = 4096;
+                    auto buffer = std::make_unique<unsigned char[]>(buffer_length);
+                    while (auto read_bytes = read(i_fd, buffer.get(), buffer_length))
+                    {
+                        if (read_bytes == -1)
+                        {
+                            written_bytes = -1;
+                            break;
+                        }
+                        auto remaining = read_bytes;
+                        while (remaining > 0) {
+                            auto read_result = write(o_fd, buffer.get(), remaining);
+                            if (read_result == -1)
+                            {
+                                written_bytes = -1;
+                                // break two loops
+                                goto copy_failure;
+                            }
+                            remaining -= read_result;
+                        }
+                    }
+
+                    copy_failure: ;
+                }
 #endif
                 if (written_bytes == -1)
                 {

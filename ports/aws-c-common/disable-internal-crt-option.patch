@@ -1,11 +1,12 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index 5ceb11c..9d0aa12 100644
+index 0f597d7..1359b8b 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
-@@ -38,15 +38,6 @@ function(aws_set_common_properties target)
-         # Disable unknown pragma warnings
-         list(APPEND AWS_C_FLAGS /wd4068)
- 
+@@ -35,15 +35,6 @@ function(aws_set_common_properties target)
+         # /volatile:iso relaxes some implicit memory barriers that MSVC normally applies for volatile accesses
+         # Since we want to be compatible with user builds using /volatile:iso, use it for the tests.
+         list(APPEND AWS_C_FLAGS /volatile:iso)
+-        
 -        string(TOUPPER "${CMAKE_BUILD_TYPE}" _CMAKE_BUILD_TYPE)
 -        if(STATIC_CRT)
 -            string(REPLACE "/MD" "/MT" _FLAGS "${CMAKE_C_FLAGS_${_CMAKE_BUILD_TYPE}}")
@@ -14,7 +15,6 @@ index 5ceb11c..9d0aa12 100644
 -        endif()
 -        string(REPLACE " " ";" _FLAGS "${_FLAGS}")
 -        list(APPEND AWS_C_FLAGS "${_FLAGS}")
--
+ 
      else()
          list(APPEND AWS_C_FLAGS -Wall -Werror -Wstrict-prototypes)
- 

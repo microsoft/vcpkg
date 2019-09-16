@@ -73,6 +73,7 @@ namespace vcpkg::Export
         static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
