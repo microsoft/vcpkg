@@ -1,5 +1,5 @@
 Source: directx-shader-compiler
-Version: 2019-08-27
+Version: 1.4.1907
 Homepage: https://github.com/microsoft/DirectXShaderCompiler
 Description: DirectX Shader Compiler project
 Build-Depends: spirv-headers, spirv-tools
