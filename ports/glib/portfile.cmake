@@ -33,7 +33,7 @@ file(WRITE ${SOURCE_PATH}/glib/pcre/Makefile.in)
 file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
 
 if (selinux IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
-    message("selinux may not found. You can install them with \"apt-get install selinux\".")
+    message("Selinux was not found in its typical system location. Your build may fail. You can install Selinux with \"apt-get install selinux\".")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
