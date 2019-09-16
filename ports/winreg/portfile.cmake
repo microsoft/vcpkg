@@ -2,6 +2,10 @@
 
 include(vcpkg_common_functions)
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    message("winreg only support windows.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GiovanniDicanio/WinReg
