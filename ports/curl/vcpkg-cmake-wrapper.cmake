@@ -1,4 +1,14 @@
-if (${ARGS} MATCHES "CONFIG|NO_MODULE")
+set (FOUND_CONFIG FALSE)
+
+foreach (ARG ${ARGS})
+    string (TOUPPER "${ARG}" ARG)
+
+    if (${ARG} STREQUAL "CONFIG" OR ${ARG} STREQUAL "NO_MODULE")
+        set (FOUND_CONFIG TRUE)
+    endif()
+endforeach()
+
+if (FOUND_CONFIG)
     _find_package(${ARGS})
 else()
     _find_package(${ARGS} CONFIG)
