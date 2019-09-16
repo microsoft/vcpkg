@@ -185,6 +185,8 @@ else()
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
+file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl)
+
 vcpkg_copy_pdbs()
 
 vcpkg_test_cmake(PACKAGE_NAME CURL)

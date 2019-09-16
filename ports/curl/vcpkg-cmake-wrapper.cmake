@@ -1,4 +1,8 @@
-_find_package(${ARGS} CONFIG)
+if (${ARGS} MATCHES "CONFIG|NO_MODULE")
+    _find_package(${ARGS})
+else()
+    _find_package(${ARGS} CONFIG)
+endif()
 
 if(TARGET CURL::libcurl)
 	get_target_property(_curl_include_dirs CURL::libcurl INTERFACE_INCLUDE_DIRECTORIES)
