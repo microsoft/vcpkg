@@ -2,6 +2,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
 #Basic setup
 include(qt_port_hashes)
+include(qt_port_hashes_latest OPTIONAL)
 #Fixup scripts
 include(qt_fix_makefile_install)
 include(qt_fix_cmake)

@@ -3,6 +3,10 @@ vcpkg_buildpath_length_warning(37)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
+if("latest" IN_LIST FEATURES)
+  set(QT_BUILD_LATEST ON)
+endif()
+
 include(qt_port_functions)
 include(configure_qt)
 include(install_qt)
@@ -269,3 +273,11 @@ file(COPY
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
 )
+
+if(QT_BUILD_LATEST)
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/qt5
+)
+endif()
