@@ -72,28 +72,21 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(CMAKE_HOST_WIN32)
-        set(_PATHSEP ";")
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
         else()
             set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
         endif()
-    else()
-        set(_PATHSEP ":")
     endif()
 
     set(NINJA_CAN_BE_USED ON) # Ninja as generator
     set(NINJA_HOST ON) # Ninja as parallel configurator
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(_TARGETTING_UWP 1)
-    endif()
-
     if(_csc_HOST_ARCHITECTURE STREQUAL "x86")
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(NINJA_CAN_BE_USED OFF)
         set(NINJA_HOST OFF)
-    elseif(_TARGETTING_UWP)
+    elseif(VCPKG_TARGET_IS_UWP)
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(NINJA_CAN_BE_USED OFF)
     endif()
@@ -102,9 +95,8 @@ function(vcpkg_configure_cmake)
         set(GENERATOR ${_csc_GENERATOR})
     elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
-    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT _TARGETTING_UWP))
+    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR NOT VCPKG_TARGET_IS_WINDOWS)
         set(GENERATOR "Ninja")
-
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
         set(GENERATOR "Visual Studio 12 2013")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
@@ -154,7 +146,7 @@ function(vcpkg_configure_cmake)
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        vcpkg_add_to_path("${NINJA_PATH}")
         list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -162,7 +154,8 @@ function(vcpkg_configure_cmake)
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
-        if(_TARGETTING_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+        if(VCPKG_TARGET_IS_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+            message(WARNING "UWP triplet is missing VCPKG_CMAKE_SYSTEM_VERSION. Setting it to 10.0")
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
         endif()
     endif()
@@ -197,16 +190,18 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR _TARGETTING_UWP)
+        if(VCPKG_TARGET_IS_WINDOWS)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        elseif(VCPKG_TARGET_IS_LINUX)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+        elseif(VCPKG_TARGET_IS_ANDROID)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        elseif(VCPKG_TARGET_IS_OSX)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+        elseif(VCPKG_TARGET_IS_FREEBSD)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        else()
+            message(STATUS "Unknown VCPKG target. No VCPKG_CHAINLOAD_TOOLCHAIN_FILE set!")
         endif()
     endif()
 
@@ -250,74 +245,51 @@ function(vcpkg_configure_cmake)
         endif()
     endforeach()
 
-    set(rel_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
-        -G ${GENERATOR}
-        -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR})
-    set(dbg_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
-        -G ${GENERATOR}
-        -DCMAKE_BUILD_TYPE=Debug
-        -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
+    foreach(buildtype ${VCPKG_BUILD_LIST})
+        set(${VCPKG_BUILD_SHORT_NAME_${buildtype}}_command
+            ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_${buildtype}}"
+            -G ${GENERATOR}
+            -DCMAKE_BUILD_TYPE=${VCPKG_BUILD_CMAKE_TYPE_${buildtype}}
+            -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}${VCPKG_PATH_SUFFIX_${buildtype}})
+    endforeach()
 
     if(NINJA_HOST AND CMAKE_HOST_WIN32 AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        vcpkg_add_to_path("${NINJA_PATH}")
 
         #parallelize the configure step
         set(_contents
             "rule CreateProcess\n  command = $process\n\n"
         )
-
-        macro(_build_cmakecache whereat build_type)
-            set(${build_type}_line "build ${whereat}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ${whereat} &&")
-            foreach(arg ${${build_type}_command})
-                set(${build_type}_line "${${build_type}_line} \"${arg}\"")
+        foreach(buildtype ${VCPKG_BUILD_LIST})
+            set(buildshort ${VCPKG_BUILD_SHORT_NAME_${buildtype}})
+            set(${buildtype}_line "build ../${TARGET_TRIPLET}-${buildshort}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ../${TARGET_TRIPLET}-${buildshort} &&")
+            foreach(arg ${buildshort}_command})
+                set(${buildtype}_line "${${buildtype}_line} \"${arg}\"")
             endforeach()
-            set(_contents "${_contents}${${build_type}_line}\"\n\n")
-        endmacro()
-
-        if(NOT DEFINED VCPKG_BUILD_TYPE)
-            _build_cmakecache(".." "rel")
-            _build_cmakecache("../../${TARGET_TRIPLET}-dbg" "dbg")
-        elseif(VCPKG_BUILD_TYPE STREQUAL "release")
-            _build_cmakecache(".." "rel")
-        elseif(VCPKG_BUILD_TYPE STREQUAL "debug")
-            _build_cmakecache("../../${TARGET_TRIPLET}-dbg" "dbg")
-        endif()
-
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure)
-        file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
+            set(_contents "${_contents}${${buildtype}_line}\"\n\n")
+        endforeach()
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/vcpkg-parallel-configure)
+        file(WRITE ${CURRENT_BUILDTREES_DIR}/vcpkg-parallel-configure/build.ninja "${_contents}")
 
         message(STATUS "Configuring ${TARGET_TRIPLET}")
         vcpkg_execute_required_process(
             COMMAND ninja -v
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/vcpkg-parallel-configure
             LOGNAME config-${TARGET_TRIPLET}
         )
     else()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        foreach(buildtype ${VCPKG_BUILD_LIST})
+            message(STATUS "Configuring ${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}})
             vcpkg_execute_required_process(
-                COMMAND ${dbg_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-                LOGNAME config-${TARGET_TRIPLET}-dbg
+                COMMAND ${${VCPKG_BUILD_SHORT_NAME_${buildtype}}_command}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}
+                LOGNAME config-${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}
             )
-        endif()
-
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-            vcpkg_execute_required_process(
-                COMMAND ${rel_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-                LOGNAME config-${TARGET_TRIPLET}-rel
-            )
-        endif()
+        endforeach()
     endif()
 
     set(_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
