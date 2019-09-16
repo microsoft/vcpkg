@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         move-cmake-min-req.patch
         fix-config.patch
+        fix-transparency.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

@@ -1,0 +1,14 @@
+diff --git a/src/win32_window.c b/src/win32_window.c
+index 4506c8a7..8f3e60f3 100644
+--- a/src/win32_window.c
++++ b/src/win32_window.c
+@@ -339,8 +339,7 @@ static void updateFramebufferTransparency(const _GLFWwindow* window)
+             // Using a color key not equal to black to fix the trailing
+             // issue.  When set to black, something is making the hit test
+             // not resize with the window frame.
+-            SetLayeredWindowAttributes(window->win32.handle,
+-                                       RGB(0, 193, 48), 255, LWA_COLORKEY);
++            SetLayeredWindowAttributes(window->win32.handle, 0, 254, LWA_ALPHA);
+         }
+ 
+         DeleteObject(region);
