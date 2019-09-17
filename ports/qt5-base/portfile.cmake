@@ -273,9 +273,9 @@ file(COPY
 )
 
 if(QT_BUILD_LATEST)
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/qt5
-)
+    file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/share/qt5
+    )
 endif()
