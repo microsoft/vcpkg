@@ -50,6 +50,7 @@ vcpkg_from_github(
         fix-pugixml-link.patch
         hdf5_static.patch
         fix-find-lzma.patch
+        fix-proj4.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
