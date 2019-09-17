@@ -247,9 +247,7 @@ else()
         WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
         LOGNAME fix-cmake
     )
-
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
-
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
         file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
