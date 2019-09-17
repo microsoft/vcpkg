@@ -15,12 +15,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-BuildError.patch
 )
 
-set(PROJ4_DIR ${CURRENT_INSTALLED_DIR}/share/proj4)
-find_library(PROJ_LIBRARY_REL NAMES proj PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
-find_library(PROJ_LIBRARY_DBG NAMES proj_d PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
-find_library(SQLITE3_LIBRARY_REL NAMES sqlite3 PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
-find_library(SQLITE3_LIBRARY_DBG NAMES sqlite3 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
-file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake) # remove outdated module. There are probably more
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -32,12 +28,6 @@ vcpkg_configure_cmake(
 	-DWITH_UTILITIES=OFF
 	-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 	-DCMAKE_DISABLE_FIND_PACKAGE_JPEG=${CMAKE_DISABLE_FIND_PACKAGE_JPEG}
-  OPTIONS_DEBUG
-    -DPROJ4_LIBRARIES=${PROJ_LIBRARY_DBG}
-    -DSQLITE3_LIBRARIES=${SQLITE3_LIBRARY_DBG}
-  OPTIONS_RELEASE
-    -DPROJ4_LIBRARIES=${PROJ_LIBRARY_REL}
-    -DSQLITE3_LIBRARIES=${SQLITE3_LIBRARY_REL}
 )
 
 vcpkg_install_cmake()

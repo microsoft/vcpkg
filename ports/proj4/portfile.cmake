@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
         fix-linux-build.patch
-        disable-export-namespace.patch # Since PROJ4::proj cannot be used, disable export namespace.
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
