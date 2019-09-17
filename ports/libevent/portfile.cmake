@@ -11,6 +11,7 @@ vcpkg_from_github(
     SHA512 a34ca4ad4d55a989a4f485f929d0ed2438d070d0e12a19d90c2b12783a562419c64db6a2603b093d958a75246d14ffefc8730c69c90b1b2f48339bde947f0e02
     PATCHES
         fix-file_path.patch
+        fix-crt_linkage.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
