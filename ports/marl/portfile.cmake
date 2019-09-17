@@ -9,8 +9,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/marl
-    REF a2918916e74a929a881b18983a3a50e53aa9e1c2
-    SHA512 7765f79066e27ba8ad656db4a3a3623d5e9e6c3784b22d53ae4b9450d351bcb7b1f08f2ca8387c80b48b9f4dd7b0fb48a69914d3afa683fb20f0c236353337ff
+    REF bf3e23083979c3bd3de1c77346b655eec423b3bc
+    SHA512 8c85b9a2b7e3cb397fc11c4bf32c5f62d4113ab6af92861c93472299f1b9296edef4dd8d1eb24db242fe55b52f33d2e058a4ce91fbaa793ffa4d5f4c8e336251
     HEAD_REF master
 )
 
@@ -23,11 +23,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
