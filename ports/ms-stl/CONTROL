@@ -1,0 +1,5 @@
+Source: ms-stl
+Version: 2019-09-17
+Homepage: https://github.com/microsoft/STL
+Build-Depends: boost
+Description: Microsoft's C++ Standard Library

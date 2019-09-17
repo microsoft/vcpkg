@@ -1,0 +1,71 @@
+diff --git a/stl/CMakeLists.txt b/stl/CMakeLists.txt
+index c409cea89..034984aa3 100644
+--- a/stl/CMakeLists.txt	
++++ b/stl/CMakeLists.txt
+@@ -402,6 +402,8 @@ include_directories(BEFORE
+     "${TOOLSET_ROOT_DIR}/crt/src/vcruntime"
+     )
+ 
++include(GNUInstallDirs)
++
+ function(add_stl_dlls D_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIONS GL_FLAG THIS_CONFIG_LINK_OPTIONS)
+     # msvcp140.dll
+     add_library(msvcp${D_SUFFIX}_objects OBJECT ${DLL_SOURCES} ${SOURCES})
+@@ -467,10 +469,24 @@ function(add_stl_dlls D_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIO
+     add_dependencies(msvcp${D_SUFFIX}_implib msvcp${D_SUFFIX} msvcp_1${D_SUFFIX} msvcp_2${D_SUFFIX} msvcp${D_SUFFIX}_codecvt_ids)
+     set_target_properties(msvcp${D_SUFFIX}_implib PROPERTIES STATIC_LIBRARY_OPTIONS "/NOLOGO;/NODEFAULTLIB;/IGNORE:4006;$<TARGET_LINKER_FILE:msvcp${D_SUFFIX}>;$<TARGET_LINKER_FILE:msvcp_1${D_SUFFIX}>;$<TARGET_LINKER_FILE:msvcp_2${D_SUFFIX}>;$<TARGET_LINKER_FILE:msvcp${D_SUFFIX}_codecvt_ids>")
+     set_target_properties(msvcp${D_SUFFIX}_implib PROPERTIES ARCHIVE_OUTPUT_NAME "msvcprt${D_SUFFIX}")
++    
++    install (TARGETS msvcp${D_SUFFIX}_implib msvcp${D_SUFFIX}_implib_objects EXPORT ms-stl-config
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Runtime
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Development
++        OBJECTS DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl/obj" COMPONENT Development
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl" COMPONENT Development
++        BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime)
++    export(EXPORT ms-stl-config NAMESPACE microsoft:: FILE ms-stl-config.cmake)
++    install(EXPORT ms-stl-config NAMESPACE microsoft:: DESTINATION "share/ms-stl")
++
+ endfunction()
+ 
+-add_stl_dlls("" "" "${VCLIBS_RELEASE_OPTIONS}" "/GL" "/LTCG;/opt:ref,icf")
+-add_stl_dlls("d" "_DEBUG" "${VCLIBS_DEBUG_OPTIONS}" "" "/opt:ref,noicf")
++if(BUILD_SHARED_LIBS)
++    #This should be dependent on CMAKE_BUILD_TYPE
++    add_stl_dlls("" "" "${VCLIBS_RELEASE_OPTIONS}" "/GL" "/LTCG;/opt:ref,icf")
++    add_stl_dlls("d" "_DEBUG" "${VCLIBS_DEBUG_OPTIONS}" "" "/opt:ref,noicf")
++endif()
+ 
+ function(add_stl_statics FLAVOR_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIONS)
+     add_library(libcpmt${FLAVOR_SUFFIX}_eha OBJECT ${EHA_SOURCES})
+@@ -481,10 +497,30 @@ function(add_stl_statics FLAVOR_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPI
+     target_compile_definitions(libcpmt${FLAVOR_SUFFIX} PRIVATE "${THIS_CONFIG_DEFINITIONS}")
+     target_compile_options(libcpmt${FLAVOR_SUFFIX} PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};/EHsc")
+     target_link_libraries(libcpmt${FLAVOR_SUFFIX} PRIVATE Boost::headers Boost::disable_autolinking libcpmt${FLAVOR_SUFFIX}_eha)
++
++    #Install the target and all it build outputs.
++    install (TARGETS libcpmt${FLAVOR_SUFFIX} libcpmt${FLAVOR_SUFFIX}_eha EXPORT ms-stl-config
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Runtime
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Development
++        OBJECTS DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl/obj" COMPONENT Development
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl" COMPONENT Development
++        BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime)
++    export(EXPORT ms-stl-config NAMESPACE microsoft:: FILE ms-stl-config.cmake)
++    install(EXPORT ms-stl-config NAMESPACE microsoft:: DESTINATION "share/ms-stl")
++    
+ endfunction()
+ 
++#This should be dependent on CMAKE_BUILD_TYPE and _ITERATOR_DEBUG_LEVEL should be an option passed to CMAKE
+ add_stl_statics("" "_ITERATOR_DEBUG_LEVEL=0" "${VCLIBS_RELEASE_OPTIONS}")
+ add_stl_statics("1" "_ITERATOR_DEBUG_LEVEL=1" "${VCLIBS_RELEASE_OPTIONS}")
+ add_stl_statics("d" "_DEBUG;_ITERATOR_DEBUG_LEVEL=2" "${VCLIBS_DEBUG_OPTIONS}")
+ add_stl_statics("d1" "_DEBUG;_ITERATOR_DEBUG_LEVEL=1" "${VCLIBS_DEBUG_OPTIONS}")
+ add_stl_statics("d0" "_DEBUG;_ITERATOR_DEBUG_LEVEL=0" "${VCLIBS_DEBUG_OPTIONS}")
++
++export(PACKAGE ms-stl)
++#Install public headers
++install(FILES ${HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl")
++install(FILES "${PROJECT_BINARY_DIR}/stl/ms-stl-config.cmake"
++        DESTINATION "share/ms-stl")
++
