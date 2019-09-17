@@ -13,10 +13,19 @@ vcpkg_extract_source_archive_ex(
 )
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    mpg123 USE_MP3
+    libflac USE_FLAC
+    libmodplug USE_MOD
+	libvorbis USE_OGGVORBIS
+	opusfile USE_OPUS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
+		${FEATURE_OPTIONS}
         -DSDL_MIXER_SKIP_HEADERS=ON
 )
 
