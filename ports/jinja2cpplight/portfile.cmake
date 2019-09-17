@@ -1,6 +1,11 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+else()
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -22,10 +27,8 @@ vcpkg_copy_pdbs()
 
 file(GLOB_RECURSE JINJA2CPPLIGHT_EXES ${CURRENT_PACKAGES_DIR}/bin/jinja2cpplight_unittests*)
 file(COPY ${JINJA2CPPLIGHT_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-file(REMOVE ${JINJA2CPPLIGHT_EXES})
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+file(REMOVE_RECURSE ${JINJA2CPPLIGHT_EXES})
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
