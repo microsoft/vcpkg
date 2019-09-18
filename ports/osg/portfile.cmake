@@ -9,8 +9,8 @@ vcpkg_from_github(
     PATCHES
         collada.patch
         static.patch
-        fix-example-application.patch
         fix-sdl.patch
+        disable-present3d-staticview-in-linux.patch #Due to some link error we cannot solve yet, disable them in linux.
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -40,28 +40,33 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 # handle osg tools and plugins
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-set(OSG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/osg)
+set(OSG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(MAKE_DIRECTORY ${OSG_TOOL_PATH})
 
-file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(EXECUTE_SUFFIX ".exe")
+    set(DYNAMIC_SUFFIX ".dll")
+else()
+    set(EXECUTE_SUFFIX "")
+    set(DYNAMIC_SUFFIX ".so")
+endif()
+
+file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*${EXECUTE_SUFFIX})
 file(COPY ${OSG_TOOLS} DESTINATION ${OSG_TOOL_PATH})
 file(REMOVE_RECURSE ${OSG_TOOLS})
-file(GLOB OSG_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+file(GLOB OSG_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*${EXECUTE_SUFFIX})
 file(REMOVE_RECURSE ${OSG_TOOLS_DBG})
 
-file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.4/*.dll)
-file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/osg/osgPlugins-3.6.4)
-file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.4/*.dll)
+file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.4/*${DYNAMIC_SUFFIX})
+file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-3.6.4)
+file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.4/*${DYNAMIC_SUFFIX})
 file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-3.6.4)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.4/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.4/)
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/osg)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/osg/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/osg/copyright)
 
 #Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -70,3 +75,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.4/)
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
