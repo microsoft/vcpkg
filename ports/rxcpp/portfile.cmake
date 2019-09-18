@@ -1,6 +1,4 @@
-#header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/RxCpp-4.0.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,15 +9,15 @@ vcpkg_from_github(
 )
 
 file(INSTALL
-	${SOURCE_PATH}/Rx/v2/src/rxcpp
+    ${SOURCE_PATH}/Rx/v2/src/rxcpp
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
 file(INSTALL
-	${SOURCE_PATH}/Ix/CPP/src/cpplinq
+    ${SOURCE_PATH}/Ix/CPP/src/cpplinq
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
 file(INSTALL
-	${SOURCE_PATH}/license.md
-	DESTINATION ${CURRENT_PACKAGES_DIR}/share/rxcpp RENAME copyright)
+    ${SOURCE_PATH}/license.md
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/rxcpp RENAME copyright)
