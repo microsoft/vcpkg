@@ -37,6 +37,7 @@ set(
   libyara/ahocorasick.c
   libyara/arena.c
   libyara/atoms.c
+  libyara/bitmask.c
   libyara/compiler.c
   libyara/endian.c
   libyara/exec.c
@@ -69,7 +70,9 @@ set(
   libyara/re_lexer.c
   libyara/rules.c
   libyara/scan.c
+  libyara/scanner.c
   libyara/sizedstr.c
+  libyara/stack.c
   libyara/stopwatch.c
   libyara/stream.c
   libyara/strutils.c

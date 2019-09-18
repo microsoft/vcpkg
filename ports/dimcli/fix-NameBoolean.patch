@@ -1,8 +1,8 @@
 diff --git a/libs/dimcli/cli.cpp b/libs/dimcli/cli.cpp
-index 9e67c12..c96bd24 100644
+index 45dac3b..6129884 100644
 --- a/libs/dimcli/cli.cpp
 +++ b/libs/dimcli/cli.cpp
-@@ -388,8 +388,8 @@ GroupConfig const & Cli::Config::findGrpOrDie(Cli const & cli) {
+@@ -392,8 +392,8 @@ GroupConfig const & Cli::Config::findGrpOrDie(Cli const & cli) {
  ***/
  
  //===========================================================================
@@ -13,7 +13,7 @@ index 9e67c12..c96bd24 100644
      , m_names{names}
  {
      // set m_fromName and assert if names is malformed
-@@ -486,12 +486,12 @@ static bool includeName(
+@@ -526,12 +526,12 @@ static bool includeName(
      OptName const & name,
      NameListType type,
      Cli::OptBase const & opt,
@@ -29,10 +29,10 @@ index 9e67c12..c96bd24 100644
              return !name.invert;
          if (type == kNameDisable)
 diff --git a/libs/dimcli/cli.h b/libs/dimcli/cli.h
-index 2c1615c..3e4f405 100644
+index d4941dc..fa8d526 100644
 --- a/libs/dimcli/cli.h
 +++ b/libs/dimcli/cli.h
-@@ -818,7 +818,7 @@ public:
+@@ -777,7 +777,7 @@ public:
      };
  
  public:
@@ -41,7 +41,7 @@ index 2c1615c..3e4f405 100644
      virtual ~OptBase() {}
  
      //-----------------------------------------------------------------------
-@@ -952,7 +952,7 @@ inline void Cli::OptBase::setValueDesc<DIMCLI_LIB_FILESYSTEM_PATH>() {
+@@ -1062,7 +1062,7 @@ std::string Cli::OptBase::toValueDesc<DIMCLI_LIB_FILESYSTEM_PATH>() const {
  template <typename A, typename T>
  class Cli::OptShim : public OptBase {
  public:
@@ -50,7 +50,7 @@ index 2c1615c..3e4f405 100644
      OptShim(OptShim const &) = delete;
      OptShim & operator=(OptShim const &) = delete;
  
-@@ -1100,8 +1100,8 @@ protected:
+@@ -1249,8 +1249,8 @@ protected:
  
  //===========================================================================
  template <typename A, typename T>
@@ -59,5 +59,5 @@ index 2c1615c..3e4f405 100644
 +Cli::OptShim<A, T>::OptShim(std::string const & keys, bool in_boolean)
 +    : OptBase(keys, in_boolean)
  {
-     setValueDesc<T>();
- }
+     if (std::is_arithmetic<T>::value)
+         this->imbue(std::locale(""));
