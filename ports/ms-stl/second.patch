@@ -1,0 +1,498 @@
+diff --git a/stl/CMakeLists.txt b/stl/CMakeLists.txt
+index 2a8c5f936..198b84f3a 100644
+--- a/stl/CMakeLists.txt	
++++ b/stl/CMakeLists.txt
+@@ -228,6 +228,240 @@ set(HEADERS
+     ${CMAKE_CURRENT_LIST_DIR}/inc/yvals_core.h
+ )
+ 
++set(CVT_HEADERS
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_1
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_10
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_13
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_14
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_15
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_16
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_2
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_3
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_4
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_5
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_6
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_7
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_8
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/8859_9
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/baltic
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/big5
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp037
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1006
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1026
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1250
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1251
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1252
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1253
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1254
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1255
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1256
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1257
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp1258
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp424
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp437
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp500
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp737
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp775
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp850
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp852
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp855
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp856
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp857
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp860
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp861
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp862
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp863
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp864
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp865
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp866
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp869
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp874
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp875
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp932
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp936
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp949
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cp950
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/cyrillic
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/ebcdic
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/euc
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/euc_0208
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/gb12345
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/gb2312
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/greek
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/iceland
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/jis
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/jis0201
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/jis_0208
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/ksc5601
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/latin2
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/one_one
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/roman
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/sjis
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/sjis_0208
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/turkish
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/utf16
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/utf8
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/utf8_utf16
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/wbuffer
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/wstring
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/xjis
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/xone_byte
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cvt/xtwo_byte
++)
++
++
++set(EXP_HEADERS
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/coroutine
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/deque
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/filesystem
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/forward_list
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/generator
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/list
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/map
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/resumable
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/set
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/string
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/unordered_map
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/unordered_set
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/vector
++    ${CMAKE_CURRENT_LIST_DIR}/inc/experimental/xutility
++)
++
++set(BASE_HEADERS
++    ${CMAKE_CURRENT_LIST_DIR}/inc/__msvc_all_public_headers.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/inc/algorithm
++    ${CMAKE_CURRENT_LIST_DIR}/inc/any
++    ${CMAKE_CURRENT_LIST_DIR}/inc/array
++    ${CMAKE_CURRENT_LIST_DIR}/inc/atomic
++    ${CMAKE_CURRENT_LIST_DIR}/inc/bitset
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cassert
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ccomplex
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cctype
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cerrno
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cfenv
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cfloat
++    ${CMAKE_CURRENT_LIST_DIR}/inc/charconv
++    ${CMAKE_CURRENT_LIST_DIR}/inc/chrono
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cinttypes
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ciso646
++    ${CMAKE_CURRENT_LIST_DIR}/inc/climits
++    ${CMAKE_CURRENT_LIST_DIR}/inc/clocale
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cmath
++    ${CMAKE_CURRENT_LIST_DIR}/inc/codecvt
++    ${CMAKE_CURRENT_LIST_DIR}/inc/compare
++    ${CMAKE_CURRENT_LIST_DIR}/inc/complex
++    ${CMAKE_CURRENT_LIST_DIR}/inc/concepts
++    ${CMAKE_CURRENT_LIST_DIR}/inc/condition_variable
++    ${CMAKE_CURRENT_LIST_DIR}/inc/csetjmp
++    ${CMAKE_CURRENT_LIST_DIR}/inc/csignal
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstdalign
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstdarg
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstdbool
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstddef
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstdint
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstdio
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstdlib
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cstring
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ctgmath
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ctime
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cuchar
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cwchar
++    ${CMAKE_CURRENT_LIST_DIR}/inc/cwctype
++    ${CMAKE_CURRENT_LIST_DIR}/inc/deque
++    ${CMAKE_CURRENT_LIST_DIR}/inc/exception
++    ${CMAKE_CURRENT_LIST_DIR}/inc/execution
++    ${CMAKE_CURRENT_LIST_DIR}/inc/filesystem
++    ${CMAKE_CURRENT_LIST_DIR}/inc/forward_list
++    ${CMAKE_CURRENT_LIST_DIR}/inc/fstream
++    ${CMAKE_CURRENT_LIST_DIR}/inc/functional
++    ${CMAKE_CURRENT_LIST_DIR}/inc/future
++    ${CMAKE_CURRENT_LIST_DIR}/inc/hash_map
++    ${CMAKE_CURRENT_LIST_DIR}/inc/hash_set
++    ${CMAKE_CURRENT_LIST_DIR}/inc/initializer_list
++    ${CMAKE_CURRENT_LIST_DIR}/inc/iomanip
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ios
++    ${CMAKE_CURRENT_LIST_DIR}/inc/iosfwd
++    ${CMAKE_CURRENT_LIST_DIR}/inc/iostream
++    ${CMAKE_CURRENT_LIST_DIR}/inc/iso646.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/istream
++    ${CMAKE_CURRENT_LIST_DIR}/inc/iterator
++    ${CMAKE_CURRENT_LIST_DIR}/inc/limits
++    ${CMAKE_CURRENT_LIST_DIR}/inc/list
++    ${CMAKE_CURRENT_LIST_DIR}/inc/locale
++    ${CMAKE_CURRENT_LIST_DIR}/inc/map
++    ${CMAKE_CURRENT_LIST_DIR}/inc/memory
++    ${CMAKE_CURRENT_LIST_DIR}/inc/memory_resource
++    ${CMAKE_CURRENT_LIST_DIR}/inc/mutex
++    ${CMAKE_CURRENT_LIST_DIR}/inc/new
++    ${CMAKE_CURRENT_LIST_DIR}/inc/numeric
++    ${CMAKE_CURRENT_LIST_DIR}/inc/optional
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ostream
++    ${CMAKE_CURRENT_LIST_DIR}/inc/queue
++    ${CMAKE_CURRENT_LIST_DIR}/inc/random
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ranges
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ratio
++    ${CMAKE_CURRENT_LIST_DIR}/inc/regex
++    ${CMAKE_CURRENT_LIST_DIR}/inc/scoped_allocator
++    ${CMAKE_CURRENT_LIST_DIR}/inc/set
++    ${CMAKE_CURRENT_LIST_DIR}/inc/shared_mutex
++    ${CMAKE_CURRENT_LIST_DIR}/inc/sstream
++    ${CMAKE_CURRENT_LIST_DIR}/inc/stack
++    ${CMAKE_CURRENT_LIST_DIR}/inc/stdexcept
++    ${CMAKE_CURRENT_LIST_DIR}/inc/streambuf
++    ${CMAKE_CURRENT_LIST_DIR}/inc/string
++    ${CMAKE_CURRENT_LIST_DIR}/inc/string_view
++    ${CMAKE_CURRENT_LIST_DIR}/inc/strstream
++    ${CMAKE_CURRENT_LIST_DIR}/inc/system_error
++    ${CMAKE_CURRENT_LIST_DIR}/inc/thread
++    ${CMAKE_CURRENT_LIST_DIR}/inc/tuple
++    ${CMAKE_CURRENT_LIST_DIR}/inc/type_traits
++    ${CMAKE_CURRENT_LIST_DIR}/inc/typeindex
++    ${CMAKE_CURRENT_LIST_DIR}/inc/typeinfo
++    ${CMAKE_CURRENT_LIST_DIR}/inc/unordered_map
++    ${CMAKE_CURRENT_LIST_DIR}/inc/unordered_set
++    ${CMAKE_CURRENT_LIST_DIR}/inc/use_ansi.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/utility
++    ${CMAKE_CURRENT_LIST_DIR}/inc/valarray
++    ${CMAKE_CURRENT_LIST_DIR}/inc/variant
++    ${CMAKE_CURRENT_LIST_DIR}/inc/vector
++    ${CMAKE_CURRENT_LIST_DIR}/inc/version
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xatomic.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xbit_ops.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xcall_once.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xcharconv.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xcharconv_ryu.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xcharconv_ryu_tables.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xerrc.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xfacet
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xfilesystem_abi.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xhash
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xiosbase
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xkeycheck.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocale
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocbuf
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocinfo
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocinfo.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocmes
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocmon
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xlocnum
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xloctime
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xmemory
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xnode_handle.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xpolymorphic_allocator.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xsmf_control.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xstddef
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xstring
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xtgmath.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xthreads.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xtimec.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xtr1common
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xtree
++    ${CMAKE_CURRENT_LIST_DIR}/inc/xutility
++    ${CMAKE_CURRENT_LIST_DIR}/inc/ymath.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/yvals.h
++    ${CMAKE_CURRENT_LIST_DIR}/inc/yvals_core.h
++)
++
+ foreach(header ${HEADERS})
+     file(RELATIVE_PATH _header_path "${CMAKE_CURRENT_LIST_DIR}/inc" "${header}")
+     configure_file("${header}" "${PROJECT_BINARY_DIR}/out/inc/${_header_path}" COPYONLY)
+@@ -393,7 +627,7 @@ set(STATIC_SOURCES
+     ${SOURCES_SATELLITE_2}
+     ${SOURCES_SATELLITE_CODECVT_IDS}
+ )
+-
++# should _HAS_OLD_IOSTREAMS_MEMBERS be an cmake option?
+ add_compile_definitions(_CRTBLD _VCRT_ALLOW_INTERNALS _HAS_OLD_IOSTREAMS_MEMBERS=1 _STL_CONCRT_SUPPORT)
+ 
+ include_directories(BEFORE
+@@ -402,89 +636,172 @@ include_directories(BEFORE
+     "${TOOLSET_ROOT_DIR}/crt/src/vcruntime"
+     )
+ 
++include(GNUInstallDirs)
+-function(add_stl_dlls D_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIONS GL_FLAG THIS_CONFIG_LINK_OPTIONS)
++#function(add_stl_dlls D_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIONS GL_FLAG THIS_CONFIG_LINK_OPTIONS)
++if(BUILD_SHARED_LIBS)
++    set(D_SUFFIX "\$<\$<CONFIG:DEBUG>:d>")
++    set(GL_FLAG "\$<\$<NOT:\$<CONFIG:DEBUG>>:/GL>")
++    set(THIS_CONFIG_COMPILE_OPTIONS)
++    set(THIS_CONFIG_DEFINITIONS "\$<\$<CONFIG:DEBUG>:_DEBUG>")
++    set(THIS_CONFIG_LINK_OPTIONS "\$<\$<NOT:\$<CONFIG:DEBUG>>:/LTCG;/opt:ref,icf>;\$<\$<CONFIG:DEBUG>:/opt:ref,noicf>")
+     # msvcp140.dll
+-    add_library(msvcp${D_SUFFIX}_objects OBJECT ${DLL_SOURCES} ${SOURCES})
+-    target_compile_definitions(msvcp${D_SUFFIX}_objects PRIVATE "CRTDLL2;_DLL;${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(msvcp${D_SUFFIX}_objects PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};${GL_FLAG};/EHsc")
++    add_library(msvcp_objects OBJECT ${DLL_SOURCES} ${SOURCES})
++    target_compile_definitions(msvcp_objects PRIVATE "CRTDLL2;_DLL;${THIS_CONFIG_DEFINITIONS}")
++    target_compile_options(msvcp_objects PRIVATE "${GL_FLAG};/EHsc")
+ 
+-    add_library(msvcp${D_SUFFIX}_eha_objects OBJECT ${EHA_SOURCES})
+-    target_compile_definitions(msvcp${D_SUFFIX}_eha_objects PRIVATE "CRTDLL2;_DLL;${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(msvcp${D_SUFFIX}_eha_objects PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};${GL_FLAG};/EHa")
++    add_library(msvcp_eha_objects OBJECT ${EHA_SOURCES})
++    target_compile_definitions(msvcp_eha_objects PRIVATE "CRTDLL2;_DLL;${THIS_CONFIG_DEFINITIONS}")
++    target_compile_options(msvcp_eha_objects PRIVATE "${GL_FLAG};/EHa")
+ 
+-    add_library(msvcp${D_SUFFIX} SHARED)
+-    target_link_libraries(msvcp${D_SUFFIX} PRIVATE msvcp${D_SUFFIX}_eha_objects msvcp${D_SUFFIX}_objects "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib" "${TOOLSET_LIB}/concrt${D_SUFFIX}.lib" "delayimp.lib")
+-    set_target_properties(msvcp${D_SUFFIX} PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_base${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    set_target_properties(msvcp${D_SUFFIX} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+-    set_target_properties(msvcp${D_SUFFIX} PROPERTIES OUTPUT_NAME "msvcp140${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    target_link_options(msvcp${D_SUFFIX} PRIVATE "${THIS_CONFIG_LINK_OPTIONS};/delayload:concrt140${D_SUFFIX}.dll")
++    add_library(msvcp SHARED)
++    target_link_options(msvcp PRIVATE /DEBUG:FULL /WX /RELEASE /SUBSYSTEM:Console /NODEFAULTLIB /INCREMENTAL:NO /MANIFEST:NO /DLL /profile /guard:cf /DEBUGTYPE:cv,fixup /LARGEADDRESSAWARE)
++    target_link_libraries(msvcp PRIVATE msvcp_eha_objects msvcp_objects "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib" "${TOOLSET_LIB}/concrt${D_SUFFIX}.lib" "delayimp.lib")
++    set_target_properties(msvcp PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_base${D_SUFFIX}${VCLIBS_SUFFIX}")
++    set_target_properties(msvcp PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
++    set_target_properties(msvcp PROPERTIES OUTPUT_NAME "msvcp140${D_SUFFIX}${VCLIBS_SUFFIX}")
++    target_link_options(msvcp PRIVATE "${THIS_CONFIG_LINK_OPTIONS};/delayload:concrt140${D_SUFFIX}.dll")
+ 
+     # import library 'statics'
+-    add_library(msvcp${D_SUFFIX}_implib_objects OBJECT ${IMPLIB_SOURCES})
+-    target_compile_definitions(msvcp${D_SUFFIX}_implib_objects PRIVATE "_DLL;${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(msvcp${D_SUFFIX}_implib_objects PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};/EHsc") # No /GL!
++    add_library(msvcp_implib_objects OBJECT ${IMPLIB_SOURCES})
++    target_compile_definitions(msvcp_implib_objects PRIVATE "_DLL;${THIS_CONFIG_DEFINITIONS}")
++    target_compile_options(msvcp_implib_objects PRIVATE "/EHsc") # No /GL!
+ 
+     # msvcp140_1.dll (the memory_resource satellite)
+-    add_library(msvcp_1${D_SUFFIX}_objects OBJECT ${SOURCES_SATELLITE_1})
+-    target_compile_definitions(msvcp_1${D_SUFFIX}_objects PRIVATE "_BUILDING_SATELLITE_1;_DLL;${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(msvcp_1${D_SUFFIX}_objects PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};${GL_FLAG};/EHsc")
++    add_library(msvcp_1_objects OBJECT ${SOURCES_SATELLITE_1})
++    target_compile_definitions(msvcp_1_objects PRIVATE "_BUILDING_SATELLITE_1;_DLL;${THIS_CONFIG_DEFINITIONS}")
++    target_compile_options(msvcp_1_objects PRIVATE "${GL_FLAG};/EHsc")
+ 
+-    add_library(msvcp_1${D_SUFFIX} SHARED)
+-    target_link_libraries(msvcp_1${D_SUFFIX} PRIVATE msvcp_1${D_SUFFIX}_objects "msvcp${D_SUFFIX}" "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib")
+-    set_target_properties(msvcp_1${D_SUFFIX} PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_1${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    set_target_properties(msvcp_1${D_SUFFIX} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+-    set_target_properties(msvcp_1${D_SUFFIX} PROPERTIES OUTPUT_NAME "msvcp140_1${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    target_link_options(msvcp_1${D_SUFFIX} PRIVATE "${THIS_CONFIG_LINK_OPTIONS}")
++    add_library(msvcp_1 SHARED)
++    target_link_options(msvcp_1 PRIVATE /DEBUG:FULL /WX /RELEASE /SUBSYSTEM:Console /NODEFAULTLIB /INCREMENTAL:NO /MANIFEST:NO /DLL /profile /guard:cf /DEBUGTYPE:cv,fixup /LARGEADDRESSAWARE)
++    target_link_libraries(msvcp_1 PRIVATE msvcp_1_objects msvcp "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib")
++    set_target_properties(msvcp_1 PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_1${D_SUFFIX}${VCLIBS_SUFFIX}")
++    set_target_properties(msvcp_1 PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
++    set_target_properties(msvcp_1 PROPERTIES OUTPUT_NAME "msvcp140_1${D_SUFFIX}${VCLIBS_SUFFIX}")
++    target_link_options(msvcp_1 PRIVATE "${THIS_CONFIG_LINK_OPTIONS}")
+ 
+     # msvcp140_2.dll (the special math satellite)
+-    add_library(msvcp_2${D_SUFFIX}_objects OBJECT ${SOURCES_SATELLITE_2})
+-    target_compile_definitions(msvcp_2${D_SUFFIX}_objects PRIVATE "_BUILDING_SATELLITE_2;_DLL;${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(msvcp_2${D_SUFFIX}_objects PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};${GL_FLAG};/EHsc")
+-    target_link_libraries(msvcp_2${D_SUFFIX}_objects PRIVATE Boost::headers Boost::disable_autolinking)
+-
+-    add_library(msvcp_2${D_SUFFIX} SHARED)
+-    target_link_libraries(msvcp_2${D_SUFFIX} PRIVATE msvcp_2${D_SUFFIX}_objects msvcp${D_SUFFIX}_implib_objects "msvcp${D_SUFFIX}" "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib")
+-    set_target_properties(msvcp_2${D_SUFFIX} PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_2${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    set_target_properties(msvcp_2${D_SUFFIX} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+-    set_target_properties(msvcp_2${D_SUFFIX} PROPERTIES OUTPUT_NAME "msvcp140_2${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    target_link_options(msvcp_2${D_SUFFIX} PRIVATE "${THIS_CONFIG_LINK_OPTIONS}")
++    add_library(msvcp_2_objects OBJECT ${SOURCES_SATELLITE_2})
++    target_compile_definitions(msvcp_2_objects PRIVATE "_BUILDING_SATELLITE_2;_DLL;${THIS_CONFIG_DEFINITIONS}")
++    target_compile_options(msvcp_2_objects PRIVATE "${GL_FLAG};/EHsc")
++    target_link_libraries(msvcp_2_objects PRIVATE Boost::headers Boost::disable_autolinking)
++
++    add_library(msvcp_2 SHARED)
++    target_link_options(msvcp_2 PRIVATE /DEBUG:FULL /WX /RELEASE /SUBSYSTEM:Console /NODEFAULTLIB /INCREMENTAL:NO /MANIFEST:NO /DLL /profile /guard:cf /DEBUGTYPE:cv,fixup /LARGEADDRESSAWARE)
++    target_link_libraries(msvcp_2 PRIVATE msvcp_2_objects msvcp_implib_objects msvcp "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib")
++    set_target_properties(msvcp_2 PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_2${D_SUFFIX}${VCLIBS_SUFFIX}")
++    set_target_properties(msvcp_2 PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
++    set_target_properties(msvcp_2 PROPERTIES OUTPUT_NAME "msvcp140_2${D_SUFFIX}${VCLIBS_SUFFIX}")
++    target_link_options(msvcp_2 PRIVATE "${THIS_CONFIG_LINK_OPTIONS}")
+ 
+     # msvcp140_codecvt_ids.dll
+-    add_library(msvcp${D_SUFFIX}_codecvt_ids_objects OBJECT ${SOURCES_SATELLITE_CODECVT_IDS})
+-    target_compile_definitions(msvcp${D_SUFFIX}_codecvt_ids_objects PRIVATE "_BUILDING_SATELLITE_CODECVT_IDS;_DLL;${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(msvcp${D_SUFFIX}_codecvt_ids_objects PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};${GL_FLAG};/EHsc")
++    add_library(msvcp_codecvt_ids_objects OBJECT ${SOURCES_SATELLITE_CODECVT_IDS})
++    target_compile_definitions(msvcp_codecvt_ids_objects PRIVATE "_BUILDING_SATELLITE_CODECVT_IDS;_DLL;${THIS_CONFIG_DEFINITIONS}")
++    target_compile_options(msvcp_codecvt_ids_objects PRIVATE "${GL_FLAG};/EHsc")
+ 
+-    add_library(msvcp${D_SUFFIX}_codecvt_ids SHARED)
+-    target_link_libraries(msvcp${D_SUFFIX}_codecvt_ids PRIVATE msvcp${D_SUFFIX}_codecvt_ids_objects "msvcp${D_SUFFIX}" "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib")
+-    set_target_properties(msvcp${D_SUFFIX}_codecvt_ids PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_codecvt_ids${D_SUFFIX}${VCLIBS_SUFFIX}")
+-    set_target_properties(msvcp${D_SUFFIX}_codecvt_ids PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+-    set_target_properties(msvcp${D_SUFFIX}_codecvt_ids PROPERTIES OUTPUT_NAME "msvcp140${D_SUFFIX}_codecvt_ids${VCLIBS_SUFFIX}")
+-    target_link_options(msvcp${D_SUFFIX}_codecvt_ids PRIVATE "${THIS_CONFIG_LINK_OPTIONS}")
++    add_library(msvcp_codecvt_ids SHARED)
++    target_link_options(msvcp PRIVATE /DEBUG:FULL /WX /RELEASE /SUBSYSTEM:Console /NODEFAULTLIB /INCREMENTAL:NO /MANIFEST:NO /DLL /profile /guard:cf /DEBUGTYPE:cv,fixup /LARGEADDRESSAWARE)
++    target_link_libraries(msvcp_codecvt_ids PRIVATE msvcp_codecvt_ids_objects msvcp "${TOOLSET_LIB}/vcruntime${D_SUFFIX}.lib" "${TOOLSET_LIB}/msvcrt${D_SUFFIX}.lib" "ucrt${D_SUFFIX}.lib")
++    set_target_properties(msvcp_codecvt_ids PROPERTIES ARCHIVE_OUTPUT_NAME "msvcp140_codecvt_ids${D_SUFFIX}${VCLIBS_SUFFIX}")
++    set_target_properties(msvcp_codecvt_ids PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
++    set_target_properties(msvcp_codecvt_ids PROPERTIES OUTPUT_NAME "msvcp140${D_SUFFIX}_codecvt_ids${VCLIBS_SUFFIX}")
++    target_link_options(msvcp_codecvt_ids PRIVATE "${THIS_CONFIG_LINK_OPTIONS}")
+ 
+     # import library
+-    add_library(msvcp${D_SUFFIX}_implib STATIC ${HEADERS})
+-    target_link_libraries(msvcp${D_SUFFIX}_implib msvcp${D_SUFFIX}_implib_objects)
+-    add_dependencies(msvcp${D_SUFFIX}_implib msvcp${D_SUFFIX} msvcp_1${D_SUFFIX} msvcp_2${D_SUFFIX} msvcp${D_SUFFIX}_codecvt_ids)
+-    set_target_properties(msvcp${D_SUFFIX}_implib PROPERTIES STATIC_LIBRARY_OPTIONS "/NOLOGO;/NODEFAULTLIB;/IGNORE:4006;$<TARGET_LINKER_FILE:msvcp${D_SUFFIX}>;$<TARGET_LINKER_FILE:msvcp_1${D_SUFFIX}>;$<TARGET_LINKER_FILE:msvcp_2${D_SUFFIX}>;$<TARGET_LINKER_FILE:msvcp${D_SUFFIX}_codecvt_ids>")
+-    set_target_properties(msvcp${D_SUFFIX}_implib PROPERTIES ARCHIVE_OUTPUT_NAME "msvcprt${D_SUFFIX}")
+-endfunction()
+-
+-add_stl_dlls("" "" "${VCLIBS_RELEASE_OPTIONS}" "/GL" "/LTCG;/opt:ref,icf")
+-add_stl_dlls("d" "_DEBUG" "${VCLIBS_DEBUG_OPTIONS}" "" "/opt:ref,noicf")
+-
+-function(add_stl_statics FLAVOR_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIONS)
+-    add_library(libcpmt${FLAVOR_SUFFIX}_eha OBJECT ${EHA_SOURCES})
+-    target_compile_definitions(libcpmt${FLAVOR_SUFFIX}_eha PRIVATE "${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(libcpmt${FLAVOR_SUFFIX}_eha PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};/EHa")
+-
+-    add_library(libcpmt${FLAVOR_SUFFIX} STATIC ${HEADERS} ${IMPLIB_SOURCES} ${SOURCES} ${STATIC_SOURCES})
+-    target_compile_definitions(libcpmt${FLAVOR_SUFFIX} PRIVATE "${THIS_CONFIG_DEFINITIONS}")
+-    target_compile_options(libcpmt${FLAVOR_SUFFIX} PRIVATE "${THIS_CONFIG_COMPILE_OPTIONS};/EHsc")
+-    target_link_libraries(libcpmt${FLAVOR_SUFFIX} PRIVATE Boost::headers Boost::disable_autolinking libcpmt${FLAVOR_SUFFIX}_eha)
+-endfunction()
+-
+-add_stl_statics("" "_ITERATOR_DEBUG_LEVEL=0" "${VCLIBS_RELEASE_OPTIONS}")
+-add_stl_statics("1" "_ITERATOR_DEBUG_LEVEL=1" "${VCLIBS_RELEASE_OPTIONS}")
+-add_stl_statics("d" "_DEBUG;_ITERATOR_DEBUG_LEVEL=2" "${VCLIBS_DEBUG_OPTIONS}")
+-add_stl_statics("d1" "_DEBUG;_ITERATOR_DEBUG_LEVEL=1" "${VCLIBS_DEBUG_OPTIONS}")
+-add_stl_statics("d0" "_DEBUG;_ITERATOR_DEBUG_LEVEL=0" "${VCLIBS_DEBUG_OPTIONS}")
++    add_library(msvcp_implib STATIC ${HEADERS})
++    target_link_libraries(msvcp_implib PRIVATE msvcp_implib_objects)
++    add_dependencies(msvcp_implib msvcp msvcp_1 msvcp_2 msvcp_codecvt_ids)
++    set_target_properties(msvcp_implib PROPERTIES STATIC_LIBRARY_OPTIONS "/NOLOGO;/NODEFAULTLIB;/IGNORE:4006;$<TARGET_LINKER_FILE:msvcp>;$<TARGET_LINKER_FILE:msvcp_1>;$<TARGET_LINKER_FILE:msvcp_2>;$<TARGET_LINKER_FILE:msvcp_codecvt_ids>")
++    set_target_properties(msvcp_implib PROPERTIES ARCHIVE_OUTPUT_NAME "msvcprt${D_SUFFIX}")
++    
++    install (TARGETS msvcp_implib msvcp_implib_objects msvcp msvcp_1 msvcp_2 msvcp_codecvt_ids EXPORT ms-stl-config
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Runtime
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Development
++        OBJECTS DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Development
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl" COMPONENT Development
++        BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime)
++    export(EXPORT ms-stl-config NAMESPACE microsoft:: FILE ms-stl-config.cmake)
++    install(EXPORT ms-stl-config NAMESPACE microsoft:: DESTINATION "share/ms-stl")
++    
++endif()
++#endfunction()
++
++#add_stl_dlls("" "" "${VCLIBS_RELEASE_OPTIONS}" "/GL" "/LTCG;/opt:ref,icf")
++#add_stl_dlls("d" "_DEBUG" "${VCLIBS_DEBUG_OPTIONS}" "" "/opt:ref,noicf")
++
++#This allows to set the iterator debug level via the cmake call
++if(NOT DEFINED ITERATOR_DEBUG_LEVEL)
++    if(NOT DEFINED ITERATOR_DEBUG_LEVEL_RELEASE)
++        set(ITERATOR_DEBUG_LEVEL_RELEASE 0) # Default release level is 0
++    endif()
++    if(NOT DEFINED ITERATOR_DEBUG_LEVEL_DEBUG)
++        set(ITERATOR_DEBUG_LEVEL_DEBUG 2) # Default debug level is 2
++    endif()
++else()
++    if(NOT DEFINED ITERATOR_DEBUG_LEVEL_RELEASE)
++        set(ITERATOR_DEBUG_LEVEL_RELEASE ${ITERATOR_DEBUG_LEVEL})
++    endif()
++    if(NOT DEFINED ITERATOR_DEBUG_LEVEL_DEBUG)
++        set(ITERATOR_DEBUG_LEVEL_DEBUG ${ITERATOR_DEBUG_LEVEL})
++    endif()
++endif()
++
++macro(check_iter_debug_level out_def out_name_rel out_name_dbg input_level)
++    if(${${input_level}} GREATER 2 OR ${${input_level}} LESS 0)
++        message(FATAL_ERROR "${input_level} outside valid range. Valid values are 0, 1 and 2")
++    endif()
++    if(${${input_level}} EQUAL 0)
++        set(${out_def} _ITERATOR_DEBUG_LEVEL=0)
++        set(${out_name_rel} "")
++        set(${out_name_dbg} "0")
++    elseif(${${input_level}} EQUAL 1)
++        set(${out_def} _ITERATOR_DEBUG_LEVEL=1)
++        set(${out_name_rel} "1")
++        set(${out_name_dbg} "1")
++    elseif(${${input_level}} EQUAL 2)
++        set(${out_def} _ITERATOR_DEBUG_LEVEL=2)
++        set(${out_name_rel} "2")
++        set(${out_name_dbg} "0")
++    endif()
++endmacro()
++
++check_iter_debug_level(ITER_DEF_DEBUG DUMMY ITERATOR_SUFFIX_DEBUG ITERATOR_DEBUG_LEVEL_DEBUG)
++check_iter_debug_level(ITER_DEF_RELEASE ITERATOR_SUFFIX_RELEASE DUMMY ITERATOR_DEBUG_LEVEL_RELEASE)
++
++#function(add_stl_statics FLAVOR_SUFFIX THIS_CONFIG_DEFINITIONS THIS_CONFIG_COMPILE_OPTIONS)
++add_library(libcpmt_eha OBJECT ${EHA_SOURCES})
++target_compile_definitions(libcpmt_eha PRIVATE "$<$<NOT:$<CONFIG:DEBUG>>:${ITER_DEF_RELEASE}>$<$<CONFIG:DEBUG>:_DEBUG;${ITER_DEF_DEBUG}>")
++target_compile_options(libcpmt_eha PRIVATE "/EHa")
++
++add_library(libcpmt STATIC ${HEADERS} ${IMPLIB_SOURCES} ${SOURCES} ${STATIC_SOURCES})
++target_compile_definitions(libcpmt PRIVATE "$<$<NOT:$<CONFIG:DEBUG>>:${ITER_DEF_RELEASE}>$<$<CONFIG:DEBUG>:_DEBUG;${ITER_DEF_DEBUG}>")
++target_compile_options(libcpmt PRIVATE "/EHsc")
++target_link_libraries(libcpmt PRIVATE Boost::headers Boost::disable_autolinking libcpmt_eha)
++set_target_properties(libcpmt PROPERTIES OUTPUT_NAME "libcpmt$<$<CONFIG:DEBUG>:d>$<$<NOT:$<CONFIG:DEBUG>>:${ITERATOR_SUFFIX_RELEASE}>$<$<CONFIG:DEBUG>:${ITERATOR_SUFFIX_DEBUG}>")
++#endfunction()
++
++#add_stl_statics("" "_ITERATOR_DEBUG_LEVEL=0" "${VCLIBS_RELEASE_OPTIONS}")
++#add_stl_statics("1" "_ITERATOR_DEBUG_LEVEL=1" "${VCLIBS_RELEASE_OPTIONS}")
++#add_stl_statics("d" "_DEBUG;_ITERATOR_DEBUG_LEVEL=2" "${VCLIBS_DEBUG_OPTIONS}")
++#add_stl_statics("d1" "_DEBUG;_ITERATOR_DEBUG_LEVEL=1" "${VCLIBS_DEBUG_OPTIONS}")
++#add_stl_statics("d0" "_DEBUG;_ITERATOR_DEBUG_LEVEL=0" "${VCLIBS_DEBUG_OPTIONS}")
++
++install (TARGETS libcpmt libcpmt_eha EXPORT ms-stl-config
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Runtime
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Development
++    OBJECTS DESTINATION "${CMAKE_INSTALL_LIBDIR}/ms-stl" COMPONENT Development
++    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime
++    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl" COMPONENT Development
++    BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}/ms-stl" COMPONENT Runtime)
++export(EXPORT ms-stl-config NAMESPACE microsoft:: FILE ms-stl-config.cmake)
++install(EXPORT ms-stl-config NAMESPACE microsoft:: DESTINATION "share/ms-stl")
++
++export(PACKAGE ms-stl)
++#Install public headers
++install(FILES ${BASE_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl")
++install(FILES ${EXP_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl/experimental")
++install(FILES ${CVT_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ms-stl/cvt")
++install(FILES "${PROJECT_BINARY_DIR}/stl/ms-stl-config.cmake"
++        DESTINATION "share/ms-stl")
++
++

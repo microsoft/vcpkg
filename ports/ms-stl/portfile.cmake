@@ -3,11 +3,13 @@ message(STATUS "${PORT} will only build with Visual Studio 2019 Version 16.3 and
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/STL
-    REF 92508bed6387cbdae433fc86279bc446af6f1b1a
-    SHA512 85df2e5b1ed8e30449459b773d51e92e8027daf5b74e1276950e413583cf47093f7024d10412e520be1e907e4e105391c07f4dfadbb6a27414416ff487cf4d9a
+    REF 7f65140761947af4ed7f9dfc11adee8c86c9e4c2
+    SHA512 c94fed807129bdd488b4a23334179b48d46136f2611e5714f1c0a7f9abf2f2aa947b3d539a51bb6188e17730165e084ca22d6c3078cf9ceca2bce6d829159039
     HEAD_REF master
     PATCHES
-        install_targets.patch
+        first.patch     # removes setting of build flags so that vcpkg can inject its own flags
+        second.patch    # removes building of all flavours and only build one flavour depending on configuration options
+                        # you can pass ITERATOR_DEBUG_LEVEL[_DEBUG|_RELEASE] via configure to set the appropiate iterator debug level. 
 )
 
 vcpkg_configure_cmake(
