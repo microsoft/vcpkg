@@ -1,0 +1,54 @@
+diff --git a/include/pybind11/pybind11.h b/include/pybind11/pybind11.h
+index f1d91c7..2e0a186 100644
+--- a/include/pybind11/pybind11.h
++++ b/include/pybind11/pybind11.h
+@@ -895,9 +895,10 @@ protected:
+             pybind11_fail("generic_type: cannot initialize type \"" + std::string(rec.name) +
+                           "\": an object with that name is already defined");
+ 
+-        if (rec.module_local ? get_local_type_info(*rec.type) : get_global_type_info(*rec.type))
+-            pybind11_fail("generic_type: type \"" + std::string(rec.name) +
+-                          "\" is already registered!");
++        /// Thoren Huppke: Commented out because it blocked the creation of new interpreters after one was deleted.
++        // if (rec.module_local ? get_local_type_info(*rec.type) : get_global_type_info(*rec.type))
++        //     pybind11_fail("generic_type: type \"" + std::string(rec.name) +
++        //                   "\" is already registered!");
+ 
+         m_ptr = make_new_python_type(rec);
+ 
+@@ -2000,7 +2001,9 @@ class gil_scoped_release { };
+ error_already_set::~error_already_set() {
+     if (m_type) {
+         error_scope scope;
+-        gil_scoped_acquire gil;
++        /// Thoren Huppke: Commented this out because it uses an old thread/interpreter and does not allow creating/deletion of interpreters.
++        /// We just need to make sure, that these errors are deleted in scopes that hold the gil.
++        // gil_scoped_acquire gil;
+         m_type.release().dec_ref();
+         m_value.release().dec_ref();
+         m_trace.release().dec_ref();
+@@ -2077,8 +2080,12 @@ template <class T> function get_overload(const T *this_ptr, const char *name) {
+     return tinfo ? get_type_overload(this_ptr, tinfo, name) : function();
+ }
+ 
++
++/// Thoren Huppke: commented out the gil_scoped_acquire as it does not allow for deletions and recreations of interpreters!
++/// We have to ensure that the correct thread is active and the gil is held throughout the call.
++/// Concerns all the PYBIND11_OVERLOAD makros.
+ #define PYBIND11_OVERLOAD_INT(ret_type, cname, name, ...) { \
+-        pybind11::gil_scoped_acquire gil; \
++        /* pybind11::gil_scoped_acquire gil; */ \
+         pybind11::function overload = pybind11::get_overload(static_cast<const cname *>(this), name); \
+         if (overload) { \
+             auto o = overload(__VA_ARGS__); \
+@@ -2143,8 +2150,8 @@ template <class T> function get_overload(const T *this_ptr, const char *name) {
+           }
+       };
+ \endrst */
+-#define PYBIND11_OVERLOAD(ret_type, cname, fn, ...) \
+-    PYBIND11_OVERLOAD_NAME(PYBIND11_TYPE(ret_type), PYBIND11_TYPE(cname), #fn, fn, __VA_ARGS__)
++#define PYBIND11_OVERLOAD(ret_type, cname, fn, cfn, ...) \
++    PYBIND11_OVERLOAD_NAME(PYBIND11_TYPE(ret_type), PYBIND11_TYPE(cname), #fn, cfn, __VA_ARGS__)
+ 
+ /** \rst
+     Macro for pure virtual functions, this function is identical to :c:macro:`PYBIND11_OVERLOAD`, except that it throws

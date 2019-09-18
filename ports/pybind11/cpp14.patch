@@ -1,0 +1,17 @@
+diff --git a/include/pybind11/detail/common.h b/include/pybind11/detail/common.h
+index bec8ccf..5586391 100644
+--- a/include/pybind11/detail/common.h
++++ b/include/pybind11/detail/common.h
+@@ -30,9 +30,9 @@
+ #if !(defined(_MSC_VER) && __cplusplus == 199711L) && !defined(__INTEL_COMPILER)
+ #  if __cplusplus >= 201402L
+ #    define PYBIND11_CPP14
+-#    if __cplusplus >= 201703L
+-#      define PYBIND11_CPP17
+-#    endif
++// #    if __cplusplus >= 201703L
++// #      define PYBIND11_CPP17
++// #    endif
+ #  endif
+ #elif defined(_MSC_VER) && __cplusplus == 199711L
+ // MSVC sets _MSVC_LANG rather than __cplusplus (supposedly until the standard is fully implemented)
