@@ -7,8 +7,8 @@ Feature: sodium
 Description: Using libsodium for CURVE security
 Build-Depends: libsodium
 
-Feature: sha1
+Feature: websockets-sha1
 Description: Enable WebSocket transport through builtin sha1 (libzmq#3676)
 
-Feature: nss
+Feature: websockets-nss
 Description: Enable WebSocket transport through NSS (libzmq#3676)

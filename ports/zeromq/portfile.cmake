@@ -11,14 +11,14 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-if("nss" IN_LIST FEATURES)
-    if("sha1" IN_LIST FEATURES)
-        message(WARNING "Both sha1 and nss are specified, will use NSS instead.")
+if("websockets-nss" IN_LIST FEATURES)
+    if("websockets-sha1" IN_LIST FEATURES)
+        message(WARNING "Both websockets-sha1 and websockets-nss are specified, will use NSS instead.")
     endif()
 
     set(DISABLE_WS OFF)
     set(WITH_NSS ON)
-elseif("sha1" IN_LIST FEATURES)
+elseif("websockets-sha1" IN_LIST FEATURES)
     set(DISABLE_WS OFF)
     set(WITH_NSS OFF)
 else()
