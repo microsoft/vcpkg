@@ -13,7 +13,7 @@ TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
 {
     std::vector<std::string> t = {"--vcpkg-root",
                                   "C:\\vcpkg",
-                                  "--scripts-root=C:\\scripts",
+                                  "--x-scripts-root=C:\\scripts",
                                   "--debug",
                                   "--sendmetrics",
                                   "--printmetrics",
@@ -45,7 +45,7 @@ TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
 {
     std::vector<std::string> t = {"--VCPKG-ROOT",
                                   "C:\\vcpkg",
-                                  "--SCRIPTS-ROOT=C:\\scripts",
+                                  "--X-SCRIPTS-ROOT=C:\\scripts",
                                   "--DEBUG",
                                   "--SENDMETRICS",
                                   "--PRINTMETRICS",

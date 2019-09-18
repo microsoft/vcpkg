@@ -31,6 +31,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         install-cmake-modules-to-share.patch
         fix-build-error.patch
+        fix-linux-build.patch
 )
 
 if(NOT EXISTS ${SOURCE_PATH}/tools/clang)

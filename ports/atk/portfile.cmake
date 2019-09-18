@@ -13,6 +13,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        fix-linux-config.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -22,6 +24,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCMAKE_PROGRAM_PATH=${CURRENT_INSTALLED_DIR}/tools/glib
+        -DGETTEXT_PACKAGE=atk10
+        -DVERSION=10
     OPTIONS_DEBUG
         -DATK_SKIP_HEADERS=ON)
 

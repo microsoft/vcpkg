@@ -15,12 +15,14 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DINSTALL_CMAKE_DIR=share/yaml
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/config.h)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/yaml TARGET_PATH share/yaml)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/config.h ${CURRENT_PACKAGES_DIR}/debug/share)
+
 
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/libyaml/copyright COPYONLY)
