@@ -13,14 +13,11 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        fixAutoPtrExpired.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libxml++-${LIBXMLPP_VERSION}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fixAutoPtrExpired.patch"
-)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

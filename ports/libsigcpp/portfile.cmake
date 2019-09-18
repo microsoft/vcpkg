@@ -23,10 +23,11 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/dont-import-symbols.patch)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/sigc++config.h SIGCPPCONFIG_H)
+    string(REPLACE "endif /* !SIGC_MSC */"
+    "endif /* !SIGC_MSC */
+#undef SIGC_DLL" SIGCPPCONFIG_H "${SIGCPPCONFIG_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sigc++config.h "${SIGCPPCONFIG_H}")
 endif()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsigcpp)
