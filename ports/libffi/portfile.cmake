@@ -30,6 +30,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_apply_patches(
