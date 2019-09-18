@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
       "${CMAKE_CURRENT_LIST_DIR}/0001-findwxwidgets-fixes.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0002-wxwidgets-dev-fixes.patch"
       "${CMAKE_CURRENT_LIST_DIR}/install-interface-include-directories.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/use-math-h-nan.patch"
 )
 
 set(BUILD_with_wxwidgets OFF)

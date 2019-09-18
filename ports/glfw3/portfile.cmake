@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF 3.3
     SHA512 e74bb7ba0c1c3a524a193c4fb5a2d13ba0e75f8e309612ea19cdcc944859d6e2fe29d8b2e3db76236e1011b637564ddd5f4a176dcccfeb84d09bda060f08f774
     HEAD_REF master
-    PATCHES move-cmake-min-req.patch
+    PATCHES
+        move-cmake-min-req.patch
+        fix-config.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

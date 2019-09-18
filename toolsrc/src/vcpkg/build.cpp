@@ -53,6 +53,7 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageOptions build_package_options{
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
@@ -395,6 +396,7 @@ namespace vcpkg::Build
             {"CMD", "BUILD"},
             {"PORT", config.scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", config.port_dir},
+            {"VCPKG_ROOT_PATH", paths.root},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
@@ -406,6 +408,11 @@ namespace vcpkg::Build
             {"ALL_FEATURES", all_features},
             {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
         };
+
+        if (Util::Enum::to_bool(config.build_package_options.only_downloads))
+        {
+            variables.push_back({"VCPKG_DOWNLOAD_MODE", "true"});
+        }
 
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
@@ -528,6 +535,7 @@ namespace vcpkg::Build
                                                 const BuildPackageConfig& config)
     {
         auto& fs = paths.get_filesystem();
+
 #if defined(_WIN32)
         const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
         if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
@@ -559,6 +567,14 @@ namespace vcpkg::Build
 #else
         const int return_code = System::cmd_execute_clean(command, env);
 #endif
+        // With the exception of empty packages, builds in "Download Mode" always result in failure.
+        if (config.build_package_options.only_downloads == Build::OnlyDownloads::YES)
+        {
+            // TODO: Capture executed command output and evaluate whether the failure was intended.
+            // If an unintended error occurs then return a BuildResult::DOWNLOAD_FAILURE status.
+            return BuildResult::DOWNLOADED;
+        }
+
         const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
 
@@ -793,20 +809,23 @@ namespace vcpkg::Build
         const std::string& name = config.scf.core_paragraph->name;
 
         std::vector<FeatureSpec> required_fspecs = compute_required_feature_specs(config, status_db);
-        std::vector<FeatureSpec> required_fspecs_copy = required_fspecs;
 
         // extract out the actual package ids
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
         Util::sort_unique_erase(dep_pspecs);
 
         // Find all features that aren't installed. This mutates required_fspecs.
-        Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
-            return status_db.is_installed(fspec) || fspec.name() == name;
-        });
-
-        if (!required_fspecs.empty())
+        // Skip this validation when running in Download Mode.
+        if (config.build_package_options.only_downloads != Build::OnlyDownloads::YES)
         {
-            return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+            Util::erase_remove_if(required_fspecs, [&](FeatureSpec const& fspec) {
+                return status_db.is_installed(fspec) || fspec.name() == name;
+            });
+
+            if (!required_fspecs.empty())
+            {
+                return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
+            }
         }
 
         const PackageSpec spec =
@@ -817,7 +836,10 @@ namespace vcpkg::Build
         // dep_pspecs was not destroyed
         for (auto&& pspec : dep_pspecs)
         {
-            if (pspec == spec) continue;
+            if (pspec == spec || Util::Enum::to_bool(config.build_package_options.only_downloads))
+            {
+                continue;
+            }
             const auto status_it = status_db.find_installed(pspec);
             Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
             dependency_abis.emplace_back(
@@ -949,6 +971,7 @@ namespace vcpkg::Build
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
         static const std::string EXCLUDED_STRING = "EXCLUDED";
+        static const std::string DOWNLOADED_STRING = "DOWNLOADED";
 
         switch (build_result)
         {
@@ -959,6 +982,7 @@ namespace vcpkg::Build
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::EXCLUDED: return EXCLUDED_STRING;
+            case BuildResult::DOWNLOADED: return DOWNLOADED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
