@@ -1,0 +1,16 @@
+diff --git a/cmake/project-config-version.cmake.in b/cmake/project-config-version.cmake.in
+index 1f207b8..d469658 100644
+--- a/cmake/project-config-version.cmake.in
++++ b/cmake/project-config-version.cmake.in
+@@ -22,9 +22,9 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
+   # Reject if there's a mismatch in MSVC compiler versions
+ #  set (REASON "_MSC_VER = @MSVC_VERSION@")
+ #  set (PACKAGE_VERSION_UNSUITABLE TRUE)
+-elseif (NOT CMAKE_CROSSCOMPILING STREQUAL "@CMAKE_CROSSCOMPILING@")
++elseif (NOT CMAKE_CROSSCOMPILING STREQUAL FALSE)
+   # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}
+-  set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")
++  set (REASON "cross-compiling = FALSE")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)
+ elseif (CMAKE_CROSSCOMPILING AND
+     NOT (CMAKE_SYSTEM_NAME STREQUAL "@CMAKE_SYSTEM_NAME@" AND

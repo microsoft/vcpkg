@@ -1,9 +1,9 @@
 #header-only library
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.8356/WTL10_8356.zip"
-    FILENAME "WTL10_8356.zip"
-    SHA512 4eb24151f4009cdfebc17f08312cae65d46c8ea205ccc7b56f14c46b54d28d8d4e6290de3150e558dc076d7815a9dde2a8952695f46f4402c83b0da2bf65f241
+    URLS "https://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.9163/WTL10_9163.zip"
+    FILENAME "WTL10_9163.zip"
+    SHA512 feb7fb1c456e44ad05610f31f8c0f964eb6ce3eadf65a389219051f0ea2547069727666616622631cd90e25ea4a682a7c88c7089a374181870717246ad44e035
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
