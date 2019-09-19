@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 961b39d..66782be 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -105,11 +105,11 @@ source_group(sol2 FILES ${SOL2_HEADER_SOURCES})
+ # # # sol2 Library
+ # # Add a target for sol2's library to be included by external users
+ add_library(sol2 INTERFACE)
+-add_library(sol2::sol2 ALIAS sol2)
++#add_library(sol2::sol2 ALIAS sol2)
+ target_sources(sol2 INTERFACE ${SOL2_SINGLE_HEADER_SOURCES})
+-set_target_properties(sol2
+-	PROPERTIES
+-	EXPORT_NAME sol2::sol2)
++#set_target_properties(sol2
++#	PROPERTIES
++#	EXPORT_NAME sol2::sol2)
+ 
+ target_include_directories(sol2 INTERFACE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
