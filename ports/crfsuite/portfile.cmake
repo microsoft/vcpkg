@@ -5,6 +5,8 @@ endif()
 
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chokkan/crfsuite
@@ -14,7 +16,7 @@ vcpkg_from_github(
     PATCHES  fix_msc_ver.patch
 )
 
-message(STATUS "source path is : ${SOURCE_PATH}")
+
 list(REMOVE_ITEM SOURCE_FILE ${SOURCE_PATH}/win32/liblbfgs/lbfgs.lib)
 list(REMOVE_ITEM SOURCE_FILE ${SOURCE_PATH}/win32/liblbfgs/lbfgs_debug.lib)
 
