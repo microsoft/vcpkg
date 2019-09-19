@@ -1,13 +1,15 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FMILibrary-2.0.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://jmodelica.org/fmil/FMILibrary-2.0.3-src.zip"
     FILENAME "FMILibrary-2.0.3-src.zip"
     SHA512 86e4b5019d8f2a76b01141411845d977fb3949617604de0b34351f23647e3e8b378477de184e1c4f2f59297bc4c7de3155e0edba9099b8924594a36b37b04cc8
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 # Note that if you have configured and built both static and shared library on Windows
 # but want to link with the static library compile time define "FMILIB_BUILDING_LIBRARY" must be set.
