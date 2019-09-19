@@ -8,17 +8,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(LIBRAW_CMAKE_COMMIT "a71f3b83ee3dccd7be32f9a2f410df4d9bdbde0a")
-set(LIBRAW_CMAKE_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-cmake-${LIBRAW_CMAKE_COMMIT})
-vcpkg_download_distfile(CMAKE_BUILD_ARCHIVE
-    URLS "https://github.com/LibRaw/LibRaw-cmake/archive/${LIBRAW_CMAKE_COMMIT}.zip"
-    FILENAME "LibRaw-cmake-${LIBRAW_CMAKE_COMMIT}"
-    SHA512 54216e6760e2339dc3bf4b4be533a13160047cabfc033a06da31f2226c43fc93eaea9672af83589e346ce9231c1a57910ac5e800759e692fe2cd9d53b7fba0c6
-)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH ${SOURCE_PATH}
-    ARCHIVE ${CMAKE_BUILD_ARCHIVE}
+vcpkg_from_github(
+    OUT_SOURCE_PATH LIBRAW_CMAKE_SOURCE_PATH
+    REPO LibRaw/LibRaw-cmake
+    REF a71f3b83ee3dccd7be32f9a2f410df4d9bdbde0a
+    SHA512 607e6f76bcb57534da4f0c864b7a421f1ed49244468b1b52abe77f65aa599cae80715520b3a951294321b812deffd4f163757c9949f337571aa54f414ccc58a5
+    HEAD_REF master
     PATCHES
         findlibraw_debug_fix.patch
         lcms2_debug_fix.patch
