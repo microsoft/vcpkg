@@ -18,6 +18,9 @@
 #  ``CUDNN_LIBRARIES``
 #    The CUDNN libraries.
 #
+#  ``CuDNN::CuDNN``
+#    The CUDNN target
+#
 
 include(FindPackageHandleStandardArgs)
 
