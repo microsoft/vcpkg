@@ -18,9 +18,14 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
 file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    x11 WITH_X11
+)
+
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}/src
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
