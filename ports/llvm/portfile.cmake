@@ -17,6 +17,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        install-llvm-modules-to-share.patch
+        fix-linux-build.patch
 )
 
 vcpkg_download_distfile(CLANG_ARCHIVE
@@ -26,16 +29,15 @@ vcpkg_download_distfile(CLANG_ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH/tools
+    OUT_SOURCE_PATH CLANG_SOURCE_PATH
     ARCHIVE ${CLANG_ARCHIVE}
     PATCHES
-        install-cmake-modules-to-share.patch
         fix-build-error.patch
-        fix-linux-build.patch
+        install-clang-modules-to-share.patch
 )
 
 if(NOT EXISTS ${SOURCE_PATH}/tools/clang)
-  file(RENAME ${SOURCE_PATH}/tools/cfe-8.0.0.src ${SOURCE_PATH}/tools/clang)
+  file(RENAME ${CLANG_SOURCE_PATH} ${SOURCE_PATH}/tools/clang)
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
