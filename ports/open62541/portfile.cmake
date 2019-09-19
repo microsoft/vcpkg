@@ -14,20 +14,9 @@ vcpkg_from_github(
     REF v0.3.0
     SHA512 67766d226e1b900c0c37309099ecdbe987d10888ebf43f9066b21cf79f64d34e6ac30c2671a4901892f044859da4e8dbaa9fed5a49c633f73fef3bec75774050
     HEAD_REF master
+    PATCHES
+        fix-dynamic-build.patch
 )
-
-file(READ ${SOURCE_PATH}/CMakeLists.txt OPEN62541_CMAKELISTS)
-string(REPLACE
-               "RUNTIME DESTINATION \${CMAKE_INSTALL_PREFIX}"
-               "RUNTIME DESTINATION \${BIN_INSTALL_DIR}"
-       OPEN62541_CMAKELISTS "${OPEN62541_CMAKELISTS}")
-file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${OPEN62541_CMAKELISTS}")
-
-if(CMAKE_HOST_WIN32)
-    set(EXECUTABLE_SUFFIX ".exe")
-else()
-    set(EXECUTABLE_SUFFIX "")
-endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -70,5 +59,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/open62541/tools)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/open62541)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/open62541/LICENSE ${CURRENT_PACKAGES_DIR}/share/open62541/copyright)
+vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

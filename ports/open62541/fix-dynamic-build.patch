@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 64b9a96..1fe50e4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,7 @@ set(OPEN62541_VER_LABEL "") # Appended to the X.Y.Z version format. For example
+ 
+ #  If a relative path is specified, it is treated as relative to the $<INSTALL_PREFIX>
+ set(LIB_INSTALL_DIR lib CACHE PATH "Installation path of libraries")
++set(BIN_INSTALL_DIR bin CACHE PATH "Installation path of dll")
+ 
+ # Set OPEN62541_VER_COMMIT
+ if(GIT_FOUND)
+@@ -806,14 +807,14 @@ install(TARGETS open62541
+         EXPORT open62541Targets
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
++        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+         INCLUDES DESTINATION include/open62541 include)
+ else()
+ install(TARGETS open62541
+         EXPORT open62541Targets
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
++        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+         INCLUDES DESTINATION include)
+ endif()
+ 
