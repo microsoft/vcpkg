@@ -9,7 +9,6 @@ vcpkg_from_github(
         001-sdl-includes.patch
         002-tools-path.patch
         003-glfw-find-module.patch
-        004-khrplatform-include.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
