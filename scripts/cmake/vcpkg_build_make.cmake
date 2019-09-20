@@ -36,14 +36,17 @@ function(vcpkg_build_make)
             set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             
-            set(MAKE_CMD "${BASH} --noprofile --norc")
+            set(MAKE_CMD "${BASH} make --noprofile --norc")
+            set(INSTALL_CMD "${BASH} make install --noprofile --norc")
         else()
             find_program(MAKE make)
             set(MAKE_CMD make)
+            set(INSTALL_CMD make install)
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake)
         set(MAKE_CMD "${NMAKE}")
+        set(INSTALL_CMD "${NMAKE} install")
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
@@ -83,6 +86,14 @@ function(vcpkg_build_make)
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
                 LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
             )
+            
+            if (_bc_ENABLE_INSTALL)
+                vcpkg_execute_build_process(
+                    COMMAND ${INSTALL_CMD} #${CONFIG}
+                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
+                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
+                )
+            endif()
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
