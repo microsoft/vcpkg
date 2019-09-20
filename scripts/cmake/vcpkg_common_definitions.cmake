@@ -5,8 +5,7 @@
 ## ## The following variables are available:
 ## ```cmake
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
-## VCPKG_HOST_PATH_SEPARATOR                Host specific path separator
-## VCPKG_HOST_PATH_SEPARATOR_ESCAPED        Escaped version of VCPKG_HOST_PATH_SEPARATOR if necessary (set to VCPKG_HOST_PATH_SEPARATOR if not necessary)
+## VCPKG_HOST_PATH_SEPARATOR                Host specific path separator (USAGE: "<something>${VCPKG_HOST_PATH_SEPARATOR}<something>"; only use and pass variables with VCPKG_HOST_PATH_SEPARATOR within "")
 ## VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
 ## VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
 ## VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
@@ -42,11 +41,9 @@ endif()
 
 #Helper variable to identify the host path separator. 
 if(CMAKE_HOST_WIN32)
-    set(VCPKG_HOST_PATH_SEPARATOR "\;")           #Is escaped here because else VCPKG_HOST_PATH_SEPARATOR will be a list of two empty elements
-    set(VCPKG_HOST_PATH_SEPARATOR_ESCAPED "\\\;") #Needed if you want to pass around variables with VCPKG_HOST_PATH_SEPARATOR
+    set(VCPKG_HOST_PATH_SEPARATOR ";")
 elseif(CMAKE_HOST_UNIX)
     set(VCPKG_HOST_PATH_SEPARATOR ":")
-    set(VCPKG_HOST_PATH_SEPARATOR_ESCAPED ${VCPKG_HOST_PATH_SEPARATOR})
 endif()
 
 #Helper variables to identify executables on host/target
