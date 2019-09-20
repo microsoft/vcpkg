@@ -39,37 +39,34 @@ function(vcpkg_configure_qmake)
         list(APPEND _csc_OPTIONS "CONFIG*=static-runtime")
     endif()
     
-    # Cleanup build directories
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-
+    
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf)
     
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    foreach(buildtype ${VCPKG_BUILD_LIST})
+        #Cleanup
+        file(REMOVE_RECURSE "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}")
+        
+        string(TOLOWER ${buildtype} _lowerbuildtype)
+        set(_qt_conf "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}/qt.conf")
+        
+        configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_${_lowerbuildtype}.conf" "${_qt_conf}")
+        
+        message(STATUS "Configuring ${VCPKG_BUILD_TRIPLET_${buildtype}}")
+        
+        file(MAKE_DIRECTORY "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}")
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME config-${TARGET_TRIPLET}-rel
+            COMMAND ${QMAKE_COMMAND} ${VCPKG_BUILD_QMAKE_CONFIG_${_buildname}} ${_csc_OPTIONS} ${_csc_OPTIONS_${buildtype}} ${_csc_SOURCE_PATH} -qtconf "${_qt_conf}"
+            WORKING_DIRECTORY "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}"
+            LOGNAME config-${VCPKG_BUILD_TRIPLET_${buildtype}}
         )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-    endif()
+        
+        message(STATUS "Configuring ${VCPKG_BUILD_TRIPLET_${buildtype}} done")
+        
+        unset(_lowerbuildtype)
+        unset(_qt_conf)
+    endforeach()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_debug.conf ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf)
-
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} ${_csc_SOURCE_PATH} -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf"
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
-    endif()
 
 endfunction()
