@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/speexdsp-1.2rc3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/speexdsp-1.2.0)
 set(CMAKE_PATH ${CMAKE_CURRENT_LIST_DIR})
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://downloads.xiph.org/releases/speex/speexdsp-1.2rc3.tar.gz"
-    FILENAME "speexdsp-1.2rc3.tar.xz"
-    SHA512 29dfa8345df025eeb076561648a9b5c0485692be699b6da3c2a3734b4329187a1c2eb181252f4df12b21f1309ecdf59797437dfb123d160fd723491ab216e858
+    URLS "http://downloads.xiph.org/releases/speex/speexdsp-1.2.0.tar.gz"
+    FILENAME "speexdsp-1.2.0.tar.gz"
+    SHA512 e357cd5377415ea66c862302c7cf8bf6a10063cacd903f0846478975b87974cf5bdf00e2c6759d8f4f453c4c869cf284e9dc948a84a83d7b2ab96bd5405c05ec
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 

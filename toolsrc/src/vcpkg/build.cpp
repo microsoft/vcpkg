@@ -396,6 +396,7 @@ namespace vcpkg::Build
             {"CMD", "BUILD"},
             {"PORT", config.scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", config.port_dir},
+            {"VCPKG_ROOT_PATH", paths.root},
             {"TARGET_TRIPLET", triplet.canonical_name()},
             {"TARGET_TRIPLET_FILE", paths.get_triplet_file_path(triplet).u8string()},
             {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
