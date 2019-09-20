@@ -2,6 +2,15 @@ diff --git a/QGLViewer/QGLViewer.pro b/QGLViewer/QGLViewer.pro
 index 702925cb6..fc3cb7118 100644
 --- a/QGLViewer/QGLViewer.pro
 +++ b/QGLViewer/QGLViewer.pro
+@@ -214,7 +214,7 @@ macx|darwin-g++ {
+ 	include.files *= qglviewer.icns
+ 
+     # Or whatever exists in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+-    QMAKE_MAC_SDK = macosx10.12
++    #QMAKE_MAC_SDK = macosx10.12
+ 
+ 	lib_bundle {
+ 		FRAMEWORK_HEADERS.version = Versions
 @@ -224,7 +224,7 @@ macx|darwin-g++ {
  		QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
  
