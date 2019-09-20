@@ -60,50 +60,37 @@ function(vcpkg_build_cmake)
         set(TARGET_PARAM)
     endif()
 
-    foreach(BUILDTYPE "debug" "release")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-            if(BUILDTYPE STREQUAL "debug")
-                set(SHORT_BUILDTYPE "dbg")
-                set(CONFIG "Debug")
+    foreach(BUILDTYPE ${VCPKG_BUILD_LIST})
+        set(CONFIG "${VCPKG_BUILD_CMAKE_TYPE_${BUILDTYPE}}")
+
+        message(STATUS "Building ${VCPKG_BUILD_TRIPLET_${BUILDTYPE}}")
+
+        if(_bc_ADD_BIN_TO_PATH)
+            set(_BACKUP_ENV_PATH "$ENV{PATH}")
+            if(CONFIG STREQUAL "Debug")
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin")
             else()
-                set(SHORT_BUILDTYPE "rel")
-                set(CONFIG "Release")
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
             endif()
+        endif()
 
-            message(STATUS "Building ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
+        if (_bc_DISABLE_PARALLEL)
+            vcpkg_execute_build_process(
+                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
+                WORKING_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${BUILDTYPE}}
+                LOGNAME "${_bc_LOGFILE_ROOT}-${VCPKG_BUILD_TRIPLET_${BUILDTYPE}}"
+            )
+        else()
+            vcpkg_execute_build_process(
+                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
+                NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
+                WORKING_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${BUILDTYPE}}
+                LOGNAME "${_bc_LOGFILE_ROOT}-${VCPKG_BUILD_TRIPLET_${BUILDTYPE}}"
+            )
+        endif()
 
-            if(_bc_ADD_BIN_TO_PATH)
-                set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(CMAKE_HOST_WIN32)
-                    set(_PATHSEP ";")
-                else()
-                    set(_PATHSEP ":")
-                endif()
-                if(BUILDTYPE STREQUAL "debug")
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin${_PATHSEP}$ENV{PATH}")
-                else()
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
-                endif()
-            endif()
-
-            if (_bc_DISABLE_PARALLEL)
-                vcpkg_execute_build_process(
-                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
-                )
-            else()
-                vcpkg_execute_build_process(
-                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
-                    NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
-                )
-            endif()
-
-            if(_bc_ADD_BIN_TO_PATH)
-                set(ENV{PATH} "${_BACKUP_ENV_PATH}")
-            endif()
+        if(_bc_ADD_BIN_TO_PATH)
+            set(ENV{PATH} "${_BACKUP_ENV_PATH}")
         endif()
     endforeach()
 endfunction()
