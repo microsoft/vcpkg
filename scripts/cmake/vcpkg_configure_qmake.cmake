@@ -51,7 +51,7 @@ function(vcpkg_configure_qmake)
         string(TOLOWER ${buildtype} _lowerbuildtype)
         set(_qt_conf "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}/qt.conf")
         
-        configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_${_lowerbuildtype}.conf" "${_qt_conf}")
+        configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_${buildtype}.conf" "${_qt_conf}")
         
         message(STATUS "Configuring ${VCPKG_BUILD_TRIPLET_${buildtype}}")
         
