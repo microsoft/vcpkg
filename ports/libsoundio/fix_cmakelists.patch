@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6541f1b..d01e3fa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,4 @@
+ cmake_minimum_required(VERSION 2.8.5)
+-project(libsoundio C)
+-set(CMAKE_MODULE_PATH ${libsoundio_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+ 
+ if(CMAKE_VERSION VERSION_LESS 3.0.0)
+     set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "library install dir (lib)")
+@@ -11,6 +9,12 @@ else()
+     cmake_policy(SET CMP0046 NEW)
+     include(GNUInstallDirs)
+ endif()
++cmake_policy(SET CMP0022 NEW)
++
++project(libsoundio C)
++set(CMAKE_MODULE_PATH ${libsoundio_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
++
++set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+ 
+ if(NOT CMAKE_BUILD_TYPE)
+     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
+@@ -225,6 +229,7 @@ configure_file(
+ 
+ if(BUILD_DYNAMIC_LIBS)
+     add_library(libsoundio_shared SHARED ${LIBSOUNDIO_SOURCES})
++    set_target_properties(libsoundio_shared PROPERTIES PUBLIC_HEADER "${LIBSOUNDIO_HEADERS}")
+     set_target_properties(libsoundio_shared PROPERTIES
+         OUTPUT_NAME soundio
+         SOVERSION ${LIBSOUNDIO_VERSION_MAJOR}
+@@ -233,22 +238,21 @@ if(BUILD_DYNAMIC_LIBS)
+         LINKER_LANGUAGE C
+     )
+     target_link_libraries(libsoundio_shared LINK_PUBLIC ${LIBSOUNDIO_LIBS})
+-    install(TARGETS libsoundio_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    install(TARGETS libsoundio_shared EXPORT libsoundio-export RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ endif()
+ 
+ if(BUILD_STATIC_LIBS)
+     add_library(libsoundio_static STATIC ${LIBSOUNDIO_SOURCES})
++    set_target_properties(libsoundio_static PROPERTIES PUBLIC_HEADER "${LIBSOUNDIO_HEADERS}")
+     set_target_properties(libsoundio_static PROPERTIES
+         OUTPUT_NAME ${SOUNDIO_STATIC_LIBNAME}
+         COMPILE_FLAGS ${LIB_CFLAGS}
+         LINKER_LANGUAGE C
+     )
+-    install(TARGETS libsoundio_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    install(TARGETS libsoundio_static EXPORT libsoundio-export LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ endif()
+ 
+-install(FILES
+-    ${LIBSOUNDIO_HEADERS}
+-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/soundio")
++install(EXPORT libsoundio-export FILE libsoundio-config.cmake DESTINATION share/libsoundio/ EXPORT_LINK_INTERFACE_LIBRARIES)
+ 
+ # Example Programs
+ 
