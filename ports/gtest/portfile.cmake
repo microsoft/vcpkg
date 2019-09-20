@@ -11,7 +11,8 @@ vcpkg_from_github(
     SHA512 fc874a7977f11be58dc63993b520b4ae6ca43654fb5250c8b56df62a21f4dca8fcbdc81dfa106374b2bb7c59bc88952fbfc0e3ae4c7d63fdb502afbaeb39c822
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
+        0002-Fix-z7-override.patch
+        fix-main-lib-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
