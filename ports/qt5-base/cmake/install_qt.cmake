@@ -53,36 +53,18 @@ function(install_qt)
    endif()
 
    set(_path "$ENV{PATH}")
-
-    #Replace with VCPKG variables if PR #7733 is merged
-    unset(BUILDTYPES)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(_buildname "DEBUG")
-        list(APPEND BUILDTYPES ${_buildname})
-        set(_short_name_${_buildname} "dbg")
-        set(_path_suffix_${_buildname} "/debug")
-        set(_build_type_${_buildname} "debug")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(_buildname "RELEASE")
-        list(APPEND BUILDTYPES ${_buildname})
-        set(_short_name_${_buildname} "rel")
-        set(_path_suffix_${_buildname} "")
-        set(_build_type_${_buildname} "release")
-    endif()
-    unset(_buildname)
     
-    foreach(_buildname ${BUILDTYPES})
-        set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
+    foreach(_buildname ${VCPKG_BUILD_LIST})
+        set(_build_triplet ${VCPKG_BUILD_TRIPLET_${_buildname}})
         
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/bin")
 
         if(VCPKG_TARGET_IS_OSX)
            # For some reason there will be an error on MacOSX without this clean!
             message(STATUS "Cleaning before build ${_build_triplet}")
             vcpkg_execute_required_process(
                 COMMAND ${INVOKE_SINGLE} clean
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+                WORKING_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}
                 LOGNAME cleaning-1-${_build_triplet}
             )
         endif()
@@ -90,7 +72,7 @@ function(install_qt)
         message(STATUS "Building ${_build_triplet}")
         vcpkg_execute_required_process(
             COMMAND ${INVOKE}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+            WORKING_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}
             LOGNAME build-${_build_triplet}
         )
         
@@ -99,21 +81,22 @@ function(install_qt)
             message(STATUS "Cleaning after build before install ${_build_triplet}")
             vcpkg_execute_required_process(
                 COMMAND ${INVOKE_SINGLE} clean
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+                WORKING_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}
                 LOGNAME cleaning-2-${_build_triplet}
             )
         endif()
         
         message(STATUS "Fixig makefile installation path ${_build_triplet}")
-        qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
+        qt_fix_makefile_install("${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}")
         message(STATUS "Installing ${_build_triplet}")
         vcpkg_execute_required_process(
             COMMAND ${INVOKE} install
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
+            WORKING_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}
             LOGNAME package-${_build_triplet}
         )
         message(STATUS "Package ${_build_triplet} done")
         set(ENV{PATH} "${_path}")
+        unset(_build_triplet)
     endforeach()
     
 
