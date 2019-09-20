@@ -17,7 +17,9 @@
 ## VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
 ## VCPKG_BUILD_LIST                         List of VCPKG_BUILD_TYPE which the current port will build (uppercase)
 ## VCPKG_BUILD_SHORT_NAME_<BUILDTYPE>       Short name of the buildtype (e.g. DEBUG=dbg; RELEASE=rel)
-## VCPKG_PATH_SUFFIX_<BUILDTYPE>            Path suffix used for the buildtype (e.g. /debug)
+## VCPKG_BUILD_CMAKE_TYPE_<BUILDTYPE>       CMAKE_BUILD_TYPE used for buildtype
+## VCPKG_PATH_SUFFIX_<BUILDTYPE>            Path suffix used for buildtype (e.g. /debug)
+## VCPKG_BUILD_TRIPLET_<BUILDTYPE>          Fullname of the buildtriplet e.g. ${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_<BUILDTYPE>}
 ## VCPKG_BUILDTREE_TRIPLET_DIR_<BUILDTYPE>  Path to current buildtype buildtree (e.g. CURRENT_BUILDTREES_DIR/TRIPLET-rel )
 ## ```
 ##
