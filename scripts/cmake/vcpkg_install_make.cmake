@@ -14,5 +14,5 @@
 ## This command transparently forwards to [`vcpkg_build_make()`](vcpkg_build_make.md), adding a `TARGET install`
 
 function(vcpkg_install_make)
-    vcpkg_build_cmake(LOGFILE_ROOT ENABLE_INSTALL)
+    vcpkg_build_make(LOGFILE_ROOT ENABLE_INSTALL)
 endfunction()
