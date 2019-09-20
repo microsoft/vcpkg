@@ -148,58 +148,34 @@ function(vcpkg_install_msbuild)
     endif()
 
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
+    foreach(_buildname ${VCPKG_BUILD_LIST})
+        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for ${_csc_${_buildname}_CONFIGURATION}")
+        file(REMOVE_RECURSE ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}})
+        file(MAKE_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}})
+        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}})
+        set(SOURCE_COPY_PATH ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}}/${SOURCE_PATH_SUFFIX})
         vcpkg_execute_required_process(
             COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_RELEASE_CONFIGURATION}
+                /p:Configuration=${_csc_${_buildname}_CONFIGURATION}
                 ${_csc_OPTIONS}
-                ${_csc_OPTIONS_RELEASE}
+                ${_csc_OPTIONS_${_buildname}}
             WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
+            LOGNAME build-${VCPKG_BUILD_TRIPLET_${_buildname}}
         )
         file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
         file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
         file(GLOB_RECURSE EXES ${SOURCE_COPY_PATH}/*.exe)
         if(LIBS)
-            file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+            file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/lib)
         endif()
         if(DLLS)
-            file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+            file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}${VCPKG_PATH_SUFFIX_${_buildname}}/bin)
         endif()
-        if(EXES)
-            file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        if(EXES AND ${VCPKG_COPY_EXE_${_buildname}})
+            file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}${VCPKG_PATH_SUFFIX_${_buildname}})
+            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}${VCPKG_PATH_SUFFIX_${_buildname}})
         endif()
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Debug")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${SOURCE_PATH_SUFFIX})
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_DEBUG}
-            WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-dbg
-        )
-        file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
-        file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
-        if(LIBS)
-            file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-        endif()
-        if(DLLS)
-            file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        endif()
-    endif()
+    endforeach()
 
     vcpkg_copy_pdbs()
 
