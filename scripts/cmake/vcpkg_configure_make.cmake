@@ -148,6 +148,7 @@ function(vcpkg_configure_make)
             file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
         endforeach()
         if (_csc_PRERUN_SHELL)
+            message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
                 WORKING_DIRECTORY ${OBJ_DIR}
@@ -156,8 +157,9 @@ function(vcpkg_configure_make)
         endif()
         
         if (_csc_AUTOCONFIG)
+            message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -v --install
+                COMMAND autoreconf -v --install
                 WORKING_DIRECTORY ${OBJ_DIR}
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
@@ -180,17 +182,18 @@ function(vcpkg_configure_make)
             file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
         endforeach()
         if (_csc_PRERUN_SHELL)
+            message(STATUS "Prerun shell with ${TARGET_TRIPLET}-rel")
             vcpkg_execute_required_process(
                 COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
-                WORKING_DIRECTORY ${_csc_SOURCE_PATH}
+                WORKING_DIRECTORY ${OBJ_DIR}
                 LOGNAME prerun-${TARGET_TRIPLET}_rel
             )
         endif()
         
-        
         if (_csc_AUTOCONFIG)
+            message(STATUS "Generating configure with ${TARGET_TRIPLET}-rel")
             vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -v --install
+                COMMAND autoreconf -v --install
                 WORKING_DIRECTORY ${OBJ_DIR}
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
