@@ -3,16 +3,20 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF e756743a12468fabe0141f979aa2da407c1e69ad
-    SHA512 5cb50e7e8556170fd62e67545dc38797fec8ee4056be7f1218779bd0d0c2fd8f2a858ca0c7153a3196e673233e2f36d6cb1d335f56256a4c9fd82beb2fcd4bfe
+    REF 8d34332ff2301607df0fc9971a2fbe903c0feb7c
+    SHA512 8b3a9b6c4e5236353672b6deb64c94ac79deb116962405f01fe36e2fd8ddc48ec65d88ffc06746ce2e13c93eaeb04e4ba73de8f9d6f2a57a73111765d5ba8ad7
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    sodium WITH_LIBSODIUM
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sodium WITH_LIBSODIUM
+    INVERTED_FEATURES
+        websockets-sha1 DISABLE_WS
 )
 
 vcpkg_configure_cmake(
@@ -25,6 +29,7 @@ vcpkg_configure_cmake(
         -DBUILD_SHARED=${BUILD_SHARED}
         -DWITH_PERF_TOOL=OFF
         -DWITH_DOCS=OFF
+        -DWITH_NSS=OFF
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
