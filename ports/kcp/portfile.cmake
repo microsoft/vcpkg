@@ -5,11 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skywind3000/kcp
-    REF 362c49d5900f4697bb1dd3a082229e07125ba9e8
-    SHA512 0ebd8b83b3051832b08db807fdac6782ed32c3953034571f8e7ef4b26b431492335307887ca58ec07bddefd32f6ee3a015bb78300f52382be19a2c28f43d0bcb
+    REF 4c58607c917c2a82bf116489c3eb89e4e9aa696d
+    SHA512 6689d6c2393eb96bba276de90aec584dae9da0dad5c7bd15519bc61de16de9123e19a945a9e29c5b5cc88bf844ebfb9681b27eb425e3a59a354f13488516cdcc
     HEAD_REF master
-    PATCHES
-        cmake-install.patch
 )
 
 vcpkg_configure_cmake(
