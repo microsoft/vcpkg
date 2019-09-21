@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF add3c9792dcd3f08c497ae3adafb2a3b5b5fc338
     SHA512 2727342fbb31523583374ab6df6ff7542e80b4f94319cf0f293e8c085711fa10ed312b4fc4b91391112b5e27eaaae519cb4141ea9d4108ffb5b7383a043b38b8
     HEAD_REF master
+    PATCHES
+        fix-linux-build.patch
 )
 
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
