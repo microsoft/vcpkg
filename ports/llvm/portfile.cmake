@@ -31,6 +31,7 @@ vcpkg_apply_patches(
     PATCHES 
             install-cmake-modules-to-share.patch
             fix-build-error.patch
+            fix-linux-build.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
