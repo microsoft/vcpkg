@@ -1,0 +1,4 @@
+Source: wepoll
+Version: 2019-09-20
+Description: Fast epoll for windows
+Homepage: https://github.com/piscisaureus/wepoll
