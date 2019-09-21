@@ -83,6 +83,10 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
         set(GENERATOR "Visual Studio 15 2017 ARM")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017")
+
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        set(GENERATOR "Visual Studio 16 2019")
+
     else()
         message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
@@ -91,7 +95,7 @@ endif()
 
 foreach(BUILDTYPE "rel" "dbg")
 
-    message("Building ${TARGET_TRIPLET}-${BUILDTYPE}...")
+    message(STATUS "Building ${TARGET_TRIPLET}-${BUILDTYPE}...")
 
     string(COMPARE EQUAL ${BUILDTYPE} "rel" RELEASE_BUILD)
 
@@ -177,7 +181,7 @@ foreach(BUILDTYPE "rel" "dbg")
 
     endif()
 
-    message("Building ${TARGET_TRIPLET}-${BUILDTYPE}... Done")
+    message(STATUS "Building ${TARGET_TRIPLET}-${BUILDTYPE}... Done")
 
 endforeach()
 
