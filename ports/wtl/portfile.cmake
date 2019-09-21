@@ -1,4 +1,3 @@
-#header-only library
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
@@ -10,12 +9,11 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    NO_REMOVE_ONE_LEVEL
 )
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/Include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/wtl FILES_MATCHING PATTERN "*.h")
+file(INSTALL ${SOURCE_PATH}/Include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.h")
+file(COPY ${SOURCE_PATH}/Samples DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${SOURCE_PATH}/AppWizard DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/MS-PL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wtl)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/wtl/MS-PL.txt ${CURRENT_PACKAGES_DIR}/share/wtl/copyright)
-
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/Samples DESTINATION ${CURRENT_PACKAGES_DIR}/share/wtl)
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/AppWizard DESTINATION ${CURRENT_PACKAGES_DIR}/share/wtl)
+file(INSTALL ${SOURCE_PATH}/MS-PL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

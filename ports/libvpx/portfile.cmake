@@ -5,9 +5,6 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(LIBVPX_VERSION 1.8.1)
 set(LIBVPX_HASH 615476a929e46befdd4782a39345ce55cd30176ecb2fcd8a875c31694ae2334b395dcab9c5ba58d53ceb572ed0c022d2a3748ca4bbd36092e22b01cf3c9b2e8e)
 
-string(REGEX REPLACE "\\\\" "/" SOURCE_PATH_UNIX ${SOURCE_PATH})
-string(REGEX REPLACE "\\\\" "/" CURRENT_PACKAGES_DIR_UNIX ${CURRENT_PACKAGES_DIR})
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/webmproject/libvpx/archive/v${LIBVPX_VERSION}/libvpx-${LIBVPX_VERSION}.tar.gz"
     FILENAME "libvpx-${LIBVPX_VERSION}.tar.gz"
@@ -57,7 +54,7 @@ file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 vcpkg_execute_required_process(
     COMMAND
         ${BASH} --noprofile --norc
-        "${SOURCE_PATH_UNIX}/configure"
+        "${SOURCE_PATH}/configure"
         --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
         ${LIBVPX_CRT_LINKAGE}
         --disable-examples

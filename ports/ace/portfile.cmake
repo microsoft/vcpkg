@@ -12,7 +12,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-set(ACE_ROOT ${SOURCE_PATH}/ACE_wrappers)
+set(ACE_ROOT ${SOURCE_PATH})
 set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(ACE_SOURCE_PATH ${ACE_ROOT}/ace)
 
@@ -76,7 +76,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(LIB_PREFIX lib)
   set(SOLUTION_TYPE gnuace)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
-  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)include/makeinclude/platform_linux.GNU")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
 endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
