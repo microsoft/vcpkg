@@ -26,8 +26,7 @@ if (VCPKG_CRT_LINKAGE STREQUAL static)
 endif()
 
 
-vcpkg_download_distfile(
-    PYTHON_ARCHIVE
+vcpkg_download_distfile(ARCHIVE
     URLS https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz
     FILENAME Python-${PYTHON_VERSION}.tar.xz
     SHA512 27ea43eb45fc68f3d2469d5f07636e10801dee11635a430ec8ec922ed790bb426b072da94df885e4dfa1ea8b7a24f2f56dd92f9b0f51e162330f161216bd6de6
