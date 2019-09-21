@@ -12,15 +12,17 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_cmakelists.patch
+        fix_example.patch
+        fix_test.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIBS)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_DYNAMIC_LIBS=${BUILD_DYNAMIC_LIBS}
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_EXAMPLE_PROGRAMS=OFF
         -DBUILD_TESTS=OFF
 )
