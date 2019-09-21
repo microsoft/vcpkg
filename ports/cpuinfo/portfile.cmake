@@ -7,7 +7,7 @@ vcpkg_download_distfile(
     pull_22_patch_file
     URLS "https://github.com/pytorch/cpuinfo/compare/d5e37adf1406cf899d7d9ec1d317c47506ccb970...868bd113ed496a01cd030ab4d5b8853561f919a3.diff"
     FILENAME "cpuinfo-pull-22-868bd11.patch"
-    SHA512 c8fbbad1bc4a01b7c8aa10c9e395d1d9e8a1c48c95fca511bfa7ca36b69450e3804281bebcf6f2abacd92592d20abd08df26a32792eca33294380f1b8d68f9ac
+    SHA512 6971707e71613ca07fe0d18cb9c36cd5161177fc9ad3eb9e66f17a694559f3a95ccdad8f50e9342507a7978bd454f66e47c8a94db9077267ca302535b7cc3b59
 )
 
 vcpkg_from_github(
@@ -46,16 +46,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(CPUINFO_BUILD_TOOLS)
-    if(NOT CMAKE_SYSTEM_NAME OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(EXECUTABLE_SUFFIX ".exe")
-    else()
-        set(EXECUTABLE_SUFFIX "")
-    endif()
-
+if(tools IN_LIST FEATURES)
     foreach(cpuinfo_tool cache-info cpuid-dump cpu-info isa-info)
         file(COPY
-            ${CURRENT_PACKAGES_DIR}/bin/${cpuinfo_tool}${EXECUTABLE_SUFFIX}
+            ${CURRENT_PACKAGES_DIR}/bin/${cpuinfo_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
             DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
         )
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
