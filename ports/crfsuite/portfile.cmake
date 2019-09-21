@@ -13,6 +13,8 @@ vcpkg_from_github(
     REF 0.12
     SHA512   7cb02c1ac72613bafd639e1ef9a7ce7ddb0d36b2e7038c45f9745ad177344c3f20c7df48dfc1bdce364af1d0a85957a918ed8fee078232d5a2c91ab3796ee7f0
     HEAD_REF master
+    PATCHES
+		fix_msc_ver.patch
 )
 
 
