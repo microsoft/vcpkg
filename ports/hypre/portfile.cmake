@@ -10,11 +10,11 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-root-cmakelists.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-macro-to-template.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-blas-vs14-math.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-lapack-vs14-math.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-export-global-data-symbols.patch
+        fix-root-cmakelists.patch
+        fix-macro-to-template.patch
+        fix-blas-vs14-math.patch
+        fix-lapack-vs14-math.patch
+        fix-export-global-data-symbols.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -24,7 +24,7 @@ else()
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/src
     PREFER_NINJA
     OPTIONS
         ${OPTIONS}
@@ -42,4 +42,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/../COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/hypre/copyright)
+file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/hypre/copyright)
