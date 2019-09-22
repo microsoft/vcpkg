@@ -58,7 +58,7 @@ install(TARGETS lcms
 
 export(TARGETS lcms
     NAMESPACE lcms::
-    FILE "${CMAKE_CURRENT_LIST_DIR}/share/lcms/lcmsConfig.cmake"
+    FILE "share/lcms/lcmsConfig.cmake"
 )
 
 install(EXPORT lcmsConfig
