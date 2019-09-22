@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6541f1b..3ba15ba 100644
+index 6541f1b..058bf3b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,4 @@
@@ -40,7 +40,7 @@ index 6541f1b..3ba15ba 100644
  else()
      set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Werror -pedantic")
      set(LIB_CFLAGS "-std=c11 -fvisibility=hidden -Wall -Werror=strict-prototypes -Werror=old-style-definition -Werror=missing-prototypes -D_REENTRANT -D_POSIX_C_SOURCE=200809L -Wno-missing-braces")
-@@ -223,32 +225,32 @@ configure_file(
+@@ -223,32 +225,33 @@ configure_file(
      ${DOXYGEN_CONF_FILE}
  )
  
@@ -66,7 +66,7 @@ index 6541f1b..3ba15ba 100644
 -    set_target_properties(libsoundio_static PROPERTIES
 -        OUTPUT_NAME ${SOUNDIO_STATIC_LIBNAME}
 +    target_link_libraries(libsoundio LINK_PUBLIC ${LIBSOUNDIO_LIBS})
-+    install(TARGETS libsoundio EXPORT libsoundio-export ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    install(TARGETS libsoundio EXPORT libsoundio-export LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +else()
 +    add_library(libsoundio STATIC ${LIBSOUNDIO_SOURCES})
 +    set_target_properties(libsoundio PROPERTIES PUBLIC_HEADER "${LIBSOUNDIO_HEADERS}")
@@ -76,8 +76,9 @@ index 6541f1b..3ba15ba 100644
          LINKER_LANGUAGE C
      )
 -    install(TARGETS libsoundio_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    target_link_libraries(libsoundio LINK_PUBLIC ${LIBSOUNDIO_LIBS})
 +    target_compile_definitions(libsoundio PUBLIC SOUNDIO_STATIC_LIBRARY)
-+    install(TARGETS libsoundio EXPORT libsoundio-export LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    install(TARGETS libsoundio EXPORT libsoundio-export LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  endif()
  
 -install(FILES
@@ -88,7 +89,7 @@ index 6541f1b..3ba15ba 100644
  
  # Example Programs
  
-@@ -257,44 +259,28 @@ if(BUILD_EXAMPLE_PROGRAMS)
+@@ -257,44 +260,28 @@ if(BUILD_EXAMPLE_PROGRAMS)
      set_target_properties(sio_sine PROPERTIES
          LINKER_LANGUAGE C
          COMPILE_FLAGS ${EXAMPLE_CFLAGS})
@@ -137,7 +138,7 @@ index 6541f1b..3ba15ba 100644
      install(TARGETS sio_record DESTINATION ${CMAKE_INSTALL_BINDIR})
  endif()
  
-@@ -308,7 +294,7 @@ if(BUILD_TESTS)
+@@ -308,7 +295,7 @@ if(BUILD_TESTS)
      )
  
      add_executable(latency "${libsoundio_SOURCE_DIR}/test/latency.c" ${LIBSOUNDIO_SOURCES})
@@ -146,7 +147,7 @@ index 6541f1b..3ba15ba 100644
      set_target_properties(latency PROPERTIES
          LINKER_LANGUAGE C
          COMPILE_FLAGS ${LIB_CFLAGS}
-@@ -318,31 +304,19 @@ if(BUILD_TESTS)
+@@ -318,31 +305,19 @@ if(BUILD_TESTS)
      set_target_properties(underflow PROPERTIES
          LINKER_LANGUAGE C
          COMPILE_FLAGS ${EXAMPLE_CFLAGS})
