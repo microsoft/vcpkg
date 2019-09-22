@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(ADDITIONAL_PATCH "shared.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mm2/Little-CMS
@@ -8,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove_library_directive.patch
+        ${ADDITIONAL_PATCH}
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -15,17 +20,10 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_DEBUG
-        -DSKIP_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/lcms RENAME copyright)
-
-vcpkg_copy_pdbs()
-
-file(READ "${CURRENT_PACKAGES_DIR}/include/lcms2.h" _contents)
-string(REPLACE " #endif  // CMS_USE_BIG_ENDIAN" " #endif  // CMS_USE_BIG_ENDIAN
-+#define CMS_DLL" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/lcms2.h" "${_contents}")
