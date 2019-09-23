@@ -13,33 +13,40 @@ vcpkg_from_github(
 
 find_program(NMAKE nmake)
 
-set(SCRIPTS_DIR ${SOURCE_PATH}/win32)
+#
+# Windows build
+#
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	set(SCRIPTS_DIR ${SOURCE_PATH}/win32)
 
-set(CONFIGURE_COMMAND_TEMPLATE cscript configure.js
-    cruntime=@CRUNTIME@
-    debug=@DEBUGMODE@
-    prefix=@INSTALL_DIR@
-    include=@INCLUDE_DIR@
-    lib=@LIB_DIR@
-    bindir=$(PREFIX)\\tools\\
-    sodir=$(PREFIX)\\bin\\
-)
+	set(CONFIGURE_COMMAND_TEMPLATE cscript configure.js
+    	cruntime=@CRUNTIME@
+		debug=@DEBUGMODE@
+    	prefix=@INSTALL_DIR@
+    	include=@INCLUDE_DIR@
+    	lib=@LIB_DIR@
+    	bindir=$(PREFIX)\\tools\\
+    	sodir=$(PREFIX)\\bin\\
+	)
 
-# Create some directories ourselves, because the makefile doesn't
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+	# Create some directories ourselves, because the makefile doesn't
+	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 
 #
 # Release
 #
-
 message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
 
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CRUNTIME /MD)
-else()
-    set(CRUNTIME /MT)
-endif()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+		set(CRUNTIME /MD)
+	else(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+		set(CRUNTIME /MT)
+	endif(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+endif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+
 set(DEBUGMODE no)
 set(LIB_DIR ${CURRENT_INSTALLED_DIR}/lib)
 set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include)
@@ -47,77 +54,108 @@ set(INSTALL_DIR ${CURRENT_PACKAGES_DIR})
 file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
 file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
 file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
-string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND)
-vcpkg_execute_required_process(
-    COMMAND ${CONFIGURE_COMMAND}
-    WORKING_DIRECTORY ${SCRIPTS_DIR}
-    LOGNAME config-${TARGET_TRIPLET}-rel
-)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND)
+	vcpkg_execute_required_process(
+    	COMMAND ${CONFIGURE_COMMAND}
+    	WORKING_DIRECTORY ${SOURCE_PATH}
+    	LOGNAME config-${TARGET_TRIPLET}-rel
+	)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	vcpkg_execute_required_process(
+		COMMAND bash --noprofile --norc -c "./autogen.sh --prefix=${CURRENT_PACKAGES_DIR}"
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME autogen-${TARGET_TRIPLET}-rel
+	)
+endif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+
 # Handle build output directory
 file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" OUTDIR)
 file(MAKE_DIRECTORY "${OUTDIR}")
 message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} /f Makefile.msvc rebuild OUTDIR=${OUTDIR}
-    WORKING_DIRECTORY ${SCRIPTS_DIR}
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	vcpkg_execute_required_process(
+    	COMMAND ${NMAKE} /f Makefile.msvc rebuild OUTDIR=${OUTDIR}
+    	WORKING_DIRECTORY ${SCRIPTS_DIR}
+    	LOGNAME build-${TARGET_TRIPLET}-rel
+	)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	vcpkg_execute_required_process(
+		COMMAND bash --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME make-${TARGET_TRIPLET}-rel
+	)
+endif()
 message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} /f Makefile.msvc install OUTDIR=${OUTDIR}
-    WORKING_DIRECTORY ${SCRIPTS_DIR}
-    LOGNAME install-${TARGET_TRIPLET}-rel
-)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	vcpkg_execute_required_process(
+    	COMMAND ${NMAKE} /f Makefile.msvc install OUTDIR=${OUTDIR}
+    	WORKING_DIRECTORY ${SCRIPTS_DIR}
+    	LOGNAME install-${TARGET_TRIPLET}-rel
+	)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	vcpkg_execute_required_process(
+		COMMAND bash --noprofile -norc -c "make install"
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME install-${TARGET_TRIPLET}-rel
+	)
+endif()
 message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
-
 
 #
 # Debug
 #
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
 
-message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+	if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    	set(CRUNTIME /MDd)
+	else(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+	    set(CRUNTIME /MTd)
+	endif(VCPKG_CRT_LINKAGE STREQUAL dynamic)
 
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CRUNTIME /MDd)
-else()
-    set(CRUNTIME /MTd)
-endif()
-set(DEBUGMODE yes)
-set(LIB_DIR ${CURRENT_INSTALLED_DIR}/debug/lib)
-set(INSTALL_DIR ${CURRENT_PACKAGES_DIR}/debug)
-file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
-file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
-string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND)
+	set(DEBUGMODE yes)
+	set(LIB_DIR ${CURRENT_INSTALLED_DIR}/debug/lib)
+	set(INSTALL_DIR ${CURRENT_PACKAGES_DIR}/debug)
+	file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
+	file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
 
-vcpkg_execute_required_process(
-    COMMAND ${CONFIGURE_COMMAND}
-    WORKING_DIRECTORY ${SCRIPTS_DIR}
-    LOGNAME config-${TARGET_TRIPLET}-dbg
-)
-# Handle build output directory
-file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" OUTDIR)
-file(MAKE_DIRECTORY "${OUTDIR}")
-message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+	string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND)
+	vcpkg_execute_required_process(
+    	COMMAND ${CONFIGURE_COMMAND}
+    	WORKING_DIRECTORY ${SCRIPTS_DIR}
+    	LOGNAME config-${TARGET_TRIPLET}-dbg
+	)
 
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} /f Makefile.msvc rebuild OUTDIR=${OUTDIR}
-    WORKING_DIRECTORY ${SCRIPTS_DIR}
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+	# Handle build output directory
+	file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" OUTDIR)
+	file(MAKE_DIRECTORY "${OUTDIR}")
+	message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
 
-message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} /f Makefile.msvc install OUTDIR=${OUTDIR}
-    WORKING_DIRECTORY ${SCRIPTS_DIR}
-    LOGNAME install-${TARGET_TRIPLET}-dbg
-)
-message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
+	message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+
+	vcpkg_execute_required_process(
+    	COMMAND ${NMAKE} /f Makefile.msvc rebuild OUTDIR=${OUTDIR}
+    	WORKING_DIRECTORY ${SCRIPTS_DIR}
+    	LOGNAME build-${TARGET_TRIPLET}-dbg
+	)
+
+	message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+
+	message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
+	vcpkg_execute_required_process(
+    	COMMAND ${NMAKE} /f Makefile.msvc install OUTDIR=${OUTDIR}
+    	WORKING_DIRECTORY ${SCRIPTS_DIR}
+    	LOGNAME install-${TARGET_TRIPLET}-dbg
+	)
+
+	message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
+endif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 
 #
 # Cleanup
@@ -126,17 +164,17 @@ message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
 # You have to define LIB(E)XSLT_STATIC or not, depending on how you link
 file(READ ${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h XSLTEXPORTS_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBXSLT_STATIC)" "0" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
+	string(REPLACE "!defined(LIBXSLT_STATIC)" "0" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
 else()
-    string(REPLACE "!defined(LIBXSLT_STATIC)" "1" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
+	string(REPLACE "!defined(LIBXSLT_STATIC)" "1" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h "${XSLTEXPORTS_H}")
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h EXSLTEXPORTS_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBEXSLT_STATIC)" "0" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
+	string(REPLACE "!defined(LIBEXSLT_STATIC)" "0" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
 else()
-    string(REPLACE "!defined(LIBEXSLT_STATIC)" "1" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
+	string(REPLACE "!defined(LIBEXSLT_STATIC)" "1" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPORTS_H}")
 
@@ -146,18 +184,30 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # The makefile builds both static and dynamic libraries, so remove the ones we don't want
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt_a.lib)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt.lib)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-    # Rename the libs to match the dynamic lib names
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libxslt.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+		file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt_a.lib)
+		file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib)
+	else()
+		file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt.lib)
+		file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
+		# Rename the libs to match the dynamic lib names
+		file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libxslt.lib)
+    	file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt.lib)
+		file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt.lib)
+    	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
+	endif()
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	vcpkg_execute_required_process(
+		COMMAND bash --noprofile --norc -c "make clean"
+		WORKING_DIRECTORY ${SOURCE_PATH}
+		LOGNAME clean-${TARGET_TRIPLET}-rel
+	)
+endif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+	file(WRITE ${CURRENT_PACKAGES_DIR}/lib64/libxslt-plugins/future.txt "Maybe this directory is needed in future")
 endif()
 
 vcpkg_copy_pdbs()
