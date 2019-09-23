@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-abort-on-all-platforms.patch
+        fix-libm-unix.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
