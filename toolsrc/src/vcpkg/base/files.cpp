@@ -185,6 +185,7 @@ namespace vcpkg::Files
         if (ec) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
         return result;
     }
+    
     bool Filesystem::exists(const fs::path& path) const
     {
         std::error_code ec;
@@ -667,13 +668,14 @@ namespace vcpkg::Files
             auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
 
             std::vector<fs::path> ret;
+            std::error_code ec;
             for (auto&& path : paths)
             {
                 auto base = path + "/" + name;
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(VCPKG_LINE_INFO, p))
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", p.u8string(), '\n');

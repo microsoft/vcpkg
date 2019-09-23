@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2da00e0..09f3eba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,7 @@ option(BUILD_CV_KINFU_EXAMPLE "Build OpenCV KinectFusion example" OFF)
+ add_subdirectory(wrappers)
+ 
+ if (BUILD_EXAMPLES AND BUILD_GLSL_EXTENSIONS)
+-    find_package(glfw3 3.3 QUIET)
++    find_package(glfw3 CONFIG REQUIRED)
+     if(NOT TARGET glfw)
+         message(STATUS "GLFW 3.3 not found; using internal version")
+         set(GLFW_INSTALL ON)
