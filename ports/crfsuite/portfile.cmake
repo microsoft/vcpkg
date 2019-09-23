@@ -10,11 +10,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chokkan/crfsuite
-    REF 0.12
-    SHA512   7cb02c1ac72613bafd639e1ef9a7ce7ddb0d36b2e7038c45f9745ad177344c3f20c7df48dfc1bdce364af1d0a85957a918ed8fee078232d5a2c91ab3796ee7f0
+    REF 5d1bd3b803bb26582ed5cc274d6b5af6cc7f9cae
+    SHA512   e7f329f96fb0dc0e347b3e7a3e26b23ceb45e6fae7b59ace05633a24d58a31665826ebc5280e5a864f50598772791e4b5b3e7da7f46994655cbe03806f823f73
     HEAD_REF master
-    PATCHES
-		fix_msc_ver.patch
 )
 
 
