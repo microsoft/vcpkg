@@ -8,18 +8,18 @@
 ## ```
 ##
 ## ### TARGET
-## The target passed to the cmake build command (`cmake --build . --target <target>`). If not specified, no target will
+## The target passed to the configure/make build command (`./configure/make/make install`). If not specified, no target will
 ## be passed.
 ##
 ## ### ADD_BIN_TO_PATH
 ## Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 ##
 ## ## Notes:
-## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_cmake.md).
+## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 ## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
 ## "install" target
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH" "LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -56,14 +56,22 @@ function(vcpkg_build_make)
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
-                set(SHORT_BUILDTYPE "dbg")
+                # Skip debug generate
+                if (_VCPKG_NO_DEBUG)
+                    continue()
+                endif()
+                set(SHORT_BUILDTYPE "-dbg")
                 set(CONFIG "Debug")
             else()
-                set(SHORT_BUILDTYPE "rel")
+                if (_VCPKG_NO_DEBUG)
+                    set(SHORT_BUILDTYPE "")
+                else()
+                    set(SHORT_BUILDTYPE "-rel")
+                endif()
                 set(CONFIG "Release")
             endif()
 
-            message(STATUS "Building ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
+            message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
@@ -83,21 +91,39 @@ function(vcpkg_build_make)
 
             vcpkg_execute_build_process(
                 COMMAND ${MAKE_CMD} #${CONFIG}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
-                LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}
+                LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
             )
-            
-            if (_bc_ENABLE_INSTALL)
-                vcpkg_execute_build_process(
-                    COMMAND ${INSTALL_CMD} #${CONFIG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
-                )
-            endif()
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()
+        endif()
+    endforeach()
+    
+    foreach(BUILDTYPE "debug" "release")
+        if(BUILDTYPE STREQUAL "debug")
+            # Skip debug generate
+            if (_VCPKG_NO_DEBUG)
+                continue()
+            endif()
+            set(SHORT_BUILDTYPE "-dbg")
+            set(CONFIG "Debug")
+        else()
+            if (_VCPKG_NO_DEBUG)
+                set(SHORT_BUILDTYPE "")
+            else()
+                set(SHORT_BUILDTYPE "-rel")
+            endif()
+            set(CONFIG "Release")
+        endif()
+        if (_bc_ENABLE_INSTALL)
+            message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+            vcpkg_execute_build_process(
+                COMMAND ${INSTALL_CMD} #${CONFIG}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}
+                LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+            )
         endif()
     endforeach()
 endfunction()

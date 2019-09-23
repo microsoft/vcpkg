@@ -1,6 +1,6 @@
 ## # vcpkg_install_make
 ##
-## Build and install a cmake project.
+## Build and install a make project.
 ##
 ## ## Usage:
 ## ```cmake

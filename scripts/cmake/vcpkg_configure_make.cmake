@@ -20,6 +20,9 @@
 ## Specifies the directory containing the `CMakeLists.txt`.
 ## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
 ##
+## ### NO_DEBUG
+## This port doesn't support debug mode.
+##
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure.
 ##
@@ -45,7 +48,7 @@
 ## This command supplies many common arguments to CMake. To see the full list, examine the source.
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG"
+        "AUTOCONFIG;NO_DEBUG"
         "SOURCE_PATH;GENERATOR;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -120,6 +123,8 @@ function(vcpkg_configure_make)
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
+    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} --bindir=${CURRENT_PACKAGES_DIR}/bin --sbindir=${CURRENT_PACKAGES_DIR}/bin --libdir=${CURRENT_PACKAGES_DIR}/lib --includedir=${CURRENT_PACKAGES_DIR}/include)
+    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} --bindir=${CURRENT_PACKAGES_DIR}/debug/bin --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin --libdir=${CURRENT_PACKAGES_DIR}/debug/lib --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
     set(base_cmd )
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc )
@@ -140,7 +145,7 @@ function(vcpkg_configure_make)
     endif()
     
     # Configure debug
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         file(MAKE_DIRECTORY ${OBJ_DIR})
         file(GLOB SOURCE_FILES ${_csc_SOURCE_PATH}/*)
@@ -175,37 +180,44 @@ function(vcpkg_configure_make)
 
     # Configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        if (_csc_NO_DEBUG)
+            set(TAR_TRIPLET_DIR ${TARGET_TRIPLET})
+            set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
+        else()
+            set(TAR_TRIPLET_DIR ${TARGET_TRIPLET}-rel)
+            set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
+        endif()
         file(MAKE_DIRECTORY ${OBJ_DIR})
         file(GLOB SOURCE_FILES ${_csc_SOURCE_PATH}/*)
         foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
             file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
         endforeach()
         if (_csc_PRERUN_SHELL)
-            message(STATUS "Prerun shell with ${TARGET_TRIPLET}-rel")
+            message(STATUS "Prerun shell with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
                 COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
                 WORKING_DIRECTORY ${OBJ_DIR}
-                LOGNAME prerun-${TARGET_TRIPLET}_rel
+                LOGNAME prerun-${TAR_TRIPLET_DIR}
             )
         endif()
         
         if (_csc_AUTOCONFIG)
-            message(STATUS "Generating configure with ${TARGET_TRIPLET}-rel")
+            message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
                 COMMAND autoreconf -v --install
                 WORKING_DIRECTORY ${OBJ_DIR}
-                LOGNAME prerun-${TARGET_TRIPLET}-dbg
+                LOGNAME prerun-${TAR_TRIPLET_DIR}
             )
         endif()
         
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+        message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
         vcpkg_execute_required_process(
             COMMAND ${rel_command}
             WORKING_DIRECTORY ${OBJ_DIR}
-            LOGNAME config-${TARGET_TRIPLET}-rel
+            LOGNAME config-${TAR_TRIPLET_DIR}
         )
     endif()
     
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
+    set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
 endfunction()
