@@ -47,13 +47,12 @@ endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libpngConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
+file(COPY ${CURRENT_PORT_DIR}/libpngConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpng/LICENSE ${CURRENT_PACKAGES_DIR}/share/libpng/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/png)
 endif()
