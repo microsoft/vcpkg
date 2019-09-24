@@ -1,21 +1,155 @@
 diff --git a/src/common/system_utils_win.cpp b/src/common/system_utils_win.cpp
-index e4c146091..974b1b3ba 100644
+index 8c5a821ab..e4ae99d0f 100644
 --- a/src/common/system_utils_win.cpp
 +++ b/src/common/system_utils_win.cpp
-@@ -110,7 +110,7 @@ class Win32Library : public Library
+@@ -136,6 +136,9 @@ bool RunApp(const std::vector<const char *> &args,
+             std::string *stderrOut,
+             int *exitCodeOut)
+ {
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++    return false;
++#else
+     ScopedPipe stdoutPipe;
+     ScopedPipe stderrPipe;
+ 
+@@ -240,6 +243,17 @@ bool RunApp(const std::vector<const char *> &args,
+     CloseHandle(processInfo.hThread);
+ 
+     return success;
++#endif
++}
++
++static WCHAR *buildWPath(const char *libraryName) {
++    static const WCHAR dDll[] = L".dll";
++
++    WCHAR *path = new WCHAR[strlen(libraryName) + 6];
++    int i = 0, j = 0;
++    while (path[i] = libraryName[i]) i++;
++    while (path[i++] = dDll[j++]);
++    return path;
+ }
+ 
+ class Win32Library : public Library
+@@ -247,12 +261,23 @@ class Win32Library : public Library
+   public:
+     Win32Library(const char *libraryName)
+     {
++        #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++        WCHAR *path = buildWPath(libraryName);
++
++        OutputDebugStringW(L"loading: ");
++        OutputDebugStringW(path);
++        OutputDebugStringW(L"\n");
++
++        mModule = LoadPackagedLibrary(path, 0);
++        delete[] path;
++        #else
+         char buffer[MAX_PATH];
          int ret = snprintf(buffer, MAX_PATH, "%s.%s", libraryName, GetSharedLibraryExtension());
          if (ret > 0 && ret < MAX_PATH)
          {
--            mModule = LoadLibraryA(buffer);
-+           // mModule = LoadLibraryA(buffer);
+             mModule = LoadLibraryA(buffer);
          }
++        #endif
      }
  
+     ~Win32Library() override
+diff --git a/src/gpu_info_util/SystemInfo_win.cpp b/src/gpu_info_util/SystemInfo_win.cpp
+index b19f9b740..9abe4a47d 100644
+--- a/src/gpu_info_util/SystemInfo_win.cpp
++++ b/src/gpu_info_util/SystemInfo_win.cpp
+@@ -6,16 +6,20 @@
+ 
+ // SystemInfo_win.cpp: implementation of the Windows-specific parts of SystemInfo.h
+ 
++#include <windows.h>
++#include <dxgi.h>
++
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++#else
++#include <d3d10.h>
++#endif
++
+ #include "gpu_info_util/SystemInfo_internal.h"
+ 
+ #include "common/debug.h"
+ #include "common/string_utils.h"
+ 
+ // Windows.h needs to be included first
+-#include <windows.h>
+-
+-#include <d3d10.h>
+-#include <dxgi.h>
+ 
+ #include <array>
+ #include <sstream>
+@@ -28,23 +32,28 @@ namespace
+ 
+ bool GetDevicesFromDXGI(std::vector<GPUDeviceInfo> *devices)
+ {
+-    IDXGIFactory *factory;
+-    if (!SUCCEEDED(CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void **>(&factory))))
++    IDXGIFactory1 *factory;
++    if (!SUCCEEDED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void **>(&factory))))
+     {
+         return false;
+     }
+ 
+     UINT i                = 0;
+-    IDXGIAdapter *adapter = nullptr;
+-    while (factory->EnumAdapters(i++, &adapter) != DXGI_ERROR_NOT_FOUND)
++    IDXGIAdapter1 *adapter = nullptr;
++    while (factory->EnumAdapters1(i++, &adapter) != DXGI_ERROR_NOT_FOUND)
+     {
+-        DXGI_ADAPTER_DESC desc;
+-        adapter->GetDesc(&desc);
+-
+-        LARGE_INTEGER umdVersion;
+-        if (adapter->CheckInterfaceSupport(__uuidof(ID3D10Device), &umdVersion) ==
+-            DXGI_ERROR_UNSUPPORTED)
+-        {
++        DXGI_ADAPTER_DESC1 desc;
++        LARGE_INTEGER umdVersion = {0};
++        bool ok1 = SUCCEEDED(adapter->GetDesc1(&desc));
++        #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++          umdVersion.HighPart = desc.AdapterLuid.HighPart;
++          umdVersion.LowPart = desc.AdapterLuid.LowPart;
++          bool ok2 = true;
++        #else
++          bool ok2 = adapter->CheckInterfaceSupport(__uuidof(ID3D10Device), &umdVersion) != DXGI_ERROR_UNSUPPORTED;
++        #endif
++
++        if (!ok1 || !ok2) {
+             adapter->Release();
+             continue;
+         }
+@@ -65,8 +74,6 @@ bool GetDevicesFromDXGI(std::vector<GPUDeviceInfo> *devices)
+         device.driverVersion = o.str();
+ 
+         devices->push_back(device);
+-
+-        adapter->Release();
+     }
+ 
+     factory->Release();
+@@ -96,8 +103,12 @@ bool GetSystemInfo(SystemInfo *info)
+     info->activeGPUIndex = 0;
+ 
+     // Override isOptimus. nvd3d9wrap.dll is loaded into all processes when Optimus is enabled.
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++    info->isOptimus    = false;
++#else
+     HMODULE nvd3d9wrap = GetModuleHandleW(L"nvd3d9wrap.dll");
+     info->isOptimus    = nvd3d9wrap != nullptr;
++#endif
+ 
+     return true;
+ }
 diff --git a/src/libANGLE/renderer/d3d/RendererD3D.cpp b/src/libANGLE/renderer/d3d/RendererD3D.cpp
-index 2a8d0221b..362c95a6f 100644
+index 64c00658c..454708cd1 100644
 --- a/src/libANGLE/renderer/d3d/RendererD3D.cpp
 +++ b/src/libANGLE/renderer/d3d/RendererD3D.cpp
-@@ -229,7 +229,6 @@ GLenum DefaultGLErrorCode(HRESULT hr)
+@@ -240,7 +240,6 @@ GLenum DefaultGLErrorCode(HRESULT hr)
  {
      switch (hr)
      {
@@ -23,8 +157,28 @@ index 2a8d0221b..362c95a6f 100644
          case E_OUTOFMEMORY:
              return GL_OUT_OF_MEMORY;
          default:
+diff --git a/src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp b/src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp
+index f80a30796..52bede063 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp
+@@ -67,7 +67,14 @@ void DebugAnnotator11::initialize(ID3D11DeviceContext *context)
+     // writing out all compiled shaders to temporary files even if debugging
+     // tools are not attached. See rx::ShaderD3D::prepareSourceAndReturnOptions.
+     // If you want debug annotations, you must use Windows 10.
+-    if (IsWindows10OrGreater())
++
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++    bool isWin10 = true;
++#else
++    bool isWin10 = IsWindows10OrGreater()
++#endif
++
++    if (isWin10)
+     {
+         mUserDefinedAnnotation.Attach(
+             d3d11::DynamicCastComObject<ID3DUserDefinedAnnotation>(context));
 diff --git a/src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp b/src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp
-index 9da5cfdae..6eaab6aa7 100644
+index 7bc139125..41902acc5 100644
 --- a/src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp
 +++ b/src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp
 @@ -14,6 +14,7 @@
@@ -35,7 +189,7 @@ index 9da5cfdae..6eaab6aa7 100644
  #include "libANGLE/Buffer.h"
  #include "libANGLE/Context.h"
  #include "libANGLE/Display.h"
-@@ -1189,10 +1190,11 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
+@@ -1175,10 +1176,11 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
      outExtensions->robustResourceInitialization = true;
  
      // Compositor Native Window capabilies require WinVer >= 1803
@@ -51,7 +205,7 @@ index 9da5cfdae..6eaab6aa7 100644
  }
  
  angle::Result Renderer11::flush(Context11 *context11)
-@@ -1266,16 +1268,24 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
+@@ -1252,16 +1254,24 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
                                                  const egl::Config *config,
                                                  const egl::AttributeMap &attribs) const
  {
