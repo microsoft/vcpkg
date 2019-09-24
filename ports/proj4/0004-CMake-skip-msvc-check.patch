@@ -1,0 +1,15 @@
+diff --git a/project-config-version.cmake.in b/project-config-version.cmake.in
+index ce2820c..f90706c 100644
+--- a/project-config-version.cmake.in
++++ b/project-config-version.cmake.in
+@@ -18,10 +18,6 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
+   # since a multi-architecture library is built for that platform).
+   set (REASON "sizeof(*void) =  @CMAKE_SIZEOF_VOID_P@")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)
+-elseif (MSVC AND NOT MSVC_VERSION STREQUAL "@MSVC_VERSION@")
+-  # Reject if there's a mismatch in MSVC compiler versions
+-  set (REASON "_MSC_VER = @MSVC_VERSION@")
+-  set (PACKAGE_VERSION_UNSUITABLE TRUE)
+ elseif (NOT CMAKE_CROSSCOMPILING STREQUAL "@CMAKE_CROSSCOMPILING@")
+   # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}
+   set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")

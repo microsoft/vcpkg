@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
         0001-CMake-add-detection-of-recent-visual-studio-versions.patch
         0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
         0003-CMake-configurable-cmake-config-install-location.patch
+        0004-CMake-skip-msvc-check.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
