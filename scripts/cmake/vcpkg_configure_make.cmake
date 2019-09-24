@@ -144,8 +144,18 @@ function(vcpkg_configure_make)
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     endif()
 
-    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} --bindir=${CURRENT_PACKAGES_DIR}/bin --sbindir=${CURRENT_PACKAGES_DIR}/bin --libdir=${CURRENT_PACKAGES_DIR}/lib --includedir=${CURRENT_PACKAGES_DIR}/include)
-    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} --bindir=${CURRENT_PACKAGES_DIR}/debug/bin --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin --libdir=${CURRENT_PACKAGES_DIR}/debug/lib --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
+    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
+                             --prefix=${CURRENT_PACKAGES_DIR}
+                             --bindir=${CURRENT_PACKAGES_DIR}/bin
+                             --sbindir=${CURRENT_PACKAGES_DIR}/bin
+                             --libdir=${CURRENT_PACKAGES_DIR}/lib
+                             --includedir=${CURRENT_PACKAGES_DIR}/include)
+    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
+                           --prefix=${CURRENT_PACKAGES_DIR}/debug
+                           --bindir=${CURRENT_PACKAGES_DIR}/debug/bin
+                           --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin
+                           --libdir=${CURRENT_PACKAGES_DIR}/debug/lib
+                           --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
     set(base_cmd )
     if(CMAKE_HOST_WIN32)
         if (GENERATOR STREQUAL "nmake")
