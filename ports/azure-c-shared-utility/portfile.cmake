@@ -9,7 +9,6 @@ if("public-preview" IN_LIST FEATURES)
         REF 1f3fd807c8c47b6607d349469301afb64643aa89
         SHA512 312ef2668ad62cb676c51474ba08307bacf9843d661233f7a6145e565ae58dcecb7bfa2e8a157efef1b54e8c07621bf2ec47b4d76ea180d77767b1ad44b951c2
         HEAD_REF master
-        PATCHES no-double-expand-cmake.patch
     )
 else()
     vcpkg_from_github(
@@ -18,7 +17,6 @@ else()
         REF 1f3fd807c8c47b6607d349469301afb64643aa89
         SHA512 312ef2668ad62cb676c51474ba08307bacf9843d661233f7a6145e565ae58dcecb7bfa2e8a157efef1b54e8c07621bf2ec47b4d76ea180d77767b1ad44b951c2
         HEAD_REF master
-        PATCHES no-double-expand-cmake.patch
     )
 endif()
 
@@ -43,4 +41,3 @@ file(COPY ${SOURCE_PATH}/configs/azure_iot_build_rules.cmake DESTINATION ${CURRE
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-c-shared-utility/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-
