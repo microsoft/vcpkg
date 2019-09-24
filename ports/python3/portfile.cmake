@@ -83,13 +83,13 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
 		
 		if(VCPKG_TARGET_IS_OSX)
-			vcpkg_execute_required_process(
+			vcpkg_execute_build_process(
 			  COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE} --with-openssl=${CURRENT_INSTALLED_DIR} "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include -framework CoreFoundation" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/lib" "LIBS=-liconv"
 			  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 			  LOGNAME config-${TARGET_TRIPLET}-rel
 			)
 		else()
-			vcpkg_execute_required_process(
+			vcpkg_execute_build_process(
 			  COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE} --with-openssl=${CURRENT_INSTALLED_DIR} "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/lib"
 			  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 			  LOGNAME config-${TARGET_TRIPLET}-rel
@@ -97,15 +97,16 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		endif()
 
 		message(STATUS "Building ${TARGET_TRIPLET}-rel")
-		vcpkg_execute_required_process(
-		  COMMAND make -j
+		vcpkg_execute_build_process(
+		  COMMAND make -j ${VCPKG_CONCURRENCY}
+		  NO_PARALLEL_COMMAND make
 		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 		  LOGNAME make-build-${TARGET_TRIPLET}-release
 		)
 		
 		message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-		vcpkg_execute_required_process(
-		  COMMAND make -j install
+		vcpkg_execute_build_process(
+		  COMMAND make install
 		  WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
 		  LOGNAME make-install-${TARGET_TRIPLET}-release
 		)
@@ -130,13 +131,13 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		set(OUT_PATH_DEBUG ${SOURCE_PATH_DEBUG}/../../make-build-${TARGET_TRIPLET}-debug)
 		file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
 		if(VCPKG_TARGET_IS_OSX)
-			vcpkg_execute_required_process(
+			vcpkg_execute_build_process(
 			  COMMAND "${SOURCE_PATH_DEBUG}/configure" --with-pydebug --prefix=${OUT_PATH_DEBUG} --with-openssl=${CURRENT_INSTALLED_DIR}/debug "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include -framework CoreFoundation" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/debug/lib" "LIBS=-liconv"
 			  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 			  LOGNAME config-${TARGET_TRIPLET}-debug
 			)
 		else()
-			vcpkg_execute_required_process(
+			vcpkg_execute_build_process(
 			  COMMAND "${SOURCE_PATH_DEBUG}/configure" --with-pydebug --prefix=${OUT_PATH_DEBUG} --with-openssl=${CURRENT_INSTALLED_DIR}/debug "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/debug/lib"
 			  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 			  LOGNAME config-${TARGET_TRIPLET}-debug
@@ -144,15 +145,16 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		endif()
 
 		message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-		vcpkg_execute_required_process(
-		  COMMAND make -j
+		vcpkg_execute_build_process(
+		  COMMAND make -j ${VCPKG_CONCURRENCY}
+		  NO_PARALLEL_COMMAND make
 		  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 		  LOGNAME make-build-${TARGET_TRIPLET}-debug
 		)
 		
 		message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-		vcpkg_execute_required_process(
-		  COMMAND make -j install
+		vcpkg_execute_build_process(
+		  COMMAND make install
 		  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 		  LOGNAME make-install-${TARGET_TRIPLET}-debug
 		)
