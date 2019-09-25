@@ -63,7 +63,7 @@ function(vcpkg_build_make)
         set(ENV{CL} " /MP ")
         # Set make command and install command
         set(MAKE ${NMAKE} /NOLOGO /G /U)
-        set(MAKE_OPTS -f makefile.vc all)
+        set(MAKE_OPTS -f makefile all)
         set(INSTALL_OPTS install)
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
@@ -71,79 +71,74 @@ function(vcpkg_build_make)
     
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     
-    if (NOT _VCPKG_MAKE_GENERATOR STREQUAL "nmake")
-        # For make or other generator
-        foreach(BUILDTYPE "debug" "release")
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-                if(BUILDTYPE STREQUAL "debug")
-                    # Skip debug generate
-                    if (_VCPKG_NO_DEBUG)
-                        continue()
-                    endif()
-                    set(SHORT_BUILDTYPE "-dbg")
-                else()
-                    # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                    if (_VCPKG_NO_DEBUG)
-                        set(SHORT_BUILDTYPE "")
-                    else()
-                        set(SHORT_BUILDTYPE "-rel")
-                    endif()
+    foreach(BUILDTYPE "debug" "release")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+            if(BUILDTYPE STREQUAL "debug")
+                # Skip debug generate
+                if (_VCPKG_NO_DEBUG)
+                    continue()
                 endif()
-                
-                if (CMAKE_HOST_WIN32)
-                    # In windows we can remotely call make
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                set(SHORT_BUILDTYPE "-dbg")
+            else()
+                # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
+                if (_VCPKG_NO_DEBUG)
+                    set(SHORT_BUILDTYPE "")
                 else()
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-                endif()
-    
-                message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-
-                vcpkg_execute_required_process(
-                    COMMAND ${MAKE} ${MAKE_OPTS}
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
-    
-                if(_bc_ADD_BIN_TO_PATH)
-                    set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+                    set(SHORT_BUILDTYPE "-rel")
                 endif()
             endif()
-        endforeach()
-        
-        if (_bc_ENABLE_INSTALL)
-            foreach(BUILDTYPE "debug" "release")
-                if(BUILDTYPE STREQUAL "debug")
-                    # Skip debug generate
-                    if (_VCPKG_NO_DEBUG)
-                        continue()
-                    endif()
-                    set(SHORT_BUILDTYPE "-dbg")
-                else()
-                    # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                    if (_VCPKG_NO_DEBUG)
-                        set(SHORT_BUILDTYPE "")
-                    else()
-                        set(SHORT_BUILDTYPE "-rel")
-                    endif()
-                endif()
-                
-                if (CMAKE_HOST_WIN32)
-                    # In windows we can remotely call make
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-                else()
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-                endif()
-                
-                message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                vcpkg_execute_required_process(
-                    COMMAND ${MAKE} ${INSTALL_OPTS}
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
-            endforeach()
+            
+            if (CMAKE_HOST_WIN32)
+                # In windows we can remotely call make
+                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+            else()
+                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+            endif()
+    
+            message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+
+            vcpkg_execute_required_process(
+                COMMAND ${MAKE} ${MAKE_OPTS}
+                WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+            )
+    
+            if(_bc_ADD_BIN_TO_PATH)
+                set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+            endif()
         endif()
-    else()
-        # For nmake
+    endforeach()
+    
+    if (_bc_ENABLE_INSTALL)
+        foreach(BUILDTYPE "debug" "release")
+            if(BUILDTYPE STREQUAL "debug")
+                # Skip debug generate
+                if (_VCPKG_NO_DEBUG)
+                    continue()
+                endif()
+                set(SHORT_BUILDTYPE "-dbg")
+            else()
+                # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
+                if (_VCPKG_NO_DEBUG)
+                    set(SHORT_BUILDTYPE "")
+                else()
+                    set(SHORT_BUILDTYPE "-rel")
+                endif()
+            endif()
+            
+            if (CMAKE_HOST_WIN32)
+                # In windows we can remotely call make
+                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+            else()
+                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+            endif()
+            
+            message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+            vcpkg_execute_required_process(
+                COMMAND ${MAKE} ${INSTALL_OPTS}
+                WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+            )
+        endforeach()
     endif()
 endfunction()
