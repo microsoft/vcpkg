@@ -7,7 +7,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnu.org/gnu/osip/libosip2-5.1.0.tar.gz"
+    URLS "http://ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz"
     FILENAME "libosip2-${LIBOSIP2_VER}.tar.gz"
     SHA512 391c9a0ea399f789d7061b0216d327eecba5bbf0429659f4f167604b9e703e1678ba6f58079aa4f84b3636a937064ecfb92e985368164fcb679e95654e43d65b
 )
