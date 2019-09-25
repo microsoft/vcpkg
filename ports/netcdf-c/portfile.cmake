@@ -14,7 +14,6 @@ vcpkg_from_github(
         hdf5_2.patch
         fix-build-error-on-linux.patch
         hdf5_3.patch
-        0001_import_curl_target.patch
 )
 
 #Remove outdated find modules
