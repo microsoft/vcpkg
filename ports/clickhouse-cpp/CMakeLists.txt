@@ -22,7 +22,7 @@ target_include_directories(clickhouse-cpp PUBLIC
 )
 
 target_link_libraries(clickhouse-cpp 
-    PRIVATE lz4
+    PRIVATE lz4::lz4
     PRIVATE cityhash
 )
 

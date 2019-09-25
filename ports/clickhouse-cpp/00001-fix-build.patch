@@ -13,34 +13,6 @@ index 6b7af08..c3a6449 100644
  
  #include <system_error>
  
-diff --git a/clickhouse/base/socket.cpp b/clickhouse/base/socket.cpp
-index 7a17e6d..cb29d1d 100644
---- a/clickhouse/base/socket.cpp
-+++ b/clickhouse/base/socket.cpp
-@@ -34,6 +34,23 @@ public:
-     }
- };
- 
-+// from https://github.com/catboost/catboost/blob/master/util/network/socket.cpp
-+#if defined(_win_)
-+static inline void SetNonBlockSocket(SOCKET fd, int value) {
-+    unsigned long inbuf = value;
-+    unsigned long outbuf = 0;
-+    DWORD written = 0;
-+
-+    if (!inbuf) {
-+        WSAEventSelect(fd, nullptr, 0);
-+    }
-+
-+    if (WSAIoctl(fd, FIONBIO, &inbuf, sizeof(inbuf), &outbuf, sizeof(outbuf), &written, 0, 0) == SOCKET_ERROR) {
-+		throw std::system_error(WSAGetLastError(), std::system_category(), "can not set non block socket state");
-+    }
-+}
-+#endif
-+
- void SetNonBlock(SOCKET fd, bool value) {
- #if defined(_unix_)
-     int flags;
 diff --git a/clickhouse/client.cpp b/clickhouse/client.cpp
 index 1053006..59950ab 100644
 --- a/clickhouse/client.cpp
