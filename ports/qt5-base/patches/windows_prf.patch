@@ -1,0 +1,13 @@
+diff --git a/mkspecs/features/win32/windows.prf b/mkspecs/features/win32/windows.prf
+index 272170d4..70b8ea2e 100644
+--- a/mkspecs/features/win32/windows.prf
++++ b/mkspecs/features/win32/windows.prf
+@@ -6,7 +6,7 @@ contains(TEMPLATE, ".*app") {
+ 
+     qt:for(entryLib, $$list($$unique(QMAKE_LIBS_QT_ENTRY))) {
+         isEqual(entryLib, -lqtmain) {
+-            lib = $$QT.core.libs/$${QMAKE_PREFIX_STATICLIB}qtmain$$QT_LIBINFIX$$qtPlatformTargetSuffix().$$QMAKE_EXTENSION_STATICLIB
++            lib = $$QT.core.libs/manual-link/$${QMAKE_PREFIX_STATICLIB}qtmain$$QT_LIBINFIX$$qtPlatformTargetSuffix().$$QMAKE_EXTENSION_STATICLIB
+             PRE_TARGETDEPS += $$lib
+             QMAKE_LIBS += $$lib
+         } else {
