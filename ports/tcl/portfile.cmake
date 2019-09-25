@@ -9,23 +9,29 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-    set(MACHINE_STR AMD64)
+if (VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+        set(MACHINE_STR AMD64)
+    else()
+        set(MACHINE_STR IX86)
+    endif()
+    
+    vcpkg_install_nmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH win
+        OPTIONS
+            MACHINE=${MACHINE_STR}
+        OPTIONS_DEBUG
+            OPTS=symbols
+    )
+
 else()
-    set(MACHINE_STR IX86)
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH unix
+    )
+    
+    vcpkg_install_make()
 endif()
-
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    GENERATOR NMake
-    PROJECT_SUBPATH unix
-    NMAKE_PROJECT_SUBPATH win
-    NMAKE_OPTION
-        MACHINE=${MACHINE_STR}
-    NMAKE_OPTION_DEBUG
-        OPTS=symbols
-)
-
-vcpkg_install_make()
 
 file(INSTALL ${SOURCE_PATH}/license.terms DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

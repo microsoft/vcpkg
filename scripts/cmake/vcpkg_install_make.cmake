@@ -11,7 +11,7 @@
 ## See [`vcpkg_build_make()`](vcpkg_build_make.md).
 ##
 ## ## Notes:
-## This command transparently forwards to [`vcpkg_build_make()`](vcpkg_build_make.md), adding a `TARGET install`
+## This command transparently forwards to [`vcpkg_build_make()`](vcpkg_build_make.md), adding `ENABLE_INSTALL`
 
 function(vcpkg_install_make)
     vcpkg_build_make(LOGFILE_ROOT ENABLE_INSTALL)

@@ -8,6 +8,7 @@
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
 ##     [GENERATOR]
+##     [NO_DEBUG]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
@@ -22,11 +23,6 @@
 ##
 ## ### PROJECT_SUBPATH
 ## Specifies the directory containing the ``configure`/`configure.ac`.
-## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-## Should use `GENERATOR NMake` first.
-##
-## ### NMAKE_PROJECT_SUBPATH
-## Specifies the directory containing the ``makefile.vc`.
 ## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
 ## Should use `GENERATOR NMake` first.
 ##
@@ -53,25 +49,13 @@
 ## ### OPTIONS_DEBUG
 ## Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
 ##
-## ### NMAKE_OPTION
-## Additional options passed to generate during the generation.
-## Only for msvc makefile
-##
-## ### NMAKE_OPTION_RELEASE
-## Additional options passed to generate during the Release generation. These are in addition to `NMAKE_OPTION`.
-## Only for msvc makefile
-##
-## ### NMAKE_OPTION_DEBUG
-## Additional options passed to generate during the Debug generation. These are in addition to `NMAKE_OPTION`.
-## Only for msvc makefile
-##
 ## ## Notes
 ## This command supplies many common arguments to configure. To see the full list, examine the source.
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;NO_DEBUG"
-        "SOURCE_PATH;PROJECT_SUBPATH;NMAKE_PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;NMAKE_OPTION;NMAKE_OPTION_DEBUG;NMAKE_OPTION_RELEASE"
+        "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
     )
     
@@ -101,19 +85,15 @@ function(vcpkg_configure_make)
     endif()
     
     if (_csc_AUTOCONFIG AND NOT CMAKE_HOST_WIN32)
-        find_program(autoreconf autoreconf)
-        if (NOT autoreconf)
-            message(FATAL_ERROR "autoreconf must be installed. Install them with \"apt-get dh-autoreconf\".")
-        endif()
+        find_program(autoreconf autoreconf REQUIRED)
     endif()
 
     set(SKIP_CONFIGURE OFF)
+    set(WIN_TARGET_ARCH )
+    set(WIN_TARGET_COMPILER )
     if (GENERATOR STREQUAL "nmake")
         message(STATUS "Using generator NMAKE")
-        find_program(NMAKE nmake)
-        if (NOT NMAKE)
-            message(FATAL_ERROR "NMAKE not found.")
-        endif()
+        find_program(NMAKE nmake REQUIRED)
         set(SKIP_CONFIGURE ON)
     elseif (GENERATOR STREQUAL "make")
         message(STATUS "Using generator make")
@@ -122,17 +102,24 @@ function(vcpkg_configure_make)
             vcpkg_find_acquire_program(PERL)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
+            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
             
+
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+                set(WIN_TARGET_ARCH --host=x86-pc-mingw32)
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+                set(WIN_TARGET_ARCH --host=x86_64-pc-mingw64)
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+                set(WIN_TARGET_ARCH --host=arm-pc-mingw32)
+            endif()
+            set(WIN_TARGET_COMPILER CC=cl)
             message(STATUS "PERL_EXE_PATH ; ${PERL_EXE_PATH}")
             set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
         else()
-            find_program(MAKE make)
-            if (NOT MAKE)
-                message(FATAL_ERROR "MAKE not found.")
-            endif()
+            find_program(MAKE make REQUIRED)
         endif()
     else()
         message(FATAL_ERROR "${GENERATOR} not supported.")
@@ -150,33 +137,24 @@ function(vcpkg_configure_make)
                              --sbindir=${CURRENT_PACKAGES_DIR}/bin
                              --libdir=${CURRENT_PACKAGES_DIR}/lib
                              --includedir=${CURRENT_PACKAGES_DIR}/include)
+
     set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                            --prefix=${CURRENT_PACKAGES_DIR}/debug
                            --bindir=${CURRENT_PACKAGES_DIR}/debug/bin
                            --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin
                            --libdir=${CURRENT_PACKAGES_DIR}/debug/lib
                            --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
+
     set(base_cmd )
     if(CMAKE_HOST_WIN32)
-        if (GENERATOR STREQUAL "nmake")
-            set(base_cmd ${NMAKE} /NOLOGO /G /U /f "${_csc_NMAKE_PROJECT_SUBPATH}")
-            set(rel_command
-                ${base_cmd} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
-            )
-            set(dbg_command
-                ${base_cmd} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
-            )
-        else()
-            set(base_cmd ${BASH} --noprofile --norc )
-            set(rel_command
-                ${base_cmd} "configure" "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
-            )
-            set(dbg_command
-                ${base_cmd} "configure" "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
-            )
-        endif()
+        set(base_cmd ${BASH} --noprofile --norc -c ${WIN_TARGET_COMPILER} )
+        set(rel_command
+            ${base_cmd} "./configure" ${WIN_TARGET_ARCH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+        )
+        set(dbg_command
+            ${base_cmd} "./configure" ${WIN_TARGET_ARCH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
+        )
     else()
-        set(_csc_NMAKE_PROJECT_SUBPATH )
         set(base_cmd ./)
         set(rel_command
             ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
@@ -189,11 +167,8 @@ function(vcpkg_configure_make)
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        if (GENERATOR STREQUAL "nmake")
-            set(PRJ_DIR ${OBJ_DIR}/${_csc_NMAKE_PROJECT_SUBPATH})
-        else()
-            set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
-        endif()
+        set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
+        
         file(MAKE_DIRECTORY ${OBJ_DIR})
         file(GLOB SOURCE_FILES ${_csc_SOURCE_PATH}/*)
         foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
@@ -237,11 +212,8 @@ function(vcpkg_configure_make)
             set(TAR_TRIPLET_DIR ${TARGET_TRIPLET}-rel)
             set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
         endif()
-        if (GENERATOR STREQUAL "nmake")
-            set(PRJ_DIR ${OBJ_DIR}/${_csc_NMAKE_PROJECT_SUBPATH})
-        else()
-            set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
-        endif()
+        set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
+        
         file(MAKE_DIRECTORY ${OBJ_DIR})
         file(GLOB SOURCE_FILES ${_csc_SOURCE_PATH}/*)
         foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
@@ -277,8 +249,5 @@ function(vcpkg_configure_make)
     endif()
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
     set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
-    set(_VCPKG_NMAKE_OPTION_RELEASE ${_csc_NMAKE_OPTION} ${_csc_NMAKE_OPTION_RELEASE} PARENT_SCOPE)
-    set(_VCPKG_NMAKE_OPTION_DEBUG ${_csc_NMAKE_OPTION} ${_csc_NMAKE_OPTION_DEBUG} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
-    set(_VCPKG_NMAKE_PROJECT_SUBPATH ${_csc_NMAKE_PROJECT_SUBPATH} PARENT_SCOPE)
 endfunction()

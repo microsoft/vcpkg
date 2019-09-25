@@ -1,6 +1,6 @@
-## # vcpkg_build_cmake
+## # vcpkg_build_make
 ##
-## Build a make project.
+## Build a linux make project.
 ##
 ## ## Usage:
 ## ```cmake
@@ -42,7 +42,7 @@ function(vcpkg_build_make)
             set(MAKE "${BASH} make --noprofile --norc")
             set(_VCPKG_MAKE_GENERATOR install)
         else()
-            find_program(MAKE make)
+            find_program(MAKE make REQUIRED)
             # Set make command and install command
             set(MAKE make)
             set(INSTALL_OPTS install)
@@ -53,9 +53,10 @@ function(vcpkg_build_make)
             set(_VCPKG_PROJECT_SUBPATH )
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
-        find_program(NMAKE nmake)
+        find_program(NMAKE nmake REQUIRED)
         get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
         set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
+        set(ENV{CL} " /MP ")
         # Set make command and install command
         set(MAKE ${NMAKE} /NOLOGO /G /U)
         set(MAKE_OPTS -f makefile.vc all)
@@ -136,55 +137,5 @@ function(vcpkg_build_make)
         endif()
     else()
         # For nmake
-        set(EXTRA_OPT OPTS=pdbs OPTS=symbols)
-        foreach(BUILDTYPE "debug" "release")
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-                if(BUILDTYPE STREQUAL "debug")
-                    # Skip debug generate
-                    if (_VCPKG_NO_DEBUG)
-                        continue()
-                    endif()
-                    # Generate obj dir suffix
-                    set(SHORT_BUILDTYPE "-dbg")
-                    set(CONFIG "Debug")
-                    # Add install command and arguments
-                    if (_bc_ENABLE_INSTALL)
-                        set(INSTALL_OPTS ${INSTALL_OPTS} INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
-                        set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
-                    endif()
-                    set(MAKE_OPTS ${MAKE_OPTS} ${_VCPKG_NMAKE_OPTION_DEBUG} ${EXTRA_OPT})
-                else()
-                    # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                    if (_VCPKG_NO_DEBUG)
-                        set(SHORT_BUILDTYPE "")
-                    else()
-                        set(SHORT_BUILDTYPE "-rel")
-                    endif()
-                    set(CONFIG "Release")
-                    # Add install command and arguments
-                    if (_bc_ENABLE_INSTALL)
-                        set(INSTALL_OPTS ${INSTALL_OPTS} INSTALLDIR=${CURRENT_PACKAGES_DIR})
-                        set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
-                    endif()
-                    set(MAKE_OPTS ${MAKE_OPTS} ${_VCPKG_NMAKE_OPTION_RELEASE} ${EXTRA_OPT})
-                endif()
-
-                if (NOT _bc_ENABLE_INSTALL)
-                    message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                else()
-                    message(STATUS "Building and installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                endif()
-
-                vcpkg_execute_required_process(
-                    COMMAND ${MAKE} ${MAKE_OPTS}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_NMAKE_PROJECT_SUBPATH}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
-
-                if(_bc_ADD_BIN_TO_PATH)
-                    set(ENV{PATH} "${_BACKUP_ENV_PATH}")
-                endif()
-            endif()
-        endforeach()
     endif()
 endfunction()
