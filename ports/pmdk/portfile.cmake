@@ -15,9 +15,6 @@ vcpkg_from_github(
     REF 1.6
     SHA512 f66e4edf1937d51abfa7c087b65a64109cd3d2a8d9587d6c4fc28a1003d67ec1f35a0011c9a9d0bfe76ad7227be83e86582f8405c988eac828d8ae5d0a399483
     HEAD_REF master
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/addPowerShellExecutionPolicy.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/v141.patch"
 )
 
 get_filename_component(PMDK_VERSION "${SOURCE_PATH}" NAME)
