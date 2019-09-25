@@ -25,7 +25,7 @@
 ##
 ## ### PROJECT_NAME
 ## Specifies the name of msvc makefile name.
-## Default is makefile.vc
+## Default is `makefile.vc`
 ##
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
@@ -80,8 +80,8 @@ function(vcpkg_build_nmake)
     endif()
     
     set(MAKE )
-    set(MAKE_OPTS )
-    set(INSTALL_OPTS )
+    set(MAKE_OPTS_BASE )
+    set(INSTALL_OPTS_BASE )
     
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
@@ -91,8 +91,8 @@ function(vcpkg_build_nmake)
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)
-    set(MAKE_OPTS -f ${MAKEFILE_NAME} all)
-    set(INSTALL_OPTS install)
+    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME} all)
+    set(INSTALL_OPTS_BASE install)
     set(EXTRA_OPT OPTS=pdbs OPTS=symbols)
     # Add subpath to work directory
     if (_bn_PROJECT_SUBPATH)
@@ -112,11 +112,12 @@ function(vcpkg_build_nmake)
                 set(SHORT_BUILDTYPE "-dbg")
                 set(CONFIG "Debug")
                 # Add install command and arguments
+                set(MAKE_OPTS ${MAKE_OPTS_BASE})
                 if (_bn_ENABLE_INSTALL)
-                    set(INSTALL_OPTS ${INSTALL_OPTS} INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
+                    set(INSTALL_OPTS ${INSTALL_OPTS_BASE} INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
                     set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
-                set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS_DEBUG} ${EXTRA_OPT})
+                set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_DEBUG} ${EXTRA_OPT})
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                 if (_bn_NO_DEBUG)
@@ -126,11 +127,12 @@ function(vcpkg_build_nmake)
                 endif()
                 set(CONFIG "Release")
                 # Add install command and arguments
+                set(MAKE_OPTS ${MAKE_OPTS_BASE})
                 if (_bn_ENABLE_INSTALL)
-                    set(INSTALL_OPTS ${INSTALL_OPTS} INSTALLDIR=${CURRENT_PACKAGES_DIR})
+                    set(INSTALL_OPTS ${INSTALL_OPTS_BASE} INSTALLDIR=${CURRENT_PACKAGES_DIR})
                     set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
-                set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS_RELEASE} ${EXTRA_OPT})
+                set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_RELEASE} ${EXTRA_OPT})
             endif()
             
             set(CURRENT_TRIPLET_NAME ${TARGET_TRIPLET}${SHORT_BUILDTYPE})
@@ -138,9 +140,11 @@ function(vcpkg_build_nmake)
             
             file(REMOVE_RECURSE ${OBJ_DIR})
             file(MAKE_DIRECTORY ${OBJ_DIR})
-            file(GLOB SOURCE_FILES ${_bn_SOURCE_PATH}/*)
+            file(GLOB_RECURSE SOURCE_FILES ${_bn_SOURCE_PATH}/*)
             foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
+                get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
+                string(REPLACE "${_bn_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
+                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
             endforeach()
 
             if (NOT _bn_ENABLE_INSTALL)

@@ -67,7 +67,7 @@ function(vcpkg_configure_make)
     if (_csc_OPTIONS_DEBUG STREQUAL _csc_OPTIONS_RELEASE OR NMAKE_OPTION_RELEASE STREQUAL NMAKE_OPTION_DEBUG)
         message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_configure_make")
     endif()
-
+    # Select compiler
     if(_csc_GENERATOR MATCHES "NMake")
         if (CMAKE_HOST_WIN32)
             set(GENERATOR "nmake")
@@ -88,41 +88,36 @@ function(vcpkg_configure_make)
         find_program(autoreconf autoreconf REQUIRED)
     endif()
 
-    set(SKIP_CONFIGURE OFF)
     set(WIN_TARGET_ARCH )
     set(WIN_TARGET_COMPILER )
+    # Detect compiler
     if (GENERATOR STREQUAL "nmake")
         message(STATUS "Using generator NMAKE")
         find_program(NMAKE nmake REQUIRED)
-        set(SKIP_CONFIGURE ON)
     elseif (GENERATOR STREQUAL "make")
         message(STATUS "Using generator make")
-        if (CMAKE_HOST_WIN32)
-            vcpkg_find_acquire_program(YASM)
-            vcpkg_find_acquire_program(PERL)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-            get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-            get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-            
-
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-                set(WIN_TARGET_ARCH --host=x86-pc-mingw32)
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                set(WIN_TARGET_ARCH --host=x86_64-pc-mingw64)
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-                set(WIN_TARGET_ARCH --host=arm-pc-mingw32)
-            endif()
-            set(WIN_TARGET_COMPILER CC=cl)
-            message(STATUS "PERL_EXE_PATH ; ${PERL_EXE_PATH}")
-            set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
-            set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-        else()
-            find_program(MAKE make REQUIRED)
-        endif()
+        find_program(MAKE make REQUIRED)
     else()
         message(FATAL_ERROR "${GENERATOR} not supported.")
+    endif()
+    # Pre-processing windows configure requirements
+    if (CMAKE_HOST_WIN32)
+        vcpkg_find_acquire_program(YASM)
+        vcpkg_find_acquire_program(PERL)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
+        get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+        get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+            set(WIN_TARGET_ARCH --host=i686-pc-mingw32)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+            set(WIN_TARGET_ARCH --host=i686-pc-mingw64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+            set(WIN_TARGET_ARCH --host=arm-pc-mingw32)
+        endif()
+        set(WIN_TARGET_COMPILER CC=cl)
+        set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+        set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     endif()
     
     if (NOT _csc_NO_DEBUG)
@@ -147,12 +142,45 @@ function(vcpkg_configure_make)
 
     set(base_cmd )
     if(CMAKE_HOST_WIN32)
-        set(base_cmd ${BASH} --noprofile --norc -c ${WIN_TARGET_COMPILER} )
+        set(base_cmd ${BASH} --noprofile --norc -c)
+        
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared)
+            if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+                set(_csc_OPTIONS ${_csc_OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
+            endif()
+        else()
+            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static)
+        endif()
+    
+        if(VCPKG_CRT_LINKAGE STREQUAL "static")
+            set(MAKE_RUNTIME "-MT")
+        else()
+            set(MAKE_RUNTIME "-MD")
+        endif()
+        
+        set(ENV{CFLAGS} "${MAKE_RUNTIME} -O2 -Oi -Zi")
+        set(ENV{CXXFLAGS} "${MAKE_RUNTIME} -O2 -Oi -Zi")
+        set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+        
+        if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
+            set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
+        endif()
+        
+        if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
+            set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
+        endif()
+        
+        string(REPLACE ";" " " _csc_OPTIONS "${_csc_OPTIONS}")
+        string(REPLACE ";" " " _csc_OPTIONS_RELEASE "${_csc_OPTIONS_RELEASE}")
+        string(REPLACE ";" " " _csc_OPTIONS_DEBUG "${_csc_OPTIONS_DEBUG}")
         set(rel_command
-            ${base_cmd} "./configure" ${WIN_TARGET_ARCH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} --disable-asm"
         )
         set(dbg_command
-            ${base_cmd} "./configure" ${WIN_TARGET_ARCH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
+            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} --disable-asm"
         )
     else()
         set(base_cmd ./)
@@ -170,37 +198,41 @@ function(vcpkg_configure_make)
         set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
         
         file(MAKE_DIRECTORY ${OBJ_DIR})
-        file(GLOB SOURCE_FILES ${_csc_SOURCE_PATH}/*)
-        foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-            file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
-        endforeach()
         
-        if (NOT SKIP_CONFIGURE)
-            if (_csc_PRERUN_SHELL)
-                message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
-                vcpkg_execute_required_process(
-                    COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
-                    WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TARGET_TRIPLET}-dbg
-                )
-            endif()
-            
-            if (_csc_AUTOCONFIG)
-                message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
-                vcpkg_execute_required_process(
-                    COMMAND autoreconf -v --install
-                    WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TARGET_TRIPLET}-dbg
-                )
-            endif()
-            
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        if (NOT CMAKE_HOST_WIN32)
+            file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
+            foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
+                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
+                get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
+                string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
+                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
+            endforeach()
+        endif()
+
+        if (_csc_PRERUN_SHELL)
+            message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
-                COMMAND ${dbg_command}
+                COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
                 WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME config-${TARGET_TRIPLET}-dbg
+                LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
         endif()
+        
+        if (_csc_AUTOCONFIG)
+            message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
+            vcpkg_execute_required_process(
+                COMMAND autoreconf -v --install
+                WORKING_DIRECTORY ${PRJ_DIR}
+                LOGNAME prerun-${TARGET_TRIPLET}-dbg
+            )
+        endif()
+        
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        vcpkg_execute_required_process(
+            COMMAND ${dbg_command}
+            WORKING_DIRECTORY ${PRJ_DIR}
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
     endif()
 
     # Configure release
@@ -215,39 +247,48 @@ function(vcpkg_configure_make)
         set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
         
         file(MAKE_DIRECTORY ${OBJ_DIR})
-        file(GLOB SOURCE_FILES ${_csc_SOURCE_PATH}/*)
-        foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-            file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
-        endforeach()
         
-        if (NOT SKIP_CONFIGURE)
-            if (_csc_PRERUN_SHELL)
-                message(STATUS "Prerun shell with ${TAR_TRIPLET_DIR}")
-                vcpkg_execute_required_process(
-                    COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
-                    WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
-                )
-            endif()
-            
-            if (_csc_AUTOCONFIG)
-                message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
-                vcpkg_execute_required_process(
-                    COMMAND autoreconf -v --install
-                    WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
-                )
-            endif()
-            
-            message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
+        if (NOT CMAKE_HOST_WIN32)
+            file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
+            foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
+                get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
+                string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
+                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
+            endforeach()
+        endif()
+        
+        if (_csc_PRERUN_SHELL)
+            message(STATUS "Prerun shell with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
-                COMMAND ${rel_command}
+                COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
                 WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME config-${TAR_TRIPLET_DIR}
+                LOGNAME prerun-${TAR_TRIPLET_DIR}
             )
         endif()
+        
+        if (_csc_AUTOCONFIG)
+            message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
+            vcpkg_execute_required_process(
+                COMMAND autoreconf -v --install
+                WORKING_DIRECTORY ${PRJ_DIR}
+                LOGNAME prerun-${TAR_TRIPLET_DIR}
+            )
+        endif()
+        
+        message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
+        vcpkg_execute_required_process(
+            COMMAND ${rel_command}
+            WORKING_DIRECTORY ${PRJ_DIR}
+            LOGNAME config-${TAR_TRIPLET_DIR}
+        )
     endif()
+    
+    unset(ENV{CFLAGS})
+    unset(ENV{CXXFLAGS})
+    unset(ENV{LDFLAGS})
+    
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
     set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
+    SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
 endfunction()

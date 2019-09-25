@@ -25,32 +25,35 @@ function(vcpkg_build_make)
         set(_bc_LOGFILE_ROOT "build")
     endif()
     
+    if (_VCPKG_PROJECT_SUBPATH)
+        set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH}/)
+    endif()
+    
     set(MAKE )
     set(MAKE_OPTS )
     set(INSTALL_OPTS )
     if (_VCPKG_MAKE_GENERATOR STREQUAL "make")
         if (CMAKE_HOST_WIN32)
+            # Compiler requriements
             vcpkg_find_acquire_program(YASM)
             vcpkg_find_acquire_program(PERL)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+            
             set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
-            set(MAKE "${BASH} make --noprofile --norc")
-            set(_VCPKG_MAKE_GENERATOR install)
+            set(MAKE ${BASH} --noprofile --norc -c)
+            set(MAKE_OPTS "${_VCPKG_PROJECT_SUBPATH}make")
+            set(INSTALL_OPTS "${_VCPKG_PROJECT_SUBPATH}make install")
         else()
+            # Compiler requriements
             find_program(MAKE make REQUIRED)
-            # Set make command and install command
             set(MAKE make)
+            # Set make command and install command
+            set(MAKE_OPTS)
             set(INSTALL_OPTS install)
-        endif()
-        if (_VCPKG_PROJECT_SUBPATH)
-            set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH})
-        else()
-            set(_VCPKG_PROJECT_SUBPATH )
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)
@@ -61,12 +64,6 @@ function(vcpkg_build_make)
         set(MAKE ${NMAKE} /NOLOGO /G /U)
         set(MAKE_OPTS -f makefile.vc all)
         set(INSTALL_OPTS install)
-        # Add subpath to work directory
-        if (_VCPKG_NMAKE_PROJECT_SUBPATH)
-            set(_VCPKG_NMAKE_PROJECT_SUBPATH /${_VCPKG_NMAKE_PROJECT_SUBPATH})
-        else()
-            set(_VCPKG_NMAKE_PROJECT_SUBPATH )
-        endif()
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
@@ -95,11 +92,10 @@ function(vcpkg_build_make)
                 endif()
     
                 message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-    
-                
+
                 vcpkg_execute_required_process(
                     COMMAND ${MAKE} ${MAKE_OPTS}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}
+                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
     
@@ -130,7 +126,7 @@ function(vcpkg_build_make)
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 vcpkg_execute_required_process(
                     COMMAND ${MAKE} ${INSTALL_OPTS}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}
+                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}
                     LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             endforeach()

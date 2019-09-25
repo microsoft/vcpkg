@@ -57,7 +57,7 @@ function(vcpkg_install_nmake)
     endif()
     
     vcpkg_build_nmake(LOGFILE_ROOT ENABLE_INSTALL
-        NO_DEBUG ${_in_NO_DEBUG}
+        ${_in_NO_DEBUG}
         SOURCE_PATH ${_in_SOURCE_PATH} PROJECT_SUBPATH ${_in_PROJECT_SUBPATH} PROJECT_NAME ${_in_PROJECT_NAME}
         OPTIONS ${_in_OPTIONS} OPTIONS_RELEASE ${_in_OPTIONS_RELEASE} OPTIONS_DEBUG ${_in_OPTIONS_DEBUG}
     )
