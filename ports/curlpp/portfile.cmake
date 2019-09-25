@@ -31,7 +31,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 
     configure_file(
-        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
         ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}
         @ONLY
     )

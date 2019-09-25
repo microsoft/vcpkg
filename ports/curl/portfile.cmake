@@ -175,6 +175,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+
+    file(GLOB FILES LIST_DIRECTORIES TRUE ${CURRENT_PACKAGES_DIR}/bin/*)
+    if (FILES STREQUAL "")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    endif()
+
+    file(GLOB FILES LIST_DIRECTORIES TRUE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+    if (FILES STREQUAL "")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
