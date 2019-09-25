@@ -1,0 +1,5 @@
+Source: crfsuite
+Version: 2019-07-21
+Homepage: http://www.chokkan.org/software/crfsuite/
+Build-Depends: liblbfgs
+Description:  CRFSuite is an implementation of Conditional Random Fields (CRFs) for labeling sequential data.
