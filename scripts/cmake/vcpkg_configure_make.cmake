@@ -269,7 +269,7 @@ function(vcpkg_configure_make)
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
-                COMMAND autoreconf -v --install
+                COMMAND autoreconf -vfi --install
                 WORKING_DIRECTORY ${PRJ_DIR}
                 LOGNAME prerun-${TAR_TRIPLET_DIR}
             )

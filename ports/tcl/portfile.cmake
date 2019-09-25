@@ -21,6 +21,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH win
         OPTIONS
             MACHINE=${MACHINE_STR}
+            OPTS=pdbs
+            OPTS=symbols
         OPTIONS_DEBUG
             OPTS=symbols
     )
