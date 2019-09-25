@@ -1,11 +1,3 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -14,8 +6,9 @@ vcpkg_from_github(
     REF  v1.1.33
     SHA512 2c20b2af3c19952b25b10dca0d95fe227602f7f815db352b04dd061c52c458d745f92c597ce08ac9207ba0fbe0169ea2fb78263d8590743717553f84463fe1d9
     HEAD_REF master
-	PATCHES
-	0001-Fix-makefile.patch
+    PATCHES
+        0001-Fix-makefile.patch
+        0002-Fix-lzma.patch
 )
 
 find_program(NMAKE nmake)
@@ -167,8 +160,7 @@ else()
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxslt)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libxslt/Copyright ${CURRENT_PACKAGES_DIR}/share/libxslt/copyright)
-
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
