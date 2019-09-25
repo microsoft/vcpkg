@@ -45,6 +45,7 @@ function(vcpkg_build_make)
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
             set(MAKE ${BASH} --noprofile --norc -c)
+            # Must use absolute path to call make in windows
             set(MAKE_OPTS "${_VCPKG_PROJECT_SUBPATH}make")
             set(INSTALL_OPTS "${_VCPKG_PROJECT_SUBPATH}make install")
         else()
@@ -80,7 +81,6 @@ function(vcpkg_build_make)
                         continue()
                     endif()
                     set(SHORT_BUILDTYPE "-dbg")
-                    set(CONFIG "Debug")
                 else()
                     # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                     if (_VCPKG_NO_DEBUG)
@@ -88,14 +88,20 @@ function(vcpkg_build_make)
                     else()
                         set(SHORT_BUILDTYPE "-rel")
                     endif()
-                    set(CONFIG "Release")
+                endif()
+                
+                if (CMAKE_HOST_WIN32)
+                    # In windows we can remotely call make
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                else()
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
                 endif()
     
                 message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
                 vcpkg_execute_required_process(
                     COMMAND ${MAKE} ${MAKE_OPTS}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}
+                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
     
@@ -113,7 +119,6 @@ function(vcpkg_build_make)
                         continue()
                     endif()
                     set(SHORT_BUILDTYPE "-dbg")
-                    set(CONFIG "Debug")
                 else()
                     # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                     if (_VCPKG_NO_DEBUG)
@@ -121,12 +126,19 @@ function(vcpkg_build_make)
                     else()
                         set(SHORT_BUILDTYPE "-rel")
                     endif()
-                    set(CONFIG "Release")
                 endif()
+                
+                if (CMAKE_HOST_WIN32)
+                    # In windows we can remotely call make
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                else()
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                endif()
+                
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 vcpkg_execute_required_process(
                     COMMAND ${MAKE} ${INSTALL_OPTS}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}
+                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
                     LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             endforeach()

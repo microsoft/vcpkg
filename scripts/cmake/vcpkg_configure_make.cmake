@@ -7,8 +7,11 @@
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
+##     [DISABLE_AUTO_HOST]
+##     [DISABLE_AUTO_DST]
 ##     [GENERATOR]
 ##     [NO_DEBUG]
+##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
@@ -32,6 +35,14 @@
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure file.
 ##
+## ### DISABLE_AUTO_HOST
+## Don't set host automatically, the default value is `i686`.
+## If use this option, you will need to set host manually.
+##
+## ### DISABLE_AUTO_DST
+## Don't set installation path automatically, the default value is `${CURRENT_PACKAGES_DIR}` and `${CURRENT_PACKAGES_DIR}/debug`
+## If use this option, you will need to set dst path manually.
+##
 ## ### GENERATOR
 ## Specifies the precise generator to use.
 ## NMake: nmake(windows) make(unix)
@@ -53,7 +64,7 @@
 ## This command supplies many common arguments to configure. To see the full list, examine the source.
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;NO_DEBUG"
+        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -107,13 +118,15 @@ function(vcpkg_configure_make)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
         get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(WIN_TARGET_ARCH --host=i686-pc-mingw32)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(WIN_TARGET_ARCH --host=i686-pc-mingw64)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            set(WIN_TARGET_ARCH --host=arm-pc-mingw32)
+        
+        if (_csc_DISABLE_AUTO_HOST)
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+                set(WIN_TARGET_ARCH --host=i686-pc-mingw32)
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+                set(WIN_TARGET_ARCH --host=i686-pc-mingw64)
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+                set(WIN_TARGET_ARCH --host=arm-pc-mingw32)
+            endif()
         endif()
         set(WIN_TARGET_COMPILER CC=cl)
         set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
@@ -126,20 +139,22 @@ function(vcpkg_configure_make)
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     endif()
 
-    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
-                             --prefix=${CURRENT_PACKAGES_DIR}
-                             --bindir=${CURRENT_PACKAGES_DIR}/bin
-                             --sbindir=${CURRENT_PACKAGES_DIR}/bin
-                             --libdir=${CURRENT_PACKAGES_DIR}/lib
-                             --includedir=${CURRENT_PACKAGES_DIR}/include)
-
-    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
-                           --prefix=${CURRENT_PACKAGES_DIR}/debug
-                           --bindir=${CURRENT_PACKAGES_DIR}/debug/bin
-                           --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin
-                           --libdir=${CURRENT_PACKAGES_DIR}/debug/lib
-                           --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
-
+    if (_csc_DISABLE_AUTO_DST)
+        set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
+                                --prefix=${CURRENT_PACKAGES_DIR}
+                                --bindir=${CURRENT_PACKAGES_DIR}/bin
+                                --sbindir=${CURRENT_PACKAGES_DIR}/bin
+                                --libdir=${CURRENT_PACKAGES_DIR}/lib
+                                --includedir=${CURRENT_PACKAGES_DIR}/include)
+    
+        set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
+                            --prefix=${CURRENT_PACKAGES_DIR}/debug
+                            --bindir=${CURRENT_PACKAGES_DIR}/debug/bin
+                            --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin
+                            --libdir=${CURRENT_PACKAGES_DIR}/debug/lib
+                            --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
+    endif()
+    
     set(base_cmd )
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc -c)
@@ -176,11 +191,12 @@ function(vcpkg_configure_make)
         string(REPLACE ";" " " _csc_OPTIONS "${_csc_OPTIONS}")
         string(REPLACE ";" " " _csc_OPTIONS_RELEASE "${_csc_OPTIONS_RELEASE}")
         string(REPLACE ";" " " _csc_OPTIONS_DEBUG "${_csc_OPTIONS_DEBUG}")
+        
         set(rel_command
-            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} --disable-asm"
+            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}"
         )
         set(dbg_command
-            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} --disable-asm"
+            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}"
         )
     else()
         set(base_cmd ./)

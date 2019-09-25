@@ -26,6 +26,7 @@ vcpkg_configure_make(
         --disable-ffms
         --disable-gpac
         --disable-lsmash
+        --disable-asm
     OPTIONS_DEBUG
         --enable-debug
 )
