@@ -24,16 +24,15 @@ else()
     set(LINKSTATIC OFF)
 endif()
 
-# Features
-set(USE_LIBRAW OFF)
-if("libraw" IN_LIST FEATURES)
-    set(USE_LIBRAW ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    libraw USE_LIBRAW
+    opencolorio USE_OCIO 
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
@@ -42,9 +41,7 @@ vcpkg_configure_cmake(
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
         -DUSE_GIF=OFF
-        -DUSE_LIBRAW=${USE_LIBRAW}
         -DUSE_NUKE=OFF
-        -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
         -DUSE_OPENJPEG=OFF
         -DUSE_OPENSSL=OFF

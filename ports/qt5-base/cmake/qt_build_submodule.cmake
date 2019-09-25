@@ -7,7 +7,7 @@ function(qt_build_submodule SOURCE_PATH)
     get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
     vcpkg_add_to_path("${PYTHON2_EXE_PATH}")
     
-    vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
+    vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH} ${ARGV})
 
     vcpkg_build_qmake(SKIP_MAKEFILES)
     

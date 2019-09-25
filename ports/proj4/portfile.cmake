@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
         fix-linux-build.patch
+        CMake-skip-msvc-check.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
