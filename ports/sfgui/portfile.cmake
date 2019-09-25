@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF 0.4.0
     SHA512 15456c6080b7095bcdcec08489b2b91b5cfc36cdf3c0b645b305072e7e835837eb4f95b59371ff176630b2b7ae51da475d8ea0bde5ff7fc0ba74c463bf5f54cf
     HEAD_REF master
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-sfml-targets.patch"
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindSFML.cmake)
@@ -16,7 +15,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SFGUI_BUILD_SHARED_LIB
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DSFGUI_BUILD_DOC=OFF
         -DSFGUI_BUILD_EXAMPLES=OFF
         -DSFGUI_BUILD_SHARED_LIBS=${SFGUI_BUILD_SHARED_LIBS}
