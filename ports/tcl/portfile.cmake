@@ -19,11 +19,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_nmake(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH win
+        NO_DEBUG
         OPTIONS
             MACHINE=${MACHINE_STR}
             OPTS=pdbs
-            OPTS=symbols
-        OPTIONS_DEBUG
             OPTS=symbols
     )
 

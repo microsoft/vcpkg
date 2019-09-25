@@ -119,7 +119,7 @@ function(vcpkg_configure_make)
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
         get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
         
-        if (_csc_DISABLE_AUTO_HOST)
+        if (NOT _csc_DISABLE_AUTO_HOST)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
                 set(WIN_TARGET_ARCH --host=i686-pc-mingw32)
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
@@ -139,7 +139,7 @@ function(vcpkg_configure_make)
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     endif()
 
-    if (_csc_DISABLE_AUTO_DST)
+    if (NOT _csc_DISABLE_AUTO_DST)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                                 --prefix=${CURRENT_PACKAGES_DIR}
                                 --bindir=${CURRENT_PACKAGES_DIR}/bin
