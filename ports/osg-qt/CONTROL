@@ -1,4 +1,4 @@
 Source: osg-qt
-Version: 3.5.7
+Version: Qt4
 Description:  osgQt - Qt project for making use of OpenSceneGraph(OSG)
 Build-Depends: osg, protobuf, qt5-base

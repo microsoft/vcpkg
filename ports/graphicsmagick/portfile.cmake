@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
 
-set(GM_VERSION 1.3.31)
+set(GM_VERSION 1.3.33)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}-windows-source.7z"
     FILENAME "GraphicsMagick-${GM_VERSION}-windows-source.7z"
-    SHA512 ff67f5e6adf352527264e7a6a76d45ce34470263dc764760d876b9ab5d5078e3a46b9d9cb2e7ab52d53106ffe584d44c66b42f3d4d62c972662d488c86510881
+	SHA512 856fafe36693a7963f5944f489f4b7a0d15d9dcc575f96d31486e3abd886f681854cbb2271feb4b4cb19668480904d473138a2d9c2ec95539de705d75e2f49c9
 )
 
 vcpkg_extract_source_archive_ex(
@@ -28,6 +28,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/magick_types.h DESTINATION ${SOURCE_PATH}/ma
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
 )

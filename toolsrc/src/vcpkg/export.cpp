@@ -73,8 +73,10 @@ namespace vcpkg::Export
         static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
@@ -140,12 +142,12 @@ namespace vcpkg::Export
         std::error_code ec;
         fs.create_directories(paths.buildsystems / "tmp", ec);
 
-        fs.write_contents(targets_redirect, targets_redirect_content);
+        fs.write_contents(targets_redirect, targets_redirect_content, VCPKG_LINE_INFO);
 
         const std::string nuspec_file_content =
             create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, nuget_version);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
-        fs.write_contents(nuspec_file_path, nuspec_file_content);
+        fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
         const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
@@ -228,10 +230,10 @@ namespace vcpkg::Export
     {
         const std::vector<fs::path> integration_files_relative_to_root = {
             {".vcpkg-root"},
-            {fs::path {"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
-            {fs::path {"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
-            {fs::path {"scripts"} / "buildsystems" / "vcpkg.cmake"},
-            {fs::path {"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
+            {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
+            {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)
@@ -338,26 +340,33 @@ namespace vcpkg::Export
 
         struct OptionPair
         {
-            const std::string& name;
+            const StringLiteral& name;
             Optional<std::string>& out_opt;
         };
-        const auto options_implies =
-            [&](const std::string& main_opt_name, bool main_opt, Span<const OptionPair> implying_opts) {
-                if (main_opt)
-                {
-                    for (auto&& opt : implying_opts)
-                        opt.out_opt = maybe_lookup(options.settings, opt.name);
-                }
-                else
-                {
-                    for (auto&& opt : implying_opts)
-                        Checks::check_exit(VCPKG_LINE_INFO,
-                                           !maybe_lookup(options.settings, opt.name),
-                                           "%s is only valid with %s",
-                                           opt.name,
-                                           main_opt_name);
-                }
-            };
+        const auto options_implies = [&](const StringLiteral& main_opt_name,
+                                         bool is_main_opt,
+                                         const std::initializer_list<OptionPair>& implying_opts) {
+            if (is_main_opt)
+            {
+                for (auto&& opt : implying_opts)
+                    opt.out_opt = maybe_lookup(options.settings, opt.name);
+            }
+            else
+            {
+                for (auto&& opt : implying_opts)
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       !maybe_lookup(options.settings, opt.name),
+                                       "%s is only valid with %s",
+                                       opt.name,
+                                       main_opt_name);
+            }
+        };
+
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+// there's a bug in VS 2015 that causes a bunch of "unreferenced local variable" warnings
+#pragma warning(push)
+#pragma warning(disable : 4189)
+#endif
 
         options_implies(OPTION_NUGET,
                         ret.nuget,
@@ -375,6 +384,9 @@ namespace vcpkg::Export
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
                         });
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+#pragma warning(pop)
+#endif
         return ret;
     }
 
@@ -399,8 +411,10 @@ namespace vcpkg::Export
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path export_to_path = paths.root;
         const fs::path raw_exported_dir_path = export_to_path / export_id;
+        fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
+
+        // TODO: error handling
         std::error_code ec;
-        fs.remove_all(raw_exported_dir_path, ec);
         fs.create_directory(raw_exported_dir_path, ec);
 
         // execute the plan
@@ -475,7 +489,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         if (!opts.raw)
         {
-            fs.remove_all(raw_exported_dir_path, ec);
+            fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
         }
     }
 
@@ -487,7 +501,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
-        Dependencies::PathsPortFileProvider provider(paths);
+
+        // Load ports from ports dirs
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 

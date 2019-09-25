@@ -1,0 +1,15 @@
+diff --git a/src/libOpenImageIO/CMakeLists.txt b/src/libOpenImageIO/CMakeLists.txt
+index 5449675..cdd5235 100644
+--- a/src/libOpenImageIO/CMakeLists.txt
++++ b/src/libOpenImageIO/CMakeLists.txt
+@@ -171,10 +171,6 @@ elseif(MINGW)
+     target_link_libraries (OpenImageIO psapi ws2_32)
+ endif ()
+ 
+-if (VISIBILITY_MAP_FILE)
+-    add_dependencies (OpenImageIO "${VISIBILITY_MAP_FILE}")
+-endif ()
+-
+ if (USE_EXTERNAL_PUGIXML)
+     target_link_libraries (OpenImageIO ${PUGIXML_LIBRARIES})
+ endif ()

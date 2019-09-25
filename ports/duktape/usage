@@ -1,0 +1,5 @@
+find_package(duktape CONFIG REQUIRED)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${DUKTAPE_INCLUDE_DIRS})
+
+target_link_libraries(main ${DUKTAPE_LIBRARY})

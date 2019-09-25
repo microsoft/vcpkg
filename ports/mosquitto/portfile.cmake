@@ -5,17 +5,12 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
-    REF v1.5
-    SHA512 f6a5c8e71d642ef931176fe428fb79353933facc2db226d9e55b87d4ff9bd6610a1bd05d71159e30c8afb1fda542d233630ae164770e652baa7ea51117211489
+    REF be73f792008904c5edcba9a2c17dcb23620edb09
+    SHA512 b6fffffc5363c6242487619d920b34f68389dd0a18313733266e0723773af9b92a481bf6fabe6e9ca82e30ea08895822d9cfbf33c2309c1f213c951983e6d129
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/win64-cmake.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/output_folders-cmake.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-dependence-pthreads.patch"
+        archive-dest.patch
+        win64-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -35,16 +30,31 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
-# Remove debug/include
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(REMOVE ${EXE})
-file(REMOVE ${DEBUG_EXE})
+if(CMAKE_HOST_WIN32)
+  set(EXECUTABLE_SUFFIX ".exe")
+else()
+  set(EXECUTABLE_SUFFIX "")
+endif()
+
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_passwd${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_passwd${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_pub${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_pub${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_rr${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_rr${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_sub${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_sub${EXECUTABLE_SUFFIX})
+
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+#endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/mosquitto RENAME copyright)
-
-# Copy pdb
-vcpkg_copy_pdbs()

@@ -10,6 +10,10 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT CMAKE_SYSTEM_NAME OR CMAKE_S
     message(FATAL_ERROR "Oracle has dropped support in libmysql for 32-bit Windows.")
 endif()
 
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(WARNING "libmysql needs ncurses on LINUX, please install ncurses first.\nOn Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -18,13 +22,10 @@ vcpkg_from_github(
     REF mysql-8.0.4
     SHA512 8d9129e7670e88df14238299052a5fe6d4f3e40bf27ef7a3ca8f4f91fb40507b13463e9bd24435b34e5d06c5d056dfb259fb04e77cc251b188eea734db5642be
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
-        ${CMAKE_CURRENT_LIST_DIR}/system-libs.patch
+        ignore-boost-version.patch
+        system-libs.patch
+        linux_libmysql.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)

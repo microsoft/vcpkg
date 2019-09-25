@@ -1,0 +1,4 @@
+Source: cpp-netlib
+Version: 0.13.0-2
+Build-Depends: boost
+Description: A collection of network-related routines/implementations geared towards providing a robust cross-platform networking library

@@ -1,3 +1,4 @@
 Source: gumbo
 Version: 0.10.1-3
+Homepage: https://github.com/google/gumbo-parser
 Description: An HTML5 parsing library in pure C99

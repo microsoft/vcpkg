@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
 if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "Aws-sdk-cpp's buildsystem uses very long paths and may fail on your system.\n"
+    message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
         "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
     )
 endif()
@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.7.100
-    SHA512 543eee9c0367131756b274ab9f8f42e3c889f3f54c5f0b7cd6fa68cab5fd009ba9cb87f8029a81d260b1ea2adfb7c3b3ab07a989054e2480e47b41c15887f0f8
+    REF d3ee022fea02e8e7e02f3cdd77904dc4c39ab79a
+    SHA512 6f146830f15864bb3770ad50a6ebcbc478235e9c2c59aa044353bbfc297bf26437e07b77b970974cc294782809aaa837a3407cbc846426b04e97447cd7f9e3cf
     HEAD_REF master
 )
 

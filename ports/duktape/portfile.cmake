@@ -7,12 +7,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svaarala/duktape
-    REF v2.0.3
-    SHA512 6ad189f6f9291cbd7eb7227113302fd0c204018611bb37bf4acd7f6b0eb2a75837dac8fb9fba441a0d76e6f1dbad62e4750a6645f65de31611b089f6922bad26
+    REF v2.4.0
+    SHA512 5f42ff6faab8d49531423e199c032fd2de49524bab71f39d1cf822e6f9ee82a6089c9a93837ae7849d19a95693318a8480986e4672f6f73f3182b4902e6b2daa
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 if(CMAKE_HOST_WIN32)
     set(EXECUTABLE_SUFFIX ".exe")
@@ -25,12 +27,14 @@ get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
-        vcpkg_download_distfile(GET_PIP
-            URLS "https://bootstrap.pypa.io/get-pip.py"
-            FILENAME "tools/python/python2/get-pip.py"
-            SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad
-        )
-        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON2_DIR}/get-pip.py)
+		vcpkg_from_github(
+			OUT_SOURCE_PATH PYFILE_PATH
+			REPO pypa/get-pip
+			REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+			SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+			HEAD_REF master
+		)
+		execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py)
     endif()
     execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml)
 else()
@@ -46,6 +50,7 @@ vcpkg_apply_patches(
 )
 
 vcpkg_configure_cmake(
+    PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
 )
 

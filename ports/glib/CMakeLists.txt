@@ -102,6 +102,7 @@ else()
     endif()
     add_definitions("-DGIO_MODULE_DIR=\"gio/modules\"")
 endif()
+install(FILES ${CMAKE_BINARY_DIR}/config/config.h DESTINATION include/glib)
 
 include_directories(${CMAKE_BINARY_DIR}/config ${CMAKE_BINARY_DIR}/config/glib ${CMAKE_BINARY_DIR}/config/gio ${CMAKE_BINARY_DIR}/config/gmodule)
 include_directories(. glib)
@@ -252,8 +253,14 @@ if(WIN32)
     target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi advapi32 shell32)
 elseif(APPLE)
     target_link_libraries(gio PRIVATE xdgmime kqueue)
+    if (HAVE_SELINUX)
+        target_link_libraries(gio PRIVATE selinux)
+    endif()
 else()
     target_link_libraries(gio PRIVATE xdgmime inotify)
+    if (HAVE_SELINUX)
+        target_link_libraries(gio PRIVATE selinux)
+    endif()
 endif()
 list(APPEND GLIB_TARGETS gio)
 
@@ -330,8 +337,8 @@ install(
     DESTINATION share/unofficial-glib
 )
 configure_file(
-    cmake/unofficial-glib-config.in.cmake
-    cmake/unofficial-glib-config.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-glib-config.in.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-glib-config.cmake
     @ONLY
 )
 install(

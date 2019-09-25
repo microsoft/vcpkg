@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO htacg/tidy-html5
-    REF 5.4.0
-    SHA512 d92c89f2ef371499f9c3de6f9389783d2449433b4da1f5a29e2eb81b7a7db8dd9f68e220cdde092d446e9bd779bcbc30f84bda79013526540f29d00f438cb402
+    REF d1b906991a7587688d384b648c55731f9be52506
+    SHA512 ac1229f95db9ab6367d7650e27b87e76a0874e01c9d404e8c5fb75ba2761318218b658a4f7522188fda8008974393a333a8a5fbed8e3a472c98445f13e459ad5
     HEAD_REF master
     PATCHES
         remove_execution_character_set.patch
@@ -15,6 +15,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    NO_CHARSET_FLAG
     OPTIONS
         -DBUILD_SHARED_LIB=OFF
         -DTIDY_CONSOLE_SHARED=OFF

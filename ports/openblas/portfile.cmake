@@ -1,25 +1,4 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
-
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    message(FATAL_ERROR "openblas can only be built for x64 currently")
-endif()
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-    set(CMAKE_CROSSCOMPILING OFF)
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -30,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         uwp.patch
         fix-space-path.patch
+        fix-redefinition-function.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -42,6 +22,8 @@ set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
+
+set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 # for UWP version, must build non uwp first for helper
 # binaries.
@@ -56,7 +38,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DTARGET=NEHALEM
     )
 
     # add just built path to environment for gen_config_h.exe,
@@ -72,21 +56,35 @@ if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
-        "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
+        OPTIONS 
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DVS_WINRT_COMPONENT=TRUE
+            "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
 elseif(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_configure_cmake(
+        PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
+        OPTIONS
+            ${COMMON_OPTIONS})
 else()
+    list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
+    list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DNOFORTRAN=ON)
+        OPTIONS
+            ${COMMON_OPTIONS}
+            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            -DNOFORTRAN=ON
+            -DBU=_  #required for all blas functions to append extra _ using NAME
+            )
 endif()
 
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
+#maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
 
 # openblas do not make the config file , so I manually made this
 # but I think in most case, libraries will not include these files, they define their own used function prototypes
@@ -100,6 +98,9 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 # openblas is BSD
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
 
 vcpkg_copy_pdbs()
 

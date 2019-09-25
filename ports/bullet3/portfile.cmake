@@ -5,13 +5,19 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bulletphysics/bullet3
-    REF 2.87
-    SHA512 649e470223295666eda6f7ff59d03097637c2645b5cd951977060ae14b89f56948ce03e437e83c986d26876f187d7ee34e790bc3882d5d66da9af89a4ab81c21
+    REF 2.88
+    SHA512 15face1940d496c96fd19a44139d11d2cbb629526c40432be4a0eef5fa9a532c842ec7318248c0359a080f2034111bf1a3c2d3a6fd789bec675bd368fac7bd93
     HEAD_REF master
 )
 
+set(BULLET_MULTITHREADING OFF)
+if ("multithreading" IN_LIST FEATURES)
+    set(BULLET_MULTITHREADING ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
         -DBUILD_DEMOS=OFF
@@ -21,6 +27,7 @@ vcpkg_configure_cmake(
         -DBUILD_EXTRAS=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DINSTALL_LIBS=ON
+        -DBULLET2_MULTITHREADING=${BULLET_MULTITHREADING}
 )
 
 vcpkg_install_cmake()
