@@ -178,9 +178,11 @@ namespace vcpkg::Commands::CI
                 std::string feature_list;
                 for (const auto& feature : test.features)
                 {
-                    if (!feature_list.empty()) feature_list += ", ";
-
-					feature_list += feature;
+                    if (!feature_list.empty()) 
+                    {
+                        feature_list += ", ";
+                    }
+                    feature_list += feature;
                 }
 
                 traits_block += Strings::format(R"(<trait name="features" value="%s" />)", feature_list);
