@@ -55,8 +55,8 @@ add_library(${PROJECT_NAME} ${CBC_SOURCES})
 target_include_directories(${PROJECT_NAME}
                            PUBLIC
                            $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}>
-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cgl/src/>
-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cgl/src/OsiCbc>)
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cbc/src/>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cbc/src/OsiCbc>)
 
 if(MSVC)
   target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
@@ -64,7 +64,7 @@ endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CMATH)
 target_compile_definitions(${PROJECT_NAME} PUBLIC COIN_HAS_CLP)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Coin::CoinUtils Coin::Osi)
+target_link_libraries(${PROJECT_NAME} PRIVATE Coin::CoinUtils Coin::Osi Coin::Cgl Coin::Clp)
 
 install(DIRECTORY Cbc/src/
         DESTINATION ${INSTALL_INCLUDE_DIR}
