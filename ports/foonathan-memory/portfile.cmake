@@ -22,15 +22,17 @@ vcpkg_from_github(
 
 file(COPY ${COMP_SOURCE_PATH}/comp_base.cmake DESTINATION ${SOURCE_PATH}/cmake/comp)
 
-vcpkg_check_features(tool FOONATHAN_MEMORY_BUILD_TOOLS)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tool FOONATHAN_MEMORY_BUILD_TOOLS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DFOONATHAN_MEMORY_BUILD_EXAMPLES=OFF
         -DFOONATHAN_MEMORY_BUILD_TESTS=OFF
-        -DFOONATHAN_MEMORY_BUILD_TOOLS=${FOONATHAN_MEMORY_BUILD_TOOLS}
 )
 
 vcpkg_install_cmake()
@@ -94,14 +96,14 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/README.md
 )
 
-if(FOONATHAN_MEMORY_BUILD_TOOLS)
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR
-       VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(EXECUTABLE_SUFFIX ".exe")
-    else()
-        set(EXECUTABLE_SUFFIX "")
-    endif()
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR 
+   VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/nodesize_dbg${EXECUTABLE_SUFFIX})
     file(COPY
         ${CURRENT_PACKAGES_DIR}/bin/nodesize_dbg${EXECUTABLE_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
