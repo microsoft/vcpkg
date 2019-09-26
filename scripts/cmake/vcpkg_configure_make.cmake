@@ -62,6 +62,13 @@
 ##
 ## ## Notes
 ## This command supplies many common arguments to configure. To see the full list, examine the source.
+##
+## ## Examples
+##
+## * [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
+## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
+## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
+## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG"

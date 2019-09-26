@@ -43,6 +43,11 @@
 ##
 ## ## Notes:
 ## This command transparently forwards to [`vcpkg_build_nmake()`](vcpkg_build_nmake.md), adding `ENABLE_INSTALL`
+##
+## ## Examples
+##
+## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
+## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 
 function(vcpkg_install_nmake)
     cmake_parse_arguments(_in
