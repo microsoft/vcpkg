@@ -87,7 +87,7 @@ function(vcpkg_build_nmake)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
     # Set needed env
     set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
-    set(ENV{CL} " /MP ")
+    set(ENV{CL} "$ENV{CL} /MP")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)

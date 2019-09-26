@@ -41,7 +41,7 @@ function(vcpkg_build_make)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
             
-            set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+            set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
             set(MAKE ${BASH} --noprofile --norc -c)
@@ -60,7 +60,7 @@ function(vcpkg_build_make)
         find_program(NMAKE nmake REQUIRED)
         get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
         set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
-        set(ENV{CL} " /MP ")
+        set(ENV{CL} "$ENV{CL} /MP")
         # Set make command and install command
         set(MAKE ${NMAKE} /NOLOGO /G /U)
         set(MAKE_OPTS -f makefile all)

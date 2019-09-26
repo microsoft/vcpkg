@@ -80,6 +80,7 @@ function(vcpkg_configure_make)
     endif()
     # Select compiler
     if(_csc_GENERATOR MATCHES "NMake")
+        message(FATAL_ERROR "Sorry, NMake does not supported currently.")
         if (CMAKE_HOST_WIN32)
             set(GENERATOR "nmake")
         else()
@@ -129,7 +130,7 @@ function(vcpkg_configure_make)
             endif()
         endif()
         set(WIN_TARGET_COMPILER CC=cl)
-        set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+        set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
         set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     endif()
     
@@ -161,36 +162,30 @@ function(vcpkg_configure_make)
         
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared)
-            if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            if (VCPKG_TARGET_IS_UWP)
                 set(_csc_OPTIONS ${_csc_OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
             endif()
         else()
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static)
         endif()
-    
-        if(VCPKG_CRT_LINKAGE STREQUAL "static")
-            set(MAKE_RUNTIME "-MT")
-        else()
-            set(MAKE_RUNTIME "-MD")
-        endif()
         
-        set(ENV{CFLAGS} "${MAKE_RUNTIME} -O2 -Oi -Zi")
-        set(ENV{CXXFLAGS} "${MAKE_RUNTIME} -O2 -Oi -Zi")
-        set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+        set(ENV{CFLAGS} "$ENV{CFLAGS} ${VCPKG_C_FLAGS} -O2 -Oi -Zi")
+        set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS} -O2 -Oi -Zi")
+        set(ENV{LDFLAGS} "$ENV{LDFLAGS} -DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
         
-        if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        if(VCPKG_TARGET_IS_UWP)
             set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
             set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
         endif()
         
-        if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        if(VCPKG_TARGET_IS_UWP)
             set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
             set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
         endif()
         
-        string(REPLACE ";" " " _csc_OPTIONS "${_csc_OPTIONS}")
-        string(REPLACE ";" " " _csc_OPTIONS_RELEASE "${_csc_OPTIONS_RELEASE}")
-        string(REPLACE ";" " " _csc_OPTIONS_DEBUG "${_csc_OPTIONS_DEBUG}")
+        list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
+        list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
+        list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
         
         set(rel_command
             ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}"
@@ -298,10 +293,6 @@ function(vcpkg_configure_make)
             LOGNAME config-${TAR_TRIPLET_DIR}
         )
     endif()
-    
-    unset(ENV{CFLAGS})
-    unset(ENV{CXXFLAGS})
-    unset(ENV{LDFLAGS})
     
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
     set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
