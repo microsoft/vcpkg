@@ -18,7 +18,6 @@ vcpkg_from_github(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    NO_DEBUG
     OPTIONS
         --enable-strip
         --disable-lavf

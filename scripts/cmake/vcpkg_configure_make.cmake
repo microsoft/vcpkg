@@ -167,7 +167,7 @@ function(vcpkg_configure_make)
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc -c)
         
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared)
             if (VCPKG_TARGET_IS_UWP)
                 set(_csc_OPTIONS ${_csc_OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
@@ -175,15 +175,21 @@ function(vcpkg_configure_make)
         else()
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static)
         endif()
-        
-        set(ENV{CFLAGS} "$ENV{CFLAGS} ${VCPKG_C_FLAGS} -O2 -Oi -Zi")
-        set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS} -O2 -Oi -Zi")
-        set(ENV{LDFLAGS} "$ENV{LDFLAGS} -DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
-        
-        if(VCPKG_TARGET_IS_UWP)
-            set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
-            set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
+	
+        if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+            set(CL_FLAGS_DBG "-MDd -Od -Zi -RTC1")
+            set(CL_FLAGS_REL "-MD -O2 -Oi -Zi")
+        else()
+            set(CL_FLAGS_DBG "-MTd -Od -Zi -RTC1")
+            set(CL_FLAGS_REL "-MT -O2 -Oi -Zi")
         endif()
+        
+        set(LD_FLAGS_DBUG "-DEBUG")
+        set(LD_FLAGS_REL "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+        
+        set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
+        set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
+        set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS}")
         
         if(VCPKG_TARGET_IS_UWP)
             set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
@@ -212,6 +218,15 @@ function(vcpkg_configure_make)
     
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
+        if (CMAKE_HOST_WIN32)
+            unset(ENV{CFLAGS})
+            unset(ENV{CXXFLAGS})
+            unset(ENV{LDFLAGS})
+            set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${CL_FLAGS_DBG}")
+            set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${CL_FLAGS_DBG}")
+            set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${LD_FLAGS_DBUG}")
+        endif()
+        
         set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
         
@@ -255,6 +270,15 @@ function(vcpkg_configure_make)
 
     # Configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        if (CMAKE_HOST_WIN32)
+            unset(ENV{CFLAGS})
+            unset(ENV{CXXFLAGS})
+            unset(ENV{LDFLAGS})
+            set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${CL_FLAGS_REL}")
+            set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${CL_FLAGS_REL}")
+            set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${LD_FLAGS_REL}")
+        endif()
+        
         if (_csc_NO_DEBUG)
             set(TAR_TRIPLET_DIR ${TARGET_TRIPLET})
             set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
@@ -299,6 +323,13 @@ function(vcpkg_configure_make)
             WORKING_DIRECTORY ${PRJ_DIR}
             LOGNAME config-${TAR_TRIPLET_DIR}
         )
+    endif()
+    
+    # Restore envs
+    if (CMAKE_HOST_WIN32)
+        set(ENV{CFLAGS} "${C_FLAGS_GLOBAL}")
+        set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL}")
+        set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL}")
     endif()
     
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)

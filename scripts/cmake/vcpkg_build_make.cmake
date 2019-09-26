@@ -48,6 +48,7 @@ function(vcpkg_build_make)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
             
+            set(PATH_GLOBAL "$ENV{PATH}")
             set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
@@ -66,6 +67,7 @@ function(vcpkg_build_make)
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)
         get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+        set(PATH_GLOBAL "$ENV{PATH}")
         set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
         set(ENV{CL} "$ENV{CL} /MP")
         # Set make command and install command
@@ -103,6 +105,20 @@ function(vcpkg_build_make)
             endif()
     
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+
+            if(_bc_ADD_BIN_TO_PATH)
+                set(_BACKUP_ENV_PATH "$ENV{PATH}")
+                if(CMAKE_HOST_WIN32)
+                    set(_PATHSEP ";")
+                else()
+                    set(_PATHSEP ":")
+                endif()
+                if(BUILDTYPE STREQUAL "debug")
+                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin${_PATHSEP}$ENV{PATH}")
+                else()
+                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
+                endif()
+            endif()
 
             vcpkg_execute_required_process(
                 COMMAND ${MAKE} ${MAKE_OPTS}
@@ -147,5 +163,9 @@ function(vcpkg_build_make)
                 LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
             )
         endforeach()
+    endif()
+    
+    if (CMAKE_HOST_WIN32)
+        set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
 endfunction()
