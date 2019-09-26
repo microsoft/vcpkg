@@ -11,9 +11,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KhronosGroup/OpenXR-SDK
-    REF release-1.0.0
-    SHA512 423079b841a01f3b51283839c565cfa1b8ff38348c3f3d6f62e9120569d4ad540d8d6bfe8010e74d9bbb76aeaedcf273e5e3b1717bb0b424898793fb4712aa58
+    REPO jherico/OpenXR-SDK
+    REF 4e618f467a40c25478a8dff5921c2ab57c06bec2
+    SHA512 428d5af7463fab1eb69b9f0d81f4d38c6f5f07540b018260e0afcba3944a8ec60d51ccab7317815997dfc4cff5c2545d7f855c9f1dd03dbd27d74a67046f5b08
     HEAD_REF master
 )
 
@@ -44,29 +44,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-function(COPY_BINARIES SOURCE DEST)
-    # hack, because CMAKE_SHARED_LIBRARY_SUFFIX seems to be unpopulated
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(SHARED_LIB_SUFFIX ".dll")
-    else()
-        set(SHARED_LIB_SUFFIX ".so")
-    endif()
-    file(MAKE_DIRECTORY ${DEST})
-    file(GLOB_RECURSE SHARED_BINARIES ${SOURCE}/*${SHARED_LIB_SUFFIX})
-    file(COPY ${SHARED_BINARIES} DESTINATION ${DEST})
-    file(REMOVE_RECURSE ${SHARED_BINARIES})
-endfunction()
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # No CMake files are contained in /share only docs
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openxr-loader RENAME copyright)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    COPY_BINARIES(${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/bin)
-    COPY_BINARIES(${CURRENT_PACKAGES_DIR}/debug/lib ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
 
 vcpkg_copy_pdbs()

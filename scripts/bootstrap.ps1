@@ -226,8 +226,9 @@ function getWindowsSDK( [Parameter(Mandatory=$False)][switch]$DisableWin10SDK = 
         $win10sdkVersions = @(Get-ChildItem $folder | Where-Object {$_.Name -match "^10"} | Sort-Object)
         [array]::Reverse($win10sdkVersions) # Newest SDK first
 
-        foreach ($win10sdkV in $win10sdkVersions)
+        foreach ($win10sdk in $win10sdkVersions)
         {
+            $win10sdkV = $win10sdk.Name
             $windowsheader = "$folder\$win10sdkV\um\windows.h"
             if (!(Test-Path $windowsheader))
             {

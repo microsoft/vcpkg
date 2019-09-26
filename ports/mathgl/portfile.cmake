@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
   REF ${MATHGL_VERSION}
   PATCHES
     type_fix.patch
+    fix_cmakelists_and_cpp.patch
 )
 
 set(enable-hdf5 OFF)
@@ -107,11 +108,20 @@ else()
   set(EXECUTABLE_SUFFIX "")
 endif()
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mgllab${EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mglview${EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mglconv${EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mgltask${EXECUTABLE_SUFFIX})
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/mathgl/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mglconv${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/mathgl/mglconv${EXECUTABLE_SUFFIX})
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mgltask${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/mathgl/mgltask${EXECUTABLE_SUFFIX})
+if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/mgllab${EXECUTABLE_SUFFIX})
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mgllab${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/mathgl/mgllab${EXECUTABLE_SUFFIX})
+endif()
+if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/mglview${EXECUTABLE_SUFFIX})
+	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mglview${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/mathgl/mglview${EXECUTABLE_SUFFIX})
+endif()
+
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/mathgl)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

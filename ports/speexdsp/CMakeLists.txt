@@ -5,10 +5,7 @@ option(USE_SSE       "Use SSE")
 project (libspeexdsp)
 
 file(GLOB_RECURSE LIBSPEEXDSP_SOURCES "${SOURCE_PATH}/libspeexdsp/*.c")
-list(REMOVE_ITEM LIBSPEEXDSP_SOURCES "${SOURCE_PATH}/libspeexdsp/testdenoise.c"
-                                     "${SOURCE_PATH}/libspeexdsp/testecho.c"
-                                     "${SOURCE_PATH}/libspeexdsp/testjitter.c"
-                                     "${SOURCE_PATH}/libspeexdsp/testresample.c")
+list(FILTER LIBSPEEXDSP_SOURCES EXCLUDE REGEX "${SOURCE_PATH}/libspeexdsp/test.*\\.c")
 file(GLOB_RECURSE LIBSPEEXDSP_HEADERS "${SOURCE_PATH}/libspeexdsp/*.h")
 file(GLOB_RECURSE LIBSPEEXDSP_HEADERS_PUBLIC "${SOURCE_PATH}/include/**/*.h")
 
