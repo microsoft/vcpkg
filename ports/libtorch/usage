@@ -1,0 +1,10 @@
+This is custom installation of the LibTorch for vcpkg:
+
+    find_package(Protobuf   CONFIG REQUIRED)
+    find_package(Torch      CONFIG REQUIRED)
+
+    target_link_libraries(main
+    PRIVATE
+        protobuf::libprotobuf   # from vcpkg
+        c10 torch caffe2::mkl   # from pytorch package
+    )

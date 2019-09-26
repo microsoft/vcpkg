@@ -1,0 +1,74 @@
+
+# Post cleanup of include dirs
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/include/c10/cuda/test/impl
+    ${CURRENT_PACKAGES_DIR}/include/c10/hip
+    ${CURRENT_PACKAGES_DIR}/include/c10/test/core/impl
+    ${CURRENT_PACKAGES_DIR}/include/c10/test/util
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/aten/docs
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/docker-ubuntu-14.04  
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/ideep
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/nnpack
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/opencl/OpenCL        
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/playground/resnetdemo
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/pytorch
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/script/examples
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/tensorboard
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/core/nomnigraph/Representations
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/experiments/python
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/ideep/operators/quantization
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/mobile/contrib/libopencl-stub/src
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/mobile/contrib/libvulkan-stub/src
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/operators/experimental/c10/cpu
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/opt/nql/tests
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/docs
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/examples
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/helpers
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/ideep
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/layers
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/mint/static/css
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/mint/templates
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/mkl
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/modeling
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/models/seq2seq
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/onnx/bin
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/onnx/tests
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/operator_test
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/predictor
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/rnn
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/serialized_test/data/operator_test
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/test
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/trt
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/depthwise
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/nnpack
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/test/assets
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/utils/hip
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/data/datasets
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/data/samplers
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/nn/modules
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/optim
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/python
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/serialize
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/backends
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/jit/generated
+
+    ${CURRENT_PACKAGES_DIR}/include/c10/test
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/operators/experimental/c10
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/mint/static
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/models
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/onnx
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/serialized_test/data
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/test
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/data
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src/nn
+
+    ${CURRENT_PACKAGES_DIR}/include/c10/cuda/test
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/playground
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/contrib/script
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/operators/experimental
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/mint
+    ${CURRENT_PACKAGES_DIR}/include/caffe2/python/serialized_test
+    ${CURRENT_PACKAGES_DIR}/include/torch/csrc/api/src
+
+    ${CURRENT_PACKAGES_DIR}/include/google
+)
