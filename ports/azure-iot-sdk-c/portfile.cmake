@@ -9,7 +9,7 @@ if("public-preview" IN_LIST FEATURES)
         REF 8b7cc18456f377b7f0df42dcdefb24ae81d9e7fc
         SHA512 0386889fc3d32a795998a35a382cce6d11f6712416f3a1a49de6ea7d9c0c973ca05989353ee9a3ec5ca02dc55c2b59dc803cbf4866b918274667e52d03d1490f
         HEAD_REF public-preview
-        PATCHES improve-external-deps.patch
+        PATCHES improve-external-deps.patch cmake-hsm-option.patch
     )
 else()
     vcpkg_from_github(
