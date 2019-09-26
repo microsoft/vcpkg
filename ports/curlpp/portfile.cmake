@@ -29,11 +29,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin
     )
-
-    configure_file(
-        ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}
-        @ONLY
-    )
 endif()
 
 # Handle copyright

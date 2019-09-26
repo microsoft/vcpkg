@@ -1,18 +1,8 @@
-set (FOUND_CONFIG FALSE)
+list(REMOVE_ITEM ARGS "NO_MODULE")
+list(REMOVE_ITEM ARGS "CONFIG")
+list(REMOVE_ITEM ARGS "MODULE")
 
-foreach (ARG ${ARGS})
-    string (TOUPPER "${ARG}" ARG)
-
-    if (${ARG} STREQUAL "CONFIG" OR ${ARG} STREQUAL "NO_MODULE")
-        set (FOUND_CONFIG TRUE)
-    endif()
-endforeach()
-
-if (FOUND_CONFIG)
-    _find_package(${ARGS})
-else()
-    _find_package(${ARGS} CONFIG)
-endif()
+_find_package(${ARGS} CONFIG)
 
 if(TARGET CURL::libcurl)
     set(CURL_FOUND TRUE)
