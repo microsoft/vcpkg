@@ -1,42 +1,45 @@
 include(SelectLibraryConfigurations)
 
-_find_package(RdKafka CONFIG)
+list(REMOVE_ITEM ARGS "NO_MODULE")
+list(REMOVE_ITEM ARGS "CONFIG")
+list(REMOVE_ITEM ARGS "MODULE")
+
+_find_package(${ARGS} CONFIG)
 
 if(RdKafka_FOUND)
     if(TARGET RdKafka::rdkafka)
-        set(TARGETNAME RdKafka::rdkafka)
+        set(TARGET_NAME RdKafka::rdkafka)
     else(TARGET RdKafka::rdkafka++)
-        set(TARGETNAME RdKafka::rdkafka++)
+        set(TARGET_NAME RdKafka::rdkafka++)
     endif()
 
-    if(TARGET ${TARGETNAME} AND NOT DEFINED RdKafka_INCLUDE_DIRS)
-        get_target_property(RdKafka_INCLUDE_DIRS ${TARGETNAME} INTERFACE_INCLUDE_DIRECTORIES)
-        set(RdKafka_INCLUDE_DIR ${RdKafka_INCLUDE_DIRS})
-        
-        get_target_property(_RdKafka_DEFS ${TARGETNAME} INTERFACE_COMPILE_DEFINITIONS)
-        
-        if("${_RdKafka_DEFS}" MATCHES "RdKafka_STATIC")
-            get_target_property(RdKafka_LIBRARY_DEBUG ${TARGETNAME} IMPORTED_IMPLIB_DEBUG)
-            get_target_property(RdKafka_LIBRARY_RELEASE ${TARGETNAME} IMPORTED_IMPLIB_RELEASE)       
-        else()
-            get_target_property(RdKafka_LIBRARY_DEBUG ${TARGETNAME} IMPORTED_LOCATION_DEBUG)
-            get_target_property(RdKafka_LIBRARY_RELEASE ${TARGETNAME} IMPORTED_LOCATION_RELEASE)
+    if(TARGET ${TARGET_NAME} AND NOT DEFINED RdKafka_INCLUDE_DIRS)
+        get_target_property(_RdKafka_INCLUDE_DIRS ${TARGET_NAME} INTERFACE_INCLUDE_DIRECTORIES)
+        get_target_property(_RdKafka_LINK_LIBRARIES ${TARGET_NAME} INTERFACE_LINK_LIBRARIES)
+
+        if (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            get_target_property(_RdKafka_LIBRARY_DEBUG ${TARGET_NAME} IMPORTED_IMPLIB_DEBUG)
+            get_target_property(_RdKafka_LIBRARY_RELEASE ${TARGET_NAME} IMPORTED_IMPLIB_RELEASE)
         endif()
-        
-        get_target_property(_RdKafka_LINK_INTERFACE ${TARGETNAME} IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE) # same for debug and release
-        
-        list(APPEND RdKafka_LIBRARIES ${_RdKafka_LINK_INTERFACE})
-        list(APPEND RdKafka_LIBRARY ${_RdKafka_LINK_INTERFACE})
-        
+
+        if(NOT _RdKafka_LIBRARY_DEBUG AND NOT _RdKafka_LIBRARY_RELEASE)
+            get_target_property(_RdKafka_LIBRARY_DEBUG ${TARGET_NAME} IMPORTED_LOCATION_DEBUG)
+            get_target_property(_RdKafka_LIBRARY_RELEASE ${TARGET_NAME} IMPORTED_LOCATION_RELEASE)
+        endif()
+
+        set(RdKafka_INCLUDE_DIR "${_RdKafka_INCLUDE_DIRS}")
+        set(RdKafka_LIBRARY_DEBUG "${_RdKafka_LIBRARY_DEBUG}")
+        set(RdKafka_LIBRARY_RELEASE "${_RdKafka_LIBRARY_RELEASE}")
+
         select_library_configurations(RdKafka)
-        
-        if("${_RdKafka_DEFS}" MATCHES "RdKafka_STATIC")
-            set(RdKafka_STATIC_LIBRARIES ${RdKafka_LIBRARIES})
-        else()
-            set(RdKafka_SHARED_LIBRARIES ${RdKafka_LIBRARIES})
-        endif()
-        
-        unset(_RdKafka_DEFS)
-        unset(_RdKafka_LINK_INTERFACE)
+
+        list(APPEND RdKafka_LIBRARIES ${_RdKafka_LINK_LIBRARIES})
+        list(APPEND RdKafka_LIBRARY ${_RdKafka_LINK_LIBRARIES})
+
+        unset(_RdKafka_INCLUDE_DIRS)
+        unset(_RdKafka_LINK_LIBRARIES)
+        unset(_RdKafka_LIBRARY_DEBUG)
+        unset(_RdKafka_LIBRARY_DEBUG)
+        unset(TARGET_NAME)
     endif() 
 endif()
