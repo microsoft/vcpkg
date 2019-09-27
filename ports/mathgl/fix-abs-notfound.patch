@@ -1,0 +1,13 @@
+diff --git a/include/mgl2/datac.h b/include/mgl2/datac.h
+index f2c0251..0e69de7 100644
+--- a/include/mgl2/datac.h
++++ b/include/mgl2/datac.h
+@@ -474,7 +474,7 @@ using mglDataA::Momentum;
+ 	void set_v(mreal val, long i,long j=0,long k=0)	{	a[i+nx*(j+ny*k)]=val;	}
+ #else
+ 	/// Get the value in given cell of the data with border checking
+-	mreal v(long i,long j=0,long k=0) const	{	return mgl_abs(mgl_datac_get_value(this,i,j,k));	}
++	mreal v(long i,long j=0,long k=0) const	{	return abs(a[i+nx*(j+ny*k)]);	}
+ 	/// Set the value in given cell of the data
+ 	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_datac_set_value(this,val,i,j,k);	}
+ #endif

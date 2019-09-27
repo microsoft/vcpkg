@@ -14,78 +14,27 @@ vcpkg_extract_source_archive_ex(
   PATCHES
     type_fix.patch
     fix_cmakelists_and_cpp.patch
+    fix-abs-notfound.patch
 )
 
-set(enable-hdf5 OFF)
-if("hdf5" IN_LIST FEATURES)
-  set(enable-hdf5 ON)
-endif()
-
-set(enable-fltk OFF)
-if("fltk" IN_LIST FEATURES)
-  set(enable-fltk ON)
-endif()
-
-set(enable-gif OFF)
-if("gif" IN_LIST FEATURES)
-  set(enable-gif ON)
-endif()
-
-set(enable-png OFF)
-if("png" IN_LIST FEATURES)
-  set(enable-png ON)
-endif()
-
-set(enable-zlib OFF)
-if("zlib" IN_LIST FEATURES)
-  set(enable-zlib ON)
-endif()
-
-set(enable-jpeg OFF)
-if("jpeg" IN_LIST FEATURES)
-  set(enable-jpeg ON)
-endif()
-
-set(enable-gsl OFF)
-if("gsl" IN_LIST FEATURES)
-  set(enable-gsl ON)
-endif()
-
-set(enable-opengl OFF)
-if("opengl" IN_LIST FEATURES)
-  set(enable-opengl ON)
-endif()
-
-set(enable-glut OFF)
-if("glut" IN_LIST FEATURES)
-  set(enable-glut ON)
-endif()
-
-set(enable-wx OFF)
-if("wx" IN_LIST FEATURES)
-  set(enable-wx ON)
-endif()
-
-set(enable-qt5 OFF)
-if("qt5" IN_LIST FEATURES)
-  set(enable-qt5 ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    hdf5    enable-hdf5
+    fltk    enable-fltk
+    gif     enable-gif
+    png     enable-png
+    zlib    enable-zlib
+    jpeg    enable-jpeg
+    gsl     enable-gsl
+    opengl  enable-opengl
+    glut    enable-glut
+    wx      enable-wx
+    qt5     enable-qt5
+)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS
-   -Denable-hdf5=${enable-hdf5}
-   -Denable-fltk=${enable-fltk}
-   -Denable-gif=${enable-gif}
-   -Denable-png=${enable-png}
-   -Denable-zlib=${enable-zlib}
-   -Denable-jpeg=${enable-jpeg}
-   -Denable-gsl=${enable-gsl}
-   -Denable-opengl=${enable-opengl}
-   -Denable-glut=${enable-glut}
-   -Denable-wx=${enable-wx}
-   -Denable-qt5=${enable-qt5}
+  OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
