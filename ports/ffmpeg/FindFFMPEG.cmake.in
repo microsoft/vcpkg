@@ -23,24 +23,29 @@
 #  ``FFMPEG_LIBRARIES``
 #    List of the FFMPEG libraries found
 #
-# Hints
-# ^^^^^
-#
-#  ``FFMPEG_ROOT``
-#    Set this variable to a directory that contains a FFMPEG installation
-#
 #
 
 include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 include(${CMAKE_ROOT}/Modules/CMakeFindDependencyMacro.cmake)
 
-set(FFMPEG_VERSION "4.1")
+set(FFMPEG_VERSION "4.2")
 
 find_dependency(Threads)
-#list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS Threads::Threads)
 if(UNIX)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread -lvdpau -lX11)
+endif()
+
+if(@ENABLE_BZIP2@)
+  find_dependency(BZip2)
+  get_target_property(BZip2_LIBRARY_RELEASE BZip2::BZip2 IMPORTED_LOCATION_RELEASE)
+  get_target_property(BZip2_LIBRARY_DEBUG BZip2::BZip2 IMPORTED_LOCATION_DEBUG)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${BZip2_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${BZip2_LIBRARY_RELEASE}>")
+endif()
+
+if(@ENABLE_LZMA@)
+  find_dependency(LibLZMA)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS "$<$<CONFIG:Debug>:${LibLZMA_LIBRARY_DEBUG}>$<$<CONFIG:Release>:${LibLZMA_LIBRARY_RELEASE}>")
 endif()
 
 #  Platform dependent libraries required by FFMPEG
@@ -126,6 +131,7 @@ FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
 FFMPEG_FIND(libavdevice   avdevice   avdevice.h)
 FFMPEG_FIND(libavfilter   avfilter   avfilter.h)
 FFMPEG_FIND(libavformat   avformat   avformat.h)
+FFMPEG_FIND(libavresample avresample avresample.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
 FFMPEG_FIND(libswresample swresample swresample.h)
 FFMPEG_FIND(libswscale    swscale    swscale.h)
@@ -135,13 +141,16 @@ if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_
   list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
   list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
 
-  set(FFMPEG_libavformat_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
-  set(FFMPEG_libavdevice_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
   set(FFMPEG_libavcodec_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
-  set(FFMPEG_libavutil_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
-  set(FFMPEG_libswscale_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libavdevice_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
   set(FFMPEG_libavfilter_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libavformat_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  if(FFMPEG_libavresample_FOUND)
+    set(FFMPEG_libavresample_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  endif()
+  set(FFMPEG_libavutil_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
   set(FFMPEG_libswresample_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
+  set(FFMPEG_libswscale_VERSION "${FFMPEG_VERSION}" CACHE STRING "")
 
   list(APPEND FFMPEG_LIBRARIES
     ${FFMPEG_libavformat_LIBRARY}
@@ -151,6 +160,7 @@ if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_
     ${FFMPEG_libswscale_LIBRARY}
     ${FFMPEG_libavfilter_LIBRARY}
     ${FFMPEG_libswresample_LIBRARY}
+    ${FFMPEG_libavresample_LIBRARY}
     ${FFMPEG_libzlib_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
   )
