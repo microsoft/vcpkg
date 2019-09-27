@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF v4.1.0
     SHA512 a92e817ecbdf6f235cae724ada2615af9fa0c243249625d0f2c2f09ff5dd7f53fdabd03a0278fe2995fe27528c5511d71f87b7a6b3d54f73b49b65aef56e32fd
     HEAD_REF master
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/support_find_package.patch"
+    PATCHES support_find_package.patch
 )
 
 vcpkg_configure_cmake(
