@@ -12,6 +12,10 @@ ignition_modular_library(NAME cmake
                          PATCHES do-not-compile-gtest.patch
 						 # Support for ARM64 (backport of https://bitbucket.org/ignitionrobotics/ign-cmake/pull-requests/168)
 						         support-arm64.patch
+                         # Do not depend on pkg-config installed to find uuid 
+                                 uuid-do-not-require-pkg-config.patch
+                         # Fix FindIgnCURL.cmake (backport of https://bitbucket.org/ignitionrobotics/ign-cmake/pull-requests/175)
+                                 fix-find-ign-curl.patch
 						 )
 
 # Permit empty include folder
