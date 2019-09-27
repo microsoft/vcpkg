@@ -224,8 +224,12 @@ if(WIN32)
     set(LIBANGLE_SOURCES_PLATFORM
         "src/third_party/systeminfo/SystemInfo.cpp"
     )
+elseif(APPLE)
+    file(GLOB LIBANGLE_SOURCES_PLATFORM
+         "src/libANGLE/renderer/*.mm"
+    )
 else()
-    set(LIBANGLE_SOURCES_PLATFORM )
+    set(LIBANGLE_SOURCES_PLATFORM)
 endif()
 
 file(GLOB LIBANGLE_SOURCES
