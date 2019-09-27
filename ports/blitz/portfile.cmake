@@ -1,12 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    message(FATAL_ERROR "${PORT} doesn't currently support ARM and ARM64")
-endif()
-
-if(VCPKG_TARGET_IS_UWP")
-    message(FATAL_ERROR "${PORT} doesn't currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -34,4 +26,3 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
