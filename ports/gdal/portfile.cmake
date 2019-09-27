@@ -386,7 +386,7 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
-      COMMAND make
+      COMMAND make "-j${NUM_CPUS}"
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME make-build-${TARGET_TRIPLET}-debug
     )
