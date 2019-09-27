@@ -82,7 +82,7 @@ function(vcpkg_search_library_debug OUTPUT_VAR)
 endfunction()
 
 function(vcpkg_search_library_release OUTPUT_VAR)
-    cmake_parse_arguments(PARSE_ARGV 1 _vcpkg_search_lib "" "" "NAMES;PATH_SUFFIXES")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcpkg_search_lib "" "" "NAMES;PATH_SUFFIXES")
     if(NOT DEFINED _vcpkg_search_lib_NAMES)
         if("${ARGV}" MATCHES "NAMES")
             #NAMES in argument list but not parsed for some reason -> retry with old parser syntax
