@@ -332,6 +332,9 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
       message(FATAL_ERROR "MAKE not found")
   endif()
 
+  include(ProcessorCount)
+  ProcessorCount(NUM_CPUS)
+
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
     # Release build
@@ -347,7 +350,7 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
 
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
-      COMMAND make
+      COMMAND make "-j${NUM_CPUS}"
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME make-build-${TARGET_TRIPLET}-release
     )
