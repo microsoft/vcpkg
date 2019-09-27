@@ -254,7 +254,7 @@ function(vcpkg_configure_make)
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
-                COMMAND autoreconf -v --install
+                COMMAND autoreconf -vfi
                 WORKING_DIRECTORY ${PRJ_DIR}
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
@@ -319,7 +319,7 @@ function(vcpkg_configure_make)
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi --install
+                COMMAND autoreconf -vfi
                 WORKING_DIRECTORY ${PRJ_DIR}
                 LOGNAME prerun-${TAR_TRIPLET_DIR}
             )
