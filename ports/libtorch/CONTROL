@@ -2,8 +2,8 @@ Source: libtorch
 Version: 1.2.0
 Build-Depends: protobuf
 Homepage: https://github.com/pytorch/pytorch
-Description: Tensors and Dynamic neural networks in Python with strong GPU acceleration
+Description: Tensors and Dynamic neural networks in Python with strong GPU acceleration 
 
 Feature: cuda
 Build-Depends: cuda
-Description: CUDA support
+Description: CUDA support for libtorch
