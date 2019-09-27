@@ -1,0 +1,41 @@
+diff --git a/src/decoder.c b/src/decoder.c
+index 262ce76..b3f7390 100644
+--- a/src/decoder.c
++++ b/src/decoder.c
+@@ -37,8 +37,8 @@
+ #include <math.h>
+ #include <errno.h>
+ 
+-#include "src/itemhandler.h"
+-#include "src/libwandder.h"
++#include "itemhandler.h"
++#include "libwandder.h"
+ 
+ #define DIGIT(x)  (x - '0')
+ 
+diff --git a/src/encoder.c b/src/encoder.c
+index a0c613a..7cc7958 100644
+--- a/src/encoder.c
++++ b/src/encoder.c
+@@ -32,7 +32,7 @@
+ #include <stdbool.h>
+ #include <time.h>
+ #include <math.h>
+-#include "src/libwandder.h"
++#include "libwandder.h"
+ 
+ #define VALALLOC(x, p) \
+     if (x > p->valalloced) { \
+diff --git a/src/itemhandler.h b/src/itemhandler.h
+index 154ac1e..c91a478 100644
+--- a/src/itemhandler.h
++++ b/src/itemhandler.h
+@@ -30,7 +30,7 @@
+ #include <inttypes.h>
+ #include <stdint.h>
+ 
+-#include "src/libwandder.h"
++#include "libwandder.h"
+ 
+ wandder_itemhandler_t *init_wandder_itemhandler(size_t itemsize,
+         uint32_t itemsperalloc);
