@@ -1,11 +1,9 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    # This URL is not stable becuase they use the same name for minor releases which changes the hash below.
-    # if you know a stable download URL then please update it.
     URLS "http://otl.sourceforge.net/otlv4_h2.zip"
     FILENAME "otl-4.0.443.zip"
-    SHA512 ee866971a7546c5fbfcdde07c63eb2bbfc2c2a681174eb58b77e7ccb55af08e80674c40267ca7762136aa422eca2d8456e668d7ee495a43d8378fdfad084184b
+    SHA512 7f1e9080f097da648050dcc60e5e54f7801bbdcbd5e4609dc14424a1881995c06f045e92bdabfca754461324dbf0e882c8542816799c4ec3c0a1a7fc6c150fa4
 )
 
 vcpkg_extract_source_archive_ex(
