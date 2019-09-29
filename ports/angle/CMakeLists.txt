@@ -42,6 +42,13 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
 # angle::common
+if(WIN32)
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
+elseif(LINUX)
+    set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
+elseif(APPLE)
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
+endif()
 file(GLOB ANGLE_COMMON_SOURCES 
     "src/common/*.h"
     "src/common/*.inl"
@@ -55,7 +62,7 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/xxhash/*.c"
     "src/common/third_party/smhasher/src/*.h"
     "src/common/third_party/smhasher/src/*.cpp")
-list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer")
+list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
 add_library(angle::common ALIAS angle_common)
