@@ -11,9 +11,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO KhronosGroup/OpenXR-SDK
-    REF release-1.0.2
-    SHA512 a3eb61d76e5b6658376870633cf067ddf43d68758d8eaa29dce97fe25d1959f7166f31840dffdae6f1c2f9ef6546e0e90f26b2c84afede6dc702e16a23d0676e
+    REPO jherico/OpenXR-SDK
+    REF 4e618f467a40c25478a8dff5921c2ab57c06bec2
+    SHA512 428d5af7463fab1eb69b9f0d81f4d38c6f5f07540b018260e0afcba3944a8ec60d51ccab7317815997dfc4cff5c2545d7f855c9f1dd03dbd27d74a67046f5b08
     HEAD_REF master
 )
 
