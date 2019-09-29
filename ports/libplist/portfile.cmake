@@ -14,6 +14,10 @@ vcpkg_from_github(
 set(ENV{_CL_} "$ENV{_CL_} /GL-")
 set(ENV{_LINK_} "$ENV{_LINK_} /LTCG:OFF")
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(ENV{_LINK_} "$ENV{_LINK_} /APPCONTAINER")
+endif()
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH libplist.sln
