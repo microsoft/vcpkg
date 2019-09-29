@@ -55,7 +55,7 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/xxhash/*.c"
     "src/common/third_party/smhasher/src/*.h"
     "src/common/third_party/smhasher/src/*.cpp")
-list(FILTER ANGLE_COMMON_SOURCES EXCLUDE "_unittest|event_tracer")
+list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
 add_library(angle::common ALIAS angle_common)
