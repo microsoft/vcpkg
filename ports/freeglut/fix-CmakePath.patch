@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b92d8c..2cd590b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -636,7 +636,7 @@ CONFIGURE_FILE(FreeGLUTConfig.cmake.in
+     "${CMAKE_CURRENT_BINARY_DIR}/FreeGLUT/FreeGLUTConfig.cmake"
+     @ONLY
+ )
+-SET(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/FreeGLUT)
++SET(ConfigPackageLocation share/cmake/FreeGLUT)
+ INSTALL(EXPORT FreeGLUTTargets
+     FILE FreeGLUTTargets.cmake
+     NAMESPACE FreeGLUT::

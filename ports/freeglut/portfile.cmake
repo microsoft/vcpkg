@@ -1,17 +1,15 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
-    FILENAME "freeglut-3.0.0.tar.gz"
-    SHA512 9c45d5b203b26a7ff92331b3e080a48e806c92fbbe7c65d9262dd18c39cd6efdad8a795a80f499a2d23df84b4909dbd7c1bab20d7dd3555d3d88782ce9dd15b0
-)
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-  PATCHES
-    use_targets_to_export_x11_dependency.patch
-    macOS_Xquartz.patch
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO dcnieho/FreeGLUT
+	REF  FG_3_2_1_RC1
+	SHA512 8f9ad85e4ad1ce33152294409f1be1d4f4cbd07ff1cb557e358c7470a81e3cf901c108e042de135880c6d1cdebc19c7d7ce030ba228249bb0e452996df63d9bd 
+    HEAD_REF master
+    PATCHES 
+        use_targets_to_export_x11_dependency.patch
+        macOS_Xquartz.patch
+        fix-CmakePath.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -56,6 +54,7 @@ endif()
 
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeglut)
