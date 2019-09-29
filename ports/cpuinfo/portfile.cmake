@@ -58,7 +58,7 @@ if(tools IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     else()
-        message(FATAL_ERROR "FIXME")
+        # TODO: Fix it once this lib supports dynamic building.
     endif()
 endif()
 
