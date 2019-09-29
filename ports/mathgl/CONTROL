@@ -32,7 +32,7 @@ Build-Depends: gsl
 Description: gsl module
 
 Feature: opengl
-Build-Depends: opengl[glut] (windows), opengl (!windows)
+Build-Depends: opengl
 Description: opengl module
 
 Feature: glut
