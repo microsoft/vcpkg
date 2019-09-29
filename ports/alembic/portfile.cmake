@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-C1083.patch
+        fix-find-openexr-ilmbase.patch
 )
 
 vcpkg_configure_cmake(
