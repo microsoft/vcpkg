@@ -1,0 +1,12 @@
+diff --git a/pulsar-client-cpp/include/pulsar/Schema.h b/pulsar-client-cpp/include/pulsar/Schema.h
+index e889fb1287..9f9d013731 100644
+--- a/pulsar-client-cpp/include/pulsar/Schema.h
++++ b/pulsar-client-cpp/include/pulsar/Schema.h
+@@ -23,6 +23,7 @@
+ #include <iosfwd>
+ #include <memory>
+ #include <pulsar/defines.h>
++#include <string>
+ 
+ namespace pulsar {
+ 
