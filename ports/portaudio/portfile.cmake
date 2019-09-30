@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.portaudio.com/archives/pa_snapshot.tgz"
     FILENAME "pa_snapshot.tgz"
-    SHA512 c75dab82c7e6f05dcabd2fbd3ab93eee0e49951115b902f0b63a180ffdfec9e87c70e421dedeea7a74726f644c5077965ce1c09130d78568a0643fbc2486101a
+    SHA512 7eb4db6c51b3afca3b7767336acc3d66e1fb3b14943079127f2aae0a9e8869b213ac69851ee0732d0801e55bcf892c657e4acab6d588affab4f7e993ba46aa32
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
