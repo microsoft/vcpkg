@@ -1,19 +1,13 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz"
-    FILENAME "pa_stable_v190600_20161030.tgz"
-    SHA512 7ec692cbd8c23878b029fad9d9fd63a021f57e60c4921f602995a2fca070c29f17a280c7f2da5966c4aad29d28434538452f4c822eacf3a60af59a6dc8e9704c
+    URLS "http://www.portaudio.com/archives/pa_snapshot.tgz"
+    FILENAME "pa_snapshot.tgz"
+    SHA512 c75dab82c7e6f05dcabd2fbd3ab93eee0e49951115b902f0b63a180ffdfec9e87c70e421dedeea7a74726f644c5077965ce1c09130d78568a0643fbc2486101a
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        cmakelists-install.patch
-        find_dsound.patch
-        wasapi_support.patch
-        crt_linkage_build_config.patch
-        pa_win_waveformat.patch
 )
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
@@ -49,6 +43,8 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 		file (REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 	endif ()
 endif ()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
 # Handle copyright
@@ -56,3 +52,4 @@ file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/p
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/portaudio/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/portaudio/copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
