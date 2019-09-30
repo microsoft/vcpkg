@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6f403af..2f1744a 100644
+index 6f403af..9b62bd2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -312,8 +312,6 @@ ENDIF(CMAKE_COMPILER_IS_GNUCC)
@@ -11,7 +11,7 @@ index 6f403af..2f1744a 100644
      IF(X11_Xrandr_FOUND)
          SET(HAVE_X11_EXTENSIONS_XRANDR_H TRUE)
          LIST(APPEND LIBS ${X11_Xrandr_LIB})
-@@ -396,9 +394,15 @@ ENDIF()
+@@ -396,6 +394,9 @@ ENDIF()
  
  IF(FREEGLUT_BUILD_SHARED_LIBS)
      ADD_LIBRARY(freeglut SHARED ${FREEGLUT_SRCS})
@@ -21,9 +21,3 @@ index 6f403af..2f1744a 100644
  ENDIF()
  IF(FREEGLUT_BUILD_STATIC_LIBS)
      ADD_LIBRARY(freeglut_static STATIC ${FREEGLUT_SRCS})
-+    IF(UNIX AND NOT(ANDROID OR BLACKBERRY))
-+        TARGET_LINK_LIBRARIES(freeglut_static PRIVATE X11::X11)
-+    ENDIF()
- ENDIF()
- 
- 
