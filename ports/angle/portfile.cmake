@@ -23,7 +23,6 @@ vcpkg_from_github(
     SHA512 037ebe356371924088563180c4a37a31eaffa41ca21c42554391672c28e62fabc19d787516b88baa192b771e05c370c5a6cfec0863b70e08d65216f41d89923f
     PATCHES 
         001-fix-uwp.patch
-        002-fix-linux.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
