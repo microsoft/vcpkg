@@ -32,7 +32,7 @@ vcpkg_from_github(
         "${CMAKE_CURRENT_LIST_DIR}/schema.patch"
 )
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/v2.4.1-b877a762c7/pulsar-client-cpp)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/v2.4.1-403c2b014b/pulsar-client-cpp)
 
 if(WIN32)
   set(PROTOC_PATH ${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc.exe)

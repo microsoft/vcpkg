@@ -1,3 +1,24 @@
+diff --git a/pulsar-client-cpp/CMakeLists.txt b/pulsar-client-cpp/CMakeLists.txt
+index e8352b1d03..3f9ae55bed 100644
+--- a/pulsar-client-cpp/CMakeLists.txt
++++ b/pulsar-client-cpp/CMakeLists.txt
+@@ -104,7 +104,7 @@ else()
+     endif (USE_LOG4CXX)
+ endif (LINK_STATIC)
+ 
+-find_package(Boost REQUIRED COMPONENTS program_options regex system)
++find_package(Boost REQUIRED COMPONENTS program_options regex system date_time)
+ 
+ find_package(ZLIB REQUIRED)
+ 
+@@ -214,6 +214,7 @@ set(COMMON_LIBS
+   ${COMMON_LIBS}
+   ${Boost_REGEX_LIBRARY}
+   ${Boost_SYSTEM_LIBRARY}
++  ${Boost_DATE_TIME_LIBRARY}
+   ${CURL_LIBRARIES}
+   ${OPENSSL_LIBRARIES}
+   ${ZLIB_LIBRARIES}
 diff --git a/pulsar-client-cpp/include/pulsar/Schema.h b/pulsar-client-cpp/include/pulsar/Schema.h
 index e889fb1287..9f9d013731 100644
 --- a/pulsar-client-cpp/include/pulsar/Schema.h
