@@ -11,13 +11,12 @@
 
 include(vcpkg_common_functions)
 
-# vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 cmake_minimum_required(VERSION 3.8)
 
 set(CMAKE_CXX_STANDARD 11)
 
 set(VCPKG_BUILD_TYPE release)
+set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VERSION v2.4.1)
 set(LIBRARY_VERSION 2.4.1)
 
