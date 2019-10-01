@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-checksums
-    REF v0.1.3
-    SHA512 79bf71a6c4c268b27efe8a6a3c4b90281da4ce7f6e4c1c62fce80b11a4756ecfd4dc2b19624ace3f54137113d0cb56a517de0b91dd6338ee8ca069756bca13f4
+    REF v0.1.4
+    SHA512 cef20913077354fb0d52a40e9b9a428ae9290ab35c83962427d992c3bd543b4531b452bcccf9d92416b4d23138ffed39f0792d3a625d20c0ed04d784cc109418
     HEAD_REF master
 )
 
@@ -37,4 +37,4 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aw
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/share
-)
+)
