@@ -32,6 +32,14 @@ vcpkg_extract_source_archive_ex(
     #   002_more_port_fixes.patch
 )
 
+# # Check if one or more features are a part of a package installation.
+# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+#   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
+#     tbb   WITH_TBB
+#   INVERTED_FEATURES
+#     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
+# )
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
@@ -42,8 +50,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# #  
-#vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
+# # Moves all .cmake files from /debug/share/@PORT@/ to /share/@PORT@/
+# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
+# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
 
 # # Handle copyright
 # file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/@PORT@ RENAME copyright)
