@@ -7,8 +7,8 @@ index dc5f1a9..4e4d813 100644
  # Configure subdirectories.
  # We depend on these for later projects, so they should come first.
 -add_subdirectory(third_party)
-+# add_subdirectory(third_party)
-+
++set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
++set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 +find_package(glslang CONFIG REQUIRED)
 +find_package(spirv-tools CONFIG REQUIRED)
  
