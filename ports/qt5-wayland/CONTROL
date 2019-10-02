@@ -1,0 +1,4 @@
+Source: qt5-wayland
+Version: 5.12.5-1
+Description: qt5-wayland is a module that wraps the functionality of Wayland. QtWayland is separated into a client and server side. The client side is the wayland platform plugin, and provides a way to run Qt applications as Wayland clients. The server side is the Qt Wayland Compositor API, and allows users to write their own Wayland compositors.
+Build-Depends:  qt5-base, qt5-declarative
