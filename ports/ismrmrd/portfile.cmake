@@ -11,8 +11,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
-    REF 4d4004d91ccadd41ddb30b019f970a69bb23a1bc
-    SHA512 648901de4629c8b11574894763a5fa61a3cb0420c5aa62cdff02c4641ba702ca73efba12b403076301e44a4f0a7c915da1f2c7a34b24377d0385af92f2eda892
+    REF 1fe9ea7b466fa7f286538411e5398e2a14ece21d
+    SHA512  e12084d6de9d97f1ffa6d876ceb8cbed7d9e84a7031ad00e53e24f9ec28f68ba21c4fe9a4d0fa2c87056bcd25571783eeeea3d3dbbee1bf5c908bd62aa2c9b28
     HEAD_REF master
     PATCHES
         ${STATIC_PATCH}
