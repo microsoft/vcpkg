@@ -74,8 +74,8 @@ endif()
 find_package_handle_standard_args(PThreads4W DEFAULT_MSG PThreads4W_LIBRARY PThreads4W_CXXEXC_LIBRARY PThreads4W_STRUCTEXC_LIBRARY PThreads4W_INCLUDE_DIR)
 mark_as_advanced(PThreads4W_INCLUDE_DIR PThreads4W_LIBRARY PThreads4W_CXXEXC_LIBRARY PThreads4W_STRUCTEXC_LIBRARY)
 
-set(PThreads4W_DLL_DIR ${PThreads4W_INCLUDE_DIR})
-list(TRANSFORM PThreads4W_DLL_DIR APPEND "/../bin")
+set(PThreads4W_DLL_DIR "${PThreads4W_INCLUDE_DIR}/../bin")
+list(APPEND PThreads4W_DLL_DIR "${PThreads4W_INCLUDE_DIR}/../debug/bin")
 message(STATUS "PThreads4W_DLL_DIR: ${PThreads4W_DLL_DIR}")
 
 find_file(PThreads4W_LIBRARY_RELEASE_DLL NAMES pthreadVC${PThreads4W_MAJOR_VERSION}.dll PATHS ${PThreads4W_DLL_DIR})

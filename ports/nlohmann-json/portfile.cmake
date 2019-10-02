@@ -21,6 +21,15 @@ download_src(nlohmann_json.natvis 9bce6758db0e54777394a4e718e60a281952b15f0c6dc6
 download_src(cmake/config.cmake.in 7caab6166baa891f77f5b632ac4a920e548610ec41777b885ec51fe68d3665ffe91984dd2881caf22298b5392dfbd84b526fda252467bb66de9eb90e6e6ade5a)
 download_src(single_include/nlohmann/json.hpp 1a12ea9e54a19e398a4d7aa3be1759ce3666a1b479bd553fe11bc63897a8055f11f42871eee6c801756dde038d860c48043cc50df753835c9a9691a1876a159e)
 
+# fifo_map
+vcpkg_download_distfile(FIFO_MAP
+    URLS "https://raw.githubusercontent.com/nlohmann/fifo_map/0dfbf5dacbb15a32c43f912a7e66a54aae39d0f9/src/fifo_map.hpp"
+    FILENAME "nlohmann-json-v${SOURCE_VERSION}/fifo_map.hpp"
+    SHA512 dc6acfa8cc8317f0f98b4af35125df330052a6de8f4752d61efb3f80a4b01570d5ced2360dcbdf5d59cb5742b25f373f9b18f758994bccaa29959c6f6b875cb4
+)
+get_filename_component(SUBPATH_DIR "${SOURCE_PATH}/single_include/nlohmann/json.hpp" DIRECTORY)
+file(COPY ${FIFO_MAP} DESTINATION ${SUBPATH_DIR})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
