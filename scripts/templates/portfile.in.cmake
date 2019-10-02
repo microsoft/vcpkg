@@ -9,8 +9,10 @@
 #   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
+# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md 
 
-include(vcpkg_common_functions)
+# # Specifies if the port install should fail immediately given a condition
+# vcpkg_fail_port_install(MESSAGE "@PORT@ currently only supports Linux and Mac platforms" ON_TARGET "Windows")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "@URL@"
@@ -40,8 +42,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Handle copyright
+# #  
+#vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
+
+# # Handle copyright
 # file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/@PORT@ RENAME copyright)
 
-# Post-build test for cmake libraries
+# # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME @PORT@)
