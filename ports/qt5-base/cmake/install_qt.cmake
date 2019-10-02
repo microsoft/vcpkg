@@ -104,7 +104,7 @@ function(install_qt)
             )
         endif()
         
-        message(STATUS "Fixig makefile installation path ${_build_triplet}")
+        message(STATUS "Fixing makefile installation path ${_build_triplet}")
         qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         message(STATUS "Installing ${_build_triplet}")
         vcpkg_execute_required_process(
