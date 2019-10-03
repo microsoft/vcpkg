@@ -1,16 +1,19 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index 1f96018..c9a3758 100644
+index 1f96018..7212467 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -337,7 +337,7 @@ spvtools_pch(SPIRV_SOURCES pch_source)
+@@ -337,9 +337,9 @@ spvtools_pch(SPIRV_SOURCES pch_source)
  add_library(${SPIRV_TOOLS} ${SPIRV_SOURCES})
  spvtools_default_compile_options(${SPIRV_TOOLS})
  target_include_directories(${SPIRV_TOOLS}
 -  PUBLIC ${spirv-tools_SOURCE_DIR}/include
 +  PUBLIC "$<BUILD_INTERFACE:${spirv-tools_SOURCE_DIR}/include>"
    PRIVATE ${spirv-tools_BINARY_DIR}
-   PRIVATE ${SPIRV_HEADER_INCLUDE_DIR}
+-  PRIVATE ${SPIRV_HEADER_INCLUDE_DIR}
++  PUBLIC ${SPIRV_HEADER_INCLUDE_DIR}
    )
+ set_property(TARGET ${SPIRV_TOOLS} PROPERTY FOLDER "SPIRV-Tools libraries")
+ spvtools_check_symbol_exports(${SPIRV_TOOLS})
 @@ -370,10 +370,20 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
  endif()
  
