@@ -40,6 +40,7 @@ set(QT_HASH_qt5-websockets          a951f355c3ce8f56fc5c4252e050ef008f4b3f9825a1
 set(QT_HASH_qt5-webview             4933a9a637eb4ca3790310f2921dcbaa44dd7363eb4226f522c6d38a8ada5dfdaf87a8b33390740524ff05056397c530426e3969f798a7c75f2f663c099192b8)
 set(QT_HASH_qt5-winextras           279514fc482a6e64a28970af2c69f9bd3db1e4e1ec9bf92be7d6ec47bdbea272149a4353ba0807da03ed8d0ee916f1d7f6efdc86bdb9173227055e0a44ac0155)
 set(QT_HASH_qt5-xmlpatterns         6b426e5af2f1f71b77c5cb2bba79a9dc8223c7d57192be445df0d2fe9066f07632ad5ee799b3a782bc582446057197b55fa0260d1ea525db8b3a9a3912081169)
+set(QT_HASH_qt5-wayland             b111d039f52209f241f175f7c43c07c5930e4a7d57ed940f19e8509fd80ee990cfc8642480293309353d1b55099dd6c99c167bffbd979928b40515841ba5391e)
 
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")
