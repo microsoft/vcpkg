@@ -167,6 +167,22 @@ namespace vcpkg::Commands::Edit
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
+
+        const auto txt_default = System::get_registry_string(HKEY_CLASSES_ROOT, R"(.txt\ShellNew)", "ItemName");
+        if(const auto entry = txt_default.get())
+        {
+            #ifdef UNICODE
+            LPWSTR dst = new wchar_t[MAX_PATH];
+            ExpandEnvironmentStrings(Strings::to_utf16(*entry).c_str(), dst, MAX_PATH);
+            auto full_path = Strings::to_utf8(dst);
+            #else
+            LPSTR dst = new char[MAX_PATH];
+            ExpandEnvironmentStrings(entry->c_str(), dst, MAX_PATH);
+            auto full_path = std::string(dst);
+            #endif
+            auto begin = full_path.find_first_not_of('@');
+            candidate_paths.push_back(fs::u8path(full_path.substr(begin, full_path.find_first_of(',')-begin)));
+        }
 #elif defined(__APPLE__)
         candidate_paths.push_back(
             fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
