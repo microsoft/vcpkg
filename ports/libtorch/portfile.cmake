@@ -125,17 +125,32 @@ endif()
 
 # remove packaged 3rd parties
 # - Protobuf
-file(GLOB       PYTORCH_PREBUILT_PROTOBUF_LIBS
+file(GLOB       PYTORCH_PREBUILT_LIBS
     "${CURRENT_PACKAGES_DIR}/lib/libproto*${CMAKE_STATIC_LIBRARY_SUFFIX}"
     "${CURRENT_PACKAGES_DIR}/debug/lib/libproto*${CMAKE_STATIC_LIBRARY_SUFFIX}"
 )
-file(REMOVE     ${PYTORCH_PREBUILT_PROTOBUF_LIBS})
+file(REMOVE     ${PYTORCH_PREBUILT_LIBS})
 
-message(STATUS "Removed Protobuf in libtorch. Will use that of the VcPkg")
-foreach(removed_file_name ${PYTORCH_PREBUILT_PROTOBUF_LIBS})
+message(STATUS "Removing 'protobuf' in the 'libtorch' prebuilt package")
+foreach(removed_file_name ${PYTORCH_PREBUILT_LIBS})
     message(STATUS "Removed: ${removed_file_name}")
 endforeach()
 
+# - cpuinfo
+file(GLOB       PYTORCH_PREBUILT_LIBS
+    "${CURRENT_PACKAGES_DIR}/include/clog.h"
+    "${CURRENT_PACKAGES_DIR}/include/cpuinfo.h"
+    "${CURRENT_PACKAGES_DIR}/lib/libclog*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/lib/libcpuinfo*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libclog*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libcpuinfo*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+)
+file(REMOVE     ${PYTORCH_PREBUILT_LIBS})
+
+message(STATUS "Removing 'cpuinfo' in the 'libtorch' prebuilt package")
+foreach(removed_file_name ${PYTORCH_PREBUILT_PROTOBUF_LIBS})
+    message(STATUS "Removed: ${removed_file_name}")
+endforeach()
 
 file(INSTALL    ${CMAKE_CURRENT_LIST_DIR}/usage
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtorch

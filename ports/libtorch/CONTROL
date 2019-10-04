@@ -1,6 +1,6 @@
 Source: libtorch
 Version: 1.2.0
-Build-Depends: protobuf
+Build-Depends: protobuf, cpuinfo
 Homepage: https://github.com/pytorch/pytorch
 Description: Tensors and Dynamic neural networks in Python with strong GPU acceleration 
 
