@@ -90,6 +90,12 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMExports-debug.cmake "${DEBUG_MODULE}")
 endif()
 
+if (EXISTS ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMConfig.cmake)
+    file(READ ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMConfig.cmake LLVM_TOOLS_MODULE)
+    string(REPLACE "\${LLVM_INSTALL_PREFIX}/bin" "\${LLVM_INSTALL_PREFIX}/tools/llvm" LLVM_TOOLS_MODULE "${LLVM_TOOLS_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/llvm/LLVMConfig.cmake "${LLVM_TOOLS_MODULE}")
+endif()
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/tools

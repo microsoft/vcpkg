@@ -16,6 +16,8 @@ vcpkg_from_github(
     REF acdd4226c210336e9e15eb812e5932a645fcd5ce
     SHA512 53986b1cde7b2bd19974f32b8c31736566061a228dda368d3d850355c566d910499c16519bbff078a6cdab19931cd9833a7d684ac63fb1ec40b2a123ff263aaa
     HEAD_REF master
+    PATCHES
+      "correct-paths.patch"
 )
 
 # note we specify values for WITH_STATIC_LIB and WITH_SHARED_LIB because even though
