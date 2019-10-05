@@ -1,0 +1,17 @@
+Index: gappa-1.3.5/src/parser/ring.cpp
+===================================================================
+--- gappa-1.3.5.orig/src/parser/ring.cpp
++++ gappa-1.3.5/src/parser/ring.cpp
+@@ -17,11 +17,7 @@
+ #include <sstream>
+ 
+ #include "../config.h"
+-#ifdef HAVE_UMAP
+-#include <tr1/unordered_map>
+-#else
+-#include <ext/hash_map>
+-#endif
++#include <unordered_map>
+ 
+ #include <gmp.h>
+ 

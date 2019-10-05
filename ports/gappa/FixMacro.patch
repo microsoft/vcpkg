@@ -1,0 +1,22 @@
+Index: gappa-1.3.5/src/utils.hpp
+===================================================================
+--- gappa-1.3.5.orig/src/utils.hpp
++++ gappa-1.3.5/src/utils.hpp
+@@ -26,11 +26,17 @@
+ 
+ #else
+ 
++#ifdef WIN32
++#define RUN_LAST(name) \
++  static void dummy_##name()
++
++#else
+ #define RUN_LAST(name) \
+   __attribute__((unused)) \
+   static void dummy_##name()
+ 
+ #endif
++#endif
+ 
+ template<class T>
+ class static_ptr

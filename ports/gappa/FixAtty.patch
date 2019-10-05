@@ -1,0 +1,21 @@
+Index: gappa-1.3.5/src/parser/lexer.cpp
+===================================================================
+--- gappa-1.3.5.orig/src/parser/lexer.cpp
++++ gappa-1.3.5/src/parser/lexer.cpp
+@@ -46,6 +46,7 @@
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <cctype>
++#include <io.h>
+ /* end standard C headers. */
+ 
+ /* flex integer type definitions */
+@@ -1599,7 +1600,7 @@ static void yy_load_buffer_state  (void)
+         b->yy_bs_column = 0;
+     }
+ 
+-        b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
++        b->yy_is_interactive = file ? (_isatty( fileno(file) ) > 0) : 0;
+     
+ 	errno = oerrno;
+ }

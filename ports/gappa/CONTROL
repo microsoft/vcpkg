@@ -1,0 +1,4 @@
+Source: gappa
+Version: 1.3.5
+Build-Depends: boost, mpfr
+Description: Gappa is a tool intended to help verifying and formally proving properties on numerical programs dealing with floating-point or fixed-point arithmetic.

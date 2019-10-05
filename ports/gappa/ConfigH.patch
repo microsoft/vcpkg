@@ -1,0 +1,47 @@
+Index: gappa-1.3.5/config.h.in
+===================================================================
+--- gappa-1.3.5.orig/config.h.in
++++ gappa-1.3.5/config.h.in
+@@ -1,32 +1,32 @@
+ /* config.h.in.  Generated from configure.in by autoheader.  */
+ 
+ /* Define to 1 if you have the `gmp' library (-lgmp). */
+-#undef HAVE_LIBGMP
++#cmakedefine HAVE_LIBGMP
+ 
+ /* Define to 1 if you have the `mpfr' library (-lmpfr). */
+-#undef HAVE_LIBMPFR
++#cmakedefine HAVE_LIBMPFR
+ 
+ /* Define to 1 if your Standard Library supports tr1/unordered_map. */
+-#undef HAVE_UMAP
++#cmakedefine HAVE_UMAP
+ 
+ /* Define to the address where bug reports for this package should be sent. */
+-#undef PACKAGE_BUGREPORT
++#cmakedefine PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
+ 
+ /* Define to the full name of this package. */
+-#undef PACKAGE_NAME
++#cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
+ 
+ /* Define to the full name and version of this package. */
+-#undef PACKAGE_STRING
++#cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
+ 
+ /* Define to the one symbol short name of this package. */
+-#undef PACKAGE_TARNAME
++#cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
+ 
+ /* Define to the home page for this package. */
+-#undef PACKAGE_URL
++#undef PACKAGE_URL "@PACKAGE_URL@"
+ 
+ /* Define to the version of this package. */
+-#undef PACKAGE_VERSION
++#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
+ 
+ /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
+    `char[]'. */
+-#undef YYTEXT_POINTER
++#cmakedefine YYTEXT_POINTER

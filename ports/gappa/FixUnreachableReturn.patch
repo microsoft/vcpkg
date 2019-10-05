@@ -1,0 +1,54 @@
+Index: gappa-1.3.5/src/parser/pattern.cpp
+===================================================================
+--- gappa-1.3.5.orig/src/parser/pattern.cpp
++++ gappa-1.3.5/src/parser/pattern.cpp
+@@ -64,7 +64,7 @@ bool match(ast_real const *src, ast_real
+ struct rewrite_visitor: boost::static_visitor< ast_real const * > {
+   ast_real const *visit(ast_real const *dst) const;
+   template< typename T > ast_real const *operator()(T const &r) const { return normalize(ast_real(r)); }
+-  ast_real const *operator()(undefined_real const &) const { assert(false); }
++  ast_real const *operator()(undefined_real const &) const { assert(false); return nullptr;}
+   ast_real const *operator()(real_op const &r) const;
+   ast_real const *operator()(placeholder const &i) const;
+   ast_real const *operator()(hidden_real const &h) const;
+@@ -109,7 +109,7 @@ struct unhide_visitor: boost::static_vis
+ {
+   ast_real const *visit(ast_real const *dst) const;
+   template< typename T > ast_real const *operator()(T const &r) const { return normalize(ast_real(r)); }
+-  ast_real const *operator()(undefined_real const &) const { assert(false); }
++  ast_real const *operator()(undefined_real const &) const { assert(false); return nullptr; }
+   ast_real const *operator()(real_op const &r) const;
+   ast_real const *operator()(hidden_real const &h) const { return visit(h.real); }
+ };
+Index: gappa-1.3.5/src/parser/ast.cpp
+===================================================================
+--- gappa-1.3.5.orig/src/parser/ast.cpp
++++ gappa-1.3.5/src/parser/ast.cpp
+@@ -371,15 +371,15 @@ function_class const *default_function_g
+   return p.empty() ? fun : NULL;
+ }
+ 
+-interval function_class::round                         (interval const &, std::string &) const { assert(false); }
+-interval function_class::enforce                       (interval const &, std::string &) const { assert(false); }
+-interval function_class::absolute_error                                  (std::string &) const { assert(false); }
+-interval function_class::relative_error                                  (std::string &) const { assert(false); }
+-interval function_class::absolute_error_from_exact_bnd (interval const &, std::string &) const { assert(false); }
+-interval function_class::absolute_error_from_exact_abs (interval const &, std::string &) const { assert(false); }
+-interval function_class::absolute_error_from_approx_bnd(interval const &, std::string &) const { assert(false); }
+-interval function_class::absolute_error_from_approx_abs(interval const &, std::string &) const { assert(false); }
+-interval function_class::relative_error_from_exact_bnd (interval const &, std::string &) const { assert(false); }
+-interval function_class::relative_error_from_exact_abs (interval const &, std::string &) const { assert(false); }
+-interval function_class::relative_error_from_approx_bnd(interval const &, std::string &) const { assert(false); }
+-interval function_class::relative_error_from_approx_abs(interval const &, std::string &) const { assert(false); }
++interval function_class::round                         (interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::enforce                       (interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::absolute_error                                  (std::string &) const { assert(false); return nullptr; }
++interval function_class::relative_error                                  (std::string &) const { assert(false); return nullptr; }
++interval function_class::absolute_error_from_exact_bnd (interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::absolute_error_from_exact_abs (interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::absolute_error_from_approx_bnd(interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::absolute_error_from_approx_abs(interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::relative_error_from_exact_bnd (interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::relative_error_from_exact_abs (interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::relative_error_from_approx_bnd(interval const &, std::string &) const { assert(false); return nullptr; }
++interval function_class::relative_error_from_approx_abs(interval const &, std::string &) const { assert(false); return nullptr; }

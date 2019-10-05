@@ -1,0 +1,13 @@
+Index: gappa-1.3.5/src/parser/ast.cpp
+===================================================================
+--- gappa-1.3.5.orig/src/parser/ast.cpp
++++ gappa-1.3.5/src/parser/ast.cpp
+@@ -35,7 +35,7 @@ bool register_approx(ast_real const *r1,
+ template< class T >
+ class cache {
+   struct less_t {
+-    bool operator()(T const *v1, T const *v2) { return *v1 < *v2; }
++    bool operator()(T const *v1, T const *v2) const { return *v1 < *v2; }
+   };
+   typedef std::set< T *, less_t > store_t;
+   store_t store;
