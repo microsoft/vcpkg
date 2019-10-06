@@ -23,13 +23,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfgui RENAME copyright)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/SFGUI/cmake)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+#file(GLOB_RECURSE SFGUI_DOC_RELEASE ${CURRENT_PACKAGES_DIR}/*.md)
+#file(GLOB_RECURSE SFGUI_DOC_DEBUG ${CURRENT_PACKAGES_DIR}/debug/*.md)
+#file(REMOVE ${SFGUI_DOC_RELEASE} ${SFGUI_DOC_DEBUG})
 
-file(GLOB_RECURSE SFGUI_DOC_RELEASE ${CURRENT_PACKAGES_DIR}/*.md)
-file(GLOB_RECURSE SFGUI_DOC_DEBUG ${CURRENT_PACKAGES_DIR}/debug/*.md)
-file(REMOVE ${SFGUI_DOC_RELEASE} ${SFGUI_DOC_DEBUG})
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfgui RENAME copyright)
