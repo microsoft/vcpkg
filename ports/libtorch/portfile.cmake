@@ -1,5 +1,14 @@
 include(vcpkg_common_functions)
 
+# enforce x64 architecture
+if (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    message(FATAL_ERROR "libtorch's prebuilt package targets x64 architecture.")
+endif()
+# disable static triplet
+if(WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "libtorch's prebuilt package contains DLL. Please use the triplet 'x64-windows'")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda     USE_CUDA
 )
@@ -76,12 +85,15 @@ endif()
 # INSTALL makes too long reporting. use COPY instead
 file(COPY       ${SOURCE_PATH}/include
                 ${SOURCE_PATH}/share
-                # ${SOURCE_PATH}/cmake # protobuf already installed through vcpkg
+                # already installed. cmake configs will be ignored
+                #   protobuf, cpuinfo
+                # ${SOURCE_PATH}/cmake
     DESTINATION ${CURRENT_PACKAGES_DIR}
 )
 
 if(WIN32)
     # .exe
+    # the tools may not work well if it requires some DLL
     file(GLOB  PYTORCH_EXECUTABLES
         "${SOURCE_PATH}/bin/*.exe"
         "${SOURCE_PATH}/test/*.exe"
@@ -125,30 +137,28 @@ endif()
 
 # remove packaged 3rd parties
 # - Protobuf
-file(GLOB       PYTORCH_PREBUILT_LIBS
+message(STATUS "Removing 'protobuf' in the 'libtorch' prebuilt package")
+file(GLOB       PYTORCH_ALREADY_INSTALLED_LIBS
     "${CURRENT_PACKAGES_DIR}/lib/libproto*${CMAKE_STATIC_LIBRARY_SUFFIX}"
     "${CURRENT_PACKAGES_DIR}/debug/lib/libproto*${CMAKE_STATIC_LIBRARY_SUFFIX}"
 )
-file(REMOVE     ${PYTORCH_PREBUILT_LIBS})
-
-message(STATUS "Removing 'protobuf' in the 'libtorch' prebuilt package")
-foreach(removed_file_name ${PYTORCH_PREBUILT_LIBS})
+file(REMOVE     ${PYTORCH_ALREADY_INSTALLED_LIBS})
+foreach(removed_file_name ${PYTORCH_ALREADY_INSTALLED_LIBS})
     message(STATUS "Removed: ${removed_file_name}")
 endforeach()
 
 # - cpuinfo
-file(GLOB       PYTORCH_PREBUILT_LIBS
+message(STATUS "Removing 'cpuinfo' in the 'libtorch' prebuilt package")
+file(GLOB       PYTORCH_ALREADY_INSTALLED_LIBS
     "${CURRENT_PACKAGES_DIR}/include/clog.h"
     "${CURRENT_PACKAGES_DIR}/include/cpuinfo.h"
-    "${CURRENT_PACKAGES_DIR}/lib/libclog*${CMAKE_STATIC_LIBRARY_SUFFIX}"
-    "${CURRENT_PACKAGES_DIR}/lib/libcpuinfo*${CMAKE_STATIC_LIBRARY_SUFFIX}"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/libclog*${CMAKE_STATIC_LIBRARY_SUFFIX}"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/libcpuinfo*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}clog*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}cpuinfo*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}clog*${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}cpuinfo*${CMAKE_STATIC_LIBRARY_SUFFIX}"
 )
-file(REMOVE     ${PYTORCH_PREBUILT_LIBS})
-
-message(STATUS "Removing 'cpuinfo' in the 'libtorch' prebuilt package")
-foreach(removed_file_name ${PYTORCH_PREBUILT_PROTOBUF_LIBS})
+file(REMOVE     ${PYTORCH_ALREADY_INSTALLED_LIBS})
+foreach(removed_file_name ${PYTORCH_ALREADY_INSTALLED_LIBS})
     message(STATUS "Removed: ${removed_file_name}")
 endforeach()
 
@@ -170,3 +180,4 @@ endif()
 
 # Any addition validation?
 vcpkg_test_cmake(PACKAGE_NAME Torch)
+

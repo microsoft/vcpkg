@@ -5,6 +5,9 @@ This is custom installation of the LibTorch for vcpkg:
 
     target_link_libraries(main
     PRIVATE
-        protobuf::libprotobuf   # from vcpkg
-        c10 torch caffe2::mkl   # from pytorch package
+        # from vcpkg
+        protobuf::libprotobuf cpuinfo::clog cpuinfo::cpuinfo
+
+        # from pytorch prebuilt package
+        c10 torch caffe2::mkl
     )
