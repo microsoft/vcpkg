@@ -4,9 +4,15 @@ include(vcpkg_common_functions)
 if (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     message(FATAL_ERROR "libtorch's prebuilt package targets x64 architecture.")
 endif()
-# disable static triplet
-if(WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "libtorch's prebuilt package contains DLL. Please use the triplet 'x64-windows'")
+if(WIN32)
+    # filter the Universal Windows Platform
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+        message(FATAL_ERROR "libtorch's prebuilt can't be used for UWP.")
+    endif()
+    # disable static triplet
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        message(FATAL_ERROR "libtorch's prebuilt package contains DLL. Please use the triplet 'x64-windows'")
+    endif()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
