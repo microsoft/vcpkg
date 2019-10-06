@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/nameof
-    REF 9d335128265e443acf4e12ed40327e166cd8e3da
-    SHA512 3d4af0069fc3dbf9a4a79ae1bea282cafb69606936a66bf43b5a13ae2f0cbc88e98dbb02a12e9c211afd73d9807b36a6f09635a1922ce5faaeb2a148672a0b13
+    REF v0.9.1
+    SHA512 58da89b161f5f3036b78971e4a669dd1efac3eb53499fd2469a568c4623b52679dcfd7ea4f8ed582910e88a137754b1662ff4fe7beb08278f2d3de6af1a1dba6
     HEAD_REF master
 )
 
