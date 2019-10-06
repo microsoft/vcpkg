@@ -1,0 +1,11 @@
+--- a/MPC/config/bzip2.mpb	2019-10-06 11:14:51.164094600 +0700
++++ b/MPC/config/bzip2.mpb	2019-10-06 11:15:08.269289500 +0700
+@@ -5,8 +5,6 @@
+   macros   += USE_BZIP2
+ 
+   specific(prop:windows) {
+-    lit_libs += bzip2
+-  } else {
+     lit_libs += bz2
+   }
+ }
