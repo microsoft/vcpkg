@@ -242,8 +242,8 @@ else
     fetchTool "cmake" "$UNAME" cmakeExe || exit 1
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
-if [[ $os = "osx" ]]; then
-    if [[ $vcpkgAllowAppleClang = "true" ]] ; then
+if [ "$os" = "osx" ]; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
         CXX=clang
     else
         selectCXX CXX || exit 1
