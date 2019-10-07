@@ -5,9 +5,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.postgresql.org/pub/source/v9.6.3/postgresql-9.6.3.tar.bz2"
-    FILENAME "postgresql-9.6.3.tar.bz2"
-    SHA512 97141972e154e6b0e756ee6a4e20f26e82022a9fd4c56305314a3a5567a79ece638e4ac3d513b46138737ae6bd27a098f30013a94767db151181aac9c01290a1
+    URLS "https://ftp.postgresql.org/pub/source/v12.0/postgresql-12.0.tar.bz2"
+    FILENAME "postgresql-12.0.tar.bz2"
+    SHA512 231a0b5c181c33cb01c3f39de1802319b79eceec6997935ab8605dea1f4583a52d0d16e5a70fcdeea313462f062503361d543433ee03d858ba332c72a665f696
 )
 
 vcpkg_extract_source_archive_ex(
@@ -15,18 +15,17 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
+vcpkg_acquire_msys(MSYS_ROOT PACKAGES make gcc)
+vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-        "-DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}"
+        --with-openssl
+        CC=${MSYS_ROOT}/usr/bin/gcc.exe
     OPTIONS_DEBUG
-        -DINSTALL_INCLUDES=OFF
+        --enable-debug
 )
+vcpkg_install_make()
 
-vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpq RENAME copyright)
