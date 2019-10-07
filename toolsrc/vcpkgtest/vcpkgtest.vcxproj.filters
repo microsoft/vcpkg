@@ -39,9 +39,6 @@
     <ClCompile Include="..\src\vcpkg-test\statusparagraphs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg-test\supports.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg-test\update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

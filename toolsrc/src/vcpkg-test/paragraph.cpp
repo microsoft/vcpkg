@@ -35,7 +35,6 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
             {"Description", "d"},
             {"Build-Depends", "bd"},
             {"Default-Features", "df"},
-            {"Supports", "x64"},
         }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
@@ -48,8 +47,6 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[0].name() == "bd");
     REQUIRE(pgh.core_paragraph->default_features.size() == 1);
     REQUIRE(pgh.core_paragraph->default_features[0] == "df");
-    REQUIRE(pgh.core_paragraph->supports.size() == 1);
-    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
 }
 
 TEST_CASE ("SourceParagraph two depends", "[paragraph]")
@@ -83,23 +80,6 @@ TEST_CASE ("SourceParagraph three depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
     REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
     REQUIRE(pgh.core_paragraph->depends[2].name() == "xyz");
-}
-
-TEST_CASE ("SourceParagraph three supports", "[paragraph]")
-{
-    auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Supports", "x64, windows, uwp"},
-        }});
-    REQUIRE(m_pgh.has_value());
-    auto& pgh = **m_pgh.get();
-
-    REQUIRE(pgh.core_paragraph->supports.size() == 3);
-    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
-    REQUIRE(pgh.core_paragraph->supports[1] == "windows");
-    REQUIRE(pgh.core_paragraph->supports[2] == "uwp");
 }
 
 TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")

@@ -23,7 +23,6 @@ namespace vcpkg
         static const std::string FEATURE = "Feature";
         static const std::string MAINTAINER = "Maintainer";
         static const std::string SOURCE = "Source";
-        static const std::string SUPPORTS = "Supports";
         static const std::string VERSION = "Version";
         static const std::string HOMEPAGE = "Homepage";
         static const std::string TYPE = "Type";
@@ -115,7 +114,6 @@ namespace vcpkg
         spgh->homepage = parser.optional_field(SourceParagraphFields::HOMEPAGE);
         spgh->depends = expand_qualified_dependencies(
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
-        spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));
         spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
 
         auto err = parser.error_info(spgh->name);
@@ -255,48 +253,4 @@ namespace vcpkg
 
     std::string to_string(const Dependency& dep) { return dep.name(); }
 
-    ExpectedT<Supports, std::vector<std::string>> Supports::parse(const std::vector<std::string>& strs)
-    {
-        Supports ret;
-        std::vector<std::string> unrecognized;
-
-        for (auto&& str : strs)
-        {
-            if (str == "x64")
-                ret.architectures.push_back(Architecture::X64);
-            else if (str == "x86")
-                ret.architectures.push_back(Architecture::X86);
-            else if (str == "arm")
-                ret.architectures.push_back(Architecture::ARM);
-            else if (str == "windows")
-                ret.platforms.push_back(Platform::WINDOWS);
-            else if (str == "uwp")
-                ret.platforms.push_back(Platform::UWP);
-            else if (str == "v140")
-                ret.toolsets.push_back(ToolsetVersion::V140);
-            else if (str == "v141")
-                ret.toolsets.push_back(ToolsetVersion::V141);
-            else if (str == "crt-static")
-                ret.crt_linkages.push_back(Linkage::STATIC);
-            else if (str == "crt-dynamic")
-                ret.crt_linkages.push_back(Linkage::DYNAMIC);
-            else
-                unrecognized.push_back(str);
-        }
-
-        if (unrecognized.empty())
-            return std::move(ret);
-        else
-            return std::move(unrecognized);
-    }
-
-    bool Supports::is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
-    {
-        const auto is_in_or_empty = [](auto v, auto&& c) -> bool { return c.empty() || c.end() != Util::find(c, v); };
-        if (!is_in_or_empty(arch, architectures)) return false;
-        if (!is_in_or_empty(plat, platforms)) return false;
-        if (!is_in_or_empty(crt, crt_linkages)) return false;
-        if (!is_in_or_empty(tools, toolsets)) return false;
-        return true;
-    }
 }
