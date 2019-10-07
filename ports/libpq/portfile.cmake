@@ -15,12 +15,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-vcpkg_acquire_msys(MSYS_ROOT PACKAGES make gcc)
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        --with-openssl
-        CC=${MSYS_ROOT}/usr/bin/gcc.exe
     OPTIONS_DEBUG
         --enable-debug
 )
