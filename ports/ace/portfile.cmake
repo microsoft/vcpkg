@@ -44,7 +44,6 @@ vcpkg_apply_patches(
 ###################################################
 
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
-
 if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"\n#define ACE_NO_INLINE")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -181,8 +180,6 @@ endif()
 #   Installation
 #
 ###################################################
-
-
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   set(LIB_RELEASE_SUFFIX .lib)

@@ -5,12 +5,8 @@ vcpkg_from_github(
     REF v2019.01
     SHA512 482131372671ce0b86b6643f8c584f000db4324fe0f7e32bf9a31febded7b97ab7e947028fe21ce649554d2cff2bc11dfd94fad0006c465911c9f44b28c2d2a5
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-tools-path.patch
+        001-tools-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

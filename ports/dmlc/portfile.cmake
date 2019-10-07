@@ -27,9 +27,10 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
-       -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}   
-       -DUSE_OPENMP=${ENABLE_OPENMP}       
+    NO_PARALLEL_CONFIGURE
+    OPTIONS
+       -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}
+       -DUSE_OPENMP=${ENABLE_OPENMP}
 )
 
 vcpkg_install_cmake()
