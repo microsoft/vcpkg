@@ -10,6 +10,7 @@ vcpkg_from_github(
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
+        f2c_compatible_binaries.patch
 )
 
 find_program(GIT NAMES git git.cmd)

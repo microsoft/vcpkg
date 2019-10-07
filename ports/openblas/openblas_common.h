@@ -1,9 +1,15 @@
 #pragma once
 #include "openblas/openblas_config.h"
 
+#if defined(OPENBLAS___64BIT__)
+#define __64BIT__
+#endif
+
 #if defined(OPENBLAS_OS_WINNT) || defined(OPENBLAS_OS_CYGWIN_NT) || defined(OPENBLAS_OS_INTERIX)
 #define OPENBLAS_WINDOWS_ABI
 #define OPENBLAS_OS_WINDOWS
+#define OS_WINNT
+
 
 #ifdef DOUBLE
 #define DOUBLE_DEFINED DOUBLE

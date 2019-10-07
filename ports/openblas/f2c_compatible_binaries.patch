@@ -1,0 +1,13 @@
+diff --git a/cmake/f_check.cmake b/cmake/f_check.cmake
+index f877fc3..836c90a 100644
+--- a/cmake/f_check.cmake
++++ b/cmake/f_check.cmake
+@@ -24,7 +24,7 @@ if (NOT NO_LAPACK)
+   enable_language(Fortran)
+ else()
+   include(CMakeForceCompiler)
+-  CMAKE_FORCE_Fortran_COMPILER(gfortran GNU)
++  CMAKE_FORCE_Fortran_COMPILER(g77 GNU)
+ endif()
+ 
+ if (NOT ONLY_CBLAS)
