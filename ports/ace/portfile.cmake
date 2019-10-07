@@ -1,13 +1,5 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm64")
-    message(FATAL_ERROR "${PORT} does not currently support ARM64")
-
-endif()
 
 include(vcpkg_common_functions)
-
-
 
 set(ACE_ROOT ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers)
 set(TAO_ROOT ${ACE_ROOT}/tao)
@@ -41,6 +33,7 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/bzip2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/mpc-arm.patch"
         "${CMAKE_CURRENT_LIST_DIR}/stacktrace-arm.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/arm_prevent_amd64_definition.patch"
 )
 
 
@@ -58,15 +51,13 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-linux.h\"")
     file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    #set(ENV{DYLD_LIBRARY_PATH} ${ACE_ROOT}/ace:${ACE_ROOT}/lib)
-    #set(ENV{MACOSX_DEPLOYMENT_TARGET} 10.4)
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
     file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP.")
+    file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"\n#define ACE_NO_INLINE")
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL ${VCPKG_CMAKE_SYSTEM_NAME}))
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(DLL_DECORATOR s)
   endif()
@@ -77,7 +68,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   else()
     set(SOLUTION_TYPE vc14)
   endif()
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif((VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
   set(SOLUTION_TYPE gnuace)
 endif()
 
@@ -141,11 +132,7 @@ string(PREPEND ACE_FEATURES ",")
 ###################################################
 
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    set(MSBUILD_PLATFORM "ARM")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm64")
-    set(MSBUILD_PLATFORM "ARM64")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
 else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
@@ -166,7 +153,7 @@ else()
 endif()
 
 vcpkg_execute_required_process(
-    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ${WORKSPACE}.mwc ${MPC_STATIC_FLAG} -features stl=1,ace_for_tao=0,ace_inline=0${ACE_FEATURES} -use_env -expand_vars
+    COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ${WORKSPACE}.mwc ${MPC_STATIC_FLAG} -features stl=1,ace_for_tao=0,ace_inline=0${ACE_FEATURES} -workers ${VCPKG_CONCURRENCY} -use_env -expand_vars
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME mwc-tao-${TARGET_TRIPLET}
 )
@@ -179,18 +166,15 @@ vcpkg_execute_required_process(
 ###################################################
 
 # Build for Windows
-if(NOT VCPKG_CMAKE_SYSTEM_NAME) 
+if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL ${VCPKG_CMAKE_SYSTEM_NAME}))
     vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} USE_VCPKG_INTEGRATION)
-endif()
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
   ENDIF ()
   vcpkg_execute_required_process(COMMAND make WORKING_DIRECTORY ${WORKING_DIR} LOGNAME make-${TARGET_TRIPLET})
 endif()
-
 
 ###################################################
 #
@@ -229,7 +213,7 @@ endif()
 function(install_includes SOURCE_PATH SUBDIRECTORIES INCLUDE_DIR)
     foreach(SUB_DIR ${SUBDIRECTORIES})
         file(GLOB INCLUDE_FILES ${SOURCE_PATH}/${SUB_DIR}/*.h ${SOURCE_PATH}/${SUB_DIR}/*.inl ${SOURCE_PATH}/${SUB_DIR}/*.cpp)
-        file(INSTALL ${INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${INCLUDE_DIR}/${SUB_DIR})
+        file(COPY ${INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${INCLUDE_DIR}/${SUB_DIR})
     endforeach()
 endfunction()
 
@@ -256,18 +240,18 @@ function(install_libraries SOURCE_PATH LIBRARIES)
         if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             # Install the DLL files
             if(EXISTS ${LIB_PATH}/${LIBRARY}${DLL_RELEASE_SUFFIX})
-                file(INSTALL ${LIB_PATH}/${LIBRARY}${DLL_RELEASE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+                file(COPY ${LIB_PATH}/${LIBRARY}${DLL_RELEASE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
             endif()
             if(EXISTS ${LIB_PATH}/${LIBRARY}${DLL_DEBUG_SUFFIX})
-                file(INSTALL ${LIB_PATH}/${LIBRARY}${DLL_DEBUG_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)       
+                file(COPY ${LIB_PATH}/${LIBRARY}${DLL_DEBUG_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)       
             endif()
         endif()
         # Install the lib files
         if(EXISTS ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX})
-            file(INSTALL ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+            file(COPY ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
         endif()
         if(EXISTS ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX})
-            file(INSTALL ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+            file(COPY ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
         endif()         
     endforeach()
 endfunction()
@@ -305,7 +289,7 @@ function(install_tao_executables SOURCE_PATH EXE_FILE)
         set(EXECUTABLE_SUFFIX "")
     endif()
     if(EXISTS "${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX}")
-        file(INSTALL ${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace-tao)
+        file(COPY ${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace-tao)
     endif()
 endfunction()
 
@@ -320,12 +304,17 @@ install_tao_executables(${ACE_ROOT}/bin "tao_nsgroup")
 install_tao_executables(${ACE_ROOT}/bin "tao_nslist")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(INSTALL ${ACE_ROOT}/lib/ACEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
+    file(COPY ${ACE_ROOT}/lib/ACEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
     if(BUILD_TAO)
-        file(INSTALL ${ACE_ROOT}/lib/TAO_IDL_FEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
-        file(INSTALL ${ACE_ROOT}/lib/TAO_IDL_BEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
+        file(COPY ${ACE_ROOT}/lib/TAO_IDL_FEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
+        file(COPY ${ACE_ROOT}/lib/TAO_IDL_BEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
     endif()
 endif()
+
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindACE.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindTAO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/TAO_IDL.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
 
 # Handle copyright
 file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace/)
