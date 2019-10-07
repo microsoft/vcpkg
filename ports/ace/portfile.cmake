@@ -57,7 +57,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"\n#define ACE_NO_INLINE")
 endif()
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL ${VCPKG_CMAKE_SYSTEM_NAME}))
+if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL VCPKG_CMAKE_SYSTEM_NAME))
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(DLL_DECORATOR s)
   endif()
@@ -166,7 +166,7 @@ vcpkg_execute_required_process(
 ###################################################
 
 # Build for Windows
-if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL ${VCPKG_CMAKE_SYSTEM_NAME}))
+if((NOT VCPKG_CMAKE_SYSTEM_NAME) OR ("WindowsStore" STREQUAL VCPKG_CMAKE_SYSTEM_NAME))
     vcpkg_build_msbuild(PROJECT_PATH "${WORKING_DIR}/${WORKSPACE}.sln" PLATFORM ${MSBUILD_PLATFORM} USE_VCPKG_INTEGRATION)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   FIND_PROGRAM(MAKE make)
