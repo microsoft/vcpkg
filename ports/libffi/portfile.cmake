@@ -17,6 +17,7 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -29,6 +30,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
 string(REPLACE "/* *know* they are going to link with the static library. */"
