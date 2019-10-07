@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 498a4f6..234dc85 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -86,6 +86,7 @@ install(
+   TARGETS libopencc
+   LIBRARY DESTINATION ${DIR_LIBRARY}
+   ARCHIVE DESTINATION ${DIR_LIBRARY}
++  RUNTIME DESTINATION bin
+ )
+ 
+ install(
