@@ -1,16 +1,18 @@
 include(vcpkg_common_functions)
+
 set(SOURCE_VERSION 0.15.1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ode-${SOURCE_VERSION})
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://bitbucket.org/odedevs/ode/downloads/ode-${SOURCE_VERSION}.tar.gz"
     FILENAME "ode-${SOURCE_VERSION}.tar.gz"
     SHA512 e30623374c8f7c45359d6d837313698ca28da7b5a2d26c7171da16ccd6f95c4a49aad731c432db6ca2911886948a2e7ea93a96ade5a1639b945a825d8ac87249
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-add-static-runtime-option.patch"
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        0001-add-static-runtime-option.patch
 )
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")

@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 # support out of source builds.
 set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/epsilon-0.9.2)
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/epsilon-0.9.2)
-
+file(REMOVE_RECURSE ${SOURCE_PATH_DEBUG} ${SOURCE_PATH_RELEASE}) # to be sure that the patches can be properly applied, we always clean the buildtrees folder
 foreach(BUILD_TYPE debug release)
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
@@ -96,4 +96,3 @@ file(INSTALL ${FILTERS}
 vcpkg_copy_pdbs()
 file(INSTALL ${SOURCE_PATH_RELEASE}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/epsilon/ RENAME copyright)
 message(STATUS "Packaging ${TARGET_TRIPLET} done")
-

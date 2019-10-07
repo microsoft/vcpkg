@@ -1,7 +1,5 @@
-diff --git a/src/PQP_Compile.h b/src/PQP_Compile.h
-index f76c981..8a70710 100644
---- a/src/PQP_Compile.h
-+++ b/src/PQP_Compile.h
+--- a/PQP_v1.3/src/PQP_Compile.h
++++ b/PQP_v1.3/src/PQP_Compile.h
 @@ -44,10 +44,10 @@
  // prevents compiler warnings when PQP_REAL is float
  
