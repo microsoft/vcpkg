@@ -1,14 +1,14 @@
 # Vcpkg
 
 ## 概要
-Vcpkg可帮助您在Windows，Linux和MacOS上管理C和C++库。这个工具和生态系统正在不断发展，您的参与对它的成功至关重要！
+Vcpkg 可帮助您在 Windows、Linux 和 MacOS 上管理 C 和 C++ 库。这个工具和生态系统正在不断发展，您的参与对它的成功至关重要！
 
-如需获取有关可用命令的简短描述， 请执行`vcpkg help`。
+如需获取有关可用命令的简短描述， 请执行 `vcpkg help`。
 
 ## 快速开始
 需求:
-- Windows 10，8.1，7，Linux，或 MacOS
-- Visual Studio 2015 Update 3 或更新的版本(Windows中)
+- Windows 10、8.1、7、Linux、或 MacOS
+- Visual Studio 2015 Update 3 或更新的版本 (Windows 中)
 - Git
 - *可选:* CMake 3.12.4
 
@@ -33,16 +33,16 @@ PS> .\vcpkg install sdl2 curl
 Linux:~/$ ./vcpkg install sdl2 curl
 ```
 
-与CMake一起使用已安装库的最佳方法是通过工具链文件 `scripts\buildsystems\vcpkg.cmake`。要使用此文件，您只需将`-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake`作为参数添加到CMake命令行中。
+与CMake一起使用已安装库的最佳方法是通过工具链文件 `scripts\buildsystems\vcpkg.cmake`。要使用此文件，您只需将 `-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake` 作为参数添加到CMake命令行中。
 
-在Visual Studio中，您可以创建一个新项目(或打开一个已有项目)。所有已安装的库都可以使用`#include`在您的项目中使用，而无需进行其他配置。
+在Visual Studio中，您可以创建一个新项目(或打开一个已有项目)。所有已安装的库都可以使用 `#include` 在您的项目中使用，而无需进行其他配置。
 
 若需获取更多信息，请查看[使用一个包](docs/examples/installing-and-using-packages.md)具体示例。 若您需要使用的库不在vcpkg中，请[在GitHub上创建一个issue](https://github.com/microsoft/vcpkg/issues) ，开发团队和贡献者会看到它，并有可能为此库创建端口文件。
 
-有关macOS和Linux支持的其他说明，请参见[官方公告](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/)。
+有关 macOS 和 Linux 支持的其他说明，请参见[官方公告](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/)。
 
 ## Tab补全/自动补全
-`vcpkg`支持在Powershell和bash中自动补全命令、程序包名称、选项等。如需启用自动补全功能,请使用以下命令:
+`vcpkg`支持在 Powershell 和 bash 中自动补全命令、程序包名称、选项等。如需启用自动补全功能，请使用以下命令:
 ```
 PS> .\vcpkg integrate powershell
 Linux:~/$ ./vcpkg integrate bash
@@ -69,4 +69,4 @@ Vcpkg通过您的贡献不断发展。下面是一些您可以贡献的方式:
 
 ## License
 
-使用的代码License为[MIT License](LICENSE.txt)。
+使用的代码 License 为[MIT License](LICENSE.txt)。
