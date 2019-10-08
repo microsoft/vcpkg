@@ -121,7 +121,7 @@ function(vcpkg_build_make)
             endif()
 
             vcpkg_execute_build_process(
-                COMMAND ${MAKE} -j ${VCPKG_CONCURRENCY} ${MAKE_OPTS}
+                COMMAND ${MAKE} ${MAKE_OPTS}
                 WORKING_DIRECTORY ${WORKING_DIRECTORY}
                 LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
             )
