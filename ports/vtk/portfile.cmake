@@ -49,6 +49,7 @@ vcpkg_from_github(
         fix_ogg_linkage.patch
         fix-pugixml-link.patch
         hdf5_static.patch
+        fix-find-lzma.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -72,6 +73,7 @@ if(VTK_WITH_QT)
 endif()
 
 if(VTK_WITH_PYTHON)
+    vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
@@ -127,6 +129,7 @@ vcpkg_configure_cmake(
         -DModule_vtkGUISupportMFC=${Module_vtkGUISupportMFC}
         -DModule_vtkRenderingOpenVR=${Module_vtkRenderingOpenVR}
         -DVTK_Group_MPI=${VTK_Group_MPI}
+        -DPYTHON_EXECUTABLE=${PYTHON3}
 
         ${ADDITIONAL_OPTIONS}
 )

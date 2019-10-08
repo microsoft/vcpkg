@@ -3,6 +3,10 @@ vcpkg_buildpath_length_warning(37)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
+if("latest" IN_LIST FEATURES)
+  set(QT_BUILD_LATEST ON)
+endif()
+
 include(qt_port_functions)
 include(configure_qt)
 include(install_qt)
@@ -163,9 +167,9 @@ elseif(VCPKG_TARGET_IS_OSX)
         string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" VCPKG_OSX_DEPLOYMENT_TARGET ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Major.Minor OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
-        if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.14") # Max Version supported by QT
-            message(STATUS "Qt 5.12.4 only support OSX_DEPLOYMENT_TARGET up to 10.14")
-            set(VCPKG_OSX_DEPLOYMENT_TARGET "10.14")
+        if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.15") # Max Version supported by QT. This version is defined in mkspecs/common/macx.conf as QT_MAC_SDK_VERSION_MAX
+            message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.15")
+            set(VCPKG_OSX_DEPLOYMENT_TARGET "10.15")
         endif()
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
@@ -191,66 +195,71 @@ list(APPEND CORE_OPTIONS
     -nomake examples
     -nomake tests)
 
-configure_qt(
-    SOURCE_PATH ${SOURCE_PATH}
-    ${QT_PLATFORM_CONFIGURE_OPTIONS}
-    OPTIONS ${CORE_OPTIONS}
-    OPTIONS_RELEASE ${RELEASE_OPTIONS}
-    OPTIONS_DEBUG ${DEBUG_OPTIONS}
-    )
+if(QT_UPDATE_VERSION)
+    SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+else()
+    configure_qt(
+        SOURCE_PATH ${SOURCE_PATH}
+        ${QT_PLATFORM_CONFIGURE_OPTIONS}
+        OPTIONS ${CORE_OPTIONS}
+        OPTIONS_RELEASE ${RELEASE_OPTIONS}
+        OPTIONS_DEBUG ${DEBUG_OPTIONS}
+        )
 
-install_qt()
+    install_qt()
 
-#########################
-#TODO: Make this a function since it is also done by modular scripts!
-# e.g. by patching mkspecs/features/qt_tools.prf somehow
-file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/mkspecs/*.pri" 
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/mkspecs/*.pri")
+    #########################
+    #TODO: Make this a function since it is also done by modular scripts!
+    # e.g. by patching mkspecs/features/qt_tools.prf somehow
+    file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/mkspecs/*.pri" 
+                                "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/mkspecs/*.pri")
 
-file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/include" CMAKE_INCLUDE_PATH)
+    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/include" CMAKE_INCLUDE_PATH)
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    qt_fix_prl("${CURRENT_INSTALLED_DIR}" "${PRL_FILES}")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    qt_fix_prl("${CURRENT_INSTALLED_DIR}/debug" "${PRL_FILES}")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
-endif()
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost 
-
-#This needs a new VCPKG policy. 
-if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
-    message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        qt_fix_prl("${CURRENT_INSTALLED_DIR}" "${PRL_FILES}")
+        file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
     endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        qt_fix_prl("${CURRENT_INSTALLED_DIR}/debug" "${PRL_FILES}")
+        file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
+    endif()
+
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost 
+
+    #This needs a new VCPKG policy. 
+    if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
+        message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
+        if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+        endif()
+    endif()
+
+    #TODO: Replace python script with cmake script
+    vcpkg_execute_required_process(
+        COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
+        WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
+        LOGNAME fix-cmake
+    )
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
+        file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
+    endif()
+    
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf")
+    endif()
+
+    qt_install_copyright(${SOURCE_PATH})
 endif()
-
-#TODO: Replace python script with cmake script
-vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
-    WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
-    LOGNAME fix-cmake
-)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
-    file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
-endif()
-
-qt_install_copyright(${SOURCE_PATH})
-
 #install scripts for other qt ports
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
@@ -266,3 +275,11 @@ file(COPY
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
 )
+
+if(QT_BUILD_LATEST)
+    file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/share/qt5
+    )
+endif()

@@ -18,6 +18,9 @@ else()
     ]])
 endif()
 
+# fixup Windows drive letter to uppercase.
+get_filename_component(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_CANDIDATE} ABSOLUTE)
+
 # Validate VCPKG_ROOT_DIR_CANDIDATE
 if (NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
     message(FATAL_ERROR "Could not find .vcpkg-root")
