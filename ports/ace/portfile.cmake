@@ -286,7 +286,7 @@ function(install_tao_executables SOURCE_PATH EXE_FILE)
         set(EXECUTABLE_SUFFIX "")
     endif()
     if(EXISTS "${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX}")
-        file(COPY ${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace-tao)
+        file(COPY ${ACE_ROOT}/bin/${EXE_FILE}${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
     endif()
 endfunction()
 
@@ -307,11 +307,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(COPY ${ACE_ROOT}/lib/TAO_IDL_BEd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ace)
     endif()
 endif()
-
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindACE.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindTAO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/TAO_IDL.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
 
 # Handle copyright
 file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace/)
