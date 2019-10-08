@@ -1,11 +1,15 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetds-1.1.6)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.freetds.org/files/stable/freetds-1.1.6.tar.bz2"
     FILENAME "freetds-1.1.6.tar.bz2"
     SHA512 160c8638302fd36a3f42d031dbd58525cde899b64d320f6187ce5865ea2c049a1af63be419623e4cd18ccf229dd2ee7ec509bc5721c3371de0f31710dad7470d
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 set(BUILD_freetds_openssl OFF)
 if("openssl" IN_LIST FEATURES)

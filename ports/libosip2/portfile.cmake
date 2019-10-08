@@ -17,50 +17,17 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
 )
 
-find_program(autoreconf autoreconf)
-if (NOT autoreconf)
-    message(FATAL_ERROR "autoreconf must be installed before libx11 can build. Install them with \"apt-get dh-autoreconf\".")
-endif()
-
-find_program(MAKE make)
-if (NOT MAKE)
-    message(FATAL_ERROR "MAKE not found")
-endif()
-
-vcpkg_execute_required_process(
-    COMMAND "./autogen.sh"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME autoreconf-${TARGET_TRIPLET}
+vcpkg_configure_make(
+    SOURCE_PATH ${SOURCE_PATH}
+    NO_DEBUG
+    AUTO_HOST
+    AUTO_DST
+    PRERUN_SHELL autogen.sh
 )
 
-message(STATUS "Configuring ${TARGET_TRIPLET}")
-set(OUT_PATH ${CURRENT_BUILDTREES_DIR}/make-build-${TARGET_TRIPLET})
+vcpkg_install_make()
 
-file(REMOVE_RECURSE ${OUT_PATH})
-file(MAKE_DIRECTORY ${OUT_PATH})
-
-vcpkg_execute_required_process(
-    COMMAND "./configure" --prefix=${OUT_PATH}
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME config-${TARGET_TRIPLET}
-)
-
-message(STATUS "Building ${TARGET_TRIPLET}")
-vcpkg_execute_required_process(
-    COMMAND make
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}-release
-)
-
-message(STATUS "Installing ${TARGET_TRIPLET}")
-vcpkg_execute_required_process(
-    COMMAND make install
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME install-${TARGET_TRIPLET}-release
-)
-file(COPY ${OUT_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-file(COPY ${OUT_PATH}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB_RECURSE LIBOSIP2_BINARIES ${CURRENT_PACKAGES_DIR}/lib *.so)
 foreach(LIBOSIP2_BINARY LIBOSIP2_BINARIES)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
