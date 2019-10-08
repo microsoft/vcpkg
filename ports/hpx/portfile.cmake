@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO STEllAR-GROUP/hpx
     REF 1.3.0
     SHA512 e55ca0c6fe1716b6ee72b0c4a9234a1136455ddc2f5509925395a80442d564b0db251968fef53d202a1f5140e12d0941d0173ab20a7b181632eac20cb925bf31
-    HEAD_REF master
+    HEAD_REF stable
 )
 
 vcpkg_configure_cmake(

@@ -3,6 +3,10 @@ vcpkg_buildpath_length_warning(37)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
+if("latest" IN_LIST FEATURES)
+  set(QT_BUILD_LATEST ON)
+endif()
+
 include(qt_port_functions)
 include(configure_qt)
 include(install_qt)
@@ -243,13 +247,15 @@ else()
         WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
         LOGNAME fix-cmake
     )
-
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5core)
-
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
         file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/bin)
+    endif()
+    
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf")
     endif()
 
     qt_install_copyright(${SOURCE_PATH})
@@ -269,3 +275,11 @@ file(COPY
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt5
 )
+
+if(QT_BUILD_LATEST)
+    file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes_latest.cmake
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/share/qt5
+    )
+endif()

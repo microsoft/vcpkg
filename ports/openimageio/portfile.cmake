@@ -10,10 +10,14 @@ vcpkg_from_github(
         fix_libraw.patch
         use-webp.patch
         remove_wrong_dependency.patch
-        fix_find_openexr.patch
+        use-vcpkg-find-openexr.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
+
+file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake")
+file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake")
+
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -14,7 +14,6 @@ vcpkg_extract_source_archive_ex(
     REF ${SYSTEMC_VERSION}
     PATCHES
         install.patch
-        tlm_correct_dependency.patch
 )
 
 vcpkg_configure_cmake(

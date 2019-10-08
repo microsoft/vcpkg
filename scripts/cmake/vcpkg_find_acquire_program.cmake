@@ -20,6 +20,7 @@
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
+## - GO
 ## - JOM
 ## - MESON
 ## - NASM
@@ -79,6 +80,14 @@ function(vcpkg_find_acquire_program VAR)
     set(_vfa_RENAME "yasm.exe")
     set(NOEXTRACT ON)
     set(HASH c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b)
+  elseif(VAR MATCHES "GO")
+    set(PROGNAME go)
+    set(PATHS ${DOWNLOADS}/tools/go/go/bin)
+    set(BREW_PACKAGE_NAME "go")
+    set(APT_PACKAGE_NAME "golang-go")
+    set(URL "https://dl.google.com/go/go1.13.1.windows-386.zip")
+    set(ARCHIVE "go1.13.1.windows-386.zip")
+    set(HASH 2ab0f07e876ad98d592351a8808c2de42351ab387217e088bc4c5fa51d6a835694c501e2350802323b55a27dc0157f8b70045597f789f9e50f5ceae50dea3027)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)

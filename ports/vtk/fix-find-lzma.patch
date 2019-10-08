@@ -6,7 +6,7 @@ index 213ab18df1..1e290da4cb 100644
  
 -find_library(LZMA_LIBRARIES NAMES lzma)
 +find_library(LZMA_LIBRARY_RELEASE NAMES lzma PATH_SUFFIXES lib)
-+find_library(LZMA_LIBRARY_DEBUG NAME lzmad PATH_SUFFIXES debug/lib)
++find_library(LZMA_LIBRARY_DEBUG NAMES lzmad PATH_SUFFIXES debug/lib)
  find_path(LZMA_INCLUDE_DIRS NAMES lzma.h)
  
 +select_library_configurations(LZMA)

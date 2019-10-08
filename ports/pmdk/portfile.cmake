@@ -8,20 +8,15 @@ elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     message(FATAL_ERROR "x86 is not supported. Please use pmdk:x64-windows instead.")
 endif()
 
-# Download source
+set(PMDK_VERSION "1.6")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF 1.6
+    REF ${PMDK_VERSION}
     SHA512 f66e4edf1937d51abfa7c087b65a64109cd3d2a8d9587d6c4fc28a1003d67ec1f35a0011c9a9d0bfe76ad7227be83e86582f8405c988eac828d8ae5d0a399483
     HEAD_REF master
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/addPowerShellExecutionPolicy.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/v141.patch"
 )
-
-get_filename_component(PMDK_VERSION "${SOURCE_PATH}" NAME)
-string(REPLACE "pmdk-" "" PMDK_VERSION "${PMDK_VERSION}")
 
 # Build only the selected projects
 vcpkg_build_msbuild(
