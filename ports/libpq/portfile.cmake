@@ -17,10 +17,8 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    if(CMAKE_HOST_UNIX AND NOT CMAKE_HOST_APPLE)
     OPTIONS
         --without-readline
-    endif()
     OPTIONS_DEBUG
         --enable-debug
 )
