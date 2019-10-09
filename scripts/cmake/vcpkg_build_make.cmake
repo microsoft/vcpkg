@@ -52,16 +52,16 @@ function(vcpkg_build_make)
             set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
-            set(MAKE ${BASH} --noprofile --norc -c)
+            set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS "${_VCPKG_PROJECT_SUBPATH}make")
-            set(INSTALL_OPTS "${_VCPKG_PROJECT_SUBPATH}make install -j ${VCPKG_CONCURRENCY}")
+            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY}")
+            set(INSTALL_OPTS "install -j ${VCPKG_CONCURRENCY}")
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
             set(MAKE make)
             # Set make command and install command
-            set(MAKE_OPTS)
+            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
             set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
