@@ -8,8 +8,6 @@ vcpkg_from_github(
     REF d1b906991a7587688d384b648c55731f9be52506
     SHA512 ac1229f95db9ab6367d7650e27b87e76a0874e01c9d404e8c5fb75ba2761318218b658a4f7522188fda8008974393a333a8a5fbed8e3a472c98445f13e459ad5
     HEAD_REF master
-    PATCHES
-        remove_execution_character_set.patch
 )
 
 vcpkg_configure_cmake(
