@@ -7,12 +7,9 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REF 09dd10886c560ab5af41cfe694567f34c88cd101
     HEAD_REF master
     SHA512 d0a440e2e96fca9aac7fe73d46bb6508825a82547dca1e9c93d8c3ca46878fa137e7a2a7a865bcfa641d0236e26307a3342d55fc83578552a37eec7565642d91
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/0001-Find-external-sqlite3.patch)
+        0001-Find-external-sqlite3.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

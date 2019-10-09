@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF bcb26fd638bd8c543cd3cc42837b120ff86d44b1
-    SHA512 af897d2daca6e67efe777724147b1047624df9df938222fe967d380263d88ccb3c081e1a24a6c790bf1b35f46385ef08b46d8e46d0922f945cd28c59dd0d35a7
+    REF libtorrent-1_2_2
+    SHA512 34dcf5421dfccbba78bdd30890b9c18b92fdee1a2e1693ada9b55b79a167730093862017581b9251a654b5517011dbe4c46b520b03b78aa86a909457f7edcf2c
     HEAD_REF master
     PATCHES
         add-datetime-to-boost-libs.patch

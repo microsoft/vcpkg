@@ -1,17 +1,17 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.5)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
     FILENAME "fltk-1.3.5.tar.gz"
     SHA512 db7ea7c5f3489195a48216037b9371a50f1119ae7692d66f71b6711e5ccf78814670581bae015e408dee15c4bba921728309372c1cffc90113cdc092e8540821
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.5
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/add-link-libraries.patch"
+        findlibsfix.patch
+        add-link-libraries.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
