@@ -52,6 +52,7 @@ namespace vcpkg
         std::string homepage;
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
+        std::string supports_expression;
     };
 
     /// <summary>

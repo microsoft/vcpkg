@@ -26,6 +26,7 @@ namespace vcpkg
         static const std::string VERSION = "Version";
         static const std::string HOMEPAGE = "Homepage";
         static const std::string TYPE = "Type";
+        static const std::string SUPPORTS = "Supports";
     }
 
     static Span<const std::string> get_list_of_valid_fields()
@@ -38,6 +39,7 @@ namespace vcpkg
             SourceParagraphFields::BUILD_DEPENDS,
             SourceParagraphFields::HOMEPAGE,
             SourceParagraphFields::TYPE,
+			SourceParagraphFields::SUPPORTS,
         };
 
         return valid_fields;
@@ -115,6 +117,7 @@ namespace vcpkg
         spgh->depends = expand_qualified_dependencies(
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
+        spgh->supports_expression = parser.optional_field(SourceParagraphFields::SUPPORTS);
 
         auto err = parser.error_info(spgh->name);
         if (err)
