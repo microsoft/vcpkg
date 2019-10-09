@@ -49,9 +49,13 @@ function(vcpkg_get_build_depends)
 
         list(JOIN _deps_FEATURES ", " FEATURES_COMMA)
         find_program(VCPKG_PROG vcpkg PATHS ${VCPKG_ROOT_DIR})
+        message(STATUS "${VCPKG_PROG} depend-info ${_deps_PORT}[${FEATURES_COMMA}] --max-recurse=${_deps_RECURSE_LEVEL}")
         execute_process(COMMAND ${VCPKG_PROG} depend-info ${_deps_PORT}[${FEATURES_COMMA}] --max-recurse=${_deps_RECURSE_LEVEL}
                             OUTPUT_VARIABLE ${_deps_OUTPUT_VARIABLE})
         #message(STATUS "Depend-Info: ${_deps_OUTPUT_VARIABLE}: ${${_deps_OUTPUT_VARIABLE}}")
         string(REGEX REPLACE "[^:]+: " "" "${_deps_OUTPUT_VARIABLE}" "${${_deps_OUTPUT_VARIABLE}}")
+        string(REGEX REPLACE ", " ";" "${_deps_OUTPUT_VARIABLE}" "${${_deps_OUTPUT_VARIABLE}}")
+        string(REGEX REPLACE "\n" "" "${_deps_OUTPUT_VARIABLE}" "${${_deps_OUTPUT_VARIABLE}}")
+        message(STATUS "get: ${_deps_OUTPUT_VARIABLE}: ${${_deps_OUTPUT_VARIABLE}}")
         set(${_deps_OUTPUT_VARIABLE} ${${_deps_OUTPUT_VARIABLE}} PARENT_SCOPE)
 endfunction()
