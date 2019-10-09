@@ -3,3 +3,4 @@ Version: 2.1.11
 Build-Depends: openssl
 Homepage: https://github.com/libevent/libevent
 Description: An event notification library
+Supports: !uwp
