@@ -79,9 +79,9 @@ else()
 endif()
 
 target_link_libraries(Irrlicht PRIVATE 
-    ${ZLIB_LIBRARY} 
     ${PNG_LIBRARY} 
     ${JPEG_LIBRARY} 
+    ${ZLIB_LIBRARY}
     ${BZIP2_LIBRARY}
     )
 
