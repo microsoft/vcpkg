@@ -22,7 +22,5 @@ function(vcpkg_write_port_info)
     file(APPEND "${info_file}" "set(${PORT}_FEATURES ${FEATURES} CACHE INTERNAL \"\")\n")
     
     vcpkg_get_build_depends(OUTPUT_VARIABLE ${PORT}_DEPENDENCIES)
-    if(NOT "${${PORT}_DEPENDENCIES}" MATCHES "^[ \t\r\n]*$")
-        file(APPEND "${info_file}" "set(${PORT}_DEPENDENCIES \"${${PORT}_DEPENDENCIES}\" CACHE INTERNAL \"\")\n")
-    endif()
+    file(APPEND "${info_file}" "set(${PORT}_DEPENDENCIES \"${${PORT}_DEPENDENCIES}\" CACHE INTERNAL \"\")\n")
 endfunction()
