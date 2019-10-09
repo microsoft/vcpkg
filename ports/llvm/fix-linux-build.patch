@@ -1,8 +1,8 @@
 diff --git a/cmake/config-ix.cmake b/cmake/config-ix.cmake
-index 900c35e..78fd3cd 100644
+index 4c585b8..21364be 100644
 --- a/cmake/config-ix.cmake
 +++ b/cmake/config-ix.cmake
-@@ -154,7 +154,7 @@ if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
+@@ -166,7 +166,7 @@ if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
          else()
            include_directories(${LIBXML2_INCLUDE_DIR})
          endif()

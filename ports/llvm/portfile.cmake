@@ -9,9 +9,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://releases.llvm.org/8.0.0/llvm-8.0.0.src.tar.xz"
-    FILENAME "llvm-8.0.0.src.tar.xz"
-    SHA512 1602343b451b964f5d8c2d6b0654d89384c80d45883498c5f0e2f4196168dd4a1ed2a4dadb752076020243df42ffe46cb31d82ffc145d8e5874163cbb9686a1f
+    URLS "http://releases.llvm.org/9.0.0/llvm-9.0.0.src.tar.xz"
+    FILENAME "llvm-9.0.0.src.tar.xz"
+    SHA512 1bb3341e1d231559b948f1505b33c2e2e03989f9b8bbfef0e0cdaff5ac43f85574c9ec5ac53399b914f497d6899425d861411024e8d7e1d1a338c1c6951ac658
 )
 
 vcpkg_extract_source_archive_ex(
@@ -23,9 +23,9 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_download_distfile(CLANG_ARCHIVE
-    URLS "http://releases.llvm.org/8.0.0/cfe-8.0.0.src.tar.xz"
-    FILENAME "cfe-8.0.0.src.tar.xz"
-    SHA512 98e540222719716985e5d8439116e47469cb01201ea91d1da7e46cb6633da099688d9352c3b65e5c5f660cbbae353b3d79bb803fc66b3be663f2b04b1feed1c3
+    URLS "http://releases.llvm.org/9.0.0/cfe-9.0.0.src.tar.xz"
+    FILENAME "cfe-9.0.0.src.tar.xz"
+    SHA512 83fcca5499102b375e620cdac97d75e6111ebed4ef10240859ddd8a88bc5b022703739d2eae0d8693c91892ad11fc6b531c0dbee62fbce68d3be595b94f0b1fe
 )
 
 vcpkg_extract_source_archive_ex(

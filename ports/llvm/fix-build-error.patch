@@ -1,6 +1,8 @@
+diff --git a/tools/libclang/CMakeLists.txt b/tools/libclang/CMakeLists.txt
+index 613ead1..488daf3 100644
 --- a/tools/libclang/CMakeLists.txt
 +++ b/tools/libclang/CMakeLists.txt
-@@ -56,10 +56,7 @@ if (TARGET clangTidyPlugin)
+@@ -58,10 +58,7 @@ if (TARGET clangTidyPlugin)
    endif()
  endif ()
  
