@@ -283,7 +283,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
             "set(_VCPKG_ROOT_DIR \"${_root_dir}\" CACHE STRING \"\")\n"
         )
     else()
-        set(CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES 
             VCPKG_TARGET_TRIPLET
             VCPKG_APPLOCAL_DEPS
             VCPKG_CHAINLOAD_TOOLCHAIN_FILE
