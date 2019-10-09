@@ -8,11 +8,16 @@
 #
 
 function(vcpkg_build_qmake)
-    cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
+    cmake_parse_arguments(_csc "SKIP_MAKEFILES;PREFER_NMAKE" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
 
     if(CMAKE_HOST_WIN32)
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}")
+        if (_csc_PREFER_NMAKE)
+            find_program(NMAKE nmake)
+            set(INVOKE "${NMAKE}")
+        else()
+            vcpkg_find_acquire_program(JOM)
+            set(INVOKE "${JOM}")
+        endif()
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}")
