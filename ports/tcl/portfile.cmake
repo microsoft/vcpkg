@@ -12,12 +12,16 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     # Handle features
-    set(TCL_BUILD_OPTS OPTS=pdbs,symbols,msvcrt)
+    set(TCL_BUILD_OPTS OPTS=pdbs,symbols)
     set(TCL_BUILD_STATS STATS=none)
     set(TCL_BUILD_CHECKS CHECKS=none)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},static)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},static,staticpkg)
     endif()
+    if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},msvcrt)
+    endif()
+    
     if ("thrdalloc" IN_LIST FEATURES)
         set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},thrdalloc)
     endif()
@@ -54,7 +58,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
         foreach(TOOL ${TOOLS})
             get_filename_component(DST_DIR ${TOOL} PATH)
             file(COPY ${TOOL} DESTINATION ${DST_DIR})
-            message("cp ${TOOL} to ${DST_DIR}")
         endforeach()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/dde1.4
                             ${CURRENT_PACKAGES_DIR}/lib/nmake
@@ -72,6 +75,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6
                             ${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0
         )
+    endif()
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
     
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
