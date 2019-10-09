@@ -55,14 +55,14 @@ function(vcpkg_build_make)
             set(MAKE ${BASH} --noprofile --norc -c)
             # Must use absolute path to call make in windows
             set(MAKE_OPTS "${_VCPKG_PROJECT_SUBPATH}make")
-            set(INSTALL_OPTS "${_VCPKG_PROJECT_SUBPATH}make install")
+            set(INSTALL_OPTS "${_VCPKG_PROJECT_SUBPATH}make install -j ${VCPKG_CONCURRENCY}")
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
             set(MAKE make)
             # Set make command and install command
             set(MAKE_OPTS)
-            set(INSTALL_OPTS install)
+            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)
