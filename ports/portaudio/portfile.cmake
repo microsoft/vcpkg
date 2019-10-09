@@ -1,13 +1,9 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.portaudio.com/archives/pa_snapshot.tgz"
-    FILENAME "pa_snapshot.tgz"
-    SHA512 7eb4db6c51b3afca3b7767336acc3d66e1fb3b14943079127f2aae0a9e8869b213ac69851ee0732d0801e55bcf892c657e4acab6d588affab4f7e993ba46aa32
-)
-vcpkg_extract_source_archive_ex(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    URL https://git.assembla.com/portaudio.git
+    REF c5d2c51bd6fe354d0ee1119ba932bfebd3ebfacc
 )
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
