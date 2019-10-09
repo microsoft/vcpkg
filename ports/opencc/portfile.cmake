@@ -3,11 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BYVoid/OpenCC
-    REF 192c50f30f6cf3abf0512f1ae84f4d7c0cbb3e51
-    SHA512 4b4bb61ad0bb75d113a18830b83c91d852ba782186100ce244152fa42f03a7cde69b9189aaf69e7b3ae33c52b50a449d3055bb465651fc730138ec5283d6f3b5
+    REF 05a2b5c1b684f6f938c4261389cd92289e382c0d
+    SHA512 d9f8e89b34793d1e71dc87dbd2322b021c2160402fb497211baa86b5ac49098546e4005a2ac1f2642126e4a2e07340f52abc5ea733e3c3fe556e6dcf1eaee400
     HEAD_REF master
-    PATCHES
-        fix-dll-install-path.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
