@@ -1,8 +1,9 @@
 Source: libpq
 Version: 12.0
+Build-Depends: 
 Homepage: https://www.postgresql.org/
 Description: The official database access API of postgresql
-Default-Features: zlib, openssl, bonjour(osx)
+Default-Features: zlib, openssl
 
 Feature: openssl
 Build-Depends: openssl
@@ -41,7 +42,6 @@ Build-Depends: kerberos
 Description: Kerberos Support (--with-gssapi)
 
 Feature: systemd
-Build-Depends: 
 Description: Build with support for systemd service notifications. (--with-systemd)
 
 Feature: ldap
@@ -65,17 +65,15 @@ Build-Depends: icu
 Description: Build with support for the ICU library (--with-icu)
 
 Feature: bonjour
-Build-Depends: 
 Description: Build with Bonjour support (--with-bonjour)
 
 Feature: uuid
-Build-Depends: 
 Description: Build the uuid-ossp module (which provides functions to generate UUIDs) (--with-uuid=LIBRARY LIBRARY=(bsd|e2fs|ossp))
 
-Feature: libxml
-Build-Depends: libxml
+Feature: xml
+Build-Depends: libxml2
 Description: Build with libxml (--with-libxml)
 
-Feature: libxslt
+Feature: xslt
 Build-Depends: libxslt
 Description: Build with libxslt (--with-libxslt)
