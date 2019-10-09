@@ -137,6 +137,14 @@ if(NOT ${IRR_SHARED_LIB})
     target_compile_definitions(Irrlicht PUBLIC _IRR_STATIC_LIB_)
 endif()
 
+# Disable Irrlicht building already provided dependencies
+target_compile_definitions(Irrlicht
+    PRIVATE NO_IRR_USE_NON_SYSTEM_ZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_LIB_PNG_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_BZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
+    )
+
 # Per platform config
 # -------------------------------------------------------------------------------------------------
 
