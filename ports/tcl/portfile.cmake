@@ -1,40 +1,81 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
-    REF 54ea3ef1f5f651192316dace49ff9593fcbf6cf0
-    SHA512 b9c6567d77838635ed6b440ae3aea1ea5c421e474136fe5905b6c7db48ab32811cf15a2b0201ccbdb02b9c5e68e9880e48ab611f9c8054fdbf8ee9f784c0b61a)
+    REF 2abfa2c03ddc0419e6525f86c2c0323b2ba1932e
+    SHA512 d9bc83c389cf3b95ab64b75c57eb9a2b23b957503d2dadc2d3f6854e9e784d87d9b2059a82f35accb419693bfe675b523c4751af91efac700644e118ff689fd7)
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(MACHINE_STR AMD64)
+        set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
     else()
-        set(MACHINE_STR IX86)
+        set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
+    endif()
+    
+    # Handle features
+    set(TCL_BUILD_OPTS OPTS=pdbs,symbols,msvcrt)
+    set(TCL_BUILD_STATS STATS=none)
+    set(TCL_BUILD_CHECKS CHECKS=none)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},static)
+    endif()
+    if ("thrdalloc" IN_LIST FEATURES)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},thrdalloc)
+    endif()
+    if ("profile" IN_LIST FEATURES)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},profile)
+    endif()
+    if ("unchecked" IN_LIST FEATURES)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},unchecked)
+    endif()
+    if ("utfmax" IN_LIST FEATURES)
+        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},time64bit)
     endif()
     
     vcpkg_install_nmake(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH win
-        NO_DEBUG
         OPTIONS
-            MACHINE=${MACHINE_STR}
-            OPTS=pdbs
-            OPTS=symbols
+            ${TCL_BUILD_MACHINE_STR}
+            ${TCL_BUILD_OPTS}
+            ${TCL_BUILD_STATS}
+            ${TCL_BUILD_CHECKS}
     )
-
-    file(GLOB_RECURSE TOOLS
-            ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
-            ${CURRENT_PACKAGES_DIR}/lib/nmake/*
-            ${CURRENT_PACKAGES_DIR}/lib/reg1.3/*
-            ${CURRENT_PACKAGES_DIR}/lib/tcl8/*
-            ${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*
-            ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*
-    )
-    foreach(TOOL ${TOOLS})
-        get_filename_component(DST_DIR ${TOOL} PATH)
-        string(REPLACE "${${CURRENT_PACKAGES_DIR}/lib/}" "${${CURRENT_PACKAGES_DIR}/tools/}" DST_DIR "${DST_DIR}")
-        file(COPY ${TOOL} DESTINATION ${DST_DIR})
-        file(REMOVE ${TOOL})
-    endforeach()
+    # Install
+    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
+        file(GLOB_RECURSE TOOLS
+                ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
+                ${CURRENT_PACKAGES_DIR}/lib/nmake/*
+                ${CURRENT_PACKAGES_DIR}/lib/reg1.3/*
+                ${CURRENT_PACKAGES_DIR}/lib/tcl8/*
+                ${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*
+                ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*
+        )
+        
+        foreach(TOOL ${TOOLS})
+            get_filename_component(DST_DIR ${TOOL} PATH)
+            file(COPY ${TOOL} DESTINATION ${DST_DIR})
+            message("cp ${TOOL} to ${DST_DIR}")
+        endforeach()
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/dde1.4
+                            ${CURRENT_PACKAGES_DIR}/lib/nmake
+                            ${CURRENT_PACKAGES_DIR}/lib/reg1.3
+                            ${CURRENT_PACKAGES_DIR}/lib/tcl8
+                            ${CURRENT_PACKAGES_DIR}/lib/tcl8.6
+                            ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0
+        )
+    endif()
+    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/nmake
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6
+                            ${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0
+        )
+    endif()
+    
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    
 else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
