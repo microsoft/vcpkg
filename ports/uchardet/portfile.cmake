@@ -5,6 +5,7 @@ vcpkg_from_git(
     URL https://gitlab.freedesktop.org/uchardet/uchardet
     REF bdfd6116a965fd210ef563613763e724424728b7
     PATCHES
+        fix-string-no-output-variable.patch
         win32-getopt.patch
 )
 

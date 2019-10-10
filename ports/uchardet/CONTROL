@@ -1,7 +1,7 @@
 Source: uchardet
 Version: 2019-10-07
 Description: An encoding detector library ported from Mozilla
-Homepage: https://github.com/BYVoid/uchardet
+Homepage: https://cgit.freedesktop.org/uchardet/uchardet/
 
 Feature: tool
 Description: Build uchardet CLI tool
