@@ -6,8 +6,6 @@ vcpkg_from_bitbucket(
     REF 51fff70fcc70c8bcb167b5daa497babf51b7603e
     SHA512 7048720d1842a0a8e621f6878c43942664523f889f2659f4334c7428d1177a5a226c95bcb5f84b93cae87c61e188bf91dc2429b1ddfc7b6a7b8eb74ab8c0a1ec
     HEAD_REF master
-    PATCHES
-        avoid-src-dir-generation.patch
 )
 
 vcpkg_configure_cmake(
