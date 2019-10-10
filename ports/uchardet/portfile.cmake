@@ -6,6 +6,7 @@ vcpkg_from_git(
     REF bdfd6116a965fd210ef563613763e724424728b7
     PATCHES
         fix-string-no-output-variable.patch
+        fix-tool-build-error.patch
         win32-getopt.patch
 )
 
