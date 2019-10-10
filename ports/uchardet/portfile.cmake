@@ -10,7 +10,10 @@ vcpkg_from_git(
         win32-getopt.patch
 )
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # On Windows, we can get a uchardet.dll, but it exports no symbols.
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -53,5 +56,4 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share/man
 )
 
-# Handle copyright
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
