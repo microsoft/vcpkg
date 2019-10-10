@@ -178,7 +178,7 @@ namespace vcpkg::Commands::CI
                 std::string feature_list;
                 for (const auto& feature : test.features)
                 {
-                    if (!feature_list.empty()) 
+                    if (!feature_list.empty())
                     {
                         feature_list += ", ";
                     }
@@ -462,7 +462,7 @@ namespace vcpkg::Commands::CI
             }
 
             auto action_plan = Dependencies::PackageGraph::create_feature_install_plan(
-                provider, var_provider, split_specs->unknown, {}, {});
+                provider, var_provider, split_specs->unknown, status_db, serialize_options);
 
             for (auto&& action : action_plan)
             {
