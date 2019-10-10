@@ -19,6 +19,8 @@ macro(feature_not_implemented_yet)
 endmacro()
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
+    # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu, pgport
     feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
     feature_not_implemented_yet(perl python tcl uuid)
 else()
@@ -35,7 +37,8 @@ vcpkg_download_distfile(ARCHIVE
 set(PATCHES  
         patches/windows/install.patch
         patches/windows/win_bison_flex.patch
-        patches/windows/openssl_exe_path.patch)
+        patches/windows/openssl_exe_path.patch
+        patches/windows/Solution.patch)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
@@ -215,20 +218,48 @@ if(VCPKG_TARGET_IS_WINDOWS)
     
     if(NOT HAS_TOOLS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
+    else()
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     endif()
     #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
     #vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
+    if("${FEATURES}" MATCHES "openssl")
+        list(APPEND BUILD_OPTS --with-openssl)
+    endif()
+    if(NOT "${FEATURES}" MATCHES "zlib")
+        list(APPEND BUILD_OPTS --without-zlib)
+    endif()
+    if(NOT "${FEATURES}" MATCHES "readline")
+        list(APPEND BUILD_OPTS --without-readline)
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            --without-readline
+            ${BUILD_OPTS}
+            --with-includes=${CURRENT_INSTALLED_DIR}/include
+        OPTIONS_RELEASE
+            --exec-prefix=${CURRENT_PACKAGES_DIR}/tools/${PORT}
+            --datarootdir=${CURRENT_PACKAGES_DIR}/share/${PORT}
+            --with-libraries=${CURRENT_INSTALLED_DIR}/lib
         OPTIONS_DEBUG
+            --exec-prefix=${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
+            --datarootdir=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}
+            --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
-    vcpkg_install_make()
+    vcpkg_install_make()    
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    if(NOT HAS_TOOLS)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    else()
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
 endif()
-vcpkg_copy_pdbs()
+#vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpq RENAME copyright)
