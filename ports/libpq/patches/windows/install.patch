@@ -2,6 +2,41 @@ diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
 index d109b2c90..75c7446e6 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
+@@ -19,13 +19,13 @@ our (@ISA, @EXPORT_OK);
+ 
+ my $insttype;
+ my @client_contribs = ('oid2name', 'pgbench', 'vacuumlo');
+-my @client_program_files = (
+-	'clusterdb',      'createdb',   'createuser',    'dropdb',
+-	'dropuser',       'ecpg',       'libecpg',       'libecpg_compat',
+-	'libpgtypes',     'libpq',      'pg_basebackup', 'pg_config',
+-	'pg_dump',        'pg_dumpall', 'pg_isready',    'pg_receivewal',
+-	'pg_recvlogical', 'pg_restore', 'psql',          'reindexdb',
+-	'vacuumdb',       @client_contribs);
++my @client_program_files = ( 'ecpg',  'libecpg','libecpg_compat', 'libpgtypes', 'libpq' );
++	# 'clusterdb',      'createdb',   'createuser',    'dropdb',
++	# 'dropuser',       'ecpg',       'libecpg',       'libecpg_compat',
++	#'libpgtypes',     'libpq',      'pg_basebackup', 'pg_config',
++	#'pg_dump',        'pg_dumpall', 'pg_isready',    'pg_receivewal',
++	#'pg_recvlogical', 'pg_restore', 'psql',          'reindexdb',
++	#'vacuumdb',       @client_contribs);
+ 
+ sub lcopy
+ {
+@@ -106,11 +106,11 @@ sub Install
+ 			}
+ 		},
+ 		@top_dir);
+-	CopySetOfFiles('config files', $sample_files, $target . '/share/');
++	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
+ 	CopyFiles(
+ 		'Import libraries',
+ 		$target . '/lib/',
+-		"$conf\\", "postgres\\postgres.lib", "libpgcommon\\libpgcommon.lib",
++		"$conf\\", "libpgcommon\\libpgcommon.lib",
+ 		"libpgport\\libpgport.lib");
+ 	CopyContribFiles($config, $target);
+ 	CopyIncludeFiles($target);
 @@ -78,10 +78,10 @@ sub Install
  	my $majorver = DetermineMajorVersion();
  	print "Installing version $majorver for $conf in $target\n";
@@ -16,15 +51,6 @@ index d109b2c90..75c7446e6 100644
  	if ($insttype eq "client")
  	{
  		EnsureDirectories($target, @client_dirs);
-@@ -106,7 +106,7 @@ sub Install
- 			}
- 		},
- 		@top_dir);
--	CopySetOfFiles('config files', $sample_files, $target . '/share/');
-+	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
- 	CopyFiles(
- 		'Import libraries',
- 		$target . '/lib/',
 @@ -120,35 +120,35 @@ sub Install
  		CopySetOfFiles(
  			'timezone names',
@@ -78,7 +104,7 @@ index d109b2c90..75c7446e6 100644
  	}
  
  	GenerateNLSFiles($target, $config->{nls}, $majorver) if ($config->{nls});
-@@ -282,11 +282,11 @@ sub CopySolutionOutput
+@@ -282,23 +282,26 @@ sub CopySolutionOutput
  		{
  			if ($1 == 1)
  			{
@@ -92,7 +118,24 @@ index d109b2c90..75c7446e6 100644
  				if ($is_sharedlib)
  				{
  					push(@{ $install_list{'bin'} }, "dll");
-@@ -306,11 +306,11 @@ sub CopySolutionOutput
+ 					push(@{ $install_list{'lib'} }, "lib");
+ 				}
++				else
++				{
++					push(@{ $install_list{'lib'} }, "lib");
++				}
+ 			}
+ 			else
+ 			{
+-
++				push(@{ $install_list{'lib'} }, "lib");
+ 				# Static libraries, such as libpgport, only used internally
+ 				# during build, don't install.
+-				next;
+ 			}
+ 		}
+ 		elsif ($vcproj eq 'vcxproj'
+@@ -306,11 +309,11 @@ sub CopySolutionOutput
  		{
  			if ($1 eq 'Application')
  			{
@@ -106,6 +149,18 @@ index d109b2c90..75c7446e6 100644
  				if ($is_sharedlib)
  				{
  					push(@{ $install_list{'bin'} }, "dll");
+@@ -319,10 +322,9 @@ sub CopySolutionOutput
+ 			}
+ 			else    # 'StaticLibrary'
+ 			{
+-
++				push(@{ $install_list{'lib'} }, "lib");
+ 				# Static lib, such as libpgport, only used internally
+ 				# during build, don't install.
+-				next;
+ 			}
+ 		}
+ 		else
 @@ -339,7 +339,7 @@ sub CopySolutionOutput
  				  || croak "Could not copy $pf.$ext\n";
  			}

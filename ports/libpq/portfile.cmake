@@ -84,7 +84,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg
 endif()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -155,8 +154,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(WRITE "${CONFIG_FILE}" "${_contents}")
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
         vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
-        set(ENV{MSBFLAGS} "/t:Rebuild
-            /p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
+        set(ENV{MSBFLAGS} "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
             /p:VCPkgLocalAppDataDisabled=true
             /p:UseIntelMKL=No
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
@@ -164,13 +162,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             /p:VcpkgTriplet=${TARGET_TRIPLET}"
             )
-        message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
+        
+        set(build_libs libpq libecpg_compat)
+        foreach(build_lib ${build_libs})
+        message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
-            COMMAND ${PERL} build.pl ${_buildtype}
+            COMMAND ${PERL} build.pl ${_buildtype} ${build_lib}
             WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-            LOGNAME build-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
+            LOGNAME build-${build_lib}-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
         )
-        message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
+        message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}... done")
+        endforeach()
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
             COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} client
@@ -189,8 +191,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/symbols)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/symbols)
 
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+    
+    #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
+    #vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
     vcpkg_configure_make(
