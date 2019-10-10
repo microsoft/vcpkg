@@ -168,13 +168,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:VcpkgTriplet=${TARGET_TRIPLET}"
             )
         if(HAS_TOOLS)
-                message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
-                vcpkg_execute_required_process(
-                    COMMAND ${PERL} build.pl ${_buildtype}
-                    WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-                    LOGNAME build-${TARGET_TRIPLET}-${_buildtype}
-                )
-                message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+                set(ENV{MSBFLAGS} "$ENV{MSBFLAGS} /p:Platform=Win32")
+            endif()
+            message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
+            vcpkg_execute_required_process(
+                COMMAND ${PERL} build.pl ${_buildtype}
+                WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
+                LOGNAME build-${TARGET_TRIPLET}-${_buildtype}
+            )
+            message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
         else()
             set(build_libs libpq libecpg_compat)
             foreach(build_lib ${build_libs})
