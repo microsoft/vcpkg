@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://angelcode.com/angelscript/sdk/files/angelscript_2.34.0.zip"
+    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.34.0.zip"
     FILENAME "angelscript_2.34.0.zip"
     SHA512 c26dba452ab52c300da9c95fde8398acf4840cbc0e653ededf978d4a3e942cfe5b77292c74c49dc0279250a27cfd324c696c49d139a97c844b2a1eead9aae2f4
 )
