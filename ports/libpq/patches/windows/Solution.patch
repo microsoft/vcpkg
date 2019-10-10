@@ -2,7 +2,7 @@ diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
 index 51711c2bf..d33fdc3b0 100644
 --- a/src/tools/msvc/Solution.pm	
 +++ b/src/tools/msvc/Solution.pm
-@@ -69,9 +69,12 @@ sub DeterminePlatform
+@@ -69,9 +69,15 @@ sub DeterminePlatform
         my $self = shift;
  
         # Examine CL help output to determine if we are in 32 or 64-bit mode.
@@ -10,9 +10,12 @@ index 51711c2bf..d33fdc3b0 100644
 +       my $output = `cl 2>&1`;
         $? >> 8 == 0 or die "cl command not found";
 -       $self->{platform} = ($output =~ /^\/favor:<.+AMD64/m) ? 'x64' : 'Win32';
-+       $self->{platform} = ($output =~ m/x64\n/) ? 'x64' : 'Unknown';
-+       $self->{platform} = ($output =~ m/x86\n/) ? 'Win32' : 'Unknown';
-+       $self->{platform} = ($output =~ m/ARM64\n/) ? 'ARM64' : 'Unknown';
++       if ($output =~ m/x64\n/) { $self->{platform} = 'x64';
++       } elsif ($output =~ m/x86\n/) { $self->{platform} = 'Win32';
++       } elsif ($output =~ m/ARM64\n/) { $self->{platform} = 'ARM64';
++       } elsif ($output =~ m/ARM\n/) { $self->{platform} = 'ARM';
++       } else { $self->{platform} = 'Unknown'
++       }
 +       print "cl output $output.";
         print "Detected hardware platform: $self->{platform}\n";
         return;
