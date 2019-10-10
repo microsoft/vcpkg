@@ -52,10 +52,10 @@ function(vcpkg_build_make)
             set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
-            set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
+            set(MAKE ${BASH} --noprofile --norc -c ${_VCPKG_PROJECT_SUBPATH}make)
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY}")
-            set(INSTALL_OPTS "install -j ${VCPKG_CONCURRENCY}")
+            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
+            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
@@ -121,7 +121,7 @@ function(vcpkg_build_make)
             endif()
 
             vcpkg_execute_build_process(
-                COMMAND ${MAKE} ${MAKE_OPTS}
+                COMMAND "${MAKE} ${MAKE_OPTS}"
                 WORKING_DIRECTORY ${WORKING_DIRECTORY}
                 LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
             )
@@ -158,7 +158,7 @@ function(vcpkg_build_make)
             
             message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
             vcpkg_execute_required_process(
-                COMMAND ${MAKE} ${INSTALL_OPTS}
+                COMMAND "${MAKE} ${INSTALL_OPTS}"
                 WORKING_DIRECTORY ${WORKING_DIRECTORY}
                 LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
             )
