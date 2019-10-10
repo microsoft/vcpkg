@@ -2,9 +2,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} currently only supports being built for desktop")
 endif()
 
-vcpkg_read_dependent_port_info()
-message(STATUS "${PORT}_ALL_DEPENDENCIES: ${${PORT}_ALL_DEPENDENCIES}")
-
 macro(feature_unsupported)
     foreach(_feat ${ARGN})
         if("${FEATURES}" MATCHES "${_feat}")
