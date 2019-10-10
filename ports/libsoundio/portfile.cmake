@@ -12,8 +12,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_cmakelists.patch
-        fix_example.patch
-        fix_test.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
