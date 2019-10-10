@@ -88,9 +88,6 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS)
-    if("${FEATURES}" MATCHES "readline|libedit|perl|python|tcl|kerberos|systemd|bsd|pam|llvm|uuid")
-   # message(FATAL_ERROR "These features are TODOs. If you require them feel free to implement them")
-    endif()
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -109,25 +106,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
         
-        
-        ##	ldap      => undef,    # --with-ldap
+        ##	ldap      => undef,    # --with-ldap                            ##done
         ##	extraver  => undef,    # --with-extra-version=<string>
         ##	gss       => undef,    # --with-gssapi=<path>
-        ##	icu       => undef,    # --with-icu=<path>
-        ##	nls       => undef,    # --enable-nls=<path>
+        ##	icu       => undef,    # --with-icu=<path>                      ##done
+        ##	nls       => undef,    # --enable-nls=<path>                    ##done
         ##	tap_tests => undef,    # --enable-tap-tests
         ##	tcl       => undef,    # --with-tcl=<path>
         ##	perl      => undef,    # --with-perl
         ##	python    => undef,    # --with-python=<path>
-        ##	openssl   => undef,    # --with-openssl=<path>
+        ##	openssl   => undef,    # --with-openssl=<path>                  ##done
         ##	uuid      => undef,    # --with-ossp-uuid
-        ##	xml       => undef,    # --with-libxml=<path>
-        ##	xslt      => undef,    # --with-libxslt=<path>
-        ##	iconv     => undef,    # (not in configure, path to iconv)
-        ##	zlib      => undef     # --with-zlib=<path>
+        ##	xml       => undef,    # --with-libxml=<path>                   ##done
+        ##	xslt      => undef,    # --with-libxslt=<path>                  ##done
+        ##	iconv     => undef,    # (not in configure, path to iconv)      ##done (needed by xml)
+        ##	zlib      => undef     # --with-zlib=<path>                     ##done
         
         ## Setup external dependencies
         ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;perl;python;tcl;nls;kerberos;systemd;ldap;bsd;pam;llvm;icu;bonjour;uuid;xml;xslt;"
+        if("${FEATURES}" MATCHES "ldap")
+            string(REPLACE "ldap      => undef" "ldap      => 1" _contents "${_contents}")
+        endif()
+        if("${FEATURES}" MATCHES "icu")
+           string(REPLACE "icu      => undef" "icu      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+        if("${FEATURES}" MATCHES "nls")
+           string(REPLACE "nls      => undef" "nls      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
         if("${FEATURES}" MATCHES "openssl")
             set(buildenv_contents "${buildenv_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
             #set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
@@ -143,20 +148,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
            string(REPLACE "xslt      => undef" "xslt      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
 
-        if("${FEATURES}" MATCHES "nls")
-           string(REPLACE "nls      => undef" "nls      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
-        endif()
-
-        if("${FEATURES}" MATCHES "xslt")
-           string(REPLACE "xslt      => undef" "xslt      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
-        endif()
-
         if("${FEATURES}" MATCHES "zlib")
            string(REPLACE "zlib      => undef" "zlib      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
-        endif()
-        
-        if("${FEATURES}" MATCHES "ldap")
-            string(REPLACE "ldap      => undef" "ldap      => 1" _contents "${_contents}")
         endif()
         
         file(WRITE "${CONFIG_FILE}" "${_contents}")
@@ -196,21 +189,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/symbols)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/symbols)
-    
-    #file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    #file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT})
-    
-    #file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    #foreach(_exe ${DEBUG_EXE})
-    #    file(REMOVE "${_exe}")
-    #endforeach()
 
-    #file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    #foreach(_dll ${RELEASE_DLL})
-    #    STRING(REPLACE "/lib" "/bin" _newdll "${_dll}")
-    #    file(RENAME "${_dll}" "${_newdll}")
-    #endforeach()
-    
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
