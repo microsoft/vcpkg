@@ -44,6 +44,11 @@ endif()
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-crt.patch)
 endif()
+if(NOT "${FEATURES}" MATCHES "client")
+    list(APPEND PATCHES patches/windows/minimize_install.patch)
+else()
+    set(HAS_TOOLS TRUE)
+endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -162,22 +167,32 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             /p:VcpkgTriplet=${TARGET_TRIPLET}"
             )
-        
-        set(build_libs libpq libecpg_compat)
-        foreach(build_lib ${build_libs})
-        message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}...")
-        vcpkg_execute_required_process(
-            COMMAND ${PERL} build.pl ${_buildtype} ${build_lib}
-            WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-            LOGNAME build-${build_lib}-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
-        )
-        message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}... done")
-        endforeach()
+        if(HAS_TOOLS)
+                message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
+                vcpkg_execute_required_process(
+                    COMMAND ${PERL} build.pl ${_buildtype}
+                    WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
+                    LOGNAME build-${TARGET_TRIPLET}-${_buildtype}
+                )
+                message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
+        else()
+            set(build_libs libpq libecpg_compat)
+            foreach(build_lib ${build_libs})
+                message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}...")
+                vcpkg_execute_required_process(
+                    COMMAND ${PERL} build.pl ${_buildtype} ${build_lib}
+                    WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
+                    LOGNAME build-${build_lib}-${TARGET_TRIPLET}-${_buildtype}
+                )
+                message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}... done")
+            endforeach()
+        endif()
+
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
             COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} client
             WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-            LOGNAME install-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
+            LOGNAME install-${TARGET_TRIPLET}-${_buildtype}
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
@@ -195,6 +210,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
     
+    if(NOT HAS_TOOLS)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
+    endif()
     #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
     #vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")

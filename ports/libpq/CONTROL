@@ -77,3 +77,6 @@ Description: Build with libxml (--with-libxml)
 Feature: xslt
 Build-Depends: libxslt
 Description: Build with libxslt (--with-libxslt)
+
+Feature: client
+Description: Build all client tools and libraries. 
