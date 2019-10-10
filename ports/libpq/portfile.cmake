@@ -86,7 +86,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg
     unset(_buildtype)
 endif()
 
-
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -106,7 +107,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             SOURCE_PATH "${BUILDPATH_${_buildtype}}"
             PATCHES patches/windows/Solution_${_buildtype}.patch
         )
-        
+        message(STATUS "Patches applied!")
         file(COPY "${CURRENT_PORT_DIR}/config.pl" DESTINATION "${BUILDPATH_${_buildtype}}/src/tools/msvc")
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
@@ -174,18 +175,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             /p:VcpkgTriplet=${TARGET_TRIPLET}"
             )
+        message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
             COMMAND ${PERL} build.pl ${_buildtype}
             WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
             LOGNAME build-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
         )
-        message(STATUS "Insallting libpq ${TARGET_TRIPLET}-${_buildtype}...")
+        message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
+        message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
-            COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} 
+            COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} client
             WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
             LOGNAME install-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
         )
-        message(STATUS "Insallting libpq ${TARGET_TRIPLET}-${_buildtype}... - done")
+        message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
     
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
@@ -193,14 +196,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-    #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/symbols)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/symbols)
+    
     #file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/share/${PORT})
     #file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT})
-    #file(GLOB RELEASE_EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    #foreach(_exe ${RELEASE_EXE})
-    #    STRING(REPLACE "/bin" "/tools/${PORT}" _newexe "${_exe}")
-    #    file(RENAME "${_exe}" "${_newexe}")
-    #endforeach()
     
     #file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     #foreach(_exe ${DEBUG_EXE})
