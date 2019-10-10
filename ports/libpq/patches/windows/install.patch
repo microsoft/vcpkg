@@ -13,7 +13,7 @@ index d109b2c90..75c7446e6 100644
 -	'pg_dump',        'pg_dumpall', 'pg_isready',    'pg_receivewal',
 -	'pg_recvlogical', 'pg_restore', 'psql',          'reindexdb',
 -	'vacuumdb',       @client_contribs);
-+my @client_program_files = ( 'ecpg',  'libecpg','libecpg_compat', 'libpgtypes', 'libpq' );
++my @client_program_files = ( 'libecpg','libecpg_compat', 'libpgtypes', 'libpq' );
 +	# 'clusterdb',      'createdb',   'createuser',    'dropdb',
 +	# 'dropuser',       'ecpg',       'libecpg',       'libecpg_compat',
 +	#'libpgtypes',     'libpq',      'pg_basebackup', 'pg_config',
