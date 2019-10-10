@@ -30,6 +30,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        patches/windows/win_bison_flex.patch
+        patches/windows/openssl_exe_path.patch
 )
 unset(buildenv_contents)
 # Get paths to required programs
@@ -76,6 +79,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
             file(COPY ${SOURCE_FILE} DESTINATION "${BUILDPATH_${_buildtype}}")
         endforeach()
         message(STATUS "Copying libpq source files... done")
+        
+        vcpkg_apply_patches(
+            SOURCE_PATH "${BUILDPATH_${_buildtype}}"
+            PATCHES patches/windows/Solution_${_buildtype}.patch
+        )
+        
         file(COPY "${CURRENT_PORT_DIR}/config.pl" DESTINATION "${BUILDPATH_${_buildtype}}/src/tools/msvc")
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
@@ -101,14 +110,31 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;perl;python;tcl;nls;kerberos;systemd;ldap;bsd;pam;llvm;icu;bonjour;uuid;xml;xslt;"
         if("${FEATURES}" MATCHES "openssl")
             set(buildenv_contents "${buildenv_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
-            set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
-            string(REPLACE "openssl   => undef" "openssl   => \"${CURRENT_INSTALLED_DIR}/tools/openssl\"" _contents "${_contents}")
+            #set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
+            string(REPLACE "openssl   => undef" "openssl   => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+
+        if("${FEATURES}" MATCHES "xml")
+           string(REPLACE "xml      => undef" "xml      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+           string(REPLACE "iconv      => undef" "iconv      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+
+        if("${FEATURES}" MATCHES "xslt")
+           string(REPLACE "xslt      => undef" "xslt      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+
+        if("${FEATURES}" MATCHES "nls")
+           string(REPLACE "nls      => undef" "nls      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+
+        if("${FEATURES}" MATCHES "xslt")
+           string(REPLACE "xslt      => undef" "xslt      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
 
         if("${FEATURES}" MATCHES "zlib")
-           string(REPLACE "zlib      => undef" "zlib      => \"${CURRENT_INSTALLED_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}}\"" _contents "${_contents}")
+           string(REPLACE "zlib      => undef" "zlib      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-
+        
         if("${FEATURES}" MATCHES "ldap")
             string(REPLACE "ldap      => undef" "ldap      => 1" _contents "${_contents}")
         endif()
