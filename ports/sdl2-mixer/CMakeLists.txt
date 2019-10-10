@@ -10,6 +10,56 @@ set(SDL_MIXER_LIBRARIES SDL2::SDL2)
 # builtin formats
 set(SDL_MIXER_DEFINES MUSIC_WAV)
 
+# MP3 support
+if(SDL_MIXER_ENABLE_MP3)
+    find_path(MPG123_INCLUDE_DIR mpg123.h)
+    find_library(MPG123_LIBRARY NAMES libmpg123 mpg123)
+    list(APPEND SDL_MIXER_INCLUDES ${MPG123_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_MP3_MPG123)
+    get_filename_component(MPG123_LIBRARY_NAME "${MPG123_LIBRARY}" NAME_WE)
+    list(APPEND SDL_MIXER_LOAD_DEFINES -DMPG123_DYNAMIC="${MPG123_LIBRARY_NAME}${LIBRARY_SUFFIX}")
+endif()
+
+# FLAC support
+if(SDL_MIXER_ENABLE_FLAC)
+    find_path(FLAC_INCLUDE_DIR FLAC/all.h)
+    find_library(FLAC_LIBRARY FLAC)
+    list(APPEND SDL_MIXER_INCLUDES ${FLAC_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_FLAC)
+    get_filename_component(FLAC_LIBRARY_NAME "${FLAC_LIBRARY}" NAME_WE)
+    list(APPEND SDL_MIXER_LOAD_DEFINES -DFLAC_DYNAMIC="${FLAC_LIBRARY_NAME}${LIBRARY_SUFFIX}")
+endif()
+
+# MOD support
+if(SDL_MIXER_ENABLE_MOD)
+    find_path(MODPLUG_INCLUDE_DIR libmodplug/modplug.h)
+    find_library(MODPLUG_LIBRARY modplug)
+    list(APPEND SDL_MIXER_INCLUDES ${MODPLUG_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_MOD_MODPLUG)
+    get_filename_component(MODPLUG_LIBRARY_NAME "${MODPLUG_LIBRARY}" NAME_WE)
+    list(APPEND SDL_MIXER_LOAD_DEFINES -DMODPLUG_DYNAMIC="${MODPLUG_LIBRARY_NAME}${LIBRARY_SUFFIX}")
+endif()
+
+# Ogg-Vorbis support
+if(SDL_MIXER_ENABLE_OGGVORBIS)
+    find_path(VORBIS_INCLUDE_DIR vorbis/codec.h)
+    find_library(VORBISFILE_LIBRARY vorbisfile)
+    list(APPEND SDL_MIXER_INCLUDES ${VORBIS_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_OGG)
+    get_filename_component(VORBISFILE_LIBRARY_NAME "${VORBISFILE_LIBRARY}" NAME_WE)
+    list(APPEND SDL_MIXER_LOAD_DEFINES -DOGG_DYNAMIC="${VORBISFILE_LIBRARY_NAME}${LIBRARY_SUFFIX}")
+endif()
+
+# Opus support
+if(SDL_MIXER_ENABLE_OPUS)
+    find_path(OPUS_INCLUDE_DIR opus/opusfile.h)
+    find_library(OPUSFILE_LIBRARY opusfile)
+    list(APPEND SDL_MIXER_INCLUDES ${OPUS_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_OPUS)
+    get_filename_component(OPUSFILE_LIBRARY_NAME "${OPUSFILE_LIBRARY}" NAME_WE)
+    list(APPEND SDL_MIXER_LOAD_DEFINES -DOPUS_DYNAMIC="${OPUSFILE_LIBRARY_NAME}${LIBRARY_SUFFIX}")
+endif()
+
 add_library(SDL2_mixer
     effect_position.c
     effect_stereoreverse.c
@@ -38,7 +88,7 @@ if(WIN32)
 endif()
 
 set_target_properties(SDL2_mixer PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
-target_compile_definitions(SDL2_mixer PRIVATE ${SDL_MIXER_DEFINES})
+target_compile_definitions(SDL2_mixer PRIVATE ${SDL_MIXER_DEFINES} ${SDL_MIXER_LOAD_DEFINES})
 target_include_directories(SDL2_mixer PRIVATE ${SDL_MIXER_INCLUDES} ./native_midi)
 
 install(TARGETS SDL2_mixer
