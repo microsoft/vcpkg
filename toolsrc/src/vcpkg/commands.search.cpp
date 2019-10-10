@@ -9,7 +9,7 @@
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkglib.h>
 
-using vcpkg::Dependencies::PathsPortFileProvider;
+using vcpkg::PortFileProvider::PathsPortFileProvider;
 
 namespace vcpkg::Commands::Search
 {

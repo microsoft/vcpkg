@@ -2,6 +2,7 @@
 #include <vcpkg-test/util.h>
 
 #include <vcpkg/dependencies.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/triplet.h>
 
@@ -119,8 +120,8 @@ TEST_CASE ("basic install scheme", "[plan]")
     auto spec_b = spec_map.emplace("b", "c");
     auto spec_c = spec_map.emplace("c");
 
-    Dependencies::MapPortFileProvider map_port(spec_map.map);
-    auto install_plan = Dependencies::create_feature_install_plan(
+    PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+    auto install_plan = Dependencies::PackageGraph::create_feature_install_plan(
         map_port, {FeatureSpec{spec_a, ""}}, StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 3);

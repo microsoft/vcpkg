@@ -103,7 +103,8 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
-        static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
+        static std::vector<FeatureSpec> to_feature_specs(const FullPackageSpec& spec,
+                                                         const std::vector<std::string>& default_features);
 
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
                                                                               const Triplet& default_triplet);
@@ -144,5 +145,22 @@ namespace std
     struct equal_to<vcpkg::PackageSpec>
     {
         bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const { return left == right; }
+    };
+
+    template<>
+    struct hash<vcpkg::FeatureSpec>
+    {
+        size_t operator()(const vcpkg::FeatureSpec& value) const
+        {
+            size_t hash = std::hash<vcpkg::PackageSpec>()(value.spec());
+            hash = hash * 31 + std::hash<std::string>()(value.feature());
+            return hash;
+        }
+    };
+
+    template<>
+    struct equal_to<vcpkg::FeatureSpec>
+    {
+        bool operator()(const vcpkg::FeatureSpec& left, const vcpkg::FeatureSpec& right) const { return left == right; }
     };
 }

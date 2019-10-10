@@ -229,7 +229,7 @@ namespace vcpkg::Remove
             }
 
             // Load ports from ports dirs
-            Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });
@@ -268,7 +268,8 @@ namespace vcpkg::Remove
         const bool is_recursive = Util::Sets::contains(options.switches, OPTION_RECURSE);
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 
-        const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
+        const std::vector<RemovePlanAction> remove_plan =
+            Dependencies::PackageGraph::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
         std::map<RemovePlanType, std::vector<const RemovePlanAction*>> group_by_plan_type;

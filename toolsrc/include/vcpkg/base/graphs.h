@@ -117,12 +117,17 @@ namespace vcpkg::Graphs
     struct Graph final : AdjacencyProvider<V, V>
     {
     public:
-        void add_vertex(const V& v) { this->m_edges[v]; }
-
-        void add_edge(const V& u, const V& v)
+        bool add_vertex(const V& v)
         {
-            this->m_edges[v];
-            this->m_edges[u].insert(v);
+            return m_edges.emplace(std::piecewise_construct, std::forward_as_tuple(v), std::forward_as_tuple()).second;
+        }
+
+        bool add_edge(const V& u, const V& v)
+        {
+            auto vertex = m_edges.emplace(std::piecewise_construct, std::forward_as_tuple(v), std::forward_as_tuple());
+            auto edge = m_edges[u].emplace(v);
+
+            return vertex.second || edge.second;
         }
 
         std::vector<V> vertex_list() const

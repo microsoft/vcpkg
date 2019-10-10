@@ -4,6 +4,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -294,8 +295,9 @@ namespace vcpkg::Install
     using Build::ExtendedBuildResult;
 
     ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                    const InstallPlanAction& action,
-                                                    StatusParagraphs& status_db)
+                                                    InstallPlanAction& action,
+                                                    StatusParagraphs& status_db,
+                                                    const CMakeVars::CMakeVarProvider& var_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -337,8 +339,13 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{
-                    scfl, action.spec.triplet(), action.build_options, action.feature_list};
+                const Build::BuildPackageConfig build_config{scfl,
+                                                             action.spec.triplet(),
+                                                             action.build_options,
+                                                             var_provider,
+                                                             std::move(action.feature_dependencies),
+                                                             std::move(action.package_dependencies),
+                                                             std::move(action.feature_list)};
                 return Build::build_package(paths, build_config, status_db);
             }();
 
@@ -421,10 +428,11 @@ namespace vcpkg::Install
         }
     }
 
-    InstallSummary perform(const std::vector<AnyAction>& action_plan,
+    InstallSummary perform(std::vector<AnyAction>& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
-                           StatusParagraphs& status_db)
+                           StatusParagraphs& status_db,
+                           const CMakeVars::CMakeVarProvider& var_provider)
     {
         std::vector<SpecSummary> results;
 
@@ -432,7 +440,7 @@ namespace vcpkg::Install
         size_t counter = 0;
         const size_t package_count = action_plan.size();
 
-        for (const auto& action : action_plan)
+        for (auto& action : action_plan)
         {
             const auto build_timer = Chrono::ElapsedTimer::create_started();
             counter++;
@@ -443,9 +451,9 @@ namespace vcpkg::Install
 
             results.emplace_back(spec, &action);
 
-            if (const auto install_action = action.install_action.get())
+            if (auto install_action = action.install_action.get())
             {
-                auto result = perform_install_plan_action(paths, *install_action, status_db);
+                auto result = perform_install_plan_action(paths, *install_action, status_db, var_provider);
 
                 if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
@@ -668,12 +676,14 @@ namespace vcpkg::Install
         };
 
         //// Load ports from ports dirs
-        PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        CMakeVars::CMakeVarProvider var_provider(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         std::vector<AnyAction> action_plan =
-            create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
+            PackageGraph::create_feature_install_plan(provider, var_provider, specs, status_db);
 
+        std::vector<FullPackageSpec> install_package_specs;
         for (auto&& action : action_plan)
         {
             if (auto p_install = action.install_action.get())
@@ -681,8 +691,12 @@ namespace vcpkg::Install
                 p_install->build_options = install_plan_options;
                 if (p_install->request_type != RequestType::USER_REQUESTED)
                     p_install->build_options.use_head_version = Build::UseHeadVersion::NO;
+
+                install_package_specs.emplace_back(FullPackageSpec{p_install->spec, p_install->feature_list});
             }
         }
+
+        var_provider.load_tag_vars(install_package_specs, provider);
 
         // install plan will be empty if it is already installed - need to change this at status paragraph part
         Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty");
@@ -705,7 +719,7 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db);
+        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db, var_provider);
 
         System::print2("\nTotal elapsed time: ", summary.total_elapsed_time, "\n\n");
 
