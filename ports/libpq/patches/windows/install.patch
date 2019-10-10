@@ -1,0 +1,84 @@
+diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
+index d109b2c90..2d6ca8c07 100644
+--- a/src/tools/msvc/Install.pm
++++ b/src/tools/msvc/Install.pm
+@@ -282,11 +282,11 @@ sub CopySolutionOutput
+ 		{
+ 			if ($1 == 1)
+ 			{
+-				push(@{ $install_list{'bin'} }, "exe");
++				push(@{ $install_list{'tools/libpq'} }, "exe");
+ 			}
+ 			elsif ($1 == 2)
+ 			{
+-				push(@{ $install_list{'lib'} }, "dll");
++				push(@{ $install_list{'bin'} }, "dll");
+ 				if ($is_sharedlib)
+ 				{
+ 					push(@{ $install_list{'bin'} }, "dll");
+@@ -306,11 +306,11 @@ sub CopySolutionOutput
+ 		{
+ 			if ($1 eq 'Application')
+ 			{
+-				push(@{ $install_list{'bin'} }, "exe");
++				push(@{ $install_list{'tools/libpq'} }, "exe");
+ 			}
+ 			elsif ($1 eq 'DynamicLibrary')
+ 			{
+-				push(@{ $install_list{'lib'} }, "dll");
++				push(@{ $install_list{'bin'} }, "dll");
+ 				if ($is_sharedlib)
+ 				{
+ 					push(@{ $install_list{'bin'} }, "dll");
+@@ -339,7 +339,7 @@ sub CopySolutionOutput
+ 				  || croak "Could not copy $pf.$ext\n";
+ 			}
+ 		}
+-		lcopy("$conf\\$pf\\$pf.pdb", "$target\\symbols\\$pf.pdb")
++		lcopy("$conf\\$pf\\$pf.pdb", "$target\\bin\\$pf.pdb")
+ 		  || croak "Could not copy $pf.pdb\n";
+ 		print ".";
+ 	}
+@@ -494,7 +494,7 @@ sub CopySubdirFiles
+ 		foreach my $f (split /\s+/, $flist)
+ 		{
+ 			lcopy("$subdir/$module/$f",
+-				"$target/share/$moduledir/" . basename($f))
++				"$target/share/libpq/$moduledir/" . basename($f))
+ 			  || croak("Could not copy file $f in contrib $module");
+ 			print '.';
+ 		}
+@@ -509,7 +509,7 @@ sub CopySubdirFiles
+ 		foreach my $f (split /\s+/, $flist)
+ 		{
+ 			lcopy("$subdir/$module/$f",
+-				"$target/share/tsearch_data/" . basename($f))
++				"$target/share/libpq/tsearch_data/" . basename($f))
+ 			  || croak("Could not copy file $f in $subdir $module");
+ 			print '.';
+ 		}
+@@ -701,7 +701,7 @@ sub GenerateNLSFiles
+ 	my $majorver = shift;
+ 
+ 	print "Installing NLS files...";
+-	EnsureDirectories($target, "share/locale");
++	EnsureDirectories($target, "share/locale");
+ 	my @flist;
+ 	File::Find::find(
+ 		{
+@@ -723,12 +723,12 @@ sub GenerateNLSFiles
+ 			next unless /([^\/]+)\.po/;
+ 			$lang = $1;
+ 
+-			EnsureDirectories($target, "share/locale/$lang",
+-				"share/locale/$lang/LC_MESSAGES");
++			EnsureDirectories($target, "share/locale/$lang",
++				"share/libpq/locale/$lang/LC_MESSAGES");
+ 			my @args = (
+ 				"$nlspath\\bin\\msgfmt",
+ 				'-o',
+-				"$target\\share\\locale\\$lang\\LC_MESSAGES\\$prgm-$majorver.mo",
++				"$target\\share\\libpq\\locale\\$lang\\LC_MESSAGES\\$prgm-$majorver.mo",
+ 				$_);
+ 			system(@args) && croak("Could not run msgfmt on $dir\\$_");
+ 			print ".";

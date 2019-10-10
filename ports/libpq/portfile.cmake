@@ -2,22 +2,30 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} currently only supports being built for desktop")
 endif()
 
-#vcpkg_get_build_depends(OUTPUT_VARIABLE TEST_VAR PORT zlib FEATURES core)
-#message(STATUS "TEST_VAR:${TEST_VAR}")
-#if("${TEST_VAR}" MATCHES "")
-#    message(STATUS "EMPTY DEPENDENCY")
-#endif()
-
 vcpkg_read_dependent_port_info()
 message(STATUS "${PORT}_ALL_DEPENDENCIES: ${${PORT}_ALL_DEPENDENCIES}")
 
-if(VCPKG_TARGET_IS_OSX AND NOT "${FEATURES}" MATCHES "bonjour")
-    message(STATUS "Feature bonjour not used. On OsX building with feature bonjour is recommended")
-    ## OPTIONS 
-endif()
+macro(feature_unsupported)
+    foreach(_feat ${ARGN})
+        if("${FEATURES}" MATCHES "${_feat}")
+            message(FATAL_ERROR "Feature ${_feat} not supported by configure script on the target platform")
+        endif()
+    endforeach()
+endmacro()
 
-if("${FEATURES}" MATCHES "readline|libedit|perl|python|tcl|nls|kerberos|systemd|ldap|bsd|pam|llvm|icu|uuid|xml|xslt")
-   # message(FATAL_ERROR "These features are TODOs. If you require them feel free to implement them")
+macro(feature_not_implemented_yet)
+    foreach(_feat ${ARGN})
+        if("${FEATURES}" MATCHES "${_feat}")
+            message(FATAL_ERROR "Feature ${_feat} is not yet implement on the target platform")
+        endif()
+    endforeach()
+endmacro()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
+    feature_not_implemented_yet(perl python tcl uuid)
+else()
+    feature_not_implemented_yet(readline bonjour libedit kerberos bsd systemd llvm pam perl python tcl uuid)
 endif()
 
 ## Download and extract sources
@@ -27,12 +35,23 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 231a0b5c181c33cb01c3f39de1802319b79eceec6997935ab8605dea1f4583a52d0d16e5a70fcdeea313462f062503361d543433ee03d858ba332c72a665f696
 )
 
+set(PATCHES  
+        patches/windows/install.patch
+        patches/windows/win_bison_flex.patch
+        patches/windows/openssl_exe_path.patch)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
+    list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)
+endif()
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    list(APPEND PATCHES patches/windows/MSBuildProject-static-crt.patch)
+endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        patches/windows/win_bison_flex.patch
-        patches/windows/openssl_exe_path.patch
+    PATCHES ${PATCHES}
+
 )
 unset(buildenv_contents)
 # Get paths to required programs
@@ -71,6 +90,9 @@ endif()
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS)
+    if("${FEATURES}" MATCHES "readline|libedit|perl|python|tcl|kerberos|systemd|bsd|pam|llvm|uuid")
+   # message(FATAL_ERROR "These features are TODOs. If you require them feel free to implement them")
+    endif()
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -157,12 +179,43 @@ if(VCPKG_TARGET_IS_WINDOWS)
             WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
             LOGNAME build-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
         )
+        message(STATUS "Insallting libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
             COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} 
             WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
             LOGNAME install-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-${_buildtype}
         )
+        message(STATUS "Insallting libpq ${TARGET_TRIPLET}-${_buildtype}... - done")
     endforeach()
+    
+    message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
+    #Cleanup
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    #file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    #file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    #file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT})
+    #file(GLOB RELEASE_EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    #foreach(_exe ${RELEASE_EXE})
+    #    STRING(REPLACE "/bin" "/tools/${PORT}" _newexe "${_exe}")
+    #    file(RENAME "${_exe}" "${_newexe}")
+    #endforeach()
+    
+    #file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+    #foreach(_exe ${DEBUG_EXE})
+    #    file(REMOVE "${_exe}")
+    #endforeach()
+
+    #file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+    #foreach(_dll ${RELEASE_DLL})
+    #    STRING(REPLACE "/lib" "/bin" _newdll "${_dll}")
+    #    file(RENAME "${_dll}" "${_newdll}")
+    #endforeach()
+    
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
