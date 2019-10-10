@@ -249,7 +249,11 @@ else()
             --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
+    
     vcpkg_install_make()    
+    # instead?
+    #    make -C src/include install
+    #    make -C src/interfaces install
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
