@@ -8,9 +8,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ofiwg/libfabric
-    REF v1.8.0
+    REF v1.8.1
     HEAD_REF master
-    SHA512 1101b0967fcd5ac527f94a1e4dd72a58a007e348971eb01b57425a812e1ea8320e1cbcfba7dea35520dab2c47753d91495c6b360438ca0be98ce6ee6568e2e08
+    SHA512 7c3879af3ad7dbda9e9bf9f43a2d213a8e41d50212008f29e912d3d0946efc381e6833c08206106e9f486c37eaef16103198247b328297209ef80dc66ca1b6e5
     PATCHES
       add_additional_includes.patch
 )

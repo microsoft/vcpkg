@@ -1,9 +1,6 @@
-# vcpkg portfile.cmake for PDAL
-#
-# NOTE: update the version string for new PDAL release
-set(PDAL_VERSION_STR "1.7.1")
-
 include(vcpkg_common_functions)
+
+set(PDAL_VERSION_STR "1.7.1")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/pdal/PDAL-${PDAL_VERSION_STR}-src.tar.gz"

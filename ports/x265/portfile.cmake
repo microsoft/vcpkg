@@ -6,11 +6,8 @@ vcpkg_from_bitbucket(
     REF 3.0
     SHA512 698fd31bf30c65896717225de69714523bcbd3d835474f777bf32c3a6d6dbbf941a09db076e13e76917a5ca014c89fca924fcb0ea3d15bc09748b6fc834a4ba2
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-install-pdb.patch
+    PATCHES
+        disable-install-pdb.patch
 )
 
 set(ENABLE_ASSEMBLY OFF)

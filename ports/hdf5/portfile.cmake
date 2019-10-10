@@ -16,7 +16,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         hdf5_config.patch
 )
-set(SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5)
 
 if ("parallel" IN_LIST FEATURES)
     set(ENABLE_PARALLEL ON)
@@ -30,10 +29,10 @@ else()
     set(ENABLE_CPP OFF)
 endif()
 
-file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip 
+file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS

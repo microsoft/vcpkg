@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
   PATCHES
       remove_internal_blas.patch
 	  fix-ConfigFile.patch
+      fix-install.patch
 )
 
 vcpkg_configure_cmake(
