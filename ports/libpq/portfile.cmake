@@ -156,7 +156,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
         vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
         set(ENV{MSBFLAGS} "/t:Rebuild
-            /p:Platform=Win32
             /p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
             /p:VCPkgLocalAppDataDisabled=true
             /p:UseIntelMKL=No
