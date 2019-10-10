@@ -8,13 +8,13 @@ elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     message(FATAL_ERROR "x86 is not supported. Please use pmdk:x64-windows instead.")
 endif()
 
-set(PMDK_VERSION "1.6")
+set(PMDK_VERSION "1.7")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF ${PMDK_VERSION}
-    SHA512 f66e4edf1937d51abfa7c087b65a64109cd3d2a8d9587d6c4fc28a1003d67ec1f35a0011c9a9d0bfe76ad7227be83e86582f8405c988eac828d8ae5d0a399483
+    REF d2f6f5b0032eb5678ec6c5c3dff03509caa4b817 #version 1.7 commit on 2019.10.10
+    SHA512 8ac50f9ea03e140eeb5fcd25ea34591b38cb76cfaa2a8622155d54b90c1cadb9fe046deeaa422163e2cd82a993a9b736523e932d66cb458ff1d2111649587e8a
     HEAD_REF master
 )
 
