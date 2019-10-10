@@ -3,14 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF ad1ab61a56c63d770e4beb335efe8b1f1a9e36cd
-    SHA512 48ee7862583e7adb86b56b20634c34aebf83ef0a3a14ad96182494ce6a84cb027334840a6c4c335e9342110c3a36532e3eeae22a3ed7363cd91b27cb7ca58154
+    REF 781bc97c35a74cb2e24387075b69414080bca9e1
+    SHA512 b75b7c3f36c7ba7daeb014312c3dfaeaae4d24e0826e439bdb19a4879866fb3eb4a09baf4eb8f706e68afcccf9409b6d168ded3dc8d81d0f3299b603958f8953
     HEAD_REF master
     PATCHES
-        fix_libraw.patch
-        use-webp.patch
-        remove_wrong_dependency.patch
-        use-vcpkg-find-openexr.patch
+        fix-dependency.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -20,17 +17,17 @@ file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILDSTATIC ON)
-    set(LINKSTATIC ON)
-else()
-    set(BUILDSTATIC OFF)
-    set(LINKSTATIC OFF)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     libraw USE_LIBRAW
-    opencolorio USE_OCIO 
+    opencolorio USE_OCIO
+    ffmpeg USE_FFMPEG
+    field3d USE_FIELD3D
+    freetype USE_FREETYPE
+    gif USE_GIF
+    opencv USE_OPENCV
+    openjpeg USE_OPENJPEG
+    ptex USE_PTEX
+    webp USE_WEBP
 )
 
 vcpkg_configure_cmake(
@@ -40,27 +37,14 @@ vcpkg_configure_cmake(
         -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
-        -DUSE_DICOM=OFF
-        -DUSE_FFMPEG=OFF
-        -DUSE_FIELD3D=OFF
-        -DUSE_FREETYPE=OFF
-        -DUSE_GIF=OFF
+        -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
-        -DUSE_OPENCV=OFF
-        -DUSE_OPENJPEG=OFF
-        -DUSE_OPENSSL=OFF
-        -DUSE_PTEX=OFF
         -DUSE_PYTHON=OFF
         -DUSE_QT=OFF
-        -DUSE_WEBP=OFF
-        -DBUILDSTATIC=${BUILDSTATIC}
         -DLINKSTATIC=${LINKSTATIC}
         -DBUILD_MISSING_PYBIND11=OFF
         -DBUILD_MISSING_DEPS=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DVERBOSE=ON
-    OPTIONS_DEBUG
-        -DOPENEXR_CUSTOM_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
 vcpkg_install_cmake()
