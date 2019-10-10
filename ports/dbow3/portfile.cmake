@@ -14,7 +14,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DUSE_SIMD=ON
         -DUSE_OPENCV_CONTRIB=ON
-        -DBUILD_SHARED_LIBS=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
 )
