@@ -1,6 +1,6 @@
 Source: libpq
 Version: 12.0
-Build-Depends: 
+Build-Depends: libpq[bonjour] (osx)
 Homepage: https://www.postgresql.org/
 Description: The official database access API of postgresql
 Default-Features: zlib, openssl
