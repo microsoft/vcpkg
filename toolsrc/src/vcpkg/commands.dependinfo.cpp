@@ -12,9 +12,9 @@
 #include <vector>
 
 using vcpkg::Dependencies::AnyAction;
-using vcpkg::Dependencies::create_feature_install_plan;
 using vcpkg::Dependencies::InstallPlanAction;
-using vcpkg::Dependencies::PathsPortFileProvider;
+using vcpkg::Dependencies::PackageGraph;
+using vcpkg::PortFileProvider::PathsPortFileProvider;
 
 namespace vcpkg::Commands::DependInfo
 {
@@ -44,7 +44,7 @@ namespace vcpkg::Commands::DependInfo
         {
             std::string package;
             int depth;
-            std::set<std::string> features;
+            std::unordered_set<std::string> features;
             std::vector<std::string> dependencies;
         };
 
@@ -205,9 +205,10 @@ namespace vcpkg::Commands::DependInfo
                 const InstallPlanAction& install_action = *pia;
 
                 const std::vector<std::string> dependencies = Util::fmap(
-                    install_action.computed_dependencies, [](const PackageSpec& spec) { return spec.name(); });
+                    install_action.package_dependencies, [](const PackageSpec& spec) { return spec.name(); });
 
-                std::set<std::string> features{install_action.feature_list};
+                std::unordered_set<std::string> features{install_action.feature_list.begin(),
+                                                         install_action.feature_list.end()};
                 features.erase("core");
 
                 std::string port_name = install_action.spec.name();
@@ -252,12 +253,13 @@ namespace vcpkg::Commands::DependInfo
         }
 
         PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        CMakeVars::CMakeVarProvider var_provider(paths);
 
         // By passing an empty status_db, we should get a plan containing all dependencies.
         // All actions in the plan should be install actions, as there's no installed packages to remove.
         StatusParagraphs status_db;
         std::vector<AnyAction> action_plan =
-            create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
+            PackageGraph::create_feature_install_plan(provider, var_provider, specs, status_db);
         std::vector<const InstallPlanAction*> install_actions = Util::fmap(action_plan, [&](const AnyAction& action) {
             if (auto install_action = action.install_action.get())
             {

@@ -60,9 +60,10 @@ namespace vcpkg::Commands::CI
         void add_test_results(const std::string& spec,
                               const Build::BuildResult& build_result,
                               const Chrono::ElapsedTime& elapsed_time,
-                              const std::string& abi_tag)
+                              const std::string& abi_tag,
+                              const std::vector<std::string>& features)
         {
-            m_collections.back().tests.push_back({spec, build_result, elapsed_time, abi_tag});
+            m_collections.back().tests.push_back({spec, build_result, elapsed_time, abi_tag, features});
         }
 
         // Starting a new test collection
@@ -98,6 +99,7 @@ namespace vcpkg::Commands::CI
             vcpkg::Build::BuildResult result;
             vcpkg::Chrono::ElapsedTime time;
             std::string abi_tag;
+            std::vector<std::string> features;
         };
 
         struct XunitCollection
@@ -166,9 +168,29 @@ namespace vcpkg::Commands::CI
             }
 
             std::string traits_block;
-            if (test.abi_tag != "") // only adding if there is a known abi tag
+            if (test.abi_tag != "")
             {
-                traits_block = Strings::format(R"(<traits><trait name="abi_tag" value="%s" /></traits>)", test.abi_tag);
+                traits_block += Strings::format(R"(<trait name="abi_tag" value="%s" />)", test.abi_tag);
+            }
+
+            if (!test.features.empty())
+            {
+                std::string feature_list;
+                for (const auto& feature : test.features)
+                {
+                    if (!feature_list.empty())
+                    {
+                        feature_list += ", ";
+                    }
+                    feature_list += feature;
+                }
+
+                traits_block += Strings::format(R"(<trait name="features" value="%s" />)", feature_list);
+            }
+
+            if (!traits_block.empty())
+            {
+                traits_block = "<traits>" + traits_block + "</traits>";
             }
 
             m_xml += Strings::format(R"(      <test name="%s" method="%s" time="%lld" result="%s">%s%s</test>)"
@@ -199,8 +221,9 @@ namespace vcpkg::Commands::CI
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
         const VcpkgPaths& paths,
         const std::set<std::string>& exclusions,
-        const Dependencies::PortFileProvider& provider,
-        const std::vector<FeatureSpec>& fspecs,
+        const PortFileProvider::PortFileProvider& provider,
+        const CMakeVars::CMakeVarProvider& var_provider,
+        const std::vector<FullPackageSpec>& specs,
         const bool purge_tombstones)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
@@ -221,9 +244,25 @@ namespace vcpkg::Commands::CI
             Build::FailOnTombstone::YES,
         };
 
-        vcpkg::Cache<Triplet, Build::PreBuildInfo> pre_build_info_cache;
+        var_provider.load_dep_info_vars(
+            Util::fmap(specs, [](const FullPackageSpec& spec) { return spec.package_spec; }));
 
-        auto action_plan = Dependencies::create_feature_install_plan(provider, fspecs, {}, {});
+        auto action_plan =
+            Dependencies::PackageGraph::create_feature_install_plan(provider, var_provider, specs, {}, {});
+
+        std::vector<FullPackageSpec> install_specs;
+        for (const Dependencies::AnyAction& action : action_plan)
+        {
+            if (auto install_action = action.install_action.get())
+            {
+                install_specs.emplace_back(
+                    FullPackageSpec{action.spec(),
+                                    std::vector<std::string>{install_action->feature_list.begin(),
+                                                             install_action->feature_list.end()}});
+            }
+        }
+
+        var_provider.load_tag_vars(install_specs, provider);
 
         auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -237,10 +276,16 @@ namespace vcpkg::Commands::CI
                 {
                     auto triplet = p->spec.triplet();
 
-                    const Build::BuildPackageConfig build_config{*scfl, triplet, build_options, p->feature_list};
+                    const Build::BuildPackageConfig build_config{*scfl,
+                                                                 triplet,
+                                                                 build_options,
+                                                                 var_provider,
+                                                                 std::move(p->feature_dependencies),
+                                                                 std::move(p->package_dependencies),
+                                                                 std::move(p->feature_list)};
 
                     auto dependency_abis =
-                        Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
+                        Util::fmap(build_config.package_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
                             auto it = ret->abi_tag_map.find(spec);
 
                             if (it == ret->abi_tag_map.end())
@@ -248,8 +293,9 @@ namespace vcpkg::Commands::CI
                             else
                                 return {spec.name(), it->second};
                         });
-                    const auto& pre_build_info = pre_build_info_cache.get_lazy(
-                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet, *scfl); });
+
+                    const auto pre_build_info = Build::PreBuildInfo(
+                        paths, triplet, var_provider.get_tag_vars(p->spec).value_or_exit(VCPKG_LINE_INFO));
 
                     auto maybe_tag_and_file =
                         Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
@@ -289,8 +335,8 @@ namespace vcpkg::Commands::CI
                     ret->known.emplace(p->spec, BuildResult::EXCLUDED);
                     will_fail.emplace(p->spec);
                 }
-                else if (std::any_of(p->computed_dependencies.begin(),
-                                     p->computed_dependencies.end(),
+                else if (std::any_of(p->package_dependencies.begin(),
+                                     p->package_dependencies.end(),
                                      [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
                 {
                     ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
@@ -352,7 +398,8 @@ namespace vcpkg::Commands::CI
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        CMakeVars::CMakeVarProvider var_provider(paths);
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
@@ -383,17 +430,17 @@ namespace vcpkg::Commands::CI
 
             xunitTestResults.push_collection(triplet.canonical_name());
 
-            Dependencies::PackageGraph pgraph(provider, status_db);
-
             std::vector<PackageSpec> specs = PackageSpec::to_package_specs(all_ports, triplet);
             // Install the default features for every package
-            auto all_feature_specs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
-            auto split_specs =
-                find_unknown_ports_for_ci(paths, exclusions_set, provider, all_feature_specs, purge_tombstones);
-            auto feature_specs = FullPackageSpec::to_feature_specs(split_specs->unknown);
+            auto all_default_full_specs = Util::fmap(specs, [&](auto& spec) {
+                std::vector<std::string> default_features =
+                    provider.get_control_file(spec.name()).get()->source_control_file->core_paragraph->default_features;
+                default_features.emplace_back("core");
+                return FullPackageSpec{spec, std::move(default_features)};
+            });
 
-            for (auto&& fspec : feature_specs)
-                pgraph.install(fspec);
+            auto split_specs = find_unknown_ports_for_ci(
+                paths, exclusions_set, provider, var_provider, all_default_full_specs, purge_tombstones);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
 
@@ -414,36 +461,16 @@ namespace vcpkg::Commands::CI
                 serialize_options.randomizer = &randomizer_instance;
             }
 
-            auto action_plan = [&]() {
-                int iterations = 0;
-                do
+            auto action_plan = Dependencies::PackageGraph::create_feature_install_plan(
+                provider, var_provider, split_specs->unknown, status_db, serialize_options);
+
+            for (auto&& action : action_plan)
+            {
+                if (auto action_ptr = action.install_action.get())
                 {
-                    bool inconsistent = false;
-                    auto action_plan = pgraph.serialize(serialize_options);
-
-                    for (auto&& action : action_plan)
-                    {
-                        if (auto p = action.install_action.get())
-                        {
-                            p->build_options = install_plan_options;
-                            if (Util::Sets::contains(exclusions_set, p->spec.name()))
-                            {
-                                p->plan_type = InstallPlanType::EXCLUDED;
-                            }
-
-                            for (auto&& feature : split_specs->features[p->spec])
-                                if (p->feature_list.find(feature) == p->feature_list.end())
-                                {
-                                    pgraph.install({p->spec, feature});
-                                    inconsistent = true;
-                                }
-                        }
-                    }
-
-                    if (!inconsistent) return action_plan;
-                    Checks::check_exit(VCPKG_LINE_INFO, ++iterations < 100);
-                } while (true);
-            }();
+                    action_ptr->build_options = install_plan_options;
+                }
+            }
 
             if (is_dry_run)
             {
@@ -452,26 +479,30 @@ namespace vcpkg::Commands::CI
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
+                auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db, var_provider);
                 auto collection_time_elapsed = collection_timer.elapsed();
 
                 // Adding results for ports that were built or pulled from an archive
                 for (auto&& result : summary.results)
                 {
+                    auto& port_features = split_specs->features[result.spec];
                     split_specs->known.erase(result.spec);
                     xunitTestResults.add_test_results(result.spec.to_string(),
                                                       result.build_result.code,
                                                       result.timing,
-                                                      split_specs->abi_tag_map.at(result.spec));
+                                                      split_specs->abi_tag_map.at(result.spec),
+                                                      port_features);
                 }
 
                 // Adding results for ports that were not built because they have known states
                 for (auto&& port : split_specs->known)
                 {
+                    auto& port_features = split_specs->features[port.first];
                     xunitTestResults.add_test_results(port.first.to_string(),
                                                       port.second,
                                                       Chrono::ElapsedTime{},
-                                                      split_specs->abi_tag_map.at(port.first));
+                                                      split_specs->abi_tag_map.at(port.first),
+                                                      port_features);
                 }
 
                 all_known_results.emplace_back(std::move(split_specs->known));

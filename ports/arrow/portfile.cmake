@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         all.patch
+        fix-msvc-1900.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)

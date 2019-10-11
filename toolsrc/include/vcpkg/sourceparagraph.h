@@ -21,14 +21,32 @@ namespace vcpkg
         static Dependency parse_dependency(std::string name, std::string qualifier);
     };
 
-    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
-    std::vector<FeatureSpec> filter_dependencies_to_specs(const std::vector<Dependency>& deps, const Triplet& t);
-    std::vector<Features> filter_dependencies_to_features(const std::vector<vcpkg::Dependency>& deps, const Triplet& t);
+    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps,
+                                                 const Triplet& t,
+                                                 const std::unordered_map<std::string, std::string>& cmake_vars);
+
+    std::vector<FeatureSpec> filter_dependencies_to_specs(
+        const std::vector<Dependency>& deps,
+        const Triplet& t,
+        const std::unordered_map<std::string, std::string>& cmake_vars);
 
     // zlib[uwp] becomes Dependency{"zlib", "uwp"}
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
 
     std::string to_string(const Dependency& dep);
+
+    struct Type
+    {
+        enum
+        {
+            UNKNOWN,
+            PORT,
+            ALIAS,
+        } type;
+
+        static std::string to_string(const Type&);
+        static Type from_string(const std::string&);
+    };
 
     /// <summary>
     /// Port metadata of additional feature in a package (part of CONTROL file)
@@ -52,6 +70,7 @@ namespace vcpkg
         std::string homepage;
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
+        Type type;
         std::string supports_expression;
     };
 
@@ -70,8 +89,8 @@ namespace vcpkg
     };
 
     /// <summary>
-    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was loaded
-    /// from.
+    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
+    /// loaded from.
     /// </summary>
     struct SourceControlFileLocation
     {

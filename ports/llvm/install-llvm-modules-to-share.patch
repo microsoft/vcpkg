@@ -1,0 +1,10 @@
+diff --git a/cmake/modules/CMakeLists.txt b/cmake/modules/CMakeLists.txt
+index f5cc0006..1d9c52ac 100644
+--- a/cmake/modules/CMakeLists.txt
++++ b/cmake/modules/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
++set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
+ set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
+ 
+ # First for users who use an installed LLVM, create the LLVMExports.cmake file.

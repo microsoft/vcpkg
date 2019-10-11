@@ -156,7 +156,7 @@ It is preferable to set options in a call to `vcpkg_configure_xyz()` over patchi
 Common options that allow avoiding patching:
 1. [MSBUILD] `<PropertyGroup>` settings inside the project file can be overridden via `/p:` parameters
 2. [CMAKE] Calls to `find_package(XYz)` in CMake scripts can be disabled via [`-DCMAKE_DISABLE_FIND_PACKAGE_XYz=ON`](https://cmake.org/cmake/help/v3.15/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html)
-3. [CMAKE] Cache variables (declared as `set(VAR "value" CACHE STRING "Documentation")` or `option(VAR "Documentation" "Default Value")`) can be overriden by just passing them in on the command line as `-DVAR:STRING=Foo`. One notable exception is if the `FORCE` parameter is passed to `set()`. See also the [CMake `set` documentation](https://cmake.org/cmake/help/v3.15/command/set.html)
+3. [CMAKE] Cache variables (declared as `set(VAR "value" CACHE STRING "Documentation")` or `option(VAR "Documentation" "Default Value")`) can be overridden by just passing them in on the command line as `-DVAR:STRING=Foo`. One notable exception is if the `FORCE` parameter is passed to `set()`. See also the [CMake `set` documentation](https://cmake.org/cmake/help/v3.15/command/set.html)
 
 ### Prefer patching over overriding `VCPKG_<VARIABLE>` values
 

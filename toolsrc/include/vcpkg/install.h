@@ -58,8 +58,9 @@ namespace vcpkg::Install
     };
 
     Build::ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                           const Dependencies::InstallPlanAction& action,
-                                                           StatusParagraphs& status_db);
+                                                           Dependencies::InstallPlanAction& action,
+                                                           StatusParagraphs& status_db,
+                                                           const CMakeVars::CMakeVarProvider& var_provider);
 
     enum class InstallResult
     {
@@ -74,10 +75,11 @@ namespace vcpkg::Install
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
 
-    InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
+    InstallSummary perform(std::vector<Dependencies::AnyAction>& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
-                           StatusParagraphs& status_db);
+                           StatusParagraphs& status_db,
+                           const CMakeVars::CMakeVarProvider& var_provider);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 

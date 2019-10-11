@@ -1,0 +1,16 @@
+function(vcpkg_get_dep_info PORT VCPKG_TRIPLET_FILE)
+    message("d8187afd-ea4a-4fc3-9aa4-a6782e1ed9af")
+    include(${VCPKG_TRIPLET_FILE})
+
+    # GUID used as a flag - "cut here line"
+    message("c35112b6-d1ba-415b-aa5d-81de856ef8eb")
+    message("VCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}")
+    message("VCPKG_CMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
+    message("VCPKG_CMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+    message("CMAKE_HOST_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME}")
+    message("CMAKE_HOST_SYSTEM_PROCESSOR=${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    message("CMAKE_HOST_SYSTEM_VERSION=${CMAKE_HOST_SYSTEM_VERSION}")
+    message("CMAKE_HOST_SYSTEM=${CMAKE_HOST_SYSTEM}")
+    message("e1e74b5c-18cb-4474-a6bd-5c1c8bc81f3f")
+    message("8c504940-be29-4cba-9f8f-6cd83e9d87b7")
+endfunction()
