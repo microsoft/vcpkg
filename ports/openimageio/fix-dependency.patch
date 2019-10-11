@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8a5f120..37d048c 100644
+index 8a5f120..6789963 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -53,6 +53,18 @@ include (compiler)
+@@ -53,6 +53,17 @@ include (compiler)
  # Helpful macros for our project
  include (oiio_macros)
  
@@ -17,10 +17,20 @@ index 8a5f120..37d048c 100644
 +option (USE_PTEX "Use Ptex if found" ON)
 +option (USE_QT "Use QT if found" ON)
 +option (USE_WEBP "Use WebP if found" ON)
-+
  
  option (VERBOSE "Print lots of messages while compiling" OFF)
  set (${PROJ_NAME}_NAMESPACE ${PROJECT_NAME} CACHE STRING
+@@ -86,6 +97,10 @@ set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "Library naming postfix for Debug build
+ 
+ set(OIIO_TESTSUITE_IMAGEDIR "${PROJECT_SOURCE_DIR}/.." CACHE PATH
+     "Location of oiio-images, openexr-images, libtiffpic, etc.." )
++    
++if (BUILD_SHARED_LIBS)
++    add_definitions (-DOpenImageIO_EXPORTS=1 -DOpenImageIO_Util_EXPORTS=1)
++endif()
+ 
+ if (NOT OIIO_THREAD_ALLOW_DCLP)
+     add_definitions ("-DOIIO_THREAD_ALLOW_DCLP=0")
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 2410d84..2a8e076 100644
 --- a/src/cmake/externalpackages.cmake
