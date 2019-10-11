@@ -1,11 +1,13 @@
+diff --git a/cmake/OpenCVDownload.cmake b/cmake/OpenCVDownload.cmake
+index 63cf6d3..7d66b2b 100644
 --- a/cmake/OpenCVDownload.cmake
 +++ b/cmake/OpenCVDownload.cmake
-@@ -151,6 +151,8 @@ function(ocv_download)
-   # Download
-   if(NOT EXISTS "${CACHE_CANDIDATE}")
+@@ -159,6 +159,8 @@ function(ocv_download)
      ocv_download_log("#cmake_download \"${CACHE_CANDIDATE}\" \"${DL_URL}\"")
-+    string(REPLACE "${OPENCV_DOWNLOAD_PATH}/" "opencv-cache/" CACHE_SUBPATH "${CACHE_CANDIDATE}")
-+    message(FATAL_ERROR "    Downloads are not permitted during configure. Please pre-download the file \"${CACHE_CANDIDATE}\":\n    \n    vcpkg_download_distfile(OCV_DOWNLOAD\n        URLS \"${DL_URL}\"\n        FILENAME \"${CACHE_SUBPATH}\"\n        SHA512 0\n    )")
-     file(DOWNLOAD "${DL_URL}" "${CACHE_CANDIDATE}"
-          INACTIVITY_TIMEOUT 60
-          TIMEOUT 600
+     foreach(try ${OPENCV_DOWNLOAD_TRIES_LIST})
+       ocv_download_log("#try ${try}")
++	   string(REPLACE "${OPENCV_DOWNLOAD_PATH}/" "opencv-cache/" CACHE_SUBPATH "${CACHE_CANDIDATE}")
++      message(FATAL_ERROR "    Downloads are not permitted during configure. Please pre-download the file \"${CACHE_CANDIDATE}\":\n    \n    vcpkg_download_distfile(OCV_DOWNLOAD\n        URLS \"${DL_URL}\"\n        FILENAME \"${CACHE_SUBPATH}\"\n        SHA512 0\n    )")
+       file(DOWNLOAD "${DL_URL}" "${CACHE_CANDIDATE}"
+            STATUS status
+            LOG __log

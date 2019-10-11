@@ -4,13 +4,13 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(OPENCV_VERSION "4.1.1")
+set(OPENCV_VERSION "4.1.2")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 80fa48d992ca06a2a4ab6740df6d8c21f4926165486b393969da2c5bbe2f3a0b799fb76dee5e3654e90c743e49bbd2b5b02ad59a4766896bbf4cd5b4e3251e0f
+    SHA512 d18d2cc35dc1c95c8870d35feb14459db27ebf6d09ff89a185918b1faff1b36dedacc18f268a6483570c404aca19b83ba627ce7af2265af7195a029cb766c09f
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
