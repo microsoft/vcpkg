@@ -248,7 +248,7 @@ namespace vcpkg
         for (auto&& dep : deps)
         {
             const auto& qualifier = dep.qualifier;
-            if (qualifier.empty() || evaluate_expression(qualifier, t.canonical_name()))
+            if (qualifier.empty() || evaluate_expression(qualifier, {cmake_vars, t.canonical_name()}))
             {
                 ret.emplace_back(dep.name());
             }
