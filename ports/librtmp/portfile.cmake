@@ -13,6 +13,9 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
+        dh.patch                #Openssl 1.1.1 patch
+        handshake.patch         #Openssl 1.1.1 patch
+        hashswf.patch           #Openssl 1.1.1 patch
         fix_strncasecmp.patch
         hide_netstackdump.patch
 )
