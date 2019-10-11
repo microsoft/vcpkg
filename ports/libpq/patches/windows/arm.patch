@@ -17,17 +17,14 @@ diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
 index 823357c02..625f32bf8 100644
 --- a/src/tools/msvc/MSBuildProject.pm	
 +++ b/src/tools/msvc/MSBuildProject.pm
-@@ -307,9 +307,11 @@ sub WriteItemDefinitionGroup
+@@ -307,9 +307,8 @@ sub WriteItemDefinitionGroup
  	  : ($self->{type} eq "dll" ? 'DynamicLibrary' : 'StaticLibrary');
  	my $libs = $self->GetAdditionalLinkerDependencies($cfgname, ';');
  
 -	my $targetmachine =
 -	  $self->{platform} eq 'Win32' ? 'MachineX86' : 'MachineX64';
 -
-+	my $targetmachine = $self->{platform} eq 'Win32' ? 'MachineX86' : 'Unknown';
-+	my $targetmachine = $self->{platform} eq 'x64' ? 'MachineX64' : 'Unknown';
-+	my $targetmachine = $self->{platform} eq 'ARM' ? 'MachineARM' : 'Unknown';
-+	my $targetmachine = $self->{platform} eq 'ARM64' ? 'MachineARM64' : 'Unknown';
++	my $targetmachine = $self->{platform} eq 'ARM64' ? 'MachineARM64' : 'MachineARM';
 +    
  	my $includes = $self->{includes};
  	unless ($includes eq '' or $includes =~ /;$/)
