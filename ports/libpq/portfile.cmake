@@ -279,5 +279,5 @@ endif()
 #endif()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/postgresql)
-file(INSTALL vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/postgresql)
+file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/postgresql)
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpq RENAME copyright)
