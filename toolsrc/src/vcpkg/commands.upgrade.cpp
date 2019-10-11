@@ -45,7 +45,7 @@ namespace vcpkg::Commands::Upgrade
 
         // Load ports from ports dirs
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::CMakeVarProvider var_provider(paths);
+        CMakeVars::TripletCMakeVarProvider var_provider(paths);
 
         // input sanitization
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {

@@ -87,7 +87,8 @@ namespace vcpkg
         , type(spgh.type)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.name(); });
+        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.to_string(); });
+        Util::sort_unique_erase(this->depends);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh,
@@ -97,7 +98,8 @@ namespace vcpkg
         : version(), description(fpgh.description), maintainer(), feature(fpgh.name), type(spgh.type)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.name(); });
+        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.to_string(); });
+        Util::sort_unique_erase(this->depends);
     }
 
     std::string BinaryParagraph::displayname() const

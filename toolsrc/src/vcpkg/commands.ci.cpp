@@ -222,7 +222,7 @@ namespace vcpkg::Commands::CI
         const VcpkgPaths& paths,
         const std::set<std::string>& exclusions,
         const PortFileProvider::PortFileProvider& provider,
-        const CMakeVars::CMakeVarProvider& var_provider,
+        const CMakeVars::TripletCMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
         const bool purge_tombstones)
     {
@@ -399,7 +399,7 @@ namespace vcpkg::Commands::CI
         StatusParagraphs status_db = database_load_check(paths);
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::CMakeVarProvider var_provider(paths);
+        CMakeVars::TripletCMakeVarProvider var_provider(paths);
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,

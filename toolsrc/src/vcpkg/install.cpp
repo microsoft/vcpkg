@@ -677,7 +677,7 @@ namespace vcpkg::Install
 
         //// Load ports from ports dirs
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::CMakeVarProvider var_provider(paths);
+        CMakeVars::TripletCMakeVarProvider var_provider(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         std::vector<AnyAction> action_plan =

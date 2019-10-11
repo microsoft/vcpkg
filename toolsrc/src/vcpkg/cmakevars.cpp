@@ -7,11 +7,11 @@
 #include <vcpkg/cmakevars.h>
 
 using vcpkg::Optional;
-using vcpkg::CMakeVars::CMakeVarProvider;
+using vcpkg::CMakeVars::TripletCMakeVarProvider;
 
 namespace vcpkg::CMakeVars
 {
-    fs::path CMakeVarProvider::create_tag_extraction_file(
+    fs::path TripletCMakeVarProvider::create_tag_extraction_file(
         const Span<const std::pair<const FullPackageSpec*, std::string>>& spec_abi_settings) const
     {
         constexpr StringLiteral COMMAND_START = "vcpkg_get_tags(";
@@ -73,7 +73,7 @@ namespace vcpkg::CMakeVars
         return path;
     }
 
-    fs::path CMakeVarProvider::create_dep_info_extraction_file(const Span<const PackageSpec> specs) const
+    fs::path TripletCMakeVarProvider::create_dep_info_extraction_file(const Span<const PackageSpec> specs) const
     {
         constexpr StringLiteral COMMAND_START = "vcpkg_get_dep_info(";
         constexpr StringLiteral COMMAND_END = ")\n";
@@ -116,8 +116,8 @@ namespace vcpkg::CMakeVars
         return path;
     }
 
-    void CMakeVarProvider::launch_and_split(const fs::path& script_path,
-                                            std::vector<std::vector<std::pair<std::string, std::string>>>& vars) const
+    void TripletCMakeVarProvider::launch_and_split(
+        const fs::path& script_path, std::vector<std::vector<std::pair<std::string, std::string>>>& vars) const
     {
         static constexpr CStringView PORT_START_GUID = "d8187afd-ea4a-4fc3-9aa4-a6782e1ed9af";
         static constexpr CStringView PORT_END_GUID = "8c504940-be29-4cba-9f8f-6cd83e9d87b7";
@@ -166,7 +166,7 @@ namespace vcpkg::CMakeVars
         }
     }
 
-    void CMakeVarProvider::load_generic_triplet_vars(const Triplet& triplet) const
+    void TripletCMakeVarProvider::load_generic_triplet_vars(const Triplet& triplet) const
     {
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(1);
         FullPackageSpec full_spec = FullPackageSpec::from_string("", triplet).value_or_exit(VCPKG_LINE_INFO);
@@ -180,7 +180,7 @@ namespace vcpkg::CMakeVars
                                              std::make_move_iterator(vars.front().end()));
     }
 
-    void CMakeVarProvider::load_dep_info_vars(Span<const PackageSpec> specs) const
+    void TripletCMakeVarProvider::load_dep_info_vars(Span<const PackageSpec> specs) const
     {
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(specs.size());
         const fs::path file_path = create_dep_info_extraction_file(specs);
@@ -198,8 +198,8 @@ namespace vcpkg::CMakeVars
         }
     }
 
-    void CMakeVarProvider::load_tag_vars(Span<const FullPackageSpec> specs,
-                                         const PortFileProvider::PortFileProvider& port_provider) const
+    void TripletCMakeVarProvider::load_tag_vars(Span<const FullPackageSpec> specs,
+                                                const PortFileProvider::PortFileProvider& port_provider) const
     {
         std::vector<std::pair<const FullPackageSpec*, std::string>> spec_abi_settings;
         spec_abi_settings.reserve(specs.size());
@@ -229,7 +229,7 @@ namespace vcpkg::CMakeVars
         }
     }
 
-    Optional<const std::unordered_map<std::string, std::string>&> CMakeVarProvider::get_generic_triplet_vars(
+    Optional<const std::unordered_map<std::string, std::string>&> TripletCMakeVarProvider::get_generic_triplet_vars(
         const Triplet& triplet) const
     {
         auto find_itr = generic_triplet_vars.find(triplet);
@@ -241,7 +241,7 @@ namespace vcpkg::CMakeVars
         return nullopt;
     }
 
-    Optional<const std::unordered_map<std::string, std::string>&> CMakeVarProvider::get_dep_info_vars(
+    Optional<const std::unordered_map<std::string, std::string>&> TripletCMakeVarProvider::get_dep_info_vars(
         const PackageSpec& spec) const
     {
         auto find_itr = dep_resolution_vars.find(spec);
@@ -253,7 +253,7 @@ namespace vcpkg::CMakeVars
         return nullopt;
     }
 
-    Optional<const std::unordered_map<std::string, std::string>&> CMakeVarProvider::get_tag_vars(
+    Optional<const std::unordered_map<std::string, std::string>&> TripletCMakeVarProvider::get_tag_vars(
         const PackageSpec& spec) const
     {
         auto find_itr = tag_vars.find(spec);
