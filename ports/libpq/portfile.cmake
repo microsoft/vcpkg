@@ -208,6 +208,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
     
+    
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -270,5 +271,11 @@ else()
     endif()
 endif()
 #vcpkg_copy_pdbs()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.lib")
+    #RENAME debug library due to CMake. In general that is a bad idea but it will have consquences for the generated cmake targets 
+    # of other ports if not renamed. Maybe a vcpkg_cmake_wrapper is required here to correct the target information if the rename is removed?
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/libpqd.lib")
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpq RENAME copyright)
