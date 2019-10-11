@@ -1,4 +1,4 @@
 Source: tacopie
-Version: 3.2.0-1
-Homepage: https://github.com/Cylix/tacopie
+Version: 3.2.0-2
+Homepage: https://github.com/cpp-redis/tacopie
 Description: Tacopie is a TCP Client & Server C++11 library

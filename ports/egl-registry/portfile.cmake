@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/EGL-Registry
-  REF e2562a9e7f567b837cdf96cf8b12e7fc0d88cc30
-  SHA512 8c380c26f6afc0ce2ab2dd2fe834daae0d0dbe9e2bd55ab30c80f8dfa5e234f1902e5735c4d8acf016f03924a46431b9bb794bb77f1f091c56905a98c38f5d04
+  REF 598f20e3b7b7eec3e8d8a83e64b9592a21c55bb6
+  SHA512 360aa2399fec12ad23c5e4bce7e9287a9b1b1d98ba6c326dde2b1bc1c32735bc6933ca8e5c626ba421cda5aac216bc7c268e064cf0dd67605a23151e29ba1f36
   HEAD_REF master
 )
 

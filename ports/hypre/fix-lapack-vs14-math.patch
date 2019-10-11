@@ -1,5 +1,5 @@
---- a/lapack/f2c.h	Fri Sep 11 18:57:56 2015
-+++ b/lapack/f2c.h	Thu Dec 22 18:22:26 2016
+--- a/src/lapack/f2c.h	Fri Sep 11 18:57:56 2015
++++ b/src/lapack/f2c.h	Thu Dec 22 18:22:26 2016
 @@ -190,18 +190,18 @@
  typedef struct Namelist Namelist;
  

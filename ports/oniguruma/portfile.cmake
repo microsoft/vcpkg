@@ -3,22 +3,21 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF v6.9.2
-    SHA512 b5578560f469c2e123280159a23a0e59045bf2452fd3efe09393c5e99ecc6323f965d2189a4e7e6e3a108c1d02b9b041f3fe991cd8ab64f7289003a5a07b4434
+    REF v6.9.3
+    SHA512 a0f4da26ba08de516c05b5e4b803a9cf8013489c3743ecf27fbc3f66f835eef8fca81b9ed2bd68729a470fe897994046843a4fd31d44a9584ff8dabd1748df21
     HEAD_REF master
 )
 
-if("non-posix" IN_LIST FEATURES)
-    set(ENABLE_POSIX_API OFF)
-else()
-    set(ENABLE_POSIX_API ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        "non-posix" ENABLE_POSIX_API
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_POSIX_API=${ENABLE_POSIX_API}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

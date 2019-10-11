@@ -1,8 +1,9 @@
 Source: opencv
-Version: 4.1.1
+Version: 4.1.1-1
 Homepage: https://github.com/opencv/opencv
 Description: Computer vision library
-Build-Depends: opencv4
+Build-Depends: opencv4[core]
+Default-Features: dnn, jpeg, opengl, png, tiff, webp
 
 Feature: nonfree
 Build-Depends: opencv4[nonfree]

@@ -33,9 +33,9 @@ vcpkg_from_github(
     REF ae80dede0546d652040ae6260a810e53e20a06fa
     SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
     HEAD_REF master
-	PATCHES
-		msvc_142_bug_workaround.patch
-		vs16_3_typeinfo_header_fix.patch
+	  PATCHES
+		  msvc_142_bug_workaround.patch
+		  vs16_3_typeinfo_header_fix.patch
 )
 
 set(BUILD_SNIPPETS "False")
@@ -84,7 +84,6 @@ vcpkg_build_msbuild(
 	DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
     PLATFORM ${MSBUILD_PLATFORM}
 )
-
 set(BUILD_PATH "win.x86_${WINDOWS_PLATFORM}.vc${TOOLSET_VERSION}.${RUNTIME_LIBRARY_LINKAGE}")
 
 file(INSTALL ${SOURCE_PATH}/physx/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/)

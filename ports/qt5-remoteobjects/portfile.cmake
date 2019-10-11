@@ -1,5 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtremoteobjects f01b9497dab7e5db24f090d227fca5703a50b5065ad6c0798b78e83b41c374a04eb2857ffaf0225071791c9bb6b8703e37e47d31bf905fa819395b4d69819178)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

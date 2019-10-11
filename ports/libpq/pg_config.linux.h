@@ -144,7 +144,7 @@
 #define PACKAGE_TARNAME "postgresql"
 #define PACKAGE_URL ""
 #define PACKAGE_VERSION "9.6.3"
-#define PG_INT128_TYPE __int128
+${DEFINE_PG_INT128_TYPE}
 #define PG_INT64_TYPE long int
 #define PG_KRB_SRVNAM "postgres"
 #define PG_MAJORVERSION "9.6"

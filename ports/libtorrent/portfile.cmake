@@ -3,12 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF 76c2794923c4c101ff715be11d794f7fefc6c524
-    SHA512 3e154857bb56318ebe725326e1832aa387dc85840be80ebe76c0265e8fded43bc3006d528784c8805e30c3fba41b4108ccf81170870d1686dc499048367563ea
+    REF libtorrent-1_2_2
+    SHA512 34dcf5421dfccbba78bdd30890b9c18b92fdee1a2e1693ada9b55b79a167730093862017581b9251a654b5517011dbe4c46b520b03b78aa86a909457f7edcf2c
     HEAD_REF master
     PATCHES
         add-datetime-to-boost-libs.patch
-        windows-boost-1.70.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTORRENT_SHARED)

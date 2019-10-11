@@ -6,10 +6,6 @@ include(vcpkg_common_functions)
 
 set(OPENCV_VERSION "4.1.1")
 
-if(VCPKG_TARGET_IS_LINUX)
-    message("OpenCV currently requires the following library from the system package manager:\n    libgtk3\n\nThis can be installed on Ubuntu systems via apt-get install libgtk-3-dev")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -20,6 +16,7 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-fix-policy-CMP0057.patch
       0009-fix-uwp.patch
 )
 
@@ -27,34 +24,61 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
-vcpkg_check_features(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ade"      WITH_ADE
  "contrib"  WITH_CONTRIB
  "cuda"     WITH_CUDA
+ "cuda"     WITH_CUBLAS
  "dnn"      BUILD_opencv_dnn
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "gdcm"     WITH_GDCM
  "halide"   WITH_HALIDE
- "ipp"      WITH_IPP
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
  "openmp"   WITH_OPENMP
- "ovis"     BUILD_opencv_ovis
  "png"      WITH_PNG
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
- "tbb"      WITH_TBB
  "tiff"     WITH_TIFF
- "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
 )
 
-if(WITH_CUDA)
+# Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
+# As the respective value of their variables can be unset conditionally.
+set(WITH_IPP OFF)
+if("ipp" IN_LIST FEATURES)
+  set(WITH_IPP ON)
+endif()
+
+set(BUILD_opencv_ovis OFF)
+if("ovis" IN_LIST FEATURES)
+  set(BUILD_opencv_ovis ON)
+endif()
+
+set(WITH_TBB OFF)
+if("tbb" IN_LIST FEATURES)
+  set(WITH_TBB ON)
+endif()
+
+set(WITH_VTK OFF)
+if("vtk" IN_LIST FEATURES)
+  set(WITH_VTK ON)
+endif()
+
+if("dnn" IN_LIST FEATURES)
+  vcpkg_download_distfile(TINYDNN_ARCHIVE
+    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
+    FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
+    SHA512 5f2c1a161771efa67e85b1fea395953b7744e29f61187ac5a6c54c912fb195b3aef9a5827135c3668bd0eeea5ae04a33cc433e1f6683e2b7955010a2632d168b
+  )
+endif()
+
+if("cuda" IN_LIST FEATURES)
   vcpkg_download_distfile(OCV_DOWNLOAD
       URLS "https://github.com/NVIDIA/NVIDIAOpticalFlowSDK/archive/79c6cee80a2df9a196f20afd6b598a9810964c32.zip"
       FILENAME "opencv-cache/nvidia_optical_flow/ca5acedee6cb45d0ec610a6732de5c15-79c6cee80a2df9a196f20afd6b598a9810964c32.zip"
@@ -64,7 +88,7 @@ endif()
 
 # Build image quality module when building with 'contrib' feature and not UWP.
 set(BUILD_opencv_quality OFF)
-if(WITH_CONTRIB)
+if("contrib" IN_LIST FEATURES)
   if (VCPKG_TARGET_IS_UWP)
     set(BUILD_opencv_quality OFF)
     message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
@@ -81,6 +105,8 @@ if(WITH_CONTRIB)
     SHA512 8af13f0a5f350360316662c1ce5e58c21d906a58591acfbd575a8dacde19b6f3bbd694c3c199feb35c33549cf8c37e3fb4c494b586a00ad29fe3b4aeeb2d22ab
     HEAD_REF master
   )
+  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
+
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_bgm.i"
     FILENAME "opencv-cache/xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i"
@@ -140,15 +166,6 @@ if(WITH_CONTRIB)
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
     FILENAME "opencv-cache/data/7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat"
     SHA512 c16e60a6c4bb4de3ab39b876ae3c3f320ea56f69c93e9303bd2dff8760841dcd71be4161fff8bc71e8fe4fe8747fa8465d49d6bd8f5ebcdaea161f4bc2da7c93
-  )
-  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
-endif()
-
-if(BUILD_opencv_dnn)
-  vcpkg_download_distfile(TINYDNN_ARCHIVE
-    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
-    FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
-    SHA512 5f2c1a161771efa67e85b1fea395953b7744e29f61187ac5a6c54c912fb195b3aef9a5827135c3668bd0eeea5ae04a33cc433e1f6683e2b7955010a2632d168b
   )
 endif()
 
@@ -226,6 +243,17 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   endif()
 endif()
 
+if("ffmpeg" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_UWP)
+    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
+    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
+  endif()
+endif()
+
+if("qt" IN_LIST FEATURES)
+  list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
+endif()
+
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
@@ -237,9 +265,9 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DCMAKE_DEBUG_POSTFIX=d
-        ###### Ungrouped Entries
-        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
-        -DBUILD_opencv_java=OFF
+        # Do not build docs/examples
+        -DBUILD_DOCS=OFF
+        -DBUILD_EXAMPLES=OFF
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
@@ -256,11 +284,10 @@ vcpkg_configure_cmake(
         -DBUILD_PROTOBUF=OFF
         ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
+        -DBUILD_opencv_java=OFF
         -DBUILD_opencv_js=OFF
         -DBUILD_ANDROID_PROJECT=OFF
         -DBUILD_ANDROID_EXAMPLES=OFF
-        -DBUILD_DOCS=OFF
-        -DBUILD_EXAMPLES=OFF
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_TESTS=OFF
@@ -270,14 +297,13 @@ vcpkg_configure_cmake(
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
-	-DUPDATE_PROTO_FILES=ON
+        -DUPDATE_PROTO_FILES=ON
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         # ENABLE
         -DENABLE_CXX11=ON
         ###### OPENCV vars
@@ -285,51 +311,32 @@ vcpkg_configure_cmake(
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         ###### customized properties
-        -DWITH_ADE=${WITH_ADE}
-        -DWITH_CUBLAS=${WITH_CUDA}
-        -DWITH_CUDA=${WITH_CUDA}
-        -DWITH_EIGEN=${WITH_EIGEN}
-        -DWITH_FFMPEG=${WITH_FFMPEG}
-        -DWITH_GDCM=${WITH_GDCM}
-        -DWITH_HALIDE=${WITH_HALIDE}
+        ## Options from vcpkg_check_features()
+        ${FEATURE_OPTIONS}
+        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_IPP=${WITH_IPP}
-        -DWITH_JASPER=${WITH_JASPER}
-        -DWITH_JPEG=${WITH_JPEG}
         -DWITH_MSMF=${WITH_MSMF}
-        -DWITH_OPENEXR=${WITH_OPENEXR}
-        -DWITH_OPENGL=${WITH_OPENGL}
-        -DWITH_OPENMP=${WITH_OPENMP}
-        -DWITH_PNG=${WITH_PNG}
         -DWITH_PROTOBUF=ON
-        -DWITH_QT=${WITH_QT}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_TIFF=${WITH_TIFF}
         -DWITH_VTK=${WITH_VTK}
-        -DWITH_WEBP=${WITH_WEBP}
         ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
         -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
-        -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
-        -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
-        -DBUILD_opencv_world=${BUILD_opencv_world}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        ###### Additional build flags
+        ${ADDITIONAL_BUILD_FLAGS}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
-# OpenCV does not list TIFF as a dependency. 
-# We explicitly add it to the module file, 
-# in order to fix unresolved symbols linking problems 
-# for downstream projects using OpenCV as static library
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
   string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
                  "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(TIFF REQUIRED)
 find_package(Protobuf REQUIRED)
 if(Protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
@@ -346,6 +353,7 @@ if(Protobuf_FOUND)
     )
   endif()
 endif()
+find_package(TIFF QUIET)
 find_package(HDF5 QUIET)
 find_package(Freetype QUIET)
 find_package(Ogre QUIET)
@@ -354,9 +362,10 @@ find_package(Ceres QUIET)
 find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
+find_package(Tesseract QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
-  if(WITH_OPENMP)
+  if("openmp" IN_LIST FEATURES)
     string(REPLACE "set_target_properties(opencv_core PROPERTIES
   INTERFACE_LINK_LIBRARIES \""
                    "set_target_properties(opencv_core PROPERTIES
@@ -375,4 +384,4 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv4.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv4 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
