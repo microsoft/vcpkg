@@ -22,7 +22,7 @@ index 51711c2bf..d33fdc3b0 100644
 -       }
 +       #if ($sslout =~ /(\d+)\.(\d+)\.(\d+)(\D)/m)
 +       #{
-+               return (1, 0, 2);
++               return (1, 1, 1);
 +       #}
  
 -       croak
