@@ -20,9 +20,11 @@ endmacro()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu, pgport
+    # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu
     feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
     feature_not_implemented_yet(perl python tcl uuid)
+elseif(VCPKG_TARGET_IS_OSX)
+    feature_not_implemented_yet(readline libedit kerberos bsd systemd llvm pam perl python tcl uuid)
 else()
     feature_not_implemented_yet(readline bonjour libedit kerberos bsd systemd llvm pam perl python tcl uuid)
 endif()
