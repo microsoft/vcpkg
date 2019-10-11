@@ -104,6 +104,10 @@ set (cgicc_HEADERS
 include_directories (. ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_library (cgicc ${cgicc_SOURCES} ${cgicc_HEADERS})
 
+if (BUILD_SHARED_LIBS)
+    add_definitions(-DCGICC_EXPORTS)
+endif()
+
 install(TARGETS cgicc
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib

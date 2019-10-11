@@ -1,8 +1,6 @@
 
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnu.org/gnu/cgicc/cgicc-3.2.19.tar.gz"
     FILENAME "cgicc-3.2.19.tar.gz"
