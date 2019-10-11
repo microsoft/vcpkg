@@ -22,4 +22,4 @@ Build-Depends: python3
 
 Feature: atlmfc
 Description: Mfc functionality for vtk on Windows
-Build-Depends: atlmfc
+Build-Depends: atlmfc (windows)
