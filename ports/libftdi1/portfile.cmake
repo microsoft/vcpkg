@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         cmake-fix.patch
         win32.patch
+        fix-libusb-path.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/exports.def DESTINATION ${SOURCE_PATH}/src)
