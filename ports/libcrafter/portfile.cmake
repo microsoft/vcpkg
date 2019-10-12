@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF version-0.3
     SHA512 7c396ba942b304dddfaa569adb44697f75568d3ef2ed48dda758e281f3b7c172439309033bbf5498069a4a61a952f93e41af99b129ce874ce76b5ec08da58116
     HEAD_REF master
+    PATCHES fix-build-error.patch
 )
 
 vcpkg_configure_make(
