@@ -4,22 +4,23 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "This port is only for building msmpi on Windows Desktop")
 endif()
 
-set(MSMPI_VERSION "10.0.12498")
+set(MSMPI_VERSION "10.1.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi"
+    URLS "https://download.microsoft.com/download/2/9/e/29efe9b1-16d7-4912-a229-6734b0c4e235/msmpisdk.msi"
     FILENAME "msmpisdk-${MSMPI_VERSION}.msi"
-    SHA512 36a31b2516f45fbc26167b31d2d6419f1928aef1591033f0430d36570159205e1a3134557a4ac0462f2d879add1fc6fee87a6997032e4438b528cd42a8bbe6b1
+    SHA512 5d2507de328f7ab5380ec46c105b5b1bcb56290949ad7bb91fe26ab4ec097b23cb4f9e6681827e00b20d670f0241fca5d111ebd4c88879d94780a78cfa316b91
 )
 
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe"
+        URLS "https://download.microsoft.com/download/2/9/e/29efe9b1-16d7-4912-a229-6734b0c4e235/msmpisetup.exe"
         FILENAME "msmpisetup-${MSMPI_VERSION}.exe"
-        SHA512 c272dc842eb1e693f25eb580e1caf0c1fdb385611a12c20cdc6a40cf592ccbdba434a1c16edb63eef14b1a2ac6e678ac1cd561ec5fd003a5d17191a0fad281ae
+        SHA512 6911e50a158f7bfa5b0cd18e266a7323c6afc4034ec240f2689a9b358a1e5ec3ebb96313071f64f9bcd0d84453684a3cebad13ecf4137a41b90cee14895338b8
     )
 endmacro()
+
 
 ### Check for correct version of installed redistributable package
 
