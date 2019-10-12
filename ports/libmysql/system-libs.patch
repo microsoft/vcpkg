@@ -97,17 +97,18 @@ diff --git a/cmake/ssl.cmake b/cmake/ssl.cmake
 index 8af9699..2bdfe14 100644
 --- a/cmake/ssl.cmake
 +++ b/cmake/ssl.cmake
-@@ -104,6 +104,16 @@ ENDMACRO()
+@@ -104,6 +104,17 @@ ENDMACRO()
  # Provides the following configure options:
  # WITH_SSL=[yes|bundled|system|<path/to/custom/installation>]
  MACRO (MYSQL_CHECK_SSL)
 +  find_package(OpenSSL REQUIRED)
++  find_package(Threads REQUIRED)
 +  set(OPENSSL_LIBRARY ${OPENSSL_SSL_LIBRARY} CACHE STRING "")
 +  set(CRYPTO_LIBRARY ${OPENSSL_CRYPTO_LIBRARY} CACHE STRING "")
 +  FIND_PROGRAM(OPENSSL_EXECUTABLE openssl
 +        DOC "path to the openssl executable")
 +  SET(SSL_DEFINES "-DHAVE_OPENSSL")
-+  set(SSL_LIBRARIES ${OPENSSL_LIBRARIES})
++  set(SSL_LIBRARIES ${OPENSSL_LIBRARIES} Threads::Threads)
 +ENDMACRO()
 +
 +MACRO (MYSQL_CHECK_SSL_OLD)
