@@ -5,25 +5,26 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF releases/CGAL-4.14
-    SHA512 c70b3ad475f6b2c03ecb540e195b4d26a709205c511b0c705dfddb5b14ef372453ce1d4d49ed342fcd21ba654dea793e91c058afae626276bfb3cfd72bccb382
+    REF 55a05c5a23c1a5721f8cba3a7b5485b9a1f2f663 #4.14.1
+    SHA512 ec1a0a87b433b2509287f19d50bde12e097d0b279b2f35d90480d8fc5dc52d0ece6bb83904caeac7a85e1a1da536aea9d2b27a2ee922b84e9528ced78ebbd53e
     HEAD_REF master
-    PATCHES
-        cgal_target_fix.patch
 )
 
-set(WITH_CGAL_Qt5  OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_CGAL_Qt5 ON)
-endif()
+# Remove CMakeCache.txt to support compiler ninja
+file(REMOVE_RECURSE ${OUT_SOURCE_PATH}/Maintenance/infrastructure)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    qt WITH_CGAL_Qt5
+    headeronly CGAL_HEADER_ONLY
+    demo WITH_demos
+    test WITH_tests
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DCGAL_HEADER_ONLY=ON
-        -DCGAL_INSTALL_CMAKE_DIR=share/cgal
-        -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
+    OPTIONS ${FEATURE_OPTIONS}
+        -DCGAL_INSTALL_CMAKE_DIR=share/CGAL
 )
 
 vcpkg_install_cmake()
@@ -32,19 +33,7 @@ vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
-# Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-else()
-    foreach(ROOT ${CURRENT_PACKAGES_DIR}/bin)
-        file(REMOVE
-            ${ROOT}/cgal_create_CMakeLists
-            ${ROOT}/cgal_create_cmake_script
-            ${ROOT}/cgal_make_macosx_app
-        )
-    endforeach()
-endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "include (\$\{CMAKE_CURRENT_LIST_DIR\}/../../share/cgal/CGALConfig.cmake)")
 
