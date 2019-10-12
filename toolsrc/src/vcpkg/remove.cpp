@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
@@ -247,10 +248,33 @@ namespace vcpkg::Remove
                 System::print2(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
-            specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-                return Input::check_and_get_package_spec(
-                    std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-            });
+            for (const auto& arg : args.command_arguments)
+            {
+                Optional<PackageSpec> exact_spec;
+                std::vector<PackageSpec> regex_specs;
+                std::regex arg_regex{std::string(arg)};
+                for (const auto& status : status_db) 
+                {
+                    if (!status->is_installed())
+                        continue;
+                    const auto& spec_name = Strings::ascii_to_lowercase(std::string(status->package.spec.name()));
+                    if (spec_name == arg)
+                    {
+                        // Found an exact match, no need to search further.
+                        exact_spec = Input::check_and_get_package_spec(
+                            std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+                        break;
+                    }
+                    if (std::regex_match(spec_name, arg_regex))
+                        regex_specs.push_back(
+                            Input::check_and_get_package_spec(
+                                std::string(spec_name), default_triplet, COMMAND_STRUCTURE.example_text));
+                }
+                if (exact_spec.has_value())
+                    specs.push_back(*exact_spec.get());
+                else
+                    std::copy(regex_specs.begin(), regex_specs.end(), std::back_inserter(specs));
+            }
 
             for (auto&& spec : specs)
                 Input::check_triplet(spec.triplet(), paths);
