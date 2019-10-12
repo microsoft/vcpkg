@@ -9,11 +9,13 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        crypt32.patch
 )
 
 set(BUILD_freetds_openssl OFF)
 if("openssl" IN_LIST FEATURES)
-    message(FATAL_ERROR "freetds does not support OpenSSL 1.1.0 yet")
+    set(BUILD_freetds_openssl ON)
 endif()
 
 vcpkg_configure_cmake(
