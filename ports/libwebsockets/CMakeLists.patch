@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4daeec85e..34e5e197d 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -1861,7 +1861,9 @@ if (LWS_WITH_ZLIB)
+ 		endif()
+ 	endif()
+ endif()
+-
++if(CMAKE_SYSTEM_NAME MATCHES "Windows")
++    list(APPEND CMAKE_REQUIRED_LIBRARIES crypt32.lib)
++endif()
+ CHECK_FUNCTION_EXISTS(SSL_CTX_set1_param LWS_HAVE_SSL_CTX_set1_param)
+ CHECK_FUNCTION_EXISTS(SSL_set_info_callback LWS_HAVE_SSL_SET_INFO_CALLBACK)
+ CHECK_FUNCTION_EXISTS(X509_VERIFY_PARAM_set1_host LWS_HAVE_X509_VERIFY_PARAM_set1_host)
