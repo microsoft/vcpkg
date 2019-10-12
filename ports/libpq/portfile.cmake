@@ -40,7 +40,8 @@ set(PATCHES
         patches/windows/install.patch
         patches/windows/win_bison_flex.patch
         patches/windows/openssl_exe_path.patch
-        patches/windows/Solution.patch)
+        patches/windows/Solution.patch
+        patches/linux/configure.patch)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
