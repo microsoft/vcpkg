@@ -17,46 +17,70 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-if("private-headers" IN_LIST FEATURES)
-    set(INSTALL_PRIVATE_H ON)
+if (VCPKG_TARGET_IS_WINDOWS)
+    if("private-headers" IN_LIST FEATURES)
+        set(INSTALL_PRIVATE_H ON)
+    else()
+        set(INSTALL_PRIVATE_H OFF)
+    endif()
+
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DINSTALL_PDB=OFF
+            -DMIN_WINDOWS_VER=Windows7
+            -DAPR_HAVE_IPV6=ON
+            -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
+        # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
+        # OPTIONS_RELEASE -DOPTIMIZE=1
+        # OPTIONS_DEBUG -DDEBUGGABLE=1
+    )
+
+    vcpkg_install_cmake()
+
+    # There is no way to suppress installation of the headers in debug builds.
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+    # Both dynamic and static are built, so keep only the one needed
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/apr-1.lib
+                    ${CURRENT_PACKAGES_DIR}/lib/aprapp-1.lib
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/apr-1.lib
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/aprapp-1.lib)
+    else()
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libapr-1.lib
+                    ${CURRENT_PACKAGES_DIR}/lib/libaprapp-1.lib
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/libapr-1.lib
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/libaprapp-1.lib)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    vcpkg_copy_pdbs()
 else()
-    set(INSTALL_PRIVATE_H OFF)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DINSTALL_PDB=OFF
-        -DMIN_WINDOWS_VER=Windows7
-        -DAPR_HAVE_IPV6=ON
-        -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
-)
-
-vcpkg_install_cmake()
-
-# There is no way to suppress installation of the headers in debug builds.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Both dynamic and static are built, so keep only the one needed
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/apr-1.lib
-                ${CURRENT_PACKAGES_DIR}/lib/aprapp-1.lib
-                ${CURRENT_PACKAGES_DIR}/debug/lib/apr-1.lib
-                ${CURRENT_PACKAGES_DIR}/debug/lib/aprapp-1.lib)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libapr-1.lib
-                ${CURRENT_PACKAGES_DIR}/lib/libaprapp-1.lib
-                ${CURRENT_PACKAGES_DIR}/debug/lib/libapr-1.lib
-                ${CURRENT_PACKAGES_DIR}/debug/lib/libaprapp-1.lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    message(STATUS "Configuring apr")
+    vcpkg_execute_required_process(
+        COMMAND "./configure" --prefix=${CURRENT_INSTALLED_DIR}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "autotools-config-${TARGET_TRIPLET}"
+    )
+    
+    message(STATUS "Building ${TARGET_TRIPLET}")
+    vcpkg_execute_required_process(
+        COMMAND make
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-release
+    )
+    
+    message(STATUS "Installing ${TARGET_TRIPLET}")
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # Installs include files to apr-1 sub-directory
+    vcpkg_execute_required_process(
+        COMMAND make install
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME install-${TARGET_TRIPLET}-release
+    )
 endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/apr)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/apr/LICENSE ${CURRENT_PACKAGES_DIR}/share/apr/copyright)
-
-vcpkg_copy_pdbs()
