@@ -26,7 +26,7 @@ index 8e285a60c..ea562d200 100644
  {
    int ret = TRUE;
    MP_t bn;
-@@ -211,20 +214,34 @@ DHInit(int nKeyBits)
+@@ -211,20 +214,33 @@ DHInit(int nKeyBits)
    if (!dh)
      goto failed;
  
@@ -37,11 +37,11 @@ index 8e285a60c..ea562d200 100644
 -  if (!dh->g)
 +  if (!g) 
 +  {
-+    MP_free(g);
      goto failed;
 +  }
  
 -  MP_gethex(dh->p, P1024, res);	/* prime P1024, see dhgroups.h */
++  DH_get0_pqg(dh, (BIGNUM const**)&p, NULL, NULL);
 +  MP_gethex(p, P1024, res);	/* prime P1024, see dhgroups.h */
    if (!res)
      {
@@ -56,7 +56,6 @@ index 8e285a60c..ea562d200 100644
 +  if (!res)
 +  {
 +    MP_free(g);
-+    MP_free(p);
 +    goto failed;
 +  }
 +  MPH_set_length(dh,nKeyBits, res);
@@ -81,7 +80,7 @@ index 8e285a60c..ea562d200 100644
 -	  dh->pub_key = dh->priv_key = 0;
 -	}
 +        {
-+              return 0; // Cannot set priv_key to nullptr so there is no way to generate a new pub/priv key pair in openssl 1.1.1. 
++              MDH_Free(dh); // Cannot set priv_key to nullptr so there is no way to generate a new pub/priv key pair in openssl 1.1.1.
 +        }
  
        MP_free(q1);
