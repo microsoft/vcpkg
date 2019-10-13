@@ -1,4 +1,4 @@
-Source: apr-util
+Source: apr-util-windows
 Version: 1.6.0-5
 Homepage: https://apr.apache.org/
 Description: Apache Portable Runtime (APR) project  mission is to create and maintain software libraries that provide a predictable and consistent interface to underlying platform-specific implementation
