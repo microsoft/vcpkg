@@ -80,7 +80,7 @@ index 8e285a60c..ea562d200 100644
 -	  dh->pub_key = dh->priv_key = 0;
 -	}
 +        {
-+              MDH_Free(dh); // Cannot set priv_key to nullptr so there is no way to generate a new pub/priv key pair in openssl 1.1.1.
++              MDH_free(dh); // Cannot set priv_key to nullptr so there is no way to generate a new pub/priv key pair in openssl 1.1.1.
 +        }
  
        MP_free(q1);
