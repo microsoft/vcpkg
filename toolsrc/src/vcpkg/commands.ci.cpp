@@ -311,8 +311,6 @@ namespace vcpkg::Commands::CI
                     if (!abi.empty()) ret->abi_tag_map.emplace(p->spec, abi);
                 }
 
-                std::string state;
-
                 auto archives_root_dir = paths.root / "archives";
                 auto archive_name = abi + ".zip";
                 auto archive_subpath = fs::u8path(abi.substr(0, 2)) / archive_name;
@@ -330,26 +328,39 @@ namespace vcpkg::Commands::CI
                 ret->features.emplace(p->spec,
                                       std::vector<std::string>{p->feature_list.begin(), p->feature_list.end()});
 
+                std::string state;
+
                 if (Util::Sets::contains(exclusions, p->spec.name()))
                 {
+                    state = "skip";
                     ret->known.emplace(p->spec, BuildResult::EXCLUDED);
                     will_fail.emplace(p->spec);
                 }
+                //else if(package is not spported for this triplet)
+                //{  
+                //    // This treats unsupported ports as if they are excluded
+                //    // which means the ports dependent on it will be cascaded due to missing dependencies
+                //    // Should this be changed so instead it is a failure to depend on a unsupported port?
+                //    state = n/a
+                //    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                //    will_fail.emplace(p->spec);
+                //}
                 else if (std::any_of(p->package_dependencies.begin(),
                                      p->package_dependencies.end(),
                                      [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
                 {
+                    state = "cascade";
                     ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
                     will_fail.emplace(p->spec);
                 }
                 else if (fs.exists(archive_path))
                 {
-                    state += "pass";
+                    state = "pass";
                     ret->known.emplace(p->spec, BuildResult::SUCCEEDED);
                 }
                 else if (fs.exists(archive_tombstone_path))
                 {
-                    state += "fail";
+                    state = "fail";
                     ret->known.emplace(p->spec, BuildResult::BUILD_FAILED);
                     will_fail.emplace(p->spec);
                 }
