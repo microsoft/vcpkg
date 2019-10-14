@@ -71,8 +71,9 @@ namespace vcpkg::PortFileProvider
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        SourceControlFileLocation scfl{std::move(*scf), ports_dir};
-                        auto it = cache.emplace(spec, std::move(scfl));
+                        auto it = cache.emplace(std::piecewise_construct,
+                                                std::forward_as_tuple(spec),
+                                                std::forward_as_tuple(std::move(*scf), ports_dir));
                         return it.first->second;
                     }
                 }
@@ -89,8 +90,9 @@ namespace vcpkg::PortFileProvider
             {
                 if (scf->get()->core_paragraph->name == spec)
                 {
-                    SourceControlFileLocation scfl{std::move(*scf), ports_dir / spec};
-                    auto it = cache.emplace(spec, std::move(scfl));
+                    auto it = cache.emplace(std::piecewise_construct,
+                                            std::forward_as_tuple(spec),
+                                            std::forward_as_tuple(std::move(*scf), ports_dir / spec));
                     return it.first->second;
                 }
             }
@@ -115,8 +117,9 @@ namespace vcpkg::PortFileProvider
                     auto port_name = scf->get()->core_paragraph->name;
                     if (cache.find(port_name) == cache.end())
                     {
-                        SourceControlFileLocation scfl{std::move(*scf), ports_dir};
-                        auto it = cache.emplace(port_name, std::move(scfl));
+                        auto it = cache.emplace(std::piecewise_construct,
+                                                std::forward_as_tuple(port_name),
+                                                std::forward_as_tuple(std::move(*scf), ports_dir));
                         ret.emplace_back(&it.first->second);
                     }
                 }
@@ -136,8 +139,9 @@ namespace vcpkg::PortFileProvider
                 auto port_name = scf->core_paragraph->name;
                 if (cache.find(port_name) == cache.end())
                 {
-                    SourceControlFileLocation scfl{std::move(scf), ports_dir / port_name};
-                    auto it = cache.emplace(port_name, std::move(scfl));
+                    auto it = cache.emplace(std::piecewise_construct,
+                                            std::forward_as_tuple(port_name),
+                                            std::forward_as_tuple(std::move(scf), ports_dir / port_name));
                     ret.emplace_back(&it.first->second);
                 }
             }

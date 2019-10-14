@@ -193,9 +193,9 @@ namespace vcpkg::Build
                            const Triplet& triplet,
                            const BuildPackageOptions& build_package_options,
                            const CMakeVars::CMakeVarProvider& var_provider,
-                           std::unordered_map<std::string, std::vector<FeatureSpec>>&& feature_dependencies,
-                           std::vector<PackageSpec>&& package_dependencies,
-                           std::vector<std::string>&& feature_list)
+                           const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies,
+                           const std::vector<PackageSpec>& package_dependencies,
+                           const std::vector<std::string>& feature_list)
             : scfl(scfl)
             , scf(*scfl.source_control_file)
             , triplet(triplet)
@@ -211,13 +211,13 @@ namespace vcpkg::Build
         const SourceControlFileLocation& scfl;
         const SourceControlFile& scf;
         const Triplet& triplet;
-        fs::path port_dir;
+        const fs::path& port_dir;
         const BuildPackageOptions& build_package_options;
         const CMakeVars::CMakeVarProvider& var_provider;
 
         const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies;
-        std::vector<PackageSpec> package_dependencies;
-        std::vector<std::string> feature_list;
+        const std::vector<PackageSpec>& package_dependencies;
+        const std::vector<std::string>& feature_list;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,

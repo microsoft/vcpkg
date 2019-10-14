@@ -72,10 +72,7 @@ namespace vcpkg::Dependencies
 
                             for (const std::string& installed_feature : inst->original_features)
                             {
-                                auto ret = add_feature(installed_feature, var_provider);
-                                new_dependencies.insert(new_dependencies.end(),
-                                                        std::make_move_iterator(ret.begin()),
-                                                        std::make_move_iterator(ret.end()));
+                                new_dependencies.emplace_back(m_spec, installed_feature);
                             }
                         }
                         else
@@ -131,25 +128,32 @@ namespace vcpkg::Dependencies
                 // added inform the caller
                 auto find_itr = info.build_edges.find(feature);
 
-                if (!dep_list.empty())
+                if (find_itr == info.build_edges.end())
                 {
-                    if (find_itr == info.build_edges.end())
+                    new_dependencies.insert(new_dependencies.end(), dep_list.begin(), dep_list.end());
+                    info.build_edges.emplace(feature, dep_list);
+                    return new_dependencies;
+                }
+                else
+                {
+                    if (find_itr->second.empty())
                     {
                         new_dependencies.insert(new_dependencies.end(), dep_list.begin(), dep_list.end());
-                        info.build_edges.emplace(feature, std::move(dep_list));
+                        find_itr->second = dep_list;
+                        return new_dependencies;
                     }
-                    else
-                    {
-                        std::set_difference(dep_list.begin(),
-                                            dep_list.end(),
-                                            find_itr->second.begin(),
-                                            find_itr->second.end(),
-                                            new_dependencies.end());
 
-                        auto mid = find_itr->second.insert(
-                            find_itr->second.begin(), new_dependencies.begin(), new_dependencies.end());
-                        std::inplace_merge(find_itr->second.begin(), mid, find_itr->second.end());
-                    }
+                    std::vector<FeatureSpec> new_specs;
+                    std::set_difference(dep_list.begin(),
+                                        dep_list.end(),
+                                        find_itr->second.begin(),
+                                        find_itr->second.end(),
+                                        std::inserter(new_specs, new_specs.begin()));
+
+                    new_dependencies.insert(new_dependencies.end(), new_specs.begin(), new_specs.end());
+                    auto mid = find_itr->second.insert(find_itr->second.end(), new_specs.begin(), new_specs.end());
+
+                    std::inplace_merge(find_itr->second.begin(), mid, find_itr->second.end());
                 }
 
                 return new_dependencies;
@@ -215,11 +219,13 @@ namespace vcpkg::Dependencies
             auto it = m_graph.find(spec);
             if (it == m_graph.end())
             {
-                const SourceControlFileLocation& scfl =
-                    m_port_provider.get_control_file(spec.name()).value_or_exit(VCPKG_LINE_INFO);
+                const SourceControlFileLocation* scfl = m_port_provider.get_control_file(spec.name()).get();
+
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.name());
 
                 return m_graph
-                    .emplace(std::piecewise_construct, std::forward_as_tuple(spec), std::forward_as_tuple(spec, scfl))
+                    .emplace(std::piecewise_construct, std::forward_as_tuple(spec), std::forward_as_tuple(spec, *scfl))
                     .first->second;
             }
 
@@ -566,10 +572,13 @@ namespace vcpkg::Dependencies
         std::vector<FeatureSpec> feature_specs;
         for (const FullPackageSpec& spec : specs)
         {
-            const SourceControlFileLocation& scfl =
-                port_provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
+            const SourceControlFileLocation* scfl = port_provider.get_control_file(spec.package_spec.name()).get();
+
+            Checks::check_exit(
+                VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
+
             auto fspecs =
-                FullPackageSpec::to_feature_specs(spec, scfl.source_control_file->core_paragraph->default_features);
+                FullPackageSpec::to_feature_specs(spec, scfl->source_control_file->core_paragraph->default_features);
             feature_specs.insert(
                 feature_specs.end(), std::make_move_iterator(fspecs.begin()), std::make_move_iterator(fspecs.end()));
         }

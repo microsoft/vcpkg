@@ -215,6 +215,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> unknown;
         std::map<PackageSpec, Build::BuildResult> known;
         std::map<PackageSpec, std::vector<std::string>> features;
+        std::unordered_map<std::string, SourceControlFileLocation> default_feature_provider;
         std::map<PackageSpec, std::string> abi_tag_map;
     };
 
@@ -266,7 +267,7 @@ namespace vcpkg::Commands::CI
 
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        for (auto&& action : action_plan)
+        for (Dependencies::AnyAction& action : action_plan)
         {
             if (auto p = action.install_action.get())
             {
@@ -274,15 +275,18 @@ namespace vcpkg::Commands::CI
                 std::string abi;
                 if (auto scfl = p->source_control_file_location.get())
                 {
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
+
                     auto triplet = p->spec.triplet();
 
                     const Build::BuildPackageConfig build_config{*scfl,
                                                                  triplet,
                                                                  build_options,
                                                                  var_provider,
-                                                                 std::move(p->feature_dependencies),
-                                                                 std::move(p->package_dependencies),
-                                                                 std::move(p->feature_list)};
+                                                                 p->feature_dependencies,
+                                                                 p->package_dependencies,
+                                                                 p->feature_list};
 
                     auto dependency_abis =
                         Util::fmap(build_config.package_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -326,9 +330,6 @@ namespace vcpkg::Commands::CI
                 }
 
                 bool b_will_build = false;
-
-                ret->features.emplace(p->spec,
-                                      std::vector<std::string>{p->feature_list.begin(), p->feature_list.end()});
 
                 if (Util::Sets::contains(exclusions, p->spec.name()))
                 {
@@ -419,7 +420,7 @@ namespace vcpkg::Commands::CI
         XunitTestResults xunitTestResults;
 
         std::vector<std::string> all_ports =
-            Util::fmap(provider.load_all_control_files(), [](auto&& scfl) -> std::string {
+            Util::fmap(provider.load_all_control_files(), [](const SourceControlFileLocation*& scfl) -> std::string {
                 return scfl->source_control_file.get()->core_paragraph->name;
             });
         std::vector<TripletAndSummary> results;
@@ -441,6 +442,7 @@ namespace vcpkg::Commands::CI
 
             auto split_specs = find_unknown_ports_for_ci(
                 paths, exclusions_set, provider, var_provider, all_default_full_specs, purge_tombstones);
+            PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
 
             Dependencies::CreateInstallPlanOptions serialize_options;
 
@@ -462,13 +464,20 @@ namespace vcpkg::Commands::CI
             }
 
             auto action_plan = Dependencies::PackageGraph::create_feature_install_plan(
-                provider, var_provider, split_specs->unknown, status_db, serialize_options);
+                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options);
 
             for (auto&& action : action_plan)
             {
                 if (auto action_ptr = action.install_action.get())
                 {
-                    action_ptr->build_options = install_plan_options;
+                    if (Util::Sets::contains(exclusions_set, action_ptr->spec.name()))
+                    {
+                        action_ptr->plan_type = InstallPlanType::EXCLUDED;
+                    }
+                    else
+                    {
+                        action_ptr->build_options = install_plan_options;
+                    }
                 }
             }
 
