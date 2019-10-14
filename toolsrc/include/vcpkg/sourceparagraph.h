@@ -7,6 +7,8 @@
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
 
+#include <vcpkg/base/system.print.h>
+
 #include <string>
 #include <vector>
 
@@ -79,6 +81,16 @@ namespace vcpkg
     /// </summary>
     struct SourceControlFile
     {
+        SourceControlFile() = default;
+        SourceControlFile(const SourceControlFile& scf)
+            : core_paragraph(std::make_unique<SourceParagraph>(*scf.core_paragraph))
+        {
+            for (const auto& feat_ptr : scf.feature_paragraphs)
+            {
+                feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>(*feat_ptr));
+            }
+        }
+
         static Parse::ParseExpected<SourceControlFile> parse_control_file(
             std::vector<Parse::RawParagraph>&& control_paragraphs);
 
@@ -94,6 +106,22 @@ namespace vcpkg
     /// </summary>
     struct SourceControlFileLocation
     {
+        SourceControlFileLocation(const SourceControlFileLocation& scfl)
+            : source_control_file(std::make_unique<SourceControlFile>(*scfl.source_control_file))
+            , source_location(scfl.source_location)
+        {
+        }
+
+        SourceControlFileLocation(std::unique_ptr<SourceControlFile>&& scf, fs::path&& source)
+            : source_control_file(std::move(scf)), source_location(std::move(source))
+        {
+        }
+
+        SourceControlFileLocation(std::unique_ptr<SourceControlFile>&& scf, const fs::path& source)
+            : source_control_file(std::move(scf)), source_location(source)
+        {
+        }
+
         std::unique_ptr<SourceControlFile> source_control_file;
         fs::path source_location;
     };

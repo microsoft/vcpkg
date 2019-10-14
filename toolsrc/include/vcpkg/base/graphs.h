@@ -148,7 +148,7 @@ namespace vcpkg::Graphs
 
         // Note: this function indicates how tied this template is to the exact type it will be templated upon.
         // Possible fix: This type shouldn't implement to_string() and should instead be derived from?
-        std::string to_string(const V& spec) const override { return spec->spec.to_string(); }
+        std::string to_string(const V& spec) const override { return spec->m_spec.to_string(); }
 
     private:
         std::unordered_map<V, std::unordered_set<V>> m_edges;

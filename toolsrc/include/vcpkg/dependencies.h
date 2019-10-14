@@ -166,13 +166,15 @@ namespace vcpkg::Dependencies
                      const StatusParagraphs& status_db);
         ~PackageGraph();
 
-        void install(Span<const FeatureSpec> specs) const;
-        void upgrade(Span<const PackageSpec> specs) const;
+        void install(Span<const FeatureSpec> specs);
+        void upgrade(Span<const PackageSpec> specs);
         void mark_user_requested(const PackageSpec& spec);
 
         std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
 
-        std::vector<FeatureSpec> get_required_removals(const PackageSpec& spec) const;
+        std::vector<FeatureSpec> graph_removals(const PackageSpec& spec);
+        std::vector<FeatureSpec> graph_installs(const PackageSpec& spec,
+                                                const std::vector<FeatureSpec>& new_dependencies);
 
         const CMakeVars::CMakeVarProvider& m_var_provider;
 

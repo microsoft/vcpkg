@@ -40,7 +40,7 @@ namespace vcpkg::Commands::Env
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
-        CMakeVars::CMakeVarProvider var_provider(paths);
+        CMakeVars::TripletCMakeVarProvider var_provider(paths);
 
         var_provider.load_generic_triplet_vars(triplet);
 
