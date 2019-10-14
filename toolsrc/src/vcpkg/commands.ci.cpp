@@ -13,6 +13,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
+#include <vcpkg/logicexpression.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::CI
@@ -219,6 +220,22 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, std::string> abi_tag_map;
     };
 
+    static bool supported_for_triplet(const CMakeVars::TripletCMakeVarProvider& var_provider,
+                                      
+                                      const InstallPlanAction* install_plan)
+    {
+        const std::string& supports_expression =
+            install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
+                .source_control_file->core_paragraph->supports_expression;
+        if (supports_expression.empty())
+        {
+            return true; // default to 'supported'
+        }
+
+        ExpressionContext context = {var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO), install_plan->spec.triplet().canonical_name()};
+        return evaluate_expression(supports_expression, context);
+    }
+
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
         const VcpkgPaths& paths,
         const std::set<std::string>& exclusions,
@@ -337,15 +354,16 @@ namespace vcpkg::Commands::CI
                     ret->known.emplace(p->spec, BuildResult::EXCLUDED);
                     will_fail.emplace(p->spec);
                 }
-                //else if(package is not spported for this triplet)
-                //{  
-                //    // This treats unsupported ports as if they are excluded
-                //    // which means the ports dependent on it will be cascaded due to missing dependencies
-                //    // Should this be changed so instead it is a failure to depend on a unsupported port?
-                //    state = n/a
-                //    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
-                //    will_fail.emplace(p->spec);
-                //}
+                // else if(package is not spported for this triplet)
+                else if (!supported_for_triplet(var_provider, p))
+                {
+                    // This treats unsupported ports as if they are excluded
+                    // which means the ports dependent on it will be cascaded due to missing dependencies
+                    // Should this be changed so instead it is a failure to depend on a unsupported port?
+                    state = "n/a";
+                    ret->known.emplace(p->spec, BuildResult::EXCLUDED);
+                    will_fail.emplace(p->spec);
+                }
                 else if (std::any_of(p->package_dependencies.begin(),
                                      p->package_dependencies.end(),
                                      [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))

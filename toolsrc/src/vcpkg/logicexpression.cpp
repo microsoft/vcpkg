@@ -332,6 +332,7 @@ namespace vcpkg
                 while (next() == oper)
                 {
                 };
+                skip_whitespace();
                 seed = operation(not_expression(), seed);
 
             } while (current() == oper);
