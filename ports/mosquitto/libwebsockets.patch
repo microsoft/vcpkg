@@ -6,7 +6,7 @@ index 473931c8f..a8aa78e5d 100644
  
  option(WITH_SOCKS "Include SOCKS5 support?" ON)
  if (WITH_SOCKS)
-+    find_package(libwebsockets CONFIG REQUIRED)
++    find_package(Libwebsockets CONFIG REQUIRED)
  	add_definitions("-DWITH_SOCKS")
  endif (WITH_SOCKS)
  
