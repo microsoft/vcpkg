@@ -5,8 +5,9 @@ include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 list(APPEND CORE_OPTIONS
     -system-tiff
     -system-webp
+    -jasper
     -verbose)
-    
+
 find_library(TIFF_RELEASE NAMES tiff PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on lzma
 find_library(TIFF_DEBUG NAMES tiffd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
