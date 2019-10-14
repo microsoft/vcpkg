@@ -8,19 +8,18 @@ set(MSMPI_VERSION "10.1.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/2/9/e/29efe9b1-16d7-4912-a229-6734b0c4e235/msmpisdk.msi"
+    URLS "https://github.com/microsoft/Microsoft-MPI/releases/download/v10.1.1/msmpisdk.msi"
     FILENAME "msmpisdk-${MSMPI_VERSION}.msi"
     SHA512 5d2507de328f7ab5380ec46c105b5b1bcb56290949ad7bb91fe26ab4ec097b23cb4f9e6681827e00b20d670f0241fca5d111ebd4c88879d94780a78cfa316b91
 )
 
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/2/9/e/29efe9b1-16d7-4912-a229-6734b0c4e235/msmpisetup.exe"
+        URLS "https://github.com/microsoft/Microsoft-MPI/releases/download/v10.1.1/msmpisetup.exe"
         FILENAME "msmpisetup-${MSMPI_VERSION}.exe"
         SHA512 6911e50a158f7bfa5b0cd18e266a7323c6afc4034ec240f2689a9b358a1e5ec3ebb96313071f64f9bcd0d84453684a3cebad13ecf4137a41b90cee14895338b8
     )
 endmacro()
-
 
 ### Check for correct version of installed redistributable package
 
