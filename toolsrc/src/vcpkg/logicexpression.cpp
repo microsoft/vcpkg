@@ -46,6 +46,7 @@ namespace vcpkg
         linux,
         osx,
         uwp,
+        android,
 
         static_link,
     };
@@ -75,6 +76,27 @@ namespace vcpkg
             , current_iter(raw_text.begin())
             , current_char(get_current_char())
         {
+            {
+                auto override_vars = evaluation_context.cmake_context.find("VCPKG_DEP_INFO_OVERRIDE_VARS");
+                if (override_vars != evaluation_context.cmake_context.end())
+                {
+                    auto cmake_list = Strings::split(override_vars->second, ";");
+                    for (auto& override_id : cmake_list)
+                    {
+                        if (!override_id.empty())
+                        {
+                            if (override_id[0] == '!')
+                            {
+                                context_override.insert({override_id.substr(1), false});
+                            }
+                            else
+                            {
+                                context_override.insert({override_id, true});
+                            }
+                        }
+                    }
+                }
+            }
             skip_whitespace();
 
             final_result = logic_expression();
@@ -97,7 +119,10 @@ namespace vcpkg
 
     private:
         const std::string& raw_text;
+
         const ExpressionContext& evaluation_context;
+        std::map<std::string, bool> context_override;
+
         std::string::const_iterator current_iter;
         char current_char;
 
@@ -176,6 +201,7 @@ namespace vcpkg
                 {"linux", Identifier::linux},
                 {"osx", Identifier::osx},
                 {"uwp", Identifier::uwp},
+                {"android", Identifier::android},
                 {"static", Identifier::static_link},
             };
 
@@ -189,7 +215,7 @@ namespace vcpkg
             return id_pair->second;
         }
 
-		bool true_if_exists_and_equal(const std::string& variable_name, const std::string& value)
+        bool true_if_exists_and_equal(const std::string& variable_name, const std::string& value)
         {
             auto iter = evaluation_context.cmake_context.find(variable_name);
             if (iter == evaluation_context.cmake_context.end())
@@ -204,7 +230,6 @@ namespace vcpkg
         // All unrecognized identifiers are an error
         bool evaluate_identifier_cmake(const std::string name, int column)
         {
-            // TODO: evaluate overrides first
             auto id = string2identifier(name);
 
             switch (id)
@@ -228,6 +253,7 @@ namespace vcpkg
                 case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
                 case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
                 case Identifier::uwp: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
                 case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
             }
 
@@ -236,12 +262,25 @@ namespace vcpkg
 
         bool evaluate_identifier(const std::string name, int column)
         {
-            // return
+            if (!context_override.empty())
+            {
+                auto override_id = context_override.find(name);
+                if (override_id != context_override.end())
+                {
+                    return override_id->second;
+                }
+                // Fall through to use the cmake logic if the id does not have an override
+            }
+
             bool legacy = evaluate_identifier_legacy(name);
             bool cmake = evaluate_identifier_cmake(name, column);
             if (legacy != cmake)
             {
-                System::print2("The following evaluated differently:\n   ", name, '\n');
+                // Legacy evaluation only used the name of the triplet, now we use the actual
+                // cmake variables. This has the potential to break custom triplets.
+                // For now just print a message, this will need to change once we start introducing
+                // new variables that did not exist previously (such as host-*)
+                System::print2("Identifier logic evaluation does not match legacy evaluation:\n   ", name, '\n');
             }
             return cmake;
         }
