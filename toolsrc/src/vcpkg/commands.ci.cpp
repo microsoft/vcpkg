@@ -354,7 +354,6 @@ namespace vcpkg::Commands::CI
                     ret->known.emplace(p->spec, BuildResult::EXCLUDED);
                     will_fail.emplace(p->spec);
                 }
-                // else if(package is not spported for this triplet)
                 else if (!supported_for_triplet(var_provider, p))
                 {
                     // This treats unsupported ports as if they are excluded
