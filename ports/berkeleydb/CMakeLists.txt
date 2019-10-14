@@ -9,16 +9,18 @@ add_definitions(
 	-D_CRT_SECURE_NO_DEPRECATE
 	-D_CRT_NONSTDC_NO_DEPRECATE
 	-D_LIB
+	-DUNICODE
+	-D_UNICODE
 )
 
 if (BUILD_SHARED_LIBS)
 	add_definitions(
-		-D_LIB
+		-DDB_CREATE_DLL
+		-D_USRDLL
 	)
 else()
 	add_definitions(
-		-DDB_CREATE_DLL
-		-D_USRDLL
+		-D_LIB
 	)
 endif()
 

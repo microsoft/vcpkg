@@ -4,15 +4,18 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Abseil currently only supports being built for desktop")
 endif()
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF d9b47d7888b39cd113bacacb9edd5023a71cbb3a
-    SHA512 d5aac7bbe7cdb1419f19eff80487a1d8fa03cde82db760bf9fab464a62ae66251c62f69ff13940db41af1bb287ea9680782773bf1cb19c15d489f711b390d734
+    REF aa468ad75539619b47979911297efbb629c52e44
+    SHA512 4254d8599103d8f06b03f60a0386eba07f314184217d0bca404d41fc0bd0a8df287fe6d07158d10cde096af3097aff2ecc1a5e8f7c3046ecf956b5fde709ad1d
     HEAD_REF master
+    PATCHES 
+        fix-usage-lnk-error.patch
+        fix-config.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -20,17 +23,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil TARGET_PATH share/unofficial-abseil)
-
-file(GLOB_RECURSE HEADERS ${CURRENT_PACKAGES_DIR}/include/*)
-foreach(FILE ${HEADERS})
-    file(READ "${FILE}" _contents)
-    string(REPLACE "std::min(" "(std::min)(" _contents "${_contents}")
-    string(REPLACE "std::max(" "(std::max)(" _contents "${_contents}")
-    file(WRITE "${FILE}" "${_contents}")
-endforeach()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/absl TARGET_PATH share/absl)
 
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/abseil RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
+                    ${CURRENT_PACKAGES_DIR}/debug/include
+                    ${CURRENT_PACKAGES_DIR}/include/absl/copts
+                    ${CURRENT_PACKAGES_DIR}/include/absl/strings/testdata
+                    ${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata)

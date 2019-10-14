@@ -1,0 +1,19 @@
+LIBRARY   fastfeat
+EXPORTS
+  fast9_detect_nonmax   @1
+  fast10_detect_nonmax   @2
+  fast9_corner_score @3
+  fast10_corner_score @4
+  fast11_corner_score @5
+  fast12_corner_score @6
+  fast9_detect @7
+  fast10_detect @8
+  fast11_detect @9
+  fast12_detect @10
+  fast9_score @11
+  fast10_score @12
+  fast11_score @13
+  fast12_score @14
+  fast11_detect_nonmax @15
+  fast12_detect_nonmax @16
+  nonmax_suppression @17

@@ -1,11 +1,15 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mDNSResponder-765.30.11)
-vcpkg_download_distfile(ARCHIVE_FILE
+
+vcpkg_download_distfile(ARCHIVE
   URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-765.30.11.tar.gz
   FILENAME mDNSResponder-765.30.11.tar.gz
   SHA512 dfdea663ec1089058c2225ede13d70241dfec8311ff7fb8d29c8d386f5077a4104455d78f8777496cce96b8ff289b73ed1aec2bf65c52154b866fc1b7675ef90
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
   SET(BUILD_ARCH "Win32")

@@ -1,5 +1,4 @@
-The package armadillo is compatible with built-in CMake targets:
+The package armadillo provides CMake targets:
 
     find_package(Armadillo CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${ARMADILLO_INCLUDE_DIRS})
     target_link_libraries(main PRIVATE ${ARMADILLO_LIBRARIES})

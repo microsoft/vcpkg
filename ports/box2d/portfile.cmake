@@ -1,18 +1,6 @@
-
-# Get output directory
-set(PROJECT_ARCH_BITS "x64")
-if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(PROJECT_ARCH_BITS "x32")
-elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM not supported")
-endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
-
-
 include(vcpkg_common_functions)
 
-if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -22,54 +10,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/use-static-linkage.patch
-    )
-endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-# Put the licence and readme files where vcpkg expects it
-message(STATUS "Packaging license")
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/box2d)
-file(COPY ${SOURCE_PATH}/Box2D/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/box2d)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/box2d/License.txt ${CURRENT_PACKAGES_DIR}/share/box2d/copyright)
-message(STATUS "Packaging license done")
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+vcpkg_install_cmake()
 
-# Building:
-set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/${PROJECT_ARCH_BITS}")
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-box2d TARGET_PATH share/unofficial-box2d)
 
-vcpkg_build_msbuild(PROJECT_PATH ${SOURCE_PATH}/Box2D/Build/vs2015/Box2D.vcxproj)
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib")
-    file(
-        INSTALL ${OUTPUTS_PATH}/Release/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        FILES_MATCHING PATTERN "*.lib"
-    )
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/lib/box2d.lib)
-    message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib done")
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib")
-    file(
-        INSTALL ${OUTPUTS_PATH}/Debug/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        FILES_MATCHING PATTERN "*.lib"
-    )
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/debug/lib/box2d.lib)
-    message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib done")
-endif()
-
-message(STATUS "Packaging headers")
 file(
     COPY ${SOURCE_PATH}/Box2D/Box2D
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    PATTERN "*.h"
+    FILES_MATCHING PATTERN "*.h"
 )
-message(STATUS "Packaging headers done")
 
 vcpkg_copy_pdbs()
+
+file(COPY ${SOURCE_PATH}/Box2D/License.txt ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/box2d)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/box2d/License.txt ${CURRENT_PACKAGES_DIR}/share/box2d/copyright)

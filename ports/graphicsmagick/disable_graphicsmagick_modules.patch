@@ -1,0 +1,11 @@
+--- a/magick/studio.h	2018-06-23 14:13:49.191541000 -0400
++++ b/magick/studio.h	2018-09-02 11:50:41.856753700 -0400
+@@ -414,7 +414,7 @@
+ #endif
+ 
+ #if defined(HasLTDL) || ( defined(MSWINDOWS) && defined(_DLL) )
+-#  define SupportMagickModules
++//#  define SupportMagickModules
+ #endif
+ 
+ #if defined(_MAGICKMOD_)

@@ -1,11 +1,15 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/breakpad
-    REF e93f852a3c316ad767381d5e5bc839eba5c6225b
-    SHA512 8139472f4f9ce01770cf2922a52cc63fa009cfff93db893d297f61a1b44198b10bba73c92977e84c18a90ef7e71f0911e4fe9d27e8978fc38f231e499e23fc4d
+    REF c46151db0ffd1a8dae914e45f1212ef427f61ed3
+    SHA512 bd9f247851a3caa6f36574c8a243c2a01cb1cf23c2266b6f6786b85c7418dba5937363c00184e26cda24225f96bb7aaeb08efd13d6a269a3b78c357c2eda7e14
     HEAD_REF master
+	PATCHES
+		fix-unique_ptr.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

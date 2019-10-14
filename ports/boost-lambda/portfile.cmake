@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/lambda
-    REF boost-1.66.0
-    SHA512 2f5fd6c55c686528971c9e021779f39217952b279e5bef46879233fb1c516895a4fcdc6eddf43cd0fb73aa7ee5f868d6f4d51fdc74c9f68515ef6735ff31a349
+    REF boost-1.71.0
+    SHA512 222f8b6b877c0229793c97b84c8e55edfeb8c2bd21ac5f759132ff12413d064be6ffae3015e2c2c6f2c42bcb5386124eb553a494f25fbfa07633a9a43d0fa626
     HEAD_REF master
 )
 

@@ -1,16 +1,14 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libssh2-1.8.0)
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://www.libssh2.org/download/libssh2-1.8.0.tar.gz"
-    FILENAME "libssh2-1.8.0.tar.gz"
-    SHA512 289aa45c4f99653bebf5f99565fe9c519abc204feb2084b47b7cc3badc8bf4ecdedd49ea6acdce8eb902b3c00995d5f92a3ca77b2508b92f04ae0e7de7287558
-)
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libssh2/libssh2
+    REF 42d37aa63129a1b2644bf6495198923534322d64
+    SHA512 e86c0787e2aa7be5e9f19356e543493e53c7d1b51b585c46facfb05f769e6491209f820b207bf594348f4760c492c32dda3fcc94fc0af93cb09c736492a8e231
+    HEAD_REF master
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch"
 )
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS

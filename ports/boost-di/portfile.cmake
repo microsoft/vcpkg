@@ -1,19 +1,16 @@
-#header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/di-1.0.1)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/boost-experimental/di/archive/v1.0.1.tar.gz"
-    FILENAME "di-1.0.1.tar.gz"
-    SHA512 4e7270be51e7c8d0dcb6e0ba4bcf8e12904016086bdd59667954815f4acb03fc62447775885594a8403f5067a20b2520717fe979926d740dff0efa0c97ebf20c
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO boost-experimental/di
+    REF v1.1.0
+    SHA512 69f7b0567cffea9bf983aedd7eabd1a07ae20249cd56a13de98eaa0cc835cbe3b76e790da68489536dd07edeb99271a69111f4d0c6b0aa3721ce9f5ead848fe0
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(INSTALL ${SOURCE_PATH}/include/boost
 	DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# boost-di license does not exist in source folder.
-# it shares the boost license.
 vcpkg_download_distfile(LICENSE
 	URLS http://www.boost.org/LICENSE_1_0.txt
 	FILENAME "boost-di-copyright"

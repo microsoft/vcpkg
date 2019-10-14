@@ -25,17 +25,7 @@ namespace vcpkg::Commands
 
     namespace CI
     {
-        struct UnknownCIPortsResults
-        {
-            std::vector<PackageSpec> unknown;
-            std::map<PackageSpec, Build::BuildResult> known;
-        };
-
         extern const CommandStructure COMMAND_STRUCTURE;
-        UnknownCIPortsResults find_unknown_ports_for_ci(const VcpkgPaths& paths,
-                                                        const std::set<std::string>& exclusions,
-                                                        const Dependencies::PortFileProvider& provider,
-                                                        const std::vector<FeatureSpec>& fspecs);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
@@ -65,7 +55,8 @@ namespace vcpkg::Commands
 
     namespace DependInfo
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
     namespace Search
@@ -109,6 +100,11 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace PortHistory
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Autocomplete
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
@@ -129,10 +125,20 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args);
     }
 
+    namespace X_VSInstances
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Hash
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-        std::string get_file_hash(const VcpkgPaths& paths, fs::path const& path, std::string const& hash_type);
+    }
+
+    namespace Fetch
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     template<class T>

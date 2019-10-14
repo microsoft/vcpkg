@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/strings.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
@@ -23,9 +23,9 @@ namespace vcpkg::Commands::Env
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("env --triplet x64-windows"),
+        Help::create_example_string("env <optional command> --triplet x64-windows"),
         0,
-        0,
+        1,
         {SWITCHES, {}},
         nullptr,
     };
@@ -64,11 +64,12 @@ namespace vcpkg::Commands::Env
         if (add_python) extra_env.emplace("PYTHONPATH", (paths.installed / triplet.to_string() / "python").u8string());
         if (path_vars.size() > 0) extra_env.emplace("PATH", Strings::join(";", path_vars));
 
-        if (env_cmd.empty())
-            System::cmd_execute_clean("cmd", extra_env);
-        else
-            System::cmd_execute_clean(env_cmd + " && cmd", extra_env);
+        std::string env_cmd_prefix = env_cmd.empty() ? "" : Strings::format("%s && ", env_cmd);
+        std::string env_cmd_suffix =
+            args.command_arguments.empty() ? "cmd" : Strings::format("cmd /c %s", args.command_arguments.at(0));
 
+        const std::string cmd = Strings::format("%s%s", env_cmd_prefix, env_cmd_suffix);
+        System::cmd_execute_clean(cmd, extra_env);
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

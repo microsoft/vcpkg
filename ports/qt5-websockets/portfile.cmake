@@ -1,5 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtwebsockets 9330d6806251bc77d4c2a497a31b1b0e42a1e6bfe3ea7c00cee123052e9e1f9080e33cf4dfcd6ee6e4732c62f41257a77ec25ad607528f4e8ebe61ccaee3e159)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

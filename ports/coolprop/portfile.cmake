@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF 0e934e842e9ce83eea64fda1d4ab8e59adf9d8cd
     SHA512 a44eafc84f2b88259d7bcf6cfa81daeb81ea9d55bd356e59b3ef77b6f68ea405961c7cb54ba899e3896bb2a02d3e01119a4a51f72899126c8da6081fa2ece948
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fmt-fix.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
@@ -16,8 +18,8 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON2_DIR}")
 file(REMOVE_RECURSE ${SOURCE_PATH}/externals)
 
 # Patch up the file locations
-file(COPY 
-    ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
+file(COPY
+    ${CURRENT_INSTALLED_DIR}/include/catch.hpp
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
 )
 
@@ -30,12 +32,12 @@ file(COPY
     DESTINATION ${SOURCE_PATH}/externals/Eigen/unsupported
 )
 
-file(COPY 
+file(COPY
     ${CURRENT_INSTALLED_DIR}/include/rapidjson
     DESTINATION ${SOURCE_PATH}/externals/rapidjson/include
 )
 
-file(COPY 
+file(COPY
     ${CURRENT_INSTALLED_DIR}/include/IF97.h
     DESTINATION ${SOURCE_PATH}/externals/IF97
 )

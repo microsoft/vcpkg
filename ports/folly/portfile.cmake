@@ -1,31 +1,27 @@
+include(vcpkg_common_functions)
+
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Required to run build/generate_escape_tables.py et al.
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.03.19.00
-    SHA512 72df8768753bf9f1109ad3f16645d811906b633833c91c7d9fe856a06c16b5e398876cf6cae415401eff96b568c99ffa1dc0c44d81cd40219bafb0f4c72fc2ca
+    REF d12df6e924adc3889cd2fbeaca078355c5da170f
+    SHA512 ecb55cda91ab6db1519b612b676b5166454132960edce0a36f1b4e42f5e1a5f753d8bbb2ed93e34faed1025a54840eb4dc876a49c88b8dd9c90c8070dafc43b8
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
+        missing-include-atomic.patch
+        boost-1.70.patch
+        reorder-glog-gflags.patch
+        disable-non-underscore-posix-names.patch
 )
 
 file(COPY
@@ -33,6 +29,7 @@ file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
     DESTINATION ${SOURCE_PATH}/CMake/
 )
+file(REMOVE ${SOURCE_PATH}/CMake/FindGFlags.cmake)
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -68,6 +65,7 @@ vcpkg_configure_cmake(
         -DLIBAIO_FOUND=OFF
         -DLIBURCU_FOUND=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
+        -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
 
@@ -76,6 +74,22 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets()
+
+# Release folly-targets.cmake does not link to the right libraries in debug mode.
+# We substitute with generator expressions so that the right libraries are linked for debug and release.
+set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
+FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
+string(REPLACE "\${_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
+FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
+FILE(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake _contents)
+FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
+"include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(glog CONFIG)
+${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

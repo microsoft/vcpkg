@@ -3,11 +3,8 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/parse.h>
 #include <vcpkg/vcpkgpaths.h>
-#include <vcpkg/versiont.h>
 
 #include <vcpkg/base/expected.h>
-
-#include <map>
 
 namespace vcpkg::Paragraphs
 {
@@ -15,7 +12,6 @@ namespace vcpkg::Paragraphs
 
     Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path);
     Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path);
-    Expected<RawParagraph> parse_single_paragraph(const std::string& str);
     Expected<std::vector<RawParagraph>> parse_paragraphs(const std::string& str);
 
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& control_path);

@@ -1,47 +1,49 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 744b2d5..d114b9b 100644
+index db48e9f..5c35276 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -312,6 +312,9 @@ else ()
-   set(BASE_SRCS ${BASE_SRCS} src/base/ftdebug.c)
+@@ -328,6 +328,10 @@ else ()
+   list(APPEND BASE_SRCS src/base/ftdebug.c)
  endif ()
  
 +if(MSVC)
 +  add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
 +endif()
- 
++
  if (BUILD_FRAMEWORK)
-   set(BASE_SRCS
+   list(APPEND BASE_SRCS builds/mac/freetype-Info.plist)
+ endif ()
 diff --git a/include/freetype/freetype.h b/include/freetype/freetype.h
-index 4666d48..382a915 100644
+index 4f2eaca..1e01fe4 100644
 --- a/include/freetype/freetype.h
 +++ b/include/freetype/freetype.h
-@@ -845,6 +845,9 @@ FT_BEGIN_HEADER
-   /*************************************************************************/
-   /*************************************************************************/
- 
+@@ -1038,6 +1038,11 @@ FT_BEGIN_HEADER
+    *   Especially for TrueType fonts see also the documentation for
+    *   @FT_Size_Metrics.
+    */
++   
 +#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
 +#define generic GenericFromFreeTypeLibrary
 +#endif
- 
-   /*************************************************************************/
-   /*                                                                       */
-@@ -1777,6 +1780,10 @@ FT_BEGIN_HEADER
++
+   typedef struct  FT_FaceRec_
+   {
+     FT_Long           num_faces;
+@@ -1910,6 +1915,9 @@ FT_BEGIN_HEADER
  
    } FT_GlyphSlotRec;
  
 +#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
 +#undef generic
 +#endif
-+
  
    /*************************************************************************/
    /*************************************************************************/
 diff --git a/src/base/ftobjs.c b/src/base/ftobjs.c
-index fa05347..ae2754b 100644
+index 3f8619d..edf03b6 100644
 --- a/src/base/ftobjs.c
 +++ b/src/base/ftobjs.c
-@@ -457,6 +457,9 @@
+@@ -528,6 +528,9 @@
      return error;
    }
  
@@ -49,9 +51,9 @@ index fa05347..ae2754b 100644
 +#define generic GenericFromFreeTypeLibrary
 +#endif
  
-   /* documentation is in ftobjs.h */
- 
-@@ -971,6 +974,9 @@
+   static void
+   ft_glyphslot_clear( FT_GlyphSlot  slot )
+@@ -1195,6 +1198,9 @@
      FT_FREE( face );
    }
  

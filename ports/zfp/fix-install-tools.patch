@@ -1,0 +1,72 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 47179fd..96add54 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -220,8 +220,8 @@ add_subdirectory(src)
+ option(BUILD_ALL "Build all subdirectories" OFF)
+ if(BUILD_ALL)
+   set(BUILD_CFP ON CACHE BOOL "Build CFP arrays library" FORCE)
+-  set(BUILD_ZFORP ON CACHE BOOL "Build Fortran library" FORCE)
+-  set(BUILD_ZFPY ON CACHE BOOL "Build python bindings for zfp" FORCE)
++  set(BUILD_ZFORP OFF CACHE BOOL "Build Fortran library" FORCE)
++  set(BUILD_ZFPY OFF CACHE BOOL "Build python bindings for zfp" FORCE)
+   set(BUILD_UTILITIES ON CACHE BOOL "Build command line utilities for zfp" FORCE)
+   set(BUILD_EXAMPLES ON CACHE BOOL "Build Examples" FORCE)
+ endif()
+diff --git a/cfp/src/CMakeLists.txt b/cfp/src/CMakeLists.txt
+index 386698c..ecba525 100644
+--- a/cfp/src/CMakeLists.txt
++++ b/cfp/src/CMakeLists.txt
+@@ -36,3 +36,5 @@ install(TARGETS cfp EXPORT cfp-targets
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++  
++install(DIRECTORY ${ZFP_SOURCE_DIR}/cfp/include DESTINATION include) 
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 7cc7606..6ca1034 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -34,3 +34,20 @@ if(HAVE_LIBM_MATH)
+   target_link_libraries(pgm m)
+   target_link_libraries(simple m)
+ endif()
++
++install(TARGETS diffusion 
++    RUNTIME DESTINATION tools)
++ if(BUILD_CFP)
++   install(TARGETS diffusionC 
++       RUNTIME DESTINATION tools)
++ endif()
++install(TARGETS inplace 
++    RUNTIME DESTINATION tools)
++install(TARGETS iterator 
++    RUNTIME DESTINATION tools)
++install(TARGETS pgm 
++    RUNTIME DESTINATION tools)
++install(TARGETS simple 
++    RUNTIME DESTINATION tools)
++install(TARGETS speed 
++    RUNTIME DESTINATION tools)
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index d15246e..7a6c6cb 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -19,3 +19,6 @@ if(ZFP_BUILD_TESTING_LARGE)
+     endforeach()
+   endforeach()
+ endif()
++
++install(TARGETS testzfp 
++    RUNTIME DESTINATION tools)
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index a960d2c..5fcbf87 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -4,3 +4,6 @@ target_link_libraries(zfpcmd zfp)
+ if(HAVE_LIBM_MATH)
+   target_link_libraries(zfpcmd m)
+ endif()
++
++install(TARGETS zfpcmd 
++    RUNTIME DESTINATION tools)

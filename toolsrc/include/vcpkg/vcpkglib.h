@@ -16,7 +16,7 @@ namespace vcpkg
         SortedVector<std::string> files;
     };
 
-    std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db);
+    std::vector<InstalledPackageView> get_installed_ports(const StatusParagraphs& status_db);
     std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths,
                                                                        const StatusParagraphs& status_db);
 

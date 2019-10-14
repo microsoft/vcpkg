@@ -3,14 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-CDR
-    REF v1.0.6
-    SHA512 80861ff6a0283e1398306e081fe70d7d185f980e5714ae51864cae012b8f79719efa24e7f41025b2bfb2052cb2a3098436c75a38407f8f5a331593cb91868fb2
+    REF v1.0.11
+    SHA512 04b84437ffad6425ba7f934adb9ae6a88e710e50ca9259ae0ecdb9dbfcdbd59944fd21e85e81ba4d341df1ee2c76fa7040ab902b869ef3185cacee6e866f5e80
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/install-cmake.patch
+    PATCHES install-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -23,13 +19,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/fastcdr/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/fastcdr/cmake)
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/fastcdr/fastcdr-config.cmake" _contents)
+string(REPLACE "include(\${fastcdr_LIB_DIR}/fastcdr/cmake/fastcdr-targets.cmake)" "include(\${CMAKE_CURRENT_LIST_DIR}/fastcdr-targets.cmake)" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/fastcdr/fastcdr-config.cmake" "${_contents}")
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/lib/fastcdr ${CURRENT_PACKAGES_DIR}/debug/lib/fastcdr)
 
-# always build static and share library default
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(READ ${CURRENT_PACKAGES_DIR}/include/fastcdr/eProsima_auto_link.h EPROSIMA_AUTO_LINK_H)
     string(REPLACE "#define EPROSIMA_LIB_PREFIX \"lib\"" "#define EPROSIMA_LIB_PREFIX" EPROSIMA_AUTO_LINK_H "${EPROSIMA_AUTO_LINK_H}")

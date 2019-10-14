@@ -1,0 +1,14 @@
+--- a/tools/libclang/CMakeLists.txt
++++ b/tools/libclang/CMakeLists.txt
+@@ -56,10 +56,7 @@ if (TARGET clangTidyPlugin)
+   endif()
+ endif ()
+ 
+-find_library(DL_LIBRARY_PATH dl)
+-if (DL_LIBRARY_PATH)
+-  list(APPEND LIBS dl)
+-endif()
++list(APPEND LIBS "${DL_LIBRARY_PATH}")
+ 
+ option(LIBCLANG_BUILD_STATIC
+   "Build libclang as a static library (in addition to a shared one)" OFF)

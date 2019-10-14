@@ -7,21 +7,56 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF v3.3.2
-    SHA512 7bc17d6f742080278e35f86b0233d70045df0ca1578cd427126e0acce183709bf33ecca689db65e2e67bdfaf687c04d36cae1202a926beeebc88076648aa40bc
-    HEAD_REF master)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    REF 614110e76d9dbb9ed3e159a71cbd75fa3b23efe3
+    SHA512 8feac2c0e22e5b7c05f3be97c774ad82d39bdea4b3fa3a2b297b85f8a5a9f548c528ef63f5495afd42fb75759e03a4108f3831b27103f899f8fe4ef7e8e2d1cf
+    HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-dependencies.patch)
+        fix-buildsystem.patch
+        fix-dependencies.patch
+        fix-lz4.patch
+)
+
+set(BUILD_libarchive_bzip2 OFF)
+if("bzip2" IN_LIST FEATURES)
+  set(BUILD_libarchive_bzip2 ON)
+endif()
+
+set(BUILD_libarchive_libxml2 OFF)
+if("libxml2" IN_LIST FEATURES)
+  set(BUILD_libarchive_libxml2 ON)
+endif()
+
+set(BUILD_libarchive_lz4 OFF)
+if("lz4" IN_LIST FEATURES)
+  set(BUILD_libarchive_lz4 ON)
+endif()
+
+set(BUILD_libarchive_lzma OFF)
+if("lzma" IN_LIST FEATURES)
+  set(BUILD_libarchive_lzma ON)
+endif()
+
+set(BUILD_libarchive_lzo OFF)
+if("lzo" IN_LIST FEATURES)
+  set(BUILD_libarchive_lzo ON)
+endif()
+
+set(BUILD_libarchive_openssl OFF)
+if("openssl" IN_LIST FEATURES)
+  set(BUILD_libarchive_openssl ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_LZO=OFF
+        -DENABLE_BZip2=${BUILD_libarchive_bzip2}
+        -DENABLE_LIBXML2=${BUILD_libarchive_libxml2}
+        -DENABLE_LZ4=${BUILD_libarchive_lz4}
+        -DENABLE_LZMA=${BUILD_libarchive_lzma}
+        -DENABLE_LZO=${BUILD_libarchive_lzo}
+        -DENABLE_OPENSSL=${BUILD_libarchive_openssl}
+        -DENABLE_PCREPOSIX=OFF
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
@@ -33,7 +68,9 @@ vcpkg_configure_cmake(
         -DENABLE_ACL=OFF
         -DENABLE_TEST=OFF
         -DENABLE_ICONV=OFF
-        -DPOSIX_REGEX_LIB=NONE)
+        -DPOSIX_REGEX_LIB=NONE
+        -DENABLE_WERROR=OFF
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

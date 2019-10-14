@@ -1,7 +1,7 @@
-diff --git a/src-ILU/include/ilu_error/ilu_err-french.h b/src-ILU/include/ilu_error/ilu_err-french.h
+diff --git a/DevIL/src-ILU/include/ilu_error/ilu_err-french.h b/DevIL/src-ILU/include/ilu_error/ilu_err-french.h
 index d3b280d..445440e 100644
---- a/src-ILU/include/ilu_error/ilu_err-french.h
-+++ b/src-ILU/include/ilu_error/ilu_err-french.h
+--- a/DevIL/src-ILU/include/ilu_error/ilu_err-french.h
++++ b/DevIL/src-ILU/include/ilu_error/ilu_err-french.h
 @@ -17,19 +17,19 @@
  #include "ilu_internal.h"
  
@@ -41,10 +41,10 @@ index d3b280d..445440e 100644
  	IL_TEXT("jpeg : erreur dans la librairie"),
  	IL_TEXT("png : erreur dans la librairie"),
  	IL_TEXT("tiff : erreur dans la librairie"),
-diff --git a/src-ILU/include/ilu_error/ilu_err-german.h b/src-ILU/include/ilu_error/ilu_err-german.h
+diff --git a/DevIL/src-ILU/include/ilu_error/ilu_err-german.h b/DevIL/src-ILU/include/ilu_error/ilu_err-german.h
 index bf3f05c..acdbe8a 100644
---- a/src-ILU/include/ilu_error/ilu_err-german.h
-+++ b/src-ILU/include/ilu_error/ilu_err-german.h
+--- a/DevIL/src-ILU/include/ilu_error/ilu_err-german.h
++++ b/DevIL/src-ILU/include/ilu_error/ilu_err-german.h
 @@ -6,7 +6,7 @@
  //
  // Filename: src-ILU/include/ilu_error/ilu_err_German.h
@@ -91,10 +91,10 @@ index bf3f05c..acdbe8a 100644
  	IL_TEXT("Fehler beim Lesen der Datei")
  };
  
-diff --git a/src-ILU/include/ilu_error/ilu_err-italian.h b/src-ILU/include/ilu_error/ilu_err-italian.h
+diff --git a/DevIL/src-ILU/include/ilu_error/ilu_err-italian.h b/DevIL/src-ILU/include/ilu_error/ilu_err-italian.h
 index 09d7bd1..d34b23f 100644
---- a/src-ILU/include/ilu_error/ilu_err-italian.h
-+++ b/src-ILU/include/ilu_error/ilu_err-italian.h
+--- a/DevIL/src-ILU/include/ilu_error/ilu_err-italian.h
++++ b/DevIL/src-ILU/include/ilu_error/ilu_err-italian.h
 @@ -22,13 +22,13 @@ ILconst_string iluErrorStringsItalian[IL_FILE_READ_ERROR - IL_INVALID_ENUM + 1]
  	IL_TEXT("configuri non sostenne"),
  	IL_TEXT("erreur interne"),
@@ -112,10 +112,10 @@ index 09d7bd1..d34b23f 100644
  	IL_TEXT("equivalente fuori-configuri"),
  	IL_TEXT("inondi di batteria"),
      IL_TEXT("insufficienza di batteria"),
-diff --git a/src-ILU/include/ilu_error/ilu_err-spanish.h b/src-ILU/include/ilu_error/ilu_err-spanish.h
+diff --git a/DevIL/src-ILU/include/ilu_error/ilu_err-spanish.h b/DevIL/src-ILU/include/ilu_error/ilu_err-spanish.h
 index 77b5a24..0945fdf 100644
---- a/src-ILU/include/ilu_error/ilu_err-spanish.h
-+++ b/src-ILU/include/ilu_error/ilu_err-spanish.h
+--- a/DevIL/src-ILU/include/ilu_error/ilu_err-spanish.h
++++ b/DevIL/src-ILU/include/ilu_error/ilu_err-spanish.h
 @@ -6,7 +6,7 @@
  //
  // Filename: src-ILU/include/ilu_error/ilu_err-spanish.h

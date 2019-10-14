@@ -1,66 +1,76 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 131b437..c29e604 100644
+index d80af40..361ecae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -62,6 +62,9 @@ option(WITH_JAVA "Build Java wrapper for the TurboJPEG library" FALSE)
- option(WITH_12BIT "Encode/decode JPEG images with 12-bit samples (implies WITH_SIMD=0 WITH_TURBOJPEG=0 WITH_ARITH_ENC=0 WITH_ARITH_DEC=0)" FALSE)
+@@ -143,6 +143,12 @@ option(ENABLE_SHARED "Build shared libraries" TRUE)
+ boolean_number(ENABLE_SHARED)
  option(ENABLE_STATIC "Build static libraries" TRUE)
- option(ENABLE_SHARED "Build shared libraries" TRUE)
+ boolean_number(ENABLE_STATIC)
 +option(ENABLE_EXECUTABLES "Build executables" TRUE)
++boolean_number(ENABLE_EXECUTABLES)
 +option(INSTALL_DOCS "Install doc files" TRUE)
++boolean_number(INSTALL_DOCS)
 +option(INSTALL_HEADERS "Install header files" TRUE)
- 
- if(WITH_12BIT)
-   set(WITH_SIMD FALSE)
-@@ -279,14 +282,16 @@ if(WITH_TURBOJPEG)
-     target_link_libraries(turbojpeg jpeg-static)
-     set_target_properties(turbojpeg PROPERTIES LINK_INTERFACE_LIBRARIES "")
- 
--    add_executable(tjunittest tjunittest.c tjutil.c)
--    target_link_libraries(tjunittest turbojpeg)
-+    if(ENABLE_EXECUTABLES)
-+      add_executable(tjunittest tjunittest.c tjutil.c)
-+      target_link_libraries(tjunittest turbojpeg)
- 
--    add_executable(tjbench tjbench.c bmp.c tjutil.c rdbmp.c rdppm.c wrbmp.c
--      wrppm.c)
--    target_link_libraries(tjbench turbojpeg jpeg-static)
--    set_property(TARGET tjbench PROPERTY COMPILE_FLAGS
--      "-DBMP_SUPPORTED -DPPM_SUPPORTED")
-+      add_executable(tjbench tjbench.c bmp.c tjutil.c rdbmp.c rdppm.c wrbmp.c
-+        wrppm.c)
-+      target_link_libraries(tjbench turbojpeg jpeg-static)
-+      set_property(TARGET tjbench PROPERTY COMPILE_FLAGS
-+        "-DBMP_SUPPORTED -DPPM_SUPPORTED")
-+    endif()
-   endif()
- 
-   if(ENABLE_STATIC)
-@@ -299,14 +304,16 @@ if(WITH_TURBOJPEG)
-       add_dependencies(turbojpeg-static simd)
++boolean_number(INSTALL_HEADERS)
+ option(REQUIRE_SIMD "Generate a fatal error if SIMD extensions are not available for this platform (default is to fall back to a non-SIMD build)" FALSE)
+ boolean_number(REQUIRE_SIMD)
+ option(WITH_12BIT "Encode/decode JPEG images with 12-bit samples (implies WITH_ARITH_DEC=0 WITH_ARITH_ENC=0 WITH_JAVA=0 WITH_SIMD=0 WITH_TURBOJPEG=0 )" FALSE)
+@@ -593,18 +599,20 @@ if(WITH_TURBOJPEG)
+         LINK_FLAGS "${TJMAPFLAG}${TJMAPFILE}")
      endif()
  
--    add_executable(tjunittest-static tjunittest.c tjutil.c)
+-    add_executable(tjunittest tjunittest.c tjutil.c md5/md5.c md5/md5hl.c)
+-    target_link_libraries(tjunittest turbojpeg)
++    if(ENABLE_EXECUTABLES)
++      add_executable(tjunittest tjunittest.c tjutil.c md5/md5.c md5/md5hl.c)
++      target_link_libraries(tjunittest turbojpeg)
+ 
+-    add_executable(tjbench tjbench.c tjutil.c)
+-    target_link_libraries(tjbench turbojpeg)
+-    if(UNIX)
+-      target_link_libraries(tjbench m)
+-    endif()
++      add_executable(tjbench tjbench.c tjutil.c)
++      target_link_libraries(tjbench turbojpeg)
++      if(UNIX)
++        target_link_libraries(tjbench m)
++      endif()
+ 
+-    add_executable(tjexample tjexample.c)
+-    target_link_libraries(tjexample turbojpeg)
+-  endif()
++      add_executable(tjexample tjexample.c)
++        target_link_libraries(tjexample turbojpeg)
++    endif()
++   endif()
+ 
+   if(ENABLE_STATIC)
+     add_library(turbojpeg-static STATIC ${JPEG_SOURCES} $<TARGET_OBJECTS:simd>
+@@ -616,14 +624,16 @@ if(WITH_TURBOJPEG)
+       set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
+     endif()
+ 
+-    add_executable(tjunittest-static tjunittest.c tjutil.c md5/md5.c
+-      md5/md5hl.c)
 -    target_link_libraries(tjunittest-static turbojpeg-static)
 +    if(ENABLE_EXECUTABLES)
-+      add_executable(tjunittest-static tjunittest.c tjutil.c)
++      add_executable(tjunittest-static tjunittest.c tjutil.c md5/md5.c
++        md5/md5hl.c)
 +      target_link_libraries(tjunittest-static turbojpeg-static)
  
--    add_executable(tjbench-static tjbench.c bmp.c tjutil.c rdbmp.c rdppm.c
--      wrbmp.c wrppm.c)
--    target_link_libraries(tjbench-static turbojpeg-static jpeg-static)
--    set_property(TARGET tjbench-static PROPERTY COMPILE_FLAGS
--      "-DBMP_SUPPORTED -DPPM_SUPPORTED")
-+      add_executable(tjbench-static tjbench.c bmp.c tjutil.c rdbmp.c rdppm.c
-+        wrbmp.c wrppm.c)
-+      target_link_libraries(tjbench-static turbojpeg-static jpeg-static)
-+      set_property(TARGET tjbench-static PROPERTY COMPILE_FLAGS
-+        "-DBMP_SUPPORTED -DPPM_SUPPORTED")
-+    endif()
+-    add_executable(tjbench-static tjbench.c tjutil.c)
+-    target_link_libraries(tjbench-static turbojpeg-static)
+-    if(UNIX)
+-      target_link_libraries(tjbench-static m)
++      add_executable(tjbench-static tjbench.c tjutil.c)
++      target_link_libraries(tjbench-static turbojpeg-static)
++      if(UNIX)
++        target_link_libraries(tjbench-static m)
++      endif()
+     endif()
    endif()
  endif()
- 
-@@ -318,7 +325,7 @@ else()
+@@ -639,7 +649,7 @@ else()
    set(DJPEG_BMP_SOURCES wrbmp.c wrtarga.c)
  endif()
  
@@ -69,8 +79,8 @@ index 131b437..c29e604 100644
    add_executable(cjpeg-static cjpeg.c cdjpeg.c rdgif.c rdppm.c rdswitch.c
      ${CJPEG_BMP_SOURCES})
    set_property(TARGET cjpeg-static PROPERTY COMPILE_FLAGS ${COMPILE_FLAGS})
-@@ -334,10 +341,11 @@ if(ENABLE_STATIC)
-   set_property(TARGET jpegtran-static PROPERTY COMPILE_FLAGS "-DUSE_SETMODE")
+@@ -655,9 +665,10 @@ if(ENABLE_STATIC)
+   set_property(TARGET jpegtran-static PROPERTY COMPILE_FLAGS "${USE_SETMODE}")
  endif()
  
 -add_executable(rdjpgcom rdjpgcom.c)
@@ -78,87 +88,116 @@ index 131b437..c29e604 100644
 -add_executable(wrjpgcom wrjpgcom.c)
 +if(ENABLE_EXECUTABLES)
 +  add_executable(rdjpgcom rdjpgcom.c)
- 
 +  add_executable(wrjpgcom wrjpgcom.c)
 +endif()
  
- #
- # Tests
-@@ -917,24 +925,30 @@ add_custom_target(installer
+ 
+ ###############################################################################
+@@ -1337,10 +1348,14 @@ set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
  
  if(WITH_TURBOJPEG)
    if(ENABLE_SHARED)
 -    install(TARGETS turbojpeg tjbench
 +    install(TARGETS turbojpeg
-       ARCHIVE DESTINATION lib
-       LIBRARY DESTINATION lib
-       RUNTIME DESTINATION bin)
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +    if(ENABLE_EXECUTABLES)
 +      install(TARGETS tjbench
-+        RUNTIME DESTINATION bin)
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +    endif()
-   endif()
+     if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+       CMAKE_C_LINKER_SUPPORTS_PDB)
+       install(FILES "$<TARGET_PDB_FILE:turbojpeg>"
+@@ -1350,7 +1365,7 @@ if(WITH_TURBOJPEG)
    if(ENABLE_STATIC)
-     install(TARGETS turbojpeg-static ARCHIVE DESTINATION lib)
+     install(TARGETS turbojpeg-static ARCHIVE
+       DESTINATION ${CMAKE_INSTALL_LIBDIR})
 -    if(NOT ENABLE_SHARED)
 +    if(NOT ENABLE_SHARED AND ENABLE_EXECUTABLES)
-       install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/tjbench-static.exe
-         DESTINATION bin RENAME tjbench.exe)
+       if(MSVC_IDE OR XCODE)
+         set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
+       else()
+@@ -1360,13 +1375,15 @@ if(WITH_TURBOJPEG)
+         DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME tjbench${EXE})
      endif()
    endif()
--  install(FILES ${CMAKE_SOURCE_DIR}/turbojpeg.h DESTINATION include)
+-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg.h
+-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +  if(INSTALL_HEADERS)
-+    install(FILES ${CMAKE_SOURCE_DIR}/turbojpeg.h DESTINATION include)
++    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg.h
++      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +  endif()
  endif()
  
  if(ENABLE_STATIC)
-   install(TARGETS jpeg-static ARCHIVE DESTINATION lib)
+   install(TARGETS jpeg-static ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 -  if(NOT ENABLE_SHARED)
 +  if(NOT ENABLE_SHARED AND ENABLE_EXECUTABLES)
-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/cjpeg-static.exe
-       DESTINATION bin RENAME cjpeg.exe)
-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/djpeg-static.exe
-@@ -944,17 +958,23 @@ if(ENABLE_STATIC)
+     if(MSVC_IDE OR XCODE)
+       set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
+     else()
+@@ -1381,21 +1398,25 @@ if(ENABLE_STATIC)
    endif()
  endif()
  
--install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION bin)
+-install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +if(ENABLE_EXECUTABLES)
-+  install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION bin)
++  install(TARGETS rdjpgcom wrjpgcom RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +endif()
  
--install(FILES ${CMAKE_SOURCE_DIR}/README.ijg ${CMAKE_SOURCE_DIR}/README.md
--  ${CMAKE_SOURCE_DIR}/example.c ${CMAKE_SOURCE_DIR}/libjpeg.txt
--  ${CMAKE_SOURCE_DIR}/structure.txt ${CMAKE_SOURCE_DIR}/usage.txt
--  ${CMAKE_SOURCE_DIR}/wizard.txt
--  DESTINATION doc)
+-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
+-  ${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/example.txt
+-  ${CMAKE_CURRENT_SOURCE_DIR}/tjexample.c
+-  ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg.txt
+-  ${CMAKE_CURRENT_SOURCE_DIR}/structure.txt
+-  ${CMAKE_CURRENT_SOURCE_DIR}/usage.txt ${CMAKE_CURRENT_SOURCE_DIR}/wizard.txt
+-  ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
+-if(WITH_JAVA)
+-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/java/TJExample.java
+-    DESTINATION ${CMAKE_INSTALL_DOCDIR})
 +if(INSTALL_DOCS)
-+  install(FILES ${CMAKE_SOURCE_DIR}/README.ijg ${CMAKE_SOURCE_DIR}/README.md
-+    ${CMAKE_SOURCE_DIR}/example.c ${CMAKE_SOURCE_DIR}/libjpeg.txt
-+    ${CMAKE_SOURCE_DIR}/structure.txt ${CMAKE_SOURCE_DIR}/usage.txt
-+    ${CMAKE_SOURCE_DIR}/wizard.txt
-+    DESTINATION doc)
-+endif()
++  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
++    ${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/example.txt
++    ${CMAKE_CURRENT_SOURCE_DIR}/tjexample.c
++    ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg.txt
++    ${CMAKE_CURRENT_SOURCE_DIR}/structure.txt
++    ${CMAKE_CURRENT_SOURCE_DIR}/usage.txt ${CMAKE_CURRENT_SOURCE_DIR}/wizard.txt
++    ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
++  if(WITH_JAVA)
++    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/java/TJExample.java
++      DESTINATION ${CMAKE_INSTALL_DOCDIR})
++  endif()
+ endif()
  
--install(FILES ${CMAKE_BINARY_DIR}/jconfig.h ${CMAKE_SOURCE_DIR}/jerror.h
--  ${CMAKE_SOURCE_DIR}/jmorecfg.h ${CMAKE_SOURCE_DIR}/jpeglib.h
--  DESTINATION include)
+-if(UNIX OR MINGW)
++if((UNIX OR MINGW) AND INSTALL_DOCS)
+   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cjpeg.1
+     ${CMAKE_CURRENT_SOURCE_DIR}/djpeg.1 ${CMAKE_CURRENT_SOURCE_DIR}/jpegtran.1
+     ${CMAKE_CURRENT_SOURCE_DIR}/rdjpgcom.1
+@@ -1406,10 +1427,12 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc
+   ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
+-  ${CMAKE_CURRENT_SOURCE_DIR}/jerror.h ${CMAKE_CURRENT_SOURCE_DIR}/jmorecfg.h
+-  ${CMAKE_CURRENT_SOURCE_DIR}/jpeglib.h
+-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +if(INSTALL_HEADERS)
-+  install(FILES ${CMAKE_BINARY_DIR}/jconfig.h ${CMAKE_SOURCE_DIR}/jerror.h
-+    ${CMAKE_SOURCE_DIR}/jmorecfg.h ${CMAKE_SOURCE_DIR}/jpeglib.h
-+    DESTINATION include)
++  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
++    ${CMAKE_CURRENT_SOURCE_DIR}/jerror.h ${CMAKE_CURRENT_SOURCE_DIR}/jmorecfg.h
++    ${CMAKE_CURRENT_SOURCE_DIR}/jpeglib.h
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +endif()
  
- configure_file("${CMAKE_SOURCE_DIR}/cmakescripts/cmake_uninstall.cmake.in"
-   "cmake_uninstall.cmake" IMMEDIATE @ONLY)
-
+ include(cmakescripts/BuildPackages.cmake)
+ 
 diff --git a/sharedlib/CMakeLists.txt b/sharedlib/CMakeLists.txt
-index d423cce..9da7c6e 100644
+index a5c4e39..794c2af 100644
 --- a/sharedlib/CMakeLists.txt
 +++ b/sharedlib/CMakeLists.txt
-@@ -50,24 +50,31 @@ else()
- 	set(DJPEG_BMP_SOURCES ../wrbmp.c ../wrtarga.c)
+@@ -71,27 +71,35 @@ else()
+   set(DJPEG_BMP_SOURCES ../wrbmp.c ../wrtarga.c)
  endif()
  
 -add_executable(cjpeg ../cjpeg.c ../cdjpeg.c ../rdgif.c ../rdppm.c
@@ -182,24 +221,28 @@ index d423cce..9da7c6e 100644
  
 -add_executable(jpegtran ../jpegtran.c ../cdjpeg.c ../rdswitch.c ../transupp.c)
 -target_link_libraries(jpegtran jpeg)
--set_property(TARGET jpegtran PROPERTY COMPILE_FLAGS "-DUSE_SETMODE")
+-set_property(TARGET jpegtran PROPERTY COMPILE_FLAGS "${USE_SETMODE}")
 +  add_executable(jpegtran ../jpegtran.c ../cdjpeg.c ../rdswitch.c ../transupp.c)
 +  target_link_libraries(jpegtran jpeg)
-+  set_property(TARGET jpegtran PROPERTY COMPILE_FLAGS "-DUSE_SETMODE")
++  set_property(TARGET jpegtran PROPERTY COMPILE_FLAGS "${USE_SETMODE}")
  
 -add_executable(jcstest ../jcstest.c)
 -target_link_libraries(jcstest jpeg)
 +  add_executable(jcstest ../jcstest.c)
 +  target_link_libraries(jcstest jpeg)
++endif()
  
 -install(TARGETS jpeg cjpeg djpeg jpegtran
-+  install(TARGETS cjpeg djpeg jpegtran
-+    ARCHIVE DESTINATION lib
-+    LIBRARY DESTINATION lib
-+    RUNTIME DESTINATION bin)
-+endif()
-+
 +install(TARGETS jpeg
-   ARCHIVE DESTINATION lib
-   LIBRARY DESTINATION lib
-   RUNTIME DESTINATION bin)
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++if(ENABLE_EXECUTABLES)
++  install(TARGETS cjpeg djpeg jpegtran
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
+ if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+   CMAKE_C_LINKER_SUPPORTS_PDB)
+   install(FILES "$<TARGET_PDB_FILE:jpeg>"

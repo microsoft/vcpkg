@@ -2,12 +2,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO msgpack/msgpack-c
-    REF cpp-2.1.5
-    SHA512 aab8357e494bb5aa7407b53e5e650382869ea95812a6677e085530d5f27cde6946fbfd0095b19608c75163dbb82de9ccb6a695234e7c03659fc6efc2da300e19
-    HEAD_REF master)
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-static-lib-option.patch)
+    REF cpp-3.2.0
+    SHA512 698fcdd5b427373997d0c89ff2cd09c44cf3b165defd381ff3cd9e14ecb83841064754a42aab99441a3b17aa26e3daec8f83e40d6d482c4b443b21b313278d14
+    HEAD_REF master
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(MSGPACK_ENABLE_SHARED OFF)

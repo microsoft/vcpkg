@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
-    REF v2.2.1
-    SHA512 1bc0646862fabef1111c05403a7238965ce5661a6f53945a1b7c4faad33f039d2ea278de64190099a8ae4fd66487a070de59334a7f32e187060bbbc7e0c3060e
+    REF e43e1cc01ae6d4e4e5ba10557a057d7f3d5ece0d
+    SHA512 546a0501c420cbbb21fb458192bae6c8d34bdd4bdbfe47fed22869e09429d6404b4e399e30c36c6d658bf8002339d051efde33685b03a00797b9cfe476cfb98e
     HEAD_REF master
 )
 

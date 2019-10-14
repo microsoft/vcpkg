@@ -1,0 +1,13 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO dcleblanc/SafeInt
+    REF 3.21
+    SHA512 211885bccd768ccb175b1f672a4156642f9d75074059cf537b5e2f751a19e37983e6acf7c4bf936ddc8828e0c6510165722f02f76ec943e3c03ca486a48d3340
+    HEAD_REF master
+)
+
+file(INSTALL ${SOURCE_PATH}/SafeInt.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/safeint RENAME copyright)

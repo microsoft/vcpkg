@@ -12,6 +12,11 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(CAIRO_LIB_SUFFIX d)
 endif()
 
+if (WIN32)
+  # Set utf-8 charset to avoid compile error C2001
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+endif()
+
 # find dependencies
 # glib
 find_path(GLIB_INCLUDE_DIR glib.h)
@@ -76,8 +81,11 @@ add_definitions(
     -DGTK_DISABLE_SINGLE_INCLUDES
     -D_USE_MATH_DEFINES)
 
+add_definitions(-DG_ENABLE_DEBUG)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_definitions(-DG_ENABLE_DEBUG)
+	add_definitions(-DG_ENABLE_CONSISTENCY_CHECKS)
+else()
+	add_definitions(-DG_DISABLE_CAST_CHECKS)
 endif()
 
 macro(extract_vcproj_sources VC_PROJECT OUT_VAR)

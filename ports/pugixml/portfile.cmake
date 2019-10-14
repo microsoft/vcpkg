@@ -1,32 +1,22 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pugixml-1.8)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/zeux/pugixml/releases/download/v1.8.1/pugixml-1.8.1.zip"
-    FILENAME "pugixml-1.8.1.zip"
-    SHA512 683fe224a9bcac032d78cb44d03915a3766d2faa588f3a8486b5719f26eeba3e17d447edf70e1907f51f8649ffb4607b6badd1365e4c15cf24279bf577dc853e
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-	)
-else()
-	vcpkg_apply_patches(
-		SOURCE_PATH ${SOURCE_PATH}
-		PATCHES
-			${CMAKE_CURRENT_LIST_DIR}/pugixmlapi.patch
-	)
-	vcpkg_configure_cmake(
-		SOURCE_PATH ${SOURCE_PATH}
-		OPTIONS
-			-DBUILD_DEFINES="PUGIXML_API=__declspec\(dllexport\)"
-	)
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO zeux/pugixml
+    REF v1.10
+    SHA512 0634053d4f757b9293997763bb2e51595197c192f3974e954975d6d6ff91e4a6cb7c194efa530e0eef1a2a93db16592c5630010b6482430dff5ffc6879e84b6a
+    HEAD_REF master
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/pugixml")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/pugixml)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 file(INSTALL ${SOURCE_PATH}/readme.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pugixml RENAME copyright)

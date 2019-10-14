@@ -1,0 +1,50 @@
+diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
+--- a/cmake/prebuild.cmake	2019-01-28 03:05:58.422245700 -0600
++++ b/cmake/prebuild.cmake	2019-01-28 03:07:02.885495800 -0600
+@@ -37,6 +37,9 @@
+ 
+ # CPUIDEMU = ../../cpuid/table.o
+ 
++if (NOT DEFINED BLASHELPER_BINARY_DIR)
++  set(BLASHELPER_BINARY_DIR "${PROJECT_BINARY_DIR}")
++endif ()
+ 
+ if (DEFINED CPUIDEMU)
+   set(EXFLAGS "-DCPUIDEMU -DVENDOR=99")
+@@ -310,8 +313,8 @@ else(NOT CMAKE_CROSSCOMPILING)
+   message(STATUS "Running getarch")
+ 
+   # use the cmake binary w/ the -E param to run a shell command in a cross-platform way
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" 0 OUTPUT_VARIABLE GETARCH_MAKE_OUT)
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIABLE GETARCH_CONF_OUT)
++execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH_BIN}" 0 OUTPUT_VARIABLE GETARCH_MAKE_OUT)
++execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIABLE GETARCH_CONF_OUT)
+ 
+   message(STATUS "GETARCH results:\n${GETARCH_MAKE_OUT}")
+ 
+@@ -337,8 +340,8 @@ execute_process(COMMAND "${PROJECT_BINAR
+   endif ()
+ 
+   # use the cmake binary w/ the -E param to run a shell command in a cross-platform way
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH2_BIN}" 0 OUTPUT_VARIABLE GETARCH2_MAKE_OUT)
+-execute_process(COMMAND "${PROJECT_BINARY_DIR}/${GETARCH2_BIN}" 1 OUTPUT_VARIABLE GETARCH2_CONF_OUT)
++execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH2_BIN}" 0 OUTPUT_VARIABLE GETARCH2_MAKE_OUT)
++execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH2_BIN}" 1 OUTPUT_VARIABLE GETARCH2_CONF_OUT)
+ 
+   # append config data from getarch_2nd to the TARGET file and read in CMake vars
+   file(APPEND ${TARGET_CONF_TEMP} ${GETARCH2_CONF_OUT})
+
+diff --git a/cmake/system.cmake b/cmake/system.cmake
+index a060d98..52ffa5a 100644
+--- a/cmake/system.cmake
++++ b/cmake/system.cmake
+@@ -13,6 +13,9 @@ if(CMAKE_CROSSCOMPILING AND NOT DEFINED TARGET)
+     set(TARGET "ARMV8")
+   elseif(ARM)
+     set(TARGET "ARMV7") # TODO: Ask compiler which arch this is
++  elseif(${HOST_OS} STREQUAL "WINDOWSSTORE")
++    set(CMAKE_CROSSCOMPILING 0)
++    add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
+   else()
+     message(FATAL_ERROR "When cross compiling, a TARGET is required.")
+   endif()

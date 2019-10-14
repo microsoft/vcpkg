@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO beltoforion/muparser
-  REF 6cf2746f7ce3ecbe0fd91098a3c2123e5253bb0e
-  SHA512 a44720507806beb577fee9480102dbdcbf8b95612e8e51e1c57688c27e69f5fec0261beb03d034471519d8a4430954d74fdb626f63d21000160eeaa081a83861
+  REF v2.2.6.1
+  SHA512 01bfc8cc48158c8413ae5e1da2ddbac1c9f0b9075470b1ab75853587d641dd195ebea268e1060a340098fd8015bc5f77d8e9cde5f81cffeade2f157c5f295496
   HEAD_REF master
 )
 

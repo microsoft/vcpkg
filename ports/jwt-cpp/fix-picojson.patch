@@ -1,0 +1,12 @@
+diff --git a/include/jwt-cpp/jwt.h b/include/jwt-cpp/jwt.h
+index ec56810..a26fd97 100644
+--- a/include/jwt-cpp/jwt.h
++++ b/include/jwt-cpp/jwt.h
+@@ -1,6 +1,6 @@
+ #pragma once
+ #define PICOJSON_USE_INT64
+-#include "picojson.h"
++#include "picojson/picojson.h"
+ #include "base.h"
+ #include <set>
+ #include <chrono>

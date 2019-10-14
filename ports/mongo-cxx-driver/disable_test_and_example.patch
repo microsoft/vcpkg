@@ -1,149 +1,42 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4538920..e783ff5 100644
+index c6f56e4..5601f90 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -74,66 +74,66 @@ endif()
+@@ -89,6 +89,8 @@ endif()
  
  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
  
--add_custom_target(hugo_dir
--    COMMAND ${CMAKE_COMMAND} -E make_directory hugo
--)
--
--add_custom_target(hugo
--    DEPENDS hugo_dir
--    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
--    COMMAND hugo
--    VERBATIM
--)
--
--add_custom_target(hugo-deploy
--    DEPENDS hugo
--    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--    COMMAND etc/deploy-to-ghpages.pl --hugo git@github.com:mongodb/mongo-cxx-driver
--    VERBATIM
--)
--
--add_custom_target(docs_dir_current
--    COMMAND ${CMAKE_COMMAND} -E make_directory docs/api/current
--)
--
--add_custom_target(doxygen-current
--    DEPENDS docs_dir_current
--    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--    COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
--    VERBATIM
--)
--
--add_custom_target(doxygen-all
--    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--    COMMAND etc/generate-all-apidocs.pl
--    VERBATIM
--)
--
--add_custom_target(doxygen-deploy
--    DEPENDS doxygen-all
--    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--    COMMAND etc/deploy-to-ghpages.pl --doxygen git@github.com:mongodb/mongo-cxx-driver
--    VERBATIM
--)
--
--add_custom_target(format
--    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py format
--    VERBATIM
--)
--
--add_custom_target(format-lint
--    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py lint
--    VERBATIM
--)
--
--add_custom_target(docs
--    DEPENDS hugo doxygen-current
--)
--
--set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
-+#add_custom_target(hugo_dir
-+#    COMMAND ${CMAKE_COMMAND} -E make_directory hugo
-+#)
-+#
-+#add_custom_target(hugo
-+#    DEPENDS hugo_dir
-+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
-+#    COMMAND hugo
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(hugo-deploy
-+#    DEPENDS hugo
-+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-+#    COMMAND etc/deploy-to-ghpages.pl --hugo git@github.com:mongodb/mongo-cxx-driver
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(docs_dir_current
-+#    COMMAND ${CMAKE_COMMAND} -E make_directory docs/api/current
-+#)
-+#
-+#add_custom_target(doxygen-current
-+#    DEPENDS docs_dir_current
-+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-+#    COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(doxygen-all
-+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-+#    COMMAND etc/generate-all-apidocs.pl
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(doxygen-deploy
-+#    DEPENDS doxygen-all
-+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-+#    COMMAND etc/deploy-to-ghpages.pl --doxygen git@github.com:mongodb/mongo-cxx-driver
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(format
-+#    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py format
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(format-lint
-+#    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py lint
-+#    VERBATIM
-+#)
-+#
-+#add_custom_target(docs
-+#    DEPENDS hugo doxygen-current
-+#)
-+#
-+#set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
++if(0)
++
+ add_custom_target(hugo_dir
+     COMMAND ${CMAKE_COMMAND} -E make_directory hugo
+ )
+@@ -147,6 +149,8 @@ add_custom_target(docs
  
+ set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
+ 
++endif()
++
  enable_testing()
  
  add_subdirectory(src)
- 
--add_subdirectory(examples EXCLUDE_FROM_ALL)
-+#add_subdirectory(examples EXCLUDE_FROM_ALL)
 diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
-index 010f5e4..a9a7ada 100644
+index 50085d0..5966d21 100644
 --- a/src/bsoncxx/CMakeLists.txt
 +++ b/src/bsoncxx/CMakeLists.txt
-@@ -202,4 +202,4 @@ install(
-   DESTINATION lib/cmake/libbsoncxx-${BSONCXX_VERSION}
+@@ -249,4 +249,4 @@ install(
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
  )
  
 -add_subdirectory(test)
-+#add_subdirectory(test)
++# add_subdirectory(test)
 diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
-index 12d188b..2ef54e4 100644
+index 3cba62d..64ff936 100644
 --- a/src/mongocxx/CMakeLists.txt
 +++ b/src/mongocxx/CMakeLists.txt
-@@ -209,4 +209,4 @@ install(
-   DESTINATION lib/cmake/libmongocxx-${MONGOCXX_VERSION}
+@@ -259,4 +259,4 @@ install(
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
  )
  
 -add_subdirectory(test)
-+#add_subdirectory(test)
++# add_subdirectory(test)

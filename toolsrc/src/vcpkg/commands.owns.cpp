@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkglib.h>
@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Owns
             {
                 if (file.find(file_substr) != std::string::npos)
                 {
-                    System::println("%s: %s", pgh.package.displayname(), file);
+                    System::print2(pgh.package.displayname(), ": ", file, '\n');
                 }
             }
         }
@@ -34,7 +34,7 @@ namespace vcpkg::Commands::Owns
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const StatusParagraphs status_db = database_load_check(paths);
         search_file(paths, args.command_arguments[0], status_db);

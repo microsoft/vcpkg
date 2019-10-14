@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zrax/string_theory
-    REF 1.7
-    SHA512 59b367542a0dde727bf58791a94eed1b0f7007d1c661a8e728f3668bb284cadd98a03379cb96dc832e5230b6e991b66b9c8522e3525ed168505d9b930af5d239
+    REF 2.2
+    SHA512 84b0eb645fdb302f233c162afbcea1b1b201546a60d81448a86437fe599c4184d7abe3d6ea8bd1743bdffab75bcd4e4ab296ce1fffb7da8ae6aab880d0bbda2d
     HEAD_REF master
 )
 
@@ -22,8 +22,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/string_theory")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/string_theory)
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/string-theory ${CURRENT_PACKAGES_DIR}/share/string_theory)
 

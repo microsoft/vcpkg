@@ -1,0 +1,94 @@
+Source: opencv3
+Version: 3.4.7-2
+Build-Depends: protobuf, zlib
+Homepage: https://github.com/opencv/opencv
+Description: computer vision library
+Default-Features: dnn, jpeg, opengl, png, tiff, webp
+
+Feature: nonfree
+Description: allow nonfree and unredistributable libraries
+
+Feature: flann
+Description: opencv_flann module
+
+Feature: contrib
+Build-Depends: opencv3[dnn], hdf5 (!uwp)
+Description: opencv_contrib module
+
+Feature: cuda
+Build-Depends: opencv3[contrib], cuda
+Description: CUDA support for opencv
+
+Feature: dnn
+Build-Depends: opencv3[flann]
+Description: Enable dnn module
+
+Feature: eigen
+Build-Depends: eigen3
+Description: Eigen support for opencv
+
+Feature: ffmpeg
+Build-Depends: ffmpeg
+Description: ffmpeg support for opencv
+
+Feature: gdcm
+Build-Depends: gdcm
+Description: GDCM support for opencv
+
+Feature: ipp
+Description: Enable Intel Integrated Performance Primitives
+
+Feature: jasper
+Build-Depends: jasper
+Description: JPEG 2000 support for opencv
+
+Feature: jpeg
+Build-Depends: libjpeg-turbo
+Description: JPEG support for opencv
+
+Feature: openexr
+Build-Depends: openexr
+Description: OpenEXR support for opencv
+
+Feature: opengl
+Build-Depends: opengl
+Description: opengl support for opencv
+
+Feature: ovis
+Build-Depends: opencv3[contrib], ogre
+Description: opencv_ovis module
+
+Feature: png
+Build-Depends: libpng
+Description: PNG support for opencv
+
+Feature: qt
+Build-Depends: qt5
+Description: Qt GUI support for opencv
+
+Feature: sfm
+Build-Depends: opencv3[contrib], eigen3, glog, gflags, ceres
+Description: opencv_sfm module
+
+Feature: tbb
+Build-Depends: tbb
+Description: Enable Intel Threading Building Blocks
+
+Feature: tiff
+Build-Depends: tiff
+Description: TIFF support for opencv
+
+Feature: vtk
+Build-Depends: vtk
+Description: vtk support for opencv
+
+Feature: webp
+Build-Depends: libwebp
+Description: WebP support for opencv
+
+Feature: halide
+Build-Depends: halide, opencv3[core], opencv3[dnn]
+Description: Halide support for opencv
+
+Feature: world
+Description: Compile to a single package support for opencv

@@ -1,16 +1,13 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building of HPX not supported yet. Building dynamic.") 
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.1.0
-    SHA512 435250143ddbd2608995fe3dc5c229a096312d7ac930925ae56d0abd2d5689886126f6e81bc7e37b84ca9bc99f951ef1f39580168a359c48788ac8d008bc7078
-    HEAD_REF master
+    REF 1.3.0
+    SHA512 e55ca0c6fe1716b6ee72b0c4a9234a1136455ddc2f5509925395a80442d564b0db251968fef53d202a1f5140e12d0941d0173ab20a7b181632eac20cb925bf31
+    HEAD_REF stable
 )
 
 vcpkg_configure_cmake(
@@ -20,7 +17,6 @@ vcpkg_configure_cmake(
         "-DBOOST_ROOT=${CURRENT_INSTALLED_DIR}/share/boost"
         "-DHWLOC_ROOT=${CURRENT_INSTALLED_DIR}/share/hwloc"
         -DHPX_WITH_VCPKG=ON
-        -DHPX_WITH_HWLOC=ON
         -DHPX_WITH_TESTS=OFF
         -DHPX_WITH_EXAMPLES=OFF
         -DHPX_WITH_TOOLS=OFF
@@ -30,9 +26,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # post build cleanup
-file(GLOB SHARE_DIR ${CURRENT_PACKAGES_DIR}/share/hpx-*)
-file(RENAME ${SHARE_DIR} ${CURRENT_PACKAGES_DIR}/share/hpx)
-
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/HPX)
 
 file(GLOB_RECURSE CMAKE_FILES "${CURRENT_PACKAGES_DIR}/share/hpx/*.cmake")
@@ -44,7 +37,7 @@ foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
         _contents "${_contents}")
     string(REGEX REPLACE
         "lib/hpx/([A-Za-z0-9_.-]+\\.dll)"
-        "bin/\\1"
+        "bin/hpx/\\1"
         _contents "${_contents}")
     file(WRITE ${CMAKE_FILE} "${_contents}")
 endforeach()
@@ -65,7 +58,7 @@ endif()
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/hpx/*.dll)
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/hpx)
     file(REMOVE ${DLLS})
 endif()
 
@@ -77,7 +70,7 @@ endif()
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/hpx/*.dll)
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/hpx)
     file(REMOVE ${DLLS})
 endif()
 
