@@ -24,9 +24,6 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(COPY ${SOURCE_PATH}/lang/c++/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/avro-cpp)
