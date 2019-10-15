@@ -1,14 +1,14 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libodb-mysql-2.4.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.codesynthesis.com/download/odb/2.4/libodb-mysql-2.4.0.tar.gz"
     FILENAME "libodb-mysql-2.4.0.tar.gz"
     SHA512 c27b73c3f61dccdd149c11c122185f645a00d5bc346b366ee65b738f8719c39d03fad07a0d55b62b3db9e3ad2507679c24ddda331e5d110f367ad32f7cf8b910
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/adapter_mysql_8.0.patch
 )

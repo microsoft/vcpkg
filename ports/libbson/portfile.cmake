@@ -65,10 +65,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     endif()
 
     # drop the __declspec(dllimport) when building static
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES static.patch
-    )
+    file(READ ${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h LIBBSON_MACROS_H)
+    string(REPLACE "define BSON_API __declspec(dllimport)" "define BSON_API" LIBBSON_MACROS_H "${LIBBSON_MACROS_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h "${LIBBSON_MACROS_H}")
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
