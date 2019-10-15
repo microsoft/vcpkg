@@ -10,6 +10,7 @@ vcpkg_from_github(
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_make()
@@ -18,23 +19,29 @@ if (EXISTS ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool)
     file(COPY ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool)
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/contrib ${CURRENT_PACKAGES_DIR}/debug/contrib)
 
 file(GLOB ${CURRENT_PACKAGES_DIR}/bin LIBMESH_TOOLS)
 foreach (LIBMESH_TOOL ${LIBMESH_TOOLS})
     file(COPY ${LIBMESH_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    file(REMOVE ${CURRENT_PACKAGES_DIR})
+    file(REMOVE ${LIBMESH_TOOL})
 endforeach()
 
 file(GLOB LIBMESH_TOOLS ${CURRENT_PACKAGES_DIR}/examples/*)
 foreach (LIBMESH_TOOL ${LIBMESH_TOOLS})
     file(COPY ${LIBMESH_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    file(REMOVE ${CURRENT_PACKAGES_DIR})
+    file(REMOVE ${LIBMESH_TOOL})
 endforeach()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Remove tools and debug include directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/contrib ${CURRENT_PACKAGES_DIR}/debug/etc
                     ${CURRENT_PACKAGES_DIR}/debug/examples ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+                    ${CURRENT_PACKAGES_DIR}/debug/share
+                    ${CURRENT_PACKAGES_DIR}/Make.common ${CURRENT_PACKAGES_DIR}/debug/Make.common)
 
 vcpkg_copy_pdbs()
 
