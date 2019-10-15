@@ -177,10 +177,10 @@ index 7a14775..f5c84a8 100644
  ## libigl
  if(NOT TARGET igl::core)
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 8a0af13..7840822 100644
+index 8a0af13..5c6a350 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -11,11 +11,10 @@ else()
+@@ -11,16 +11,14 @@ else()
  endif()
  
  ### Download data
@@ -193,6 +193,11 @@ index 8a0af13..7840822 100644
  list(APPEND CMAKE_MODULE_PATH ${LIBIGL_EXTERNAL}/catch2/contrib)
  
  
+ # Add catch2
+-add_subdirectory(${LIBIGL_EXTERNAL}/catch2 catch2)
+ 
+ 
+ # Create test executable
 diff --git a/tutorial/106_ViewerMenu/main.cpp b/tutorial/106_ViewerMenu/main.cpp
 index 09f3272..9e1a19d 100644
 --- a/tutorial/106_ViewerMenu/main.cpp
