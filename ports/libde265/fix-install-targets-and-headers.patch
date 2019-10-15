@@ -1,0 +1,49 @@
+diff --git a/dec265/CMakeLists.txt b/dec265/CMakeLists.txt
+index b57035c..eef50c1 100644
+--- a/dec265/CMakeLists.txt
++++ b/dec265/CMakeLists.txt
+@@ -39,3 +39,10 @@ if(NOT MSVC)
+ 
+   target_link_libraries (hdrcopy ${LIBDE265_LIBRARY_NAME})
+ endif()
++
++#Install targets
++if(NOT MSVC)
++  install(TARGETS hdrcopy RUNTIME DESTINATION tools)
++else()
++  install(TARGETS dec265 RUNTIME DESTINATION tools)
++endif()
+\ No newline at end of file
+diff --git a/enc265/CMakeLists.txt b/enc265/CMakeLists.txt
+index 114717c..efb3dc4 100644
+--- a/enc265/CMakeLists.txt
++++ b/enc265/CMakeLists.txt
+@@ -14,3 +14,6 @@ endif()
+ add_executable (enc265 ${enc265_sources})
+ 
+ target_link_libraries (enc265 ${LIBDE265_LIBRARY_NAME})
++
++#Install targets
++install(TARGETS enc265 RUNTIME DESTINATION tools)
+\ No newline at end of file
+diff --git a/libde265/CMakeLists.txt b/libde265/CMakeLists.txt
+index 137e197..ae606c8 100644
+--- a/libde265/CMakeLists.txt
++++ b/libde265/CMakeLists.txt
+@@ -78,3 +78,15 @@ target_link_libraries(${LIBDE265_LIBRARY_NAME} ${CMAKE_THREAD_LIBS_INIT})
+ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+   SET_TARGET_PROPERTIES(${LIBDE265_LIBRARY_NAME} PROPERTIES COMPILE_FLAGS "-fPIC")
+ endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
++
++file(GLOB LIBDE265_HEADERS *.h)
++
++#Install targets
++install(TARGETS ${LIBDE265_LIBRARY_NAME}
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++
++#Install headers
++install(FILES ${LIBDE265_HEADERS} DESTINATION include)
+\ No newline at end of file
