@@ -1,13 +1,15 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/Simple OpenGL Image Library")
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.lonesock.net/files/soil.zip"
     FILENAME "soil-2008.07.07.zip"
     SHA512 a575a84aa65b7556320779d635561341f5cf156418d0462473e5d1eb082829be3bcb30600b4887af75aeddd3715de16bdb3ca1668ebaa93eea62bacf22b79548
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
@@ -25,5 +27,4 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/soil RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

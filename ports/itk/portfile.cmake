@@ -19,6 +19,11 @@ else()
     set(ITKVtkGlue OFF)
 endif()
 
+set(USE_64BITS_IDS OFF)
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+    set(USE_64BITS_IDS ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -30,7 +35,7 @@ vcpkg_configure_cmake(
         -DITK_INSTALL_DATA_DIR=share/itk/data
         -DITK_INSTALL_DOC_DIR=share/itk/doc
         -DITK_INSTALL_PACKAGE_DIR=share/itk
-        -DITK_USE_64BITS_IDS=ON
+        -DITK_USE_64BITS_IDS=${USE_64BITS_IDS}
         -DITK_USE_CONCEPT_CHECKING=ON
         #-DITK_USE_SYSTEM_LIBRARIES=ON # enables USE_SYSTEM for all third party libraries, some of which do not have vcpkg ports such as CastXML, SWIG, MINC etc
         -DITK_USE_SYSTEM_DOUBLECONVERSION=ON

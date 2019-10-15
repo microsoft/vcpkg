@@ -29,7 +29,7 @@ index 8b183a0..a801ae8 100644
 -SET_TARGET_PROPERTIES(${PROJECT_NAME}_static PROPERTIES PREFIX "lib")
 -target_link_libraries(${PROJECT_NAME}_static ${CURL_LIBRARIES} ${CONAN_LIBS})
 +SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "lib")
-+target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} ${CONAN_LIBS})
++target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 +endif()
 +
 +target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
