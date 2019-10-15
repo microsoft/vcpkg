@@ -1,0 +1,4 @@
+Source: omniorb
+Version: 4.2.3-1
+Build-Depends: python3, zlib, openssl
+Description: OmniORB is a robust high performance CORBA ORB for C++ and Python. It is freely available under the terms of the GNU Lesser General Public License (for the libraries), and GNU General Public License (for the tools). omniORB is largely CORBA 2.6 compliant. 
