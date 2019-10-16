@@ -1,0 +1,10 @@
+Source: marble
+Version: master
+Homepage: https://marble.kde.org
+Description: Marble KDE library
+Build-Depends: qt5
+Default-Features:
+
+Feature:
+Description:
+Build-Depends:
