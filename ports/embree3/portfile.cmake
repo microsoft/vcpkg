@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-InstallPath.patch
         fix-cmake-path.patch
+        fix-embree-path.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/common/cmake/FindTBB.cmake)
