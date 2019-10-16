@@ -48,9 +48,11 @@ file(INSTALL
 )
 file(INSTALL
     ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.lib
+    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
     ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.lib
+    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -67,6 +69,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         DESTINATION ${TOOL_PATH})
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/DirectXTex)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/DirectXTex/LICENSE ${CURRENT_PACKAGES_DIR}/share/DirectXTex/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
