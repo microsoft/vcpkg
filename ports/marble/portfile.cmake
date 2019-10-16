@@ -134,8 +134,8 @@ endfunction()
 vcpkg_from_git_1(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://anongit.kde.org/marble
-    REF refs/heads/Applications/17.04 # should disscuss this with Marble community
-	SHA 016b072716ed61ea7bd3a0ccffd1ab8a0d09de17
+    REF tags/v19.08.2 # refs/heads/Applications/17.04 # should disscuss this with Marble community
+	SHA e0bcc466dd30451e7922453d5c297868b8a098dc  # 016b072716ed61ea7bd3a0ccffd1ab8a0d09de17
    #PATCHES
    #     md32.patch
 )
@@ -144,10 +144,8 @@ set(POSTFIX d)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX="${POSTFIX}"
+    OPTIONS_DEBUG    -DCMAKE_DEBUG_POSTFIX="${POSTFIX}"
 )
-
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
@@ -177,7 +175,7 @@ file(REMOVE  ${f3} ${f4} )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/plugins" "${CURRENT_PACKAGES_DIR}/lib/plugins" )
 
 #The software license must be available at ${CURRENT_PACKAGES_DIR}/share/marble/copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/d41cd33dae-5a253a42e2/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/marble)
+file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/marble)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/marble/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/marble/copyright)
 
 #The following files are placed in
