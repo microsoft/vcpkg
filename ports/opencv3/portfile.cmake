@@ -331,6 +331,7 @@ find_package(Ceres QUIET)
 find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
+find_package(Tesseract QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
