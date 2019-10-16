@@ -121,4 +121,11 @@
         <sha512>ab1effc926b000a6adc12198a1886514ec203621a53b0cd7ec1cd9a8225dccda7e857feaabcfba4004bea73129b986abaad777c4573f44e0af70411226ce08b0</sha512>
         <archiveName>PowerShell-6.2.1-win-x86.zip</archiveName>
     </tool>
+    <tool name="xgettext" os="windows">
+        <version>0.14.4</version>
+        <exeRelativePath>bin\xgettext.exe</exeRelativePath>
+        <url>https://sourceforge.net/projects/gnuwin32/files/gettext/0.14.4/gettext-0.14.4-bin.zip</url>
+        <sha512>fb6029f247646520fe8cc4cfaaa646b5685b4a1dd5f446f1c6163bbfc935e619b2d71c512ec5dc6d64a1fc537620765341859d2ae0c370a1695b1865035a20d9</sha512>
+        <archiveName>gettext-0.14.4-bin.zip</archiveName>
+    </tool>
 </tools>

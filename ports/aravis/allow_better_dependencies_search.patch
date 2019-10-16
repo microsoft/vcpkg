@@ -1,0 +1,24 @@
+diff --git a/meson.build b/meson.build
+index 9698569..f87ac88 100644
+--- a/meson.build
++++ b/meson.build
+@@ -17,13 +17,13 @@ aravis_data_dir = join_paths (get_option ('datadir'), 'aravis-@0@'.format (aravi
+ cc = meson.get_compiler ('c')
+ cxx = meson.get_compiler ('cpp')
+ 
+-glib_dep = dependency ('glib-2.0', version: '>=2.38', required: true)
+-gobject_dep = dependency ('gobject-2.0', required: true)
+-gio_dep = dependency ('gio-2.0', required: true)
+-xml2_dep = dependency ('libxml-2.0', required: true)
+-libz_dep = dependency ('zlib', required: true)
++glib_dep = dependency ('unofficial-glib', method : 'cmake', modules : ['unofficial::glib::glib'], required: true)
++gobject_dep = dependency ('unofficial-glib', method : 'cmake', modules : ['unofficial::glib::gobject'], required: true)
++gio_dep = dependency ('unofficial-glib', method : 'cmake', modules : ['unofficial::glib::gio'], required: true)
++xml2_dep = dependency ('LibXml2', method : 'cmake', modules : ['LibXml2::LibXml2'], required: true)
++libz_dep = dependency ('ZLIB', method : 'cmake', modules : ['ZLIB::ZLIB'], required: true)
+ 
+-libm = cc.find_library ('m', required: true)
++libm = cc.find_library ('m', required: false)
+ 
+ aravis_dependencies = [glib_dep, gobject_dep, gio_dep, xml2_dep, libz_dep, libm]
+ aravis_dependency_str = 'glib-2.0 gobject-2.0 gio-2.0'
