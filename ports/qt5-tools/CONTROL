@@ -1,4 +1,4 @@
 Source: qt5-tools
-Version: 5.12.5-1
+Version: 5.12.5-2
 Description: Qt5 Tools Module; Includes deployment tools and helpers, Qt Designer, Assistant, and other applications
-Build-Depends:  qt5-base, qt5-declarative, qt5-activeqt
+Build-Depends:  qt5-base, qt5-declarative, qt5-activeqt (windows)
