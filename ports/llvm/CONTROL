@@ -3,3 +3,4 @@ Version: 8.0.0-3
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Build-Depends: atlmfc (windows)
+Supports: !uwp

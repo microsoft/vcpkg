@@ -118,6 +118,16 @@ This field is optional.
 Default-Features: dynamodb, s3, kinesis
 ```
 
+#### Supports
+Expression that evalutates to true when the port is supported for a given triplet.  This field is currently only used in the CI testing to skip ports.
+
+This field is optional and defaults to true.
+
+```no-highlight
+Supports: !(uwp||arm)
+```
+
+
 ## Feature Paragraphs
 
 Multiple optional features can be specified in the `CONTROL` files.  It must have a `Feature` and `Description` field.  It can optionally have a `Build-Depends` field.  It must be separated from other paragraphs by one or more empty lines.

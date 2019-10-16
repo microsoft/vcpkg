@@ -29,7 +29,6 @@
     <ClCompile Include="..\src\vcpkg-test\specifier.cpp" />
     <ClCompile Include="..\src\vcpkg-test\statusparagraphs.cpp" />
     <ClCompile Include="..\src\vcpkg-test\strings.cpp" />
-    <ClCompile Include="..\src\vcpkg-test\supports.cpp" />
     <ClCompile Include="..\src\vcpkg-test\update.cpp" />
     <ClCompile Include="..\src\vcpkg-test\util.cpp" />
   </ItemGroup>

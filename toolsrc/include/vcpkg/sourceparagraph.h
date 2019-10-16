@@ -70,10 +70,10 @@ namespace vcpkg
         std::string description;
         std::string maintainer;
         std::string homepage;
-        std::vector<std::string> supports;
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
         Type type;
+        std::string supports_expression;
     };
 
     /// <summary>
@@ -131,35 +131,4 @@ namespace vcpkg
     {
         return print_error_message({&error_info_list, 1});
     }
-
-    struct Supports
-    {
-        static ExpectedT<Supports, std::vector<std::string>> parse(const std::vector<std::string>& strs);
-
-        using Architecture = System::CPUArchitecture;
-
-        enum class Platform
-        {
-            WINDOWS,
-            UWP,
-        };
-        enum class Linkage
-        {
-            DYNAMIC,
-            STATIC,
-        };
-        enum class ToolsetVersion
-        {
-            V140,
-            V141,
-        };
-
-        bool is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools);
-
-    private:
-        std::vector<Architecture> architectures;
-        std::vector<Platform> platforms;
-        std::vector<Linkage> crt_linkages;
-        std::vector<ToolsetVersion> toolsets;
-    };
 }

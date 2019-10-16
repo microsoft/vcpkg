@@ -34,6 +34,23 @@ namespace vcpkg
         }
     };
 
+    enum class Identifier
+    {
+        invalid, // not a recognized identifier
+        x64,
+        x86,
+        arm,
+        arm64,
+
+        windows,
+        linux,
+        osx,
+        uwp,
+        android,
+
+        static_link,
+    };
+
     // logic expression supports the following :
     //  primary-expression:
     //    ( logic-expression )
@@ -53,12 +70,33 @@ namespace vcpkg
     class ExpressionParser
     {
     public:
-        ExpressionParser(const std::string& str, const std::string& evaluation_context)
+        ExpressionParser(const std::string& str, const ExpressionContext& context)
             : raw_text(str)
-            , evaluation_context(evaluation_context)
+            , evaluation_context(context)
             , current_iter(raw_text.begin())
             , current_char(get_current_char())
         {
+            {
+                auto override_vars = evaluation_context.cmake_context.find("VCPKG_DEP_INFO_OVERRIDE_VARS");
+                if (override_vars != evaluation_context.cmake_context.end())
+                {
+                    auto cmake_list = Strings::split(override_vars->second, ";");
+                    for (auto& override_id : cmake_list)
+                    {
+                        if (!override_id.empty())
+                        {
+                            if (override_id[0] == '!')
+                            {
+                                context_override.insert({override_id.substr(1), false});
+                            }
+                            else
+                            {
+                                context_override.insert({override_id, true});
+                            }
+                        }
+                    }
+                }
+            }
             skip_whitespace();
 
             final_result = logic_expression();
@@ -81,7 +119,10 @@ namespace vcpkg
 
     private:
         const std::string& raw_text;
-        const std::string& evaluation_context;
+
+        const ExpressionContext& evaluation_context;
+        std::map<std::string, bool> context_override;
+
         std::string::const_iterator current_iter;
         char current_char;
 
@@ -143,9 +184,105 @@ namespace vcpkg
             return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '-');
         }
 
-        bool evaluate_identifier(const std::string name) const
+        // Legacy evaluation only searches for substrings.  Use this only for diagnostic purposes.
+        bool evaluate_identifier_legacy(const std::string name) const
         {
-            return evaluation_context.find(name) != std::string::npos;
+            return evaluation_context.legacy_context.find(name) != std::string::npos;
+        }
+
+        static Identifier string2identifier(const std::string& name)
+        {
+            static const std::map<std::string, Identifier> id_map = {
+                {"x64", Identifier::x64},
+                {"x86", Identifier::x86},
+                {"arm", Identifier::arm},
+                {"arm64", Identifier::arm64},
+                {"windows", Identifier::windows},
+                {"linux", Identifier::linux},
+                {"osx", Identifier::osx},
+                {"uwp", Identifier::uwp},
+                {"android", Identifier::android},
+                {"static", Identifier::static_link},
+            };
+
+            auto id_pair = id_map.find(name);
+
+            if (id_pair == id_map.end())
+            {
+                return Identifier::invalid;
+            }
+
+            return id_pair->second;
+        }
+
+        bool true_if_exists_and_equal(const std::string& variable_name, const std::string& value)
+        {
+            auto iter = evaluation_context.cmake_context.find(variable_name);
+            if (iter == evaluation_context.cmake_context.end())
+            {
+                return false;
+            }
+            return iter->second == value;
+        }
+
+        // If an identifier is on the explicit override list, return the override value
+        // Otherwise fall back to the built in logic to evaluate
+        // All unrecognized identifiers are an error
+        bool evaluate_identifier_cmake(const std::string name, int column)
+        {
+            auto id = string2identifier(name);
+
+            switch (id)
+            {
+                case Identifier::invalid:
+                    // Point out in the diagnostic that they should add to the override list because that is what
+                    // most users should do, however it is also valid to update the built in identifiers to recognize
+                    // the name.
+                    add_error("Unrecognized identifer name.  Add to override list in triplet file.", column);
+                    break;
+
+                case Identifier::x64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x64");
+                case Identifier::x86: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "x86");
+                case Identifier::arm:
+                    // For backwards compatability arm is also true for arm64.
+                    // This is because it previously was only checking for a substring.
+                    return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm") ||
+                           true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
+                case Identifier::arm64: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "arm64");
+                case Identifier::windows: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "");
+                case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
+                case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
+                case Identifier::uwp: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
+                case Identifier::static_link: return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
+            }
+
+            return evaluation_context.legacy_context.find(name) != std::string::npos;
+        }
+
+        bool evaluate_identifier(const std::string name, int column)
+        {
+            if (!context_override.empty())
+            {
+                auto override_id = context_override.find(name);
+                if (override_id != context_override.end())
+                {
+                    return override_id->second;
+                }
+                // Fall through to use the cmake logic if the id does not have an override
+            }
+
+            bool legacy = evaluate_identifier_legacy(name);
+            bool cmake = evaluate_identifier_cmake(name, column);
+            if (legacy != cmake)
+            {
+                // Legacy evaluation only used the name of the triplet, now we use the actual
+                // cmake variables. This has the potential to break custom triplets.
+                // For now just print a message, this will need to change once we start introducing
+                // new variables that did not exist previously (such as host-*)
+                System::print2("Identifier logic evaluation does not match legacy evaluation:\n   ", name, '\n');
+            }
+            return cmake;
         }
 
         //  identifier:
@@ -154,6 +291,7 @@ namespace vcpkg
         {
             auto curr = current();
             std::string name;
+            auto starting_column = current_column();
 
             for (curr = current(); is_alphanum(curr); curr = next())
             {
@@ -166,7 +304,7 @@ namespace vcpkg
                 return false;
             }
 
-            bool result = evaluate_identifier(name);
+            bool result = evaluate_identifier(name, starting_column);
             skip_whitespace();
             return result;
         }
@@ -194,6 +332,7 @@ namespace vcpkg
                 while (next() == oper)
                 {
                 };
+                skip_whitespace();
                 seed = operation(not_expression(), seed);
 
             } while (current() == oper);
@@ -253,9 +392,9 @@ namespace vcpkg
         }
     };
 
-    bool evaluate_expression(const std::string& expression, const std::string& evaluation_context)
+    bool evaluate_expression(const std::string& expression, const ExpressionContext& context)
     {
-        ExpressionParser parser(expression, evaluation_context);
+        ExpressionParser parser(expression, context);
 
         return parser.get_result();
     }
