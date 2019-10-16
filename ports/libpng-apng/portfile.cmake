@@ -11,7 +11,6 @@ vcpkg_from_github(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
         ${CMAKE_CURRENT_LIST_DIR}/skip-install-symlink.patch
-        ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_APNG_VERSION}-apng.patch
 )
 
 vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
@@ -34,6 +33,12 @@ find_program(GIT NAMES git git.cmd)
 get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
 set(AWK_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 set(ENV{PATH} "$ENV{PATH};${AWK_EXE_PATH}")
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_APNG_VERSION}-apng.patch
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PNG_STATIC_LIBS OFF)
