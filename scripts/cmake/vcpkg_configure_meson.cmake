@@ -23,10 +23,10 @@ function(vcpkg_configure_meson)
             set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MT /O2 /Oi /Gy /DNDEBUG /Z7")
         endif()
         set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /DEBUG")
-        set(MESON_RELEASE_LDFLAGS "${MESON_RELEASE_LDFLAGS} /INCREMENTAL:NO /OPT:REF /OPT:ICF")
+        set(MESON_RELEASE_LDFLAGS "${MESON_RELEASE_LDFLAGS} /INCREMENTAL:NO")
     endif()
 
-    # select meson cmd-line options
+    set(ENV{CMAKE_PREFIX_PATH} "${CURRENT_INSTALLED_DIR}")
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         list(APPEND _vcm_OPTIONS --default-library shared)
