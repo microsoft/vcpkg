@@ -112,6 +112,11 @@ namespace vcpkg::Dependencies
                     {
                         if (dep.qualifier.empty())
                         {
+                            // Feature "core" is always part of the dependencies.
+                            dep_list.emplace_back(PackageSpec::from_name_and_triplet(dep.depend.name, m_spec.triplet())
+                                                      .value_or_exit(VCPKG_LINE_INFO),
+                                                  "core");
+
                             for (const std::string& dep_feature : dep.depend.features)
                             {
                                 dep_list.emplace_back(
@@ -709,9 +714,13 @@ namespace vcpkg::Dependencies
                 }
                 else
                 {
-                    paragraph_depends = &clust.m_scfl.source_control_file->find_feature(spec.feature())
-                                             .value_or_exit(VCPKG_LINE_INFO)
-                                             .depends;
+                    auto maybe_paragraph = clust.m_scfl.source_control_file->find_feature(spec.feature());
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       maybe_paragraph.has_value(),
+                                       "Package %s does not have a %s feature",
+                                       spec.name(),
+                                       spec.feature());
+                    paragraph_depends = &maybe_paragraph.value_or_exit(VCPKG_LINE_INFO).depends;
                 }
 
                 if (!m_var_provider.get_dep_info_vars(spec.spec()).has_value())

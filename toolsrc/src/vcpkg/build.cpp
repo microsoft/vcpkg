@@ -663,7 +663,9 @@ namespace vcpkg::Build
                                        Hash::Algorithm::Sha1));
 
         abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
-        abi_tag_entries.emplace_back("features", Strings::join(";", config.feature_list));
+        std::vector<std::string> sorted_feature_list(std::begin(config.feature_list), std::end(config.feature_list));
+        Util::sort(sorted_feature_list);
+        abi_tag_entries.emplace_back("features", Strings::join(";", sorted_feature_list));
 
         if (pre_build_info.public_abi_override)
         {
