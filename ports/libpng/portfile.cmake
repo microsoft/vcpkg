@@ -5,10 +5,12 @@ set(LIBPNG_VER 1.6.37)
 # Download the apng patch
 set(LIBPNG_APNG_OPTION )
 if ("apng" IN_LIST FEATURES)
-    if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_VER}-apng.patch)
+    set(LIBPNG_APG_PATCH_NAME libpng-${LIBPNG_VER}-apng.patch)
+    set(LIBPNG_APG_PATCH_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APG_PATCH_NAME})
+    if (NOT EXISTS ${LIBPNG_APG_PATCH_PATH})
         vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
-            URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/libpng-${LIBPNG_VER}-apng.patch.gz"
-            FILENAME "libpng-${LIBPNG_VER}-apng.patch.gz"
+            URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APG_PATCH_NAME}.gz"
+            FILENAME "${LIBPNG_APG_PATCH_NAME}.gz"
             SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
         )
         
@@ -21,7 +23,7 @@ if ("apng" IN_LIST FEATURES)
         )
     endif()
     
-    set(APNG_EXTRA_PATCH ${SOURCE_PATH}/../libpng-${LIBPNG_VER}-apng.patch)    
+    set(APNG_EXTRA_PATCH ${LIBPNG_APG_PATCH_PATH})    
     set(LIBPNG_APNG_OPTION "-DPNG_PREFIX=a")
 endif()
 
