@@ -1,5 +1,4 @@
 
-include(vcpkg_common_functions)
 set(GTK_VERSION 3.22.19)
 
 vcpkg_download_distfile(ARCHIVE
@@ -11,10 +10,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        0001-remove-atk-bridge.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
 
 # generate sources using python script installed with glib
 if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.c)
@@ -27,16 +25,27 @@ if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}
         LOGNAME source-gen)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DGTK_VERSION=${GTK_VERSION}
-    OPTIONS_DEBUG
-        -DGTK_SKIP_HEADERS=ON)
+if(WIN32)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DGTK_VERSION=${GTK_VERSION}
+        OPTIONS_DEBUG
+            -DGTK_SKIP_HEADERS=ON
+    )
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
+    vcpkg_install_cmake()
+    vcpkg_copy_pdbs()
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+    )
+
+    vcpkg_install_make()
+endif()
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

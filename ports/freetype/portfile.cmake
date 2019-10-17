@@ -15,9 +15,10 @@ PATCHES
     0001-Fix-install-command.patch
     0002-Add-CONFIG_INSTALL_PATH-option.patch
     0003-Fix-UWP.patch
+    0004-use-proper-pkg-config-version.patch
     0005-Fix-DLL-EXPORTS.patch
 )
-    
+
 if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
   set(ENABLE_DLL_EXPORT OFF)
 else()

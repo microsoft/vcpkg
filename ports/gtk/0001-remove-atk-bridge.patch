@@ -1,0 +1,17 @@
+diff --git a/configure b/configure
+index 4c82823..33fe395 100755
+--- a/configure
++++ b/configure
+@@ -26903,11 +26903,7 @@ fi
+ # Check for Accessibility Toolkit flags
+ ########################################
+ 
+-if test x$enable_x11_backend = xyes; then
+-   ATK_PACKAGES="atk atk-bridge-2.0"
+-else
+-   ATK_PACKAGES="atk"
+-fi
++ATK_PACKAGES="atk"
+ 
+ 
+ pkg_failed=no

@@ -125,4 +125,4 @@ include_directories(aapl)
 
 add_executable(ragel ${SRC})
 
-install(TARGETS ragel DESTINATION tools CONFIGURATIONS Release)
+install(TARGETS ragel DESTINATION tools/ragel CONFIGURATIONS Release)

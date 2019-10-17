@@ -16,7 +16,7 @@
 ##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
+## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your make script supports the
 ## "install" target
 ##
 ## ## Examples
@@ -31,11 +31,11 @@ function(vcpkg_build_make)
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
     endif()
-    
+
     if (_VCPKG_PROJECT_SUBPATH)
         set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH}/)
     endif()
-    
+
     set(MAKE )
     set(MAKE_OPTS )
     set(INSTALL_OPTS )
@@ -47,7 +47,7 @@ function(vcpkg_build_make)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-            
+
             set(PATH_GLOBAL "$ENV{PATH}")
             set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -77,9 +77,9 @@ function(vcpkg_build_make)
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
-    
+
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-    
+
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
@@ -96,14 +96,14 @@ function(vcpkg_build_make)
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
             endif()
-            
+
             if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
                 set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
             else()
                 set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
             endif()
-    
+
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             if(_bc_ADD_BIN_TO_PATH)
@@ -125,13 +125,13 @@ function(vcpkg_build_make)
                 WORKING_DIRECTORY ${WORKING_DIRECTORY}
                 LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
             )
-    
+
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()
         endif()
     endforeach()
-    
+
     if (_bc_ENABLE_INSTALL)
         foreach(BUILDTYPE "debug" "release")
             if(BUILDTYPE STREQUAL "debug")
@@ -148,14 +148,14 @@ function(vcpkg_build_make)
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
             endif()
-            
+
             if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
                 set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
             else()
                 set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
             endif()
-            
+
             message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
             vcpkg_execute_required_process(
                 COMMAND ${MAKE} ${INSTALL_OPTS}
@@ -164,7 +164,7 @@ function(vcpkg_build_make)
             )
         endforeach()
     endif()
-    
+
     if (CMAKE_HOST_WIN32)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()

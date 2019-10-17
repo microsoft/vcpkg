@@ -41,11 +41,21 @@ get_filename_component(GETTEXT_DIR "${GETTEXT}" DIRECTORY)
 vcpkg_add_to_path("${GETTEXT_DIR}")
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/glib")
 
+set(enable_viewer "false")
+if("viewer" IN_LIST FEATURES)
+  set(enable_viewer "true")
+endif()
+
+set(enable_gst_plugin "false")
+if("gst-plugin" IN_LIST FEATURES)
+  set(enable_gst_plugin "true")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -Dviewer=false
-        -Dgst-plugin=false
+        -Dviewer=${enable_viewer}
+        -Dgst-plugin=${enable_gst_plugin}
         -Dpacket-socket=false
         -Dusb=false
         -Dfast-heartbeat=false
@@ -69,9 +79,9 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/bin/arv-fake-gv-camera-0.8${EXECUTABLE_SUFFI
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/arv-tool-0.8${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/arv-tool-0.8${EXECUTABLE_SUFFIX})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+#  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+#endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

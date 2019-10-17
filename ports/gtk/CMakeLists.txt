@@ -30,8 +30,12 @@ set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GIO_LIBRARY} ${GLIB_GMODULE_LIBRA
 find_path(PANGO_INCLUDE_DIR pango/pango.h)
 find_library(PANGO_LIBRARY pango-${PANGO_LIB_SUFFIX})
 find_library(PANGO_CAIRO_LIBRARY pangocairo-${PANGO_LIB_SUFFIX})
-find_library(PANGO_WIN32_LIBRARY pangowin32-${PANGO_LIB_SUFFIX})
-set(PANGO_LIBRARIES ${PANGO_LIBRARY} ${PANGO_CAIRO_LIBRARY} ${PANGO_WIN32_LIBRARY})
+set(PANGO_LIBRARIES ${PANGO_LIBRARY} ${PANGO_CAIRO_LIBRARY})
+if(WIN32)
+    find_library(PANGO_WIN32_LIBRARY pangowin32-${PANGO_LIB_SUFFIX})
+    list(APPEND PANGO_LIBRARIES ${PANGO_WIN32_LIBRARY})
+endif()
+
 # cairo
 find_library(CAIRO_LIBRARY cairo${CAIRO_LIB_SUFFIX})
 find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject${CAIRO_LIB_SUFFIX})
@@ -52,7 +56,9 @@ find_library(EPOXY_LIBRARY epoxy)
 
 # gettext
 find_path(LIBINTL_INCLUDE_DIR libintl.h)
-find_library(LIBINTL_LIBRARY NAMES intl libintl)
+if(WIN32)
+    find_library(LIBINTL_LIBRARY NAMES intl libintl)
+endif()
 
 set(GTK_REQUIRED_LIBRARIES
     ${LIBINTL_LIBRARY}
@@ -105,14 +111,14 @@ endmacro()
 # build 'win32' gdk backend
 extract_vcproj_sources(build/win32/vs14/gdk3-win32.vcxproj GDK_WIN32_SOURCES)
 add_library(gdk-3-win32 STATIC ${GDK_WIN32_SOURCES})
-target_compile_definitions(gdk-3-win32 PRIVATE 
+target_compile_definitions(gdk-3-win32 PRIVATE
     GDK_COMPILATION G_LOG_DOMAIN="Gdk" INSIDE_GDK_WIN32)
 target_include_directories(gdk-3-win32 PRIVATE . ./gdk ./gdk/win32 ${GTK_REQUIRED_INCLUDE_DIR})
 
 # build 'broadway' gdk backend
 extract_vcproj_sources(build/win32/vs14/gdk3-broadway.vcxproj GDK_BROADWAY_SOURCES)
 add_library(gdk-3-broadway STATIC ${GDK_BROADWAY_SOURCES})
-target_compile_definitions(gdk-3-broadway PRIVATE 
+target_compile_definitions(gdk-3-broadway PRIVATE
     GDK_COMPILATION G_LOG_DOMAIN="Gdk")
 target_include_directories(gdk-3-broadway PRIVATE . ./gdk ./gdk/broadway ${GTK_REQUIRED_INCLUDE_DIR})
 
@@ -120,7 +126,7 @@ macro(gtk_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
     target_include_directories(${MODULE_NAME} PRIVATE . ./gdk ./gtk ${GTK_REQUIRED_INCLUDE_DIR})
     target_link_libraries(${MODULE_NAME} ${GTK_REQUIRED_LIBRARIES})
-    set_target_properties(${MODULE_NAME} PROPERTIES 
+    set_target_properties(${MODULE_NAME} PROPERTIES
         ARCHIVE_OUTPUT_NAME ${MODULE_NAME}.0)
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
 endmacro()

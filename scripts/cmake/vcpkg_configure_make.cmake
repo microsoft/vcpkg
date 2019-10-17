@@ -76,12 +76,12 @@ function(vcpkg_configure_make)
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
     )
-    
+
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support; "
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
     endif()
-    
+
     if (_csc_OPTIONS_DEBUG STREQUAL _csc_OPTIONS_RELEASE OR NMAKE_OPTION_RELEASE STREQUAL NMAKE_OPTION_DEBUG)
         message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_configure_make")
     endif()
@@ -102,13 +102,15 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "${_csc_GENERATOR} not supported.")
     endif()
-    
+
     if (_csc_AUTOCONFIG AND NOT CMAKE_HOST_WIN32)
         find_program(autoreconf autoreconf REQUIRED)
     endif()
 
     set(WIN_TARGET_ARCH )
     set(WIN_TARGET_COMPILER )
+    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
     # Detect compiler
     if (GENERATOR STREQUAL "nmake")
         message(STATUS "Using generator NMAKE")
@@ -126,7 +128,7 @@ function(vcpkg_configure_make)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
         get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-        
+
         if (NOT _csc_DISABLE_AUTO_HOST)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
                 set(WIN_TARGET_ARCH --host=i686-pc-mingw32)
@@ -140,7 +142,7 @@ function(vcpkg_configure_make)
         set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
         set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     endif()
-    
+
     if (NOT _csc_NO_DEBUG)
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     else()
@@ -154,7 +156,7 @@ function(vcpkg_configure_make)
                                 --sbindir=${CURRENT_PACKAGES_DIR}/bin
                                 --libdir=${CURRENT_PACKAGES_DIR}/lib
                                 --includedir=${CURRENT_PACKAGES_DIR}/include)
-    
+
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                             --prefix=${CURRENT_PACKAGES_DIR}/debug
                             --bindir=${CURRENT_PACKAGES_DIR}/debug/bin
@@ -162,11 +164,11 @@ function(vcpkg_configure_make)
                             --libdir=${CURRENT_PACKAGES_DIR}/debug/lib
                             --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
     endif()
-    
+
     set(base_cmd )
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc -c)
-        
+
         if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared)
             if (VCPKG_TARGET_IS_UWP)
@@ -184,16 +186,16 @@ function(vcpkg_configure_make)
         set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
         set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
         set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS}")
-        
+
         if(VCPKG_TARGET_IS_UWP)
             set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
             set(_csc_OPTIONS ${_csc_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
         endif()
-        
+
         list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
-        
+
         set(rel_command
             ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}"
         )
@@ -209,7 +211,7 @@ function(vcpkg_configure_make)
             ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
         )
     endif()
-    
+
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         if (CMAKE_HOST_WIN32)
@@ -226,12 +228,12 @@ function(vcpkg_configure_make)
             string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
         endif()
-        
+
         set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
-        
+
         file(MAKE_DIRECTORY ${OBJ_DIR})
-        
+
         if (NOT CMAKE_HOST_WIN32)
             file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
             foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
@@ -250,7 +252,7 @@ function(vcpkg_configure_make)
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
         endif()
-        
+
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
@@ -259,7 +261,7 @@ function(vcpkg_configure_make)
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
         endif()
-        
+
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         vcpkg_execute_required_process(
             COMMAND ${dbg_command}
@@ -277,16 +279,16 @@ function(vcpkg_configure_make)
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
             string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
-            
+
             set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
             string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
-            
+
             set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
             string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
         endif()
-        
+
         if (_csc_NO_DEBUG)
             set(TAR_TRIPLET_DIR ${TARGET_TRIPLET})
             set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
@@ -295,9 +297,9 @@ function(vcpkg_configure_make)
             set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
         endif()
         set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
-        
+
         file(MAKE_DIRECTORY ${OBJ_DIR})
-        
+
         if (NOT CMAKE_HOST_WIN32)
             file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
             foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
@@ -306,7 +308,7 @@ function(vcpkg_configure_make)
                 file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
             endforeach()
         endif()
-        
+
         if (_csc_PRERUN_SHELL)
             message(STATUS "Prerun shell with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
@@ -315,7 +317,7 @@ function(vcpkg_configure_make)
                 LOGNAME prerun-${TAR_TRIPLET_DIR}
             )
         endif()
-        
+
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
@@ -324,7 +326,7 @@ function(vcpkg_configure_make)
                 LOGNAME prerun-${TAR_TRIPLET_DIR}
             )
         endif()
-        
+
         message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
         vcpkg_execute_required_process(
             COMMAND ${rel_command}
@@ -332,14 +334,14 @@ function(vcpkg_configure_make)
             LOGNAME config-${TAR_TRIPLET_DIR}
         )
     endif()
-    
+
     # Restore envs
     if (CMAKE_HOST_WIN32)
         set(ENV{CFLAGS} "${C_FLAGS_GLOBAL}")
         set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL}")
         set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL}")
     endif()
-    
+
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
     set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)

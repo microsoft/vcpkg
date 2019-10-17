@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 89bd219..b4a2514 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -488,7 +488,7 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+     string(REPLACE "%includedir%" "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}"
+            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+-    string(REPLACE "%ft_version%" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
++    string(REPLACE "%ft_version%" "${VERSION_MAJOR}${VERSION_MINOR}.${VERSION_PATCH}"
+            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+     string(REPLACE "%REQUIRES_PRIVATE%" "${PKG_CONFIG_REQUIRED_PRIVATE}"
+            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
