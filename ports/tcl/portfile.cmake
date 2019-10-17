@@ -12,7 +12,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     # Handle features
-    set(TCL_BUILD_OPTS OPTS=pdbs,symbols)
+    set(TCL_BUILD_OPTS OPTS=pdbs)
     set(TCL_BUILD_STATS STATS=none)
     set(TCL_BUILD_CHECKS CHECKS=none)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -40,9 +40,17 @@ if (VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH win
         OPTIONS
             ${TCL_BUILD_MACHINE_STR}
-            ${TCL_BUILD_OPTS}
             ${TCL_BUILD_STATS}
             ${TCL_BUILD_CHECKS}
+        OPTIONS_DEBUG
+            ${TCL_BUILD_OPTS},symbols
+            INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug
+            SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0
+        OPTIONS_RELEASE
+            ${TCL_BUILD_OPTS}
+            release
+            INSTALLDIR=${CURRENT_PACKAGES_DIR}
+            SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0
     )
     # Install
     if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
