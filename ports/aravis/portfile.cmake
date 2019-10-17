@@ -14,6 +14,7 @@ else()
     set(EXECUTABLE_SUFFIX "")
 endif()
 
+vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
@@ -34,6 +35,11 @@ if(CMAKE_HOST_WIN32)
         execute_process(COMMAND ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX} python-gettext)
     endif()
 endif()
+
+vcpkg_find_acquire_program(GETTEXT)
+get_filename_component(GETTEXT_DIR "${GETTEXT}" DIRECTORY)
+vcpkg_add_to_path("${GETTEXT_DIR}")
+vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/glib")
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}

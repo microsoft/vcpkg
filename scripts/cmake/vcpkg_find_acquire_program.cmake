@@ -278,7 +278,7 @@ function(vcpkg_find_acquire_program VAR)
 
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
-      find_program(${VAR} ${PROGNAME} PATHS ${PATHS})
+      find_program(${VAR} ${PROGNAME} PATHS ${PATHS} PATH_SUFFIXES bin)
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
       find_file(SCRIPT ${SCRIPTNAME} PATHS ${PATHS})
