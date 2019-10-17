@@ -30,8 +30,8 @@
 
 
 # # Specifies if the port install should fail immediately given a condition
-#vcpkg_fail_port_install(MESSAGE "marble currently only supports Windows platforms" ON_TARGET "Mac")
-#vcpkg_fail_port_install(MESSAGE "marble currently only supports Windows platforms" ON_TARGET "Linux")
+vcpkg_fail_port_install(MESSAGE "this Marble port currently only supports only Windows platform (and dll mode), sorry" ON_TARGET LINUX OSX ANDROID FREEBSD ON_LIBRARY_LINKAGE static)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 include(vcpkg_common_functions)
 
