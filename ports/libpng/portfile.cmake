@@ -5,7 +5,7 @@ set(LIBPNG_VER 1.6.37)
 # Download the apng patch
 set(LIBPNG_APNG_OPTION )
 if ("apng" IN_LIST FEATURES)
-    if (NOT EXISTS ${SOURCE_PATH}/../libpng-${LIBPNG_VER}-apng.patch)
+    if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_VER}-apng.patch)
         vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
             URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/libpng-${LIBPNG_VER}-apng.patch.gz"
             FILENAME "libpng-${LIBPNG_VER}-apng.patch.gz"
