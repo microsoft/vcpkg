@@ -377,11 +377,17 @@ find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake DLL_PATH)
-  # [OFFSET /x86/vc])
-  string(REPLACE /x86/vc
-                 /debug/x86/vc DLL_PATH "${DLL_PATH}")
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${DLL_PATH}")
+  if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+	  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake DLL_PATH)
+	  string(REPLACE /x86/vc
+					 /debug/x86/vc DLL_PATH "${DLL_PATH}")
+	  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${DLL_PATH}")
+  else if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+	  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake DLL_PATH)
+	  string(REPLACE /x64/vc
+					 /debug/x64/vc DLL_PATH "${DLL_PATH}")
+	  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${DLL_PATH}")
+  endif()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
