@@ -68,3 +68,10 @@ index 1f0d720..a1fe6fa 100644
  if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
    install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")
  endif()
+diff --git a/cmake/platforms/OpenCV-WindowsStore.cmake b/cmake/platforms/OpenCV-WindowsStore.cmake
+index 8b5dfa5..efc8b4f 100644
+--- a/cmake/platforms/OpenCV-WindowsStore.cmake
++++ b/cmake/platforms/OpenCV-WindowsStore.cmake
+@@ -1 +1 @@
+-include("${CMAKE_CURRENT_LIST_DIR}/OpenCV_WinRT.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/OpenCV-WinRT.cmake")

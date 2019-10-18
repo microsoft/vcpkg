@@ -13,7 +13,6 @@ vcpkg_from_github(
     SHA512 d18d2cc35dc1c95c8870d35feb14459db27ebf6d09ff89a185918b1faff1b36dedacc18f268a6483570c404aca19b83ba627ce7af2265af7195a029cb766c09f
     HEAD_REF master
     PATCHES
-      0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
@@ -375,6 +374,14 @@ find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake DLL_PATH)
+  # [OFFSET /x86/vc])
+  string(REPLACE /x86/vc
+                 /debug/x86/vc DLL_PATH "${DLL_PATH}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${DLL_PATH}")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
