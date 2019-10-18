@@ -1,0 +1,4 @@
+Source: libbase58
+Version: 0.1.4
+Homepage: https://github.com/luke-jr/libbase58
+Description: C library for Bitcoin's base58 encoding.
