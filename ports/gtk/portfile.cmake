@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 
-if(NOT WIN32)
+if(NOT CMAKE_HOST_WIN32)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
     )
