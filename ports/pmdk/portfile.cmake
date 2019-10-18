@@ -13,7 +13,7 @@ set(PMDK_VERSION "1.7")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF ${PMDK_VERSION}
+    REF bc5e309485df61c452d08367e4b13ba9dfed5071 #Commit id corresponding to the version 1.7
     SHA512 ce6c36f0354c2272cc7258b190077d7655528c414128c937d8735854a083516f0a15340cebb16f3c0588835dc9b48501e04415a4d3e96887be5fcee5a3b90905
     HEAD_REF master
 )
