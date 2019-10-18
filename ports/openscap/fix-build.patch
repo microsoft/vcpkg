@@ -1,12 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4de5b57..e390e34 100644
+index 4de5b57..5f483a3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -140,16 +140,23 @@ find_package(SWIG)
+@@ -140,15 +140,25 @@ find_package(SWIG)
  find_package(LibXml2 REQUIRED)
  find_package(LibXslt REQUIRED)
  find_package(BZip2)
 +find_package(OpenSSL REQUIRED)
++find_package(ZLIB REQUIRED)
  
  # PThread
 -set(CMAKE_THREAD_PREFER_PTHREAD)
@@ -16,7 +17,6 @@ index 4de5b57..e390e34 100644
 -check_library_exists(pthread pthread_timedjoin_np "" HAVE_PTHREAD_TIMEDJOIN_NP)
 -check_library_exists(pthread pthread_setname_np "" HAVE_PTHREAD_SETNAME_NP)
 -check_library_exists(pthread pthread_getname_np "" HAVE_PTHREAD_GETNAME_NP)
--
 +if (WIN32)
 +    set(CMAKE_THREAD_PREFER_PTHREAD)
 +    set(THREADS_PREFER_PTHREAD_FLAG)
@@ -29,31 +29,35 @@ index 4de5b57..e390e34 100644
 +else()
 +    set(THREADS_USE_PTHREADS_WIN32 -pthread)
 +endif()
++
 +# OpenSSL
 +link_libraries(OpenSSL::SSL OpenSSL::Crypto)
+ 
  # WITH_CRYPTO
  set(WITH_CRYPTO "gcrypt" CACHE STRING "gcrypt|nss3")
- if(NOT (${WITH_CRYPTO} EQUAL "nss3"))
-@@ -378,13 +385,13 @@ if(WIN32)
- 	# The install path can be changed by user in Windows installer.
- 	# We will use relative names - "schemas", "xsl" and "cpe"
- 	# directories will be located in the same directory as oscap.exe.
+@@ -373,19 +383,9 @@ message(STATUS "asciidoc: ${ASCIIDOC_EXECUTABLE}")
+ 
+ # ---------- PATHS
+ 
+-if(WIN32)
+-	# Windows installer does not allow full paths.
+-	# The install path can be changed by user in Windows installer.
+-	# We will use relative names - "schemas", "xsl" and "cpe"
+-	# directories will be located in the same directory as oscap.exe.
 -	set(OSCAP_DEFAULT_SCHEMA_PATH "schemas")
 -	set(OSCAP_DEFAULT_XSLT_PATH "xsl")
 -	set(OSCAP_DEFAULT_CPE_PATH "cpe")
-+	set(OSCAP_DEFAULT_SCHEMA_PATH share/openscap/schemas)
-+	set(OSCAP_DEFAULT_XSLT_PATH share/openscap/xsl)
-+	set(OSCAP_DEFAULT_CPE_PATH share/openscap/cpe)
- else()
+-else()
 -	set(OSCAP_DEFAULT_SCHEMA_PATH "${CMAKE_INSTALL_FULL_DATADIR}/openscap/schemas")
 -	set(OSCAP_DEFAULT_XSLT_PATH "${CMAKE_INSTALL_FULL_DATADIR}/openscap/xsl")
 -	set(OSCAP_DEFAULT_CPE_PATH "${CMAKE_INSTALL_FULL_DATADIR}/openscap/cpe")
-+	set(OSCAP_DEFAULT_SCHEMA_PATH share/openscap/schemas)
-+	set(OSCAP_DEFAULT_XSLT_PATH share/openscap/xsl)
-+	set(OSCAP_DEFAULT_CPE_PATH share/openscap/cpe)
- endif()
+-endif()
++set(OSCAP_DEFAULT_SCHEMA_PATH share/openscap/schemas)
++set(OSCAP_DEFAULT_XSLT_PATH share/openscap/xsl)
++set(OSCAP_DEFAULT_CPE_PATH share/openscap/cpe)
  set(OSCAP_TEMP_DIR "/tmp" CACHE STRING "use different temporary directory to execute sce scripts (default=/tmp)")
  
+ # ---------- RPATHS for linking
 diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
 index 2a3f373..bd0e12c 100644
 --- a/utils/CMakeLists.txt
