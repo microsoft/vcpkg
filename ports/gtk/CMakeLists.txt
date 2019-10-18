@@ -1,8 +1,34 @@
 cmake_minimum_required(VERSION 3.0)
 project(gtk+ C)
 
-configure_file(config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
-configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h COPYONLY)
+if(WIN32)
+    configure_file(config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
+    configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h COPYONLY)
+else()
+    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h)
+        file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h "
+/* gdkconfig.h
+ *
+ * This is a generated file.  Please modify `configure.ac'
+ */
+
+#ifndef __GDKCONFIG_H__
+#define __GDKCONFIG_H__
+
+#if !defined (__GDK_H_INSIDE__) && !defined (GDK_COMPILATION)
+#error \"Only <gdk/gdk.h> can be included directly.\"
+#endif
+
+#include <glib.h>
+
+#define GETTEXT_PACKAGE gtk320
+#endif
+")
+    endif()
+    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
+        configure_file(config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
+    endif()
+endif()
 
 set(GLIB_LIB_SUFFIX 2.0)
 set(PANGO_LIB_SUFFIX 1.0)
@@ -30,8 +56,11 @@ set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GIO_LIBRARY} ${GLIB_GMODULE_LIBRA
 find_path(PANGO_INCLUDE_DIR pango/pango.h)
 find_library(PANGO_LIBRARY pango-${PANGO_LIB_SUFFIX})
 find_library(PANGO_CAIRO_LIBRARY pangocairo-${PANGO_LIB_SUFFIX})
-find_library(PANGO_WIN32_LIBRARY pangowin32-${PANGO_LIB_SUFFIX})
 set(PANGO_LIBRARIES ${PANGO_LIBRARY} ${PANGO_CAIRO_LIBRARY} ${PANGO_WIN32_LIBRARY})
+if(WIN32)
+    find_library(PANGO_WIN32_LIBRARY pangowin32-${PANGO_LIB_SUFFIX})
+endif()
+
 # cairo
 find_library(CAIRO_LIBRARY cairo${CAIRO_LIB_SUFFIX})
 find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject${CAIRO_LIB_SUFFIX})
@@ -50,9 +79,11 @@ find_library(GDK_PIXBUF_LIBRARY gdk_pixbuf-${GDK_PIXBUF_LIB_SUFFIX})
 find_path(EPOXY_INCLUDE_DIR epoxy/common.h)
 find_library(EPOXY_LIBRARY epoxy)
 
-# gettext
-find_path(LIBINTL_INCLUDE_DIR libintl.h)
-find_library(LIBINTL_LIBRARY NAMES intl libintl)
+if(WIN32)
+    # gettext
+    find_path(LIBINTL_INCLUDE_DIR libintl.h)
+    find_library(LIBINTL_LIBRARY NAMES intl libintl)
+endif()
 
 set(GTK_REQUIRED_LIBRARIES
     ${LIBINTL_LIBRARY}
@@ -102,17 +133,19 @@ macro(extract_vcproj_sources VC_PROJECT OUT_VAR)
     endforeach()
 endmacro()
 
-# build 'win32' gdk backend
-extract_vcproj_sources(build/win32/vs14/gdk3-win32.vcxproj GDK_WIN32_SOURCES)
-add_library(gdk-3-win32 STATIC ${GDK_WIN32_SOURCES})
-target_compile_definitions(gdk-3-win32 PRIVATE 
-    GDK_COMPILATION G_LOG_DOMAIN="Gdk" INSIDE_GDK_WIN32)
-target_include_directories(gdk-3-win32 PRIVATE . ./gdk ./gdk/win32 ${GTK_REQUIRED_INCLUDE_DIR})
+if(WIN32)
+    # build 'win32' gdk backend
+    extract_vcproj_sources(build/win32/vs14/gdk3-win32.vcxproj GDK_WIN32_SOURCES)
+    add_library(gdk-3-win32 STATIC ${GDK_WIN32_SOURCES})
+    target_compile_definitions(gdk-3-win32 PRIVATE
+        GDK_COMPILATION G_LOG_DOMAIN="Gdk" INSIDE_GDK_WIN32)
+    target_include_directories(gdk-3-win32 PRIVATE . ./gdk ./gdk/win32 ${GTK_REQUIRED_INCLUDE_DIR})
+endif()
 
 # build 'broadway' gdk backend
 extract_vcproj_sources(build/win32/vs14/gdk3-broadway.vcxproj GDK_BROADWAY_SOURCES)
 add_library(gdk-3-broadway STATIC ${GDK_BROADWAY_SOURCES})
-target_compile_definitions(gdk-3-broadway PRIVATE 
+target_compile_definitions(gdk-3-broadway PRIVATE
     GDK_COMPILATION G_LOG_DOMAIN="Gdk")
 target_include_directories(gdk-3-broadway PRIVATE . ./gdk ./gdk/broadway ${GTK_REQUIRED_INCLUDE_DIR})
 
@@ -120,7 +153,7 @@ macro(gtk_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
     target_include_directories(${MODULE_NAME} PRIVATE . ./gdk ./gtk ${GTK_REQUIRED_INCLUDE_DIR})
     target_link_libraries(${MODULE_NAME} ${GTK_REQUIRED_LIBRARIES})
-    set_target_properties(${MODULE_NAME} PROPERTIES 
+    set_target_properties(${MODULE_NAME} PROPERTIES
         ARCHIVE_OUTPUT_NAME ${MODULE_NAME}.0)
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
 endmacro()
@@ -128,8 +161,12 @@ endmacro()
 extract_vcproj_sources(build/win32/vs14/gdk-3.vcxproj GDK_SOURCES)
 gtk_add_module(gdk-3 ${GDK_SOURCES})
 target_compile_definitions(gdk-3 PRIVATE GDK_COMPILATION)
-target_include_directories(gdk-3 PRIVATE ./gdk/win32 ./gdk/broadway)
-target_link_libraries(gdk-3 gdk-3-win32 gdk-3-broadway winmm dwmapi setupapi imm32 ws2_32)
+target_include_directories(gdk-3 PRIVATE ./gdk/broadway)
+
+if(WIN32)
+    target_include_directories(gdk-3 PRIVATE ./gdk/win32)
+    target_link_libraries(gdk-3 gdk-3-win32 gdk-3-broadway winmm dwmapi setupapi imm32 ws2_32)
+endif()
 
 extract_vcproj_sources(build/win32/vs14/gtk-3.vcxproj GTK_SOURCES)
 set_source_files_properties(gtk/inspector/visual.c PROPERTIES COMPILE_FLAGS "/FImath.h")
@@ -160,16 +197,23 @@ target_compile_definitions(gtk-3 PRIVATE
     GTK_VERSION="${GTK_VERSION}/etc"
     GTK_BINARY_VERSION="3.0.0/etc"
     GDK_DISABLE_DEPRECATED
-    ISOLATION_AWARE_ENABLED)
-target_link_libraries(gtk-3 gdk-3 winspool comctl32 imm32)
-target_compile_options(gtk-3 PRIVATE "/wd4828" PRIVATE "/wd4244" PRIVATE "/wd4305" PRIVATE "/wd4018")
+    ISOLATION_AWARE_ENABLED
+)
+
+if(WIN32)
+    target_link_libraries(gtk-3 gdk-3 winspool comctl32 imm32)
+    target_compile_options(gtk-3 PRIVATE "/wd4828" PRIVATE "/wd4244" PRIVATE "/wd4305" PRIVATE "/wd4018")
+endif()
 
 extract_vcproj_sources(build/win32/vs14/gailutil-3.vcxproj GAILUTIL_SOURCES)
 gtk_add_module(gailutil-3 ${GAILUTIL_SOURCES})
 target_compile_definitions(gailutil-3 PRIVATE GTK_DISABLE_DEPRECATED GDK_DISABLE_DEPRECATED)
 target_link_libraries(gailutil-3 gtk-3 gdk-3)
-set_target_properties(gailutil-3 PROPERTIES
-    LINK_FLAGS \"/DEF:${CMAKE_CURRENT_SOURCE_DIR}/libgail-util/gailutil.def\")
+
+if(WIN32)
+    set_target_properties(gailutil-3 PROPERTIES
+        LINK_FLAGS \"/DEF:${CMAKE_CURRENT_SOURCE_DIR}/libgail-util/gailutil.def\")
+endif()
 
 if(NOT GTK_SKIP_HEADERS)
     set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)

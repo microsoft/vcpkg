@@ -32,6 +32,8 @@ function(vcpkg_configure_meson)
     endif()
 
     set(ENV{CMAKE_PREFIX_PATH} "${CURRENT_INSTALLED_DIR}")
+    set(ENV{PKG_CONFIG_PATH}   "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         list(APPEND _vcm_OPTIONS --default-library shared)

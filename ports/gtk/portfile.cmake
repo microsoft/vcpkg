@@ -14,18 +14,23 @@ vcpkg_extract_source_archive_ex(
         0001-remove-atk-bridge.patch
 )
 
-# generate sources using python script installed with glib
-if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.c)
-    vcpkg_find_acquire_program(PYTHON3)
-    set(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib)
 
-    vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} ${GLIB_TOOL_DIR}/gdbus-codegen --interface-prefix org.Gtk. --c-namespace _Gtk --generate-c-code gtkdbusgenerated ./gtkdbusinterfaces.xml
-        WORKING_DIRECTORY ${SOURCE_PATH}/gtk
-        LOGNAME source-gen)
-endif()
+if(NOT WIN32)
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+    )
+    vcpkg_install_make()
+else()
+    # generate sources using python script installed with glib
+    if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.c)
+        vcpkg_find_acquire_program(PYTHON3)
+        set(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib)
 
-if(WIN32)
+        vcpkg_execute_required_process(
+            COMMAND ${PYTHON3} ${GLIB_TOOL_DIR}/gdbus-codegen --interface-prefix org.Gtk. --c-namespace _Gtk --generate-c-code gtkdbusgenerated ./gtkdbusinterfaces.xml
+            WORKING_DIRECTORY ${SOURCE_PATH}/gtk
+            LOGNAME source-gen)
+    endif()
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
 
@@ -40,12 +45,7 @@ if(WIN32)
 
     vcpkg_install_cmake()
     vcpkg_copy_pdbs()
-else()
-    vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-    )
-
-    vcpkg_install_make()
 endif()
+
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
