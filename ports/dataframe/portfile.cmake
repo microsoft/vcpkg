@@ -27,7 +27,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/dataframe)
-elseif(VCPKG_TARGET_IS_LINUX)
+else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/dataframe)
 endif()
 
