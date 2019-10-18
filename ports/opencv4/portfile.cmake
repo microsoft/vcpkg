@@ -382,7 +382,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	  string(REPLACE /x86/vc
 					 /debug/x86/vc DLL_PATH "${DLL_PATH}")
 	  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${DLL_PATH}")
-  else if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 	  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake DLL_PATH)
 	  string(REPLACE /x64/vc
 					 /debug/x64/vc DLL_PATH "${DLL_PATH}")
