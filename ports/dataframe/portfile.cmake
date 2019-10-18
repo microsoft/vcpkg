@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_fail_port_install(MESSAGE "dataframe currently only supports Windows, Linux and Mac platforms" ON_TARGET "WindowsStore")
 
 if(VCPKG_TARGET_IS_WINDOWS)
