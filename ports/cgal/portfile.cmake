@@ -8,8 +8,6 @@ vcpkg_from_github(
     REF releases/CGAL-5.0-beta1
     SHA512 a51927d1371297d5db06ce77309a43b480582e42a64844e95cbd7fe7308952df8360ec0ec1a6044478162f0b261622789d3fc0a46834959421db50d02c5d6f98
     HEAD_REF master
-    PATCHES
-        cgal_target_fix.patch
 )
 
 set(WITH_CGAL_Qt5  OFF)
