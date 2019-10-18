@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO badaix/aixlog
-    REF  v1.2.1
-    SHA512 776558fdd911f0cc9e8d467bf8e00a1930d2e51bb8ccd5f36f95955fefecab65faf575a80fdaacfe83fd32808f8b9c2e0323b16823e0431300df7bc0c1dfde12
+    REF  v1.2.2
+    SHA512 384ffe4a40970150d7cbc64f5bd5a64486415f11487b5a432502f16e190f9a96383e65173cbb6624b4ec8bc5168addef93a895dc9b16f874e4a4c8d93be55dd6
     )
     
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
