@@ -60,4 +60,5 @@ file(
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
 )
 
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
 vcpkg_test_cmake(PACKAGE_NAME CGAL)
