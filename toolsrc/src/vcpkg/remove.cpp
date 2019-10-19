@@ -265,8 +265,6 @@ namespace vcpkg::Remove
                     std::regex arg_regex{arg};
                     for (const auto& status : status_db) 
                     {
-                        if (!status->is_installed())
-                            continue;
                         const auto& spec_name = Strings::ascii_to_lowercase(std::string(status->package.spec.name()));
                         if (spec_name == arg)
                         {
@@ -284,6 +282,11 @@ namespace vcpkg::Remove
                         specs.push_back(*exact_spec.get());
                     else
                         std::copy(regex_specs.begin(), regex_specs.end(), std::back_inserter(specs));
+                }
+                if (specs.empty())
+                {
+                    System::print2(System::Color::error, "Error: cannot find any packages that match the specified pattern.\n");
+                    Checks::exit_fail(VCPKG_LINE_INFO);
                 }
             }
             else
