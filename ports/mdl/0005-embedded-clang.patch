@@ -1,0 +1,55 @@
+diff --git a/src/mdl/jit/libbsdf/CMakeLists.txt b/src/mdl/jit/libbsdf/CMakeLists.txt
+index 9f5107f..3c6916a 100644
+--- a/src/mdl/jit/libbsdf/CMakeLists.txt
++++ b/src/mdl/jit/libbsdf/CMakeLists.txt
+@@ -81,9 +81,6 @@ setup_ide(TARGET ${PROJECT_NAME} SOURCES ${PROJECT_SOURCES})
+ # CLANG Build Step
+ # -------------------------------------------------------------------------------------------------
+ 
+-# get clang
+-target_add_tool_dependency(TARGET ${PROJECT_NAME} TOOL clang)
+-
+ add_custom_command(
+     OUTPUT
+         ${_GENERATED_DIR}/libbsdf.bc
+@@ -91,15 +88,16 @@ add_custom_command(
+         ${_GENERATED_DIR}/libbsdf.ll
+     COMMAND ${CMAKE_COMMAND} -E echo "Compile libbsdf bytecode using clang ..."
+     COMMAND ${CMAKE_COMMAND} -E make_directory ${_GENERATED_DIR}
+-    COMMAND ${clang_PATH}
++    COMMAND clang
+         -emit-llvm -c -O2 -ffast-math -target x86_64-pc-win32 ${CMAKE_CURRENT_SOURCE_DIR}/libbsdf.cpp
+         -o ${_GENERATED_DIR}/libbsdf.bc -MD -MT ${_GENERATED_DIR}/libbsdf.bc -MP -MF ${_GENERATED_DIR}/libbsdf.d.tmp
+     COMMAND ${CMAKE_COMMAND} -E copy ${_GENERATED_DIR}/libbsdf.d.tmp ${_GENERATED_DIR}/libbsdf.d
+     COMMAND ${CMAKE_COMMAND} -E remove ${_GENERATED_DIR}/libbsdf.d.tmp
+-    COMMAND ${clang_PATH}
++    COMMAND clang
+         -emit-llvm -S -O2 -ffast-math -target x86_64-pc-win32 ${CMAKE_CURRENT_SOURCE_DIR}/libbsdf.cpp
+         -o ${_GENERATED_DIR}/libbsdf.ll
+     DEPENDS
+         ${PROJECT_SOURCES}
++        clang
+     VERBATIM
+     )
+diff --git a/src/mdl/jit/llvm/CMakeLists.txt b/src/mdl/jit/llvm/CMakeLists.txt
+index 8caa26b..27b04b3 100644
+--- a/src/mdl/jit/llvm/CMakeLists.txt
++++ b/src/mdl/jit/llvm/CMakeLists.txt
+@@ -112,7 +112,7 @@ option(LLVM_INCLUDE_TESTS "Generate build targets for the LLVM unit tests." OFF)
+ option(LLVM_INCLUDE_GO_TESTS "Include the Go bindings tests in test build targets." OFF)
+ option(LLVM_INCLUDE_EXAMPLES "Generate build targets for the LLVM examples" OFF)
+ option(LLVM_INCLUDE_DOCS "Generate build targets for llvm documentation." OFF)
+-option(LLVM_INCLUDE_TOOLS "Generate build targets for the LLVM tools." OFF)
++option(LLVM_INCLUDE_TOOLS "Generate build targets for the LLVM tools." ON)
+ option(LLVM_BUILD_TOOLS "Build the LLVM tools. If OFF, just generate build targets." OFF)
+ option(LLVM_BUILD_UTILS "Build the LLVM tools. If OFF, just generate build targets." OFF)
+ option(LLVM_ENABLE_BINDINGS "Build bindings." OFF)
+@@ -131,6 +131,8 @@ set(PYTHON_EXECUTABLE ${python_PATH})
+ set(LLVM_CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist CACHE PATH "LLVM source root.")
+ set(LLVM_NATIVE_BUILD ${CMAKE_CURRENT_BINARY_DIR}/dist/NATIVE CACHE PATH "Binary root dir for LLVM tablegen.")
+ 
++set(LLVM_TOOLS_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/dist/bin" CACHE STRING "Path for binary subdirectory (defaults to 'bin')")
++
+ # speed up build is not working properly on all platforms and configurations
+ if(WINDOWS)
+     set(_ENABLE_LLVM_NATIVE_BUILD ON)   # speed up build

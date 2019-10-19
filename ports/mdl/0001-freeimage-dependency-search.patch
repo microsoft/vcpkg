@@ -1,0 +1,55 @@
+diff --git a/cmake/find/find_freeimage_ext.cmake b/cmake/find/find_freeimage_ext.cmake
+index 5148c75..926ce6b 100644
+--- a/cmake/find/find_freeimage_ext.cmake
++++ b/cmake/find/find_freeimage_ext.cmake
+@@ -36,8 +36,8 @@ function(FIND_FREEIMAGE_EXT)
+     set(_FREEIMAGE_LIB "NOTFOUND")
+     set(_FREEIMAGE_SHARED "NOTFOUND")
+ 
+-    find_file(_FREEIMAGE_HEADER_FILE "FreeImage.h" 
+-        HINTS 
++    find_file(_FREEIMAGE_HEADER_FILE "FreeImage.h"
++        HINTS
+             ${FREEIMAGE_DIR}
+             ${FREEIMAGE_DIR}/include
+             ${FREEIMAGE_DIR}/Dist/x64
+@@ -52,16 +52,24 @@ function(FIND_FREEIMAGE_EXT)
+ 
+         if(WINDOWS)
+             # assuming that the windows (x64) binaries from http://freeimage.sourceforge.net/download.html are used
+-            find_file(_FREEIMAGE_LIB "${CMAKE_STATIC_LIBRARY_PREFIX}freeimage${CMAKE_STATIC_LIBRARY_SUFFIX}" 
+-                HINTS 
++            find_file(_FREEIMAGE_LIB
++                NAMES
++                    "${CMAKE_STATIC_LIBRARY_PREFIX}freeimage${CMAKE_STATIC_LIBRARY_SUFFIX}"
++                    "${CMAKE_STATIC_LIBRARY_PREFIX}FreeImage${CMAKE_STATIC_LIBRARY_SUFFIX}"
++                HINTS
+                     ${FREEIMAGE_DIR}
+                     ${FREEIMAGE_DIR}/Dist/x64
++                    ${FREEIMAGE_DIR}/lib
+                 )
+ 
+-            find_file(_FREEIMAGE_SHARED "${CMAKE_SHARED_LIBRARY_PREFIX}freeimage${CMAKE_SHARED_LIBRARY_SUFFIX}" 
+-                HINTS 
++            find_file(_FREEIMAGE_SHARED
++                NAMES
++                    "${CMAKE_SHARED_LIBRARY_PREFIX}freeimage${CMAKE_SHARED_LIBRARY_SUFFIX}"
++                    "${CMAKE_SHARED_LIBRARY_PREFIX}FreeImage${CMAKE_SHARED_LIBRARY_SUFFIX}"
++                HINTS
+                     ${FREEIMAGE_DIR}
+                     ${FREEIMAGE_DIR}/Dist/x64
++                    ${FREEIMAGE_DIR}/bin
+                 )
+ 
+         elseif(LINUX OR MACOSX)
+@@ -71,8 +79,9 @@ function(FIND_FREEIMAGE_EXT)
+             find_file(_FREEIMAGE_SHARED
+                 NAMES
+                     "${CMAKE_SHARED_LIBRARY_PREFIX}freeimage${CMAKE_SHARED_LIBRARY_SUFFIX}"
++                    "${CMAKE_SHARED_LIBRARY_PREFIX}FreeImage${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                     "libfreeimage.so"
+-                HINTS 
++                HINTS
+                     ${FREEIMAGE_DIR}
+                     ${FREEIMAGE_DIR}/lib64
+                     ${FREEIMAGE_DIR}/lib

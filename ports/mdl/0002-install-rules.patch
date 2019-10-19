@@ -1,0 +1,253 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c91ff0a..71e2a13 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,6 +52,8 @@ option(MDL_LOG_FILE_DEPENDENCIES "Prints the list of files that is copied after
+ set(MDL_ADDITIONAL_COMPILER_DEFINES "" CACHE STRING "Additional compile defines that are passed to each of the projects")
+ set(MDL_ADDITIONAL_COMPILER_OPTIONS "" CACHE STRING "Additional compile options that are passed to each of the projects")
+ 
++include(GNUInstallDirs)
++
+ # -------------------------------------------------------------------------------------------------
+ # general setup
+ include(${MDL_BASE_FOLDER}/cmake/setup.cmake)
+@@ -199,3 +201,31 @@ foreach(_TEST_POST ${MDL_TEST_LIST_POST})
+     add_subdirectory(${_TEST_POST})
+ endforeach()
+ 
++message(STATUS "ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}")
++message(STATUS "LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}")
++message(STATUS "RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}")
++
++install(
++    TARGETS
++        core
++        sdk
++        i18n
++        mdlc
++        mdlm
++    EXPORT   mdl-targets
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++)
++
++install(
++    EXPORT       mdl-targets
++    NAMESPACE    "mdl::"
++    DESTINATION  "share/mdl"
++)
++
++export(
++    EXPORT    mdl-targets
++    NAMESPACE "mdl::"
++)
+diff --git a/cmake/utilities.cmake b/cmake/utilities.cmake
+index 745b6b2..b44d0f4 100644
+--- a/cmake/utilities.cmake
++++ b/cmake/utilities.cmake
+@@ -592,7 +592,7 @@ function(CREATE_FROM_BASE_PRESET)
+     endif()
+ 
+     # create target and alias
+-    if(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "STATIC" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED")
++    if(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "STATIC" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "SHARED" OR CREATE_FROM_BASE_PRESET_TYPE STREQUAL "MODULE")
+         add_library(${CREATE_FROM_BASE_PRESET_TARGET} ${CREATE_FROM_BASE_PRESET_TYPE} ${CREATE_FROM_BASE_PRESET_SOURCES})
+         add_library(${CREATE_FROM_BASE_PRESET_NAMESPACE}::${CREATE_FROM_BASE_PRESET_TARGET} ALIAS ${CREATE_FROM_BASE_PRESET_TARGET})
+     elseif(CREATE_FROM_BASE_PRESET_TYPE STREQUAL "EXECUTABLE")
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index ab4485d..4b493fc 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -213,7 +213,7 @@ create_from_base_preset(
+     )
+ 
+ # override position and name in the folder hierarchy
+-set_target_properties(${PROJECT_NAME} PROPERTIES 
++set_target_properties(${PROJECT_NAME} PROPERTIES
+     FOLDER          "include"               # hierarchy
+     PROJECT_LABEL   "mi"                    # project name
+     )
+@@ -223,3 +223,8 @@ source_group("base" FILES ${PROJECT_HEADERS_BASE})
+ source_group("math" FILES ${PROJECT_HEADERS_MATH})
+ source_group("mdl" FILES ${PROJECT_HEADERS_MDL})
+ source_group("neuraylib" FILES ${PROJECT_HEADERS_NEURAYLIB})
++
++install(
++    DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/mi"
++    TYPE      INCLUDE
++)
+diff --git a/src/prod/bin/i18n/CMakeLists.txt b/src/prod/bin/i18n/CMakeLists.txt
+index ea3806f..212a1c1 100644
+--- a/src/prod/bin/i18n/CMakeLists.txt
++++ b/src/prod/bin/i18n/CMakeLists.txt
+@@ -27,7 +27,7 @@
+ #*****************************************************************************
+ 
+ # name of the target and the resulting library
+-set(PROJECT_NAME prod-bin-i18n)
++set(PROJECT_NAME i18n)
+ 
+ # collect sources
+ set(PROJECT_HEADERS
+@@ -67,9 +67,11 @@ create_from_base_preset(
+     SOURCES ${PROJECT_SOURCES}
+ )
+ 
++add_executable(prod-bin-i18n ALIAS ${PROJECT_NAME})
++
+ # add mdl and other dependencies
+-target_add_dependencies(TARGET ${PROJECT_NAME} 
+-    DEPENDS 
++target_add_dependencies(TARGET ${PROJECT_NAME}
++    DEPENDS
+         boost
+         llvm
+         ${LINKER_START_GROUP}
+@@ -81,4 +83,3 @@ target_add_dependencies(TARGET ${PROJECT_NAME}
+         base-util-string_utils
+         ${LINKER_END_GROUP}
+     )
+-    
+\ No newline at end of file
+diff --git a/src/prod/bin/mdlc/CMakeLists.txt b/src/prod/bin/mdlc/CMakeLists.txt
+index 826fc83..86cf547 100644
+--- a/src/prod/bin/mdlc/CMakeLists.txt
++++ b/src/prod/bin/mdlc/CMakeLists.txt
+@@ -27,7 +27,7 @@
+ #*****************************************************************************
+ 
+ # name of the target and the resulting library
+-set(PROJECT_NAME prod-bin-mdlc)
++set(PROJECT_NAME mdlc)
+ 
+ # collect sources
+ set(PROJECT_HEADERS
+@@ -52,9 +52,11 @@ create_from_base_preset(
+     SOURCES ${PROJECT_SOURCES}
+ )
+ 
++add_executable(prod-bin-mdlc ALIAS ${PROJECT_NAME})
++
+ # add mdl and other dependencies
+-target_add_dependencies(TARGET ${PROJECT_NAME} 
+-    DEPENDS 
++target_add_dependencies(TARGET ${PROJECT_NAME}
++    DEPENDS
+         boost
+         llvm
+         ${LINKER_START_GROUP}
+@@ -70,4 +72,3 @@ target_add_dependencies(TARGET ${PROJECT_NAME}
+         mdl::base-system-version
+         ${LINKER_END_GROUP}
+     )
+-    
+\ No newline at end of file
+diff --git a/src/prod/bin/mdlm/CMakeLists.txt b/src/prod/bin/mdlm/CMakeLists.txt
+index fa2d588..30ba194 100644
+--- a/src/prod/bin/mdlm/CMakeLists.txt
++++ b/src/prod/bin/mdlm/CMakeLists.txt
+@@ -27,7 +27,7 @@
+ #*****************************************************************************
+ 
+ # name of the target and the resulting example
+-set(PROJECT_NAME prod-bin-mdlm)
++set(PROJECT_NAME mdlm)
+ 
+ # collect sources
+ set(PROJECT_HEADERS
+@@ -66,6 +66,8 @@ create_from_base_preset(
+     SOURCES ${PROJECT_SOURCES}
+ )
+ 
++add_executable(prod-bin-mdlm ALIAS ${PROJECT_NAME})
++
+ # add dependencies
+ target_add_dependencies(TARGET ${PROJECT_NAME}
+     DEPENDS
+@@ -81,7 +83,7 @@ target_add_dependencies(TARGET ${PROJECT_NAME}
+         ${LINKER_END_GROUP}
+         mdl::mdl_sdk
+     )
+-    
++
+ # creates a user settings file to setup the debugger (visual studio only, otherwise this is a no-op)
+ target_create_vs_user_settings(TARGET ${PROJECT_NAME})
+ 
+diff --git a/src/prod/lib/mdl_core/CMakeLists.txt b/src/prod/lib/mdl_core/CMakeLists.txt
+index d2378d5..14ff310 100644
+--- a/src/prod/lib/mdl_core/CMakeLists.txt
++++ b/src/prod/lib/mdl_core/CMakeLists.txt
+@@ -27,21 +27,23 @@
+ #*****************************************************************************
+ 
+ # name of the target and the resulting library
+-set(PROJECT_NAME prod-lib-mdl_core)
++set(PROJECT_NAME core)
+ 
+ # collect sources
+-set(PROJECT_SOURCES 
++set(PROJECT_SOURCES
+     "mdl_core_factory.cpp"
+     )
+ 
+ # create target from template
+ create_from_base_preset(
+     TARGET ${PROJECT_NAME}
+-    TYPE SHARED
++    TYPE MODULE
+     SOURCES ${PROJECT_SOURCES}
+     EMBED_RC "mdl_core.rc"
+     )
+ 
++add_library(prod-lib-mdl_core ALIAS ${PROJECT_NAME})
++
+ # customize name
+ set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "lib")
+ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "mdl_core")
+diff --git a/src/prod/lib/mdl_sdk/CMakeLists.txt b/src/prod/lib/mdl_sdk/CMakeLists.txt
+index cf0d3d3..782a609 100644
+--- a/src/prod/lib/mdl_sdk/CMakeLists.txt
++++ b/src/prod/lib/mdl_sdk/CMakeLists.txt
+@@ -27,11 +27,11 @@
+ #*****************************************************************************
+ 
+ # name of the target and the resulting library
+-set(PROJECT_NAME prod-lib-mdl_sdk)
++set(PROJECT_NAME sdk)
+ 
+ # collect sources
+-set(PROJECT_SOURCES 
+-    "mdl_sdk_factory.cpp" 
++set(PROJECT_SOURCES
++    "mdl_sdk_factory.cpp"
+     "mdl_sdk_required_modules.cpp"
+     "mdl_sdk_stubs.cpp"
+     )
+@@ -39,11 +39,13 @@ set(PROJECT_SOURCES
+ # create target from template
+ create_from_base_preset(
+     TARGET ${PROJECT_NAME}
+-    TYPE SHARED
++    TYPE MODULE
+     SOURCES ${PROJECT_SOURCES}
+     EMBED_RC "mdl_sdk.rc"
+     )
+ 
++add_library(prod-lib-mdl_sdk ALIAS ${PROJECT_NAME})
++
+ # customize name
+ set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "lib")
+ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "mdl_sdk")
+@@ -57,8 +59,8 @@ add_library(mdl_sdk ALIAS ${PROJECT_NAME})
+ add_library(mdl::mdl_sdk ALIAS ${PROJECT_NAME})
+ 
+ # add mdl and other dependencies
+-target_add_dependencies(TARGET ${PROJECT_NAME} 
+-    DEPENDS 
++target_add_dependencies(TARGET ${PROJECT_NAME}
++    DEPENDS
+         boost
+         ${LINKER_WHOLE_ARCHIVE}
+         ${LINKER_START_GROUP}

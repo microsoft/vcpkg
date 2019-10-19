@@ -1,0 +1,6 @@
+Source: mdl
+Version: 2019.1.1 (317500.2554)
+Description: NVIDIA Material Definition Language SDK (Open Source)
+Homepage: https://github.com/NVIDIA/MDL-SDK
+Maintainer: Andréa MACHIZAUD <andrea.machizaud@gmail.com>
+Build-Depends: freeimage, python2, boost-any, boost-algorithm, boost-bind, boost-core, boost-function, boost-functional, boost-unordered, boost-smart-ptr, boost-tokenizer
