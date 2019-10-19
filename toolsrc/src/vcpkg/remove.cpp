@@ -189,14 +189,18 @@ namespace vcpkg::Remove
     static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_NO_DRY_RUN = "--no-dry-run";
     static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PATTERN = "--pattern";
 
-    static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 7> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},
         {OPTION_NO_PURGE, "Do not remove the cached copy of the package"},
         {OPTION_RECURSE, "Allow removal of packages not explicitly specified on the command line"},
         {OPTION_DRY_RUN, "Print the packages to be removed, but do not remove them"},
+        {OPTION_NO_DRY_RUN, "Actually remove"},
         {OPTION_OUTDATED, "Select all packages with versions that do not match the portfiles"},
+        {OPTION_PATTERN, "Select all packages that match a regular expression pattern"},
     }};
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
@@ -219,9 +223,12 @@ namespace vcpkg::Remove
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
+        const bool outdated = Util::Sets::contains(options.switches, OPTION_OUTDATED);
+        const bool pattern = Util::Sets::contains(options.switches, OPTION_PATTERN);
+
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<PackageSpec> specs;
-        if (Util::Sets::contains(options.switches, OPTION_OUTDATED))
+        if (outdated)
         {
             if (args.command_arguments.size() != 0)
             {
@@ -248,32 +255,43 @@ namespace vcpkg::Remove
                 System::print2(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
-            for (const auto& arg : args.command_arguments)
+
+            if (pattern)
             {
-                Optional<PackageSpec> exact_spec;
-                std::vector<PackageSpec> regex_specs;
-                std::regex arg_regex{std::string(arg)};
-                for (const auto& status : status_db) 
+                for (auto& arg : args.command_arguments)
                 {
-                    if (!status->is_installed())
-                        continue;
-                    const auto& spec_name = Strings::ascii_to_lowercase(std::string(status->package.spec.name()));
-                    if (spec_name == arg)
+                    Optional<PackageSpec> exact_spec;
+                    std::vector<PackageSpec> regex_specs;
+                    std::regex arg_regex{arg};
+                    for (const auto& status : status_db) 
                     {
-                        // Found an exact match, no need to search further.
-                        exact_spec = Input::check_and_get_package_spec(
-                            std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
-                        break;
+                        if (!status->is_installed())
+                            continue;
+                        const auto& spec_name = Strings::ascii_to_lowercase(std::string(status->package.spec.name()));
+                        if (spec_name == arg)
+                        {
+                            // Found an exact match, no need to search further.
+                            exact_spec = Input::check_and_get_package_spec(
+                                std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+                            break;
+                        }
+                        if (std::regex_match(spec_name, arg_regex))
+                            regex_specs.push_back(
+                                Input::check_and_get_package_spec(
+                                    std::string(spec_name), default_triplet, COMMAND_STRUCTURE.example_text));
                     }
-                    if (std::regex_match(spec_name, arg_regex))
-                        regex_specs.push_back(
-                            Input::check_and_get_package_spec(
-                                std::string(spec_name), default_triplet, COMMAND_STRUCTURE.example_text));
+                    if (exact_spec.has_value())
+                        specs.push_back(*exact_spec.get());
+                    else
+                        std::copy(regex_specs.begin(), regex_specs.end(), std::back_inserter(specs));
                 }
-                if (exact_spec.has_value())
-                    specs.push_back(*exact_spec.get());
-                else
-                    std::copy(regex_specs.begin(), regex_specs.end(), std::back_inserter(specs));
+            }
+            else
+            {
+                specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+                    return Input::check_and_get_package_spec(
+                        std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
+                    });
             }
 
             for (auto&& spec : specs)
@@ -291,6 +309,7 @@ namespace vcpkg::Remove
         const Purge purge = to_purge(purge_was_passed || !no_purge_was_passed);
         const bool is_recursive = Util::Sets::contains(options.switches, OPTION_RECURSE);
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
+        const bool no_dry_run = Util::Sets::contains(options.switches, OPTION_NO_DRY_RUN);
 
         const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
@@ -320,6 +339,14 @@ namespace vcpkg::Remove
         if (dry_run)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
+        }
+
+        if (pattern && !no_dry_run)
+        {
+            System::print2(System::Color::warning,
+                "If you are sure you want to remove the above packages, run this command with the "
+                "--no-dry-run option.\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         for (const RemovePlanAction& action : remove_plan)
