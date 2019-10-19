@@ -31,17 +31,3 @@ index c7f583d..ca9e602 100644
  
  # Now create the liblas-config files using the .in templates
  configure_file (liblas-config.cmake.in
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e35de06..f7c25d2 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -226,7 +226,8 @@ target_link_libraries(${LIBLAS_LIB_NAME}
-   ${GEOTIFF_LIBRARY}
-   ${GDAL_LIBRARY}
-   ${LASZIP_LIBRARY}
--  ${Boost_LIBRARIES})
-+  ${Boost_LIBRARIES}
-+  proj)
- 
- target_link_libraries(${LIBLAS_C_LIB_NAME}
-   ${LIBLAS_LIB_NAME} )
