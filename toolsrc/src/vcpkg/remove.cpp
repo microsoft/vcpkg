@@ -344,7 +344,12 @@ namespace vcpkg::Remove
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        if (pattern && !no_dry_run)
+        const bool has_packages_to_remove =
+            Util::find_if(remove_plan, [](const RemovePlanAction& package) -> bool {
+                return package.plan_type == RemovePlanType::REMOVE;
+            }) != remove_plan.cend();
+
+        if (has_packages_to_remove && pattern && !no_dry_run)
         {
             System::print2(System::Color::warning,
                 "If you are sure you want to remove the above packages, run this command with the "
