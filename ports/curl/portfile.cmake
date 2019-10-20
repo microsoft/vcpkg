@@ -86,7 +86,7 @@ if("sspi" IN_LIST FEATURES)
 endif()
 
 # brotli
-set(HAVE_BROTLI OFF) 
+set(HAVE_BROTLI OFF)
 if("brotli" IN_LIST FEATURES)
     set(HAVE_BROTLI ON)
 endif()
@@ -168,7 +168,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib OR EXISTS ${CURRENT_PACKAG
     message(FATAL_ERROR "Curl's import library name should be consistent with the static library name.")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

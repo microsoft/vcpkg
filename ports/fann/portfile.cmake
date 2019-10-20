@@ -39,8 +39,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
 
     # Remove useless config file and include path
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 endif()
 
 # Handle copyright

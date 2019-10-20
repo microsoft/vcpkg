@@ -16,30 +16,44 @@ vcpkg_from_github(
         export-global-data.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
-    OPTIONS_DEBUG
-        -DFFI_SKIP_HEADERS=ON
-)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
+        OPTIONS_DEBUG
+            -DFFI_SKIP_HEADERS=ON
+    )
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+    vcpkg_install_cmake()
+    vcpkg_copy_pdbs()
+    vcpkg_fixup_cmake_targets()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
-string(REPLACE "/* *know* they are going to link with the static library. */"
-"/* *know* they are going to link with the static library. */
+    file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
+    string(REPLACE "/* *know* they are going to link with the static library. */"
+    "/* *know* they are going to link with the static library. */
 
-#define FFI_BUILDING
+    #define FFI_BUILDING
 
-" FFI_H "${FFI_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+    " FFI_H "${FFI_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+else()
+    vcpkg_configure_make(
+        AUTOCONFIG
+        SOURCE_PATH ${SOURCE_PATH}
+    )
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libffi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libffi/copyright)
+    vcpkg_install_make()
+
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libffi-3.1/include ${CURRENT_PACKAGES_DIR}/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libffi-3.1)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/libffi-3.1)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+endif()
+
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

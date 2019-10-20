@@ -1,4 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_LINUX)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     if (NOT EXISTS "/usr/include/libintl.h")
         message(FATAL_ERROR "Please use command \"sudo apt-get install gettext\" to install gettext on linux.")
@@ -8,8 +8,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 endif()
 
 #Based on https://github.com/winlibs/gettext
-
-include(vcpkg_common_functions)
 
 set(GETTEXT_VERSION 0.19)
 
@@ -27,25 +25,34 @@ vcpkg_extract_source_archive_ex(
         0002-Fix-uwp-build.patch
 )
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
-    ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
-    DESTINATION ${SOURCE_PATH}/gettext-runtime
-)
-file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+        ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
+        ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
+        DESTINATION ${SOURCE_PATH}/gettext-runtime
+    )
+    file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.win32.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.win32.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
-    PREFER_NINJA
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
+        PREFER_NINJA
+        OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+    )
 
-vcpkg_install_cmake()
+    vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+    )
+
+    vcpkg_install_make()
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-gettext-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-gettext)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)

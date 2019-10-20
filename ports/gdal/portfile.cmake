@@ -245,7 +245,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
       DEBUG=1
   )
-  
+
   # Begin build process
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################
@@ -326,7 +326,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
 
   # Copy over PDBs
   vcpkg_copy_pdbs()
-  
+
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
   endif()
@@ -368,7 +368,6 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
 
     file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/gdalplugins)
     file(COPY ${OUT_PATH_RELEASE}/lib/pkgconfig DESTINATION ${OUT_PATH_RELEASE}/share/gdal)
-    file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
     file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
     file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
     file(COPY ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
@@ -404,7 +403,6 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     )
 
     file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/gdalplugins)
-    file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
     file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
   endif()
