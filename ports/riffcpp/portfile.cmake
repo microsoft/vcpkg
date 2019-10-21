@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libdmusic/riffcpp
-    REF  v2.2.1
-    SHA512 646a98e6f6cd3995081a6242a866effab2968e20b2700248e3d19036bed426236e3844ad09d4b542e023f5f280d74575c47abe5e5e94ce0d77536f4f0a33b8c1
+    REF  v2.2.4
+    SHA512 abceba02441305267c444ed724ca769fa08369302eb74b7729b700883b9354f3db95d8c68ee15f25844a75f1609edd2bcf7482fc639b9e2d3ee3b8caf5e9585f
     HEAD_REF master
 )
 

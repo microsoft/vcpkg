@@ -79,17 +79,10 @@ else()
 endif()
 
 target_link_libraries(Irrlicht PRIVATE 
-    ${ZLIB_LIBRARY} 
     ${PNG_LIBRARY} 
     ${JPEG_LIBRARY} 
+    ${ZLIB_LIBRARY}
     ${BZIP2_LIBRARY}
-    )
-
-target_compile_definitions(Irrlicht PRIVATE
-    NO_IRR_USE_NON_SYSTEM_ZLIB_
-    NO_IRR_USE_NON_SYSTEM_LIB_PNG_
-    NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
-    NO_IRR_USE_NON_SYSTEM_BZLIB_
     )
 
 if(IRR_BUILD_TOOLS)
@@ -144,6 +137,14 @@ if(NOT ${IRR_SHARED_LIB})
     target_compile_definitions(Irrlicht PUBLIC _IRR_STATIC_LIB_)
 endif()
 
+# Disable Irrlicht building already provided dependencies
+target_compile_definitions(Irrlicht
+    PRIVATE NO_IRR_USE_NON_SYSTEM_ZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_LIB_PNG_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_BZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
+    )
+
 # Per platform config
 # -------------------------------------------------------------------------------------------------
 
@@ -151,9 +152,6 @@ endif()
 target_compile_definitions(Irrlicht PRIVATE IRRLICHT_EXPORTS)
 
 if(WIN32)
-    # Unicode
-    target_compile_definitions(Irrlicht PRIVATE UNICODE _UNICODE)
-
     # Import the symbols of bzip2
     target_compile_definitions(Irrlicht PRIVATE BZ_IMPORT)
 

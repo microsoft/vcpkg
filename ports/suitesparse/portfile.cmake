@@ -24,6 +24,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         suitesparse.patch
+        add-find-package-metis.patch
 )
 
 # Copy suitesparse sources.

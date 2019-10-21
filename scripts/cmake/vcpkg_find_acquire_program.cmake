@@ -20,6 +20,7 @@
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
+## - GO
 ## - JOM
 ## - MESON
 ## - NASM
@@ -45,6 +46,7 @@ function(vcpkg_find_acquire_program VAR)
   unset(_vfa_RENAME)
   unset(SUBDIR)
   unset(REQUIRED_INTERPRETER)
+  unset(_vfa_SUPPORTED)
   unset(POST_INSTALL_COMMAND)
 
   vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
@@ -78,6 +80,14 @@ function(vcpkg_find_acquire_program VAR)
     set(_vfa_RENAME "yasm.exe")
     set(NOEXTRACT ON)
     set(HASH c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b)
+  elseif(VAR MATCHES "GO")
+    set(PROGNAME go)
+    set(PATHS ${DOWNLOADS}/tools/go/go/bin)
+    set(BREW_PACKAGE_NAME "go")
+    set(APT_PACKAGE_NAME "golang-go")
+    set(URL "https://dl.google.com/go/go1.13.1.windows-386.zip")
+    set(ARCHIVE "go1.13.1.windows-386.zip")
+    set(HASH 2ab0f07e876ad98d592351a8808c2de42351ab387217e088bc4c5fa51d6a835694c501e2350802323b55a27dc0157f8b70045597f789f9e50f5ceae50dea3027)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
@@ -231,6 +241,23 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://doxygen.nl/files/doxygen-1.8.15.windows.bin.zip")
     set(ARCHIVE "doxygen-1.8.15.windows.bin.zip")
     set(HASH 89482dcb1863d381d47812c985593e736d703931d49994e09c7c03ef67e064115d0222b8de1563a7930404c9bc2d3be323f3d13a01ef18861be584db3d5a953c)
+  elseif(VAR MATCHES "BAZEL")
+    set(PROGNAME bazel)
+    set(BAZEL_VERSION 0.25.2)
+    set(SUBDIR ${BAZEL_VERSION})
+    set(PATHS ${DOWNLOADS}/tools/bazel/${SUBDIR})
+    set(_vfa_RENAME "bazel")
+    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+      set(_vfa_SUPPORTED ON)
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64")
+      set(ARCHIVE "bazel-${BAZEL_VERSION}-linux-x86_64")
+      set(NOEXTRACT ON)
+      set(HASH db4a583cf2996aeb29fd008261b12fe39a4a5faf0fbf96f7124e6d3ffeccf6d9655d391378e68dd0915bc91c9e146a51fd9661963743857ca25179547feceab1)
+    else()
+      set(URL "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-windows-x86_64.zip") 
+      set(ARCHIVE "bazel-${BAZEL_VERSION}-windows-x86_64.zip")
+      set(HASH 6482f99a0896f55ef65739e7b53452fd9c0adf597b599d0022a5e0c5fa4374f4a958d46f98e8ba25af4b065adacc578bfedced483d8c169ea5cb1777a99eea53)
+    endif()
   # Download Tools
   elseif(VAR MATCHES "ARIA2")
     set(PROGNAME aria2c)
@@ -254,7 +281,7 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
-    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _vfa_SUPPORTED)
       set(EXAMPLE ".")
       if(DEFINED BREW_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
         set(EXAMPLE ":\n    brew install ${BREW_PACKAGE_NAME}")
@@ -274,9 +301,9 @@ function(vcpkg_find_acquire_program VAR)
     file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
     if(DEFINED NOEXTRACT)
       if(DEFINED _vfa_RENAME)
-        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME})
+        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
       else()
-        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR})
+        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
       endif()
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
@@ -284,12 +311,12 @@ function(vcpkg_find_acquire_program VAR)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
         file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
-        execute_process(
+        _execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
         )
       else()
-        execute_process(
+        _execute_process(
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
           WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
@@ -298,6 +325,7 @@ function(vcpkg_find_acquire_program VAR)
 
     if(DEFINED POST_INSTALL_COMMAND)
       vcpkg_execute_required_process(
+        ALLOW_IN_DOWNLOAD_MODE
         COMMAND ${POST_INSTALL_COMMAND}
         WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         LOGNAME ${VAR}-tool-post-install

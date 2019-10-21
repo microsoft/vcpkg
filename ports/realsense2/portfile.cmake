@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 7595780c1955a2d4a91df5b70ab6366c672f389bc3d2dcb9f2e78a2ea1fc875c65f878103df483205e17f62dfd024ee5f7ccb15afc5d18978d3c25aa071652ab
     HEAD_REF development
     PATCHES
-      "fix_openni2.patch"
+        fix_openni2.patch
+        fix-dependency-glfw3.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
@@ -68,6 +69,11 @@ if(BUILD_TOOLS)
     if(NOT BINS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
+    
+    # Issue#7109, remove mismatched dlls and libs when build with tools, this workaround should be removed when the post-build checks related feature implemented.
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/realsense2-gl.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/realsense2-gl.dll)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/realsense2-gl.pdb)
 endif()
 
 
@@ -76,5 +82,4 @@ if(BUILD_OPENNI2_BINDINGS)
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers)
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/realsense2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/realsense2/LICENSE ${CURRENT_PACKAGES_DIR}/share/realsense2/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
