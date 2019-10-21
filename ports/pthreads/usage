@@ -7,5 +7,3 @@ The package pthreads provides CMake targets:
     target_link_libraries(main PRIVATE PThreads4W::PThreads4W_CXXEXC)
     #or
     target_link_libraries(main PRIVATE PThreads4W::PThreads4W_STRUCTEXC)
-    
-    target_include_directories(main PRIVATE PThreads4W_INCLUDE_DIR)
