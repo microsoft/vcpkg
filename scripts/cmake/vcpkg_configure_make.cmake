@@ -102,10 +102,6 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "${_csc_GENERATOR} not supported.")
     endif()
-    
-    if (_csc_AUTOCONFIG AND NOT CMAKE_HOST_WIN32)
-        find_program(autoreconf autoreconf REQUIRED)
-    endif()
 
     set(WIN_TARGET_ARCH )
     set(WIN_TARGET_COMPILER )
@@ -123,7 +119,11 @@ function(vcpkg_configure_make)
     if (CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(YASM)
         vcpkg_find_acquire_program(PERL)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
+        set(MSYS_REQUIRE_PACKAGES diffutils)
+        if (_csc_AUTOCONFIG)
+            set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} autoconf automake m4 libtool perl)
+        endif()
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
         get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
         
@@ -139,6 +139,8 @@ function(vcpkg_configure_make)
         set(WIN_TARGET_COMPILER CC=cl)
         set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
         set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    elseif (_csc_AUTOCONFIG)
+        find_program(autoreconf autoreconf REQUIRED)
     endif()
     
     if (NOT _csc_NO_DEBUG)
@@ -253,11 +255,19 @@ function(vcpkg_configure_make)
         
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
-            vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi
-                WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME prerun-${TARGET_TRIPLET}-dbg
-            )
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_required_process(
+                    COMMAND ${base_cmd} autoreconf -vfi
+                    WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            else()
+                vcpkg_execute_required_process(
+                    COMMAND autoreconf -vfi
+                    WORKING_DIRECTORY ${PRJ_DIR}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            endif()
         endif()
         
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
@@ -318,11 +328,19 @@ function(vcpkg_configure_make)
         
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
-            vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi
-                WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME prerun-${TAR_TRIPLET_DIR}
-            )
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_required_process(
+                    COMMAND ${base_cmd} autoreconf -vfi
+                    WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            else()
+                vcpkg_execute_required_process(
+                    COMMAND autoreconf -vfi
+                    WORKING_DIRECTORY ${PRJ_DIR}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            endif()
         endif()
         
         message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
