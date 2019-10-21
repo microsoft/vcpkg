@@ -25,9 +25,19 @@ if ("example" IN_LIST FEATURES)
     if (NOT VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature example only support windows.")
     endif()
+    
+    if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+        set(BUILD_ARCH "Win32")
+    elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+        set(BUILD_ARCH "x64")
+    else()
+        message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
+    
     vcpkg_build_msbuild(
         USE_VCPKG_INTEGRATION
         PROJECT_PATH ${SOURCE_PATH}/examples/imgui_examples.sln
+        PLATFORM ${BUILD_ARCH}
     )
     
     # Install headers
