@@ -12,6 +12,7 @@ Description: build with tests
 
 Feature: util
 Description: build available utils
+Build-Depends: getopt-win32 (windows)
 
 Feature: python
 Description: build with python3
