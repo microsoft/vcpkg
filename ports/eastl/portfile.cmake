@@ -17,11 +17,10 @@ set(EABASE_PATH  ${SOURCE_PATH})
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
-    REF dcd2b838d52de13691999aff8faeaa8f284928ac
-    SHA512 9756ee47a30447f17ceb45fb5143d6e80905636cf709c171059a83f74094fb25391c896de0ea5e063cdad4e7334c5f963c75b1c34ad539fd24175983a2054159
+    REF 3.14.01
+    SHA512 efc03bdd4b6371b3fb4b75cac31ce3081290e9177453914a4fbb601d1ba44d65a86f2e98b7b27efbd985f37bd59a80169cf58beb3a32e5b3672ea2a2d6dd78d1
     HEAD_REF master
     PATCHES 
-    fixchar8_t.patch # can be removed after electronicarts/EASTL#274 is resolved
     fix_cmake_install.patch
 )
 

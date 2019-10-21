@@ -1,0 +1,11 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO bfgroup/Lyra
+    REF 1.1
+    SHA512 afb1f97a3c72697a8739019e132758db270a9271b4be8f7e593f43155761550606d63795c657c586fb885bb61d78ad0fe1517537b8338c5e05ba74be5a8dc208
+    HEAD_REF master
+)
+
+file(COPY ${SOURCE_PATH}/include/lyra DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

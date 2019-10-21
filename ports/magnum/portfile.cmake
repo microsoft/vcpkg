@@ -5,14 +5,10 @@ vcpkg_from_github(
     REF v2019.01
     SHA512 1edce0a38af90bd456a827b073d30d470a13b47797d62ba22001643be7519722c6886498a63be5e2ee65b8649a7eb2c217bbe2cd36ab4f4523d91aaee573ffd5
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch
-        ${CMAKE_CURRENT_LIST_DIR}/002-tools-path.patch
-        ${CMAKE_CURRENT_LIST_DIR}/003-glfw-find-module.patch
+        001-sdl-includes.patch
+        002-tools-path.patch
+        003-glfw-find-module.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

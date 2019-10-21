@@ -28,6 +28,7 @@ vcpkg_configure_cmake(
         -DDISABLE_DOC=ON
         -DDISABLE_SAMPLES=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_ICU=${DISABLE_ICU}
+        -DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON
         ${XMLCHTYPE}
 )
 
