@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         toolchain_fixes.patch
 		rename_config_cmake.patch
+		fix_find_package_sdl2.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
