@@ -11,6 +11,7 @@
 ##     [DISABLE_AUTO_DST]
 ##     [GENERATOR]
 ##     [NO_DEBUG]
+##     [SKIP_CONFIGURE]
 ##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
@@ -31,6 +32,9 @@
 ##
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
+##
+## ### SKIP_CONFIGURE
+## Skip configure process
 ##
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure file.
@@ -71,7 +75,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG"
+        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -270,12 +274,14 @@ function(vcpkg_configure_make)
             endif()
         endif()
         
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        vcpkg_execute_required_process(
-            COMMAND ${dbg_command}
-            WORKING_DIRECTORY ${PRJ_DIR}
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
+        if (NOT _csc_SKIP_CONFIGURE)
+            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+            vcpkg_execute_required_process(
+                COMMAND ${dbg_command}
+                WORKING_DIRECTORY ${PRJ_DIR}
+                LOGNAME config-${TARGET_TRIPLET}-dbg
+            )
+        endif()
     endif()
 
     # Configure release
@@ -343,12 +349,14 @@ function(vcpkg_configure_make)
             endif()
         endif()
         
-        message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
-        vcpkg_execute_required_process(
-            COMMAND ${rel_command}
-            WORKING_DIRECTORY ${PRJ_DIR}
-            LOGNAME config-${TAR_TRIPLET_DIR}
-        )
+        if (NOT _csc_SKIP_CONFIGURE)
+            message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
+            vcpkg_execute_required_process(
+                COMMAND ${rel_command}
+                WORKING_DIRECTORY ${PRJ_DIR}
+                LOGNAME config-${TAR_TRIPLET_DIR}
+            )
+        endif()
     endif()
     
     # Restore envs
