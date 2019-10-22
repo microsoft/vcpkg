@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.12)
 
 project(loguru CXX)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_LINK_FLAGS -lpthread -ldl)
+set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} -lpthread -ldl)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
