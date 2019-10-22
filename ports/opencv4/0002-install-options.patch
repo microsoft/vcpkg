@@ -2,15 +2,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 34aa1b1..d5c71b0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -525,7 +525,7 @@ endif()
- 
- if(WIN32)
-   # Postfix of DLLs:
--  ocv_update(OPENCV_DLLVERSION "${OPENCV_VERSION_MAJOR}${OPENCV_VERSION_MINOR}${OPENCV_VERSION_PATCH}")
-+  ocv_update(OPENCV_DLLVERSION "")
-   ocv_update(OPENCV_DEBUG_POSTFIX d)
- else()
-   # Postfix of so's:
 @@ -578,7 +578,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
