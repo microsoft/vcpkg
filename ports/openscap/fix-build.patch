@@ -59,14 +59,26 @@ index 4de5b57..5f483a3 100644
  
  # ---------- RPATHS for linking
 diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
-index 2a3f373..bd0e12c 100644
+index 2a3f373..781d05a 100644
 --- a/utils/CMakeLists.txt
 +++ b/utils/CMakeLists.txt
-@@ -6,27 +6,20 @@ if(ENABLE_OSCAP_UTIL)
+@@ -6,27 +6,32 @@ if(ENABLE_OSCAP_UTIL)
  	add_executable(oscap ${UTILS_SOURCES})
  	target_link_libraries(oscap openscap)
  	if(WIN32)
 -		set(OSCAP_UTIL_DESTINATION ".")
++        find_path(GETOPT_INCLUDE_DIR getopt.h)
++        include(SelectLibraryConfigurations)
++        find_library(GETOPT_LIBRARY_RELEASE NAMES getopt)
++        find_library(GETOPT_LIBRARY_DEBUG NAMES getopt PATH_SUFFIXES debug/lib)
++        select_library_configurations(GETOPT)
++        
++        message("GETOPT_INCLUDE_DIR: ${GETOPT_INCLUDE_DIR}")
++        message("GETOPT_LIBRARY: ${GETOPT_LIBRARY}")
++        
++        target_include_directories(oscap PRIVATE ${GETOPT_INCLUDE_DIR})
++        target_link_libraries(oscap PRIVATE ${GETOPT_LIBRARY})
++        
 +		set(OSCAP_UTIL_DESTINATION tools)
  		# Install the 'oscap' utility
  		install(TARGETS "oscap"
@@ -89,7 +101,7 @@ index 2a3f373..bd0e12c 100644
  		# Install manual page
  		install(FILES "oscap.8"
 -			DESTINATION "${CMAKE_INSTALL_MANDIR}/man8"
-+			DESTINATION "share/openscap/man8"
++			DESTINATION share/openscap/man8
  		)
  	endif()
  endif()
