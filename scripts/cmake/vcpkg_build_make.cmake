@@ -26,7 +26,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;NO_PARALLEL_BUILD;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -54,15 +54,19 @@ function(vcpkg_build_make)
             # Set make command and install command
             set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
+            if(NOT _csc_NO_PARALLEL_BUILD)
+                set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
+                set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
+            endif()
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
             set(MAKE make;)
             # Set make command and install command
-            set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
+            if(NOT _csc_NO_PARALLEL_BUILD)
+                set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
+                set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
+            endif()
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)

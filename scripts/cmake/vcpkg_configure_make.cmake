@@ -12,6 +12,7 @@
 ##     [GENERATOR]
 ##     [NO_DEBUG]
 ##     [SKIP_CONFIGURE]
+##     [FORCE GCC]
 ##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
@@ -38,6 +39,9 @@
 ##
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure file.
+##
+## ### FORCE_GCC
+## Force using GCC compiler also when other might be preferred by the user. Useful on macOS
 ##
 ## ### DISABLE_AUTO_HOST
 ## Don't set host automatically, the default value is `i686`.
@@ -75,7 +79,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
+        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE;FORCE_GCC"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -149,6 +153,40 @@ function(vcpkg_configure_make)
         find_program(autoreconf autoreconf REQUIRED)
     endif()
 
+    set(base_cmd )
+    if(_csc_FORCE_GCC AND NOT CMAKE_HOST_WIN32)
+        if(NOT GCC)
+            find_program(GCC "gcc-9")
+            find_program(GXX "g++-9")
+        endif()
+        if(NOT GCC)
+            find_program(GCC "gcc-8")
+            find_program(GXX "g++-8")
+        endif()
+        if(NOT GCC)
+            find_program(GCC "gcc-7")
+            find_program(GXX "g++-7")
+        endif()
+        if(NOT GCC)
+            find_program(GCC "gcc-6")
+            find_program(GXX "g++-6")
+        endif()
+        if(NOT GCC)
+            find_program(GCC "gcc")
+            find_program(GXX "g++")
+        endif()
+        if(GCC)
+            set(ENV{CC} ${GCC})
+            set(ENV{CXX} ${GXX})
+            message(STATUS "Forcing CC compiler to ${GCC}")
+            message(STATUS "Forcing CXX compiler to ${GXX}")
+            set(base_cmd ./)
+        else()
+            set(base_cmd ./)
+        endif()
+    endif()
+
+
     if (NOT _csc_NO_DEBUG)
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     else()
@@ -171,7 +209,6 @@ function(vcpkg_configure_make)
                             --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
     endif()
 
-    set(base_cmd )
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc -c)
 
@@ -209,7 +246,6 @@ function(vcpkg_configure_make)
             ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}"
         )
     else()
-        set(base_cmd ./)
         set(rel_command
             ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
         )

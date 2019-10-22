@@ -1,20 +1,20 @@
-set(GETTEXT_VERSION 0.20.1)
+set(GETTEXT_VERSION 0.19)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${GETTEXT_VERSION}.tar.gz"
     FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
-    SHA512 af6d74986da285df0bdd59524bdf01bb12db448e5ea659dda3b60b660c4a9063c80e8c74cc8751334e065e98348ee0db0079e43c67d485a15e86ae236115fe06
+    SHA512 a5db035c582ff49d45ee6eab9466b2bef918e413a882019c204a9d8903cb3770ddfecd32c971ea7c7b037c7b69476cf7c56dcabc8b498b94ab99f132516c9922
 )
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GETTEXT_VERSION}
     PATCHES
         0001-Fix-macro-definitions.patch
+        0002-Fix-uwp-build.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS)
     file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
         ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
@@ -32,18 +32,43 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     vcpkg_install_cmake()
-    vcpkg_copy_pdbs()
 
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
 else()
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    set(GETTEXT_EXTRA_OPTS)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(GETTEXT_EXTRA_OPTS ${GETTEXT_EXTRA_OPTS} --enable-shared)
+    else()
+        set(GETTEXT_EXTRA_OPTS ${GETTEXT_EXTRA_OPTS} --enable-static)
+    endif()
+
+    set(GETTEXT_EXTRA_OPTS ${GETTEXT_EXTRA_OPTS}
+                           --enable-relocatable
+                           --disable-nls
+    )
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        FORCE_GCC
+        OPTIONS
+            ${GETTEXT_EXTRA_OPTS}
     )
 
-    vcpkg_install_make()
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-gettext-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-gettext)
+    vcpkg_build_make(
+        NO_PARALLEL_BUILD
+        ENABLE_INSTALL
+    )
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(GLOB_RECURSE GETTEXT_EXES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+        file(INSTALL ${GETTEXT_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 endif()
 
+# Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_copy_pdbs()
