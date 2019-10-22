@@ -1,16 +1,13 @@
 cmake_minimum_required(VERSION 3.12)
 
 project(loguru CXX)
-
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} -lpthread -ldl)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
 set(loguru_headers
   loguru.hpp
 )
-
 set(loguru_sources
   loguru.cpp
 )
@@ -19,6 +16,12 @@ add_library(loguru ${loguru_sources})
 target_include_directories(loguru PUBLIC 
                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                $<INSTALL_INTERFACE:include/loguru>)
+
+if(UNIX)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    target_link_libraries(loguru PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
+endif()
 
 set(LOGURU_INCLUDE_INSTALL_DIR include/loguru CACHE PATH "Install directory for headers")
 if(INSTALL_HEADERS)
@@ -43,5 +46,3 @@ install(TARGETS loguru
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/loguruConfig.cmake DESTINATION share/loguru)
 install(EXPORT loguruTargets DESTINATION share/loguru)
-
-
