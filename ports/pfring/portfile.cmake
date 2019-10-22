@@ -17,7 +17,6 @@ vcpkg_build_make()
 vcpkg_copy_pdbs()
 
 # Install manually because pfring cannot set prefix
-
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
     set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     
