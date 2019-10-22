@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5a89ace..6b5836d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -6,7 +6,7 @@
@@ -10,4 +8,4 @@ index 5a89ace..6b5836d 100644
 +project(yogacore CXX)
  set(CMAKE_VERBOSE_MAKEFILE on)
  
- file(GLOB yogacore_SRC yoga/*.cpp)
+ file(GLOB_RECURSE yogacore_SRC yoga/*.cpp)
