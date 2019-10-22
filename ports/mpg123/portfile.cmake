@@ -26,7 +26,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/mpg123/mpg123/${MPG123_VERSION}/mpg123-${MPG123_VERSION}.tar.bz2"
+    URLS "https://downloads.sourceforge.net/project/mpg123/mpg123/${MPG123_VERSION}/mpg123-${MPG123_VERSION}.tar.bz2"
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
 )

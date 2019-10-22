@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 include(CMakePackageConfigHelpers)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-2.4.0.tar.gz"
+    URLS "https://www.codesynthesis.com/download/odb/2.4/libodb-2.4.0.tar.gz"
     FILENAME "libodb-2.4.0.tar.gz"
     SHA512 f1311458634695eb6ba307ebfd492e3b260e7beb06db1c5c46df58c339756be4006322cdc4e42d055bf5b2ad14ce4656ddcafcc4e16c282034db8a77d255c3eb
 )

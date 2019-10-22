@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 set(VERSION 2_1_25)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.tinkerforge.com/bindings/c/tinkerforge_c_bindings_${VERSION}.zip"
+    URLS "https://download.tinkerforge.com/bindings/c/tinkerforge_c_bindings_${VERSION}.zip"
     FILENAME "tinkerforge-${VERSION}.zip"
     SHA512  c02b789bd466803d60aeb39a544b0aa17af811377b065a0b273bcfc15c5844f8cfe981d8143743e32bd05470c2c6af297df50924da0d2895a4cdf4bc9e9bd0b8
 )

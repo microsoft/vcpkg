@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 vcpkg_download_distfile(
     SOURCE_ARCHIVE_PATH
-    URLS http://www.tcpdump.org/release/libpcap-1.9.0.tar.gz
+    URLS https://www.tcpdump.org/release/libpcap-1.9.0.tar.gz
     FILENAME libpcap-1.9.0.tar.gz
     SHA512 0ff25641f1e9d29082766caef45888c19214f770c4f378818caa73fcbc4ae54ad9195549c2499d4879ff46e35741d93b2b02cc5f3d6aa99e85a32194cf10bfe7
 )

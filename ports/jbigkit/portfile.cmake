@@ -6,7 +6,7 @@ set(JBIGKIT_VERSION 2.1)
 set(JBIGKIT_HASH c4127480470ef90db1ef3bd2caa444df10b50ed8df0bc9997db7612cb48b49278baf44965028f1807a21028eb965d677e015466306b44683c4ec75a23e1922cf)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.cl.cam.ac.uk/~mgk25/jbigkit/download/jbigkit-${JBIGKIT_VERSION}.tar.gz"
+    URLS "https://www.cl.cam.ac.uk/~mgk25/jbigkit/download/jbigkit-${JBIGKIT_VERSION}.tar.gz"
     FILENAME "jbigkit-${JBIGKIT_VERSION}.tar.gz"
     SHA512 ${JBIGKIT_HASH}
 )

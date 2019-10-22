@@ -13,7 +13,7 @@ if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
+    URLS "https://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
     FILENAME "gdal${GDAL_VERSION_PKG}.zip"
     SHA512 ${GDAL_PACKAGE_SUM}
 )

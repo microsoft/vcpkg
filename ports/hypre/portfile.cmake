@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz"
+    URLS "https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz"
     FILENAME "hypre-2.11.2.tar.gz"
     SHA512 a06321028121e5420fa944ce4fae5f9b96e6021ec2802e68ec3c349f19a20543ed7eff774a4735666c5807ce124eb571b3f86757c67e91faa1c683c3f657469f
 )

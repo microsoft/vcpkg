@@ -7,7 +7,7 @@ include(vcpkg_common_functions)
 set(VERSION 4.7.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
+    URLS "https://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
     SHA512 24d53278db56b199e6787242f22339f74e07d2cd3ed56f851ad905b110c2ba3cb001e1e2fcbc8624f0e93e00ba1fe1b23630dd1a736558c694655aeb1c3129da
 )

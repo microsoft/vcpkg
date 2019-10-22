@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.sourceforge.net/mad/libmad-0.15.1b.tar.gz"
+    URLS "https://download.sourceforge.net/mad/libmad-0.15.1b.tar.gz"
     FILENAME "libmad-0.15.1b.tar.gz"
     SHA512 2cad30347fb310dc605c46bacd9da117f447a5cabedd8fefdb24ab5de641429e5ec5ce8af7aefa6a75a3f545d3adfa255e3fa0a2d50971f76bc0c4fc0400cc45
 )

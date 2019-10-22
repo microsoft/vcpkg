@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_from_gitlab(
-    GITLAB_URL http://gitlab.onelab.info
+    GITLAB_URL https://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gl2ps/gl2ps
     REF gl2ps_1_4_0

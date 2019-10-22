@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-boost-2.4.0.tar.gz"
+    URLS "https://www.codesynthesis.com/download/odb/2.4/libodb-boost-2.4.0.tar.gz"
     FILENAME "libodb-boost-2.4.0.tar.gz"
     SHA512 af716b0385cf4ea18b20dcd5880c69c43cfc195eec4ff196a8e438833306489c39ab06a494e5d60cd08ba0d94caa05bd07e5f3fa836d835bad15c8a2ad7de306
 )

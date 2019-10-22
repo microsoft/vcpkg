@@ -9,7 +9,7 @@ if(TRIPLET_SYSTEM_ARCH MATCHES "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Window
 elseif(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "http://www.advsofteng.net/chartdir_cpp_win.zip"
+        URLS "https://www.advsofteng.net/chartdir_cpp_win.zip"
         FILENAME "chartdir_cpp_win-6.3.1.zip"
         SHA512 e9841d4416c833f57439a36cb981a9c320884c655f8278a22690f05a215c87f0bba83406b45e03ea384c015a4619852c7a9b36dcc9dbd7d531dee1c07b5cffe9
     )
@@ -57,7 +57,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 
         vcpkg_download_distfile(ARCHIVE_FILE
-            URLS "http://www.advsofteng.net/chartdir_cpp_linux_64.tar.gz"
+            URLS "https://www.advsofteng.net/chartdir_cpp_linux_64.tar.gz"
             FILENAME "chartdir_cpp_linux_64-6.3.1.tar.gz"
             SHA512 e6a3acee3cc5f38304ffa0d3704b1365fcc7a60c8bb688f121caa31efa568b74598b4e10379e84200888d9d8dc3cd7a6a24a944c2d63ca5a146162854c6222a9
         )
@@ -65,7 +65,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
     else()
 
         vcpkg_download_distfile(ARCHIVE_FILE
-            URLS "http://www.advsofteng.net/chartdir_cpp_linux.tar.gz"
+            URLS "https://www.advsofteng.net/chartdir_cpp_linux.tar.gz"
             FILENAME "chartdir_cpp_linux-6.3.1.tar.gz"
             SHA512 0a2f2d7c8d53c2f06c302a837f286826b4f48cc5f5bdb55c4de23337bc4188d1652625aee2c8061561d9b5bdef5e0e2a4cdd176d44ca60c1f730e4f38299c5a0
         )

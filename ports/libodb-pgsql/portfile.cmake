@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-pgsql-2.4.0.tar.gz"
+    URLS "https://www.codesynthesis.com/download/odb/2.4/libodb-pgsql-2.4.0.tar.gz"
     FILENAME "libodb-pgsql-2.4.0.tar.gz"
     SHA512 535515356233b815f144c0098940174f7a530e7fa4e930c0a9ebdc255fdb8bac8cdcceac31f25be4864105323e00bfe50808efa648e7c8ffb5a944e52f514b69
 )

@@ -4,7 +4,7 @@ set(SHAPELIB_VERSION 1.4.1)
 set(SHAPELIB_HASH e3e02dde8006773fed25d630896e79fd79d2008a029cc86b157fe0d92c143a9fab930fdb93d9700d4e1397c3b23ae4b86e91db1dbaca1c5388d4e3aea0309341)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/shapelib/shapelib-${SHAPELIB_VERSION}.zip"
+    URLS "https://download.osgeo.org/shapelib/shapelib-${SHAPELIB_VERSION}.zip"
     FILENAME "shapelib-${SHAPELIB_VERSION}.zip"
     SHA512 ${SHAPELIB_HASH}
 )

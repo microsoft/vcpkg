@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz"
+    URLS "https://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz"
     FILENAME "fltk.tar.gz"
     SHA512 0be1c8e6bb7a8c7ef484941a73868d5e40b90e97a8e5dc747bac2be53a350621975406ecfd4a9bcee8eeb7afd886e75bf7a6d6478fd6c56d16e54059f22f0891
 )

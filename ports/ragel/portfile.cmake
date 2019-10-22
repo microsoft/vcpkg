@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.colm.net/files/ragel/ragel-6.10.tar.gz"
+    URLS "https://www.colm.net/files/ragel/ragel-6.10.tar.gz"
     FILENAME "ragel-6.10.tar.gz"
     SHA512 6c1fe4f6fa8546ae28b92ccfbae94355ff0d3cea346b9ae8ce4cf6c2bdbeb823e0ccd355332643ea72d3befd533a8b3030ddbf82be7ffa811c2c58cbb01aaa38
 )

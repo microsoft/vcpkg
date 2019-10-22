@@ -9,7 +9,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 set(VERSION 4.7)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://monkeysaudio.com/files/MAC_SDK_483.zip"
+    URLS "https://monkeysaudio.com/files/MAC_SDK_483.zip"
     FILENAME "MAC_SDK_483.zip"
     SHA512 c080aa87997def3b970050f6bd334b6908884cc521f192abc02d774a8b3067207781dcab30f052015d4ae891fc6390c6f0b33ed319d9d7fd0850dab6fcded8f0
 )

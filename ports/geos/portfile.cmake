@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 set(GEOS_VERSION 3.6.3)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2"
+    URLS "https://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2"
     FILENAME "geos-${GEOS_VERSION}.tar.bz2"
     SHA512 f88adcf363433e247a51fb1a2c0b53f39b71aba8a6c01dd08aa416c2e980fe274a195e6edcb5bb5ff8ea81b889da14a1a8fb2849e04669aeba3b6d55754dc96a
 )

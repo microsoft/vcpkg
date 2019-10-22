@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 set(VERSION 1.8.1)
                                               
 vcpkg_download_distfile(ARCHIVE
-	URLS "http://download.osgeo.org/liblas/libLAS-${VERSION}.tar.bz2"
+	URLS "https://download.osgeo.org/liblas/libLAS-${VERSION}.tar.bz2"
 	FILENAME "libLAS-${VERSION}-src.tar.bz2"
     SHA512 1cb39c557af0006c54f1100d0d409977fcc1886abd155c1b144d806c47f8675a9f2125d3a9aca16bae65d2aabba84d5e5e322b42085e7db312f3d53f92342acf  
 	HEAD_REF master

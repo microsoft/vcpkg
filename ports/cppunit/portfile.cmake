@@ -10,7 +10,7 @@ if (VCPKG_CRT_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://dev-www.libreoffice.org/src/cppunit-${VERSION}.tar.gz"
+    URLS "https://dev-www.libreoffice.org/src/cppunit-${VERSION}.tar.gz"
     FILENAME "cppunit-${VERSION}.tar.gz"
     SHA512 4ea1da423c6f7ab37e4144689f593396829ce74d43872d6b10709c1ad5fbda4ee945842f7e9803592520ef81ac713e95a3fe130295bf048cd32a605d1959882e
 )

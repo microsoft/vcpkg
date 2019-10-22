@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://tinythreadpp.bitsnbites.eu/files/TinyThread%2B%2B-1.1-src.tar.bz2"
+    URLS "https://tinythreadpp.bitsnbites.eu/files/TinyThread%2B%2B-1.1-src.tar.bz2"
     FILENAME "TinyThread++-1.1.tar.bz2"
     SHA512 407f54fcf3f68dd7fec25e9e0749a1803dffa5d52d606905155714d29f519b5eae64ff654b11768fecc32c0123a78c48be37c47993e0caf157a63349a2f869c6
 )
