@@ -2,9 +2,9 @@ vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac p
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO threatstack/libmagic
-    REF 1249b5cd02c3b6fb9b917d16c76bc76c862932b6
-    SHA512 36c55d1d3956f72490d3e57375cc4a951de9689fdad5ae80e660724c62ea9086d5ce47fcecf823fd6ea6d6d2bce46920d408d3d59b25fe3a53787861de7540f8
+    REPO file/file
+    REF a0d5b0e4e9f97d74a9911e95cedd579852e25398
+    SHA512 bd20a7f3a3117da10556a1f746f691d2e26b23b30cb70a6c08e05110eb415d457b82265dd910a7b05fc30bc34ba9019a33b1c59a34d844c14c2df7ba1eea060e
     HEAD_REF mater
 )
 
@@ -23,6 +23,7 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man/man5)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
