@@ -1,0 +1,88 @@
+diff --git a/Horde3D/Binaries/CMakeLists.txt b/Horde3D/Binaries/CMakeLists.txt
+index dd722bb..8b22be4 100644
+--- a/Horde3D/Binaries/CMakeLists.txt
++++ b/Horde3D/Binaries/CMakeLists.txt
+@@ -11,4 +11,4 @@ ENDIF(NOT ${CMAKE_CFG_INTDIR} STREQUAL ".")
+ 
+ ADD_CUSTOM_COMMAND(TARGET CopyPlatformFiles PRE_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E
+-                   copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_SYSTEM_NAME} ${out_dir})
++                   copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${out_dir})
+diff --git a/Horde3D/Bindings/C++/CMakeLists.txt b/Horde3D/Bindings/C++/CMakeLists.txt
+index 71d696c..d073e60 100644
+--- a/Horde3D/Bindings/C++/CMakeLists.txt
++++ b/Horde3D/Bindings/C++/CMakeLists.txt
+@@ -1,11 +1,17 @@
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
++    install(FILES Horde3D.h Horde3DUtils.h
++            DESTINATION include/horde3d
++            )
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+ 
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+-        install(FILES Horde3D.h Horde3DUtils.h
+-                DESTINATION include/horde3d
+-                )
++    install(FILES Horde3D.h Horde3DUtils.h
++            DESTINATION include/horde3d
++            )
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ 
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
++    install(FILES Horde3D.h Horde3DUtils.h
++            DESTINATION include/horde3d
++            )
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+\ No newline at end of file
+diff --git a/Horde3D/Source/Horde3DEngine/CMakeLists.txt b/Horde3D/Source/Horde3DEngine/CMakeLists.txt
+index b04cad7..0908520 100644
+--- a/Horde3D/Source/Horde3DEngine/CMakeLists.txt
++++ b/Horde3D/Source/Horde3DEngine/CMakeLists.txt
+@@ -78,6 +78,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+ 	ENDIF(MSVC)
+ 	FIND_PACKAGE(OpenGL REQUIRED)
+ 	target_link_libraries(Horde3D ${OPENGL_gl_LIBRARY} ${HORDE3D_EXTENSION_LIBS})
++	install(TARGETS Horde3D
++		RUNTIME DESTINATION bin
++		LIBRARY DESTINATION lib
++		ARCHIVE DESTINATION lib
++		)	
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+ 
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+@@ -103,4 +108,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ 	FIND_LIBRARY(OPENGL_LIBRARY OpenGL)
+ 	FIND_LIBRARY(CORE_FOUNDATION_LIBRARY CoreFoundation)
+ 	target_link_libraries(Horde3D ${OPENGL_LIBRARY} ${HORDE3D_EXTENSION_LIBS} ${CORE_FOUNDATION_LIBRARY})
++	install(TARGETS Horde3D
++		RUNTIME DESTINATION bin
++		LIBRARY DESTINATION lib
++		ARCHIVE DESTINATION lib
++		)	
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+diff --git a/Horde3D/Source/Horde3DUtils/CMakeLists.txt b/Horde3D/Source/Horde3DUtils/CMakeLists.txt
+index 6b93306..83b5ee9 100644
+--- a/Horde3D/Source/Horde3DUtils/CMakeLists.txt
++++ b/Horde3D/Source/Horde3DUtils/CMakeLists.txt
+@@ -11,6 +11,11 @@ add_library(Horde3DUtils SHARED
+ target_link_libraries(Horde3DUtils Horde3D)
+ 
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
++	install(TARGETS Horde3DUtils
++		RUNTIME DESTINATION bin
++		LIBRARY DESTINATION lib
++		ARCHIVE DESTINATION lib
++		)
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+ 
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+@@ -25,4 +30,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ 	set_target_properties(Horde3DUtils PROPERTIES
+ 		FRAMEWORK TRUE
+ 		PUBLIC_HEADER "../../Bindings/C++/Horde3DUtils.h")
++	install(TARGETS Horde3DUtils
++		RUNTIME DESTINATION bin
++		LIBRARY DESTINATION lib
++		ARCHIVE DESTINATION lib
++		)		
+ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
