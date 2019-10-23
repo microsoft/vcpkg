@@ -1,0 +1,5 @@
+Source: simpleamqpclient
+Version: 2019-4-19
+Homepage: https://github.com/alanxz/SimpleAmqpClient
+Description: SimpleAmqpClient is an easy-to-use C++ wrapper around the rabbitmq-c C library
+Build-Depends: librabbitmq, boost-chrono, boost-system, boost-smart-ptr, boost-lexical-cast, boost-variant, boost-math, boost-foreach, boost-algorithm
