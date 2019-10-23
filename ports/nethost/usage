@@ -1,0 +1,4 @@
+The package nethost provides CMake integration:
+
+    find_package(nethost CONFIG REQUIRED)
+    target_include_directories(main PRIVATE ${NETHOST_INCLUDE_DIRS})

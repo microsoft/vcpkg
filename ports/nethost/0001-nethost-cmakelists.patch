@@ -1,0 +1,25 @@
+diff --git a/src/corehost/cli/nethost/CMakeLists.txt b/src/corehost/cli/nethost/CMakeLists.txt
+index b56650bf..ed86ce09 100644
+--- a/src/corehost/cli/nethost/CMakeLists.txt
++++ b/src/corehost/cli/nethost/CMakeLists.txt
+@@ -8,6 +8,8 @@ project(nethost)
+ set(DOTNET_PROJECT_NAME "nethost")
+ 
+ # Include directories
++include(../../../settings.cmake)
++include(../../../functions.cmake)
+ include_directories(../fxr)
+ 
+ # CMake does not recommend using globbing since it messes with the freshness checks
+@@ -27,6 +29,7 @@ include(../lib.cmake)
+ add_definitions(-DFEATURE_LIBHOST=1)
+ add_definitions(-DNETHOST_EXPORT)
+ 
+-install(FILES nethost.h DESTINATION corehost)
+-install(TARGETS nethost DESTINATION corehost)
+-install_symbols(nethost corehost)
+\ No newline at end of file
++install(FILES nethost.h ../coreclr_delegates.h ../hostfxr.h DESTINATION include)
++install(TARGETS nethost RUNTIME DESTINATION bin)
++install(TARGETS nethost LIBRARY DESTINATION lib)
++install_symbols(nethost bin)
