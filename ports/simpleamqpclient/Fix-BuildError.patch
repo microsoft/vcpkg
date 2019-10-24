@@ -1,0 +1,22 @@
+diff --git a/src/Channel.cpp b/src/Channel.cpp
+index 0d08453..b3eb39b 100644
+--- a/src/Channel.cpp
++++ b/src/Channel.cpp
+@@ -73,7 +73,7 @@ Channel::ptr_t Channel::CreateFromUri(const std::string &uri, int frame_max) {
+   amqp_default_connection_info(&info);
+ 
+   boost::shared_ptr<char> uri_dup =
+-      boost::shared_ptr<char>(strdup(uri.c_str()), free);
++      boost::shared_ptr<char>(_strdup(uri.c_str()), free);
+ 
+   if (0 != amqp_parse_url(uri_dup.get(), &info)) {
+     throw BadUriException();
+@@ -92,7 +92,7 @@ Channel::ptr_t Channel::CreateSecureFromUri(
+   amqp_default_connection_info(&info);
+ 
+   boost::shared_ptr<char> uri_dup =
+-      boost::shared_ptr<char>(strdup(uri.c_str()), free);
++      boost::shared_ptr<char>(_strdup(uri.c_str()), free);
+ 
+   if (0 != amqp_parse_url(uri_dup.get(), &info)) {
+     throw BadUriException();
