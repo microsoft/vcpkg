@@ -37,20 +37,20 @@ foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-          ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-static-build.patch
+                0001-Fix-debug-crt-flags.patch
+                0002-Fix-static-build.patch
       )
     else()
       vcpkg_apply_patches(
           SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
           PATCHES
-          ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+                0001-Fix-debug-crt-flags.patch
       )
     endif()
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
         PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-std-fabs.patch
+              0003-Fix-std-fabs.patch
     )
 endforeach()
 
@@ -65,7 +65,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   # Setup proj4 libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj.lib" PROJ_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib" PROJ_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib" PROJ_LIBRARY_DBG)
 
   # Setup libpng libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)
@@ -192,6 +192,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
       PNGDIR=${PNG_INCLUDE_DIR}
       ZLIB_INC=-I${ZLIB_INCLUDE_DIR}
       ZLIB_EXTERNAL_LIB=1
+      ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
       MSVC_VER=1900
   )
 
@@ -200,7 +201,6 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
   endif()
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
   else()
       # Enables PDBs for release and debug builds
