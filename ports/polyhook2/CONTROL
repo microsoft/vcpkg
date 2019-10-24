@@ -1,0 +1,4 @@
+Source: polyhook2
+Version: 2019-10-22
+Description: C++17, x86/x64 Hooking Libary v2.0
+Build-Depends: capstone
