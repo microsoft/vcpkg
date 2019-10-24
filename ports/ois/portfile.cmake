@@ -12,6 +12,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
+# Automatically fail port install for UWP and ARM. Unsure if it is
+# supported by library. See here: https://github.com/wgois/OIS/issues/57
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
+
 vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
