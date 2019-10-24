@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v1.3.4
     SHA512 3a9f9a8fd8ba56ae9ca04203bdea9e9a25275e1f531ca10deee0e760e6beaf44e83ee7a616cfe3ade9676082d9cc8611214de876f64d141e1e8c3b1e16273001
     HEAD_REF master
+    PATCHES fix-dependency-install.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
