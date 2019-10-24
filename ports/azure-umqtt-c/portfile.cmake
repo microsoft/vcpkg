@@ -6,16 +6,16 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-umqtt-c
-        REF fd5796c7d7d3add8a43b4d5ddcf4b1fba32d37cf
-        SHA512 14fd4077539fcec177cf8b10fc42e4fb93748ab1939cfc742e8b6ec15512afe3a7eadcf5f219ff87c4118ef95f6aa0da2efbd56b7adf33383456d4a498ad4368
+        REF 7557db6de094b67818d3c410dc95a3cf07cd86a6
+        SHA512 f2577379f711e2576fdd6dfecbc4d8a0b26c7670a77bc468238e8dd5fa43f208db85eddd06dd570fde4219ba19304338c712f671c059c6cc10abb4892d58ae40
         HEAD_REF master
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-umqtt-c
-        REF fd5796c7d7d3add8a43b4d5ddcf4b1fba32d37cf
-        SHA512 14fd4077539fcec177cf8b10fc42e4fb93748ab1939cfc742e8b6ec15512afe3a7eadcf5f219ff87c4118ef95f6aa0da2efbd56b7adf33383456d4a498ad4368
+        REF 7557db6de094b67818d3c410dc95a3cf07cd86a6
+        SHA512 f2577379f711e2576fdd6dfecbc4d8a0b26c7670a77bc468238e8dd5fa43f208db85eddd06dd570fde4219ba19304338c712f671c059c6cc10abb4892d58ae40
         HEAD_REF master
     )
 endif()
