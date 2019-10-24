@@ -78,5 +78,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/share/libraw/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
