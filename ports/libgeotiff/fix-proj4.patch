@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 617978c..baf45bc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -146,8 +146,11 @@ IF(WITH_PROJ4)
+     endif ()
+ 
+     IF(PROJ4_FOUND)
+-        ADD_DEFINITIONS(-DHAVE_LIBPROJ=1)
++        ADD_DEFINITIONS(-DHAVE_LIBPROJ=1 -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1)
+         INCLUDE_DIRECTORIES(${PROJ4_INCLUDE_DIR})
++        IF(NOT WIN32)
++            LIST(APPEND PROJ4_LIBRARIES ${CMAKE_DL_LIBS})
++        ENDIF()
+     ENDIF()
+ ENDIF()
+ 

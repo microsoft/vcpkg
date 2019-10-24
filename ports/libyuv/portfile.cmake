@@ -14,18 +14,23 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX="${POSTFIX}"
+        -DCMAKE_DEBUG_POSTFIX=${POSTFIX}
 )
 
 vcpkg_install_cmake()
 
+set(YUVCONVERT_FNAME yuvconvert.exe)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(YUVCONVERT_FNAME yuvconvert)
+endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/yuv)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/yuvconvert.exe ${CURRENT_PACKAGES_DIR}/tools/yuv/yuvconvert.exe)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${YUVCONVERT_FNAME} ${CURRENT_PACKAGES_DIR}/tools/yuv/${YUVCONVERT_FNAME})
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/yuvconvert.exe)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/${YUVCONVERT_FNAME})
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 endif()
 
@@ -37,10 +42,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/libyuv.dll)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/libyuv.dylib)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libyuvd.dll)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libyuvd.dylib)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 endif()

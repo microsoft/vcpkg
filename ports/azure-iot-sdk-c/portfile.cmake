@@ -9,7 +9,7 @@ if("public-preview" IN_LIST FEATURES)
         REF d1cdf78b5160af8e08354e102a6b96395eee79e1
         SHA512 0efbfc19e5eef4831b55ded0e8d88e83194bc0f26886841ddc83405c15b7f1bae983e22dc569e22846acd78b843b9e7492883b7c502f4eed92ff80ef45a9942d
         HEAD_REF public-preview
-        PATCHES improve-external-deps.patch
+        PATCHES improve-external-deps.patch cmake-hsm-option.patch
     )
 else()
     vcpkg_from_github(
@@ -20,6 +20,14 @@ else()
         HEAD_REF master
         PATCHES improve-external-deps.patch
     )
+endif()
+
+if("use_prov_client" IN_LIST FEATURES)
+    message(STATUS "use prov_client")
+    set(USE_PROV_CLIENT 1)
+else()
+    message(STATUS "NO prov_client")
+    set(USE_PROV_CLIENT 0)
 endif()
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
@@ -34,6 +42,8 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
+        -Duse_prov_client=${USE_PROV_CLIENT}
+        -Dhsm_type_symm_key=${USE_PROV_CLIENT}
 )
 
 vcpkg_install_cmake()
