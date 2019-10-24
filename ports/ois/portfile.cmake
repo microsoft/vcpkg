@@ -22,7 +22,7 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+# vcpkg_test_cmake(PACKAGE_NAME ${PORT})
