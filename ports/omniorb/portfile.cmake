@@ -3,20 +3,21 @@ set(VCPKG_USE_HEAD_VERSION ON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CaeruleusAqua/omniORB-cmake
-    REF  vcpkg-070ef3c40771a5618472e252be7f667c0a09b7b5
-    HEAD_REF vcpkg-fixes
+    REF 7bd95e32d16c72eb24521aee071895e8d7cffd91
+    HEAD_REF master
     SHA512 9fa56364696f91e2bf4287954d26f0c35b3f8aad241df3fbd3c9fc617235d8c83b28ddcac88436383b2eb273f690322e6f349e2f9c64d02f0058a4b76fa55035
 )
 
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DPython_ROOT_DIR=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/tools/python3
-    OPTIONS -DPython_EXECUTABLE=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/tools/python3/python.exe
-    OPTIONS_RELEASE -DPython_LIBRARIES=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/python37.lib
-    OPTIONS_DEBUG -DPython_LIBRARIES=${VCPKG_ROOT_DIR}/installed//${TARGET_TRIPLET}/debug/lib/python37_d.lib
+    PREFER_NINJA
+    OPTIONS_DEBUG -DPython_RUNTIME_LIBRARY_DIRS=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin/
+    OPTIONS -DPython_LIBRARY_DEBUG=${VCPKG_ROOT_DIR}/installed//${TARGET_TRIPLET}/debug/lib/python37_d.lib
+    OPTIONS -DPYTHON_SITE=Lib/site-packages
 )
+
+vcpkg_add_to_path(${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 
 vcpkg_install_cmake()
 
