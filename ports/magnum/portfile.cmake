@@ -8,7 +8,6 @@ vcpkg_from_github(
     PATCHES
         001-sdl-includes.patch
         002-tools-path.patch
-        003-glfw-find-module.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
