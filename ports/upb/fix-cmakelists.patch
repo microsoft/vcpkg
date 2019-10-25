@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 836c5ff..200e3b4 100644
+index 836c5ff..6ee66a7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -58,90 +58,194 @@ elseif(UNIX)
+@@ -58,90 +58,148 @@ elseif(UNIX)
    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
  endif()
  
@@ -10,7 +10,7 @@ index 836c5ff..200e3b4 100644
 +if (ENABLE_TEST)
 +    enable_testing()
 +endif()
-+
+ 
 +set(UPB_HDRS
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/generated_util.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/msg.h
@@ -21,7 +21,8 @@ index 836c5ff..200e3b4 100644
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/encode.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/upb.h
 +)
- 
++
++set(UBP_PROJECTS upb)
  add_library(upb
    upb/decode.c
    upb/encode.c
@@ -37,16 +38,21 @@ index 836c5ff..200e3b4 100644
 -  upb/decode.h
 -  upb/encode.h
 -  upb/upb.h)
++  upb/upb.h
 +  ${UPB_HDRS})
 +
++
++set(UBP_PROJECTS ${UBP_PROJECTS} generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me)
  add_library(generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me INTERFACE)
  target_link_libraries(generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me INTERFACE
    upb)
-+  
++
 +set(REFLECTION_HDRS
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/def.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/msgfactory.h
 +)
++
++set(UBP_PROJECTS ${UBP_PROJECTS} reflection)
  add_library(reflection
    upb/def.c
    upb/msgfactory.c
@@ -58,11 +64,14 @@ index 836c5ff..200e3b4 100644
    table
    upb)
 +
++set(UBP_PROJECTS ${UBP_PROJECTS} table)
  add_library(table INTERFACE)
  target_link_libraries(table INTERFACE
    upb)
 +
 +set(LEGACY_MSG_HDRS ${CMAKE_CURRENT_LIST_DIR}/upb/legacy_msg_reflection.h)
++
++set(UBP_PROJECTS ${UBP_PROJECTS} legacy_msg_reflection)
  add_library(legacy_msg_reflection
    upb/legacy_msg_reflection.c
 -  upb/legacy_msg_reflection.h)
@@ -70,12 +79,14 @@ index 836c5ff..200e3b4 100644
  target_link_libraries(legacy_msg_reflection
    table
    upb)
-+  
++
 +set(HANDLERS_HDRS
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/handlers-inl.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/handlers.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/sink.h
 +)
++
++set(UBP_PROJECTS ${UBP_PROJECTS} handlers)
  add_library(handlers
    upb/handlers.c
 -  upb/handlers-inl.h
@@ -95,6 +106,8 @@ index 836c5ff..200e3b4 100644
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/pb/encoder.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/pb/textprinter.h
 +)
++
++set(UBP_PROJECTS ${UBP_PROJECTS} upb_pb)
  add_library(upb_pb
    upb/pb/compile_decoder.c
    upb/pb/decoder.c
@@ -113,11 +126,13 @@ index 836c5ff..200e3b4 100644
    reflection
    table
    upb)
-+
++  
 +set(UPB_JSON_HDRS
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/json/parser.h
 +  ${CMAKE_CURRENT_LIST_DIR}/upb/json/printer.h
 +)
++
++set(UBP_PROJECTS ${UBP_PROJECTS} upb_json)
  add_library(upb_json
    generated_for_cmake/upb/json/parser.c
    upb/json/printer.c
@@ -128,6 +143,7 @@ index 836c5ff..200e3b4 100644
    upb
    upb_pb)
 +
++set(UBP_PROJECTS ${UBP_PROJECTS} upb_cc_bindings)
  add_library(upb_cc_bindings INTERFACE)
  target_link_libraries(upb_cc_bindings INTERFACE
    descriptor_upbproto
@@ -140,8 +156,10 @@ index 836c5ff..200e3b4 100644
 -target_link_libraries(upb_test
 -  handlers
 -  upb)
+-
  
 +if (ENABLE_TEST)
++  set(UBP_PROJECTS ${UBP_PROJECTS} upb_test)
 +  add_library(upb_test
 +    tests/testmain.cc
 +    tests/test_util.h
@@ -150,80 +168,17 @@ index 836c5ff..200e3b4 100644
 +    handlers
 +    upb)
 +endif()
- 
++ 
 +install(FILES ${UPB_HDRS} ${REFLECTION_HDRS} ${LEGACY_MSG_HDRS} ${HANDLERS_HDRS} DESTINATION include/upb)
 +install(FILES ${UPB_PB_HDRS} DESTINATION include/upb/pb)
 +install(FILES ${UPB_JSON_HDRS} DESTINATION include/upb/json)
 +
-+install(
-+  TARGETS upb
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS reflection
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS table
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS legacy_msg_reflection
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS handlers
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS upb_pb
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS upb_json
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+install(
-+  TARGETS upb_cc_bindings
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
-+
-+if (ENABLE_TEST)
-+  install(
-+  TARGETS upb_test
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+  )
-+endif()
++foreach(PROJ ${UBP_PROJECTS})
++    install(
++    TARGETS ${PROJ}
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++    )
++endforeach()
 \ No newline at end of file
