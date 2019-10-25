@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO census-instrumentation/opencensus-cpp
     REF 2b0725c2d0f809351300c634c54e70e0a8c3f4ed #v0.4.0
-    SHA512 7533a4b0578c8757a4cdece24d09d3ed081d3585fc97342970c63f919aa235d99a0b9d5d8591ec07f9d19d9356b2cdad96e885eb8205c25e82ab476329d4e355 
+    SHA512 16f3975ed0580aec83e0dd98f15a04d614cf45bfa7e07b0b94e881afc12e8e4bac3c0efde1f8e7da9f5dc66365415ae1e3ab10dfcbd9e078879246db6e81cd56 
     HEAD_REF master 
 )
 
