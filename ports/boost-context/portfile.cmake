@@ -10,6 +10,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# https://github.com/boostorg/context/pull/122
+# Already merged upstream
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-compilation-with-MSVC-for-ARM.patch"
+)
+
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
 string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")

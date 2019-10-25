@@ -1,0 +1,37 @@
+From 0386f0e6fde2127ae84dae16071430c2246e230d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20Janiszewski?=
+ <janisozaur@users.noreply.github.com>
+Date: Wed, 16 Oct 2019 22:45:12 +0200
+Subject: [PATCH] Fix compilation with MSVC for ARM
+
+Much like https://github.com/boostorg/type_traits/pull/106, only allow
+x86-specific intrinsics when targetting x86-like architectures.
+---
+ include/boost/context/detail/prefetch.hpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/boost/context/detail/prefetch.hpp b/include/boost/context/detail/prefetch.hpp
+index a479450..27f2fdb 100644
+--- a/include/boost/context/detail/prefetch.hpp
++++ b/include/boost/context/detail/prefetch.hpp
+@@ -18,7 +18,7 @@
+ #include <immintrin.h>
+ #endif
+ 
+-#if BOOST_COMP_MSVC
++#if BOOST_COMP_MSVC && !defined(_M_ARM) && !defined(_M_ARM64)
+ #include <mmintrin.h>
+ #endif
+ 
+@@ -44,7 +44,7 @@ void prefetch( void * addr) {
+     // L1 cache : hint == _MM_HINT_T0
+     _mm_prefetch( (const char *)addr, _MM_HINT_T0);
+ }
+-#elif BOOST_COMP_MSVC
++#elif BOOST_COMP_MSVC && !defined(_M_ARM) && !defined(_M_ARM64)
+ #define BOOST_HAS_PREFETCH 1
+ BOOST_FORCEINLINE
+ void prefetch( void * addr) {
+-- 
+2.23.0
+
