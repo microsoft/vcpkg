@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install-targets.patch
+        Fix-StaticSupport.patch
 )
 
 vcpkg_configure_cmake(
