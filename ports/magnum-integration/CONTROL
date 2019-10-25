@@ -8,6 +8,10 @@ Feature: bullet
 Description: BulletIntegration library
 Build-Depends: bullet3
 
+Feature: eigen
+Description: EigenIntegration library
+Build-Depends: eigen3
+
 Feature: glm
 Description: GlmIntegration library
 Build-Depends: glm
