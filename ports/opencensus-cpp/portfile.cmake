@@ -5,7 +5,8 @@ vcpkg_from_github(
     REPO census-instrumentation/opencensus-cpp
     REF 2b0725c2d0f809351300c634c54e70e0a8c3f4ed #v0.4.0
     SHA512 16f3975ed0580aec83e0dd98f15a04d614cf45bfa7e07b0b94e881afc12e8e4bac3c0efde1f8e7da9f5dc66365415ae1e3ab10dfcbd9e078879246db6e81cd56 
-    HEAD_REF master 
+    HEAD_REF master
+    PATCHES fix-install.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
