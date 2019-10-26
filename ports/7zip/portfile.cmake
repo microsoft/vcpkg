@@ -12,6 +12,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${7ZIP_VERSION}
     NO_REMOVE_ONE_LEVEL
+    PATCHES
+        add-functions-and-fixes-for-static-link.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -39,6 +41,7 @@ file(
 
 file(
     COPY
+        ${CMAKE_CURRENT_LIST_DIR}/7zip.h
         ${CMAKE_CURRENT_LIST_DIR}/guids.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/7zip
 )

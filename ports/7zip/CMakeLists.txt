@@ -321,6 +321,10 @@ target_compile_definitions(7zip
         -D_UNICODE
 )
 
+if(NOT BUILD_SHARED_LIBS)
+    target_compile_definitions(7zip PUBLIC -D_7ZIP_STATIC)
+endif()
+
 target_compile_options(7zip
     PRIVATE
         /wd5043
