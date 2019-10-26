@@ -41,7 +41,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+endif()
 
 vcpkg_copy_pdbs()
 
