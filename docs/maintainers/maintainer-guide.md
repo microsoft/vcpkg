@@ -42,6 +42,7 @@ At this time, the following helpers are deprecated:
 1. `vcpkg_extract_source_archive()` should be replaced by [`vcpkg_extract_source_archive_ex()`](vcpkg_extract_source_archive_ex.md)
 2. `vcpkg_apply_patches()` should be replaced by the `PATCHES` arguments to the "extract" helpers (e.g. [`vcpkg_from_github()`](vcpkg_from_github.md))
 3. `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
+4. `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
 
 ### Avoid excessive comments in portfiles
 

@@ -26,12 +26,13 @@
 ##
 ## ## Examples
 ##
-## * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
+## * [cpuinfo](https://github.com/microsoft/vcpkg/blob/master/ports/cpuinfo/portfile.cmake)
 ## * [nanomsg](https://github.com/microsoft/vcpkg/blob/master/ports/nanomsg/portfile.cmake)
+## * [uriparser](https://github.com/microsoft/vcpkg/blob/master/ports/uriparser/portfile.cmake)
 function(vcpkg_copy_tools)
     cmake_parse_arguments(_vct "VERBOSE" "SEARCH_DIR" "TOOL_NAMES" ${ARGN})
 
-    if((DEFINED _vct_SEARCH_DIR OR DEFINED _vct_VERBOSE) AND NOT DEFINED _vct_TOOL_NAMES)
+    if((DEFINED _vct_SEARCH_DIR OR _vct_VERBOSE) AND NOT DEFINED _vct_TOOL_NAMES)
         message(FATAL_ERROR "TOOL_NAMES should be specified if SEARCH_DIR or VERBOSE is specified.")
     endif()
 
@@ -60,7 +61,7 @@ function(vcpkg_copy_tools)
             ${CURRENT_PACKAGES_DIR}/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
             ${CURRENT_PACKAGES_DIR}/debug/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
         )
-    endif()
+    endforeach()
 
     # Do remaining cleaning work
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

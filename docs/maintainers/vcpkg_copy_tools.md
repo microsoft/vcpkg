@@ -26,8 +26,9 @@ Display more messages for debugging purpose.
 
 ## Examples
 
-* [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
+* [cpuinfo](https://github.com/microsoft/vcpkg/blob/master/ports/cpuinfo/portfile.cmake)
 * [nanomsg](https://github.com/microsoft/vcpkg/blob/master/ports/nanomsg/portfile.cmake)
+* [uriparser](https://github.com/microsoft/vcpkg/blob/master/ports/uriparser/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg_copy_tools.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_copy_tools.cmake)

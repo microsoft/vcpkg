@@ -63,16 +63,8 @@ file(COPY
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
-if(CMAKE_HOST_WIN32)
-    set(EXECUTABLE_SUFFIX ".exe")
-else()
-    set(EXECUTABLE_SUFFIX "")
-endif()
-
 if ("tool" IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tools(zmakecert)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -82,16 +74,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         "if defined CZMQ_STATIC"
         "if 1 //if defined CZMQ_STATIC"
     )
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/bin/zmakecert${EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX})
 endif()
 
 # Handle copyright
