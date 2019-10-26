@@ -65,6 +65,8 @@ file(COPY
 
 if ("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(zmakecert)
+else()
+    vcpkg_copy_tools()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
