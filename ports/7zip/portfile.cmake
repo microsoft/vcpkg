@@ -16,6 +16,10 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/Archive2.def
+    DESTINATION ${SOURCE_PATH}/CPP/7zip/Archive/
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

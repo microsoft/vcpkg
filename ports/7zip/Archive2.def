@@ -1,0 +1,19 @@
+EXPORTS
+  CreateObject
+
+  GetHandlerProperty
+  GetNumberOfFormats
+  GetHandlerProperty2
+  GetIsArc
+
+  GetNumberOfMethods
+  GetMethodProperty
+  CreateDecoder
+  CreateEncoder
+
+  GetHashers
+
+  SetCodecs
+
+  SetLargePageMode
+  SetCaseSensitive
