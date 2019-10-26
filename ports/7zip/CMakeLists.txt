@@ -1,7 +1,6 @@
 # Created from 7-zip v19.00 - 7zip/CPP/7zip/Bundles/Format7zF
 
 cmake_minimum_required(VERSION 3.11)
-cmake_policy(VERSION 3.11)
 
 project(7zip LANGUAGES C CXX ASM_MASM)
 
@@ -127,14 +126,6 @@ set(SRC_C
     C/Aes.c
     C/7zCrc.c
     C/XzCrc64.c
-)
-
-set_source_files_properties(
-    ${SRC_COMPRESS}
-    ${SRC_CRYPTO}
-    ${SRC_C}
-        PROPERTIES
-            COMPILE_FLAGS $<$<CONFIG:RELEASE>:"/O2">
 )
 
 set(SRC_OTHER
