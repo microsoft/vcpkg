@@ -2,17 +2,6 @@ include(vcpkg_common_functions)
 
 set(LIBPNG_APNG_VERSION 1.6.36)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO glennrp/libpng
-    REF v${LIBPNG_APNG_VERSION}
-    SHA512 aeb00b48347c9e84d31995b3fe7e40580029734aa8103d774eee5745f5ca1fd1fd91a15f32d492277ab94346e4e7f731ee9bfea1783f930094f9f87eb3d9397d
-    HEAD_REF master
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
-        ${CMAKE_CURRENT_LIST_DIR}/skip-install-symlink.patch
-)
-
 vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
     URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_APNG_VERSION}/libpng-${LIBPNG_APNG_VERSION}-apng.patch.gz"
     FILENAME "libpng-${LIBPNG_APNG_VERSION}-apng.patch.gz"
@@ -27,18 +16,24 @@ vcpkg_execute_required_process(
     LOGNAME extract-patch.log
 )
 
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO glennrp/libpng
+    REF v${LIBPNG_APNG_VERSION}
+    SHA512 aeb00b48347c9e84d31995b3fe7e40580029734aa8103d774eee5745f5ca1fd1fd91a15f32d492277ab94346e4e7f731ee9bfea1783f930094f9f87eb3d9397d
+    HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
+        ${CMAKE_CURRENT_LIST_DIR}/skip-install-symlink.patch
+        ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_APNG_VERSION}-apng.patch
+)
+
 find_program(GIT NAMES git git.cmd)
 
 # sed and awk are installed with git but in a different directory
 get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
 set(AWK_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 set(ENV{PATH} "$ENV{PATH};${AWK_EXE_PATH}")
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_APNG_VERSION}-apng.patch
-)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PNG_STATIC_LIBS OFF)
