@@ -6,6 +6,46 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+function(copy_tools)
+    cmake_parse_arguments(_vct "" "" "" ${ARGN})
+
+    set(_vct_SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin)
+    set(_vct_TOOL_NAMES ${ARGN})
+
+    foreach(tool_name ${_vct_TOOL_NAMES})
+        set(tool_path "${_vct_SEARCH_DIR}/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+
+        if(EXISTS ${tool_path})
+            file(COPY ${tool_path} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        endif()
+
+        file(REMOVE
+            ${CURRENT_PACKAGES_DIR}/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
+            ${CURRENT_PACKAGES_DIR}/debug/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
+        )
+    endforeach()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        if(VCPKG_TARGET_IS_WINDOWS)
+            file(GLOB exes_ignored
+                ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
+                ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
+            )
+
+            foreach(ignored_exe ${exes_ignored})
+                file(REMOVE ${ignored_exe})
+            endforeach()
+        endif()
+    else()
+        file(REMOVE_RECURSE
+            ${CURRENT_PACKAGES_DIR}/bin
+            ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+    endif()
+
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+endfunction()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
@@ -45,22 +85,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     if(tools IN_LIST FEATURES)
-        foreach(gperf_tool addr2line-pdb nm-pdb)
-            file(COPY
-                ${CURRENT_PACKAGES_DIR}/bin/${gperf_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
-            )
-            file(REMOVE
-                ${CURRENT_PACKAGES_DIR}/bin/${gperf_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/${gperf_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            )
-        endforeach()
-
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-            file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-        endif()
+        copy_tools(addr2line-pdb nm-pdb)
     endif()
 else()
     vcpkg_configure_make(
@@ -69,6 +94,13 @@ else()
     )
 
     vcpkg_install_make()
+
+    copy_tools(pprof pprof-symbolize)
+
+    file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/debug/include
+        ${CURRENT_PACKAGES_DIR}/debug/share
+    )
 endif()
 
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
