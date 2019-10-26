@@ -1,6 +1,6 @@
 # vcpkg_copy_tools
 
-Copy tools and all their DLL dependencies into the tool folder.
+Copy tools and all their DLL dependencies into the tool folder, and do necessary cleanup.
 
 ## Usage
 ```cmake

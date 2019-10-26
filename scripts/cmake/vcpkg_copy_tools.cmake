@@ -1,6 +1,6 @@
 ## # vcpkg_copy_tools
 ##
-## Copy tools and all their DLL dependencies into the tool folder.
+## Copy tools and all their DLL dependencies into the tool folder, and do necessary cleanup.
 ##
 ## ## Usage
 ## ```cmake
@@ -66,7 +66,10 @@ function(vcpkg_copy_tools)
     # Do remaining cleaning work
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         if(VCPKG_TARGET_IS_WINDOWS)
-            file(GLOB exes_ignored ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+            file(GLOB exes_ignored
+                ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
+                ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
+            )
 
             foreach(ignored_exe ${exes_ignored})
                 if(_vct_VERBOSE)
