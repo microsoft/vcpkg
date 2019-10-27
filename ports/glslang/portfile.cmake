@@ -36,9 +36,11 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/glslang)
 
 vcpkg_copy_pdbs()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools")
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*${CMAKE_EXECUTABLE_SUFFIX}")
+file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/glslang)
+file(REMOVE ${EXES})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/glslang)
