@@ -2,11 +2,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcheck/check
-    REF 0.12.0
-    SHA512 f7b6452b69f999a90e86a8582d980c0c1b74ba5629ee34455724463ba62bfe3501ad0415aa771170f5c638a7a253f123bf87cbef25aadc6569a7a3a4d10fce90
+    REF 0.13.0
+    SHA512 7943021c5bc3b5ca7bc552f6fe1287e384724d69e5bb128d58256692e810b194e506fc1b65ea4fed27d065e2176e7371483e918beb48125abfe3b6f1ca68eb8f
     HEAD_REF master
-    PATCHES
-        fix-build-debug-mode.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,8 +14,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/check.cmake ${CURRENT_PACKAGES_DIR}/cmake/check-config.cmake)
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
