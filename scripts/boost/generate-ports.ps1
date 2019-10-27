@@ -106,6 +106,10 @@ function Generate()
     {
         $portfileLines += @("    PATCHES Removeseekpos.patch")
     }
+    if ($Name -eq "context")
+    {
+        $portfileLines += @("    PATCHES 0001-Fix-compilation-with-MSVC-for-ARM.patch")
+    }
     $portfileLines += @(
         ")"
         ""

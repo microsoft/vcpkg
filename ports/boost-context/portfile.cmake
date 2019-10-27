@@ -8,13 +8,9 @@ vcpkg_from_github(
     REF boost-1.71.0
     SHA512 d1da9103e22d45461fe16def14879aed3e6e67b3c83f41100a2f762c3ca14dbd52e381809968ddf4ecf5caf838d4d1f0859d6a94e7e7addbad32a1a56c6eb171
     HEAD_REF master
-)
-
-# https://github.com/boostorg/context/pull/122
-# Already merged upstream
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-compilation-with-MSVC-for-ARM.patch"
+    # https://github.com/boostorg/context/pull/122
+    # Already merged upstream
+    PATCHES 0001-Fix-compilation-with-MSVC-for-ARM.patch
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
