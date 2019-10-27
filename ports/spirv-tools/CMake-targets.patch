@@ -1,8 +1,8 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index 2d7d7ca..bf77be7 100644
+index 1f96018..c9a3758 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -327,31 +327,41 @@ set_source_files_properties(
+@@ -337,7 +337,7 @@ spvtools_pch(SPIRV_SOURCES pch_source)
  add_library(${SPIRV_TOOLS} ${SPIRV_SOURCES})
  spvtools_default_compile_options(${SPIRV_TOOLS})
  target_include_directories(${SPIRV_TOOLS}
@@ -11,37 +11,8 @@ index 2d7d7ca..bf77be7 100644
    PRIVATE ${spirv-tools_BINARY_DIR}
    PRIVATE ${SPIRV_HEADER_INCLUDE_DIR}
    )
- set_property(TARGET ${SPIRV_TOOLS} PROPERTY FOLDER "SPIRV-Tools libraries")
- spvtools_check_symbol_exports(${SPIRV_TOOLS})
- 
--add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
--spvtools_default_compile_options(${SPIRV_TOOLS}-shared)
--target_include_directories(${SPIRV_TOOLS}-shared
--  PUBLIC ${spirv-tools_SOURCE_DIR}/include
--  PRIVATE ${spirv-tools_BINARY_DIR}
--  PRIVATE ${SPIRV_HEADER_INCLUDE_DIR}
--  )
--set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
--set_property(TARGET ${SPIRV_TOOLS}-shared PROPERTY FOLDER "SPIRV-Tools libraries")
--spvtools_check_symbol_exports(${SPIRV_TOOLS}-shared)
--target_compile_definitions(${SPIRV_TOOLS}-shared
--  PRIVATE SPIRV_TOOLS_IMPLEMENTATION
--  PUBLIC SPIRV_TOOLS_SHAREDLIB
--)
-+# add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
-+# spvtools_default_compile_options(${SPIRV_TOOLS}-shared)
-+# target_include_directories(${SPIRV_TOOLS}-shared
-+#   PUBLIC ${spirv-tools_SOURCE_DIR}/include
-+#   PRIVATE ${spirv-tools_BINARY_DIR}
-+#   PRIVATE ${SPIRV_HEADER_INCLUDE_DIR}
-+#   )
-+# set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
-+# set_property(TARGET ${SPIRV_TOOLS}-shared PROPERTY FOLDER "SPIRV-Tools libraries")
-+# spvtools_check_symbol_exports(${SPIRV_TOOLS}-shared)
-+# target_compile_definitions(${SPIRV_TOOLS}-shared
-+#   PRIVATE SPIRV_TOOLS_IMPLEMENTATION
-+#   PUBLIC SPIRV_TOOLS_SHAREDLIB
-+# )
+@@ -370,10 +370,20 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+ endif()
  
  if(ENABLE_SPIRV_TOOLS_INSTALL)
 -  install(TARGETS ${SPIRV_TOOLS} ${SPIRV_TOOLS}-shared
@@ -60,6 +31,8 @@ index 2d7d7ca..bf77be7 100644
 +    NAMESPACE spirv-tools::
 +  )
  endif(ENABLE_SPIRV_TOOLS_INSTALL)
+ 
+ if(MSVC)
 diff --git a/source/link/CMakeLists.txt b/source/link/CMakeLists.txt
 index 8ca4df3..ac0aa62 100644
 --- a/source/link/CMakeLists.txt
@@ -89,10 +62,10 @@ index 8ca4df3..ac0aa62 100644
 +  )
  endif(ENABLE_SPIRV_TOOLS_INSTALL)
 diff --git a/source/opt/CMakeLists.txt b/source/opt/CMakeLists.txt
-index 854c950..fc91539 100644
+index b02485a..111ce3c 100644
 --- a/source/opt/CMakeLists.txt
 +++ b/source/opt/CMakeLists.txt
-@@ -159,7 +159,7 @@ add_library(SPIRV-Tools-opt
+@@ -221,7 +221,7 @@ add_library(SPIRV-Tools-opt ${SPIRV_TOOLS_OPT_SOURCES})
  
  spvtools_default_compile_options(SPIRV-Tools-opt)
  target_include_directories(SPIRV-Tools-opt
@@ -101,7 +74,7 @@ index 854c950..fc91539 100644
    PUBLIC ${SPIRV_HEADER_INCLUDE_DIR}
    PRIVATE ${spirv-tools_BINARY_DIR}
  )
-@@ -171,9 +171,14 @@ set_property(TARGET SPIRV-Tools-opt PROPERTY FOLDER "SPIRV-Tools libraries")
+@@ -233,8 +233,13 @@ set_property(TARGET SPIRV-Tools-opt PROPERTY FOLDER "SPIRV-Tools libraries")
  spvtools_check_symbol_exports(SPIRV-Tools-opt)
  
  if(ENABLE_SPIRV_TOOLS_INSTALL)
@@ -116,4 +89,3 @@ index 854c950..fc91539 100644
 +    FILE "${CMAKE_CURRENT_BINARY_DIR}/spirv-tools-opt-config.cmake"
 +  )
  endif(ENABLE_SPIRV_TOOLS_INSTALL)
-     

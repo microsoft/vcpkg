@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(NOT CMAKE_HOST_WIN32)
     message("${PORT} currently requires the following tools from the system package manager:\n    python-six\n\nThis can be installed on Ubuntu systems via apt-get install python-six python3-six (depending on your current python default interpreter)")
 endif()
 
@@ -32,23 +32,30 @@ endif()
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
-if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
-    if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
-        vcpkg_download_distfile(GET_PIP
-            URLS "https://bootstrap.pypa.io/get-pip.py"
-            FILENAME "tools/python/python3/get-pip.py"
-            SHA512 99520d223819708b8f6e4b839d1fa215e4e8adc7fcd0db6c25a0399cf2fa10034b35673cf450609303646d12497f301ef53b7e7cc65c78e7bce4af0c673555ad
-        )
-        execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${PYTHON3_DIR}/get-pip.py)
+
+if(CMAKE_HOST_WIN32)
+    # Must not modify system copy of python3 -- on CMAKE_HOST_WIN32, we have our own private copy
+    if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
+        if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
+            get_filename_component(PYTHON3_DIR_NAME "${PYTHON3_DIR}" NAME)
+            vcpkg_download_distfile(GET_PIP
+                URLS "https://bootstrap.pypa.io/3.3/get-pip.py"
+                FILENAME "tools/python/${PYTHON3_DIR_NAME}/get-pip.py"
+                SHA512 92e68525830bb23955a31cb19ebc3021ef16b6337eab83d5db2961b791283d2867207545faf83635f6027f2f7b7f8fee2c85f2cfd8e8267df25406474571c741
+            )
+            execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${GET_PIP})
+        endif()
+        execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install six)
+    else()
+        execute_process(COMMAND ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX} six)
     endif()
-    execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install six)
-else()
-    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX} six)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBIN_INSTALL_DIR:STRING=bin
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -65,5 +72,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/open62541/tools)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/open62541)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/open62541/LICENSE ${CURRENT_PACKAGES_DIR}/share/open62541/copyright)
+vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

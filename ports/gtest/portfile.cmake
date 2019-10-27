@@ -7,11 +7,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF b6cd405286ed8635ece71c72f118e659f4ade3fb
-    SHA512 1642a9cf1923d00c52c346399941517787431dad3e6d3a5da07bc02243a231a95e30e0a9568ffd29bb9b9757f15c1c47d2d811c2bedb301f2d27cf912be0a534
+    REF cd17fa2abda2a2e4111cdabd62a87aea16835014 #version 1.10.0 commit on 2019.10.09
+    SHA512 0899ebc21821e1978e8831ac89698fc88bf98ec7e22b9dd4f9eea0459396f6834ef35f6ee2afd1b8ca9432722e561c30905f8d87614d012bb711d295ebc1d833
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
+        0002-Fix-z7-override.patch
+        fix-main-lib-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)

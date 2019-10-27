@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF Qt4
     SHA512 426a4ba88f680978d24817248b99c68cafa4517144e6e3d2480612870c4a224bb955539cacb438274d4ee1c93c36d94f8437d142070b2ecde2b81517bf357e71
     HEAD_REF master
+	PATCHES
+        OsgMacroUtils.patch
 )
 
 

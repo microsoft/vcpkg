@@ -7,6 +7,8 @@ vcpkg_from_github(
     SHA512 0586020c159fa4b3acb3ea3fa0a361bcc757d840298d7a436c356d0929b5ace3da4d054e3c0d107a499076413336e3b9a2f35750e6bf0add9320cc52a5c7afd5
     HEAD_REF master
     PATCHES "use-default-config-on-all-platforms.patch"
+            "QGLViewer_remove_shared.patch"
+            "macosx.patch"
 )
 
 vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH}/QGLViewer/QGLViewer.pro)

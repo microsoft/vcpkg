@@ -13,45 +13,48 @@
 
 namespace vcpkg::Dependencies
 {
-    struct ClusterInstalled
+    namespace
     {
-        InstalledPackageView ipv;
-        std::set<PackageSpec> remove_edges;
-        std::set<std::string> original_features;
-    };
+        struct ClusterInstalled
+        {
+            InstalledPackageView ipv;
+            std::set<PackageSpec> remove_edges;
+            std::set<std::string> original_features;
+        };
 
-    struct ClusterSource
-    {
-        const SourceControlFileLocation* scfl = nullptr;
-        std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
-    };
+        struct ClusterSource
+        {
+            const SourceControlFileLocation* scfl = nullptr;
+            std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
+        };
 
-    /// <summary>
-    /// Representation of a package and its features in a ClusterGraph.
-    /// </summary>
-    struct Cluster : Util::MoveOnlyBase
-    {
-        PackageSpec spec;
+        /// <summary>
+        /// Representation of a package and its features in a ClusterGraph.
+        /// </summary>
+        struct Cluster : Util::MoveOnlyBase
+        {
+            PackageSpec spec;
 
-        Optional<ClusterInstalled> installed;
-        Optional<ClusterSource> source;
+            Optional<ClusterInstalled> installed;
+            Optional<ClusterSource> source;
 
-        // Note: this map can contain "special" strings such as "" and "*"
-        std::unordered_map<std::string, bool> plus;
-        std::set<std::string> to_install_features;
-        bool minus = false;
-        bool transient_uninstalled = true;
-        RequestType request_type = RequestType::AUTO_SELECTED;
-    };
+            // Note: this map can contain "special" strings such as "" and "*"
+            std::unordered_map<std::string, bool> plus;
+            std::set<std::string> to_install_features;
+            bool minus = false;
+            bool transient_uninstalled = true;
+            RequestType request_type = RequestType::AUTO_SELECTED;
+        };
 
-    struct ClusterPtr
-    {
-        Cluster* ptr;
+        struct ClusterPtr
+        {
+            Cluster* ptr;
 
-        Cluster* operator->() const { return ptr; }
-    };
+            Cluster* operator->() const { return ptr; }
+        };
 
-    bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
+        bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
+    }
 }
 
 namespace std
@@ -122,11 +125,11 @@ namespace vcpkg::Dependencies
         const PortFileProvider& m_provider;
     };
 
-    std::string to_output_string(RequestType request_type,
-                                 const CStringView s,
-                                 const Build::BuildPackageOptions& options,
-                                 const fs::path& install_port_path,
-                                 const fs::path& default_port_path)
+    static std::string to_output_string(RequestType request_type,
+                                        const CStringView s,
+                                        const Build::BuildPackageOptions& options,
+                                        const fs::path& install_port_path,
+                                        const fs::path& default_port_path)
     {
         if (!default_port_path.empty() &&
             !Strings::case_insensitive_ascii_starts_with(install_port_path.u8string(), default_port_path.u8string()))
@@ -312,6 +315,7 @@ namespace vcpkg::Dependencies
                                                  const std::vector<std::string>* ports_dirs_paths)
         : filesystem(paths.get_filesystem())
     {
+        auto& fs = Files::get_real_filesystem();
         if (ports_dirs_paths)
         {
             for (auto&& overlay_path : *ports_dirs_paths)
@@ -326,7 +330,7 @@ namespace vcpkg::Dependencies
                                        overlay.string());
 
                     Checks::check_exit(VCPKG_LINE_INFO,
-                                       fs::stdfs::is_directory(overlay),
+                                       fs::is_directory(fs.status(VCPKG_LINE_INFO, overlay)),
                                        "Error: Path \"%s\" must be a directory",
                                        overlay.string());
 
@@ -669,7 +673,8 @@ namespace vcpkg::Dependencies
             }
         }
 
-        // This feature was or will be uninstalled, therefore we need to rebuild
+        // The feature was not previously installed. Mark the cluster
+        // (aka the entire port) to be removed before re-adding it.
         mark_minus(cluster, graph, graph_plan, prevent_default_features);
 
         return follow_plus_dependencies(feature, cluster, graph, graph_plan, prevent_default_features);
@@ -1032,6 +1037,7 @@ namespace vcpkg::Dependencies
         static constexpr Build::BuildPackageOptions s_build_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
@@ -1040,12 +1046,11 @@ namespace vcpkg::Dependencies
             Build::FailOnTombstone::YES,
         };
 
-        if (auto scf = p.source_control_file_location.get())
+        if (auto scfl = p.source_control_file_location.get())
         {
             auto triplet = p.spec.triplet();
 
-            const Build::BuildPackageConfig build_config{
-                *scf->source_control_file, triplet, fs::path{scf->source_location}, s_build_options, p.feature_list};
+            const Build::BuildPackageConfig build_config{*scfl, triplet, s_build_options, p.feature_list};
 
             auto dependency_abis = Util::fmap(p.computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
                 auto it = abi_tag_map.find(spec);
@@ -1056,7 +1061,7 @@ namespace vcpkg::Dependencies
                     return {spec.name(), it->second};
             });
             const auto& pre_build_info = pre_build_info_cache.get_lazy(
-                triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
+                triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet, *scfl); });
 
             auto maybe_tag_and_file = Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
             if (auto tag_and_file = maybe_tag_and_file.get())

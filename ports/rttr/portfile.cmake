@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rttrorg/rttr
@@ -10,15 +8,23 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-directory-output.patch
-        remove-owner-read-perms.patch
+        remove-owner-read-perms.patch		
 )
 
+#Handle static lib
+set(BUILD_STATIC_LIB OFF) 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	set(BUILD_STATIC_LIB ON) 
+else()
+	set(BUILD_STATIC_LIB OFF) 
+endif()
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DBUILD_BENCHMARKS=OFF
-        -DBUILD_UNIT_TESTS=OFF
+	SOURCE_PATH ${SOURCE_PATH}
+	PREFER_NINJA
+	OPTIONS
+		-DBUILD_BENCHMARKS=OFF
+		-DBUILD_UNIT_TESTS=OFF
+		-DBUILD_STATIC=${BUILD_STATIC_LIB}
 )
 
 vcpkg_install_cmake()
@@ -29,6 +35,11 @@ elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsS
 	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
 	message(FATAL_ERROR "RTTR does not support this platform")
+endif()
+
+#Handle static lib
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 #Handle copyright

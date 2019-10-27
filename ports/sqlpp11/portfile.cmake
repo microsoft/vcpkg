@@ -6,12 +6,12 @@ vcpkg_from_github(
     REF 0.58
     SHA512 c391e72638a748e0e25b53176dc371ba468bc14bdcb6dda2f2418c4ab4d620ebc5507ee284ff81c3104888d0d959703c6c91b55ccd69a8641b07dcb20cd56209
     HEAD_REF master
-    PATCHES FixForMSVC.patch
 )
 
 # Use sqlpp11's own build process, skipping tests
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
     -DENABLE_TESTS:BOOL=OFF
 )

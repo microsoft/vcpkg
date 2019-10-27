@@ -104,6 +104,7 @@ namespace vcpkg::Commands::SetInstalled
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
+            Build::OnlyDownloads::NO,
             clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,

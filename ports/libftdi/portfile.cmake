@@ -13,7 +13,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         libusb-win32.patch
         shared-static.patch
-        export-cmake.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/exports.def DESTINATION ${SOURCE_PATH}/src)

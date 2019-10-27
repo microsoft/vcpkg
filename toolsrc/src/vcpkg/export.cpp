@@ -73,6 +73,7 @@ namespace vcpkg::Export
         static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
@@ -339,26 +340,33 @@ namespace vcpkg::Export
 
         struct OptionPair
         {
-            const std::string& name;
+            const StringLiteral& name;
             Optional<std::string>& out_opt;
         };
-        const auto options_implies =
-            [&](const std::string& main_opt_name, bool main_opt, Span<const OptionPair> implying_opts) {
-                if (main_opt)
-                {
-                    for (auto&& opt : implying_opts)
-                        opt.out_opt = maybe_lookup(options.settings, opt.name);
-                }
-                else
-                {
-                    for (auto&& opt : implying_opts)
-                        Checks::check_exit(VCPKG_LINE_INFO,
-                                           !maybe_lookup(options.settings, opt.name),
-                                           "%s is only valid with %s",
-                                           opt.name,
-                                           main_opt_name);
-                }
-            };
+        const auto options_implies = [&](const StringLiteral& main_opt_name,
+                                         bool is_main_opt,
+                                         const std::initializer_list<OptionPair>& implying_opts) {
+            if (is_main_opt)
+            {
+                for (auto&& opt : implying_opts)
+                    opt.out_opt = maybe_lookup(options.settings, opt.name);
+            }
+            else
+            {
+                for (auto&& opt : implying_opts)
+                    Checks::check_exit(VCPKG_LINE_INFO,
+                                       !maybe_lookup(options.settings, opt.name),
+                                       "%s is only valid with %s",
+                                       opt.name,
+                                       main_opt_name);
+            }
+        };
+
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+// there's a bug in VS 2015 that causes a bunch of "unreferenced local variable" warnings
+#pragma warning(push)
+#pragma warning(disable : 4189)
+#endif
 
         options_implies(OPTION_NUGET,
                         ret.nuget,
@@ -376,6 +384,9 @@ namespace vcpkg::Export
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
                         });
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+#pragma warning(pop)
+#endif
         return ret;
     }
 
@@ -400,8 +411,10 @@ namespace vcpkg::Export
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path export_to_path = paths.root;
         const fs::path raw_exported_dir_path = export_to_path / export_id;
+        fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
+
+        // TODO: error handling
         std::error_code ec;
-        fs.remove_all(raw_exported_dir_path, ec);
         fs.create_directory(raw_exported_dir_path, ec);
 
         // execute the plan
@@ -476,7 +489,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         if (!opts.raw)
         {
-            fs.remove_all(raw_exported_dir_path, ec);
+            fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
         }
     }
 

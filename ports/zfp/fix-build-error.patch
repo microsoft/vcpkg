@@ -1,0 +1,11 @@
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index a960d2c..e6a492d 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ add_executable(zfpcmd zfp.c)
+-set_property(TARGET zfpcmd PROPERTY OUTPUT_NAME zfp)
++#set_property(TARGET zfpcmd PROPERTY OUTPUT_NAME zfp)
+ target_link_libraries(zfpcmd zfp)
+ if(HAVE_LIBM_MATH)
+   target_link_libraries(zfpcmd m)

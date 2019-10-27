@@ -1,4 +1,4 @@
 Source: range-v3
-Version: 0.5.0
-Homepage: https://github.com/Microsoft/Range-V3-VS2015
+Version: 0.9.1
+Homepage: https://github.com/ericniebler/range-v3
 Description: Range library for C++11/14/17.
