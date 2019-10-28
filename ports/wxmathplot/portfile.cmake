@@ -23,19 +23,12 @@ vcpkg_from_github(
 file(COPY ${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake DESTINATION ${VCPKG_WX_FIND_SOURCE_PATH})
 file(COPY ${CMAKE_ROOT}/Modules/FindPackageMessage.cmake DESTINATION ${VCPKG_WX_FIND_SOURCE_PATH})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(BUILD_SHARED_LIBS ON)
-else()
-  set(BUILD_SHARED_LIBS OFF)
-endif()
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DCMAKE_MODULE_PATH=${VCPKG_WX_FIND_SOURCE_PATH}
 )
 
