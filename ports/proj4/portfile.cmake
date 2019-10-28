@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
@@ -23,20 +21,21 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     database BUILD_PROJ_DATABASE
 )
-
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         set(BIN_SUFFIX .exe)
-        if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3-bin.exe)
-                message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
+        if (VCPKG_TARGET_ARCHITECTURE MATCHES arm OR VCPKG_TARGET_ARCHITECTURE MATCHES uwp)
+            if (VCPKG_TARGET_ARCHITECTURE MATCHES 64)
+                if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3-bin.exe)
+                    message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:${TARGET_TRIPLET} first.")
+                endif()
+                set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
+            else()
+                if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3-bin.exe)
+                    message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
+                endif()
+                set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
             endif()
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
-        elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
-            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3-bin.exe)
-                message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x64-windows first.")
-            endif()
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
         else()
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
         endif()
