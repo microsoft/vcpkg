@@ -14,8 +14,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
-		rename_config_cmake.patch
-		fix_find_package_sdl2.patch
+        rename_config_cmake.patch
+        fix_find_package_sdl2.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
@@ -26,31 +26,12 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
-# Configure features
-
-if("d3d9" IN_LIST FEATURES)
-    set(WITH_D3D9 ON)
-else()
-    set(WITH_D3D9 OFF)
-endif()
-
-if("java" IN_LIST FEATURES)
-    set(WITH_JAVA ON)
-else()
-    set(WITH_JAVA OFF)
-endif()
-
-if("python" IN_LIST FEATURES)
-    set(WITH_PYTHON ON)
-else()
-    set(WITH_PYTHON OFF)
-endif()
-
-if("csharp" IN_LIST FEATURES)
-    set(WITH_CSHARP ON)
-else()
-    set(WITH_CSHARP OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    d3d9    OGRE_BUILD_RENDERSYSTEM_D3D9
+    java    OGRE_BUILD_COMPONENT_JAVA
+    python  OGRE_BUILD_COMPONENT_PYTHON
+    csharp  OGRE_BUILD_COMPONENT_CSHARP
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -77,10 +58,7 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
 # Optional stuff
-        -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
-        -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
-        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
-        -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
+        ${FEATURE_OPTIONS}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre-next
 )
