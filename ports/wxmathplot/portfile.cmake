@@ -1,14 +1,15 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/code-snapshots/svn/w/wx/wxmathplot/svn/wxmathplot-svn-r95-trunk-mathplot.zip"
-    FILENAME "wxmathplot-svn-r95-trunk-mathplot.zip"
-    SHA512 2cd4353ee99d08b6070d865ce6d2f174ff586825d9cda9f407188a503e767be1d0fb624ddb5eb13754c499708a4c809f9b935c6293612ad8af613767fea11663
+    URLS "https://netix.dl.sourceforge.net/project/wxmathplot/wxmathplot/0.1.2/wxMathPlot-0.1.2.tar.gz"
+    FILENAME "wxMathPlot-0.1.2.tar.gz"
+    SHA512 528354345544f2553e09cd0d6f4c6e69aa1e2e938a7ae2615c5546e1a2718fbdc1b9f325e4e11368825ae54b185bc5f8aec6a1a9796abce57fec052f14ee1607
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES 0001-wxmathplot-svn-r95-trunk.patch
 )
 
 vcpkg_from_github(

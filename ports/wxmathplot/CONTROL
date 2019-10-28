@@ -1,5 +1,5 @@
 Source: wxmathplot
-Version: 2019-09-16
+Version: 0.1.3-r95
 Build-Depends: wxwidgets
 Homepage: https://sourceforge.net/projects/wxmathplot
 Description: wxMathPlot is an add-on library for wxWidgets which provides a framework for easy plotting of mathematical functions, sampled data and generic 2D plots.
