@@ -1,5 +1,7 @@
-include(vcpkg_common_functions)
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+# In windows, libyuv does not export any symbols.
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,6 +9,7 @@ vcpkg_from_git(
     REF fec9121b676eccd9acea2460aec7d6ae219701b9
     PATCHES
         fix_cmakelists.patch
+        fix-build-type.patch
 )
 
 set(POSTFIX d)
@@ -18,38 +21,10 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
-set(YUVCONVERT_FNAME yuvconvert.exe)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(YUVCONVERT_FNAME yuvconvert)
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libyuv)
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/yuv)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${YUVCONVERT_FNAME} ${CURRENT_PACKAGES_DIR}/tools/yuv/${YUVCONVERT_FNAME})
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/${YUVCONVERT_FNAME})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-endif()
-
-set(LIBRARY_TYPE SHARED)
-set(IMPORT_TYPE IMPLIB)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(LIBRARY_TYPE STATIC)
-    set(IMPORT_TYPE LOCATION)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/libyuv.dll)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/libyuv.dylib)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libyuvd.dll)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/libyuvd.dylib)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libyuv RENAME copyright)
