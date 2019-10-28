@@ -1,0 +1,13 @@
+diff --git a/MatroskaConfig.cmake.in b/MatroskaConfig.cmake.in
+index 924fa51..88c72f5 100644
+--- a/MatroskaConfig.cmake.in
++++ b/MatroskaConfig.cmake.in
+@@ -1,7 +1,7 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(EBML REQUIRED)
++find_dependency(EBML CONFIG REQUIRED)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/MatroskaTargets.cmake)
+ 

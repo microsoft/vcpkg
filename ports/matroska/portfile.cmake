@@ -10,6 +10,7 @@ vcpkg_from_github(
     REF release-1.5.2
     SHA512  5e819d611455efb1dd49ea26b6b124899b1f6ba07b4af93b2f3437ffe7c2c0089a922ef894a7c8612faddadeea75142d0604ee54e6c5822439dc8c65008e119b
     HEAD_REF master
+    PATCHES fix-config-cmake.patch
 )
 
 vcpkg_configure_cmake(
