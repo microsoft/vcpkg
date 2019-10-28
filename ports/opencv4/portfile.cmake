@@ -9,8 +9,8 @@ set(OPENCV_VERSION "4.1.2")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF 4c71dbf0af70e8728b8a791695b083540af72887 #version 4.1.2 commit on 2019.10.10
-    SHA512 d01884281a48dff41ea1e6eb798c78d92cbea6b10f03c5c207555acf68f700bf81d82cb465e74c8ef218aab606ea919c3806350e3ce607f0cfa322e8c2c66d37
+    REF ${OPENCV_VERSION}
+    SHA512 d18d2cc35dc1c95c8870d35feb14459db27ebf6d09ff89a185918b1faff1b36dedacc18f268a6483570c404aca19b83ba627ce7af2265af7195a029cb766c09f
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -259,7 +259,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ###### ocv_options
-	-DOPENCV_DLLVERSION=
+        -DOPENCV_DLLVERSION=
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib
