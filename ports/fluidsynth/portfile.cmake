@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF v2.0.5
-    SHA512 5344ac889d2927dc2465bae40096d756a9bf9b1100e287ba0621c55ffc76f9cb8fa763f6bc832d701cd0ad2997965cf344f58ae4b3dd445eb3491e3659c093d9
+    REF 34b4db10b7164d95e1266c713610554fa96f6914 # v2.0.8
+    SHA512 c46e198eb271e27972e2bf6a5b8f694a3f0c15034aab5dded0a5524b979bdcfbc4d10668e7e1b56d7735aae7665e7a24cd8f5f97de85326ce403efb604af3272
     HEAD_REF master
     PATCHES
        force-x86-gentables.patch

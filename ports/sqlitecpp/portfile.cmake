@@ -4,9 +4,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO "SRombauts/SQLiteCpp"
-    REF 09dd10886c560ab5af41cfe694567f34c88cd101
+    REF 8015952b937464d5944abbd8ff07ef34af1eba2b # 2.4.0
     HEAD_REF master
-    SHA512 d0a440e2e96fca9aac7fe73d46bb6508825a82547dca1e9c93d8c3ca46878fa137e7a2a7a865bcfa641d0236e26307a3342d55fc83578552a37eec7565642d91
+    SHA512 1acb61c5370554e7cad4e63517c48e34813a2bb14e7cfd1569ac18ca5f3405257c5cedaef9457ad3b3489a1e6ba6bb05b0d67dc9cac0709ce9d0b39094fc8d5e
     PATCHES
         0001-Find-external-sqlite3.patch
 )

@@ -7,8 +7,8 @@ EndIF ()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uSockets
-    REF v0.3.1
-    SHA512 f02b72844fb87acbf435d86a89e55244e45e047b049f36bda8e89c9ddeba8d7e6432008d33d33771faec60dcca60a3e3bfa3918c3af08ba80741e09df62c91fd
+    REF e2c093cb7857fa8dc5716470613c46bad508007a # v0.3.2
+    SHA512 1506fe5e571a9194a12ee4b8d874db95c75243bd4181c4e67d896a60f38489ba0765d898c84cb3bc8dabe87974bba31a66ee1effe886edd304e4eaaa686cd65e
     HEAD_REF master
 )
 

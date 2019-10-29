@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF 0.16.3
-    SHA512 f7e567264ea1686a431eacbf2a62f49c0f4467df073ec983ae622d9417c28124eb456eb40d6a70dbe062ad58333944924f04f7e3fee5a7b76917890d98bedce1
+    REF 4da751ab7a79bcdc6e9dd2157b9b5c5c6814e26d # 0.17.2
+    SHA512 4bd739c553fcbd6aa3b61372b42ad2ab40099c18959892553b9bc232b95740ba563d967d73e0695f0ce3d31409ae704eb578b6590431039f18291c896f535a36
     HEAD_REF master
 	PATCHES
 		openssl-version-override.patch

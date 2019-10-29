@@ -7,8 +7,8 @@ vcpkg_find_acquire_program(PYTHON2)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/qpid-proton
-    REF 0.28.0
-    SHA512 dc253218a076ea56d64e0aaeb6ef9e7345bb9ac700c58b8ea6cb9b3c79d66b0667bcc62cbb45f9ce3455fa8f97b7dfb1c2096d269d1b5b9c5c650ef61a126cfe
+    REF b4b0854f6b9213b5250e8ce78301aa287a31a947 # 0.29.0
+    SHA512 f5fd199448a5d996dd3aa5178bd7e2e4d298823c15fe5f3f24f309d0db7ce93055d041fe504b089e0e0cd106b2ddb532f89a1a2f4e76d6d3708d82b3432050b1
     HEAD_REF next
 )
 

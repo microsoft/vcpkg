@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF R_2_2_7
-    SHA512 11b1f9a135c4501ef0112e17da8381e956366165a11a384daedd4cdef9a00c3112c8f6ff8c8f6d3b5e7b71b9a73041f23beac0f27e9cfafe1ec0266d95870408
+    REF a7bc26b69768f7fb24f0c7976fae24b157b85b13 # R_2_2_9
+    SHA512 18842d5c9ff89654c5beeb9daba7ff5a911da318d419735fb14a5acbe0d1b4ac07077822c70cfa5c845892bcec2d72f8f265b9a259fe459092864f4d1754f8dd
     HEAD_REF master)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

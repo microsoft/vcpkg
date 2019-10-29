@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.6
-    SHA512 1ad980176a51f70d8b0b2d158da8c01f30f77b7cf385b24a6340d3c5feb1513bd04b9390487d05cc9557db7dc5f7c135b1688dec9f17ebef35dba884ef7ddee9
+    REF 5f36f18148603facb6c3540e673610d6b24cbfbb # v0.3.7
+    SHA512 c1abcfd6fbf6ae3efa28053523ffb3d72aefaa279594347bfd9910c40f25778421b8d1d2d4dc6c934c9def40642942bb74fe76e06c2d96b1898ea61204a95540
     HEAD_REF develop
     PATCHES
         uwp.patch

@@ -16,8 +16,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opentracing/opentracing-cpp
-    REF cf9b9d5c26ef985af2213521a4f0701b7e715db2
-    SHA512 75b77781c075c6814bf4a81d793e872ca47447fe82a4cad878bee99ffb2082e13e95ee285f32fb2e599765b08b4404d8e475bacff79a412a954d227b93ba53ef
+    REF 4bb431f7728eaf383a07e86f9754a5b67575dab0 # v1.6.0
+    SHA512 1c69ff4cfd5f6037a48815367d3026c1bf06c3c49ebf232a64c43167385fb62e444c3b3224fc38f68ef0fdb378e3736db6ee6ba57160e6e578c87c09e92e527e
 )
 
 vcpkg_configure_cmake(

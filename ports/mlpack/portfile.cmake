@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/mlpack
-    REF mlpack-3.1.1
-    SHA512 4acef74da951934b9bd1cabd87b9d6d002c80eb3218f69755277fa654d928aed379a5e63987f32ec162cc005c2952e618d6d528c2311aebb8cd2cc01cab71f86
+    REF 214bb060290c3ba5f83a05784538346d212a4f9f # 3.2.1
+    SHA512 f45a922d0fcf6ca3cc66632eb0429fb75a2c1ec6f402c2dc45de2f16822cbf2b7bc2ade56eebbdcd4b270daf86751ddbf2f3012c92179d5a9a749339b741c584
     HEAD_REF master
     PATCHES
         cmakelists.patch

@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
-    REF v19.05
-    SHA512 4d708835f6efd539d5fff5cbaf0ec4d68c6d0c4d813ee531c4b9589ee585b720c34e993ef0a7ad0104a921ebd7ab8dec46d0c9284ec7f11993057fe81d3729e0
+    REF 4b1162957b2ad219e1635c81de8343be490e41fc # v19.11
+    SHA512 ab8f762fbe4f6a0cb0e3b2c38f30e96200935b6fdfaf185c4e4a375868d993b89dbbf0e7b340ec3a0e210b891463a51931dddec1abfe69c2da4fd649111c7466
     HEAD_REF master
 )
 

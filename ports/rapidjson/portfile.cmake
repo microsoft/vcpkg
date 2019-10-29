@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/rapidjson
-    REF d87b698d0fcc10a5f632ecbc80a9cb2a8fa094a5
-    SHA512 1770668c954e1bfa40da3956ccf2252703d2addb058bb8c0bf579abac585262452d0e15dcfed9ac2fa358c0da305d706226fdab8310b584017aba98e4f31db4f
+    REF 3b638e67150783303aebf1fc0789d6c44a026b53
+    SHA512 743ff74448c1ac31d1d03c90aa50cd6119b9e1723e618d0ca1f6021ec8a5282b34e1fc13b8577d7cf9eee064b6d9f809b0c92fdc09581c96dfd69cf7b7805223
     HEAD_REF master
 )
 

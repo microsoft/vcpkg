@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/jbig2dec
-    REF 0.16
-    SHA512 a8aa1b1f14466104eed412c38604b2450d1acc1c73faaaf81d5211ac7f4d636bf8d177285f6550f1f5211b31d14f1c14d83571e3e899700ebfc9af00912ed874
+    REF d5db179ea91b1da54df81adb8d5d6d2573117b6a # 0.17
+    SHA512 1d12da6f666d2a87c6cd7dc4fc7cd7a21b4c15cd299027d134885cfe0aaab0e5908a3eb3249a70f2ccba763c7b0a3accb334efdb0bbe5adc2e644125c602fa1c
     HEAD_REF master
 )
 

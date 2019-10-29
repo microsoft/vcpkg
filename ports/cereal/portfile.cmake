@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USCiLab/cereal
-    REF v1.2.2
-    SHA512 9567b2e19add9446b24f8afd122eea09ba6ecd1a090335cf0ab31fdc8f64c6c97daa3d9eaf0801c36a770737488e0eebf81d96d7b7a65deed30da6130f2d47eb
+    REF 02eace19a99ce3cd564ca4e379753d69af08c2c8 # v1.3.0
+    SHA512 de8a349803a6700478901b66a35b11d6d2ddeb43970cc0f92754e4b53d16c0e0b5f1ac6d8ef45cc982dc1cdad3e58816acdeb76e006532e9cb150c7fa20595bf
     HEAD_REF develop
 )
 

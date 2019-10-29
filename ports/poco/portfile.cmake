@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 8a127d6f16795d914cadc342d3f4f3b9b7999e3b #1.9.2
-    SHA512 282097ee2118ac55320ebdde05bb53ed27d68af49c201b0b26027706ef935ae08f8090abb8aab1cafe84c72520ea73b01263b439d32bd2d0bd55319b0634b168
+    REF b95393dcc3640807838e8323b4e600e54d2e8116 # poco-1.9.4-release
+    SHA512 df669841cbb2004e3cb974f7bc909dd163c7a125ea557d008817f9cb7ebd50ffedd869a487fda20d60fe7309a496aff78d690948bded2c785d20db11ffb9d6d3
     HEAD_REF master
     PATCHES
         # Find pcre in debug

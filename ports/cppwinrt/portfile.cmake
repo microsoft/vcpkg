@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cppwinrt
-    REF fall_2017_creators_update_for_vs_15.3
-    SHA512 e3f987ed3f3dce019b8bf9f5451e53b42357473a003b8c14f9009e1848ee0463286bd46fdc3c739c8f7c2d232707e8018f5c087ffae784c745d51a8143f9a294
+    REF e4830e1aed38332d46f46c8e550f94ddc05c4410 # 2.0.191018.6
+    SHA512 bcc24233c7e26d950644b0b0d3dd7bbc75af156905f68f0ad3209418ae30c08d262cb212d379bc93a00cda4dea80596cb5367123f927b2571bb0fd57e037e638
     HEAD_REF master
 )
 
