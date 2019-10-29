@@ -33,7 +33,7 @@ vcpkg_execute_build_process(
 
 #Release Build
 vcpkg_execute_build_process(
-    COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc EXTRALIBS="/Release" CFLAGS="/Ox /DUSE_LTM /DLTM_DESC /I${CURRENT_PACKAGES_DIR}/.."
+    COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc CFLAGS="/Ox /DUSE_LTM /DLTM_DESC /I${CURRENT_PACKAGES_DIR}/.."
     WORKING_DIRECTORY ${SOURCE_PATH}
 )
 
