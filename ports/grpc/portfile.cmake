@@ -18,13 +18,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
-        00002-static-linking-in-linux.patch
-        00003-undef-base64-macro.patch
-        00004-link-gdi32-on-windows.patch
-        00005-fix-uwp-error.patch
-        00006-crypt32.patch
-        00007-disable_grpcpp_channelz.patch
-        00008-fix-duplicate-gettid.patch
+        00002-undef-base64-macro.patch
+        00003-link-gdi32-on-windows.patch
+        00004-fix-uwp-error.patch
+        00005-crypt32.patch
+        00006-disable_grpcpp_channelz.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
