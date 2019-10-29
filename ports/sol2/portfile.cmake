@@ -19,8 +19,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sol2)
 
 file(
     REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/include
+        ${CURRENT_PACKAGES_DIR}/debug
+        ${CURRENT_PACKAGES_DIR}/lib
+        ${CURRENT_PACKAGES_DIR}/include
 )
 
 file(INSTALL ${SOURCE_PATH}/single/include/sol DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
