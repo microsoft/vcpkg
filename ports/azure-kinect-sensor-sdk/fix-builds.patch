@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4967b94..1a78f11 100644
+index 4967b94..e36009e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -100,6 +100,27 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+@@ -27,8 +27,6 @@ option(K4A_BUILD_DOCS "Build K4A doxygen documentation" OFF)
+ option(K4A_MTE_VERSION "Skip FW version check" OFF)
+ option(K4A_SOURCE_LINK "Enable source linking on MSVC" OFF)
+ 
+-include(GitCommands)
+-
+ # Set the project version
+ include(K4AProjectVersion)
+ 
+@@ -100,6 +98,27 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
      set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
  endif()
  
@@ -30,19 +39,23 @@ index 4967b94..1a78f11 100644
  # Find all dependencies
  add_subdirectory(extern)
  
-@@ -160,10 +181,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+@@ -160,10 +179,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
      endif()
  endif()
  
+-add_subdirectory(examples)
+-add_subdirectory(src)
+-add_subdirectory(tests)
+-add_subdirectory(tools)
 +if (BUILD_EXAMPLES)
- add_subdirectory(examples)
++ add_subdirectory(examples)
 +endif()
- add_subdirectory(src)
++ add_subdirectory(src)
 +if (WITH_TEST)
- add_subdirectory(tests)
++ add_subdirectory(tests)
 +endif()
 +if (BUILD_TOOLS)
- add_subdirectory(tools)
++ add_subdirectory(tools)
 +endif()
  
  if (K4A_BUILD_DOCS)
