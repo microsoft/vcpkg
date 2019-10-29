@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-master-project-check.patch
         fix-feature-export.patch
+        fix-error-4275.patch
 )
 
 set(SPDLOG_USE_BENCHMARK OFF)
