@@ -6,16 +6,16 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF f9e3db3a849c851f3f1b3013ed66c0d64158c68b
-        SHA512 41c2e4f56b7d85a5890dfe00db26056bca105370985e55c483df3b41d29831edff5092c36dbf39b7f65a14bbf4f4abaf3b1c2f53e9693a7214158858c31de8dc
+        REF 065ffdeeb47313ddbbc2a8e84ad52ab033e2e8d2
+        SHA512 bade6fae2d5479b7690632dbcc58bda5dd871eb0aa63d6a56cb35e81630121b5148309cd3414e6339c1218ec59fc12ac318b4964d295b579f7a0cacf5593b7ba
         HEAD_REF master
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF f9e3db3a849c851f3f1b3013ed66c0d64158c68b
-        SHA512 41c2e4f56b7d85a5890dfe00db26056bca105370985e55c483df3b41d29831edff5092c36dbf39b7f65a14bbf4f4abaf3b1c2f53e9693a7214158858c31de8dc
+        REF 065ffdeeb47313ddbbc2a8e84ad52ab033e2e8d2
+        SHA512 bade6fae2d5479b7690632dbcc58bda5dd871eb0aa63d6a56cb35e81630121b5148309cd3414e6339c1218ec59fc12ac318b4964d295b579f7a0cacf5593b7ba
         HEAD_REF master
     )
 endif()
