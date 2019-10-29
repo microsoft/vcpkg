@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.8)
 project(imgui CXX)
 
-set(CMAKE_DEBUG_POSTFIX d)
-
 set(IMGUI_INCLUDES_PUBLIC
     imgui.h
     imconfig.h
-)
-
-set(IMGUI_INCLUDES_PRIVATE
     imgui_internal.h
+    imstb_rectpack.h
+    imstb_textedit.h
+    imstb_truetype.h
 )
 
 set(IMGUI_SOURCES
@@ -19,13 +17,14 @@ set(IMGUI_SOURCES
     imgui_widgets.cpp
 )
 
-add_library(${PROJECT_NAME}
-    ${IMGUI_INCLUDES_PUBLIC}
-    ${IMGUI_INCLUDES_PRIVATE}
-    ${IMGUI_SOURCES}
-)
+file(GLOB IMGUI_INCLUDES_EXAMPLES examples/*.h)
+file(GLOB IMGUI_SOURCES_EXAMPLES examples/*.cpp)
 
-target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+add_library(${PROJECT_NAME} INTERFACE)
+
+target_include_directories(${PROJECT_NAME} INTERFACE
+                           $<INSTALL_INTERFACE:include>
+                           $<BUILD_INTERFACE:.>)
 
 install(TARGETS ${PROJECT_NAME}
     EXPORT IMGUIExport
@@ -36,9 +35,4 @@ install(TARGETS ${PROJECT_NAME}
 
 install(EXPORT IMGUIExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_NAME}:: DESTINATION share/${PROJECT_NAME})
 
-if(NOT IMGUI_SKIP_HEADERS)
-    install(
-        FILES ${IMGUI_INCLUDES_PUBLIC}
-        DESTINATION include
-    )
-endif()
+install(FILES ${IMGUI_INCLUDES_PUBLIC} ${IMGUI_SOURCES} ${IMGUI_INCLUDES_EXAMPLES} ${IMGUI_SOURCES_EXAMPLES} DESTINATION include)
