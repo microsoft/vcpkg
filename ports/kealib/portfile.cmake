@@ -1,14 +1,14 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/kealib-1.4.11)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://bitbucket.org/chchrsc/kealib/downloads/kealib-1.4.11.tar.gz"
     FILENAME "kealib-1.4.11.tar.gz"
     SHA512 e080dfd51111f85ddf8ab1bd71aaf7ec6cbe814db29ed62806362ef83718f777935347d9063cf29085f21bf09d4277fd88f5269af6555304130f50d093d28f63
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         hdf5_include.patch
 )

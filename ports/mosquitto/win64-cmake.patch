@@ -29,17 +29,3 @@ index b7a7616..bceb92a 100644
  #  ifndef strcasecmp
  #    define strcasecmp strcmpi
  #  endif
-diff --git a/lib/net_mosq.h b/lib/net_mosq.h
-index b843ebe..8c077eb 100644
---- a/lib/net_mosq.h
-+++ b/lib/net_mosq.h
-@@ -20,6 +20,9 @@ Contributors:
- #include <unistd.h>
- #else
- #include <winsock2.h>
-+#if defined(_MSC_VER) && _MSC_VER > 1900
-+#undef ssize_t
-+#endif
- typedef SSIZE_T ssize_t;
- #endif
- 

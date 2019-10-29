@@ -1,18 +1,22 @@
-set(PCRE_VERSION 8.41)
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre-${PCRE_VERSION})
+
+set(PCRE_VERSION 8.41)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip" 
+    URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
          "https://downloads.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.zip"
     FILENAME "pcre-${PCRE_VERSION}.zip"
     SHA512 a3fd57090a5d9ce9d608aeecd59f42f04deea5b86a5c5899bdb25b18d8ec3a89b2b52b62e325c6485a87411eb65f1421604f80c3eaa653bd7dbab05ad22795ea
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-option-2.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix-arm-config-define.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix-arm64-config-define.patch)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        fix-option-2.patch
+        fix-arm-config-define.patch
+        fix-arm64-config-define.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

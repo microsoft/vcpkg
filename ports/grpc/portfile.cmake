@@ -24,6 +24,7 @@ vcpkg_from_github(
         00005-fix-uwp-error.patch
         00006-crypt32.patch
         00007-disable_grpcpp_channelz.patch
+        00008-fix-duplicate-gettid.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")

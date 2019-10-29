@@ -1,0 +1,14 @@
+--- a/include/SDL_cpuinfo.h	Tue Jul 23 21:41:00 2019 -0400
++++ b/include/SDL_cpuinfo.h	Tue Aug 13 20:26:27 2019 -0700
+@@ -73,8 +73,8 @@
+ #      define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
+ #    endif
+ #    if defined (_M_ARM64)
+-#      include <armintr.h>
+-#      include <arm_neon.h>
++#      include <arm64intr.h>
++#      include <arm64_neon.h>
+ #      define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
+ #    endif
+ #  endif
+ 

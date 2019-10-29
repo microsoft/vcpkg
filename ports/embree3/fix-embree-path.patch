@@ -1,0 +1,26 @@
+diff --git a/common/cmake/embree-config.cmake b/common/cmake/embree-config.cmake
+index cab4d41..da84d3d 100644
+--- a/common/cmake/embree-config.cmake
++++ b/common/cmake/embree-config.cmake
+@@ -14,11 +14,19 @@
+ ## limitations under the License.                                           ##
+ ## ======================================================================== ##
+ 
+-SET(EMBREE_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/@EMBREE_RELATIV_ROOT_DIR@)
++SET(EMBREE_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../@EMBREE_RELATIV_ROOT_DIR@)
+ GET_FILENAME_COMPONENT(EMBREE_ROOT_DIR "${EMBREE_ROOT_DIR}" ABSOLUTE)
+ 
+ SET(EMBREE_INCLUDE_DIRS ${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_INCLUDEDIR@)
+-SET(EMBREE_LIBRARY ${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_LIBDIR@/@EMBREE_LIBRARY_FULLNAME@)
++
++IF (CMAKE_BUILD_TYPE STREQUAL Debug)
++    SET(EMBREE_LIBRARY ${EMBREE_ROOT_DIR}/debug/@CMAKE_INSTALL_LIBDIR@/@EMBREE_LIBRARY_FULLNAME@)
++ENDIF ()
++
++IF (CMAKE_BUILD_TYPE STREQUAL Release)
++    SET(EMBREE_LIBRARY ${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_LIBDIR@/@EMBREE_LIBRARY_FULLNAME@)
++ENDIF ()
++
+ SET(EMBREE_LIBRARIES ${EMBREE_LIBRARY})
+ 
+ MARK_AS_ADVANCED(embree_DIR)
