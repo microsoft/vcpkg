@@ -11,6 +11,7 @@ vcpkg_from_github(
         enable-winrt-cmake.patch
         fix-arm64-headers.patch
         disable-hidapi-for-uwp.patch
+        fix-space-in-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
