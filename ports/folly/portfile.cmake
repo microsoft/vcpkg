@@ -14,8 +14,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF fd84bde19311f13f840b8e5809c87714575ade72 # v2019.10.28.00
-    SHA512 1fceeb8838e6c04cac4fb80784eeb37d56df429df69042cb8bd844b66daf8f7a0985d74a6c602d7e7adb10ee1d8af8a5ed60efd8524320bafeabca947d6f1528
+    REF d12df6e924adc3889cd2fbeaca078355c5da170f
+    SHA512 ecb55cda91ab6db1519b612b676b5166454132960edce0a36f1b4e42f5e1a5f753d8bbb2ed93e34faed1025a54840eb4dc876a49c88b8dd9c90c8070dafc43b8
     HEAD_REF master
     PATCHES
         missing-include-atomic.patch
