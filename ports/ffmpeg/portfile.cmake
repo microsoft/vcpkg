@@ -12,6 +12,7 @@ vcpkg_from_github(
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
         0005-fix-libvpx-linking.patch
+        Fix-StaticFeatures.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -251,6 +252,9 @@ set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_FILES})
 list(LENGTH FILES_TO_REMOVE FILES_TO_REMOVE_LEN)
 if(FILES_TO_REMOVE_LEN GREATER 0)
     file(REMOVE ${FILES_TO_REMOVE})
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
