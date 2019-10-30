@@ -51,3 +51,28 @@ index d3ffa08..8452377 100644
  /* External library function prototypes */
  
  /*** Search and database functions (search.c) ***/
+diff --git a/lib/search.c b/lib/search.c
+index 1cdedc3..72c4bb5 100644
+--- a/lib/search.c
++++ b/lib/search.c
+@@ -1256,7 +1256,7 @@ static void add_relatives(int pos, IndexPtr idx, int rel1, int rel2)
+ {
+     int i;
+     struct relgrp *rel, *last, *r;
+-
++    last = NULL;
+     /* If either of the new relatives are already in a relative group,
+        then add the other to the existing group (transitivity).
+        Otherwise create a new group and add these 2 senses to it. */
+@@ -1281,8 +1281,9 @@ static void add_relatives(int pos, IndexPtr idx, int rel1, int rel2)
+     rel->senses[rel1] = rel->senses[rel2] = 1;
+     if (rellist == NULL)
+ 	rellist = rel;
+-    else
+-	last->next = rel;
++    else if (last) {
++        last->next = rel;
++    }
+ }
+ 
+ static struct relgrp *mkrellist(void)
