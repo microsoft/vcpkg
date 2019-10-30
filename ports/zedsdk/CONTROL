@@ -1,0 +1,4 @@
+Source: zedsdk
+Version: 2.8.3
+Description: The ZED SDK allows you to add depth and motion sensing to your application.
+Build-Depends: cuda
