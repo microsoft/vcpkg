@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://netix.dl.sourceforge.net/project/wxmathplot/wxmathplot/0.1.2/wxMathPlot-0.1.2.tar.gz"
