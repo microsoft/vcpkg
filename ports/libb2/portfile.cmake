@@ -1,10 +1,10 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux platform" ON_TARGET "Windows" "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE2/libb2
-    REF v0.98.1
-    SHA512 10478ecccec3472c23e6a73266e7940d81f35f75bb7cb4cfb171b0e40d989aca97881f26601d0e29bd47db6ace7080d77eb7c497739fbfac2dbbf82616a1e65a
+    REF 2c5142f12a2cd52f3ee0a43e50a3a76f75badf85
+    SHA512 cf29cf9391ae37a978eb6618de6f856f3defa622b8f56c2d5a519ab34fd5e4d91f3bb868601a44e9c9164a2992e80dde188ccc4d1605dffbdf93687336226f8d
     HEAD_REF master
 )
 
