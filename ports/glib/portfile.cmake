@@ -40,7 +40,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
-        OPTIONS ${FEATURE_OPTIONS}
+        OPTIONS
+            ${FEATURE_OPTIONS}
             -DGLIB_VERSION=${GLIB_VERSION}
         OPTIONS_DEBUG
             -DGLIB_SKIP_HEADERS=ON
@@ -55,6 +56,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            --enable-libmount=no
     )
 
     vcpkg_install_make()

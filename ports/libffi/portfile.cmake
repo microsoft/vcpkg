@@ -41,7 +41,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     " FFI_H "${FFI_H}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+
 else()
+
+    vcpkg_find_acquire_program(PERL)
+    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+    vcpkg_add_to_path(${PERL_PATH})
+    if(0)
+        message(STATUS "Applying includedir patch")
+        vcpkg_execute_required_process(
+          COMMAND ${PERL} -pe \'s\#^includesdir = .*\#includesdir = \\\@includedir\\\@\#\' -i include/Makefile.in
+          WORKING_DIRECTORY "${SOURCE_PATH}"
+          LOGNAME "perl-${TARGET_TRIPLET}-all"
+        )
+        message(STATUS "Applying includedir patch - done")
+    endif()
+
     vcpkg_configure_make(
         AUTOCONFIG
         SOURCE_PATH ${SOURCE_PATH}
@@ -49,11 +64,16 @@ else()
 
     vcpkg_install_make()
 
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libffi-3.1/include ${CURRENT_PACKAGES_DIR}/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libffi-3.1)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/libffi-3.1)
+    if(0)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    else()
+        file(COPY ${CURRENT_PACKAGES_DIR}/lib/libffi-3.1/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/libffi-3.1)
+    endif()
+
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/info/dir)
+    vcpkg_fixup_pkgconfig_targets()
 endif()
 
 
