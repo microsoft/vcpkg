@@ -23,22 +23,6 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
-if(MSVC)
-  set(
-    CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} /bigobj /MP /wd4996 /wd4819 /wd4251 /wd4267 /wd4244 /wd4275"
-    )
-endif()
-
-if(APPLE)
-  set(
-    CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override -Wno-unused-command-line-argument -Wno-unused-result -Wno-exceptions"
-    )
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9"
-      CACHE STRING "Minimum OS X deployment version")
-endif()
-
 find_package(CoinUtils REQUIRED)
 find_package(Osi REQUIRED)
 find_package(Cgl REQUIRED)
@@ -58,9 +42,6 @@ target_include_directories(${PROJECT_NAME}
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cbc/src/>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cbc/src/OsiCbc>)
 
-if(MSVC)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CMATH)
 target_compile_definitions(${PROJECT_NAME} PUBLIC COIN_HAS_CLP)
 

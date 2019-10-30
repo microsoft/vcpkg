@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Cbc
-    REF releases/2.10.3
-    SHA512 4e645d85ed2481090d9fff0f5b43c1538935d38177e7efab6ca90cc5aa53e6dead72bef3b9ce6652f81fa57803254d22ce6316894ee8f2ace3e54c11d7e2ffe0
+    REF 6fe3addaa76436d479d4431add67b371e11d3e83
+    SHA512 1f2a756514e5aac66f710aa5af58b35a74747b9a9dd1d8817442afaca6a17c5ad42cc25c25b28e4bade8ab52a7561e467abe90864efffab25fb1fee82e975bd2
     PATCHES fix-c1083-error.patch
 )
 
