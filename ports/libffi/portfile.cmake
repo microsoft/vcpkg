@@ -53,6 +53,7 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libffi-3.1)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/libffi-3.1)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/info/dir)
 endif()
 
 
