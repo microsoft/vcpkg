@@ -1,0 +1,4 @@
+Source: libyuv
+Version: fec9121-1
+Build-Depends: libjpeg-turbo
+Description: libyuv is an open source project that includes YUV scaling and conversion functionality.

@@ -1,19 +1,15 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetds-1.1.6)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.freetds.org/files/stable/freetds-1.1.6.tar.bz2"
     FILENAME "freetds-1.1.6.tar.bz2"
     SHA512 160c8638302fd36a3f42d031dbd58525cde899b64d320f6187ce5865ea2c049a1af63be419623e4cd18ccf229dd2ee7ec509bc5721c3371de0f31710dad7470d
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 set(BUILD_freetds_openssl OFF)
 if("openssl" IN_LIST FEATURES)
@@ -64,6 +60,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freetds)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/freetds/COPYING ${CURRENT_PACKAGES_DIR}/share/freetds/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

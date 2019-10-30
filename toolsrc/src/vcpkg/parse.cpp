@@ -2,6 +2,7 @@
 
 #include <vcpkg/parse.h>
 
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg::Parse
@@ -44,6 +45,8 @@ namespace vcpkg::Parse
         return nullptr;
     }
 
+    static bool is_whitespace(char c) { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
+
     std::vector<std::string> parse_comma_list(const std::string& str)
     {
         if (str.empty())
@@ -53,26 +56,93 @@ namespace vcpkg::Parse
 
         std::vector<std::string> out;
 
-        size_t cur = 0;
+        auto iter = str.cbegin();
+
         do
         {
-            auto pos = str.find(',', cur);
-            if (pos == std::string::npos)
+            // Trim leading whitespace of each element
+            while (iter != str.cend() && is_whitespace(*iter))
             {
-                out.push_back(str.substr(cur));
-                break;
-            }
-            out.push_back(str.substr(cur, pos - cur));
-
-            // skip comma and space
-            ++pos;
-            while (str[pos] == ' ')
-            {
-                ++pos;
+                ++iter;
             }
 
-            cur = pos;
-        } while (cur != std::string::npos);
+            // Allow commas inside of [].
+            bool bracket_nesting = false;
+
+            auto element_begin = iter;
+            auto element_end = iter;
+            while (iter != str.cend() && (*iter != ',' || bracket_nesting))
+            {
+                char value = *iter;
+
+                // do not support nested []
+                if (value == '[')
+                {
+                    if (bracket_nesting)
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Lists do not support nested brackets, Did you forget a ']'?\n"
+                                                  ">    '%s'\n"
+                                                  ">     %s^\n",
+                                                  str,
+                                                  std::string(static_cast<int>(iter - str.cbegin()), ' '));
+                    }
+                    bracket_nesting = true;
+                }
+                else if (value == ']')
+                {
+                    if (!bracket_nesting)
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Found unmatched ']'.  Did you forget a '['?\n"
+                                                  ">    '%s'\n"
+                                                  ">     %s^\n",
+                                                  str,
+                                                  std::string(static_cast<int>(iter - str.cbegin()), ' '));
+                    }
+                    bracket_nesting = false;
+                }
+
+                ++iter;
+
+                // Trim ending whitespace
+                if (!is_whitespace(value))
+                {
+                    // Update element_end after iter is incremented so it will be one past.
+                    element_end = iter;
+                }
+            }
+
+            if (element_begin == element_end)
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Empty element in list\n"
+                                          ">    '%s'\n"
+                                          ">     %s^\n",
+                                          str,
+                                          std::string(static_cast<int>(element_begin - str.cbegin()), ' '));
+            }
+            out.push_back({element_begin, element_end});
+
+            if (iter != str.cend())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO, *iter == ',', "Internal parsing error - expected comma");
+
+                // Not at the end, must be at a comma that needs to be stepped over
+                ++iter;
+
+                if (iter == str.end())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Empty element in list\n"
+                                              ">    '%s'\n"
+                                              ">     %s^\n",
+                                              str,
+                                              std::string(str.length(), ' '));
+                }
+            }
+
+        } while (iter != str.cend());
 
         return out;
     }
