@@ -9,6 +9,11 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/nanovgConfig.cmake DESTINATION ${SOURCE_PATH})
 
+file(GLOB STB_SRCS ${SOURCE_PATH}/src/stb_*)
+if(STB_SRCS)
+    file(REMOVE_RECURSE ${STB_SRCS})
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
