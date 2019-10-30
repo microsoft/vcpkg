@@ -16,12 +16,18 @@ vcpkg_from_github(
   PATCHES
     fix_clang_not_setting_modern_cplusplus.patch
     fix_install_ilmimf.patch
+    fix_linux_static_library_names.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENEXR_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENEXR_BUILD_SHARED)
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
     -DOPENEXR_BUILD_PYTHON_LIBS:BOOL=FALSE
+    -DOPENEXR_BUILD_STATIC=${OPENEXR_BUILD_STATIC}
+    -DOPENEXR_BUILD_SHARED=${OPENEXR_BUILD_SHARED}
   OPTIONS_DEBUG
     -DILMBASE_PACKAGE_PREFIX=${CURRENT_INSTALLED_DIR}/debug
   OPTIONS_RELEASE
@@ -58,7 +64,7 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openexr)
 
 vcpkg_copy_pdbs()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 

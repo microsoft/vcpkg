@@ -171,8 +171,8 @@ function(vcpkg_build_nmake)
                 message(STATUS "Building and installing ${CURRENT_TRIPLET_NAME}")
             endif()
 
-            vcpkg_execute_required_process(
-                COMMAND ${MAKE} -j ${VCPKG_CONCURRENCY} ${MAKE_OPTS}
+            vcpkg_execute_build_process(
+                COMMAND ${MAKE} ${MAKE_OPTS}
                 WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
                 LOGNAME "${_bn_LOGFILE_ROOT}-${CURRENT_TRIPLET_NAME}"
             )

@@ -244,7 +244,7 @@ else
 fi
 if [ "$os" = "osx" ]; then
     if [ "$vcpkgAllowAppleClang" = "true" ] ; then
-        CXX=clang
+        CXX=clang++
     else
         selectCXX CXX || exit 1
     fi
