@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO dcnieho/FreeGLUT
-	REF  FG_3_2_1_RC1
-	SHA512 8f9ad85e4ad1ce33152294409f1be1d4f4cbd07ff1cb557e358c7470a81e3cf901c108e042de135880c6d1cdebc19c7d7ce030ba228249bb0e452996df63d9bd 
+	REF  3673b101ab751e8b9c55261f32a80b2e4bede242
+	SHA512 03834e57bc55dcddceabeaa8fd04db1fd684396b80374c8604a3dd76ef9b4cc84eb15f9ecbacecf1a9e3b779e61fde4ca079d87a89893f7414f00b61c6fd433e 
     HEAD_REF master
     PATCHES 
         use_targets_to_export_x11_dependency.patch
