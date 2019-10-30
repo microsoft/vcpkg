@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF cf3bd998d3fb1af5405bb9ab8cfb810eeb275842 # v4.7.2
-    SHA512 362eb6376617610d1245e553a30b0a4be807efd2b0eab2a4482ac2456588152faf030574416fed1205cf5b25ddd60829f8e227d520004e745563c340b0cf3efb
+    REF v4.7.0
+    SHA512 6602799780105c60ac8c873ed4055c1512dc8bebf98de01e1cce572d113ffb3bf3ca522475b93255c415340f672c55dc6785e0bdbcc39055314683da1d02141a
     HEAD_REF master
     PATCHES
         no-install-deps.patch

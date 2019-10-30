@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO webmproject/libwebp
-  REF 0fe1a89dbf1930fc2554dbe76adad5d962054ead # v1.0.3
-  SHA512 824844a247d3d0d89f1721b08304624b3d3ba0060e218f5c172ffd19d19b96a71d41055fdcda7e6f01a846a95c2519f52e0f39e9f49878e74ca9bb8a1df5fb13
+  REF v1.0.2
+  SHA512 27ca4e7c87d3114a5d3dba6801b5608207a9adc44d0fa62f7523d39be789d389d342d9db5e28c9301eff8fcb1471809c76680a68abd4ff97217b17dd13c4e22b
   HEAD_REF master
   PATCHES
     0001-build-fixes.patch

@@ -5,8 +5,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO apache/avro
-  REF 89218262cde62e98fcb3778b86cd3f03056c54f3 # release-1.9.1
-  SHA512 b5e038ea9d58a78d15cf435c45261e2307accab6718668e2e8deaf4a95d19262a31d2b89553bd1b474cd2a4b558b1f2f6ca0bfb8c8266ded605e25c08cec8664
+  REF release-1.8.2
+  SHA512 a48cc353aadd45ad2c8593bf89ec3f1ddb0fcd364b79dd002a60a54d49cab714b46eee8bd6dc47b13588b9eead49c754dfe05f6aff735752fca8d2cd35ae8649
   HEAD_REF master
   PATCHES
         avro.patch
