@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.14.1
-    SHA512 f5493a62becaaee9d26e05f33509f51c98e96a5efd5d5bbdffdf70456c254b62075f1c9bc63d1119289a22d00359dfe9862078a284f8e063ecf13bd338a50728
+    REF apache-arrow-0.15.0
+    SHA512 4339aefdcbbaa04913a6b4fc2a24fd3c59e2ae12c26d3a0005b6708b622776c5d3989bb4c1005a1c6002d59423c52667c99bb85dc6f5c890a8580a27c470a696
     HEAD_REF master
     PATCHES
         all.patch
@@ -49,3 +49,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/arrow RENAME copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
