@@ -1,0 +1,5 @@
+Source: materialx
+Version: 2019-10-31
+Homepage: https://github.com/materialx/MaterialX
+Description: MaterialX is an open standard for transfer of rich material and look-development content between applications and renderers.
+Build-Depends: opengl (!uwp&!windows)
