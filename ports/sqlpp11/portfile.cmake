@@ -19,7 +19,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Sqlpp11 TARGET_PATH share/sqlpp11)
+
 
 # Delete redundant and unnecessary directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
