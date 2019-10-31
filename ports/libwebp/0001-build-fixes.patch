@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 499ddce..895fda9 100644
+index 9f31226..e474e90 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -159,6 +159,12 @@ add_definitions(-DHAVE_CONFIG_H)
+@@ -167,6 +167,12 @@ add_definitions(-DHAVE_CONFIG_H)
  if(MSVC)
    # avoid security warnings for e.g., fopen() used in the examples.
    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -11,11 +11,11 @@ index 499ddce..895fda9 100644
 +    add_definitions(-DWEBP_EXTERN=__declspec\(dllexport\))
 +  else()
 +    add_definitions(-DFREEGLUT_STATIC)
-+  endif()
++  endif()  
  else()
    add_definitions(-Wall)
  endif()
-@@ -342,19 +346,23 @@ if(WEBP_BUILD_ANIM_UTILS
+@@ -350,19 +356,23 @@ if(WEBP_BUILD_ANIM_UTILS
                      "example_util_[^ ]*")
    list(APPEND EXAMPLEUTIL_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/examples/stopwatch.h)
    add_library(exampleutil ${EXAMPLEUTIL_SRCS})
@@ -23,7 +23,7 @@ index 499ddce..895fda9 100644
    target_include_directories(
      exampleutil
      PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
-+  target_link_libraries(exampleutil imageioutil)
++	target_link_libraries(exampleutil imageioutil)
  
    parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/imageio "IMAGEIOUTILS_SRCS"
                      "imageio_util_[^ ]*")
@@ -39,7 +39,7 @@ index 499ddce..895fda9 100644
    target_link_libraries(imagedec
                          imageioutil
                          webpdemux
-@@ -365,7 +373,8 @@ if(WEBP_BUILD_ANIM_UTILS
+@@ -373,7 +383,8 @@ if(WEBP_BUILD_ANIM_UTILS
    parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/imageio "IMAGEENC_SRCS"
                      "imageenc_[^ ]*")
    add_library(imageenc ${IMAGEENC_SRCS})
@@ -49,7 +49,7 @@ index 499ddce..895fda9 100644
  
    set_property(TARGET exampleutil
                        imageioutil
-@@ -380,7 +389,7 @@ if(WEBP_BUILD_DWEBP)
+@@ -388,7 +399,7 @@ if(WEBP_BUILD_DWEBP)
    parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/examples "DWEBP_SRCS" "dwebp")
    add_executable(dwebp ${DWEBP_SRCS})
    target_link_libraries(dwebp exampleutil imagedec imageenc)
@@ -58,7 +58,7 @@ index 499ddce..895fda9 100644
    install(TARGETS dwebp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  endif()
  
-@@ -389,13 +398,14 @@ if(WEBP_BUILD_CWEBP)
+@@ -397,13 +408,14 @@ if(WEBP_BUILD_CWEBP)
    parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/examples "CWEBP_SRCS" "cwebp")
    add_executable(cwebp ${CWEBP_SRCS})
    target_link_libraries(cwebp exampleutil imagedec webp)
@@ -74,16 +74,15 @@ index 499ddce..895fda9 100644
    target_link_libraries(libwebpmux webp)
    target_include_directories(libwebpmux
                               PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
-@@ -411,7 +421,7 @@ if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)
+@@ -419,7 +431,6 @@ if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)
                                     "${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux.h;\
  ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux_types.h;\
  ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/types.h;")
 -  set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
-+  #set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
    list(APPEND INSTALLED_LIBRARIES libwebpmux)
    configure_pkg_config("src/mux/libwebpmux.pc")
  endif()
-@@ -428,7 +438,7 @@ if(WEBP_BUILD_GIF2WEBP)
+@@ -436,7 +447,7 @@ if(WEBP_BUILD_GIF2WEBP)
                          webp
                          libwebpmux
                          ${WEBP_DEP_GIF_LIBRARIES})
@@ -92,7 +91,7 @@ index 499ddce..895fda9 100644
    install(TARGETS gif2webp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  endif()
  
-@@ -444,7 +454,7 @@ if(WEBP_BUILD_IMG2WEBP)
+@@ -452,7 +463,7 @@ if(WEBP_BUILD_IMG2WEBP)
                          imageioutil
                          webp
                          libwebpmux)
@@ -101,15 +100,15 @@ index 499ddce..895fda9 100644
    install(TARGETS img2webp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  endif()
  
-@@ -464,6 +474,7 @@ if(WEBP_BUILD_VWEBP)
+@@ -472,6 +483,7 @@ if(WEBP_BUILD_VWEBP)
                            webpdemux)
      target_include_directories(vwebp
                                 PRIVATE GLUT::GLUT
-+                                       ${CMAKE_CURRENT_SOURCE_DIR}/src
++							           ${CMAKE_CURRENT_SOURCE_DIR}/src
                                         ${CMAKE_CURRENT_BINARY_DIR}/src
                                         ${OPENGL_INCLUDE_DIR})
      install(TARGETS vwebp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-@@ -483,7 +494,7 @@ if(WEBP_BUILD_WEBPINFO)
+@@ -491,7 +503,7 @@ if(WEBP_BUILD_WEBPINFO)
                      "webpinfo")
    add_executable(webpinfo ${WEBPINFO_SRCS})
    target_link_libraries(webpinfo exampleutil imageioutil)
@@ -118,7 +117,7 @@ index 499ddce..895fda9 100644
    install(TARGETS webpinfo RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  endif()
  
-@@ -493,7 +504,7 @@ if(WEBP_BUILD_WEBPMUX)
+@@ -501,7 +513,7 @@ if(WEBP_BUILD_WEBPMUX)
                      "webpmux")
    add_executable(webpmux ${WEBPMUX_SRCS})
    target_link_libraries(webpmux exampleutil imageioutil libwebpmux webp)
@@ -127,7 +126,7 @@ index 499ddce..895fda9 100644
    install(TARGETS webpmux RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  endif()
  
-@@ -540,7 +551,7 @@ if(WEBP_BUILD_WEBP_JS)
+@@ -548,7 +560,7 @@ if(WEBP_BUILD_WEBP_JS)
    # JavaScript version
    add_executable(webp_js ${CMAKE_CURRENT_SOURCE_DIR}/extras/webp_to_sdl.c)
    target_link_libraries(webp_js webpdecoder SDL)
@@ -136,7 +135,7 @@ index 499ddce..895fda9 100644
    set(WEBP_HAVE_SDL 1)
    set_target_properties(
      webp_js
-@@ -553,7 +564,7 @@ if(WEBP_BUILD_WEBP_JS)
+@@ -561,7 +573,7 @@ if(WEBP_BUILD_WEBP_JS)
    # WASM version
    add_executable(webp_wasm ${CMAKE_CURRENT_SOURCE_DIR}/extras/webp_to_sdl.c)
    target_link_libraries(webp_wasm webpdecoder SDL)
@@ -144,17 +143,19 @@ index 499ddce..895fda9 100644
 +  target_include_directories(webp_wasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
    set_target_properties(
      webp_wasm
-     PROPERTIES LINK_FLAGS "-s WASM=1 -s 'BINARYEN_METHOD=\"native-wasm\"' \
-@@ -579,7 +590,7 @@ if(WEBP_BUILD_ANIM_UTILS)
+     PROPERTIES LINK_FLAGS "-s WASM=1 \
+@@ -587,8 +599,8 @@ if(WEBP_BUILD_ANIM_UTILS)
                          libwebpmux
                          webpdemux
                          ${WEBP_DEP_GIF_LIBRARIES})
 -  target_include_directories(anim_diff PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
+-
 +  target_include_directories(anim_diff PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src)
- 
++ 
    # anim_dump
    include_directories(${WEBP_DEP_IMG_INCLUDE_DIRS} ${WEBP_DEP_GIF_INCLUDE_DIRS})
-@@ -595,7 +606,7 @@ if(WEBP_BUILD_ANIM_UTILS)
+   parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/examples "ANIM_DUMP_SRCS"
+@@ -603,7 +615,7 @@ if(WEBP_BUILD_ANIM_UTILS)
                          libwebpmux
                          webpdemux
                          ${WEBP_DEP_GIF_LIBRARIES})

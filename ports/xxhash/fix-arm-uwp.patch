@@ -1,5 +1,5 @@
 diff --git a/xxh3.h b/xxh3.h
-index 0972c46..e5c7101 100644
+index b3a8295..dc5c519 100644
 --- a/xxh3.h
 +++ b/xxh3.h
 @@ -40,7 +40,7 @@
@@ -11,23 +11,15 @@ index 0972c46..e5c7101 100644
  /* ===   Dependencies   === */
  
  #undef XXH_INLINE_ALL   /* in case it's already defined */
-@@ -97,7 +97,7 @@
- #endif
- 
- /* U64 XXH_mult32to64(U32 a, U64 b) { return (U64)a * (U64)b; } */
--#ifdef _MSC_VER
-+#if defined(_MSC_VER) && (!_WIN32_WINNT >= 0x0A00)
- #   include <intrin.h>
-     /* MSVC doesn't do a good job with the mull detection. */
- #   define XXH_mult32to64 __emulu
 diff --git a/xxhsum.c b/xxhsum.c
-index 0ec11c0..7d39c24 100644
+index 9e33e4e..92b55b3 100644
 --- a/xxhsum.c
 +++ b/xxhsum.c
-@@ -31,6 +31,7 @@
- #ifndef XXHASH_C_2097394837
- #define XXHASH_C_2097394837
+@@ -28,7 +28,7 @@
+  * Display convention is Big Endian, for both 32 and 64 bits algorithms
+  */
  
+-
 +#pragma warning (disable : 4146)
  /* ************************************
   *  Compiler Options
