@@ -8,6 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_TARGET_IS_LINUX)
+    message(STATUS "MaterialX currently requires the following libraries from the system package manager:\n    libx11\n    libxt\n    freeglut3\n\nThese can be installed on Ubuntu systems via sudo apt-get install libx11-dev libxt-dev freeglut3-dev")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
