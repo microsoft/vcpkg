@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-event-stream
-    REF 0d1e206629e9b4cf7de1ccdb37b7996bb141d05b # v0.1.3
-    SHA512 0bcbaee66a788ee246d5a5a6965d1bd52cf900d8151662b4449ca8a460227a7e6821a7725f6f490caa643df65379757529688cca62bdd42ed9d3d9abc37a614e
+    REF v0.1.1
+    SHA512 974311cdface59bb5a95c7c249ad31cf694ebefd5c7b25f280f6817c6dc8d9ab1fdc8f75030099efe573be41a93676f199fda797d2a7bb41533f7e15f05de120
     HEAD_REF master
 )
 
