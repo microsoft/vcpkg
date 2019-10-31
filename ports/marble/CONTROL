@@ -1,10 +1,14 @@
 Source: marble
-Version: master
+Version: 19.08.2
 Homepage: https://marble.kde.org
 Description: Marble KDE library
 Build-Depends: qt5
-Default-Features:
 
-Feature:
-Description:
-Build-Depends:
+Feature: tools
+Description: support for tools
+
+Feature: tests
+Description: support for tests
+
+Feature: plugins
+Description: Build plugins for Qt Designer
