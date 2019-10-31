@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1bae9a7..0303186 100644
+index d91b199..c1f6ed8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -53,7 +53,7 @@ option(WITH_WINDOWS_UTF8_FILENAMES "use UTF8 as characterset for opening files,
+@@ -59,7 +59,7 @@ option(WITH_WINDOWS_UTF8_FILENAMES "use UTF8 as characterset for opening files,
  if (WITH_WINDOWS_UTF8_FILENAMES)
    add_definitions(-DROCKSDB_WINDOWS_UTF8_FILENAMES)
  endif()
