@@ -1,0 +1,25 @@
+diff --git a/src/aliceVision/prettyprint.hpp b/src/aliceVision/prettyprint.hpp
+index 01846d7..742e133 100644
+--- a/src/aliceVision/prettyprint.hpp
++++ b/src/aliceVision/prettyprint.hpp
+@@ -49,16 +49,15 @@ namespace pretty_print
+         struct has_begin_end : private sfinae_base
+         {
+         private:
+-            template <typename C>
+-            static yes & f(typename std::enable_if<
+-                std::is_same<decltype(static_cast<typename C::const_iterator(C::*)() const>(&C::begin)),
++            template <typename C, typename Other = C::const_iterator (C::*)() const>
++            static yes & f(typename std::enable_if<std::is_same<decltype(static_cast<typename Other>(&C::begin)),
+                              typename C::const_iterator(C::*)() const>::value>::type *);
+ 
+             template <typename C> static no & f(...);
+ 
+-            template <typename C>
++            template <typename C, typename Other = C::const_iterator (C::*)() const>
+             static yes & g(typename std::enable_if<
+-                std::is_same<decltype(static_cast<typename C::const_iterator(C::*)() const>(&C::end)),
++                std::is_same<decltype(static_cast<typename Other>(&C::end)),
+                              typename C::const_iterator(C::*)() const>::value, void>::type*);
+ 
+             template <typename C> static no & g(...);

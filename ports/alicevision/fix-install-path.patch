@@ -1,0 +1,13 @@
+diff --git a/src/cmake/Helpers.cmake b/src/cmake/Helpers.cmake
+index e1237a6..bde2950 100644
+--- a/src/cmake/Helpers.cmake
++++ b/src/cmake/Helpers.cmake
+@@ -183,7 +183,7 @@ function(alicevision_add_software software_name)
+ 
+   install(TARGETS ${software_name}
+     RUNTIME
+-      DESTINATION ${CMAKE_INSTALL_BINDIR}
++      DESTINATION tools
+   )
+ endfunction()
+ 

@@ -1,0 +1,310 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df98d3b..8b80f65 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -96,6 +96,8 @@ set(CMAKE_CORE_BUILD_FLAGS -DCMAKE_BUILD_TYPE=${DEPS_CMAKE_BUILD_TYPE} -DBUILD_S
+ set(CMAKE_CORE_BUILD_FLAGS_NOSHARED -DCMAKE_BUILD_TYPE=${DEPS_CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_DO_STRIP=${CMAKE_INSTALL_DO_STRIP})
+ 
+ if(AV_BUILD_ZLIB)
++find_package(ZLIB REQUIRED)
++if (0)
+ set(ZLIB_TARGET zlib)
+ ExternalProject_Add(${ZLIB_TARGET}
+        URL http://www.zlib.net/zlib-1.2.11.tar.gz
+@@ -110,9 +112,12 @@ ExternalProject_Add(${ZLIB_TARGET}
+        )
+ set(ZLIB_CMAKE_FLAGS -DZLIB_ROOT=${BUILD_DIR}/zlib_build)
+ endif()
++endif()
+ 
+ 
+ # Add Geogram
++find_package(Geogram CONFIG REQUIRED)
++if (0)
+ if(WIN32)
+    set(VORPALINE_PLATFORM Win-vs-dynamic-generic)
+ elseif(APPLE)
+@@ -133,10 +138,12 @@ ExternalProject_Add(${GEOGRAM_TARGET}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} -DVORPALINE_PLATFORM=${VORPALINE_PLATFORM} -DGEOGRAM_WITH_HLBFGS=OFF -DGEOGRAM_WITH_TETGEN=OFF -DGEOGRAM_WITH_GRAPHICS=OFF -DGEOGRAM_WITH_EXPLORAGRAM=OFF -DGEOGRAM_WITH_LUA=OFF -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
+        DEPENDS ${ZLIB_TARGET}
+        )
++endif()
+ set(GEOGRAM_CMAKE_FLAGS -DGEOGRAM_INSTALL_PREFIX=${BUILD_DIR}/geogram_build -DGEOGRAM_INCLUDE_DIR=${BUILD_DIR}/geogram_build/include/geogram1)
+ 
+ # Add Cuda
+ if(AV_USE_CUDA AND AV_BUILD_CUDA)
++if (0)
+ set(CUDA_TARGET cuda)
+ ExternalProject_Add(${CUDA_TARGET}
+        URL https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run
+@@ -153,6 +160,7 @@ ExternalProject_Add(${CUDA_TARGET}
+        BUILD_COMMAND ""
+        INSTALL_COMMAND sh ${BUILD_DIR}/src/cuda_8.0.61_375.26_linux-run --silent --no-opengl-libs --toolkit --toolkitpath=<INSTALL_DIR>
+        )
++endif()
+ set(CUDA_CUDART_LIBRARY "")
+ set(CUDA_CMAKE_FLAGS -DCUDA_TOOLKIT_ROOT_DIR=${BUILD_DIR}/cuda_build)
+ else()
+@@ -163,6 +171,8 @@ else()
+ endif()
+ 
+ # Add Tbb
++find_package(TBB CONFIG REQUIRED)
++if (0)
+ set(TBB_TARGET tbb)
+ ExternalProject_Add(${TBB_TARGET}
+        URL https://github.com/01org/tbb/archive/2018_U5.tar.gz
+@@ -177,9 +187,12 @@ ExternalProject_Add(${TBB_TARGET}
+        BUILD_COMMAND PREFIX=<INSTALL_DIR> make PREFIX=<INSTALL_DIR>
+        INSTALL_COMMAND mkdir -p <INSTALL_DIR>/${CMAKE_INSTALL_LIBDIR} && echo "cp <BINARY_DIR>/build/linux_*_release/*.so* <INSTALL_DIR>/${CMAKE_INSTALL_LIBDIR}" > tbb_so_files.sh && sh tbb_so_files.sh && cp -r "<BINARY_DIR>/include" "<INSTALL_DIR>"
+        )
++endif()
+ set(TBB_CMAKE_FLAGS -DTBB_INCLUDE_DIRS:PATH=${BUILD_DIR}/tbb_build/include -DTBB_LIBRARIES=${BUILD_DIR}/tbb_build/${CMAKE_INSTALL_LIBDIR}/libtbb.so)
+ 
+ # Add Eigen
++find_package(Eigen3 CONFIG REQUIRED)
++if (0)
+ set(EIGEN_TARGET eigen)
+ ExternalProject_Add(${EIGEN_TARGET}
+        URL https://github.com/eigenteam/eigen-git-mirror/archive/3.3.7.tar.gz
+@@ -192,9 +205,11 @@ ExternalProject_Add(${EIGEN_TARGET}
+        INSTALL_DIR ${BUILD_DIR}/eigen_build
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
+        )
++endif()
+ set(EIGEN_CMAKE_FLAGS -DEigen3_DIR:PATH=${BUILD_DIR}/eigen_build/share/eigen3/cmake -DEIGEN3_INCLUDE_DIR=${BUILD_DIR}/eigen_build/include/eigen3 -DEIGEN_INCLUDE_DIR=${BUILD_DIR}/eigen_build/include/eigen3 -DEigen_INCLUDE_DIR=${BUILD_DIR}/eigen_build/include/eigen3)
+ 
+ if(AV_BUILD_OPENGV)
++if (0)
+ set(OPENGV_TARGET opengv)
+ ExternalProject_Add(${OPENGV_TARGET}
+        GIT_REPOSITORY https://github.com/laurentkneip/opengv.git
+@@ -209,10 +224,13 @@ ExternalProject_Add(${OPENGV_TARGET}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} ${EIGEN_CMAKE_FLAGS} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
+        DEPENDS ${EIGEN_TARGET}
+        )
++endif()
+ set(OPENGV_CMAKE_FLAGS -DOPENGV_DIR=${BUILD_DIR}/opengv_install)
+ endif()
+ 
+ if(AV_BUILD_LAPACK)
++find_package(clapack CONFIG REQUIRED)
++if (0)
+ set(LAPACK_TARGET lapack)
+ ExternalProject_Add(${LAPACK_TARGET}
+        URL http://www.netlib.org/lapack/lapack-3.8.0.tar.gz
+@@ -226,12 +244,15 @@ ExternalProject_Add(${LAPACK_TARGET}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
+        DEPENDS ${TBB_TARGET}
+        )
++endif()
+ set(BLAS_LIBRARIES ${BUILD_DIR}/lapack_build/${CMAKE_INSTALL_LIBDIR}/libblas.so)
+ set(LAPACK_LIBRARIES ${BUILD_DIR}/lapack_build/${CMAKE_INSTALL_LIBDIR}/liblapack.so)
+ set(LAPACK_CMAKE_FLAGS -DBLAS_LIBRARIES=${BLAS_LIBRARIES} -DLAPACK_LIBRARIES=${LAPACK_LIBRARIES})
+ endif()
+ 
+ if(AV_BUILD_SUITESPARSE)
++find_package(suitesparse CONFIG REQUIRED)
++if (0)
+ set(SUITESPARSE_TARGET suitesparse)
+ set(SUITESPARSE_INTERNAL_MAKE_CMD LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${BUILD_DIR}/lapack_build/${CMAKE_INSTALL_LIBDIR} make BLAS="${BLAS_LIBRARIES}" LAPACK="${LAPACK_LIBRARIES}")
+ ExternalProject_Add(${SUITESPARSE_TARGET}
+@@ -249,11 +270,14 @@ ExternalProject_Add(${SUITESPARSE_TARGET}
+        INSTALL_COMMAND cd <BINARY_DIR> && ${SUITESPARSE_INTERNAL_MAKE_CMD} install INSTALL=<INSTALL_DIR>
+        DEPENDS ${LAPACK_TARGET}
+        )
++endif()
+ set(SUITESPARSE_CMAKE_FLAGS ${LAPACK_CMAKE_FLAGS} -DSUITESPARSE_INCLUDE_DIR_HINTS=${BUILD_DIR}/suitesparse_build/include -DSUITESPARSE_LIBRARY_DIR_HINTS=${BUILD_DIR}/suitesparse_build/lib)
+ endif()
+ 
+ # Add ceres-solver: A Nonlinear Least Squares Minimizer
+ set(CERES_TARGET ceres)
++find_package(Ceres CONFIG REQUIRED)
++if (0)
+ ExternalProject_Add(${CERES_TARGET}
+        URL https://github.com/ceres-solver/ceres-solver/archive/1.14.0.tar.gz
+        PREFIX ${BUILD_DIR}
+@@ -266,10 +290,13 @@ ExternalProject_Add(${CERES_TARGET}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} ${SUITESPARSE_CMAKE_FLAGS} -DSUITESPARSE:BOOL=ON -DLAPACK:BOOL=ON ${EIGEN_CMAKE_FLAGS} -DMINIGLOG=ON -DBUILD_EXAMPLES:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
+        DEPENDS ${EIGEN_TARGET} ${SUITESPARSE_TARGET}
+        )
++endif()
+ set(CERES_CMAKE_FLAGS ${SUITESPARSE_CMAKE_FLAGS} -DCeres_DIR=${BUILD_DIR}/ceres_build/${CMAKE_INSTALL_LIBDIR}/cmake/Ceres)
+ 
+ # Add OpenEXR
+ set(OPENEXR_TARGET openexr)
++find_package(openexr CONFIG REQUIRED)
++if (0)
+ ExternalProject_Add(${OPENEXR_TARGET}
+       URL https://github.com/openexr/openexr/archive/v2.3.0.tar.gz
+       # URL https://github.com/openexr/openexr/archive/v2.2.1.tar.gz
+@@ -294,11 +321,14 @@ ExternalProject_Add(${OPENEXR_TARGET}
+       CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} -DOPENEXR_BUILD_PYTHON_LIBS=OFF -DOPENEXR_ENABLE_TESTS=OFF ${ZLIB_CMAKE_FLAGS} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> <SOURCE_DIR>
+       DEPENDS ${ZLIB_TARGET}
+       )
++endif()
+ set(ILMBASE_CMAKE_FLAGS -DILMBASE_ROOT=${BUILD_DIR}/openexr_build -DILMBASE_INCLUDE_PATH=${BUILD_DIR}/openexr_build/include)
+ set(OPENEXR_CMAKE_FLAGS ${ILMBASE_CMAKE_FLAGS} -DOPENEXR_ROOT=${BUILD_DIR}/openexr_build -DOPENEXR_INCLUDE_PATH=${BUILD_DIR}/openexr_build/include)
+ 
+ # Add LibTiff
+ if(AV_BUILD_TIFF)
++find_package(tiff CONFIG REQUIRED)
++if (0)
+ set(TIFF_TARGET tiff)
+ ExternalProject_Add(${TIFF_TARGET}
+        URL http://download.osgeo.org/libtiff/tiff-4.0.10.tar.gz
+@@ -314,9 +344,12 @@ ExternalProject_Add(${TIFF_TARGET}
+        )
+ SET(TIFF_CMAKE_FLAGS -DTIFF_LIBRARY=${BUILD_DIR}/tiff_build/lib/libtiff.so -DTIFF_INCLUDE_DIR=${BUILD_DIR}/tiff_build/include)
+ endif()
++endif()
+ 
+ # Add LibPng
+ if(AV_BUILD_PNG)
++find_package(libpng CONFIG REQUIRED)
++if (0)
+ set(PNG_TARGET png)
+ ExternalProject_Add(${PNG_TARGET}
+        URL http://github.com/glennrp/libpng-releases/raw/master/libpng-1.6.34.tar.gz
+@@ -333,10 +366,13 @@ ExternalProject_Add(${PNG_TARGET}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} ${ZLIB_CMAKE_FLAGS} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> <SOURCE_DIR>
+        DEPENDS ${ZLIB_TARGET}
+        )
++endif()
+ SET(PNG_CMAKE_FLAGS -DPNG_LIBRARY=${BUILD_DIR}/png_build/${CMAKE_INSTALL_LIBDIR}/libpng.so -DPNG_PNG_INCLUDE_DIR=${BUILD_DIR}/png_build/include)
+ endif()
+ 
+ if(AV_BUILD_JPEG)
++find_package(JPEG REQUIRED)
++if (0)
+ set(JPEG_TARGET turbojpeg)
+ # Add turbojpeg
+ ExternalProject_Add(${JPEG_TARGET}
+@@ -351,11 +387,14 @@ ExternalProject_Add(${JPEG_TARGET}
+        CONFIGURE_COMMAND cd <BINARY_DIR> && autoreconf -fiv && ./configure --prefix=<INSTALL_DIR> 
+        DEPENDS ${ZLIB_TARGET}
+        )
++endif()
+ SET(JPEG_CMAKE_FLAGS -DJPEG_LIBRARY=${BUILD_DIR}/turbojpeg_build/lib/libjpeg.so -DJPEG_INCLUDE_DIR=${BUILD_DIR}/turbojpeg_build/include)
+ endif()
+ 
+ 
+ if(AV_BUILD_LIBRAW)
++find_package(LibRaw CONFIG REQUIRED)
++if (0)
+ set(LIBRAW_TARGET libraw)
+ # Add libraw
+ ExternalProject_Add(libraw_cmake
+@@ -387,10 +426,15 @@ ExternalProject_Add(${LIBRAW_TARGET}
+     CONFIGURE_COMMAND cp <SOURCE_DIR>_cmake/CMakeLists.txt . && cp -rf <SOURCE_DIR>_cmake/cmake . && ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} -DENABLE_OPENMP=ON -DENABLE_LCMS=ON -DENABLE_EXAMPLES=OFF ${ZLIB_CMAKE_FLAGS} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DINSTALL_CMAKE_MODULE_PATH:PATH=<INSTALL_DIR>/cmake <SOURCE_DIR>
+       DEPENDS libraw_cmake ${ZLIB_TARGET}
+       )
++endif()
+ SET(LIBRAW_CMAKE_FLAGS -DLIBRAW_PATH=${BUILD_DIR}/libraw_build -DPC_LIBRAW_INCLUDEDIR=${BUILD_DIR}/libraw_build/include -DPC_LIBRAW_LIBDIR=${BUILD_DIR}/libraw_build/lib -DPC_LIBRAW_R_LIBDIR=${BUILD_DIR}/libraw_build/lib)
+ endif()
+ 
+ # Add Boost
++find_package(Boost
++             COMPONENTS atomic container date_time exception filesystem graph log math program_options regex serialization system test thread stacktrace timer
++             REQUIRED)
++if (0)
+ set(BOOST_TARGET boost)
+ ExternalProject_Add(${BOOST_TARGET}
+        URL https://github.com/alicevision/AliceVisionDependencies/releases/download/boost-src-1.66.0/boost_1_66_0.tar.bz2
+@@ -411,9 +455,11 @@ ExternalProject_Add(${BOOST_TARGET}
+        DEPENDS ${ZLIB_TARGET}
+        )
+ set(BOOST_CMAKE_FLAGS -DBOOST_ROOT=${BUILD_DIR}/boost_build)
+-
++endif()
+ # Add OpenImageIO
+ set(OPENIMAGEIO_TARGET openimageio)
++find_package(OpenImageIO CONFIG REQUIRED)
++if (0)
+ ExternalProject_Add(${OPENIMAGEIO_TARGET}
+       URL https://github.com/OpenImageIO/oiio/archive/Release-2.0.10.tar.gz
+       PREFIX ${BUILD_DIR}
+@@ -426,12 +472,15 @@ ExternalProject_Add(${OPENIMAGEIO_TARGET}
+       CONFIGURE_COMMAND ${CMAKE_COMMAND} -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations" ${CMAKE_CORE_BUILD_FLAGS} -DCMAKE_PREFIX_PATH="${BUILD_DIR}/png_build;${BUILD_DIR}/turbojpeg_build;${BUILD_DIR}/libraw_build" -DBOOST_ROOT=${BUILD_DIR}/boost_build -DOIIO_BUILD_TESTS:BOOL=OFF -DILMBASE_HOME=${BUILD_DIR}/openexr_build -DOPENEXR_HOME=${BUILD_DIR}/openexr_build ${TIFF_CMAKE_FLAGS} ${ZLIB_CMAKE_FLAGS} ${PNG_CMAKE_FLAGS} ${JPEG_CMAKE_FLAGS} ${LIBRAW_CMAKE_FLAGS} ${OPENEXR_CMAKE_FLAGS} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR> -DUSE_PYTHON=OFF -DUSE_OPENCV=OFF -DUSE_OPENGL=OFF
+       DEPENDS ${BOOST_TARGET} ${OPENEXR_TARGET} ${TIFF_TARGET} ${PNG_TARGET} ${JPEG_TARGET} ${LIBRAW_TARGET} ${ZLIB_TARGET}
+       )
++endif()
+ # TODO: openjpeg
+ # -DOPENJPEG_INCLUDE_DIR=$OPENJPEG_INCLUDE_DIR/openjpeg-2.0 -DOPENJPEG_OPENJP2_LIBRARIES=$OPENJPEG_OPENJP2_LIBRARIES
+ set(OPENIMAGEIO_CMAKE_FLAGS -DOPENIMAGEIO_LIBRARY_DIR_HINTS=${BUILD_DIR}/openimageio_build -DOPENIMAGEIO_INCLUDE_DIR_HINTS=${BUILD_DIR}/openimageio_build)
+ 
+ # Add Alembic: I/O for Point Cloud and Cameras
+ set(ALEMBIC_TARGET alembic)
++find_package(Alembic CONFIG REQUIRED)
++if (0)
+ ExternalProject_Add(${ALEMBIC_TARGET}
+       URL https://github.com/alembic/alembic/archive/1.7.10.tar.gz
+       PREFIX ${BUILD_DIR}
+@@ -444,9 +493,12 @@ ExternalProject_Add(${ALEMBIC_TARGET}
+       CONFIGURE_COMMAND ${CMAKE_COMMAND} ${CMAKE_CORE_BUILD_FLAGS} ${ZLIB_CMAKE_FLAGS} ${ILMBASE_CMAKE_FLAGS} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
+       DEPENDS ${BOOST_TARGET} ${OPENEXR_TARGET} ${ZLIB_TARGET}
+       )
+-set(ALEMBIC_CMAKE_FLAGS -DAlembic_DIR:PATH=${BUILD_DIR}/alembic_build/lib/cmake/Alembic)
++endif()
++set(ALEMBIC_CMAKE_FLAGS -DAlembic_DIR:PATH=${INSTALLED_PATH}/share/Alembic)
+ 
+ if(AV_BUILD_OPENCV)
++find_package(opencv REQUIRED)
++if (0)
+ set(OPENCV_TARGET opencv)
+ ExternalProject_Add(opencv_contrib
+   URL https://github.com/opencv/opencv_contrib/archive/4.1.0.zip
+@@ -491,6 +543,7 @@ ExternalProject_Add(${OPENCV_TARGET}
+     -DBUILD_LIST=core,improc,photo,objdetect,video,imgcodecs,videoio,features2d,xfeatures2d,version
+     ../${OPENCV_SRC_PATH}
+ )
++endif()
+ # set(OPENCV_CMAKE_FLAGS -DOpenCV_DIR=${BUILD_DIR}/opencv_install -DCMAKE_PREFIX_PATH=${BUILD_DIR}/opencv_install)
+ set(OPENCV_CMAKE_FLAGS -DOpenCV_DIR=${BUILD_DIR}/opencv_install/${CMAKE_INSTALL_LIBDIR}/cmake/opencv4 -DOPENCV_DIR=${BUILD_DIR}/opencv_install/${CMAKE_INSTALL_LIBDIR}/cmake/opencv4)
+ endif()
+@@ -498,6 +551,7 @@ endif()
+ # Add CCTag
+ if(AV_BUILD_CCTAG)
+ set(CCTAG_TARGET cctag)
++if (0)
+ ExternalProject_Add(${CCTAG_TARGET}
+       GIT_REPOSITORY https://github.com/alicevision/CCTag
+       GIT_TAG develop
+@@ -513,10 +567,12 @@ ExternalProject_Add(${CCTAG_TARGET}
+       )
+ set(CCTAG_CMAKE_FLAGS -DCCTag_DIR:PATH=${BUILD_DIR}/cctag_build/lib/cmake/CCTag)
+ endif()
++endif()
+ 
+ # Add PopSift
+ if(AV_BUILD_POPSIFT)
+ set(POPSIFT_TARGET popsift)
++if (0)
+ ExternalProject_Add(${POPSIFT_TARGET}
+       GIT_REPOSITORY https://github.com/alicevision/popsift
+       GIT_TAG aa77bd6d308ad9fced2d5ba63e02f2f10873479b
+@@ -532,6 +588,7 @@ ExternalProject_Add(${POPSIFT_TARGET}
+       )
+ set(POPSIFT_CMAKE_FLAGS -DPopSift_DIR:PATH=${BUILD_DIR}/popsift_build/lib/cmake/PopSift)
+ endif()
++endif()
+ 
+ set(AV_DEPS
+   ${ZLIB_TARGET}
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7ea43b5..b495505 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -158,11 +158,7 @@ endmacro(add_target_properties)
+ # ==============================================================================
+ # Check that submodule have been initialized and updated
+ # ==============================================================================
+-if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/CoinUtils)
+-  message(FATAL_ERROR
+-    "\n submodule(s) are missing, please update your repository:\n"
+-    "  > git submodule update -i\n")
+-endif()
++find_package(CoinUtils CONFIG REQUIRED)
+ 
+ # ==============================================================================
+ # Additional cmake find modules
