@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ab282f4..5319d17 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -118,6 +118,5 @@ endif()
+ find_package(jsoncpp QUIET)
+ option(WITH_JSONCPP "Build with jsoncpp" ${jsoncpp_FOUND})
+ if(WITH_JSONCPP)
+-    find_package(jsoncpp REQUIRED)
+-    add_subdirectory(components/jsoncpp)
++    find_package(jsoncpp CONFIG REQUIRED)
+ endif()

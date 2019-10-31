@@ -1,0 +1,5 @@
+Source: cpd
+Version: 2019-03-26
+Homepage: https://github.com/gadomski/cpd
+Description: Coherent Point Drift (CPD) is a point-set registration algorithm, originally developed by Andriy Myronenko et al. This is a C++ library that runs CPD.
+Build-Depends: eigen3
