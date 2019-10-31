@@ -1,3 +1,9 @@
+if(CMAKE_HOST_WIN32)
+    set(REQUIRED_PATCH "allow_better_dependencies_search.patch")
+else()
+    set(REQUIRED_PATCH "allow_better_dependencies_search_noglib.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AravisProject/aravis
@@ -5,7 +11,7 @@ vcpkg_from_github(
     SHA512 1b93197031f1a4912911c320e88eda67f7c08db1570c22213f5f2ec41f17e17b6f04c513b8990871e07864137da3cf725389da2aceca4035303560f472ea2a83
     HEAD_REF master
     PATCHES
-        allow_better_dependencies_search.patch
+        ${REQUIRED_PATCH}
 )
 
 if(CMAKE_HOST_WIN32)
@@ -79,9 +85,9 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/bin/arv-fake-gv-camera-0.8${EXECUTABLE_SUFFI
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/arv-tool-0.8${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/arv-tool-0.8${EXECUTABLE_SUFFIX})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-#endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

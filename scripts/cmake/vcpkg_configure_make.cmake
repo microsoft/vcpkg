@@ -114,6 +114,7 @@ function(vcpkg_configure_make)
     set(WIN_TARGET_ARCH )
     set(WIN_TARGET_COMPILER )
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+    set(ENV{LD_LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/lib")
 
     # Detect compiler
     if (GENERATOR STREQUAL "nmake")

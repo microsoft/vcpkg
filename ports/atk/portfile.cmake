@@ -1,6 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 set(ATK_VERSION 2.24.0)
 
@@ -10,26 +9,39 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 3ae0a4d5f28d5619d465135c685161f690732053bcb70a47669c951fbf389b5d2ccc5c7c73d4ee8c5a3b2df14e2f5b082e812a215f10a79b27b412d077f5e962
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+    set(REQUIRED_PATCH "fix-config.patch")
+endif()
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        fix-linux-config.patch
+        ${REQUIRED_PATCH}
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DCMAKE_PROGRAM_PATH=${CURRENT_INSTALLED_DIR}/tools/glib
+            -DGETTEXT_PACKAGE=atk10
+            -DVERSION=10
+        OPTIONS_DEBUG
+            -DATK_SKIP_HEADERS=ON)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DCMAKE_PROGRAM_PATH=${CURRENT_INSTALLED_DIR}/tools/glib
-        -DGETTEXT_PACKAGE=atk10
-        -DVERSION=10
-    OPTIONS_DEBUG
-        -DATK_SKIP_HEADERS=ON)
-
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
+    vcpkg_install_cmake()
+    vcpkg_copy_pdbs()
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+    )
+    vcpkg_install_make()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

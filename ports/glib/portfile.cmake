@@ -54,6 +54,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/glib)
 else()
+    set(ENV{LIBFFI_CFLAGS} "-I${CURRENT_INSTALLED_DIR}/lib/libffi-3.1/include")
+    set(ENV{LIBFFI_LIBS} "-L${CURRENT_INSTALLED_DIR}/lib -lffi")
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
@@ -61,8 +64,19 @@ else()
     )
 
     vcpkg_install_make()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/gdb)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/gio)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/gio)
+    #todo: we should fix tools setup
+
+    vcpkg_fixup_pkgconfig_targets()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
