@@ -1,3 +1,4 @@
 Source: pjlib
 Version: 2019-10-22
+Homepage: https://github.com/pjsip/pjproject
 Description: PJLIB is an Open Source, small footprint framework library written in C for making scalable applications.
