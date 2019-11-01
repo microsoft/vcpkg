@@ -1,0 +1,4 @@
+Source: kf5syntaxhighlighting
+Version: 5.64.0
+Description: Syntax highlighting engine for Kate syntax definitions
+Build-Depends: ecm, qt5-base, qt5-tools, qt5-xmlpatterns
