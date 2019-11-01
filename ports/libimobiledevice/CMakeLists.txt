@@ -7,11 +7,8 @@ find_library(libusbmuxd usbmuxd REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_path(dirent_INCLUDE_DIR dirent.h)
 if (WIN32)
-find_library(getopt getopt REQUIRED)
+    find_library(getopt getopt REQUIRED)
 endif()
-
-#prepare config files
-configure_file(config.h.in config.h @ONLY)
 
 # ready to create library
 file(GLOB_RECURSE IMOBDEV_COMMON_HDR common/*.h)
@@ -19,7 +16,6 @@ file(GLOB_RECURSE IMOBDEV_COMMON_SRC common/*.c)
 
 file(GLOB IMOBDEV_PUBLIC_HDR include/*.h)
 file(GLOB IMOBDEV_PUBLIC_SUB_HDR include/libimobiledevice/*.h)
-list(APPEND IMOBDEV_PUBLIC_HDR ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 file(GLOB_RECURSE IMOBDEV_PRIVATE_HDR src/*.h)
 file(GLOB_RECURSE IMOBDEV_SRC src/*.c)
 
