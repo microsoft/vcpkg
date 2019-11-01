@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbeder/yaml-cpp
@@ -8,14 +7,34 @@ vcpkg_from_github(
     PATCHES
         0002-fix-include-path.patch
         0003-cxx-std-features.patch
+		0004-fix-test.patch
+)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+	set(BUILD_SHARED ON)
+else()
+	set(BUILD_SHARED OFF)
+endif()
+
+if (VCPKG_CRT_LINKAGE STREQUAL dymanic)
+	set(SHARED_RT OFF)
+else()
+	set(SHARED_RT ON)
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	test YAML_CPP_BUILD_TESTS
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
+		-DYAML_BUILD_SHARED_LIBS=${BUILD_SHARED}
+		-DYAML_MSVC_SHARED_RT=${SHARED_RT}
+		-DYAML_MSVC_STHREADED_RT=OFF
         -DYAML_CPP_BUILD_TOOLS=OFF
-        -DYAML_CPP_BUILD_TESTS=OFF
+		-DYAML_CPP_INSTALL=ON
 )
 
 vcpkg_install_cmake()
@@ -39,5 +58,4 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/yaml-cpp/dll.h "${DLL_H}")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/yaml-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
