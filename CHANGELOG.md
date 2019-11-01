@@ -44,7 +44,7 @@ vcpkg (2019.10.31)
     - [(#8720)](https://github.com/microsoft/vcpkg/pull/8720) maintainer-guide.md - Fix link
 
 #### The following *remarkable* changes have been made to vcpkg's infrastructure:
-- New maintainer `portfile.cmake` helper functions for finer control over configuring/building/installing with make and nmake
+- New maintainer `portfile.cmake` helper functions for finer control over configuring/building/installing with `make` and `nmake`
     - [(#8267)](https://github.com/microsoft/vcpkg/pull/8267) Add function vcpkg_configure_make/vcpkg_build_make/vcpkg_install_make/vcpkg_build_nmake/vcpkg_install_nmake
     - [(#8540)](https://github.com/microsoft/vcpkg/pull/8540) Fix separate make and install execution error issue.
     - [(#8589)](https://github.com/microsoft/vcpkg/pull/8589) [libxslt]Using vcpkg_install_nmake in Windows, support unix.
