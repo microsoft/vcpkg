@@ -1,4 +1,4 @@
 Source: libimobiledevice
-Version: 1.2.76
+Version: 1.2.137
 Description: A cross-platform protocol library to communicate with iOS devices
 Build-Depends: libplist, libusbmuxd, openssl, dirent, getopt
