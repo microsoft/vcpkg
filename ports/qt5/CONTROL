@@ -6,4 +6,4 @@ Build-Depends: qt5-3d, qt5-activeqt (windows), qt5-base, qt5-charts, qt5-datavis
 
 Feature: latest
 Build-Depends: qt5-base[latest]
-Description: Build latest qt version (5.13.1) instead of LTS
+Description: Build latest qt version (5.13.2) instead of LTS
