@@ -15,7 +15,7 @@ vcpkg (2019.10.31)
 
 #### The following commands and options have been updated:
 - `create`
-    - Port template updated with best practices, new CMake variables, CONTROL homepage field and example feature entries, links to relevant documentation, and maintainer function usage examples
+    - Port template updated with best practices, new CMake variables, `CONTROL` homepage field and example feature entries, links to relevant documentation, and maintainer function usage examples
         - [(#8427)](https://github.com/microsoft/vcpkg/pull/8427) Update vcpkg create template
         - [(#8488)](https://github.com/microsoft/vcpkg/pull/8488) update templates.
 
