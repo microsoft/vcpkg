@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yse/easy_profiler
-    REF master
-    SHA512 7bec8c2797ffc88eb3eeba489e4565dcbd394c112208532fd4c4bf38b678fe2c90d0a0ed73ef4b6e41b3d2e0b1e74f0bc5f864ecc2be5ada459fef67bfc77dbe
+    REF 91d10c2b464256e1838349478d92f8f8014d1f54
+    SHA512 2caf997d1799cae4dd19ecb9cf1e09a5f4445dd1aa3fd6ebf349f56a18bf49df9d916285001aa0266a3d972e1b46c85a6ffb58a1034a8c5f8f1221a92b00f879
     HEAD_REF master
 )
 
