@@ -67,7 +67,6 @@ namespace vcpkg
         fs::path downloads;
         fs::path ports;
         fs::path installed;
-        bool installed_was_overrriden;
         fs::path triplets;
         fs::path scripts;
 

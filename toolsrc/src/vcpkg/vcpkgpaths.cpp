@@ -69,12 +69,10 @@ namespace vcpkg
         if (auto ird = install_root_dir.get())
         {
             paths.installed = *ird;
-            paths.installed_was_overrriden = true;
         }
         else
         {
             paths.installed = paths.root / "installed";
-            paths.installed_was_overrriden = false;
         }
         paths.triplets = paths.root / "triplets";
 
