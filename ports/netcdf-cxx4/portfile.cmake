@@ -4,8 +4,6 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(HDF5_USE_STATIC_LIBRARIES ON)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/netcdf-cxx4-4.3.0)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-cxx4

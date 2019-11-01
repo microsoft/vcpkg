@@ -1,5 +1,5 @@
 Source: azure-uamqp-c
-Version: 2019-05-16.1
+Version: 2019-10-07.2
 Build-Depends: azure-c-shared-utility, azure-macro-utils-c, umock-c
 Description: AMQP library for C
 

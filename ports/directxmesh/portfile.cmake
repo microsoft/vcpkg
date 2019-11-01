@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF jun2019
-    SHA512 6d42cd4d3e34e7f3bd5cee1a9ad90c9f89eafa55951a0a8d776034a05caa06b0fd17629547d14c8f2b4d0c5fafdbd24ae05c2a6582b5d069093d6b4dadac09a0
+    REF aug2019
+    SHA512 7b5a02783444a89813c6736e3d6eadf66515bdd10055b9b6b1bc25b30ee0ec315ec9936d3a9bd52b2b8df78b3b5072465963c8123c04f77a1838d5cddc4eeb21
     HEAD_REF master
 )
 
@@ -49,9 +49,11 @@ file(INSTALL
 
 file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.lib
+    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.lib
+    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -62,6 +64,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         DESTINATION ${TOOL_PATH})
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxmesh)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/directxmesh/LICENSE ${CURRENT_PACKAGES_DIR}/share/directxmesh/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

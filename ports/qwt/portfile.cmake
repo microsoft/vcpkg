@@ -21,10 +21,17 @@ vcpkg_configure_qmake(
         CONFIG+=${VCPKG_LIBRARY_LINKAGE}
 )
 
-vcpkg_build_qmake(
-    RELEASE_TARGETS sub-src-release_ordered
-    DEBUG_TARGETS sub-src-debug_ordered
-)
+if (CMAKE_HOST_WIN32)
+    vcpkg_build_qmake(
+        RELEASE_TARGETS sub-src-release_ordered
+        DEBUG_TARGETS sub-src-debug_ordered
+    )
+elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
+    vcpkg_build_qmake(
+        RELEASE_TARGETS sub-src-all-ordered
+        DEBUG_TARGETS sub-src-all-ordered
+    )
+endif()
 
 #Set the correct install directory to packages
 foreach(MAKEFILE ${RELEASE_MAKEFILES} ${DEBUG_MAKEFILES})
@@ -36,29 +43,20 @@ file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/qwt)
 
 #Install the module files
-file(INSTALL
-    ${RELEASE_DIR}/lib/qwt.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
+if (CMAKE_HOST_WIN32)
+    file(INSTALL ${RELEASE_DIR}/lib/qwt.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${DEBUG_DIR}/lib/qwtd.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-file(INSTALL
-    ${DEBUG_DIR}/lib/qwtd.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(INSTALL
-        ${RELEASE_DIR}/lib/qwt.dll
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
-
-    file(INSTALL
-        ${DEBUG_DIR}/lib/qwtd.dll
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(INSTALL ${RELEASE_DIR}/lib/qwt.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${DEBUG_DIR}/lib/qwtd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+    vcpkg_copy_pdbs()
+elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
+    file(INSTALL ${RELEASE_DIR}/lib/libqwt.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${DEBUG_DIR}/lib/libqwt.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 endif()
 
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/qwt)

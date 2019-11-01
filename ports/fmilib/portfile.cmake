@@ -1,25 +1,19 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FMILibrary-2.0.3)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://jmodelica.org/fmil/FMILibrary-2.0.3-src.zip"
     FILENAME "FMILibrary-2.0.3-src.zip"
     SHA512 86e4b5019d8f2a76b01141411845d977fb3949617604de0b34351f23647e3e8b378477de184e1c4f2f59297bc4c7de3155e0edba9099b8924594a36b37b04cc8
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
+        0001-remove-install-prefix.patch
+)
 
 # Note that if you have configured and built both static and shared library on Windows
 # but want to link with the static library compile time define "FMILIB_BUILDING_LIBRARY" must be set.
@@ -57,141 +51,18 @@ else()
     SET(FMILIB_BUILD_SHARED_LIB ON)
 endif()
 
-SET(OPTIONS
-    -DFMILIB_BUILD_TESTS=OFF
-    -DFMILIB_BUILD_STATIC_LIB=${FMILIB_BUILD_STATIC_LIB}
-    -DFMILIB_BUILD_SHARED_LIB=${FMILIB_BUILD_SHARED_LIB}
-    -DFMILIB_BUILDING_LIBRARY=${FMILIB_BUILDING_LIBRARY}
-    -DFMILIB_BUILD_WITH_STATIC_RTLIB=${FMILIB_BUILD_WITH_STATIC_RTLIB}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DFMILIB_BUILD_TESTS=OFF
+        -DFMILIB_BUILD_STATIC_LIB=${FMILIB_BUILD_STATIC_LIB}
+        -DFMILIB_BUILD_SHARED_LIB=${FMILIB_BUILD_SHARED_LIB}
+        -DFMILIB_BUILDING_LIBRARY=${FMILIB_BUILDING_LIBRARY}
+        -DFMILIB_BUILD_WITH_STATIC_RTLIB=${FMILIB_BUILD_WITH_STATIC_RTLIB}
 )
 
-# Reset package dir
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR})
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR})
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(GENERATOR "Visual Studio 12 2013")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(GENERATOR "Visual Studio 12 2013 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-        set(GENERATOR "Visual Studio 12 2013 ARM")
-
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(GENERATOR "Visual Studio 14 2015")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(GENERATOR "Visual Studio 14 2015 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
-        set(GENERATOR "Visual Studio 14 2015 ARM")
-
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017")
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017 ARM")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(GENERATOR "Visual Studio 15 2017")
-    else()
-        message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
-    endif()
-
-endif()
-
-foreach(BUILDTYPE "rel" "dbg")
-
-    message("Building ${TARGET_TRIPLET}-${BUILDTYPE}...")
-
-    string(COMPARE EQUAL ${BUILDTYPE} "rel" RELEASE_BUILD)
-
-    SET(BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILDTYPE})
-
-    # Reset working dir
-    file(REMOVE_RECURSE ${BUILD_DIR})
-    file(MAKE_DIRECTORY ${BUILD_DIR})
-
-    SET(FMILIB_INSTALL_PREFIX ${CURRENT_PACKAGES_DIR})
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        SET(OPTIONS ${OPTIONS} -G ${GENERATOR})
-    endif()
-    if(NOT RELEASE_BUILD)
-        STRING(APPEND FMILIB_INSTALL_PREFIX "/debug")
-    endif()
-
-    # Step 1: Configure
-    vcpkg_execute_required_process(COMMAND
-        cmake
-            -DFMILIB_INSTALL_PREFIX=${FMILIB_INSTALL_PREFIX}
-            -DFMILIB_DEFAULT_BUILD_TYPE_RELEASE=${RELEASE_BUILD}
-            ${OPTIONS}
-            ${SOURCE_PATH}
-        WORKING_DIRECTORY
-            ${BUILD_DIR}
-    )
-
-    # Step 2: Build
-    # Custom build - becouse vcpkg_configure_cmake() + vcpkg_install_cmake() fails on Linux for some unknown reason
-    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        find_program(MAKE make)
-        if(NOT MAKE)
-            message(FATAL_ERROR "Could not find make. Please install it through your package manager.")
-        endif()
-        vcpkg_execute_required_process(COMMAND make "install"  WORKING_DIRECTORY ${BUILD_DIR})
-    else()
-        if(RELEASE_BUILD)
-            SET(CONFIG "MinSizeRel")
-        else()
-            SET(CONFIG "Debug")
-        endif()
-        vcpkg_execute_required_process(COMMAND
-            cmake
-                --build .
-                --config ${CONFIG}
-                --target "install"
-            WORKING_DIRECTORY
-                ${BUILD_DIR}
-        )
-    endif()
-
-    if (RELEASE_BUILD)
-
-        # remove /doc folder
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
-
-        # Move .dll files (if any) from /lib to /bin
-        file(GLOB TMP ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-        if (TMP)
-            file(COPY ${TMP} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-            file(REMOVE ${TMP})
-
-            # Add bin to path
-            set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin;$ENV{PATH}")
-        endif()
-
-    else()
-
-        # remove duplicate folders in /debug
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
-
-        # Move .dll files (if any) from /lib to /bin
-        file(GLOB TMP ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-        if (TMP)
-            file(COPY ${TMP} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(REMOVE ${TMP})
-
-            # Add bin to path
-            set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin;$ENV{PATH}")
-        endif()
-
-    endif()
-
-    message("Building ${TARGET_TRIPLET}-${BUILDTYPE}... Done")
-
-endforeach()
-
+vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmilib RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

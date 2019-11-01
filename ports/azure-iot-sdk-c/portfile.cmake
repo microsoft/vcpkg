@@ -6,20 +6,28 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF f3f9538960d9b29033e52522dd63e985ba970504
-        SHA512 f8ce98d62425da4bec1c9e99b7b662a615d90a9407e03f7ce31a56fb8848f6bda1a39156bbabf351383e490dc3438d842136220dcf08efb1560e21d9ac76a0ba
+        REF d1cdf78b5160af8e08354e102a6b96395eee79e1
+        SHA512 0efbfc19e5eef4831b55ded0e8d88e83194bc0f26886841ddc83405c15b7f1bae983e22dc569e22846acd78b843b9e7492883b7c502f4eed92ff80ef45a9942d
         HEAD_REF public-preview
-        PATCHES improve-external-deps.patch
+        PATCHES improve-external-deps.patch cmake-hsm-option.patch
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF b03cc5e0afb647934e45d4530d3e993476db3d3e
-        SHA512 7428c625dbacfd9ab612d5bbfad3c079074cd3834fe84a42db88e747aab2615140c0ca3035adc36b29ed8cf4bf487360522215ce03cee3e26254af925a68384a
+        REF f8d260df190f90c04114ca8ff7d83dd03d4dd80d
+        SHA512 111331293cfbdbdac4a6460d293ec8650bee31940829852c27afc88cc6e742e96f71c996aa275dc5ed1f13e9fe19452d7b2685dde47bb7d6c135ebee58c50d21
         HEAD_REF master
         PATCHES improve-external-deps.patch
     )
+endif()
+
+if("use_prov_client" IN_LIST FEATURES)
+    message(STATUS "use prov_client")
+    set(USE_PROV_CLIENT 1)
+else()
+    message(STATUS "NO prov_client")
+    set(USE_PROV_CLIENT 0)
 endif()
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
@@ -34,6 +42,8 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
+        -Duse_prov_client=${USE_PROV_CLIENT}
+        -Dhsm_type_symm_key=${USE_PROV_CLIENT}
 )
 
 vcpkg_install_cmake()

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF v6.0.0
-    SHA512 482eb7b52961878877d1e4a4f1e1a5a867ff5b83f0df3ce47c0eb68f43eabcde720ea7ccb2eeb960dbc29fc61c888db62751984425e9b27c7498dfa4441aa801
+    REF v9.0.0
+    SHA512 c9ab8c459f4cdf2b740edd461eefa2972a068078999ab97efff4473f1fae4dd774d00ea56cb33bdf883f78eb8d8b73aa721d35dd77e016b047cf4c9dadfee72b
     HEAD_REF master
 )
 
@@ -13,8 +13,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DREPROC++=ON
-        -DREPROC++_INSTALL=ON
-        -DREPROC_INSTALL=ON
+        -DREPROC_INSTALL_PKGCONFIG=OFF
 )
 
 vcpkg_install_cmake()

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dcafb64..6c3d03e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -253,7 +253,7 @@ ELSEIF(MSVC)
+   IF(MSVC12)
+     ADD_COMPILE_OPTIONS(/wd4351)
+   ENDIF()
+-  SET(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MDd /Ob2 /DEBUG:FULL /Zi")
++#  SET(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MDd /Ob2 /DEBUG:FULL /Zi")
+ ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
+   IF(NOT HUNTER_ENABLED)
+     SET(CMAKE_CXX_FLAGS "-fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")

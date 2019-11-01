@@ -6,16 +6,19 @@ vcpkg_from_github(
     REF 3.3
     SHA512 e74bb7ba0c1c3a524a193c4fb5a2d13ba0e75f8e309612ea19cdcc944859d6e2fe29d8b2e3db76236e1011b637564ddd5f4a176dcccfeb84d09bda060f08f774
     HEAD_REF master
-    PATCHES move-cmake-min-req.patch
+    PATCHES
+        fix-config.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(
 "GLFW3 currently requires the following libraries from the system package manager:
     xinerama
     xcursor
+    xorg
+    libglu1-mesa
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev")
 endif()
 
 vcpkg_configure_cmake(
@@ -46,7 +49,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     endif()
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/glfw3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/glfw3/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/glfw3/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

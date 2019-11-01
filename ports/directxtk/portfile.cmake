@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF jun2019
-    SHA512 211b18ee0755802a5d44b58da2485276cabdee222d2f5fd7b42bad0bf75810e3ac1bd319b90891d9cc0345b124631ad37588422af9120cece9fa0ed769033e77
+    REF oct2019
+    SHA512 d14cc3836986d4082edd34c39fda1d8c5ba4c8bfdc8640e61a3eac61e19c1eae6c7bc9ab57a353b7dc5cc04e084b71df43174aecfbd41975ebe97f0f8e7f4a86
     HEAD_REF master
 )
 
@@ -48,10 +48,12 @@ file(INSTALL
 
 file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -65,5 +67,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         DESTINATION ${DXTK_TOOL_PATH})
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxtk RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
