@@ -1,0 +1,13 @@
+diff --git a/cmake_unofficial/CMakeLists.txt b/cmake_unofficial/CMakeLists.txt
+index ef1b18e..e043c51 100644
+--- a/cmake_unofficial/CMakeLists.txt
++++ b/cmake_unofficial/CMakeLists.txt
+@@ -140,7 +140,7 @@ if(NOT XXHASH_BUNDLED_MODE)
+   set(xxHash_VERSION_CONFIG "${PROJECT_BINARY_DIR}/xxHashConfigVersion.cmake")
+   set(xxHash_PROJECT_CONFIG "${PROJECT_BINARY_DIR}/xxHashConfig.cmake")
+   set(xxHash_TARGETS_CONFIG "${PROJECT_BINARY_DIR}/xxHashTargets.cmake")
+-  set(xxHash_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/xxHash/")
++  set(xxHash_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/xxhash/")
+   write_basic_package_version_file(${xxHash_VERSION_CONFIG}
+     VERSION ${XXHASH_VERSION_STRING}
+     COMPATIBILITY AnyNewerVersion)

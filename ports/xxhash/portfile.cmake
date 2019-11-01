@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF e2f4695899e831171ecd2e780078474712ea61d3 # v0.7.2
     SHA512 2bb8e4f74bc58f9696fd14964b9af3d59bcd52498ebecc3e9b0e2025d2116a14f0a70fc4de9ff214242248f87718667b50bc7d2fd981df14a82c60ad7296ba08
     HEAD_REF dev
-    PATCHES fix-arm-uwp.patch
+    PATCHES
+        fix-arm-uwp.patch
+        fix-cmakelists.patch
 )
 
 vcpkg_configure_cmake(
