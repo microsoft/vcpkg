@@ -1,0 +1,7 @@
+Source: libmpeg2
+Version: 0.5.1
+Homepage: http://libmpeg2.sourceforge.net/
+Description: a free MPEG-2 video stream decoder
+
+Feature: build_binaries
+Description: Build binaries provided with libmpeg2

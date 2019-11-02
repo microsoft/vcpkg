@@ -1,0 +1,113 @@
+From 391e154c060bbe0086e406af4e05b5b9c1b426d1 Mon Sep 17 00:00:00 2001
+From: Michal Janiszewski <janisozaur@gmail.com>
+Date: Sat, 2 Nov 2019 15:49:13 -0700
+Subject: [PATCH] Mark functions as exported
+
+---
+ include/mpeg2.h        | 47 +++++++++++++++++++++++-------------------
+ include/mpeg2convert.h |  4 ++--
+ 2 files changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/include/mpeg2.h b/include/mpeg2.h
+index aff0c33..3520cbe 100644
+--- a/include/mpeg2.h
++++ b/include/mpeg2.h
+@@ -41,6 +41,11 @@
+ #define SEQ_VIDEO_FORMAT_MAC 0x80
+ #define SEQ_VIDEO_FORMAT_UNSPECIFIED 0xa0
+ 
++// Set to desired linkage qualifier, e.g. __declspec(dllexport)
++#ifndef LIBMPEG2_API
++#define LIBMPEG2_API
++#endif
++
+ typedef struct mpeg2_sequence_s {
+     unsigned int width, height;
+     unsigned int chroma_width, chroma_height;
+@@ -148,10 +153,10 @@ typedef int mpeg2_convert_t (int stage, void * id,
+ 			     const mpeg2_sequence_t * sequence, int stride,
+ 			     uint32_t accel, void * arg,
+ 			     mpeg2_convert_init_t * result);
+-int mpeg2_convert (mpeg2dec_t * mpeg2dec, mpeg2_convert_t convert, void * arg);
+-int mpeg2_stride (mpeg2dec_t * mpeg2dec, int stride);
+-void mpeg2_set_buf (mpeg2dec_t * mpeg2dec, uint8_t * buf[3], void * id);
+-void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
++LIBMPEG2_API int mpeg2_convert (mpeg2dec_t * mpeg2dec, mpeg2_convert_t convert, void * arg);
++LIBMPEG2_API int mpeg2_stride (mpeg2dec_t * mpeg2dec, int stride);
++LIBMPEG2_API void mpeg2_set_buf (mpeg2dec_t * mpeg2dec, uint8_t * buf[3], void * id);
++LIBMPEG2_API void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
+ 
+ #define MPEG2_ACCEL_X86_MMX 1
+ #define MPEG2_ACCEL_X86_3DNOW 2
+@@ -166,25 +171,25 @@ void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
+ #define MPEG2_ACCEL_ARM 1
+ #define MPEG2_ACCEL_DETECT 0x80000000
+ 
+-uint32_t mpeg2_accel (uint32_t accel);
+-mpeg2dec_t * mpeg2_init (void);
+-const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
+-void mpeg2_close (mpeg2dec_t * mpeg2dec);
++LIBMPEG2_API uint32_t mpeg2_accel (uint32_t accel);
++LIBMPEG2_API mpeg2dec_t * mpeg2_init (void);
++LIBMPEG2_API const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
++LIBMPEG2_API void mpeg2_close (mpeg2dec_t * mpeg2dec);
+ 
+-void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
+-int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
+-mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
++LIBMPEG2_API void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
++LIBMPEG2_API int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
++LIBMPEG2_API mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
+ 
+-void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
+-void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
+-void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
++LIBMPEG2_API void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
++LIBMPEG2_API void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
++LIBMPEG2_API void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
+ 
+-void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
++LIBMPEG2_API void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
+ 
+-void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, uint8_t * current_fbuf[3],
++LIBMPEG2_API void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, uint8_t * current_fbuf[3],
+ 		      uint8_t * forward_fbuf[3], uint8_t * backward_fbuf[3]);
+-void mpeg2_slice (mpeg2_decoder_t * decoder, int code, const uint8_t * buffer);
+-int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
++LIBMPEG2_API void mpeg2_slice (mpeg2_decoder_t * decoder, int code, const uint8_t * buffer);
++LIBMPEG2_API int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
+ 			unsigned int * pixel_width,
+ 			unsigned int * pixel_height);
+ 
+@@ -196,9 +201,9 @@ typedef enum {
+     MPEG2_ALLOC_CONVERTED = 4
+ } mpeg2_alloc_t;
+ 
+-void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
+-void mpeg2_free (void * buf);
+-void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
++LIBMPEG2_API void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
++LIBMPEG2_API void mpeg2_free (void * buf);
++LIBMPEG2_API void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
+ 			 int free (void *));
+ 
+ #endif /* LIBMPEG2_MPEG2_H */
+diff --git a/include/mpeg2convert.h b/include/mpeg2convert.h
+index 108dee8..9bad0aa 100644
+--- a/include/mpeg2convert.h
++++ b/include/mpeg2convert.h
+@@ -40,9 +40,9 @@ typedef enum {
+     MPEG2CONVERT_BGR = 1
+ } mpeg2convert_rgb_order_t;
+ 
+-mpeg2_convert_t * mpeg2convert_rgb (mpeg2convert_rgb_order_t order,
++LIBMPEG2_API mpeg2_convert_t * mpeg2convert_rgb (mpeg2convert_rgb_order_t order,
+ 				    unsigned int bpp);
+ 
+-mpeg2_convert_t mpeg2convert_uyvy;
++LIBMPEG2_API mpeg2_convert_t mpeg2convert_uyvy;
+ 
+ #endif /* LIBMPEG2_MPEG2CONVERT_H */
+-- 
+2.23.0.windows.1
+
