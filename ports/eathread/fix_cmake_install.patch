@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34fc37a..0c5fb3d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,7 @@ option(EATHREAD_BUILD_TESTS "Enable generation of build files for tests" OFF)
+ #-------------------------------------------------------------------------------------------
+ # Compiler Flags
+ #-------------------------------------------------------------------------------------------
+-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/test/packages/EASTL/scripts/CMake")
++set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${_VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/share/eastl")
+ include(CommonCppFlags)
+ 
+ #-------------------------------------------------------------------------------------------
+@@ -34,10 +34,12 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ #-------------------------------------------------------------------------------------------
+ # Export Include Directories
+ #-------------------------------------------------------------------------------------------
+-target_include_directories(EAThread PUBLIC include)
++target_include_directories(EAThread PUBLIC include ${_VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/include)
+ 
+ #-------------------------------------------------------------------------------------------
+ # Package Dependencies 
+ #-------------------------------------------------------------------------------------------
+ target_link_libraries(EAThread EABase)
+ 
++install(TARGETS EAThread DESTINATION lib)
++install(DIRECTORY include/EAThread DESTINATION include)

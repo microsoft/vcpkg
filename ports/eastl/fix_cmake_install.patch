@@ -1,19 +1,28 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b8171cd..c771e77 100644
+index b8171cd..dafda0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,6 +41,7 @@ add_definitions(-DEASTL_OPENSOURCE=1)
+@@ -10,6 +10,8 @@ project(EASTL CXX)
+ option(EASTL_BUILD_BENCHMARK "Enable generation of build files for benchmark" OFF)
+ option(EASTL_BUILD_TESTS "Enable generation of build files for tests" OFF)
+ 
++find_library(eabase CONFIG REQUIRED)
++
+ #-------------------------------------------------------------------------------------------
+ # Compiler Flags
+ #-------------------------------------------------------------------------------------------
+@@ -41,10 +43,12 @@ add_definitions(-DEASTL_OPENSOURCE=1)
  #-------------------------------------------------------------------------------------------
  # Include dirs
  #-------------------------------------------------------------------------------------------
-+include_directories(APPEND test/packages)
- target_include_directories(EASTL PUBLIC include)
+-target_include_directories(EASTL PUBLIC include)
++target_include_directories(EASTL PUBLIC include ${_VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/include)
  
  #-------------------------------------------------------------------------------------------
-@@ -48,3 +49,6 @@ target_include_directories(EASTL PUBLIC include)
+ # Dependencies
  #-------------------------------------------------------------------------------------------
- target_link_libraries(EASTL EABase)
+-target_link_libraries(EASTL EABase)
++target_link_libraries(EASTL PUBLIC EABase)
  
 +install(TARGETS EASTL DESTINATION lib)
 +install(DIRECTORY include/EASTL DESTINATION include)
-+install(DIRECTORY test/packages/EABase DESTINATION include)
