@@ -1,0 +1,4 @@
+Source: sqlpp11-connector-postgresql
+Version: 0.54-1
+Description: A C++ wrapper for PostgeSQL meant to be used in combination with sqlpp11.
+Build-Depends: libpqxx, sqlpp11
