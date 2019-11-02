@@ -1,6 +1,7 @@
 Source: symengine
 Version: 2019-02-12
 Description: SymEngine is a fast symbolic manipulation library
+Homepage: https://github.com/symengine/symengine
 Build-Depends: boost-math, boost-random
 Default-Features: integer-class-boostmp
 
