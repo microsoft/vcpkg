@@ -1,0 +1,5 @@
+Source: qt5-kdreports
+Version: 1.8.0
+Description: Qt library for generating printable and exportable reports from code and from XML descriptions.
+Homepage: https://www.kdab.com/development-resources/qt-tools/kd-reports
+Build-Depends: qt5-base
