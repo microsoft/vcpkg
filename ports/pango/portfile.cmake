@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(PANGO_VERSION 1.40.11)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-${PANGO_VERSION}.tar.xz"
