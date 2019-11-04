@@ -81,7 +81,7 @@ function Generate()
             ""
             "Feature: python2"
             "Description: Python2 support in Boost.Python"
-            "Build-Depends: python2"
+            "Build-Depends: python2 (!osx&!linux)"
         )
     }
     if ($Name -eq "regex")
