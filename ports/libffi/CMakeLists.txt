@@ -9,7 +9,7 @@ if(NOT CMAKE_SYSTEM_PROCESSOR)
 endif()
 
 # config variables for ffi.h.in
-set(VERSION 3.3-rc0)
+set(VERSION 3.3-rc2)
 
 set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386)
 
@@ -62,10 +62,9 @@ include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(include)
 
-if(BUILD_SHARED_LIBS)
-    if(WIN32)
-        add_definitions(-DFFI_BUILDING_DLL)
-    endif()
+add_definitions(-DFFI_BUILDING)
+if(BUILD_SHARED_LIBS AND WIN32)
+    add_definitions(-DFFI_BUILDING_DLL)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF c2a6859012d928b67a83619bd5087674a96b9254
-    SHA512 8639ec9b979bcc59e5a3c063663aedbfb6c1ff0f49a0207ee8a7168d0deebec57255cfff5972c50027ca8276afb6079f0c144a862733de4d3e5a4a917337d007
+    REF v3.3-rc2
+    SHA512 3470b4f8dcb5529a6b8f8a6bcadb15df5732a973b2e18f016a922e0f17c4961cea6de46dae9eab0f75a9970921e5c23b310b90f4b12355e2ef84592ae1232a38
     HEAD_REF master
 )
 
@@ -24,14 +24,15 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
-string(REPLACE "/* *know* they are going to link with the static library. */"
-"/* *know* they are going to link with the static library. */
+string(REPLACE "   *know* they are going to link with the static library.  */"
+"   *know* they are going to link with the static library.  */
 
 #define FFI_BUILDING
-
 " FFI_H "${FFI_H}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libffi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libffi/copyright)
