@@ -7,7 +7,7 @@ set(NANOVG_SOURCES src/nanovg.c)
 set(NANOVG_HEADERS src/nanovg.h src/nanovg_gl.h src/nanovg_gl_utils.h)
 add_library(nanovg STATIC ${NANOVG_SOURCES} ${NANOVG_HEADERS})
 set_target_properties(nanovg PROPERTIES PUBLIC_HEADER "${NANOVG_HEADERS}")
-target_include_directories(nanovg PRIVATE 3rdparty/nanovg/src ${STB_INCLUDES})
+target_include_directories(nanovg PRIVATE ${STB_INCLUDES})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_definitions(nanovg PRIVATE DEBUG)
@@ -27,7 +27,6 @@ install(EXPORT nanovgTargets
   NAMESPACE nanovg::
   DESTINATION share/nanovg)
 
-include(CMakePackageConfigHelpers)
 install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/nanovgConfig.cmake
   DESTINATION share/nanovg)
