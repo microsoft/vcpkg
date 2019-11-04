@@ -1,0 +1,531 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 36f6587..8dfbdd8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ project(poppler)
+ 
+-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
++cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+ 
+@@ -124,7 +124,8 @@ set(GLIB_REQUIRED "2.41")
+ macro_bool_to_01(ENABLE_SPLASH HAVE_SPLASH)
+ find_package(Freetype REQUIRED)
+ if(WITH_FONTCONFIGURATION_FONTCONFIG)
+-  find_package(Fontconfig REQUIRED)
++  find_package(unofficial-fontconfig REQUIRED)
++  set(FONTCONFIG_LIBRARIES unofficial::fontconfig::fontconfig)
+ endif()
+ macro_optional_find_package(JPEG)
+ macro_optional_find_package(PNG)
+@@ -159,20 +160,22 @@ if (ENABLE_QT5)
+   endif()
+ endif()
+ 
+-macro_optional_find_package(Cairo ${CAIRO_VERSION})
+-if(CAIRO_FOUND)
+-  set(HAVE_CAIRO ${CAIRO_FOUND})
++macro_optional_find_package(unofficial-cairo)
++if(unofficial-cairo_FOUND)
++  set(HAVE_CAIRO ${unofficial-cairo_FOUND})
++  set(CAIRO_LIBRARIES unofficial::cairo::cairo unofficial::cairo::cairo-gobject)
+   set(CAIRO_FEATURE "#define POPPLER_HAS_CAIRO 1")
+   set(CAIRO_REQ "cairo")
+   set(POPPLER_GLIB_DISABLE_DEPRECATED "")
+   set(POPPLER_GLIB_DISABLE_SINGLE_INCLUDES "")
+   if(ENABLE_GLIB)
+-    macro_optional_find_package(GLIB)
+-    if(NOT GLIB_FOUND)
++    macro_optional_find_package(unofficial-glib)
++    if(NOT unofficial-glib_FOUND)
+       set(ENABLE_GLIB OFF)
+     endif()
+   endif()
+   if(ENABLE_GLIB)
++    set(GLIB2_LIBRARIES unofficial::glib::glib unofficial::glib::gthread unofficial::glib::gobject unofficial::glib::gmodule unofficial::glib::gio)
+     if(ENABLE_GOBJECT_INTROSPECTION)
+       # Check for introspection
+       macro_optional_find_package(GObjectIntrospection 0.9.12)
+@@ -187,9 +190,9 @@ else()
+   set(ENABLE_GLIB OFF)
+ endif()
+ if(ENABLE_CPP)
+-  macro_optional_find_package(Iconv)
+-  set(ENABLE_CPP ${ICONV_FOUND})
+-  set(HAVE_ICONV ${ICONV_FOUND})
++  macro_optional_find_package(unofficial-iconv)
++  set(ENABLE_CPP ${unofficial-iconv_FOUND})
++  set(HAVE_ICONV ${unofficial-iconv_FOUND})
+ endif()
+ if(ENABLE_ZLIB)
+   find_package(ZLIB)
+@@ -237,7 +240,7 @@ if(MINGW)
+   # Use mingw's ansi stdio extensions
+   add_definitions(-D__USE_MINGW_ANSI_STDIO=1)
+ endif()
+-if(FONTCONFIG_FOUND)
++if(unofficial-fontconfigG_FOUND)
+   add_definitions(${FONTCONFIG_DEFINITIONS})
+   include_directories(SYSTEM ${FONTCONFIG_INCLUDE_DIR})
+ endif()
+@@ -292,20 +295,14 @@ if(ENABLE_SPLASH)
+   endif()
+ endif()
+ 
+-# Recent versions of poppler-data install a .pc file.
++# poppler-data installed via vcpkg comes with poppler-data-config.cmake, in whch POPPLER_DATADIR is defined
+ # Use it to determine the encoding data path, if available.
+ # Default to the same prefix otherwise.
+-pkg_check_modules(POPPLER_DATA poppler-data)
+-if(POPPLER_DATA_FOUND)
+-  execute_process(COMMAND "${PKG_CONFIG_EXECUTABLE}" --variable=poppler_datadir poppler-data
+-                  RESULT_VARIABLE _result_var
+-                  OUTPUT_VARIABLE _output_var OUTPUT_STRIP_TRAILING_WHITESPACE)
+-  if(_result_var STREQUAL "0" AND NOT _output_var STREQUAL "")
+-    set(POPPLER_DATADIR "${_output_var}")
+-  endif()
+-endif()
++find_package(poppler-data CONFIG)
+ if(NOT DEFINED POPPLER_DATADIR)
+   set(POPPLER_DATADIR "${CMAKE_INSTALL_PREFIX}/share/poppler")
++else()
++  message(STATUS "POPPLER_DATADIR: ${POPPLER_DATADIR}")
+ endif()
+ 
+ if(EXTRA_WARN)
+@@ -405,7 +402,9 @@ set(poppler_SRCS
+   poppler/Rendition.cc
+   poppler/CertificateInfo.cc
+ )
+-set(poppler_LIBS ${FREETYPE_LIBRARIES})
++set(poppler_PUBLIC_LIBS  Freetype::Freetype)
++cmake_policy(SET CMP0003 NEW)
++cmake_policy(SET CMP0020 NEW)
+ if(ENABLE_SPLASH)
+   set(poppler_SRCS ${poppler_SRCS}
+     poppler/SplashOutputDev.cc
+@@ -427,21 +426,22 @@ if(ENABLE_SPLASH)
+     splash/SplashXPathScanner.cc
+   )
+ endif()
+-if(FONTCONFIG_FOUND)
+-  set(poppler_LIBS ${poppler_LIBS} ${FONTCONFIG_LIBRARIES})
++
++if(unofficial-fontconfig_FOUND)
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} ${FONTCONFIG_LIBRARIES})
+ endif()
+ 
+ if(JPEG_FOUND)
+   set(poppler_SRCS ${poppler_SRCS}
+     poppler/DCTStream.cc
+   )
+-  set(poppler_LIBS ${poppler_LIBS} ${JPEG_LIBRARIES})
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} JPEG::JPEG)
+ endif()
+ if(ENABLE_ZLIB)
+   set(poppler_SRCS ${poppler_SRCS}
+     poppler/FlateEncoder.cc
+   )
+-  set(poppler_LIBS ${poppler_LIBS} ${ZLIB_LIBRARIES})
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} ZLIB::ZLIB)
+ endif()
+ if(ENABLE_ZLIB_UNCOMPRESS)
+   set(poppler_SRCS ${poppler_SRCS}
+@@ -453,45 +453,49 @@ if(ENABLE_LIBCURL)
+     poppler/CurlCachedFile.cc
+     poppler/CurlPDFDocBuilder.cc
+   )
+-  set(poppler_LIBS ${poppler_LIBS} ${CURL_LIBRARIES})
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} CURL::libcurl)
+ endif()
+ if (ENABLE_NSS3)
+   set(poppler_SRCS ${poppler_SRCS}
+     poppler/SignatureHandler.cc
+   )
+   if(${CMAKE_VERSION} VERSION_LESS "3.6.0")
+-    set(poppler_LIBS ${poppler_LIBS} ${NSS3_LIBRARIES})
++    set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} ${NSS3_LIBRARIES})
+   else()
+-    set(poppler_LIBS ${poppler_LIBS} PkgConfig::NSS3)
++    set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} PkgConfig::NSS3)
+   endif()
+ endif()
+ if (OpenJPEG_FOUND)
+   set(poppler_SRCS ${poppler_SRCS}
+     poppler/JPEG2000Stream.cc
+   )
+-  set(poppler_LIBS ${poppler_LIBS} openjp2)
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} openjp2)
+ else ()
+   set(poppler_SRCS ${poppler_SRCS}
+     poppler/JPXStream.cc
+   )
+ endif()
+ if(USE_CMS)
+-  set(poppler_LIBS ${poppler_LIBS} ${LCMS2_LIBRARIES})
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} ${LCMS2_LIBRARIES})
+ endif()
+ if(WIN32)
+   # use clean APIs
+   add_definitions(-DWIN32_LEAN_AND_MEAN)
+   # gdi32 is needed under win32
+-  set(poppler_LIBS ${poppler_LIBS} gdi32)
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} gdi32)
+ endif()
+ if(PNG_FOUND)
+-  set(poppler_LIBS ${poppler_LIBS} ${PNG_LIBRARIES})
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} PNG::PNG)
+ endif()
+ if(TIFF_FOUND)
+-  set(poppler_LIBS ${poppler_LIBS} ${TIFF_LIBRARIES})
++  set(poppler_PUBLIC_LIBS ${poppler_PUBLIC_LIBS} TIFF::TIFF)
+ endif()
+ 
++set(poppler_LIBS ${poppler_PUBLIC_LIBS})
++
+ if(MSVC)
++add_compile_definitions(strncasecmp=_strnicmp)
++add_compile_definitions(strcasecmp=_stricmp)
+ add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ add_library(poppler STATIC ${poppler_SRCS})
+ else()
+@@ -502,11 +506,15 @@ if(MINGW AND BUILD_SHARED_LIBS)
+     get_target_property(POPPLER_SOVERSION poppler SOVERSION)
+     set_target_properties(poppler PROPERTIES SUFFIX "-${POPPLER_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ endif()
+-target_link_libraries(poppler LINK_PRIVATE ${poppler_LIBS})
++target_link_libraries(poppler PUBLIC ${poppler_PUBLIC_LIBS})
+ if(CMAKE_USE_PTHREADS_INIT)
+-   target_link_libraries(poppler LINK_PRIVATE Threads::Threads)
++   target_link_libraries(poppler PRIVATE Threads::Threads)
+ endif()
+-install(TARGETS poppler RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++
++install(TARGETS poppler EXPORT poppler-targets
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ if(ENABLE_UNSTABLE_API_ABI_HEADERS)
+   install(FILES
+@@ -662,7 +670,7 @@ if(ENABLE_UNSTABLE_API_ABI_HEADERS)
+       splash/SplashXPathScanner.h
+       DESTINATION include/poppler/splash)
+   endif()
+-  if(CAIRO_FOUND)
++  if(unofficial-cairo_FOUND)
+     install(FILES
+       poppler/CairoFontEngine.h
+       poppler/CairoOutputDev.h
+@@ -671,7 +679,6 @@ if(ENABLE_UNSTABLE_API_ABI_HEADERS)
+   endif()
+ endif()
+ 
+-
+ if(ENABLE_UTILS)
+   add_subdirectory(utils)
+ endif()
+@@ -683,12 +690,30 @@ if(ENABLE_QT5)
+   add_subdirectory(qt5)
+ endif()
+ if(ENABLE_CPP)
++  set(ICONV_LIBRARIES unofficial::iconv::libcharset unofficial::iconv::libiconv)
+   add_subdirectory(cpp)
+ endif()
+ 
++install (EXPORT poppler-targets
++    NAMESPACE poppler::
++    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/poppler")
++
++configure_file(poppler-config.cmake.in "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/poppler-config.cmake" @ONLY)
++
++install(FILES
++  "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/poppler-config.cmake"
++  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/poppler"
++)
++
+ set(PKG_CONFIG_VERSION_0_18 TRUE)
+ if(PKG_CONFIG_EXECUTABLE)
+-  exec_program(${PKG_CONFIG_EXECUTABLE} ARGS --version RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _output_VAR)
++  get_filename_component(PKG_CONFIG_CMD ${PKG_CONFIG_EXECUTABLE} ABSOLUTE)
++  set(PKG_CONFIG_EXECUTABLE ${PKG_CONFIG_CMD})
++  execute_process(COMMAND
++    "${PKG_CONFIG_EXECUTABLE}${PKG_CONFIG_SUFFIX}" --version
++    RESULT_VARIABLE _return_VALUE
++    OUTPUT_VARIABLE _output_VAR)
++  message(STATUS "CMD: ${PKG_CONFIG_EXECUTABLE}${PKG_CONFIG_SUFFIX}, found PKG_CONFIG_VERSION: ${_output_VAR}, RETURN: ${_return_VALUE}")
+   macro_ensure_version("0.18" "${_output_VAR}" PKG_CONFIG_VERSION_0_18)
+ endif()
+ if(PKG_CONFIG_VERSION_0_18)
+@@ -710,7 +735,7 @@ if(PKG_CONFIG_EXECUTABLE)
+   if(ENABLE_GLIB)
+     poppler_create_install_pkgconfig(poppler-glib.pc ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+   endif()
+-  if(CAIRO_FOUND)
++  if(unofficial-cairo_FOUND)
+     poppler_create_install_pkgconfig(poppler-cairo.pc ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+   endif()
+   if(ENABLE_CPP)
+@@ -723,7 +748,7 @@ endif()
+ message("Building Poppler with support for:")
+ show_end_message("font configuration" ${font_configuration})
+ show_end_message_yesno("splash output" ENABLE_SPLASH)
+-show_end_message_yesno("cairo output" CAIRO_FOUND)
++show_end_message_yesno("unofficial-cairo output" unofficial-cairo_FOUND)
+ show_end_message_yesno("qt5 wrapper" ENABLE_QT5)
+ show_end_message_yesno("glib wrapper" ENABLE_GLIB)
+ show_end_message_yesno("  introspection" INTROSPECTION_FOUND)
+@@ -743,7 +768,7 @@ show_end_message_yesno("command line utils" ENABLE_UTILS)
+ show_end_message_yesno("fuzz target" ENABLE_FUZZER)
+ show_end_message("test data dir" ${TESTDATADIR})
+ 
+-if(NOT ENABLE_SPLASH AND NOT CAIRO_FOUND)
++if(NOT ENABLE_SPLASH AND NOT unofficial-cairo_FOUND)
+   message("Warning: There is no rendering backend enabled")
+ endif()
+ 
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 4d8bc7b..54278c7 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -30,8 +30,11 @@ if(MINGW AND BUILD_SHARED_LIBS)
+     get_target_property(POPPLER_CPP_SOVERSION poppler-cpp SOVERSION)
+     set_target_properties(poppler-cpp PROPERTIES SUFFIX "-${POPPLER_CPP_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ endif()
+-target_link_libraries(poppler-cpp poppler ${ICONV_LIBRARIES})
+-install(TARGETS poppler-cpp RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++target_link_libraries(poppler-cpp PUBLIC poppler ${ICONV_LIBRARIES})
++install(TARGETS poppler-cpp EXPORT poppler-targets
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ install(FILES
+   poppler-destination.h
+diff --git a/glib/CMakeLists.txt b/glib/CMakeLists.txt
+index 2781f09..171bd2e 100644
+--- a/glib/CMakeLists.txt
++++ b/glib/CMakeLists.txt
+@@ -40,6 +40,19 @@ set(poppler_glib_public_headers
+ 
+ find_program(GLIB2_MKENUMS glib-mkenums)
+ 
++if(WIN32)
++  file(COPY "${GLIB2_MKENUMS}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
++  get_filename_component(GLIB2_MKENUMS_FILE_NAME ${GLIB2_MKENUMS} NAME)
++  set(LOCAL_GLIB2_MKENUMS "${CMAKE_CURRENT_BINARY_DIR}/${GLIB2_MKENUMS_FILE_NAME}")
++
++  execute_process(COMMAND
++    ${PERL_EXE_DIR}/pl2bat.bat ${LOCAL_GLIB2_MKENUMS}
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
++    RESULT_VARIABLE _pl2bat_ret OUTPUT_VARIABLE _pl2bat_out
++  )
++  set(GLIB2_MKENUMS "${CMAKE_CURRENT_BINARY_DIR}/${GLIB2_MKENUMS_FILE_NAME}.bat")
++endif()
++
+ add_custom_command(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/poppler-enums.h
+   COMMAND ${GLIB2_MKENUMS}
+@@ -94,15 +107,17 @@ if(MINGW AND BUILD_SHARED_LIBS)
+     get_target_property(POPPLER_GLIB_SOVERSION poppler-glib SOVERSION)
+     set_target_properties(poppler-glib PROPERTIES SUFFIX "-${POPPLER_GLIB_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ endif()
+-if(${CMAKE_VERSION} VERSION_LESS "3.6.0")
+-    target_link_libraries(poppler-glib poppler ${GLIB2_LIBRARIES} ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES})
+-else()
+-    target_link_libraries(poppler-glib poppler PkgConfig::GLIB2 ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES})
+-endif()
++
++target_link_libraries(poppler-glib PUBLIC poppler ${GLIB2_LIBRARIES} ${CAIRO_LIBRARIES} Freetype::Freetype)
++
+ if(CMAKE_USE_PTHREADS_INIT)
+-   target_link_libraries(poppler-glib Threads::Threads)
++   target_link_libraries(poppler-glib PRIVATE Threads::Threads)
+ endif()
+-install(TARGETS poppler-glib RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++
++install(TARGETS poppler-glib EXPORT poppler-targets
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ install(FILES
+   ${poppler_glib_public_headers}
+diff --git a/qt5/src/CMakeLists.txt b/qt5/src/CMakeLists.txt
+index ca1f247..967971b 100644
+--- a/qt5/src/CMakeLists.txt
++++ b/qt5/src/CMakeLists.txt
+@@ -44,11 +44,15 @@ if(MINGW AND BUILD_SHARED_LIBS)
+     get_target_property(POPPLER_QT5_SOVERSION poppler-qt5 SOVERSION)
+     set_target_properties(poppler-qt5 PROPERTIES SUFFIX "-${POPPLER_QT5_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ endif()
+-target_link_libraries(poppler-qt5 poppler ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Xml_LIBRARIES} ${FREETYPE_LIBRARIES})
++target_link_libraries(poppler-qt5 PUBLIC poppler ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Xml_LIBRARIES} Freetype::Freetype)
+ if(MSVC)
+-target_link_libraries(poppler-qt5 poppler ${poppler_LIBS})
++target_link_libraries(poppler-qt5 PUBLIC ${poppler_PUBLIC_LIBS})
+ endif()
+-install(TARGETS poppler-qt5 RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++set_property(TARGET poppler-qt5 PROPERTY Qt5_NO_LINK_QTMAIN ON)
++install(TARGETS poppler-qt5 EXPORT poppler-targets
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ install(FILES
+   poppler-qt5.h
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index 3a1e0d1..f7eaebd 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -7,6 +7,8 @@ set(common_libs
+   poppler
+ )
+ 
++set(UTIL_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/tools/poppler")
++
+ if (ENABLE_SPLASH)
+   # pdftoppm
+   set(pdftoppm_SOURCES ${common_srcs}
+@@ -14,8 +16,8 @@ if (ENABLE_SPLASH)
+   )
+   add_executable(pdftoppm ${pdftoppm_SOURCES})
+   target_link_libraries(pdftoppm ${common_libs})
+-  install(TARGETS pdftoppm DESTINATION bin)
+-  install(FILES pdftoppm.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++  install(TARGETS pdftoppm DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++  install(FILES pdftoppm.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ endif ()
+ 
+ if (HAVE_CAIRO)
+@@ -44,8 +46,8 @@ if (HAVE_CAIRO)
+   if(LCMS2_FOUND)
+     target_link_libraries(pdftocairo ${LCMS2_LIBRARIES})
+   endif()
+-  install(TARGETS pdftocairo DESTINATION bin)
+-  install(FILES pdftocairo.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++  install(TARGETS pdftocairo DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++  install(FILES pdftocairo.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ endif ()
+ 
+ # pdfdetach
+@@ -54,8 +56,8 @@ set(pdfdetach_SOURCES ${common_srcs}
+ )
+ add_executable(pdfdetach ${pdfdetach_SOURCES})
+ target_link_libraries(pdfdetach ${common_libs})
+-install(TARGETS pdfdetach DESTINATION bin)
+-install(FILES pdfdetach.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdfdetach DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdfdetach.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdfdetach
+ set(pdfattach_SOURCES ${common_srcs}
+@@ -63,8 +65,8 @@ set(pdfattach_SOURCES ${common_srcs}
+ )
+ add_executable(pdfattach ${pdfattach_SOURCES})
+ target_link_libraries(pdfattach ${common_libs})
+-install(TARGETS pdfattach DESTINATION bin)
+-install(FILES pdfattach.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdfattach DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdfattach.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdffonts
+ set(pdffonts_SOURCES ${common_srcs}
+@@ -72,8 +74,8 @@ set(pdffonts_SOURCES ${common_srcs}
+ )
+ add_executable(pdffonts ${pdffonts_SOURCES})
+ target_link_libraries(pdffonts ${common_libs})
+-install(TARGETS pdffonts DESTINATION bin)
+-install(FILES pdffonts.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdffonts DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdffonts.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdfimages
+ set(pdfimages_SOURCES ${common_srcs}
+@@ -85,8 +87,8 @@ set(pdfimages_SOURCES ${common_srcs}
+ )
+ add_executable(pdfimages ${pdfimages_SOURCES})
+ target_link_libraries(pdfimages ${common_libs})
+-install(TARGETS pdfimages DESTINATION bin)
+-install(FILES pdfimages.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdfimages DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdfimages.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdfinfo
+ set(pdfinfo_SOURCES ${common_srcs}
+@@ -96,8 +98,8 @@ set(pdfinfo_SOURCES ${common_srcs}
+ )
+ add_executable(pdfinfo ${pdfinfo_SOURCES})
+ target_link_libraries(pdfinfo ${common_libs})
+-install(TARGETS pdfinfo DESTINATION bin)
+-install(FILES pdfinfo.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdfinfo DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdfinfo.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ if (ENABLE_NSS3)
+   # pdfsig
+@@ -106,8 +108,8 @@ if (ENABLE_NSS3)
+   )
+   add_executable(pdfsig ${pdfsig_SOURCES})
+   target_link_libraries(pdfsig ${common_libs})
+-  install(TARGETS pdfsig DESTINATION bin)
+-  install(FILES pdfsig.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++  install(TARGETS pdfsig DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++  install(FILES pdfsig.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ endif ()
+ 
+ # pdftops
+@@ -116,8 +118,8 @@ set(pdftops_SOURCES ${common_srcs}
+ )
+ add_executable(pdftops ${pdftops_SOURCES})
+ target_link_libraries(pdftops ${common_libs})
+-install(TARGETS pdftops DESTINATION bin)
+-install(FILES pdftops.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdftops DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdftops.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdftotext
+ set(pdftotext_SOURCES ${common_srcs}
+@@ -125,8 +127,8 @@ set(pdftotext_SOURCES ${common_srcs}
+ )
+ add_executable(pdftotext ${pdftotext_SOURCES})
+ target_link_libraries(pdftotext ${common_libs})
+-install(TARGETS pdftotext DESTINATION bin)
+-install(FILES pdftotext.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdftotext DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdftotext.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdftohtml
+ set(pdftohtml_SOURCES ${common_srcs}
+@@ -138,8 +140,8 @@ set(pdftohtml_SOURCES ${common_srcs}
+ )
+ add_executable(pdftohtml ${pdftohtml_SOURCES})
+ target_link_libraries(pdftohtml ${common_libs})
+-install(TARGETS pdftohtml DESTINATION bin)
+-install(FILES pdftohtml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdftohtml DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdftohtml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdfseparate
+ set(pdfseparate_SOURCES ${common_srcs}
+@@ -147,8 +149,8 @@ set(pdfseparate_SOURCES ${common_srcs}
+ )
+ add_executable(pdfseparate ${pdfseparate_SOURCES})
+ target_link_libraries(pdfseparate ${common_libs})
+-install(TARGETS pdfseparate DESTINATION bin)
+-install(FILES pdfseparate.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdfseparate DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdfseparate.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+ 
+ # pdfunite
+ set(pdfunite_SOURCES ${common_srcs}
+@@ -156,5 +158,5 @@ set(pdfunite_SOURCES ${common_srcs}
+ )
+ add_executable(pdfunite ${pdfunite_SOURCES})
+ target_link_libraries(pdfunite ${common_libs})
+-install(TARGETS pdfunite DESTINATION bin)
+-install(FILES pdfunite.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++install(TARGETS pdfunite DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
++install(FILES pdfunite.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)

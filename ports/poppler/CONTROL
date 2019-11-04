@@ -1,0 +1,34 @@
+Source: poppler
+Version: 0.82.0
+Build-Depends: freetype, openjpeg, lcms, libjpeg-turbo, curl, libpng, tiff, fontconfig (!windows)
+Description: a library for rendering PDF files, and examining or modifying their structure.
+
+Feature: poppler-data
+Build-Depends: poppler-data
+Description: Encoding data for the poppler PDF rendering library
+
+Feature: splash
+Build-Depends: boost
+Description: Build the Splash graphics backend, necessary if cairo is not installed
+
+Feature: utils
+Description: Compile poppler command line utils
+
+Feature: cpp
+Build-Depends: libiconv
+Description: Compile poppler cpp wrapper
+
+Feature: glib
+Build-Depends: glib, cairo, freetype
+Description: Compile poppler glib wrapper
+
+Feature: qt5
+Build-Depends: qt5-base, freetype
+Description: Compile poppler qt5 wrapper
+
+Feature: zlib
+Build-Depends: zlib
+Description: Build with zlib
+
+Feature: tests
+Description: compile test programs for selected wrapper(s).
