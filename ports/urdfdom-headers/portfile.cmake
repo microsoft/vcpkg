@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
-    REF 1.0.3
-    SHA512 44b1ca9724a9ccd5d2ad51f61d36de19b9a893955ad5c3ecfa2356f6468a0ac140b8cd6fa2aa18c163b0fa8ba87e834358369d2470cd3dee474408113a30b7a0
+    REF 00c1c9c231e46b2300d04073ad696521758fa45c
+    SHA512 8622cfad074454ae34be3e77c37b201adeb0e348df251e1c2fd57f35ae24817bbd2880a9c465056976eb8815fda041ba2fbd70ccb7cac6efc5ed3d7a082e80ef
     HEAD_REF master
   )
 
@@ -16,9 +16,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake" TARGET_PATH share/urdfdom_headers)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/urdfdom_headers)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/urdfdom_headers/cmake" TARGET_PATH share/urdfdom_headers)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/urdfdom_headers/cmake TARGET_PATH share/urdfdom_headers)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers)
 endif()

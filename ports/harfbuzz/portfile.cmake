@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 2.4.0
-    SHA512 dd3a5caec689cffdd887bd3ca646ceaee804a0501d1d4ad1e9d9d48d9e4a87a02b76a9aa354dc69528b7d2a17c2431fce67c1681c72ad8246c2f5a1be498d52a
+    REF 2.5.3
+    SHA512 d541463b3647fc2c7ddaa29aedcea1c3bde5e26e0d529384d66d630af3aaf2a4befb3c4d47c93833f099339a0f951fb132011a02c57fc00ba543bd1b17026ffa
     HEAD_REF master
     PATCHES
         0001-fix-cmake-export.patch
@@ -17,9 +17,11 @@ vcpkg_from_github(
 )
 
 file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
+
 if("${_contents}" MATCHES "include \\(FindFreetype\\)")
     message(FATAL_ERROR "Harfbuzz's cmake must not directly include() FindFreetype.")
 endif()
+
 if("${_contents}" MATCHES "find_library\\(GLIB_LIBRARIES")
     message(FATAL_ERROR "Harfbuzz's cmake must not directly find_library() glib.")
 endif()
@@ -68,8 +70,20 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/harfbuzz TARGET_PATH share/harfbuzz)
+vcpkg_fixup_cmake_targets()
+
 vcpkg_copy_pdbs()
+
+if (HAVE_GLIB)
+    # Propagate dependency on glib downstream
+    file(READ "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" _contents)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-glib CONFIG)
+    
+${_contents}
+")
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz RENAME copyright)

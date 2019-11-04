@@ -3,9 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-common
-    REF v0.3.0
-    SHA512 604b4289f19be662f15dc5ba80c20b78856975332b485796f979580e45f8d778eb8ce0cc2c02dcbaf27bc1159f473e02676cd951b674b7c8478ed26438a04541
+    REF b2e7ca47449571beaca4a507c65ac3ee39d8eefc
+    SHA512 c9dc394bf3ef8eb33d36b81bae5a2002a8fccc7d876ad9c631da818aae7d06846615791c2311e8baa6efa7fcd9d565effabfec6f01767ca0099c6fa64d58e2fa
     HEAD_REF master
+    PATCHES
+        disable-error-4068.patch # This patch fixes dependency port compilation failure
+        disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
 )
 
 vcpkg_configure_cmake(
@@ -16,7 +19,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-common/cmake)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/include
@@ -31,4 +34,4 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aw
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/share
-)
+)

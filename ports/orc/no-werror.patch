@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4484e373..87b5ed41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,9 +81,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+   set (WARN_FLAGS "${WARN_FLAGS} -Wno-covered-switch-default")
+   set (WARN_FLAGS "${WARN_FLAGS} -Wno-missing-noreturn -Wno-unknown-pragmas")
+   set (WARN_FLAGS "${WARN_FLAGS} -Wno-gnu-zero-variadic-macro-arguments")
+-  set (WARN_FLAGS "${WARN_FLAGS} -Wconversion -Werror")
++  set (WARN_FLAGS "${WARN_FLAGS} -Wconversion")
+ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+-  set (WARN_FLAGS "-Wall -Wno-unknown-pragmas -Wconversion -Werror")
++  set (WARN_FLAGS "-Wall -Wno-unknown-pragmas -Wconversion")
+   if (CMAKE_CXX_COMPILER_VERSION STREQUAL "" OR
+       CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.7")
+     set (CXX11_FLAGS "-std=c++0x")

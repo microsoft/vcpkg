@@ -22,7 +22,7 @@ file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
 list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
 add_library(libmupdf ${SOURCES})
 
-target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DNO_ICC)
+target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0)
 target_include_directories(libmupdf
   PUBLIC
     include

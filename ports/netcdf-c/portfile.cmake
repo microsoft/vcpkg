@@ -10,8 +10,21 @@ vcpkg_from_github(
         no-install-deps.patch
         config-pkg-location.patch
         transitive-hdf5.patch
-        fix_curl_linkage.patch
+        hdf5.patch
+        hdf5_2.patch
+        fix-build-error-on-linux.patch
+        hdf5_3.patch
 )
+
+#Remove outdated find modules
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindSZIP.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindZLIB.cmake")
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(NC_USE_STATIC_CRT ON)
+else()
+    set(NC_USE_STATIC_CRT OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,9 +35,11 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
+        -DENABLE_FILTER_TESTING=OFF
         -DUSE_HDF5=ON
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
+        -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
         -DConfigPackageLocation=share/netcdf
 )
 
@@ -38,10 +53,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-c)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/copyright
-)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

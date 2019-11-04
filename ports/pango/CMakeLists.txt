@@ -11,6 +11,11 @@ else()
   configure_file(./config.h.unix ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 endif()
 
+if (WIN32)
+  # Set utf-8 charset to avoid compile error C2001
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+endif()
+
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(. ./pango ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -113,7 +118,7 @@ pango_add_module(pangowin32
     pango/pangowin32-fontcache.c
     pango/pangowin32-fontmap.c
     pango/pangowin32-shape.c)
-target_link_libraries(pangowin32 usp10 pango)
+target_link_libraries(pangowin32 usp10 pango gdi32)
 endif()
 
 pango_add_module(pangoft2

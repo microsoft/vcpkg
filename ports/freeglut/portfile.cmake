@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
     FILENAME "freeglut-3.0.0.tar.gz"
@@ -36,6 +36,7 @@ file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DFREEGLUT_BUILD_STATIC_LIBS=${FREEGLUT_STATIC}
         -DFREEGLUT_BUILD_SHARED_LIBS=${FREEGLUT_DYNAMIC}

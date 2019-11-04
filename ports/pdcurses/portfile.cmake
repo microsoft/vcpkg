@@ -9,26 +9,15 @@ find_program(NMAKE nmake)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wmcbrine/PDCurses
-    REF 3.6
-    SHA512 1ed34e7eb791c9e00aae60878339e79f6b3af086c45d88d2b59d9b2b4020481ff5a5c21e078e59ae24f2de3b4d412f0240f21a50eb743f7e172c832a7e17ed5e
+    REF 2467ab2b6c07163d0171b80ad6c252c29da28173
+    SHA512 4d729a4e0ffa1b5d1fd35ed73329d08886e1e565936a008cd7b45f8e5fbaabcb86c65377fd1e33acef6271f828cd4158e8a56ed15cd664b2a8c8e1d66cf8c00a
     HEAD_REF master
 )
 
-file(REMOVE_RECURSE
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
-)
+set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)
 
-file(GLOB SOURCES ${SOURCE_PATH}/*)
-
-file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-
-set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)                                                          
-
-
-set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)                                                                                                   
-set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)   
+set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)
+set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
@@ -73,7 +62,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 file(
-    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h ${SOURCE_PATH}/term.h
+    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)

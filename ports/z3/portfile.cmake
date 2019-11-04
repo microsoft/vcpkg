@@ -15,11 +15,10 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
-  REF z3-4.8.4
-  SHA512 4660ba6ab33a6345b2e8396c332d4afcfc73eda66ceb2595a39f152df4d62a9ea0f349b0f9212389ba84ecba6bdae6ad9b62b376ba44dc4d9c74f80d7a818bf4
+  REF Z3-4.8.5
+  SHA512 ca36e1a0332bd473a64f41dfdb31656fb3486178473e4fd4934dccce109a84c9686c08f94998df74bacb588eb12ea5db25dc17a564ee76f82fd2559349697309
   HEAD_REF master
   PATCHES
-         fix_cmake_long_dir.patch
          fix-install-path.patch
 )
 
@@ -35,7 +34,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/z3 TARGET_PATH share/z3)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
