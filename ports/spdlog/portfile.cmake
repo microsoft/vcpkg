@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
@@ -10,6 +8,7 @@ vcpkg_from_github(
         disable-master-project-check.patch
         fix-feature-export.patch
         fix-error-4275.patch
+        fix-uwp.patch
 )
 
 set(SPDLOG_USE_BENCHMARK OFF)
