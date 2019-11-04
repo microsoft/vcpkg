@@ -11,6 +11,27 @@ using vcpkg::CMakeVars::TripletCMakeVarProvider;
 
 namespace vcpkg::CMakeVars
 {
+    Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_generic_triplet_vars(
+        const Triplet& triplet) const
+    {
+        Util::unused(triplet);
+        return nullopt;
+    }
+
+    Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_dep_info_vars(
+        const PackageSpec& spec) const
+    {
+        Util::unused(spec);
+        return nullopt;
+    }
+
+    Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_tag_vars(
+        const PackageSpec& spec) const
+    {
+        Util::unused(spec);
+        return nullopt;
+    }
+
     fs::path TripletCMakeVarProvider::create_tag_extraction_file(
         const Span<const std::pair<const FullPackageSpec*, std::string>>& spec_abi_settings) const
     {
