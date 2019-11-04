@@ -132,7 +132,14 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(${PROJECT_NAME}Config.cmake.in
      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
      INSTALL_DESTINATION share/${PROJECT_NAME})
+# Disable check for same 32/64bit-ness in libffiConfigVersion.cmake by setting CMAKE_SIZEOF_VOID_P
+set (CMAKE_SIZEOF_VOID_P "")
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${VERSION}
+    COMPATIBILITY AnyNewerVersion)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION share/${PROJECT_NAME})
 install(EXPORT ${PROJECT_NAME}Targets
     DESTINATION share/${PROJECT_NAME})
