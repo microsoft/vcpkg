@@ -1,0 +1,57 @@
+diff --git a/include/boost/python/detail/wrap_python.hpp b/include/boost/python/detail/wrap_python.hpp
+index 13679db..612f27e 100644
+--- a/include/boost/python/detail/wrap_python.hpp
++++ b/include/boost/python/detail/wrap_python.hpp
+@@ -54,7 +54,7 @@
+ # include <math.h>
+ #endif
+ 
+-# include <pyconfig.h>
++# include <python3.7/pyconfig.h>
+ # if defined(_SGI_COMPILER_VERSION) && _SGI_COMPILER_VERSION >= 740
+ #  undef _POSIX_C_SOURCE
+ #  undef _XOPEN_SOURCE
+@@ -79,7 +79,7 @@
+ //
+ // Get ahold of Python's version number
+ //
+-#include <patchlevel.h>
++#include <python3.7/patchlevel.h>
+ 
+ #if PY_MAJOR_VERSION<2 || PY_MAJOR_VERSION==2 && PY_MINOR_VERSION<2
+ #error Python 2.2 or higher is required for this version of Boost.Python.
+@@ -175,7 +175,7 @@ typedef int pid_t;
+ #if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION == 2 && PY_MICRO_VERSION < 2
+ # include <boost/python/detail/python22_fixed.h>
+ #else
+-# include <Python.h>
++# include <python3.7/Python.h>
+ #endif
+ 
+ #if BOOST_PYTHON_GCC_HAS_WREGISTER
+diff --git a/src/object/class.cpp b/src/object/class.cpp
+index 9bb9683..39a7eb3 100644
+--- a/src/object/class.cpp
++++ b/src/object/class.cpp
+@@ -25,7 +25,7 @@
+ #include <vector>
+ #include <cstddef>
+ #include <new>
+-#include <structmember.h>
++#include <python3.7/structmember.h>
+ 
+ namespace boost { namespace python {
+ 
+diff --git a/src/object/enum.cpp b/src/object/enum.cpp
+index 10122ad..8de3f65 100644
+--- a/src/object/enum.cpp
++++ b/src/object/enum.cpp
+@@ -12,7 +12,7 @@
+ #include <boost/python/str.hpp>
+ #include <boost/python/extract.hpp>
+ #include <boost/python/object_protocol.hpp>
+-#include <structmember.h>
++#include <python3.7/structmember.h>
+ 
+ namespace boost { namespace python { namespace objects {
+ 
