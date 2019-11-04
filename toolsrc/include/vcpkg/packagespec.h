@@ -103,6 +103,8 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
+        static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
+
         static std::vector<FeatureSpec> to_feature_specs(const FullPackageSpec& spec,
                                                          const std::vector<std::string>& default_features);
 
