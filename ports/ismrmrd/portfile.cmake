@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(WIN32_INCLUDE_STDDEF_PATCH "x86-windows-include-stddef.patch")
 endif()
@@ -11,12 +9,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
-    REF 4d4004d91ccadd41ddb30b019f970a69bb23a1bc
-    SHA512 648901de4629c8b11574894763a5fa61a3cb0420c5aa62cdff02c4641ba702ca73efba12b403076301e44a4f0a7c915da1f2c7a34b24377d0385af92f2eda892
+    REF 1066d90e5d87302ccd71ce58ee153b5c87783064 # v1.4.1
+    SHA512 a830bd3b8a9580cf182f436066213441ee04c781e6e721b82287550f2ca552d58c5390d80b4b6a6b7bd8483fa3e45bf00858268706cedb99a4390ca047eb4d6c
     HEAD_REF master
     PATCHES
         ${STATIC_PATCH}
         ${WIN32_INCLUDE_STDDEF_PATCH}
+        fix-depends-hdf5.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,6 +24,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DUSE_SYSTEM_PUGIXML=ON
         -DUSE_HDF5_DATASET_SUPPORT=ON
+        -DVCPKG_TARGET_TRIPLET=ON
 )
 
 vcpkg_install_cmake()
@@ -84,7 +84,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ismrmrd/LICENSE ${CURRENT_PACKAGES_DIR}/share/ismrmrd/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/ismrmrd)
