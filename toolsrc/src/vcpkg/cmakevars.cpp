@@ -88,8 +88,13 @@ namespace vcpkg::CMakeVars
         }
 
         fs::path path = paths.buildtrees / (hasher->get_hash() + ".vcpkg_tags.cmake");
+        
+        Files::Filesystem& fs = paths.get_filesystem();
 
-        paths.get_filesystem().write_contents(path, extraction_file, VCPKG_LINE_INFO);
+        std::error_code ec;
+        fs.create_directories(paths.buildtrees, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory %s", paths.buildtrees.u8string());
+        fs.write_contents(path, extraction_file, VCPKG_LINE_INFO);
 
         return path;
     }
