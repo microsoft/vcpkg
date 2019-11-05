@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+#vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,8 +14,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DENABLE_TESTS:BOOL=OFF
+    OPTIONS -DENABLE_TESTS:BOOL=OFF
 )
 
 vcpkg_install_cmake()
@@ -23,6 +22,17 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/sqlpp-connector-postgresql")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sqlpp11-connector-postgresql RENAME copyright)
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/sqlpp11-connector-postgresql-dynamic.dll)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sqlpp11-connector-postgresql-dynamic.dll ${CURRENT_PACKAGES_DIR}/bin/sqlpp11-connector-postgresql-dynamic.dll)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/sqlpp11-connector-postgresql-dynamic.dll)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sqlpp11-connector-postgresql-dynamic.dll ${CURRENT_PACKAGES_DIR}/debug/bin/sqlpp11-connector-postgresql-dynamic.dll)
+endif()
+  
+vcpkg_copy_pdbs()
