@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6e69e3a..65c9c03 100644
+index 6ce583b..e9ea757 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -535,7 +535,7 @@ endif()
+@@ -665,7 +665,7 @@ endif()
  
  if(WIN32)
    # Postfix of DLLs:
--  ocv_update(OPENCV_DLLVERSION "${OPENCV_VERSION_MAJOR}${OPENCV_VERSION_MINOR}${OPENCV_VERSION_PATCH}")
-+  ocv_update(OPENCV_DLLVERSION "")
-   ocv_update(OPENCV_DEBUG_POSTFIX d)
+-  set(OPENCV_DLLVERSION "${OPENCV_VERSION_MAJOR}${OPENCV_VERSION_MINOR}${OPENCV_VERSION_PATCH}")
++  set(OPENCV_DLLVERSION "")
+   set(OPENCV_DEBUG_POSTFIX d)
  else()
    # Postfix of so's:
-@@ -588,7 +588,7 @@ endif()
+@@ -716,7 +716,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
@@ -21,10 +21,10 @@ index 6e69e3a..65c9c03 100644
  endif()
  
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index f7fd48b..5bd5c25 100644
+index 0b9d669..142b21b 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -257,7 +257,6 @@ if(MSVC)
+@@ -254,7 +254,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)
@@ -33,7 +33,7 @@ index f7fd48b..5bd5c25 100644
      set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
    endif()
 diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index c7f9fc2..a22f94a 100644
+index 2c7c42b..e7bc157 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
 @@ -109,7 +109,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
@@ -45,17 +45,25 @@ index c7f9fc2..a22f94a 100644
    ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "" "")
  endif()
  
+@@ -121,7 +121,7 @@ endif()
+ # --------------------------------------------------------------------------------------------
+ #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
+ # --------------------------------------------------------------------------------------------
+-if(WIN32)
++if(0)
+   if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+     if(BUILD_SHARED_LIBS)
+       set(_lib_suffix "lib")
 diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
-index 1f0d720..a1fe6fa 100644
+index 1f0d720..0bb1ff7 100644
 --- a/data/CMakeLists.txt
 +++ b/data/CMakeLists.txt
-@@ -1,9 +1,6 @@
+@@ -1,8 +1,6 @@
  file(GLOB HAAR_CASCADES haarcascades/*.xml)
  file(GLOB LBP_CASCADES lbpcascades/*.xml)
  
 -install(FILES ${HAAR_CASCADES} DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/haarcascades COMPONENT libs)
 -install(FILES ${LBP_CASCADES}  DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/lbpcascades  COMPONENT libs)
--
+ 
  if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
    install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")
- endif()
