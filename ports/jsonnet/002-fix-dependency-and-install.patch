@@ -1,0 +1,61 @@
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 82fb7c2..a94b4ff 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -28,6 +28,7 @@ set(LIBJSONNET_SOURCE
+     string_utils.cpp
+     vm.cpp)
+ 
++if (BUILD_SHARED_BINARIES)
+ add_library(libjsonnet ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
+ add_dependencies(libjsonnet md5 stdlib)
+ target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json)
+@@ -48,6 +49,7 @@ install(TARGETS libjsonnet
+ 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+ 	ARCHIVE DESTINATION "${CMAKE_INSTALL_BINDIR}"
+ 	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++endif()
+ 
+ if (BUILD_STATIC_LIBS)
+     # Static library for jsonnet command-line tool.
+@@ -102,3 +104,6 @@ if (BUILD_TESTS)
+     add_test(jsonnet_test_snippet
+         ${GLOBAL_OUTPUT_PATH}/jsonnet -e ${TEST_SNIPPET})
+ endif()
++
++
++install(FILES ${LIBJSONNET_HEADERS} DESTINATION include)
+\ No newline at end of file
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index bf349df..6ed1442 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -8,9 +8,9 @@ set(LIBJSONNETPP_SOURCE
+     libjsonnet++.cpp
+ )
+ 
++if (BUILD_SHARED_BINARIES)
+ add_library(libjsonnet++ SHARED ${LIBJSONNETPP_HEADERS} ${LIBJSONNETPP_SOURCE})
+-add_dependencies(libjsonnet++ jsonnet)
+-# target_link_libraries(libjsonnet libjsonnet)
++target_link_libraries(libjsonnet++ libjsonnet)
+ 
+ # CMake prepends CMAKE_SHARED_LIBRARY_PREFIX to shared libraries, so without
+ # this step the output would be |liblibjsonnet|.
+@@ -22,6 +22,7 @@ install(TARGETS libjsonnet++
+ 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+ 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+ 	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++endif()
+ 
+ if (BUILD_STATIC_LIBS)
+     # Static library for jsonnet command-line tool.
+@@ -38,6 +39,8 @@ else()
+     add_library(libjsonnet++_for_binaries ALIAS libjsonnet++_static)
+ endif()
+ 
++install(FILES ${LIBJSONNETPP_HEADERS} DESTINATION include)
++
+ # Tests
+ function(add_test_executablepp test_name)
+     if (EXISTS ${CMAKE_CURRENT_LIST_DIR}/${test_name}.cpp)
