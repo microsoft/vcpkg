@@ -2,3 +2,47 @@ Source: pdal
 Version: 1.7.1-6
 Description: PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.
 Build-Depends: gdal, geos, jsoncpp, libgeotiff, laszip
+
+Feature: i3s
+Description: Indexed 3d Scene Layer (I3S) plugin
+Build-Depends: zlib
+
+Feature: cpd
+Description: Coherent Point Drift (CPD) plugin
+Build-Depends: cpd
+
+Feature: geowave
+Description: GeoWave plugin
+
+Feature: icebridge
+Description: Icebridge plugin
+Build-Depends: hdf5
+
+Feature: mbio
+Description: MBIO plugin
+
+Feature: mrsid
+Description: MrSID plugin
+
+Feature: pgpointcloud
+Description: PgPointCloud plugin
+
+Feature: openscenegraph
+Description: OpenScenGraph plugin
+Build-Depends: osg
+
+Feature: rdb
+Description: RDB plugin
+
+Feature: sqlite
+Description: SQLite plugin
+Build-Depends: sqlite3
+
+Feature: fbx
+Description: FBX plugin
+
+Feature: tiledb
+Description: TileDB plugin
+
+Feature: e57
+Description: E57 plugin

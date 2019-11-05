@@ -1,0 +1,15 @@
+//The new version of OSG removed redudent bool parameter from TriangleFunctor::operator(Vec3, Vec3, Vec3, bool) so it's now simply TriangleFunctor::operator(Vec3, Vec3, Vec3) as the bool was always false in recently OSG versions.
+
+diff --git a/plugins/openscenegraph/io/OSGReader.cpp b/plugins/openscenegraph/io/OSGReader.cpp
+index 4b1a916..c35aa5e 100644
+--- a/plugins/openscenegraph/io/OSGReader.cpp
++++ b/plugins/openscenegraph/io/OSGReader.cpp
+@@ -51,7 +51,7 @@ struct CollectTriangles
+         verts = new osg::Vec3Array();
+     }
+ #ifdef OSG_VERSION_GREATER_THAN
+-#if OSG_VERSION_GREATER_THAN(3,2,0)
++#if 0
+     inline void operator () (const osg::Vec3& v1, const osg::Vec3& v2, const osg::Vec3& v3, bool treatVertexDataAsTemporary)
+ #else
+     inline void operator () (const osg::Vec3& v1, const osg::Vec3& v2, const osg::Vec3& v3)

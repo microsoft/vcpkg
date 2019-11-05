@@ -16,6 +16,8 @@ vcpkg_extract_source_archive_ex(
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
         PDALConfig.patch
+        fix-osgFunction.patch
+        fix-FindDependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
@@ -39,6 +41,26 @@ else()
   set(VCPKG_BUILD_STATIC_LIBS ON)
 endif()
 
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYPATH ${PYTHON2} PATH)
+vcpkg_add_to_path("${PYPATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    i3s BUILD_PLUGIN_I3S
+    cpd BUILD_PLUGIN_CPD  # Only support build static library.
+    geowave BUILD_PLUGIN_GEOWAVE
+    icebridge BUILD_PLUGIN_ICEBRIDGE
+    mbio BUILD_PLUGIN_MBIO
+    mrsid BUILD_PLUGIN_MRSID
+    pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
+    openscenegraph BUILD_PLUGIN_OPENSCENEGRAPH
+    rdb BUILD_PLUGIN_RDBLIB
+    sqlite BUILD_PLUGIN_SQLITE
+    fbx BUILD_PLUGIN_FBX
+    tiledb BUILD_PLUGIN_TILEDB
+    e57 BUILD_PLUGIN_E57
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -46,6 +68,7 @@ vcpkg_configure_cmake(
         -DPDAL_BUILD_STATIC:BOOL=${VCPKG_BUILD_STATIC_LIBS}
         -DWITH_TESTS:BOOL=OFF
         -DWITH_COMPLETION:BOOL=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)

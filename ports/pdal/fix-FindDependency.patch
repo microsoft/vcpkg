@@ -1,0 +1,38 @@
+diff --git a/plugins/icebridge/CMakeLists.txt b/plugins/icebridge/CMakeLists.txt
+index aebfa70..f9ccd31 100644
+--- a/plugins/icebridge/CMakeLists.txt
++++ b/plugins/icebridge/CMakeLists.txt
+@@ -2,8 +2,7 @@
+ # Icebridge plugin CMake configuration
+ #
+ 
+-include (${PDAL_CMAKE_DIR}/hdf5.cmake)
+-
++find_package(hdf5 CONFIG REQUIRED)
+ 
+ if (NOT PDAL_HAVE_HDF5)
+     message(FATAL "HDF5 not found but is required for Icebridge.")
+@@ -16,7 +15,8 @@ else()
+     target_include_directories(${libname}
+         PRIVATE
+             ${ROOT_DIR}
+-            ${LIBXML2_INCLUDE_DIR})
++            ${LIBXML2_INCLUDE_DIR}
++            ${HDF5_INCLUDE_DIRS})
+ 
+     if (WITH_TESTS)
+         PDAL_ADD_TEST(icetest
+diff --git a/plugins/sqlite/CMakeLists.txt b/plugins/sqlite/CMakeLists.txt
+index 7699310..3d26c6b 100644
+--- a/plugins/sqlite/CMakeLists.txt
++++ b/plugins/sqlite/CMakeLists.txt
+@@ -2,8 +2,7 @@
+ # SQLite plugin CMake configuration
+ #
+ 
+-include (${PDAL_CMAKE_DIR}/sqlite.cmake)
+-include (${PDAL_CMAKE_DIR}/spatialite.cmake)
++find_package(sqlite3 CONFIG REQUIRED)
+ 
+ # SQLite Reader
+ #
