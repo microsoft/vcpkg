@@ -326,7 +326,7 @@ TEST_CASE ("basic feature test 3", "[plan]")
     CMakeVars::MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::PackageGraph::create_feature_install_plan(
-        map_port, var_provider, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+        map_port, var_provider, {spec_c, spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
     REQUIRE(install_plan.size() == 4);
     remove_plan_check(install_plan.at(0), "a");

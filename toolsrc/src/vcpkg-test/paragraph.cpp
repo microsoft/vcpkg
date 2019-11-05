@@ -360,11 +360,12 @@ TEST_CASE ("BinaryParagraph serialize min", "[paragraph]")
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0].size() == 4);
+    REQUIRE(pghs[0].size() == 5);
     REQUIRE(pghs[0]["Package"] == "zlib");
     REQUIRE(pghs[0]["Version"] == "1.2.8");
     REQUIRE(pghs[0]["Architecture"] == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
+    REQUIRE(pghs[0]["Type"] == "Port");
 }
 
 TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
@@ -382,13 +383,14 @@ TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0].size() == 7);
+    REQUIRE(pghs[0].size() == 8);
     REQUIRE(pghs[0]["Package"] == "zlib");
     REQUIRE(pghs[0]["Version"] == "1.2.8");
     REQUIRE(pghs[0]["Architecture"] == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
     REQUIRE(pghs[0]["Description"] == "first line\n second line");
     REQUIRE(pghs[0]["Depends"] == "dep");
+    REQUIRE(pghs[0]["Type"] == "Port");
 }
 
 TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
