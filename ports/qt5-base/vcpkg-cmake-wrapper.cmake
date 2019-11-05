@@ -19,7 +19,7 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
     find_package(PostgreSQL MODULE REQUIRED)
     find_package(double-conversion CONFIG)
     find_package(OpenSSL)
-    find_package(harfbuzz CONFIG)
+    find_package(harfbuzz CONFIG REQUIRED)
 
     set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
         ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
