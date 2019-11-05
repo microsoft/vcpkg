@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7b73b98..72f6171 100644
+index 38b7b7d..5b3d33e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -882,7 +882,9 @@ check_symbol_exists(setsockopt     "${CURL_INCLUDES}" HAVE_SETSOCKOPT)
+@@ -897,7 +897,9 @@ check_symbol_exists(setsockopt     "${CURL_INCLUDES}" HAVE_SETSOCKOPT)
  check_function_exists(mach_absolute_time HAVE_MACH_ABSOLUTE_TIME)
  
  # symbol exists in win32, but function does not.
@@ -38,39 +38,39 @@ index 8337c72..41867b2 100644
    }
    else {
 diff --git a/lib/curl_ntlm_core.c b/lib/curl_ntlm_core.c
-index e896276..268f0ea 100644
+index e7060eb..9cd76f7 100644
 --- a/lib/curl_ntlm_core.c
 +++ b/lib/curl_ntlm_core.c
-@@ -743,9 +743,12 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
+@@ -726,10 +726,11 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
  
    /* Calculate the timestamp */
  #ifdef DEBUGBUILD
 -  char *force_timestamp = getenv("CURL_FORCETIME");
 -  if(force_timestamp)
 +  char *force_timestamp = curl_getenv("CURL_FORCETIME");
-+  if (force_timestamp)
-+  {
++  if(force_timestamp) {
      tw = CURL_OFF_T_C(11644473600) * 10000000;
+-  else
 +    free(force_timestamp);
 +  }
-   else
  #endif
      tw = ((curl_off_t)time(NULL) + CURL_OFF_T_C(11644473600)) * 10000000;
+ 
 diff --git a/lib/ftp.c b/lib/ftp.c
-index 8042edf..3442df7 100644
+index 825aaaa..3b96670 100644
 --- a/lib/ftp.c
 +++ b/lib/ftp.c
-@@ -4260,7 +4260,7 @@ CURLcode ftp_parse_url_path(struct connectdata *conn)
+@@ -4262,7 +4262,7 @@ CURLcode ftp_parse_url_path(struct connectdata *conn)
      /* prevpath is "raw" so we convert the input path before we compare the
         strings */
      size_t dlen;
 -    char *path;
 +    char *path = NULL;
      CURLcode result =
-       Curl_urldecode(conn->data, data->state.path, 0, &path, &dlen, TRUE);
+       Curl_urldecode(conn->data, ftp->path, 0, &path, &dlen, TRUE);
      if(result) {
 diff --git a/lib/rand.c b/lib/rand.c
-index 2670af9..0d18d37 100644
+index 6ee45fe..b2d712d 100644
 --- a/lib/rand.c
 +++ b/lib/rand.c
 @@ -44,7 +44,7 @@ static CURLcode randit(struct Curl_easy *data, unsigned int *rnd)

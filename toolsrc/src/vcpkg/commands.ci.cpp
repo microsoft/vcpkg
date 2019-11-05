@@ -55,27 +55,21 @@ namespace vcpkg::Commands::CI
     struct XunitTestResults
     {
     public:
+        XunitTestResults() { m_assembly_run_datetime = Chrono::CTime::get_current_date_time(); }
 
-        XunitTestResults()
+        void add_test_results(const std::string& spec,
+                              const Build::BuildResult& build_result,
+                              const Chrono::ElapsedTime& elapsed_time,
+                              const std::string& abi_tag,
+                              const std::vector<std::string>& features)
         {
-            m_assembly_run_datetime = Chrono::CTime::get_current_date_time();
-        }
-
-        void add_test_results(const std::string& spec, const Build::BuildResult& build_result, const Chrono::ElapsedTime& elapsed_time, const std::string& abi_tag)
-        {
-            m_collections.back().tests.push_back({ spec, build_result, elapsed_time, abi_tag });
+            m_collections.back().tests.push_back({spec, build_result, elapsed_time, abi_tag, features});
         }
 
         // Starting a new test collection
-        void push_collection( const std::string& name)
-        {
-            m_collections.push_back({name});
-        }
+        void push_collection(const std::string& name) { m_collections.push_back({name}); }
 
-        void collection_time(const vcpkg::Chrono::ElapsedTime& time)
-        {
-            m_collections.back().time = time;
-        }
+        void collection_time(const vcpkg::Chrono::ElapsedTime& time) { m_collections.back().time = time; }
 
         const std::string& build_xml()
         {
@@ -96,19 +90,16 @@ namespace vcpkg::Commands::CI
             return m_xml;
         }
 
-        void assembly_time(const vcpkg::Chrono::ElapsedTime& assembly_time)
-        {
-            m_assembly_time = assembly_time;
-        }
+        void assembly_time(const vcpkg::Chrono::ElapsedTime& assembly_time) { m_assembly_time = assembly_time; }
 
     private:
-
         struct XunitTest
         {
             std::string name;
             vcpkg::Build::BuildResult result;
             vcpkg::Chrono::ElapsedTime time;
             std::string abi_tag;
+            std::vector<std::string> features;
         };
 
         struct XunitCollection
@@ -126,34 +117,33 @@ namespace vcpkg::Commands::CI
                 auto rawDateTime = m_assembly_run_datetime.get()->to_string();
                 // The expected format is "yyyy-mm-ddThh:mm:ss.0Z"
                 //                         0123456789012345678901
-                datetime = Strings::format(R"(run-date="%s" run-time="%s")",
-                    rawDateTime.substr(0, 10), rawDateTime.substr(11, 8));
+                datetime = Strings::format(
+                    R"(run-date="%s" run-time="%s")", rawDateTime.substr(0, 10), rawDateTime.substr(11, 8));
             }
 
             std::string time = Strings::format(R"(time="%lld")", m_assembly_time.as<std::chrono::seconds>().count());
 
-            m_xml += Strings::format(
-                R"(<assemblies>)" "\n"
-                R"(  <assembly name="vcpkg" %s %s>)"  "\n"
-                , datetime, time);
+            m_xml += Strings::format(R"(<assemblies>)"
+                                     "\n"
+                                     R"(  <assembly name="vcpkg" %s %s>)"
+                                     "\n",
+                                     datetime,
+                                     time);
         }
         void xml_finish_assembly()
         {
             m_xml += "  </assembly>\n"
-                "</assemblies>\n";
+                     "</assemblies>\n";
         }
 
         void xml_start_collection(const XunitCollection& collection)
         {
             m_xml += Strings::format(R"(    <collection name="%s" time="%lld">)"
-                "\n",
-                collection.name,
-                collection.time.as<std::chrono::seconds>().count());
+                                     "\n",
+                                     collection.name,
+                                     collection.time.as<std::chrono::seconds>().count());
         }
-        void xml_finish_collection()
-        {
-            m_xml += "    </collection>\n";
-        }
+        void xml_finish_collection() { m_xml += "    </collection>\n"; }
 
         void xml_test(const XunitTest& test)
         {
@@ -161,39 +151,56 @@ namespace vcpkg::Commands::CI
             const char* result_string = "";
             switch (test.result)
             {
-            case BuildResult::POST_BUILD_CHECKS_FAILED:
-            case BuildResult::FILE_CONFLICTS:
-            case BuildResult::BUILD_FAILED:
-                result_string = "Fail";
-                message_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(test.result));
-                break;
-            case BuildResult::EXCLUDED:
-            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
-                result_string = "Skip";
-                message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(test.result));
-                break;
-            case BuildResult::SUCCEEDED:
-                result_string = "Pass";
-                break;
-            default:
-                Checks::exit_fail(VCPKG_LINE_INFO);
-                break;
+                case BuildResult::POST_BUILD_CHECKS_FAILED:
+                case BuildResult::FILE_CONFLICTS:
+                case BuildResult::BUILD_FAILED:
+                    result_string = "Fail";
+                    message_block =
+                        Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(test.result));
+                    break;
+                case BuildResult::EXCLUDED:
+                case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+                    result_string = "Skip";
+                    message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(test.result));
+                    break;
+                case BuildResult::SUCCEEDED: result_string = "Pass"; break;
+                default: Checks::exit_fail(VCPKG_LINE_INFO); break;
             }
 
             std::string traits_block;
-            if (test.abi_tag != "") // only adding if there is a known abi tag
+            if (test.abi_tag != "")
             {
-                traits_block = Strings::format(R"(<traits><trait name="abi_tag" value="%s" /></traits>)", test.abi_tag);
+                traits_block += Strings::format(R"(<trait name="abi_tag" value="%s" />)", test.abi_tag);
+            }
+
+            if (!test.features.empty())
+            {
+                std::string feature_list;
+                for (const auto& feature : test.features)
+                {
+                    if (!feature_list.empty()) 
+                    {
+                        feature_list += ", ";
+                    }
+                    feature_list += feature;
+                }
+
+                traits_block += Strings::format(R"(<trait name="features" value="%s" />)", feature_list);
+            }
+
+            if (!traits_block.empty())
+            {
+                traits_block = "<traits>" + traits_block + "</traits>";
             }
 
             m_xml += Strings::format(R"(      <test name="%s" method="%s" time="%lld" result="%s">%s%s</test>)"
-                "\n",
-                test.name,
-                test.name,
-                test.time.as<std::chrono::seconds>().count(),
-                result_string,
-                traits_block,
-                message_block);
+                                     "\n",
+                                     test.name,
+                                     test.name,
+                                     test.time.as<std::chrono::seconds>().count(),
+                                     result_string,
+                                     traits_block,
+                                     message_block);
         }
 
         Optional<vcpkg::Chrono::CTime> m_assembly_run_datetime;
@@ -203,7 +210,6 @@ namespace vcpkg::Commands::CI
         std::string m_xml;
     };
 
-
     struct UnknownCIPortsResults
     {
         std::vector<FullPackageSpec> unknown;
@@ -212,11 +218,12 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, std::string> abi_tag_map;
     };
 
-    static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(const VcpkgPaths& paths,
-                                                           const std::set<std::string>& exclusions,
-                                                           const Dependencies::PortFileProvider& provider,
-                                                           const std::vector<FeatureSpec>& fspecs,
-                                                           const bool purge_tombstones)
+    static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(
+        const VcpkgPaths& paths,
+        const std::set<std::string>& exclusions,
+        const Dependencies::PortFileProvider& provider,
+        const std::vector<FeatureSpec>& fspecs,
+        const bool purge_tombstones)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
 
@@ -227,8 +234,10 @@ namespace vcpkg::Commands::CI
         const Build::BuildPackageOptions build_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
@@ -246,12 +255,11 @@ namespace vcpkg::Commands::CI
             {
                 // determine abi tag
                 std::string abi;
-                if (auto scf = p->source_control_file.get())
+                if (auto scfl = p->source_control_file_location.get())
                 {
                     auto triplet = p->spec.triplet();
 
-                    const Build::BuildPackageConfig build_config {
-                        *scf, triplet, paths.port_dir(p->spec), build_options, p->feature_list};
+                    const Build::BuildPackageConfig build_config{*scfl, triplet, build_options, p->feature_list};
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -263,7 +271,7 @@ namespace vcpkg::Commands::CI
                                 return {spec.name(), it->second};
                         });
                     const auto& pre_build_info = pre_build_info_cache.get_lazy(
-                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
+                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet, *scfl); });
 
                     auto maybe_tag_and_file =
                         Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
@@ -296,7 +304,7 @@ namespace vcpkg::Commands::CI
                 bool b_will_build = false;
 
                 ret->features.emplace(p->spec,
-                                     std::vector<std::string> {p->feature_list.begin(), p->feature_list.end()});
+                                      std::vector<std::string>{p->feature_list.begin(), p->feature_list.end()});
 
                 if (Util::Sets::contains(exclusions, p->spec.name()))
                 {
@@ -327,11 +335,11 @@ namespace vcpkg::Commands::CI
                     b_will_build = true;
                 }
 
-                System::println("%40s: %1s %8s: %s", p->spec, (b_will_build ? "*" : " "), state, abi);
+                System::printf("%40s: %1s %8s: %s\n", p->spec, (b_will_build ? "*" : " "), state, abi);
             }
         }
 
-        System::print("Time to determine pass/fail: %s\n", timer.elapsed().to_string());
+        System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
 
         return ret;
     }
@@ -340,7 +348,7 @@ namespace vcpkg::Commands::CI
     {
         if (!GlobalState::g_binary_caching)
         {
-            System::println(System::Color::warning, "Warning: Running ci without binary caching!");
+            System::print2(System::Color::warning, "Warning: Running ci without binary caching!\n");
         }
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -356,11 +364,8 @@ namespace vcpkg::Commands::CI
         const auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const auto purge_tombstones = Util::Sets::contains(options.switches, OPTION_PURGE_TOMBSTONES);
 
-        std::vector<Triplet> triplets;
-        for (const std::string& triplet : args.command_arguments)
-        {
-            triplets.push_back(Triplet::from_canonical_name(triplet));
-        }
+        std::vector<Triplet> triplets = Util::fmap(
+            args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
 
         if (triplets.empty())
         {
@@ -368,13 +373,16 @@ namespace vcpkg::Commands::CI
         }
 
         StatusParagraphs status_db = database_load_check(paths);
-        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
+
+        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
+            Build::CleanDownloads::NO,
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
@@ -385,7 +393,10 @@ namespace vcpkg::Commands::CI
 
         XunitTestResults xunitTestResults;
 
-        std::vector<std::string> all_ports = Install::get_all_port_names(paths);
+        std::vector<std::string> all_ports =
+            Util::fmap(provider.load_all_control_files(), [](auto&& scfl) -> std::string {
+                return scfl->source_control_file.get()->core_paragraph->name;
+            });
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (const Triplet& triplet : triplets)
@@ -394,13 +405,13 @@ namespace vcpkg::Commands::CI
 
             xunitTestResults.push_collection(triplet.canonical_name());
 
-            Dependencies::PackageGraph pgraph(paths_port_file, status_db);
+            Dependencies::PackageGraph pgraph(provider, status_db);
 
             std::vector<PackageSpec> specs = PackageSpec::to_package_specs(all_ports, triplet);
             // Install the default features for every package
             auto all_feature_specs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
             auto split_specs =
-                find_unknown_ports_for_ci(paths, exclusions_set, paths_port_file, all_feature_specs, purge_tombstones);
+                find_unknown_ports_for_ci(paths, exclusions_set, provider, all_feature_specs, purge_tombstones);
             auto feature_specs = FullPackageSpec::to_feature_specs(split_specs->unknown);
 
             for (auto&& fspec : feature_specs)
@@ -458,7 +469,7 @@ namespace vcpkg::Commands::CI
 
             if (is_dry_run)
             {
-                Dependencies::print_plan(action_plan);
+                Dependencies::print_plan(action_plan, true, paths.ports);
             }
             else
             {
@@ -469,37 +480,47 @@ namespace vcpkg::Commands::CI
                 // Adding results for ports that were built or pulled from an archive
                 for (auto&& result : summary.results)
                 {
+                    auto& port_features = split_specs->features[result.spec];
                     split_specs->known.erase(result.spec);
-                    xunitTestResults.add_test_results(result.spec.to_string(), result.build_result.code, result.timing, split_specs->abi_tag_map.at(result.spec));
+                    xunitTestResults.add_test_results(result.spec.to_string(),
+                                                      result.build_result.code,
+                                                      result.timing,
+                                                      split_specs->abi_tag_map.at(result.spec),
+                                                      port_features);
                 }
 
                 // Adding results for ports that were not built because they have known states
                 for (auto&& port : split_specs->known)
                 {
-                    xunitTestResults.add_test_results(port.first.to_string(), port.second, Chrono::ElapsedTime{}, split_specs->abi_tag_map.at(port.first));
+                    auto& port_features = split_specs->features[port.first];
+                    xunitTestResults.add_test_results(port.first.to_string(),
+                                                      port.second,
+                                                      Chrono::ElapsedTime{},
+                                                      split_specs->abi_tag_map.at(port.first),
+                                                      port_features);
                 }
 
                 all_known_results.emplace_back(std::move(split_specs->known));
                 abi_tag_map.insert(split_specs->abi_tag_map.begin(), split_specs->abi_tag_map.end());
 
-                results.push_back({ triplet, std::move(summary)});
+                results.push_back({triplet, std::move(summary)});
 
-                xunitTestResults.collection_time( collection_time_elapsed );
+                xunitTestResults.collection_time(collection_time_elapsed);
             }
         }
         xunitTestResults.assembly_time(timer.elapsed());
 
         for (auto&& result : results)
         {
-            System::println("\nTriplet: %s", result.triplet);
-            System::println("Total elapsed time: %s", result.summary.total_elapsed_time);
+            System::print2("\nTriplet: ", result.triplet, "\n");
+            System::print2("Total elapsed time: ", result.summary.total_elapsed_time, "\n");
             result.summary.print();
         }
-
+        auto& fs = paths.get_filesystem();
         auto it_xunit = options.settings.find(OPTION_XUNIT);
         if (it_xunit != options.settings.end())
         {
-            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml());
+            fs.write_contents(fs::u8path(it_xunit->second), xunitTestResults.build_xml(), VCPKG_LINE_INFO);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

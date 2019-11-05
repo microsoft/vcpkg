@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF v1.0.0
-    SHA512 f567de9d6cd8bca0b34f1f48231a59c6698730c5b63f1d733de14fecf09991de74e4b3a99cc98ae7f62dcba8b2b7831d5e617fd32ca38b296b9073bc07fb2d92
+    REF v9.0.0
+    SHA512 c9ab8c459f4cdf2b740edd461eefa2972a068078999ab97efff4473f1fae4dd774d00ea56cb33bdf883f78eb8d8b73aa721d35dd77e016b047cf4c9dadfee72b
     HEAD_REF master
 )
 
@@ -12,14 +12,16 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DREPROC_BUILD_CXX_WRAPPER=ON
-        -DREPROC_INSTALL=ON
+        -DREPROC++=ON
+        -DREPROC_INSTALL_PKGCONFIG=OFF
 )
 
 vcpkg_install_cmake()
 
+file(GLOB REPROC_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/lib/cmake/reproc++/*)
+file(INSTALL ${REPROC_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc++)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/reproc++/reproc++-targets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc++)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/reproc)
-
 
 # Debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

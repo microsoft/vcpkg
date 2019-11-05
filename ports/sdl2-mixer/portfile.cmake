@@ -13,49 +13,34 @@ vcpkg_extract_source_archive_ex(
 )
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-set(USE_MP3 OFF)
-if("mpg123" IN_LIST FEATURES)
-    set(USE_MP3 ON)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+else()
+    set(LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
 endif()
 
-set(USE_FLAC OFF)
-if("libflac" IN_LIST FEATURES)
-    set(USE_FLAC ON)
-endif()
-
-set(USE_MOD OFF)
-if("libmodplug" IN_LIST FEATURES)
-    set(USE_MOD ON)
-endif()
-
-set(USE_OGGVORBIS OFF)
-if("libvorbis" IN_LIST FEATURES)
-    set(USE_OGGVORBIS ON)
-endif()
-
-set(USE_OPUS OFF)
-if("opusfile" IN_LIST FEATURES)
-    set(USE_OPUS ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    mpg123 SDL_MIXER_ENABLE_MP3
+    libflac SDL_MIXER_ENABLE_FLAC
+    libmodplug SDL_MIXER_ENABLE_MOD
+    libvorbis SDL_MIXER_ENABLE_OGGVORBIS
+    opusfile SDL_MIXER_ENABLE_OPUS
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSDL_MIXER_ENABLE_MP3=${USE_MP3}             # mpg123
-        -DSDL_MIXER_ENABLE_FLAC=${USE_FLAC}           # libflac
-        -DSDL_MIXER_ENABLE_MOD=${USE_MOD}             # libmodplug
-        -DSDL_MIXER_ENABLE_OGGVORBIS=${USE_OGGVORBIS} # libvorbis
-        -DSDL_MIXER_ENABLE_OPUS=${USE_OPUS}           # opusfile
+        ${FEATURE_OPTIONS}
+        -DLIBRARY_SUFFIX=${LIBRARY_SUFFIX}
     OPTIONS_DEBUG
         -DSDL_MIXER_SKIP_HEADERS=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/sdl2-mixer")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-mixer)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-mixer/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2-mixer/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

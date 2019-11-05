@@ -1,7 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtvirtualkeyboard 17f85982bb7d39784b5a85fba7758d3c032c158ca453c30255ec03e5e61dc8bbcbcbc58afe8f43bcf0297bb00d4e8606f553501bde68252d097d7bb32af9d24f)
-
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

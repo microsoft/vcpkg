@@ -1,5 +1,5 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtmacextras 0d307b85e09fd97f36c5ee333297ceda4c709f6dc995dba4e8b8c1a85bd95c83ed80ee641e13e05fe3b965060c7847ba1835b7e6d9099a03c8bf9f2c4bae1ded)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message(FATAL_ERROR "qt5-macextras only support OSX.")
+endif()
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

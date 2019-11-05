@@ -1,0 +1,14 @@
+diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
+index a03ef142e..2d06a2937 100644
+--- a/PDALConfig.cmake.in
++++ b/PDALConfig.cmake.in	
+@@ -15,6 +15,9 @@ foreach(_dir @PDAL_CONFIG_LIBRARY_DIRS@)
+   list(APPEND PDAL_LIBRARY_DIRS ${_foo})
+ endforeach(_dir)
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(GeoTIFF)
++find_dependency(CURL)
+ include("${CMAKE_CURRENT_LIST_DIR}/PDALTargets.cmake")
+ 
+ if (WIN32)

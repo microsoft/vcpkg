@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/wave
-    REF boost-1.69.0
-    SHA512 aeb8ba65a0fcc85aae27aa5bba45b2a7421c2e04b64bb03ece77b6c7fa0f2d9282a5e19c64506bcd906357375deb7a1e5711334c74859995b1d0e70014248609
+    REF boost-1.71.0
+    SHA512 9f3bdaa5f94e1bee1c83d6faaf0d48066525323d6d2c62dcbf528482f9323ffbdc5671079afae0d268f4aecd8a296952612c5d019ba16f8fb80a594d4c7c6585
     HEAD_REF master
 )
 

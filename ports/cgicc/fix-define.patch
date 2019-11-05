@@ -1,0 +1,22 @@
+diff --git a/cgicc/config.h.in b/cgicc/config.h.in
+index 6870cc2..ee7b5b4 100644
+--- a/cgicc/config.h.in
++++ b/cgicc/config.h.in
+@@ -76,7 +76,7 @@
+ #undef HAVE__BOOL
+ 
+ /* The host system cgicc was configured for */
+-#undef HOST
++#cmakedefine HOST "@HOST@"
+ 
+ /* Define to the sub-directory where libtool stores uninstalled libraries. */
+ #undef LT_OBJDIR
+@@ -106,7 +106,7 @@
+ #undef STDC_HEADERS
+ 
+ /* Version number of package */
+-#undef VERSION
++#cmakedefine VERSION "@VERSION@"
+ 
+ /* Define to `__inline__' or `__inline' if that's what the C compiler
+    calls it, or to nothing if 'inline' is not supported under any name.  */

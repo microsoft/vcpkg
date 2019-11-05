@@ -1,8 +1,10 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Cylix/cpp_redis
+    REPO cpp-redis/cpp_redis
     REF 4.3.1
     SHA512 abf372542c53f37f504b3211b840b100d07a8f4b2e7f5584cc7550ab16ed617838e2df79064374c7a409458d8567f4834686318ea3a40249c767e36c744c7a47
     HEAD_REF master
@@ -27,7 +29,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DMSVC_RUNTIME_LIBRARY_CONFIG=${MSVC_RUNTIME_LIBRARY_CONFIG}
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE
 )
 
 vcpkg_install_cmake()
@@ -52,10 +53,10 @@ if(FILES_TO_REMOVE)
     file(REMOVE_RECURSE ${FILES_TO_REMOVE})
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpp-redis RENAME copyright)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

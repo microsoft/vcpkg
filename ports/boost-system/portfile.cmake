@@ -2,11 +2,13 @@
 
 include(vcpkg_common_functions)
 
+vcpkg_buildpath_length_warning(37)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/system
-    REF boost-1.69.0
-    SHA512 64f49a8f2484e3a539a922d66ce05ece9d0ea214c3b1ddf66487ae4201d2a6050ef39da8b1f7dbdb48fbdbc04a1446df0f03cbe8fb85729fcf8b70f066c92053
+    REF boost-1.71.0
+    SHA512 9ffb4a160a87fed72f5e4e214fbbb2c02a5c3d4d1c14eb51b5c64f658d22b763af830d90b3e905ec5bcb9369a410bbe39b2948f6fc75c708266412d182ed2f23
     HEAD_REF master
 )
 

@@ -1,5 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtwebview 27e1904570678691e26831e87953e47d6b707bfe0504cde112ad6c8c18ea163eb83d90f8d4dbbf73873caee827e486691bb73e16a4c8b9e522bbeffbb68e9973)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

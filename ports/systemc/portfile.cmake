@@ -14,7 +14,6 @@ vcpkg_extract_source_archive_ex(
     REF ${SYSTEMC_VERSION}
     PATCHES
         install.patch
-        tlm_correct_dependency.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,16 +25,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SystemCLanguage TARGET_PATH share/systemclanguage)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/SystemCTLM TARGET_PATH share/systemctlm)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCLanguage TARGET_PATH share/SystemCLanguage)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SystemCTLM TARGET_PATH share/SystemCTLM)
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/systemc RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/sysc/packages/qt/time)
 
-# Post-build test for cmake libraries (disabled for now due to issues with vcpkg_test_cmake)
-#vcpkg_test_cmake(PACKAGE_NAME SystemCLanguage)
-#vcpkg_test_cmake(PACKAGE_NAME SystemCTLM)
+file(INSTALL ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/systemc RENAME copyright)

@@ -1,0 +1,26 @@
+diff --git a/CMake/abslConfig.cmake.in b/CMake/abslConfig.cmake.in
+index 60847fa..4641d44 100644
+--- a/CMake/abslConfig.cmake.in
++++ b/CMake/abslConfig.cmake.in
+@@ -4,4 +4,8 @@ include(FindThreads)
+ 
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++set_and_check(absl_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
++
+ include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+\ No newline at end of file
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e7587f7..3079534 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -132,6 +132,7 @@ if(ABSL_ENABLE_INSTALL)
+     CMake/abslConfig.cmake.in
+     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+     INSTALL_DESTINATION "${ABSL_INSTALL_CONFIGDIR}"
++    PATH_VARS CMAKE_INSTALL_INCLUDEDIR
+   )
+   install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+     DESTINATION "${ABSL_INSTALL_CONFIGDIR}"

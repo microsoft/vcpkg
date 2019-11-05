@@ -92,33 +92,33 @@ extern "C" {
 #else
 
   /* The following typedefs are subtituted when using Unixish configure */
-  typedef @INT8_T@   magick_int8_t;
-  typedef @UINT8_T@  magick_uint8_t;
+  typedef signed char   magick_int8_t;
+  typedef unsigned char  magick_uint8_t;
 
-  typedef @INT16_T@  magick_int16_t;
-  typedef @UINT16_T@ magick_uint16_t;
+  typedef signed short  magick_int16_t;
+  typedef unsigned short magick_uint16_t;
 
-  typedef @INT32_T@  magick_int32_t;
-#  define MAGICK_INT32_F @INT32_F@
-  typedef @UINT32_T@ magick_uint32_t;
-#  define MAGICK_UINT32_F @UINT32_F@
+  typedef signed int  magick_int32_t;
+#  define MAGICK_INT32_F ""
+  typedef unsigned int magick_uint32_t;
+#  define MAGICK_UINT32_F ""
 
-  typedef @INT64_T@  magick_int64_t;
-#  define MAGICK_INT64_F @INT64_F@
-  typedef @UINT64_T@ magick_uint64_t;
-#  define MAGICK_UINT64_F @UINT64_F@
+  typedef signed long  magick_int64_t;
+#  define MAGICK_INT64_F "l"
+  typedef unsigned long magick_uint64_t;
+#  define MAGICK_UINT64_F "l"
 
-  typedef @UINTMAX_T@ magick_uintmax_t;
-#  define MAGICK_UINTMAX_F @UINTMAX_F@
+  typedef unsigned long magick_uintmax_t;
+#  define MAGICK_UINTMAX_F "l"
 
-  typedef @UINTPTR_T@ magick_uintptr_t;
-#  define MAGICK_UINTPTR_F @UINTPTR_F@
+  typedef unsigned long magick_uintptr_t;
+#  define MAGICK_UINTPTR_F "l"
 
-#  define MAGICK_SIZE_T_F @MAGICK_SIZE_T_F@
-#  define MAGICK_SIZE_T @MAGICK_SIZE_T@
+#  define MAGICK_SIZE_T_F "l"
+#  define MAGICK_SIZE_T unsigned long
 
-#  define MAGICK_SSIZE_T_F @MAGICK_SSIZE_T_F@
-#  define MAGICK_SSIZE_T @MAGICK_SSIZE_T@
+#  define MAGICK_SSIZE_T_F "l"
+#  define MAGICK_SSIZE_T signed long
 
 #endif
 

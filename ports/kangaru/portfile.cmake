@@ -3,23 +3,24 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gracicot/kangaru
-    REF v4.1.2
-    SHA512 44ca94da38c80aa8495bb58cc26db0591d5e1b32b52c3ff242d95598856c5e84f25d7e7184c1e15e44d9a89987856740548fb070ad393cbe51da4bb79aa216d2
+    REF v4.2.1
+    SHA512 2902624ee4a07ccb3e5d0e087a33df922d919c71a728827857bc429c19686340636a1c0d358097f474f65410fda052a86b7560da1789bf065d75f878d5ec9f37
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DKANGARU_EXPORT=Off -DKANGARU_TEST=Off
+    PREFER_NINJA
+    OPTIONS -DKANGARU_EXPORT=Off -DKANGARU_TEST=Off -DKANGARU_REVERSE_DESTRUCTION=On
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/kangaru")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/kangaru)
 
 file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/lib
-	${CURRENT_PACKAGES_DIR}/debug
+    ${CURRENT_PACKAGES_DIR}/lib
+    ${CURRENT_PACKAGES_DIR}/debug
 )
 
 

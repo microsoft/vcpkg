@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO daniele77/cli
-    REF f74c6eea9616e0a62f5b3be4e1d07ad432232e90
-    SHA512 9a5e25175844a7e9eacb05056c2e56e21be82efed6991d9c0e7d33e3a76f83d815455ec6e79d045ec15453354a1c50b0f91feef2766ae323931b4d4eb6caf1cf
+    REF v1.1.1
+    SHA512 c5046450af8818e23fc5187e66a963cfa981042a99b66c52bfe6119bf126348cd38c50472bc267197e4175ee056f8cf639b09846675450d67c06c1c64f64acba 
     HEAD_REF master
 )
 
@@ -14,7 +14,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cli TARGET_PATH share/cli)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cli)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cli RENAME copyright)

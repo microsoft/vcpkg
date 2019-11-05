@@ -5,14 +5,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO owt5008137/libcopp
-    REF 1.1.0
-    SHA512 27b444d158281786154830c6e216e701ba0301af1d7a08873b33e27ce3d2db6ddb4753239878633f4c2aed9f759b46f961408a2eb7b50b5d445c3531c1fa9546
+    REF 1.2.1
+    SHA512 bd3525b7cafb261b395ab767d30654ee7c2920f2b8312ed7887b004e764b8dd8dece5f34a5f7724d16c4a56a281ea9eb3107eff54c947160fbf9f12b76b34485
     HEAD_REF v2
 )
 
 # Use libcopp's own build process, skipping examples and tests
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     # PREFER_NINJA # Disabled because Ninja does not invoke masm correctly for this project
 )
 vcpkg_install_cmake()

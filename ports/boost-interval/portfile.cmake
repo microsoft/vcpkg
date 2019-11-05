@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/interval
-    REF boost-1.69.0
-    SHA512 203e19a3c87fa50b22fe0c194f7774fc7dcf7ed7cd21add4bad8cdd1251783a7b173e1100cf33397d69aa3636a4dc4f2341f4a7dd8ac8c7c7f0781e9d48e1001
+    REF boost-1.71.0
+    SHA512 95863f6851114e878b59537ea8f5314064436899b90a39c3357521faf79181ca0f3a833c7a8d3fc873b804e5b9c16221edbff94716b3d5287af831aed40b97d4
     HEAD_REF master
 )
 

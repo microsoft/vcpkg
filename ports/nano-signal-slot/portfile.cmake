@@ -1,13 +1,5 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(
-	ONLY_STATIC_LIBRARY
-)
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds not supported yet.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NoAvailableAlias/nano-signal-slot

@@ -1,5 +1,6 @@
 Source: capstone
 Version: 4.0.1-120373dc
+Homepage: https://github.com/aquynh/capstone
 Description: Multi-architecture disassembly framework
 
 Feature: arm

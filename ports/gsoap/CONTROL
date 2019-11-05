@@ -1,4 +1,5 @@
 Source: gsoap
-Version: 2.8.82-2
+Version: 2.8.93-2
 Build-Depends: curl
+Homepage: https://sourceforge.net/projects/gsoap2/
 Description: The gSOAP toolkit is a C and C++ software development toolkit for SOAP and REST XML Web services and generic C/C++ XML data bindings.

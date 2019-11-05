@@ -1,8 +1,11 @@
+include(vcpkg_common_functions)
+
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     message(FATAL_ERROR "Architecture not supported")
 endif()
 
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
@@ -14,6 +17,7 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -26,14 +30,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/auto-define-static-macro.patch
-    )
-endif()
+file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
+string(REPLACE "/* *know* they are going to link with the static library. */"
+"/* *know* they are going to link with the static library. */
+
+#define FFI_BUILDING
+
+" FFI_H "${FFI_H}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libffi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libffi/copyright)

@@ -28,9 +28,14 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "
     configure_file(src/include/port/darwin.h include/pg_config_os.h COPYONLY)
     configure_file(src/backend/port/dynloader/darwin.h include/dynloader.h COPYONLY)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+        set(DEFINE_PG_INT128_TYPE "#define PG_INT128_TYPE __int128")
+    else()
+        set(DEFINE_PG_INT128_TYPE "#undef PG_INT128_TYPE")
+    endif()
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/pg_config_ext.h" "#include <stdint.h>\n#define PG_INT64_TYPE int64_t")
     configure_file(src/include/port/linux.h include/pg_config_os.h COPYONLY)
-    configure_file("${PORT_DIR}/pg_config.linux.h" include/pg_config.h COPYONLY)
+    configure_file("${PORT_DIR}/pg_config.linux.h" include/pg_config.h)
     configure_file(src/backend/port/dynloader/linux.h include/dynloader.h COPYONLY)
 else()
     message(FATAL_ERROR "Unknown system: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
@@ -66,6 +71,9 @@ if(WIN32)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     list(APPEND pg_port_src
         src/port/strlcpy.c
+        src/port/inet_aton.c
+        src/port/inet_net_ntop.c
+        src/port/getpeereid.c
     )
 endif()
 
@@ -130,10 +138,15 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(libpq ${pg_port_src} ${pg_backend_src} ${pg_libpq_src})
-target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -D_CRT_SECURE_NO_WARNINGS)
+
+target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -DHAVE_CRYPTO_LOCK -D_CRT_SECURE_NO_WARNINGS)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_definitions(libpq PRIVATE -D_GNU_SOURCE)
+endif()
+
 target_link_libraries(libpq PRIVATE OpenSSL::SSL)
 if(WIN32)
-    target_link_libraries(libpq PRIVATE ws2_32 secur32 advapi32 shell32)
+    target_link_libraries(libpq PRIVATE ws2_32 secur32 advapi32 shell32 crypt32)
 endif()
 target_include_directories(libpq PRIVATE src/include src/port ${CMAKE_CURRENT_BINARY_DIR}/include)
 set_target_properties(libpq PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)

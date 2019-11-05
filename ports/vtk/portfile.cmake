@@ -8,36 +8,13 @@ set(VTK_SHORT_VERSION "8.2")
 set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # =============================================================================
 # Options:
-
-if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON )
-else()
-    set(VTK_WITH_QT                      OFF )
-endif()
-
-if ("mpi" IN_LIST FEATURES)
-    set(VTK_WITH_MPI                     ON )
-else()
-    set(VTK_WITH_MPI                     OFF )
-endif()
-
-if ("python" IN_LIST FEATURES)
-    set(VTK_WITH_PYTHON                  ON)
-else()
-    set(VTK_WITH_PYTHON                  OFF)
-endif()
-
-if("openvr" IN_LIST FEATURES)
-    set(VTK_WITH_OPENVR                  ON)
-else()
-    set(VTK_WITH_OPENVR                  OFF)
-endif()
-
-if("libharu" IN_LIST FEATURES)
-    set(VTK_WITH_LIBHARU                  ON)
-else()
-    set(VTK_WITH_LIBHARU                  OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    qt     VTK_WITH_QT
+    mpi    VTK_Group_MPI
+    python VTK_WITH_PYTHON
+    openvr Module_vtkRenderingOpenVR
+    atlmfc Module_vtkGUISupportMFC 
+)
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
@@ -46,14 +23,19 @@ set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`
 # Clone & patch
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "Kitware/VTK"
+    REPO Kitware/VTK
     REF "v${VTK_LONG_VERSION}"
     SHA512 fd1d9c2872baa6eca7f8105b0057b56ec554e9d5eaf25985302e7fc032bdce72255d79e3f5f16ca50504151bda49cb3a148272ba32e0f410b4bdb70959b8f3f4
-    HEAD_REF "master"
+    HEAD_REF master
     PATCHES
         fix-find-lz4.patch
         fix_ogg_linkage.patch
+        fix-pugixml-link.patch
+        hdf5_static.patch
+        fix-find-lzma.patch
+        fix-proj4.patch
 )
+
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
 # since they do not detect the debug libraries correctly.
 # The default files distributed with CMake (>= 3.9) should be superior by all means.
@@ -61,6 +43,7 @@ vcpkg_from_github(
 # so we provide an own one.
 file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
 
 # =============================================================================
@@ -73,28 +56,11 @@ if(VTK_WITH_QT)
     )
 endif()
 
-if(VTK_WITH_MPI)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_Group_MPI=ON
-    )
-endif()
-
 if(VTK_WITH_PYTHON)
+    vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
-    )
-endif()
-
-if(VTK_WITH_OPENVR)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DModule_vtkRenderingOpenVR=ON
-    )
-endif()
-
-if(VTK_WITH_LIBHARU)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_USE_SYSTEM_LIBHARU=ON
     )
 endif()
 
@@ -112,56 +78,43 @@ if(VTK_WITH_ALL_MODULES)
         # -DVTK_USE_SYSTEM_XDMF3=ON
         # -DVTK_USE_SYSTEM_ZFP=ON
         # -DVTK_USE_SYSTEM_ZOPE=ON
+        # -DVTK_USE_SYSTEM_LIBPROJ=ON
     )
 endif()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    set(Module_vtkGUISupportMFC ON)
-else()
-    set(Module_vtkGUISupportMFC OFF)
-endif()
+set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
 
 # =============================================================================
 # Configure & Install
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
-    set(HDF5_USE_STATIC_LIBRARIES ON)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
-        -DHAVE_SNPRINTF=ON
-        -DVTK_Group_Imaging=ON
-        -DVTK_Group_Views=ON
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DVTK_USE_SYSTEM_EXPAT=ON
-        -DVTK_USE_SYSTEM_FREETYPE=ON
-        # -DVTK_USE_SYSTEM_GL2PS=ON
-        -DVTK_USE_SYSTEM_JPEG=ON
-        -DVTK_USE_SYSTEM_GLEW=ON
-        -DVTK_USE_SYSTEM_HDF5=ON
-        -DVTK_USE_SYSTEM_JSONCPP=ON
-        -DVTK_USE_SYSTEM_LIBPROJ=ON
-        -DVTK_USE_SYSTEM_LIBXML2=ON
-        -DVTK_USE_SYSTEM_LZ4=ON
-        # -DVTK_USE_SYSTEM_NETCDF=ON
-        # -DVTK_USE_SYSTEM_NETCDFCPP=ON
-        -DVTK_USE_SYSTEM_OGG=ON
-        -DVTK_USE_SYSTEM_THEORA=ON
-        -DVTK_USE_SYSTEM_PNG=ON
-        -DVTK_USE_SYSTEM_TIFF=ON
-        -DVTK_USE_SYSTEM_ZLIB=ON
         -DVTK_INSTALL_INCLUDE_DIR=include
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
-        -DModule_vtkGUISupportMFC=${Module_vtkGUISupportMFC}
+
+        # We set all libraries to "system" and explicitly list the ones that should use embedded copies
+        -DVTK_USE_SYSTEM_LIBRARIES=ON
+        -DVTK_USE_SYSTEM_GL2PS=OFF
+
+        # Select modules / groups to install
+        -DVTK_Group_Imaging=ON
+        -DVTK_Group_Views=ON
+        -DPYTHON_EXECUTABLE=${PYTHON3}
+
         ${ADDITIONAL_OPTIONS}
+    OPTIONS_RELEASE
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_REL}
+    OPTIONS_DEBUG
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_DBG}
 )
 
 vcpkg_install_cmake()
@@ -286,7 +239,7 @@ if(VTK_WITH_ALL_MODULES)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

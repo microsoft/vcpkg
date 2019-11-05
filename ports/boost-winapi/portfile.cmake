@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/winapi
-    REF boost-1.69.0
-    SHA512 e1ed458c0ce6d5daa6e9fe577a0010e05e5bc290e485b4f2183e5f61b5ebb07983eab9f5477b3195049f232a699074a1a58f719b5d5b8c0f550ab9e3abae6764
+    REF boost-1.71.0
+    SHA512 105b412f033b94bc19baba4415d9954cba7dab28b0bea8f416c4ca8485db0ef5f48f846557ad691019f16039e3051a871d4794ab2822f53ab249d3592565a6b2
     HEAD_REF master
 )
 

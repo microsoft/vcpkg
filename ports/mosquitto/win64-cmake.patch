@@ -1,22 +1,9 @@
-diff --git a/config.h b/config.h
-index 906fad4..d5b2a72 100644
---- a/config.h
-+++ b/config.h
-@@ -15,7 +15,7 @@
- #  define EPROTO ECONNABORTED
- #endif
- 
--#ifdef WIN32
-+#ifdef WIN32 || WIN64
- #  ifndef strcasecmp
- #    define strcasecmp strcmpi
- #  endif
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index d537e77..272b60a 100644
---- a/lib/CMakeLists.txt
-+++ b/lib/CMakeLists.txt
-@@ -6,12 +6,8 @@ option(WITH_THREADING "Include client library threading support?" ON)
- if (${WITH_THREADING} STREQUAL ON)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e58d072..e582a25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,12 +54,7 @@ option(WITH_THREADING "Include client library threading support?" ON)
+ if (WITH_THREADING)
  	add_definitions("-DWITH_THREADING")
  	if (WIN32)
 -		if (CMAKE_CL_64)
@@ -25,26 +12,20 @@ index d537e77..272b60a 100644
 -			set (PTHREAD_LIBRARIES C:\\pthreads\\Pre-built.2\\lib\\x86\\pthreadVC2.lib)
 -		endif (CMAKE_CL_64)
 -		set (PTHREAD_INCLUDE_DIR C:\\pthreads\\Pre-built.2\\include)
-+		find_library(PTHREAD_LIBRARIES NAMES pthreadsVC2)
-+		find_path(PTHREAD_INCLUDE_DIR pthread.h)
++		find_package(pthread REQUIRED)
  	else (WIN32)
  		find_library(LIBPTHREAD pthread)
  		if (LIBPTHREAD)
-diff --git a/lib/net_mosq.h b/lib/net_mosq.h
-index b5d8549..be60659 100644
---- a/lib/net_mosq.h
-+++ b/lib/net_mosq.h
-@@ -20,7 +20,12 @@
- #include <unistd.h>
- #else
- #include <winsock2.h>
-+#if defined(_MSC_VER) && _MSC_VER > 1900
-+#undef ssize_t
- typedef int ssize_t;
-+#else
-+typedef int ssize_t;
-+#endif
+diff --git a/config.h b/config.h
+index b7a7616..bceb92a 100644
+--- a/config.h
++++ b/config.h
+@@ -27,7 +27,7 @@
+ #  define EPROTO ECONNABORTED
  #endif
  
- #include "mosquitto_internal.h"
-
+-#ifdef WIN32
++#if defined(WIN32) || defined(WIN64)
+ #  ifndef strcasecmp
+ #    define strcasecmp strcmpi
+ #  endif

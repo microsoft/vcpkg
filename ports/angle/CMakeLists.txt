@@ -6,11 +6,6 @@ if(WIN32 AND NOT WINDOWS_STORE)
 else()
     set(WINDOWS_DESKTOP 0)
 endif()
-if (WINDOWS_DESKTOP OR WINDOWS_STORE)
-    set(WINDOWS_ANY 1)
-else()
-    set(WINDOWS_ANY 0)
-endif()
 
 if(UNIX AND NOT APPLE)
     set(LINUX 1)
@@ -18,7 +13,7 @@ else()
     set(LINUX 0)
 endif()
 
-if(WINDOWS_ANY)
+if(MSVC)
     add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive)
 else()
     set(CMAKE_CXX_STANDARD 17)
@@ -35,6 +30,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 add_definitions(
     -D_CRT_SECURE_NO_DEPRECATE
     -D_SCL_SECURE_NO_WARNINGS
+    -DGL_SILENCE_DEPRECATION
     -D_HAS_EXCEPTIONS=0
     -DNOMINMAX
     -DANGLE_STANDALONE_BUILD
@@ -46,7 +42,7 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
 # angle::common
-if(WINDOWS_ANY)
+if(WIN32)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
@@ -54,18 +50,18 @@ elseif(APPLE)
     set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_win")
 endif()
 file(GLOB ANGLE_COMMON_SOURCES 
-	"src/common/*.h" 
-	"src/common/*.inl" 
-	"src/common/*.cpp" 
-	"src/common/third_party/base/anglebase/*.h" 
-	"src/common/third_party/base/anglebase/*.cc" 
-	"src/common/third_party/base/anglebase/containers/*.h" 
-	"src/common/third_party/base/anglebase/numerics/*.h" 
-	"src/common/third_party/base/anglebase/numerics/*.cc" 
-	"src/common/third_party/xxhash/*.h" 
-	"src/common/third_party/xxhash/*.c" 
-	"src/common/third_party/smhasher/src/*.h" 
-	"src/common/third_party/smhasher/src/*.cpp")
+    "src/common/*.h"
+    "src/common/*.inl"
+    "src/common/*.cpp"
+    "src/common/third_party/base/anglebase/*.h"
+    "src/common/third_party/base/anglebase/*.cc"
+    "src/common/third_party/base/anglebase/containers/*.h"
+    "src/common/third_party/base/anglebase/numerics/*.h"
+    "src/common/third_party/base/anglebase/numerics/*.cc"
+    "src/common/third_party/xxhash/*.h"
+    "src/common/third_party/xxhash/*.c"
+    "src/common/third_party/smhasher/src/*.h"
+    "src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
@@ -152,7 +148,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
 endif()
 
 # D3D Renderers
-if(WINDOWS_ANY)
+if(WIN32)
     ## All D3D Sources
     file(GLOB_RECURSE LIBANGLE_D3D_SOURCES
         "src/libANGLE/renderer/d3d/*.cpp"
@@ -196,13 +192,43 @@ if(WINDOWS_ANY)
     add_library(angle::renderer::d3d ALIAS angle_renderer_d3d)
 endif()
 
+## angle::gpu_info_util
+file(GLOB ANGLE_GPU_INFO_UTIL_SOURCES
+    "src/gpu_info_util/SystemInfo.h"
+    "src/gpu_info_util/SystemInfo_internal.h"
+    "src/gpu_info_util/SystemInfo.cpp"
+)
+add_library(angle_gpu_info_util STATIC ${ANGLE_GPU_INFO_UTIL_SOURCES})
+if(WIN32)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
+    target_link_libraries(angle_gpu_info_util PRIVATE setupapi.lib dxgi.lib)
+elseif(APPLE)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_mac.mm")
+	find_library(IOKit IOKit)
+	find_library(CoreFoundation CoreFoundation)
+	find_library(CoreGraphics CoreGraphics)
+	target_link_libraries(angle_gpu_info_util PRIVATE ${IOKit} ${CoreFoundation} ${CoreGraphics})
+elseif(LINUX)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_linux.cpp" "src/gpu_info_util/SystemInfo_x11.cpp")
+    target_compile_definitions(angle_gpu_info_util PRIVATE GPU_INFO_USE_X11)
+    target_link_libraries(angle_gpu_info_util PRIVATE X11 Xi Xext)
+elseif(ANDROID)
+    target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_android.cpp")
+endif()
+target_link_libraries(angle_gpu_info_util PRIVATE angle::common)
+add_library(angle::gpu_info_util ALIAS angle_gpu_info_util)
+
 ## Core libANGLE library
-if(WINDOWS_ANY)
+if(WIN32)
     set(LIBANGLE_SOURCES_PLATFORM
         "src/third_party/systeminfo/SystemInfo.cpp"
     )
+elseif(APPLE)
+    file(GLOB LIBANGLE_SOURCES_PLATFORM
+         "src/libANGLE/renderer/*.mm"
+    )
 else()
-    set(LIBANGLE_SOURCES_PLATFORM )
+    set(LIBANGLE_SOURCES_PLATFORM)
 endif()
 
 file(GLOB LIBANGLE_SOURCES
@@ -257,6 +283,7 @@ add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
 target_link_libraries(libANGLE PRIVATE
     angle::common
     angle::image_util
+    angle::gpu_info_util
     angle::translator
     angle::preprocessor
     ${LIBANGLE_RENDERER_PLATFORM}
@@ -272,7 +299,35 @@ add_library(angle::libANGLE ALIAS libANGLE)
 
 ##########
 # libGLESv2
-file(GLOB LIBGLESV2_SOURCES "src/libGLESv2/*.h" "src/libGLESv2/*.cpp" "src/libGLESv2/libGLESv2_autogen.def")
+# Modified according to the file src/libGLESv2.gni
+list(APPEND LIBGLESV2_SOURCES
+  "src/common/angleutils.h"
+  "src/common/debug.h"
+  "src/libANGLE/entry_points_enum_autogen.h"
+  "src/libANGLE/entry_points_utils.h"
+  "src/libGLESv2/entry_points_egl.cpp"
+  "src/libGLESv2/entry_points_egl.h"
+  "src/libGLESv2/entry_points_egl_ext.cpp"
+  "src/libGLESv2/entry_points_egl_ext.h"
+  "src/libGLESv2/entry_points_gles_1_0_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_1_0_autogen.h"
+  "src/libGLESv2/entry_points_gles_2_0_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_2_0_autogen.h"
+  "src/libGLESv2/entry_points_gles_3_0_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_3_0_autogen.h"
+  "src/libGLESv2/entry_points_gles_3_1_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_3_1_autogen.h"
+  "src/libGLESv2/entry_points_gles_ext_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_ext_autogen.h"
+  "src/libGLESv2/global_state.cpp"
+  "src/libGLESv2/global_state.h"
+  "src/libGLESv2/libGLESv2_autogen.cpp"
+  "src/libGLESv2/libGLESv2.rc"
+  "src/libGLESv2/proc_table_egl.h"
+  "src/libGLESv2/proc_table_egl_autogen.cpp"
+  "src/libGLESv2/resource.h"
+  "src/libGLESv2/libGLESv2_autogen.def"
+)
 add_library(libGLESv2 ${LIBGLESV2_SOURCES})
 target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
 target_compile_definitions(libGLESv2
@@ -296,7 +351,7 @@ add_library(libEGL
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>")
-target_include_directories(libEGL PUBLIC "${CMAKE_CURRENT_LIST_DIR}/include")
+target_include_directories(libEGL PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 
 
 SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
@@ -309,7 +364,7 @@ install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
     ARCHIVE DESTINATION lib
 )
 
-#install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(
@@ -322,4 +377,3 @@ if(NOT DISABLE_INSTALL_HEADERS)
         PATTERN "export.h" EXCLUDE
     )
 endif()
-
