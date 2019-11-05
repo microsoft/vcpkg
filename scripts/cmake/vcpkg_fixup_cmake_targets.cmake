@@ -30,7 +30,6 @@ function(vcpkg_fixup_cmake_targets)
         set(_vfct_TARGET_PATH share/${PORT})
     endif()
 
-
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(EXECUTABLE_SUFFIX "\\.exe")
     else()
