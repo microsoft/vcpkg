@@ -1,46 +1,30 @@
-diff --git a/cmake/WtFindSsl.txt b/cmake/WtFindSsl.txt
-index c5f7bbc8..6e2c2f4d 100644
---- a/cmake/WtFindSsl.txt
-+++ b/cmake/WtFindSsl.txt
-@@ -121,6 +121,16 @@ ELSEIF(APPLE)
-       /usr/local/lib
-     NO_DEFAULT_PATH
-   )
-+  FIND_LIBRARY(CRYPTO_LIB
-+    NAMES
-+      crypto
-+    PATHS
-+      ${SSL_PREFIX}/lib
-+      ${SSL_PREFIX}/lib/VC
-+      /usr/lib
-+      /usr/local/lib
-+    NO_DEFAULT_PATH
-+  )
- ELSE (WIN32)
-   FIND_LIBRARY(SSL_LIB
-     NAMES
-@@ -131,6 +141,15 @@ ELSE (WIN32)
-       /usr/lib
-       /usr/local/lib
-   )
-+  FIND_LIBRARY(CRYPTO_LIB
-+    NAMES
-+      crypto
-+    PATHS
-+      ${SSL_PREFIX}/lib
-+      ${SSL_PREFIX}/lib/VC
-+      /usr/lib
-+      /usr/local/lib
-+  )
- ENDIF (WIN32)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bd3b506..560ffb2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -546,6 +546,12 @@ IF(ENABLE_HARU AND HARU_FOUND)
+   SET(WT_HAS_WPDFIMAGE true)
+ ENDIF(ENABLE_HARU AND HARU_FOUND)
  
- IF(SSL_LIB
-@@ -144,7 +163,7 @@ IF(SSL_LIB
-     ENDIF(SSL_TOO_LIB)
-   ELSE(WIN32)
-     SET(SSL_FOUND true)
--    SET(SSL_LIBRARIES ${SSL_LIB} -lcrypto)
-+    SET(SSL_LIBRARIES ${SSL_LIB} ${CRYPTO_LIB})
-   ENDIF(WIN32)
- ENDIF(SSL_LIB
-     AND SSL_INCLUDE_DIRS)
++if (WIN32)
++    add_definitions(-DWT_WIN32)
++endif()
++find_package(OpenSSL REQUIRED)
++set(OPENSSL_FOUND OpenSSL_FOUND)
++set(OPENSSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
+ IF(ENABLE_SSL AND OPENSSL_FOUND)
+   SET(HAVE_SSL ON)
+   SET(WT_WITH_SSL true)
+diff --git a/src/isapi/IsapiRequest.h b/src/isapi/IsapiRequest.h
+index 6c788e2..3f8d213 100644
+--- a/src/isapi/IsapiRequest.h
++++ b/src/isapi/IsapiRequest.h
+@@ -1,5 +1,8 @@
+ #include "WebRequest.h"
+ #include <sstream>
++#ifdef _WIN32
++#include <winsock2.h>
++#endif
+ #include <httpext.h>
+ 
+ namespace Wt {
