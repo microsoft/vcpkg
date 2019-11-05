@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e78894..62292d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ PROJECT(hiredis VERSION "${VERSION}")
+ 
+ SET(ENABLE_EXAMPLES OFF CACHE BOOL "Enable building hiredis examples")
+ 
+-ADD_LIBRARY(hiredis SHARED
++ADD_LIBRARY(hiredis
+     async.c
+     dict.c
+     hiredis.c
+@@ -36,6 +36,8 @@ SET_TARGET_PROPERTIES(hiredis
+     VERSION "${HIREDIS_SONAME}")
+ IF(WIN32 OR MINGW)
+     TARGET_LINK_LIBRARIES(hiredis PRIVATE ws2_32)
++    INSTALL(FILES win32.h
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hiredis) 
+ ENDIF()
+ TARGET_INCLUDE_DIRECTORIES(hiredis PUBLIC .)
+ 
