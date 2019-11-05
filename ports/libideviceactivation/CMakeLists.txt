@@ -33,7 +33,7 @@ configure_file(
 )
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/libideviceactivation-1.0.pc
-    DESTINATION lib/libideviceactivation
+    DESTINATION lib/pkgconfig
 )
 
 install(FILES ${IDVCACTV_PUBLIC_HDR} DESTINATION include)

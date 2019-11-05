@@ -42,7 +42,7 @@ configure_file(
 )
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/libimobiledevice-1.0.pc
-    DESTINATION lib/libimobiledevice
+    DESTINATION lib/pkgconfig
 )
 
 install(FILES ${IMOBDEV_PUBLIC_HDR} DESTINATION include)
