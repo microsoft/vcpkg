@@ -115,6 +115,12 @@ function(vcpkg_configure_make)
     set(WIN_TARGET_COMPILER )
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     set(ENV{LD_LIBRARY_PATH} "${CURRENT_INSTALLED_DIR}/lib")
+    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/tools/gettext")
+    find_program(GETTEXT_MSGFMT "msgfmt")
+    if(GETTEXT_MSGFMT)
+        message(STATUS "Gettext msgfmt found: ${GETTEXT_MSGFMT}")
+    endif()
+
 
     # Detect compiler
     if (GENERATOR STREQUAL "nmake")
