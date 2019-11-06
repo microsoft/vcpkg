@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-tools-path.patch
+        002-find-basis-universal.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
