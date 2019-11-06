@@ -15,7 +15,7 @@ index c07b827..ffe773b 100644
 +    find_package(BZip2 REQUIRED)
 +    find_package(lz4 CONFIG REQUIRED)
 +    find_package(LibXml2 REQUIRED)
-+    find_package(LZO REQUIRED)
++    find_package(lzo REQUIRED)
 +    find_package(OpenSSL REQUIRED)
  endif()
  
