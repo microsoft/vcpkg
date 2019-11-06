@@ -1,0 +1,22 @@
+diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
+index 79f7514..79bc033 100644
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -215,7 +215,7 @@ if(NOT DEFINED OGRE_CMAKE_DIR)
+     set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
+   endif()
+ endif()
+-configure_package_config_file(${OGRE_TEMPLATES_DIR}/OGREConfig.cmake.in ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
++configure_package_config_file(${OGRE_TEMPLATES_DIR}/OGREConfig.cmake.in ${PROJECT_BINARY_DIR}/cmake/ogre-nextConfig.cmake
+     INSTALL_DESTINATION ${OGRE_CMAKE_DIR}
+     PATH_VARS CMAKE_INSTALL_PREFIX)
+ write_basic_package_version_file(
+@@ -223,7 +223,7 @@ write_basic_package_version_file(
+     VERSION ${OGRE_VERSION} 
+     COMPATIBILITY SameMajorVersion)
+ install(FILES
+-   ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
++   ${PROJECT_BINARY_DIR}/cmake/ogre-nextConfig.cmake
+    ${PROJECT_BINARY_DIR}/cmake/OGREConfigVersion.cmake
+    DESTINATION ${OGRE_CMAKE_DIR}
+ )
