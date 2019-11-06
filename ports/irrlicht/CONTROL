@@ -1,5 +1,6 @@
 Source: irrlicht
-Version: 1.8.4-1
+Version: 1.8.4-4
+Homepage: http://irrlicht.sourceforge.net
 Description: Irrlicht lightning fast 3d engine
 Build-Depends: zlib, libpng, bzip2, libjpeg-turbo
 
