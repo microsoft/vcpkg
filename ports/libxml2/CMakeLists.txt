@@ -8,7 +8,11 @@ set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 find_package(ZLIB REQUIRED)
 find_package(LibLZMA REQUIRED)
-find_package(unofficial-iconv REQUIRED)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    find_package(unofficial-iconv REQUIRED)
+else()
+    find_package(Iconv REQUIRED)
+endif()
 
 file(GLOB SOURCES *.c)
 list(FILTER SOURCES EXCLUDE REGEX "/(run|test|trio)[^/]*$")
@@ -108,11 +112,14 @@ if(INSTALL_HEADERS)
     set_target_properties(libxml2 PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 endif()
 target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBLZMA_INCLUDE_DIRS})
-target_link_libraries(libxml2 PRIVATE
-    unofficial::iconv::libcharset unofficial::iconv::libiconv
-    ZLIB::ZLIB
-    ${LIBLZMA_LIBRARIES}
-)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    target_link_libraries(libxml2 PRIVATE unofficial::iconv::libcharset unofficial::iconv::libiconv)
+else()
+    target_include_directories(libxml2 PRIVATE ${Iconv_INCLUDE_DIRS})
+    target_link_libraries(libxml2 PRIVATE ${Iconv_LIBRARIES})
+endif()
+target_link_libraries(libxml2 PRIVATE ZLIB::ZLIB ${LIBLZMA_LIBRARIES})
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     target_include_directories(libxml2 PRIVATE win32/vc10)
     target_link_libraries(libxml2 PRIVATE

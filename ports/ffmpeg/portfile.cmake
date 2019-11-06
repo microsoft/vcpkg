@@ -1,4 +1,5 @@
-include(vcpkg_common_functions)
+# this port might require a staging area to be proper installed. In fact, it is tightly coupled to opencv and the build order should be
+# opencv[core] -> ffmpeg[opencv] -> opencv[ffmpeg]
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

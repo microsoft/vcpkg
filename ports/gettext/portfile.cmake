@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-Fix-macro-definitions.patch
         0002-Fix-uwp-build.patch
+        0003-Fix-osx.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -28,10 +29,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
         PREFER_NINJA
-        OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+        OPTIONS_DEBUG
+            -DDISABLE_INSTALL_HEADERS=ON
     )
 
     vcpkg_install_cmake()
+    vcpkg_copy_pdbs()
 
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-gettext TARGET_PATH share/unofficial-gettext)
 else()
@@ -49,9 +52,9 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
-        FORCE_GCC
         OPTIONS
             ${GETTEXT_EXTRA_OPTS}
+            --with-libiconv-prefix=${CURRENT_INSTALLED_DIR}
     )
 
     vcpkg_build_make(
@@ -59,9 +62,22 @@ else()
         ENABLE_INSTALL
     )
 
+    if (EXISTS ${CURRENT_PACKAGES_DIR}/lib/GNU.Gettext.dll)
+        if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/bin)
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+        endif()
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/GNU.Gettext.dll ${CURRENT_PACKAGES_DIR}/bin/GNU.Gettext.dll)
+    endif()
+    if (EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/GNU.Gettext.dll)
+        if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+        endif()
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/GNU.Gettext.dll ${CURRENT_PACKAGES_DIR}/debug/bin/GNU.Gettext.dll)
+    endif()
+
+    file(GLOB_RECURSE TOOLS_EXES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    file(INSTALL ${TOOLS_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(GLOB_RECURSE GETTEXT_EXES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-        file(INSTALL ${GETTEXT_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 
@@ -70,7 +86,4 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/info/dir)
 endif()
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_copy_pdbs()

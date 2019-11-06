@@ -43,11 +43,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
 
 else()
-
-    vcpkg_find_acquire_program(PERL)
-    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-    vcpkg_add_to_path(${PERL_PATH})
     if(0)
+        vcpkg_find_acquire_program(PERL)
+        get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+        vcpkg_add_to_path(${PERL_PATH})
         message(STATUS "Applying includedir patch")
         vcpkg_execute_required_process(
           COMMAND ${PERL} -pe \'s\#^includesdir = .*\#includesdir = \\\@includedir\\\@\#\' -i include/Makefile.in

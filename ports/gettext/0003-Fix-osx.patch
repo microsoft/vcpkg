@@ -1,0 +1,14 @@
+diff --git a/build-aux/install-reloc b/build-aux/install-reloc
+index 2dfbf60..eedc855 100755
+--- a/build-aux/install-reloc
++++ b/build-aux/install-reloc
+@@ -232,6 +232,9 @@ func_create_wrapper ()
+                 "$srcdir"/areadlink.c \
+                 "$srcdir"/careadlinkat.c \
+                 "$srcdir"/allocator.c \
++               "$srcdir"/strerror-override.c \
++               "$srcdir"/stat.c \
++               "$srcdir"/lstat.c \
+                 "$srcdir"/readlink.c \
+                 "$srcdir"/canonicalize-lgpl.c \
+                 "$srcdir"/malloca.c \
