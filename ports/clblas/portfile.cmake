@@ -40,6 +40,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/concrt140d.dll
         ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp140d.dll
         ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140d.dll
+        ${CURRENT_PACKAGES_DIR}/bin/concrt140d.dll
+        ${CURRENT_PACKAGES_DIR}/bin/msvcp140d.dll
+        ${CURRENT_PACKAGES_DIR}/bin/vcruntime140d.dll
     )
 endif()
 
