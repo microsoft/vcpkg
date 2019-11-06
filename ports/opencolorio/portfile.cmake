@@ -1,5 +1,4 @@
 include(vcpkg_common_definitions)
-include(vcpkg_common_functions)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(_BUILD_SHARED OFF)
@@ -29,9 +28,9 @@ vcpkg_check_features(
         applications OCIO_BUILD_APPS
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_PATH ${PYTHON2} DIRECTORY)
-vcpkg_add_to_path(PREPEND ${PYTHON2_PATH})
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path(PREPEND ${PYTHON3_PATH})
 
 # TODO(theblackunknown) build additional targets based on feature
 
