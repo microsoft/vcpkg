@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         001-tools-path.patch
         002-find-basis-universal.patch
+        003-use-outdated-basisu.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
