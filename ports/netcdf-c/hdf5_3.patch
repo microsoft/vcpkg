@@ -1,5 +1,5 @@
 diff --git a/libhdf5/CMakeLists.txt b/libhdf5/CMakeLists.txt
-index f3c7bbc..34fc2ab 100644
+index f3c7bbc..3efb582 100644
 --- a/libhdf5/CMakeLists.txt
 +++ b/libhdf5/CMakeLists.txt
 @@ -20,3 +20,9 @@ add_library(netcdfhdf5 OBJECT ${libnchdf5_SOURCES})
@@ -12,3 +12,4 @@ index f3c7bbc..34fc2ab 100644
 +else()
 + target_link_libraries(netcdfhdf5 PRIVATE hdf5::hdf5-static hdf5::hdf5_hl-static) 
 +endif()
+\ No newline at end of file

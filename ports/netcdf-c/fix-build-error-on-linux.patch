@@ -1,15 +1,8 @@
 diff --git a/include/ncconfigure.h b/include/ncconfigure.h
-index 2c5b2c8..d397790 100644
+index c9440fd..da3ea1c 100644
 --- a/include/ncconfigure.h
 +++ b/include/ncconfigure.h
-@@ -25,20 +25,20 @@ missing functions should be
- defined and missing types defined.
- */
- 
--#ifndef HAVE_STRDUP
-+#ifndef strdup
- extern char* strdup(const char*);
- #endif
+@@ -72,7 +72,7 @@ extern int fileno(FILE*);
  
  /* handle null arguments */
  #ifndef nulldup
@@ -17,12 +10,4 @@ index 2c5b2c8..d397790 100644
 +#ifdef strdup
  #define nulldup(s) ((s)==NULL?NULL:strdup(s))
  #else
- char *nulldup(const char* s);
- #endif
- #endif
- 
--#ifdef _MSC_VER
-+#ifdef _WIN32
- #ifndef HAVE_SSIZE_T
- #include <basetsd.h>
- typedef SSIZE_T ssize_t;
+ extern char *nulldup(const char* s);

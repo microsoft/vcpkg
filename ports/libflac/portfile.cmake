@@ -1,20 +1,14 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(FLAC_MAX_MIN_PATCH
-    URLS "https://github.com/xiph/flac/commit/64f47c2d71ffba5aa8cd1d2a447339fd95f362f9.patch"
-    FILENAME "flac-max-min.patch"
-    SHA512 7ce9ccf9f081b478664cccd677c10269567672a8aa3a60839ef203b3d0a626d2b2c2f34d4c7fc897c31a436d7c22fb740bca5449a465dab39d60655417fe7772)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/flac
-    REF 1.3.2
-    SHA512 d0e177cadee371940516864bf72e1eb3d101a5f2779c854ecb8a3361a654a9b9e7efd303c83e2f308bacc7e54298d37705f677e2b955d4a9fe3470c364fa45f3
+    REF f764434a39e8a8715d5871bb263189e5a7298280 # 1.3.3
+    SHA512 d44ddd4f83eb5ff4b8ad07c860db1f2f66e0638ea498b08df27fe079bc33f1acdeeca9d050df3d1c22a4de294976901971bd61f578df9856756be04f102567d2
     HEAD_REF master
     PATCHES
-        "${FLAC_MAX_MIN_PATCH}"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-library-console.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile2.patch"
+        uwp-library-console.patch
+        fix-win_utf8_io.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
