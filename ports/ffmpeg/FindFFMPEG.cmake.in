@@ -51,7 +51,7 @@ endif()
 #  Platform dependent libraries required by FFMPEG
 if(WIN32)
   if(NOT CYGWIN)
-    list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 Secur32 bcrypt)
+    list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 secur32 bcrypt)
   endif()
 else()
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS m)
