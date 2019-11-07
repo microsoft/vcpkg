@@ -6,10 +6,10 @@ if("public-preview" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF d1cdf78b5160af8e08354e102a6b96395eee79e1
-        SHA512 0efbfc19e5eef4831b55ded0e8d88e83194bc0f26886841ddc83405c15b7f1bae983e22dc569e22846acd78b843b9e7492883b7c502f4eed92ff80ef45a9942d
+        REF abb906e01060f7c837cbb6522f75f31c7b10fa4a
+        SHA512 9549a799de741964cea2c436a8990b78a04715c43237bb8c3837237e66aa43ada25d74001eada160cad3f5fe71cd32fc054584fade686d931cd51f4ae44d69bd
         HEAD_REF public-preview
-        PATCHES improve-external-deps.patch cmake-hsm-option.patch
+        PATCHES improve-external-deps.patch
     )
 else()
     vcpkg_from_github(
