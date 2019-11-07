@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(plist C)
 
-file(GLOB_RECURSE PLIST_TOOLS_SRC tools/*.c)
-
 file(GLOB_RECURSE PLIST_HEADER include/plist/*.h)
 file(GLOB_RECURSE PLIST_SRC src/*.c)
 
