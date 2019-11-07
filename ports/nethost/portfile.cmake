@@ -1,9 +1,9 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dotnet/core-setup
-    REF v3.0.0
+    REF 7d57652f33493fa022125b7f63aad0d70c52d810 #v3.0.0
     SHA512 667768a3fc11dbe72c7f4f6b3b5431dd898a1731294a3c134c9b2914ea7f5a309a06289e1dddd74736ac775d52f2f366e7f1986edc5cf8b7a0bc2ae5a437063a
     HEAD_REF release/3.0.0
     PATCHES
