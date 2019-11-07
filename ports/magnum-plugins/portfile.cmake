@@ -1,4 +1,9 @@
 include(vcpkg_common_functions)
+
+if(NOT VCPKG_USE_HEAD_VERSION)
+    set(_RELEASE_ONLY_PATCHES "002-find-basis-universal.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
@@ -7,7 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-tools-path.patch
-        002-find-basis-universal.patch
+        ${_RELEASE_ONLY_PATCHES}
         003-use-outdated-basisu.patch
 )
 
