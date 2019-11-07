@@ -1,0 +1,136 @@
+diff --git a/build/win32/vs15/gtk-3.vcxproj b/build/win32/vs15/gtk-3.vcxproj
+index cacde98..c23c705 100644
+--- a/build/win32/vs15/gtk-3.vcxproj
++++ b/build/win32/vs15/gtk-3.vcxproj
+@@ -163,20 +163,6 @@
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+-    <CustomBuild Include="..\..\..\gtk\gtkdbusinterfaces.xml">
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating GTK+ DBus Sources...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GenerateGtkDbusBuiltSources)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\gtk\gtkdbusgenerated.c;..\..\..\gtk\gtkdbusgenerated.h;%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating GTK+ DBus Sources...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GenerateGtkDbusBuiltSourcesX64)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\gtk\gtkdbusgenerated.c;..\..\..\gtk\gtkdbusgenerated.h;%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating GTK+ DBus Sources...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GenerateGtkDbusBuiltSources)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\gtk\gtkdbusgenerated.c;..\..\..\gtk\gtkdbusgenerated.h;%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating GTK+ DBus Sources...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GenerateGtkDbusBuiltSourcesX64)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\gtk\gtkdbusgenerated.c;..\..\..\gtk\gtkdbusgenerated.h;%(Outputs)</Outputs>
+-    </CustomBuild>
+     <CustomBuild Include="..\..\..\gtk\gtk-win32.rc.body">
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying GTK+ Win32 Version Resource...</Message>
+       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(CopyGtkWin32RC)</Command>
+@@ -191,20 +177,6 @@
+       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CopyGtkWin32RC)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\gtk\gtk-win32.rc;%(Outputs)</Outputs>
+     </CustomBuild>
+-    <CustomBuild Include="..\..\..\gtk\libgtk3.manifest.in">
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating GTK+ Win32 Manifest...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GenerateGtkWin32Manifest)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating GTK+ Win32 Manifest...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GenerateGtkWin32Manifest)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating GTK+ Win32 Manifest...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GenerateGtkWin32Manifest)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating GTK+ Win32 Manifest...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GenerateGtkWin32Manifest)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+-    </CustomBuild>
+   </ItemGroup>
+   <ItemGroup>
+     <ResourceCompile Include="..\..\..\gtk\gtk-win32.rc" />
+diff --git a/build/win32/vs15/gtk3-build-defines.props b/build/win32/vs15/gtk3-build-defines.props
+index d695642..34661ea 100644
+--- a/build/win32/vs15/gtk3-build-defines.props
++++ b/build/win32/vs15/gtk3-build-defines.props
+@@ -29,7 +29,8 @@
+       <AdditionalOptions>/d2Zi+ %(AdditionalOptions)</AdditionalOptions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>pangocairo-1.0.lib;cairo.lib;cairo-gobject.lib;pango-1.0.lib;gdk_pixbuf-2.0.lib;gio-2.0.lib;gmodule-2.0.lib;gobject-2.0.lib;glib-2.0.lib;intl.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32' Or '$(Configuration)|$(Platform)'=='Release|x64'">pangocairo-1.0.lib;cairo.lib;cairo-gobject.lib;pango-1.0.lib;gdk_pixbuf-2.0.lib;gio-2.0.lib;gmodule-2.0.lib;gobject-2.0.lib;glib-2.0.lib;libintl.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' Or '$(Configuration)|$(Platform)'=='Debug|x64'">pangocairo-1.0.lib;cairod.lib;cairo-gobjectd.lib;pango-1.0.lib;gdk_pixbuf-2.0.lib;gio-2.0.lib;gmodule-2.0.lib;gobject-2.0.lib;glib-2.0.lib;libintl.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>$(GlibEtcInstallRoot)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+     </Link>
+   </ItemDefinitionGroup>
+diff --git a/build/win32/vs15/gtk3-install.vcxproj b/build/win32/vs15/gtk3-install.vcxproj
+index 3a4d947..e8ca0a5 100644
+--- a/build/win32/vs15/gtk3-install.vcxproj
++++ b/build/win32/vs15/gtk3-install.vcxproj
+@@ -158,63 +158,37 @@
+     <CustomBuild Include="..\..\..\config.h.win32">
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GtkDoInstallBin)$(GtkDoInstall)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GtkDoInstallBin)$(GtkDoInstall)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">blah;%(Outputs)</Outputs>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">Installing Build Results...</Message>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">$(GtkPCFiles)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)$(GtkPostInstall)</Command>
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">$(GtkDoInstallBin)$(GtkDoInstall)$(GtkDoInstallBroadwayHeaders)</Command>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">blah;%(Outputs)</Outputs>
+     </CustomBuild>
+-    <CustomBuild Include="..\gtkpc.py">
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GenerateGtkPC)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">$(GenerateGtkPC) --broadway</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|Win32'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GenerateGtkPCX64)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">$(GenerateGtkPCX64) --broadway</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug_Broadway|x64'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GenerateGtkPC)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">$(GenerateGtkPC) --broadway</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|Win32'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GenerateGtkPCX64)</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GtkPCFiles);%(Outputs)</Outputs>
+-      <Message Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">Generating .pc files...</Message>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">$(GenerateGtkPCX64) --broadway</Command>
+-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release_Broadway|x64'">$(GtkPCFiles);%(Outputs)</Outputs>
+-    </CustomBuild>
+   </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="gdk-3.vcxproj">
