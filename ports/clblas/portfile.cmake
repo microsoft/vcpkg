@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.patch
+        Fix-BuildDLL.patch
 )
 
 # v2.12 has a very old FindOpenCL.cmake using OPENCL_ vs. OpenCL_ var names
@@ -37,12 +38,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb
         ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
         ${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe
-        ${CURRENT_PACKAGES_DIR}/debug/bin/concrt140d.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp140d.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140d.dll
-        ${CURRENT_PACKAGES_DIR}/bin/concrt140d.dll
-        ${CURRENT_PACKAGES_DIR}/bin/msvcp140d.dll
-        ${CURRENT_PACKAGES_DIR}/bin/vcruntime140d.dll
     )
 endif()
 
