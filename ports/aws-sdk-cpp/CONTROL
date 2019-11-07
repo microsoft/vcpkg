@@ -51,7 +51,7 @@ Description: C++ SDK for the AWS autoscaling service
 Feature: autoscaling-plans
 Description: C++ SDK for the AWS autoscaling-plans service
 
-Feature: AWSMigrationHub
+Feature: awsmigrationhub
 Description: C++ SDK for the AWS AWSMigrationHub service
 
 Feature: awstransfer
