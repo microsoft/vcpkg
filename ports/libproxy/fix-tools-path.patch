@@ -1,0 +1,14 @@
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index 52010c6..0a3f4b5 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ include_directories("../libproxy")
+ 
++if (BUILD_TOOLS)
+ add_executable(proxy proxy.c)
+ target_link_libraries(proxy libproxy)
+-install(TARGETS proxy RUNTIME DESTINATION ${BIN_INSTALL_DIR})
++install(TARGETS proxy RUNTIME DESTINATION tools)
++endif()
+\ No newline at end of file
