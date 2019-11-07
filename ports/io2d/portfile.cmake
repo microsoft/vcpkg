@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-linux-build.patch
+        Fix-FindCairo.patch
 )
 
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
