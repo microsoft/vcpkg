@@ -1,6 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "http://otl.sourceforge.net/otlv4_h2.zip"
-    FILENAME "otlv4_h2-4.0.447.zip"
+    FILENAME "otlv4_h2-4.0.447-1.zip"
     SHA512 03616606ffb903e43af2e8fec0cd6ecd22380b711966145ca7fe5f1ccde151dcaff044ce7c81389e4055cdab72d019cc301d023a6e179492d1df8b5f2787f4d9
 )
 
