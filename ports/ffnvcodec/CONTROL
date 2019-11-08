@@ -1,0 +1,4 @@
+Source: ffnvcodec
+Version: 9.1.23.0
+Homepage: https://github.com/FFmpeg/nv-codec-headers
+Description: FFmpeg version of Nvidia Codec SDK headers.

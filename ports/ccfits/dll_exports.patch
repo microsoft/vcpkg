@@ -1,10 +1,7 @@
-Index: FITS.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- FITS.h	(date 1502267716000)
-+++ FITS.h	(revision )
+diff --git a/FITS.h b/FITS.h
+index e21f3db..3e97c83 100644
+--- a/FITS.h
++++ b/FITS.h
 @@ -21,6 +21,8 @@
  #include "HDUCreator.h"
  // FitsError
@@ -14,42 +11,33 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  
  namespace CCfits {
    class FITSBase;
-@@ -665,9 +667,8 @@
+@@ -665,7 +667,7 @@ do this either).
  
  
  
 -  class FITS 
--  {
--
-+  class CCFITS_EXPORT FITS
-+  {	
++  class CCFITS_EXPORT FITS 
+   {
+ 
      public:
- 
- 
-Index: HDU.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- HDU.h	(date 1502267716000)
-+++ HDU.h	(revision )
-@@ -568,7 +568,7 @@
+diff --git a/HDU.h b/HDU.h
+index 07f68e7..047e731 100644
+--- a/HDU.h
++++ b/HDU.h
+@@ -568,7 +568,7 @@ and return its value.
  
  
  
 -  class HDU 
-+  class CCFITS_EXPORT HDU
++  class CCFITS_EXPORT HDU 
    {
  
      public:
-Index: Table.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- Table.h	(date 1502267716000)
-+++ Table.h	(revision )
-@@ -268,7 +268,7 @@
+diff --git a/Table.h b/Table.h
+index a0c1afe..9a8a5db 100644
+--- a/Table.h
++++ b/Table.h
+@@ -268,7 +268,7 @@ namespace CCfits {
  
  
  
@@ -58,19 +46,16 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
  
      public:
-Index: Column.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- Column.h	(date 1502267716000)
-+++ Column.h	(revision )
-@@ -838,14 +838,14 @@
+diff --git a/Column.h b/Column.h
+index e4496a7..b798947 100644
+--- a/Column.h
++++ b/Column.h
+@@ -838,14 +838,14 @@ namespace CCfits {
  
  
  
 -  class Column 
-+  class CCFITS_EXPORT Column
++  class CCFITS_EXPORT Column 
    {
  
      public:
@@ -82,7 +67,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              RangeError (const String& msg, bool silent = true);
-@@ -857,7 +857,7 @@
+@@ -857,7 +857,7 @@ namespace CCfits {
  
  
  
@@ -91,7 +76,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              InvalidDataType (const String& str = string(), bool silent = true);
-@@ -869,7 +869,7 @@
+@@ -869,7 +869,7 @@ namespace CCfits {
  
  
  
@@ -100,7 +85,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              InvalidRowParameter (const String& diag, bool silent = true);
-@@ -881,7 +881,7 @@
+@@ -881,7 +881,7 @@ namespace CCfits {
  
  
  
@@ -109,7 +94,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              WrongColumnType (const String& diag, bool silent = true);
-@@ -893,7 +893,7 @@
+@@ -893,7 +893,7 @@ namespace CCfits {
  
  
  
@@ -118,7 +103,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              UnspecifiedLengths (const String& diag, bool silent = true);
-@@ -905,7 +905,7 @@
+@@ -905,7 +905,7 @@ namespace CCfits {
  
  
  
@@ -127,7 +112,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              InvalidRowNumber (const String& diag, bool silent = true);
-@@ -917,7 +917,7 @@
+@@ -917,7 +917,7 @@ namespace CCfits {
  
  
  
@@ -136,7 +121,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              InsufficientElements (const String& msg, bool silent = true);
-@@ -929,7 +929,7 @@
+@@ -929,7 +929,7 @@ namespace CCfits {
  
  
  
@@ -145,7 +130,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              NoNullValue (const String& diag, bool silent = true);
-@@ -941,7 +941,7 @@
+@@ -941,7 +941,7 @@ namespace CCfits {
  
  
  
@@ -154,14 +139,11 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        {
          public:
              InvalidNumberOfRows (int number, bool silent = true);
-Index: AsciiTable.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- AsciiTable.h	(date 1502267716000)
-+++ AsciiTable.h	(revision )
-@@ -133,7 +133,7 @@
+diff --git a/AsciiTable.h b/AsciiTable.h
+index 620cf41..d03aa44 100644
+--- a/AsciiTable.h
++++ b/AsciiTable.h
+@@ -133,7 +133,7 @@ namespace CCfits {
  
  
  
@@ -170,14 +152,11 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
  
      public:
-Index: CCfits.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- CCfits.h	(date 1502267716000)
-+++ CCfits.h	(revision )
-@@ -23,7 +23,7 @@
+diff --git a/CCfits.h b/CCfits.h
+index d09438a..a62b8a6 100644
+--- a/CCfits.h
++++ b/CCfits.h
+@@ -23,7 +23,7 @@ namespace CCfits {
  #include <sys/types.h>
  #include "longnam.h"
  #include "float.h"
@@ -186,7 +165,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  
  namespace CCfits {
    /*! \namespace CCfits
-@@ -32,8 +32,8 @@
+@@ -32,8 +32,8 @@ namespace CCfits {
    static const int BITPIX = -32;
    static const int  NAXIS =   2;
    static const int  MAXDIM = 99;
@@ -197,46 +176,37 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  
    extern  char BSCALE[7];
    extern  char BZERO[6];
-Index: FITSBase.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- FITSBase.h	(date 1502267716000)
-+++ FITSBase.h	(revision )
-@@ -30,7 +30,7 @@
+diff --git a/FITSBase.h b/FITSBase.h
+index 996fdae..0c985f9 100644
+--- a/FITSBase.h
++++ b/FITSBase.h
+@@ -30,7 +30,7 @@ namespace CCfits {
  
  
  
 -  class FITSBase 
-+  class CCFITS_EXPORT FITSBase
++  class CCFITS_EXPORT FITSBase 
    {
  
      public:
-Index: Keyword.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- Keyword.h	(date 1502267716000)
-+++ Keyword.h	(revision )
-@@ -195,7 +195,7 @@
+diff --git a/Keyword.h b/Keyword.h
+index 816c119..b6df1f1 100644
+--- a/Keyword.h
++++ b/Keyword.h
+@@ -195,7 +195,7 @@ namespace CCfits {
  
  
  
 -  class Keyword 
-+  class CCFITS_EXPORT Keyword
++  class CCFITS_EXPORT Keyword 
    {
  
      public:
-Index: ExtHDU.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- ExtHDU.h	(date 1502267716000)
-+++ ExtHDU.h	(revision )
-@@ -435,7 +435,7 @@
+diff --git a/ExtHDU.h b/ExtHDU.h
+index d075fa1..e2d7dc6 100644
+--- a/ExtHDU.h
++++ b/ExtHDU.h
+@@ -435,7 +435,7 @@ namespace CCfits {
  
  
  
@@ -245,14 +215,11 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
  
      public:
-Index: PHDU.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- PHDU.h	(date 1502267716000)
-+++ PHDU.h	(revision )
-@@ -264,7 +264,7 @@
+diff --git a/PHDU.h b/PHDU.h
+index fe5f799..d9669b4 100644
+--- a/PHDU.h
++++ b/PHDU.h
+@@ -264,7 +264,7 @@ namespace CCfits {
  
  
  
@@ -261,14 +228,11 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
  
      public:
-Index: BinTable.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- BinTable.h	(date 1502267716000)
-+++ BinTable.h	(revision )
-@@ -127,7 +127,7 @@
+diff --git a/BinTable.h b/BinTable.h
+index 68851e3..906005a 100644
+--- a/BinTable.h
++++ b/BinTable.h
+@@ -127,7 +127,7 @@ namespace CCfits {
  
  
  
@@ -277,63 +241,41 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
  
      public:
-Index: Image.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- Image.h	(date 1502267716000)
-+++ Image.h	(revision )
-@@ -32,7 +32,7 @@
- 
- 
-   template <typename T>
--  class Image 
-+  class Image
-   {
- 
-     public:
-Index: ColumnCreator.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- ColumnCreator.h	(date 1502267716000)
-+++ ColumnCreator.h	(revision )
-@@ -28,7 +28,7 @@
+diff --git a/ColumnCreator.h b/ColumnCreator.h
+index 104bd4f..15cd0ea 100644
+--- a/ColumnCreator.h
++++ b/ColumnCreator.h
+@@ -28,7 +28,7 @@ namespace CCfits {
  
  
  
 -  class ColumnCreator 
-+  class CCFITS_EXPORT ColumnCreator
++  class CCFITS_EXPORT ColumnCreator 
    {
  
      public:
-Index: FitsError.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- FitsError.h	(date 1502267716000)
-+++ FitsError.h	(revision )
-@@ -14,6 +14,7 @@
+diff --git a/FitsError.h b/FitsError.h
+index 593723c..52941f6 100644
+--- a/FitsError.h
++++ b/FitsError.h
+@@ -13,6 +13,7 @@
+ //#include <exception>
  //#include <iostream>
  //#include <stl.h>
- #include <string>
 +#include "ccfits_export.h"
+ #include <string>
  using std::string;
  
- 
-@@ -90,7 +91,7 @@
+@@ -90,7 +91,7 @@ namespace CCfits {
  
  
  
 -  class FitsException 
-+  class CCFITS_EXPORT FitsException
++  class CCFITS_EXPORT FitsException 
    {
      public:
          FitsException (const string& msg, bool& silent);
-@@ -109,7 +110,7 @@
+@@ -109,7 +110,7 @@ namespace CCfits {
  
  
  
@@ -342,40 +284,34 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
      public:
          FitsError (int errornum, bool silent = true);
-@@ -123,7 +124,7 @@
+@@ -123,7 +124,7 @@ namespace CCfits {
  
  
  
 -  class FitsFatal 
-+  class CCFITS_EXPORT FitsFatal
++  class CCFITS_EXPORT FitsFatal 
    {
      public:
          FitsFatal (const string& diag);
-Index: HDUCreator.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- HDUCreator.h	(date 1502267716000)
-+++ HDUCreator.h	(revision )
-@@ -35,7 +35,7 @@
+diff --git a/HDUCreator.h b/HDUCreator.h
+index 65b82b7..2b5f717 100644
+--- a/HDUCreator.h
++++ b/HDUCreator.h
+@@ -35,7 +35,7 @@ namespace CCfits {
  
  
  
 -  class HDUCreator 
-+  class CCFITS_EXPORT HDUCreator
++  class CCFITS_EXPORT HDUCreator 
    {
  
      public:
-Index: ccfits_export.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- ccfits_export.h	(revision )
-+++ ccfits_export.h	(revision )
-@@ -0,0 +1,42 @@
-+
+diff --git a/ccfits_export.h b/ccfits_export.h
+new file mode 100644
+index 0000000..a2540a6 100644
+--- /dev/null
++++ b/ccfits_export.h
+@@ -0,0 +1,41 @@
 +#ifndef CCFITS_EXPORT_H
 +#define CCFITS_EXPORT_H
 +
@@ -417,13 +353,11 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +#endif
 +
 +#endif
-Index: FITSUtil.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- FITSUtil.h	(date 1502267716000)
-+++ FITSUtil.h	(revision )
+\ No newline at end of file
+diff --git a/FITSUtil.h b/FITSUtil.h
+index 762d430..e2eee33 100644
+--- a/FITSUtil.h
++++ b/FITSUtil.h
 @@ -22,6 +22,7 @@
  #include <string>
  // FitsError
@@ -432,7 +366,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  #include <typeinfo>
  
  
-@@ -287,21 +288,21 @@
+@@ -287,21 +288,21 @@ object.
      template <typename T>
      void swap(std::vector<T>& left, std::vector<T>& right);
  
@@ -459,7 +393,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
    {
            bool operator()(const string& left, const string& right) const;
    };
-@@ -323,7 +324,7 @@
+@@ -323,7 +324,7 @@ object.
  
    char** CharArray(const std::vector<string>& inArray);
  
@@ -468,7 +402,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  
  
    template <typename S, typename T> 
-@@ -633,7 +634,7 @@
+@@ -633,7 +634,7 @@ object.
  
  
  
@@ -477,19 +411,78 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      {
        public:
            UnrecognizedType (string diag, bool silent = true);
-Index: KeywordCreator.h
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- KeywordCreator.h	(date 1502267716000)
-+++ KeywordCreator.h	(revision )
-@@ -24,7 +24,7 @@
+diff --git a/KeywordCreator.h b/KeywordCreator.h
+index d878a26..b2c0c70 100644
+--- a/KeywordCreator.h
++++ b/KeywordCreator.h
+@@ -24,7 +24,7 @@ namespace CCfits {
  
  
  
 -  class KeywordCreator 
-+  class CCFITS_EXPORT KeywordCreator
++  class CCFITS_EXPORT KeywordCreator 
    {
  
      public:
+diff --git a/CCfits b/CCfits
+index e9848c9..f30c9ad 100644
+--- a/CCfits
++++ b/CCfits
+@@ -2,20 +2,20 @@
+ #ifndef CCFITS
+ #define CCFITS  20031208
+ 
+-#include <CCfits/CCfits.h>
++#include <CCfits.h>
+ 
+-#include <CCfits/FITS.h>
+-#include <CCfits/BinTable.h>
+-#include <CCfits/AsciiTable.h>
+-#include <CCfits/ColumnVectorData.h>
+-#include <CCfits/ColumnData.h>
+-#include <CCfits/ColumnT.h>
+-#include <CCfits/ExtHDUT.h>
+-#include <CCfits/KeywordT.h>
+-#include <CCfits/KeyData.h>
+-#include <CCfits/FitsError.h>
+-#include <CCfits/FITSUtilT.h>
+-#include <CCfits/PHDUT.h>
++#include <FITS.h>
++#include <BinTable.h>
++#include <AsciiTable.h>
++#include <ColumnVectorData.h>
++#include <ColumnData.h>
++#include <ColumnT.h>
++#include <ExtHDUT.h>
++#include <KeywordT.h>
++#include <KeyData.h>
++#include <FitsError.h>
++#include <FITSUtilT.h>
++#include <PHDUT.h>
+ 
+ 
+ #endif
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b958fc7..0b1fb4e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,11 @@ IF (BUILD_SHARED_LIBS)
+   SET (LIB_TYPE SHARED)
+ ENDIF (BUILD_SHARED_LIBS)
+ 
++
++IF (NOT BUILD_SHARED_LIBS)
++    ADD_DEFINITIONS(-DCCFITS_STATIC_DEFINE)
++ENDIF()
++
+ FILE(GLOB H_FILES "*.h")
+ SET(H_FILES ${H_FILES} CCfits)
+ 
+@@ -55,6 +60,7 @@ SET(SRC_FILES
+ )
+ 
+ ADD_LIBRARY(${LIB_NAME} ${LIB_TYPE} ${H_FILES} ${SRC_FILES})
++
+ TARGET_LINK_LIBRARIES(${LIB_NAME} ${CFITSIO_LIBRARY}
+ )
+ 

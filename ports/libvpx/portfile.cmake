@@ -2,20 +2,19 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LIBVPX_VERSION 1.7.0)
-set(LIBVPX_HASH 8b3b766b550f8d86907628d7ed88035f9a2612aac21542e0fd5ad35b905eb82cbe1be02a1a24afce7a3bcc4766f62611971f72724761996b392136c40a1e7ff0)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libvpx-${LIBVPX_VERSION})
-
-string(REGEX REPLACE "\\\\" "/" SOURCE_PATH_UNIX ${SOURCE_PATH})
-string(REGEX REPLACE "\\\\" "/" CURRENT_PACKAGES_DIR_UNIX ${CURRENT_PACKAGES_DIR})
+set(LIBVPX_VERSION 1.8.1)
+set(LIBVPX_HASH 615476a929e46befdd4782a39345ce55cd30176ecb2fcd8a875c31694ae2334b395dcab9c5ba58d53ceb572ed0c022d2a3748ca4bbd36092e22b01cf3c9b2e8e)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/webmproject/libvpx/archive/v${LIBVPX_VERSION}/libvpx-${LIBVPX_VERSION}.tar.gz"
     FILENAME "libvpx-${LIBVPX_VERSION}.tar.gz"
     SHA512 ${LIBVPX_HASH}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
@@ -55,7 +54,7 @@ file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 vcpkg_execute_required_process(
     COMMAND
         ${BASH} --noprofile --norc
-        "${SOURCE_PATH_UNIX}/configure"
+        "${SOURCE_PATH}/configure"
         --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
         ${LIBVPX_CRT_LINKAGE}
         --disable-examples
@@ -75,16 +74,24 @@ vcpkg_build_msbuild(
     PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmdd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" RENAME "vpxmd.pdb")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" RENAME "vpxmdd.pdb")
-else()
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmtd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" RENAME "vpxmt.pdb")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" RENAME "vpxmtd.pdb")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" RENAME "vpxmd.pdb")
+    else()
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" RENAME "vpxmt.pdb")
+    endif()
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmdd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" RENAME "vpxmdd.pdb")
+    else()
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmtd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" RENAME "vpxmtd.pdb")
+    endif()
 endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)

@@ -18,8 +18,9 @@ namespace vcpkg
                                             const std::string& default_vs_path,
                                             const std::vector<std::string>* triplets_dirs)
     {
+        auto& fs = Files::get_real_filesystem();
         std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
+        const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
         if (ec)
         {
             return ec;
@@ -42,7 +43,7 @@ namespace vcpkg
         if (auto odp = overriddenDownloadsPath.get())
         {
             auto asPath = fs::u8path(*odp);
-            if (!fs::stdfs::is_directory(asPath))
+            if (!fs::is_directory(fs.status(VCPKG_LINE_INFO, asPath)))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
                 Checks::exit_with_message(
@@ -71,12 +72,12 @@ namespace vcpkg
         {
             if (scripts_dir->empty() || !fs::stdfs::is_directory(*scripts_dir))
             {
-                    Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "Invalid scripts override directory: %s; "
-                        "create that directory or unset --scripts-root to use the default scripts location.",
-                        scripts_dir->u8string());
+                Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO,
+                    "Invalid scripts override directory: %s; "
+                    "create that directory or unset --x-scripts-root to use the default scripts location.",
+                    scripts_dir->u8string());
             }
 
             paths.scripts = *scripts_dir;
@@ -147,26 +148,25 @@ namespace vcpkg
             }
             Util::sort_unique_erase(output);
             return output;
-            });
+        });
     }
 
     const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
     {
-        return m_triplets_cache.get_lazy(triplet, [&]()-> auto {
-            for (auto&& triplet_dir : triplets_dirs)
-            {
-                auto&& path = triplet_dir / (triplet.canonical_name() + ".cmake");
-                if (this->get_filesystem().exists(path))
+        return m_triplets_cache.get_lazy(
+            triplet, [&]() -> auto {
+                for (const auto& triplet_dir : triplets_dirs)
                 {
-                    return path;
+                    auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
+                    if (this->get_filesystem().exists(path))
+                    {
+                        return path;
+                    }
                 }
-            }
 
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Error: Triplet file %s.cmake not found",
-                                      triplet.canonical_name());
-        });
-        
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: Triplet file %s.cmake not found", triplet.canonical_name());
+            });
     }
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const

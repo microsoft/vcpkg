@@ -108,6 +108,9 @@
     <ClCompile Include="..\src\vcpkg\install.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\logicexpression.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\metrics.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.porthistory.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

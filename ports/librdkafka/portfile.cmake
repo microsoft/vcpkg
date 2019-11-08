@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF v1.1.0
-    SHA512 35561399b07278a09a51245c5503c86eb0cc8971692b4e65a332144bfb71e2e86d4ceaf1804534b6a416bcace74cef493b6465c20b32c14de97f45f2854359c6
+    REF v1.2.0
+    SHA512 7caddeec09bd1556688f0011f5cae49f8b0cde55b8dbc1296b3d2a39879badc42b7f59369bb1938ce7c4c4ff8b0fe4f1973b923c3db603466c10a4c015306522
     HEAD_REF master
     PATCHES
         fix-arm64.patch
@@ -12,11 +12,12 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
-vcpkg_check_features(
-    lz4 ENABLE_LZ4_EXT
-    ssl WITH_SSL
-    zlib WITH_ZLIB
-    zstd WITH_ZSTD
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    lz4     ENABLE_LZ4_EXT
+    ssl     WITH_SSL
+    zlib    WITH_ZLIB
+    zstd    WITH_ZSTD
+    snappy WITH_SNAPPY
 )
 
 vcpkg_configure_cmake(
@@ -49,7 +50,7 @@ vcpkg_fixup_cmake_targets(
     TARGET_PATH share/rdkafka
 )
 
-if(ENABLE_LZ4_EXT)
+if("lz4" IN_LIST FEATURES)
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/share/rdkafka/RdKafkaConfig.cmake
         "find_dependency(LZ4)"

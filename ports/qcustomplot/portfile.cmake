@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(QCP_VERSION 2.0.1) 
+set(QCP_VERSION 2.0.1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.qcustomplot.com/release/${QCP_VERSION}/QCustomPlot.tar.gz"

@@ -1,20 +1,17 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
 include(CMakePackageConfigHelpers)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libodb-2.4.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-2.4.0.tar.gz"
     FILENAME "libodb-2.4.0.tar.gz"
     SHA512 f1311458634695eb6ba307ebfd492e3b260e7beb06db1c5c46df58c339756be4006322cdc4e42d055bf5b2ad14ce4656ddcafcc4e16c282034db8a77d255c3eb
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
+
 file(COPY
   ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
   ${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in
@@ -22,6 +19,7 @@ file(COPY
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
@@ -36,9 +34,6 @@ write_basic_package_version_file(${CURRENT_PACKAGES_DIR}/share/odb/odbConfigVers
     VERSION 2.4.0
     COMPATIBILITY SameMajorVersion
 )
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libodb)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libodb/LICENSE ${CURRENT_PACKAGES_DIR}/share/libodb/copyright)
 
 set(LIBODB_HEADER_PATH ${CURRENT_PACKAGES_DIR}/include/odb/details/export.hxx)
 file(READ ${LIBODB_HEADER_PATH} LIBODB_HEADER)
@@ -50,3 +45,5 @@ endif()
 file(WRITE ${LIBODB_HEADER_PATH} "${LIBODB_HEADER}")
 
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

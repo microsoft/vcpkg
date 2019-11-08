@@ -56,7 +56,7 @@ namespace vcpkg::Commands
     namespace DependInfo
     {
         extern const CommandStructure COMMAND_STRUCTURE;
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
     namespace Search
@@ -96,6 +96,11 @@ namespace vcpkg::Commands
     }
 
     namespace PortsDiff
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
+    namespace PortHistory
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }

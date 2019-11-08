@@ -60,9 +60,10 @@ namespace vcpkg::Commands::CI
         void add_test_results(const std::string& spec,
                               const Build::BuildResult& build_result,
                               const Chrono::ElapsedTime& elapsed_time,
-                              const std::string& abi_tag)
+                              const std::string& abi_tag,
+                              const std::vector<std::string>& features)
         {
-            m_collections.back().tests.push_back({spec, build_result, elapsed_time, abi_tag});
+            m_collections.back().tests.push_back({spec, build_result, elapsed_time, abi_tag, features});
         }
 
         // Starting a new test collection
@@ -98,6 +99,7 @@ namespace vcpkg::Commands::CI
             vcpkg::Build::BuildResult result;
             vcpkg::Chrono::ElapsedTime time;
             std::string abi_tag;
+            std::vector<std::string> features;
         };
 
         struct XunitCollection
@@ -166,9 +168,29 @@ namespace vcpkg::Commands::CI
             }
 
             std::string traits_block;
-            if (test.abi_tag != "") // only adding if there is a known abi tag
+            if (test.abi_tag != "")
             {
-                traits_block = Strings::format(R"(<traits><trait name="abi_tag" value="%s" /></traits>)", test.abi_tag);
+                traits_block += Strings::format(R"(<trait name="abi_tag" value="%s" />)", test.abi_tag);
+            }
+
+            if (!test.features.empty())
+            {
+                std::string feature_list;
+                for (const auto& feature : test.features)
+                {
+                    if (!feature_list.empty()) 
+                    {
+                        feature_list += ", ";
+                    }
+                    feature_list += feature;
+                }
+
+                traits_block += Strings::format(R"(<trait name="features" value="%s" />)", feature_list);
+            }
+
+            if (!traits_block.empty())
+            {
+                traits_block = "<traits>" + traits_block + "</traits>";
             }
 
             m_xml += Strings::format(R"(      <test name="%s" method="%s" time="%lld" result="%s">%s%s</test>)"
@@ -212,6 +234,7 @@ namespace vcpkg::Commands::CI
         const Build::BuildPackageOptions build_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
@@ -236,13 +259,7 @@ namespace vcpkg::Commands::CI
                 {
                     auto triplet = p->spec.triplet();
 
-                    const Build::BuildPackageConfig build_config{
-                        *scfl->source_control_file, 
-                        triplet, 
-                        static_cast<fs::path>(scfl->source_location), 
-                        build_options, 
-                        p->feature_list
-                    };
+                    const Build::BuildPackageConfig build_config{*scfl, triplet, build_options, p->feature_list};
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -254,7 +271,7 @@ namespace vcpkg::Commands::CI
                                 return {spec.name(), it->second};
                         });
                     const auto& pre_build_info = pre_build_info_cache.get_lazy(
-                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet); });
+                        triplet, [&]() { return Build::PreBuildInfo::from_triplet_file(paths, triplet, *scfl); });
 
                     auto maybe_tag_and_file =
                         Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
@@ -356,12 +373,13 @@ namespace vcpkg::Commands::CI
         }
 
         StatusParagraphs status_db = database_load_check(paths);
-        
+
         Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::YES,
             Build::CleanPackages::YES,
             Build::CleanDownloads::NO,
@@ -462,20 +480,24 @@ namespace vcpkg::Commands::CI
                 // Adding results for ports that were built or pulled from an archive
                 for (auto&& result : summary.results)
                 {
+                    auto& port_features = split_specs->features[result.spec];
                     split_specs->known.erase(result.spec);
                     xunitTestResults.add_test_results(result.spec.to_string(),
                                                       result.build_result.code,
                                                       result.timing,
-                                                      split_specs->abi_tag_map.at(result.spec));
+                                                      split_specs->abi_tag_map.at(result.spec),
+                                                      port_features);
                 }
 
                 // Adding results for ports that were not built because they have known states
                 for (auto&& port : split_specs->known)
                 {
+                    auto& port_features = split_specs->features[port.first];
                     xunitTestResults.add_test_results(port.first.to_string(),
                                                       port.second,
                                                       Chrono::ElapsedTime{},
-                                                      split_specs->abi_tag_map.at(port.first));
+                                                      split_specs->abi_tag_map.at(port.first),
+                                                      port_features);
                 }
 
                 all_known_results.emplace_back(std::move(split_specs->known));

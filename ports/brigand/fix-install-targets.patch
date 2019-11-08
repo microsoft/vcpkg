@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 13ea689..9d20700 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -292,3 +292,9 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/brigand
+ install(FILES ${CMAKE_BINARY_DIR}/libbrigand.pc
+     DESTINATION lib/pkgconfig
+ )
++
++install(TARGETS brigand
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)

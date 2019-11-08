@@ -7,9 +7,14 @@ vcpkg_from_github(
   REF v1.0.1
   SHA512 be612197fae387b9f1d8f10944d451ec9e7ebec6045beed365e642089c0a5fde882ed5c734f2b46a5008f98b8445a51114492f0f36fdc684b8a8fe4b71fe31a4
   HEAD_REF master
+  PATCHES
+    fix-include-path.patch
+    fix-dependency.patch
 )
 
-vcpkg_check_features("ssl" PAHO_WITH_SSL)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
+  "ssl" PAHO_WITH_SSL
+)
 
 # Link with 'paho-mqtt3as' library
 set(PAHO_C_LIBNAME paho-mqtt3as)
@@ -22,7 +27,7 @@ else()
 endif()
 
 # Setting the include path where MqttClient.h is present
-set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include/paho-mqtt")
+set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include")
 
 # Set the generator to Ninja
 set(PAHO_CMAKE_GENERATOR "Ninja")
@@ -48,8 +53,8 @@ vcpkg_configure_cmake(
   OPTIONS
   -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
   -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
-  -DPAHO_WITH_SSL=${PAHO_WITH_SSL}
   -DPAHO_MQTT_C_INCLUDE_DIRS=${PAHO_C_INC}
+  ${FEATURE_OPTIONS}
   ${PAHO_OPTIONS}
 )
 
@@ -63,4 +68,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Add copyright
-file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/paho-mqttpp3 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
