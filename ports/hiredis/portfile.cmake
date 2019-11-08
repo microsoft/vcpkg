@@ -1,5 +1,5 @@
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "hiredis only supports static on Windows.")
+    message(FATAL_ERROR "${PORT} currently only supports static on Windows.")
 endif()
 
 vcpkg_from_github(
@@ -10,7 +10,16 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-support-windows-static.patch
+        fix-example-install.patch
 )
+
+if("ssl" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+   message(FATAL_ERROR "${PORT} currently doesn't support ssl feature on Windows.")
+endif()
+
+if("example" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+   message(FATAL_ERROR "${PORT} currently doesn't support example feature on Windows.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     ssl     ENABLE_SSL 

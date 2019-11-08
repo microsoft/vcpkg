@@ -1,0 +1,76 @@
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index dd3a313..7b79b2a 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -1,13 +1,16 @@
+-INCLUDE(FindPkgConfig)
+ # Check for GLib
+ 
+-PKG_CHECK_MODULES(GLIB2 glib-2.0)
+-if (GLIB2_FOUND)
+-    INCLUDE_DIRECTORIES(${GLIB2_INCLUDE_DIRS})
+-    LINK_DIRECTORIES(${GLIB2_LIBRARY_DIRS})
+-    ADD_EXECUTABLE(example-glib example-glib.c)
+-    TARGET_LINK_LIBRARIES(example-glib hiredis ${GLIB2_LIBRARIES})
+-ENDIF(GLIB2_FOUND)
++IF(0)
++    FIND_LIBRARY(GLIB_LIBRARY NAMES glib-2.0)
++    FIND_PATH(GLIB_INCLUDE_DIR glib.h)
++    SET(GLIB_FOUND ${GLIB_LIBRARY})
++    IF(GLIB_FOUND)
++        INCLUDE_DIRECTORIES(${GLIB_INCLUDE_DIR})
++        ADD_EXECUTABLE(example-glib example-glib.c)
++        TARGET_LINK_LIBRARIES(example-glib hiredis ${GLIB_LIBRARY})
++        INSTALL(TARGETS example-glib RUNTIME DESTINATION tools)
++    ENDIF()
++ENDIF()
+ 
+ FIND_PATH(LIBEV ev.h
+     HINTS /usr/local /usr/opt/local
+@@ -17,30 +20,45 @@ if (LIBEV)
+     # Just compile and link with libev
+     ADD_EXECUTABLE(example-libev example-libev.c)
+     TARGET_LINK_LIBRARIES(example-libev hiredis ev)
++    INSTALL(TARGETS example-libev RUNTIME DESTINATION tools)
+ ENDIF()
+ 
++
++FIND_PACKAGE(Libevent CONFIG REQUIRED)
+ FIND_PATH(LIBEVENT event.h)
+ if (LIBEVENT)
++    INCLUDE_DIRECTORIES(${LIBEVENT})
+     ADD_EXECUTABLE(example-libevent example-libevent)
+-    TARGET_LINK_LIBRARIES(example-libevent hiredis event)
++    if(BUILD_SHARED_LIBS)
++        TARGET_LINK_LIBRARIES(example-libevent hiredis event_shared event_core_shared event_extra_shared event_openssl_shared)
++    else()
++        TARGET_LINK_LIBRARIES(example-libevent hiredis event_static event_core_static event_extra_static event_openssl_static)
++    endif()
++    INSTALL(TARGETS example-libevent RUNTIME DESTINATION tools)
+ ENDIF()
+ 
+ FIND_PATH(LIBUV uv.h)
+ IF (LIBUV)
+     ADD_EXECUTABLE(example-libuv example-libuv.c)
+     TARGET_LINK_LIBRARIES(example-libuv hiredis uv)
++    INSTALL(TARGETS example-libuv RUNTIME DESTINATION tools)
+ ENDIF()
+ 
+ IF (APPLE)
+     FIND_LIBRARY(CF CoreFoundation)
+     ADD_EXECUTABLE(example-macosx example-macosx.c)
+     TARGET_LINK_LIBRARIES(example-macosx hiredis ${CF})
++    INSTALL(TARGETS example-macosx RUNTIME DESTINATION tools)
+ ENDIF()
+ 
+ IF (ENABLE_SSL)
+     ADD_EXECUTABLE(example-ssl example-ssl.c)
+     TARGET_LINK_LIBRARIES(example-ssl hiredis hiredis_ssl)
++    INSTALL(TARGETS example-ssl RUNTIME DESTINATION tools)
+ ENDIF()
+ 
+ ADD_EXECUTABLE(example example.c)
+ TARGET_LINK_LIBRARIES(example hiredis)
++
++#Install tools
++INSTALL(TARGETS example RUNTIME DESTINATION tools)
