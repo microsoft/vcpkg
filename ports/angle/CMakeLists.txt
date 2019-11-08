@@ -156,6 +156,7 @@ if(WIN32)
         "src/libANGLE/renderer/d3d/*.h"
     )
     list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "_unittest")
+    add_compile_options(/bigobj)
 
     ## WinRT D3D Renderer
     if(WINDOWS_STORE)
