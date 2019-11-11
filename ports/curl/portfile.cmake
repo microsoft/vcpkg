@@ -13,6 +13,7 @@ vcpkg_from_github(
         0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
+        0007_disable_tool_export_curl_target.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
