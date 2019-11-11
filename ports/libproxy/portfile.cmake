@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Windows")
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -7,7 +6,10 @@ vcpkg_from_github(
     REF 5924d4223e2b7238607749d977c0a878fe33cdbc #0.4.15
     SHA512 3c3be46e1ccd7e25a9b6e5fd71bfac5c1075bc9230a9a7ca94ee5e82bdbf090ab08dd53d8c6946db1353024409b234b35822d22f95a02cfb48bb54705b07d478
     HEAD_REF master
-    PATCHES fix-tools-path.patch
+    PATCHES
+        fix-tools-path.patch
+        support-windows.patch
+        fix-dependency-libmodman.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
