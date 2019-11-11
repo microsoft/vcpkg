@@ -258,6 +258,34 @@ function(vcpkg_find_acquire_program VAR)
       set(ARCHIVE "bazel-${BAZEL_VERSION}-windows-x86_64.zip")
       set(HASH 6482f99a0896f55ef65739e7b53452fd9c0adf597b599d0022a5e0c5fa4374f4a958d46f98e8ba25af4b065adacc578bfedced483d8c169ea5cb1777a99eea53)
     endif()
+  elseif(VAR MATCHES "GN")
+    set(PROGNAME gn)
+    set(REQUIRED_INTERPRETER PYTHON2)
+    set(SCRIPTNAME "gn.py")
+    set(PATHS ${DOWNLOADS}/tools/gn)
+    set(URL "https://storage.googleapis.com/chrome-infra/depot_tools.zip")
+    set(ARCHIVE "depot_tools.zip")
+    set(SKIP_SHA512 ON)
+    #set(HASH c5ca2578ae40ece6a93218b9ad8728bebd811a318e152568b63fffff936764d044d40cfb1e9036f1133844263428407208cec63e890ff9c46ffc7b5815174581)
+    file(TO_NATIVE_PATH "${PATHS}" GN_PATH)
+    vcpkg_add_to_path(PREPEND ${GN_PATH})
+    
+    if (VCPKG_TARGET_IS_WINDOWS)
+        set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
+        
+        if (VCPKG_PLATFORM_TOOLSET STREQUAL v140)
+            set(VS_VER 2015)
+        elseif (VCPKG_PLATFORM_TOOLSET STREQUAL v141)
+            set(VS_VER 2017)
+        elseif (VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+            set(VS_VER 2019)
+        else()
+            message(FATAL_ERROR "unsupported Visual Stduio version.")
+        endif()
+        
+        set(ENV{GYP_MSVS_VERSION} ${VS_VER})
+        set(ENV{vs${VS_VER}_install} ${VCPKG_VISUAL_STUDIO_PATH})
+    endif()
   # Download Tools
   elseif(VAR MATCHES "ARIA2")
     set(PROGNAME aria2c)
@@ -291,11 +319,21 @@ function(vcpkg_find_acquire_program VAR)
       message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
     endif()
 
-    vcpkg_download_distfile(ARCHIVE_PATH
-        URLS ${URL}
-        SHA512 ${HASH}
-        FILENAME ${ARCHIVE}
-    )
+    if (SKIP_SHA512)
+        set(VCPKG_USE_HEAD_VERSION ON)
+        vcpkg_download_distfile(ARCHIVE_PATH
+            URLS ${URL}
+            FILENAME ${ARCHIVE}
+            SKIP_SHA512
+        )
+        set(VCPKG_USE_HEAD_VERSION OFF)
+    else()
+        vcpkg_download_distfile(ARCHIVE_PATH
+            URLS ${URL}
+            SHA512 ${HASH}
+            FILENAME ${ARCHIVE}
+        )
+    endif()
 
     set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
     file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
@@ -333,7 +371,47 @@ function(vcpkg_find_acquire_program VAR)
     endif()
 
     do_find()
+    
+    if (VAR MATCHES "GN")
+        if (VCPKG_TARGET_IS_WINDOWS)
+            set(CMD_START cmd /c)
+        endif()
+        message("This may take several hours.")
+        message("fetching gn...")
+        if (VCPKG_TARGET_IS_WINDOWS)# AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
+            # The result of the check is i386 due to the use of 32-bit cmd, forced download amd64
+            file(READ ${PATHS}/cipd.ps1 CIPD_FILE)
+            string(REPLACE "[System.IntPtr]::Size -eq 8" "1" CIPD_FILE "${CIPD_FILE}")
+            file(WRITE ${PATHS}/cipd.ps1 "${CIPD_FILE}")
+        endif()
+        
+        vcpkg_execute_required_process(
+            COMMAND ${CMD_START} gclient
+            WORKING_DIRECTORY ${PATHS}
+            LOGNAME gclient
+        )
+        # If failed, delete vpython_cipd_cache and .vpython-root folder in user path.
+        vcpkg_execute_required_process(
+            COMMAND ${CMD_START} fetch chromium
+            WORKING_DIRECTORY ${PATHS}
+            LOGNAME fetch-gn
+        )
+        
+        message("Updating gn...")
+        vcpkg_execute_required_process(
+            COMMAND ${CMD_START} gclient sync
+            WORKING_DIRECTORY ${PATHS}
+            LOGNAME update-gn
+        )
+    endif()
   endif()
-
-  set(${VAR} "${${VAR}}" PARENT_SCOPE)
+  
+  if (NOT VAR MATCHES "GN")
+    set(${VAR} "${${VAR}}" PARENT_SCOPE)
+  else()
+    if (VCPKG_TARGET_IS_WINDOWS)
+        set(CMD_START cmd /c)
+    endif()
+    set(${VAR} "${CMD_START} ${${VAR}}" PARENT_SCOPE)
+  endif()
 endfunction()
