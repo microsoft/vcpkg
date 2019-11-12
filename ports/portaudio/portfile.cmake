@@ -4,6 +4,7 @@ vcpkg_from_git(
     REF c5d2c51bd6fe354d0ee1119ba932bfebd3ebfacc
     PATCHES
         fix-library-can-not-be-found.patch
+        fix-include.patch
 )
 
 # NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
