@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -38,16 +36,30 @@ file(GLOB HEADER_FILES "${SOURCE_PATH}/*.h")
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/freetype-gl)
 
 # LIB
-file(GLOB LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
-)
-file(GLOB DEBUG_LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB LIBS
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
+    )
+    file(GLOB DEBUG_LIBS
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
+    )
+else()
+    file(GLOB LIBS
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.a"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.a"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.a"
+    )
+    file(GLOB DEBUG_LIBS
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.a"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.a"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.a"
+    )
+endif()
+
 file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
