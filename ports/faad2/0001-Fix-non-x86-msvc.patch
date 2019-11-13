@@ -1,0 +1,13 @@
+diff --git a/libfaad/common.h b/libfaad/common.h
+index 897a0f0..8b78807 100644
+--- a/libfaad/common.h
++++ b/libfaad/common.h
+@@ -313,7 +313,7 @@ char *strchr(), *strrchr();
+   }
+ 
+ 
+-  #if defined(_WIN32) && !defined(_WIN64) && !defined(__MINGW32__)
++  #if defined(_WIN32) && defined(_M_IX86) && !defined(__MINGW32__)
+     #ifndef HAVE_LRINTF
+     #define HAS_LRINTF
+     static INLINE int lrintf(float f)
