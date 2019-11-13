@@ -1,40 +1,36 @@
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index dd3a313..7b79b2a 100644
+index dd3a313..6287794 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
-@@ -1,13 +1,16 @@
+@@ -1,12 +1,17 @@
 -INCLUDE(FindPkgConfig)
  # Check for GLib
  
 -PKG_CHECK_MODULES(GLIB2 glib-2.0)
--if (GLIB2_FOUND)
--    INCLUDE_DIRECTORIES(${GLIB2_INCLUDE_DIRS})
++FIND_LIBRARY(GLIB2_LIBRARIES NAMES glib-2.0)
++FIND_PATH(GLIB2_INCLUDE_DIRS glib.h)
++SET(GLIB2_FOUND ${GLIB2_LIBRARIES})
+ if (GLIB2_FOUND)
+     INCLUDE_DIRECTORIES(${GLIB2_INCLUDE_DIRS})
 -    LINK_DIRECTORIES(${GLIB2_LIBRARY_DIRS})
--    ADD_EXECUTABLE(example-glib example-glib.c)
+     ADD_EXECUTABLE(example-glib example-glib.c)
 -    TARGET_LINK_LIBRARIES(example-glib hiredis ${GLIB2_LIBRARIES})
--ENDIF(GLIB2_FOUND)
-+IF(0)
-+    FIND_LIBRARY(GLIB_LIBRARY NAMES glib-2.0)
-+    FIND_PATH(GLIB_INCLUDE_DIR glib.h)
-+    SET(GLIB_FOUND ${GLIB_LIBRARY})
-+    IF(GLIB_FOUND)
-+        INCLUDE_DIRECTORIES(${GLIB_INCLUDE_DIR})
-+        ADD_EXECUTABLE(example-glib example-glib.c)
-+        TARGET_LINK_LIBRARIES(example-glib hiredis ${GLIB_LIBRARY})
-+        INSTALL(TARGETS example-glib RUNTIME DESTINATION tools)
-+    ENDIF()
-+ENDIF()
++    TARGET_LINK_LIBRARIES(example-glib PUBLIC hiredis ${GLIB2_LIBRARIES})
++    if (UNIX)
++        FIND_PACKAGE(Threads REQUIRED)
++        TARGET_LINK_LIBRARIES(example-glib PRIVATE Threads::Threads)
++    endif()
++    INSTALL(TARGETS example-glib RUNTIME DESTINATION tools)
+ ENDIF(GLIB2_FOUND)
  
  FIND_PATH(LIBEV ev.h
-     HINTS /usr/local /usr/opt/local
-@@ -17,30 +20,45 @@ if (LIBEV)
+@@ -17,30 +22,44 @@ if (LIBEV)
      # Just compile and link with libev
      ADD_EXECUTABLE(example-libev example-libev.c)
      TARGET_LINK_LIBRARIES(example-libev hiredis ev)
 +    INSTALL(TARGETS example-libev RUNTIME DESTINATION tools)
  ENDIF()
  
-+
 +FIND_PACKAGE(Libevent CONFIG REQUIRED)
  FIND_PATH(LIBEVENT event.h)
  if (LIBEVENT)

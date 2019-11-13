@@ -9,3 +9,4 @@ Build-Depends: openssl
 
 Feature: example
 Description: Build example
+Build-Depends: glib, libevent
