@@ -60,6 +60,10 @@ if ("tool" IN_LIST FEATURES)
     file(REMOVE ${TIFF_TOOLS})
     file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(REMOVE ${TIFF_TOOLS})
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 endif()
 
 vcpkg_copy_pdbs()
