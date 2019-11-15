@@ -1,0 +1,11 @@
+Source: freealut
+Version: 2019-11-15
+Homepage: https://github.com/vancegroup/freealut
+Description: freealut is a free implementation of OpenAL's ALUT standard.
+Build-Depends: openal-soft
+
+Feature: test
+Description:Build test
+
+Feature: example
+Description: Build example

@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 963c530..c8e2094 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,8 +40,7 @@ option(BUILD_USE_WERROR "enable fail on all warning" OFF)
+ ###
+ # Dependencies
+ ###
+-find_package(OpenAL REQUIRED)
+-include_directories(${OPENAL_INCLUDE_DIR})
++find_package(OpenAL CONFIG REQUIRED)
+ 
+ ###
+ # Checking for types
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b72d1a1..0c2e799 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -44,7 +44,7 @@ if(BUILD_STATIC)
+ 	# we can't create a static library with the same name
+ 	# as the shared one, so we copy it over after creation
+ 	add_library(alut_static STATIC ${ALUT_SOURCES} ${ALUT_INTERNAL_HEADERS} ${ALUT_HEADERS})
+-	target_link_libraries(alut_static ${OPENAL_LIBRARY} ${ADD_LIBS})
++	target_link_libraries(alut_static OpenAL::OpenAL ${ADD_LIBS})
+ 	if(UNIX)
+ 		target_link_libraries(alut_static m)
+ 	endif()	
+@@ -79,7 +79,7 @@ set_target_properties(alut
+ 	${MAJOR_VERSION}
+ 	SOVERSION
+ 	${MAJOR_VERSION})
+-target_link_libraries(alut ${OPENAL_LIBRARY})
++target_link_libraries(alut OpenAL::OpenAL)
+ if(UNIX)
+ 	target_link_libraries(alut m)
+ endif()	
