@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         iconv.patch
+        1059-Add-missing-library-link-on-Windows.patch # https://github.com/Exiv2/exiv2/pull/1059
 )
 
 if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND ("unicode" IN_LIST FEATURES))
