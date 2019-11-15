@@ -99,8 +99,12 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
   ENDIF ()
+  if("ssl" IN_LIST FEATURES)
+    list(APPEND _ace_makefile_macros "ssl=1")
+    set(ENV{SSL_ROOT} ${CURRENT_INSTALLED_DIR})
+  endif()
   vcpkg_execute_required_process(
-    COMMAND make
+    COMMAND make ${_ace_makefile_macros}
     WORKING_DIRECTORY ${ACE_ROOT}/ace
     LOGNAME make-${TARGET_TRIPLET}
   )
