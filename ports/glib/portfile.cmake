@@ -7,6 +7,7 @@ endif()
 
 # Glib relies on DllMain on Windows
 if (NOT VCPKG_CMAKE_SYSTEM_NAME)
+	set(VCPKG_CRT_LINKAGE dynamic)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 endif()
 
