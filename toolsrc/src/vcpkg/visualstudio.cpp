@@ -319,6 +319,11 @@ namespace vcpkg::VisualStudio
                         // unknown toolset
                         continue;
                     }
+                    else if (toolset_version_prefix[3] == '0')
+                    {
+                        toolset_version = V_140;
+                        vcvars_option = "-vcvars_ver=14.0";
+                    }
                     else if (toolset_version_prefix[3] == '1')
                     {
                         toolset_version = V_141;
@@ -347,24 +352,6 @@ namespace vcpkg::VisualStudio
                             {
                                 const auto english_language_pack = dumpbin_path.parent_path() / "1033";
                                 const bool english_language_pack_available = fs.exists(english_language_pack);
-
-                                if (v140_is_available)
-                                {
-                                    const Toolset toolset{vs_instance.root_path,
-                                                          dumpbin_path,
-                                                          vcvarsall_bat,
-                                                          {"-vcvars_ver=14.0"},
-                                                          MinTool.name,
-                                                          MinTool.vsversion,
-                                                          MinTool.cmake_generator,
-                                                          arch};
-                                    found_toolsets.push_back(toolset);
-                                    if (!english_language_pack_available)
-                                    {
-                                        excluded_toolsets.push_back(toolset);
-                                        break;
-                                    }
-                                }
 
                                 const Toolset toolset{vs_instance.root_path,
                                                       dumpbin_path,
