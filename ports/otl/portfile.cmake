@@ -1,18 +1,15 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    # This URL is not stable becuase they use the same name for minor releases which changes the hash below.
-    # if you know a stable download URL then please update it.
     URLS "http://otl.sourceforge.net/otlv4_h2.zip"
-    FILENAME "otl-4.0.443.zip"
-    SHA512 7f1e9080f097da648050dcc60e5e54f7801bbdcbd5e4609dc14424a1881995c06f045e92bdabfca754461324dbf0e882c8542816799c4ec3c0a1a7fc6c150fa4
+    FILENAME "otlv4_h2-4.0.447.zip"
+    SHA512 07663442272a327a7d9154f6e817c0166ed254cfe3b9d043762179e96180a70d3ba4b3762e5ef1ebdb18492e3425467c9ddad3a2c68aa93bb7d51d54e9712008
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
-    REF 4.0.443
 )
 
 file(INSTALL ${SOURCE_PATH}/otlv4.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/otl)

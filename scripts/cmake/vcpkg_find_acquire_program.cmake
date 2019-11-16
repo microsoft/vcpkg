@@ -20,6 +20,7 @@
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
+## - GO
 ## - JOM
 ## - MESON
 ## - NASM
@@ -79,6 +80,14 @@ function(vcpkg_find_acquire_program VAR)
     set(_vfa_RENAME "yasm.exe")
     set(NOEXTRACT ON)
     set(HASH c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b)
+  elseif(VAR MATCHES "GO")
+    set(PROGNAME go)
+    set(PATHS ${DOWNLOADS}/tools/go/go/bin)
+    set(BREW_PACKAGE_NAME "go")
+    set(APT_PACKAGE_NAME "golang-go")
+    set(URL "https://dl.google.com/go/go1.13.1.windows-386.zip")
+    set(ARCHIVE "go1.13.1.windows-386.zip")
+    set(HASH 2ab0f07e876ad98d592351a8808c2de42351ab387217e088bc4c5fa51d6a835694c501e2350802323b55a27dc0157f8b70045597f789f9e50f5ceae50dea3027)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
@@ -160,10 +169,10 @@ function(vcpkg_find_acquire_program VAR)
     else()
       set(SCRIPTNAME meson)
     endif()
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.51.0)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.51.0.zip")
-    set(ARCHIVE "meson-0.51.0.zip")
-    set(HASH bf1df65cde7e0e0a44e4b4be7d68de9897a77c4ea4c694f1d77fe82cd3c7e7818dc034a3313ce885ba6883b4ba6d282b7a589f665fa499d9eb79fc7a23e415cc)
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.52.0)
+    set(URL "https://github.com/mesonbuild/meson/archive/0.52.0.zip")
+    set(ARCHIVE "meson-0.52.0.zip")
+    set(HASH 2f2657599f19933c02be2a1faa508d5b2d137fba1ccc9d68a6b6d04b8d21163c33220c673643fa444fa86e94ba010cf8a851b9e6abc096559a7c735f5099a180)
   elseif(VAR MATCHES "FLEX")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME win_flex)

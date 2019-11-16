@@ -74,7 +74,18 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
+# Build image quality module when building with 'contrib' feature and not UWP.
+set(BUILD_opencv_quality OFF)
 if("contrib" IN_LIST FEATURES)
+  if (VCPKG_TARGET_IS_UWP)
+    set(BUILD_opencv_quality OFF)
+    message(WARNING "The image quality module (quality) does not build for UWP, the module has been disabled.")
+    # The hdf module is silently disabled by OpenCVs buildsystem if HDF5 is not detected.
+    message(WARNING "The hierarchical data format module (hdf) depends on HDF5 which doesn't support UWP, the module has been disabled.")
+  else()
+    set(BUILD_opencv_quality CMAKE_DEPENDS_IN_PROJECT_ONLY)
+  endif()
+
   vcpkg_from_github(
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
@@ -88,12 +99,6 @@ if("contrib" IN_LIST FEATURES)
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/face_landmark_model.dat"
     FILENAME "opencv-cache/data/7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat"
     SHA512 c16e60a6c4bb4de3ab39b876ae3c3f320ea56f69c93e9303bd2dff8760841dcd71be4161fff8bc71e8fe4fe8747fa8465d49d6bd8f5ebcdaea161f4bc2da7c93
-  )
-
-  vcpkg_download_distfile(TINYDNN_ARCHIVE
-    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
-    FILENAME "opencv-cache/tiny_dnn/adb1c512e09ca2c7a6faef36f9c53e59-v1.0.0a3.tar.gz"
-    SHA512 5f2c1a161771efa67e85b1fea395953b7744e29f61187ac5a6c54c912fb195b3aef9a5827135c3668bd0eeea5ae04a33cc433e1f6683e2b7955010a2632d168b
   )
 
   function(download_opencv_3rdparty ID COMMIT HASH)
@@ -184,11 +189,38 @@ if(WITH_IPP)
 endif()
 
 set(WITH_MSMF ON)
-if(VCPKG_TARGET_IS_UWP)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(WITH_MSMF OFF)
 endif()
 
-set(WITH_ZLIB ON)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  if (WITH_TBB)
+    message(WARNING "TBB is currently unsupported in this build configuration, turning it off")
+    set(WITH_TBB OFF)
+  endif()
+
+  if (WITH_VTK)
+    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
+    set(WITH_VTK OFF)
+  endif()
+
+  if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
+    message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
+    set(BUILD_opencv_ovis OFF)
+  endif()
+endif()
+
+if("ffmpeg" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_UWP)
+    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
+    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
+  endif()
+endif()
+
+if("qt" IN_LIST FEATURES)
+  list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
+endif()
+
 set(BUILD_opencv_line_descriptor ON)
 set(BUILD_opencv_saliency ON)
 set(BUILD_opencv_bgsegm ON)
@@ -197,14 +229,11 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_saliency OFF)
   set(BUILD_opencv_bgsegm OFF)
 endif()
-if (VCPKG_TARGET_IS_UWP)
-  set(BUILD_opencv_quality OFF)
-endif()
 
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_LIB_INSTALL_PATH=lib
@@ -216,63 +245,57 @@ vcpkg_configure_cmake(
         # Do not build docs/examples
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
-        # Do not build integrated libraries, use external ones whenever possible
+        ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
-        -DBUILD_PACKAGE=OFF
-        -DBUILD_PERF_TESTS=OFF
         -DBUILD_PNG=OFF
-        -DBUILD_PROTOBUF=OFF
-        -DBUILD_TESTS=OFF
         -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
-        -DBUILD_WITH_DEBUG_INFO=ON
-        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_ZLIB=OFF
-        # Select which OpenCV modules should be built
+        ###### Disable build 3rd party components
+        -DBUILD_PROTOBUF=OFF
+        ###### OpenCV Build components
         -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_bgsegm=${BUILD_opencv_bgsegm}
         -DBUILD_opencv_line_descriptor=${BUILD_opencv_line_descriptor}
-        -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
-        -DBUILD_opencv_python2=OFF
-        -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
-        # PROTOBUF
+        -DBUILD_PACKAGE=OFF
+        -DBUILD_PERF_TESTS=OFF
+        -DBUILD_TESTS=OFF
+        -DBUILD_WITH_DEBUG_INFO=ON
+        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
+        ###### PROTOBUF
         -DPROTOBUF_UPDATE_FILES=ON
         -DUPDATE_PROTO_FILES=ON
-        -DWITH_PROTOBUF=ON
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
         -DENABLE_CXX11=ON
-        -DENABLE_PYLINT=OFF
-        -DOPENCV_ENABLE_NONFREE=${OPENCV_ENABLE_NONFREE}
-        # INSTALL
-        -DINSTALL_FORCE_UNIX_PATHS=ON
-        -DINSTALL_LICENSE=OFF
-        # OPENCV
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
-        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
+        ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
-        # WITH
-        ${FEATURE_OPPTIONS}
+        ###### customized properties
+        ## Options from vcpkg_check_features()
+        ${FEATURE_OPTIONS}
+        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_IPP=${WITH_IPP}
-        -DWITH_LAPACK=OFF
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
+        -DWITH_PROTOBUF=ON
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_VTK=${WITH_VTK}
-        -DWITH_ZLIB=${WITH_ZLIB}
-        -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
-        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
-        -DINSTALL_OTHER=OFF
+        ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
+        -DWITH_LAPACK=OFF
+        ###### BUILD_options (mainly modules which require additional libraries)
+        -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
+        ###### The following modules are disabled for UWP
+        -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        ###### Additional build flags
+        ${ADDITIONAL_BUILD_FLAGS}
 )
 
 vcpkg_install_cmake()
@@ -308,6 +331,7 @@ find_package(Ceres QUIET)
 find_package(ade QUIET)
 find_package(VTK QUIET)
 find_package(OpenMP QUIET)
+find_package(Tesseract QUIET)
 find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
@@ -321,4 +345,4 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/setup_vars_opencv3.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/setup_vars_opencv3.cmd)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv3 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,0 +1,32 @@
+diff --git a/projects/CMake/CMakeLists.txt b/projects/CMake/CMakeLists.txt
+index 3d0744740..293f187c5 100644
+--- a/projects/CMake/CMakeLists.txt
++++ b/projects/CMake/CMakeLists.txt
+@@ -146,3 +146,27 @@ set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE CACHE BOOL "Don't require all project
+ 
+ install(DIRECTORY ${RXCPP_DIR}/Rx/v2/src/rxcpp/ DESTINATION include/rxcpp
+         FILES_MATCHING PATTERN "*.hpp")
++
++# Here we are exporting TARGETS so that other projects can import rxcpp
++# just with find_package(rxcpp CONFIG) after rxcpp is installed into system by "make install". 
++add_library(rxcpp INTERFACE)
++
++target_include_directories(rxcpp INTERFACE
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include/rxcpp>
++)
++
++install(TARGETS rxcpp EXPORT rxcppConfig)
++install(EXPORT rxcppConfig DESTINATION share/rxcpp/cmake)
++
++# When find_package(rxcpp SOME_VERSION REQUIRED) will be used in third party project
++# where SOME_VERSION is any version incompatible with ${PROJECT_VERSION} then cmake will generate the error.
++# It means you don't need track versions manually.
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file("${PROJECT_BINARY_DIR}/rxcppConfigVersion.cmake"
++    VERSION
++        ${PROJECT_VERSION}
++    COMPATIBILITY
++        AnyNewerVersion
++)
++install(FILES "${PROJECT_BINARY_DIR}/rxcppConfigVersion.cmake" DESTINATION share/rxcpp/cmake)

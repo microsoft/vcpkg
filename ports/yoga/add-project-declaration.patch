@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ #
+ 
+ cmake_minimum_required(VERSION 3.4.1)
+-
++project(yogacore CXX)
+ set(CMAKE_VERBOSE_MAKEFILE on)
+ 
+ file(GLOB_RECURSE yogacore_SRC yoga/*.cpp)
