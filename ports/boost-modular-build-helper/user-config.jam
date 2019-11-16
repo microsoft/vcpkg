@@ -6,6 +6,19 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
     <setup>"@NOTHING_BAT@"
     @TOOLSET_OPTIONS@
     ;
+    if "@VCPKG_PLATFORM_TOOLSET@" = "llvm"
+    {
+        using clang-win : : "@VCPKG_CXX_COMPILER@" :
+        <setup>"@NOTHING_BAT@"
+        <linker>"@VCPKG_LINKER@"
+        <archiver>"@VCPKG_LINKER@"
+        @TOOLSET_OPTIONS@
+        ;
+    }
+    #using intel-win : 14.2 : "@VCPKG_CXX_COMPILER@" :
+    #<setup>"@NOTHING_BAT@"
+    #@TOOLSET_OPTIONS@
+    #;
 }
 else
 {
