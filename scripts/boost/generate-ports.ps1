@@ -47,7 +47,7 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "asio" -or $Name -eq "mpi")
+    if ($Name -eq "asio" -or $Name -eq "mpi" -or $Name -eq "iostreams")
     {
         $versionsuffix = "-1"
     }
@@ -173,9 +173,6 @@ function Generate()
                 ")"
             )
         }
-        elseif ($Name -eq "iostreams")
-        {
-        }
         else
         {
             $portfileLines += @(
@@ -184,13 +181,11 @@ function Generate()
                 )
         }
     }
-    if ($Name -ne "iostreams")
-    {
-        $portfileLines += @(
-            "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
-            "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
-        )
-    }
+
+    $portfileLines += @(
+        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
+        "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
+    )
 
     if (Test-Path "$scriptsDir/post-build-stubs/$Name.cmake")
     {

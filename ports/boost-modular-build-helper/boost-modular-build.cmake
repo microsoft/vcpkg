@@ -34,28 +34,8 @@ function(boost_modular_build)
 
     set(REQUIREMENTS ${_bm_REQUIREMENTS})
 
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(BOOST_LIB_PREFIX)
-        set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
-        set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
-    else()
-        set(BOOST_LIB_PREFIX lib)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            set(BOOST_LIB_RELEASE_SUFFIX .a)
-            set(BOOST_LIB_DEBUG_SUFFIX .a)
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-            set(BOOST_LIB_RELEASE_SUFFIX .dylib)
-            set(BOOST_LIB_DEBUG_SUFFIX .dylib)
-        else()
-            set(BOOST_LIB_RELEASE_SUFFIX .so)
-            set(BOOST_LIB_DEBUG_SUFFIX .so)
-        endif()
-    endif()
-
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
         file(READ ${_bm_SOURCE_PATH}/build/Jamfile.v2 _contents)
-        #string(REPLACE "import ../../predef/check/predef" "import predef/check/predef" _contents "${_contents}")
-        #string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
         string(REGEX REPLACE
             "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
             "/boost/\\1//\\2"
@@ -67,12 +47,6 @@ function(boost_modular_build)
     endif()
 
     configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
-    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-config/checks")
-    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${_bm_SOURCE_PATH}/build/config")
-    # endif()
-    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-predef/check")
-    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${_bm_SOURCE_PATH}/build/predef")
-    # endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
@@ -211,7 +185,6 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS_DBG "linkflags=${VCPKG_LINKER_FLAGS_DEBUG}")
     endif()
 
-
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         list(APPEND _bm_OPTIONS runtime-link=shared)
@@ -342,30 +315,6 @@ function(boost_modular_build)
         endif()
         message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
     endif()
-
-    file(GLOB INSTALLED_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib ${CURRENT_PACKAGES_DIR}/lib/*.lib)
-    foreach(LIB ${INSTALLED_LIBS})
-        get_filename_component(OLD_FILENAME ${LIB} NAME)
-        get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
-        string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
-        string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
-        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
-        string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
-        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_71" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
-        if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
-            # nothing to do
-        elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
-            file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
-        else()
-            file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
-        endif()
-    endforeach()
 
     vcpkg_copy_pdbs()
 endfunction()
