@@ -10,8 +10,6 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
     {
         using clang-win : : "@VCPKG_CXX_COMPILER@" :
         <setup>"@NOTHING_BAT@"
-        <linker>"@VCPKG_LINKER@"
-        <archiver>"@VCPKG_LINKER@"
         @TOOLSET_OPTIONS@
         ;
     }

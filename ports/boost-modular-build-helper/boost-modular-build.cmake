@@ -6,7 +6,7 @@ function(boost_modular_build)
     endif()
 
     # Todo: this serves too similar a purpose as vcpkg_find_acquire_program()
-    if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_WINDOWS)
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
     elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
@@ -34,10 +34,18 @@ function(boost_modular_build)
 
     set(REQUIREMENTS ${_bm_REQUIREMENTS})
 
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(VCPKG_TARGET_IS_WINDOWS)
         set(BOOST_LIB_PREFIX)
-        set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
-        set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
+        set(BOOST_LIB_RELEASE_SUFFIX -${VCPKG_PLATFORM_TOOLSET}-mt.lib)
+        set(BOOST_LIB_DEBUG_SUFFIX -${VCPKG_PLATFORM_TOOLSET}-mt-gd.lib)
+        if(VCPKG_PLATFORM_TOOLSET MATCHES "llvm")
+            string(REPLACE "llvm" "clangw10" BOOST_LIB_RELEASE_SUFFIX ${BOOST_LIB_RELEASE_SUFFIX})
+            string(REPLACE "llvm" "clangw10" BOOST_LIB_DEBUG_SUFFIX ${BOOST_LIB_DEBUG_SUFFIX})
+            string(REPLACE "-gd" "-d" BOOST_LIB_DEBUG_SUFFIX ${BOOST_LIB_DEBUG_SUFFIX})
+        else()
+            string(REPLACE "v14" "vc14" BOOST_LIB_RELEASE_SUFFIX ${BOOST_LIB_RELEASE_SUFFIX})
+            string(REPLACE "v14" "vc14" BOOST_LIB_DEBUG_SUFFIX ${BOOST_LIB_DEBUG_SUFFIX})
+        endif()
     else()
         set(BOOST_LIB_PREFIX lib)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -367,8 +375,6 @@ function(boost_modular_build)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
-        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
-        string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
