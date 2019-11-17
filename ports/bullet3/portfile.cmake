@@ -32,6 +32,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# Install cmake toolchain files
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/bullet/UseBullet.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3)
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/bullet/BulletConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3)
+file(READ ${CURRENT_PACKAGES_DIR}/share/bullet3/BulletConfig.cmake _contents)
+string(REPLACE "lib/cmake/bullet" "share/bullet3" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/bullet3/BulletConfig.cmake "${_contents}")
+
+# Clean up unneeded files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
