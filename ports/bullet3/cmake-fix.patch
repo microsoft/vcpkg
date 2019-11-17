@@ -1,0 +1,277 @@
+diff --git a/BulletConfig.cmake.in b/BulletConfig.cmake.in
+index f5dc7bdbb..f5412dac3 100644
+--- a/BulletConfig.cmake.in
++++ b/BulletConfig.cmake.in
+@@ -3,6 +3,8 @@
+ #  BulletConfig.cmake(.in)
+ #
+ 
++@PACKAGE_INIT@
++
+ # Use the following variables to compile and link against Bullet:
+ #  BULLET_FOUND              - True if Bullet was found on your system
+ #  BULLET_USE_FILE           - The file making Bullet usable
+@@ -15,11 +17,20 @@
+ #  BULLET_VERSION_STRING     - A human-readable string containing the version
+ 
+ set ( BULLET_FOUND 1 )
+-set ( BULLET_USE_FILE     "@BULLET_USE_FILE@" )
++set_and_check ( BULLET_USE_FILE     "@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/UseBullet.cmake" )
+ set ( BULLET_DEFINITIONS  "@BULLET_DEFINITIONS@" )
+-set ( BULLET_INCLUDE_DIR  "@INCLUDE_INSTALL_DIR@" )
+-set ( BULLET_INCLUDE_DIRS "@INCLUDE_INSTALL_DIR@" )
++set_and_check ( BULLET_INCLUDE_DIR  "@PACKAGE_INCLUDE_INSTALL_DIR@" )
++set_and_check ( BULLET_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@" )
+ set ( BULLET_LIBRARIES    "@BULLET_LIBRARIES@" )
+-set ( BULLET_LIBRARY_DIRS "@LIB_DESTINATION@" )
+-set ( BULLET_ROOT_DIR     "@CMAKE_INSTALL_PREFIX@" )
+-set ( BULLET_VERSION_STRING "@BULLET_VERSION@" )
+\ No newline at end of file
++set_and_check ( BULLET_LIBRARY_DIRS "@PACKAGE_LIB_DESTINATION@" )
++set_and_check ( BULLET_ROOT_DIR     "@PACKAGE_CMAKE_INSTALL_PREFIX@" )
++set ( BULLET_VERSION_STRING "@BULLET_VERSION@" )
++
++# Load targets
++if(NOT TARGET Bullet3Common)
++  file(GLOB CONFIG_FILES "@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/*_Export.cmake")
++  foreach(f ${CONFIG_FILES})
++    include(${f})
++  endforeach()
++  set(_DIR)
++endif()
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 68e0a93bc..872e14361 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.4.3)
++cmake_minimum_required(VERSION 3.0)
+ set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
+ cmake_policy(SET CMP0017 NEW)
+ #this line has to appear before 'PROJECT' in order to be able to disable incremental linking
+@@ -465,23 +465,34 @@ IF (BUILD_UNIT_TESTS)
+ 	SUBDIRS(test)
+ ENDIF()
+ 
+-set (BULLET_CONFIG_CMAKE_PATH lib${LIB_SUFFIX}/cmake/bullet )
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++	"${CMAKE_CURRENT_BINARY_DIR}/BulletConfigVersion.cmake"
++	VERSION ${BULLET_VERSION}
++	COMPATIBILITY AnyNewerVersion
++)
++
++set (BULLET_CONFIG_CMAKE_PATH share/bullet3 )
+ list (APPEND BULLET_LIBRARIES LinearMath)
+ list (APPEND BULLET_LIBRARIES Bullet3Common)
+ list (APPEND BULLET_LIBRARIES BulletInverseDynamics)
+ list (APPEND BULLET_LIBRARIES BulletCollision)
+ list (APPEND BULLET_LIBRARIES BulletDynamics)
+ list (APPEND BULLET_LIBRARIES BulletSoftBody)
+-set (BULLET_USE_FILE ${BULLET_CONFIG_CMAKE_PATH}/UseBullet.cmake)
+-configure_file 	( ${CMAKE_CURRENT_SOURCE_DIR}/BulletConfig.cmake.in
+-					${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake
+-					@ONLY ESCAPE_QUOTES
+-				)
++
++configure_package_config_file(
++	${CMAKE_CURRENT_SOURCE_DIR}/BulletConfig.cmake.in
++	${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake
++	PATH_VARS INCLUDE_INSTALL_DIR LIB_DESTINATION CMAKE_INSTALL_PREFIX BULLET_CONFIG_CMAKE_PATH
++	INSTALL_DESTINATION ${BULLET_CONFIG_CMAKE_PATH}
++)
++
+ OPTION(INSTALL_CMAKE_FILES "Install generated CMake files" ON)
+ 
+ IF (INSTALL_CMAKE_FILES)
+ 	install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/UseBullet.cmake
+ 		${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake
++		${CMAKE_CURRENT_BINARY_DIR}/BulletConfigVersion.cmake
+ 		DESTINATION ${BULLET_CONFIG_CMAKE_PATH}
+ 	)
+ ENDIF (INSTALL_CMAKE_FILES)
+diff --git a/src/Bullet3Common/CMakeLists.txt b/src/Bullet3Common/CMakeLists.txt
+index e899e67d9..0ca702eb8 100644
+--- a/src/Bullet3Common/CMakeLists.txt
++++ b/src/Bullet3Common/CMakeLists.txt
+@@ -43,9 +43,12 @@ IF (INSTALL_LIBS)
+ 		#FILES_MATCHING requires CMake 2.6
+ 		IF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.5)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS Bullet3Common DESTINATION .)
++				INSTALL(TARGETS Bullet3Common
++					EXPORT Bullet3Common_Export
++					DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS Bullet3Common
++					EXPORT Bullet3Common_Export
+ 					RUNTIME DESTINATION bin
+ 					LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+@@ -59,5 +62,8 @@ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h"  PATTERN
+ 			SET_TARGET_PROPERTIES(Bullet3Common PROPERTIES FRAMEWORK true)
+ 			SET_TARGET_PROPERTIES(Bullet3Common PROPERTIES PUBLIC_HEADER "${Bullet3Common_HDRS}")
+ 		ENDIF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
++
++		INSTALL(EXPORT Bullet3Common_Export
++			DESTINATION ${BULLET_CONFIG_CMAKE_PATH})
+ 	ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ ENDIF (INSTALL_LIBS)
+diff --git a/src/BulletCollision/CMakeLists.txt b/src/BulletCollision/CMakeLists.txt
+index f5d725562..e98de8ba2 100644
+--- a/src/BulletCollision/CMakeLists.txt
++++ b/src/BulletCollision/CMakeLists.txt
+@@ -266,11 +266,15 @@ IF (INSTALL_LIBS)
+ 		#INSTALL of other files requires CMake 2.6
+ 		IF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.5)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletCollision DESTINATION .)
++				INSTALL(TARGETS BulletCollision
++					EXPORT BulletCollision_Export
++					DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletCollision RUNTIME DESTINATION bin
+-								LIBRARY DESTINATION lib${LIB_SUFFIX}
+-								ARCHIVE DESTINATION lib${LIB_SUFFIX})
++				INSTALL(TARGETS BulletCollision
++					EXPORT BulletCollision_Export
++					RUNTIME DESTINATION bin
++					LIBRARY DESTINATION lib${LIB_SUFFIX}
++					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ 				INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE PATTERN "CMakeFiles" EXCLUDE)
+ 				INSTALL(FILES ../btBulletCollisionCommon.h
+@@ -290,5 +294,8 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/BulletCollision)
+ 			SET_PROPERTY(SOURCE ${NarrowPhaseCollision_HDRS} PROPERTY MACOSX_PACKAGE_LOCATION Headers/NarrowPhaseCollision)
+ 
+ 		ENDIF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
++
++		INSTALL(EXPORT BulletCollision_Export
++			DESTINATION ${BULLET_CONFIG_CMAKE_PATH})
+ 	ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ ENDIF (INSTALL_LIBS)
+diff --git a/src/BulletDynamics/CMakeLists.txt b/src/BulletDynamics/CMakeLists.txt
+index 3332440f2..3bbce4389 100644
+--- a/src/BulletDynamics/CMakeLists.txt
++++ b/src/BulletDynamics/CMakeLists.txt
+@@ -147,11 +147,15 @@ IF (INSTALL_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ 		IF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.5)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletDynamics DESTINATION .)
++				INSTALL(TARGETS BulletDynamics
++					EXPORT BulletDynamics_Export
++					DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletDynamics RUNTIME DESTINATION bin
+-								LIBRARY DESTINATION lib${LIB_SUFFIX}
+-								ARCHIVE DESTINATION lib${LIB_SUFFIX})
++				INSTALL(TARGETS BulletDynamics
++					EXPORT BulletDynamics_Export
++					RUNTIME DESTINATION bin
++					LIBRARY DESTINATION lib${LIB_SUFFIX}
++					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ 				INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h"  PATTERN
+ ".svn" EXCLUDE PATTERN "CMakeFiles" EXCLUDE)
+@@ -172,4 +176,7 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/BulletDynamics)
+ 			SET_PROPERTY(SOURCE ${MLCPSolvers_HDRS} PROPERTY MACOSX_PACKAGE_LOCATION Headers/MLCPSolvers)
+ 		ENDIF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 	ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
++	
++	INSTALL(EXPORT BulletDynamics_Export
++		DESTINATION ${BULLET_CONFIG_CMAKE_PATH})
+ ENDIF (INSTALL_LIBS)
+diff --git a/src/BulletInverseDynamics/CMakeLists.txt b/src/BulletInverseDynamics/CMakeLists.txt
+index 3331c27ea..86b4e54be 100644
+--- a/src/BulletInverseDynamics/CMakeLists.txt
++++ b/src/BulletInverseDynamics/CMakeLists.txt
+@@ -42,11 +42,15 @@ IF (INSTALL_LIBS)
+ 		#INSTALL of other files requires CMake 2.6
+ 		IF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.5)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletInverseDynamics DESTINATION .)
++				INSTALL(TARGETS BulletInverseDynamics
++					EXPORT BulletInverseDynamics_Export
++					DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletInverseDynamics RUNTIME DESTINATION bin
+-								LIBRARY DESTINATION lib${LIB_SUFFIX}
+-								ARCHIVE DESTINATION lib${LIB_SUFFIX})
++				INSTALL(TARGETS BulletInverseDynamics
++					EXPORT BulletInverseDynamics_Export
++					RUNTIME DESTINATION bin
++					LIBRARY DESTINATION lib${LIB_SUFFIX}
++					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ 				INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE PATTERN "CMakeFiles" EXCLUDE)
+ 				INSTALL(FILES ../btBulletCollisionCommon.h
+@@ -62,5 +66,8 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/BulletInverseDynamics)
+ 			SET_PROPERTY(SOURCE ${BulletInverseDynamicsDetails_HDRS} PROPERTY MACOSX_PACKAGE_LOCATION Headers/details)
+ 
+ 		ENDIF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
++
++		INSTALL(EXPORT BulletInverseDynamics_Export
++			DESTINATION ${BULLET_CONFIG_CMAKE_PATH})
+ 	ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ ENDIF (INSTALL_LIBS)
+diff --git a/src/BulletSoftBody/CMakeLists.txt b/src/BulletSoftBody/CMakeLists.txt
+index d43df1c67..6ba508ec5 100644
+--- a/src/BulletSoftBody/CMakeLists.txt
++++ b/src/BulletSoftBody/CMakeLists.txt
+@@ -50,11 +50,15 @@ IF (INSTALL_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ 		IF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.5)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS BulletSoftBody DESTINATION .)
++				INSTALL(TARGETS BulletSoftBody
++					EXPORT BulletSoftBody_Export
++					DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-			INSTALL(TARGETS BulletSoftBody RUNTIME DESTINATION bin
+-							LIBRARY DESTINATION lib${LIB_SUFFIX}
+-							ARCHIVE DESTINATION lib${LIB_SUFFIX})
++				INSTALL(TARGETS BulletSoftBody
++					EXPORT BulletSoftBody_Export
++					RUNTIME DESTINATION bin
++					LIBRARY DESTINATION lib${LIB_SUFFIX}
++					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ 				INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h"  PATTERN
+ ".svn" EXCLUDE PATTERN "CMakeFiles" EXCLUDE)
+@@ -65,5 +69,8 @@ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h"  PATTERN
+ 			SET_TARGET_PROPERTIES(BulletSoftBody PROPERTIES FRAMEWORK true)
+ 			SET_TARGET_PROPERTIES(BulletSoftBody PROPERTIES PUBLIC_HEADER "${BulletSoftBody_HDRS}")
+ 		ENDIF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
++
++		INSTALL(EXPORT BulletSoftBody_Export
++			DESTINATION ${BULLET_CONFIG_CMAKE_PATH})
+ 	ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ ENDIF (INSTALL_LIBS)
+diff --git a/src/LinearMath/CMakeLists.txt b/src/LinearMath/CMakeLists.txt
+index 0c8c0133a..56d4b5bcc 100644
+--- a/src/LinearMath/CMakeLists.txt
++++ b/src/LinearMath/CMakeLists.txt
+@@ -59,9 +59,12 @@ IF (INSTALL_LIBS)
+ 		#FILES_MATCHING requires CMake 2.6
+ 		IF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.5)
+ 			IF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+-				INSTALL(TARGETS LinearMath DESTINATION .)
++				INSTALL(TARGETS LinearMath
++					EXPORT LinearMath_Export
++					DESTINATION .)
+ 			ELSE (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
+ 				INSTALL(TARGETS LinearMath
++					EXPORT LinearMath_Export
+ 					RUNTIME DESTINATION bin
+ 					LIBRARY DESTINATION lib${LIB_SUFFIX}
+ 					ARCHIVE DESTINATION lib${LIB_SUFFIX})
+@@ -75,5 +78,8 @@ DESTINATION ${INCLUDE_INSTALL_DIR} FILES_MATCHING PATTERN "*.h"  PATTERN
+ 			SET_TARGET_PROPERTIES(LinearMath PROPERTIES FRAMEWORK true)
+ 			SET_TARGET_PROPERTIES(LinearMath PROPERTIES PUBLIC_HEADER "${LinearMath_HDRS}")
+ 		ENDIF (APPLE AND BUILD_SHARED_LIBS AND FRAMEWORK)
++
++		INSTALL(EXPORT LinearMath_Export
++			DESTINATION ${BULLET_CONFIG_CMAKE_PATH})
+ 	ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+ ENDIF (INSTALL_LIBS)
