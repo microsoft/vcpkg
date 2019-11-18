@@ -1,0 +1,92 @@
+diff --git a/CMake/resources.cmake b/CMake/resources.cmake
+index 3676d3b..6296b22 100644
+--- a/CMake/resources.cmake
++++ b/CMake/resources.cmake
+@@ -63,15 +63,26 @@ endmacro (fl_find_header)
+ fl_find_header (HAVE_ALSA_ASOUNDLIB_H alsa/asoundlib.h)
+ fl_find_header (HAVE_DLFCN_H dlfcn.h)
+ fl_find_header (HAVE_GL_GLU_H GL/glu.h)
+-fl_find_header (HAVE_LIBPNG_PNG_H libpng/png.h)
++#fl_find_header (HAVE_LIBPNG_PNG_H libpng/png.h)
+ fl_find_header (HAVE_LOCALE_H locale.h)
+ fl_find_header (HAVE_OPENGL_GLU_H OpenGL/glu.h)
+-fl_find_header (HAVE_PNG_H png.h)
++#fl_find_header (HAVE_PNG_H png.h)
+ fl_find_header (HAVE_STDIO_H stdio.h)
+ fl_find_header (HAVE_STRINGS_H strings.h)
+ fl_find_header (HAVE_SYS_SELECT_H sys/select.h)
+ fl_find_header (HAVE_SYS_STDTYPES_H sys/stdtypes.h)
+ 
++find_package(PNG REQUIRED)
++if(PNG_FOUND)
++ set(LIB_png ${PNG_LIBRARIES})
++ set(HAVE_PNG_H ${PNG_FOUND})
++ 
++endif()
++find_package(ZLIB REQUIRED)
++if(ZLIB_FOUND)
++ set(LIB_zlib ${ZLIB_LIBRARIES})
++endif()
++
+ if (USE_FIND_FILE)
+   fl_find_header (HAVE_X11_XREGION_H "X11/Xregion.h")
+   fl_find_header (HAVE_XDBE_H "X11/extensions/Xdbe.h")
+@@ -184,12 +195,13 @@ find_library(LIB_freetype freetype)
+ find_library(LIB_GL GL)
+ find_library(LIB_MesaGL MesaGL)
+ find_library(LIB_jpeg jpeg)
+-find_library(LIB_png png)
+-find_library(LIB_zlib z)
++#find_library(LIB_png png)
++#find_library(LIB_zlib z)
+ 
+ mark_as_advanced(LIB_CAIRO LIB_dl LIB_fontconfig LIB_freetype)
+ mark_as_advanced(LIB_GL LIB_MesaGL)
+-mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
++#mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
++mark_as_advanced(LIB_jpeg)
+ 
+ #######################################################################
+ # functions
+@@ -208,31 +220,31 @@ if(HAVE_DLFCN_H)
+ endif(HAVE_DLFCN_H)
+ 
+ set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
+-CHECK_FUNCTION_EXISTS(dlsym			HAVE_DLSYM)
++CHECK_FUNCTION_EXISTS(dlsym     HAVE_DLSYM)
+ set(CMAKE_REQUIRED_LIBRARIES)
+ 
+-CHECK_FUNCTION_EXISTS(localeconv		HAVE_LOCALECONV)
++CHECK_FUNCTION_EXISTS(localeconv    HAVE_LOCALECONV)
+ 
+ if(LIB_png)
+   set(CMAKE_REQUIRED_LIBRARIES ${LIB_png})
+-  CHECK_FUNCTION_EXISTS(png_get_valid		HAVE_PNG_GET_VALID)
+-  CHECK_FUNCTION_EXISTS(png_set_tRNS_to_alpha	HAVE_PNG_SET_TRNS_TO_ALPHA)
++  CHECK_FUNCTION_EXISTS(png_get_valid   HAVE_PNG_GET_VALID)
++  CHECK_FUNCTION_EXISTS(png_set_tRNS_to_alpha HAVE_PNG_SET_TRNS_TO_ALPHA)
+   set(CMAKE_REQUIRED_LIBRARIES)
+ endif(LIB_png)
+ 
+-CHECK_FUNCTION_EXISTS(scandir			HAVE_SCANDIR)
+-CHECK_FUNCTION_EXISTS(snprintf			HAVE_SNPRINTF)
++CHECK_FUNCTION_EXISTS(scandir     HAVE_SCANDIR)
++CHECK_FUNCTION_EXISTS(snprintf      HAVE_SNPRINTF)
+ 
+ # not really true but we convert strcasecmp calls to _stricmp calls in flstring.h
+ if(MSVC)
+    set(HAVE_STRCASECMP 1)
+ endif(MSVC)
+ 
+-CHECK_FUNCTION_EXISTS(strcasecmp		HAVE_STRCASECMP)
++CHECK_FUNCTION_EXISTS(strcasecmp    HAVE_STRCASECMP)
+ 
+-CHECK_FUNCTION_EXISTS(strlcat			HAVE_STRLCAT)
+-CHECK_FUNCTION_EXISTS(strlcpy			HAVE_STRLCPY)
+-CHECK_FUNCTION_EXISTS(vsnprintf			HAVE_VSNPRINTF)
++CHECK_FUNCTION_EXISTS(strlcat     HAVE_STRLCAT)
++CHECK_FUNCTION_EXISTS(strlcpy     HAVE_STRLCPY)
++CHECK_FUNCTION_EXISTS(vsnprintf     HAVE_VSNPRINTF)
+ 
+ if(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
+    set(MSG "POSIX compatible scandir")

@@ -1,0 +1,60 @@
+diff --git a/CMake/options.cmake b/CMake/options.cmake
+index 3784314..ae0b48f 100644
+--- a/CMake/options.cmake
++++ b/CMake/options.cmake
+@@ -157,37 +157,33 @@ if(OPTION_BUILD_HTML_DOCUMENTATION OR OPTION_BUILD_PDF_DOCUMENTATION)
+ endif(OPTION_BUILD_HTML_DOCUMENTATION OR OPTION_BUILD_PDF_DOCUMENTATION)
+ 
+ #######################################################################
+-include(FindPkgConfig)
+ 
+ option(OPTION_CAIRO "use lib Cairo" OFF)
+ option(OPTION_CAIROEXT
+    "use FLTK code instrumentation for Cairo extended use" OFF
+    )
+ 
+-if ((OPTION_CAIRO OR OPTION_CAIROEXT) AND LIB_CAIRO)
+-   pkg_search_module(PKG_CAIRO cairo)
+-endif ((OPTION_CAIRO OR OPTION_CAIROEXT) AND LIB_CAIRO)
+-
+-if (PKG_CAIRO_FOUND)
++if (OPTION_CAIRO OR OPTION_CAIROEXT)
++   # find_library(LIB_CAIRO cairo) in resources.cmake
++   if (NOT LIB_CAIRO)
++      message(STATUS "*** Cairo was requested but not found - please install Cairo ...")
++      message(STATUS "*** or disable options OPTION_CAIRO and OPTION_CAIRO_EXT")
++      message(FATAL_ERROR "*** Terminating: missing Cairo libs or headers")
++   endif (NOT LIB_CAIRO)
+    set (FLTK_HAVE_CAIRO 1)
+    add_subdirectory(cairo)
+-   list(APPEND FLTK_LDLIBS -lcairo -lpixman-1)
+-   include_directories(${PKG_CAIRO_INCLUDE_DIRS})
+-   string(REPLACE ";" " " CAIROFLAGS "${PKG_CAIRO_CFLAGS}")
+-
++#   list(APPEND FLTK_LDLIBS -lcairo -lpixman-1)
++#   include_directories(${PKG_CAIRO_INCLUDE_DIRS})
++#   string(REPLACE ";" " " CAIROFLAGS "${PKG_CAIRO_CFLAGS}")
+    if (LIB_CAIRO AND OPTION_CAIROEXT)
+-     set(FLTK_USE_CAIRO 1)
+-     set(FLTK_CAIRO_FOUND TRUE)
+-   else ()
+-     set(FLTK_CAIRO_FOUND FALSE)
+-   endif (LIB_CAIRO AND OPTION_CAIROEXT)
+-else ()
+-   if (OPTION_CAIRO OR OPTION_CAIROEXT)
+-     message(STATUS "*** Cairo was requested but not found - please check your cairo installation")
+-     message(STATUS "***   or disable options OPTION_CAIRO and OPTION_CAIRO_EXT.")
+-     message(FATAL_ERROR "*** Terminating: missing Cairo libs or headers.")
+-   endif (OPTION_CAIRO OR OPTION_CAIROEXT)
+-endif (PKG_CAIRO_FOUND)
++      set(FLTK_USE_CAIRO 1)
++      set(FLTK_CAIRO_FOUND TRUE)
++   else()
++      set(FLTK_CAIRO_FOUND FALSE)
++   endif()
++else()
++   set(FLTK_CAIRO_FOUND FALSE)
++endif (OPTION_CAIRO OR OPTION_CAIROEXT)
+ 
+ #######################################################################
+ option(OPTION_USE_NANOSVG "support SVG images" ON)
