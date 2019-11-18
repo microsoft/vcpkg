@@ -308,6 +308,7 @@ __pycache__/
 !triplets/x64-osx.cmake
 !triplets/x64-windows-llvm.cmake
 !triplets/x64-windows-intel19.cmake
+!triplets/x64-windows-clang.cmake
 *.exe
 *.zip
 

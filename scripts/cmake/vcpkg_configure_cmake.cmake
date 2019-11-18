@@ -170,7 +170,7 @@ function(vcpkg_configure_cmake)
     )
     
     #Add toolset option if available
-    if(VCPKG_PLATFORM_TOOLSET)
+    if(VCPKG_PLATFORM_TOOLSET AND NOT GENERATOR STREQUAL "Ninja")
         list(APPEND _csc_OPTIONS
             "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         )
