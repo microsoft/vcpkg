@@ -66,7 +66,7 @@ function(vcpkg_configure_cmake)
         ${ARGN}
     )
 
-    if(NOT VCPKG_PLATFORM_TOOLSET)
+    if(NOT VCPKG_PLATFORM_TOOLSET AND NOT DEFINED VCPKG_DEFAULT_CMAKE_GENERATOR)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support; "
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
     endif()
@@ -170,7 +170,7 @@ function(vcpkg_configure_cmake)
     )
     
     #Add toolset option if available
-    if(DEFINED VCPKG_PLATFORM_TOOLSET)
+    if(VCPKG_PLATFORM_TOOLSET)
         list(APPEND _csc_OPTIONS
             "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         )
@@ -199,9 +199,11 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_BUILD_TOOLS "-DCMAKE_CXX_COMPILER:FILEPATH=${VCPKG_CXX_COMPILER}")
     endif()
     if(DEFINED VCPKG_LINKER)
-        list(APPEND _csc_BUILD_TOOLS "-DCMAKE_LINKER:FILEPATH=${VCPKG_LINKER})")
+        list(APPEND _csc_BUILD_TOOLS "-DCMAKE_LINKER:FILEPATH=${VCPKG_LINKER}")
     endif()
-    
+    if(DEFINED VCPKG_AR)
+        list(APPEND _csc_BUILD_TOOLS "-DCMAKE_AR:FILEPATH=${VCPKG_AR}")
+    endif()
     # Sets configuration variables for macOS builds
     foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT)
         if(DEFINED VCPKG_${config_var})
