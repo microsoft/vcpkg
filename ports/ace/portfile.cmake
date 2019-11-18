@@ -86,27 +86,81 @@ vcpkg_execute_required_process(
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-  vcpkg_build_msbuild(
-    PROJECT_PATH ${ACE_SOURCE_PATH}/ace.sln
-    PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
-  )
-endif()
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
   ENDIF ()
+
+  list(APPEND _pkg_components ACE_ETCL_Parser ACE_ETCL ACE)
   if("ssl" IN_LIST FEATURES)
     list(APPEND _ace_makefile_macros "ssl=1")
     set(ENV{SSL_ROOT} ${CURRENT_INSTALLED_DIR})
+    list(APPEND _pkg_components ACE_SSL)
   endif()
+  set(ENV{INSTALL_PREFIX} ${CURRENT_PACKAGES_DIR})
+  # Set `PWD` environment variable since ACE's `install` make target calculates install dir using this env.
+  set(_prev_env $ENV{PWD})
+  set(ENV{PWD} ${ACE_ROOT}/ace)
+
+  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_required_process(
-    COMMAND make ${_ace_makefile_macros}
+    COMMAND make ${_ace_makefile_macros} "debug=1" "-j${VCPKG_CONCURRENCY}"
     WORKING_DIRECTORY ${ACE_ROOT}/ace
-    LOGNAME make-${TARGET_TRIPLET}
+    LOGNAME make-${TARGET_TRIPLET}-dbg
+  )
+  message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+  message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
+  vcpkg_execute_required_process(
+    COMMAND make ${_ace_makefile_macros} install
+    WORKING_DIRECTORY ${ACE_ROOT}/ace
+    LOGNAME install-${TARGET_TRIPLET}-dbg
+  )
+  file(COPY ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+  # TODO: check if we really need to remove those directories
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
+  foreach(_pkg_comp ${_pkg_components})
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_pkg_comp}.pc _content)
+    string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=${CURRENT_PACKAGES_DIR}/debug/lib" _content ${_content})
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_pkg_comp}.pc ${_content})
+  endforeach()
+  message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
+
+  vcpkg_execute_required_process(
+    COMMAND make ${_ace_makefile_macros} realclean
+    WORKING_DIRECTORY ${ACE_ROOT}/ace
+    LOGNAME realclean-${TARGET_TRIPLET}-dbg
+  )
+
+  message(STATUS "Building ${TARGET_TRIPLET}-rel")
+  vcpkg_execute_required_process(
+    COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
+    WORKING_DIRECTORY ${ACE_ROOT}/ace
+    LOGNAME make-${TARGET_TRIPLET}-rel
+  )
+  message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+  message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
+  vcpkg_execute_required_process(
+    COMMAND make ${_ace_makefile_macros} install
+    WORKING_DIRECTORY ${ACE_ROOT}/ace
+    LOGNAME install-${TARGET_TRIPLET}-rel
+  )
+  message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
+  # Restore `PWD` environment variable
+  set($ENV{PWD} _prev_env)
+
+  # Handle copyright
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
+
+  return()
+endif()
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+  vcpkg_build_msbuild(
+    PROJECT_PATH ${ACE_SOURCE_PATH}/ace.sln
+    PLATFORM ${MSBUILD_PLATFORM}
+    USE_VCPKG_INTEGRATION
   )
 endif()
 
