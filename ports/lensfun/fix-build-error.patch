@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 494b146..f5b09c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,18 +83,6 @@ IF(BUILD_FOR_SSE2)
+   ENDIF()
+ ENDIF()
+ 
+-IF(WIN32)
+-  # base path for searching for glib on windows
+-  IF(NOT GLIB2_BASE_DIR)
+-    SET(GLIB2_BASE_DIR "${SOURCE_BASE_DIR}/glib-2.28.1" CACHE STRING "Base path of glib2 dir." FORCE)
+-  ENDIF()
+-  # install glib dll on windows next to lensfun.dll
+-  IF (GLIB2_DLL)
+-    INSTALL(FILES ${GLIB2_DLL} DESTINATION ${CMAKE_INSTALL_BINDIR})
+-  ENDIF()
+-ENDIF()
+-
+-
+ IF (BUILD_TESTS)
+   # automatic tests need at least glib version 2.40
+   # NOTE: must be one of the macros listed in https://developer.gnome.org/glib/stable/glib-Version-Information.html
+@@ -182,14 +170,6 @@ IF(BUILD_DOC)
+   ADD_SUBDIRECTORY(docs)
+ ENDIF()
+ 
+-IF(WIN32 AND NOT BUILD_STATIC)
+-  FIND_FILE(GLIB2_DLL
+-            NAMES glib-2.dll glib-2-vs9.dll
+-            PATHS "${GLIB2_BASE_DIR}/bin"
+-            NO_SYSTEM_ENVIRONMENT_PATH)
+-  INSTALL(FILES ${GLIB2_DLL} DESTINATION ${CMAKE_INSTALL_BINDIR})
+-ENDIF()
+-
+ # print some information
+ MESSAGE(STATUS "-------------------------------------------------------------------------------------")
+ MESSAGE(STATUS "Building Lensfun ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}.${VERSION_BUGFIX}")
+diff --git a/libs/lensfun/modifier.cpp b/libs/lensfun/modifier.cpp
+index 6d48fdf..1597e71 100644
+--- a/libs/lensfun/modifier.cpp
++++ b/libs/lensfun/modifier.cpp
+@@ -8,6 +8,7 @@
+ #include "lensfunprv.h"
+ #include <math.h>
+ #include <stdexcept>
++#include <algorithm>
+ #include "windows/mathconstants.h"
+ 
+ lfModifier *lfModifier::Create (const lfLens *lens, float crop, int width, int height)

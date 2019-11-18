@@ -1,0 +1,5 @@
+Source: lensfun
+Version: 2019-11-18
+Homepage: https://github.com/lensfun/lensfun
+Description: The goal of the Lensfun library is to provide a open source database of photographic lenses and their characteristics.
+Build-Depends: glib
