@@ -1,3 +1,7 @@
+# CURRENT_PACKAGES_DIR = Root of installed Target files
+# SOURCE_PATH = Root of unpacked Sources
+# CMAKE_CURRENT_SOURCE_DIR = Root of this vcpkg instance
+
 include(vcpkg_common_functions)
 
 # Get jaeger-idl from github
@@ -46,10 +50,23 @@ vcpkg_configure_cmake(
 file(GLOB IDL_SOURCE_FILES LIST_DIRECTORIES false ${IDL_SOURCE_DIR}/*)
 file(COPY ${IDL_SOURCE_FILES} DESTINATION ${SOURCE_PATH}/src/jaegertracing/thrift-gen)
 
+# Generate Jaeger client
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOURCE_PATH}/gsoap/stdsoap2.cpp ${SOURCE_PATH}/gsoap/dom.c ${SOURCE_PATH}/gsoap/dom.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+# Copy includefiles
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/jaegertracing)
+file(GLOB JCCPP_INCLUDE_FILES LIST_DIRECTORIES true ${SOURCE_PATH}/src/jaegertracing/*.h)
+file(COPY ${JCCPP_INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/jaegertracing)
+file(COPY ${CURRENT_PACKAGES_DIR}/src/jaegertracing/Constants.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/jaegertracing)
+
+# Copy binaries
+file(COPY ${CURRENT_PACKAGES_DIR}/jaegertracing_plugin.dll DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+# Copy Libraries
+file(COPY ${CURRENT_PACKAGES_DIR}/jaegertracing_plugin.dll ${CURRENT_PACKAGES_DIR}/jaegertracing-static.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+# Copy CMake files
+#file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/jaeger-client-cpp)
+#file(GLOB JCCPP_CMAKE_FILES LIST_DIRECTORIES true ${SOURCE_PATH}/src/jaegertracing/*.h)
+#file(COPY ${CURRENT_PACKAGES_DIR}/jaegertracing_plugin.dll ${CURRENT_PACKAGES_DIR}/jaegertracing-static.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jaeger-client-cpp/copyright)
