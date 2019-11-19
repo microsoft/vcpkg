@@ -1,0 +1,1 @@
+Define PDC_DLL_BUILD to import external variables if building pdcurses as a DLL on Windows.

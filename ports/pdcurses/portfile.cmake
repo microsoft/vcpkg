@@ -1,9 +1,7 @@
-
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
   message(FATAL_ERROR "PDCurses only supports dynamic CRT linkage")
 endif()
 
-include(vcpkg_common_functions)
 find_program(NMAKE nmake)
 
 vcpkg_from_github(
@@ -68,3 +66,6 @@ file(
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)
 
 vcpkg_copy_pdbs()
+
+# Install usage
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
