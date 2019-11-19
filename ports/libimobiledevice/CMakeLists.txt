@@ -3,7 +3,7 @@ project(libimobiledevice C)
 
 # find dependencies
 find_library(libplist plist REQUIRED)
-find_library(libusbmuxd usbmuxd REQUIRED)
+find_library(libusbmuxd libusbmuxd REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_path(dirent_INCLUDE_DIR dirent.h)
 if (WIN32)
@@ -42,7 +42,7 @@ configure_file(
 )
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/libimobiledevice-1.0.pc
-    DESTINATION lib/pkgconfig
+    DESTINATION lib/libimobiledevice
 )
 
 install(FILES ${IMOBDEV_PUBLIC_HDR} DESTINATION include)
