@@ -13,9 +13,9 @@ vcpkg_from_github(ARCHIVE
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED ON)
+    set(OPTION_BUILD_SHARED "-DOPTION_BUILD_SHARED_LIBS=ON")
 else()
-    set(BUILD_SHARED OFF)
+    set(OPTION_BUILD_SHARED "-DOPTION_BUILD_SHARED_LIBS=OFF")
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
@@ -25,7 +25,7 @@ else()
 endif()
 
 if ("cairo" IN_LIST FEATURES)
-    set(OPTION_USE_CAIRO "-DOPTION_CAIRO=ON")	
+    set(OPTION_USE_CAIRO "-DOPTION_CAIRO=ON")
 endif()
 
 vcpkg_configure_cmake(
@@ -38,7 +38,7 @@ vcpkg_configure_cmake(
         -DOPTION_USE_SYSTEM_ZLIB=ON
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
-        -DOPTION_BUILD_SHARED_LIBS=${BUILD_SHARED}
+        ${OPTION_BUILD_SHARED}
         ${OPTION_USE_CAIRO}
         ${OPTION_USE_GL}
 )
@@ -49,14 +49,23 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share 
 )
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(FLUID_TARGET fluid.exe)
+elseif (VCPKG_TARGET_IS_OSX)
+    set(FLUID_TARGET fluid.app)
+endif()
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
+if (FLUID_TARGET)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/${FLUID_TARGET} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/${FLUID_TARGET})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
+
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${FLUID_TARGET})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
+endif()
 
 vcpkg_copy_pdbs()
 
