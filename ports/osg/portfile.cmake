@@ -23,7 +23,7 @@ endif()
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
 
 set(OSG_USE_UTF8_FILENAME ON)
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (NOT VCPKG_TARGET_IS_WINDOWS)
     message("Build osg requires gcc with version higher than 4.7.")
     # Enable OSG_USE_UTF8_FILENAME will call some windows-only functions.
     set(OSG_USE_UTF8_FILENAME OFF)
