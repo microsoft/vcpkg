@@ -1,0 +1,4 @@
+The package libftdi1 is compatible with built-in CMake targets:
+
+    find_package(libftdi1 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libftdi1)

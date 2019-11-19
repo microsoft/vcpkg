@@ -14,6 +14,8 @@ vcpkg_extract_source_archive_ex(
         cmake-fix.patch
         win32.patch
         fix-libusb-path.patch
+        fix-ftdi1-path.patch
+        fix-cmake-path.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/exports.def DESTINATION ${SOURCE_PATH}/src)
@@ -46,3 +48,4 @@ file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libft
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libftdi1/LICENSE ${CURRENT_PACKAGES_DIR}/share/libftdi1/copyright)
 
 vcpkg_copy_pdbs()
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libftdi1)

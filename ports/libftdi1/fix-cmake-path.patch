@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 24cff24..af1dbbd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -217,7 +217,7 @@ set ( LIBFTDI_VERSION_STRING ${VERSION_STRING} )
+ set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
+ set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
+ 
+-set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
++set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/share/libftdi1/UseLibFTDI1.cmake )
+ 
+ if(CMAKE_VERSION VERSION_LESS 2.8.8) 
+   configure_file ( cmake/LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
