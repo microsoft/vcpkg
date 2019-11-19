@@ -15,7 +15,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-BuildError.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake) # remove outdated module. There are probably more
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}

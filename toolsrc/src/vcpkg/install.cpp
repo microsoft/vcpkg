@@ -204,7 +204,7 @@ namespace vcpkg::Install
         {
             // The VS2015 standard library requires comparison operators of T and U
             // to also support comparison of T and T, and of U and U, due to debug checks.
-#if _MSC_VER < 1910
+#if _MSC_VER <= 1910
             bool operator()(const std::string& lhs, const std::string& rhs) { return lhs < rhs; }
             bool operator()(const file_pack& lhs, const file_pack& rhs) { return lhs.first < rhs.first; }
 #endif

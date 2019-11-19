@@ -1,3 +1,4 @@
 Source: fribidi
-Version: 2019-02-04-1
+Version: 2019-02-04-2
 Description: GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)
+Build-Depends: tool-meson

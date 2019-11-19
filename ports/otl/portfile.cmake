@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://otl.sourceforge.net/otlv4_h2.zip"
-    FILENAME "otlv4_h2-4.0.443.zip"
-    SHA512 90a90d909586aae2088c87b5899244c01eef58aed7183d73b9be647f9c7a7bdcdc2f50f5c3cb564330b0061fb63e85f1b5522b4cf9390bc9baa5e2cb97ea3f3e
+    FILENAME "otlv4_h2-4.0.447.zip"
+    SHA512 07663442272a327a7d9154f6e817c0166ed254cfe3b9d043762179e96180a70d3ba4b3762e5ef1ebdb18492e3425467c9ddad3a2c68aa93bb7d51d54e9712008
 )
 
 vcpkg_extract_source_archive_ex(
