@@ -9,6 +9,9 @@ vcpkg_install_nmake(
     [NO_DEBUG]
     PROJECT_SUBPATH <${SUBPATH}>
     PROJECT_NAME <${MAKEFILE_NAME}>
+    [PRERUN_SHELL <${SHELL_PATH}>]
+    [PRERUN_SHELL_DEBUG <${SHELL_PATH}>]
+    [PRERUN_SHELL_RELEASE <${SHELL_PATH}>]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
@@ -28,6 +31,15 @@ Default is makefile.vc
 
 ### NO_DEBUG
 This port doesn't support debug mode.
+
+### PRERUN_SHELL
+Script that needs to be called before build
+
+### PRERUN_SHELL_DEBUG
+Script that needs to be called before debug build
+
+### PRERUN_SHELL_RELEASE
+Script that needs to be called before release build
 
 ### OPTIONS
 Additional options passed to generate during the generation.

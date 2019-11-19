@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9213990..f51cc5e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -224,7 +224,9 @@ set(CMAKECONFIGDIR "${DEFAULT_CMAKEDIR}"
+ include_directories(${PROJ4_SOURCE_DIR}/src)
+ 
+ message(STATUS "")
+-add_subdirectory(data)
++if(BUILD_PROJ_DATABASE)
++  add_subdirectory(data)
++endif()
+ add_subdirectory(include)
+ add_subdirectory(src)
+ add_subdirectory(man)
