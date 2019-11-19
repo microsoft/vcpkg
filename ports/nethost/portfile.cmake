@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dotnet/core-setup
     REF 7d57652f33493fa022125b7f63aad0d70c52d810 #v3.0.0
-    SHA512 667768a3fc11dbe72c7f4f6b3b5431dd898a1731294a3c134c9b2914ea7f5a309a06289e1dddd74736ac775d52f2f366e7f1986edc5cf8b7a0bc2ae5a437063a
+    SHA512 d31baa1ca35f058069fab77df7208dcf03c68b5e5b2410ba6b2f226f5db35fa78990e784f485f700c1aece1033bd49bf74d82724bbeb1f1d1b412f6e47f51a77
     HEAD_REF release/3.0.0
     PATCHES
         0001-nethost-cmakelists.patch
