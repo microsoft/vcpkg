@@ -91,7 +91,15 @@ if(CMD MATCHES "^BUILD$")
     set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
     include(${SCRIPTS}/cmake/vcpkg_common_definitions.cmake)
     include(${SCRIPTS}/cmake/vcpkg_common_functions.cmake)
+
+    if(DEFINED VCPKG_LOAD_ENVIROMNENT_BATCH)
+        vcpkg_load_environment_from_batch(
+                BATCH_FILE_PATH ${VCPKG_LOAD_ENVIROMNENT_BATCH}
+                ARGUMENTS       ${VCPKG_LOAD_ENVIROMNENT_BATCH_ARGS})
+    endif()
+
     include(${CURRENT_PORT_DIR}/portfile.cmake)
+
 
     set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)
     file(WRITE  ${BUILD_INFO_FILE_PATH} "CRTLinkage: ${VCPKG_CRT_LINKAGE}\n")
