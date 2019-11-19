@@ -196,25 +196,7 @@ namespace vcpkg::Build
 
     static CStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
-        auto maybe_target_arch = System::to_cpu_architecture(target_architecture);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, maybe_target_arch.has_value(), "Invalid architecture string: %s", target_architecture);
-        auto target_arch = maybe_target_arch.value_or_exit(VCPKG_LINE_INFO);
-        auto host_architectures = System::get_supported_host_architectures();
-
-        const auto it = Util::find_if(host_architectures, [&](const System::CPUArchitecture& arch) {
-            return (arch == toolset.arch.host_arch && target_arch == toolset.arch.target_arch);
-        });
-        if (it != host_architectures.end())
-        {
-            return to_string(*it);
-        };
-        Checks::exit_with_message(
-            VCPKG_LINE_INFO,
-            "Unsupported host/target/toolset combination. Toolset was: %s with Host: %s and Target: %s:\n%s",
-            toolset.name,
-            to_string(toolset.arch.host_arch),
-            target_architecture);
+		return toolset.arch.name;      
     }
 
     static auto make_env_passthrough(const PreBuildInfo& pre_build_info) -> std::unordered_map<std::string, std::string>
@@ -245,13 +227,13 @@ namespace vcpkg::Build
             tonull = "";
         }
 
-        const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
+        const auto vs_toolchain = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
         return Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
                                toolset.vcvarsall.u8string(),
                                Strings::join(" ", toolset.vcvarsall_options),
-                               arch,
+                               vs_toolchain,
                                target,
                                tonull);
     }
