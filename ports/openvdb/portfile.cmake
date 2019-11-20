@@ -1,16 +1,16 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF v6.1.0
-    SHA512 99ebbb50104ef87792ab73989e8714c4f283fb02d04c3033126b5f0d927ff7bbdebe35c8214ded841692941d8ed8ae551fd6d1bf90ad7dc07bedc3b38b9c4b38
+    REF aebaf8d95be5e57fd33949281ec357db4a576c2e # v6.2.1
+    SHA512 e5cf03e77ed0600252cb97aa4bbf9468345ad037a3053626900bd8233e89720f981f0706e5103c2d33ea9c246ba1cf695af68e60d395e5be90e655f2e127db9b
     HEAD_REF master
     PATCHES
         0001-remove-pkgconfig.patch
         0002-fix-cmake-modules.patch
         0003-fix-cmake.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OPENVDB_STATIC ON)
@@ -24,7 +24,7 @@ if ("tools" IN_LIST FEATURES)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENVDB_BUILD_TOOLS ON)
   else()
-    message(ERROR "Unable to build tools if static libraries are required")
+    message(FATAL_ERROR "Unable to build tools if static libraries are required")
   endif()
 endif()
 
@@ -69,4 +69,4 @@ if (OPENVDB_BUILD_TOOLS)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/openvdb RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
