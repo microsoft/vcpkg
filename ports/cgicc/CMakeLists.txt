@@ -106,6 +106,8 @@ add_library (cgicc ${cgicc_SOURCES} ${cgicc_HEADERS})
 
 if (BUILD_SHARED_LIBS)
     add_definitions(-DCGICC_EXPORTS)
+else()
+    add_definitions(-DCGICC_STATIC)
 endif()
 
 install(TARGETS cgicc
