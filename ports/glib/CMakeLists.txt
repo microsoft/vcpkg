@@ -109,6 +109,7 @@ else()
     add_definitions("-DGIO_MODULE_DIR=\"gio/modules\"")
 endif()
 install(FILES ${CMAKE_BINARY_DIR}/config/config.h DESTINATION include/glib)
+install(FILES ${CMAKE_SOURCE_DIR}/msvc_recommended_pragmas.h DESTINATION include)
 
 include_directories(${CMAKE_BINARY_DIR}/config ${CMAKE_BINARY_DIR}/config/glib ${CMAKE_BINARY_DIR}/config/gio ${CMAKE_BINARY_DIR}/config/gmodule)
 include_directories(. glib)

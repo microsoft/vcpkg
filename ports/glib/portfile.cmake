@@ -1,13 +1,9 @@
-include(vcpkg_common_functions)
-
 # Glib uses winapi functions not available in WindowsStore
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 # Glib relies on DllMain on Windows
-if (NOT VCPKG_CMAKE_SYSTEM_NAME)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 set(GLIB_VERSION 2.52.3)
