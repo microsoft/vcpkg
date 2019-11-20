@@ -1,7 +1,7 @@
 include(qt_fix_makefile_install)
 
 function(install_qt)
-    cmake_parse_arguments(_bc "DISABLE_PARALLEL;PREFER_NMAKE" "" "" ${ARGN})
+    cmake_parse_arguments(_bc "DISABLE_PARALLEL" "" "" ${ARGN})
 
     if (_bc_DISABLE_PARALLEL)
         set(NUMBER_OF_PROCESSORS "1")
@@ -28,7 +28,7 @@ function(install_qt)
     message(STATUS "NUMBER_OF_PROCESSORS is ${NUMBER_OF_PROCESSORS}")
 
     if(CMAKE_HOST_WIN32)
-        if (_bc_PREFER_NMAKE)
+        if (VCPKG_QMAKE_USE_NMAKE)
             find_program(NMAKE nmake REQUIRED)
             set(INVOKE "${NMAKE}")
             get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
