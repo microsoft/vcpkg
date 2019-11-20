@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-tools-path.patch
         support-windows.patch
         fix-dependency-libmodman.patch
+        fix-install-py.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
