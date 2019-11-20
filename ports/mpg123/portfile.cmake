@@ -48,36 +48,44 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
         RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
-        DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
+        endif()
     )
 
     message(STATUS "Installing")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.dll
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(INSTALL
+                ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.dll
+                ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.pdb
+                DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+            )
+        endif()
         file(INSTALL
             ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.dll
             ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.pdb
             DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         )
     else()
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug_x86/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        )
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(INSTALL
+                ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug_x86/libmpg123.pdb
+                DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+            )
+        endif()
         file(INSTALL
             ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release_x86/libmpg123.pdb
             DESTINATION ${CURRENT_PACKAGES_DIR}/lib
         )
     endif()
 
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(INSTALL
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.lib
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        )
+    endif()
     file(INSTALL
         ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
@@ -92,24 +100,26 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
 
-    ################
-    # Debug build
-    ################
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/configure" --prefix=${SOURCE_PATH}/build/debug --enable-debug=yes --enable-static=yes --disable-dependency-tracking --with-default-audio=coreaudio --with-module-suffix=.so
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME config-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done.")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        ################
+        # Debug build
+        ################
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        vcpkg_execute_required_process(
+            COMMAND "${SOURCE_PATH}/configure" --prefix=${SOURCE_PATH}/build/debug --enable-debug=yes --enable-static=yes --disable-dependency-tracking --with-default-audio=coreaudio --with-module-suffix=.so
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done.")
 
-    message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Installing ${TARGET_TRIPLET}-dbg done.")
+        message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
+        vcpkg_execute_required_process(
+            COMMAND make -j install
+            WORKING_DIRECTORY ${SOURCE_PATH}
+            LOGNAME build-${TARGET_TRIPLET}-dbg
+        )
+        message(STATUS "Installing ${TARGET_TRIPLET}-dbg done.")
+    endif()
 
     ################
     # Release build
@@ -135,21 +145,34 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
     )
     message(STATUS "Installing ${TARGET_TRIPLET}-rel done.")
 
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/debug/include/fmt123.h"
-            "${SOURCE_PATH}/build/debug/include/mpg123.h"
-            "${SOURCE_PATH}/build/debug/include/out123.h"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/include
-    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/debug/include/fmt123.h"
+                "${SOURCE_PATH}/build/debug/include/mpg123.h"
+                "${SOURCE_PATH}/build/debug/include/out123.h"
+            DESTINATION
+                ${CURRENT_PACKAGES_DIR}/include
+        )
+
+        file(
+            INSTALL
+                "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
+                "${SOURCE_PATH}/build/debug/lib/libout123.a"
+            DESTINATION
+                ${CURRENT_INSTALLED_DIR}/debug/lib
+        )
+
+    endif()
 
     file(
         INSTALL
-            "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/debug/lib/libout123.a"
+            "${SOURCE_PATH}/build/release/include/fmt123.h"
+            "${SOURCE_PATH}/build/release/include/mpg123.h"
+            "${SOURCE_PATH}/build/release/include/out123.h"
         DESTINATION
-            ${CURRENT_INSTALLED_DIR}/debug/lib
+            ${CURRENT_PACKAGES_DIR}/include
     )
 
     file(
