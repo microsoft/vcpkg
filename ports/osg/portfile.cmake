@@ -1,9 +1,9 @@
-include(vcpkg_common_functions)
+set(OSG_VER 3.6.4)
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO openscenegraph/OpenSceneGraph
-	REF OpenSceneGraph-3.6.4
+	REF OpenSceneGraph-${OSG_VER}
 	SHA512 7cb34fc279ba62a7d7177d3f065f845c28255688bd29026ffb305346e1bb2e515a22144df233e8a7246ed392044ee3e8b74e51bf655282d33ab27dcaf12f4b19
 	HEAD_REF master
     PATCHES
@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-sdl.patch
         fix-example-application.patch
         disable-present3d-staticview-in-linux.patch #Due to some link error we cannot solve yet, disable them in linux.
+        fix-curl.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -63,11 +64,11 @@ file(REMOVE_RECURSE ${OSG_TOOLS})
 file(GLOB OSG_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*${EXECUTE_SUFFIX})
 file(REMOVE_RECURSE ${OSG_TOOLS_DBG})
 
-file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.4/*${DYNAMIC_SUFFIX})
-file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-3.6.4)
-file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.4/*${DYNAMIC_SUFFIX})
-file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-3.6.4)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.4/)
+file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/*${DYNAMIC_SUFFIX})
+file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/osgPlugins-${OSG_VER})
+file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/*${DYNAMIC_SUFFIX})
+file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/)
 
 #Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -76,7 +77,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.4/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
