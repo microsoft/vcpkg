@@ -14,6 +14,12 @@ vcpkg_from_github(
         fix-crt_linkage.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    openssl EVENT__DISABLE_OPENSSL
+    thread  EVENT__DISABLE_THREAD_SUPPORT
+)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBEVENT_LIB_TYPE SHARED)
 else()
@@ -23,7 +29,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DEVENT_INSTALL_CMAKE_DIR:PATH=share/libevent
         -DEVENT__LIBRARY_TYPE=${LIBEVENT_LIB_TYPE}
         -DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}
