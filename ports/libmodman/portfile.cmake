@@ -11,7 +11,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES fix-install-path.patch
+    PATCHES
+        fix-install-path.patch
+        fix-undefined-typeid.patch
 )
 
 vcpkg_configure_cmake(
