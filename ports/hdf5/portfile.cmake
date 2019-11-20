@@ -17,8 +17,6 @@ vcpkg_extract_source_archive_ex(
         fix-generate.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/hdf5-1.10.5/config/cmake_ext_mod/FindSZIP.cmake)
-
 if ("parallel" IN_LIST FEATURES)
     set(ENABLE_PARALLEL ON)
 else()
