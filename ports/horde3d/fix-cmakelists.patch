@@ -9,10 +9,10 @@ index dd722bb..8b22be4 100644
 -                   copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_SYSTEM_NAME} ${out_dir})
 +                   copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${out_dir})
 diff --git a/Horde3D/Bindings/C++/CMakeLists.txt b/Horde3D/Bindings/C++/CMakeLists.txt
-index 71d696c..d073e60 100644
+index 71d696c..e718a0c 100644
 --- a/Horde3D/Bindings/C++/CMakeLists.txt
 +++ b/Horde3D/Bindings/C++/CMakeLists.txt
-@@ -1,11 +1,17 @@
+@@ -1,4 +1,7 @@
  if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 +    install(FILES Horde3D.h Horde3DUtils.h
 +            DESTINATION include/horde3d
@@ -20,12 +20,7 @@ index 71d696c..d073e60 100644
  endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
  
  if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
--        install(FILES Horde3D.h Horde3DUtils.h
--                DESTINATION include/horde3d
--                )
-+    install(FILES Horde3D.h Horde3DUtils.h
-+            DESTINATION include/horde3d
-+            )
+@@ -8,4 +11,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
  endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
  
  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
