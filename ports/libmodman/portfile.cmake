@@ -1,4 +1,5 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm" "arm64")
 
 set(LIBMODMAN_VER 2.0.1)
 
