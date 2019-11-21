@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index b376cd1..aab66cb 100644
+index b376cd1..baffe7e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -71,8 +71,8 @@ target_link_libraries(${EXE_NAME} libcurl ${CURL_LIBS} ZLIB::ZLIB)
@@ -11,8 +11,8 @@ index b376cd1..aab66cb 100644
 -       APPEND FILE ${PROJECT_BINARY_DIR}/curl-target.cmake
 -       NAMESPACE CURL::
 -)
-+# install(TARGETS ${EXE_NAME} EXPORT ${TARGETS_EXPORT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
-+# export(TARGETS ${EXE_NAME}
++install(TARGETS ${EXE_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
++#export(TARGETS ${EXE_NAME}
 +#       APPEND FILE ${PROJECT_BINARY_DIR}/curl-target.cmake
 +#       NAMESPACE CURL::
-+# )
++#)
