@@ -1,3 +1,6 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm64")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO horde3d/Horde3D
@@ -12,6 +15,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
+
+file(REMOVE ${SOURCE_PATH}/CMake/Modules/FindGLFW.cmake)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
