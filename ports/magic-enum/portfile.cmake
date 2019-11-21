@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF v0.6.3
     SHA512 ac5e1a08c491c380980b1ca928cd545f0f062818e5946904e6f17803f6e6578f4a7f882896b22681537ef7c559897b002aacc52f8fe35d22ea528d1b5e491e63
     HEAD_REF master
-    PATCHES
-        fix-package-configuration-name.patch
 )
 
 vcpkg_configure_cmake(
@@ -20,7 +18,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/magic_enum TARGET_PATH share/magic_enum)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
