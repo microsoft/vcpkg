@@ -11,6 +11,9 @@
 #include <vcpkg/base/system.h>
 #endif
 
+#define BUFSIZE 4096
+#define VARNAME TEXT(L"HTTP_PROXY")
+
 namespace vcpkg::Downloads
 {
 #if defined(_WIN32)
@@ -43,6 +46,37 @@ namespace vcpkg::Downloads
                                     0);
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
+        bool hasHTTP_PROXY_set = false;
+        LPWSTR envHttpProxy;
+        DWORD dwRet = NO_ERROR;
+
+        envHttpProxy = (LPWSTR)malloc(BUFSIZE * sizeof(WCHAR));
+        if (NULL != envHttpProxy)
+        {
+            dwRet = GetEnvironmentVariableW(VARNAME, envHttpProxy, BUFSIZE);
+
+            if (dwRet > 0)
+            {
+                if (dwRet < BUFSIZE)
+                {
+                    hasHTTP_PROXY_set = true;
+                }
+                else
+                {
+                    envHttpProxy = (LPWSTR)realloc(envHttpProxy, dwRet * sizeof(WCHAR));
+                    if (NULL != envHttpProxy)
+                    {
+                        dwRet = GetEnvironmentVariableW(VARNAME, envHttpProxy, dwRet);
+                        if (dwRet > 0)
+                        {
+                            hasHTTP_PROXY_set = true;
+                        }
+                    }
+                }
+            }
+        }
+
+
         // Win7 IE Proxy fallback
         if (IsWindows7OrGreater() && !IsWindows8Point1OrGreater())
         {
@@ -55,17 +89,29 @@ namespace vcpkg::Downloads
             // If no proxy was found automatically, use IE's proxy settings, if any
             if (noProxyFound)
             {
-                WINHTTP_CURRENT_USER_IE_PROXY_CONFIG ieProxy;
-                if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr)
+                if (hasHTTP_PROXY_set)
                 {
-                    WINHTTP_PROXY_INFO proxy;
-                    proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-                    proxy.lpszProxy = ieProxy.lpszProxy;
-                    proxy.lpszProxyBypass = ieProxy.lpszProxyBypass;
-                    WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+                    proxyInfo.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+                    proxyInfo.lpszProxy = envHttpProxy;
+
+                    WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, sizeof(proxyInfo));
+                }
+                else
+                {
+                    WINHTTP_CURRENT_USER_IE_PROXY_CONFIG ieProxy;
+                    if (WinHttpGetIEProxyConfigForCurrentUser(&ieProxy) && ieProxy.lpszProxy != nullptr)
+                    {
+                        WINHTTP_PROXY_INFO proxy;
+                        proxy.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+                        proxy.lpszProxy = ieProxy.lpszProxy;
+                        proxy.lpszProxyBypass = ieProxy.lpszProxyBypass;
+                        WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(proxy));
+                    }
                 }
             }
         }
+
+        free(envHttpProxy);
 
         // Use Windows 10 defaults on Windows 7
         DWORD secure_protocols(WINHTTP_FLAG_SECURE_PROTOCOL_SSL3 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 |
@@ -89,6 +135,12 @@ namespace vcpkg::Downloads
         // Send a request.
         auto bResults =
             WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+        
+        if (bResults == ERROR_WINHTTP_SECURE_FAILURE)
+        {
+                
+        }
+        
         Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpSendRequest() failed: %d", GetLastError());
 
         // End the request.
