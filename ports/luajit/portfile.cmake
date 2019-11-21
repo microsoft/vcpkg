@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "LuaJIT currently only supports being built for desktop")
 endif()
@@ -15,53 +13,70 @@ vcpkg_from_github(
         002-fix-build-path.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	set (LJIT_STATIC "")
+if (VCPKG_TARGET_IS_WINDOWS)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set (LJIT_STATIC "")
+    else()
+        set (LJIT_STATIC "static")
+    endif()
+    
+    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
+        message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        
+        vcpkg_execute_required_process_repeat(
+            COUNT 1
+            COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src debug ${LJIT_STATIC}
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+            LOGNAME build-${TARGET_TRIPLET}-dbg
+        )
+        
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        endif()
+        vcpkg_copy_pdbs()
+    endif()
+    
+    
+    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
+        message(STATUS "Building ${TARGET_TRIPLET}-rel")
+        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        
+        vcpkg_execute_required_process_repeat(d8un
+            COUNT 1
+            COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src ${LJIT_STATIC}
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            LOGNAME build-${TARGET_TRIPLET}-rel
+        )
+        
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        endif()
+        vcpkg_copy_pdbs()
+    endif()
+    
 else()
-	set (LJIT_STATIC "static")
-endif()
-
-if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    
-    vcpkg_execute_required_process_repeat(
-        COUNT 1
-        COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src debug ${LJIT_STATIC}
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME build-${TARGET_TRIPLET}-dbg
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        SKIP_CONFIGURE
+        NO_DEBUG
     )
     
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    vcpkg_build_make()
     
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/src/libluajit.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/src/libluajit.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     endif()
-    vcpkg_copy_pdbs()
-endif()
-
-
-if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-    
-    vcpkg_execute_required_process_repeat(d8un
-        COUNT 1
-        COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src ${LJIT_STATIC}
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )
-    
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    endif()
-    vcpkg_copy_pdbs()
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/src/luajit DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/src/lua.h 			    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
@@ -72,4 +87,4 @@ file(INSTALL ${SOURCE_PATH}/src/lauxlib.h 		    DESTINATION ${CURRENT_PACKAGES_D
 file(INSTALL ${SOURCE_PATH}/src/lua.hpp 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
