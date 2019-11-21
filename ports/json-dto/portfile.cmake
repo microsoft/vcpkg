@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/json_dto
-    REF v.0.2.9
-    SHA512 6a34e24c784f002bb3b025af93dc24c485090bc1f9ce55472a54929fe58fa4b1bf6f1ff5d2fea9fb33c8bc87aeae6a926cbb2d196f1e7172bb1a356935f3a7b6
+    REF d620668d568075cbdb169d1b160db71ad6693194 # v.0.2.9.1
+    SHA512 5f92f04cfeb524eabe6a245aeab9205d274532cbac3296483ac5ebd7d1e3531bd9acf1937c75d84663592ff8a22ac72bb64be09c18ac859e94d80e3515883aae
 )
 
 vcpkg_configure_cmake(
@@ -24,6 +24,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/json-dto)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/json-dto)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/json-dto/LICENSE ${CURRENT_PACKAGES_DIR}/share/json-dto/copyright)
-
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
