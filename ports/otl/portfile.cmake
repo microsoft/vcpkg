@@ -13,4 +13,5 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(INSTALL ${SOURCE_PATH}/otlv40448.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/otl)
+file(INSTALL ${SOURCE_PATH}/otlv40448.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/otl RENAME otlv4.h)
 file(INSTALL ${SOURCE_PATH}/otlv40448.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/otl RENAME copyright)
