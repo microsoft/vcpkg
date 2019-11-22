@@ -25,9 +25,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ms-angle)
-
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ms-angle RENAME copyright)

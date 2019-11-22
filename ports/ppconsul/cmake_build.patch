@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 92e4698..002981e 100644
+index 92e4698..aa643aa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -75,6 +75,8 @@ else ()
+@@ -52,6 +52,8 @@ endif()
+ 
+ enable_testing()
+ 
++find_package(json11 REQUIRED)
++
+ if (${USE_CPPNETLIB})
+     find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS thread filesystem system date_time chrono regex)
+ 
+@@ -75,6 +77,8 @@ else ()
  	   set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${CURL_ROOT}/lib")
      endif ()
      find_package(CURL REQUIRED)
@@ -11,19 +20,30 @@ index 92e4698..002981e 100644
  endif ()
  
  set(LIBB64_DIR "${PROJECT_SOURCE_DIR}/ext/b64")
-@@ -89,7 +91,6 @@ endif()
+@@ -87,9 +91,7 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
+     message(FATAL_ERROR "Building Ppconsul as dynamic library on Windows is not supported, see https://github.com/oliora/ppconsul/issues/25")
+ endif()
  
- add_subdirectory(ext/json11)
+-add_subdirectory(ext/json11)
  add_subdirectory(src)
 -add_subdirectory(tests)
  
  install(
      DIRECTORY "${HEADERS_DIR}"
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 8e24aab..beaac68 100644
+index d747100..966c7e2 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -85,7 +85,10 @@ if (${USE_CPPNETLIB})
+@@ -78,7 +78,7 @@ target_include_directories(${PROJECT_NAME}
+ 
+ target_link_libraries(${PROJECT_NAME}
+     PRIVATE
+-        json11
++        ${JSON11_LIBRARIES}
+         ${Boost_LIBRARIES}
+ )
+ 
+@@ -87,7 +87,10 @@ if (${USE_CPPNETLIB})
      target_link_libraries(${PROJECT_NAME} PRIVATE ${CPPNETLIB_LIBRARIES})
  else ()
      target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
@@ -35,3 +55,16 @@ index 8e24aab..beaac68 100644
  endif ()
  
  source_group(${PROJECT_NAME} FILES ${SOURCES})
+diff --git a/src/s11n.h b/src/s11n.h
+index 962a1ac..6ab7f3b 100644
+--- a/src/s11n.h
++++ b/src/s11n.h
+@@ -6,7 +6,7 @@
+ 
+ #include "ppconsul/config.h"
+ #include "ppconsul/error.h"
+-#include <json11/json11.hpp>
++#include <json11.hpp>
+ #include <vector>
+ #include <set>
+ #include <map>

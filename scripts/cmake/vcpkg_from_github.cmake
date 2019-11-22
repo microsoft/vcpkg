@@ -172,6 +172,7 @@ function(vcpkg_from_github)
     endif()
 
     vcpkg_extract_source_archive_ex(
+        SKIP_PATCH_CHECK
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${downloaded_file_path}"
         REF "${SANITIZED_HEAD_REF}"

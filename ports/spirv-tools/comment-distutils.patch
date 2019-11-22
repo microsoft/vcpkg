@@ -1,0 +1,22 @@
+diff --git a/utils/generate_registry_tables.py b/utils/generate_registry_tables.py
+index 8b1c3572..6ab28fe6 100644
+--- a/utils/generate_registry_tables.py
++++ b/utils/generate_registry_tables.py
+@@ -16,7 +16,7 @@
+ 
+ from __future__ import print_function
+ 
+-import distutils.dir_util
++#import distutils.dir_util
+ import os.path
+ import xml.etree.ElementTree
+ 
+@@ -64,7 +64,7 @@ def main():
+     with open(args.xml) as xml_in:
+        registry = xml.etree.ElementTree.fromstring(xml_in.read())
+ 
+-    distutils.dir_util.mkpath(os.path.dirname(args.generator_output))
++    #distutils.dir_util.mkpath(os.path.dirname(args.generator_output))
+     print(generate_vendor_table(registry), file=open(args.generator_output, 'w'))
+ 
+ 

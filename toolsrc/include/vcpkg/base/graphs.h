@@ -46,7 +46,7 @@ namespace vcpkg::Graphs
             if (!r) return;
             for (auto i = c.size(); i > 1; --i)
             {
-                auto j = r->random(static_cast<int>(i));
+                std::size_t j = r->random(static_cast<int>(i));
                 if (j != i - 1)
                 {
                     std::swap(c[i - 1], c[j]);

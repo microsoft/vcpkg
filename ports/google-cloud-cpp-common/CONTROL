@@ -1,0 +1,5 @@
+Source: google-cloud-cpp-common
+Version: 0.16.0
+Build-Depends: grpc, googleapis
+Description: Base C++ Libraries for Google Cloud Platform APIs
+Homepage: https://github.com/googleapis/google-cloud-cpp-common

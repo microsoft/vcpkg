@@ -1,12 +1,5 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.lua.org/ftp/lua-5.3.5.tar.gz"
     FILENAME "lua-5.3.5.tar.gz"
@@ -31,6 +24,20 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if("cpp" IN_LIST FEATURES)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DCOMPILE_AS_CPP=ON
+        OPTIONS_DEBUG
+            -DSKIP_INSTALL_HEADERS=ON
+            -DSKIP_INSTALL_TOOLS=ON
+    )
+
+    vcpkg_install_cmake()
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c20a5c3..1ba8583 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,3 +74,6 @@ configure_file(
+ 
+ export(TARGETS ParallelSTL NAMESPACE pstl:: FILE ParallelSTLTargets.cmake)
+ export(PACKAGE ParallelSTL)
++
++#Install headers
++install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include DESTINATION include)
+\ No newline at end of file

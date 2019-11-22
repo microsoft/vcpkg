@@ -16,7 +16,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         hdf5_config.patch
 )
-set(SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5)
 
 if ("parallel" IN_LIST FEATURES)
     set(ENABLE_PARALLEL ON)
@@ -30,12 +29,10 @@ else()
     set(ENABLE_CPP OFF)
 endif()
 
-#Note: HDF5 Builds by default static as well as shared libraries. Set BUILD_SHARED_LIBS to OFF to only get static libraries
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
+file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
 
-file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -54,10 +51,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/hdf5)
-
-#Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best 
+#Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

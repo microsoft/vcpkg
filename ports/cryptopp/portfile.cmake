@@ -5,20 +5,18 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH CMAKE_SOURCE_PATH
   REPO noloader/cryptopp-cmake
-  REF b97d72f083fefa249e46ae3c15a2c294e615fca2
-  SHA512 e6c65bb81a47009fa568c957beea65c37f2283bdc5afad6a45983f685c0b9c9c01ac4bb334d45dacbdc74f9d834b316c09cbb16d3ead7fb48737fbad76ff3f8d
+  REF 6d0666c457fbbf6f81819fd2b80f0cb5b6646593
+  SHA512 0341f14ce734afaee8bcc1db1716684f241499c692a5478c83a3df3fd2e5331cd04b2f4f51d43cce231ca1d9fbe76220639573c05ef06be0cf33081a1ef7ab30
   HEAD_REF master
   PATCHES
     cmake.patch
-    simon-speck.patch
-    missing-flags.patch
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_8_1_0
-  SHA512 2b09b30c53a8f95a9c3204a48867174c70a1e97171854122f4d8454b25d5af9b94cab2c210dd9857c7db66df881849183e82b6155b80bfef6e69dac8efd2ea9a
+  REF CRYPTOPP_8_2_0
+  SHA512 d2dcc107091d00800de243abdce8286ccd7fcc5707eebf88b97675456a021e62002e942b862db0465f72142951f631c0c1f0b2ba56028b96461780a17f2dfdf9
   HEAD_REF master
   PATCHES patch.patch
 )
@@ -27,7 +25,7 @@ file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 # disable assembly on OSX to fix broken build
-if(APPLE)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CRYPTOPP_DISABLE_ASM "ON")
 else()
     set(CRYPTOPP_DISABLE_ASM "OFF")

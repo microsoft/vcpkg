@@ -2,11 +2,17 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 0)
+else()
+    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO shogun-toolbox/shogun
-    REF shogun_6.1.3
-    SHA512 11aeed456b13720099ca820ab9742c90ce4af2dc049602a425f8c44d2fa155327c7f1d3af2ec840666f600a91e75902d914ffe784d76ed35810da4f3a5815673
+    REF ab274e7ab6bf24dd598c1daf1e626cb686d6e1cc
+    SHA512 fb90e5bf802c6fd59bf35ab7bbde5e8cfcdc5d46c69c52097140b30c6b29e28b8341dd1ece7f8a1f9d9123f4bc06d44d288584ce7dfddccf3d33fe05106884ae
     HEAD_REF master
     PATCHES
         cmake.patch
@@ -15,12 +21,6 @@ vcpkg_from_github(
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
 file(MAKE_DIRECTORY ${SOURCE_PATH}/cmake/external)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/MSDirent.cmake DESTINATION ${SOURCE_PATH}/cmake/external)
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 0)
-else()
-    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
-endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -36,9 +36,6 @@ vcpkg_configure_cmake(
         -DENABLE_TESTING=OFF
         -DLICENSE_GPL_SHOGUN=OFF
         -DLIBSHOGUN_BUILD_STATIC=ON
-        # Conflicting definitions in OpenBLAS and Eigen
-        -DENABLE_EIGEN_LAPACK=OFF
-
         -DCMAKE_DISABLE_FIND_PACKAGE_JSON=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_ViennaCL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_TFLogger=TRUE
@@ -53,13 +50,13 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_CCache=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_LAPACK=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
 
         -DINSTALL_TARGETS=shogun-static
 )
 
 vcpkg_install_cmake()
-
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shogun)
 
 file(REMOVE_RECURSE

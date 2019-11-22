@@ -1,0 +1,21 @@
+Source: ixwebsocket
+Version: 6.1.0
+Build-Depends: zlib
+Description: Lightweight WebSocket Client and Server + HTTP Client and Server
+Default-Features: ssl
+
+Feature: ssl
+Build-Depends: ixwebsocket[openssl] (!uwp&!windows&!osx), ixwebsocket[mbedtls] (windows), ixwebsocket[mbedtls] (uwp), ixwebsocket[sectransp] (osx)
+Description: Default SSL backend
+
+# SSL backends
+Feature: openssl
+Build-Depends: openssl
+Description: SSL support (OpenSSL)
+
+Feature: mbedtls
+Build-Depends: mbedtls
+Description: SSL support (mbedTLS)
+
+Feature: sectransp
+Description: SSL support (sectransp)

@@ -8,16 +8,13 @@ vcpkg_download_distfile(ARCHIVE
   SHA512 cf19c710291ddff3f6ead7d86bdfdeaebca21291d9df094bf0a8ef599546b007757fb2dbb19b56511bb53ef7456eac0c73973b9627bf4d02982c856124428b49
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(ADDITIONAL_PATCH "openblas_linux.patch")
-endif()
-
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
   PATCHES
       remove_internal_blas.patch
-      ${ADDITIONAL_PATCH}
+	  fix-ConfigFile.patch
+      fix-install.patch
 )
 
 vcpkg_configure_cmake(

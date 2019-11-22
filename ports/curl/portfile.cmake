@@ -3,14 +3,16 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_65_0
-    SHA512 436b6b42654c1db2b3f69df410a7f28401a50faf18e74f328a93585c147541e697664b0e9e7df03239fd76c797c1bb4f435f4c668a6b0ad28bdd67e17f786491
+    REF curl-7_66_0
+    SHA512 0b02b6117ab69e848219fa59b25e4254934d841fbc3e2a70ccfdcb417ab7fc46a10dd703a25fbe8a2a98a59cbc73ad6b9298f5668a7345f7910010b958de4d21
     HEAD_REF master
     PATCHES
         0001_cmake.patch
         0002_fix_uwp.patch
         0003_fix_libraries.patch
         0004_nghttp2_staticlib.patch
+        0005_remove_imp_suffix.patch
+        0006_fix_tool_depends.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -72,6 +74,24 @@ if("tool" IN_LIST FEATURES)
     set(BUILD_CURL_EXE ON)
 endif()
 
+# c-ares
+set(USE_ARES OFF)
+if("c-ares" IN_LIST FEATURES)
+    set(USE_ARES ON)
+endif()
+
+# SSPI
+set(USE_WINDOWS_SSPI OFF)
+if("sspi" IN_LIST FEATURES)
+    set(USE_WINDOWS_SSPI ON)
+endif()
+
+# brotli
+set(HAVE_BROTLI OFF) 
+if("brotli" IN_LIST FEATURES)
+    set(HAVE_BROTLI ON)
+endif()
+
 # UWP targets
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -100,6 +120,9 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_SECTRANSP=${USE_SECTRANSP}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
+        -DENABLE_ARES=${USE_ARES}
+        -DCURL_WINDOWS_SSPI=${USE_WINDOWS_SSPI}
+        -DCURL_BROTLI=${HAVE_BROTLI}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_RELEASE
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
@@ -113,7 +136,7 @@ vcpkg_install_cmake()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/CURL)
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
+    vcpkg_fixup_cmake_targets()
 else()
     message(FATAL_ERROR "Could not locate the curl config files")
 endif()
@@ -140,25 +163,41 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl${EXECUTABLE_SUFFIX}")
     endif()
 endif()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib OR EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib)
+    # Because vcpkg only ever installs one or the other, there is no need to have the libraries be different names.
+    # Using the same name improves compatibility, because downstream projects can always rely on "libcurl.lib"
+    message(FATAL_ERROR "Curl's import library name should be consistent with the static library name.")
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+
+    file(GLOB FILES LIST_DIRECTORIES TRUE ${CURRENT_PACKAGES_DIR}/bin/*)
+    if (FILES STREQUAL "")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    endif()
+
+    file(GLOB FILES LIST_DIRECTORIES TRUE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+    if (FILES STREQUAL "")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
 else()
     string(REPLACE "#ifdef CURL_STATICLIB" "#if 0" CURL_H "${CURL_H}")
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
+file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl)
+
 vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-vcpkg_test_cmake(PACKAGE_NAME CURL MODULE)
+vcpkg_test_cmake(PACKAGE_NAME CURL)

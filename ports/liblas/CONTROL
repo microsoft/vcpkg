@@ -1,0 +1,12 @@
+Source: liblas
+Version: 1.8.1-3
+Build-Depends: boost, boost-thread, boost-system, boost-iostreams, boost-filesystem, libgeotiff
+Description: A C/C++ library for reading and writing the very common LAS LiDAR format.
+
+Feature: jpeg
+Description: Support for jpeg
+Build-Depends: libjpeg-turbo
+
+Feature: zlib
+Build-Depends: zlib
+Description: Support zlib for compression

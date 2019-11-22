@@ -7,8 +7,9 @@ namespace vcpkg
 {
     StatusParagraphs::StatusParagraphs() = default;
 
-    StatusParagraphs::StatusParagraphs(std::vector<std::unique_ptr<StatusParagraph>>&& ps)
-        : paragraphs(std::move(ps)){};
+    StatusParagraphs::StatusParagraphs(std::vector<std::unique_ptr<StatusParagraph>>&& ps) : paragraphs(std::move(ps))
+    {
+    }
 
     std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name,
                                                                               const Triplet& triplet)

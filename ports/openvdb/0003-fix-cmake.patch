@@ -1,0 +1,130 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 580b353..d40418c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -274,7 +274,6 @@ if(OPENVDB_INSTALL_CMAKE_MODULES)
+     cmake/FindLog4cplus.cmake
+     cmake/FindOpenEXR.cmake
+     cmake/FindOpenVDB.cmake
+-    cmake/FindTBB.cmake
+     cmake/OpenVDBGLFW3Setup.cmake
+     cmake/OpenVDBHoudiniSetup.cmake
+     cmake/OpenVDBMayaSetup.cmake
+diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
+index dd9b0b3..36ec0d0 100644
+--- a/cmake/FindOpenVDB.cmake
++++ b/cmake/FindOpenVDB.cmake
+@@ -310,7 +310,7 @@ endif()
+ # Add standard dependencies
+ 
+ find_package(IlmBase REQUIRED COMPONENTS Half)
+-find_package(TBB REQUIRED COMPONENTS tbb)
++find_package(TBB CONFIG REQUIRED)
+ find_package(ZLIB REQUIRED)
+ find_package(Boost REQUIRED COMPONENTS iostreams system)
+ 
+diff --git a/openvdb/CMakeLists.txt b/openvdb/CMakeLists.txt
+index 89301bd..e363a13 100644
+--- a/openvdb/CMakeLists.txt
++++ b/openvdb/CMakeLists.txt
+@@ -71,16 +71,10 @@ message(STATUS "----------------------------------------------------")
+ # Collect and configure lib dependencies
+ 
+ if(USE_EXR)
+-  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED)
+-  find_package(OpenEXR ${MINIMUM_OPENEXR_VERSION} REQUIRED)
++  find_package(IlmBase REQUIRED)
++  find_package(OpenEXR REQUIRED)
+ else()
+-  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED COMPONENTS Half)
+-endif()
+-
+-find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbb)
+-if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
+-  message(DEPRECATION "Support for TBB versions < ${FUTURE_MINIMUM_TBB_VERSION} "
+-    "is deprecated and will be removed.")
++  find_package(IlmBase REQUIRED COMPONENTS Half)
+ endif()
+ 
+ find_package(ZLIB ${MINIMUM_ZLIB_VERSION} REQUIRED)
+@@ -117,10 +111,10 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")
+     message(WARNING "Unable to find Jemalloc, attempting to fall back to TBB malloc.
+       It is recommended to use Jemalloc for optimum performance."
+     )
+-    find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbbmalloc tbbmalloc_proxy)
++    find_package(TBB CONFIG REQUIRED)
+   endif()
+ elseif(CONCURRENT_MALLOC STREQUAL "Tbbmalloc")
+-  find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbbmalloc tbbmalloc_proxy)
++  find_package(TBB CONFIG REQUIRED)
+ endif()
+ 
+ # Set deps. Note that the order here is important. If we're building against
+@@ -132,15 +126,15 @@ endif()
+ set(OPENVDB_CORE_DEPENDENT_LIBS
+   Boost::iostreams
+   Boost::system
+-  IlmBase::Half
++  ${Ilmbase_HALF_LIBRARY}
+ )
+ 
+ if(USE_EXR)
+   list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
+-    IlmBase::IlmThread
+-    IlmBase::Iex
+-    IlmBase::Imath
+-    OpenEXR::IlmImf
++    ${Ilmbase_ILMTHREAD_LIBRARY}
++    ${Ilmbase_IEX_LIBRARY}
++    ${Ilmbase_IMATH_LIBRARY}
++    ${OPENEXR_ILMIMF_LIBRARY}
+   )
+ endif()
+ 
+@@ -152,7 +146,7 @@ endif()
+ # See FindOpenVDB.cmake
+ 
+ if(USE_BLOSC)
+-  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS Blosc::blosc)
++  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS ${BLOSC_blosc_LIBRARY})
+ endif()
+ 
+ list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
+@@ -187,7 +181,11 @@ endif()
+ 
+ # @todo Should be target definitions
+ if(WIN32)
+-  add_definitions(-D_WIN32 -DNOMINMAX -DOPENVDB_DLL)
++  add_definitions(-D_WIN32 -DNOMINMAX)
++  add_definitions(-D__TBB_NO_IMPLICIT_LINKAGE -D__TBBMALLOC_NO_IMPLICIT_LINKAGE)
++  if (OPENVDB_SHARED)
++    add_definitions(-DOPENEXR_DLL -DOPENVDB_DLL)
++  endif()
+ endif()
+ 
+ ##### Core library configuration
+@@ -404,6 +402,7 @@ list(APPEND OPENVDB_CORE_PRIVATE_DEFINES "-DOPENVDB_PRIVATE")
+ if(USE_BLOSC)
+   list(APPEND OPENVDB_CORE_PRIVATE_DEFINES "-DOPENVDB_USE_BLOSC")
+ endif()
++list(APPEND OPENVDB_CORE_PRIVATE_DEFINES "$<$<CXX_COMPILER_ID:MSVC>:/bigobj>")
+ 
+ # Public defines
+ 
+diff --git a/openvdb/cmd/CMakeLists.txt b/openvdb/cmd/CMakeLists.txt
+index 57fbec0..d817044 100644
+--- a/openvdb/cmd/CMakeLists.txt
++++ b/openvdb/cmd/CMakeLists.txt
+@@ -155,9 +155,9 @@ if(OPENVDB_BUILD_VDB_RENDER)
+   # headers
+ 
+   target_link_libraries(vdb_render
+-    OpenEXR::IlmImf
+-    IlmBase::IlmThread
+-    IlmBase::Iex
++    ${OPENEXR_ILMIMF_LIBRARY}
++    ${Ilmbase_ILMTHREAD_LIBRARY}
++    ${Ilmbase_IEX_LIBRARY}
+     ${OPENVDB_BINARIES_DEPENDENT_LIBS}
+   )
+ 

@@ -13,6 +13,7 @@ vcpkg_from_github(
         hdf5.patch
         hdf5_2.patch
         fix-build-error-on-linux.patch
+        hdf5_3.patch
 )
 
 #Remove outdated find modules
@@ -52,10 +53,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-c)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/copyright
-)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

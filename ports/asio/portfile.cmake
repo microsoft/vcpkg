@@ -9,6 +9,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Always use "ASIO_STANDALONE" to avoid boost dependency
+file(READ "${SOURCE_PATH}/asio/include/asio/detail/config.hpp" _contents)
+string(REPLACE "defined(ASIO_STANDALONE)" "!defined(VCPKG_DISABLE_ASIO_STANDALONE)" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/asio/include/asio/detail/config.hpp" "${_contents}")
+
 # CMake install
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(

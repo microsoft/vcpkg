@@ -69,7 +69,7 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             }
         }
     } elseif ($targetBinaryName -match "Qt5Quickd?.dll") {
-        foreach ($a in @("Qt5QuickControls2", "Qt5QuickControls2d", "Qt5QuickTemplates2", "Qt5QuickTemplates2d"))
+        foreach ($a in @("Qt5QuickControls2", "Qt5QuickControls2d", "Qt5QuickShapes", "Qt5QuickShapesd", "Qt5QuickTemplates2", "Qt5QuickTemplates2d"))
         {
             if (Test-Path "$binDir\$a.dll")
             {

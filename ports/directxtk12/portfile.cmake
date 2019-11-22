@@ -3,19 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXTk12 only supports dynamic CRT linkage")
+  message(FATAL_ERROR "DirectXTK12 only supports dynamic CRT linkage")
 endif()
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DirectXTK12-dec2016)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/DirectXTK12/archive/dec2016.tar.gz"
-    FILENAME "DirectXTK12-dec2016.tar.gz"
-    SHA512 7c98fbf1d7ef96807a38d396a87dacdc60fdcd7e461210d246cc424789c4c5c5fb1390db958c1bd1f77da8af756a9eae36813e5da6bbb0ea1432ff4004f1d010
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_Desktop_2015_Win10.sln
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/DirectXTK12
+    REF oct2019
+    SHA512 10ad63b35574900b8f68f7f836b1d3056d3e862ce2ff0707809fafd97c64bc9fd1ff402a2c4c237d7aee75a876762425c9d13bc2bd242ed4eb9c4d76ba3fc685
+    HEAD_REF master
 )
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
@@ -24,17 +20,39 @@ ELSE()
 	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
 
-file(INSTALL
-	${SOURCE_PATH}/Bin/Desktop_2015_Win10/${BUILD_ARCH}/Release/DirectXTK12.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL
-	${SOURCE_PATH}/Bin/Desktop_2015_Win10/${BUILD_ARCH}/Debug/DirectXTK12.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+    set(VS_VERSION "2015")
+elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    set(VS_VERSION "2017")
+elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    set(VS_VERSION "2019")
+else()
+    message(FATAL_ERROR "Unsupported platform toolset.")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(SLN_NAME "Windows10_${VS_VERSION}")
+else()
+    set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
+endif()
+
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
+)
 
 file(INSTALL
 	${SOURCE_PATH}/Inc/
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK12
 )
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxtk12 RENAME copyright)
+file(INSTALL
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK12.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK12.pdb
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+file(INSTALL
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK12.lib
+    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK12.pdb
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

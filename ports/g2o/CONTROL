@@ -1,5 +1,5 @@
 Source: g2o
-Version: 20170730_git-4
+Version: 20170730_git-5
 Build-Depends: suitesparse, eigen3, clapack (!osx), ceres
 Description: g2o: A General Framework for Graph Optimization
 Homepage: https://openslam.org/g2o.html

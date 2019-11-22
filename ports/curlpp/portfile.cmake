@@ -29,12 +29,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin
     )
-
-    configure_file(
-        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-        ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}
-        @ONLY
-    )
 endif()
 
 # Handle copyright

@@ -3,9 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qhull/qhull
-    REF v7.2.1 # Qhull 2015.2
-    SHA512 8f5177ea45f82fa28f13e95105497e7e29086d7301e1cb8d3860fff09ebf8d0f01cfcb0f044c422f0ac0ba94b845bba223232e5eeb613bf671f65a569b8766d0
+    REF v7.3.2 # Qhull 2019.1
+    SHA512 aea2c70179de10f648aba960129a3b9a3fe309a0eb085bdb86f697e3d4b214570c241e88d4f0b4d2974137759ee7086452d0a3957c4b2a256708402fb3c9eb3d
     HEAD_REF master
+	PATCHES uwp.patch
 )
 if(${TARGET_TRIPLET} STREQUAL "x64-windows-static") 
 # workaround for visual studio toolset regression LNK1201 (remove if solved)
@@ -36,6 +37,8 @@ vcpkg_configure_cmake(
 endif()
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull) 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB_RECURSE HTMFILES ${CURRENT_PACKAGES_DIR}/include/*.htm)

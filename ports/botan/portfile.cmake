@@ -1,41 +1,22 @@
-include(vcpkg_common_functions)
-
-set(BOTAN_VERSION 2.9.0)
+set(BOTAN_VERSION 2.12.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 0129d3172ec419beb90a2b3487f6385a35da0742
-    SHA512 a8328df5ad2693a96935d1d2202ddd6678a5ba9c63a8159acbe56f1c884fa5faaa71339e8f56284cfd00574a9b4f91bdb1fb22c36c8e899d9b4cbe881f4867d3
+    REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
+    SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
     HEAD_REF master
+    PATCHES fix-generate-build-path.patch
 )
-
-set(NUMBER_OF_PROCESSORS "1")
-if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-else()
-    if(APPLE)
-        set(job_count_command sysctl -n hw.physicalcpu)
-    else()
-        set(job_count_command nproc)
-    endif()
-    execute_process( 
-            COMMAND ${job_count_command}
-            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-        )
-    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    if(NOT NUMBER_OF_PROCESSORS)
-        set(NUMBER_OF_PROCESSORS "1")
-    endif()
-endif()
 
 if(CMAKE_HOST_WIN32)
     vcpkg_find_acquire_program(JOM)
-    set(build_tool "${JOM}" /J ${NUMBER_OF_PROCESSORS})
+    set(build_tool "${JOM}")
+    set(parallel_build "/J${VCPKG_CONCURRENCY}")
 else()
     find_program(MAKE make)
-    set(build_tool "${MAKE}" -j${NUMBER_OF_PROCESSORS})
+    set(build_tool "${MAKE}")
+    set(parallel_build "-j${VCPKG_CONCURRENCY}")
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -93,7 +74,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
-    endif()    
+    endif()
 
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" ${configure_arguments}
@@ -102,8 +83,9 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
-    vcpkg_execute_required_process(
-        COMMAND ${build_tool}
+    vcpkg_execute_build_process(
+        COMMAND "${build_tool}" ${parallel_build}
+        NO_PARALLEL_COMMAND "${build_tool}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
@@ -112,7 +94,11 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/src/scripts/install.py"
             --prefix=${BOTAN_FLAG_PREFIX}
-            --docdir=share
+            --bindir=${BOTAN_FLAG_PREFIX}/bin
+            --libdir=${BOTAN_FLAG_PREFIX}/lib
+            --pkgconfigdir=${BOTAN_FLAG_PREFIX}/lib
+            --includedir=${BOTAN_FLAG_PREFIX}/include
+            --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 

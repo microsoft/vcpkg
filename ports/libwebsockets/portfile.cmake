@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF v3.1.0
-    SHA512 e2a4c1b25bc6f028654a63fc01a2732e6c63414868f8d3d01fa477752fdabe0f61e8d271fe7dd2734db0e15b1250f6b0101285b6d694f971ec4bf67ba7ee067c
+    REF v3.2.0
+    SHA512 afc1c9e259d6d48000b09da111af4129680d50474cdfedbad197ee22260d57a837b67cc6a3f8e6b1aa7ce7dc5d3fd900569783631540501709868125c6d1e4da
     HEAD_REF master
 )
 
@@ -13,6 +13,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
         -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
@@ -27,9 +28,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libwebsockets" TARGET_PATH "share/libwebsockets")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libwebsockets)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -29,7 +29,7 @@ function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$tar
         Copy-Item "$SourceDir\$targetBinaryName" $targetBinaryDir
     }
     if ($copiedFilesLog) { Add-Content $copiedFilesLog "$targetBinaryDir\$targetBinaryName" -Encoding UTF8 }
-    if ($tlogFile) { Add-Content $tlogFile "$targetBinaryDir\$targetBinaryName" }
+    if ($tlogFile) { Add-Content $tlogFile "$targetBinaryDir\$targetBinaryName" -Encoding Unicode }
 }
 
 

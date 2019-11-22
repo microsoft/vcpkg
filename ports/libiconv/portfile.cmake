@@ -21,7 +21,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-Add-export-definitions.patch
         0002-Config-for-MSVC.patch
-        0003-Fix-uwp.patch
 )
 
 #Since libiconv uses automake, make and configure, we use a custom CMake file
@@ -39,8 +38,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-iconv TARGET_PATH share/u
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libiconv/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libiconv/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME unofficial-iconv)

@@ -43,16 +43,27 @@ The port version.
 
 This field is an alphanumeric string that may also contain `.`, `_`, or `-`. No attempt at ordering versions is made; all versions are treated as bit strings and are only evaluated for equality.
 
-By convention, if a portfile is modified without incrementing the "upstream" version, a `-#` is appended to create a unique version string.
+For tagged-release ports, we follow the following convention:
 
-Some projects do not have named releases.  In these cases use the date of the version   do not have labeled releases, in these cases use the date of the last commit in `YYYY-MM-DD` format.  See the `abseil` port as an example.
+1. If the port follows a scheme like `va.b.c`, we remove the leading `v`. In this case, it becomes `a.b.c`.
+2. If the port includes its own name in the version like `curl-7_65_1`, we remove the leading name: `7_65_1`
+3. If the port has been modified, we append a `-N` to distinguish the versions: `1.2.1-4`
+
+For rolling-release ports, we use the date that the _commit was accessed by you_, formatted as `YYYY-MM-DD`. Stated another way: if someone had a time machine and went to that date, they would see this commit as the latest master.
+
+For example, given:
+1. The latest commit was made on 2019-04-19
+2. The current version string is `2019-02-14-1`
+3. Today's date is 2019-06-01.
+
+Then if you update the source version today, you should give it version `2019-06-01`. If you need to make a change which doesn't adjust the source version, you should give it version `2019-02-14-2`.
 
 Example:
 ```no-highlight
 Version: 1.0.5-2
 ```
 ```no-highlight
-Version: 2019-3-21
+Version: 2019-03-21
 ```
 
 #### Description

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(libmodbus VERSION 3.1.4)
+project(libmodbus VERSION 3.1.6)
 
 set(LIBMODBUS_VERSION ${PROJECT_VERSION})
 set(LIBMODBUS_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
