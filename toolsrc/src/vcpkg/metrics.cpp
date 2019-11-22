@@ -184,15 +184,9 @@ namespace vcpkg::Metrics
             if (buildtime_names.size() > 0)
             {
                 if (props_plus_buildtimes.size() > 0) props_plus_buildtimes.push_back(',');
-                props_plus_buildtimes.append(
-                    Strings::format(R"("buildnames": [%s], "buildtimes": [%s])",
-                                    Strings::join(",",
-                                                  buildtime_names,
-                                                  [](std::string buildname) {
-                                                      return to_json_string(vcpkg::Hash::get_string_hash(
-                                                          buildname, Hash::Algorithm::Sha256));
-                                                  }),
-                                    Strings::join(",", buildtime_times)));
+                props_plus_buildtimes.append(Strings::format(R"("buildnames_1": [%s], "buildtimes": [%s])",
+                                                             Strings::join(",", buildtime_names, to_json_string),
+                                                             Strings::join(",", buildtime_times)));
             }
 
             const std::string& session_id = get_session_id();

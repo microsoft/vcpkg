@@ -5,12 +5,7 @@ For more information about how Microsoft protects your privacy, see https://priv
 
 ## Scope
 
-We explicitly ONLY collect information from invocations of the tool itself; we do NOT add any tracking information into the produced libraries. Telemetry is collected when using any of the `vcpkg` commands, such as:
-
-```
-vcpkg install
-vcpkg build
-```
+We explicitly ONLY collect information from invocations of the tool itself; we do NOT add any tracking information into the produced libraries. Telemetry is collected when using any of the `vcpkg` commands.
 
 ## How to opt out
 
@@ -27,7 +22,7 @@ vcpkg displays text similar to the following when you build vcpkg. This is how M
 ```
 Telemetry
 ---------
-vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by adding -disableMetrics after the bootstrap-vcpkg script.
+vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics.
 
 Read more about vcpkg telemetry at docs/about/privacy.md
 ```

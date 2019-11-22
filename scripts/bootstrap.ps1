@@ -415,7 +415,7 @@ Write-Host "`nBuilding vcpkg.exe... done.`n"
 Write-Host @"
 Telemetry
 ---------
-vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by adding -disableMetrics after the bootstrap-vcpkg.bat script.
+vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.bat with -disableMetrics.
 Read more about vcpkg telemetry at docs/about/privacy.md
 
 "@

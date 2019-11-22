@@ -584,7 +584,7 @@ namespace vcpkg::Build
             locked_metrics->track_buildtime(Hash::get_string_hash(spec.to_string(), Hash::Algorithm::Sha256) + ":[" +
                                                 Strings::join(",",
                                                               config.feature_list,
-                                                              [](std::string feature) {
+                                                              [](const std::string& feature) {
                                                                   return Hash::get_string_hash(feature,
                                                                                                Hash::Algorithm::Sha256);
                                                               }) +

@@ -697,7 +697,7 @@ namespace vcpkg::Install
             Checks::unreachable(VCPKG_LINE_INFO);
         });
 
-        Metrics::g_metrics.lock()->track_property("installplan", specs_string);
+        Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
         Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 
