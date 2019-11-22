@@ -1,4 +1,6 @@
-include(vcpkg_common_functions)
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(PATCH_fix_posix_name "fix-POSIX_name.patch")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,8 +8,8 @@ vcpkg_from_github(
     REF 0.2.2
     SHA512 455494591014a97c4371a1f372ad09f0d6e487e4f1d3419c98e9cd2f16d43a0cf9a0787d7250bebee8b8d400df4626f5acd81e90139e54fa574a66ec84964c06
     HEAD_REF master
-	PATCHES
-		fix-POSIX_name.patch
+    PATCHES
+        "${PATCH_fix_posix_name}"
 )
 
 vcpkg_configure_cmake(
