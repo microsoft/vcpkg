@@ -1,6 +1,4 @@
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "PDCurses only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 
 find_program(NMAKE nmake)
 
@@ -49,23 +47,27 @@ vcpkg_execute_required_process(
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
 file (
-    COPY ${PDC_PDCLIB}.lib
+    INSTALL ${PDC_PDCLIB}.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file (
-        COPY ${PDC_PDCLIB}.dll
+        INSTALL ${PDC_PDCLIB}.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 endif()
 
 file(
-    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h
+    INSTALL ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/curses.h _contents)
+    string(REPLACE "#ifdef PDC_DLL_BUILD" "#if 1" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/curses.h "${_contents}")
+endif()
+
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-# Install usage
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
