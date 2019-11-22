@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
@@ -14,14 +12,14 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF d12df6e924adc3889cd2fbeaca078355c5da170f
-    SHA512 ecb55cda91ab6db1519b612b676b5166454132960edce0a36f1b4e42f5e1a5f753d8bbb2ed93e34faed1025a54840eb4dc876a49c88b8dd9c90c8070dafc43b8
+    REF 8874256376d2f8a32867f17c9472a446d6707604 #2019.10.21.00
+    SHA512 96dfdde34697b72e8eb88431d742fffa337fc9146677d63cf0331dc5e4cd341fb00b88edf3781488e3194fa41525e70a6729e1bb6657f224cd1969deea9b468c
     HEAD_REF master
     PATCHES
         missing-include-atomic.patch
-        boost-1.70.patch
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
+        boost-1.70.patch
 )
 
 file(COPY
@@ -94,5 +92,4 @@ ${_contents}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/folly)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/folly/LICENSE ${CURRENT_PACKAGES_DIR}/share/folly/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

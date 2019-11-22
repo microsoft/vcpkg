@@ -1,0 +1,3 @@
+Source: ecos
+Version: 2.0.7
+Description: A lightweight conic solver for second-order cone programming.

@@ -1,184 +1,28 @@
 diff --git a/cmake/FindBlosc.cmake b/cmake/FindBlosc.cmake
-index e8b57a2..61ba83b 100644
+index ae84240..5630b6b 100644
 --- a/cmake/FindBlosc.cmake
 +++ b/cmake/FindBlosc.cmake
-@@ -1,4 +1,4 @@
--# Copyright (c) 2012-2019 DreamWorks Animation LLC
-+# Copyright (c) 2012-2016 DreamWorks Animation LLC
- #
- # All rights reserved. This software is distributed under the
- # Mozilla Public License 2.0 ( http://www.mozilla.org/MPL/2.0/ )
-@@ -24,190 +24,51 @@
- # IN NO EVENT SHALL THE COPYRIGHT HOLDERS' AND CONTRIBUTORS' AGGREGATE
- # LIABILITY FOR ALL CLAIMS REGARDLESS OF THEIR BASIS EXCEED US$250.00.
- #
--#[=======================================================================[.rst:
+@@ -86,7 +86,7 @@ may be provided to tell this module where to look.
+   Paths appended to all include and lib searches.
  
--FindBlosc
-----------
+ #]=======================================================================]
 -
--Find Blosc include dirs and libraries
--
--Use this module by invoking find_package with the form::
--
--  find_package(Blosc
--    [version] [EXACT]      # Minimum or EXACT version e.g. 1.5.0
--    [REQUIRED]             # Fail with error if Blosc is not found
--    )
--
--IMPORTED Targets
--^^^^^^^^^^^^^^^^
--
--``Blosc::blosc``
--  This module defines IMPORTED target Blosc::Blosc, if Blosc has been found.
--
--Result Variables
--^^^^^^^^^^^^^^^^
--
--This will define the following variables:
--
--``Blosc_FOUND``
--  True if the system has the Blosc library.
--``Blosc_VERSION``
--  The version of the Blosc library which was found.
--``Blosc_INCLUDE_DIRS``
--  Include directories needed to use Blosc.
--``Blosc_LIBRARIES``
--  Libraries needed to link to Blosc.
--``Blosc_LIBRARY_DIRS``
--  Blosc library directories.
--
--Cache Variables
--^^^^^^^^^^^^^^^
--
--The following cache variables may also be set:
--
--``Blosc_INCLUDE_DIR``
--  The directory containing ``blosc.h``.
--``Blosc_LIBRARY``
--  The path to the Blosc library.
--
--Hints
--^^^^^
--
--Instead of explicitly setting the cache variables, the following variables
--may be provided to tell this module where to look.
--
--``BLOSC_ROOT``
--  Preferred installation prefix.
--``BLOSC_INCLUDEDIR``
--  Preferred include directory e.g. <prefix>/include
--``BLOSC_LIBRARYDIR``
--  Preferred library directory e.g. <prefix>/lib
--``SYSTEM_LIBRARY_PATHS``
--  Paths appended to all include and lib searches.
--
--#]=======================================================================]
--
--mark_as_advanced(
--  Blosc_INCLUDE_DIR
--  Blosc_LIBRARY
--)
--
--# Append BLOSC_ROOT or $ENV{BLOSC_ROOT} if set (prioritize the direct cmake var)
--set(_BLOSC_ROOT_SEARCH_DIR "")
--
--if(BLOSC_ROOT)
--  list(APPEND _BLOSC_ROOT_SEARCH_DIR ${BLOSC_ROOT})
--else()
--  set(_ENV_BLOSC_ROOT $ENV{BLOSC_ROOT})
--  if(_ENV_BLOSC_ROOT)
--    list(APPEND _BLOSC_ROOT_SEARCH_DIR ${_ENV_BLOSC_ROOT})
--  endif()
--endif()
--
--# ------------------------------------------------------------------------
--#  Search for blosc include DIR
--# ------------------------------------------------------------------------
--
--set(_BLOSC_INCLUDE_SEARCH_DIRS "")
--list(APPEND _BLOSC_INCLUDE_SEARCH_DIRS
--  ${BLOSC_INCLUDEDIR}
--  ${_BLOSC_ROOT_SEARCH_DIR}
--  ${PC_Blosc_INCLUDE_DIRS}
--  ${SYSTEM_LIBRARY_PATHS}
--)
-+# -*- cmake -*-
-+# - Find Blosc
-+#
-+# Author : Nicholas Yue yue.nicholas@gmail.com
-+#
-+# BLOSC_FOUND            set if Blosc is found.
-+# BLOSC_INCLUDE_DIR      Blosc's include directory
-+# BLOSC_LIBRARYDIR      Blosc's library directory
-+# BLOSC_LIBRARIES        all Blosc libraries
- 
--# Look for a standard blosc header file.
--find_path(Blosc_INCLUDE_DIR blosc.h
--  NO_DEFAULT_PATH
--  PATHS ${_BLOSC_INCLUDE_SEARCH_DIRS}
--  PATH_SUFFIXES include
--)
++if (0)
+ mark_as_advanced(
+   Blosc_INCLUDE_DIR
+   Blosc_LIBRARY
+@@ -211,3 +211,30 @@ if(Blosc_FOUND)
+ elseif(Blosc_FIND_REQUIRED)
+   message(FATAL_ERROR "Unable to find Blosc")
+ endif()
++else()
 +FIND_PACKAGE ( PackageHandleStandardArgs )
- 
--if(EXISTS "${Blosc_INCLUDE_DIR}/blosc.h")
--  file(STRINGS "${Blosc_INCLUDE_DIR}/blosc.h"
--    _blosc_version_major_string REGEX "#define BLOSC_VERSION_MAJOR +[0-9]+ "
--  )
--  string(REGEX REPLACE "#define BLOSC_VERSION_MAJOR +([0-9]+).*$" "\\1"
--    _blosc_version_major_string "${_blosc_version_major_string}"
--  )
--  string(STRIP "${_blosc_version_major_string}" Blosc_VERSION_MAJOR)
 +FIND_PATH( BLOSC_LOCATION include/blosc.h)
- 
--  file(STRINGS "${Blosc_INCLUDE_DIR}/blosc.h"
--     _blosc_version_minor_string REGEX "#define BLOSC_VERSION_MINOR +[0-9]+ "
 +FIND_PACKAGE_HANDLE_STANDARD_ARGS ( Blosc
 +  REQUIRED_VARS BLOSC_LOCATION
-   )
--  string(REGEX REPLACE "#define BLOSC_VERSION_MINOR +([0-9]+).*$" "\\1"
--    _blosc_version_minor_string "${_blosc_version_minor_string}"
--  )
--  string(STRIP "${_blosc_version_minor_string}" Blosc_VERSION_MINOR)
--
--  unset(_blosc_version_major_string)
--  unset(_blosc_version_minor_string)
--
--  set(Blosc_VERSION ${Blosc_VERSION_MAJOR}.${Blosc_VERSION_MINOR})
--endif()
--
--# ------------------------------------------------------------------------
--#  Search for blosc lib DIR
--# ------------------------------------------------------------------------
- 
--set(_BLOSC_LIBRARYDIR_SEARCH_DIRS "")
--list(APPEND _BLOSC_LIBRARYDIR_SEARCH_DIRS
--  ${BLOSC_LIBRARYDIR}
--  ${_BLOSC_ROOT_SEARCH_DIR}
--  ${PC_Blosc_LIBRARY_DIRS}
--  ${SYSTEM_LIBRARY_PATHS}
--)
++  )
 +IF ( BLOSC_FOUND )
- 
--# Static library setup
--if(UNIX AND BLOSC_USE_STATIC_LIBS)
--  set(_BLOSC_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
--  set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
--endif()
-+#  SET ( BLOSC_LIBRARYDIR ${BLOSC_LOCATION}/lib
-+#    CACHE STRING "Blosc library directories")
- 
--set(BLOSC_PATH_SUFFIXES
--  lib64
--  lib
--)
-+  SET ( _blosc_library_name "blosc" )
- 
--find_library(Blosc_LIBRARY blosc
--  NO_DEFAULT_PATH
--  PATHS ${_BLOSC_LIBRARYDIR_SEARCH_DIRS}
--  PATH_SUFFIXES ${BLOSC_PATH_SUFFIXES}
--)
++SET ( _blosc_library_name "blosc" )
 +  # Static library setup
 +  IF (Blosc_USE_STATIC_LIBS)
 +    SET(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP ${CMAKE_FIND_LIBRARY_SUFFIXES})
@@ -188,391 +32,40 @@ index e8b57a2..61ba83b 100644
 +	  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 +	ENDIF ()
 +  ENDIF()
- 
--if(UNIX AND BLOSC_USE_STATIC_LIBS)
--  set(CMAKE_FIND_LIBRARY_SUFFIXES ${_BLOSC_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
--  unset(_BLOSC_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES)
--endif()
--
--# ------------------------------------------------------------------------
--#  Cache and set Blosc_FOUND
--# ------------------------------------------------------------------------
--
--include(FindPackageHandleStandardArgs)
--find_package_handle_standard_args(Blosc
--  FOUND_VAR Blosc_FOUND
--  REQUIRED_VARS
--    Blosc_LIBRARY
--    Blosc_INCLUDE_DIR
--  VERSION_VAR Blosc_VERSION
--)
 +  FIND_LIBRARY ( BLOSC_blosc_LIBRARY ${_blosc_library_name}
 +    NO_SYSTEM_ENVIRONMENT_PATH
 +    )
- 
--if(Blosc_FOUND)
--  set(Blosc_LIBRARIES ${Blosc_LIBRARY})
--  set(Blosc_INCLUDE_DIRS ${Blosc_INCLUDE_DIR})
--  set(Blosc_DEFINITIONS ${PC_Blosc_CFLAGS_OTHER})
 +  # Static library tear down
 +  IF (Blosc_USE_STATIC_LIBS)
 +    SET( CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP} )
 +  ENDIF()
- 
--  get_filename_component(Blosc_LIBRARY_DIRS ${Blosc_LIBRARY} DIRECTORY)
 +  SET( BLOSC_INCLUDE_DIR "${BLOSC_LOCATION}/include" CACHE STRING "Blosc include directory" )
- 
--  if(NOT TARGET Blosc::blosc)
--    add_library(Blosc::blosc UNKNOWN IMPORTED)
--    set_target_properties(Blosc::blosc PROPERTIES
--      IMPORTED_LOCATION "${Blosc_LIBRARIES}"
--      INTERFACE_COMPILE_DEFINITIONS "${Blosc_DEFINITIONS}"
--      INTERFACE_INCLUDE_DIRECTORIES "${Blosc_INCLUDE_DIRS}"
--    )
--  endif()
--elseif(Blosc_FIND_REQUIRED)
--  message(FATAL_ERROR "Unable to find Blosc")
--endif()
 +ENDIF ( BLOSC_FOUND )
++endif()
+\ No newline at end of file
 diff --git a/cmake/FindIlmBase.cmake b/cmake/FindIlmBase.cmake
-index 7f71a72..bb14fb4 100644
+index c58083e..438fc83 100644
 --- a/cmake/FindIlmBase.cmake
 +++ b/cmake/FindIlmBase.cmake
-@@ -1,4 +1,4 @@
--# Copyright (c) 2012-2019 DreamWorks Animation LLC
-+# Copyright (c) 2012-2016 DreamWorks Animation LLC
- #
- # All rights reserved. This software is distributed under the
- # Mozilla Public License 2.0 ( http://www.mozilla.org/MPL/2.0/ )
-@@ -24,309 +24,162 @@
- # IN NO EVENT SHALL THE COPYRIGHT HOLDERS' AND CONTRIBUTORS' AGGREGATE
- # LIABILITY FOR ALL CLAIMS REGARDLESS OF THEIR BASIS EXCEED US$250.00.
- #
--#[=======================================================================[.rst:
+@@ -100,7 +100,7 @@ may be provided to tell this module where to look.
+   Paths appended to all include and lib searches.
  
--FindIlmBase
-------------
+ #]=======================================================================]
 -
--Find IlmBase include dirs and libraries
--
--Use this module by invoking find_package with the form::
--
--  find_package(IlmBase
--    [version] [EXACT]      # Minimum or EXACT version
--    [REQUIRED]             # Fail with error if IlmBase is not found
--    [COMPONENTS <libs>...] # IlmBase libraries by their canonical name
--                           # e.g. "Half" for "libHalf"
--    )
--
--IMPORTED Targets
--^^^^^^^^^^^^^^^^
--
--``IlmBase::Half``
--  The Half library target.
--``IlmBase::Iex``
--  The Iex library target.
--``IlmBase::IexMath``
--  The IexMath library target.
--``IlmBase::IlmThread``
--  The IlmThread library target.
--``IlmBase::Imath``
--  The Imath library target.
--
--Result Variables
--^^^^^^^^^^^^^^^^
--
--This will define the following variables:
--
--``IlmBase_FOUND``
--  True if the system has the IlmBase library.
--``IlmBase_VERSION``
--  The version of the IlmBase library which was found.
--``IlmBase_INCLUDE_DIRS``
--  Include directories needed to use IlmBase.
--``IlmBase_LIBRARIES``
--  Libraries needed to link to IlmBase.
--``IlmBase_LIBRARY_DIRS``
--  IlmBase library directories.
--``IlmBase_{COMPONENT}_FOUND``
--  True if the system has the named IlmBase component.
--
--Cache Variables
--^^^^^^^^^^^^^^^
--
--The following cache variables may also be set:
--
--``IlmBase_INCLUDE_DIR``
--  The directory containing ``IlmBase/config-auto.h``.
--``IlmBase_{COMPONENT}_LIBRARY``
--  Individual component libraries for IlmBase
--``IlmBase_{COMPONENT}_DLL``
--  Individual component dlls for IlmBase on Windows.
--
--Hints
--^^^^^
--
--Instead of explicitly setting the cache variables, the following variables
--may be provided to tell this module where to look.
--
--``ILMBASE_ROOT``
--  Preferred installation prefix.
--``ILMBASE_INCLUDEDIR``
--  Preferred include directory e.g. <prefix>/include
--``ILMBASE_LIBRARYDIR``
--  Preferred library directory e.g. <prefix>/lib
--``SYSTEM_LIBRARY_PATHS``
--  Paths appended to all include and lib searches.
--
--#]=======================================================================]
--
--# Support new if() IN_LIST operator
--if(POLICY CMP0057)
--  cmake_policy(SET CMP0057 NEW)
--endif()
--
--mark_as_advanced(
--  IlmBase_INCLUDE_DIR
--  IlmBase_LIBRARY
--)
--
--set(_ILMBASE_COMPONENT_LIST
--  Half
--  Iex
--  IexMath
--  IlmThread
--  Imath
--)
--
--if(IlmBase_FIND_COMPONENTS)
--  set(ILMBASE_COMPONENTS_PROVIDED TRUE)
--  set(_IGNORED_COMPONENTS "")
--  foreach(COMPONENT ${IlmBase_FIND_COMPONENTS})
--    if(NOT ${COMPONENT} IN_LIST _ILMBASE_COMPONENT_LIST)
--      list(APPEND _IGNORED_COMPONENTS ${COMPONENT})
--    endif()
--  endforeach()
--
--  if(_IGNORED_COMPONENTS)
--    message(STATUS "Ignoring unknown components of IlmBase:")
--    foreach(COMPONENT ${_IGNORED_COMPONENTS})
--      message(STATUS "  ${COMPONENT}")
--    endforeach()
--    list(REMOVE_ITEM IlmBase_FIND_COMPONENTS ${_IGNORED_COMPONENTS})
--  endif()
--else()
--  set(ILMBASE_COMPONENTS_PROVIDED FALSE)
--  set(IlmBase_FIND_COMPONENTS ${_ILMBASE_COMPONENT_LIST})
--endif()
--
--# Append ILMBASE_ROOT or $ENV{ILMBASE_ROOT} if set (prioritize the direct cmake var)
--set(_ILMBASE_ROOT_SEARCH_DIR "")
--
--if(ILMBASE_ROOT)
--  list(APPEND _ILMBASE_ROOT_SEARCH_DIR ${ILMBASE_ROOT})
--else()
--  set(_ENV_ILMBASE_ROOT $ENV{ILMBASE_ROOT})
--  if(_ENV_ILMBASE_ROOT)
--    list(APPEND _ILMBASE_ROOT_SEARCH_DIR ${_ENV_ILMBASE_ROOT})
--  endif()
--endif()
--
--# ------------------------------------------------------------------------
--#  Search for IlmBase include DIR
--# ------------------------------------------------------------------------
--
--set(_ILMBASE_INCLUDE_SEARCH_DIRS "")
--list(APPEND _ILMBASE_INCLUDE_SEARCH_DIRS
--  ${ILMBASE_INCLUDEDIR}
--  ${_ILMBASE_ROOT_SEARCH_DIR}
--  ${PC_IlmBase_INCLUDEDIR}
--  ${SYSTEM_LIBRARY_PATHS}
--)
--
--# Look for a standard IlmBase header file.
--find_path(IlmBase_INCLUDE_DIR IlmBaseConfig.h
--  NO_DEFAULT_PATH
--  PATHS ${_ILMBASE_INCLUDE_SEARCH_DIRS}
--  PATH_SUFFIXES include/OpenEXR OpenEXR
--)
--
--if(EXISTS "${IlmBase_INCLUDE_DIR}/IlmBaseConfig.h")
--  # Get the ILMBASE version information from the config header
--  file(STRINGS "${IlmBase_INCLUDE_DIR}/IlmBaseConfig.h"
--    _ilmbase_version_major_string REGEX "#define ILMBASE_VERSION_MAJOR "
--  )
--  string(REGEX REPLACE "#define ILMBASE_VERSION_MAJOR" ""
--    _ilmbase_version_major_string "${_ilmbase_version_major_string}"
--  )
--  string(STRIP "${_ilmbase_version_major_string}" IlmBase_VERSION_MAJOR)
--
--  file(STRINGS "${IlmBase_INCLUDE_DIR}/IlmBaseConfig.h"
--     _ilmbase_version_minor_string REGEX "#define ILMBASE_VERSION_MINOR "
--  )
--  string(REGEX REPLACE "#define ILMBASE_VERSION_MINOR" ""
--    _ilmbase_version_minor_string "${_ilmbase_version_minor_string}"
--  )
--  string(STRIP "${_ilmbase_version_minor_string}" IlmBase_VERSION_MINOR)
--
--  unset(_ilmbase_version_major_string)
--  unset(_ilmbase_version_minor_string)
--
--  set(IlmBase_VERSION ${IlmBase_VERSION_MAJOR}.${IlmBase_VERSION_MINOR})
--endif()
--
--# ------------------------------------------------------------------------
--#  Search for ILMBASE lib DIR
--# ------------------------------------------------------------------------
--
--set(_ILMBASE_LIBRARYDIR_SEARCH_DIRS "")
--
--# Append to _ILMBASE_LIBRARYDIR_SEARCH_DIRS in priority order
--
--list(APPEND _ILMBASE_LIBRARYDIR_SEARCH_DIRS
--  ${ILMBASE_LIBRARYDIR}
--  ${_ILMBASE_ROOT_SEARCH_DIR}
--  ${PC_IlmBase_LIBDIR}
--  ${SYSTEM_LIBRARY_PATHS}
--)
--
--# Build suffix directories
--
--set(ILMBASE_PATH_SUFFIXES
--  lib64
--  lib
--)
--
--if(UNIX)
--  list(INSERT ILMBASE_PATH_SUFFIXES 0 lib/x86_64-linux-gnu)
--endif()
--
--set(_ILMBASE_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
--
--# library suffix handling
--if(WIN32)
--  list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--    "-${IlmBase_VERSION_MAJOR}_${IlmBase_VERSION_MINOR}.lib"
--  )
--else()
--  if(ILMBASE_USE_STATIC_LIBS)
--    list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--      "-${IlmBase_VERSION_MAJOR}_${IlmBase_VERSION_MINOR}.a"
--    )
--  else()
--    if(APPLE)
--      list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--        "-${IlmBase_VERSION_MAJOR}_${IlmBase_VERSION_MINOR}.dylib"
--      )
--    else()
--      list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--        "-${IlmBase_VERSION_MAJOR}_${IlmBase_VERSION_MINOR}.so"
--      )
--    endif()
--  endif()
--endif()
--
--set(IlmBase_LIB_COMPONENTS "")
--
--foreach(COMPONENT ${IlmBase_FIND_COMPONENTS})
--  find_library(IlmBase_${COMPONENT}_LIBRARY ${COMPONENT}
--    NO_DEFAULT_PATH
--    PATHS ${_ILMBASE_LIBRARYDIR_SEARCH_DIRS}
--    PATH_SUFFIXES ${ILMBASE_PATH_SUFFIXES}
--  )
--  list(APPEND IlmBase_LIB_COMPONENTS ${IlmBase_${COMPONENT}_LIBRARY})
--
--  if(WIN32 AND NOT ILMBASE_USE_STATIC_LIBS)
--    set(_ILMBASE_TMP ${CMAKE_FIND_LIBRARY_SUFFIXES})
--    set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
--    find_library(IlmBase_${COMPONENT}_DLL ${COMPONENT}
--      NO_DEFAULT_PATH
--      PATHS ${_ILMBASE_LIBRARYDIR_SEARCH_DIRS}
--      PATH_SUFFIXES bin
--    )
--    set(CMAKE_FIND_LIBRARY_SUFFIXES ${_ILMBASE_TMP})
--    unset(_ILMBASE_TMP)
--  endif()
--
--  if(IlmBase_${COMPONENT}_LIBRARY)
--    set(IlmBase_${COMPONENT}_FOUND TRUE)
--  else()
--    set(IlmBase_${COMPONENT}_FOUND FALSE)
--  endif()
--endforeach()
--
--# reset lib suffix
--
--set(CMAKE_FIND_LIBRARY_SUFFIXES ${_ILMBASE_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
--unset(_ILMBASE_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES)
--
--# ------------------------------------------------------------------------
--#  Cache and set ILMBASE_FOUND
--# ------------------------------------------------------------------------
--
--include(FindPackageHandleStandardArgs)
--find_package_handle_standard_args(IlmBase
--  FOUND_VAR IlmBase_FOUND
--  REQUIRED_VARS
--    IlmBase_INCLUDE_DIR
--    IlmBase_LIB_COMPONENTS
--  VERSION_VAR IlmBase_VERSION
--  HANDLE_COMPONENTS
--)
-+#-*-cmake-*-
-+# - Find ILMBase
-+#
-+# Author : Nicholas Yue yue.nicholas@gmail.com
-+#
-+# This auxiliary CMake file helps in find the ILMBASE headers and libraries
-+#
-+# ILMBASE_FOUND                  set if ILMBASE is found.
-+# ILMBASE_INCLUDE_DIR            ILMBASE's include directory
-+# ILMBASE_LIBRARYDIR            ILMBASE's include directory
-+# Ilmbase_HALF_LIBRARY           ILMBASE's Half libraries
-+# Ilmbase_IEX_LIBRARY            ILMBASE's Iex libraries
-+# Ilmbase_IEXMATH_LIBRARY        ILMBASE's IexMath libraries
-+# Ilmbase_ILMTHREAD_LIBRARY      ILMBASE's IlmThread libraries
-+# Ilmbase_IMATH_LIBRARY          ILMBASE's Imath libraries
- 
--if(IlmBase_FOUND)
--  set(IlmBase_LIBRARIES ${IlmBase_LIB_COMPONENTS})
++if (0)
+ # Support new if() IN_LIST operator
+ if(POLICY CMP0057)
+   cmake_policy(SET CMP0057 NEW)
+@@ -330,3 +330,144 @@ if(IlmBase_FOUND)
+ elseif(IlmBase_FIND_REQUIRED)
+   message(FATAL_ERROR "Unable to find IlmBase")
+ endif()
++else()
 +FIND_PACKAGE ( PackageHandleStandardArgs )
- 
--  # We have to add both include and include/OpenEXR to the include
--  # path in case OpenEXR and IlmBase are installed separately
 +FIND_PATH ( ILMBASE_LOCATION include/OpenEXR/IlmBaseConfig.h)
- 
--  set(IlmBase_INCLUDE_DIRS)
--  list(APPEND IlmBase_INCLUDE_DIRS
--    ${IlmBase_INCLUDE_DIR}/../
--    ${IlmBase_INCLUDE_DIR}
 +FIND_PACKAGE_HANDLE_STANDARD_ARGS ( ILMBase
 +  REQUIRED_VARS ILMBASE_LOCATION
-   )
--  set(IlmBase_DEFINITIONS ${PC_IlmBase_CFLAGS_OTHER})
--
--  set(IlmBase_LIBRARY_DIRS "")
--  foreach(LIB ${IlmBase_LIB_COMPONENTS})
--    get_filename_component(_ILMBASE_LIBDIR ${LIB} DIRECTORY)
--    list(APPEND IlmBase_LIBRARY_DIRS ${_ILMBASE_LIBDIR})
--  endforeach()
--  list(REMOVE_DUPLICATES IlmBase_LIBRARY_DIRS)
--
--  # Configure imported targets
--
--  foreach(COMPONENT ${IlmBase_FIND_COMPONENTS})
--    if(NOT TARGET IlmBase::${COMPONENT})
--      add_library(IlmBase::${COMPONENT} UNKNOWN IMPORTED)
--      set_target_properties(IlmBase::${COMPONENT} PROPERTIES
--        IMPORTED_LOCATION "${IlmBase_${COMPONENT}_LIBRARY}"
--        INTERFACE_COMPILE_OPTIONS "${IlmBase_DEFINITIONS}"
--        INTERFACE_INCLUDE_DIRECTORIES "${IlmBase_INCLUDE_DIRS}"
--      )
--    endif()
--  endforeach()
- 
--elseif(IlmBase_FIND_REQUIRED)
--  message(FATAL_ERROR "Unable to find IlmBase")
--endif()
++  )
 +OPTION ( ILMBASE_NAMESPACE_VERSIONING "Namespace versioning of libraries" ON )
 +
 +IF ( ILMBASE_FOUND )
@@ -707,335 +200,26 @@ index 7f71a72..bb14fb4 100644
 +ELSE ( ILMBASE_FOUND )
 +  MESSAGE ( FATAL_ERROR "Unable to find ILMBase, ILMBASE_ROOT = $ENV{ILMBASE_ROOT}")
 +ENDIF ( ILMBASE_FOUND )
++endif()
+\ No newline at end of file
 diff --git a/cmake/FindOpenEXR.cmake b/cmake/FindOpenEXR.cmake
-index 2f771ad..a381c6d 100644
+index 98bd53d..c3b449e 100644
 --- a/cmake/FindOpenEXR.cmake
 +++ b/cmake/FindOpenEXR.cmake
-@@ -1,324 +1,87 @@
--# Copyright (c) 2012-2019 DreamWorks Animation LLC
--#
--# All rights reserved. This software is distributed under the
--# Mozilla Public License 2.0 ( http://www.mozilla.org/MPL/2.0/ )
--#
--# Redistributions of source code must retain the above copyright
--# and license notice and the following restrictions and disclaimer.
--#
--# *     Neither the name of DreamWorks Animation nor the names of
--# its contributors may be used to endorse or promote products derived
--# from this software without specific prior written permission.
--#
--# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
--# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
--# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
--# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
--# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
--# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
--# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
--# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
--# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
--# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
--# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--# IN NO EVENT SHALL THE COPYRIGHT HOLDERS' AND CONTRIBUTORS' AGGREGATE
--# LIABILITY FOR ALL CLAIMS REGARDLESS OF THEIR BASIS EXCEED US$250.00.
--#
--#[=======================================================================[.rst:
+@@ -96,7 +96,7 @@ may be provided to tell this module where to look.
+   Paths appended to all include and lib searches.
+ 
+ #]=======================================================================]
 -
--FindOpenEXR
-------------
--
--Find OpenEXR include dirs and libraries
--
--Use this module by invoking find_package with the form::
--
--  find_package(OpenEXR
--    [version] [EXACT]      # Minimum or EXACT version
--    [REQUIRED]             # Fail with error if OpenEXR is not found
--    [COMPONENTS <libs>...] # OpenEXR libraries by their canonical name
--                           # e.g. "IlmImf" for "libIlmImf"
--    )
--
--IMPORTED Targets
--^^^^^^^^^^^^^^^^
--
--``OpenEXR::IlmImf``
--  The IlmImf library target.
--``OpenEXR::IlmImfUtil``
--  The IlmImfUtil library target.
--
--Result Variables
--^^^^^^^^^^^^^^^^
--
--This will define the following variables:
--
--``OpenEXR_FOUND``
--  True if the system has the OpenEXR library.
--``OpenEXR_VERSION``
--  The version of the OpenEXR library which was found.
--``OpenEXR_INCLUDE_DIRS``
--  Include directories needed to use OpenEXR.
--``OpenEXR_LIBRARIES``
--  Libraries needed to link to OpenEXR.
--``OpenEXR_LIBRARY_DIRS``
--  OpenEXR library directories.
--``OpenEXR_DEFINITIONS``
--  Definitions to use when compiling code that uses OpenEXR.
--``OpenEXR_{COMPONENT}_FOUND``
--  True if the system has the named OpenEXR component.
--
--Cache Variables
--^^^^^^^^^^^^^^^
--
--The following cache variables may also be set:
--
--``OpenEXR_INCLUDE_DIR``
--  The directory containing ``OpenEXR/config-auto.h``.
--``OpenEXR_{COMPONENT}_LIBRARY``
--  Individual component libraries for OpenEXR
--``OpenEXR_{COMPONENT}_DLL``
--  Individual component dlls for OpenEXR on Windows.
--
--Hints
--^^^^^
--
--Instead of explicitly setting the cache variables, the following variables
--may be provided to tell this module where to look.
--
--``OPENEXR_ROOT``
--  Preferred installation prefix.
--``OPENEXR_INCLUDEDIR``
--  Preferred include directory e.g. <prefix>/include
--``OPENEXR_LIBRARYDIR``
--  Preferred library directory e.g. <prefix>/lib
--``SYSTEM_LIBRARY_PATHS``
--  Paths appended to all include and lib searches.
--
--#]=======================================================================]
--
--# Support new if() IN_LIST operator
--if(POLICY CMP0057)
--  cmake_policy(SET CMP0057 NEW)
--endif()
--
--mark_as_advanced(
--  OpenEXR_INCLUDE_DIR
--  OpenEXR_LIBRARY
--)
--
--set(_OPENEXR_COMPONENT_LIST
--  IlmImf
--  IlmImfUtil
--)
--
--if(OpenEXR_FIND_COMPONENTS)
--  set(OPENEXR_COMPONENTS_PROVIDED TRUE)
--  set(_IGNORED_COMPONENTS "")
--  foreach(COMPONENT ${OpenEXR_FIND_COMPONENTS})
--    if(NOT ${COMPONENT} IN_LIST _OPENEXR_COMPONENT_LIST)
--      list(APPEND _IGNORED_COMPONENTS ${COMPONENT})
--    endif()
--  endforeach()
--
--  if(_IGNORED_COMPONENTS)
--    message(STATUS "Ignoring unknown components of OpenEXR:")
--    foreach(COMPONENT ${_IGNORED_COMPONENTS})
--      message(STATUS "  ${COMPONENT}")
--    endforeach()
--    list(REMOVE_ITEM OpenEXR_FIND_COMPONENTS ${_IGNORED_COMPONENTS})
--  endif()
--else()
--  set(OPENEXR_COMPONENTS_PROVIDED FALSE)
--  set(OpenEXR_FIND_COMPONENTS ${_OPENEXR_COMPONENT_LIST})
--endif()
--
--# Append OPENEXR_ROOT or $ENV{OPENEXR_ROOT} if set (prioritize the direct cmake var)
--set(_OPENEXR_ROOT_SEARCH_DIR "")
--
--if(OPENEXR_ROOT)
--  list(APPEND _OPENEXR_ROOT_SEARCH_DIR ${OPENEXR_ROOT})
--else()
--  set(_ENV_OPENEXR_ROOT $ENV{OPENEXR_ROOT})
--  if(_ENV_OPENEXR_ROOT)
--    list(APPEND _OPENEXR_ROOT_SEARCH_DIR ${_ENV_OPENEXR_ROOT})
--  endif()
--endif()
--
--# ------------------------------------------------------------------------
--#  Search for OpenEXR include DIR
--# ------------------------------------------------------------------------
--
--set(_OPENEXR_INCLUDE_SEARCH_DIRS "")
--list(APPEND _OPENEXR_INCLUDE_SEARCH_DIRS
--  ${OPENEXR_INCLUDEDIR}
--  ${_OPENEXR_ROOT_SEARCH_DIR}
--  ${PC_OpenEXR_INCLUDEDIR}
--  ${SYSTEM_LIBRARY_PATHS}
--)
--
--# Look for a standard OpenEXR header file.
--find_path(OpenEXR_INCLUDE_DIR OpenEXRConfig.h
--  NO_DEFAULT_PATH
--  PATHS ${_OPENEXR_INCLUDE_SEARCH_DIRS}
--  PATH_SUFFIXES  include/OpenEXR OpenEXR
--)
--
--if(EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
--  # Get the EXR version information from the config header
--  file(STRINGS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h"
--    _openexr_version_major_string REGEX "#define OPENEXR_VERSION_MAJOR "
--  )
--  string(REGEX REPLACE "#define OPENEXR_VERSION_MAJOR" ""
--    _openexr_version_major_string "${_openexr_version_major_string}"
--  )
--  string(STRIP "${_openexr_version_major_string}" OpenEXR_VERSION_MAJOR)
--
--  file(STRINGS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h"
--     _openexr_version_minor_string REGEX "#define OPENEXR_VERSION_MINOR "
--  )
--  string(REGEX REPLACE "#define OPENEXR_VERSION_MINOR" ""
--    _openexr_version_minor_string "${_openexr_version_minor_string}"
--  )
--  string(STRIP "${_openexr_version_minor_string}" OpenEXR_VERSION_MINOR)
--
--  unset(_openexr_version_major_string)
--  unset(_openexr_version_minor_string)
--
--  set(OpenEXR_VERSION ${OpenEXR_VERSION_MAJOR}.${OpenEXR_VERSION_MINOR})
--endif()
--
--# ------------------------------------------------------------------------
--#  Search for OPENEXR lib DIR
--# ------------------------------------------------------------------------
--
--set(_OPENEXR_LIBRARYDIR_SEARCH_DIRS "")
--
--# Append to _OPENEXR_LIBRARYDIR_SEARCH_DIRS in priority order
--
--list(APPEND _OPENEXR_LIBRARYDIR_SEARCH_DIRS
--  ${OPENEXR_LIBRARYDIR}
--  ${_OPENEXR_ROOT_SEARCH_DIR}
--  ${PC_OpenEXR_LIBDIR}
--  ${SYSTEM_LIBRARY_PATHS}
--)
--
--# Build suffix directories
--
--set(OPENEXR_PATH_SUFFIXES
--  lib64
--  lib
--)
--
--if(UNIX )
--  list(INSERT OPENEXR_PATH_SUFFIXES 0 lib/x86_64-linux-gnu)
--endif()
--
--set(_OPENEXR_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
--
--# library suffix handling
--if(WIN32)
--  list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--    "-${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}.lib"
--  )
--else()
--  if(OPENEXR_USE_STATIC_LIBS)
--    list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--      "-${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}.a"
--    )
--  else()
--    if(APPLE)
--      list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--        "-${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}.dylib"
--      )
--    else()
--      list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES
--        "-${OpenEXR_VERSION_MAJOR}_${OpenEXR_VERSION_MINOR}.so"
--      )
--    endif()
--  endif()
--endif()
--
--set(OpenEXR_LIB_COMPONENTS "")
--
--foreach(COMPONENT ${OpenEXR_FIND_COMPONENTS})
--  find_library(OpenEXR_${COMPONENT}_LIBRARY ${COMPONENT}
--    NO_DEFAULT_PATH
--    PATHS ${_OPENEXR_LIBRARYDIR_SEARCH_DIRS}
--    PATH_SUFFIXES ${OPENEXR_PATH_SUFFIXES}
--  )
--  list(APPEND OpenEXR_LIB_COMPONENTS ${OpenEXR_${COMPONENT}_LIBRARY})
--
--  if(WIN32 AND NOT OPENEXR_USE_STATIC_LIBS)
--    set(_OPENEXR_TMP ${CMAKE_FIND_LIBRARY_SUFFIXES})
--    set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
--    find_library(OpenEXR_${COMPONENT}_DLL ${COMPONENT}
--      NO_DEFAULT_PATH
--      PATHS ${_OPENEXR_LIBRARYDIR_SEARCH_DIRS}
--      PATH_SUFFIXES bin
--    )
--    set(CMAKE_FIND_LIBRARY_SUFFIXES ${_OPENEXR_TMP})
--    unset(_OPENEXR_TMP)
--  endif()
--
--  if(OpenEXR_${COMPONENT}_LIBRARY)
--    set(OpenEXR_${COMPONENT}_FOUND TRUE)
--  else()
--    set(OpenEXR_${COMPONENT}_FOUND FALSE)
--  endif()
--endforeach()
--
--# reset lib suffix
--
--set(CMAKE_FIND_LIBRARY_SUFFIXES ${_OPENEXR_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
--unset(_OPENEXR_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES)
--
--# ------------------------------------------------------------------------
--#  Cache and set OPENEXR_FOUND
--# ------------------------------------------------------------------------
--
--include(FindPackageHandleStandardArgs)
--find_package_handle_standard_args(OpenEXR
--  FOUND_VAR OpenEXR_FOUND
--  REQUIRED_VARS
--    OpenEXR_INCLUDE_DIR
--    OpenEXR_LIB_COMPONENTS
--  VERSION_VAR OpenEXR_VERSION
--  HANDLE_COMPONENTS
--)
--
--if(OpenEXR_FOUND)
--  set(OpenEXR_LIBRARIES ${OpenEXR_LIB_COMPONENTS})
--
--  # We have to add both include and include/OpenEXR to the include
--  # path in case OpenEXR and IlmBase are installed separately
--
--  set(OpenEXR_INCLUDE_DIRS)
--  list(APPEND OpenEXR_INCLUDE_DIRS
--    ${OpenEXR_INCLUDE_DIR}/../
--    ${OpenEXR_INCLUDE_DIR}
--  )
--  set(OpenEXR_DEFINITIONS ${PC_OpenEXR_CFLAGS_OTHER})
--
--  set(OpenEXR_LIBRARY_DIRS "")
--  foreach(LIB ${OpenEXR_LIB_COMPONENTS})
--    get_filename_component(_OPENEXR_LIBDIR ${LIB} DIRECTORY)
--    list(APPEND OpenEXR_LIBRARY_DIRS ${_OPENEXR_LIBDIR})
--  endforeach()
--  list(REMOVE_DUPLICATES OpenEXR_LIBRARY_DIRS)
--
--  # Configure imported target
--
--  foreach(COMPONENT ${OpenEXR_FIND_COMPONENTS})
--    if(NOT TARGET OpenEXR::${COMPONENT})
--      add_library(OpenEXR::${COMPONENT} UNKNOWN IMPORTED)
--      set_target_properties(OpenEXR::${COMPONENT} PROPERTIES
--        IMPORTED_LOCATION "${OpenEXR_${COMPONENT}_LIBRARY}"
--        INTERFACE_COMPILE_OPTIONS "${OpenEXR_DEFINITIONS}"
--        INTERFACE_INCLUDE_DIRECTORIES "${OpenEXR_INCLUDE_DIRS}"
--      )
--    endif()
--  endforeach()
--elseif(OpenEXR_FIND_REQUIRED)
--  message(FATAL_ERROR "Unable to find OpenEXR")
--endif()
++if (0)
+ # Support new if() IN_LIST operator
+ if(POLICY CMP0057)
+   cmake_policy(SET CMP0057 NEW)
+@@ -322,3 +322,92 @@ if(OpenEXR_FOUND)
+ elseif(OpenEXR_FIND_REQUIRED)
+   message(FATAL_ERROR "Unable to find OpenEXR")
+ endif()
++else()
 +include(FindPackageHandleStandardArgs)
 +
 +find_path(OpenEXR_INCLUDE_DIRS OpenEXR/OpenEXRConfig.h)
@@ -1123,3 +307,5 @@ index 2f771ad..a381c6d 100644
 +if(OpenEXR_FOUND)
 +    set(OPENEXR_FOUND 1)
 +endif()
++endif()
+\ No newline at end of file
