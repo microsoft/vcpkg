@@ -69,6 +69,7 @@ set_target_properties(miniunz_bin PROPERTIES OUTPUT_NAME miniunz)
 
 install(
   TARGETS minizip
+  EXPORT minizipTargets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
