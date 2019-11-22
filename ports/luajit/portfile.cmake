@@ -21,8 +21,6 @@ else()
 	set (LJIT_STATIC "static")
 endif()
 
-set(VCPKG_CRT_LINKAGE "static")
-
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
@@ -43,7 +41,6 @@ if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
     endif()
     vcpkg_copy_pdbs()
 endif()
-
 
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
