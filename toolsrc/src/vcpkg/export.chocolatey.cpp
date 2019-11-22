@@ -3,8 +3,8 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
-#include <vcpkg/export.h>
 #include <vcpkg/export.chocolatey.h>
+#include <vcpkg/export.h>
 #include <vcpkg/install.h>
 
 namespace vcpkg::Export::Chocolatey
@@ -16,11 +16,10 @@ namespace vcpkg::Export::Chocolatey
     static std::string create_nuspec_dependencies(const BinaryParagraph& binary_paragraph,
                                                   const std::map<std::string, std::string>& packages_version)
     {
-        static constexpr auto CONTENT_TEMPLATE =
-            R"(<dependency id="@PACKAGE_ID@" version="[@PACKAGE_VERSION@]" />)";
-        
+        static constexpr auto CONTENT_TEMPLATE = R"(<dependency id="@PACKAGE_ID@" version="[@PACKAGE_VERSION@]" />)";
+
         std::string nuspec_dependencies;
-        for (const std::string& depend: binary_paragraph.depends)
+        for (const std::string& depend : binary_paragraph.depends)
         {
             auto found = packages_version.find(depend);
             if (found == packages_version.end())
@@ -63,17 +62,19 @@ namespace vcpkg::Export::Chocolatey
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired package version.");
         }
-        std::string nuspec_file_content = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", binary_paragraph.spec.name());
+        std::string nuspec_file_content =
+            Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", binary_paragraph.spec.name());
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_VERSION@", package_version->second);
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_MAINTAINER@", chocolatey_options.maybe_maintainer.value_or(""));
+        nuspec_file_content = Strings::replace_all(
+            std::move(nuspec_file_content), "@PACKAGE_MAINTAINER@", chocolatey_options.maybe_maintainer.value_or(""));
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", binary_paragraph.description);
         nuspec_file_content =
             Strings::replace_all(std::move(nuspec_file_content), "@EXPORTED_ROOT_DIR@", exported_root_dir);
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_DEPENDENCIES@", create_nuspec_dependencies(binary_paragraph, packages_version));
+        nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content),
+                                                   "@PACKAGE_DEPENDENCIES@",
+                                                   create_nuspec_dependencies(binary_paragraph, packages_version));
         return nuspec_file_content;
     }
 
@@ -142,7 +143,8 @@ if (Test-Path $installedDir)
     ) { $empties | Remove-Item }
 }
 )###";
-        std::string chocolatey_uninstall_content = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_FULLSTEM@", binary_paragraph.fullstem());
+        std::string chocolatey_uninstall_content =
+            Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_FULLSTEM@", binary_paragraph.fullstem());
         return chocolatey_uninstall_content;
     }
 
@@ -150,7 +152,8 @@ if (Test-Path $installedDir)
                    const VcpkgPaths& paths,
                    const Options& chocolatey_options)
     {
-        Checks::check_exit(VCPKG_LINE_INFO, chocolatey_options.maybe_maintainer.has_value(), "--x-maintainer option is required.");
+        Checks::check_exit(
+            VCPKG_LINE_INFO, chocolatey_options.maybe_maintainer.has_value(), "--x-maintainer option is required.");
 
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path vcpkg_root_path = paths.root;
@@ -159,9 +162,9 @@ if (Test-Path $installedDir)
         const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         std::error_code ec;
-        fs.remove_all(raw_exported_dir_path, ec);
+        fs.remove_all(raw_exported_dir_path, VCPKG_LINE_INFO);
         fs.create_directory(raw_exported_dir_path, ec);
-        fs.remove_all(exported_dir_path, ec);
+        fs.remove_all(exported_dir_path, VCPKG_LINE_INFO);
         fs.create_directory(exported_dir_path, ec);
 
         // execute the plan
@@ -199,9 +202,10 @@ if (Test-Path $installedDir)
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
 
-            const std::string nuspec_file_content =
-                create_nuspec_file_contents(per_package_dir_path.string(), binary_paragraph, packages_version, chocolatey_options);
-            const fs::path nuspec_file_path = per_package_dir_path / Strings::concat(binary_paragraph.spec.name(), ".nuspec");
+            const std::string nuspec_file_content = create_nuspec_file_contents(
+                per_package_dir_path.string(), binary_paragraph, packages_version, chocolatey_options);
+            const fs::path nuspec_file_path =
+                per_package_dir_path / Strings::concat(binary_paragraph.spec.name(), ".nuspec");
             fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
             fs.create_directory(per_package_dir_path / "tools", ec);
@@ -215,9 +219,9 @@ if (Test-Path $installedDir)
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
             const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
-                                              nuget_exe.u8string(),
-                                              exported_dir_path.u8string(),
-                                              nuspec_file_path.u8string());
+                                                  nuget_exe.u8string(),
+                                                  exported_dir_path.u8string(),
+                                                  nuspec_file_path.u8string());
 
             const int exit_code = System::cmd_execute_clean(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
