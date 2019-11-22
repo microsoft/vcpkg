@@ -79,6 +79,16 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
   file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU")
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  set(DLL_DECORATOR)
+  set(LIB_RELEASE_SUFFIX .a)
+  set(LIB_DEBUG_SUFFIX .a)
+  set(LIB_PREFIX lib)
+  set(SOLUTION_TYPE gnuace)
+  file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+endif()
+
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_required_process(
     COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ace ${MPC_STATIC_FLAG}
@@ -94,7 +104,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   )
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
