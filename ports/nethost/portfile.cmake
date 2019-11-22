@@ -56,8 +56,6 @@ vcpkg_configure_cmake(
         "-DCLI_CMAKE_PLATFORM_ARCH_${ARCH_NAME}=1"
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/lib)
-
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
