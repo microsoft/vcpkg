@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 
+include(CheckCSourceRuns)
+
 file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/configure.ac config_ac_contents)
 
 foreach (line ${config_ac_contents})
@@ -206,7 +208,7 @@ else ()
     sodium_check_func(posix_memalign HAVE_POSIX_MEMALIGN)
     sodium_check_func(getpid HAVE_GETPID)
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #pragma GCC target(\"mmx\")
         #include <mmintrin.h>
@@ -223,7 +225,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -mmmx)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #pragma GCC target(\"sse2\")
         #ifndef __SSE2__
@@ -244,7 +246,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -msse2)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #pragma GCC target(\"sse3\")
         #include <pmmintrin.h>
@@ -260,7 +262,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -msse3)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #pragma GCC target(\"ssse3\")
         #include <tmmintrin.h>
@@ -276,7 +278,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -mssse3)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #pragma GCC target(\"sse4.1\")
         #include <smmintrin.h>
@@ -292,7 +294,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -msse4.1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #ifdef __native_client__
         # error NativeClient detected - Avoiding AVX opcodes
@@ -311,7 +313,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -mavx)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #ifdef __native_client__
         # error NativeClient detected - Avoiding AVX2 opcodes
@@ -331,7 +333,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AVX2INTRIN_H=1)
         target_compile_options(${PROJECT_NAME} PRIVATE -mavx2)
 
-        check_c_source_compiles(
+        check_c_source_runs(
             "
             #ifdef __native_client__
             # error NativeClient detected - Avoiding AVX2 opcodes
@@ -353,7 +355,7 @@ else ()
         endif ()
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #ifdef __native_client__
         # error NativeClient detected - Avoiding AVX512F opcodes
@@ -388,7 +390,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -mno-avx512f)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #ifdef __native_client__
         # error NativeClient detected - Avoiding AESNI opcodes
@@ -410,7 +412,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -maes -mpclmul)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #ifdef __native_client__
         # error NativeClient detected - Avoiding RDRAND opcodes
@@ -431,7 +433,7 @@ else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -mrdrnd)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #include <intrin.h>
 
@@ -446,7 +448,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE__XGETBV=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         int main(void) {
           int a = 42;
@@ -461,7 +463,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_INLINE_ASM=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         int main(void) {
         #if defined(__amd64) || defined(__amd64__) || defined(__x86_64__)
@@ -488,7 +490,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AMD64_ASM=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         int main(void) {
         #if defined(__amd64) || defined(__amd64__) || defined(__x86_64__)
@@ -509,7 +511,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AVX_ASM=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #if !defined(__clang__) && !defined(__GNUC__) && !defined(__SIZEOF_INT128__)
         # error mode(TI) is a gcc extension, and __int128 is not available
@@ -547,7 +549,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_TI_MODE=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         int main(void) {
           unsigned int cpu_info[4];
@@ -564,7 +566,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CPUID=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #if !defined(__ELF__) && !defined(__APPLE_CC__)
         # error Support for weak symbols may not be available
@@ -580,7 +582,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_WEAK_SYMBOLS=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         int main(void) {
           static volatile int _sodium_lock;
@@ -595,7 +597,7 @@ else ()
         target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_ATOMIC_OPS=1)
     endif ()
 
-    check_c_source_compiles(
+    check_c_source_runs(
         "
         #include <limits.h>
         #include <stdint.h>
