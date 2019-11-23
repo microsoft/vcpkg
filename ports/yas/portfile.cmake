@@ -8,4 +8,4 @@ vcpkg_from_github(
 
 file(INSTALL ${SOURCE_PATH}/include/yas DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/include/yas/version.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
