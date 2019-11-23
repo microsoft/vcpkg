@@ -1,3 +1,9 @@
+The package freeglut provides CMake targets:
+
+    find_package(FreeGLUT CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE FreeGLUT::freeglut)
+    target_link_libraries(main PRIVATE FreeGLUT::freeglut_static)
+
 The package freeglut is compatible with built-in CMake targets:
 
     find_package(GLUT REQUIRED)

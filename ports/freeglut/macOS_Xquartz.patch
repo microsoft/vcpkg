@@ -1,11 +1,9 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f68b27f..4339858 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -220,6 +220,16 @@ ENDIF()
+--- a/CMakeLists.txt	2019-09-25 23:43:34.000000000 +0300
++++ b/CMakeLists.txt	2019-11-23 06:20:30.019400000 +0300
+@@ -258,6 +258,16 @@
  IF(FREEGLUT_GLES)
-   ADD_DEFINITIONS(-DFREEGLUT_GLES)
-   LIST(APPEND LIBS GLESv2 GLESv1_CM EGL)
+     LIST(APPEND PUBLIC_DEFINITIONS -DFREEGLUT_GLES)
+     LIST(APPEND LIBS GLESv2 GLESv1_CM EGL)
 +ELSEIF(APPLE)
 +  # on OSX FindOpenGL uses framework version of OpenGL, but we need X11 version
 +  FIND_PATH(GLX_INCLUDE_DIR GL/glx.h

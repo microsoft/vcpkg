@@ -1,0 +1,20 @@
+--- a/CMakeLists.txt	2019-09-25 23:43:34.000000000 +0300
++++ b/CMakeLists.txt	2019-09-30 21:10:08.047600000 +0300
+@@ -67,16 +67,12 @@
+ 
+ 
+ SET(FREEGLUT_HEADERS
++    include/GL/glut.h
+     include/GL/freeglut.h
+     include/GL/freeglut_ucall.h
+     include/GL/freeglut_ext.h
+     include/GL/freeglut_std.h
+ )
+-IF(FREEGLUT_REPLACE_GLUT)
+-    LIST(APPEND FREEGLUT_HEADERS
+-        include/GL/glut.h
+-    )
+-ENDIF()
+ SET(FREEGLUT_SRCS
+     ${FREEGLUT_HEADERS}
+     src/fg_callbacks.c

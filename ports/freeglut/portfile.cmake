@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
-    FILENAME "freeglut-3.0.0.tar.gz"
-    SHA512 9c45d5b203b26a7ff92331b3e080a48e806c92fbbe7c65d9262dd18c39cd6efdad8a795a80f499a2d23df84b4909dbd7c1bab20d7dd3555d3d88782ce9dd15b0
+    URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.2.1/freeglut-3.2.1.tar.gz"
+    FILENAME "freeglut-3.2.1.tar.gz"
+    SHA512 aced4bbcd36269ce6f4ee1982e0f9e3fffbf18c94f785d3215ac9f4809b992e166c7ada496ed6174e13d77c0f7ef3ca4c57d8a282e96cbbe6ff086339ade3b08
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
   PATCHES
     use_targets_to_export_x11_dependency.patch
     macOS_Xquartz.patch
+    install_glut_h.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -26,22 +27,6 @@ else()
     set(FREEGLUT_DYNAMIC OFF)
 endif()
 
-# Patch header
-file(READ ${SOURCE_PATH}/include/GL/freeglut_std.h FREEGLUT_STDH)
-string(REGEX REPLACE "\"freeglut_static.lib\""
-                     "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
-string(REGEX REPLACE "\"freeglut_staticd.lib\""
-                     "\"freeglutd.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    string(REPLACE
-        "ifdef FREEGLUT_STATIC"
-        "if 1 //ifdef FREEGLUT_STATIC"
-        FREEGLUT_STDH
-        "${FREEGLUT_STDH}"
-    )
-endif()
-file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -54,11 +39,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeGLUT)
+
+# Copy static lib (otherwise it's incompatible with FindGLUT.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
+        file(COPY ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
+        file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
     endif()
 endif()
 
