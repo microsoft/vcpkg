@@ -67,6 +67,10 @@ if("gpl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-gpl")
 endif()
 
+if("version3" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-version3")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
