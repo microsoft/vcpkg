@@ -31,3 +31,12 @@ index 6a889e1..08c4e3c 100644
  @if errorlevel 1 goto :BAD
  %LJLIB% /OUT:%LJLIBNAME% lj_*.obj lib_*.obj
  @if errorlevel 1 goto :BAD
+@@ -94,7 +94,7 @@
+ if exist %LJDLLNAME%.manifest^
+   %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
+ 
+-%LJCOMPILE% %SOURCEDIR%\luajit.c  /Fdluajit.pdb
++%LJCOMPILE% %CRT_LINKAGE% %SOURCEDIR%\luajit.c  /Fdluajit.pdb
+ @if errorlevel 1 goto :BAD
+ %LJLINK% /out:luajit.exe luajit.obj %LJLIBNAME%
+ @if errorlevel 1 goto :BAD
