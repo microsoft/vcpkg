@@ -1,7 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
+vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -13,10 +10,9 @@ vcpkg_from_github(
     PATCHES minizip.patch # enable decrypt support for password-encrypted ZIP files
 )
 
-set(BUILD_minizip_bzip2 OFF)
-if ("bzip2" IN_LIST FEATURES)
-    set(BUILD_minizip_bzip2 ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    bzip2 ENABLE_BZIP2
+)
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in  ${SOURCE_PATH}/cmake/minizipConfig.cmake.in COPYONLY)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt  ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
@@ -25,7 +21,7 @@ vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
         OPTIONS
-            -DENABLE_BZIP2=${BUILD_minizip_bzip2}
+            ${FEATURE_OPTIONS}
         OPTIONS_DEBUG
             -DDISABLE_INSTALL_HEADERS=ON
             -DDISABLE_INSTALL_TOOLS=ON
