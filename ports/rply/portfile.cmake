@@ -12,11 +12,10 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE} 
     REF ${VERSION}
-    PATCHES
-        export_functions.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/rply.def DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/rply-config.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
