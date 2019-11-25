@@ -1,5 +1,5 @@
 Source: hiredis
-Version: 2019-11-5
+Version: 2019-11-1-1
 Homepage: https://github.com/redis/hiredis
 Description: Hiredis is a minimalistic C client library for the Redis database.
 

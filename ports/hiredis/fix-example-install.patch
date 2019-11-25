@@ -15,7 +15,7 @@ index dd3a313..6287794 100644
 -    LINK_DIRECTORIES(${GLIB2_LIBRARY_DIRS})
      ADD_EXECUTABLE(example-glib example-glib.c)
 -    TARGET_LINK_LIBRARIES(example-glib hiredis ${GLIB2_LIBRARIES})
-+    TARGET_LINK_LIBRARIES(example-glib PUBLIC hiredis ${GLIB2_LIBRARIES})
++    TARGET_LINK_LIBRARIES(example-glib PRIVATE hiredis ${GLIB2_LIBRARIES})
 +    if (UNIX)
 +        FIND_PACKAGE(Threads REQUIRED)
 +        TARGET_LINK_LIBRARIES(example-glib PRIVATE Threads::Threads)
