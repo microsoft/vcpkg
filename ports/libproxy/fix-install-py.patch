@@ -1,13 +1,10 @@
 diff --git a/bindings/python/python3/CMakeLists.txt b/bindings/python/python3/CMakeLists.txt
-index bf87dfc..51ae058 100644
+index bf87dfc..9f94c2d 100644
 --- a/bindings/python/python3/CMakeLists.txt
 +++ b/bindings/python/python3/CMakeLists.txt
-@@ -21,5 +21,7 @@ if(PYTHON3INTERP_FOUND)
+@@ -21,5 +21,4 @@ if(PYTHON3INTERP_FOUND)
    
    message(STATUS "Using PYTHON3_SITEPKG_DIR=${PYTHON3_SITEPKG_DIR}")
  
 -  install(FILES ../libproxy.py DESTINATION ${PYTHON3_SITEPKG_DIR})
-+  if (EXISTS ${CMAKE_CURRENT_LIST_DIR}/../libproxy.py)
-+      install(FILES ../libproxy.py DESTINATION ${PYTHON3_SITEPKG_DIR})
-+  endif()
  endif()

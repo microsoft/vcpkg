@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_WEBKIT3=OFF
-        -DFORCE_SYSTEM_LIBMODMAN=OFF
+        -DFORCE_SYSTEM_LIBMODMAN=ON
 )
 
 vcpkg_install_cmake()

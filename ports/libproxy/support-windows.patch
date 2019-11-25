@@ -30,7 +30,7 @@ index aab7593..465685f 100644
 +install(TARGETS libproxy RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
  install(FILES   proxy.h  DESTINATION ${INCLUDE_INSTALL_DIR})
 diff --git a/libproxy/modules/config_kde.cpp b/libproxy/modules/config_kde.cpp
-index b9bd241..de3ab46 100644
+index b9bd241..73b978e 100644
 --- a/libproxy/modules/config_kde.cpp
 +++ b/libproxy/modules/config_kde.cpp
 @@ -19,7 +19,9 @@
@@ -43,27 +43,26 @@ index b9bd241..de3ab46 100644
  
  #include <algorithm>
  #include <cstdlib>
-@@ -137,7 +139,12 @@ private:
+@@ -137,7 +139,11 @@ private:
      string command_output(const string &cmdline) throw (runtime_error) {
          // Capture stderr as well
          const string command = "(" + cmdline + ")2>&1";
-+
 +#if !defined(WIN32)
          FILE *pipe = popen(command.c_str(), "r");
 +#else
-+        FILE *pipe = fopen(command.c_str(), "r");
++        FILE *pipe = _popen(command.c_str(), "r");
 +#endif
          if (!pipe)
              throw runtime_error("Unable to run command");
  
-@@ -148,7 +155,11 @@ private:
+@@ -148,7 +154,11 @@ private:
                  result += buffer; // TODO: If this throws bad_alloc, pipe is leaked
          }
  
 +#if !defined(WIN32)
          if(pclose(pipe) != 0)
 +#else
-+        if(fclose(pipe) != 0)
++        if(_pclose(pipe) != 0)
 +#endif
              throw runtime_error("Command failed");
  

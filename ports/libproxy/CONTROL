@@ -3,7 +3,6 @@ Version: 0.4.15
 Homepage: https://github.com/libproxy/libproxy
 Description: libproxy is a library that provides automatic proxy configuration management.
 Build-Depends: libmodman
-Default-Features: tools
 
 Feature: tools
 Description: build tools
