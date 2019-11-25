@@ -1,0 +1,8 @@
+Source: microsoft-signalr
+Version: 0.1.0-alpha1
+Description: C++ Client for ASP.NET Core SignalR.
+Default-Features: cpprestsdk
+
+Feature: cpprestsdk
+Description: Add default Http and WebSocket implementations using CppRestSDK
+Build-Depends: cpprestsdk, openssl
