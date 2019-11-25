@@ -3,14 +3,27 @@ Version: 5.12.5
 Homepage: https://www.qt.io/
 Description: Qt5 Application Framework
 Build-Depends: qt5-base
-Default-Features: 3d, extras, tools, virtualkeyboard, networkauth, quickcontrols2, scxml, activeqt, charts, datavis3d, declarative, gamepad, graphicaleffects, imageformats, location, multimedia]
+Default-Features: essentials, default
+
+Feature: essentials
+Build-Depends: qt5[tools, networkauth, quickcontrols2, multimedia, imageformats, declarative, svg, activeqt]
+Description: Build the essential qt modules
 
 Feature: latest
 Build-Depends: qt5-base[latest]
 Description: Build latest qt version (5.13.1) instead of LTS
 
+Feature: default
+Build-Depends: qt5[3d, webchannel, websockets, extras, sensors, serialport, speech, virtualkeyboard, purchasing, scxml, charts, datavis3d, gamepad, graphicaleffects, location, webglplugin, webview, translations, remoteobjects, connectivity, canvas3d]
+Description: Build the essential qt modules
+
 Feature: all
-Build-Depends: qt5[3d, webchannel, websockets, extras, xmlpatterns, sensors, serialport, speech, svg, tools, virtualkeyboard, networkauth, purchasing, quickcontrols, quickcontrols2, script, scxml, activeqt, charts, datavis3d, declarative, gamepad, graphicaleffects, declarative, imageformats, location, multimedia, mqtt, webglplugin, webview, wayland, webengine, serialbus, translations, doc, remoteobjects, connectivity, canvas3d]
+Build-Depends: qt5[3d, webchannel, websockets, extras, xmlpatterns, sensors, serialport, speech, svg, tools, virtualkeyboard, networkauth, purchasing, quickcontrols, quickcontrols2, script, scxml, activeqt, charts, datavis3d, declarative, gamepad, graphicaleffects, imageformats, location, multimedia, mqtt, webglplugin, webview, wayland, webengine, serialbus, translations, doc, remoteobjects, connectivity, canvas3d]
+Description: Install all Qt5 submodules (Warning: Could take a long time...)
+
+Feature: extras
+Build-Depends: qt5-winextras (windows), qt5-macextras (osx), qt5-x11extras (linux), qt5-androidextras (android)
+Description: 
 
 Feature: 3d
 Build-Depends: qt5-3d
@@ -22,10 +35,6 @@ Description:
 
 Feature: websockets
 Build-Depends: qt5-websockets
-Description: 
-
-Feature: extras
-Build-Depends: qt5-winextras (windows), qt5-macextras (osx), qt5-x11extras (linux), qt5-androidextras (android)
 Description: 
 
 Feature: xmlpatterns
