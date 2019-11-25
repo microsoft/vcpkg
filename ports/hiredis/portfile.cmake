@@ -1,5 +1,7 @@
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "${PORT} currently only supports static on Windows.")
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
