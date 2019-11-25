@@ -126,7 +126,7 @@ endif()
 install(TARGETS libintl
   EXPORT unofficial-gettext-targets
   RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
+  LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
