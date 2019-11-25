@@ -56,7 +56,7 @@ endif()
 
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS)
   set(LIB_RELEASE_SUFFIX .lib)
   set(LIB_DEBUG_SUFFIX d.lib)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
@@ -69,7 +69,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
   set(DLL_DECORATOR)
   set(LIB_RELEASE_SUFFIX .a)
   set(LIB_DEBUG_SUFFIX .a)
@@ -86,7 +86,88 @@ vcpkg_execute_required_process(
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_build_msbuild(
+    PROJECT_PATH ${ACE_SOURCE_PATH}/ace.sln
+    PLATFORM ${MSBUILD_PLATFORM}
+    USE_VCPKG_INTEGRATION
+  )
+
+  # ACE itself does not define an install target, so it is not clear which
+  # headers are public and which not. For the moment we install everything
+  # that is in the source path and ends in .h, .inl
+  function(install_ace_headers_subdirectory ORIGINAL_PATH RELATIVE_PATH)
+  file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl)
+  file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/${RELATIVE_PATH})
+  endfunction()
+
+  # We manually install header found in the ace directory because in that case
+  # we are supposed to install also *cpp files, see ACE_wrappers\debian\libace-dev.install file
+  file(GLOB HEADER_FILES ${ACE_SOURCE_PATH}/*.h ${ACE_SOURCE_PATH}/*.inl ${ACE_SOURCE_PATH}/*.cpp)
+  file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/)
+
+  # Install headers in subdirectory
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Compression")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Compression/rle")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "ETCL")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "QoS")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Monitor_Control")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/arpa")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/net")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/netinet")
+  install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/sys")
+  if("ssl" IN_LIST FEATURES)
+      install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "SSL")
+  endif()
+
+  # Install the libraries
+  function(install_ace_library ORIGINAL_PATH ACE_LIBRARY)
+  set(LIB_PATH ${ORIGINAL_PATH}/lib/)
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+      # Install the DLL files
+      file(INSTALL
+          ${LIB_PATH}/${ACE_LIBRARY}d.dll
+          DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+      )
+      file(INSTALL
+          ${LIB_PATH}/${ACE_LIBRARY}.dll
+          DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+      )
+  endif()
+
+  # Install the lib files
+  file(INSTALL
+      ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}
+      DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+  )
+
+  file(INSTALL
+      ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX}
+      DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+  )
+  endfunction()
+
+  install_ace_library(${ACE_ROOT} "ACE")
+  install_ace_library(${ACE_ROOT} "ACE_Compression")
+  install_ace_library(${ACE_ROOT} "ACE_ETCL")
+  install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
+  install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
+  if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    install_ace_library(${ACE_ROOT} "ACE_QoS")
+  endif()
+  install_ace_library(${ACE_ROOT} "ACE_RLECompression")
+  if("ssl" IN_LIST FEATURES)
+      install_ace_library(${ACE_ROOT} "ACE_SSL")
+  endif()
+
+  vcpkg_copy_pdbs()
+
+  # Handle copyright
+  file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
+else(VCPKG_TARGET_IS_WINDOWS)
+  # VCPKG_TARGTE_IS_LINUX
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
@@ -152,88 +233,4 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
   # Handle copyright
   file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
-
-  return()
 endif()
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-  vcpkg_build_msbuild(
-    PROJECT_PATH ${ACE_SOURCE_PATH}/ace.sln
-    PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
-  )
-endif()
-
-# ACE itself does not define an install target, so it is not clear which
-# headers are public and which not. For the moment we install everything
-# that is in the source path and ends in .h, .inl
-function(install_ace_headers_subdirectory ORIGINAL_PATH RELATIVE_PATH)
-    file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.inl)
-    file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/${RELATIVE_PATH})
-endfunction()
-
-# We manually install header found in the ace directory because in that case
-# we are supposed to install also *cpp files, see ACE_wrappers\debian\libace-dev.install file
-file(GLOB HEADER_FILES ${ACE_SOURCE_PATH}/*.h ${ACE_SOURCE_PATH}/*.inl ${ACE_SOURCE_PATH}/*.cpp)
-file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/)
-
-# Install headers in subdirectory
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Compression")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Compression/rle")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "ETCL")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "QoS")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "Monitor_Control")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/arpa")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/net")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/netinet")
-install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "os_include/sys")
-if("ssl" IN_LIST FEATURES)
-    install_ace_headers_subdirectory(${ACE_SOURCE_PATH} "SSL")
-endif()
-
-# Install the libraries
-function(install_ace_library ORIGINAL_PATH ACE_LIBRARY)
-    set(LIB_PATH ${ORIGINAL_PATH}/lib/)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        # Install the DLL files
-        file(INSTALL
-            ${LIB_PATH}/${ACE_LIBRARY}d.dll
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
-        file(INSTALL
-            ${LIB_PATH}/${ACE_LIBRARY}.dll
-            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        )
-    endif()
-
-    # Install the lib files
-    file(INSTALL
-        ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-
-    file(INSTALL
-        ${LIB_PATH}/${LIB_PREFIX}${ACE_LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
-endfunction()
-
-install_ace_library(${ACE_ROOT} "ACE")
-install_ace_library(${ACE_ROOT} "ACE_Compression")
-install_ace_library(${ACE_ROOT} "ACE_ETCL")
-install_ace_library(${ACE_ROOT} "ACE_ETCL_Parser")
-install_ace_library(${ACE_ROOT} "ACE_Monitor_Control")
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-  install_ace_library(${ACE_ROOT} "ACE_QoS")
-endif()
-install_ace_library(${ACE_ROOT} "ACE_RLECompression")
-if("ssl" IN_LIST FEATURES)
-    install_ace_library(${ACE_ROOT} "ACE_SSL")
-endif()
-
-# Handle copyright
-file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
-
-vcpkg_copy_pdbs()
