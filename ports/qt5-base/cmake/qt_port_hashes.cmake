@@ -41,6 +41,18 @@ set(QT_HASH_qt5-webview             310beedf88cefc05458e99838e7cb71971aa24ba6c46
 set(QT_HASH_qt5-winextras           053ca5f60c7946f6409ef34094b4a7d1431039407a5195e539e8edfda795da20fc695ceec58ae0df15e4dcc597047518d06a424d11fb4aaf6ae82f1d4badab33)
 set(QT_HASH_qt5-xmlpatterns         30b25e152970bfe51fcdeffa43d11dd51496e5ea6a5da644b13fa0ce4835302ebec651c1ecdcf9590c6689598cea9bd63748aab4ee0ec69f9155dc310a7c04c3)
 
+##TODO
+set(QT_HASH_qt5-doc                 896539861151fc65b30d1685bacc0332bef131d2c9850fe29f2c58efecd99313fd45a28f77108403fba65fc64a5af6ba8a4d37f60016bd406597e682aef11cd2)
+set(QT_HASH_qt5-x11extras           1e83c2d350f423053fe07c41a8b889391100df93dd50f700e98116c36b3dbad9637a618765daf97b82b7ffcd0687fc52c9590d9ce48c2a9204f1edc6d2cae248)
+set(QT_HASH_qt5-androidextras       dd353112b70988a48891d34aa49ed9e8d0840a7174952879da450302be182f75a19762b25b63110dbfcc3efe41af7e9dec1eef90c44eec46bcdd861256de784d)
+set(QT_HASH_qt5-canvas3d            6fe4b01eef1a319faf57d545f79d8e945cfeeea306c2aa26ec3b96d4524ccec0e336fcff65a252bf40141e00f870aa2672c045dc4881a322c1b53cb00b684470)
+set(QT_HASH_qt5-translations        a2120add3b82fd84d44a064f08c5e781410c86dfd5eee39a01f44840063be5b4030c47989a2e6a413c4298d79b473f50968078a12793b9145d7ee8a722fd1698)
+set(QT_HASH_qt5-serialbus           bf013a1e052cb0011c05f5dd52757f4944c86f4bd61f57244ffa299cd443166a80d27493a0ec8e22dcff817e89081502f091736bd37a27616de933e51184b0f4)
+set(QT_HASH_qt5-webengine           b485d37dca14f1cf4adf01bd8b1ae52c1d4916d7acf6ed210bc9feaece8efc2aa6cee8a3ef9174b50b767e373379c6a18d14db4426ac53a8c27d2d7b222826df)
+set(QT_HASH_qt5-webglplugin         8c78761ddde2acbf862fa7ee2a5c33b6ebfdba283dfffb1a77027ed727105b16fc5ab191a8b48c491a8b29e857a03984206bfffaae0864490c8bb4c850803f73)
+set(QT_HASH_qt5-wayland             19e19b3d6226839856f8e8792665eda1f09f0bbf95a38077bdf2831205ee09254c8df6a521ba3f5a228bcd98c4d1929a2bd9e9aa2f6f14c218d4d7458d1a866c)
+
+
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")
     set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
