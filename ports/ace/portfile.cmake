@@ -191,6 +191,20 @@ else(VCPKG_TARGET_IS_WINDOWS)
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+  if(TRUE)
+    # Helper codes that logs some infomation that might be useful
+    # This codes should not be activated in real production use.
+    vcpkg_execute_required_process(
+      COMMAND ls -al
+      WORKING_DIRECTORY ${ACE_ROOT}
+      LOGNAME ace_root_ls-${TARGET_TRIPLET}
+    )
+    vcpkg_execute_required_process(
+      COMMAND ls -al
+      WORKING_DIRECTORY ${ACE_ROOT}/MPC
+      LOGNAME ace_root_mpc_ls-${TARGET_TRIPLET}
+    )
+  endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_required_process(
     COMMAND make ${_ace_makefile_macros} install
