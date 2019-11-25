@@ -40,7 +40,7 @@ else()
     set(SHARED_DEFINITION "")
 endif()
 
-IF(UNIX OR APPLE)
+IF(UNIX)
     set(TARGET pqxx_static)
 ENDIF()
 
