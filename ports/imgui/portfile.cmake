@@ -17,6 +17,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
+        -DIMGUI_INCLUDE_IMPL_VULKAN=ON
+        -DIMGUI_INCLUDE_IMPL_SDL2=ON
 )
 
 vcpkg_install_cmake()
@@ -29,11 +31,11 @@ if ("example" IN_LIST FEATURES)
         USE_VCPKG_INTEGRATION
         PROJECT_PATH ${SOURCE_PATH}/examples/imgui_examples.sln
     )
-    
+
     # Install headers
     file(GLOB IMGUI_EXAMPLE_INCLUDES ${SOURCE_PATH}/examples/*.h)
     file(INSTALL ${IMGUI_EXAMPLE_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-    
+
     # Install tools
     file(GLOB_RECURSE IMGUI_EXAMPLE_BINARIES ${SOURCE_PATH}/examples/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
     file(INSTALL ${IMGUI_EXAMPLE_BINARIES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)

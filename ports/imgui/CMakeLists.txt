@@ -19,13 +19,38 @@ set(IMGUI_SOURCES
     imgui_widgets.cpp
 )
 
+if (IMGUI_INCLUDE_IMPL_VULKAN)
+    find_package(vulkan)
+
+    list (APPEND IMGUI_INCLUDES_PUBLIC examples/imgui_impl_vulkan.h)
+    list (APPEND IMGUI_SOURCES examples/imgui_impl_vulkan.cpp)
+endif()
+
+if (IMGUI_INCLUDE_IMPL_SDL2)
+    find_package(SDL2 CONFIG REQUIRED)
+
+    list (APPEND IMGUI_INCLUDES_PUBLIC examples/imgui_impl_sdl.h)
+    list (APPEND IMGUI_SOURCES examples/imgui_impl_sdl.cpp)
+endif()
+
+
 add_library(${PROJECT_NAME}
     ${IMGUI_INCLUDES_PUBLIC}
     ${IMGUI_INCLUDES_PRIVATE}
     ${IMGUI_SOURCES}
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+if (IMGUI_INCLUDE_IMPL_VULKAN)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Vulkan)
+endif()
+
+if (IMGUI_INCLUDE_IMPL_VULKAN)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2main SDL2::SDL2-static)
+endif()
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 
 install(TARGETS ${PROJECT_NAME}
     EXPORT IMGUIExport
