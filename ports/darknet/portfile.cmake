@@ -94,6 +94,7 @@ endif()
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindStb.cmake)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}

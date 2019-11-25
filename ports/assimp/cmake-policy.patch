@@ -1,0 +1,13 @@
+diff --git a/assimpTargets.cmake.in b/assimpTargets.cmake.in
+index ab1a8d2c..4b0729be 100644
+--- a/assimpTargets.cmake.in
++++ b/assimpTargets.cmake.in
+@@ -5,6 +5,8 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 2.5)
+ endif()
+ cmake_policy(PUSH)
+ cmake_policy(VERSION 2.6)
++# Required for the evaluation of "if(@BUILD_SHARED_LIBS@)" below to function
++cmake_policy(SET CMP0012 NEW)
+ #----------------------------------------------------------------
+ # Generated CMake target import file.
+ #----------------------------------------------------------------

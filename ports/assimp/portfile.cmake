@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         uninitialized-variable.patch
         fix-static-build-error.patch
+        cmake-policy.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)

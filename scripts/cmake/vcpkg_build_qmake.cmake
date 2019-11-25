@@ -74,6 +74,7 @@ function(vcpkg_build_qmake)
             run_jom(qmake_all makefiles ${_short_name_${_buildname}})
         endif()
         run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_short_name_${_buildname}})
+        unset(_BUILD_PREFIX)
     endforeach()
       
     # Restore the original value of ENV{PATH}

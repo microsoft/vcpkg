@@ -1,0 +1,39 @@
+diff --git a/src/3rdparty/clip2tri/clip2tri.pro b/src/3rdparty/clip2tri/clip2tri.pro
+index 802c040..3545025 100644
+--- a/src/3rdparty/clip2tri/clip2tri.pro
++++ b/src/3rdparty/clip2tri/clip2tri.pro
+@@ -18,5 +18,5 @@ gcc {
+ HEADERS += clip2tri.h
+ SOURCES += clip2tri.cpp
+ 
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lpoly2tri$$qtPlatformTargetSuffix() -lclipper$$qtPlatformTargetSuffix()
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lpoly2tri$$qtPlatformTargetSuffix() -lqtclipper$$qtPlatformTargetSuffix()
+ 
+diff --git a/src/3rdparty/clipper/clipper.pro b/src/3rdparty/clipper/clipper.pro
+index 874d55c..5abedf5 100644
+--- a/src/3rdparty/clipper/clipper.pro
++++ b/src/3rdparty/clipper/clipper.pro
+@@ -1,4 +1,4 @@
+-TARGET = clipper
++TARGET = qtclipper
+ 
+ CONFIG += staticlib exceptions warn_off optimize_full
+ 
+diff --git a/src/src.pro b/src/src.pro
+index 417e227..612748e 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -6,10 +6,10 @@ include($$OUT_PWD/positioning/qtpositioning-config.pri)
+ 
+ clip2tri.subdir = 3rdparty/clip2tri
+ poly2tri.subdir = 3rdparty/poly2tri
+-clipper.subdir = 3rdparty/clipper
++qtclipper.subdir = 3rdparty/clipper
+ 
+-SUBDIRS += clip2tri clipper poly2tri
+-clip2tri.depends = clipper poly2tri
++SUBDIRS += clip2tri qtclipper poly2tri
++clip2tri.depends = qtclipper poly2tri
+ 
+ SUBDIRS += positioning
+ positioning.depends = clip2tri
