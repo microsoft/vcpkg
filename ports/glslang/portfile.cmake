@@ -16,7 +16,7 @@ vcpkg_from_github(
 file(READ ${SOURCE_PATH}/glslang/CMakeLists.txt glsl_cmake_lists)
 string(REPLACE [[target_link_libraries(glslang OGLCompiler OSDependent)]]
     [[
-target_link_libraries(glslang OGLCompiler OSDependent)
+target_link_libraries (glslang OGLCompiler OSDependent)
 target_include_directories(glslang PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
     ]] 
 glsl_cmake_lists "${glsl_cmake_lists}")
