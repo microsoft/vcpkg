@@ -8,17 +8,18 @@ elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_N
     return()
 endif()
 
-set(BOOST_VERSION 1.70.0)
+# Boost.Build has different versioning scheme from rest of Boost
+set(BOOST_BUILD_VERSION 4.0.1)
+# Still needed for license file. Boost.Build actually has a copy of it, but due to missing EOL, it has different SHA512.
+# See https://github.com/boostorg/build/pull/512
+set(BOOST_VERSION 1.71.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
-    REF boost-${BOOST_VERSION}
-    SHA512 be4e410a9656313519e089977a24da8f633db2182985f5d60e07e489f9eac8c887e8cab7e3cbd13f2b747bc3d9dab2899f174be1eaac73cfd7895015fb6b9b58
+    REF ${BOOST_BUILD_VERSION}
+    SHA512 e31080e17295ac70e393ef776804d8bc1b0af6c2260250a9897b24978b85d2160a9060c7c4678c8f7ed6dc40ace114a3a0df1a44908848aa97cc7125c4528536
     HEAD_REF master
-	PATCHES
-	    # Add the support of arm64-windows
-        arm64msvc.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
