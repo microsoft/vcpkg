@@ -1,6 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "LuaJIT currently only supports being built for desktop")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
