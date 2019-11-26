@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm" "arm64")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 # Enable static build in UNIX
 if (VCPKG_TARGET_IS_WINDOWS)
