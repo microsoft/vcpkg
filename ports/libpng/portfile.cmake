@@ -65,6 +65,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib)
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib ${CURRENT_PACKAGES_DIR}/lib/libpng16.lib)
@@ -72,17 +74,21 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16d.lib)
     endif()
+
+    foreach(FILE ${CURRENT_PACKAGES_DIR}/share/libpng/libpng16-release.cmake ${CURRENT_PACKAGES_DIR}/share/libpng/libpng16-debug.cmake)
+        file(READ ${FILE} _contents)
+        string(REGEX REPLACE "libpng16_static.lib" "libpng16.lib" _contents "${_contents}")
+        string(REGEX REPLACE "libpng16_staticd.lib" "libpng16d.lib" _contents "${_contents}")
+        file(WRITE ${FILE} "${_contents}")
+    endforeach()
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libpngConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/libpngConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpng/LICENSE ${CURRENT_PACKAGES_DIR}/share/libpng/copyright)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/png)
+endif()
 
 vcpkg_copy_pdbs()
-
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/png)
-endif()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
