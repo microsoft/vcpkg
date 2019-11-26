@@ -29,6 +29,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
+        -DIMGUI_INCLUDE_IMPL_VULKAN=ON
+        -DIMGUI_INCLUDE_IMPL_SDL2=ON
 )
 
 vcpkg_install_cmake()
