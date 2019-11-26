@@ -2,7 +2,7 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 # Enable static build in UNIX
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 set(LIBMODMAN_VER 2.0.1)

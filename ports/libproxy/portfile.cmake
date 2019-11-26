@@ -2,7 +2,7 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 # Enable static build in UNIX
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
@@ -17,6 +17,7 @@ vcpkg_from_github(
         fix-dependency-libmodman.patch
         fix-install-py.patch
         fix-arm-build.patch
+        fix-module-lib-name.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
