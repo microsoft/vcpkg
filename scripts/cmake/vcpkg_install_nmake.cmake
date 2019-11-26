@@ -7,6 +7,7 @@
 ## vcpkg_install_nmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [NO_DEBUG]
+##     [DISABLE_ALL]
 ##     PROJECT_SUBPATH <${SUBPATH}>
 ##     PROJECT_NAME <${MAKEFILE_NAME}>
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
@@ -31,6 +32,9 @@
 ##
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
+##
+## ### DISABLE_ALL
+## Disable build argument `all`
 ##
 ## ### PRERUN_SHELL
 ## Script that needs to be called before build
@@ -63,7 +67,7 @@
 
 function(vcpkg_install_nmake)
     cmake_parse_arguments(_in
-        "NO_DEBUG"
+        "NO_DEBUG;DISABLE_ALL"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
         ${ARGN}
@@ -77,8 +81,12 @@ function(vcpkg_install_nmake)
         set(NO_DEBUG NO_DEBUG)
     endif()
     
+    if (_in_DISABLE_ALL)
+        set(DISABLE_ALL DISABLE_ALL)
+    endif()
+    
     vcpkg_build_nmake(LOGFILE_ROOT ENABLE_INSTALL
-        ${NO_DEBUG}
+        ${NO_DEBUG} ${DISABLE_ALL}
         SOURCE_PATH ${_in_SOURCE_PATH} PROJECT_SUBPATH ${_in_PROJECT_SUBPATH} PROJECT_NAME ${_in_PROJECT_NAME}
         PRERUN_SHELL ${_in_PRERUN_SHELL} PRERUN_SHELL_DEBUG ${_in_PRERUN_SHELL_DEBUG} PRERUN_SHELL_RELEASE ${_in_PRERUN_SHELL_RELEASE}
         OPTIONS ${_in_OPTIONS} OPTIONS_RELEASE ${_in_OPTIONS_RELEASE} OPTIONS_DEBUG ${_in_OPTIONS_DEBUG}

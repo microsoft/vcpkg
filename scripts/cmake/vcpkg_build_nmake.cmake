@@ -7,6 +7,7 @@
 ## vcpkg_build_nmake(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [NO_DEBUG]
+##     [DISABLE_ALL]
 ##     [PROJECT_SUBPATH <${SUBPATH}>]
 ##     [PROJECT_NAME <${MAKEFILE_NAME}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
@@ -32,6 +33,9 @@
 ##
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
+##
+## ### DISABLE_ALL
+## Disable build argument `all`
 ##
 ## ### ENABLE_INSTALL
 ## Install binaries after build.
@@ -72,7 +76,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 function(vcpkg_build_nmake)
     cmake_parse_arguments(_bn
-        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
+        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG;DISABLE_ALL"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
         ${ARGN}
@@ -112,7 +116,10 @@ function(vcpkg_build_nmake)
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)
-    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME} all)
+    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME})
+    if (NOT _bn_DISABLE_ALL)
+        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} all)
+    endif()
     set(INSTALL_OPTS_BASE install)
     # Add subpath to work directory
     if (_bn_PROJECT_SUBPATH)
