@@ -12,15 +12,23 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    vulkan IMGUI_INCLUDE_IMPL_VULKAN
+    sdl2 IMGUI_INCLUDE_IMPL_SDL2
+    example IMGUI_COMPILE_ALL_EXAMPLES
+)
+
+if ("example" IN_LIST FEATURES AND ("sdl2" IN_LIST FEATURES OR "vulkan" IN_LIST ))
+    message (FATAL_ERROR "example feature uses includes whole examples folder, do not use it with other features")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DIMGUI_INCLUDE_IMPL_VULKAN=ON
-        -DIMGUI_INCLUDE_IMPL_SDL2=ON
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
-        
 )
 
 vcpkg_install_cmake()

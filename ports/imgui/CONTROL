@@ -4,11 +4,11 @@ Homepage: https://github.com/ocornut/imgui
 Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
 
 Feature: vulkan
-Description: vulkan implementation for imgui
+Description: imgui developer renderer bindings implementation for vulkan
 Build-Depends: vulkan
 
 Feature: sdl2
-Description: sdl2 implementation for imgui
+Description: imgui developer platform bindings implementation for sdl2
 Build-Depends: sdl2
 
 Feature: example

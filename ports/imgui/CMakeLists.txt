@@ -44,7 +44,7 @@ if (IMGUI_INCLUDE_IMPL_VULKAN)
     target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Vulkan)
 endif()
 
-if (IMGUI_INCLUDE_IMPL_VULKAN)
+if (IMGUI_INCLUDE_IMPL_SDL2)
     target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2main SDL2::SDL2-static)
 endif()
 
