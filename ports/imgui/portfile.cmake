@@ -18,7 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     example IMGUI_COMPILE_ALL_EXAMPLES
 )
 
-if ("example" IN_LIST FEATURES AND ("sdl2" IN_LIST FEATURES OR "vulkan" IN_LIST ))
+if ("example" IN_LIST FEATURES AND ("sdl2" IN_LIST FEATURES OR "vulkan" IN_LIST FEATURES))
     message (FATAL_ERROR "example feature uses includes whole examples folder, do not use it with other features")
 endif()
 
