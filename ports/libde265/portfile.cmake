@@ -1,19 +1,20 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp" "osx")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strukturag/libde265
-    REF v1.0.3
-    SHA512 0153632afcc9733950e8354997ccd93eddad90e8e0f7362bfe49b93b11cb1756cf803d0ba5c07042aee80e18227613af768ca82baf7891c687edf5e253a129c4
+    REF 7f848e2e257d7a29e2a73c7f4950ef596804789d
+    SHA512 2b2f8fdc9bce7dd1b36c1a9b0fd96b8771233ad9cafecb6e8c3456178a87be0ecf91f6545252137be9b0dbeb435a0caed262fdc1810c1df4fa2776409fd1b910
     HEAD_REF master
-    PATCHES fix-install-targets-and-headers.patch
+    PATCHES 
+        fix-install-targets-and-headers.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-      -DDISABLE_SSE=ON
+        -DDISABLE_SSE=ON
 )
 
 vcpkg_install_cmake()
