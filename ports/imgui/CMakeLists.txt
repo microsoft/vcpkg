@@ -20,7 +20,7 @@ set(IMGUI_SOURCES
 )
 
 if (IMGUI_INCLUDE_IMPL_VULKAN)
-    find_package(vulkan)
+    find_package(vulkan REQUIRED)
 
     list (APPEND IMGUI_INCLUDES_PUBLIC examples/imgui_impl_vulkan.h)
     list (APPEND IMGUI_SOURCES examples/imgui_impl_vulkan.cpp)
