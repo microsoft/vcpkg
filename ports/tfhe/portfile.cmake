@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} doesn't currently support on Windows platform" ON_TARGET "Windows")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports on Linux platform" ON_TARGET "Windows" "osx")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
