@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 17b644560ce7b4ee7dd921dfff0ae811aa54ede6 #v1.4.0-alpha.0
     SHA512 2746eebe5ef66c4b9d2215b6883723fca66dab77d405c662cc2af9364dc7fcd76aade396d23427db5797e0a534764eb2398890930ff3c792d0df8a681ce31462
     HEAD_REF master
-    PATCHES fix-builds.patch
+    PATCHES
+        fix-builds.patch
+        disable-c4275.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
