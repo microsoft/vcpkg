@@ -40,7 +40,8 @@ if(APPLE)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation)
     find_library(FOUNDATION_LIBRARY Foundation)
     find_library(CORESERVICES_LIBRARY CoreServices)
-    link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY})
+    find_library(APPKIT_LIBRARY AppKit)
+    link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY} ${APPKIT_LIBRARY})
 endif()
 
 if(WIN32 OR APPLE)
@@ -77,7 +78,7 @@ else()
     set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
     set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
     if(BUILD_SHARED_LIBS)
-        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR} -rpath ${LIB_DIR}")
     else()
         set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
     endif()
@@ -211,7 +212,7 @@ endif()
 
 if(APPLE)
     file(GLOB KQUEUE_SOURCES gio/kqueue/*.c)
-    add_library(kqueue ${KQUEUE_SOURCES})
+    add_library(kqueue STATIC ${KQUEUE_SOURCES})
     target_link_libraries(kqueue PRIVATE gmodule)
     target_compile_definitions(kqueue PRIVATE -DG_LOG_DOMAIN=\"GLib-GIO\" -DGIO_COMPILATION -DG_DISABLE_DEPRECATED)
     list(APPEND GLIB_TARGETS kqueue)
@@ -225,7 +226,7 @@ if(NOT WIN32)
     list(APPEND GIO_SOURCES
         "gio/gcontenttype.c"
         "gio/gfiledescriptorbased.c"
-        "gio/gnetworkmonitornm.c"
+	#"gio/gnetworkmonitornm.c"
         "gio/xdp-dbus.c"
     )
     list(FILTER GIO_SOURCES EXCLUDE REGEX "/gwin32[^/]+\$|win32/[^/]+\$|win32.c\$|gregistrysettingsbackend.c\$")
