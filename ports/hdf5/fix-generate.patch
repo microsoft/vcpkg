@@ -1,5 +1,5 @@
 diff --git a/hdf5-1.10.5/CMakeFilters.cmake b/hdf5-1.10.5/CMakeFilters.cmake
-index 5a89564..7e7daea 100644
+index 5a89564..3b636b9 100644
 --- a/hdf5-1.10.5/CMakeFilters.cmake
 +++ b/hdf5-1.10.5/CMakeFilters.cmake
 @@ -51,8 +51,9 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
@@ -27,25 +27,26 @@ index 5a89564..7e7daea 100644
    INCLUDE_DIRECTORIES (${ZLIB_INCLUDE_DIRS})
    message (STATUS "Filter ZLIB is ON")
  endif ()
-@@ -100,7 +102,16 @@ option (HDF5_ENABLE_SZIP_SUPPORT "Use SZip Filter" OFF)
+@@ -100,7 +102,17 @@ option (HDF5_ENABLE_SZIP_SUPPORT "Use SZip Filter" OFF)
  if (HDF5_ENABLE_SZIP_SUPPORT)
    option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" OFF)
    if (NOT SZIP_USE_EXTERNAL)
 -    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
 +    find_package (szip CONFIG REQUIRED)
 +    set(SZIP_FOUND ${szip_FOUND})
-+    if (BUILD_SHARED_LIBS)
-+        set(SZIP_LIBRARIES szip-shared)
-+        set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
++    if (TARGET szip-shared)
++      set(SZIP_LIBRARIES szip-shared)
++      set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
++    elseif (TARGET szip-static)
++      set(SZIP_LIBRARIES szip-static)
++      set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_LIBRARIES})
 +    else()
-+        set(SZIP_LIBRARIES szip-static)
-+        set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_LIBRARIES})
++      message(FATAL_ERROR "Could not found szip target!")
 +    endif()
-+
      if (NOT SZIP_FOUND)
        find_package (SZIP) # Legacy find
        if (SZIP_FOUND)
-@@ -128,8 +139,9 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+@@ -128,8 +140,9 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
    endif ()
    if (BUILD_SHARED_LIBS)
      set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_SHARED_LIBRARY})
