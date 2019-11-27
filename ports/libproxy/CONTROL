@@ -6,3 +6,6 @@ Build-Depends: libmodman
 
 Feature: tools
 Description: build tools
+
+Feature: tests
+Description: Build libproxy tests
