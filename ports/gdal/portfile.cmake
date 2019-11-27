@@ -11,10 +11,11 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${GDAL_PACKAGE_SUM}
 )
 
-list(APPEND GDAL_PATCHES 0001-Fix-debug-crt-flags.patch 0003-Fix-std-fabs.patch)
+list(APPEND GDAL_PATCHES 0001-Fix-debug-crt-flags.patch)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES  0002-Fix-static-build.patch)
 endif()
+list(APPEND GDAL_PATCHES 0003-Fix-std-fabs.patch 0004-fix-linux-configure.patch)
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
@@ -23,7 +24,11 @@ vcpkg_extract_source_archive_ex(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    set(NATIVE_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
+    set(NATIVE_PACKAGES_DIR_DBG "${CURRENT_PACKAGES_DIR}")
+    set(NATIVE_PACKAGES_DIR_REL "${CURRENT_PACKAGES_DIR}/debug")
+    # We can't pass in the normal absolute path because the "xcopy" command needs to use the windows path.
+    # We also can't pass in the windows path because it is used as an argument after the "\" will be used as an escape character and cannot be resolved using double quotes.
+    # Use relative path here to install manually below
     set(NATIVE_DATA_DIR stage_data)
     set(NATIVE_HTML_DIR stage_html)
     
@@ -107,7 +112,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     list(APPEND NMAKE_OPTIONS
-        GDAL_HOME=${NATIVE_PACKAGES_DIR}
         DATADIR=${NATIVE_DATA_DIR}
         HTMLDIR=${NATIVE_HTML_DIR}
         GEOS_DIR=${COMMON_INCLUDE_DIR}
@@ -143,7 +147,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     list(APPEND NMAKE_OPTIONS_REL
-        ${NMAKE_OPTIONS}
+        GDAL_HOME=${NATIVE_PACKAGES_DIR_REL}
         PROJ_LIBRARY=${PROJ_LIBRARY_REL}
         PNG_LIB=${PNG_LIBRARY_REL}
         "GEOS_LIB=${GEOS_LIBRARY_REL}"
@@ -158,7 +162,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     
     list(APPEND NMAKE_OPTIONS_DBG
-        ${NMAKE_OPTIONS}
+        GDAL_HOME=${NATIVE_PACKAGES_DIR_DBG}
         PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
         PNG_LIB=${PNG_LIBRARY_DBG}
         "GEOS_LIB=${GEOS_LIBRARY_DBG}"
@@ -176,6 +180,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_nmake(
         SOURCE_PATH ${SOURCE_PATH}
         DISABLE_ALL
+        OPTIONS ${NMAKE_OPTIONS}
         OPTIONS_DEBUG ${NMAKE_OPTIONS_DBG}
         OPTIONS_RELEASE ${NMAKE_OPTIONS_REL}
     )
@@ -185,8 +190,52 @@ if (VCPKG_TARGET_IS_WINDOWS)
     else()
         set(GDAL_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     endif()
-    install(FILES ${GDAL_OBJ_DIR}/${NATIVE_DATA_DIR}/* DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    install(FILES ${GDAL_OBJ_DIR}/${NATIVE_HTML_DIR}/* DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/html)
+    
+    # install headers
+    macro(install_hdrs SRC_PATH)
+        # DO NOT use GLOB_RECURSE here because we don't need to install addtional files
+        file(GLOB GDAL_HDRS ${SRC_PATH}/*.h)
+        foreach (GDAL_HDR ${GDAL_HDRS})
+            file(INSTALL ${GDAL_HDR} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+        endforeach()
+    endmacro()
+    install_hdrs(${GDAL_OBJ_DIR}/port)
+    install_hdrs(${GDAL_OBJ_DIR}/gcore)
+    install_hdrs(${GDAL_OBJ_DIR}/alg)
+    install_hdrs(${GDAL_OBJ_DIR}/apps)
+    install_hdrs(${GDAL_OBJ_DIR}/gnm)
+    install_hdrs(${GDAL_OBJ_DIR}/ogr)
+    install_hdrs(${GDAL_OBJ_DIR}/ogr/ogrsf_frmts)
+    install_hdrs(${GDAL_OBJ_DIR}/frmts/vrt)
+    install_hdrs(${GDAL_OBJ_DIR}/frmts/mem)
+    install_hdrs(${GDAL_OBJ_DIR}/frmts/raw)
+    
+    #install libs
+    file(GLOB DBG_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib)
+    file(INSTALL ${DBG_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(GLOB REL_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib)
+    file(INSTALL ${REL_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    
+    # install data/html files
+    file(GLOB DATA_FILES ${GDAL_OBJ_DIR}/${NATIVE_DATA_DIR}/*)
+    foreach(DATA_FILE ${DATA_FILES})
+        file(INSTALL ${DATA_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    endforeach()
+    file(GLOB HTML_FILES ${GDAL_OBJ_DIR}/${NATIVE_HTML_DIR}/*)
+    foreach(HTNL_FILE ${DATA_FILES})
+        file(INSTALL ${HTNL_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/html)
+    endforeach()
+    
+    # move tools
+    file(GLOB GDAL_TOOLS_REL ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    foreach(GDAL_TOOL ${GDAL_TOOLS_REL})
+        file(COPY ${GDAL_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(REMOVE ${GDAL_TOOL})
+    endforeach()
+    file(GLOB GDAL_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+    file(REMOVE ${GDAL_TOOLS_DBG})
+    
+    vcpkg_copy_pdbs()
 else()
     if ("mysql-libmariadb" IN_LIST FEATURES)
         set(USE_MYSQL mysql)
@@ -217,6 +266,7 @@ else()
         SOURCE_PATH ${SOURCE_PATH}
         NO_DEBUG
         OPTIONS ${EXTRA_OPTIONS}
+            --with-proj5-api=yes
         OPTIONS_DEBUG
             --with-boost-lib-path=${CURRENT_INSTALLED_DIR}/debug/lib
         OPTIONS_RELEASE
@@ -238,4 +288,4 @@ else()
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

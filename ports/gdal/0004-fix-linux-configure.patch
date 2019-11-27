@@ -1,0 +1,85 @@
+diff --git a/configure b/configure
+index 0edea88..780e41c 100644
+--- a/configure
++++ b/configure
+@@ -26839,7 +26839,7 @@ if ${ac_cv_lib_hdf5_H5Fopen+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lhdf5 -lhdf5 $LIBS"
++LIBS="-lhdf5 -lhdf5 -lszip $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35348,7 +35348,7 @@ if ${ac_cv_lib_proj_proj_create+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35412,7 +35412,7 @@ if ${ac_cv_lib_proj_pj_init+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35462,7 +35462,7 @@ if ${ac_cv_lib_proj_proj_create+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35515,7 +35515,7 @@ if ${ac_cv_lib_proj_pj_init+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35563,7 +35563,7 @@ if ${ac_cv_lib_proj_pj_init+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35610,7 +35610,7 @@ if ${ac_cv_lib_proj_pj_init+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35657,7 +35657,7 @@ if ${ac_cv_lib_proj_pj_init+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -35704,7 +35704,7 @@ if ${ac_cv_lib_proj_pj_init+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lproj  $LIBS"
++LIBS="-lproj -lstdc++ -lsqlite3 $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
