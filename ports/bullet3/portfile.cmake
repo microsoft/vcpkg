@@ -33,16 +33,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Move debug cmake toolchain files
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/bullet3/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3 PATTERN *.cmake )
-
-# Fix debug targets
-file(GLOB DebugTargetFiles "${CURRENT_PACKAGES_DIR}/share/bullet3/*_Export-debug.cmake")
-foreach(DebugTargetFilePath ${DebugTargetFiles})
-  file(READ ${DebugTargetFilePath} DebugTargetFile)
-  string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" DebugTargetFile ${DebugTargetFile})
-  file(WRITE ${DebugTargetFilePath} ${DebugTargetFile})
-endforeach()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/bullet3")
 
 # Clean up unneeded files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
