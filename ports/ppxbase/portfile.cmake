@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/ppxbase
-    REF v1.35
-    SHA512 7d418c8d0b00559216c861656c1fb3bfda8d34044fbd07e5bc3acddd27623eb7a07a986fc6bac22dde2fdf3edd165b78e8e5ef7f4bc9f17975d7cdd696942168
+    REF v1.36
+    SHA512 196f50e1bcef0a619a55d6a54f53d1405d9b85b950b9f836bb8bce9515feba36d3da1d19775c8a20067944b5786e02140da0fc0d9ed4aacece258c01c7e44b92
     HEAD_REF master
 )
 
