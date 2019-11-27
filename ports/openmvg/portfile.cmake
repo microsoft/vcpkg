@@ -60,6 +60,7 @@ vcpkg_configure_cmake(
         -DOpenMVG_USE_INTERNAL_CERES=OFF
         -DOpenMVG_USE_INTERNAL_FLANN=OFF
         -DOpenMVG_USE_INTERNAL_LEMON=OFF
+        -DTARGET_ARCHITECTURE=none
 )
 
 vcpkg_install_cmake()
