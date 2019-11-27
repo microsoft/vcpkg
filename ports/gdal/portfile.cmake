@@ -237,14 +237,16 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     vcpkg_copy_pdbs()
 else()
-    if ("mysql-libmariadb" IN_LIST FEATURES)
-        set(USE_MYSQL mysql)
-    endif()
-    if ("libspatialite" IN_LIST FEATURES)
-        set(USE_LIBMARIADB spatialite)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(BUILD_DYNAMIC yes)
+        set(BUILD_STATIC no)
+    else()
+        set(BUILD_DYNAMIC no)
+        set(BUILD_STATIC yes)
     endif()
     
     vcpkg_use_system_ports(OUT_PORTS_OPTIONS EXTRA_OPTIONS
+        PORTS
         proj
         png
         geos
@@ -258,16 +260,29 @@ else()
         netcdf
         hdf5
         libz
-        ${USE_LIBMARIADB}
-        ${USE_MYSQL}
+        crypto
+        tiff
+        
+        INVERTED_PORTS
+        hdf4
+        
+        FEATURES
+        mysql-libmariadb mysql
+        libspatialite spatialite
+        giflib gif
+        jasper jasper
+        libmysql mysql
+        xerces-c xerces
     )
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
-        NO_DEBUG
         OPTIONS ${EXTRA_OPTIONS}
             --with-proj5-api=yes
+            --enable-shared=${BUILD_DYNAMIC}
+            --enable-static=${BUILD_STATIC}
         OPTIONS_DEBUG
+            --enable-debug
             --with-boost-lib-path=${CURRENT_INSTALLED_DIR}/debug/lib
         OPTIONS_RELEASE
             --with-boost-lib-path=${CURRENT_INSTALLED_DIR}/lib

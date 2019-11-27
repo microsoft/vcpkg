@@ -2,7 +2,7 @@ Source: gdal
 Version: 2.4.1-10
 Homepage: https://gdal.org/
 Description: The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data.
-Build-Depends: proj4, libpng, geos, sqlite3, curl, expat, libpq, openjpeg, libwebp, libxml2, liblzma, netcdf-c, hdf5, zlib
+Build-Depends: proj4, libpng, geos, sqlite3, curl, expat, libpq, openjpeg, libwebp, libxml2, liblzma, netcdf-c, hdf5, zlib, tiff (!windows)
 
 Feature: mysql-libmariadb
 Build-Depends: libmariadb
@@ -11,3 +11,19 @@ Description: Add mysql support using libmariadb
 Feature: libspatialite
 Build-Depends: libspatialite
 Description: Create or update SpatiaLite databases using libspatialite
+
+Feature: giflib
+Build-Depends: giflib
+Description: Add giflib support
+
+Feature: jasper
+Build-Depends: jasper
+Description: Add jasper support
+
+Feature: libmysql
+Build-Depends: libmysql
+Description: Add libmysql support
+
+Feature: xerces-c
+Build-Depends: xerces-c
+Description: Add xerces-c support
