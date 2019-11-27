@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-find-libproxy.patch
+        fix-macos-build.patch
 )
 
 vcpkg_configure_cmake(
