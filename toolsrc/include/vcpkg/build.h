@@ -150,6 +150,7 @@ namespace vcpkg::Build
         std::vector<std::string> passthrough_env_vars;
         Optional<std::string> cmake_vs_generator;
         Optional<std::string> skip_post_build_lib_arch_check;
+        bool force_vcvar_load;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
@@ -166,7 +167,8 @@ namespace vcpkg::Build
         ENV_PASSTHROUGH,
         PUBLIC_ABI_OVERRIDE,
         SKIP_POST_BUILD_LIB_ARCH_CHECK,
-        CMAKE_VS_GENERATOR
+        CMAKE_VS_GENERATOR,
+        FORCE_VCVARS_LOAD
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -180,7 +182,8 @@ namespace vcpkg::Build
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
         {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
         {"VCPKG_SKIP_POST_BUILD_LIB_ARCH_CHECK", VcpkgTripletVar::SKIP_POST_BUILD_LIB_ARCH_CHECK},
-        {"VCPKG_CMAKE_VS_GENERATOR", VcpkgTripletVar::CMAKE_VS_GENERATOR}};
+        {"VCPKG_CMAKE_VS_GENERATOR", VcpkgTripletVar::CMAKE_VS_GENERATOR},
+        {"VCPKG_FORCE_LOAD_VCVARS_ENV", VcpkgTripletVar::FORCE_VCVARS_LOAD}};
 
     struct ExtendedBuildResult
     {

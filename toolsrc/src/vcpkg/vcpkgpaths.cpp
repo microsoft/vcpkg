@@ -185,7 +185,7 @@ namespace vcpkg
         const auto host_arch = System::get_host_processor();
         const auto target_arch = System::to_cpu_architecture(prebuildinfo.target_architecture).value_or(host_arch);
 
-        if (prebuildinfo.external_toolchain_file ||
+        if ((prebuildinfo.external_toolchain_file && !prebuildinfo.force_vcvar_load) ||
             (!prebuildinfo.cmake_system_name.empty() && prebuildinfo.cmake_system_name != "WindowsStore"))
         {
             static Toolset external_toolset = [&]() -> Toolset {

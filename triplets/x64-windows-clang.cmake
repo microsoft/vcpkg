@@ -11,7 +11,8 @@ set(VCPKG_LINKER "lld-link")
 set(VCPKG_AR "llvm-ar.exe")
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/../toolchain/win-clang-toolchain.cmake")
 set(VCPKG_DEFAULT_CMAKE_GENERATOR Ninja)
-set(VCPKG_LOAD_ENVIROMNENT_BATCH "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat")
+#set(VCPKG_LOAD_ENVIROMNENT_BATCH "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat")
+set(VCPKG_FORCE_LOAD_VCVARS_ENV "true")
 #set(ENV{VCPKG_KEEP_ENV_VARS} "Path;INCLUDE;LIB") # start building this triplet from a dev cmd with vcvars loaded. Needs to be set manually for some reason 
 #set(VCPKG_C_FLAGS) # Injects additional C build flags
 #set(VCPKG_CXX_FLAGS) # Injects additional C++ build flags

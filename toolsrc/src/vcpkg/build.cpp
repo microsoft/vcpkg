@@ -196,7 +196,7 @@ namespace vcpkg::Build
 
     static CStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
-		return toolset.arch.name;      
+        return toolset.arch.name;      
     }
 
     static auto make_env_passthrough(const PreBuildInfo& pre_build_info) -> std::unordered_map<std::string, std::string>
@@ -218,8 +218,8 @@ namespace vcpkg::Build
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        if (pre_build_info.external_toolchain_file.has_value()) return "";
-        if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
+        if (pre_build_info.external_toolchain_file.has_value() && !pre_build_info.force_vcvar_load) return "";
+        if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore" && !pre_build_info.force_vcvar_load) return "";
 
         const char* tonull = " >nul";
         if (Debug::g_debugging)
@@ -1150,6 +1150,25 @@ namespace vcpkg::Build
                     case VcpkgTripletVar::CMAKE_VS_GENERATOR:
                         pre_build_info.cmake_vs_generator =
                             variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                        break;
+                    case VcpkgTripletVar::FORCE_VCVARS_LOAD:
+                        if (variable_value.empty())
+                            pre_build_info.force_vcvar_load = false;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "1"))
+                            pre_build_info.force_vcvar_load = true;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "on"))
+                            pre_build_info.force_vcvar_load = true;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "true"))
+                            pre_build_info.force_vcvar_load = true;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "0"))
+                            pre_build_info.force_vcvar_load = false;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "off"))
+                            pre_build_info.force_vcvar_load = false;
+                        else if (Strings::case_insensitive_ascii_equals(variable_value, "false"))
+                            pre_build_info.force_vcvar_load = false;
+                        else
+                            Checks::exit_with_message(
+                                VCPKG_LINE_INFO, "Unknown setting for VCPKG_FORCE_LOAD_VCVARS_ENV: %s", variable_value);
                         break;
                 }
             }
