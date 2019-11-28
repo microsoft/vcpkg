@@ -12,6 +12,17 @@ set(IMGUI_INCLUDES_PRIVATE
     imgui_internal.h
 )
 
+set(IMGUI_INCLUDES_ALL
+    ${IMGUI_INCLUDES_PUBLIC}
+)
+
+IF (ENABLE_INTERNAL)
+    set(IMGUI_INCLUDES_ALL
+    ${IMGUI_INCLUDES_PUBLIC}
+    ${IMGUI_INCLUDES_PRIVATE}
+)  
+ENDIF (ENABLE_INTERNAL)
+
 set(IMGUI_SOURCES
     imgui.cpp
     imgui_demo.cpp
@@ -38,7 +49,7 @@ install(EXPORT IMGUIExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_
 
 if(NOT IMGUI_SKIP_HEADERS)
     install(
-        FILES ${IMGUI_INCLUDES_PUBLIC}
+        FILES ${IMGUI_INCLUDES_ALL}
         DESTINATION include
     )
 endif()
