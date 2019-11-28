@@ -1,15 +1,16 @@
 diff --git a/libhdf5/CMakeLists.txt b/libhdf5/CMakeLists.txt
-index f3c7bbc..3efb582 100644
+index f3c7bbc..0e51429 100644
 --- a/libhdf5/CMakeLists.txt
 +++ b/libhdf5/CMakeLists.txt
-@@ -20,3 +20,9 @@ add_library(netcdfhdf5 OBJECT ${libnchdf5_SOURCES})
+@@ -20,3 +20,11 @@ add_library(netcdfhdf5 OBJECT ${libnchdf5_SOURCES})
  
  # Remember to package this file for CMake builds.
  ADD_EXTRA_DIST(${libnchdf5_SOURCES} CMakeLists.txt)
 +
-+if(HDF5_BUILD_SHARED_LIBS) 
-+ target_link_libraries(netcdfhdf5 PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared)
++if (TARGET hdf5::hdf5-shared AND TARGET hdf5::hdf5_hl-shared)
++  target_link_libraries(netcdfhdf5 PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared)
++elseif (TARGET hdf5::hdf5-static AND TARGET hdf5::hdf5_hl-static)
++  target_link_libraries(netcdfhdf5 PRIVATE hdf5::hdf5-static hdf5::hdf5_hl-static)
 +else()
-+ target_link_libraries(netcdfhdf5 PRIVATE hdf5::hdf5-static hdf5::hdf5_hl-static) 
++  message(FATAL_ERROR "Could not found hdf5 target!")  
 +endif()
-\ No newline at end of file
