@@ -1,6 +1,6 @@
-diff --git a/source/data/Makefile.in b/source/data/Makefile.in
---- a/source/data/Makefile.in 
-+++ b/source/data/Makefile.in 
+diff --urN a/source/data/Makefile.in b/source/data/Makefile.in
+--- a/source/data/Makefile.in
++++ b/source/data/Makefile.in
 @@ -221,11 +221,12 @@
  ## Include the main build rules for data files
  include $(top_builddir)/$(subdir)/rules.mk

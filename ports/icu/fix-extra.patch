@@ -1,4 +1,4 @@
-diff --git a/source/extra/Makefile.in b/source/extra/Makefile.in
+diff --urN a/source/extra/Makefile.in b/source/extra/Makefile.in
 --- a/source/extra/Makefile.in
 +++ b/source/extra/Makefile.in 
 @@ -23,7 +23,7 @@
