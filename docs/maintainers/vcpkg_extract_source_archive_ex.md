@@ -25,7 +25,7 @@ The full path to the archive to be extracted.
 This is usually obtained from calling [`vcpkg_download_distfile`](vcpkg_download_distfile.md).
 
 ### REF
-A friendly name that will be used instead of the filename of the archive.
+A friendly name that will be used instead of the filename of the archive.  If more than 10 characters it will be truncated.
 
 By convention, this is set to the version number or tag fetched
 

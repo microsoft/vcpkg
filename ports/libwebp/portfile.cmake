@@ -12,6 +12,7 @@ vcpkg_from_github(
     0003-remove-missing-symbol.patch
     0004-add-missing-linked-library.patch
     0005-fix-static-build.patch
+    0006-fix-dependecies-platform.patch
 )
 
 set(WEBP_BUILD_ANIM_UTILS OFF)
@@ -35,6 +36,12 @@ endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message("WebP currently requires the following library from the system package manager:\n    Xxf86vm\n\nThis can be installed on Ubuntu systems via apt-get install libxxf86vm-dev")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(WEBP_BUILD_VWEBP OFF)
+    set(WEBP_BUILD_EXTRAS OFF)
+    message("Due to GLUT Framework problems with CMake, at the moment it's not possible to build VWebP on Mac. It has been disabled together with extras.")
 endif()
 
 vcpkg_configure_cmake(
@@ -63,8 +70,12 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/WebP/cmake/" TARGET_PATH "share/WebP/")
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/WebP)
+file(GLOB CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/*)
+file(COPY ${CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/webp/)
 
 #somehow the native CMAKE_EXECUTABLE_SUFFIX does not work, so here we emulate it
 if(CMAKE_HOST_WIN32)
@@ -114,5 +125,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebp/COPYING ${CURRENT_PACKAGES_DIR}/share/libwebp/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp RENAME copyright)

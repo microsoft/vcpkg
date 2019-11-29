@@ -1,0 +1,27 @@
+diff --git a/folly/portability/Windows.h b/folly/portability/Windows.h
+index f7990ca..b22fac5 100644
+--- a/folly/portability/Windows.h
++++ b/folly/portability/Windows.h
+@@ -26,16 +26,12 @@
+ // These have to be this way because we define our own versions
+ // of close(), because the normal Windows versions don't handle
+ // sockets at all.
+-#ifndef __STDC__
+-/* nolint */
+-#define __STDC__ 1
+-#include <direct.h> // @manual nolint
+-#include <io.h> // @manual nolint
+-#undef __STDC__
+-#else
+-#include <direct.h> // @manual nolint
+-#include <io.h> // @manual nolint
+-#endif
++#include <corecrt.h>
++#pragma push_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#define _CRT_INTERNAL_NONSTDC_NAMES 0
++#include <direct.h>
++#include <io.h>
++#pragma pop_macro("_CRT_INTERNAL_NONSTDC_NAMES")
+ 
+ #if defined(min) || defined(max)
+ #error Windows.h needs to be included by this header, or else NOMINMAX needs \

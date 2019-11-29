@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
 
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO sobjectizerteam/restinio
-    REF v.0.5.0
-    SHA512 2031abf6928456d9f93b965c0fd0114070b0aeac055edc78442284ad8a2dea47d9eaa8cb1761e76fa31286e7881559fa7d99e404e3c0d2639e6a0afab6bedd4f
+    REPO stiffstream/restinio
+    REF v.0.6.1
+    SHA512 83a92797a08aef36e8c933568a54cdb0de7d6a864ed8fced50c0c22933fab718eb9a5cf17fb2b0ebd0667c9b07961d2ea3ddf8b40abbc201eaf6660b6204381e
 )
 
 vcpkg_configure_cmake(
@@ -13,8 +13,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/restinio")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restinio)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 

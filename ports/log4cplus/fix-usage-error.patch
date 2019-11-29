@@ -1,0 +1,105 @@
+diff --git a/qt4debugappender/CMakeLists.txt b/qt4debugappender/CMakeLists.txt
+index 2f28be5..0a98704 100644
+--- a/qt4debugappender/CMakeLists.txt
++++ b/qt4debugappender/CMakeLists.txt
+@@ -4,15 +4,17 @@ set (qt4debugappender_sources
+ if (${BUILD_SHARED_LIBS})
+   add_definitions (-D${log4cplus}_EXPORTS)
+ endif ()
+-if (UNICODE)
+-  add_definitions (-DUNICODE -D_UNICODE -UMBCS -U_MBCS)
+-endif (UNICODE)
+ 
+ find_package (Qt4 REQUIRED)
+ include (${QT_USE_FILE})
+ 
+ set (qt4debugappender log4cplusqt4debugappender${log4cplus_postfix})
+ add_library (${qt4debugappender} ${qt4debugappender_sources})
++if (UNICODE)
++  target_compile_definitions (${qt4debugappender} PUBLIC UNICODE)
++  target_compile_definitions (${qt4debugappender} PUBLIC _UNICODE)
++  add_definitions (-UMBCS -U_MBCS)
++endif (UNICODE)
+ target_link_libraries (${qt4debugappender}
+   ${log4cplus}
+   ${QT_LIBRARIES}
+diff --git a/qt5debugappender/CMakeLists.txt b/qt5debugappender/CMakeLists.txt
+index 9570e76..de6fecf 100644
+--- a/qt5debugappender/CMakeLists.txt
++++ b/qt5debugappender/CMakeLists.txt
+@@ -4,15 +4,17 @@ set (qt5debugappender_sources
+ if (${BUILD_SHARED_LIBS})
+   add_definitions (-D${log4cplus}_EXPORTS)
+ endif ()
+-if (UNICODE)
+-  add_definitions (-DUNICODE -D_UNICODE -UMBCS -U_MBCS)
+-endif (UNICODE)
+ 
+ find_package (Qt5Core REQUIRED)
+ #include (${QT_USE_FILE})
+ 
+ set (qt5debugappender log4cplusqt5debugappender${log4cplus_postfix})
+ add_library (${qt5debugappender} ${qt5debugappender_sources})
++if (UNICODE)
++  target_compile_definitions (${qt5debugappender} PUBLIC UNICODE)
++  target_compile_definitions (${qt5debugappender} PUBLIC _UNICODE)
++  add_definitions (-UMBCS -U_MBCS)
++endif (UNICODE)
+ target_link_libraries (${qt5debugappender}
+   ${log4cplus}
+   ${Qt5Widgets_LIBRARIES}
+diff --git a/simpleserver/CMakeLists.txt b/simpleserver/CMakeLists.txt
+index e535120..5202f42 100644
+--- a/simpleserver/CMakeLists.txt
++++ b/simpleserver/CMakeLists.txt
+@@ -1,14 +1,15 @@
+-if (UNICODE)
+-  add_definitions (-DUNICODE -D_UNICODE -UMBCS -U_MBCS)
+-endif (UNICODE)
+-
+ message (STATUS "Threads: ${CMAKE_THREAD_LIBS_INIT}")
+-
+ set (loggingserver_sources loggingserver.cxx)
+ 
+ message (STATUS "Sources: ${loggingserver_sources}")
+ 
+-add_executable (loggingserver ${loggingserver_sources})
+-target_link_libraries (loggingserver ${log4cplus})
++set (loggingserver loggingserver${log4cplus_postfix})
++add_executable (${loggingserver} ${loggingserver_sources})
++if (UNICODE)
++  target_compile_definitions (${loggingserver} PUBLIC UNICODE)
++  target_compile_definitions (${loggingserver} PUBLIC _UNICODE)
++  add_definitions (-UMBCS -U_MBCS)
++endif (UNICODE)
++target_link_libraries (${loggingserver} ${log4cplus})
+ 
+-install(TARGETS loggingserver DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(TARGETS ${loggingserver} DESTINATION ${CMAKE_INSTALL_BINDIR})
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b7b7ad8..91e0c63 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -67,9 +67,6 @@ endif ()
+ 
+ # Define _GNU_SOURCE so that functions like `pipe2()` are visible.
+ add_definitions (-D_GNU_SOURCE=1)
+-if (UNICODE)
+-  add_definitions (-DUNICODE -D_UNICODE -UMBCS -U_MBCS)
+-endif (UNICODE)
+ if (WIN32)
+   add_definitions (-DMINGW_HAS_SECURE_API=1)
+   add_definitions (-D_WIN32_WINNT=${_WIN32_WINNT})
+@@ -85,6 +82,12 @@ endif (WIN32)
+ 
+ add_library (${log4cplus} ${log4cplus_sources})
+ 
++if (UNICODE)
++  target_compile_definitions (${log4cplus} PUBLIC UNICODE)
++  target_compile_definitions (${log4cplus} PUBLIC _UNICODE)
++  add_definitions (-UMBCS -U_MBCS)
++endif (UNICODE)
++
+ set (log4cplus_LIBS ${CMAKE_THREAD_LIBS_INIT})
+ if (LIBRT)
+   list (APPEND log4cplus_LIBS ${LIBRT})

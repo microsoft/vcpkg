@@ -150,7 +150,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
-    execute_process(COMMAND ${GIT} ls-remote
+    _execute_process(COMMAND ${GIT} ls-remote
         "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}.git" "${_vdud_HEAD_REF}"
         RESULT_VARIABLE _git_result
         OUTPUT_VARIABLE _git_output

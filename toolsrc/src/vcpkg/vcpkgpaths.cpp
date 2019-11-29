@@ -13,10 +13,14 @@
 
 namespace vcpkg
 {
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path)
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir,
+                                            const Optional<fs::path>& vcpkg_scripts_root_dir,
+                                            const std::string& default_vs_path,
+                                            const std::vector<std::string>* triplets_dirs)
     {
+        auto& fs = Files::get_real_filesystem();
         std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
+        const fs::path canonical_vcpkg_root_dir = fs.canonical(vcpkg_root_dir, ec);
         if (ec)
         {
             return ec;
@@ -39,7 +43,7 @@ namespace vcpkg
         if (auto odp = overriddenDownloadsPath.get())
         {
             auto asPath = fs::u8path(*odp);
-            if (!fs::stdfs::is_directory(asPath))
+            if (!fs::is_directory(fs.status(VCPKG_LINE_INFO, asPath)))
             {
                 Metrics::g_metrics.lock()->track_property("error", "Invalid VCPKG_DOWNLOADS override directory.");
                 Checks::exit_with_message(
@@ -63,7 +67,25 @@ namespace vcpkg
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
-        paths.scripts = paths.root / "scripts";
+
+        if (auto scripts_dir = vcpkg_scripts_root_dir.get())
+        {
+            if (scripts_dir->empty() || !fs::stdfs::is_directory(*scripts_dir))
+            {
+                Metrics::g_metrics.lock()->track_property("error", "Invalid scripts override directory.");
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO,
+                    "Invalid scripts override directory: %s; "
+                    "create that directory or unset --x-scripts-root to use the default scripts location.",
+                    scripts_dir->u8string());
+            }
+
+            paths.scripts = *scripts_dir;
+        }
+        else
+        {
+            paths.scripts = paths.root / "scripts";
+        }
 
         paths.tools = paths.downloads / "tools";
         paths.buildsystems = paths.scripts / "buildsystems";
@@ -76,13 +98,24 @@ namespace vcpkg
 
         paths.ports_cmake = paths.scripts / "ports.cmake";
 
+        if (triplets_dirs)
+        {
+            for (auto&& triplets_dir : *triplets_dirs)
+            {
+                auto path = fs::u8path(triplets_dir);
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   paths.get_filesystem().exists(path),
+                                   "Error: Path does not exist '%s'",
+                                   triplets_dir);
+                paths.triplets_dirs.emplace_back(fs::stdfs::canonical(path));
+            }
+        }
+        paths.triplets_dirs.emplace_back(fs::stdfs::canonical(paths.root / "triplets"));
+
         return paths;
     }
 
     fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
-
-    fs::path VcpkgPaths::port_dir(const PackageSpec& spec) const { return this->ports / spec.name(); }
-    fs::path VcpkgPaths::port_dir(const std::string& name) const { return this->ports / name; }
 
     fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {
@@ -94,26 +127,46 @@ namespace vcpkg
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
-    const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
-    {
-        return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
-            std::vector<std::string> output;
-            for (auto&& path : this->get_filesystem().get_files_non_recursive(this->triplets))
-            {
-                output.push_back(path.stem().filename().string());
-            }
-            Util::sort(output);
-
-            return output;
-        });
-    }
-
     bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
     {
         const auto it = Util::find_if(this->get_available_triplets(), [&](auto&& available_triplet) {
             return t.canonical_name() == available_triplet;
         });
         return it != this->get_available_triplets().cend();
+    }
+
+    const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
+    {
+        return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
+            std::vector<std::string> output;
+            for (auto&& triplets_dir : triplets_dirs)
+            {
+                for (auto&& path : this->get_filesystem().get_files_non_recursive(triplets_dir))
+                {
+                    output.push_back(path.stem().filename().string());
+                }
+            }
+            Util::sort_unique_erase(output);
+            return output;
+        });
+    }
+
+    const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
+    {
+        return m_triplets_cache.get_lazy(
+            triplet, [&]() -> auto {
+                for (const auto& triplet_dir : triplets_dirs)
+                {
+                    auto path = triplet_dir / (triplet.canonical_name() + ".cmake");
+                    if (this->get_filesystem().exists(path))
+                    {
+                        return path;
+                    }
+                }
+
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: Triplet file %s.cmake not found", triplet.canonical_name());
+            });
     }
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const

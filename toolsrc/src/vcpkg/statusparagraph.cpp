@@ -24,7 +24,7 @@ namespace vcpkg
             .push_back('\n');
     }
 
-    StatusParagraph::StatusParagraph(std::unordered_map<std::string, std::string>&& fields)
+    StatusParagraph::StatusParagraph(Parse::RawParagraph&& fields)
         : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE)
     {
         auto status_it = fields.find(BinaryParagraphRequiredField::STATUS);

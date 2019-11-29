@@ -1,21 +1,17 @@
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2"
-    FILENAME "ffmpeg-4.1.tar.bz2"
-    SHA512 ccf6d07268dc47e08ca619eb182a003face2a8ee73ec1a28157330dd7de1df88939def1fc1c7e6b6ac7b59752cdad84657d589b2fafb73e14e5ef03fb6e33417
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO ffmpeg/ffmpeg
+    REF n4.2
+    SHA512 9fa56364696f91e2bf4287954d26f0c35b3f8aad241df3fbd3c9fc617235d8c83b28ddcac88436383b2eb273f690322e6f349e2f9c64d02f0058a4b76fa55035
+    HEAD_REF master
     PATCHES
-        create-lib-libraries.patch
-        detect-openssl.patch
-        configure_opencv.patch
-        fix_windowsinclude-in-ffmpegexe-1.patch
-        fix_windowsinclude-in-ffmpegexe-2.patch
-        fix_libvpx_windows_linking.patch
+        0001-create-lib-libraries.patch
+        0002-detect-openssl.patch
+        0003-fix-windowsinclude.patch
+        0004-fix-debug-build.patch
+        0005-fix-libvpx-linking.patch
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -25,7 +21,7 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     set(SEP ";")
     #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
@@ -36,7 +32,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-if (WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
@@ -113,16 +109,24 @@ else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
 endif()
 
+set (ENABLE_LZMA OFF)
 if("lzma" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-lzma")
+    set (ENABLE_LZMA ON) #necessary for configuring FFMPEG CMake Module
 else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
+set (ENABLE_BZIP2 OFF)
 if("bzip2" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-bzlib")
+    set (ENABLE_BZIP2 ON) #necessary for configuring FFMPEG CMake Module
 else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
+endif()
+
+if("avresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avresample")
 endif()
 
 set(OPTIONS_CROSS "")
@@ -147,11 +151,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(OPTIONS_CROSS " --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
+set(OPTIONS_DEBUG "--debug") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_RELEASE "")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
-set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
@@ -160,9 +163,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endif()
 endif()
 
-message(STATUS "Building Options: ${OPTIONS}")
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
         set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
@@ -173,33 +175,46 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_RELEASE}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
+message(STATUS "Building Options: ${OPTIONS}")
 
-set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
+# Relase build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+    message(STATUS "Building Relase Options: ${OPTIONS_RELEASE}")
+    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
+    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+            "${OPTIONS} ${OPTIONS_RELEASE}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+endif()
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_DEBUG}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
+# Debug build
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+    message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
+    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${SEP}${ENV_LIB_PATH}")
+    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
+    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
+            "${SOURCE_PATH}" # SOURCE DIR
+            "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
+            "${OPTIONS} ${OPTIONS_DEBUG}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
+endif()
 
 file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
 
@@ -243,8 +258,7 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 # TODO: Examine build log and confirm that this license matches the build output
-file(COPY ${SOURCE_PATH}/COPYING.LGPLv2.1 DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffmpeg)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ffmpeg/COPYING.LGPLv2.1 ${CURRENT_PACKAGES_DIR}/share/ffmpeg/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LGPLv2.1 DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-# Used by OpenCV
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffmpeg)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake @ONLY)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

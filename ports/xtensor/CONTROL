@@ -1,6 +1,7 @@
 Source: xtensor
-Version: 0.20.7
+Version: 0.20.8
 Description: C++ tensors with broadcasting and lazy computing
+Homepage: https://quantstack.net/xtensor
 Build-Depends: nlohmann-json, xtl
 
 Feature: xsimd

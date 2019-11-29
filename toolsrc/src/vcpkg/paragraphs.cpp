@@ -116,7 +116,7 @@ namespace vcpkg::Paragraphs
             skip_spaces(ch);
         }
 
-        void get_paragraph(char& ch, std::unordered_map<std::string, std::string>& fields)
+        void get_paragraph(char& ch, RawParagraph& fields)
         {
             fields.clear();
             std::string fieldname;
@@ -141,9 +141,9 @@ namespace vcpkg::Paragraphs
         }
 
     public:
-        std::vector<std::unordered_map<std::string, std::string>> get_paragraphs()
+        std::vector<RawParagraph> get_paragraphs()
         {
-            std::vector<std::unordered_map<std::string, std::string>> paragraphs;
+            std::vector<RawParagraph> paragraphs;
 
             char ch;
             peek(ch);
@@ -164,8 +164,19 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const Files::Filesystem& fs,
-                                                                                const fs::path& control_path)
+    static Expected<RawParagraph> parse_single_paragraph(const std::string& str)
+    {
+        const std::vector<RawParagraph> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+
+        if (p.size() == 1)
+        {
+            return p.at(0);
+        }
+
+        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
+    }
+
+    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -176,8 +187,7 @@ namespace vcpkg::Paragraphs
         return contents.error();
     }
 
-    Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs,
-                                                                                       const fs::path& control_path)
+    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -188,27 +198,14 @@ namespace vcpkg::Paragraphs
         return contents.error();
     }
 
-    Expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str)
-    {
-        const std::vector<std::unordered_map<std::string, std::string>> p =
-            Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
-
-        if (p.size() == 1)
-        {
-            return p.at(0);
-        }
-
-        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
-    }
-
-    Expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str)
+    Expected<std::vector<RawParagraph>> parse_paragraphs(const std::string& str)
     {
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
+        Expected<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
             return SourceControlFile::parse_control_file(std::move(*vector_pghs));
@@ -221,7 +218,7 @@ namespace vcpkg::Paragraphs
 
     Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs =
+        Expected<std::vector<RawParagraph>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())

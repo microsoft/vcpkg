@@ -3,16 +3,21 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.8.16
-    SHA512 a919341df7d9625a869cad266d8434881b63a47f3da8daccf4bbab6675d45bd121ff780dd911a7447450fee44cd7bdd42d73aec59a99b667d6d98e79682db2c7
+    REF ad1ab61a56c63d770e4beb335efe8b1f1a9e36cd
+    SHA512 48ee7862583e7adb86b56b20634c34aebf83ef0a3a14ad96182494ce6a84cb027334840a6c4c335e9342110c3a36532e3eeae22a3ed7363cd91b27cb7ca58154
     HEAD_REF master
     PATCHES
         fix_libraw.patch
         use-webp.patch
         remove_wrong_dependency.patch
+        use-vcpkg-find-openexr.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
+
+file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake")
+file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake")
+
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -23,16 +28,15 @@ else()
     set(LINKSTATIC OFF)
 endif()
 
-# Features
-set(USE_LIBRAW OFF)
-if("libraw" IN_LIST FEATURES)
-    set(USE_LIBRAW ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    libraw USE_LIBRAW
+    opencolorio USE_OCIO 
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
@@ -41,9 +45,7 @@ vcpkg_configure_cmake(
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
         -DUSE_GIF=OFF
-        -DUSE_LIBRAW=${USE_LIBRAW}
         -DUSE_NUKE=OFF
-        -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
         -DUSE_OPENJPEG=OFF
         -DUSE_OPENSSL=OFF
@@ -71,6 +73,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openimageio)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/openimageio/LICENSE ${CURRENT_PACKAGES_DIR}/share/openimageio/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/openimageio)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/openimageio/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/openimageio/copyright)

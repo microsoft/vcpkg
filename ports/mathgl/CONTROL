@@ -1,5 +1,5 @@
 Source: mathgl
-Version: 2.4.3
+Version: 2.4.3-3
 Description: MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions
 Default-Features: opengl, jpeg, png, zlib
 

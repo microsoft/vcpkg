@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
 set(INSTALL_LIB_DIR      "lib"                      CACHE PATH "Path where lib will be installed")
 set(INSTALL_INCLUDE_DIR  "include/Coin"             CACHE PATH "Path where headers will be installed")
-set(INSTALL_CMAKE_DIR    "share/${PROJECT_NAME}"    CACHE PATH "Path where cmake configs will be installed")
+set(INSTALL_CMAKE_DIR    "share/clp"                CACHE PATH "Path where cmake configs will be installed")
 
 # Make relative paths absolute (needed later on)
 set(RELATIVE_INSTALL_INCLUDE_DIR ${INSTALL_INCLUDE_DIR})

@@ -1,0 +1,22 @@
+diff --git a/internal/ceres/blas.cc b/internal/ceres/blas.cc
+index 3ba63bb..071a26e 100644
+--- a/internal/ceres/blas.cc
++++ b/internal/ceres/blas.cc
+@@ -33,7 +33,7 @@
+ #include "glog/logging.h"
+ 
+ #ifndef CERES_NO_LAPACK
+-extern "C" void dsyrk_(char* uplo,
++extern "C" void dsyrk(char* uplo,
+                        char* trans,
+                        int* n,
+                        int* k,
+@@ -64,7 +64,7 @@ void BLAS::SymmetricRankKUpdate(int num_rows,
+   int k = transpose ? num_rows : num_cols;
+   int lda = k;
+   int ldc = n;
+-  dsyrk_(&uplo,
++  dsyrk(&uplo,
+          &trans,
+          &n,
+          &k,

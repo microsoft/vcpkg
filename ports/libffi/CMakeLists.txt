@@ -122,9 +122,20 @@ endif()
 add_library(libffi ${FFI_SOURCES})
 
 install(TARGETS libffi
+    EXPORT ${PROJECT_NAME}Targets
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(${PROJECT_NAME}Config.cmake.in
+     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+     INSTALL_DESTINATION share/${PROJECT_NAME})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    DESTINATION share/${PROJECT_NAME})
+install(EXPORT ${PROJECT_NAME}Targets
+    DESTINATION share/${PROJECT_NAME})
 
 if(NOT FFI_SKIP_HEADERS)
     install(FILES

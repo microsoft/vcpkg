@@ -1,9 +1,8 @@
 Source: magnum-extras
-Version: 2019.01-1
+Version: 2019.10
 Build-Depends: magnum[core]
-Description: Extras for magnum, C++11/C++14 graphics middleware for games and data visualization 
+Description: Extras for magnum, C++11/C++14 graphics middleware for games and data visualization
 Homepage: https://magnum.graphics/
-Default-Features:
 
 Feature: ui
 Description: Ui library
