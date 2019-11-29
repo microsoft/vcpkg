@@ -74,6 +74,7 @@ function(vcpkg_configure_cmake)
     if(NOT DEFINED VCPKG_DEFAULT_CMAKE_GENERATOR)
         vcpkg_determine_cmake_generator(VCPKG_DEFAULT_CMAKE_GENERATOR ${_csc_PREFER_NINJA})
     endif()
+
     
     if(_csc_GENERATOR) #If the Generator is defined in the function call there is probably a good reason for it
         message(STATUS "VCPKG_DEFAULT_CMAKE_GENERATOR overwritten by port file! CMake generator is: ${_csc_GENERATOR}")
@@ -86,7 +87,9 @@ function(vcpkg_configure_cmake)
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        vcpkg_add_to_path(${NINJA_PATH})
+
+        vcpkg_add_to_path("${NINJA_PATH}")
+
         list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
