@@ -16,7 +16,7 @@ index 24a5a1b..1b0ce4a 100644
  
  add_library(zookeeper STATIC ${zookeeper_sources})
 -target_include_directories(zookeeper PUBLIC include ${CMAKE_CURRENT_BINARY_DIR}/include generated)
-+target_include_directories(zookeeper PUBLIC
++target_include_directories(zookeeper INTERFACE "${CMAKE_INSTALL_PREFIX}/include" PUBLIC
 +  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 +  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/generated>)
 +
