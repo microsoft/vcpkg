@@ -529,3 +529,18 @@ index 3a1e0d1..f7eaebd 100644
 -install(FILES pdfunite.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 +install(TARGETS pdfunite DESTINATION ${UTIL_INSTALL_DIR} CONFIGURATIONS Release)
 +install(FILES pdfunite.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 CONFIGURATIONS Release)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 08cb360..9896373 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -130,7 +130,9 @@ endif()
+ macro_optional_find_package(JPEG)
+ macro_optional_find_package(PNG)
+ macro_optional_find_package(TIFF)
+-macro_optional_find_package(NSS3)
++if(PKG_CONFIG_FOUND)
++  macro_optional_find_package(NSS3)
++endif()
+ if(ENABLE_DCTDECODER STREQUAL "libjpeg")
+   if(JPEG_FOUND)
+     set(ENABLE_LIBJPEG ${JPEG_FOUND})
