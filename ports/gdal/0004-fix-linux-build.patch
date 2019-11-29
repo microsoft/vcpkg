@@ -1,0 +1,451 @@
+diff --git a/configure.ac b/configure.ac
+index b6e035d..c815863 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1188,13 +1188,12 @@ dnl ---------------------------------------------------------------------------
+ dnl Check if liblzma is available.
+ dnl ---------------------------------------------------------------------------
+ 
+-AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
++AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=directory/no)],,)
+ 
+-if test "$with_liblzma" = "yes" ; then
++if test "$with_liblzma" != "no" ; then
+   AC_CHECK_LIB(lzma,lzma_code,LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
+-  AC_CHECK_HEADERS(lzma.h)
+ 
+-  if test "$LIBLZMA_SETTING" = "yes" -a "$ac_cv_header_lzma_h" = "yes" ; then
++  if test "$LIBLZMA_SETTING" = "yes" ; then
+     LIBS="-llzma $LIBS"
+   else
+     LIBLZMA_SETTING=no
+@@ -1646,7 +1645,7 @@ if test "x${with_libtiff}" = "xyes" -o "x${with_libtiff}" = "x" ; then
+   fi
+ 
+   if test "$TIFF_SETTING" = "external" ; then
+-    LIBS="-ltiff $LIBS"
++    LIBS="-ltiff -llzma $LIBS"
+     AC_MSG_RESULT([using pre-installed libtiff.])
+   else
+     AC_MSG_RESULT([using internal TIFF code.])
+@@ -1667,10 +1666,10 @@ else
+ 
+   TIFF_SETTING=external
+   if test -r "$with_libtiff/tiff.h" ; then
+-    LIBS="-L$with_libtiff -ltiff $LIBS"
++    LIBS="-L$with_libtiff -ltiff -llzma $LIBS"
+     EXTRA_INCLUDES="-I$with_libtiff $EXTRA_INCLUDES"
+   else
+-    LIBS="-L$with_libtiff/lib -ltiff $LIBS"
++    LIBS="-L$with_libtiff/lib -ltiff -llzma $LIBS"
+     EXTRA_INCLUDES="-I$with_libtiff/include $EXTRA_INCLUDES"
+   fi
+ 
+@@ -2411,7 +2410,7 @@ elif test "$with_hdf5" = "yes" -o "$with_hdf5" = "" ; then
+     AC_CHECK_LIB(hdf5,H5Fopen,HAVE_HDF5=yes,HAVE_HDF5=no,)
+ 
+     if test "$HAVE_HDF5" = "yes" ; then
+-        LIBS="-lhdf5 $LIBS"
++        LIBS="-lhdf5_hl -lhdf5 -lszip $LIBS"
+     fi
+ 
+     dnl Some Linux distros install hdf include files here.
+@@ -2429,9 +2428,9 @@ else
+   fi
+ 
+   ORIG_LIBS="$LIBS"
+-  LIBS="-L$HDF5_LIB_DIR $LIBS -lhdf5"
++  LIBS="-L$HDF5_LIB_DIR $LIBS -lhdf5_hl -lhdf5 -lszip"
+ 
+-  AC_CHECK_LIB(hdf5,H5Fopen,HDF5_LIB_NAME="-lhdf5 ",HDF5_LIB_NAME=missing,-lhdf5)
++  AC_CHECK_LIB(hdf5,H5Fopen,HDF5_LIB_NAME="-lhdf5_hl -lhdf5 -lszip",HDF5_LIB_NAME=missing,-lhdf5)
+ 
+   if test "$HDF5_LIB_NAME" = "missing" ; then
+     AC_MSG_ERROR([HDF5 support requested with arg $with_hdf5, but no hdf5 lib found])
+@@ -2574,7 +2573,7 @@ dnl previous behaviour without nc-config
+ dnl test linking using default settings
+ elif test "$with_netcdf" = "yes" -o "$with_netcdf" = "" ; then
+ 
+-  AC_CHECK_LIB([netcdf], [nc_open], [NETCDF_SETTING=yes], [NETCDF_SETTING=no],)
++  AC_CHECK_LIB([netcdf], [nc_open], [NETCDF_SETTING=yes], [NETCDF_SETTING=no], -lcurl -lssl -lcrypto)
+ 
+   if test "$NETCDF_SETTING" = "yes" ; then
+ 
+@@ -2600,7 +2599,7 @@ elif test "$with_netcdf" = "yes" -o "$with_netcdf" = "" ; then
+     fi
+     NETCDF_INCLUDEDIR="$NETCDF_ROOT/include/"
+ 
+-    LIBS="-lnetcdf $LIBS"
++    LIBS="-lnetcdf -lcurl -lssl -lcrypto $LIBS"
+     if test "$NETCDF_ROOT" != "" ; then
+       echo "using pre-installed libnetcdf from "$NETCDF_ROOT
+     fi
+@@ -2612,7 +2611,7 @@ elif test "$with_netcdf" = "yes" -o "$with_netcdf" = "" ; then
+ dnl test linking using --with_netcdf dir
+ else
+ 
+-  AC_CHECK_LIB([netcdf], [nc_open], [NETCDF_SETTING=yes], [NETCDF_SETTING=no],-L$with_netcdf -L$with_netcdf/lib)
++  AC_CHECK_LIB([netcdf], [nc_open], [NETCDF_SETTING=yes], [NETCDF_SETTING=no],-L$with_netcdf -L$with_netcdf/lib -lcurl -lssl -lcrypto)
+ 
+   if test "$NETCDF_SETTING" = "yes" ; then
+ 
+@@ -2620,10 +2619,10 @@ else
+     NETCDF_ROOT="$with_netcdf"
+ 
+     if test -d $with_netcdf/lib ; then
+-      LIBS="-L$with_netcdf/lib -lnetcdf $LIBS"
++      LIBS="-L$with_netcdf/lib -lnetcdf -lcurl -lssl -lcrypto $LIBS"
+       EXTRA_INCLUDES="-I$with_netcdf/include $EXTRA_INCLUDES"
+     else
+-      LIBS="-L$with_netcdf -lnetcdf $LIBS"
++      LIBS="-L$with_netcdf -lnetcdf -lcurl -lssl -lcrypto $LIBS"
+       EXTRA_INCLUDES="-I$with_netcdf $EXTRA_INCLUDES"
+     fi
+     NETCDF_INCLUDEDIR="$with_netcdf/include/"
+@@ -2748,17 +2747,15 @@ if test "$with_openjpeg" = "no" ; then
+ 
+ else
+ 
+-  PKG_PROG_PKG_CONFIG([0.21])
+-  PKG_CHECK_MODULES([OPENJPEG], [libopenjp2 >= 2.1.0],
+-        [OPENJPEG_VERSION=`$PKG_CONFIG --modversion libopenjp2`],
+-        [OPENJPEG_VERSION=;])
+-
+-  if test -n "$OPENJPEG_CFLAGS"; then
++  OPENJPEG_LIBS="-lopenjp2 -lm -lpthread"
++  OPENJPEG_CFLAGS="-I$with_openjpeg/include"
++  
++  if true; then
+ 
+     # Test that the package found is for the right architecture
+     saved_LIBS="$LIBS"
+     LIBS="$OPENJPEG_LIBS"
+-    AC_CHECK_LIB(openjp2,opj_setup_decoder, [HAVE_OPENJPEG=yes], [HAVE_OPENJPEG=no])
++    AC_CHECK_LIB(openjp2,opj_setup_decoder, [HAVE_OPENJPEG=yes], [HAVE_OPENJPEG=no], -L$with_openjpeg/lib)
+     LIBS="$saved_LIBS"
+ 
+     if test "$HAVE_OPENJPEG" = "yes"; then
+@@ -3354,12 +3351,14 @@ MYSQL_CONFIG=no
+ 
+ AC_ARG_WITH(mysql,[  --with-mysql[=ARG]      Include MySQL (ARG=path to mysql_config) [[default=no]]],,)
+ 
+-if test "$with_mysql" = "yes" ; then
+-  AC_PATH_PROG(MYSQL_CONFIG, mysql_config, no)
++if test "$with_mysql" != "no"; then
++  if test -r "$with_mysql/include/mysql/mysql.h" ; then
++    AC_CHECK_LIB(mariadb, mysql_init, MYSQL_CONFIG="yes", MYSQL_CONFIG="no",)
++  else
++    MYSQL_CONFIG="no"
++  fi
+ else
+-    if test "x$with_mysql" != "x" ; then
+-      MYSQL_CONFIG=$with_mysql
+-    fi
++  AC_PATH_PROG(MYSQL_CONFIG, mysql_config, no)
+ fi
+ 
+ AC_MSG_CHECKING([for MySQL])
+@@ -3373,28 +3372,9 @@ if test "$MYSQL_CONFIG" = "no" ; then
+   AC_MSG_RESULT([no])
+ 
+ else
+-  if test -d $MYSQL_CONFIG ; then
+-      AC_MSG_RESULT([no])
+-      AC_MSG_ERROR([--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config.])
+-  fi
+-
+-  if test \! -x $MYSQL_CONFIG ; then
+-      AC_MSG_RESULT([no])
+-      AC_MSG_ERROR([--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config.])
+-  fi
+-
+-  MYSQL_VERSION="`$MYSQL_CONFIG --version`"
+-  MYSQL_MAJOR_VERSION=${MYSQL_VERSION%%'.'*}
+-
+-  if test $MYSQL_MAJOR_VERSION -le 3 ; then
+-    HAVE_MYSQL=no
+-    AC_MSG_RESULT([no, mysql is pre-4.x])
+-  else
+-      HAVE_MYSQL=yes
+-      MYSQL_LIB="`$MYSQL_CONFIG --libs`"
+-      MYSQL_INC="`$MYSQL_CONFIG --include`"
+-      AC_MSG_RESULT([yes])
+-  fi
++  HAVE_MYSQL=yes
++  MYSQL_INC="-I$with_mysql/include/mysql"
++  MYSQL_LIB="-lmariadb"
+ fi
+ 
+ AC_SUBST(HAVE_MYSQL,$HAVE_MYSQL)
+@@ -3680,7 +3660,7 @@ AC_ARG_WITH(curl,
+ dnl Clear some cache variables
+ unset ac_cv_path_LIBCURL
+ 
+-if test "`basename xx/$with_curl`" = "curl-config" ; then
++if true ; then
+   LIBCURL_CONFIG="$with_curl"
+ elif test "$with_curl" = "no" ; then
+   LIBCURL_CONFIG=no
+@@ -3688,21 +3668,21 @@ else
+   AC_PATH_PROG(LIBCURL_CONFIG, curl-config, no)
+ fi
+ 
+-if test "$LIBCURL_CONFIG" != "no" ; then
++if true ; then
+ 
+   CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
+   CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
+ 
+   AC_MSG_RESULT([        found libcurl version $CURL_VER])
+ 
+-  AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,`$LIBCURL_CONFIG --libs`)
++  AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,-L$with_curl/lib -lssl -lcrypto)
+ 
+ fi
+ 
+ if test "$CURL_SETTING" = "yes" ; then
+ 
+-  CURL_INC=`$LIBCURL_CONFIG --cflags`
+-  CURL_LIB=`$LIBCURL_CONFIG --libs`
++  CURL_INC="-I$with_curl/include"
++  CURL_LIB="-lcurl -lssl -lcrypto"
+   OPT_GDAL_FORMATS="wcs wms plmosaic wmts rda eeda $OPT_GDAL_FORMATS"
+ 
+ fi
+@@ -3722,7 +3702,7 @@ LIBXML2_LIB=
+ AC_ARG_WITH(xml2,
+     [  --with-xml2[=ARG]       Include libxml2 (ARG=path to xml2-config.)],,,)
+ 
+-if test "`basename xx/$with_xml2`" = "xml2-config" ; then
++if true ; then
+   LIBXML2_CONFIG="$with_xml2"
+ elif test "$with_xml2" = "no" ; then
+   LIBXML2_CONFIG=no
+@@ -3730,16 +3710,16 @@ else
+   AC_PATH_PROG(LIBXML2_CONFIG, xml2-config, no)
+ fi
+ 
+-if test "$LIBXML2_CONFIG" != "no" ; then
++if true ; then
+ 
+-  AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no,`$LIBXML2_CONFIG --libs`)
++  AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no,-L$with_xml2/lib)
+ 
+ fi
+ 
+ if test "$HAVE_LIBXML2" = "yes" ; then
+ 
+-  LIBXML2_INC=`$LIBXML2_CONFIG --cflags`
+-  LIBXML2_LIB=`$LIBXML2_CONFIG --libs`
++  LIBXML2_INC="-I$with_xml2/include"
++  LIBXML2_LIB="-lxml2 -lz -llzma"
+ 
+ fi
+ 
+@@ -3775,7 +3755,7 @@ elif test "$with_spatialite" = "yes"; then
+             AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,)
+             if test "$SPATIALITE_INIT_FOUND" = "yes"; then
+                 HAVE_SPATIALITE=yes
+-                SPATIALITE_LIBS="-lspatialite -lsqlite3"
++                SPATIALITE_LIBS="-lspatialite -lsqlite3 -lgeos -lgeos_c"
+                 LIBS="$LIBS $SPATIALITE_LIBS"
+                 HAVE_SQLITE3=yes
+             fi
+@@ -3793,9 +3773,9 @@ elif test "$with_spatialite" = "dlopen"; then
+       SPATIALITE_SONAME="spatialite.so"
+   fi
+ else
+-    AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-L$with_spatialite/lib -lspatialite)
++    AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-L$with_spatialite/lib -lspatialite -lgeos -lgeos_c -lstdc++)
+     if test -f "$with_spatialite/include/spatialite.h" -a \
+-        -f "$with_spatialite/include/spatialite/sqlite3.h" -a \
++        -f "$with_spatialite/include/spatialite/sqlite.h" -a \
+         "$SPATIALITE_INIT_FOUND" = "yes"; then
+ 
+         AC_MSG_RESULT(enabled)
+@@ -3807,7 +3787,7 @@ else
+         # as there's a spatialite.h file in it, which we don't want to include.
+         # We want to include include/spatialite.h instead !
+         SQLITE3_CFLAGS="-I$with_spatialite/include"
+-        SPATIALITE_LIBS="-L$with_spatialite/lib -lspatialite"
++        SPATIALITE_LIBS="-L$with_spatialite/lib -lspatialite -lgeos -lgeos_c -lstdc++"
+         LIBS="$LIBS $SPATIALITE_LIBS"
+         HAVE_SQLITE3=yes
+ 
+@@ -3820,7 +3800,7 @@ else
+         if test "$HAVE_SQLITE3" = "yes"; then
+             SPATIALITE_INC="-I$with_spatialite/include"
+             HAVE_SPATIALITE=yes
+-            SPATIALITE_LIBS="-L$with_spatialite/lib -lspatialite"
++            SPATIALITE_LIBS="-L$with_spatialite/lib -lspatialite -lgeos -lgeos_c -lstdc++"
+             LIBS="$SQLITE3_LDFLAGS $LIBS $SPATIALITE_LIBS"
+             AC_MSG_RESULT(spatialite enabled)
+         else
+@@ -3850,15 +3830,19 @@ dnl ---------------------------------------------------------------------------
+ 
+ if test "${HAVE_SPATIALITE}" = "no" -o "${HAVE_SPATIALITE}" = "dlopen" ; then
+     SQLITE3_REQ_VERSION="3.0.0"
+-    AX_LIB_SQLITE3($SQLITE3_REQ_VERSION)
+-
++    SQLITE3_LDFLAGS="-L$with_sqlite3/lib -lsqlite3 -lpthread -ldl"
++    SQLITE3_CFLAGS="-I$with_sqlite3/include"
++    AC_SUBST(SQLITE3_CFLAGS)
++    AC_SUBST(SQLITE3_LDFLAGS)
++    
++    HAVE_SQLITE3="yes"
+     if test "$HAVE_SQLITE3" = "yes"; then
+         LIBS="$SQLITE3_LDFLAGS $LIBS"
+     fi
+ fi
+ 
+ if test "$HAVE_SQLITE3" = "yes"; then
+-    AC_CHECK_LIB(sqlite3,sqlite3_column_table_name,SQLITE_HAS_COLUMN_METADATA=yes,SQLITE_HAS_COLUMN_METADATA=no,$LIBS)
++    AC_CHECK_LIB(sqlite3,sqlite3_column_table_name,SQLITE_HAS_COLUMN_METADATA=yes,SQLITE_HAS_COLUMN_METADATA=no,$LIBS -lpthread -ldl)
+ fi
+ 
+ AC_SUBST([SQLITE_INC], $SQLITE3_CFLAGS)
+@@ -4184,7 +4168,17 @@ dnl ---------------------------------------------------------------------------
+ dnl Check if geos library is available.
+ dnl ---------------------------------------------------------------------------
+ 
+-GEOS_INIT(3.1.0)
++AC_ARG_WITH(geos,[  --with-geos[=ARG]     Include Geos support (ARG=no, directory)],,)
++
++
++if test "$with_geos" != "no" ; then
++
++  AC_CHECK_LIB(geos_c,initGEOS_r, HAVE_GEOS=yes, HAVE_GEOS=no, -lgeos -lstdc++)
++  GEOS_LIBS="-lgeos -lgeos_c -lstdc++"
++else
++  HAVE_GEOS="no"
++fi
++
+ HAVE_GEOS_RESULT="no"
+ if test "${HAVE_GEOS}" = "yes" ; then
+ 
+@@ -4772,12 +4766,12 @@ else
+   AC_MSG_RESULT([link statically.])
+ 
+   ORIG_LIBS="$LIBS"
+-  PROJ_LIB="-lproj"
++  PROJ_LIB="-lproj -lstdc++"
+ 
+   if test "x$with_proj" = "xyes" ; then
+     LIBS="$PROJ_LIB $ORIG_LIBS"
+     if test "$with_proj5_api" = "yes" -o "$with_proj5_api" = ""; then
+-        AC_CHECK_LIB(proj,proj_create,PROJ_STATIC=yes,PROJ_STATIC=no,)
++        AC_CHECK_LIB(proj,proj_create,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+     fi
+     if test "$PROJ_STATIC" = "yes"; then
+         AC_CHECK_HEADERS([proj.h])
+@@ -4788,7 +4782,7 @@ else
+             PROJ_STATIC=no
+         fi
+     else
+-        AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,)
++        AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+         AC_MSG_NOTICE([proj 4.x detected])
+         PROJ_VERSION=4
+     fi
+@@ -4796,7 +4790,7 @@ else
+ 
+     LIBS="-L$with_proj/lib $PROJ_LIB $ORIG_LIBS"
+     if test "$with_proj5_api" = "yes" -o "$with_proj5_api" = ""; then
+-        AC_CHECK_LIB(proj,proj_create,PROJ_STATIC=yes,PROJ_STATIC=no,)
++        AC_CHECK_LIB(proj,proj_create,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+     fi
+     if test "$PROJ_STATIC" = "yes"; then
+         if test -r "$with_proj/include/proj.h" ; then
+@@ -4807,7 +4801,7 @@ else
+           AC_MSG_ERROR([proj.h not found])
+         fi
+     else
+-        AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,)
++        AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+ 
+         if test "$PROJ_STATIC" = "no"; then
+             dnl Disable previous value cached by the previous AC_CHECK_LIB test :
+@@ -4820,25 +4814,25 @@ else
+             unset ac_cv_lib_proj_pj_init
+ 
+             LIBS="-L$with_proj/src $PROJ_LIB $ORIG_LIBS"
+-            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,)
++            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+         fi
+ 
+         if test "$PROJ_STATIC" = "no"; then
+             unset ac_cv_lib_proj_pj_init
+             LIBS="-L$with_proj/src/.libs $PROJ_LIB $ORIG_LIBS"
+-            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,)
++            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+         fi
+ 
+         if test "$PROJ_STATIC" = "no"; then
+             unset ac_cv_lib_proj_pj_init
+             LIBS="-L$with_proj $PROJ_LIB $ORIG_LIBS"
+-            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,)
++            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+         fi
+ 
+         if test "$PROJ_STATIC" = "no"; then
+             unset ac_cv_lib_proj_pj_init
+             LIBS="$PROJ_LIB $ORIG_LIBS"
+-            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,)
++            AC_CHECK_LIB(proj,pj_init,PROJ_STATIC=yes,PROJ_STATIC=no,-lstdc++)
+         fi
+ 
+         if test "$PROJ_STATIC" = "yes"; then
+@@ -5578,12 +5572,11 @@ if test "$with_crypto" = "no" ; then
+ 
+   AC_MSG_RESULT([disabled])
+ 
+-elif test "$with_crypto" = "yes" -o \( "$with_crypto" = "" -a "$HAVE_CRYPTOPP" = "no" \) ; then
++else
+ 
+     AC_CHECK_LIB(crypto,EVP_sha256,HAVE_OPENSSL_CRYPTO=yes)
+     if test "$HAVE_OPENSSL_CRYPTO" = "yes"; then
+-        AC_CHECK_HEADERS([openssl/bio.h])
+-        if test "$ac_cv_header_openssl_bio_h" = "no"; then
++        if test -r "$with_proj/include/proj.h" = "no"; then
+             HAVE_OPENSSL_CRYPTO=no
+         else
+             LIBS="-lcrypto $LIBS"
+diff --git a/ogr/ogrsf_frmts/sqlite/ogr_sqlite.h b/ogr/ogrsf_frmts/sqlite/ogr_sqlite.h
+index 9b9a358..814896c 100644
+--- a/ogr/ogrsf_frmts/sqlite/ogr_sqlite.h
++++ b/ogr/ogrsf_frmts/sqlite/ogr_sqlite.h
+@@ -55,7 +55,7 @@
+     / IMPORTANT NOTICE: using AMALAGATION is only
+     / useful on Windows (to skip DLL hell related oddities)
+     */
+-    #include <spatialite/sqlite3.h>
++    #include <spatialite/sqlite.h>
+   #else
+     /*
+     / You MUST NOT use AMALGAMATION on Linux or any
+diff --git a/ogr/ogrsf_frmts/sqlite/ogrsqliteapiroutines.c b/ogr/ogrsf_frmts/sqlite/ogrsqliteapiroutines.c
+index 3b11edd..ec0db92 100644
+--- a/ogr/ogrsf_frmts/sqlite/ogrsqliteapiroutines.c
++++ b/ogr/ogrsf_frmts/sqlite/ogrsqliteapiroutines.c
+@@ -44,7 +44,7 @@
+     / IMPORTANT NOTICE: using AMALAGATION is only
+     / useful on Windows (to skip DLL hell related oddities)
+     */
+-    #include <spatialite/sqlite3.h>
++    #include <spatialite/sqlite.h>
+   #else
+     /*
+     / You MUST NOT use AMALGAMATION on Linux or any
+diff --git a/ogr/ogrsf_frmts/sqlite/test_load_virtual_ogr.c b/ogr/ogrsf_frmts/sqlite/test_load_virtual_ogr.c
+index 24219a0..42fae8e 100644
+--- a/ogr/ogrsf_frmts/sqlite/test_load_virtual_ogr.c
++++ b/ogr/ogrsf_frmts/sqlite/test_load_virtual_ogr.c
+@@ -38,7 +38,7 @@
+     / IMPORTANT NOTICE: using AMALAGATION is only
+     / useful on Windows (to skip DLL hell related oddities)
+     */
+-    #include <spatialite/sqlite3.h>
++    #include <spatialite/sqlite.h>
+   #else
+     /*
+     / You MUST NOT use AMALGAMATION on Linux or any

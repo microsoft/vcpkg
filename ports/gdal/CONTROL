@@ -20,10 +20,6 @@ Feature: jasper
 Build-Depends: jasper
 Description: Add jasper support
 
-Feature: libmysql
-Build-Depends: libmysql
-Description: Add libmysql support
-
 Feature: xerces-c
 Build-Depends: xerces-c
 Description: Add xerces-c support

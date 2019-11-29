@@ -15,7 +15,10 @@ list(APPEND GDAL_PATCHES 0001-Fix-debug-crt-flags.patch)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES  0002-Fix-static-build.patch)
 endif()
-list(APPEND GDAL_PATCHES 0003-Fix-std-fabs.patch 0004-fix-linux-configure.patch)
+list(APPEND GDAL_PATCHES
+            0003-Fix-std-fabs.patch
+            0004-fix-linux-build.patch
+)
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
@@ -261,7 +264,7 @@ else()
         hdf5
         libz
         crypto
-        tiff
+        libtiff
         
         INVERTED_PORTS
         hdf4
@@ -271,12 +274,12 @@ else()
         libspatialite spatialite
         giflib gif
         jasper jasper
-        libmysql mysql
         xerces-c xerces
     )
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
         OPTIONS ${EXTRA_OPTIONS}
             --with-proj5-api=yes
             --enable-shared=${BUILD_DYNAMIC}
@@ -290,16 +293,20 @@ else()
     
     vcpkg_install_make()
     
-    #file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/gdalplugins)
-    #file(COPY ${OUT_PATH_RELEASE}/lib/pkgconfig DESTINATION ${OUT_PATH_RELEASE}/share/gdal)
-    #file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
-    #file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
-    #file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    #file(COPY ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
-    #
-    #file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/gdalplugins)
-    #file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
-    #file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
+                        ${CURRENT_PACKAGES_DIR}/debug/etc
+                        ${CURRENT_PACKAGES_DIR}/debug/include
+                        ${CURRENT_PACKAGES_DIR}/debug/share
+                        ${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins
+                        ${CURRENT_PACKAGES_DIR}/lib/gdalplugins
+    )
+    
+    file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*)
+    foreach (GDAL_TOOL ${GDAL_TOOLS})
+        file(INSTALL ${GDAL_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gdal)
+        file(REMOVE ${GDAL_TOOL})
+    endforeach()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 # Handle copyright
