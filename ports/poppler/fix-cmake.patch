@@ -555,7 +555,7 @@ index 9896373..e9f4d66 100644
 +
 +
 +if(APPLE)
-+  set_target_properties(poppler PROPERTIES STATIC_LIBRARY_OPTIONS "-no_warning_for_no_symbols")
++  set_target_properties(poppler PROPERTIES STATIC_LIBRARY_FLAGS "-no_warning_for_no_symbols")
 +endif()
 +
  target_link_libraries(poppler PUBLIC ${poppler_PUBLIC_LIBS})
