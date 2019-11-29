@@ -20,9 +20,9 @@ file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLCMS2.cmake)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/poppler-config.cmake.in DESTINATION ${SOURCE_PATH})
 
-set(ENABLE_SPLASH OFF)
-if("splash" IN_LIST FEATURES)
-    set(ENABLE_SPLASH ON)
+set(ENABLE_LIBCURL OFF)
+if("curl" IN_LIST FEATURES)
+    set(ENABLE_LIBCURL ON)
 endif()
 
 set(ENABLE_UTILS OFF)
@@ -70,7 +70,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-        -DENABLE_SPLASH=${ENABLE_SPLASH}
+        -DENABLE_LIBCURL=${ENABLE_LIBCURL}
         -DENABLE_UTILS=${ENABLE_UTILS}
         -DENABLE_CPP=${ENABLE_CPP}
         -DBUILD_CPP_TESTS=${BUILD_CPP_TESTS}

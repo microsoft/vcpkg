@@ -1,15 +1,16 @@
 Source: poppler
 Version: 0.82.0
-Build-Depends: freetype, openjpeg, lcms, libjpeg-turbo, curl, libpng, tiff, fontconfig (!windows)
+Homepage: https://poppler.freedesktop.org/
+Build-Depends: freetype, openjpeg, lcms, libjpeg-turbo, libpng, tiff, fontconfig (!windows), boost
 Description: a library for rendering PDF files, and examining or modifying their structure.
 
 Feature: poppler-data
 Build-Depends: poppler-data
 Description: Encoding data for the poppler PDF rendering library
 
-Feature: splash
-Build-Depends: boost
-Description: Build the Splash graphics backend, necessary if cairo is not installed
+Feature: curl
+Build-Depends: curl
+Description: Build libcurl based HTTP support.
 
 Feature: utils
 Description: Compile poppler command line utils
