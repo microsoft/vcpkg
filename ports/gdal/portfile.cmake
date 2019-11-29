@@ -306,7 +306,7 @@ else()
         file(INSTALL ${GDAL_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gdal)
         file(REMOVE ${GDAL_TOOL})
     endforeach()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 # Handle copyright
