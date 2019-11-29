@@ -21,8 +21,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
-        ${FEATURE_OPTIONS}
-    OPTIONS_RELEASE	
+    OPTIONS
         ${FEATURE_OPTIONS}
 )
 
