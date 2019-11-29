@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
@@ -43,9 +41,7 @@ vcpkg_build_msbuild(
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/activemq-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/copyright)
-
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(
     COPY
@@ -81,3 +77,7 @@ file(
 file(COPY ${SOURCE_PATH}/src/main/activemq DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
 file(COPY ${SOURCE_PATH}/src/main/cms      DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
 file(COPY ${SOURCE_PATH}/src/main/decaf    DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
