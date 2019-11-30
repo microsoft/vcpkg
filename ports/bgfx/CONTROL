@@ -1,0 +1,5 @@
+Source: bgfx
+Version: 2019-08-19
+Description: Cross-platform, graphics API agnostic, "Bring Your Own Engine/Framework" style rendering library.
+Homepage: https://github.com/bkaradzic/bgfx
+Build-Depends: bx, bimg
