@@ -545,19 +545,20 @@ index 08cb360..9896373 100644
    if(JPEG_FOUND)
      set(ENABLE_LIBJPEG ${JPEG_FOUND})
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9896373..e9f4d66 100644
+index 9896373..76cce1a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -508,6 +508,12 @@ if(MINGW AND BUILD_SHARED_LIBS)
-     get_target_property(POPPLER_SOVERSION poppler SOVERSION)
-     set_target_properties(poppler PROPERTIES SUFFIX "-${POPPLER_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
- endif()
-+
+@@ -495,6 +495,13 @@ endif()
+ 
+ set(poppler_LIBS ${poppler_PUBLIC_LIBS})
+ 
 +
 +if(APPLE)
-+  set_target_properties(poppler PROPERTIES STATIC_LIBRARY_FLAGS "-no_warning_for_no_symbols")
++  SET(CMAKE_C_ARCHIVE_FINISH   "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
++  SET(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
 +endif()
 +
- target_link_libraries(poppler PUBLIC ${poppler_PUBLIC_LIBS})
- if(CMAKE_USE_PTHREADS_INIT)
-    target_link_libraries(poppler PRIVATE Threads::Threads)
++
+ if(MSVC)
+ add_compile_definitions(strncasecmp=_strnicmp)
+ add_compile_definitions(strcasecmp=_stricmp)
