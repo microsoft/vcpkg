@@ -73,33 +73,39 @@ else()
     set(ENV{PCRE_CFLAGS} "-I${PCRE_INCLUDE_DIR}")
     set(ENV{MSGFMT} "/bin/echo")
     set(ENV{GMSGFMT} "/bin/echo")
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/config/config.h")
-        string(TOUPPER UPPER_CONFIG "${CMAKE_BUILD_TYPE}")
-        set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
-        set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
-        if(BUILD_SHARED_LIBS)
-            set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
-        else()
-            set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
-        endif()
-
-        string(STRIP "${CXXFLAGS}" CXXFLAGS)
-        string(STRIP "${CFLAGS}"   CFLAGS)
-        string(STRIP "${LDFLAGS}"  LDFLAGS)
-        execute_process(
-            COMMAND "${CMAKE_SOURCE_DIR}/configure"
-                --disable-libelf
-                --disable-libmount
-                "CPPFLAGS=${CXXFLAGS}"
-                "CFLAGS=${CFLAGS}"
-                "LDFLAGS=${LDFLAGS}"
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
-            RESULT_VARIABLE res
-        )
-        if(NOT res EQUAL 0)
-            message(FATAL_ERROR "Configure failed.")
-        endif()
+    string(TOUPPER UPPER_CONFIG "${CMAKE_BUILD_TYPE}")
+    set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+    set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_${UPPER_CONFIG}} -I${PCRE_INCLUDE_DIR}")
+    if(BUILD_SHARED_LIBS)
+        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
+    else()
+        set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
     endif()
+
+    string(STRIP "${CXXFLAGS}" CXXFLAGS)
+    string(STRIP "${CFLAGS}"   CFLAGS)
+    string(STRIP "${LDFLAGS}"  LDFLAGS)
+    execute_process(
+        COMMAND "${CMAKE_SOURCE_DIR}/configure"
+            --disable-libelf
+            --disable-libmount
+            "CPPFLAGS=${CXXFLAGS}"
+            "CFLAGS=${CFLAGS}"
+            "LDFLAGS=${LDFLAGS}"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
+        RESULT_VARIABLE res
+    )
+    if(NOT res EQUAL 0)
+        message(FATAL_ERROR "Configure failed.")
+    endif()
+
+    if (NOT HAVE_SELINUX)
+        file(READ "${CMAKE_BINARY_DIR}/config/config.h" CONFIG_H)
+        string(REPLACE "#define HAVE_SELINUX 1"
+                    "#undef HAVE_SELINUX" CONFIG_H "${CONFIG_H}")
+        file(WRITE "${CMAKE_BINARY_DIR}/config/config.h" "${CONFIG_H}")
+    endif()
+    
     add_definitions("-DGIO_MODULE_DIR=\"gio/modules\"")
 endif()
 install(FILES ${CMAKE_BINARY_DIR}/config/config.h DESTINATION include/glib)
