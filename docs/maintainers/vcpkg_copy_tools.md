@@ -1,28 +1,24 @@
 # vcpkg_copy_tools
 
-Copy tools and all their DLL dependencies into the tool folder, and do necessary cleanup.
+Copy tools and all their DLL dependencies into the `tools` folder.
 
 ## Usage
 ```cmake
 vcpkg_copy_tools(
+    TOOL_NAMES <tool1>...
     [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
-    [TOOL_NAMES <tool1>...]
-    [VERBOSE]
+    [AUTO_CLEAN]
 )
 ```
-
-```cmake
-vcpkg_copy_tools([tool1]...)
-```
 ## Parameters
-### SEARCH_DIR
-The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if ommited.
-
 ### TOOL_NAMES
 A list of tool filenames without extension.
 
-### VERBOSE
-Display more messages for debugging purpose.
+### SEARCH_DIR
+The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if ommited.
+
+### AUTO_CLEAN
+Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
 
 ## Examples
 

@@ -1,28 +1,24 @@
 ## # vcpkg_copy_tools
 ##
-## Copy tools and all their DLL dependencies into the tool folder, and do necessary cleanup.
+## Copy tools and all their DLL dependencies into the `tools` folder.
 ##
 ## ## Usage
 ## ```cmake
 ## vcpkg_copy_tools(
+##     TOOL_NAMES <tool1>...
 ##     [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
-##     [TOOL_NAMES <tool1>...]
-##     [VERBOSE]
+##     [AUTO_CLEAN]
 ## )
 ## ```
-##
-## ```cmake
-## vcpkg_copy_tools([tool1]...)
-## ```
 ## ## Parameters
-## ### SEARCH_DIR
-## The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if ommited.
-##
 ## ### TOOL_NAMES
 ## A list of tool filenames without extension.
 ##
-## ### VERBOSE
-## Display more messages for debugging purpose.
+## ### SEARCH_DIR
+## The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if ommited.
+##
+## ### AUTO_CLEAN
+## Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
 ##
 ## ## Examples
 ##
@@ -30,10 +26,10 @@
 ## * [nanomsg](https://github.com/microsoft/vcpkg/blob/master/ports/nanomsg/portfile.cmake)
 ## * [uriparser](https://github.com/microsoft/vcpkg/blob/master/ports/uriparser/portfile.cmake)
 function(vcpkg_copy_tools)
-    cmake_parse_arguments(_vct "VERBOSE" "SEARCH_DIR" "TOOL_NAMES" ${ARGN})
+    cmake_parse_arguments(_vct "AUTO_CLEAN" "SEARCH_DIR" "TOOL_NAMES" ${ARGN})
 
-    if((DEFINED _vct_SEARCH_DIR OR _vct_VERBOSE) AND NOT DEFINED _vct_TOOL_NAMES)
-        message(FATAL_ERROR "TOOL_NAMES should be specified if SEARCH_DIR or VERBOSE is specified.")
+    if(NOT DEFINED _vct_TOOL_NAMES)
+        message(FATAL_ERROR "TOOL_NAMES must be specified.")
     endif()
 
     if(NOT DEFINED _vct_SEARCH_DIR)
@@ -42,56 +38,18 @@ function(vcpkg_copy_tools)
         message(FATAL_ERROR "SEARCH_DIR ${_vct_SEARCH_DIR} is supposed to be a directory.")
     endif()
 
-    if(NOT DEFINED _vct_TOOL_NAMES)
-        set(_vct_TOOL_NAMES ${ARGN})
-    endif()
-
     foreach(tool_name ${_vct_TOOL_NAMES})
         set(tool_path "${_vct_SEARCH_DIR}/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
         if(EXISTS ${tool_path})
             file(COPY ${tool_path} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
         else()
-            if(_vct_VERBOSE)
-                message(STATUS "Couldn't find this tool: ${tool_path}.")
-            endif()
+            message(FATAL_ERROR "Couldn't find this tool: ${tool_path}.")
         endif()
-
-        file(REMOVE
-            ${CURRENT_PACKAGES_DIR}/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/${tool_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        )
     endforeach()
 
-    # Do remaining cleaning work
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        if(VCPKG_TARGET_IS_WINDOWS)
-            file(GLOB exes_ignored
-                ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            )
-
-            foreach(ignored_exe ${exes_ignored})
-                if(_vct_VERBOSE)
-                    message(STATUS "${ignored_exe} is not installed, will be deleted.")
-                endif()
-
-                file(REMOVE ${ignored_exe})
-            endforeach()
-        endif()
-    else()
-        if(_vct_VERBOSE)
-            file(GLOB tools_ignored ${CURRENT_PACKAGES_DIR}/bin/*.*)
-
-            foreach(ignored_tool ${tools_ignored})
-                message(STATUS "${ignored_tool} is not installed, will be deleted.")
-            endforeach()
-        endif()
-
-        file(REMOVE_RECURSE
-            ${CURRENT_PACKAGES_DIR}/bin
-            ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
+    if(_vct_AUTO_CLEAN)
+        vcpkg_clean_executables_in_bin(FILE_NAMES ${_vct_TOOL_NAMES})
     endif()
 
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})

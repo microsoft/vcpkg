@@ -11,6 +11,7 @@
 - [vcpkg\_build\_nmake](vcpkg_build_nmake.md)
 - [vcpkg\_check\_features](vcpkg_check_features.md)
 - [vcpkg\_check\_linkage](vcpkg_check_linkage.md)
+- [vcpkg\_clean\_executables\_in\_bin](vcpkg_clean_executables_in_bin.md)
 - [vcpkg\_clean\_msbuild](vcpkg_clean_msbuild.md)
 - [vcpkg\_common\_definitions](vcpkg_common_definitions.md)
 - [vcpkg\_configure\_cmake](vcpkg_configure_cmake.md)

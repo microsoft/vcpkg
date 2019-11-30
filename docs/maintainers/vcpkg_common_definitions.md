@@ -5,6 +5,7 @@ File contains helpful variabls for portfiles which are commonly needed or used.
 ## The following variables are available:
 ```cmake
 VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
+VCPKG_HOST_PATH_SEPARATOR                Host specific path separator (USAGE: "<something>${VCPKG_HOST_PATH_SEPARATOR}<something>"; only use and pass variables with VCPKG_HOST_PATH_SEPARATOR within "")
 VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
 VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
 VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
