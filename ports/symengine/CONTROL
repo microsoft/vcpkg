@@ -1,5 +1,5 @@
 Source: symengine
-Version: 2019-02-12
+Version: 2019-11-30
 Description: SymEngine is a fast symbolic manipulation library
 Homepage: https://github.com/symengine/symengine
 Build-Depends: boost-math, boost-random

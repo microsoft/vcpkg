@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF 6a6d68f0c0ffb1e73949975eae06b3220e2784bf
-    SHA512 46c83bc2c2ea42bd11fe8544dfdaf7c1014a1a450a0b37abd7b448b6c10d784a7de73d22e714dbcbde750769e4d80def8828cbee8a969117161fb40d0e406571
+    REF 0139a82d23625f6dde437b25a2e4f43f5a6945fd
+    SHA512 5eee76ed21527532ab2bd50740c3a034479da3c8a23905f8c8f93bda0ab126211b54644d8e7d814cd60d99a523504843102ad5db0c14d97fda00d5aaeb2c4cae
     HEAD_REF master
 )
 
@@ -49,5 +49,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
