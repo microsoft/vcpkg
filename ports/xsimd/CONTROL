@@ -1,5 +1,5 @@
 Source: xsimd
-Version: 7.2.5
+Version: 7.4.2
 Description: Modern, portable C++ wrappers for SIMD intrinsics
 Homepage: https://github.com/QuantStack/xsimd
 

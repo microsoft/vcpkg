@@ -4,7 +4,7 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xtensor-blas
+    REPO xtensor-stack/xtensor-blas
     REF 0.16.1
     SHA512 3bdbd48b74d7be0b9f4ad2d435789e266b3cc1e043bbe73739978678bd1ca81504a688cdd80c03667305d210d299127be9939333c9bd0ac27dff0423ccb4861d
     HEAD_REF master

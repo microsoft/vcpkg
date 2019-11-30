@@ -4,9 +4,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xtensor
-    REF b2d81961ac1b335bf2c362e6b7f792ebacb8abf8
-    SHA512 cfa64ae8163ce5cf7be762d5e67f4b2b15721f7d83cebab78ebf4ff1d85825aa3065769644d0314dd583bfb8dce76659c1a5cb95ecd87d00bb2fb8309623d0ae
+    REPO xtensor-stack/xtensor
+    REF 0.20.10
+    SHA512 2345c23c2b6734f27423d376f1c6062e1f10f9ac9aaba97e8fe9eba4e78ff82068d874b2a0163d3d3d934d5b6a0a1ed8a618ad0052d6234aafc29d74d42efbaa
     HEAD_REF master
 )
 
