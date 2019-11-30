@@ -16,10 +16,12 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake.in DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(EXECUTABLE_SUFFIX ".exe")
+    set(PYTHON_OPTION "")
 else()
     set(EXECUTABLE_SUFFIX "")
+    set(PYTHON_OPTION "--user")
 endif()
 
 vcpkg_find_acquire_program(PYTHON2)
@@ -34,9 +36,9 @@ if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
             SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
             HEAD_REF master
         )
-        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py --user)
+        execute_process(COMMAND ${PYTHON2_DIR}/python${EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py ${PYTHON_OPTION})
     endif()
-    execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml --user)
+    execute_process(COMMAND ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install pyyaml ${PYTHON_OPTION})
 else()
     execute_process(COMMAND ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX} pyyaml)
 endif()
@@ -61,7 +63,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
