@@ -4,6 +4,14 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fail_port_install(MESSAGE "${PORT} only supports Windows platform" ALWAYS)
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    set(ARCH_DIR "")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(ARCH_DIR "x64/")
+else()
+    vcpkg_fail_port_install(MESSAGE "${PORT} only supports x86 and x64 architectures" ALWAYS)
+endif()
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.code.sf.net/p/crashrpt/code
@@ -33,21 +41,21 @@ set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(INSTALL ${DEBUG_DIR}/lib/CrashRpt1403d.exp DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(INSTALL ${DEBUG_DIR}/lib/CrashRpt1403d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(INSTALL ${DEBUG_DIR}/bin/CrashRpt1403d.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${DEBUG_DIR}/lib/${ARCH_DIR}CrashRpt1403d.exp DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(INSTALL ${DEBUG_DIR}/lib/${ARCH_DIR}CrashRpt1403d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(INSTALL ${DEBUG_DIR}/bin/${ARCH_DIR}CrashRpt1403d.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     
-    file(INSTALL ${RELEASE_DIR}/lib/CrashRpt1403.exp DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${RELEASE_DIR}/lib/CrashRpt1403.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${RELEASE_DIR}/bin/CrashRpt1403.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${RELEASE_DIR}/lib/${ARCH_DIR}CrashRpt1403.exp DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${RELEASE_DIR}/lib/${ARCH_DIR}CrashRpt1403.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${RELEASE_DIR}/bin/${ARCH_DIR}CrashRpt1403.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 else()
-    file(INSTALL ${DEBUG_DIR}/lib/CrashRptLIBd.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(INSTALL ${DEBUG_DIR}/lib/${ARCH_DIR}CrashRptLIBd.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
     
-    file(INSTALL ${RELEASE_DIR}/lib/CrashRptLIB.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${RELEASE_DIR}/lib/${ARCH_DIR}CrashRptLIB.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 endif()
 
-file(INSTALL ${DEBUG_DIR}/bin/CrashSender1403d.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
-file(INSTALL ${RELEASE_DIR}/bin/CrashSender1403.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(INSTALL ${DEBUG_DIR}/bin/${ARCH_DIR}CrashSender1403d.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+file(INSTALL ${RELEASE_DIR}/bin/${ARCH_DIR}CrashSender1403.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(GLOB LANG_FILES "${SOURCE_PATH}/lang_files/crashrpt_lang_*.ini")
 file(INSTALL ${LANG_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(INSTALL ${SOURCE_PATH}/thirdparty/dbghelp/bin/dbghelp.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
