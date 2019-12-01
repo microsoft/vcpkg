@@ -22,8 +22,16 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restclient-cpp)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+else()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+
 # Remove includes in debug
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restclient-cpp)
