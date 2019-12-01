@@ -50,3 +50,7 @@ Description: allow GPL licensed libraries
 
 Feature: avresample
 Description: Libav audio resampling library support in ffmpeg
+
+Feature: nvcodec
+Build-Depends: ffnvcodec, cuda
+Description: Hardware accelerated codecs

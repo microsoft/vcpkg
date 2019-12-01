@@ -129,6 +129,12 @@ if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
 endif()
 
+if("nvcodec" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-cuvid --disable-libnpp")
+else()
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-cuvid --disable-libnpp")
+endif()
+
 set(OPTIONS_CROSS "")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -175,12 +181,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_PACKAGES_DIR}/../ffnvcodec_${TARGET_TRIPLET}/lib/pkgconfig")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
 # Relase build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-    message(STATUS "Building Relase Options: ${OPTIONS_RELEASE}")
+    message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
     set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
