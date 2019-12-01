@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
@@ -185,7 +183,7 @@ set(ENV{PKG_CONFIG_PATH} "${CURRENT_PACKAGES_DIR}/../ffnvcodec_${TARGET_TRIPLET}
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-# Relase build
+# Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
