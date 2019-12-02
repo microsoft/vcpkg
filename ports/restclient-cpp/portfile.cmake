@@ -3,12 +3,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mrtazz/restclient-cpp
-    REF 0.5.1
-    SHA512 d5e17a984af44f863bc7cdc7307c2b06cae9252f86c6c6c2377cdb317f61b6419d8e9aedc5e5ccdb08fd1ee13848ec3b9ef8067a8d26dcf438a5c8793b5a2ce3
+    REF 6336cae5275c9aeddf99f13c49e8f9320f7ca4bc
+    SHA512 fbc638f82db8d0d101f4239152be67eb460659f3a7204db9523d3b5740b007b8fe434f78bf5d9f8059901aa639ba96c15b28b1e2fe5f09471accf64c2d577684 
     HEAD_REF master
-    PATCHES
-        0001_fix_cmake_linking.patch
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(COMPILE_TYPE SHARED)
+else()
+    set(COMPILE_TYPE STATIC)
+endif()
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -16,19 +21,12 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_GTest=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_jsoncpp=TRUE
+        -DCOMPILE_TYPE=${COMPILE_TYPE}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restclient-cpp)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-endif()
 
 # Remove includes in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
