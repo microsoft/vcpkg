@@ -22,10 +22,10 @@ endif()
 
 # Configure features
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    d3d9 WITH_D3D9
-    java WITH_JAVA
-    python WITH_PYTHON
-    csharp WITH_CSHARP
+    d3d9 OGRE_BUILD_RENDERSYSTEM_D3D9
+    java OGRE_BUILD_COMPONENT_JAVA
+    python OGRE_BUILD_COMPONENT_PYTHON
+    csharp OGRE_BUILD_COMPONENT_CSHARP
 )
 
 vcpkg_configure_cmake(
