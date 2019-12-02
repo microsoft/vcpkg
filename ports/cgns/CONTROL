@@ -1,0 +1,29 @@
+Source: cgns
+Version: 3.4.0
+Homepage: http://cgns.org/
+Description: The CFD General Notation System (CGNS) provides a standard for recording and recovering computer data associated with the numerical solution of fluid dynamics equations. 
+Build-Depends: 
+Default-Features: hdf5, lfs
+
+Feature: mpi
+Description: Compile with support for the message passage interface (MPI)
+Build-Depends: hdf5[mpi]
+
+Feature: fortran
+Description: Enable fortran support (not yet implemented) 
+
+Feature: tests
+Description: Build tests 
+
+Feature: tools
+Description: Build tools 
+
+Feature: hdf5
+Description: Enable hdf5 support 
+Build-Depends: hdf5[tools]
+
+Feature: lfs
+Description: Enable LFS support 
+
+Feature: legacy
+Description: Enable legacy support 
