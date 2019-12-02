@@ -7,7 +7,7 @@ index 5893f31..c8864fd 100644
  
  hunter_add_package(thrift)
 -find_package(thrift ${hunter_config} REQUIRED)
-+find_package(thrift CONFIG REQUIRED)
++find_package(Thrift CONFIG REQUIRED)
  if(HUNTER_ENABLED)
    list(APPEND LIBS thrift::thrift_static)
  else()
