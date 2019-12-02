@@ -57,7 +57,7 @@ function(vcpkg_configure_genie TOOLS_DIR)
         message(FATAL_ERROR "Unsupported host platform: ${CMAKE_HOST_SYSTEM_NAME}")
     endif()
 
-    vcpkg_execute_required_process(
+    vcpkg_execute_build_process(
         COMMAND ${GENIE} ${GENIE_OPTIONS} ${GENIE_ACTION}
         WORKING_DIRECTORY "${SOURCE_DIR}"
         LOGNAME "genie-${TARGET_TRIPLET}"
