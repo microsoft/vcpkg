@@ -8,8 +8,10 @@ vcpkg_from_github(
 )
 
 # ====================================================
-# Install the pkgconfig info for the the `nvcodec` package
+# Install the pkgconfig info for the `nvcodec` package
 # ====================================================
+
+# Windows
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make pkg-config)
@@ -18,17 +20,17 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
-    # Build script parameters:
-    # source root
-    # root of where the package would be installed on a linux system (here this is the package dir)
+    # Make and deploy the ffnvcodec.pc file using MSYS
+    # (so that FFmpeg can find it in the MSYS rootfs)
     vcpkg_execute_required_process(
         COMMAND ${BASH} --noprofile --norc "${BUILD_SCRIPT}"
-            "${SOURCE_PATH}" # SOURCE DIR
-            "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+            "${SOURCE_PATH}"
+            "${CURRENT_PACKAGES_DIR}"
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
         LOGNAME build-${TARGET_TRIPLET}
     )
 
+# Linux, etc.
 else()
     FIND_PROGRAM(MAKE make)
     IF (NOT MAKE)
@@ -41,10 +43,11 @@ else()
         LOGNAME make-${TARGET_TRIPLET}
     )
 
-    # Deploy a copy of the ffnvcodec.pc file where ffmpeg's pkgconfig call expects to find it
+    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
+    # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 endif()
 
-# Install the files to their generic location as well
+# Install the files to their default vcpkg locations
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffnvcodec)
