@@ -1,8 +1,6 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "Building with a gcc version less than 6.1 is not supported.")
 endif()
 
@@ -43,4 +41,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/u
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/angle RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

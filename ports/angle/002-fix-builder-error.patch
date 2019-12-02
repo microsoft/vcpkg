@@ -1,13 +1,30 @@
 diff --git a/src/gpu_info_util/SystemInfo_win.cpp b/src/gpu_info_util/SystemInfo_win.cpp
-index b19f9b7..a8cd1e1 100644
+index 878f0f5..2255982 100644
 --- a/src/gpu_info_util/SystemInfo_win.cpp
 +++ b/src/gpu_info_util/SystemInfo_win.cpp
-@@ -13,7 +13,7 @@
+@@ -4,6 +4,12 @@
+ // found in the LICENSE file.
+ //
  
- // Windows.h needs to be included first
- #include <windows.h>
++// Windows.h needs to be included first
++#include <windows.h>
++
++#include <d3d10.h>
++#include <dxgi.h>
++
+ // SystemInfo_win.cpp: implementation of the Windows-specific parts of SystemInfo.h
+ 
+ #include "gpu_info_util/SystemInfo_internal.h"
+@@ -11,12 +17,6 @@
+ #include "common/debug.h"
+ #include "common/string_utils.h"
+ 
+-// Windows.h needs to be included first
+-#include <windows.h>
 -
-+#define FAR 
- #include <d3d10.h>
- #include <dxgi.h>
+-#include <d3d10.h>
+-#include <dxgi.h>
+-
+ #include <array>
+ #include <sstream>
  
