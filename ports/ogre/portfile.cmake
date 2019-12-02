@@ -1,6 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
 endif()
 
@@ -23,35 +21,17 @@ else()
 endif()
 
 # Configure features
-
-if("d3d9" IN_LIST FEATURES)
-    set(WITH_D3D9 ON)
-else()
-    set(WITH_D3D9 OFF)
-endif()
-
-if("java" IN_LIST FEATURES)
-    set(WITH_JAVA ON)
-else()
-    set(WITH_JAVA OFF)
-endif()
-
-if("python" IN_LIST FEATURES)
-    set(WITH_PYTHON ON)
-else()
-    set(WITH_PYTHON OFF)
-endif()
-
-if("csharp" IN_LIST FEATURES)
-    set(WITH_CSHARP ON)
-else()
-    set(WITH_CSHARP OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    d3d9 WITH_D3D9
+    java WITH_JAVA
+    python WITH_PYTHON
+    csharp WITH_CSHARP
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES=OFF
         -DOGRE_BUILD_TESTS=OFF
@@ -72,17 +52,14 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
-# Optional stuff
-        -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
-        -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
-        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
-        -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -132,6 +109,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

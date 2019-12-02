@@ -1,6 +1,6 @@
 Source: ogre
 Version: 1.12.2
-Build-Depends: freeimage, freetype, zlib, zziplib
+Build-Depends: freeimage, freetype, zlib, zziplib, pugixml
 Homepage: https://github.com/OGRECave/ogre
 Description: 3D Object-Oriented Graphics Rendering Engine
 
