@@ -1,4 +1,4 @@
-Source: z3
-Version: 4.8.5-1
-Description: An SMT solver
+Version: 4.8.6
+Homepage: https://github.com/Z3Prover/z3
+Description: Z3 is a theorem prover from Microsoft Research.
 Supports: !arm64 && !uwp

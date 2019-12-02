@@ -532,7 +532,15 @@ namespace vcpkg::Build
 
         {
             auto locked_metrics = Metrics::g_metrics.lock();
-            locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
+
+            locked_metrics->track_buildtime(Hash::get_string_hash(spec.to_string(), Hash::Algorithm::Sha256) + ":[" +
+                                                Strings::join(",",
+                                                              config.feature_list,
+                                                              [](const std::string& feature) {
+                                                                  return Hash::get_string_hash(feature,
+                                                                                               Hash::Algorithm::Sha256);
+                                                              }) +
+                                                "]",
                                             buildtimeus);
             if (return_code != 0)
             {

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/json_dto
-    REF d620668d568075cbdb169d1b160db71ad6693194 # v.0.2.9.1
-    SHA512 5f92f04cfeb524eabe6a245aeab9205d274532cbac3296483ac5ebd7d1e3531bd9acf1937c75d84663592ff8a22ac72bb64be09c18ac859e94d80e3515883aae
+    REF aded62c151bdeb07e416cfb404a1edfc1324f29f # v.0.2.9.2
+    SHA512 a298a4220160cb70f50e0dc96900743f12ad0290f401d5ab03fc97fa16260261af6b496b4de4b4f098394c02b4aadead442acf7f9edfee3faf91e56890688768
 )
 
 vcpkg_configure_cmake(
