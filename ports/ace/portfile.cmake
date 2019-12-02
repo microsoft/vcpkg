@@ -1,11 +1,23 @@
 include(vcpkg_common_functions)
 
-# Don't change to vcpkg_from_github! This points to a release and not an archive
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.zip"
-    FILENAME ACE-src-6.5.7.zip
-    SHA512 6ce6954941521b34ae8913dfe053d0f066632c55adf4091dae6bc180c79963d6f4ddfec7796cd6d9fc8ff59037ee162d20b017c4c296828913498bdbac2fc8a7
-)
+# Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
+# when invoking `prj_install.pl`.
+# So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
+if(VCPKG_TARGET_IS_WINDOWS)
+  # Don't change to vcpkg_from_github! This points to a release and not an archive
+  vcpkg_download_distfile(ARCHIVE
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.zip"
+      FILENAME ACE-src-6.5.7.zip
+      SHA512 6ce6954941521b34ae8913dfe053d0f066632c55adf4091dae6bc180c79963d6f4ddfec7796cd6d9fc8ff59037ee162d20b017c4c296828913498bdbac2fc8a7
+  )
+else(VCPKG_TARGET_IS_WINDOWS)
+  # VCPKG_TARGET_IS_LINUX
+  vcpkg_download_distfile(ARCHIVE
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.tar.gz"
+      FILENAME ACE-src-6.5.7.tar.gz
+      SHA512 0116e269e2d49ba8afccc7abfc7492e5a6a286dcbdcfe850a21f86b4facb5fef2848985d803233f4b1fbb03457e592375ab24c62e7bbaab5c28cc240ccedbacb
+  )
+endif()
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -191,20 +203,6 @@ else(VCPKG_TARGET_IS_WINDOWS)
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-  if(TRUE)
-    # Helper codes that logs some infomation that might be useful
-    # This codes should not be activated in real production use.
-    vcpkg_execute_required_process(
-      COMMAND ls -al
-      WORKING_DIRECTORY ${ACE_ROOT}
-      LOGNAME ace_root_ls-${TARGET_TRIPLET}
-    )
-    vcpkg_execute_required_process(
-      COMMAND ls -al
-      WORKING_DIRECTORY ${ACE_ROOT}/MPC
-      LOGNAME ace_root_mpc_ls-${TARGET_TRIPLET}
-    )
-  endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_required_process(
     COMMAND make ${_ace_makefile_macros} install
