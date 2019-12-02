@@ -1,13 +1,10 @@
 #header-only library
-
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USCiLab/cereal
-    REF 02eace19a99ce3cd564ca4e379753d69af08c2c8 # v1.3.0
-    SHA512 de8a349803a6700478901b66a35b11d6d2ddeb43970cc0f92754e4b53d16c0e0b5f1ac6d8ef45cc982dc1cdad3e58816acdeb76e006532e9cb150c7fa20595bf
-    HEAD_REF develop
+    REF v1.3.0
+    SHA512 2bb640a222d4efe7c624c6ec3e755fecae00ef59e91c4db462e233546c5afe73c065ba1d16d9600f7cd3cc185593109148008b0b2b870208e2f1d6984fd40c72
+    HEAD_REF master
 )
 
 vcpkg_configure_cmake(
@@ -24,5 +21,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/cereal)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cereal)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cereal/LICENSE ${CURRENT_PACKAGES_DIR}/share/cereal/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

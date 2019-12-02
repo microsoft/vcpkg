@@ -14,7 +14,7 @@ else()
 endif()
 
 if(MSVC)
-    add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive)
+    add_compile_options(/d2guard4 /Wv:18 /guard:cf /permissive /bigobj)
 else()
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)

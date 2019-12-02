@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         glfw3_target_compat.patch
         boost-1.71.patch
+        cgal-5.0.patch
 )
 
 vcpkg_configure_cmake(

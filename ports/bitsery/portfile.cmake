@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO fraillt/bitsery
@@ -19,5 +17,4 @@ vcpkg_install_cmake()
 # Delete redundant and empty directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
-# Install license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bitsery RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
