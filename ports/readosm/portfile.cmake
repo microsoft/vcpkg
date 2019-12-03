@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Windows platform" ON_TARGET "Linux" "OSX" "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/readosm-sources/readosm-1.1.0.tar.gz"
@@ -16,13 +16,14 @@ vcpkg_extract_source_archive_ex(
 
 find_program(NMAKE nmake)
 
-set(LIBS_ALL_DBG "\"${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib\" \"${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib\"")
-set(LIBS_ALL_REL "\"${CURRENT_INSTALLED_DIR}/lib/expat.lib\" \"${CURRENT_INSTALLED_DIR}/lib/zlib.lib\"")
-
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(LIBS_ALL_DBG "\"${CURRENT_INSTALLED_DIR}/debug/lib/libexpatd.lib\" \"${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib\"")
+    set(LIBS_ALL_REL "\"${CURRENT_INSTALLED_DIR}/lib/libexpat.lib\" \"${CURRENT_INSTALLED_DIR}/lib/zlib.lib\"")
 	set(CL_FLAGS_DBG "/MDd /Zi")
 	set(CL_FLAGS_REL "/MD /Ox")
 else()
+    set(LIBS_ALL_DBG "\"${CURRENT_INSTALLED_DIR}/debug/lib/libexpatdMD.lib\" \"${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib\"")
+    set(LIBS_ALL_REL "\"${CURRENT_INSTALLED_DIR}/lib/libexpatMD.lib\" \"${CURRENT_INSTALLED_DIR}/lib/zlib.lib\"")
 	set(CL_FLAGS_DBG "/MTd /Zi")
 	set(CL_FLAGS_REL "/MT /Ox")
 endif()
@@ -64,7 +65,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/readosm RENAME copyright)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
@@ -82,5 +82,7 @@ else()
   endif()
 endif()
 
-
 message(STATUS "Packaging ${TARGET_TRIPLET} done")
+
+#Handle copyright
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/readosm RENAME copyright)
