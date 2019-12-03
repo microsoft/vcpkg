@@ -40,6 +40,9 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         hdf5.patch
+        linux_lfs.patch
+        zlib_szip.patch
+        defines.patch
 )
 
 # # Check if one or more features are a part of a package installation.
@@ -72,19 +75,18 @@ vcpkg_configure_cmake(
     OPTIONS 
         ${FEATURE_OPTIONS}
         ${CGNS_BUILD_OPTS}
-        -DHDF5_NEEDS_ZLIB=${CGNS_ENABLE_HDF5}
-        -DHDF5_NEEDS_SZIP=${CGNS_ENABLE_HDF5}
         #-DHDF5_TOOLS_DIR=${CURRENT_INSTALLED_DIR}/tools/hdf5/
 )
 
 vcpkg_install_cmake()
 
 file(INSTALL ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/)
+#file(INSTALL ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/) # old config
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h)
+file(INSTALL cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/) # we patched the config and the include is all that is needed
 
-IF(EXISTS ${CURRENT_PACKAGES_DIR}/debug)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/debug/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/debug)
+IF(EXISTS ${CURRENT_PACKAGES_DIR}/debug) 
+    #file(INSTALL ${CURRENT_PACKAGES_DIR}/debug/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/debug) #old config
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/debug/include/cgnsconfig.h)
     file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/cgnscheck${VCPKG_TARGET_EXECUTABLE_SUFFIX}
