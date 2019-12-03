@@ -271,19 +271,26 @@ foreach(HEADER ${PUBLIC_HEADERS})
     )
 endforeach()
 
-add_executable(aatest AATest.cpp)
-target_link_libraries(aatest PRIVATE libaaplus)
+if (BUILD_SHARED_LIBS)
+	add_executable(aatest AATest.cpp)
+	target_link_libraries(aatest PRIVATE libaaplus)
 
-if (MSVC)
-target_compile_definitions(aatest
-    PUBLIC
-        -DAAPLUS_EXT_CLASS\=__declspec\(dllimport\)
-)
-endif (MSVC)
+	if (MSVC)
+	target_compile_definitions(aatest
+		PUBLIC
+			-DAAPLUS_EXT_CLASS\=__declspec\(dllimport\)
+	)
+	endif (MSVC)
 
-install(TARGETS aatest libaaplus
-RUNTIME DESTINATION tools/aaplus)
-	
+	install(TARGETS aatest libaaplus
+	RUNTIME DESTINATION tools/aaplus)
+else (BUILD_SHARED_LIBS)
+	add_executable(aatest AATest.cpp)
+	target_link_libraries(aatest PRIVATE libaaplus)
+	install(TARGETS aatest
+	RUNTIME DESTINATION tools/aaplus)
+endif (BUILD_SHARED_LIBS)
+
 install(
     EXPORT libaaplus
     DESTINATION share/libaaplus
