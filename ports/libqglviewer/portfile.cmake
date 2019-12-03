@@ -3,12 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GillesDebunne/libQGLViewer
-    REF 781d914c003466b342b45d19266a9613fc0e7e0e
-    SHA512 0586020c159fa4b3acb3ea3fa0a361bcc757d840298d7a436c356d0929b5ace3da4d054e3c0d107a499076413336e3b9a2f35750e6bf0add9320cc52a5c7afd5
+    REF fee0916f2af3d0993df51956d2e5a51bbaf0c1f0 #v2.7.2
+    SHA512 449bf4ccadaf50d4333bd91050e9b50f440a64229391827aaf4a80ade2c3f5fc60501d2baee885cf1214f7e2a8a04615bafe9ac7da9f866ffa4ebe33b9b999d8
     HEAD_REF master
-    PATCHES "use-default-config-on-all-platforms.patch"
-            "QGLViewer_remove_shared.patch"
-            "macosx.patch"
+    PATCHES
+        "use-default-config-on-all-platforms.patch"
 )
 
 vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH}/QGLViewer/QGLViewer.pro)
