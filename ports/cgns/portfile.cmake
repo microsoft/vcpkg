@@ -41,7 +41,7 @@ vcpkg_from_github(
     PATCHES
         hdf5.patch
         linux_lfs.patch
-        zlib_szip.patch
+        zlib_szip_mpi.patch
         defines.patch
 )
 
