@@ -83,7 +83,7 @@ vcpkg_install_cmake()
 file(INSTALL ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 #file(INSTALL ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/) # old config
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h)
-file(INSTALL cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/) # we patched the config and the include is all that is needed
+file(INSTALL ${CURRENT_PORT_DIR}/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include) # we patched the config and the include is all that is needed
 
 IF(EXISTS ${CURRENT_PACKAGES_DIR}/debug) 
     #file(INSTALL ${CURRENT_PACKAGES_DIR}/debug/include/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/debug) #old config
