@@ -1,0 +1,18 @@
+diff --git a/cmake/TBBBuild.cmake b/cmake/TBBBuild.cmake
+index a2222e3..a208258 100644
+--- a/cmake/TBBBuild.cmake
++++ b/cmake/TBBBuild.cmake
+@@ -154,11 +154,11 @@ function(tbb_build)
+         set(make_tool_name ndk-build)
+     endif()
+ 
+-    find_program(TBB_MAKE_TOOL ${make_tool_name} DOC "Make-tool to build Intel TBB.")
++    find_program(TBB_MAKE_TOOL ${make_tool_name} DOC "Make-tool to build Intel TBB." REQUIRED)
+     mark_as_advanced(TBB_MAKE_TOOL)
+ 
+     if (NOT TBB_MAKE_TOOL)
+-        message(STATUS "Intel TBB can not be built: required make-tool (${make_tool_name}) was not found")
++        message(FATAL_ERROR "Intel TBB can not be built: required make-tool (${make_tool_name}) was not found")
+         set(${tbb_build_CONFIG_DIR} ${tbb_build_CONFIG_DIR}-NOTFOUND PARENT_SCOPE)
+         return()
+     endif()
