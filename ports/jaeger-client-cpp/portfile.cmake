@@ -1,6 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP build is not supported.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 # Get jaeger-idl from github
 vcpkg_from_github(
@@ -43,7 +41,11 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DHUNTER_ENABLED=0 -DBUILD_TESTING=0 -DJAEGERTRACING_PLUGIN=0 -DJAEGERTRACING_BUILD_EXAMPLES=0
+    OPTIONS 
+        -DHUNTER_ENABLED=0 
+        -DBUILD_TESTING=0 
+        -DJAEGERTRACING_PLUGIN=0 
+        -DJAEGERTRACING_BUILD_EXAMPLES=0
 )
 
 # Copy generated files over to jaeger-client-cpp 
@@ -53,15 +55,15 @@ file(COPY ${IDL_SOURCE_FILES} DESTINATION ${SOURCE_PATH}/src/jaegertracing/thrif
 # Generate Jaeger client
 vcpkg_install_cmake()
 
-# Integrate Debug CMake file
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/jaeger-client-cpp/jaegertracingTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/jaeger-client-cpp/jaegertracingTargets-debug.cmake)
+# Integrate Debug CMake file in one place
+# The release version of jaegertracingTargets-*.cmake is already in place, the debug version is placed in a seperate debug subdirectory.
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/jaegertracingTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/jaegertracingTargets-debug.cmake)
 # Cleanup unused Debug files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jaeger-client-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jaeger-client-cpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/jaeger-client-cpp/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/jaegertracing/testutils)
