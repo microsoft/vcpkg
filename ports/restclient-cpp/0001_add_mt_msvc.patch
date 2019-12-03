@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10b8db8..aac5bf3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,6 +43,11 @@ if(NOT DEFINED COMPILE_TYPE)
+   set(COMPILE_TYPE SHARED)
+ endif(NOT DEFINED COMPILE_TYPE)
+ 
++if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND ${COMPILE_TYPE} MATCHES "STATIC")
++       set(CMAKE_CXX_FLAGS_RELEASE "/MT")
++       set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
++endif()
++
+ add_library(restclient-cpp ${COMPILE_TYPE}
+   source/restclient.cc
+   source/connection.cc

@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 6336cae5275c9aeddf99f13c49e8f9320f7ca4bc
     SHA512 fbc638f82db8d0d101f4239152be67eb460659f3a7204db9523d3b5740b007b8fe434f78bf5d9f8059901aa639ba96c15b28b1e2fe5f09471accf64c2d577684 
     HEAD_REF master
+    PATCHES
+        0001_add_mt_msvc.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
