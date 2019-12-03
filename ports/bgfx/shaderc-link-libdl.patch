@@ -1,0 +1,16 @@
+diff --git a/scripts/shaderc.lua b/scripts/shaderc.lua
+index 95a462634..bfd005389 100644
+--- a/scripts/shaderc.lua
++++ b/scripts/shaderc.lua
+@@ -652,6 +652,11 @@ project "shaderc"
+ 			"pthread",
+ 		}
+ 
++        configuration { "linux*" }
++                links {
++                        "dl",
++                }
++
+ 	configuration {}
+ 
+ 	if filesexist(BGFX_DIR, path.join(BGFX_DIR, "../bgfx-gnm"), {

@@ -1,4 +1,4 @@
-function(vcpkg_configure_genie TOOLS_DIR)
+function(vcpkg_configure_genie TOOLS_DIR GENIE_OPTIONS)
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
         set(GENIE_OPTIONS ${GENIE_OPTIONS} --with-dynamic-runtime)
     endif()

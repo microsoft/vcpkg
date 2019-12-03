@@ -35,7 +35,7 @@ set(BIMG_DIR ${SOURCE_DIR}/.bimg)
 set(ENV{BIMG_DIR} ${BIMG_DIR})
 
 # Set up GENie (custom project generator)
-vcpkg_configure_genie("${BX_SOURCE_DIR}/tools")
+vcpkg_configure_genie("${BX_SOURCE_DIR}/tools" "--with-tools")
 
 if(GENIE_ACTION STREQUAL cmake)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -49,6 +49,7 @@ if(GENIE_ACTION STREQUAL cmake)
         OPTIONS_RELEASE -DCMAKE_BUILD_TYPE=Release
         OPTIONS_DEBUG -DCMAKE_BUILD_TYPE=Debug
     )
+    vcpkg_build_cmake(TARGET shaderc/all)
     vcpkg_install_cmake(TARGET ${PROJ}/all)
     file(INSTALL "${SOURCE_DIR}/include/bgfx" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     file(GLOB instfiles
@@ -61,6 +62,7 @@ if(GENIE_ACTION STREQUAL cmake)
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${PROJ}/*.so"
     )
     file(INSTALL ${instfiles} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/shaderc/shadercRelease" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
     file(INSTALL "${SOURCE_DIR}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 else()
     vcpkg_install_msbuild(
