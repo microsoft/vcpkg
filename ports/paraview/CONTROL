@@ -1,0 +1,10 @@
+Source: paraview
+Version: 5.6.3
+Homepage: https://www.paraview.org/
+Description: VTK-based Data Analysis and Visualization Application
+Build-Depends: vtk[qt, python]
+Default-Features:
+
+Feature: all_modules
+Description: enables the build of all paraview modules
+Build-Depends: gdal, pdal, ffmpeg, laszip

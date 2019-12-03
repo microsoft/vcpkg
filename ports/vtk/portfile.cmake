@@ -1,14 +1,13 @@
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
-
-include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.2")
 set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # =============================================================================
 # Options:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    qt     VTK_Group_Qt
     qt     VTK_WITH_QT
     mpi    VTK_Group_MPI
     python VTK_WITH_PYTHON
@@ -49,10 +48,16 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CM
 # =============================================================================
 # Collect CMake options for optional components
 if(VTK_WITH_QT)
+    MESSAGE(STATUS BUILDING WITH QT)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_Group_Qt=ON
         -DVTK_QT_VERSION=5
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
+        -DVTK_Module_vtkViewsQT=ON
+        -DVTK_Module_vtkRenderingQT=ON
+        -DVTK_Module_vtkGUISupportQt=ON
+        -DVTK_Module_vtkGUISupportQtOpenGL=ON
+        -DVTK_Module_vtkGUISupportQtSQL=ON
     )
 endif()
 
@@ -253,3 +258,6 @@ file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk/copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
+
+
+#add install for CMAKE/FindPythonModules.cmake vtkCompilerPlatformFlags vtkWrappingTools
