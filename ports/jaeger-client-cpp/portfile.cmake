@@ -30,8 +30,8 @@ set(IDL_SOURCE_DIR "${SOURCE_PATH}/data/gen-cpp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jaegertracing/jaeger-client-cpp
-    REF v0.5.0
-    SHA512 d855ecfbb1dadffc8c21ff390717a732e743a1e751759bb85e800a0057d5ec5885080ca5ab9d89761b05d68d71817bb5780f42411a92cb5152a2a0f84b0b035a
+    REF 68be4e2d0416bc7b7262ff7111efa9cc1c5a2d08
+    SHA512 028e403c57415ffecbcb8d41fff03bfe3392cc8810e65887e3e6debfcafe53b2c6f62aaf152f9955ddc382e4481366c047450ad7ce6527e98dbe66e8856b636f
     HEAD_REF master
     PATCHES 
        "fix-CMakeLists.patch"
@@ -55,9 +55,8 @@ file(COPY ${IDL_SOURCE_FILES} DESTINATION ${SOURCE_PATH}/src/jaegertracing/thrif
 # Generate Jaeger client
 vcpkg_install_cmake()
 
-# Integrate Debug CMake file in one place
-# The release version of jaegertracingTargets-*.cmake is already in place, the debug version is placed in a seperate debug subdirectory.
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/jaegertracingTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/jaegertracingTargets-debug.cmake)
+vcpkg_fixup_cmake_targets()
+
 # Cleanup unused Debug files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
