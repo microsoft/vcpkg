@@ -51,7 +51,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/SDLmain.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDLmaind.lib)
     endif()
 else()
-    message("libgles2-mesa-dev must be installed before libepoxy can build. Install them with \"apt install libgles2-mesa-dev\".")
+    message("libgles2-mesa-dev must be installed before sdl1 can build. Install them with \"apt install libgles2-mesa-dev\".")
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(BUILD_SHARED yes)
