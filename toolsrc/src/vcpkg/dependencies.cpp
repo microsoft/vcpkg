@@ -582,8 +582,10 @@ namespace vcpkg::Dependencies
             Checks::check_exit(
                 VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
 
+            const std::vector<std::string> all_features = Util::fmap(scfl->source_control_file->feature_paragraphs, [](auto&& feature_paragraph) { return feature_paragraph->name; });
+
             auto fspecs =
-                FullPackageSpec::to_feature_specs(spec, scfl->source_control_file->core_paragraph->default_features);
+                FullPackageSpec::to_feature_specs(spec, scfl->source_control_file->core_paragraph->default_features, all_features);
             feature_specs.insert(
                 feature_specs.end(), std::make_move_iterator(fspecs.begin()), std::make_move_iterator(fspecs.end()));
         }

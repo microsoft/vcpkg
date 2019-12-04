@@ -74,28 +74,39 @@ namespace vcpkg
     }
 
     std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const FullPackageSpec& spec,
-                                                               const std::vector<std::string>& default_features)
+                                                               const std::vector<std::string>& default_features,
+                                                               const std::vector<std::string>& all_features)
     {
         std::vector<FeatureSpec> feature_specs;
         bool core = false;
 
-        for (const std::string& feature : spec.features)
+        if (Util::find(spec.features, "*") != spec.features.end())
         {
-            feature_specs.emplace_back(spec.package_spec, feature);
+            for (const std::string& feature : all_features)
+            {
+                feature_specs.emplace_back(spec.package_spec, feature);
+            }
+        }
+        else
+        {
+            for (const std::string& feature : spec.features)
+            {
+                feature_specs.emplace_back(spec.package_spec, feature);
+
+                if (!core)
+                {
+                    core = feature == "core";
+                }
+            }
 
             if (!core)
             {
-                core = feature == "core";
-            }
-        }
+                feature_specs.emplace_back(spec.package_spec, "core");
 
-        if (!core)
-        {
-            feature_specs.emplace_back(spec.package_spec, "core");
-
-            for (const std::string& def : default_features)
-            {
-                feature_specs.emplace_back(spec.package_spec, def);
+                for (const std::string& def : default_features)
+                {
+                    feature_specs.emplace_back(spec.package_spec, def);
+                }
             }
         }
 

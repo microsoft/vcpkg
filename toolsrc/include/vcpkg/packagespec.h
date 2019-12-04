@@ -106,7 +106,8 @@ namespace vcpkg
         static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
 
         static std::vector<FeatureSpec> to_feature_specs(const FullPackageSpec& spec,
-                                                         const std::vector<std::string>& default_features);
+                                                         const std::vector<std::string>& default_features, 
+                                                         const std::vector<std::string>& all_features);
 
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
                                                                               const Triplet& default_triplet);
