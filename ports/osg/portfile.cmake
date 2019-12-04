@@ -38,6 +38,7 @@ vcpkg_configure_cmake(
         -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
         -DBUILD_OSG_EXAMPLES=ON
         -DBUILD_OSG_APPLICATIONS=ON
+        -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_install_cmake()
