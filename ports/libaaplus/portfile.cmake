@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VERSION 2.10.0)
 
 vcpkg_download_distfile(
@@ -32,4 +30,3 @@ file(
     RENAME copyright
 )
 
-vcpkg_test_cmake(PACKAGE_NAME LIBAAPLUS MODULE)
