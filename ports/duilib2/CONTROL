@@ -1,7 +1,0 @@
-Source: duilib2
-Version: 1.4
-Description: Duilib
-Build-Depends: ppxbase
-
-Feature: cef
-Description: Builds with cef module.
