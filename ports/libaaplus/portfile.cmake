@@ -16,17 +16,21 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tools BUILD_TOOLS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(
-    INSTALL ${SOURCE_PATH}/AA+.htm
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/libaaplus
-    RENAME copyright
-)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/libaaplus)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/AA+.htm DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

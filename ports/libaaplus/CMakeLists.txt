@@ -5,6 +5,8 @@ cmake_policy(VERSION 3.11)
 
 project(libaaplus LANGUAGES CXX)
 
+option(BUILD_TOOLS "Build libaaplus tools" OFF)
+
 file(GLOB LIBS_SRC RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
 
 list(REMOVE_ITEM ${LIBS_SRC} AATest.cpp)
@@ -39,35 +41,27 @@ foreach(HEADER ${PUBLIC_HEADERS})
     get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
     install(
         FILES ${HEADER}
-        CONFIGURATIONS Release
         DESTINATION include/aaplus/${HEADER_DIR}
     )
 endforeach()
 
-if (BUILD_SHARED_LIBS)
-	add_executable(aatest AATest.cpp)
-	target_link_libraries(aatest PRIVATE libaaplus)
 
-	if (MSVC)
-	target_compile_definitions(aatest
-		PUBLIC
-			-DAAPLUS_EXT_CLASS\=__declspec\(dllimport\)
-	)
-	endif (MSVC)
-
-	install(TARGETS aatest libaaplus
-	RUNTIME DESTINATION tools/aaplus)
-else (BUILD_SHARED_LIBS)
-	add_executable(aatest AATest.cpp)
-	target_link_libraries(aatest PRIVATE libaaplus)
-	install(TARGETS aatest
-	RUNTIME DESTINATION tools/aaplus)
-endif (BUILD_SHARED_LIBS)
+if (BUILD_TOOLS)
+    add_executable(aatest AATest.cpp)
+    target_link_libraries(aatest PRIVATE libaaplus)
+    if (BUILD_SHARED_LIBS AND MSVC)
+        target_compile_definitions(aatest
+            PUBLIC
+            -DAAPLUS_EXT_CLASS\=__declspec\(dllimport\)
+        )
+    endif (BUILD_SHARED_LIBS AND MSVC)
+    
+    install(TARGETS aatest RUNTIME DESTINATION tools/aaplus)
+endif()
 
 install(
     EXPORT libaaplus
     DESTINATION share/libaaplus
     FILE libaaplusConfig.cmake
     NAMESPACE libaaplus::
-    CONFIGURATIONS Release
 )
