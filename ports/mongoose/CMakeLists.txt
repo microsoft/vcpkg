@@ -14,7 +14,7 @@ set_target_properties(mongoose PROPERTIES PUBLIC_HEADER mongoose.h)
 
 if (ENABLE_SSL)
     find_package(OpenSSL REQUIRED)
-    target_compile_options(mongoose PRIVATE MG_ENABLE_SSL)
+    target_compile_options(mongoose PRIVATE -DMG_ENABLE_SSL)
     target_link_libraries(mongoose PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 endif()
 
