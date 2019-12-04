@@ -49,6 +49,9 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/Aurora)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/thor RENAME copyright)
 

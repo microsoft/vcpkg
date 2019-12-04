@@ -39,7 +39,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
+    static Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
         static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -462,7 +462,7 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-
+        Util::unused(expected_architecture, files);
         return LintStatus::SUCCESS;
     }
 
@@ -857,14 +857,15 @@ namespace vcpkg::PostBuildLint
     size_t perform_all_checks(const PackageSpec& spec,
                               const VcpkgPaths& paths,
                               const PreBuildInfo& pre_build_info,
-                              const BuildInfo& build_info)
+                              const BuildInfo& build_info,
+                              const fs::path& port_dir)
     {
         System::print2("-- Performing post-build validation\n");
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths, pre_build_info, build_info);
 
         if (error_count != 0)
         {
-            const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
+            const fs::path portfile = port_dir / "portfile.cmake";
             System::print2(System::Color::error,
                            "Found ",
                            error_count,

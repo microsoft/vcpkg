@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
@@ -14,13 +12,14 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2019.05.13.00
-    SHA512 5dfeef0c2845b15e32a29119921d65e349a7ae9bcfa25c406d42d8df1614d2542153cd0ad8d0cf22592045b24272375a7839af91579d6be685cb8a3512586689
+    REF 8874256376d2f8a32867f17c9472a446d6707604 #2019.10.21.00
+    SHA512 96dfdde34697b72e8eb88431d742fffa337fc9146677d63cf0331dc5e4cd341fb00b88edf3781488e3194fa41525e70a6729e1bb6657f224cd1969deea9b468c
     HEAD_REF master
     PATCHES
         missing-include-atomic.patch
-        boost-1.70.patch
         reorder-glog-gflags.patch
+        disable-non-underscore-posix-names.patch
+        boost-1.70.patch
 )
 
 file(COPY
@@ -72,7 +71,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
+vcpkg_fixup_cmake_targets()
 
 # Release folly-targets.cmake does not link to the right libraries in debug mode.
 # We substitute with generator expressions so that the right libraries are linked for debug and release.
@@ -93,5 +92,4 @@ ${_contents}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/folly)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/folly/LICENSE ${CURRENT_PACKAGES_DIR}/share/folly/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

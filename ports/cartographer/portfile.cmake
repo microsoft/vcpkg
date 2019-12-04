@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
 	PATCHES
         fix-find-packages.patch
-        disable-C2338-cartographer.patch
         fix-build-error.patch
 )
 
@@ -27,7 +26,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cartographer)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 # Clean

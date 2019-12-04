@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 set(VERSION_MAJOR 3)
-set(VERSION_MINOR 2)
+set(VERSION_MINOR 4)
 set(VERSION_PATCH 0)
 set(VERSION_FULL ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
@@ -9,12 +9,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF r${VERSION_FULL}
-    SHA512 cad8dd6e9fd75aa3aee15321c9b3df21d43c346f5b0b3dd75c86f9117d3376ad83fcda0c4a333c0a23d555e76d79432016623dd5f860ffef9964a6e8046e84b5
+    SHA512 28c052904f1b456b92482097166238eae1ad50c3ed207496f09366b46f2c9465c7e98c7219f4f10314e4d8fdd01c36b70a2221891bb75231adcc1edf013d43ce
     HEAD_REF master
     PATCHES
-        disable_test_and_example.patch
         fix-uwp.patch
         disable-c2338-mongo-cxx-driver.patch
+        disable_test_and_example.patch
 )
 
 if ("mnmlstc" IN_LIST FEATURES)
@@ -26,7 +26,7 @@ elseif ("boost" IN_LIST FEATURES)
 elseif("std-experimental" IN_LIST FEATURES)
     set(BSONCXX_POLY STD_EXPERIMENTAL)
 else()
-  if (WIN32)
+  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(BSONCXX_POLY BOOST)
   else()
     set(BSONCXX_POLY MNMLSTC)
@@ -83,13 +83,16 @@ set(LIBMONGOCXX_LIBRARIES optimized \${LIBMONGOCXX_LIBRARY_PATH_RELEASE} debug \
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
+if (NOT BSONCXX_POLY STREQUAL MNMLSTC)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bsoncxx/third_party)
+endif()
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/cmake
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/config/private
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/private
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/test
     ${CURRENT_PACKAGES_DIR}/include/bsoncxx/test_util
-    ${CURRENT_PACKAGES_DIR}/include/bsoncxx/third_party
 
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/cmake
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/config/private

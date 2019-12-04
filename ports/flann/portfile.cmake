@@ -7,16 +7,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariusmuja/flann
-    REF  aa40936816f4feaa714d3a09f92a495da017d95c
-    SHA512 f6f2e75f4ce4bc4bc4cc1feab27fe683b8a5f9f5dcea35de4df5136a683b5dff5e68776008821a16ccf1a52a9807cb053c0062deba4fe121948248acd52864ef
+    REF  1d04523268c388dabf1c0865d69e1b638c8c7d9d
+    SHA512 61e322222c2daa0b9677095e5ca231cba7c305ce754ad8e659eee350111c1e04351181c3af04e45ab6e5c9edea49c7b9ec6499bb0dbc080b87af36eb11c6ef7c
     HEAD_REF master
-    PATCHES
-        fix_targets.patch
+    PATCHES fix-build-error.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF

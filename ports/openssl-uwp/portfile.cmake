@@ -1,10 +1,16 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "This portfile only supports UWP")
 endif()
+
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
+endif()
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(UWP_PLATFORM  "arm")
@@ -31,8 +37,7 @@ vcpkg_from_github(
     SHA512 3045693fca4b042b69675f6164d8cc82106582cf31081d65a0adbd528f04e77fa48b3761f3be7bdf8ab962a093b28fec0ae6d7da02058f2b049f79b784c39c2e
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-configure-unicode.patch
+        fix-uwp-configure-unicode.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)

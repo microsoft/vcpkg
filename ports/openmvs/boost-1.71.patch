@@ -1,0 +1,13 @@
+diff --git a/libs/Common/Types.h b/libs/Common/Types.h
+index aad57d1..ef21380 100644
+--- a/libs/Common/Types.h
++++ b/libs/Common/Types.h
+@@ -88,7 +88,7 @@
+ #define BOOST_NO_EXCEPTIONS
+ #endif
+ #ifdef BOOST_NO_EXCEPTIONS
+-namespace boost { void throw_exception(std::exception const&); }
++#include <boost/throw_exception.hpp>
+ #endif
+ #define BOOST_NO_UNREACHABLE_RETURN_DETECTION
+ // include headers that implement serialization support

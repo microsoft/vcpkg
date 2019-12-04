@@ -1,4 +1,5 @@
 Source: hwloc
 Version: 1.11.7-3
+Homepage: https://github.com/open-mpi/hwloc
 Description: Portable Hardware Locality (hwloc) 
   The Portable Hardware Locality (hwloc) software package provides a portable abstraction (across OS, versions, architectures, ...) of the hierarchical topology of modern architectures, including NUMA memory nodes, sockets, shared caches, cores and simultaneous multithreading. It also gathers various system attributes such as cache and memory information as well as the locality of I/O devices such as network interfaces, InfiniBand HCAs or GPUs. 

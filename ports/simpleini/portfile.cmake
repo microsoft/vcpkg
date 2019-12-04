@@ -9,6 +9,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/simpleini.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/Simpleini.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENCE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/simpleini RENAME copyright)

@@ -19,7 +19,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-if (WIN32)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(EXECUTABLE_SUFFIX ".exe")
 else()
     set(EXECUTABLE_SUFFIX "")

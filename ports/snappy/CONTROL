@@ -1,3 +1,4 @@
 Source: snappy
 Version: 1.1.7-2
+Homepage: https://github.com/google/snappy
 Description: A fast compressor/decompressor.

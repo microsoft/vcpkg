@@ -1,3 +1,4 @@
 Source: pmdk
-Version: 1.6-1
+Version: 1.7
+Homepage: https://github.com/pmem/pmdk
 Description: Persistent Memory Development Kit

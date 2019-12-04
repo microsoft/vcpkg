@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/OpenGL-Registry
-  REF e18e52a14e902a9ee29c5bf87478ac2ca21bb06b
-  SHA512 3b883115e138178984a751ee314b0589a7a20db3bc7cff96fa0b886be1779c24031ce65847386aa2d4f42823b1597edccc5a9afc0aef42fea8611a44d2ca5df6
+  REF 3c9ab309994c2baeb5572aa0befd5f405166a275
+  SHA512 f53018fe6dfb926dd6c1ce64ffde19b650a9071a1f6fa0c7a1596237e4ff84c3ff0092fb80811c4fea9b533c4b8607ed51f328d683d8f4aac18f0616f58b56a4
   HEAD_REF master
 )
 

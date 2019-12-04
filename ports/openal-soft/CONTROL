@@ -1,3 +1,4 @@
 Source: openal-soft
 Version: 1.19.1-2
+Homepage: https://github.com/kcat/openal-soft
 Description: OpenAL Soft is an LGPL-licensed, cross-platform, software implementation of the OpenAL 3D audio API.

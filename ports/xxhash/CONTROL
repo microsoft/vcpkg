@@ -1,3 +1,4 @@
 Source: xxhash
 Version: 0.7.0
+Homepage: https://github.com/Cyan4973/xxHash
 Description: Extremely fast hash algorithm

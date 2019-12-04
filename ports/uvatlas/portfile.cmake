@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF sept2016
-    SHA512 326af26c151620cd5082daf3913cf3fbe7bca7d1aaf5cc44cacff54319ffe79b728c24519187c3f9393a846430d0fb9493ffe9473f87d220f5c9ae7dab73f69f
+    REF 8309d95904d3a8f3559d73e07f3a0472f161c28b
+    SHA512 e0031812824f179dffdec487b2e70fc80748a722c4bccf67a7e0bd865700b6e61e1f14160557a1a797a84a9e7cc559f5e66bd8cabd5da4728ee479e4247d9aa2
     HEAD_REF master
 )
 
@@ -48,5 +48,5 @@ file(INSTALL
 	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
 	# Handle copyright
-file(COPY ${SOURCE_PATH}/MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/MIT.txt ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/LICENSE ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)

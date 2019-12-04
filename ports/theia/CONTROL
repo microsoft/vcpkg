@@ -1,4 +1,5 @@
 Source: theia
 Version: 0.8-2
 Build-Depends: flann, cereal, ceres[suitesparse], openimageio, glew, freeglut (!osx)
+Homepage: https://github.com/sweeneychris/TheiaSfM
 Description: An open source library for multiview geometry and structure from motion

@@ -1,4 +1,5 @@
 Source: gtk
 Version: 3.22.19-3
+Homepage: https://www.gtk.org/
 Description: Portable library for creating graphical user interfaces.
 Build-Depends: glib, atk, gdk-pixbuf, pango, cairo, libepoxy, gettext

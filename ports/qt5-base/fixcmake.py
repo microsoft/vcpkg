@@ -1,22 +1,29 @@
 import os
 import re
+import sys
 from glob import glob
 
+port="qt5"
+if len(sys.argv) > 1:
+    port=sys.argv[1]
+
 files = [y for x in os.walk('.') for y in glob(os.path.join(x[0], '*.cmake'))]
+tooldir="/tools/"+port+"/bin/"
 
 for f in files:
     openedfile = open(f, "r")
     builder = ""
-    dllpattern = re.compile("_install_prefix}/bin/Qt5.*d.dll")
-    libpattern = re.compile("_install_prefix}/lib/Qt5.*d.lib")
-    exepattern = re.compile("_install_prefix}/bin/[a-z]+.exe")
-    tooldllpattern = re.compile("_install_prefix}/tools/qt5/Qt5.*d.dll")
+    dllpattern = re.compile("_install_prefix}/bin/Qt5.*d+(.dll|.so)")
+    libpattern = re.compile("_install_prefix}/lib/Qt5.*d+(.lib|.a)")
+    exepattern = re.compile("_install_prefix}/bin/[a-z]+(.exe|)")
+    toolexepattern = re.compile("_install_prefix}/tools/qt5/bin/[a-z]+(.exe|)")
+    tooldllpattern = re.compile("_install_prefix}/tools/qt5/bin/Qt5.*d+(.dll|.so)")
     for line in openedfile:
         if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
-            builder += "\n    " + line.replace("/tools/qt5/", "/bin/")
+            builder += "\n    " + line.replace("/tools/qt5/bin", "/bin/")
             builder += "    else()"
-            builder += "\n    " + line.replace("/tools/qt5/", "/debug/bin/")
+            builder += "\n    " + line.replace("/tools/qt5/debug/bin", "/debug/bin/")
             builder += "    endif()\n"
         elif "_install_prefix}/bin/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
@@ -58,9 +65,11 @@ for f in files:
         elif libpattern.search(line) != None:
             builder += line.replace("/lib/", "/debug/lib/")
         elif tooldllpattern.search(line) != None:
-            builder += line.replace("/tools/qt5/", "/debug/bin/")
+            builder += line.replace("/tools/qt5/bin", "/debug/bin/")
         elif exepattern.search(line) != None:
-            builder += line.replace("/bin/", "/tools/qt5/")
+            builder += line.replace("/bin/", tooldir)
+        elif toolexepattern.search(line) != None:
+            builder += line.replace("/tools/qt5/bin/",tooldir)
         else:
             builder += line
     new_file = open(f, "w")

@@ -1,3 +1,4 @@
 Source: mpir
 Version: 3.0.0-7
+Homepage: https://github.com/wbhart/mpir
 Description: Multiple Precision Integers and Rationals.

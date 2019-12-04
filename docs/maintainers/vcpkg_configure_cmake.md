@@ -7,6 +7,8 @@ Configure CMake for Debug and Release builds of a project.
 vcpkg_configure_cmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [PREFER_NINJA]
+    [DISABLE_PARALLEL_CONFIGURE]
+    [NO_CHARSET_FLAG]
     [GENERATOR <"NMake Makefiles">]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
@@ -16,20 +18,27 @@ vcpkg_configure_cmake(
 
 ## Parameters
 ### SOURCE_PATH
-Specifies the directory containing the `CMakeLists.txt`. By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+Specifies the directory containing the `CMakeLists.txt`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
 
 ### PREFER_NINJA
-Indicates that, when available, Vcpkg should use Ninja to perform the build. This should be specified unless the port is known to not work under Ninja.
+Indicates that, when available, Vcpkg should use Ninja to perform the build.
+This should be specified unless the port is known to not work under Ninja.
 
 ### DISABLE_PARALLEL_CONFIGURE
 Disables running the CMake configure step in parallel.
-
 This is needed for libraries which write back into their source directory during configure.
+
+### NO_CHARSET_FLAG
+Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
+
+This is needed for libraries that set their own source code's character set.
 
 ### GENERATOR
 Specifies the precise generator to use.
 
-This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build. If used for this purpose, it should be set to "NMake Makefiles".
+This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
+If used for this purpose, it should be set to "NMake Makefiles".
 
 ### OPTIONS
 Additional options passed to CMake during the configuration.

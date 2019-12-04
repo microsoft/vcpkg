@@ -1,6 +1,7 @@
 Source: xsimd
-Version: 7.2.3
+Version: 7.2.5
 Description: Modern, portable C++ wrappers for SIMD intrinsics
+Homepage: https://github.com/QuantStack/xsimd
 
 Feature: xcomplex
 Description: xtl complex support

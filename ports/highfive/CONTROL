@@ -1,4 +1,5 @@
 Source: highfive
 Version: 2.0
+Homepage: https://github.com/BlueBrain/HighFive
 Description: HighFive is a modern C++/C++11 friendly interface for libhdf5
 Build-Depends: hdf5

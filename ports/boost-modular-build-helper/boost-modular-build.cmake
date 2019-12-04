@@ -149,8 +149,8 @@ function(boost_modular_build)
         --ignore-site-config
         --hash
         -q
-        -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
-        -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
+        "-sZLIB_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sBZIP2_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         threading=multi
     )
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -160,55 +160,55 @@ function(boost_modular_build)
     endif()
     set(_bm_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
-         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}/debug/lib"
+         "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
-         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}/debug/lib"
+         "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
  
     set(_bm_OPTIONS_REL
          -sZLIB_BINARY=zlib
-         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}/lib"
+         "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
-         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}/lib"
+         "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
     )
 
     # Properly handle compiler and linker flags passed by VCPKG
     if(VCPKG_CXX_FLAGS)
-        list(APPEND _bm_OPTIONS cxxflags="${VCPKG_CXX_FLAGS}")
+        list(APPEND _bm_OPTIONS "cxxflags=${VCPKG_CXX_FLAGS}")
     endif()
 
     if(VCPKG_CXX_FLAGS_RELEASE)
-        list(APPEND _bm_OPTIONS_REL cxxflags="${VCPKG_CXX_FLAGS_RELEASE}")
+        list(APPEND _bm_OPTIONS_REL "cxxflags=${VCPKG_CXX_FLAGS_RELEASE}")
     endif()
 
     if(VCPKG_CXX_FLAGS_DEBUG)
-        list(APPEND _bm_OPTIONS_DBG cxxflags="${VCPKG_CXX_FLAGS_DEBUG}")
+        list(APPEND _bm_OPTIONS_DBG "cxxflags=${VCPKG_CXX_FLAGS_DEBUG}")
     endif()
 
 
     if(VCPKG_C_FLAGS)
-        list(APPEND _bm_OPTIONS cflags="${VCPKG_C_FLAGS}")
+        list(APPEND _bm_OPTIONS "cflags=${VCPKG_C_FLAGS}")
     endif()
 
     if(VCPKG_C_FLAGS_RELEASE)
-        list(APPEND _bm_OPTIONS_REL cflags="${VCPKG_C_FLAGS_RELEASE}")
+        list(APPEND _bm_OPTIONS_REL "cflags=${VCPKG_C_FLAGS_RELEASE}")
     endif()
 
     if(VCPKG_C_FLAGS_DEBUG)
-        list(APPEND _bm_OPTIONS_DBG cflags="${VCPKG_C_FLAGS_DEBUG}")
+        list(APPEND _bm_OPTIONS_DBG "cflags=${VCPKG_C_FLAGS_DEBUG}")
     endif()
 
 
     if(VCPKG_LINKER_FLAGS)
-        list(APPEND _bm_OPTIONS linkflags="${VCPKG_LINKER_FLAGS}")
+        list(APPEND _bm_OPTIONS "linkflags=${VCPKG_LINKER_FLAGS}")
     endif()
 
     if(VCPKG_LINKER_FLAGS_RELEASE)
-        list(APPEND _bm_OPTIONS_REL linkflags="${VCPKG_LINKER_FLAGS_RELEASE}")
+        list(APPEND _bm_OPTIONS_REL "linkflags=${VCPKG_LINKER_FLAGS_RELEASE}")
     endif()
 
     if(VCPKG_LINKER_FLAGS_DEBUG)
-        list(APPEND _bm_OPTIONS_DBG linkflags="${VCPKG_LINKER_FLAGS_DEBUG}")
+        list(APPEND _bm_OPTIONS_DBG "linkflags=${VCPKG_LINKER_FLAGS_DEBUG}")
     endif()
 
 
@@ -251,9 +251,9 @@ function(boost_modular_build)
             endif()
         endif()
         file(TO_NATIVE_PATH "${PLATFORM_WINMD_DIR}" PLATFORM_WINMD_DIR)
-        string(REPLACE "\\" "\\\\" PLATFORM_WINMD_DIR ${PLATFORM_WINMD_DIR}) # escape backslashes
+        string(REPLACE "\\" "/" PLATFORM_WINMD_DIR ${PLATFORM_WINMD_DIR}) # escape backslashes
 
-        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags>\"/AI\"${PLATFORM_WINMD_DIR}\"\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
+        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     else()
         set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <compileflags>-D_WIN32_WINNT=0x0602")
     endif()
@@ -357,7 +357,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_70" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_71" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do

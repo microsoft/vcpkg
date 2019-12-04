@@ -22,13 +22,14 @@ file(WRITE ${SOURCE_PATH}/examples/CMakeLists.txt "${EXAMPLECMAKE}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DENABLE_CUDA=OFF
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/freenect2")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/freenect2)
 
 vcpkg_copy_pdbs()
 

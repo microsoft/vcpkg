@@ -1,3 +1,4 @@
 Source: lodepng
 Version: 2018-09-18-2
+Homepage: https://github.com/lvandeve/lodepng
 Description: PNG encoder and decoder in C and C++

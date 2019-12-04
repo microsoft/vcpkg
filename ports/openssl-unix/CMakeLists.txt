@@ -76,9 +76,27 @@ file(WRITE "${BUILDDIR}/Configure" "${_contents}")
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
+    file(STRINGS "${BUILDDIR}/crypto/opensslv.h" SHLIB_VERSION
+        REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
+    string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
+        SHLIB_VERSION "${SHLIB_VERSION}")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(LIB_EXT dylib)
+        set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
+    else()
+        set(LIB_EXT so)
+        set(LIB_EXTS ${LIB_EXT}.${SHLIB_VERSION})
+    endif()
+    list(APPEND LIB_EXTS ${LIB_EXT})
 else()
     set(SHARED no-shared)
+    set(LIB_EXTS a)
 endif()
+foreach(lib ssl crypto)
+    foreach(ext ${LIB_EXTS})
+        list(APPEND INSTALL_LIBS "${BUILDDIR}/lib${lib}.${ext}")
+    endforeach()
+endforeach()
 
 if(CMAKE_HOST_WIN32)
     set(ENV_COMMAND set)
@@ -130,10 +148,10 @@ add_custom_target(build_libs ALL
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS depend
-    BYPRODUCTS "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
+    BYPRODUCTS ${INSTALL_LIBS}
 )
 
 install(
-    FILES "${BUILDDIR}/libssl.a" "${BUILDDIR}/libcrypto.a"
+    FILES ${INSTALL_LIBS}
     DESTINATION lib
 )

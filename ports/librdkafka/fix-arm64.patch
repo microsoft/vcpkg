@@ -1,0 +1,21 @@
+diff --git a/src/snappy_compat.h b/src/snappy_compat.h
+index acda21ec..bf2fe4c7 100644
+--- a/src/snappy_compat.h
++++ b/src/snappy_compat.h
+@@ -89,7 +89,7 @@ struct iovec {
+ // x86, PowerPC, and ARM64 can simply do these loads and stores native.
+ #if defined(__i386__) || defined(__x86_64__) || defined(__powerpc__) || \
+ 	defined(_M_IX86) || defined(_M_X64) || defined(_M_AMD64) || \
+-	defined(__aarch64__)
++	defined(__arm64) || defined(__aarch64__) || defined(__AARCH64EL__) || defined(_M_ARM64)
+ 
+ #define get_unaligned get_unaligned_direct
+ #define put_unaligned put_unaligned_direct
+@@ -115,6 +115,7 @@ struct iovec {
+ 	!defined(__ARM_ARCH_6J__) &&		\
+ 	!defined(__ARM_ARCH_6K__) &&		\
+ 	!defined(__ARM_ARCH_6Z__) &&		\
++	!defined(__ARM_ARCH_6KZ__) &&		\
+ 	!defined(__ARM_ARCH_6ZK__) &&		\
+ 	!defined(__ARM_ARCH_6T2__)
+ 

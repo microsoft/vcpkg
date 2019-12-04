@@ -21,7 +21,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/unofficial-http-parser" TARGET_PATH "share/unofficial-http-parser")
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-http-parser TARGET_PATH share/unofficial-http-parser)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE-MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/http-parser)

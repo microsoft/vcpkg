@@ -21,21 +21,7 @@ function(vcpkg_build_qmake)
     # Make sure that the linker finds the libraries used 
     set(ENV_PATH_BACKUP "$ENV{PATH}")
     
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(DEBUG_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(RELEASE_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    endif()
-
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        list(APPEND _csc_RELEASE_TARGETS ${_csc_TARGETS})
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        list(APPEND _csc_DEBUG_TARGETS ${_csc_TARGETS})
-    endif()
 
     if(NOT _csc_BUILD_LOGNAME)
         set(_csc_BUILD_LOGNAME build)
@@ -54,55 +40,34 @@ function(vcpkg_build_qmake)
     set(ENV_CL_BACKUP "$ENV{_CL_}")
     set(ENV{_CL_} "/utf-8")
 
-    #First generate the makefiles so we can modify them
+    #Replace with VCPKG variables if PR #7733 is merged
+    unset(BUILDTYPES)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;${ENV_PATH_BACKUP}")
-        if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles dbg)
-
-            #Store debug makefiles path
-            file(GLOB_RECURSE DEBUG_MAKEFILES ${DEBUG_DIR}/*Makefile*)
-
-            foreach(DEBUG_MAKEFILE ${DEBUG_MAKEFILES})
-                file(READ "${DEBUG_MAKEFILE}" _contents)
-                string(REPLACE "zlib.lib" "zlibd.lib" _contents "${_contents}")
-                string(REPLACE "installed\\${TARGET_TRIPLET}\\lib" "installed\\${TARGET_TRIPLET}\\debug\\lib" _contents "${_contents}")
-                string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib" "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib\\manual-link /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib shell32.lib" _contents "${_contents}")
-                string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
-                string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
-                string(REPLACE "debug\\lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-                string(REPLACE "lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-                string(REPLACE " Qt5Bootstrap.lib " " ${NATIVE_INSTALLED_DIR}\\tools\\qt5\\Qt5Bootstrap.lib Ole32.lib Netapi32.lib Advapi32.lib ${NATIVE_INSTALLED_DIR}\\lib\\zlib.lib Shell32.lib " _contents "${_contents}")
-                file(WRITE "${DEBUG_MAKEFILE}" "${_contents}")
-            endforeach()
-        endif()
-
-        run_jom("${_csc_DEBUG_TARGETS}" ${_csc_BUILD_LOGNAME} dbg)
+        set(_buildname "DEBUG")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "dbg")
+        set(_path_suffix_${_buildname} "/debug")        
     endif()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;${ENV_PATH_BACKUP}")
-        if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles rel)
-
-            #Store release makefile path
-            file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
-
-            foreach(RELEASE_MAKEFILE ${RELEASE_MAKEFILES})
-                file(READ "${RELEASE_MAKEFILE}" _contents)
-                string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib" "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib\\manual-link /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib shell32.lib" _contents "${_contents}")
-                string(REPLACE "tools\\qt5\\qmlcachegen.exe" "tools\\qt5-declarative\\qmlcachegen.exe" _contents "${_contents}")
-                string(REPLACE "tools/qt5/qmlcachegen" "tools/qt5-declarative/qmlcachegen" _contents "${_contents}")
-                string(REPLACE "debug\\lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-                string(REPLACE "lib\\Qt5Bootstrap.lib" "tools\\qt5\\Qt5Bootstrap.lib" _contents "${_contents}")
-                string(REPLACE " Qt5Bootstrap.lib " " ${NATIVE_INSTALLED_DIR}\\tools\\qt5\\Qt5Bootstrap.lib Ole32.lib Netapi32.lib Advapi32.lib ${NATIVE_INSTALLED_DIR}\\lib\\zlib.lib Shell32.lib " _contents "${_contents}")
-                file(WRITE "${RELEASE_MAKEFILE}" "${_contents}")
-            endforeach()
-        endif()
-
-        run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} rel)
+        set(_buildname "RELEASE")
+        list(APPEND BUILDTYPES ${_buildname})
+        set(_short_name_${_buildname} "rel")
+        set(_path_suffix_${_buildname} "")        
     endif()
+    unset(_buildname)
     
+    foreach(_buildname ${BUILDTYPES})
+        set(_BUILD_PREFIX "${_path_suffix_${_buildname}}")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/bin")
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/lib")
+        list(APPEND _csc_${_buildname}_TARGETS ${_csc_TARGETS})
+        if(NOT _csc_SKIP_MAKEFILES)
+            run_jom(qmake_all makefiles ${_short_name_${_buildname}})
+        endif()
+        run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_short_name_${_buildname}})
+        unset(_BUILD_PREFIX)
+    endforeach()
+      
     # Restore the original value of ENV{PATH}
     set(ENV{PATH} "${ENV_PATH_BACKUP}")
     set(ENV{_CL_} "${ENV_CL_BACKUP}")

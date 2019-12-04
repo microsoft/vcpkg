@@ -1,3 +1,4 @@
 Source: alac
 Version:  2017-11-03-c38887c5-1
+Homepage: https://github.com/macosforge/alac
 Description: The Apple Lossless Audio Codec (ALAC) is a lossless audio codec developed by Apple and deployed on all of its platforms and devices.

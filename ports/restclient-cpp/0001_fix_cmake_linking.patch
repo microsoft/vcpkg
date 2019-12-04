@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 45fc887..8b90048 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,7 @@ find_package(Threads REQUIRED)
+ find_package(CURL REQUIRED)
+ find_package(jsoncpp)
+ 
+-add_library(restclient-cpp SHARED
++add_library(restclient-cpp
+   source/restclient.cc
+   source/connection.cc
+   source/helpers.cc

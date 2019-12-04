@@ -1,3 +1,4 @@
 Source: libexif
-Version: 0.6.21-1
+Version: 0.6.21-2
+Homepage: https://libexif.github.io/
 Description: a library for parsing, editing, and saving EXIF data

@@ -12,7 +12,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${GEOGRAM_VERSION}
-    PATCHES fix-cmake-config-and-install.patch
+    PATCHES
+        fix-cmake-config-and-install.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
@@ -65,12 +66,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/geogram")
+vcpkg_fixup_cmake_targets()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake TARGET_CONFIG)
+string(REPLACE [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
+               [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]] TARGET_CONFIG "${TARGET_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake "${TARGET_CONFIG}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/geogram)

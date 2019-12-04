@@ -1,4 +1,5 @@
 Source: log4cplus
-Version: 2.0.4
+Version: 2.0.4-1
+Homepage: https://github.com/log4cplus/log4cplus
 Description: A simple to use C++ logging API providing thread--safe, flexible, and arbitrarily granular control over log management and configuration
 Build-Depends: catch

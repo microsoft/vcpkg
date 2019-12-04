@@ -1,3 +1,7 @@
 Source: lua
-Version: 5.3.5-1
+Version: 5.3.5-2
+Homepage: https://www.lua.org
 Description: a powerful, fast, lightweight, embeddable scripting language
+
+Feature: cpp
+Description: Builds lua for C++ linkage.

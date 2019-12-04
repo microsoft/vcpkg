@@ -1,4 +1,5 @@
 Source: matroska
 Version: 1.5.2
+Homepage: https://github.com/Matroska-Org/libmatroska
 Description: a C++ libary to parse Matroska files (.mkv and .mka)
 Build-Depends: ebml

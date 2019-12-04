@@ -1,0 +1,4 @@
+Source: tensorflow-cc
+Version: 1.14-1
+Description: Library for computation using data flow graphs for scalable machine learning
+Build-Depends: c-ares

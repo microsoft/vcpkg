@@ -1,4 +1,5 @@
 Source: libgta
 Version: 1.0.8-1
+Homepage: https://download.savannah.nongnu.org/releases/gta
 Description: Libgta is a portable library that implements the Generic Tagged Array (GTA) file format.
 Build-Depends: bzip2, zlib, liblzma

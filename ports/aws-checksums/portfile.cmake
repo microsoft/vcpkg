@@ -3,14 +3,21 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-checksums
-    REF v0.1.2
-    SHA512 d924918fce5179e2f42c0aeb86cb3bfda22f92bf3950e179f248a8d3e72c05a4f1015982970fd4075bb687a0a6e03120eee2134c0f017ec8ef69ae066881aa0d
+    REF v0.1.3
+    SHA512 79bf71a6c4c268b27efe8a6a3c4b90281da4ce7f6e4c1c62fce80b11a4756ecfd4dc2b19624ace3f54137113d0cb56a517de0b91dd6338ee8ca069756bca13f4
     HEAD_REF master
 )
+
+if (VCPKG_CRT_LINKAGE STREQUAL static)
+    set(STATIC_CRT_LNK ON)
+else()
+    set(STATIC_CRT_LNK OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DSTATIC_CRT=${STATIC_CRT_LNK}
 )
 
 vcpkg_install_cmake()

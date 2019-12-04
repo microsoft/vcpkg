@@ -1,3 +1,4 @@
 Source: rhash
 Version: 1.3.8
+Homepage: https://github.com/rhash/RHash
 Description: C library for computing a wide variety of hash sums

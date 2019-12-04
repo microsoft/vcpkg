@@ -1,0 +1,92 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 55a3068..c45f7bf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,7 @@ option(FEATURE_PE "Implement all win pe hooking functionality" ON)
+ option(BUILD_DLL "Build dll & lib instead of tests" OFF)
+ option(BUILD_STATIC "If BUILD_DLL is set, create the type that can be statically linked" ON)
+ option(CAPSTONE_FULL "Build all features of capstone." OFF)
++option(BUILD_TOOLS "Build tests" OFF)
+ 
+ # Calculate inclusion of necessary dependencies based on features
+ 
+@@ -38,7 +39,7 @@ set(HEADER_IMP_SOURCES
+ 		${PROJECT_SOURCE_DIR}/sources/PageAllocator.cpp)
+ 
+ # only build tests if making exe
+-if(BUILD_DLL MATCHES OFF)	
++if(BUILD_TOOLS)	
+ 	set(UNIT_TEST_SOURCES 
+ 			${PROJECT_SOURCE_DIR}/MainTests.cpp
+ 			${PROJECT_SOURCE_DIR}/UnitTests/TestDisassembler.cpp
+@@ -62,7 +63,7 @@ if(FEATURE_DETOURS MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${DETOUR_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+ 			# 64 bits
+ 			set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES} 
+@@ -90,7 +91,7 @@ if(FEATURE_EXCEPTION MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${EXCEPTION_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES} 
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestBreakpointHook.cpp
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestHWBreakpointHook.cpp)
+@@ -110,7 +111,7 @@ if(FEATURE_VIRTUALS MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${VIRTUAL_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES} 
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestVTableSwapHook.cpp
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestVFuncSwapHook.cpp)
+@@ -131,7 +132,7 @@ if(FEATURE_PE MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${PE_IMP_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES}
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestEatHook.cpp
+ 				${PROJECT_SOURCE_DIR}/UnitTests/TestIatHook.cpp)
+@@ -149,7 +150,7 @@ if(FEATURE_INLINENTD MATCHES ON)
+ 	set(HEADER_IMP_SOURCES ${HEADER_IMP_SOURCES} ${NTD_SOURCES})
+ 
+ 	# only build tests if making exe
+-	if(BUILD_DLL MATCHES OFF)
++	if(BUILD_TOOLS)
+ 		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+ 			# 64 bits
+ 			set(UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES}
+@@ -172,8 +173,10 @@ if(BUILD_DLL MATCHES ON)
+ 	else()
+ 	    add_library(PolyHook_2 SHARED ${SOURCE_FILES_PLH})
+ 	endif()
+-else()
+-    add_executable(PolyHook_2 ${SOURCE_FILES_PLH})
++endif()
++
++if(BUILD_TOOLS)
++    add_executable(PolyHook2_tool ${SOURCE_FILES_PLH})
+ endif()
+ 
+ # add WALL + PDB flags
+@@ -222,6 +225,12 @@ find_path(CAPSTONE_INCLUDE_DIR NAMES capstone/capstone.h)
+ target_link_libraries(${PROJECT_NAME} ${CAPSTONE_LIBRARY})
+ target_include_directories(${PROJECT_NAME} PRIVATE ${CAPSTONE_INCLUDE_DIR})
+ 
++if(BUILD_TOOLS)
++    target_link_libraries(PolyHook2_tool ${CAPSTONE_LIBRARY})
++    target_include_directories(PolyHook2_tool PRIVATE ${CAPSTONE_INCLUDE_DIR})
++    install(TARGETS PolyHook2_tool DESTINATION tool)
++endif()
++
+ # ASMJIT
+ if(DEP_ASMJIT_NEED MATCHES ON)
+ 	# AsmJit is a dep iff inlinetd is on

@@ -24,7 +24,7 @@ namespace vcpkg::Commands::Create
 
         const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
-        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
+        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}, {"VCPKG_ROOT_PATH", paths.root}};
 
         if (args.command_arguments.size() >= 3)
         {
