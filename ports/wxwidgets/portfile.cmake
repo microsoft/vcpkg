@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.2
-    SHA512 c6f8a6065e837e145633ddbd0e10910f32009900e1f7155abe0ef53b6fc83dceb9eaf6c56369d13b6526e4b8bd6073bbcbdb790d667c0dab381b67ec5d567f6f
+    REF v3.1.3
+    SHA512 4ecb5c2d13f9bda7aa3c12e887c351a0004509ec24bdd440542bec67e1b6dca20e7838a01236a71dd3cf2e1ba0653c40878047f406464cb2c9ee07c26d6f2599
     HEAD_REF master
     PATCHES disable-platform-lib-dir.patch
 )
