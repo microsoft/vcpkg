@@ -8,11 +8,18 @@ set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # Options:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     qt     VTK_Group_Qt
+    qt     Module_vtkGUISupportQtOpenGL
+    qt     Module_vtkImagingOpenGL2
+    qt     Module_vtkIOPostgreSQL # Qt is build with libpq any way so add it here
     qt     VTK_WITH_QT
     mpi    VTK_Group_MPI
     python VTK_WITH_PYTHON
     openvr Module_vtkRenderingOpenVR
     atlmfc Module_vtkGUISupportMFC 
+    paraview Module_vtkIOParallelExodus:BOOL
+    paraview Module_vtkRenderingParallel:BOOL
+    paraview Module_vtkRenderingVolumeAMR:BOOL
+    paraview Module_vtkUtilitiesEncodeString:BOOL
 )
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
@@ -48,7 +55,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CM
 # =============================================================================
 # Collect CMake options for optional components
 if(VTK_WITH_QT)
-    MESSAGE(STATUS BUILDING WITH QT)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_Group_Qt=ON
         -DVTK_QT_VERSION=5
@@ -91,7 +97,7 @@ include(SelectLibraryConfigurations)
 find_library(PROJ_LIBRARY_RELEASE proj proj4 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(PROJ_LIBRARY_DEBUG proj proj4 proj_d proj4_d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 select_library_configurations(PROJ)
-message(STATUS ${PROJ_LIBRARY};DEBUG;${PROJ_LIBRARY_DEBUG};RELEASE;${PROJ_LIBRARY_RELEASE})
+
 # =============================================================================
 # Configure & Install
 vcpkg_configure_cmake(

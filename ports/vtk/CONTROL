@@ -23,3 +23,7 @@ Build-Depends: python3
 Feature: atlmfc
 Description: Mfc functionality for vtk on Windows
 Build-Depends: atlmfc (windows)
+
+Feature: paraview
+Description: Build vtk modules required by paraview
+Build-Depends: vtk[qt, python], vtk[atlmfc] (windows)
