@@ -38,10 +38,11 @@ vcpkg_from_github(
     SHA512 1a693074830c5ca0e95a628f7c55ca93ddc03ff832715e893e5cf69a1097c1e3afe794d264f9bcb36632ca487d78fd2961a3eb5358b5c2601387d75befbb8138
     HEAD_REF master
     PATCHES
+        FindPythonModule.patch
 )
 
 #file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
-#file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/QtTesting/vtkqttesting)
+file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/QtTesting")
 # # Check if one or more features are a part of a package installation.
 # # See /docs/maintainers/vcpkg_check_features.md for more details
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -66,6 +67,11 @@ vcpkg_configure_cmake(
         -DVTK_MODULES_DIR:PATH=${CURRENT_INSTALLED_DIR}/share/vtk/Modules
         -DUSE_EXTERNAL_VTK:BOOL=ON
         -DVTK_USE_SYSTEM_PROTOBUF:BOOL=ON
+        -DVTK_USE_SYSTEM_CGNS:BOOL=ON
+        -DPARAVIEW_USE_VTKM:BOOL=OFF # VTK-m port is missing
+        -DVTK_MODULE_ENABLE_vtkqttesting:BOOL=OFF
+        -DVTK_MODULE_ENABLE_vtkIOParallelExodus:BOOL=OFF
+        -DVTK_MODULE_ENABLE_vtkRenderingParallel:BOOL=OFF
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )

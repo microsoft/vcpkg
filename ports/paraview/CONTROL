@@ -2,7 +2,7 @@ Source: paraview
 Version: 5.6.3
 Homepage: https://www.paraview.org/
 Description: VTK-based Data Analysis and Visualization Application
-Build-Depends: vtk[qt, python], vtk[atlmfc] (windows), protobuf
+Build-Depends: vtk[paraview], protobuf
 Default-Features:
 
 Feature: all_modules
