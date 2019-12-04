@@ -40,7 +40,8 @@ vcpkg_from_github(
     PATCHES
 )
 
-
+#file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/QtTesting/vtkqttesting)
 # # Check if one or more features are a part of a package installation.
 # # See /docs/maintainers/vcpkg_check_features.md for more details
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -58,13 +59,18 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
      OPTIONS 
+        -DCMAKE_MODULE_PATH:PATH=${CURRENT_INSTALLED_DIR}/share
         -DPARAVIEW_USE_EXTERNAL:BOOL=ON
-        -DVTK_MODULES_DIR:STRING=${CURRENT_INSTALLED_DIR}/share/vtk/Modules
+        -DVTK_MODULES_DIR:PATH=${CURRENT_INSTALLED_DIR}/share/vtk/Modules
+        -DVTK_INSTALL_PACKAGE_DIR:PATH=
+        -DVTK_MODULES_DIR:PATH=${CURRENT_INSTALLED_DIR}/share/vtk/Modules
         -DUSE_EXTERNAL_VTK:BOOL=ON
+        -DVTK_USE_SYSTEM_PROTOBUF:BOOL=ON
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
+#TODO. Patch .cmake from FindPythonModules in CMakeLists.txt away
 #VTK_MODULE_USE_EXTERNAL_<name>
 
 vcpkg_install_cmake()
