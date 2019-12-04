@@ -87,12 +87,13 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
-set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
-
+include(SelectLibraryConfigurations)
+find_library(PROJ_LIBRARY_RELEASE proj proj4 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(PROJ_LIBRARY_DEBUG proj proj4 proj_d proj4_d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+select_library_configurations(PROJ)
+message(STATUS ${PROJ_LIBRARY};DEBUG;${PROJ_LIBRARY_DEBUG};RELEASE;${PROJ_LIBRARY_RELEASE})
 # =============================================================================
 # Configure & Install
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -116,10 +117,7 @@ vcpkg_configure_cmake(
         -DPYTHON_EXECUTABLE=${PYTHON3}
 
         ${ADDITIONAL_OPTIONS}
-    OPTIONS_RELEASE
-        -DPROJ_LIBRARY=${PROJ_LIBRARY_REL}
-    OPTIONS_DEBUG
-        -DPROJ_LIBRARY=${PROJ_LIBRARY_DBG}
+        -DPROJ_LIBRARY=${PROJ_LIBRARY}
 )
 
 vcpkg_install_cmake()
@@ -165,24 +163,83 @@ endif()
 file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/Modules/*.cmake)
 foreach(FILE IN LISTS CMAKE_FILES)
     file(READ "${FILE}" _contents)
+    file(WRITE "${FILE}.bak" "${_contents}")
     string(REPLACE "\${_IMPORT_PREFIX}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
     file(WRITE "${FILE}" "${_contents}")
 endforeach()
+
+# Correct 3rd Party modules in *.cmake:
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkdoubleconversion.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/double-conversion.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/double-conversion.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/double-conversion.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkexpat.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/expat.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/expat.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/expat.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkjsoncpp.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/jsoncpp.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/jsoncpp.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/jsoncpp.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibproj.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/proj.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/proj.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/proj_d.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibxml2.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/libxml2.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/libxml2.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/libxml2.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtknetcdf.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/netcdf.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/netcdf.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/netcdf.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkogg.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/ogg.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/ogg.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/ogg.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtksqlite.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/sqlite3.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/sqlite3.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/sqlite3.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
+
+set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtktheora.cmake")
+file(READ "${FILE}" _contents)
+string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/theoraenc.lib;${VTK_INSTALL_PREFIX}/lib/theoradec.lib"]] 
+               [[optimized;"${VTK_INSTALL_PREFIX}/lib/theoraenc.lib";optimized;"${VTK_INSTALL_PREFIX}/lib/theoradec.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/theoraenc.lib;";debug;"${VTK_INSTALL_PREFIX}/debug/lib/theoradec.lib"]] 
+               _contents "${_contents}")
+file(WRITE "${FILE}" "${_contents}")
 
 # =============================================================================
 # Clean-up other directories
 
 # Delete the debug binary TOOL_NAME that is not required
 function(_vtk_remove_debug_tool TOOL_NAME)
-    # on windows, the tools end with .exe
-    set(filename_win ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
-    if(EXISTS ${filename_win})
-        file(REMOVE ${filename_win})
-    endif()
-    # on other OS, it doesn't
-    set(filename_unix ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME})
-    if(EXISTS ${filename_unix})
-        file(REMOVE ${filename_unix})
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
     endif()
     # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
     # to make them point to the release version of the tools
@@ -193,18 +250,12 @@ endfunction()
 
 # Move the release binary TOOL_NAME from bin to tools
 function(_vtk_move_release_tool TOOL_NAME)
-    # on windows, the tools end with .exe
-    set(old_filename_win "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe")
-    if(EXISTS ${old_filename_win})
-        file(INSTALL ${old_filename_win} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
-        file(REMOVE ${old_filename_win})
+    set(old_filename "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(EXISTS ${old_filename})
+        file(INSTALL ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
+        file(REMOVE ${old_filename})
     endif()
-    # on other OS, it doesn't
-    set(old_filename_unix "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}")
-    if(EXISTS ${old_filename_unix})
-        file(INSTALL ${old_filename_unix} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk")
-        file(REMOVE ${old_filename_unix})
-    endif()
+
     # we also have to bend the lines referencing the tools in VTKTargets-release.cmake
     # to make them point to the tool folder
     file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
@@ -259,5 +310,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_D
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
 
+file(INSTALL "${SOURCE_PATH}/CMake/FindPythonModules.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk/CMake)
+file(INSTALL "${SOURCE_PATH}/CMake/vtkCompilerPlatformFlags.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 
-#add install for CMAKE/FindPythonModules.cmake vtkCompilerPlatformFlags vtkWrappingTools
+#add install for CMAKE/FindPythonModules.cmake vtkCompilerPlatformFlags
