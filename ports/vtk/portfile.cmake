@@ -7,8 +7,11 @@ set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # =============================================================================
 # Options:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
     qt     VTK_Group_Qt
+    qt     Module_vtkGUISupportQt
     qt     Module_vtkGUISupportQtOpenGL
+    qt     Module_vtkGUISupportQtSQL
     qt     Module_vtkImagingOpenGL2
     qt     Module_vtkIOPostgreSQL # Qt is build with libpq any way so add it here
     qt     VTK_WITH_QT
@@ -20,6 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     paraview Module_vtkRenderingParallel:BOOL
     paraview Module_vtkRenderingVolumeAMR:BOOL
     paraview Module_vtkUtilitiesEncodeString:BOOL
+    paraview VTK_ENABLE_KITS:BOOL
 )
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
@@ -59,11 +63,6 @@ if(VTK_WITH_QT)
         -DVTK_Group_Qt=ON
         -DVTK_QT_VERSION=5
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
-        -DVTK_Module_vtkViewsQT=ON
-        -DVTK_Module_vtkRenderingQT=ON
-        -DVTK_Module_vtkGUISupportQt=ON
-        -DVTK_Module_vtkGUISupportQtOpenGL=ON
-        -DVTK_Module_vtkGUISupportQtSQL=ON
     )
 endif()
 
@@ -318,5 +317,5 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
 
 file(INSTALL "${SOURCE_PATH}/CMake/FindPythonModules.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk/CMake)
 file(INSTALL "${SOURCE_PATH}/CMake/vtkCompilerPlatformFlags.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
-
+file(INSTALL "${SOURCE_PATH}/CMake/vtkEncodeString.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 #add install for CMAKE/FindPythonModules.cmake vtkCompilerPlatformFlags

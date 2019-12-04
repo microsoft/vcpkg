@@ -72,6 +72,7 @@ vcpkg_configure_cmake(
         -DVTK_MODULE_ENABLE_vtkqttesting:BOOL=OFF
         -DVTK_MODULE_ENABLE_vtkIOParallelExodus:BOOL=OFF
         -DVTK_MODULE_ENABLE_vtkRenderingParallel:BOOL=OFF
+        -DVTK_ENABLE_KITS:BOOL=ON
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
