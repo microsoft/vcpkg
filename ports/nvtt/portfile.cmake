@@ -14,6 +14,7 @@ vcpkg_from_github(
         bc7.patch
         squish.patch
         fix-build-error.patch
+        OptimalOptions.patch
 )
 
 vcpkg_configure_cmake(
