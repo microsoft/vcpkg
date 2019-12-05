@@ -4,11 +4,56 @@ index ce979ba..322e2de 100644
 +++ b/IO/CityGML/CMakeLists.txt
 @@ -4,8 +4,8 @@ vtk_module_library(vtkIOCityGML ${Module_SRCS})
  # pugixml does not set _INCLUDE_DIRS or _LIBRARIES
- if(VTK_USE_SYSTEM_PUGIXML AND NOT pugixml_INCLUDE_DIRS)
-   find_package(pugixml REQUIRED)
+-if(VTK_USE_SYSTEM_PUGIXML AND NOT pugixml_INCLUDE_DIRS)
+-  find_package(pugixml REQUIRED)
++if(VTK_USE_SYSTEM_PUGIXML)
++  find_package(pugixml REQUIRED)
   get_target_property(pugixml_INCLUDE_DIRS pugixml INTERFACE_INCLUDE_DIRECTORIES)
 -  get_target_property(pugixml_LIBRARIES pugixml LOCATION)
 +  #get_target_property(pugixml_LIBRARIES pugixml LOCATION) # set by portfile!
   include_directories(${pugixml_INCLUDE_DIRS})
   vtk_module_link_libraries(vtkIOCityGML LINK_PRIVATE ${pugixml_LIBRARIES})
  endif()
+diff --git a/ThirdParty/pugixml/CMakeLists.txt b/ThirdParty/pugixml/CMakeLists.txt
+index 19dcb774e..a3d0b3fba 100644
+--- a/ThirdParty/pugixml/CMakeLists.txt
++++ b/ThirdParty/pugixml/CMakeLists.txt
+@@ -1,10 +1,22 @@
+ vtk_module_third_party(pugixml
+   LIBRARIES vtkpugixml
+-  INCLUDE_DIRS ${vtkpugixml_SOURCE_DIR}/vtkpugixml
+-  ${vtkpugixml_BINARY_DIR}/vtkpugixml
+-  NO_ADD_SUBDIRECTORY)
++  INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/vtkpugixml
++  ${CMAKE_CURRENT_BINARY_DIR}/vtkpugixml
++  )
+ 
+-vtk_module_export_info()
+-add_subdirectory(vtkpugixml)
++#vtk_module_export_info()
++#if(NOT VTK_USE_SYSTEM_PUGIXML)
++#    add_subdirectory(vtkpugixml)
++#endif()
++#vtk_target_export(vtkpugixml)
+ 
+-vtk_target_export(vtkpugixml)
++configure_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/vtk_pugixml.h.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/vtk_pugixml.h")
++
++if (NOT VTK_INSTALL_NO_DEVELOPMENT)
++  install(FILES
++    "${CMAKE_CURRENT_BINARY_DIR}/vtk_pugixml.h"
++    DESTINATION "${VTK_INSTALL_INCLUDE_DIR}"
++    COMPONENT Development)
++endif()
+diff --git a/ThirdParty/pugixml/module.cmake b/ThirdParty/pugixml/module.cmake
+index 3a920d1d1..572dab7b1 100644
+--- a/ThirdParty/pugixml/module.cmake
++++ b/ThirdParty/pugixml/module.cmake
+@@ -1 +1,5 @@
++if (VTK_USE_SYSTEM_PUGIXML)
++  message(STATUS "PUGIXML-LIBS:${pugixml_LIBRARIES}")
++  set(vtkpugixml_LIBRARIES ${pugixml_LIBRARIES})
++endif ()
+ vtk_module(vtkpugixml EXCLUDE_FROM_WRAPPING)

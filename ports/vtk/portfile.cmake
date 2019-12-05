@@ -60,19 +60,27 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CM
 
 # =============================================================================
 # Collect CMake options for optional components
-if(VTK_WITH_QT)
+if("qt" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_Group_Qt=ON
         -DVTK_QT_VERSION=5
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
+        #-DVTK_OPENGL_HAS_EGL:BOOL=ON # Qt automatically sets EGL to yes so I assume it is generally available if Qt is installed
+        #-DVTK_OPENGL_HAS_GLES 
     )
 endif()
 
-if(VTK_WITH_PYTHON)
+if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_WRAP_PYTHON=ON
+        -DVTK_WRAP_PYTHON:BOOL=ON
         -DVTK_PYTHON_VERSION=3
+    )
+endif()
+
+if("java" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_WRAP_JAVA:BOOL=ON
     )
 endif()
 
@@ -94,13 +102,23 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-include(SelectLibraryConfigurations)
-find_library(PROJ_LIBRARY_RELEASE proj proj4 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(PROJ_LIBRARY_DEBUG proj proj4 proj_d proj4_d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-select_library_configurations(PROJ)
-find_library(PUGIXML_LIBRARY_RELEASE pugixml PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(PUGIXML_LIBRARY_DEBUG pugixml PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-select_library_configurations(PUGIXML)
+include(SelectLibraryConfigurations REQUIRED)
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    find_library(PROJ_LIBRARY_RELEASE proj proj4 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+    list(APPEND PROJ_LIBRARY optimized "${PROJ_LIBRARY_RELEASE}")
+    find_library(PUGIXML_LIBRARY_RELEASE pugixml PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+    list(APPEND PUGIXML_LIBRARY optimized "${PUGIXML_LIBRARY_RELEASE}")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    find_library(PROJ_LIBRARY_DEBUG proj proj4 proj_d proj4_d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    list(APPEND PROJ_LIBRARY debug "${PROJ_LIBRARY_DEBUG}")
+    find_library(PUGIXML_LIBRARY_DEBUG pugixml PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    list(APPEND PUGIXML_LIBRARY debug "${PUGIXML_LIBRARY_DEBUG}")
+endif()
+string(REPLACE ";" "\\\\\\;" PROJ_LIBRARY "${PROJ_LIBRARY}")
+string(REPLACE ";" "\\\\\\;" PUGIXML_LIBRARY "${PUGIXML_LIBRARY}")
+
 # =============================================================================
 # Configure & Install
 vcpkg_configure_cmake(
@@ -116,6 +134,15 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
 
+        #-DVTK_OPENGL_HAS_OSMESA
+        #-DVTK_SMP_IMPLEMENTATION_TYPE Sequentiell # OpenMP or TBB
+
+        #-DVTK_ANDROID_BUILD
+        #-DVTK_IOS_BUILD
+
+        #-DVTK_LEGACY_REMOVE
+        #-DVTK_LEGACY_SILENT
+
         # We set all libraries to "system" and explicitly list the ones that should use embedded copies
         -DVTK_USE_SYSTEM_LIBRARIES=ON
         -DVTK_USE_SYSTEM_GL2PS=OFF
@@ -126,13 +153,13 @@ vcpkg_configure_cmake(
         -DPYTHON_EXECUTABLE=${PYTHON3}
 
         ${ADDITIONAL_OPTIONS}
-        -DPROJ_LIBRARY=${PROJ_LIBRARY}
+        "-DPROJ_LIBRARY:STRING=${PROJ_LIBRARY}"
         
         #-DVTK_USE_SYSTEM_PUGIXML:BOOL=OFF
-        -DPUGIXML_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DPUGIXML_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include
         #-DPUGIXML_LIBRARIES=${PUGIXML_LIBRARY}
         #-DPUGIXML_LIBRARY=${PUGIXML_LIBRARY}
-        -Dpugixml_LIBRARIES=${PUGIXML_LIBRARY}
+        "-Dpugixml_LIBRARIES:STRING=${PUGIXML_LIBRARY}"
         #-Dpugixml_LIBRARY=${PUGIXML_LIBRARY}
 )
 
@@ -206,12 +233,12 @@ string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/jsoncpp.lib"]]
                _contents "${_contents}")
 file(WRITE "${FILE}" "${_contents}")
 
-set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibproj.cmake")
-file(READ "${FILE}" _contents)
-string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/proj.lib"]] 
-               [[optimized;"${VTK_INSTALL_PREFIX}/lib/proj.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/proj_d.lib"]] 
-               _contents "${_contents}")
-file(WRITE "${FILE}" "${_contents}")
+# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibproj.cmake")
+# file(READ "${FILE}" _contents)
+# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/proj.lib"]] 
+               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/proj.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/proj_d.lib"]] 
+               # _contents "${_contents}")
+# file(WRITE "${FILE}" "${_contents}")
 
 set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibxml2.cmake")
 file(READ "${FILE}" _contents)
