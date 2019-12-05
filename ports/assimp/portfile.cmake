@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
@@ -10,6 +8,7 @@ vcpkg_from_github(
         uninitialized-variable.patch
         fix-static-build-error.patch
         cmake-policy.patch
+        fix_minizip.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
@@ -67,6 +66,4 @@ endif()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/assimp-config.cmake "${ASSIMP_CONFIG}")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/assimp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/assimp/LICENSE ${CURRENT_PACKAGES_DIR}/share/assimp/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
