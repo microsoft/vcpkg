@@ -10,13 +10,7 @@ vcpkg_from_github(
         0001_add_mt_msvc.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-    set(COMPILE_TYPE SHARED)
-else()
-    set(COMPILE_TYPE STATIC)
-endif()
-
+set(COMPILE_TYPE STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -33,10 +27,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restclient-cpp)
 
 # Remove includes in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug/lib)
-endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restclient-cpp)
