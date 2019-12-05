@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtmidi
@@ -9,7 +7,6 @@ vcpkg_from_github(
 	PATCHES
 		fix-POSIXname.patch
 )
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -18,5 +15,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/rtmidi RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
