@@ -74,19 +74,46 @@ function(boost_modular_build)
     # endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
-            set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            set(BOOST_LIB_SUFFIX ${BOOST_LIB_RELEASE_SUFFIX})
+            set(VARIANT "release")
+            set(BUILD_LIB_PATH "lib/")
+            configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+            if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
+                set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+            endif()
+            vcpkg_configure_cmake(
+                SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
+                PREFER_NINJA
+                OPTIONS
+                    "-DB2_EXE=${B2_EXE}"
+                    "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+                    "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                    ${fragment_option}
+            )
+            vcpkg_install_cmake()
         endif()
-        vcpkg_configure_cmake(
-            SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
-            PREFER_NINJA
-            OPTIONS
-                "-DB2_EXE=${B2_EXE}"
-                "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
-                "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
-                ${fragment_option}
-        )
-        vcpkg_install_cmake()
+
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+            set(BOOST_LIB_SUFFIX ${BOOST_LIB_DEBUG_SUFFIX})
+            set(VARIANT debug)
+            set(BUILD_LIB_PATH "debug/lib/")
+            configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+            if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
+                set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+            endif()
+            vcpkg_configure_cmake(
+                SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
+                PREFER_NINJA
+                OPTIONS
+                    "-DB2_EXE=${B2_EXE}"
+                    "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+                    "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                    ${fragment_option}
+            )
+            vcpkg_install_cmake()
+        endif()
 
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
