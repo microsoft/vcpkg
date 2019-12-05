@@ -22,9 +22,11 @@ FEATURES
     paraview Module_vtkIOParallelExodus:BOOL
     paraview Module_vtkRenderingParallel:BOOL
     paraview Module_vtkRenderingVolumeAMR:BOOL
-    paraview Module_vtkUtilitiesEncodeString:BOOL
-    paraview VTK_ENABLE_KITS:BOOL
+    paraview VTK_ENABLE_KITS:BOOL 
 )
+#    paraview Module_vtkUtilitiesEncodeString:BOOL
+#INVERTED_FEATURES
+#    paraview VTK_USE_SYSTEM_PUGIXML:BOOL # Bug in VTK 8.2.0 fixed in master but the macro for it was complelty changed so it cannot be transfered. 
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
@@ -40,7 +42,7 @@ vcpkg_from_github(
     PATCHES
         fix-find-lz4.patch
         fix_ogg_linkage.patch
-        fix-pugixml-link.patch
+        #fix-pugixml-link.patch TARGETS do not work correctly in VTK!!!!
         hdf5_static.patch
         fix-find-lzma.patch
         fix-proj4.patch
@@ -96,7 +98,9 @@ include(SelectLibraryConfigurations)
 find_library(PROJ_LIBRARY_RELEASE proj proj4 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(PROJ_LIBRARY_DEBUG proj proj4 proj_d proj4_d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 select_library_configurations(PROJ)
-
+find_library(PUGIXML_LIBRARY_RELEASE pugixml PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(PUGIXML_LIBRARY_DEBUG pugixml PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+select_library_configurations(PUGIXML)
 # =============================================================================
 # Configure & Install
 vcpkg_configure_cmake(
@@ -123,6 +127,13 @@ vcpkg_configure_cmake(
 
         ${ADDITIONAL_OPTIONS}
         -DPROJ_LIBRARY=${PROJ_LIBRARY}
+        
+        #-DVTK_USE_SYSTEM_PUGIXML:BOOL=OFF
+        -DPUGIXML_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        #-DPUGIXML_LIBRARIES=${PUGIXML_LIBRARY}
+        #-DPUGIXML_LIBRARY=${PUGIXML_LIBRARY}
+        -Dpugixml_LIBRARIES=${PUGIXML_LIBRARY}
+        #-Dpugixml_LIBRARY=${PUGIXML_LIBRARY}
 )
 
 vcpkg_install_cmake()
