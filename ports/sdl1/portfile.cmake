@@ -77,10 +77,10 @@ else()
     
     file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach (SDL1_TOOL ${SDL1_TOOLS})
-        file(COPY ${SDL1_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${SDL1_TOOLS})
+        file(COPY ${SDL1_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(REMOVE ${SDL1_TOOL})
     endforeach()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin))
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()
