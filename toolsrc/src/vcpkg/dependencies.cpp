@@ -113,9 +113,13 @@ namespace vcpkg::Dependencies
                         if (dep.qualifier.empty())
                         {
                             // Feature "core" is always part of the dependencies.
-                            dep_list.emplace_back(PackageSpec::from_name_and_triplet(dep.depend.name, m_spec.triplet())
-                                                      .value_or_exit(VCPKG_LINE_INFO),
-                                                  "core");
+                            if (Util::find(dep.depend.features, "core") == dep.depend.features.end())
+                            {
+                                dep_list.emplace_back(
+                                    PackageSpec::from_name_and_triplet(dep.depend.name, m_spec.triplet())
+                                        .value_or_exit(VCPKG_LINE_INFO),
+                                    "core");
+                            }
 
                             for (const std::string& dep_feature : dep.depend.features)
                             {
@@ -582,10 +586,12 @@ namespace vcpkg::Dependencies
             Checks::check_exit(
                 VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
 
-            const std::vector<std::string> all_features = Util::fmap(scfl->source_control_file->feature_paragraphs, [](auto&& feature_paragraph) { return feature_paragraph->name; });
+            const std::vector<std::string> all_features =
+                Util::fmap(scfl->source_control_file->feature_paragraphs,
+                           [](auto&& feature_paragraph) { return feature_paragraph->name; });
 
-            auto fspecs =
-                FullPackageSpec::to_feature_specs(spec, scfl->source_control_file->core_paragraph->default_features, all_features);
+            auto fspecs = FullPackageSpec::to_feature_specs(
+                spec, scfl->source_control_file->core_paragraph->default_features, all_features);
             feature_specs.insert(
                 feature_specs.end(), std::make_move_iterator(fspecs.begin()), std::make_move_iterator(fspecs.end()));
         }
@@ -622,15 +628,18 @@ namespace vcpkg::Dependencies
                 m_graph_plan->install_graph.add_vertex({&dep_clust});
 
                 // Add default features
-                for (const std::string& feature :
-                     dep_clust.m_scfl.source_control_file->core_paragraph->default_features)
+                if (dep_spec.feature() != "core")
                 {
-                    // Instead of dealing with adding default features to each of our dependencies right
-                    // away we just defer to the next pass of the loop.
-                    next_dependencies.emplace_back(dep_spec.spec(), feature);
-                }
+                    for (const std::string& feature :
+                         dep_clust.m_scfl.source_control_file->core_paragraph->default_features)
+                    {
+                        // Instead of dealing with adding default features to each of our dependencies right
+                        // away we just defer to the next pass of the loop.
+                        next_dependencies.emplace_back(dep_spec.spec(), feature);
+                    }
 
-                next_dependencies.emplace_back(dep_spec.spec(), "core");
+                    next_dependencies.emplace_back(dep_spec.spec(), "core");
+                }
             }
 
             if (dep_spec.spec() != clust.m_spec)

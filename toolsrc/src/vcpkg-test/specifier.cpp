@@ -1,5 +1,6 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/packagespec.h>
 
@@ -14,17 +15,19 @@ TEST_CASE ("specifier conversion", "[specifier]")
         auto a_spec = PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
         auto b_spec = PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
 
-        auto fspecs = FullPackageSpec::to_feature_specs({{a_spec, {"0", "1"}}, {b_spec, {"2", "3"}}});
-
+        auto fspecs = FullPackageSpec::to_feature_specs({a_spec, {"0", "1"}}, {}, {});
+        auto fspecs2 = FullPackageSpec::to_feature_specs({b_spec, {"2", "3"}}, {}, {});
+        Util::Vectors::concatenate(&fspecs, fspecs2);
+        Util::sort(fspecs);
         REQUIRE(fspecs.size() == SPEC_SIZE);
 
-        std::array<const char*, SPEC_SIZE> features = {"", "0", "1", "", "2", "3"};
+        std::array<const char*, SPEC_SIZE> features = {"0", "1", "core", "2", "3", "core"};
         std::array<PackageSpec*, SPEC_SIZE> specs = {&a_spec, &a_spec, &a_spec, &b_spec, &b_spec, &b_spec};
 
         for (std::size_t i = 0; i < SPEC_SIZE; ++i)
         {
-            REQUIRE(features.at(i) == fspecs.at(i).feature());
-            REQUIRE(*specs.at(i) == fspecs.at(i).spec());
+             REQUIRE(features.at(i) == fspecs.at(i).feature());
+             REQUIRE(*specs.at(i) == fspecs.at(i).spec());
         }
     }
 }
@@ -101,19 +104,20 @@ TEST_CASE ("specifier parsing", "[specifier]")
         auto zlib = vcpkg::FullPackageSpec::from_string("zlib[0,1]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
         auto openssl =
             vcpkg::FullPackageSpec::from_string("openssl[*]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
-        auto specs = FullPackageSpec::to_feature_specs({zlib, openssl});
+        auto specs = FullPackageSpec::to_feature_specs(zlib, {}, {});
+        auto specs2 = FullPackageSpec::to_feature_specs(openssl, {}, {});
+        Util::Vectors::concatenate(&specs, specs2);
         Util::sort(specs);
+
         auto spectargets = FeatureSpec::from_strings_and_triplet(
             {
                 "openssl",
                 "zlib",
-                "openssl[*]",
                 "zlib[0]",
                 "zlib[1]",
             },
             Triplet::X86_UWP);
         Util::sort(spectargets);
-
         REQUIRE(specs.size() == spectargets.size());
         REQUIRE(Util::all_equal(specs, spectargets));
     }

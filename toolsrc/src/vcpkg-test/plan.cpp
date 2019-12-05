@@ -46,7 +46,7 @@ static std::unique_ptr<SourceControlFile> make_control_file(
 /// </summary>
 static void features_check(Dependencies::AnyAction& install_action,
                            std::string pkg_name,
-                           std::vector<std::string> vec,
+                           std::vector<std::string> expected_features,
                            const Triplet& triplet = Triplet::X86_WINDOWS)
 {
     REQUIRE(install_action.install_action.has_value());
@@ -54,12 +54,10 @@ static void features_check(Dependencies::AnyAction& install_action,
     const auto& feature_list = plan.feature_list;
 
     REQUIRE(plan.spec.triplet().to_string() == triplet.to_string());
+    REQUIRE(pkg_name == plan.spec.name());
+    REQUIRE(feature_list.size() == expected_features.size());
 
-    auto& scfl = *plan.source_control_file_location.get();
-    REQUIRE(pkg_name == scfl.source_control_file->core_paragraph->name);
-    REQUIRE(feature_list.size() == vec.size());
-
-    for (auto&& feature_name : vec)
+    for (auto&& feature_name : expected_features)
     {
         // TODO: see if this can be simplified
         if (feature_name == "core" || feature_name == "")
@@ -454,13 +452,13 @@ TEST_CASE ("basic feature test 8", "[plan][!mayfail]")
                                                                 {spec_c_64, spec_a_86, spec_a_64, spec_c_86},
                                                                 StatusParagraphs(std::move(status_paragraphs)));
 
-    remove_plan_check(install_plan.at(0), "a", Triplet::X64_WINDOWS);
-    remove_plan_check(install_plan.at(1), "a");
+    remove_plan_check(install_plan.at(0), "a");
+    remove_plan_check(install_plan.at(1), "a", Triplet::X64_WINDOWS);
     features_check(install_plan.at(2), "b", {"core"}, Triplet::X64_WINDOWS);
     features_check(install_plan.at(3), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(4), "c", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(5), "b", {"core"});
-    features_check(install_plan.at(6), "a", {"a1", "core"});
+    features_check(install_plan.at(4), "b", {"core"});
+    features_check(install_plan.at(5), "a", {"a1", "core"});
+    features_check(install_plan.at(6), "c", {"core"}, Triplet::X64_WINDOWS);
     features_check(install_plan.at(7), "c", {"core"});
 }
 
