@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(MESSAGE "${PORT} only supports Windows platform" ALWAYS)
-endif()
+vcpkg_fail_port_install(ON_TARGET "OSX" "Linux" "UWP")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     set(ARCH_DIR "")
