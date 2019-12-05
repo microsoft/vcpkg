@@ -82,6 +82,7 @@ namespace vcpkg
 
         if (Util::find(spec.features, "*") != spec.features.end())
         {
+            feature_specs.emplace_back(spec.package_spec, "core");
             for (const std::string& feature : all_features)
             {
                 feature_specs.emplace_back(spec.package_spec, feature);
