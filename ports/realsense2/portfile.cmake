@@ -3,9 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.22.0
-    SHA512 7595780c1955a2d4a91df5b70ab6366c672f389bc3d2dcb9f2e78a2ea1fc875c65f878103df483205e17f62dfd024ee5f7ccb15afc5d18978d3c25aa071652ab
-    HEAD_REF development
+    REF v2.30.0
+    SHA512 b40ee0b51a4dfe8ed4470a513ba0a4f7d08083a46c85a8747f5316f47a50001448b1b762daa3c24278b10342802292df00cf417509374cad309c1af0910ba3a9
+    HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
