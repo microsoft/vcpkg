@@ -42,7 +42,7 @@ vcpkg_from_github(
     PATCHES
         fix-find-lz4.patch
         fix_ogg_linkage.patch
-        #fix-pugixml-link.patch TARGETS do not work correctly in VTK!!!!
+        fix-pugixml-link.patch #TARGETS do not work correctly in VTK!!!!
         hdf5_static.patch
         fix-find-lzma.patch
         fix-proj4.patch
