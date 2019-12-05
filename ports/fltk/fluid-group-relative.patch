@@ -1,0 +1,71 @@
+diff --git a/fluid/Fl_Widget_Type.cxx b/fluid/Fl_Widget_Type.cxx
+index 655aa72..0cf83ba 100644
+--- a/fluid/Fl_Widget_Type.cxx
++++ b/fluid/Fl_Widget_Type.cxx
+@@ -46,6 +46,8 @@ extern const char* i18n_include;
+ extern const char* i18n_function;
+ extern const char* i18n_file;
+ extern const char* i18n_set;
++extern int varused_test, varused;
++extern bool fl_curr_write_once;
+ 
+ int Fl_Widget_Type::default_size = FL_NORMAL_SIZE;
+ 
+@@ -2093,8 +2095,6 @@ const char *Fl_Type::callback_name() {
+   return unique_id(this, "cb", name(), label());
+ }
+ 
+-extern int varused_test, varused;
+-
+ void Fl_Widget_Type::write_code1() {
+   const char* t = subclassname(this);
+   const char *c = array_name(this);
+@@ -2153,6 +2153,16 @@ void Fl_Widget_Type::write_code1() {
+       }
+   }
+ 
++  if(fl_curr_write_once) {
++    write_c("%s#ifndef fl_curr_x\n", indent());
++    write_c("%s#define fl_curr_x() 0\n", indent());
++    write_c("%s#endif\n", indent());
++    write_c("%s#ifndef fl_curr_y\n", indent());
++    write_c("%s#define fl_curr_y() 0\n", indent());
++    write_c("%s#endif\n", indent());
++    fl_curr_write_once = false;
++  }
++
+   write_c("%s{ ", indent());
+   write_comment_inline_c();
+   if (varused) write_c("%s* o = ", t);
+@@ -2163,9 +2173,9 @@ void Fl_Widget_Type::write_code1() {
+     if (!strstr(t, "Window"))
+       write_c("new %s(0, 0, %d, %d", t, o->w(), o->h());
+     else
+-      write_c("new %s(%d, %d", t, o->w(), o->h());
++      write_c("new %s(fl_curr_x()+%d, fl_curr_y()+%d", t, o->w(), o->h());
+   } else {
+-    write_c("new %s(%d, %d, %d, %d", t, o->x(), o->y(), o->w(), o->h());
++    write_c("new %s(fl_curr_x()+%d, fl_curr_y()+%d, %d, %d", t, o->x(), o->y(), o->w(), o->h());
+   }
+   if (label() && *label()) {
+     write_c(", ");
+diff --git a/fluid/code.cxx b/fluid/code.cxx
+index 50e5d70..8dd1f82 100644
+--- a/fluid/code.cxx
++++ b/fluid/code.cxx
+@@ -149,6 +149,7 @@ int write_declare(const char *format, ...) {
+ // anything, but set a variable if it looks like the variable "o" is used:
+ int varused_test;
+ int varused;
++bool fl_curr_write_once;
+ 
+ // write an array of C characters (adds a null):
+ void write_cstring(const char *s, int length) {
+@@ -364,6 +365,7 @@ int write_code(const char *s, const char *t) {
+   indentation = 0;
+   current_class = 0L;
+   current_widget_class = 0L;
++  fl_curr_write_once = true;
+   if (!s) code_file = stdout;
+   else {
+     FILE *f = fl_fopen(s, filemode);

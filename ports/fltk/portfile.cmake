@@ -10,6 +10,7 @@ vcpkg_from_github(ARCHIVE
         find-lib-cairo.patch
         find-lib-png.patch
         add-link-libraries.patch
+        fluid-group-relative.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
