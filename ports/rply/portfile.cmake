@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 
 set(VERSION 1.1.4)
 
