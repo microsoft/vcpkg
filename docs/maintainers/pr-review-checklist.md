@@ -9,14 +9,14 @@ This document provides an annotated checklist which vcpkg team members use to ap
 
 You can link any of these items in a GitHub comment by copying the link address attached to each checklist item.
 
-- <details id=c000001>
+<details id=c000001>
     <summary><a href=#c000001>c000001</a>: No deprecated helper functions are used</summary>
 
     See [Maintainer Guidelines and Policies](maintainer-guide.md#Avoid-deprecated-helper-functions)
 </details>
 
 
-- <details id=c000002>
+<details id=c000002>
     <summary>c000002: Control Version field is updated</summary>
 
     See [Maintainer Guidelines and Policies](maintainer-guide.md#Avoid-deprecated-helper-functions#versioning)
