@@ -312,6 +312,15 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk/Copyright.txt ${CURRENT_PACKAGES_D
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
 
+## Files Modules needed by ParaView
+if("paraview" IN_LIST FEATURES)
+    set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType vtkSupportMacros vtkDirectories vtkVersion)
+    foreach(module ${VTK_CMAKE_NEEDED})
+        file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
+    endforeach()
+    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLarfeFilesSupport.cxx" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
+endif()
+
 # file(INSTALL "${SOURCE_PATH}/CMake/FindPythonModules.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk/CMake)
 # file(INSTALL "${SOURCE_PATH}/CMake/vtkCompilerPlatformFlags.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
 # file(INSTALL "${SOURCE_PATH}/CMake/vtkEncodeString.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
