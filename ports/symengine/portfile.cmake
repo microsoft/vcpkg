@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
@@ -5,6 +7,11 @@ vcpkg_from_github(
     SHA512 5eee76ed21527532ab2bd50740c3a034479da3c8a23905f8c8f93bda0ab126211b54644d8e7d814cd60d99a523504843102ad5db0c14d97fda00d5aaeb2c4cae
     HEAD_REF master
 )
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Though SymEngine supports dynamic library on Windows, it doesn't work correctly sometimes.
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -49,4 +56,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
