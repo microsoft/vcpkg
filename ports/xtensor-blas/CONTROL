@@ -1,4 +1,5 @@
 Source: xtensor-blas
-Version: 0.16.1-1
+Version: 2019-12-06
 Description: BLAS extension to xtensor
+Homepage: https://github.com/xtensor-stack/xtensor-blas
 Build-Depends: xtensor

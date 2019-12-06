@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor-blas
-    REF 0.16.1
-    SHA512 3bdbd48b74d7be0b9f4ad2d435789e266b3cc1e043bbe73739978678bd1ca81504a688cdd80c03667305d210d299127be9939333c9bd0ac27dff0423ccb4861d
+    REF eaf8262225ebcda7d96ab3c36954496466567046
+    SHA512 523a12e376fd61a876868573946ef3491fcad0c3d41654ffc1253b0e0d38f1f782e1d62c885c384d04c2590cd7b839ac962b9e9f5258a59cc8c53894067eb104
     HEAD_REF master
 )
 
@@ -31,8 +29,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xflens/cxxblas/netlib)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
