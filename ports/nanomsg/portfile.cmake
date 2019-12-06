@@ -41,7 +41,7 @@ vcpkg_replace_string(
 )
 
 if(NN_ENABLE_NANOCAT)
-    vcpkg_copy_tools(nanocat)
+    vcpkg_copy_tools(TOOL_NAMES nanocat AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)

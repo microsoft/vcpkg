@@ -63,10 +63,10 @@ file(COPY
 )
 
 if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(zmakecert)
-else()
-    vcpkg_copy_tools()
+    vcpkg_copy_tools(TOOL_NAMES zmakecert)
 endif()
+
+vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

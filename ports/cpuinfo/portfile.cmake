@@ -47,7 +47,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(tools IN_LIST FEATURES)
-    vcpkg_copy_tools(cache-info cpuid-dump cpu-info isa-info)
+    vcpkg_copy_tools(
+        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        AUTO_CLEAN
+    )
 endif()
 
 # Handle copyright

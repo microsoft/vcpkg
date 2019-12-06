@@ -31,7 +31,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(URIPARSER_BUILD_TOOLS)
-    vcpkg_copy_tools(uriparse)
+    vcpkg_copy_tools(
+        TOOL_NAMES uriparse
+        AUTO_CLEAN
+    )
 endif()
 
 set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
