@@ -50,7 +50,7 @@ file(COPY
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
-vcpkg_copy_tools(zpinger)
+vcpkg_copy_tools(TOOL_NAMES zpinger AUTO_CLEAN)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
