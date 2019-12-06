@@ -38,7 +38,7 @@ vcpkg_from_github(
     SHA512 df3490c463c96e2b7445e416067f0be469eca86ee655690fd8acdbcda8189c192909981dbb36b043d0e7ccd06f9eb6cf0a2c25a48d23d92c47b061a6ee39b2db
     HEAD_REF master
     PATCHES
-        FindPythonModule.patch
+        #FindPythonModule.patch
 )
 
 #file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
