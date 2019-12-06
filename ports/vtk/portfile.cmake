@@ -2,6 +2,9 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
+# TODO:
+# - add loguru as a dependency requires #8682
+
 # =============================================================================
 # Options:
 # Collect CMake options for optional components
@@ -41,6 +44,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         MR6108.patch # Fixes usage of system pugixml! (Already merged in master)
+        FindHDF5.patch # completly replaces FindHDF5
+        FindLibHaru.patch
+        FindLZMA.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
