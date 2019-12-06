@@ -1,0 +1,21 @@
+diff --git a/ThirdParty/pugixml/CMakeLists.txt b/ThirdParty/pugixml/CMakeLists.txt
+index a7ab1dc237617d3426802d56689a723fe32e7471..903ccbbd83bc92413e33e7afb207ebe680014c6d 100644
+--- a/ThirdParty/pugixml/CMakeLists.txt
++++ b/ThirdParty/pugixml/CMakeLists.txt
+@@ -1,7 +1,12 @@
+-vtk_module_third_party_internal(
+-  LICENSE_FILES "vtkpugixml/LICENSE"
+-  VERSION       "1.9"
+-  STANDARD_INCLUDE_DIRS)
++vtk_module_third_party(
++  INTERNAL
++    LICENSE_FILES "vtkpugixml/LICENSE"
++    VERSION       "1.9"
++    STANDARD_INCLUDE_DIRS
++  EXTERNAL
++    PACKAGE pugixml
++    TARGETS pugixml
++    STANDARD_INCLUDE_DIRS)
+ 
+ configure_file(
+   "${CMAKE_CURRENT_SOURCE_DIR}/vtk_pugixml.h.in"

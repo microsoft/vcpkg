@@ -8,13 +8,7 @@ set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 # Options:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    qt     VTK_Group_Qt
-    qt     Module_vtkGUISupportQt
-    qt     Module_vtkGUISupportQtOpenGL
-    qt     Module_vtkGUISupportQtSQL
-    qt     Module_vtkImagingOpenGL2
-    qt     Module_vtkIOPostgreSQL # Qt is build with libpq any way so add it here
-    qt     VTK_WITH_QT
+    qt     VTK_GROUP_ENABLE_Qt
     mpi    VTK_Group_MPI
     python VTK_WITH_PYTHON
     openvr Module_vtkRenderingOpenVR
@@ -22,8 +16,9 @@ FEATURES
     paraview Module_vtkIOParallelExodus:BOOL
     paraview Module_vtkRenderingParallel:BOOL
     paraview Module_vtkRenderingVolumeAMR:BOOL
-    paraview VTK_ENABLE_KITS:BOOL 
+    
 )
+#    paraview VTK_ENABLE_KITS:BOOL 
 #    paraview Module_vtkUtilitiesEncodeString:BOOL
 #INVERTED_FEATURES
 #    paraview VTK_USE_SYSTEM_PUGIXML:BOOL # Bug in VTK 8.2.0 fixed in master but the macro for it was complelty changed so it cannot be transfered. 
@@ -36,16 +31,17 @@ set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF "v${VTK_LONG_VERSION}"
-    SHA512 fd1d9c2872baa6eca7f8105b0057b56ec554e9d5eaf25985302e7fc032bdce72255d79e3f5f16ca50504151bda49cb3a148272ba32e0f410b4bdb70959b8f3f4
+    REF e4e8a4df9cc67fd2bb3dbb3b1c50a25177cbfe68 # VTK commit used by ParaView v5.7.0
+    SHA512 058607a2000535474eb09ac4318937035733105b28a2fa1fef0857dc94d586239460d5d67d0c0c733984df4dc3bcb91720b2a0c16e7edf7c691b378c8ced6cc9
     HEAD_REF master
     PATCHES
-        fix-find-lz4.patch
-        fix_ogg_linkage.patch
-        fix-pugixml-link.patch #TARGETS do not work correctly in VTK!!!!
-        hdf5_static.patch
-        fix-find-lzma.patch
-        fix-proj4.patch
+        MR6108.patch # Fixes usage of system pugixml! (Already merged in master)
+        #fix-find-lz4.patch
+        #fix_ogg_linkage.patch
+        #fix-pugixml-link.patch #TARGETS do not work correctly in VTK!!!!
+        #hdf5_static.patch
+        #fix-find-lzma.patch
+        #fix-proj4.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -53,10 +49,10 @@ vcpkg_from_github(
 # The default files distributed with CMake (>= 3.9) should be superior by all means.
 # For GDAL, the one distributed with CMake does not detect the debug libraries correctly,
 # so we provide an own one.
-file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
-file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
+#file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
+#file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
+#file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
 
 # =============================================================================
 # Collect CMake options for optional components
@@ -108,6 +104,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DVTK_BUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DVTK_INSTALL_INCLUDE_DIR=include
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
