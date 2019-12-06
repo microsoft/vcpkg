@@ -5,22 +5,12 @@ Revision: 0
 ## Overview
 This document provides an annotated checklist which vcpkg team members use to apply the "reviewed" label on incoming pull requests. If a pull request violates any of these points, we may ask contributors to make necessary changes before we can merge the changeset.
 
-## Usage
-
-You can link any of these items in a GitHub comment with the following:
-```markdown
-<!-- Using item c000001 as an example -->
-Can you please correct this? See [c000001](docs/maintainers/pr-review-checklist#c000001)
-```
-Rendered output:
-
-Can you please correct this? See [c000001](docs/maintainers/pr-review-checklist#c000001)
-
 ## Checklist
 
+You can link any of these items in a GitHub comment by copying the link address attached to each checklist item.
 
-- <details name=c000001>
-    <summary>c000001: No deprecated helper functions are used</summary>
+- <details id=c000001>
+    <summary><a href=#c000001>c000001</a>: No deprecated helper functions are used</summary>
 
     See [Maintainer Guidelines and Policies](maintainer-guide.md#Avoid-deprecated-helper-functions)
 </details>
