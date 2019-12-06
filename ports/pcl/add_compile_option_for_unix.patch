@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c153656..f65799e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -283,6 +283,9 @@ include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
+ set(FLANN_USE_STATIC ON)
+ find_package(FLANN 1.7.0 REQUIRED)
+ find_package(lz4)
++if(UNIX)
++    add_compile_options(-std=c++17)
++endif()
+ 
+ # libusb-1.0
+ option(WITH_LIBUSB "Build USB RGBD-Camera drivers" TRUE)
