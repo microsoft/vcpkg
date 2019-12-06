@@ -53,6 +53,7 @@ file(REMOVE_RECURSE  ${DLL} ${DDLL})
 file(REMOVE_RECURSE  ${CURRENT_PACKAGES_DIR}/plugins   ${CURRENT_PACKAGES_DIR}/debug/plugins)
 file(REMOVE_RECURSE  ${CURRENT_PACKAGES_DIR}/data   ${CURRENT_PACKAGES_DIR}/debug/data)
 file(REMOVE_RECURSE  ${CURRENT_PACKAGES_DIR}/mkspecs ${CURRENT_PACKAGES_DIR}/debug/mkspecs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
 
