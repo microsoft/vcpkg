@@ -4,15 +4,16 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(OPENCV_VERSION "3.4.8")
+set(OPENCV_VERSION "3.4.7")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 6c2dfa88e9a93747397f80e6a3dd7eed126bc14efe6c0ec5b064d10bc49f24fc6fb187029f3ac6f5d9f5c16465b96ba55e5d5cacc3584dce69e10567df423ccb
+    SHA512 ba1336ad4e5208748aa09c99770392cc71ef72688560d0b03287ddafd36093ef30cbdf6422f87f8f878663ab8085cc0ff8a8c65fd1ff0ec6800855ea01309beb
     HEAD_REF master
     PATCHES
+      0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
       0009-fix-uwp.patch
