@@ -33,7 +33,11 @@ function(vcpkg_clean_executables_in_bin)
     endforeach()
 
     function(try_remove_empty_directory directory)
-        if(EXISTS "${directory}" AND NOT IS_DIRECTORY "${directory}")
+        if(NOT EXISTS "${directory}")
+            return()
+        endif()
+
+        if(NOT IS_DIRECTORY "${directory}")
             message(FATAL_ERROR "${directory} is supposed to be an existing directory.")
         endif()
 
