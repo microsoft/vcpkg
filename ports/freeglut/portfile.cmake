@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     use_targets_to_export_x11_dependency.patch
     macOS_Xquartz.patch
     fix-debug-macro.patch
+    fix-link-property.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

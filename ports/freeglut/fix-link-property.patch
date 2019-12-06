@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fef1d50..75d2da1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -484,11 +484,11 @@ ELSE()
+     ENDIF()
+ ENDIF()
+ IF(FREEGLUT_BUILD_SHARED_LIBS)
+-    TARGET_LINK_LIBRARIES(freeglut ${LIBS})
++    TARGET_LINK_LIBRARIES(freeglut PUBLIC ${LIBS})
+     TARGET_COMPILE_DEFINITIONS(freeglut PUBLIC ${PUBLIC_DEFINITIONS})
+ ENDIF()
+ IF(FREEGLUT_BUILD_STATIC_LIBS)
+-    TARGET_LINK_LIBRARIES(freeglut_static ${LIBS})
++    TARGET_LINK_LIBRARIES(freeglut_static PUBLIC ${LIBS})
+     TARGET_COMPILE_DEFINITIONS(freeglut_static PUBLIC ${PUBLIC_DEFINITIONS})
+ ENDIF()
+ 
