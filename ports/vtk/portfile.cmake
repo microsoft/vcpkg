@@ -93,27 +93,17 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
-        
+        #VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
-        
+
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF
         -DPYTHON_EXECUTABLE=${PYTHON3}
 
         ${ADDITIONAL_OPTIONS}
-        
-        # Explicit library paths
-        #-DPROJ_LIBRARY=${PROJ_LIBRARY}
-        
-        #-DVTK_USE_SYSTEM_PUGIXML:BOOL=OFF
-        #-DPUGIXML_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
-        #-DPUGIXML_LIBRARIES=${PUGIXML_LIBRARY}
-        #-DPUGIXML_LIBRARY=${PUGIXML_LIBRARY}
-        #-Dpugixml_LIBRARIES=${PUGIXML_LIBRARY}
-        #-Dpugixml_LIBRARY=${PUGIXML_LIBRARY}
 )
 
 vcpkg_install_cmake()
@@ -121,7 +111,7 @@ vcpkg_copy_pdbs()
 
 # =============================================================================
 # Fixup target files
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-8.90)
 
 # For some reason the references to the XDMF libraries in the target files do not end up
 # correctly, so we fix them here.
@@ -156,13 +146,13 @@ vcpkg_fixup_cmake_targets()
 
 # Fix _IMPORT_PREFIX. It is not set within the Modules cmake (only set in VTKTargets.cmake).
 # Since for VCPKG _IMPORT_PREFIX == VTK_INSTALL_PREFIX we just replace it with that.
-file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/Modules/*.cmake)
-foreach(FILE IN LISTS CMAKE_FILES)
-    file(READ "${FILE}" _contents)
-    file(WRITE "${FILE}.bak" "${_contents}")
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
-    file(WRITE "${FILE}" "${_contents}")
-endforeach()
+# file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/Modules/*.cmake)
+# foreach(FILE IN LISTS CMAKE_FILES)
+    # file(READ "${FILE}" _contents)
+    # file(WRITE "${FILE}.bak" "${_contents}")
+    # string(REPLACE "\${_IMPORT_PREFIX}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
+    # file(WRITE "${FILE}" "${_contents}")
+# endforeach()
 
 # Correct 3rd Party modules in *.cmake:
 # set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkdoubleconversion.cmake")
@@ -237,11 +227,15 @@ function(_vtk_remove_debug_tool TOOL_NAME)
     if(EXISTS ${filename})
         file(REMOVE ${filename})
     endif()
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}d${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
+    endif()
     # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
     # to make them point to the release version of the tools
-    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
     string(REPLACE "debug/bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake" "${VTK_TARGETS_CONTENT_DEBUG}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" "${VTK_TARGETS_CONTENT_DEBUG}")
 endfunction()
 
 # Move the release binary TOOL_NAME from bin to tools
@@ -254,11 +248,15 @@ function(_vtk_move_release_tool TOOL_NAME)
 
     # we also have to bend the lines referencing the tools in VTKTargets-release.cmake
     # to make them point to the tool folder
-    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
     string(REPLACE "bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_RELEASE "${VTK_TARGETS_CONTENT_RELEASE}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake" "${VTK_TARGETS_CONTENT_RELEASE}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-release.cmake" "${VTK_TARGETS_CONTENT_RELEASE}")
+    
+    if("python" IN_LIST FEATURES)
+    endif()
 endfunction()
 
+set(VTK_SHORT_VERSION 8.90)
 set(VTK_TOOLS
     vtkEncodeString-${VTK_SHORT_VERSION}
     vtkHashSource-${VTK_SHORT_VERSION}
@@ -270,6 +268,8 @@ set(VTK_TOOLS
     vtkWrapHierarchy-${VTK_SHORT_VERSION}
     vtkParseJava-${VTK_SHORT_VERSION}
     vtkParseOGLExt-${VTK_SHORT_VERSION}
+    vtkProbeOpenGLVersion-${VTK_SHORT_VERSION}
+    vtkTestOpenGLVersion-${VTK_SHORT_VERSION}
     vtkpython
     pvtkpython
 )
@@ -279,22 +279,22 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_release_tool("${TOOL_NAME}")
 endforeach()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
-string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
-string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
+# file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
+# string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
+# string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
+# file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
 
 # =============================================================================
 # Remove other files and directories that are not valid for vcpkg
-if(VTK_WITH_ALL_MODULES)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/XdmfConfig.cmake)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
-endif()
+# if(VTK_WITH_ALL_MODULES)
+    # file(REMOVE ${CURRENT_PACKAGES_DIR}/XdmfConfig.cmake)
+    # file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
+# endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    # file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+# endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
