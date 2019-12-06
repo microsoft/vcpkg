@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "this Marble port currently only supports Windows platform (and dll mode)" ON_TARGET LINUX OSX ANDROID FREEBSD ON_LIBRARY_LINKAGE static)
+vcpkg_fail_port_install(MESSAGE "this Marble port currently only supports Windows platform (and dll mode)" ON_TARGET LINUX OSX)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
