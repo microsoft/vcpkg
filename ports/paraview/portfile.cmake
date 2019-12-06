@@ -34,11 +34,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF 587b66e78632f6d30443c990141c4a99dec74f0a # v5.6.3
-    SHA512 1a693074830c5ca0e95a628f7c55ca93ddc03ff832715e893e5cf69a1097c1e3afe794d264f9bcb36632ca487d78fd2961a3eb5358b5c2601387d75befbb8138
+    REF 0d5c94ac254a1eb1e55b3a0db291d97acd25790d # v5.7.0
+    SHA512 df3490c463c96e2b7445e416067f0be469eca86ee655690fd8acdbcda8189c192909981dbb36b043d0e7ccd06f9eb6cf0a2c25a48d23d92c47b061a6ee39b2db
     HEAD_REF master
     PATCHES
-        FindPythonModule.patch
+        #FindPythonModule.patch
 )
 
 #file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
@@ -60,10 +60,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
      OPTIONS 
-        -DCMAKE_MODULE_PATH:PATH=${CURRENT_INSTALLED_DIR}/share
         -DPARAVIEW_USE_EXTERNAL:BOOL=ON
-        -DVTK_MODULES_DIR:PATH=${CURRENT_INSTALLED_DIR}/share/vtk/Modules
-        -DVTK_INSTALL_PACKAGE_DIR:PATH=
         -DUSE_EXTERNAL_VTK:BOOL=ON
         -DVTK_USE_SYSTEM_PROTOBUF:BOOL=ON
         -DVTK_USE_SYSTEM_CGNS:BOOL=ON
@@ -72,6 +69,8 @@ vcpkg_configure_cmake(
         -DVTK_MODULE_ENABLE_vtkIOParallelExodus:BOOL=OFF
         -DVTK_MODULE_ENABLE_vtkRenderingParallel:BOOL=OFF
         -DVTK_ENABLE_KITS:BOOL=ON
+        -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=OFF
+        -DPARAVIEW_ENABLE_CATALYST:BOOL=OFF
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
