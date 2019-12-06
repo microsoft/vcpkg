@@ -35,7 +35,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
     REF 0d5c94ac254a1eb1e55b3a0db291d97acd25790d # v5.7.0
-    SHA512 1a693074830c5ca0e95a628f7c55ca93ddc03ff832715e893e5cf69a1097c1e3afe794d264f9bcb36632ca487d78fd2961a3eb5358b5c2601387d75befbb8138
+    SHA512 df3490c463c96e2b7445e416067f0be469eca86ee655690fd8acdbcda8189c192909981dbb36b043d0e7ccd06f9eb6cf0a2c25a48d23d92c47b061a6ee39b2db
     HEAD_REF master
     PATCHES
         FindPythonModule.patch
