@@ -6,38 +6,25 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/exports.def DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/exports.def DESTINATION ${SOURCE_PATH})
 
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS_DEBUG
-            -DKF_INSTALL_HEADERS=OFF
-        OPTIONS_RELEASE
-            -DKF_INSTALL_HEADERS=ON
-    )
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS_DEBUG
+        -DKF_INSTALL_HEADERS=OFF
+    OPTIONS_RELEASE
+        -DKF_INSTALL_HEADERS=ON
+)
 
-    vcpkg_install_cmake()
+vcpkg_install_cmake()
 
-    vcpkg_copy_pdbs()
+vcpkg_copy_pdbs()
 
-    vcpkg_fixup_cmake_targets(
-        CONFIG_PATH lib/cmake/unofficial-${PORT}
-        TARGET_PATH share/unofficial-${PORT}
-    )
-else()
-    vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        SKIP_CONFIGURE
-    )
+vcpkg_fixup_cmake_targets(
+    CONFIG_PATH lib/cmake/unofficial-${PORT}
+    TARGET_PATH share/unofficial-${PORT}
+)
 
-    vcpkg_install_make(
-        PROJECT_NAME Makefile
-        TARGET install
-    )
-endif()
-
-# Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
