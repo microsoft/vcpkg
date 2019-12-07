@@ -925,7 +925,6 @@ libwebsockets:arm-uwp=fail
 libwebsockets:x64-uwp=fail
 libxmp-lite:x64-linux=fail
 libxmp-lite:x64-osx=fail
-libxslt:arm64-windows=fail
 libxslt:arm-uwp=fail
 libxslt:x64-osx=fail
 libxslt:x64-uwp=fail
