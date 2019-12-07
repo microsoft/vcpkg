@@ -64,6 +64,8 @@ function(vcpkg_execute_build_process)
            OR out_contents MATCHES "LINK : fatal error LNK1201:")
             # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
             message(STATUS "Restarting Build without parallelism because memory exceeded")
+			message(STATUS "   out_contents: ${out_contents}")
+			message(STATUS "   err_contents: ${err_contents}")
             set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
             set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")
 
