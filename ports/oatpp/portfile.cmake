@@ -70,6 +70,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
+        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
 )
 
 vcpkg_install_cmake()
@@ -91,6 +92,7 @@ if("consul" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
+            "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
     )
     vcpkg_install_cmake()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-consul-${OATPP_VERSION})
@@ -133,6 +135,7 @@ if("curl" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
+            "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
     )
     vcpkg_install_cmake()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-curl-${OATPP_VERSION})
@@ -144,9 +147,9 @@ if("libressl" IN_LIST FEATURES)
     # unistd.h in the libressl include/compat would work here or not...
     #
     # When we get past this problem, add the following to the CONTROL file:
-    #   Feature:libressl
-    #   Build-Depends: libressl
-    #   Description: LibreSSL submodule providing secure server and client connection provider (external dependency on pkg-config)
+    #    Feature:libressl
+    #    Build-Depends: libressl
+    #    Description: LibreSSL submodule providing secure server and client connection provider (external dependency on pkg-config)
 
     message(STATUS "Building submodule oatpp[libressl]")
 
@@ -204,6 +207,7 @@ if("libressl" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
+            "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
     )
 
     vcpkg_install_cmake()
@@ -247,6 +251,7 @@ if("swagger" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
+            "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
     )
     vcpkg_install_cmake()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-swagger-${OATPP_VERSION})

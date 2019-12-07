@@ -3,19 +3,20 @@ Version: 0.19.10
 Description: Modern web framework
 Build-Depends:
 
+Feature:consul
+Description: Consul submodule
+
+Feature:curl
+Build-Depends: curl
+Description: Use libcurl as a RequestExecutor on the oatpp's ApiClient (external dependency on pkg-config)
+
+Feature:mbedtls
+Build-Depends: mbedtls
+Description: Mbed TLS submodule providing secure server and client connection providers
+
 Feature:swagger
 Description: OpenApi (Swagger) UI submodule
 
 Feature:websocket
 Description: websocket submodule
 
-Feature:consul
-Description: Consul submodule
-
-Feature:mbedtls
-Build-Depends: mbedtls
-Description: Mbed TLS submodule providing secure server and client connection providers
-
-Feature:curl
-Build-Depends: curl
-Description: Use libcurl as a RequestExecutor on the oatpp's ApiClient (external dependency on pkg-config)
