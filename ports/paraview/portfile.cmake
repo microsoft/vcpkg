@@ -48,6 +48,8 @@ vcpkg_from_gitlab(
     REPO paraview/visitbridge
     REF 4e5fd802e83fcc8601b7a75d318ac277514cb736
     SHA512 49ab6e32051a9cb328f5694bca7445610d80bdedddc7ac3d48970f57be1c5969578a0501b12f48a2fb332f109f79f8df189e78530bb4af75e73b0d48d7124884
+    PATCHES 
+        VisIt.patch
 )
 #Get QtTesting Plugin
 vcpkg_from_gitlab(
