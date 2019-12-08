@@ -84,3 +84,25 @@ index 58f078fe7..46446da8a 100644
    if (HDF5_FOUND)
      set (HDF5_HAVE_H5PUBCONF_H 1)
      set (HDF5_HAVE_HDF5 1)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 66b547ed1..4051f07d4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -12,13 +12,14 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
+ if (CGNS_ENABLE_HDF5)
+   add_definitions(-DBUILD_HDF5)
+   if (WIN32)
+-    if (HDF5_LIBRARY)
++    add_definitions(-DWIN32)
++    if (HDF5_BUILD_SHARED_LIBS)
+      # file(STRINGS ${HDF5_LIBRARY} HDF5isDLL REGEX "__imp__H5close")
+      # if (HDF5isDLL)
+         # this is only needed when using hdf5 dll libs
+-        add_definitions(-DWIN32 -D_HDF5USEDLL_)
++        add_definitions(-DH5_BUILT_AS_DYNAMIC_LIB)
+      # endif (HDF5isDLL)
+-    endif (HDF5_LIBRARY)
++    endif (HDF5_BUILD_SHARED_LIBS)
+   endif (WIN32)
+   if(HDF5_NEED_MPI AND MPI_INC)
+     include_directories(${MPI_INC})
