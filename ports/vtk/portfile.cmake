@@ -73,6 +73,7 @@ vcpkg_from_github(
         FindHDF5.patch # completly replaces FindHDF5
         FindLibHaru.patch
         FindLZMA.patch
+        findproj.patch
         vtkm.patch # To include an external VTKm build (v.1.3 required)
         #install_private_headers.patch #Required by ParaView, also vtkStatisticsAlgorithmPrivate vtkCompositePolyDataMapper2Internal vtkTextureObjectVS(from build)
 )
