@@ -93,7 +93,7 @@ function(vcpkg_from_gitlab)
 
     string(REPLACE "/" ";" GITLAB_REPO_LINK ${_vdud_REPO})
     
-    list(LENGTH GITLAB_LINK len)
+    list(LENGTH GITLAB_REPO_LINK len)
     if(${len} EQUAL "2")
 		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
 		list(GET GITLAB_REPO_LINK 1 REPO_NAME)
