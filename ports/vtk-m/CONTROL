@@ -1,5 +1,5 @@
 Source: vtk-m
-Version: 1.5.0
+Version: 1.3.0
 Homepage: https://gitlab.kitware.com/vtk/vtk-m/
 Description: VTK-m is a toolkit of scientific visualization algorithms for emerging processor architectures.
 
@@ -17,3 +17,7 @@ Build-Depends: tbb
 Feature: mpi
 Description: Use the MPI controller.
 Build-Depends: mpi
+
+Feature: double
+Description: Use double precision in floating point calculations
+Build-Depends:
