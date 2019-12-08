@@ -2,7 +2,7 @@ diff --git a/CMake/FindLZMA.cmake b/CMake/FindLZMA.cmake
 index 0c8c7943c..d60669484 100644
 --- a/CMake/FindLZMA.cmake
 +++ b/CMake/FindLZMA.cmake
-@@ -1,9 +1,15 @@
+@@ -1,9 +1,17 @@
  find_path(LZMA_INCLUDE_DIR
    NAMES lzma.h
    DOC "lzma include directory")
@@ -16,6 +16,8 @@ index 0c8c7943c..d60669484 100644
 +find_library(LZMA_LIBRARY_DEBUG
 +  NAMES lzmad lzma NAMES_PER_DIR
 +  DOC "lzma library")
++ include(SelectLibraryConfigurations)
++ select_library_configurations( LZMA )
  
  if (LZMA_INCLUDE_DIR)
    file(STRINGS "${LZMA_INCLUDE_DIR}/lzma/version.h" _lzma_version_lines

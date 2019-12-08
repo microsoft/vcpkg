@@ -12,6 +12,8 @@ if("qt" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_GROUP_ENABLE_Qt=YES
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
+        -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
+        -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
     )
 endif()
 
@@ -20,6 +22,30 @@ if("python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
+    )
+endif()
+
+if("paraview" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_FiltersParallelStatistics=YES
+        -DVTK_MODULE_ENABLE_VTK_IOParallelExodus=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingParallel=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeAMR=YES
+        -DVTK_MODULE_ENABLE_VTK_IOXdmf2=YES
+        -DVTK_MODULE_ENABLE_VTK_IOH5part=YES
+        -DVTK_MODULE_ENABLE_VTK_IOParallelLSDyna=YES
+        -DVTK_MODULE_ENABLE_VTK_IOTRUCHAS=YES
+        -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
+        #-DVTK_MODULE_ENABLE_VTK_mpi=YES
+        #-DVTK_MODULE_ENABLE_VTK_ParallelMPI=YES
+        #-DVTK_MODULE_ENABLE_VTK_ParallelMPI4Py=YES
+        #-DVTK_MODULE_ENABLE_VTK_WebCore=YES
+        #-DVTK_MODULE_ENABLE_VTK_WebPython=YES
     )
 endif()
 
@@ -47,6 +73,8 @@ vcpkg_from_github(
         FindHDF5.patch # completly replaces FindHDF5
         FindLibHaru.patch
         FindLZMA.patch
+        vtkm.patch # To include an external VTKm build (v.1.3 required)
+        #install_private_headers.patch #Required by ParaView, also vtkStatisticsAlgorithmPrivate vtkCompositePolyDataMapper2Internal vtkTextureObjectVS(from build)
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -69,13 +97,14 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-# include(SelectLibraryConfigurations)
-# find_library(PROJ_LIBRARY_RELEASE proj proj4 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-# find_library(PROJ_LIBRARY_DEBUG proj proj4 proj_d proj4_d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-# select_library_configurations(PROJ)
-# find_library(PUGIXML_LIBRARY_RELEASE pugixml PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-# find_library(PUGIXML_LIBRARY_DEBUG pugixml PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-# select_library_configurations(PUGIXML)
+find_library(PYTHON_LIBRARY_RELEASE python37 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(PYTHON_LIBRARY_DEBUG python37_d python37 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+if(PYTHON_LIBRARY_RELEASE)
+    list(APPEND PYTHON_LIBRARY "optimized\\\\\;${PYTHON_LIBRARY_RELEASE}")
+endif()
+if(PYTHON_LIBRARY_DEBUG)
+    list(APPEND PYTHON_LIBRARY "debug\\\\\;${PYTHON_LIBRARY_DEBUG}")
+endif()
 # =============================================================================
 # Configure & Install
 
@@ -103,11 +132,13 @@ vcpkg_configure_cmake(
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
-
+        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
+        -DVTK_MODULE_ENABLE_VTK_vtkm=YES
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        #-DPYTHON_EXECUTABLE=${PYTHON3}
+        #-DPython3_LIBRARIES="${PYTHON_LIBRARY}"
 
         ${ADDITIONAL_OPTIONS}
 )
@@ -137,93 +168,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-8.90)
     # file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake "${VTK_TARGETS_DEBUG_CONTENT}")
 # endif()
 
-#file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
-# Remove unset of _IMPORT_PREFIX in VTKTargets.cmake
-#_IMPORT_PREFIX is required by vtkModules due to vcpkg_fixup_cmake_targets changing all cmake files (to use _IMPORT_PREFIX). 
-#STRING(REPLACE [[set(_IMPORT_PREFIX)]] 
-#[[
-# VCPKG: The value of _IMPORT_PREFIX should not be unset.
-#set(_IMPORT_PREFIX)
-#]]
-#VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
-#file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
-
-#file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
-
-# Fix _IMPORT_PREFIX. It is not set within the Modules cmake (only set in VTKTargets.cmake).
-# Since for VCPKG _IMPORT_PREFIX == VTK_INSTALL_PREFIX we just replace it with that.
-# file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/share/vtk/Modules/*.cmake)
-# foreach(FILE IN LISTS CMAKE_FILES)
-    # file(READ "${FILE}" _contents)
-    # file(WRITE "${FILE}.bak" "${_contents}")
-    # string(REPLACE "\${_IMPORT_PREFIX}" "\${VTK_INSTALL_PREFIX}" _contents "${_contents}")
-    # file(WRITE "${FILE}" "${_contents}")
-# endforeach()
-
-# Correct 3rd Party modules in *.cmake:
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkdoubleconversion.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/double-conversion.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/double-conversion.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/double-conversion.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkexpat.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/expat.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/expat.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/expat.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkjsoncpp.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/jsoncpp.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/jsoncpp.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/jsoncpp.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibproj.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/proj.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/proj.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/proj_d.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtklibxml2.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/libxml2.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/libxml2.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/libxml2.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtknetcdf.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/netcdf.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/netcdf.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/netcdf.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkogg.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/ogg.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/ogg.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/ogg.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtksqlite.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/sqlite3.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/sqlite3.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/sqlite3.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
-# set(FILE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtktheora.cmake")
-# file(READ "${FILE}" _contents)
-# string(REPLACE [["${VTK_INSTALL_PREFIX}/lib/theoraenc.lib;${VTK_INSTALL_PREFIX}/lib/theoradec.lib"]] 
-               # [[optimized;"${VTK_INSTALL_PREFIX}/lib/theoraenc.lib";optimized;"${VTK_INSTALL_PREFIX}/lib/theoradec.lib";debug;"${VTK_INSTALL_PREFIX}/debug/lib/theoraenc.lib;";debug;"${VTK_INSTALL_PREFIX}/debug/lib/theoradec.lib"]] 
-               # _contents "${_contents}")
-# file(WRITE "${FILE}" "${_contents}")
-
 # =============================================================================
 # Clean-up other directories
 
@@ -241,6 +185,7 @@ function(_vtk_remove_debug_tool TOOL_NAME)
     # to make them point to the release version of the tools
     file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
     string(REPLACE "debug/bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
+    string(REPLACE "tools/vtk/${TOOL_NAME}d" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" "${VTK_TARGETS_CONTENT_DEBUG}")
 endfunction()
 
@@ -285,11 +230,6 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_release_tool("${TOOL_NAME}")
 endforeach()
 
-# file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
-# string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
-# string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
-# file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
-
 # =============================================================================
 # Remove other files and directories that are not valid for vcpkg
 # if(VTK_WITH_ALL_MODULES)
@@ -297,10 +237,10 @@ endforeach()
     # file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
 # endif()
 
-# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    # file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-# endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -314,12 +254,33 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/vtk)
 
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
-    set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType vtkSupportMacros vtkDirectories vtkVersion)
+    set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType vtkSupportMacros vtkDirectories vtkVersion FindPythonModules)
     foreach(module ${VTK_CMAKE_NEEDED})
         file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
     endforeach()
-    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLarfeFilesSupport.cxx" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
+    file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
+    
+    #ParaView requires some internal headers
+    file(INSTALL ${SOURCE_PATH}\Rendering\Annotation\vtkScalarBarActorInternal.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    file(INSTALL ${SOURCE_PATH}\Filters\Statistics\vtkStatisticsAlgorithmPrivate.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    file(INSTALL ${SOURCE_PATH}\Filters\Statistics\vtkCompositePolyDataMapper2Internal.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}\${TARGET_TRIPLET}-rel\Rendering\OpenGL2\vtkTextureObjectVS.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
 endif()
+
+#TODO remove one get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY) from vtk-prefix.cmake and VTK-vtk-module-properties and vtk-python.cmake
+set(filenames_fix_prefix vtk-prefix VTK-vtk-module-properties vtk-python)
+foreach(name ${filenames_fix_prefix})
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake")
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" _contents)
+    string(REPLACE 
+[[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")
+get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY)]]
+[[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")]] _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" "${_contents}")
+else()
+    message(STATUS "FILE:${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake does not exist! No prefix correction!")
+endif()
+endforeach()
 
 # file(INSTALL "${SOURCE_PATH}/CMake/FindPythonModules.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk/CMake)
 # file(INSTALL "${SOURCE_PATH}/CMake/vtkCompilerPlatformFlags.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)

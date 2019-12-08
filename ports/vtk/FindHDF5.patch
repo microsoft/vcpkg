@@ -1104,29 +1104,3 @@ index 2f4709c97..52165c1ae 100644
 +set(HDF5_FOUND ON CACHE BOOL "" FORCE)
 +set(hdf5_FOUND ON CACHE BOOL "" FORCE)
 \ No newline at end of file
-diff --git a/5177cbfe68-32836f596b/ThirdParty/hdf5/CMakeLists.txt b/5177cbfe68-40a31268e5/ThirdParty/hdf5/CMakeLists.txt
-index 79027198b..b9fb556ac 100644
---- a/5177cbfe68-32836f596b/ThirdParty/hdf5/CMakeLists.txt
-+++ b/5177cbfe68-40a31268e5/ThirdParty/hdf5/CMakeLists.txt
-@@ -1,5 +1,9 @@
- set(HDF5_EXTERNALLY_CONFIGURED 1)
- 
-+#if(VTK_MODULE_USE_EXTERNAL_VTK_hdf5)
-+#  find_package(hdf5 CONFIG REQUIRED)
-+#endif()
-+
- vtk_module_third_party(
-   INTERNAL
-     LICENSE_FILES "vtkhdf5/COPYING"
-
-index a7ab1dc23..789759f60 100644
-diff --git a/5177cbfe68-32836f596b/Wrapping/PythonCore/vtk.module b/5177cbfe68-40a31268e5/Wrapping/PythonCore/vtk.module
-index 03b787cc2..49cefc464 100644
---- a/5177cbfe68-32836f596b/Wrapping/PythonCore/vtk.module
-+++ b/5177cbfe68-40a31268e5/Wrapping/PythonCore/vtk.module
-@@ -6,4 +6,5 @@ DEPENDS
-   VTK::CommonCore
-   VTK::Python
-   VTK::vtksys
-+  #VTK::hdf5
- EXCLUDE_WRAP

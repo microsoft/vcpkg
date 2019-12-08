@@ -1,0 +1,113 @@
+diff --git a/Accelerators/Vtkm/CMakeLists.txt b/Accelerators/Vtkm/CMakeLists.txt
+index 4297575bd..643df6fd5 100644
+--- a/Accelerators/Vtkm/CMakeLists.txt
++++ b/Accelerators/Vtkm/CMakeLists.txt
+@@ -14,8 +14,10 @@
+ ##
+ ##=============================================================================
+ 
+-list(INSERT 0 CMAKE_MODULE_PATH
+-  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
++find_package(VTKm CONFIG REQUIRED)
++
++#list(INSERT 0 CMAKE_MODULE_PATH
++#  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
+ 
+ set(sources
+   vtkmlib/ArrayConvertersReal.cxx
+diff --git a/CMake/FindLZMA.cmake b/CMake/FindLZMA.cmake
+index ee5538ad9..6a453d51e 100644
+--- a/CMake/FindLZMA.cmake
++++ b/CMake/FindLZMA.cmake
+diff --git a/CMake/FindVTKm.cmake b/CMake/FindVTKm.cmake
+new file mode 100644
+index 000000000..c0fe00c0e
+--- /dev/null
++++ b/CMake/FindVTKm.cmake
+@@ -0,0 +1 @@
++find_package(VTKm CONFIG REQUIRED)
+\ No newline at end of file
+diff --git a/CMake/vtkCompilerPlatformFlags.cmake b/CMake/vtkCompilerPlatformFlags.cmake
+index b0bdba1e6..69c570a25 100644
+--- a/CMake/vtkCompilerPlatformFlags.cmake
++++ b/CMake/vtkCompilerPlatformFlags.cmake
+@@ -107,7 +107,7 @@ if(MSVC)
+   if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+     STRING(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+   else()
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /bigobj")
+   endif()
+ endif()
+ 
+diff --git a/ThirdParty/vtkm/CMakeLists.txt b/ThirdParty/vtkm/CMakeLists.txt
+index 5817d42f8..bc5a33d93 100644
+--- a/ThirdParty/vtkm/CMakeLists.txt
++++ b/ThirdParty/vtkm/CMakeLists.txt
+@@ -1,6 +1,47 @@
+-vtk_module_third_party_internal(
+-  LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
+-  VERSION       "master"
+-  SUBDIRECTORY  vtkvtkm
+-  STANDARD_INCLUDE_DIRS
+-  INTERFACE)
++#vtk_module_third_party_internal(
++#  LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
++#  VERSION       "master"
++#  SUBDIRECTORY  vtkvtkm
++#  STANDARD_INCLUDE_DIRS
++#  INTERFACE)
++
++message(STATUS "VTK_MODULE_USE_EXTERNAL_VTK_vtkm: ${VTK_MODULE_USE_EXTERNAL_VTK_vtkm}")
++if(TRUE)
++    message(STATUS "Searching for external VTKm")
++    find_package(VTKm CONFIG REQUIRED)
++    if(TARGET vtkm_compiler_flags)
++        get_target_property(VTKm_INCLUDE_DIRS vtkm_compiler_flags INTERFACE_INCLUDE_DIRECTORIES)
++        message(STATUS "INCLUDE: ${VTKm_INCLUDE_DIRS}")
++        get_target_property(VTKm_DIY_INCLUDE_DIRS vtkm_diy INTERFACE_INCLUDE_DIRECTORIES)
++        get_target_property(VTKm_OPTION_INCLUDE_DIRS vtkm_optionparser INTERFACE_INCLUDE_DIRECTORIES)
++        get_target_property(VTKm_TAO_INCLUDE_DIRS vtkm_taotuple INTERFACE_INCLUDE_DIRECTORIES)
++        if(MSVC)
++            set(VTKm_DEFINITIONS /bigobj)
++        endif()
++    else()
++        message(FATAL_ERROR "VTKM target missing")
++    endif()
++    if(VTKM_FOUND)
++        message(STATUS "Found VTKm")
++    endif()
++endif()
++
++vtk_module_third_party(
++  INTERNAL
++    HEADER_ONLY
++    LICENSE_FILES "vtkvtkm/vtk-m/LICENSE.txt"
++    VERSION       "master"
++    SUBDIRECTORY  vtkvtkm
++    STANDARD_INCLUDE_DIRS
++    INTERFACE
++  EXTERNAL
++    PACKAGE VTKm
++    TARGETS vtkm_cont vtkm_filter vtkm_diy vtkm_optionparser vtkm_taotuple
++    #LIBRARIES vtkm_cont vtkm_filter vtkm_diy vtkm_optionparser vtkm_taotuple
++    INCLUDE_DIRS VTKm_INCLUDE_DIRS VTKm_DIY_INCLUDE_DIRS VTKm_OPTION_INCLUDE_DIRS VTKm_TAO_INCLUDE_DIRS)
++# configure_file(
++  # "${CMAKE_CURRENT_SOURCE_DIR}/vtk_utf8.h.in"
++  # "${CMAKE_CURRENT_BINARY_DIR}/vtk_utf8.h")
++
++# vtk_module_install_headers(
++  # FILES "${CMAKE_CURRENT_BINARY_DIR}/vtk_utf8.h")
+diff --git a/ThirdParty/vtkm/vtk.module b/ThirdParty/vtkm/vtk.module
+index a8e4dad0f..c7bbbf0e8 100644
+--- a/ThirdParty/vtkm/vtk.module
++++ b/ThirdParty/vtkm/vtk.module
+@@ -3,5 +3,7 @@ NAME
+ PRIVATE_DEPENDS
+   # While not needed to satisfy symbols, this is necessary to guarantee that
+   # VTK_SMP_IMPLEMENTATION_TYPE is available when configuring vtk-m.
+-  VTK::CommonCore
++  # VTK::CommonCore
++LIBRARY_NAME
++  VTKm
+ THIRD_PARTY
