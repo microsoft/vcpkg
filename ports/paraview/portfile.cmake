@@ -38,11 +38,31 @@ vcpkg_from_github(
     SHA512 df3490c463c96e2b7445e416067f0be469eca86ee655690fd8acdbcda8189c192909981dbb36b043d0e7ccd06f9eb6cf0a2c25a48d23d92c47b061a6ee39b2db
     HEAD_REF master
     PATCHES
-        #FindPythonModule.patch
+        paraview.patch
 )
 
+#Get VisItBridge Plugin
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH VISITIT_SOURCE_PATH
+    GITLAB_URL https://gitlab.kitware.com/
+    REPO paraview/visitbridge
+    REF 4e5fd802e83fcc8601b7a75d318ac277514cb736
+    SHA512 49ab6e32051a9cb328f5694bca7445610d80bdedddc7ac3d48970f57be1c5969578a0501b12f48a2fb332f109f79f8df189e78530bb4af75e73b0d48d7124884
+)
+#Get QtTesting Plugin
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH QTTESTING_SOURCE_PATH
+    GITLAB_URL https://gitlab.kitware.com/
+    REPO paraview/qttesting
+    REF a17c15627db0852242d83460e032a021571669df
+    SHA512  34ad7c97720366dd66c011aecbaf7103ebcc128223673140d42db32c6eb419c805da204ac9afe73dae4c9b2ef9acfc4ec1b927271351fde51c9df7c44d09bf6e
+)
+
+#file(REMOVE_RECURSE ${SOURCE_PATH}/Utilities/VisItBridge)
+file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
+file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
 #file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
-file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/QtTesting")
+#file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/QtTesting")
 # # Check if one or more features are a part of a package installation.
 # # See /docs/maintainers/vcpkg_check_features.md for more details
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -55,29 +75,33 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/QtTesting")
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
-    
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
      OPTIONS 
         -DPARAVIEW_USE_EXTERNAL:BOOL=ON
-        -DUSE_EXTERNAL_VTK:BOOL=ON
-        -DVTK_USE_SYSTEM_PROTOBUF:BOOL=ON
-        -DVTK_USE_SYSTEM_CGNS:BOOL=ON
-        -DPARAVIEW_USE_VTKM:BOOL=OFF # VTK-m port is missing
-        -DVTK_MODULE_ENABLE_vtkqttesting:BOOL=OFF
-        -DVTK_MODULE_ENABLE_vtkIOParallelExodus:BOOL=OFF
-        -DVTK_MODULE_ENABLE_vtkRenderingParallel:BOOL=OFF
-        -DVTK_ENABLE_KITS:BOOL=ON
-        -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=OFF
-        -DPARAVIEW_ENABLE_CATALYST:BOOL=OFF
+        -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
+        #-DVTK_USE_SYSTEM_PROTOBUF:BOOL=ON
+        #-DVTK_USE_SYSTEM_CGNS:BOOL=ON
+        -DPARAVIEW_USE_VTKM:BOOL=ON # VTK-m port is missing but this is a requirement to build VisItLib
+        -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
+        -DPARAVIEW_ENABLE_CATALYST:BOOL=ON
+        -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
+        -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION=OFF
+        -DPARAVIEW_USE_QTHELP=OFF
+        -DBoost_INCLUDE_DIR:PATH="${CURRENT_INSTALLED_DIR}/include"
+        -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
+        -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
+        #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 #TODO. Patch .cmake from FindPythonModules in CMakeLists.txt away
 #VTK_MODULE_USE_EXTERNAL_<name>
-
+vcpkg_add_to_path(PREPEND ${CURRENT_INSTALLED_DIR}/debug/bin)
+vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
 vcpkg_install_cmake()
 
 # # Moves all .cmake files from /debug/share/paraview/ to /share/paraview/
