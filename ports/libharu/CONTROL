@@ -3,3 +3,7 @@ Version: 2017-08-15-8
 Homepage: https://github.com/libharu/libharu
 Description: libharu - free PDF library
 Build-Depends: zlib, libpng
+
+Feature: notiffsymbols
+Description: disable symbols also defined by the tiff port
+Build-Depends: tiff

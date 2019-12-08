@@ -1,0 +1,12 @@
+diff --git a/src/hpdf_image_ccitt.c b/src/hpdf_image_ccitt.c
+index 2937fc90d..a1a35d0ed 100644
+--- a/src/hpdf_image_ccitt.c
++++ b/src/hpdf_image_ccitt.c
+@@ -21,7 +21,6 @@
+ #include <memory.h>
+ #include <assert.h>
+ 
+-#define	G3CODES
+ #include "t4.h"
+ 
+ typedef unsigned int uint32;
