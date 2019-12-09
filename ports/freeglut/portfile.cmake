@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     macOS_Xquartz.patch
     fix-debug-macro.patch
     fix-link-property.patch
+    fix-output-name.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -27,14 +28,6 @@ else()
     set(FREEGLUT_STATIC ON)
     set(FREEGLUT_DYNAMIC OFF)
 endif()
-
-# Patch header
-file(READ ${SOURCE_PATH}/include/GL/freeglut_std.h FREEGLUT_STDH)
-string(REGEX REPLACE "\"freeglut_static.lib\""
-                     "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
-string(REGEX REPLACE "\"freeglut_staticd.lib\""
-                     "\"freeglutd.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
-file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -50,14 +43,6 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeGLUT)
-
-# Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
-    endif()
-endif()
 
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
