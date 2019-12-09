@@ -109,7 +109,7 @@ Example:
 Build-Depends: curl[openssl] (!windows&!osx), curl[winssl] (windows), curl[darwinssl] (osx)
 ```
 
-#### Default-Feature
+#### Default-Features
 Comma separated list of optional port features to install by default.
 
 This field is optional.

@@ -118,7 +118,7 @@ pango_add_module(pangowin32
     pango/pangowin32-fontcache.c
     pango/pangowin32-fontmap.c
     pango/pangowin32-shape.c)
-target_link_libraries(pangowin32 usp10 pango)
+target_link_libraries(pangowin32 usp10 pango gdi32)
 endif()
 
 pango_add_module(pangoft2
