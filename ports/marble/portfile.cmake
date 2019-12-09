@@ -1,6 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "this Marble port currently only supports Windows platform (and dll mode)" ON_TARGET LINUX OSX)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" ON_LIBRARY_LINKAGE "static")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -48,12 +46,12 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB  DEXE "${CURRENT_PACKAGES_DIR}/debug/*.exe")
 file(GLOB  DDLL "${CURRENT_PACKAGES_DIR}/debug/*.dll")
 
-file(REMOVE_RECURSE  ${EXE}  ${DEXE})
-file(REMOVE_RECURSE  ${DLL} ${DDLL}) 
-file(REMOVE_RECURSE  ${CURRENT_PACKAGES_DIR}/plugins   ${CURRENT_PACKAGES_DIR}/debug/plugins)
-file(REMOVE_RECURSE  ${CURRENT_PACKAGES_DIR}/data   ${CURRENT_PACKAGES_DIR}/debug/data)
-file(REMOVE_RECURSE  ${CURRENT_PACKAGES_DIR}/mkspecs ${CURRENT_PACKAGES_DIR}/debug/mkspecs)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE
+    ${EXE} ${DEXE} ${DLL} ${DDLL}
+    ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/debug/plugins
+    ${CURRENT_PACKAGES_DIR}/data    ${CURRENT_PACKAGES_DIR}/debug/data
+    ${CURRENT_PACKAGES_DIR}/mkspecs ${CURRENT_PACKAGES_DIR}/debug/mkspecs
+    ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
 
