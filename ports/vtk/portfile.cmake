@@ -33,6 +33,7 @@ vcpkg_from_github(
         fix-pugixml-link.patch
         hdf5_static.patch
         fix-find-lzma.patch
+        fix-proj4.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -77,8 +78,12 @@ if(VTK_WITH_ALL_MODULES)
         # -DVTK_USE_SYSTEM_XDMF3=ON
         # -DVTK_USE_SYSTEM_ZFP=ON
         # -DVTK_USE_SYSTEM_ZOPE=ON
+        # -DVTK_USE_SYSTEM_LIBPROJ=ON
     )
 endif()
+
+set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
 
 # =============================================================================
 # Configure & Install
@@ -106,6 +111,10 @@ vcpkg_configure_cmake(
         -DPYTHON_EXECUTABLE=${PYTHON3}
 
         ${ADDITIONAL_OPTIONS}
+    OPTIONS_RELEASE
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_REL}
+    OPTIONS_DEBUG
+        -DPROJ_LIBRARY=${PROJ_LIBRARY_DBG}
 )
 
 vcpkg_install_cmake()

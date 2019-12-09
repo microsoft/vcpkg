@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -172,7 +172,7 @@
+ #  requires root permissions to open devices, so that's not generally
+ #  useful, and we'll disable this by default on Unix. Windows and macOS
+ #  can use it without root access, though, so enable by default there.
+-if(WINDOWS OR APPLE OR ANDROID)
++if((WINDOWS AND NOT WINDOWS_STORE) OR APPLE OR ANDROID)
+   set(HIDAPI_SKIP_LIBUSB TRUE)
+ else()
+   set(HIDAPI_SKIP_LIBUSB FALSE)

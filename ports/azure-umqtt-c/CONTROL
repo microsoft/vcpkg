@@ -1,5 +1,5 @@
 Source: azure-umqtt-c
-Version: 2019-10-07.1
+Version: 2019-10-07.2
 Build-Depends: azure-c-shared-utility, azure-macro-utils-c, umock-c
 Description: General purpose library for communication over the mqtt protocol
 

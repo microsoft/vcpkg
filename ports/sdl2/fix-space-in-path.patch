@@ -1,0 +1,24 @@
+diff -ur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2019-07-23 21:41:00.000000000 +0200
++++ b/CMakeLists.txt	2019-10-27 20:26:38.000000000 +0100
+@@ -257,7 +257,7 @@
+ # General includes
+ include_directories(${SDL2_BINARY_DIR}/include ${SDL2_SOURCE_DIR}/include)
+ if(USE_GCC OR USE_CLANG)
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -idirafter ${SDL2_SOURCE_DIR}/src/video/khronos")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -idirafter \"${SDL2_SOURCE_DIR}/src/video/khronos\"")
+ else()
+   include_directories(${SDL2_SOURCE_DIR}/src/video/khronos)
+ endif()
+diff -ur a/cmake/sdlchecks.cmake b/cmake/sdlchecks.cmake
+--- a/cmake/sdlchecks.cmake	2019-07-23 21:41:00.000000000 +0200
++++ b/cmake/sdlchecks.cmake	2019-10-27 20:27:10.000000000 +0100
+@@ -1086,7 +1086,7 @@
+       set(HAVE_SDL_JOYSTICK TRUE)
+       file(GLOB HIDAPI_SOURCES ${SDL2_SOURCE_DIR}/src/joystick/hidapi/*.c)
+       set(SOURCE_FILES ${SOURCE_FILES} ${HIDAPI_SOURCES})
+-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LIBUSB_CFLAGS} -I${SDL2_SOURCE_DIR}/src/hidapi/hidapi")
++      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${LIBUSB_CFLAGS} \"-I${SDL2_SOURCE_DIR}/src/hidapi/hidapi\"")
+       if(NOT HIDAPI_SKIP_LIBUSB)
+         set(SOURCE_FILES ${SOURCE_FILES} ${SDL2_SOURCE_DIR}/src/hidapi/libusb/hid.c)
+         list(APPEND EXTRA_LIBS ${LIBUSB_LIBS})

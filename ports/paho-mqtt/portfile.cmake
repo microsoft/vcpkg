@@ -11,6 +11,7 @@ vcpkg_from_github(
          fix-install-path.patch
          fix-static-build.patch
          fix-unresolvedsymbol-arm.patch
+         export-cmake-targets.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
@@ -22,6 +23,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/eclipse-paho-mqtt-c TARGET_PATH share/eclipse-paho-mqtt-c)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
