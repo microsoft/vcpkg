@@ -144,6 +144,7 @@ function(vcpkg_fixup_cmake_targets)
     file(GLOB_RECURSE MAIN_CMAKES "${RELEASE_SHARE}/*.cmake")
     foreach(MAIN_CMAKE IN LISTS MAIN_CMAKES)
         file(READ ${MAIN_CMAKE} _contents)
+        file(WRITE ${MAIN_CMAKE}.bak "${_contents}")
         string(REGEX REPLACE
             "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
