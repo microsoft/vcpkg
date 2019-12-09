@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} currently only supports being built for desktop")
 endif()
