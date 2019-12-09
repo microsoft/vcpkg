@@ -1,5 +1,6 @@
-include(vcpkg_common_functions)
-
+if("notiffsymbols" IN_LIST FEATURES)
+    set(DISABLETIFF tiff.patch)
+endif()
 vcpkg_download_distfile(SHADING_PR
     URLS "https://github.com/libharu/libharu/pull/157.diff"
     FILENAME "libharu-shading-pr-157.patch"
@@ -17,6 +18,7 @@ vcpkg_from_github(
         add-boolean-typedef.patch
         # This patch adds shading support which is required for VTK. If desired, this could be moved into an on-by-default feature.
         ${SHADING_PR}
+        ${DISABLETIFF}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
