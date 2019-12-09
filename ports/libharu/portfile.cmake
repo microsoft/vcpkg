@@ -1,4 +1,4 @@
-if("disabletiff" IN_LIST FEATURES)
+if("notiffsymbols" IN_LIST FEATURES)
     set(DISABLETIFF tiff.patch)
 endif()
 vcpkg_download_distfile(SHADING_PR
