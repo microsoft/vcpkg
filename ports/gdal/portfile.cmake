@@ -27,8 +27,8 @@ vcpkg_extract_source_archive_ex(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    set(NATIVE_PACKAGES_DIR_DBG "${CURRENT_PACKAGES_DIR}")
-    set(NATIVE_PACKAGES_DIR_REL "${CURRENT_PACKAGES_DIR}/debug")
+    set(NATIVE_PACKAGES_DIR_DBG "${CURRENT_PACKAGES_DIR}/debug")
+    set(NATIVE_PACKAGES_DIR_REL "${CURRENT_PACKAGES_DIR}")
     # We can't pass in the normal absolute path because the "xcopy" command needs to use the windows path.
     # We also can't pass in the windows path because it is used as an argument after the "\" will be used as an escape character and cannot be resolved using double quotes.
     # Use relative path here to install manually below
