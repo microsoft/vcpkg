@@ -8,7 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-directory-output.patch
-        remove-owner-read-perms.patch		
+        Fix-depends.patch
+        remove-owner-read-perms.patch
 )
 
 #Handle static lib
