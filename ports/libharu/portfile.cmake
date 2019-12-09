@@ -1,5 +1,7 @@
 if("notiffsymbols" IN_LIST FEATURES)
-    set(DISABLETIFF tiff.patch)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(DISABLETIFF tiff.patch)
+    endif()
 endif()
 vcpkg_download_distfile(SHADING_PR
     URLS "https://github.com/libharu/libharu/pull/157.diff"
