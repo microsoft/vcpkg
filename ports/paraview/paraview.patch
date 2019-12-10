@@ -57,7 +57,7 @@ index 588da1883..28af52f7a 100644
  if (PARAVIEW_USE_MPI)
    list(APPEND paraview_requested_modules
      VTK::FiltersParallelFlowPaths
-@@ -721,12 +723,41 @@ set(_paraview_CMAKE_INSTALL_RPATH_save
+@@ -721,12 +723,43 @@ set(_paraview_CMAKE_INSTALL_RPATH_save
    "${CMAKE_INSTALL_RPATH}")
  list(APPEND CMAKE_INSTALL_RPATH
    "$ORIGIN")
@@ -85,6 +85,7 @@ index 588da1883..28af52f7a 100644
 +            endif()
 +        else()
 +            list(APPEND _to_remove ${mod})
++            list(APPEND vtk_modules ${mod})
 +        endif()
 +    endforeach()
 +    message(STATUS "UNRECOGNIZED:${paraview_unrecognized_modules}")
@@ -100,15 +101,17 @@ index 588da1883..28af52f7a 100644
 +          "The following modules were requested or required, but not found: "
 +          "${modules_notarget};${paraview_unrecognized_modules}.")
 +    endif()
++    list(REMOVE_DUPLICATES vtk_modules)
    endif ()
  
    if (PARAVIEW_ENABLE_PYTHON)
-@@ -887,11 +918,13 @@ vtk_module_build(
+@@ -887,11 +918,14 @@ vtk_module_build(
    USE_EXTERNAL        "${PARAVIEW_USE_EXTERNAL}"
    TEST_INPUT_DATA_DIRECTORY   "${paraview_test_data_directory_input}"
    TEST_OUTPUT_DATA_DIRECTORY  "${paraview_test_data_directory_output}")
 -
 +message(STATUS "VTKMOD:${vtk_modules}")
++message(STATUS "PARAVIEWMOD:${paraview_modules}")
  include(vtkModuleJson)
 +if(NOT PARAVIEW_USE_EXTERNAL_VTK)
  vtk_module_json(
