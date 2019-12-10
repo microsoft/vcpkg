@@ -1,41 +1,50 @@
 diff --git a/src/training/CMakeLists.txt b/src/training/CMakeLists.txt
-index 8fd96a9..ef258e1 100644
+index 8fd96a9..186341e 100644
 --- a/src/training/CMakeLists.txt
 +++ b/src/training/CMakeLists.txt
-@@ -253,7 +253,7 @@ if (NOT CPPAN_BUILD)
+@@ -52,7 +52,7 @@ endif()
+ # experimental
+ 
+ if (NOT CPPAN_BUILD)
+-    find_package(ICU COMPONENTS uc i18n)
++    find_package(ICU COMPONENTS i18n uc)
+ endif()
+ 
+ ########################################
+@@ -187,6 +187,9 @@ set(unicharset_training_src
+ 
+ )
+ add_library                 (unicharset_training ${unicharset_training_src})
++if(UNIX)
++list(APPEND ICU_LIBRARIES -ldl)
++endif()
+ if (NOT CPPAN_BUILD)
+ target_link_libraries       (unicharset_training common_training ${ICU_LIBRARIES})
+ else()
+@@ -253,16 +256,27 @@ if (NOT CPPAN_BUILD)
  find_package(PkgConfig)
  endif()
  
 -if (PKG_CONFIG_FOUND OR CPPAN_BUILD)
-+if (1)
+-
+-if (PKG_CONFIG_FOUND)
+-pkg_check_modules(Pango REQUIRED pango)
+-pkg_check_modules(Cairo REQUIRED cairo)
+-pkg_check_modules(PangoFt2 REQUIRED pangoft2)
+-pkg_check_modules(PangoCairo REQUIRED pangocairo)
+-pkg_check_modules(FontConfig REQUIRED fontconfig)
++find_package(unofficial-cairo CONFIG REQUIRED)
++find_package(unofficial-glib CONFIG REQUIRED)
++find_package(unofficial-gettext CONFIG REQUIRED)
++find_package(unofficial-fontconfig CONFIG REQUIRED)
++find_package(Freetype REQUIRED)
++if(UNIX OR BUILD_SHARED_LIBS)
++    find_package(harfbuzz CONFIG REQUIRED)
+ endif()
  
- if (PKG_CONFIG_FOUND)
- pkg_check_modules(Pango REQUIRED pango)
-@@ -261,8 +261,35 @@ pkg_check_modules(Cairo REQUIRED cairo)
- pkg_check_modules(PangoFt2 REQUIRED pangoft2)
- pkg_check_modules(PangoCairo REQUIRED pangocairo)
- pkg_check_modules(FontConfig REQUIRED fontconfig)
--endif()
-+else()
-+find_library(Glib_LIBRARY_RELEASE NAMES glib-2.0)
-+find_library(Glib_LIBRARY_DEBUG NAMES glib-2.0)
-+select_library_configurations(Glib)
-+
-+find_library(GObject_LIBRARY_RELEASE NAMES gobject-2.0)
-+find_library(GObject_LIBRARY_DEBUG NAMES gobject-2.0)
-+select_library_configurations(GObject)
-+
 +find_library(Pango_LIBRARY_RELEASE NAMES pango-1.0)
 +find_library(Pango_LIBRARY_DEBUG NAMES pango-1.0)
 +select_library_configurations(Pango)
-+
-+find_library(Cairo_LIBRARY_RELEASE NAMES cairo)
-+find_library(Cairo_LIBRARY_DEBUG NAMES cairod)
-+select_library_configurations(Cairo)
- 
-+find_library(FontConfig_LIBRARY_RELEASE NAMES fontconfig)
-+find_library(FontConfig_LIBRARY_DEBUG NAMES fontconfig)
-+select_library_configurations(FontConfig)
 +
 +find_library(PangoFt2_LIBRARY_RELEASE NAMES pangoft2-1.0)
 +find_library(PangoFt2_LIBRARY_DEBUG NAMES pangoft2-1.0)
@@ -44,21 +53,53 @@ index 8fd96a9..ef258e1 100644
 +find_library(PangoCairo_LIBRARY_RELEASE NAMES pangocairo-1.0)
 +find_library(PangoCairo_LIBRARY_DEBUG NAMES pangocairo-1.0)
 +select_library_configurations(PangoCairo)
-+endif()
++
  set(text2image_src
      text2image.cpp
      boxchar.cpp
-@@ -285,10 +312,12 @@ set(text2image_src
+@@ -285,16 +299,34 @@ set(text2image_src
  
  add_executable              (text2image ${text2image_src})
  target_link_libraries       (text2image unicharset_training)
 -if (PKG_CONFIG_FOUND)
-+if (1)
++
  target_include_directories  (text2image BEFORE PRIVATE ${Cairo_INCLUDE_DIRS} ${Pango_INCLUDE_DIRS})
  target_compile_definitions  (text2image PRIVATE -DPANGO_ENABLE_ENGINE)
- target_link_libraries       (text2image
-+	${GObject_LIBRARIES}
-+	${Glib_LIBRARIES}
+-target_link_libraries       (text2image
++if(UNIX OR BUILD_SHARED_LIBS)
++    target_link_libraries       (text2image
++    ${PangoCairo_LIBRARIES}
++    ${PangoFt2_LIBRARIES}
      ${Pango_LIBRARIES}
      ${Cairo_LIBRARIES}
++    harfbuzz::harfbuzz
++    Freetype::Freetype
++    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject
++    unofficial::cairo::cairo unofficial::cairo::cairo-gobject
++    unofficial::gettext::libintl
++    unofficial::fontconfig::fontconfig
++)
++else()
++    target_link_libraries       (text2image
      ${PangoCairo_LIBRARIES}
+     ${PangoFt2_LIBRARIES}
+     ${FontConfig_LIBRARIES}
+-)
++    ${Pango_LIBRARIES}
++    Freetype::Freetype
++    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject
++    unofficial::cairo::cairo unofficial::cairo::cairo-gobject
++    unofficial::gettext::libintl
++    unofficial::fontconfig::fontconfig
++ )
+ endif()
+ if (CPPAN_BUILD)
+ target_link_libraries       (text2image pvt.cppan.demo.gnome.pango.pangocairo)
+@@ -302,7 +334,6 @@ endif()
+ project_group               (text2image "Training Tools")
+ install                     (TARGETS text2image RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+ 
+-endif()
+ endif(ICU_FOUND)
+ 
+ ###############################################################################
