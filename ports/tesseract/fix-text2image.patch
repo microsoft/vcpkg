@@ -7,7 +7,7 @@ index 8fd96a9..186341e 100644
  
  if (NOT CPPAN_BUILD)
 -    find_package(ICU COMPONENTS uc i18n)
-+    find_package(ICU COMPONENTS i18n uc)
++    find_package(ICU REQUIRED COMPONENTS i18n uc)
  endif()
  
  ########################################
@@ -16,7 +16,7 @@ index 8fd96a9..186341e 100644
  )
  add_library                 (unicharset_training ${unicharset_training_src})
 +if(UNIX)
-+list(APPEND ICU_LIBRARIES -ldl)
++    list(APPEND ICU_LIBRARIES -ldl)
 +endif()
  if (NOT CPPAN_BUILD)
  target_link_libraries       (unicharset_training common_training ${ICU_LIBRARIES})
