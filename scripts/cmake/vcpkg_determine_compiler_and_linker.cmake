@@ -19,7 +19,7 @@ function(vcpkg_determine_compiler_and_linker)
         STRING(COMPARE EQUAL "${TARGET_TRIPLET}" "${TEST3}" TEST3)
         STRING(REGEX MATCH "${VCPKG_CMAKE_VS_GENERATOR}" TEST4 ${COMPILER_INFO})
     endif()
-    message(STATUS "Used CMAKE Generator: ${VCPKG_CMAKE_VS_GENERATOR}")
+    message(STATUS "Used CMake VS generator to determine compiler/linker of toolset '${VCPKG_PLATFORM_TOOLSET}': ${VCPKG_CMAKE_VS_GENERATOR}")
     if(NOT TEST1 OR NOT TEST2 OR NOT TEST3 OR NOT TEST4)
         vcpkg_execute_required_process(COMMAND  cmake -G ${VCPKG_CMAKE_VS_GENERATOR} -T ${VCPKG_PLATFORM_TOOLSET} -S ./ -B build/
                                     -DVCPKG_CMAKE_VS_GENERATOR=${VCPKG_CMAKE_VS_GENERATOR}
