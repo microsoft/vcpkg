@@ -102,9 +102,7 @@ vcpkg_configure_cmake(
 
 #TODO. Patch .cmake from FindPythonModules in CMakeLists.txt away
 #VTK_MODULE_USE_EXTERNAL_<name>
-vcpkg_add_to_path(PREPEND ${CURRENT_INSTALLED_DIR}/debug/bin)
-vcpkg_add_to_path(${CURRENT_INSTALLED_DIR}/bin)
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 # # Moves all .cmake files from /debug/share/paraview/ to /share/paraview/
 # # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
