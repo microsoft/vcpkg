@@ -234,6 +234,3 @@ To determine the host in a portfile, the standard CMake variables are fine (`CMA
 To determine the target in a portfile, the vcpkg triplet variables should be used (`VCPKG_CMAKE_SYSTEM_NAME`).
 
 See also our [triplet documentation](../users/triplets.md) for a full enumeration of possible settings.
-
-[foo](./pr-review-checklist.md#c000001)
-
