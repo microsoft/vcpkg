@@ -29,7 +29,7 @@ See our [Maintainer Guidelines and Policies](maintainer-guide.md#versioning) for
 
 A description only one or a few sentences long is helpful. Consider using the library's official description from their `README.md` or similar if possible. Automatic translations are acceptable and we are happy to clean up translations to English for our contributors.
 
-See our [CONTROL file documentation](https://github.com/grdowns/vcpkg/blob/pr-checklist/docs/maintainers/control-files.md#description) for more information
+See our [CONTROL file documentation](https://github.com/grdowns/vcpkg/blob/pr-checklist/docs/maintainers/control-files.md#description) for more information.
     
 </details>
 
@@ -41,12 +41,16 @@ See our [Maintainer Guidelines and Policies](maintainer-guide.md#Avoid-excessive
 </details>
 
 <details id=c000005>
-<summary><a href=#c000005>c000005</a>: Downloaded archives are versioned if available
+<summary><a href=#c000005>c000005</a>: Downloaded archives are versioned if available</summary
+
+To ensure archive content does not change, archives downloaded preferably have an associated version tag that can be incremented alongside the port version.
 
 </details>
 
 <details id=c000006>
 <summary><a href=#c000006>c000006</a>: New ports pass CI checks for triplets that the library officially supports
+
+To ensure vcpkg ports are of a high quality, we ask that incoming ports support the official platforms for the library in question.
 
 </details>
 
@@ -60,41 +64,35 @@ If possible, patches to the library source code should be upstreamed to the libr
 <details id=c000008>
 <summary><a href=#c000008>c000008</a>: New ports download source code from the official source if available</summary>
 
+To respect library authors and keep code secure, please have ports download source code from the official source. We may make exceptions if the original source code is not available and there is substantial community interest in maintaining the library in question.
+
 </details>
 
 <details id=c000009>
-<summary><a href=#c000009>c000009</a>: Port system dependencies are communicated with a message during installation</summary>
-
-Example:
-```cmake
-message(STATUS "${PORT} has system dependencies on")
-```
-
-</details>
-
-<details id=c000010>
 <summary><a href=#c000010>c000010</a>: Ports and port features are named correctly</summary>
 
 For user accessibility, we prefer names of ports and port features to be intuitive and close to their counterparts in official sources and other package managers. If you are unsure about the naming of a port or port feature, we recommend checking repology.org, packages.ubuntu.com, or searching for additional information using a search engine. We can also help our contributors with this, so feel free to ask for naming suggestions if you are unsure.
 
 </details>
 
-<details id=c000011>
+<details id=c000010>
 <summary><a href=#c000011>c000011</a>: Library targets are exported when appropriate</summary>
 
 To provide users with a seamless build system integration, please be sure to export and provide a means of finding the library targets intended to be used downstream. Targets not meant to be exported should be be marked private and not exported.
 
 </details>
 
-<details id=c000012>
+<details id=c000011>
 <summary><a href=#c000012>c000012</a>: Ports do not use applications which modify the user's system</summary>
     
-Examples of these applications are `sudo`, `apt`, `brew`, or `pip`. Please use an alternative to these types of programs wherever possible.
-    
+Ports should uphold vcpkg's contract of not modifying the user's system by avoiding applications which do so. Examples of these applications are `sudo`, `apt`, `brew`, or `pip`. Please use an alternative to these types of programs wherever possible.
+
 </details>
 
-<details id=c000013>
+<details id=c000012>
 <summary><a href=#c000013>c000013</a>: Ports with system dependencies include an information message during installation</summary>
+
+Some ports have library and tool dependencies that do not exist within vcpkg. For these missing dependencies, we ask that contributors add a message to the top of the port's `portfile.cmake` stating the missing dependencies and how to acquire them. We ask that the message is displayed before any major work is done to ensure that users can "early out" of the installation process as soon as possible in case they are missing the dependency.
 
 Example:
 ```cmake
