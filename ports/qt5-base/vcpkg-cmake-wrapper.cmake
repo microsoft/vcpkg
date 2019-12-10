@@ -23,12 +23,11 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
 
     set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
         ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
-        double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
+        double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto PostgreSQL::PostgreSQL
     )
 
     add_qt_library(Qt5::Core
         pcre2-16
-        libpq
         Qt5ThemeSupport
         Qt5EventDispatcherSupport
         Qt5PlatformCompositorSupport
