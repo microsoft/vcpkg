@@ -6,7 +6,7 @@ Build-Depends: leptonica
 
 Feature: training_tools
 Description: build training tools
-Build-Depends: icu, pango, cairo, fontconfig  
+Build-Depends: icu, pango, cairo, fontconfig
 
 Feature: cpu_independed
 Description: build on any cpu extension commands support
