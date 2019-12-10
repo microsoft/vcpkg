@@ -1,6 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
@@ -17,19 +15,12 @@ vcpkg_extract_source_archive_ex(
         fix-generate.patch
 )
 
-if ("parallel" IN_LIST FEATURES)
-    set(ENABLE_PARALLEL ON)
-else()
-    set(ENABLE_PARALLEL OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    parallel HDF5_ENABLE_PARALLEL
+    cpp HDF5_BUILD_CPP_LIB
+)
 
-if ("cpp" IN_LIST FEATURES)
-    set(ENABLE_CPP ON)
-else()
-    set(ENABLE_CPP OFF)
-endif()
-
-if (ENABLE_PARALLEL AND ENABLE_CPP)
+if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
     message(FATAL_ERROR "Feature Parallel and C++ options are mutually exclusive.")
 endif()
 
@@ -39,12 +30,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_BUILD_TOOLS=OFF
-        -DHDF5_BUILD_CPP_LIB=${ENABLE_CPP}
-        -DHDF5_ENABLE_PARALLEL=${ENABLE_PARALLEL}
         -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
         -DHDF5_ENABLE_SZIP_SUPPORT=ON
         -DHDF5_ENABLE_SZIP_ENCODING=ON
