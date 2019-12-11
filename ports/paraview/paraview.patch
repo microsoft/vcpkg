@@ -57,7 +57,7 @@ index 588da1883..28af52f7a 100644
  if (PARAVIEW_USE_MPI)
    list(APPEND paraview_requested_modules
      VTK::FiltersParallelFlowPaths
-@@ -721,12 +723,41 @@ set(_paraview_CMAKE_INSTALL_RPATH_save
+@@ -721,12 +723,43 @@ set(_paraview_CMAKE_INSTALL_RPATH_save
    "${CMAKE_INSTALL_RPATH}")
  list(APPEND CMAKE_INSTALL_RPATH
    "$ORIGIN")
@@ -85,6 +85,7 @@ index 588da1883..28af52f7a 100644
 +            endif()
 +        else()
 +            list(APPEND _to_remove ${mod})
++            list(APPEND vtk_modules ${mod})
 +        endif()
 +    endforeach()
 +    message(STATUS "UNRECOGNIZED:${paraview_unrecognized_modules}")
@@ -100,15 +101,17 @@ index 588da1883..28af52f7a 100644
 +          "The following modules were requested or required, but not found: "
 +          "${modules_notarget};${paraview_unrecognized_modules}.")
 +    endif()
++    list(REMOVE_DUPLICATES vtk_modules)
    endif ()
  
    if (PARAVIEW_ENABLE_PYTHON)
-@@ -887,11 +918,13 @@ vtk_module_build(
+@@ -887,11 +918,14 @@ vtk_module_build(
    USE_EXTERNAL        "${PARAVIEW_USE_EXTERNAL}"
    TEST_INPUT_DATA_DIRECTORY   "${paraview_test_data_directory_input}"
    TEST_OUTPUT_DATA_DIRECTORY  "${paraview_test_data_directory_output}")
 -
 +message(STATUS "VTKMOD:${vtk_modules}")
++message(STATUS "PARAVIEWMOD:${paraview_modules}")
  include(vtkModuleJson)
 +if(NOT PARAVIEW_USE_EXTERNAL_VTK)
  vtk_module_json(
@@ -118,3 +121,22 @@ index 588da1883..28af52f7a 100644
  vtk_module_json(
    MODULES "${paraview_modules}"
    OUTPUT "paraview-modules.json")
+diff --git a/CMake/vtkModuleWrapClientServer.cmake b/CMake/vtkModuleWrapClientServer.cmake
+index 3804a24e2..91fdd593a 100644
+--- a/CMake/vtkModuleWrapClientServer.cmake
++++ b/CMake/vtkModuleWrapClientServer.cmake
+@@ -37,10 +37,13 @@ function (_vtk_module_wrap_client_server_sources module sources classes)
+     "$<TARGET_PROPERTY:${_vtk_client_server_target_name},COMPILE_DEFINITIONS>")
+   set(_vtk_client_server_genex_include_directories
+     "$<TARGET_PROPERTY:${_vtk_client_server_target_name},INCLUDE_DIRECTORIES>")
++  set(_vtk_client_server_genex_interface_include_directories
++    "$<TARGET_PROPERTY:${_vtk_client_server_target_name},INTERFACE_INCLUDE_DIRECTORIES>")
+   file(GENERATE
+     OUTPUT  "${_vtk_client_server_args_file}"
+     CONTENT "$<$<BOOL:${_vtk_client_server_genex_compile_definitions}>:\n-D\'$<JOIN:${_vtk_client_server_genex_compile_definitions},\'\n-D\'>\'>\n
+-$<$<BOOL:${_vtk_client_server_genex_include_directories}>:\n-I\'$<JOIN:${_vtk_client_server_genex_include_directories},\'\n-I\'>\'>\n")
++             $<$<BOOL:${_vtk_client_server_genex_include_directories}>:\n-I\'$<JOIN:${_vtk_client_server_genex_include_directories},\'\n-I\'>\'>\n
++             $<$<BOOL:${_vtk_client_server_genex_interface_include_directories}>:\n-I\'$<JOIN:${_vtk_client_server_genex_interface_include_directories},\'\n-I\'>\'>\n")
+ 
+   _vtk_module_get_module_property("${module}"
+     PROPERTY  "hierarchy"
