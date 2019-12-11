@@ -1,0 +1,24 @@
+diff --git a/CMake/vtkModule.cmake b/CMake/vtkModule.cmake
+index 33408e59b..0e9cddfb0 100644
+--- a/CMake/vtkModule.cmake
++++ b/CMake/vtkModule.cmake
+@@ -2237,7 +2237,9 @@ function (vtk_module_build)
+           MODULE        "${_vtk_build_module}"
+           FROM_GLOBAL_PROPERTIES
+             # Export the public dependencies of a module.
+-            depends
++            depends
++            private_depends
++            optional_depends
+             # The library name of the module.
+             library_name
+           PROPERTIES
+@@ -2266,6 +2268,8 @@ function (vtk_module_build)
+           exclude_wrap
+           # Export the public dependencies of a module.
+           depends
++          private_depends
++          optional_depends
+           # Export what modules are implemented by the module.
+           implements
+           # Export whether the module contains autoinit logic.

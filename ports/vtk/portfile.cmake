@@ -75,6 +75,7 @@ vcpkg_from_github(
         FindLZMA.patch
         findproj.patch
         vtkm.patch # To include an external VTKm build (v.1.3 required)
+        exportalldependinfo.patch # This one is already in master and is required by paraview
         #install_private_headers.patch #Required by ParaView, also vtkStatisticsAlgorithmPrivate vtkCompositePolyDataMapper2Internal vtkTextureObjectVS(from build)
 )
 
