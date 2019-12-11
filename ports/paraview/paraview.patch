@@ -48,15 +48,6 @@ index 588da1883..28af52f7a 100644
  option(PARAVIEW_USE_EXTERNAL_VTK "Use an external VTK." OFF)
  mark_as_advanced(PARAVIEW_USE_EXTERNAL_VTK)
  else ()
-@@ -373,7 +375,7 @@ else ()
-     ParaView::qttesting
-     VTK::GUISupportQt)
- endif ()
--
-+message(STATUS "MPI:${PARAVIEW_USE_MPI}")
- if (PARAVIEW_USE_MPI)
-   list(APPEND paraview_requested_modules
-     VTK::FiltersParallelFlowPaths
 @@ -721,12 +723,43 @@ set(_paraview_CMAKE_INSTALL_RPATH_save
    "${CMAKE_INSTALL_RPATH}")
  list(APPEND CMAKE_INSTALL_RPATH
@@ -79,7 +70,7 @@ index 588da1883..28af52f7a 100644
 +        if(NOT TARGET ${mod})
 +            message(STATUS "UNREC TARGET not defined: ${mod}")
 +            list(FIND paraview_rejected_modules ${mod} _found_mod)
-+            if(_found_mod GREATER 0)
++            if(_found_mod GREATER_EQUAL 0)
 +                message(STATUS "MODULE ${mod} not necessary; Removing from unrecognized")
 +                list(APPEND _to_remove ${mod})
 +            endif()

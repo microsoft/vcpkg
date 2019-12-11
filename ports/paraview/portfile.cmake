@@ -39,6 +39,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         paraview.patch
+        second.patch
 )
 
 #Get VisItBridge Plugin
@@ -84,8 +85,7 @@ vcpkg_configure_cmake(
      OPTIONS 
         -DPARAVIEW_USE_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
-        #-DVTK_USE_SYSTEM_PROTOBUF:BOOL=ON
-        #-DVTK_USE_SYSTEM_CGNS:BOOL=ON
+        -DPARAVIEW_ENABLE_PYTHON:BOOL=ON
         -DPARAVIEW_USE_VTKM:BOOL=ON # VTK-m port is missing but this is a requirement to build VisItLib
         -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
         -DPARAVIEW_ENABLE_CATALYST:BOOL=ON
