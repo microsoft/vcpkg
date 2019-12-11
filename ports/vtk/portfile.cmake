@@ -34,7 +34,7 @@ if("python" IN_LIST FEATURES)
         "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
         "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
-        "-DPython3_EXECUTABLE=${PYTHON3}"
+       # "-DPython3_EXECUTABLE=${PYTHON3}"
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 
