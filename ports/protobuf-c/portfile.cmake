@@ -1,8 +1,5 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux platform" ON_TARGET "Windows")
 
-set( LIBNOISE_VERSION "1.0.0" )
-set( LIBNOISE_COMMIT "d7e68784a2b24c632868506780eba336ede74ecd" )
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protobuf-c/protobuf-c
