@@ -139,14 +139,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        list(APPEND NMAKE_OPTIONS WIN64=YES)
+        list(APPEND NMAKE_OPTIONS WIN64=1)
     endif()
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
+        list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB DLLBUILD=0)
     else()
-        # Enables PDBs for release and debug builds
-        list(APPEND NMAKE_OPTIONS WITH_PDB=1)
+        list(APPEND NMAKE_OPTIONS DLLBUILD=1)
     endif()
     
     list(APPEND NMAKE_OPTIONS_REL
@@ -178,7 +177,16 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ZLIB_LIB=${ZLIB_LIBRARY_DBG}
         "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
         DEBUG=1
+        ANALYZE=1
     )
+    
+    if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+        list(APPEND NMAKE_OPTIONS_REL MRSID_CONFIG=Release_md CXX_CRT_FLAGS=/MD)
+        list(APPEND NMAKE_OPTIONS_DBG MRSID_CONFIG=Debug_md CXX_CRT_FLAGS=/MDd)
+    else()
+        list(APPEND NMAKE_OPTIONS_REL MRSID_CONFIG=Release CXX_CRT_FLAGS=/MT)
+        list(APPEND NMAKE_OPTIONS_DBG MRSID_CONFIG=Debug CXX_CRT_FLAGS=/MTd)
+    endif()
 
     vcpkg_install_nmake(
         SOURCE_PATH ${SOURCE_PATH}
@@ -236,7 +244,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE ${GDAL_TOOL})
     endforeach()
     file(GLOB GDAL_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${GDAL_TOOLS_DBG})
+    if (GDAL_TOOLS_DBG)
+        file(REMOVE ${GDAL_TOOLS_DBG})
+    endif()
+    
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        # these two directories are empty
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
     
     vcpkg_copy_pdbs()
 else()
