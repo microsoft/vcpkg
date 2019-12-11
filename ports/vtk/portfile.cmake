@@ -22,7 +22,7 @@ if("qtdesignerplugin" IN_LIST FEATURES)
     )
 else()
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
+        -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF)
 endif()
 
 if("python" IN_LIST FEATURES)
