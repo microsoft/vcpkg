@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yhirose/cpp-httplib
-    REF v0.2.2
-    SHA512 da666b1e2f442685bfe4509efee1f74a944777a591c4ba6e46bb9e5fae2ddfa176eef6ab86db81149064b39d0002e0eb2b99d1e8c0653bbdef34aff6f79c1fcc
+    REF v0.2.5
+    SHA512 2b898acb0534517386d14ffa8c2d4640e27cdbbb7ed627a29c289a3012348950bbe1c64711315e8d8654688ab447735d73b9c03be39caaf10e783f612f65e31a
     HEAD_REF master
 )
 

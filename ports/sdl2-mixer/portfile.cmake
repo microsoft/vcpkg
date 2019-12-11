@@ -13,9 +13,26 @@ vcpkg_extract_source_archive_ex(
 )
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+else()
+    set(LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    mpg123 SDL_MIXER_ENABLE_MP3
+    libflac SDL_MIXER_ENABLE_FLAC
+    libmodplug SDL_MIXER_ENABLE_MOD
+    libvorbis SDL_MIXER_ENABLE_OGGVORBIS
+    opusfile SDL_MIXER_ENABLE_OPUS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DLIBRARY_SUFFIX=${LIBRARY_SUFFIX}
     OPTIONS_DEBUG
         -DSDL_MIXER_SKIP_HEADERS=ON
 )
@@ -26,5 +43,4 @@ vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-mixer)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-mixer/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2-mixer/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -32,10 +32,18 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/glib/pcre)
 file(WRITE ${SOURCE_PATH}/glib/pcre/Makefile.in)
 file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
 
+if (selinux IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
+    message("Selinux was not found in its typical system location. Your build may fail. You can install Selinux with \"apt-get install selinux\".")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    selinux HAVE_SELINUX
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DGLIB_VERSION=${GLIB_VERSION}
     OPTIONS_DEBUG
         -DGLIB_SKIP_HEADERS=ON

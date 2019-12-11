@@ -11,6 +11,8 @@ vcpkg_from_github(
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
     [PATCHES <patch1.patch> <patch2.patch>...]
+    [GITHUB_HOST <https://github.com>]
+    [AUTHORIZATION_TOKEN <${SECRET_FROM_FILE}>]
 )
 ```
 
@@ -44,6 +46,14 @@ For most projects, this should be `master`. The chosen branch should be one that
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### GITHUB_HOST
+A replacement host for enterprise GitHub instances.
+
+This field should contain the scheme, host, and port of the desired URL without a trailing slash.
+
+### AUTHORIZATION_TOKEN
+A token to be passed via the Authorization HTTP header as "token ${AUTHORIZATION_TOKEN}".
 
 ## Notes:
 At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.

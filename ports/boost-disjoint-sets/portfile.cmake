@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/disjoint_sets
-    REF boost-1.70.0
-    SHA512 3d85e4f33491529dbc1082ab45d91b93e96d74253108c05f2d6542340c2cf9e4c817c6b9996d7de0e733f09e2e60eee038056db764e3e829662142f9dbe611ca
+    REF boost-1.71.0
+    SHA512 5e8d121155c0916149e53cab8063bbe2d2cee6a8d425e215a3906d967135e83ece0e19138fa4baa71d5dab6e7ef6b1bfdb68f94788679243f3442ebe52452c43
     HEAD_REF master
 )
 

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.9.1
-    SHA512 9accb56c1aadef83bf27280e15a99809a3561cbd4b39d6605dec730cc112bf4fd2e9f1ac39127b32a1b87253e712be4b4f12afe4061a8f7be76266b3f4bca314
+    REF v3.11.0
+    SHA512 c3b4c0da30d886ca2c8bd45e38767e12cf1e603aca13a1f7463ae896c85e5a30fd32e4b2ddeb775f9c04ca0d753cd5946c5808cefbab4982a3fa4433702f771f
     HEAD_REF master
     PATCHES
         fix-uwp.patch

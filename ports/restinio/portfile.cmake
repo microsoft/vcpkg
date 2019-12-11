@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/restinio
-    REF v.0.6.0
-    SHA512 70c37a9b88db5eef0591baf0adc8227c1103a4f272c8fcd332410b9481854f5ae8f2385c8070c7eab17e8a75e699cded528fc655fbdef3553203914abb379b3a
+    REF 4e1ab4e7718a14d4cf043cc9c3f85395bd46e34b # v.0.6.1.1
+    SHA512 36a0f1587f9e1b5862f9234db921ce7745605da60894cf1abea21406807b18d42f1cc90a51c2835f77e75f977780361a759be02896d66b7530d180dd463a20b5
 )
 
 vcpkg_configure_cmake(
@@ -20,3 +20,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restinio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/restinio/LICENSE ${CURRENT_PACKAGES_DIR}/share/restinio/copyright)
+

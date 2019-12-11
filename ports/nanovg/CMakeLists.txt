@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 project(nanovg C)
 
 set(NANOVG_SOURCES src/nanovg.c)
-set(NANOVG_HEADERS src/nanovg.h src/nanovg_gl.h src/nanovg_gl_utils.h)
+set(NANOVG_HEADERS src/nanovg.h src/nanovg_gl.h src/nanovg_gl_utils.h src/stb_image.h)
 add_library(nanovg STATIC ${NANOVG_SOURCES} ${NANOVG_HEADERS})
 set_target_properties(nanovg PROPERTIES PUBLIC_HEADER "${NANOVG_HEADERS}")
 target_include_directories(nanovg PRIVATE 3rdparty/nanovg/src)

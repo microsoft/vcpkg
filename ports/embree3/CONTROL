@@ -1,5 +1,5 @@
 Source: embree3
-Version: 3.5.2-1
+Version: 3.5.2-3
 Homepage: https://github.com/embree/embree
 Description: High Performance Ray Tracing Kernels.
 Build-Depends: tbb
