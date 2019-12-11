@@ -1665,7 +1665,6 @@ torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
 tre:x64-osx=fail
 treehopper:x64-windows-static=fail
-umock-c:x64-windows-static=fail
 unicorn:arm64-windows=fail
 unicorn:arm-uwp=fail
 unicorn:x64-linux=fail
