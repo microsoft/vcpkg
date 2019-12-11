@@ -76,8 +76,8 @@ file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTest
 # )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
+#get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
+#vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -95,6 +95,13 @@ vcpkg_configure_cmake(
         -DBoost_INCLUDE_DIR:PATH="${CURRENT_INSTALLED_DIR}/include"
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
         -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
+        
+        # Help find Python3 correctly
+        "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+        "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
+        "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
