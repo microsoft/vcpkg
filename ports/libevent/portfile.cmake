@@ -1,6 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
@@ -12,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         fix-file_path.patch
         fix-crt_linkage.patch
+        fix-LibeventConfig_cmake_in_path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -57,5 +56,4 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libevent)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libevent/LICENSE ${CURRENT_PACKAGES_DIR}/share/libevent/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
