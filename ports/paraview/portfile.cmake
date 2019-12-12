@@ -113,10 +113,48 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 # # Moves all .cmake files from /debug/share/paraview/ to /share/paraview/
 # # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
-# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/paraview)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-5.7)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+set(TOOLVER pv5.7)
+set(TOOLS   paraview
+            pvbatch
+            pvdataserver
+            pvpython
+            pvrenderserver
+            pvserver
+            smTestDriver
+            vtkProcessXML
+            vtkWrapClientServer)
+            
+foreach(tool ${TOOLS})
+    # Remove debug tools
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
+    endif()
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}-${TOOLVER}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
+    endif()
+    
+    # Move release tools
+    set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(INSTALL ${filename} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(REMOVE ${filename})
+    endif()
+    set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}-${TOOLVER}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(INSTALL ${filename} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        file(REMOVE ${filename})
+    endif()
+endforeach()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 # # Handle copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME copyright)
-
+ file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME Copyright.txt) # Which one is the correct one?
+ file(INSTALL ${SOURCE_PATH}/License_v1.2.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME copyright)
 # # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME paraview)
