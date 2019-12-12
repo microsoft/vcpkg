@@ -43,8 +43,12 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
            Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib Imm32.lib)
 
-      add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d qminimal qoffscreen)
-
+      add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
+    elseif(UNIX)
+      add_qt_library(Qt5::Core
+            Qt5GraphicsSupport
+            Qt5ClipboardSupport
+            Qt5AccessibilitySupport)
     elseif(APPLE)
        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
             "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices"
