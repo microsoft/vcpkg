@@ -44,7 +44,7 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
            Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib Imm32.lib)
 
       add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
-    elseif(UNIX)
+    elseif(UNIX AND NOT APPLE)
       add_qt_library(Qt5::Core
             Qt5GraphicsSupport
             Qt5ClipboardSupport
