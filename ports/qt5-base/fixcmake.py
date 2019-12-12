@@ -13,12 +13,13 @@ tooldir="/tools/"+port+"/bin/"
 for f in files:
     openedfile = open(f, "r")
     builder = ""
-    dllpattern = re.compile("_install_prefix}/bin/Qt5.*d+(.dll|.so)")
-    libpattern = re.compile("_install_prefix}/lib/Qt5.*d+(.lib|.a)")
+    dllpatterndebug = re.compile("_install_prefix}/bin/Qt5.*d+(.dll|.so)")
+    libpatterndebug = re.compile("_install_prefix}/lib/Qt5.*d+(.lib|.a)")
     exepattern = re.compile("_install_prefix}/bin/[a-z]+(.exe|)")
     toolexepattern = re.compile("_install_prefix}/tools/qt5/bin/[a-z]+(.exe|)")
     tooldllpattern = re.compile("_install_prefix}/tools/qt5/bin/Qt5.*d+(.dll|.so)")
-    populatepluginpattern = re.compile("_populate_[^_]+_plugin_properties\([^[:space:]]+ RELEASE ")
+    populatepluginpattern = re.compile("_populate_[^_]+_plugin_properties\([^ ]+ RELEASE")
+    populatetargetpattern = re.compile("_populate_[^_]+_target_properties\(RELEASE ")
     for line in openedfile:
         if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
@@ -62,11 +63,14 @@ for f in files:
             builder += "        IMPORTED_LOCATION_DEBUG ${imported_location_debug}\n"
             builder += "    )\n"
         elif populatepluginpattern.search(line) != None:
-            builder += line + "\n"
-            builder += line.replace("RELEASE", "")
-        elif dllpattern.search(line) != None:
+            builder += line
+            builder += line.replace("RELEASE", "DEBUG").replace(".dll", "d.dll")
+        elif populatetargetpattern.search(line) != None:
+            builder += line
+            builder += line.replace("RELEASE", "DEBUG").replace(".dll", "d.dll").replace(".lib", "d.lib")
+        elif dllpatterndebug.search(line) != None:
             builder += line.replace("/bin/", "/debug/bin/")
-        elif libpattern.search(line) != None:
+        elif libpatterndebug.search(line) != None:
             builder += line.replace("/lib/", "/debug/lib/")
         elif tooldllpattern.search(line) != None:
             builder += line.replace("/tools/qt5/bin", "/debug/bin/")
