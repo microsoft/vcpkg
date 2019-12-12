@@ -15,16 +15,38 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
     }
 
-    std::string FeatureSpec::to_string() const
+    std::string FeatureSpec::to_string(bool omitTriplet) const
     {
         std::string ret;
-        this->to_string(ret);
+        this->to_string(ret, omitTriplet);
         return ret;
     }
-    void FeatureSpec::to_string(std::string& out) const
+    void FeatureSpec::to_string(std::string& out, bool omitTriplet) const
     {
-        if (feature().empty()) return spec().to_string(out);
-        Strings::append(out, name(), '[', feature(), "]:", triplet());
+        if (feature().empty()) return spec().to_string(out, omitTriplet);
+        if (omitTriplet)
+            Strings::append(out, name(), '[', feature(), "]");
+        else
+            Strings::append(out, name(), '[', feature(), "]:", triplet());
+    }
+
+    std::string FullPackageSpec::to_string(bool omitTriplet) const
+    {
+        std::string ret;
+        this->to_string(ret, omitTriplet);
+        return ret;
+    }
+    void FullPackageSpec::to_string(std::string& out, bool omitTriplet) const
+    {
+        // Strip out the "core" feature, as this is always present
+        auto print_features = features;
+        Util::erase_remove_if(print_features, [](const std::string& feature) { return feature == "core"; });
+        if (print_features.empty()) return spec().to_string(out, omitTriplet);
+
+        if (omitTriplet)
+            Strings::append(out, name(), '[', Strings::join(",", print_features), "]");
+        else
+            Strings::append(out, name(), '[', Strings::join(",", print_features), "]:", triplet());
     }
 
     std::vector<FeatureSpec> FeatureSpec::from_strings_and_triplet(const std::vector<std::string>& depends,
@@ -125,8 +147,14 @@ namespace vcpkg
 
     std::string PackageSpec::dir() const { return Strings::format("%s_%s", this->m_name, this->m_triplet); }
 
-    std::string PackageSpec::to_string() const { return Strings::format("%s:%s", this->name(), this->triplet()); }
-    void PackageSpec::to_string(std::string& s) const { Strings::append(s, this->name(), ':', this->triplet()); }
+    std::string PackageSpec::to_string(bool omitTriplet) const { return omitTriplet ? this->name() : Strings::format("%s:%s", this->name(), this->triplet()); }
+    void PackageSpec::to_string(std::string& s, bool omitTriplet) const
+    {
+        if (omitTriplet)
+            s = this->name();
+        else
+            Strings::append(s, this->name(), ':', this->triplet());
+    }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
@@ -134,6 +162,56 @@ namespace vcpkg
     }
 
     bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
+
+    bool operator< (const FullPackageSpec& left, const FullPackageSpec& right)
+    {
+        if (left.package_spec < right.package_spec) return true;
+        if (right.package_spec < left.package_spec) return false;
+
+        std::vector<std::string> leftFeatures;
+        for (auto&& f : left.features)
+            if (f != "core")
+                Util::Vectors::insert_sorted(leftFeatures, f);
+
+        std::vector<std::string> rightFeatures;
+        for (auto&& f : right.features)
+            if (f != "core")
+                Util::Vectors::insert_sorted(rightFeatures, f);
+
+        if (leftFeatures.size() < rightFeatures.size()) return true;
+        if (rightFeatures.size() < leftFeatures.size()) return false;
+
+        for (size_t i = 0; i < leftFeatures.size(); ++i)
+        {
+            int cmp = leftFeatures[i].compare(rightFeatures[i]);
+            if (cmp < 0)
+                return true;
+            else if (cmp > 0)
+                return false;
+        }
+
+        return false;   // equal
+    }
+
+    bool operator==(const FullPackageSpec& left, const FullPackageSpec& right)
+    {
+        if (left.package_spec != right.package_spec)
+            return false;
+
+        std::vector<std::string> leftFeatures;
+        for (auto&& f : left.features)
+            if (f != "core")
+                Util::Vectors::insert_sorted(leftFeatures, f);
+
+        std::vector<std::string> rightFeatures;
+        for (auto&& f : right.features)
+            if (f != "core")
+                Util::Vectors::insert_sorted(rightFeatures, f);
+
+        return leftFeatures == rightFeatures;
+    }
+
+    bool operator!=(const FullPackageSpec& left, const FullPackageSpec& right) { return !(left == right); }
 
     ExpectedT<ParsedSpecifier, PackageSpecParseResult> ParsedSpecifier::from_string(const std::string& input)
     {

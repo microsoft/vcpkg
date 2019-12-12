@@ -34,8 +34,8 @@ namespace vcpkg
 
         std::string dir() const;
 
-        std::string to_string() const;
-        void to_string(std::string& s) const;
+        std::string to_string(bool omitTriplet = false) const;
+        void to_string(std::string& s, bool omitTriplet = false) const;
 
         bool operator<(const PackageSpec& other) const
         {
@@ -65,8 +65,8 @@ namespace vcpkg
 
         const PackageSpec& spec() const { return m_spec; }
 
-        std::string to_string() const;
-        void to_string(std::string& out) const;
+        std::string to_string(bool omitTriplet = false) const;
+        void to_string(std::string& out, bool omitTriplet = false) const;
 
         static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
                                                                  const Triplet& t);
@@ -103,6 +103,14 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
+        const std::string& name() const { return package_spec.name(); }
+        const Triplet& triplet() const { return package_spec.triplet(); }
+
+        const PackageSpec& spec() const { return package_spec; }
+
+        std::string to_string(bool omitTriplet = false) const;
+        void to_string(std::string& out, bool omitTriplet = false) const;
+
         static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
 
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
@@ -124,6 +132,10 @@ namespace vcpkg
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
     bool operator!=(const PackageSpec& left, const PackageSpec& right);
+
+    bool operator< (const FullPackageSpec& left, const FullPackageSpec& right);
+    bool operator==(const FullPackageSpec& left, const FullPackageSpec& right);
+    bool operator!=(const FullPackageSpec& left, const FullPackageSpec& right);
 }
 
 namespace std

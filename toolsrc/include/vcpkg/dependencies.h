@@ -51,7 +51,7 @@ namespace vcpkg::Dependencies
                           const SourceControlFileLocation& scfl,
                           const std::set<std::string>& features,
                           const RequestType& request_type,
-                          std::vector<PackageSpec>&& dependencies);
+                          std::vector<FullPackageSpec>&& dependencies);
 
         std::string displayname() const;
 
@@ -65,7 +65,7 @@ namespace vcpkg::Dependencies
         Build::BuildPackageOptions build_options;
         std::set<std::string> feature_list;
 
-        std::vector<PackageSpec> computed_dependencies;
+        std::vector<FullPackageSpec> computed_dependencies;
     };
 
     enum class RemovePlanType
@@ -121,7 +121,7 @@ namespace vcpkg::Dependencies
         RequestType request_type;
 
         Optional<const BinaryParagraph&> core_paragraph() const;
-        std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
+        std::vector<FullPackageSpec> dependencies(const Triplet& triplet) const;
 
     private:
         Optional<InstalledPackageView> m_installed_package;

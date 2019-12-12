@@ -180,7 +180,7 @@ namespace vcpkg::Dependencies
                                          const SourceControlFileLocation& scfl,
                                          const std::set<std::string>& features,
                                          const RequestType& request_type,
-                                         std::vector<PackageSpec>&& dependencies)
+                                         std::vector<FullPackageSpec>&& dependencies)
         : spec(spec)
         , source_control_file_location(scfl)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
@@ -281,7 +281,7 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<PackageSpec> ExportPlanAction::dependencies(const Triplet&) const
+    std::vector<FullPackageSpec> ExportPlanAction::dependencies(const Triplet&) const
     {
         if (auto p_ip = m_installed_package.get())
             return p_ip->dependencies();
@@ -462,7 +462,7 @@ namespace vcpkg::Dependencies
                 {
                     auto deps = ipv.dependencies();
 
-                    if (std::find(deps.begin(), deps.end(), spec) == deps.end()) continue;
+                    if (std::find_if(deps.begin(), deps.end(), [&]( const FullPackageSpec& fps ) { return fps.package_spec == spec; }) == deps.end()) continue;
 
                     dependents.push_back(ipv.spec());
                 }
@@ -506,7 +506,8 @@ namespace vcpkg::Dependencies
 
             std::vector<PackageSpec> adjacency_list(const ExportPlanAction& plan) const override
             {
-                return plan.dependencies(plan.spec.triplet());
+                auto deps = plan.dependencies(plan.spec.triplet());
+                return Util::fmap(deps, [&](const FullPackageSpec& spec) -> PackageSpec { return spec.package_spec; });
             }
 
             ExportPlanAction load_vertex_data(const PackageSpec& spec) const override
@@ -842,7 +843,7 @@ namespace vcpkg::Dependencies
                 auto&& scfl = *pscfl;
 
                 auto dep_specs = Util::fmap(m_graph_plan->install_graph.adjacency_list(p_cluster),
-                                            [](ClusterPtr const& p) { return p->spec; });
+                                            [](ClusterPtr const& p) -> FullPackageSpec { return { p->spec, std::vector<std::string>(p->to_install_features.begin(), p->to_install_features.end())}; });
                 Util::sort_unique_erase(dep_specs);
 
                 plan.emplace_back(InstallPlanAction{
@@ -899,7 +900,7 @@ namespace vcpkg::Dependencies
 
             for (auto&& dep : deps)
             {
-                auto p_installed = graph->get(dep).installed.get();
+                auto p_installed = graph->get(dep.package_spec).installed.get();
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    p_installed,
                                    "Error: database corrupted. Package %s is installed but dependency %s is not.",

@@ -85,7 +85,7 @@ namespace vcpkg
             default: return "error";
         }
     }
-    std::vector<PackageSpec> InstalledPackageView::dependencies() const
+    std::vector<FullPackageSpec> InstalledPackageView::dependencies() const
     {
         // accumulate all features in installed dependencies
         // Todo: make this unneeded by collapsing all package dependencies into the core package
@@ -109,8 +109,8 @@ namespace vcpkg
         // </hack>
         Util::sort_unique_erase(deps);
 
-        return Util::fmap(deps, [&](const std::string& dep) -> PackageSpec {
-            auto maybe_dependency_spec = PackageSpec::from_name_and_triplet(dep, l_spec.triplet());
+        return Util::fmap(deps, [&](const std::string& dep) -> FullPackageSpec {
+            auto maybe_dependency_spec = FullPackageSpec::from_string(dep, l_spec.triplet());
             if (auto dependency_spec = maybe_dependency_spec.get())
             {
                 return std::move(*dependency_spec);

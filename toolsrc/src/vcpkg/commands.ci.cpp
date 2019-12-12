@@ -262,7 +262,8 @@ namespace vcpkg::Commands::CI
                     const Build::BuildPackageConfig build_config{*scfl, triplet, build_options, p->feature_list};
 
                     auto dependency_abis =
-                        Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
+                        Util::fmap(p->computed_dependencies, [&](const FullPackageSpec& full_spec) -> Build::AbiEntry {
+                            const auto& spec = full_spec.spec();
                             auto it = ret->abi_tag_map.find(spec);
 
                             if (it == ret->abi_tag_map.end())
@@ -313,7 +314,7 @@ namespace vcpkg::Commands::CI
                 }
                 else if (std::any_of(p->computed_dependencies.begin(),
                                      p->computed_dependencies.end(),
-                                     [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
+                                     [&](const FullPackageSpec& full_spec) { return Util::Sets::contains(will_fail, full_spec.spec()); }))
                 {
                     ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
                     will_fail.emplace(p->spec);

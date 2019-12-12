@@ -598,8 +598,8 @@ TEST_CASE ("install plan action dependencies", "[plan]")
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
     PackageSpecMap spec_map(Triplet::X64_WINDOWS);
-    auto spec_c = spec_map.emplace("c");
-    auto spec_b = spec_map.emplace("b", "c");
+    auto spec_c = FullPackageSpec{spec_map.emplace("c")};
+    auto spec_b = FullPackageSpec{spec_map.emplace("b", "c")};
     spec_map.emplace("a", "b");
 
     // Install "a" (without explicit feature specification)
@@ -613,10 +613,10 @@ TEST_CASE ("install plan action dependencies", "[plan]")
     features_check(install_plan.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
 
     features_check(install_plan.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_c});
+    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<FullPackageSpec>{spec_c});
 
     features_check(install_plan.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_b});
+    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<FullPackageSpec>{spec_b});
 }
 
 TEST_CASE ("install plan action dependencies 2", "[plan]")
@@ -626,8 +626,8 @@ TEST_CASE ("install plan action dependencies 2", "[plan]")
     // Add a port "a" which depends on the core of "b", which was already
     // installed explicitly
     PackageSpecMap spec_map(Triplet::X64_WINDOWS);
-    auto spec_c = spec_map.emplace("c");
-    auto spec_b = spec_map.emplace("b", "c");
+    auto spec_c = FullPackageSpec{spec_map.emplace("c")};
+    auto spec_b = FullPackageSpec{spec_map.emplace("b", "c")};
     spec_map.emplace("a", "c, b");
 
     // Install "a" (without explicit feature specification)
@@ -641,10 +641,10 @@ TEST_CASE ("install plan action dependencies 2", "[plan]")
     features_check(install_plan.at(0), "c", {"core"}, Triplet::X64_WINDOWS);
 
     features_check(install_plan.at(1), "b", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_c});
+    REQUIRE(install_plan.at(1).install_action.get()->computed_dependencies == std::vector<FullPackageSpec>{spec_c});
 
     features_check(install_plan.at(2), "a", {"core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<PackageSpec>{spec_b, spec_c});
+    REQUIRE(install_plan.at(2).install_action.get()->computed_dependencies == std::vector<FullPackageSpec>{spec_b, spec_c});
 }
 
 TEST_CASE ("install plan action dependencies 3", "[plan]")
@@ -665,7 +665,7 @@ TEST_CASE ("install plan action dependencies 3", "[plan]")
 
     REQUIRE(install_plan.size() == 1);
     features_check(install_plan.at(0), "a", {"1", "0", "core"}, Triplet::X64_WINDOWS);
-    REQUIRE(install_plan.at(0).install_action.get()->computed_dependencies == std::vector<PackageSpec>{});
+    REQUIRE(install_plan.at(0).install_action.get()->computed_dependencies == std::vector<FullPackageSpec>{});
 }
 
 TEST_CASE ("install with default features", "[plan]")

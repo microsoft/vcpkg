@@ -36,7 +36,7 @@ namespace vcpkg::Commands::DependInfo
         constexpr std::array<CommandSetting, 2> DEPEND_SETTINGS = {
             {{OPTION_MAX_RECURSE, "Set max recursion depth, a value of -1 indicates no limit"},
              {OPTION_SORT,
-              "Set sort order for the list of dependencies, accepted values are: lexicographical, topological "
+              "Set sort order for the list of dependencies; accepted values are: lexicographical, topological "
               "(default), "
               "reverse"}}};
 
@@ -190,7 +190,10 @@ namespace vcpkg::Commands::DependInfo
                 {
                     for (auto&& dependency : info.dependencies)
                     {
-                        assign_depth_to_dependencies(dependency, depth + 1, max_depth, dependencies_map);
+                        // Extract just the package name
+                        auto dep_name = Strings::split(dependency, ":")[0];
+                        dep_name = Strings::split(dep_name, "[")[0];
+                        assign_depth_to_dependencies(dep_name, depth + 1, max_depth, dependencies_map);
                     }
                 }
             }
@@ -205,7 +208,7 @@ namespace vcpkg::Commands::DependInfo
                 const InstallPlanAction& install_action = *pia;
 
                 const std::vector<std::string> dependencies = Util::fmap(
-                    install_action.computed_dependencies, [](const PackageSpec& spec) { return spec.name(); });
+                    install_action.computed_dependencies, [](const FullPackageSpec& spec) { return spec.to_string(true /*omitTriplet*/); });
 
                 std::set<std::string> features{install_action.feature_list};
                 features.erase("core");

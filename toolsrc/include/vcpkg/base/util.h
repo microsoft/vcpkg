@@ -30,6 +30,12 @@ namespace vcpkg::Util
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
         }
+
+        template<class T>
+        void insert_sorted(std::vector<T>& container, const T& item)
+        {
+            container.insert(std::upper_bound(container.begin(), container.end(), item), item);
+        }
     }
 
     namespace Sets
