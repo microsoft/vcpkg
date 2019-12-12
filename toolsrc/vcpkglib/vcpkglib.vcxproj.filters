@@ -96,6 +96,9 @@
     <ClCompile Include="..\src\vcpkg\export.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\globalstate.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
