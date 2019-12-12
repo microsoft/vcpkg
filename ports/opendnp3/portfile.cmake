@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIBS)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dnp3/opendnp3
@@ -11,7 +13,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSTATICLIBS=ON -DDNP3_TLS=ON
+    OPTIONS -DSTATICLIBS=${STATICLIBS} -DDNP3_TLS=ON
 )
 
 vcpkg_install_cmake()
