@@ -151,6 +151,8 @@ function(boost_modular_build)
         -q
         "-sZLIB_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         "-sBZIP2_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sLZMA_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sZSTD_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         threading=multi
     )
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -163,6 +165,10 @@ function(boost_modular_build)
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
          "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
+         -sLZMA_BINARY=lzmad
+         "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
+         -sZSTD_BINARY=zstdd
+         "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
  
     set(_bm_OPTIONS_REL
@@ -170,6 +176,10 @@ function(boost_modular_build)
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
          "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+         -sLZMA_BINARY=lzma
+         "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+         -sZSTD_BINARY=zstd
+         "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
     )
 
     # Properly handle compiler and linker flags passed by VCPKG
