@@ -1,0 +1,51 @@
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index a56fb7a..e8c01e5 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -41,7 +41,7 @@
+   <Import Project="python.props" />
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Label="Configuration">
+-    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+@@ -70,12 +70,36 @@
+       <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+       <AdditionalIncludeDirectories>$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_NO_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
++   <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MachineX86</TargetMachine>
++   </Lib>
++   <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGInstrument|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGUpdate|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MachineX86</TargetMachine>
++    </Lib>
++   <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MachineX64</TargetMachine>
++   </Lib>
++   <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGInstrument|x64'">MachineX64</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGUpdate|x64'">MachineX64</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MachineX64</TargetMachine>
++    </Lib>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClInclude Include="..\Include\abstract.h" />
