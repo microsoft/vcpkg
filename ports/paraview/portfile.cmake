@@ -139,6 +139,10 @@ foreach(tool ${TOOLS})
     if(EXISTS ${filename})
         file(REMOVE ${filename})
     endif()
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}-${TOOLVER}d${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
+    endif()
     
     # Move release tools
     set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
