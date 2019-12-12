@@ -23,6 +23,22 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	file(REMOVE_RECURSE ${SOURCE_PATH})
 	file(RENAME "${TEMP_SOURCE_PATH}" ${SOURCE_PATH})
 	
+	if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	    vcpkg_apply_patches(
+	        SOURCE_PATH ${SOURCE_PATH}
+	        PATCHES
+	            ${CMAKE_CURRENT_LIST_DIR}/0001-Static-library.patch
+	    )
+	endif()
+	
+	if (VCPKG_CRT_LINKAGE STREQUAL static)
+	    vcpkg_apply_patches(
+	        SOURCE_PATH ${SOURCE_PATH}
+	        PATCHES
+	            ${CMAKE_CURRENT_LIST_DIR}/0002-Static-CRT.patch
+	    )
+	endif()
+
 	# We need per-triplet directories because we need to patch the project files differently based on the linkage
 	# Because the patches patch the same file, they have to be applied in the correct order
 	
@@ -39,6 +55,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
 		PLATFORM ${BUILD_ARCH})
+	
+	if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	    vcpkg_apply_patches(
+	        SOURCE_PATH ${SOURCE_PATH}
+	        PATCHES
+	            ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-header-for-static-linkage.patch
+	    )
+	endif()
 
 	file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
 	file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
