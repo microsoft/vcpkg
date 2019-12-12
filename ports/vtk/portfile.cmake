@@ -11,10 +11,18 @@ endif()
 if("qt" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_GROUP_ENABLE_Qt=YES
-        -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF
         -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
         -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
     )
+endif()
+
+if("qtdesignerplugin" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_BUILD_QT_DESIGNER_PLUGIN=ON
+    )
+else()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF)
 endif()
 
 if("python" IN_LIST FEATURES)
@@ -22,7 +30,14 @@ if("python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
+        -DPython3_FIND_REGISTRY=NEVER
+        "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
+        "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
+        "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
+       # "-DPython3_EXECUTABLE=${PYTHON3}"
     )
+    #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
+
 endif()
 
 if("paraview" IN_LIST FEATURES)
@@ -41,11 +56,6 @@ if("paraview" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
-        #-DVTK_MODULE_ENABLE_VTK_mpi=YES
-        #-DVTK_MODULE_ENABLE_VTK_ParallelMPI=YES
-        #-DVTK_MODULE_ENABLE_VTK_ParallelMPI4Py=YES
-        #-DVTK_MODULE_ENABLE_VTK_WebCore=YES
-        #-DVTK_MODULE_ENABLE_VTK_WebPython=YES
     )
 endif()
 
@@ -73,23 +83,15 @@ vcpkg_from_github(
         FindHDF5.patch # completly replaces FindHDF5
         FindLibHaru.patch
         FindLZMA.patch
-        findproj.patch
+        FindLZ4.patch
+        Findproj.patch
         vtkm.patch # To include an external VTKm build (v.1.3 required)
-        #install_private_headers.patch #Required by ParaView, also vtkStatisticsAlgorithmPrivate vtkCompositePolyDataMapper2Internal vtkTextureObjectVS(from build)
+        exportalldependinfo.patch # This one is already in master and is seems to be required by paraview to wrap the client server code
+        pythonwrapper.patch #
+        # Last patch TODO: Patch out internal loguru
 )
 
-# Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
-# since they do not detect the debug libraries correctly.
-# The default files distributed with CMake (>= 3.9) should be superior by all means.
-# For GDAL, the one distributed with CMake does not detect the debug libraries correctly,
-# so we provide an own one.
-#file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
-#file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
-
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
-
 # =============================================================================
-
 
 if(VTK_WITH_ALL_MODULES)
     list(APPEND ADDITIONAL_OPTIONS
@@ -98,24 +100,10 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-find_library(PYTHON_LIBRARY_RELEASE python37 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(PYTHON_LIBRARY_DEBUG python37_d python37 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-if(PYTHON_LIBRARY_RELEASE)
-    list(APPEND PYTHON_LIBRARY "optimized\\\\\;${PYTHON_LIBRARY_RELEASE}")
-endif()
-if(PYTHON_LIBRARY_DEBUG)
-    list(APPEND PYTHON_LIBRARY "debug\\\\\;${PYTHON_LIBRARY_DEBUG}")
-endif()
 # =============================================================================
 # Configure & Install
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
-
-# set(EXTERNAL_MODULES doubleconversion eigen expat freetype glew hdf5 jpeg jsoncpp libharu libproj libxml2 lz4 lzma netcdf ogg pugixml sqlite theora tiff utf8 zlib)
-# foreach(dep IN_LIST EXTERNAL_MODULES)
-    # list(APPEND ADDITIONAL_OPTIONS -DVTK_MODULE_USE_EXTERNAL_VTK_${dep}:BOOL=ON)
-# endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -137,9 +125,8 @@ vcpkg_configure_cmake(
         -DVTK_MODULE_ENABLE_VTK_vtkm=YES
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
-        -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF
-        #-DPYTHON_EXECUTABLE=${PYTHON3}
-        #-DPython3_LIBRARIES="${PYTHON_LIBRARY}"
+        -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
+
 
         ${ADDITIONAL_OPTIONS}
 )
@@ -266,6 +253,7 @@ if("paraview" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
     file(INSTALL ${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python/vtkpythonmodules.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
 endif()
 
 #TODO remove one get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY) from vtk-prefix.cmake and VTK-vtk-module-properties and vtk-python.cmake
@@ -282,8 +270,3 @@ else()
     message(STATUS "FILE:${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake does not exist! No prefix correction!")
 endif()
 endforeach()
-
-# file(INSTALL "${SOURCE_PATH}/CMake/FindPythonModules.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk/CMake)
-# file(INSTALL "${SOURCE_PATH}/CMake/vtkCompilerPlatformFlags.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
-# file(INSTALL "${SOURCE_PATH}/CMake/vtkEncodeString.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
-#add install for CMAKE/FindPythonModules.cmake vtkCompilerPlatformFlags
