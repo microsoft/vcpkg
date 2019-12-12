@@ -18,6 +18,7 @@ for f in files:
     exepattern = re.compile("_install_prefix}/bin/[a-z]+(.exe|)")
     toolexepattern = re.compile("_install_prefix}/tools/qt5/bin/[a-z]+(.exe|)")
     tooldllpattern = re.compile("_install_prefix}/tools/qt5/bin/Qt5.*d+(.dll|.so)")
+    populatepluginpattern = re.compile("_populate_[^_]+_plugin_properties\([^[:space:]]+ RELEASE ")
     for line in openedfile:
         if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
@@ -60,6 +61,9 @@ for f in files:
             builder += "    set_target_properties(Qt5::WinMain PROPERTIES\n"
             builder += "        IMPORTED_LOCATION_DEBUG ${imported_location_debug}\n"
             builder += "    )\n"
+        elif populatepluginpattern.search(line) != None:
+            builder += line + "\n"
+            builder += line.replace("RELEASE", "")
         elif dllpattern.search(line) != None:
             builder += line.replace("/bin/", "/debug/bin/")
         elif libpattern.search(line) != None:
