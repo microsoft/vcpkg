@@ -31,6 +31,10 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
         ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
         double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto PostgreSQL::PostgreSQL
     )
+    if(NOT WINDOWS_STORE)
+        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+           UxTheme.lib) # Should probably be added to Qt5:Gui and not core but currently we only have that one wrapper
+    endif()
 
     add_qt_library(Qt5::Core
         pcre2-16
