@@ -28,6 +28,8 @@
 - [vcpkg\_from\_git](vcpkg_from_git.md)
 - [vcpkg\_from\_github](vcpkg_from_github.md)
 - [vcpkg\_from\_gitlab](vcpkg_from_gitlab.md)
+- [vcpkg\_get\_port\_version\_base](vcpkg_get_port_version_base.md)
+- [vcpkg\_get\_version\_base](vcpkg_get_version_base.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md)
 - [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)
