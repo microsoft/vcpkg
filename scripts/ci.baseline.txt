@@ -1489,7 +1489,6 @@ sdformat6:arm64-windows=fail
 sdformat6:arm-uwp=fail
 sdformat6:x64-uwp=fail
 sdformat6:x64-linux=ignore
-sdl1:arm64-windows=fail
 sdl1:arm-uwp=fail
 sdl1:x64-linux=fail
 sdl1:x64-osx=fail
