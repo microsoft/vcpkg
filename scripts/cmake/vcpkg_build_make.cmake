@@ -120,7 +120,7 @@ function(vcpkg_build_make)
                 endif()
             endif()
 
-            if (CMAKE_HOST_WIN32) # TODO: This call should not be HOST dependent!
+            if (CMAKE_HOST_WIN32)
                 vcpkg_execute_build_process(
                     COMMAND "${MAKE} ${MAKE_OPTS}"
                     WORKING_DIRECTORY ${WORKING_DIRECTORY}
@@ -133,7 +133,7 @@ function(vcpkg_build_make)
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             endif()
-    
+
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()
@@ -158,7 +158,7 @@ function(vcpkg_build_make)
             endif()
             
             message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-            if (CMAKE_HOST_WIN32) # TODO: This call should not be HOST dependent!
+            if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
                 set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
                 vcpkg_execute_build_process(
