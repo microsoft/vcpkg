@@ -5,6 +5,7 @@
 #   CURRENT_INSTALLED_DIR     = ${VCPKG_ROOT_DIR}\installed\${TRIPLET}
 #   DOWNLOADS                 = ${VCPKG_ROOT_DIR}\downloads
 #   PORT                      = current port name (zlib, etc)
+#   PORT_VERSION              = current port version (9.2.1-2, etc)
 #   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
 #   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
 #   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)

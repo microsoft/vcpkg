@@ -395,6 +395,7 @@ namespace vcpkg::Build
         std::vector<System::CMakeVariable> variables{
             {"CMD", "BUILD"},
             {"PORT", config.scf.core_paragraph->name},
+            {"PORT_VERSION", config.scf.core_paragraph->version},
             {"CURRENT_PORT_DIR", config.port_dir},
             {"VCPKG_ROOT_PATH", paths.root},
             {"TARGET_TRIPLET", triplet.canonical_name()},
