@@ -1,5 +1,11 @@
 vcpkg_buildpath_length_warning(37)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." ON)
+else()
+    option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." OFF)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
@@ -74,6 +80,10 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz)
+
+if(QT_OPENSSL_LINK)
+    list(APPEND CORE_OPTIONS -openssl-linked)
+endif()
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)

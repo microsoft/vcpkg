@@ -247,6 +247,7 @@
     <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp" />
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />
+    <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />
     <ClCompile Include="..\src\vcpkg\help.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />
