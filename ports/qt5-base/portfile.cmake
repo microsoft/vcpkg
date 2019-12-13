@@ -79,7 +79,8 @@ list(APPEND CORE_OPTIONS
     -system-pcre
     -system-doubleconversion
     -system-sqlite
-    -system-harfbuzz)
+    -system-harfbuzz
+    -no-angle)      # Qt does not need to build angle. VCPKG will build angle!
 
 if(QT_OPENSSL_LINK)
     list(APPEND CORE_OPTIONS -openssl-linked)
@@ -103,6 +104,13 @@ find_library(HARFBUZZ_RELEASE NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/lib
 find_library(HARFBUZZ_DEBUG NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(ICU_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ICU_DEBUG NAMES icuucd libicuucd iccuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(FONTCONFIG_RELEASE NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(FONTCONFIG_DEBUG NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
 #Dependent libraries
 find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -117,8 +125,9 @@ set(RELEASE_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"            
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
@@ -126,6 +135,7 @@ set(DEBUG_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
             )
@@ -154,6 +164,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
+    list(APPEND CORE_OPTIONS -fontconfig)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
@@ -162,14 +173,17 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE}"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG}"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
         )
 elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND CORE_OPTIONS -fontconfig)
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()
@@ -197,12 +211,14 @@ elseif(VCPKG_TARGET_IS_OSX)
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
         )
 endif()
 
@@ -249,11 +265,13 @@ else()
     #This needs a new VCPKG policy. 
     if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
         message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
-        if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/bin)
+            if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
+                file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug)
+                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/tools/qt5-angle/debug/bin)
+            endif()
         endif()
     endif()
 
