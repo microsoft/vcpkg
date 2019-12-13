@@ -4,7 +4,7 @@
 ## Version.
 ## The base version refers to a version without the modification
 ## number.
-
+##
 ## Given a version string in the format described in the CONTROL files docs,
 ## this function attempts to get the base part of the string.
 ##
