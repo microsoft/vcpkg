@@ -11,7 +11,7 @@ index f81e6da..91817fd 100755
 +#pragma warning(push)
 +#pragma warning(disable: 4716)
 +__declspec(naked) long
-+lrint_(double f)
++	lrint (double f)
 +{
 +	__emit(0x1e674000); // frintx d0, d0
 +	__emit(0x9e780000); // fcvtzs x0, d0
