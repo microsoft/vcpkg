@@ -10,7 +10,7 @@ Build-Depends: sdl2, openvr
 
 Feature: qt
 Description: Qt functionality for VTK
-Build-Depends: qt5
+Build-Depends: qt5-xmlpatterns, qt5-tools, qt5-imageformats
 
 Feature: mpi
 Description: MPI functionality for VTK
