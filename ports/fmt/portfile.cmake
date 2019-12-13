@@ -17,17 +17,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmt RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fmtd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fmtd.dll)
-        endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fmt.dll ${CURRENT_PACKAGES_DIR}/bin/fmt.dll)
-        endif()
-    endif()
-
     # Force FMT_SHARED to 1
     file(READ ${CURRENT_PACKAGES_DIR}/include/fmt/core.h FMT_CORE_H)
     string(REPLACE "defined(FMT_SHARED)" "1" FMT_CORE_H "${FMT_CORE_H}")
