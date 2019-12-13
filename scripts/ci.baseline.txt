@@ -1270,7 +1270,6 @@ pbc:x64-osx=fail
 pcre2:arm-uwp=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
-pdal:x64-windows-static=fail
 pdcurses:arm-uwp=fail
 pdcurses:x64-linux=fail
 pdcurses:x64-osx=fail
