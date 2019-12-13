@@ -40,6 +40,7 @@ vcpkg_from_github(
     PATCHES
         paraview.patch
         second.patch
+        protobuf.patch
 )
 
 #Get VisItBridge Plugin

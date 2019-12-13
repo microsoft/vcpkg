@@ -1,0 +1,14 @@
+diff --git a/ThirdParty/protobuf/CMakeLists.txt b/ThirdParty/protobuf/CMakeLists.txt
+index aab091468..97b5db4f4 100644
+--- a/ThirdParty/protobuf/CMakeLists.txt
++++ b/ThirdParty/protobuf/CMakeLists.txt
+@@ -42,7 +42,8 @@ vtk_module_third_party(
+     PACKAGE Protobuf
+     VERSION "3.4"
+     TARGETS protobuf::libprotobuf
+-    STANDARD_INCLUDE_DIRS)
++    STANDARD_INCLUDE_DIRS
++    CONFIG_MODE)
+ 
+ if (VTK_MODULE_USE_EXTERNAL_ParaView_protobuf)
+   # promote protobuf::protoc to GLOBAL to allow to call protobuf_generate from other directories
