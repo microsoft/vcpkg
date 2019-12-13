@@ -24,31 +24,34 @@ for f in files:
         if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
             builder += "\n    " + line.replace("/tools/qt5/bin", "/bin/")
-            builder += "    else()"
-            builder += "\n    " + line.replace("/tools/qt5/debug/bin", "/debug/bin/")
+            builder += "    else()" #This requires a release and debug build since Qt will check that the file exists! 
+            #It would be better to use an elseif here with a EXISTS check but that requires a more complicated regex to build the complete filepath since each module uses its own _(qtmodule)_install_prefix
+            #so single configuration builds of Qt are currently not supported. Thus =>
+            #TODO: Make single configuration builds of Qt work correctly!
+            builder += "\n    " + line.replace("/tools/qt5/debug/bin", "/debug/bin/") 
             builder += "    endif()\n"
         elif "_install_prefix}/bin/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
             builder += "\n    " + line
-            builder += "    else()"
-            builder += "\n    " + line.replace("/bin/", "/debug/bin/")
+            builder += "    else()" #This requires a release and debug build!
+            builder += "\n    " + line.replace("/bin/", "/debug/bin/") 
             builder += "    endif()\n"
         elif "_install_prefix}/lib/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
             builder += "\n    " + line
-            builder += "    else()"
+            builder += "    else()" #This requires a release and debug build!
             builder += "\n    " + line.replace("/lib/", "/debug/lib/")
             builder += "    endif()\n"
         elif "_install_prefix}/lib/${IMPLIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
             builder += "\n    " + line
-            builder += "    else()"
+            builder += "    else()" #This requires a release and debug build!
             builder += "\n    " + line.replace("/lib/", "/debug/lib/")
             builder += "    endif()\n"
         elif "_install_prefix}/plugins/${PLUGIN_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
             builder += "\n    " + line
-            builder += "    else()"
+            builder += "    else()" #This requires a release and debug build!
             builder += "\n    " + line.replace("/plugins/", "/debug/plugins/")
             builder += "    endif()\n"
         elif "_install_prefix}/lib/qtmaind.lib" in line:
