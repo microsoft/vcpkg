@@ -1,0 +1,35 @@
+diff --git a/cmake/geos.cmake b/cmake/geos.cmake
+index 90b79d9..4e144a6 100644
+--- a/cmake/geos.cmake
++++ b/cmake/geos.cmake
+@@ -1,7 +1,11 @@
+ #
+ # GEOS (required)
+ #
+-find_package(GEOS QUIET 3.3)
++include(SelectLibraryConfigurations)
++find_library(GEOS_LIBRARY_RELEASE NAMES libgeos libgeos_c)
++find_library(GEOS_LIBRARY_DEBUG NAMES libgeosd libgeos_cd)
++select_library_configurations(GEOS)
++find_path(GEOS_INCLUDE_DIR geos_c.h)
+ set_package_properties(GEOS PROPERTIES TYPE REQUIRED
+     PURPOSE "Provides general purpose geometry support")
+ 
+diff --git a/cmake/modules/FindPostgreSQL.cmake b/cmake/modules/FindPostgreSQL.cmake
+index 8178418..31b54d6 100644
+--- a/cmake/modules/FindPostgreSQL.cmake
++++ b/cmake/modules/FindPostgreSQL.cmake
+@@ -80,4 +80,11 @@ find_package_handle_standard_args(PostgreSQL
+   POSTGRESQL_LIBRARIES
+   POSTGRESQL_VERSION)
+ 
+-mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
++include (CMakeFindDependencyMacro)
++find_dependency(OpenSSL REQUIRED)
++set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
++if (WIN32)
++    set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} Secur32)
++endif()
++
++mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
+\ No newline at end of file
