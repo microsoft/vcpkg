@@ -1,0 +1,43 @@
+diff --git a/Library/VisItLib/common/plugin/PluginManager.C b/Library/VisItLib/common/plugin/PluginManager.C
+index 7096293f0..b2e00b585 100644
+--- a/Library/VisItLib/common/plugin/PluginManager.C
++++ b/Library/VisItLib/common/plugin/PluginManager.C
+@@ -83,9 +83,9 @@ using std::sort;
+ #define MAX_PLUGINERROR 500
+ 
+ #ifdef VISIT_STATIC
+-extern void *fake_dlsym(const string &);
+-extern void StaticGetSupportedLibs(std::vector<std::pair<std::string, std::string> > &,
+-                                   const string &);
++//extern void *fake_dlsym(const string &);
++//extern void StaticGetSupportedLibs(std::vector<std::pair<std::string, std::string> > &,
++//                                   const string &);
+ #endif
+ 
+ // ****************************************************************************
+@@ -513,7 +513,7 @@ void
+ PluginManager::GetPluginList(vector<pair<string,string> > &libs)
+ {
+ #ifdef VISIT_STATIC
+-    StaticGetSupportedLibs(libs, managerName);
++    //StaticGetSupportedLibs(libs, managerName);
+ #else
+     // Read the files in the plugin directory.
+     vector< vector<pair<string,string> > > files;
+@@ -1690,11 +1690,11 @@ PluginManager::PluginSymbol(const string &symbol, bool noError)
+ 
+ #if defined(VISIT_STATIC)
+ // Static
+-    retval = fake_dlsym(symbolName);
+-    if (retval == NULL)
+-    {
+-        debug1 << "fake_dlsym was not able to return " << symbolName << endl;
+-    }
++    // retval = fake_dlsym(symbolName);
++    // if (retval == NULL)
++    // {
++        // debug1 << "fake_dlsym was not able to return " << symbolName << endl;
++    // }
+ #else 
+ // Dynamic
+ #if defined(_WIN32)

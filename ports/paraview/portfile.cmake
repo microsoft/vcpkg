@@ -43,6 +43,9 @@ vcpkg_from_github(
         protobuf.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND VisItPatches removedoublesymbols.patch)
+endif()
 #Get VisItBridge Plugin
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH VISITIT_SOURCE_PATH
@@ -52,6 +55,8 @@ vcpkg_from_gitlab(
     SHA512 49ab6e32051a9cb328f5694bca7445610d80bdedddc7ac3d48970f57be1c5969578a0501b12f48a2fb332f109f79f8df189e78530bb4af75e73b0d48d7124884
     PATCHES 
         VisIt.patch
+        removeunusedsymbols.patch # These also get remove in master of ParaView
+        ${VisItPatches}
 )
 #Get QtTesting Plugin
 vcpkg_from_gitlab(
