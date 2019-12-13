@@ -254,7 +254,10 @@ if("paraview" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
     file(INSTALL ${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python/vtkpythonmodules.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    #file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python/vtkpythonmodules.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/static_python DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-8.90)
+    endif()
 endif()
 
 #TODO remove one get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY) from vtk-prefix.cmake and VTK-vtk-module-properties and vtk-python.cmake
