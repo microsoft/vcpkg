@@ -64,7 +64,7 @@ for f in files:
             builder += "    )\n"
         elif populatepluginpattern.search(line) != None:
             builder += line
-            builder += line.replace("RELEASE", "DEBUG").replace(".dll", "d.dll")
+            builder += line.replace("RELEASE", "DEBUG").replace(".dll", "d.dll").replace(".lib", "d.lib")
         elif populatetargetpattern.search(line) != None:
             builder += line
             builder += line.replace("RELEASE", "DEBUG").replace(".dll", "d.dll").replace(".lib", "d.lib")
