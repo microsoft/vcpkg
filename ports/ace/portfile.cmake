@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
@@ -92,7 +90,7 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
-vcpkg_execute_required_process(
+vcpkg_execute_build_process(
     COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ace ${MPC_STATIC_FLAG}
     WORKING_DIRECTORY ${ACE_ROOT}
     LOGNAME mwc-${TARGET_TRIPLET}
@@ -197,14 +195,14 @@ else(VCPKG_TARGET_IS_WINDOWS)
   set(ENV{PWD} ${ACE_ROOT}/ace)
 
   message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-  vcpkg_execute_required_process(
+  vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} "debug=1" "-j${VCPKG_CONCURRENCY}"
     WORKING_DIRECTORY ${ACE_ROOT}/ace
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
-  vcpkg_execute_required_process(
+  vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} install
     WORKING_DIRECTORY ${ACE_ROOT}/ace
     LOGNAME install-${TARGET_TRIPLET}-dbg
@@ -220,21 +218,21 @@ else(VCPKG_TARGET_IS_WINDOWS)
   endforeach()
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
-  vcpkg_execute_required_process(
+  vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} realclean
     WORKING_DIRECTORY ${ACE_ROOT}/ace
     LOGNAME realclean-${TARGET_TRIPLET}-dbg
   )
 
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
-  vcpkg_execute_required_process(
+  vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
     WORKING_DIRECTORY ${ACE_ROOT}/ace
     LOGNAME make-${TARGET_TRIPLET}-rel
   )
   message(STATUS "Building ${TARGET_TRIPLET}-rel done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
-  vcpkg_execute_required_process(
+  vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} install
     WORKING_DIRECTORY ${ACE_ROOT}/ace
     LOGNAME install-${TARGET_TRIPLET}-rel
