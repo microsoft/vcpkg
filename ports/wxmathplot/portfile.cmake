@@ -38,4 +38,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/wxmathplot)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/debian/copyright ${CURRENT_PACKAGES_DIR}/share/wxmathplot/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/debian/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
