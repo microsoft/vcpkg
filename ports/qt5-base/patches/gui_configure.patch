@@ -17,9 +17,10 @@ index c51e3ceee..7f7e206b6 100644
 @@ -262,7 +262,7 @@
              "headers": "fontconfig/fontconfig.h",
              "sources": [
-                 { "type": "pkgConfig", "args": "fontconfig" },
+-                { "type": "pkgConfig", "args": "fontconfig" },
++                { "type": "pkgConfig", "args": "breakfontconfig" },
 -                { "type": "freetype", "libs": "-lfontconfig" }
-+                { "type": "freetype", "libs": "-lbreakfontconfig" }
++                { "type": "freetype", "libs": "-lfontconfig -lexpat" }
              ],
              "use": "freetype"
          },
