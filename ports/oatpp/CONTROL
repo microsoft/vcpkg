@@ -6,10 +6,6 @@ Build-Depends:
 Feature:consul
 Description: Consul submodule
 
-Feature:curl
-Build-Depends: curl
-Description: Use libcurl as a RequestExecutor on the oatpp's ApiClient (external dependency on pkg-config)
-
 Feature:mbedtls
 Build-Depends: mbedtls
 Description: Mbed TLS submodule providing secure server and client connection providers

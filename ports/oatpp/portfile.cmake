@@ -55,13 +55,18 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Building dynamic libraries not supported. Building static libraries linking to a ${_crt_linkage_text} CRT.")	
     set(VCPKG_LIBRARY_LINKAGE static)	
 endif()
+# if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)	
+#     set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "-DBUILD_SHARED_LIBS:BOOL=ON")
+# else()
+#     set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "-DBUILD_SHARED_LIBS:BOOL=OFF")
+# endif()
 
 message(STATUS "Building oatpp[core]")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp
-    REF d48a65f59b230723e0a96b1456ac791ed274d025 # 0.19.10
-    SHA512 dde1f0a1ffee6190bcdef61e1eb020d902fb69648832e439c42caaa6383c9fc0f8002417ee0eab336bb0b4102b82046ab2b77bafda09cc4918a9b226c3a26633
+    REF 33ce431ab6d8a40a9678ef8965a828967302ffe7 # 0.19.10
+    SHA512 efc183c7c11452bddee628aa831920cef24ce7e5ab96a41afe807025e3f2194a79cf26371552fa5d5cd5ced28a94ab0b50d3e99f5b05586ed64757b99afb4c88
     HEAD_REF master
 )
 
@@ -71,6 +76,7 @@ vcpkg_configure_cmake(
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+        ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
 )
 
 vcpkg_install_cmake()
@@ -93,6 +99,7 @@ if("consul" IN_LIST FEATURES)
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
             "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+            ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
     vcpkg_install_cmake()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-consul-${OATPP_VERSION})
@@ -100,6 +107,14 @@ if("consul" IN_LIST FEATURES)
 endif()
 
 if("curl" IN_LIST FEATURES)
+    # Apparently the curl submodule hasn't caught up to the core module yet (classes that
+    # don't override abstract base classes accuratetly). When that is fixed, put the
+    # following into the CONTROL file:
+    #
+    # Feature:curl
+    # Build-Depends: curl
+    # Description: Use libcurl as a RequestExecutor on the oatpp's ApiClient (external dependency on pkg-config)
+
     message(STATUS "Building submodule oatpp[curl]")
 
     # this submodule requires pkg-config (boo)
@@ -136,6 +151,7 @@ if("curl" IN_LIST FEATURES)
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
             "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+            ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
     vcpkg_install_cmake()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-curl-${OATPP_VERSION})
@@ -208,6 +224,7 @@ if("libressl" IN_LIST FEATURES)
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
             "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+            ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
 
     vcpkg_install_cmake()
@@ -252,6 +269,7 @@ if("swagger" IN_LIST FEATURES)
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
             "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+            ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
     vcpkg_install_cmake()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-swagger-${OATPP_VERSION})
