@@ -67,7 +67,7 @@ set(CORE_OPTIONS
     # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
     #-optimized-tools
     #-force-debug-info
-    #-verbose
+    -verbose
 )
 
 ## 3rd Party Libs
