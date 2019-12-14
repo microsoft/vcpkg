@@ -80,6 +80,7 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
+    -icu
     -no-angle)      # Qt does not need to build angle. VCPKG will build angle!
 
 if(QT_OPENSSL_LINK)
@@ -107,14 +108,14 @@ find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}
 
 find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUUC_DEBUG NAMES icuucd libicuucd iccuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(ICUTU_RELEASE NAMES icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ICUTU_DEBUG NAMES icutud libicutud iccutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(ICULX_RELEASE NAMES iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ICULX_DEBUG NAMES iculxd libiculxd icculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(ICUIO_RELEASE NAMES icuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ICUIO_DEBUG NAMES icuiod libicuiod iccuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(ICUIN_RELEASE NAMES icui18n libicui18n PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ICUIN_DEBUG NAMES icui18nd libicui18nd iccui18n libicui18n PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+#find_library(ICUTU_RELEASE NAMES icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+#find_library(ICUTU_DEBUG NAMES icutud libicutud iccutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+#find_library(ICULX_RELEASE NAMES iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+#find_library(ICULX_DEBUG NAMES iculxd libiculxd icculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+#find_library(ICUIO_RELEASE NAMES icuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+#find_library(ICUIO_DEBUG NAMES icuiod libicuiod iccuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+#find_library(ICUIN_RELEASE NAMES icui18n libicui18n PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+#find_library(ICUIN_DEBUG NAMES icui18nd libicui18nd iccui18n libicui18n PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(ICUDATA_RELEASE NAMES icudata libicudata PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUDATA_DEBUG NAMES icudatad libicudatad iccudata libicudata PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 set(ICU_RELEASE "${ICUUC_RELEASE} ${ICUTU_RELEASE} ${ICULX_RELEASE} ${ICUIO_RELEASE} ${ICUIN_RELEASE} ${ICUDATA_RELEASE}")
