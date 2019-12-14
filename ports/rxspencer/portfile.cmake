@@ -1,10 +1,10 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO garyhouston/rxspencer
-    REF alpha3.8.g7
-    SHA512 6c0b8c91d841a0d1a80c4feb22b299d3fa217e974cd22d4752ef8f29d21366571549ebb2b6a2dc2d519c57e8d1f035c388822f896bd65ba30044547eb43b0aa8
+    REF ca9dface691015093c3c35e4693d512025e49dfa
+    SHA512 8c8e97949b17d1f286abfe03bcfdab0b455df9e71eca8489543857e47eb53e42cf09749cbc06973fa451aaa2855c44e3b0f2d5397949e89d0bdbe7fc09ee501d
     HEAD_REF master
     PATCHES 0001-Add-CMake-build-scripts-derived-from-LuaDist.patch
 )
