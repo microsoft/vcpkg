@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://otl.sourceforge.net/otlv4_h2.zip"
-    FILENAME "otlv4_h2-4.0.447.zip"
-    SHA512 07663442272a327a7d9154f6e817c0166ed254cfe3b9d043762179e96180a70d3ba4b3762e5ef1ebdb18492e3425467c9ddad3a2c68aa93bb7d51d54e9712008
+    URLS "http://otl.sourceforge.net/otlv4_40448.zip"
+    FILENAME "otlv4_h2-4.0.448.zip"
+    SHA512 285bf8bb0fa38ab3030af09a2939fd8e2eaadd14e65d05c6e18f4bc12070ba4e112c41e2d38c546338d51bdf09748b158b1799599f5ed9a7959a7799869b1305
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,5 +12,5 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
-file(INSTALL ${SOURCE_PATH}/otlv4.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/otl)
-file(INSTALL ${SOURCE_PATH}/otlv4.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/otl RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/otlv40448.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/otl)
+file(INSTALL ${SOURCE_PATH}/otlv40448.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/otl RENAME copyright)
