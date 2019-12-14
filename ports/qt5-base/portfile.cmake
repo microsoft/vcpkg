@@ -37,7 +37,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/winmain_pro.patch   #Moves qtmain to manual-link
                             patches/windows_prf.patch   #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch        #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch #Patches the gui configure.json to break freetype autodetection because it does not include its dependencies.
+                            patches/gui_configure.patch #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
                             #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
