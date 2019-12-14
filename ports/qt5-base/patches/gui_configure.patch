@@ -14,13 +14,17 @@ index c51e3ceee..7f7e206b6 100644
              ],
              "use": [
                  { "lib": "zlib", "condition": "features.system-zlib" }
-@@ -262,7 +262,7 @@
+@@ -262,7 +262,11 @@
              "headers": "fontconfig/fontconfig.h",
              "sources": [
 -                { "type": "pkgConfig", "args": "fontconfig" },
 +                { "type": "pkgConfig", "args": "breakfontconfig" },
 -                { "type": "freetype", "libs": "-lfontconfig" }
-+                { "type": "freetype", "libs": "-lfontconfig -lexpat" }
++                { "type": "freetype", "libs": "-lbreakautofind" },
++                { "type": "fontconfig", "libs": "-lfontconfig -lexpat" },
++                { "libs": "-lfontconfig -lexpat" },
++                { "libs": "-llibfontconfig -llibexpat" },
++                "-lfontconfig"
              ],
              "use": "freetype"
          },
