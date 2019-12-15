@@ -15,7 +15,6 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL2-gfxConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -24,12 +23,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2-gfx")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/SDL2-gfx")
-endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Delete redundant directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/Docs ${CURRENT_PACKAGES_DIR}/Screenshots)
