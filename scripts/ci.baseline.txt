@@ -307,7 +307,6 @@ cudnn:arm-uwp=fail
 cudnn:x64-uwp=fail
 cudnn:x64-windows-static=fail
 cudnn:x86-windows=fail
-cutelyst2:x64-linux=fail
 cutelyst2:x64-osx=fail
 darknet:arm-uwp=fail
 darknet:x64-uwp=fail
