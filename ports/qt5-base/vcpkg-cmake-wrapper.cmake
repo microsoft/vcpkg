@@ -34,6 +34,9 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
 
     add_qt_library(Qt5::Core
         pcre2-16
+        icuin icui18n
+        icutu icuuc icuio
+        icudt icudata
         Qt5ThemeSupport
         Qt5EventDispatcherSupport
         Qt5PlatformCompositorSupport
