@@ -459,6 +459,7 @@ fmilib:x64-windows=ignore
 fmilib:x64-windows-static=ignore
 fmilib:x86-windows=ignore
 # Folly fails due to a compiler bug in MSVC 19.22.27905, fixed in newer releases
+folly:arm64-windows=fail
 folly:x86-windows=fail
 folly:x64-windows=fail
 folly:x64-windows-static=fail
