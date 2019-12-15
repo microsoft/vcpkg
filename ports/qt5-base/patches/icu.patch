@@ -8,8 +8,8 @@ index de8d26a12..7847a46fa 100644
                      "builds": {
 -                        "debug": "-lsicuind -lsicuucd -lsicudtd",
 -                        "release": "-lsicuin -lsicuuc -lsicudt"
-+                        "debug": "-licuind -licuucd -licudtd",
-+                        "release": "-licuin -licuuc -licudt"
++                        "debug": "-licuind -licutud -licuucd -licuiod -licudtd",
++                        "release": "-licuin -licutu -licuuc -licuio -licudt"
                      },
                      "condition": "config.win32 && !features.shared"
                  },
