@@ -107,6 +107,9 @@ vcpkg_configure_cmake(
         "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
         "-DPython3_EXECUTABLE=${PYTHON3}"
+        "-DPYTHON3_EXECUTABLE=${PYTHON3}"
+        "-DPython_EXECUTABLE=${PYTHON3}"
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
         
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
     # OPTIONS_RELEASE -DOPTIMIZE=1
@@ -168,3 +171,10 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
  file(INSTALL ${SOURCE_PATH}/License_v1.2.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/paraview RENAME copyright)
 # # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME paraview)
+
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
