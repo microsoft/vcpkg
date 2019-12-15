@@ -3,11 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/indicators
-    REF a938eb8f4c7e6436e3d9be16dc0169992bffb7ca
-    SHA512 f221997e23b53b13b3e8fec72d6f73d658a584428ec1377e5aa5b72a7441bb82af9182c02c437e7f663e6de1b815421b2c3dba341e8984faf16c98a16f509ec6
+    REF 56489bf37a20d05ef5fd535273a8ef0f239282d0
+    SHA512 0e50966ede94d9c2392c1f47a60b8d064f259148c658e78afcd20291a4f3759669fa5af83f107057ffbbad6d415f70d420ce39f6adb30439d9b0bdcbe5343e3d
     HEAD_REF master
-    PATCHES
-        0001-Improve-CMakeLists.txt.patch
 )
 
 vcpkg_configure_cmake(
