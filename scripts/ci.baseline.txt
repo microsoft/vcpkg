@@ -1687,7 +1687,6 @@ vlpp:arm64-windows=fail
 vlpp:arm-uwp=fail
 vlpp:x64-osx=fail
 vlpp:x64-uwp=fail
-vtk:x64-linux=fail
 vulkan:arm64-windows=fail
 vulkan:arm-uwp=fail
 vulkan:x64-linux=fail
