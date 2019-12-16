@@ -1,0 +1,49 @@
+diff --git a/7acd25790d-2617ee1c2c-org/Qt/Widgets/CMakeLists.txt b/7acd25790d-2617ee1c2c/Qt/Widgets/CMakeLists.txt
+index 93000c493..5f2a06752 100644
+--- a/7acd25790d-2617ee1c2c-org/Qt/Widgets/CMakeLists.txt
++++ b/7acd25790d-2617ee1c2c/Qt/Widgets/CMakeLists.txt
+@@ -139,17 +139,42 @@ set(CMAKE_AUTORCC 1)
+ set(CMAKE_AUTOUIC 1)
+ set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/Resources/UI")
+ 
++##
++if(NOT PARAVIEW_BUILD_SHARED_LIBS) # Should be a check if Qt is built statically and not ParaView
++    list(APPEND qt_components Svg Sql) # added due to svg rescources, sql due to VTK::GUISupportQtSQL 
++    set(qt_plugin_list)
++    foreach(qt_component ${qt_components})
++        list(APPEND qt_plugin_list ${Qt5${qt_component}_PLUGINS})
++        message(STATUS "QtPlugin List: ${qt_plugin_list}")
++    endforeach()
++    set(qt_plugin_source "${CMAKE_CURRENT_BINARY_DIR}/qt_static_plugins.cxx")
++    if(EXISTS "${qt_plugin_source}")
++        file(REMOVE "${qt_plugin_source}")
++    endif()
++    set(qt_source_text "#ifdef QT_STATIC\n")
++    foreach(qt_plugin ${qt_plugin_list})
++        STRING(REGEX REPLACE "[^:]+::" "" qt_plugin_name "${qt_plugin}")
++        message(STATUS "RAW PLUGIN NAME: ${qt_plugin_name}")
++        string(APPEND qt_source_text "Q_IMPORT_PLUGIN(${qt_plugin_name})\n")
++    endforeach()
++    string(APPEND qt_source_text "#endif\n")
++    file(WRITE "${qt_plugin_source}" "${qt_source_text}")
++endif()
++##
++
+ vtk_module_add_module(ParaView::pqWidgets
+   CLASSES ${classes}
+   SOURCES ${ui_files}
+-          ${resource_files})
++          ${resource_files}
++          ${qt_plugin_source})
+ vtk_module_link(ParaView::pqWidgets
+   PUBLIC
+     Qt5::Core
+     Qt5::Gui
+     Qt5::Widgets
+   PRIVATE
+-    Qt5::Network)
++    Qt5::Network
++    ${qt_plugin_list})
+ 
+ if (APPLE)
+   vtk_module_link(ParaView::pqWidgets
