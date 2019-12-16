@@ -30,8 +30,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Delete redundant directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/Docs ${CURRENT_PACKAGES_DIR}/Screenshots)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx)
-
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx/COPYING ${CURRENT_PACKAGES_DIR}/share/sdl2-gfx/copyright)
