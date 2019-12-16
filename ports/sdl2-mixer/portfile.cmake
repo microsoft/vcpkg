@@ -1,5 +1,5 @@
-include(vcpkg_common_functions)
 set(SDL2_MIXER_VERSION 2.0.4)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${SDL2_MIXER_VERSION}.zip"
     FILENAME "SDL2_mixer-${SDL2_MIXER_VERSION}.zip"
@@ -12,12 +12,6 @@ vcpkg_extract_source_archive_ex(
     REF ${SDL2_MIXER_VERSION}
 )
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBRARY_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-else()
-    set(LIBRARY_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     mpg123 SDL_MIXER_ENABLE_MP3
@@ -32,7 +26,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DLIBRARY_SUFFIX=${LIBRARY_SUFFIX}
+        -DLIBRARY_SUFFIX=${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} # It should always be dynamic suffix
     OPTIONS_DEBUG
         -DSDL_MIXER_SKIP_HEADERS=ON
 )
