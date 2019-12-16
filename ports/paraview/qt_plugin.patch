@@ -1,7 +1,7 @@
-diff --git a/7acd25790d-2617ee1c2c-org/Qt/Widgets/CMakeLists.txt b/7acd25790d-2617ee1c2c/Qt/Widgets/CMakeLists.txt
+diff --git a/Qt/Widgets/CMakeLists.txt b/Qt/Widgets/CMakeLists.txt
 index 93000c493..5f2a06752 100644
---- a/7acd25790d-2617ee1c2c-org/Qt/Widgets/CMakeLists.txt
-+++ b/7acd25790d-2617ee1c2c/Qt/Widgets/CMakeLists.txt
+--- a/Qt/Widgets/CMakeLists.txt
++++ b/Qt/Widgets/CMakeLists.txt
 @@ -139,17 +139,42 @@ set(CMAKE_AUTORCC 1)
  set(CMAKE_AUTOUIC 1)
  set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/Resources/UI")
