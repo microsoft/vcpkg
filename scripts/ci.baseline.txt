@@ -1533,7 +1533,6 @@ shogun:x86-windows        = skip
 simdjson:arm64-windows=fail
 simdjson:arm-uwp=fail
 simdjson:x86-windows=fail
-simpleini:x64-linux=fail
 simpleini:x64-osx=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
