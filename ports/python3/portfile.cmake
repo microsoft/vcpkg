@@ -156,13 +156,13 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
 		if(VCPKG_TARGET_IS_OSX)
 			vcpkg_execute_build_process(
-			  COMMAND "${SOURCE_PATH_DEBUG}/configure" --with-pydebug --prefix=${OUT_PATH_DEBUG} --with-openssl=${CURRENT_INSTALLED_DIR}/debug "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include -framework CoreFoundation" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/debug/lib" "LIBS=-liconv"
+			  COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG} --with-openssl=${CURRENT_INSTALLED_DIR}/debug "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include -framework CoreFoundation" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/debug/lib" "LIBS=-liconv"
 			  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 			  LOGNAME config-${TARGET_TRIPLET}-debug
 			)
 		else()
 			vcpkg_execute_build_process(
-			  COMMAND "${SOURCE_PATH_DEBUG}/configure" --with-pydebug --prefix=${OUT_PATH_DEBUG} --with-openssl=${CURRENT_INSTALLED_DIR}/debug "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/debug/lib"
+			  COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG} --with-openssl=${CURRENT_INSTALLED_DIR}/debug "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include" "LDFLAGS=-L${CURRENT_INSTALLED_DIR}/debug/lib"
 			  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
 			  LOGNAME config-${TARGET_TRIPLET}-debug
 			)
@@ -183,7 +183,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 		  LOGNAME make-install-${TARGET_TRIPLET}-debug
 		)
 
-		file(COPY ${OUT_PATH_DEBUG}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}dm.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+		file(COPY ${OUT_PATH_DEBUG}/lib/libpython${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}m.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 		message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
 	endif()
 	
