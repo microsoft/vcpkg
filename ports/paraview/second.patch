@@ -15,7 +15,7 @@ index a39d533df..8683c81d3 100644
      endforeach()
      foreach(mod ${paraview_unrecognized_modules})
 @@ -760,6 +765,35 @@ if (PARAVIEW_USE_EXTERNAL_VTK)
-           "${modules_notarget};${paraview_unrecognized_modules}.")
+           "${modules_notarget}")
      endif()
      list(REMOVE_DUPLICATES vtk_modules)
 +    macro(search_dependent_targets)
