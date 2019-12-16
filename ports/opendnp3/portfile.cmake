@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIBS)
 
 vcpkg_from_github(
