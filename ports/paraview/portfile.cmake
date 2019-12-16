@@ -132,7 +132,7 @@ vcpkg_configure_cmake(
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
         -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
-        
+        ${ADDITIONAL_OPTIONS}
 
         
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
