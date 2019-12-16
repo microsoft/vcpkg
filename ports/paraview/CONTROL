@@ -3,7 +3,15 @@ Version: 5.7.0
 Homepage: https://www.paraview.org/
 Description: VTK-based Data Analysis and Visualization Application
 Build-Depends: vtk[paraview], protobuf, cgns, boost-core, boost-format, boost-algorithm
-Default-Features:
+Default-Features: python
+
+Feature: vtkm
+Description: enables vtkm for the build of paraview
+Build-Depends: vtk[vtkm]
+
+Feature: python
+Description: enables the build of python wrappers
+Build-Depends: vtk[python]
 
 Feature: all_modules
 Description: enables the build of all paraview modules

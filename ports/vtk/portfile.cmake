@@ -25,6 +25,13 @@ else()
         -DVTK_BUILD_QT_DESIGNER_PLUGIN=OFF)
 endif()
 
+if("vtkm" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
+        -DVTK_MODULE_ENABLE_VTK_vtkm=YES
+    )
+endif()
+
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
@@ -41,7 +48,6 @@ if("python" IN_LIST FEATURES)
 endif()
 
 if("paraview" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_FiltersParallelStatistics=YES
         -DVTK_MODULE_ENABLE_VTK_IOParallelExodus=YES
@@ -122,13 +128,9 @@ vcpkg_configure_cmake(
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
-        -DVTK_MODULE_ENABLE_VTK_vtkm=YES
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
-
-
         ${ADDITIONAL_OPTIONS}
 )
 

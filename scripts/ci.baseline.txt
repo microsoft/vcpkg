@@ -1695,6 +1695,11 @@ vulkan:x64-uwp=fail
 vulkan:x64-windows=fail
 vulkan:x64-windows-static=fail
 vulkan:x86-windows=fail
+# vtk-m cannot be build on x86, ARM or uwp
+vtk-m:x86-windows=skip
+vtk-m:arm64-windows=skip
+vtk-m:x64-uwp=skip
+vtk-m:arm-uwp=skip
 # Conflicts with latest openjpeg port (vxl ships with an old version of openjpeg)
 # conflicts with qt5-location
 vxl:arm64-windows      = skip

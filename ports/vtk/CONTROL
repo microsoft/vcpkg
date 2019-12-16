@@ -2,7 +2,11 @@ Source: vtk
 Version: 8.90-PV-v5.7
 Description: Software system for 3D computer graphics, image processing, and visualization
 Homepage: https://github.com/Kitware/VTK
-Build-Depends: vtk-m, zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, liblzma, libtheora, eigen3, double-conversion, pugixml, libharu[notiffsymbols], sqlite3, netcdf-c, utfcpp, libogg
+Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, liblzma, libtheora, eigen3, double-conversion, pugixml, libharu[notiffsymbols], sqlite3, netcdf-c, utfcpp, libogg
+
+Feature: vtkm
+Description: Build with vtk-m accelerator and module.
+Build-Depends:  vtk-m
 
 Feature: openvr
 Description: OpenVR functionality for VTK
@@ -26,7 +30,7 @@ Build-Depends: atlmfc (windows)
 
 Feature: paraview
 Description: Build vtk modules required by paraview
-Build-Depends: vtk[qt, python], vtk[atlmfc] (windows)
+Build-Depends: vtk[qt], vtk[atlmfc] (windows)
 
 Feature: all
 Description: Build vtk modules required by paraview

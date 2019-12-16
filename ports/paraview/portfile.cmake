@@ -67,7 +67,6 @@ vcpkg_from_gitlab(
     SHA512  34ad7c97720366dd66c011aecbaf7103ebcc128223673140d42db32c6eb419c805da204ac9afe73dae4c9b2ef9acfc4ec1b927271351fde51c9df7c44d09bf6e
 )
 
-#file(REMOVE_RECURSE ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
 #file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdPary/protobuf/vtkprotobuf)
@@ -81,28 +80,15 @@ file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTest
 #     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 # )
 
-vcpkg_find_acquire_program(PYTHON3)
-#get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-#vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-     OPTIONS 
-        -DPARAVIEW_USE_EXTERNAL:BOOL=ON
-        -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND ADDITIONAL_OPTIONS
         -DPARAVIEW_ENABLE_PYTHON:BOOL=ON
-        -DPARAVIEW_USE_VTKM:BOOL=ON # VTK-m port is missing but this is a requirement to build VisItLib
-        -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
-        -DPARAVIEW_ENABLE_CATALYST:BOOL=ON
-        -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
-        -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION=OFF
-        -DPARAVIEW_USE_QTHELP=OFF
-        -DBoost_INCLUDE_DIR:PATH="${CURRENT_INSTALLED_DIR}/include"
-        -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
-        -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
-        
-        # Help find Python3 correctly
+        -DVTK_PYTHON_VERSION=3
+        -DPython3_FIND_REGISTRY=NEVER
+        "-DPython3_FOUND=YES"
+        "-DPYTHON3_FOUND=YES"
+        "-DPYTHON_FOUND=YES"
         "-DPython3_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}/lib/python37.lib"
         "-DPython3_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}/debug/lib/python37_d.lib"
         "-DPython3_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/python3.7"
@@ -110,18 +96,51 @@ vcpkg_configure_cmake(
         "-DPYTHON3_EXECUTABLE=${PYTHON3}"
         "-DPython_EXECUTABLE=${PYTHON3}"
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
+    )
+    #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
+else()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DPARAVIEW_ENABLE_PYTHON:BOOL=OFF
+    )
+endif()
+
+if("vtkm" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DPARAVIEW_USE_VTKM:BOOL=ON # VTK-m port is missing but this is a requirement to build VisItLib
+    )
+else()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DPARAVIEW_USE_VTKM:BOOL=OFF # VTK-m port is missing but this is a requirement to build VisItLib
+    )
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+     OPTIONS 
+        -DPARAVIEW_USE_EXTERNAL:BOOL=ON
+        -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
+        -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
+        -DPARAVIEW_ENABLE_CATALYST:BOOL=ON
+        -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
+        -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION=OFF
+        -DPARAVIEW_USE_QTHELP=OFF
+        
+        #A little bit of help in finding the boost headers
+        -DBoost_INCLUDE_DIR:PATH="${CURRENT_INSTALLED_DIR}/include"
+        
+        # Workarounds for CMake issues
+        -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
+        -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
+        
+
         
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+        ##VTK_MODULE_USE_EXTERNAL_<name>
 )
 
-#TODO. Patch .cmake from FindPythonModules in CMakeLists.txt away
-#VTK_MODULE_USE_EXTERNAL_<name>
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_install_cmake(ADD_BIN_TO_PATH) # Bin to path required since paraview will use some self build tools
 
-# # Moves all .cmake files from /debug/share/paraview/ to /share/paraview/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/paraview-5.7)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -173,8 +192,27 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 # vcpkg_test_cmake(PACKAGE_NAME paraview)
 
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/lib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    macro(move_bin_to_lib name)
+        if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/${name})
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${name}" "${CURRENT_PACKAGES_DIR}/lib/${name}")
+        endif()
+        if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/${name})
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${name}" "${CURRENT_PACKAGES_DIR}/debug/lib/${name}")
+        endif()
+    endmacro()
+    
+    set(to_move Lib paraview-5.7 paraview-config)
+    foreach(name ${to_move})
+        move_bin_to_lib(${name})
+    endforeach()
+
+    file(GLOB_RECURSE cmake_files ${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake)
+    foreach(cmake_file ${cmake_files})
+        file(READ "${cmake_file}" _contents)
+        STRING(REPLACE "/bin/" "/lib/" _contents "${_contents}")
+        file(WRITE "${cmake_file}" "${_contents}")
+    endforeach()
+
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
