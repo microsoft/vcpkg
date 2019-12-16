@@ -1,4 +1,5 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm64")
 
 # Get jaeger-idl from github
 vcpkg_from_github(
