@@ -60,8 +60,13 @@ if("paraview" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_IOTRUCHAS=YES
         -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
+    )
+endif()
+
+if("python" IN_LIST FEATURES AND "paraview" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
     )
 endif()
 
