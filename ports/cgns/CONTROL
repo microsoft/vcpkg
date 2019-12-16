@@ -7,7 +7,7 @@ Default-Features: hdf5, lfs
 
 Feature: mpi
 Description: Compile with support for the message passage interface (MPI)
-Build-Depends: hdf5[mpi]
+Build-Depends: hdf5[parallel]
 
 Feature: fortran
 Description: Enable fortran support (not yet implemented) 
