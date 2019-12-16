@@ -17,6 +17,13 @@ vcpkg_extract_source_archive_ex(
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLASzip.cmake)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(WITH_STATIC_LASZIP TRUE)
+else()
+  set(WITH_STATIC_LASZIP FALSE)
+endif()
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -26,6 +33,8 @@ vcpkg_configure_cmake(
 	-DBUILD_OSGEO4W=OFF # Disable osgeo4w
 	-DWITH_TESTS=OFF
 	-DWITH_UTILITIES=OFF
+	-DWITH_LASZIP=ON
+	-DWITH_STATIC_LASZIP=${WITH_STATIC_LASZIP}
 	-DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 	-DCMAKE_DISABLE_FIND_PACKAGE_JPEG=${CMAKE_DISABLE_FIND_PACKAGE_JPEG}
 )
