@@ -1,9 +1,0 @@
-The package does not include any built-in CMake targets. Usage is as follows:
-
-    find_package(OpenSSL REQUIRED)
-    find_library(OPENPAL openpal)
-    find_library(OPENDNP3 opendnp3)
-    find_library(ASIOPAL asiopal)
-    find_library(ASIODNP3 asiodnp3)
-    target_link_libraries(test LINK_PUBLIC asiodnp3 opendnp3 asiopal openpal OpenSSL::SSL OpenSSL::Crypto)
-    
