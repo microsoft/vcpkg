@@ -647,6 +647,7 @@ itk:x86-windows=fail
 ixwebsocket:x64-linux=ignore
 jack2:arm-uwp=fail
 jack2:x64-uwp=fail
+jaeger-client-cpp:arm64-windows=fail
 jbig2dec:arm-uwp=fail
 jbig2dec:x64-uwp=fail
 jemalloc:arm64-windows=fail
