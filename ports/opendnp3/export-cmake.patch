@@ -81,7 +81,7 @@ index 1381bab..e184423 100644
 +  
 +write_basic_package_version_file(asiopal-version.cmake VERSION ${OPENDNP3_VERSION} COMPATIBILITY ExactVersion)
 +
-+set(PROJECT_NAME opendnp3)
++set(PROJECT_NAME asiopal)
 +if (DNP3_TLS)
 +    set(FIND_DEPENDS "find_dependency(openpal)\nfind_dependency(OpenSSL)")
 +else()
