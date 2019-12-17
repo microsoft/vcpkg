@@ -11,9 +11,21 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${SDL2_MIXER_VERSION}
 )
+
+if ("dynamic-load" IN_LIST FEATURES AND
+    (NOT "mpg123" IN_LIST FEATURES
+     AND NOT "libflac" IN_LIST FEATURES
+     AND NOT "libmodplug" IN_LIST FEATURES
+     AND NOT "libvorbis" IN_LIST FEATURES
+     AND NOT "opusfile" IN_LIST FEATURES
+    ))
+    message("No features selected, dynamic loading will not be enabled")
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    dynamic-load SDL_DYNAMIC_LOAD
     mpg123 SDL_MIXER_ENABLE_MP3
     libflac SDL_MIXER_ENABLE_FLAC
     libmodplug SDL_MIXER_ENABLE_MOD
