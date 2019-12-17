@@ -2,7 +2,7 @@ diff --git a/Qt/Widgets/CMakeLists.txt b/Qt/Widgets/CMakeLists.txt
 index 93000c493..5f2a06752 100644
 --- a/Qt/Widgets/CMakeLists.txt
 +++ b/Qt/Widgets/CMakeLists.txt
-@@ -139,17 +139,42 @@ set(CMAKE_AUTORCC 1)
+@@ -139,17 +139,43 @@ set(CMAKE_AUTORCC 1)
  set(CMAKE_AUTOUIC 1)
  set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/Resources/UI")
  
@@ -18,11 +18,12 @@ index 93000c493..5f2a06752 100644
 +    if(EXISTS "${qt_plugin_source}")
 +        file(REMOVE "${qt_plugin_source}")
 +    endif()
++    set(qt_source_text "#include <QtPlugin>\n")
 +    set(qt_source_text "#ifdef QT_STATIC\n")
 +    foreach(qt_plugin ${qt_plugin_list})
 +        STRING(REGEX REPLACE "[^:]+::" "" qt_plugin_name "${qt_plugin}")
 +        message(STATUS "RAW PLUGIN NAME: ${qt_plugin_name}")
-+        string(APPEND qt_source_text "Q_IMPORT_PLUGIN(${qt_plugin_name})\n")
++        string(APPEND qt_source_text "  Q_IMPORT_PLUGIN(${qt_plugin_name})\n")
 +    endforeach()
 +    string(APPEND qt_source_text "#endif\n")
 +    file(WRITE "${qt_plugin_source}" "${qt_source_text}")
