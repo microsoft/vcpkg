@@ -2,6 +2,7 @@ Source: duilib2
 Version: 1.4
 Description: Duilib
 Build-Depends: ppxbase
+Homepage: https://github.com/winsoft666/duilib2
 
 Feature: cef
 Description: Builds with cef module.

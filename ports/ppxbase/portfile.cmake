@@ -1,15 +1,13 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/ppxbase
-    REF v1.38
-    SHA512 84d1b72f05ba22c0b71fcf9d58d118071edff90741687708d39c3c4a6381730b397cb759f799f75a694ee3a694a1b06d25c6552574888df77dab86299d256e18
+    REF bff0968c6fcd71f68cf9a9aae5359b6fb98ab2d2
+    SHA512 a6259d6633e9173981d725628ac06b7e5faea9bbd04c6afbf6af3e2da0a461ec72ee45e0c1755781a48bc2c4bbd04892f042078a46816c37374450ee8827f453
     HEAD_REF master
 )
 
 
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+if("VCPKG_LIBRARY_LINKAGE" STREQUAL "static")
 	set(BUILD_SHARED_LIBS OFF)
 else()
 	set(BUILD_SHARED_LIBS ON)
@@ -22,8 +20,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TESTS=OFF
-	OPTIONS_RELEASE
-	OPTIONS_DEBUG
 )
 
 vcpkg_install_cmake()

@@ -3,13 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/duilib2
-    REF v1.35
-    SHA512 a2bd6e8e9f3bc1e02394034ce7704ec3b2d4a88d0e2181e656c7610bb743545ca57c2f46f4e86e0fb119c6ee06830d8bbe13a0bb6d67422c1756592a8b466318
+    REF 43cbb1b6217a3f0eaf86cf896815a801674b5570
+    SHA512 3f344cbcb3e8e7d3246ddb2edeb4394b4979de4eb7f9edae4f5aff6743332c13f6f972d895cf717f35449f7cb56ad39ff078ac7969748a4542cab0749a43a112
     HEAD_REF master
 )
 
 
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+if("VCPKG_LIBRARY_LINKAGE" STREQUAL "static")
 	set(BUILD_SHARED_LIBS OFF)
 else()
 	set(BUILD_SHARED_LIBS ON)
@@ -29,8 +29,6 @@ vcpkg_configure_cmake(
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TESTS=OFF
 		-DUILIB_WITH_CEF=${UILIB_WITH_CEF}
-	OPTIONS_RELEASE
-	OPTIONS_DEBUG
 )
 
 vcpkg_install_cmake()
