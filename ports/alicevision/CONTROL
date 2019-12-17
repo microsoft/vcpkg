@@ -2,7 +2,7 @@ Source: alicevision
 Version: 2.2.0
 Homepage: https://github.com/alicevision/AliceVision
 Description: AliceVision is a Photogrammetric Computer Vision Framework which provides a 3D Reconstruction and Camera Tracking algorithms. 
-Build-Depends: geogram, tbb, eigen3, ceres, openexr, coinutils, boost-atomic, boost-container, boost-date-time, boost-exception, boost-filesystem, boost-graph, boost-log, boost-math, boost-program-options, boost-regex, boost-serialization, boost-system, boost-test, boost-thread, boost-stacktrace, boost-timer
+Build-Depends: geogram, tbb, eigen3, ceres, openexr, coinutils, openimageio, boost-atomic, boost-container, boost-date-time, boost-exception, boost-filesystem, boost-graph, boost-log, boost-math, boost-program-options, boost-regex, boost-serialization, boost-system, boost-test, boost-thread, boost-stacktrace, boost-timer
 
 Feature: cuda
 Description: Enable building an embedded Cuda
@@ -45,6 +45,3 @@ Description: Build AliceVision tests
 
 Feature: example
 Description: Build AliceVision samples applications
-
-Feature: doc
-Description: Build AliceVision documentation

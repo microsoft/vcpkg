@@ -19,6 +19,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda AV_BUILD_CUDA
     cuda AV_USE_CUDA
+    cuda ALICEVISION_USE_CUDA
     zlib AV_BUILD_ZLIB
     tiff AV_BUILD_TIFF
     jpeg AV_BUILD_JPEG
@@ -29,7 +30,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     suitesparse AV_BUILD_SUITESPARSE
     test ALICEVISION_BUILD_TESTS
     example ALICEVISION_BUILD_EXAMPLES
-    doc ALICEVISION_BUILD_DOC
 )
 
 vcpkg_configure_cmake(
@@ -44,6 +44,7 @@ vcpkg_configure_cmake(
     -DALICEVISION_BUILD_SFM=OFF
     -DALICEVISION_BUILD_MVS=OFF
     -DALICEVISION_BUILD_HDR=OFF
+    -DALICEVISION_BUILD_DOC=OFF
 )
 
 vcpkg_install_cmake()
