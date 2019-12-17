@@ -5,5 +5,8 @@ set(VCPKG_LIBRARY_LINKAGE dynamic)
 
 set(VCPKG_CMAKE_SYSTEM_NAME Darwin)
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
+set(VCPKG_OSX_DEPLOYMENT_TARGET "10.9")
+
+set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -mmacosx-version-min=10.9")
+set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -mmacosx-version-min=10.9")
 
