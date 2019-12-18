@@ -16,7 +16,7 @@ index 8fd96a9..186341e 100644
  )
  add_library                 (unicharset_training ${unicharset_training_src})
 +if(UNIX)
-+    list(APPEND ICU_LIBRARIES -ldl)
++    list(APPEND ICU_LIBRARIES ${CMAKE_DL_LIBS})
 +endif()
  if (NOT CPPAN_BUILD)
  target_link_libraries       (unicharset_training common_training ${ICU_LIBRARIES})
