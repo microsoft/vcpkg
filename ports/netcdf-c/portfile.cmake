@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
@@ -14,6 +12,7 @@ vcpkg_from_github(
         hdf5_2.patch
         fix-build-error-on-linux.patch
         hdf5_3.patch
+        fix_config_errors_and_targets.patch
 )
 
 #Remove outdated find modules
@@ -25,10 +24,17 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
+#NC_EXTRA_DEPS 
+find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(SZIP_DEBUG NAMES libsz libszip szip sz libsz_D libszip_D szip_D sz_D szip_debug PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+#find_library(CURL_RELEASE NAMES curl libcurl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+#find_library(CURL_DEBUG NAMES curl_d libcurl_d curld libcurld curl libcurl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
+    DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     PREFER_NINJA
     OPTIONS
         -DBUILD_UTILITIES=OFF
@@ -41,10 +47,22 @@ vcpkg_configure_cmake(
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
         -DConfigPackageLocation=share/netcdf
+        "-DNC_EXTRA_DEPS=zlib szip"  #The functions checks done by cmake are actual failing due to missing external symbols. This should fix it.
+        "-DCURL_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include"
+        "-DCMAKE_REQUIRED_INCLUDES=${CURRENT_INSTALLED_DIR}/include" # the curl variable make the curl checks succesful
+        "-DSZIP_LIBRARY:STRING=debug\\\\\\\\\\\;${SZIP_DEBUG}\\\\\\\\\\\;optimized\\\\\\\\\\\;${SZIP_RELEASE}"
+    OPTIONS_RELEASE
+        "-Dzlib_DEP=${ZLIB_RELEASE}"
+        "-Dszip_DEP=${SZIP_RELEASE}"
+        "-DSZIP=${SZIP_RELEASE}"
+    OPTIONS_DEBUG
+        "-Dzlib_DEP=${ZLIB_DEBUG}"
+        "-Dszip_DEP=${SZIP_DEBUG}"
+        "-DSZIP=${SZIP_DEBUG}"
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf TARGET_PATH share/netcdf)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
