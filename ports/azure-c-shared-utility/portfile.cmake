@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
