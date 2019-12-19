@@ -104,6 +104,9 @@ vcpkg_from_github(
 )
 
 # =============================================================================
+#Overwrite outdated modules if they have not been patched:
+file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake")
+# =============================================================================
 
 if(VTK_WITH_ALL_MODULES)
     list(APPEND ADDITIONAL_OPTIONS
