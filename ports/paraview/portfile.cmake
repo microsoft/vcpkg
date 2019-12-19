@@ -41,7 +41,8 @@ vcpkg_from_github(
         paraview.patch
         second.patch
         protobuf.patch
-        qt_plugin.patch
+        #qt_plugin.patch
+        qt_static_plugins.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

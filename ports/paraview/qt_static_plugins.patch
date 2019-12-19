@@ -1,0 +1,69 @@
+diff --git a/CMake/ParaViewClient.cmake b/CMake/ParaViewClient.cmake
+index 31beb7e20..d4bb36844 100644
+--- a/CMake/ParaViewClient.cmake
++++ b/CMake/ParaViewClient.cmake
+@@ -263,7 +263,7 @@ IDI_ICON1 ICON \"${_paraview_client_APPLICATION_ICON}\"\n")
+   endif ()
+ 
+   include("${_ParaViewClient_cmake_dir}/paraview-find-package-helpers.cmake" OPTIONAL)
+-  find_package(Qt5 REQUIRED QUIET COMPONENTS Core Widgets)
++  find_package(Qt5 REQUIRED QUIET COMPONENTS Core Widgets Svg Network Sql DBus)
+ 
+   # CMake 3.13 started using Qt5's version variables to detect what version
+   # of Qt's tools to run for autorcc. However, they are looked up using the
+@@ -322,11 +322,35 @@ IDI_ICON1 ICON \"${_paraview_client_APPLICATION_ICON}\"\n")
+       FILES
+         ${_paraview_client_resource_files})
+   endif ()
++  
++  if(NOT PARAVIEW_BUILD_SHARED_LIBS) # Should be a check if Qt is built statically and not ParaView
++    list(APPEND qt_components Svg Widgets Gui) # added due to svg rescources, sql due to VTK::GUISupportQtSQL 
++    set(qt_plugin_list)
++    foreach(qt_component ${qt_components})
++        list(APPEND qt_plugin_list ${Qt5${qt_component}_PLUGINS})
++        message(STATUS "QtPlugin List: ${qt_plugin_list}")
++    endforeach()
++    set(qt_plugin_source "${CMAKE_CURRENT_BINARY_DIR}/qt_static_plugins.cxx")
++    if(EXISTS "${qt_plugin_source}")
++        file(REMOVE "${qt_plugin_source}")
++    endif()
++    set(qt_source_text "#include <QtPlugin>\n")
++    string(APPEND qt_source_text "#ifdef QT_STATIC\n")
++    foreach(qt_plugin ${qt_plugin_list})
++        STRING(REGEX REPLACE "[^:]+::" "" qt_plugin_name "${qt_plugin}")
++        message(STATUS "RAW PLUGIN NAME: ${qt_plugin_name}")
++        string(APPEND qt_source_text "  Q_IMPORT_PLUGIN(${qt_plugin_name})\n")
++    endforeach()
++    string(APPEND qt_source_text "#endif\n")
++    file(WRITE "${qt_plugin_source}" "${qt_source_text}")
++  endif()
++  
+   add_executable("${_paraview_client_NAME}" ${_paraview_client_executable_flags}
+     ${_paraview_client_SOURCES}
+     ${_paraview_client_resource_files}
+     ${_paraview_client_source_files}
+-    ${_paraview_client_extra_sources})
++    ${_paraview_client_extra_sources}
++    ${qt_plugin_source})
+   if (DEFINED _paraview_client_NAMESPACE)
+     add_executable("${_paraview_client_NAMESPACE}::${_paraview_client_NAME}" ALIAS "${_paraview_client_NAME}")
+   endif ()
+@@ -338,9 +362,17 @@ IDI_ICON1 ICON \"${_paraview_client_APPLICATION_ICON}\"\n")
+       "$<TARGET_PROPERTY:VTK::vtksys,INTERFACE_INCLUDE_DIRECTORIES>")
+   target_link_libraries("${_paraview_client_NAME}"
+     PRIVATE
++      Qt5::Core # needed in VCPKG due to the extra Wrapper 
++      Qt5::Svg  ## added
++      Qt5::Sql ## added
++      Qt5::Network ## added
++      Qt5::Gui ## added
++      Qt5::DBus ##added
+       Qt5::Widgets
+       ParaView::pqApplicationComponents
+-      VTK::vtksys)
++      VTK::vtksys
++      ${qt_plugin_list}
++      )
+ 
+   if (DEFINED _paraview_client_PLUGINS_TARGET)
+     target_link_libraries("${_paraview_client_NAME}"

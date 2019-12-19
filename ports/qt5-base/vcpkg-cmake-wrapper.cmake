@@ -33,11 +33,13 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
     )
     if(NOT WINDOWS_STORE)
         set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
-           UxTheme.lib) # Should probably be added to Qt5:Gui and not core but currently we only have that one wrapper
+           UxTheme.lib d2d1.lib Dwrite.lib d3d11.lib) # Should probably be added to Qt5:Gui and not core but currently we only have that one wrapper
     endif()
 
     add_qt_library(Qt5::Core
         pcre2-16
+        jasper
+        webp webpdemux webpdecoder
         icuin icui18n
         icutu icuuc icuio
         icudt icudata
