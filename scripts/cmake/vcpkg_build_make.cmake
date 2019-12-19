@@ -11,6 +11,12 @@
 ## The target passed to the configure/make build command (`./configure/make/make install`). If not specified, no target will
 ## be passed.
 ##
+## ### DEBUG_TARGET
+## Override TARGET with this value during debug build
+##
+## ### RELEASE_TARGET
+## Override TARGET with this value during release build
+##
 ## ### ADD_BIN_TO_PATH
 ## Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 ##
@@ -26,7 +32,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;TARGET;DEBUG_TARGET;RELEASE_TARGET" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -88,6 +94,13 @@ function(vcpkg_build_make)
                     continue()
                 endif()
                 set(SHORT_BUILDTYPE "-dbg")
+
+                # Set debug target if defined
+                if(_bc_DEBUG_TARGET STREQUAL "")
+                    set(MAKE_TARGET ${_bc_TARGET})
+                else()
+                    set(MAKE_TARGET ${_bc_DEBUG_TARGET})
+                endif()
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                 if (_VCPKG_NO_DEBUG)
@@ -95,7 +108,22 @@ function(vcpkg_build_make)
                 else()
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
+
+                # Set release target if defined
+                if(_bc_RELEASE_TARGET STREQUAL "")
+                    set(MAKE_TARGET ${_bc_TARGET})
+                else()
+                    set(MAKE_TARGET ${_bc_RELEASE_TARGET})
+                endif()
             endif()
+            if(DEFINED ${_bc_RELEASE_TARGET})
+                message(FATAL_ERROR "RELEASE DEFINED")
+            endif()
+            if(DEFINED ${_bc_DEBUG_TARGET})
+                message(FATAL_ERROR "DEBUG DEFINED")
+            endif()
+            #message(FATAL_ERROR "${_bc_RELEASE_TARGET} qwerty ${_bc_DEBUG_TARGET}")
+            #message(FATAL_ERROR "asdf ${MAKE_TARGET}")
             
             if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
@@ -122,13 +150,13 @@ function(vcpkg_build_make)
 
             if (CMAKE_HOST_WIN32)
                 vcpkg_execute_build_process(
-                    COMMAND "${MAKE} ${MAKE_OPTS}"
+                    COMMAND "${MAKE} ${MAKE_OPTS} ${MAKE_TARGET}"
                     WORKING_DIRECTORY ${WORKING_DIRECTORY}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             else()
                 vcpkg_execute_build_process(
-                    COMMAND "${MAKE};${MAKE_OPTS}"
+                    COMMAND "${MAKE};${MAKE_OPTS};${MAKE_TARGET}"
                     WORKING_DIRECTORY ${WORKING_DIRECTORY}
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
