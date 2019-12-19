@@ -8,8 +8,8 @@ index 90b79d9..4e144a6 100644
  #
 -find_package(GEOS QUIET 3.3)
 +include(SelectLibraryConfigurations)
-+find_library(GEOS_LIBRARY_RELEASE NAMES geos libgeos geos_c libgeos_c)
-+find_library(GEOS_LIBRARY_DEBUG NAMES geosd libgeosd geos_cd libgeos_cd)
++find_library(GEOS_LIBRARY_RELEASE NAMES geos_c libgeos_c)
++find_library(GEOS_LIBRARY_DEBUG NAMES geos_cd libgeos_cd)
 +select_library_configurations(GEOS)
 +find_path(GEOS_INCLUDE_DIR geos_c.h)
  set_package_properties(GEOS PROPERTIES TYPE REQUIRED
