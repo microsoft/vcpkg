@@ -1,4 +1,0 @@
-The package freetype is compatible with built-in CMake targets:
-
-    find_package(freetype CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE freetype)
