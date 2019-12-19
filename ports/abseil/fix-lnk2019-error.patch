@@ -1,0 +1,13 @@
+diff --git a/absl/base/options.h b/absl/base/options.h
+index 3961e63..a1f5a92 100644
+--- a/absl/base/options.h
++++ b/absl/base/options.h
+@@ -156,7 +156,7 @@
+ // absl::string_view is a typedef of std::string_view, use the feature macro
+ // ABSL_USES_STD_STRING_VIEW.
+ 
+-#define ABSL_OPTION_USE_STD_STRING_VIEW 2
++#define ABSL_OPTION_USE_STD_STRING_VIEW 0
+ 
+ 
+ // ABSL_OPTION_USE_STD_VARIANT
