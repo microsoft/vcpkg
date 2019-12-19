@@ -11,8 +11,58 @@
 #include <vcpkg/base/system.h>
 #endif
 
-#define BUFSIZE 4096
-#define VARNAME TEXT(L"HTTP_PROXY")
+
+namespace 
+{
+    const int BUF_SIZE = 4096;
+
+    const std::wstring ENV_HTTP_PROXY(L"HTTP_PROXY");
+    const std::wstring ENV_HTTPS_PROXY(L"HTTPS_PROXY");
+
+    bool getProxyEnvironmentSettings(const std::wstring& proxy_env_name, std::wstring& proxy_settings)
+    {
+    
+        LPWSTR envHttpProxy;
+        DWORD dwRet = NO_ERROR;
+
+        // clear result string
+        proxy_settings = L"";
+
+
+        envHttpProxy = (LPWSTR)malloc(BUF_SIZE * sizeof(WCHAR));
+        if (nullptr != envHttpProxy)
+        {
+            // Step 1: Check existence of environment variable HTTP_PROXY
+            dwRet = GetEnvironmentVariableW(proxy_env_name.c_str(), envHttpProxy, BUF_SIZE);
+
+            if (dwRet > 0)
+            {
+                if (dwRet < BUF_SIZE)
+                {
+                    proxy_settings.reserve(dwRet);
+                    std::copy(envHttpProxy, envHttpProxy + dwRet, std::back_inserter(proxy_settings));
+                    return true;
+                }
+                else
+                {
+                    // content of HTTP_PROXY is longer than BUF_SIZE characters
+                    envHttpProxy = (LPWSTR)realloc(envHttpProxy, dwRet * sizeof(WCHAR));
+                    if (nullptr != envHttpProxy)
+                    {
+                        dwRet = GetEnvironmentVariableW(proxy_env_name.c_str(), envHttpProxy, dwRet);
+                        if (dwRet > 0)
+                        {
+                            proxy_settings.reserve(dwRet);
+                            std::copy(envHttpProxy, envHttpProxy + dwRet, std::back_inserter(proxy_settings));
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
 
 namespace vcpkg::Downloads
 {
@@ -46,35 +96,15 @@ namespace vcpkg::Downloads
                                     0);
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
-        bool hasHTTP_PROXY_set = false;
-        LPWSTR envHttpProxy;
-        DWORD dwRet = NO_ERROR;
-
-        envHttpProxy = (LPWSTR)malloc(BUFSIZE * sizeof(WCHAR));
-        if (NULL != envHttpProxy)
+        std::wstring env_proxy_settings;
+        bool has_HTTP_PROXY_set = false;
+ 
+        if (getProxyEnvironmentSettings(ENV_HTTP_PROXY, env_proxy_settings) ||
+            getProxyEnvironmentSettings(ENV_HTTPS_PROXY, env_proxy_settings))
         {
-            dwRet = GetEnvironmentVariableW(VARNAME, envHttpProxy, BUFSIZE);
-
-            if (dwRet > 0)
-            {
-                if (dwRet < BUFSIZE)
-                {
-                    hasHTTP_PROXY_set = true;
-                }
-                else
-                {
-                    envHttpProxy = (LPWSTR)realloc(envHttpProxy, dwRet * sizeof(WCHAR));
-                    if (NULL != envHttpProxy)
-                    {
-                        dwRet = GetEnvironmentVariableW(VARNAME, envHttpProxy, dwRet);
-                        if (dwRet > 0)
-                        {
-                            hasHTTP_PROXY_set = true;
-                        }
-                    }
-                }
-            }
+            has_HTTP_PROXY_set = true;
         }
+
 
 
         // Win7 IE Proxy fallback
@@ -89,10 +119,13 @@ namespace vcpkg::Downloads
             // If no proxy was found automatically, use IE's proxy settings, if any
             if (noProxyFound)
             {
-                if (hasHTTP_PROXY_set)
+                // If no proxy is found but environment variable HTTP_PROXY/HTTPS_PROXY is set
+                // use that variable as proxy. This situation might exist when user is in a company network
+                // with restrict network/proxy settings
+                if (has_HTTP_PROXY_set)
                 {
                     proxyInfo.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-                    proxyInfo.lpszProxy = envHttpProxy;
+                    proxyInfo.lpszProxy = &(*env_proxy_settings.begin());
 
                     WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxyInfo, sizeof(proxyInfo));
                 }
@@ -111,7 +144,6 @@ namespace vcpkg::Downloads
             }
         }
 
-        free(envHttpProxy);
 
         // Use Windows 10 defaults on Windows 7
         DWORD secure_protocols(WINHTTP_FLAG_SECURE_PROTOCOL_SSL3 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 |
@@ -136,11 +168,7 @@ namespace vcpkg::Downloads
         auto bResults =
             WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
         
-        if (bResults == ERROR_WINHTTP_SECURE_FAILURE)
-        {
-                
-        }
-        
+     
         Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpSendRequest() failed: %d", GetLastError());
 
         // End the request.
