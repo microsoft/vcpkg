@@ -684,6 +684,7 @@ laszip:x64-uwp=fail
 lcm:x64-linux=fail
 lcm:x64-osx=fail
 leptonica:x64-uwp=fail
+leptonica:arm-uwp=fail
 leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
 libaiff:x64-linux=fail
