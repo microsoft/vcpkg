@@ -35,6 +35,9 @@ if(FEATURES MATCHES "tools" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
+find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(SZIP_DEBUG NAMES libsz libszip szip sz libsz_D libszip_D szip_D sz_D szip_debug PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
     DISABLE_PARALLEL_CONFIGURE
@@ -46,6 +49,8 @@ vcpkg_configure_cmake(
         -DHDF5_ENABLE_SZIP_ENCODING=${HDF5_ENABLE_SZIP_SUPPORT}
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
+        "-DSZIP_LIBRARY_DEBUG:PATH=${SZIP_DEBUG}"
+        "-DSZIP_LIBRARY_RELEASE:PATH=${SZIP_RELEASE}"
 )
 
 vcpkg_install_cmake(${COMPONENT})
