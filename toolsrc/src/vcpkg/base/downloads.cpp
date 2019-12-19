@@ -12,6 +12,8 @@
 #endif
 
 
+#if defined(_WIN32)
+
 namespace 
 {
     const int BUF_SIZE = 4096;
@@ -63,6 +65,8 @@ namespace
         return false;
     }
 }
+
+#endif
 
 namespace vcpkg::Downloads
 {
