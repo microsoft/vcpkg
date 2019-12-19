@@ -11,7 +11,7 @@ index 31beb7e20..d4bb36844 100644
  
    # CMake 3.13 started using Qt5's version variables to detect what version
    # of Qt's tools to run for autorcc. However, they are looked up using the
-@@ -322,11 +322,35 @@ IDI_ICON1 ICON \"${_paraview_client_APPLICATION_ICON}\"\n")
+@@ -322,11 +322,36 @@ IDI_ICON1 ICON \"${_paraview_client_APPLICATION_ICON}\"\n")
        FILES
          ${_paraview_client_resource_files})
    endif ()
@@ -20,6 +20,7 @@ index 31beb7e20..d4bb36844 100644
 +    list(APPEND qt_components Svg Widgets Gui) # added due to svg rescources, sql due to VTK::GUISupportQtSQL 
 +    set(qt_plugin_list)
 +    foreach(qt_component ${qt_components})
++        message(STATUS "Qt5${qt_component}_PLUGINS: ${Qt5${qt_component}_PLUGINS}")
 +        list(APPEND qt_plugin_list ${Qt5${qt_component}_PLUGINS})
 +        message(STATUS "QtPlugin List: ${qt_plugin_list}")
 +    endforeach()
