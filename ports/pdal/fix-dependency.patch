@@ -8,8 +8,8 @@ index 90b79d9..4e144a6 100644
  #
 -find_package(GEOS QUIET 3.3)
 +include(SelectLibraryConfigurations)
-+find_library(GEOS_LIBRARY_RELEASE NAMES libgeos libgeos_c)
-+find_library(GEOS_LIBRARY_DEBUG NAMES libgeosd libgeos_cd)
++find_library(GEOS_LIBRARY_RELEASE NAMES geos libgeos geos_c libgeos_c)
++find_library(GEOS_LIBRARY_DEBUG NAMES geosd libgeosd geos_cd libgeos_cd)
 +select_library_configurations(GEOS)
 +find_path(GEOS_INCLUDE_DIR geos_c.h)
  set_package_properties(GEOS PROPERTIES TYPE REQUIRED
@@ -25,7 +25,7 @@ index 8178418..31b54d6 100644
  
 -mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
 +include (CMakeFindDependencyMacro)
-+find_dependency(OpenSSL REQUIRED)
++find_package(OpenSSL REQUIRED)
 +set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 +if (WIN32)
 +    set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} Secur32)
