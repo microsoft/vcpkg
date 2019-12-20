@@ -1,5 +1,5 @@
 Source: ixwebsocket
-Version: 7.4.0
+Version: 7.6.3
 Build-Depends: zlib
 Description: Lightweight WebSocket Client and Server + HTTP Client and Server
 Default-Features: ssl
