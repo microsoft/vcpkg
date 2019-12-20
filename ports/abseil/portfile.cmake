@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "Abseil currently only supports being built for desktop" ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
