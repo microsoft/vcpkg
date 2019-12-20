@@ -81,6 +81,17 @@ function Generate()
         ""
         "include(vcpkg_common_functions)"
         ""
+    )
+
+    if ($PortName -eq "system")
+    {
+        $portfileLines += @(
+            "vcpkg_buildpath_length_warning(37)"
+            ""
+        )
+    }
+
+    $portfileLines += @(
         "vcpkg_from_github("
         "    OUT_SOURCE_PATH SOURCE_PATH"
         "    REPO boostorg/$Name"
@@ -154,6 +165,9 @@ function Generate()
                 ")"
             )
         }
+        elseif ($PortName -eq "iostreams")
+        {
+        }
         else
         {
             $portfileLines += @(
@@ -162,11 +176,13 @@ function Generate()
                 )
         }
     }
-
-    $portfileLines += @(
-        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
-        "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
-    )
+    if ($PortName -ne "iostreams")
+    {
+        $portfileLines += @(
+            "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
+            "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
+        )
+    }
 
     if (Test-Path "$scriptsDir/post-build-stubs/$PortName.cmake")
     {
