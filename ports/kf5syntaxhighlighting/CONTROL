@@ -1,4 +1,5 @@
 Source: kf5syntaxhighlighting
 Version: 5.64.0
+Homepage: https://github.com/KDE/syntax-highlighting
 Description: Syntax highlighting engine for Kate syntax definitions
 Build-Depends: ecm, qt5-base, qt5-tools, qt5-xmlpatterns
