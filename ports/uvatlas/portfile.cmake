@@ -1,8 +1,6 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(FATAL_ERROR "UVAtlas only supports Windows Desktop")
 endif()
 
@@ -48,5 +46,4 @@ file(INSTALL
 	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
 	# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/LICENSE ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
