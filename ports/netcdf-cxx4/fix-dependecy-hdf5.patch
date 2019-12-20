@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 60c699d..6bd7822 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -402,7 +402,7 @@ ELSE(MSVC)
+   FIND_PACKAGE(HDF5 COMPONENTS C HL REQUIRED)
+ ENDIF(MSVC)
+ 
+-CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5free_memory "" HAVE_H5FREE_MEMORY)
++set(HAVE_H5FREE_MEMORY ON)
+ IF(NOT HAVE_H5FREE_MEMORY)
+   MESSAGE(STATUS "Plugin support requires libhdf5 with H5Free support. Your libhdf5 install does not provide H5Free.  Please install a newer version of libhdf5 if you require plugin compression support.")
+   SET(NC_HAS_DEF_VAR_FILTER "")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6a48709..79de128 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -399,7 +399,13 @@ IF(MSVC)
+   SET(SEARCH_PACKAGE_NAME ${HDF5_PACKAGE_NAME})
+   FIND_PACKAGE(HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS C HL NO_MODULES REQUIRED ${NC_HDF5_LINK_TYPE})
+ ELSE(MSVC)
+-  FIND_PACKAGE(HDF5 COMPONENTS C HL REQUIRED)
++  FIND_PACKAGE(hdf5 CONFIG REQUIRED)
++  set(HDF5_FOUND ${hdf5_FOUND})
++  if (BUILD_SHARED_LIBS)
++    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared hdf5::hdf5_hl-shared)
++  else()
++    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-static hdf5::hdf5_hl-static)
++  endif()
+ ENDIF(MSVC)
+ 
+ set(HAVE_H5FREE_MEMORY ON)
