@@ -122,8 +122,6 @@ function(vcpkg_build_make)
             if(DEFINED ${_bc_DEBUG_TARGET})
                 message(FATAL_ERROR "DEBUG DEFINED")
             endif()
-            #message(FATAL_ERROR "${_bc_RELEASE_TARGET} qwerty ${_bc_DEBUG_TARGET}")
-            #message(FATAL_ERROR "asdf ${MAKE_TARGET}")
             
             if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
