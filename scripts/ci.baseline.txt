@@ -1705,7 +1705,6 @@ uvatlas:arm64-windows=fail
 uvatlas:arm-uwp=fail
 uvatlas:x64-linux=fail
 uvatlas:x64-osx=fail
-uvatlas:x64-uwp=fail
 uvatlas:x86-windows-static=fail
 uvatlas:x64-windows-static=fail
 vectorclass:arm64-windows=fail
