@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor-blas
-    REF 06c8cada1feeadbbf1a50d290ba89b3a23e631c9 # 0.17.0
-    SHA512 157521d6323cd57bc031b1a7ece99c5a1945629b0caadf94e584102031a75bd809bea59a044cf3ae1c3efc85bcd63584fe907f909b9de236409821cb9116e036
+    REF 0b23657413bb4380014b82c4dd45821f04a4adad # 0.17.1
+    SHA512 d155d9fdad2e2d1851657953544e9ef3e3c1b203a1cb4e092d0f5bab8bad27bcf3a21a0ae3be0c06a7b8a3fa8b41f244da45690d39ee6c9794ac4fcabc4de35f
     HEAD_REF master
 )
 
