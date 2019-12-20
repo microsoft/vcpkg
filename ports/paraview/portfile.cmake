@@ -120,7 +120,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
      OPTIONS 
-        -DBoost_DEBUG=ON
         -DPARAVIEW_USE_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
         -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
