@@ -4,20 +4,10 @@ Date: Sat, 30 Nov 2019 13:31:40 +0200
 Subject: [PATCH] Fix install
 
 ---
- Bento4Config.cmake |  2 ++
  CMakeLists.txt     | 32 ++++++++++++++++++++++++++++++--
- 2 files changed, 32 insertions(+), 2 deletions(-)
+ 1 files changed, 32 insertions(+), 2 deletions(-)
  create mode 100644 Bento4Config.cmake
 
-diff --git a/Bento4Config.cmake b/Bento4Config.cmake
-new file mode 100644
-index 0000000..dc07afc
---- /dev/null
-+++ b/Bento4Config.cmake
-@@ -0,0 +1,2 @@
-+include(CMakeFindDependencyMacro)
-+include("${CMAKE_CURRENT_LIST_DIR}/Bento4Targets.cmake")
-\ No newline at end of file
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 2f08b2f..f116d53 100644
 --- a/CMakeLists.txt
