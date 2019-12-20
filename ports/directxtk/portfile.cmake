@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF oct2019
-    SHA512 d14cc3836986d4082edd34c39fda1d8c5ba4c8bfdc8640e61a3eac61e19c1eae6c7bc9ab57a353b7dc5cc04e084b71df43174aecfbd41975ebe97f0f8e7f4a86
+    REF dec2019
+    SHA512 7a1f8e6b871552585ace70c2d40e02524c8aef274cec90cc93c25197c9eaa39f244d11082912083ad654df6f301da2076f36ac2195f3c9df278eefeda99af5a1
     HEAD_REF master
 )
 
@@ -33,7 +33,11 @@ endif()
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
-    set(SLN_NAME "Desktop_${VS_VERSION}")
+    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
+    else()
+        set(SLN_NAME "Desktop_${VS_VERSION}")
+    endif()
 endif()
 
 vcpkg_build_msbuild(
@@ -63,7 +67,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         ${SOURCE_PATH}/MakeSpriteFont/bin/Release/MakeSpriteFont.exe
         DESTINATION ${DXTK_TOOL_PATH})
     file(INSTALL
-        ${SOURCE_PATH}/XWBTool/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/XWBTool.exe
+        ${SOURCE_PATH}/XWBTool/Bin/Desktop_${VS_VERSION}/${BUILD_ARCH}/Release/XWBTool.exe
         DESTINATION ${DXTK_TOOL_PATH})
 endif()
 
