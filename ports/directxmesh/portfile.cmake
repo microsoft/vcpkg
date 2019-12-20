@@ -30,7 +30,7 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
     if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
@@ -60,7 +60,7 @@ file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
     set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxmesh)
     file(MAKE_DIRECTORY ${TOOL_PATH})
     file(INSTALL
