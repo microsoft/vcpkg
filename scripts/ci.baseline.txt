@@ -330,7 +330,6 @@ directxmesh:arm64-windows=fail
 directxmesh:x64-linux=fail
 directxmesh:x64-osx=fail
 directxmesh:x64-windows-static=fail
-directxtex:arm64-windows=fail
 directxtex:x64-linux=fail
 directxtex:x64-osx=fail
 directxtex:x64-windows-static=fail

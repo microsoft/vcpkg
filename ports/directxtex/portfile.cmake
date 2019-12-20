@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF oct2019
-    SHA512 e9768d029033a049552a19b9f047a9dbae48982d10bc8fe0427ed7e72c89340a3b04d7ae321fe87475f209536ce37b5aa7d8150a376093787f43fe85a0955edf
+    REF dec2019
+    SHA512 b0c7fdeb2f035186eddeb543cd16813c6807b9646367cd309082bd164ab484001dee912249d5570e3ddf5abb90cb3e7c0355a3c18c2e2bd2a051292b65a293f6
     HEAD_REF master
 )
 
@@ -33,7 +33,11 @@ endif()
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
-    set(SLN_NAME "Desktop_${VS_VERSION}")
+    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
+    else()
+        set(SLN_NAME "Desktop_${VS_VERSION}")
+    endif()
 endif()
 
 vcpkg_build_msbuild(
@@ -55,7 +59,7 @@ file(INSTALL
     ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
     set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtex)
     file(MAKE_DIRECTORY ${TOOL_PATH})
     file(INSTALL
