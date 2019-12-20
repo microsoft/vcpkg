@@ -30,7 +30,7 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
     if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
@@ -60,7 +60,7 @@ file(INSTALL
     ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_UWP)
     set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
     file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
     file(INSTALL
