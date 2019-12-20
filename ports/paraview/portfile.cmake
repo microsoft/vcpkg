@@ -120,6 +120,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
      OPTIONS 
+        -DBoost_DEBUG=ON
         -DPARAVIEW_USE_EXTERNAL:BOOL=ON
         -DPARAVIEW_USE_EXTERNAL_VTK:BOOL=ON
         -DPARAVIEW_ENABLE_VISITBRIDGE:BOOL=ON
@@ -129,7 +130,7 @@ vcpkg_configure_cmake(
         -DPARAVIEW_USE_QTHELP=OFF
         
         #A little bit of help in finding the boost headers
-        -DBoost_INCLUDE_DIR:PATH="${CURRENT_INSTALLED_DIR}/include"
+        "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
         
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
