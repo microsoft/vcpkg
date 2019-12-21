@@ -119,15 +119,6 @@ function(vcpkg_build_make)
                     set(MAKE_TARGET ${_bc_RELEASE_TARGET})
                 endif()
             endif()
-<<<<<<< HEAD
-=======
-            if(DEFINED ${_bc_RELEASE_TARGET})
-                message(FATAL_ERROR "RELEASE DEFINED")
-            endif()
-            if(DEFINED ${_bc_DEBUG_TARGET})
-                message(FATAL_ERROR "DEBUG DEFINED")
-            endif()
->>>>>>> 6b626d892b8b0310559aaf517aa4d428f049e615
             
             if (_bc_WORKING_DIRECTORY STREQUAL "")
                 if (CMAKE_HOST_WIN32)
