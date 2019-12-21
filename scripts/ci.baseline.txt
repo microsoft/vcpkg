@@ -328,7 +328,6 @@ directxmesh:x64-windows-static=fail
 directxtex:x64-linux=fail
 directxtex:x64-osx=fail
 directxtex:x64-windows-static=fail
-directxtk:arm64-windows=fail
 directxtk:x64-linux=fail
 directxtk:x64-osx=fail
 directxtk:x64-windows-static=fail
