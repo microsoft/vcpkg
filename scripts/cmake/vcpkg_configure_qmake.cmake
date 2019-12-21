@@ -56,7 +56,6 @@ function(vcpkg_configure_qmake)
         endif()
         vcpkg_execute_required_process(
             COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release
-                    DESTDIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                     ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} ${_csc_SOURCE_PATH}
                     -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
                     ${BUILD_OPT}
@@ -76,7 +75,6 @@ function(vcpkg_configure_qmake)
         endif()
         vcpkg_execute_required_process(
             COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug
-                    DESTDIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                     ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} ${_csc_SOURCE_PATH}
                     -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf"
                     ${BUILD_OPT}
