@@ -17,6 +17,9 @@
 ## ### RELEASE_TARGET
 ## Override TARGET with this value during release build
 ##
+## ### WORKING_DIRECTORY
+## Directory to call make in, if not the root directory
+##
 ## ### ADD_BIN_TO_PATH
 ## Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 ##
@@ -32,7 +35,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;TARGET;DEBUG_TARGET;RELEASE_TARGET" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT;TARGET;DEBUG_TARGET;RELEASE_TARGET;WORKING_DIRECTORY" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -116,20 +119,27 @@ function(vcpkg_build_make)
                     set(MAKE_TARGET ${_bc_RELEASE_TARGET})
                 endif()
             endif()
+<<<<<<< HEAD
+=======
             if(DEFINED ${_bc_RELEASE_TARGET})
                 message(FATAL_ERROR "RELEASE DEFINED")
             endif()
             if(DEFINED ${_bc_DEBUG_TARGET})
                 message(FATAL_ERROR "DEBUG DEFINED")
             endif()
+>>>>>>> 6b626d892b8b0310559aaf517aa4d428f049e615
             
-            if (CMAKE_HOST_WIN32)
-                # In windows we can remotely call make
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+            if (_bc_WORKING_DIRECTORY STREQUAL "")
+                if (CMAKE_HOST_WIN32)
+                    # In windows we can remotely call make
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                else()
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                endif()
             else()
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                set(WORKING_DIRECTORY ${_bc_WORKING_DIRECTORY})
             endif()
-    
+
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             if(_bc_ADD_BIN_TO_PATH)
