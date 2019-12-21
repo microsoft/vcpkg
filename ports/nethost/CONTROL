@@ -1,4 +1,4 @@
 Source: nethost
-Version: 3.0.0
-Description: Provides a set of APIs that can be used to host .NET Core 3.0.
-Homepage: https://github.com/dotnet/core-setup/tree/release/3.0/src/corehost/cli/nethost
+Version: 2019-12-21
+Description: Provides a set of APIs that can be used to host .NET Core (dotnet)
+Homepage: https://github.com/dotnet/runtime/tree/master/src/installer/corehost/cli/nethost

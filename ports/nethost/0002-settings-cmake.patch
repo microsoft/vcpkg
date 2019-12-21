@@ -1,7 +1,7 @@
-diff --git a/src/settings.cmake b/src/settings.cmake
+diff --git a/src/installer/settings.cmake b/src/installer/settings.cmake
 index 29d57b44..6ea63902 100644
---- a/src/settings.cmake
-+++ b/src/settings.cmake
+--- a/src/installer/settings.cmake
++++ b/src/installer/settings.cmake
 @@ -114,7 +114,7 @@ endfunction()
  
  function(install_symbols targetName destination_path)

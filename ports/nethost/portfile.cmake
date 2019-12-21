@@ -1,18 +1,19 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_LIBRARY_LINKAGE "static" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
+set(COMMIT_HASH 188427d7e18102c45fc6d0e20c135e226f215992)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO dotnet/core-setup
-    REF 7d57652f33493fa022125b7f63aad0d70c52d810 #v3.0.0
-    SHA512 d31baa1ca35f058069fab77df7208dcf03c68b5e5b2410ba6b2f226f5db35fa78990e784f485f700c1aece1033bd49bf74d82724bbeb1f1d1b412f6e47f51a77
-    HEAD_REF release/3.0.0
+    REPO dotnet/runtime
+    REF ${COMMIT_HASH}
+    SHA512 5a93c66c87e2113f733702d938efd39456c99fb74b383097b8d877df21536fcbcba901606aa70db6c8f1a16421ea8f06822c5b0ab1d882631b6daecbed8d03cc
+    HEAD_REF master
     PATCHES
         0001-nethost-cmakelists.patch
         0002-settings-cmake.patch
 )
 
-set(PRODUCT_VERSION "3.0.0")
-set(COMMIT_HASH "vcpkg release/3.0.0")
+set(PRODUCT_VERSION "5.0.0")
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(RID_PLAT "win")
@@ -43,7 +44,7 @@ endif()
 set(BASE_RID "${RID_PLAT}-${RID_ARCH}")
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src/corehost/cli/nethost
+    SOURCE_PATH ${SOURCE_PATH}/src/installer/corehost/cli/nethost
     PREFER_NINJA
     OPTIONS
         "-DSKIP_VERSIONING=1"
@@ -54,9 +55,12 @@ vcpkg_configure_cmake(
         "-DCLI_CMAKE_PKG_RID:STRING=${BASE_RID}"
         "-DCLI_CMAKE_COMMIT_HASH:STRING=${COMMIT_HASH}"
         "-DCLI_CMAKE_PLATFORM_ARCH_${ARCH_NAME}=1"
+        "-DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0"
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
