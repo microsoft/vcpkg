@@ -20,6 +20,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
     $<INSTALL_INTERFACE:include/SDL2>
 )
 
@@ -33,20 +34,17 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  share/${CONFIG_NAME}/${CONFIG_NAME}-config-version.cmake
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY AnyNewerVersion
-)
-
 install(EXPORT ${PROJECT_NAME}
-    FILE ${CONFIG_NAME}-config.cmake
+    FILE ${CONFIG_NAME}-targets.cmake
     NAMESPACE SDL2::
     DESTINATION share/${CONFIG_NAME}/
 )
-
-export(PACKAGE sdl2-gfx)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-config.cmake
+"include(CMakeFindDependencyMacro)
+find_dependency(SDL2 CONFIG)
+include(\${CMAKE_CURRENT_LIST_DIR}/${CONFIG_NAME}-targets.cmake)"
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-config.cmake DESTINATION share/${CONFIG_NAME})
 
 if(NOT SDL_GFX_SKIP_HEADERS)
     install(FILES SDL2_framerate.h SDL2_gfxPrimitives.h SDL2_imageFilter.h SDL2_rotozoom.h SDL2_gfxPrimitives_font.h DESTINATION include/SDL2)
