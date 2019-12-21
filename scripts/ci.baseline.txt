@@ -1113,7 +1113,6 @@ nativefiledialog:x64-uwp=fail
 netcdf-cxx4:x64-linux=ignore
 nethost:x64-uwp=fail
 nethost:arm-uwp=fail
-nethost:x64-linux=fail
 networkdirect-sdk:arm64-windows=fail
 networkdirect-sdk:arm-uwp=fail
 networkdirect-sdk:x64-linux=fail
