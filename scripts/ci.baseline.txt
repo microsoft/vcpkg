@@ -334,7 +334,6 @@ directxtk:arm64-windows=fail
 directxtk:x64-linux=fail
 directxtk:x64-osx=fail
 directxtk:x64-windows-static=fail
-directxtk12:arm64-windows=fail
 directxtk12:x64-linux=fail
 directxtk12:x64-osx=fail
 directxtk12:x64-windows-static=fail
