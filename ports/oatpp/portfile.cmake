@@ -1,4 +1,4 @@
-set(OATPP_VERSION "0.19.10")
+set(OATPP_VERSION "0.19.11")
 
 # go to extraordinary measures to find pkg-config on windows and set the PKG_CONFIG environment variable.
 function(verify_pkg_config SUBMODULE_NAME)
@@ -65,8 +65,8 @@ message(STATUS "Building oatpp[core]")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp
-    REF 33ce431ab6d8a40a9678ef8965a828967302ffe7 # 0.19.10
-    SHA512 efc183c7c11452bddee628aa831920cef24ce7e5ab96a41afe807025e3f2194a79cf26371552fa5d5cd5ced28a94ab0b50d3e99f5b05586ed64757b99afb4c88
+    REF 857315c01e9318c7e72665ed222565d583f32a98 # 0.19.11
+    SHA512 835b0239ceb3677fb746e23f33409a060dff88e6b037932c7e66e664b122643b25c4e8996201e6539c3effdc165311ba4e7a4feefb5b3c670b59a69babd85888
     HEAD_REF master
 )
 
@@ -88,8 +88,8 @@ if("consul" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH CONSUL_SOURCE_PATH
         REPO oatpp/oatpp-consul
-        REF d09cdda1113bc99d9625b1da3e731b46c43c12ff # 0.19.10
-        SHA512 53998aa48b9ba3c5f7da3d27ec6dd8def599ebb98c5ef2849c999d70bae10469001d9db4f9ce243dba045f732390ed440cd6d8166eb67a0b12c0599b29864892
+        REF d9b819eed29a3373b61e8e8306d13d0840572318 # 0.19.11
+        SHA512 d16e6cb4e2ab5e6d71e9036f13b976f00b54631a31516e9adc7cd92141f40a4f7bfa6dc9602a326ca1d7a540d404c9189b1b302ff5a24fdac65cdfe46cb68c7b
         HEAD_REF master
     )
     vcpkg_configure_cmake(
@@ -111,9 +111,6 @@ if("curl" IN_LIST FEATURES)
     # don't override abstract base classes accuratetly). When that is fixed, put the
     # following into the CONTROL file:
     #
-    # Feature:curl
-    # Build-Depends: curl
-    # Description: Use libcurl as a RequestExecutor on the oatpp's ApiClient (external dependency on pkg-config)
 
     message(STATUS "Building submodule oatpp[curl]")
 
@@ -124,8 +121,8 @@ if("curl" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH CURL_SOURCE_PATH
         REPO oatpp/oatpp-curl
-        REF f4453c97461adb1db359f59a8d6acd01be3f758a # 0.19.10
-        SHA512 4981c751aae58b1caffb77a410328a4bf62a81809fd0343ce2e47127be6f1d3440a44b8eef2123b214f336fa7b82aefa3bce06cf64b8ac42b54574b521df6b0a
+        REF 5354e78707184cdfe3fb36af5735481d1159c3a6 # 0.19.11
+        SHA512 3a40b6a6981253c7551c0784fed085403272497840874eb7ea09c7a83c9d86c5fcbf36cf6059d6f067c606fc65b2870806e20f8ffacfef605be4c824804b6bb9
         HEAD_REF master
     )
 
@@ -159,13 +156,13 @@ if("curl" IN_LIST FEATURES)
 endif()
 
 if("libressl" IN_LIST FEATURES)
-    # Unfortunately, this submodule requires unistd.h - not sure if the
-    # unistd.h in the libressl include/compat would work here or not...
+    # Unfortunately, this submodule requires libressl 3.0 and vcpkg is at 2.9.1-2
     #
     # When we get past this problem, add the following to the CONTROL file:
-    #    Feature:libressl
-    #    Build-Depends: libressl
-    #    Description: LibreSSL submodule providing secure server and client connection provider (external dependency on pkg-config)
+    # Feature:libressl
+    # Build-Depends: libressl
+    # Description: LibreSSL submodule providing secure server and client connection provider (external dependency on pkg-config)
+
 
     message(STATUS "Building submodule oatpp[libressl]")
 
@@ -176,8 +173,8 @@ if("libressl" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH LIBRESSL_SOURCE_PATH
         REPO oatpp/oatpp-libressl
-        REF b965b752dc676dbc1f7ccc308d8b826bee5b1dae # 0.19.10
-        SHA512 0b2bf0f4958190e5ea9f82db962cb7473dda86de8e1e7645cd8e8741d134793984dfbdf742c676e09ff23b93cd42447b8f967575e95887828034870297a3bca7
+        REF 7daae69903975aa7ac2705ea03320c724b4da502 # 0.19.11
+        SHA512 b09accccd65520dca8f850e48d1b7c3f22752abb733eb3b7ea13ad285079479ca8addeabec9054dc3dcba0632b94c4db98af3c99c3e99d159eaa32cf6dbe3c96
         HEAD_REF master
     )
 
@@ -217,6 +214,7 @@ if("libressl" IN_LIST FEATURES)
         set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${_libressl_pc_dir}")
     endif()  
 
+    dump_variables()
     vcpkg_configure_cmake(
         SOURCE_PATH "${LIBRESSL_SOURCE_PATH}"
         PREFER_NINJA
@@ -224,6 +222,7 @@ if("libressl" IN_LIST FEATURES)
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
             "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+            "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
             ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
 
@@ -237,8 +236,8 @@ if("mbedtls" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH MBEDTLS_SOURCE_PATH
         REPO oatpp/oatpp-mbedtls
-        REF 8a71d86ebe9b881e2e762b6209848197534b72df # 0.19.10
-        SHA512 7e6d2112ce384ff795534734cdda26928805569db67480d70a90d2544264b3b90c8807818bec2da5570500fa4277eb08b111fae6c4283aadd75db3767b89fea0
+        REF 269db6a2a04ea25367d24baccca1883fffb4bbc0 # 0.19.11
+        SHA512 2581c34a544b02130ebfadf835c61f51028484a2dab7b226d13b75fdfe546d4217989a778d1ed7fe08ad8c7d2713af7590bd4c8604a750162a16f7be44323e87
         HEAD_REF master
     )
     vcpkg_configure_cmake(
@@ -258,8 +257,8 @@ if("swagger" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SWAGGER_SOURCE_PATH
         REPO oatpp/oatpp-swagger
-4981c751aae58b1caffb77a410328a4bf62a81809fd0343ce2e47127be6f1d3440a44b8eef2123b214f336fa7b82aefa3bce06cf64b8ac42b54574b521df6b0a        REF 7a6fd37ff5d3ecb3af8e67d4fad6f871cd6aadd8 # 0.19.10
-        SHA512 a4781b4cc0c62cf73302a9d792e0e51243190a1b62b6d40f7da6d22bbac1aa34eb8652114eca6a1ff76c0a2330bd0e0911d1615fc6e36b5a3e8be5e95233ffae
+        REF 69a606770648f3d589deb9eb796bdb28525d941e # 0.19.11
+        SHA512 468871af0a8de3527d050a43c449881eb6fa9fb2279bc81bbb276d175b3d41dd48e33f03da54eb53b9749d9fc7c44e4037876e740d4213ecd93ce72ea8c2561e
         HEAD_REF master
     )
     vcpkg_configure_cmake(
@@ -281,8 +280,8 @@ if("websocket" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH WEBSOCKET_SOURCE_PATH
         REPO oatpp/oatpp-websocket
-        REF 169e4dc2b513ce118941f0c51a527a888dc6087f # 0.19.10
-        SHA512 8196d0a4d0e5adb07682fa4065c641e0bf479184c343680a661c4e5c7accea34a48215394f2afcf2ed5ecc1e60b30b5ce473b56a84c875f957e84cf7d73c4d68
+        REF be56875d6d87446e932498de3f390589fc51ee97 # 0.19.11
+        SHA512 4fce4f55b8aa144b7b9153a759f87dec075e9d6338b3a668448f35fce457626236bab012f41af660a877444b97574490f5c707e354bcb9cb1a9d03c2e5dfe019
         HEAD_REF master
     )
     vcpkg_configure_cmake(

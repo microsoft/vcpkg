@@ -1,10 +1,14 @@
 Source: oatpp
-Version: 0.19.10
+Version: 0.19.11
 Description: Modern web framework
 Build-Depends:
 
 Feature:consul
 Description: Consul submodule
+
+Feature:curl
+Build-Depends: curl
+Description: Use libcurl as a RequestExecutor on the oatpp's ApiClient (external dependency on pkg-config)
 
 Feature:mbedtls
 Build-Depends: mbedtls
