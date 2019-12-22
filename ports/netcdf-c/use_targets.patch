@@ -158,7 +158,7 @@ index c89cf3e67..b81f35a1b 100644
  
  # include target information
 +include(CMakeFindDependencyMacro)
-+find_dependency(ZLIB CONFIG)
++find_dependency(ZLIB)
 +find_dependency(HDF5 CONFIG)
 +find_dependency(CURL CONFIG)
  include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
