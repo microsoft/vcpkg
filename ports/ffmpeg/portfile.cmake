@@ -178,9 +178,9 @@ set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-# Relase build
+# Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-    message(STATUS "Building Relase Options: ${OPTIONS_RELEASE}")
+    message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
     set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
