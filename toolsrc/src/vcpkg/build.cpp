@@ -469,12 +469,31 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         auto&& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
 
+        std::string prepend_to_path;
+
 #if defined(_WIN32)
         const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
         if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
         {
             fs.copy(powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
         }
+        prepend_to_path += powershell_exe_path.parent_path().u8string() + ";";
+
+        // We need to add the git ssh path in order to be able to use git with ssh
+        // We search for the ssh executable located in a sibling folder of git
+        const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
+        fs::path git_ssh_search_path = git_exe_path.parent_path();
+        for(int parent = 0; parent < 2; ++parent )
+        {
+            git_ssh_search_path = git_ssh_search_path.parent_path();
+            fs::path git_ssh_exe_path = git_ssh_search_path / "usr" / "bin" / "ssh.exe";
+            if (fs.exists(git_ssh_exe_path))
+            {
+                prepend_to_path += git_ssh_exe_path.parent_path().u8string() + ";";
+                break;
+            }
+        }
+
 #endif
 
         Triplet triplet = action.spec.triplet();
@@ -513,7 +532,7 @@ namespace vcpkg::Build
 
         const auto& env = build_env_cache.get_lazy({&base_env, build_env_cmd}, [&]() {
             auto clean_env =
-                System::get_modified_clean_environment(base_env, powershell_exe_path.parent_path().u8string() + ";");
+                System::get_modified_clean_environment(base_env, prepend_to_path);
             if (build_env_cmd.empty())
                 return clean_env;
             else
