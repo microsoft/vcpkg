@@ -48,7 +48,7 @@ index 1ce05e0fe..7671d7b1e 100644
      ##
      # Next, check the HDF5 version. This will inform which
      # HDF5 variables we need to munge.
-@@ -695,6 +695,17 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -695,6 +695,19 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
      ENDIF()
    ENDIF(HDF5_C_LIBRARY AND HDF5_HL_LIBRARY AND HDF5_INCLUDE_DIR)
  
@@ -56,10 +56,12 @@ index 1ce05e0fe..7671d7b1e 100644
 +    set(HDF5_C_LIBRARY hdf5::hdf5-shared)
 +    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared)
 +    set(HDF5_HL_LIBRARIES hdf5::hdf5_hl-shared)
++    ADD_DEFINITIONS(-DH5_BUILT_AS_DYNAMIC_LIB)
 +  else()
 +    set(HDF5_C_LIBRARY hdf5::hdf5-static)
 +    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-static)
 +    set(HDF5_HL_LIBRARIES hdf5::hdf5_hl-static)
++    ADD_DEFINITIONS(-DH5_BUILT_AS_STATIC_LIB)
 +  endif()
 +  list(APPEND CMAKE_REQUIRED_LIBRARIES ${HDF5_C_LIBRARY})
 +
