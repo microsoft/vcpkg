@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1ce05e0fe..d1722ded6 100644
+index 1ce05e0fe..7671d7b1e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -431,7 +431,7 @@ IF(NC_EXTRA_DEPS)
@@ -11,6 +11,31 @@ index 1ce05e0fe..d1722ded6 100644
    SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${EXTRA_DEPS})
  ENDIF()
  ###
+@@ -599,15 +599,15 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+     # we will use a static library.  This can be toggled
+     # by explicitly modifying NC_FIND_SHARED_LIBS.
+     ##
+-    IF(NC_FIND_SHARED_LIBS)
+-      SET(NC_HDF5_LINK_TYPE "shared")
+-      SET(NC_HDF5_LINK_TYPE_UPPER "SHARED")
+-      ADD_DEFINITIONS(-DH5_BUILT_AS_DYNAMIC_LIB)
+-    ELSE(NC_FIND_SHARED_LIBS)
+-      SET(NC_HDF5_LINK_TYPE "static")
+-      SET(NC_HDF5_LINK_TYPE_UPPER "STATIC")
+-      ADD_DEFINITIONS(-DH5_BUILT_AS_STATIC_LIB)
+-    ENDIF(NC_FIND_SHARED_LIBS)
++    #IF(NC_FIND_SHARED_LIBS)
++      #SET(NC_HDF5_LINK_TYPE "shared")
++      #SET(NC_HDF5_LINK_TYPE_UPPER "SHARED")
++      #ADD_DEFINITIONS(-DH5_BUILT_AS_DYNAMIC_LIB)
++    #ELSE(NC_FIND_SHARED_LIBS)
++      #SET(NC_HDF5_LINK_TYPE "static")
++      #SET(NC_HDF5_LINK_TYPE_UPPER "STATIC")
++      #ADD_DEFINITIONS(-DH5_BUILT_AS_STATIC_LIB)
++    #ENDIF(NC_FIND_SHARED_LIBS)
+ 
+     #####
+     # First, find the C and HL libraries.
 @@ -620,9 +620,9 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
        SET(SEARCH_PACKAGE_NAME ${HDF5_PACKAGE_NAME})
        FIND_PACKAGE(HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS C HL CONFIG REQUIRED ${NC_HDF5_LINK_TYPE})
@@ -23,23 +48,26 @@ index 1ce05e0fe..d1722ded6 100644
      ##
      # Next, check the HDF5 version. This will inform which
      # HDF5 variables we need to munge.
-@@ -710,7 +710,8 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
-   # Use H5Pset_fapl_mpio and H5Pget_fapl_mpio, instead.
-   # CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pget_fapl_mpiposix "" HDF5_IS_PARALLEL_MPIPOSIX)
+@@ -695,6 +695,17 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+     ENDIF()
+   ENDIF(HDF5_C_LIBRARY AND HDF5_HL_LIBRARY AND HDF5_INCLUDE_DIR)
  
--  CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pget_fapl_mpio "" HDF5_IS_PARALLEL_MPIO)
-+  #CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pget_fapl_mpio "" HDF5_IS_PARALLEL_MPIO)
-+  set(HDF5_IS_PARALLEL_MPIO ${HDF5_ENABLE_PARALLEL})
-   IF(HDF5_IS_PARALLEL_MPIO)
-     SET(HDF5_PARALLEL ON)
-   ELSE()
-@@ -718,21 +719,30 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
-   ENDIF()
++  if(TARGET hdf5::hdf5-shared)
++    set(HDF5_C_LIBRARY hdf5::hdf5-shared)
++    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared)
++    set(HDF5_HL_LIBRARIES hdf5::hdf5_hl-shared)
++  else()
++    set(HDF5_C_LIBRARY hdf5::hdf5-static)
++    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-static)
++    set(HDF5_HL_LIBRARIES hdf5::hdf5_hl-static)
++  endif()
++  list(APPEND CMAKE_REQUIRED_LIBRARIES ${HDF5_C_LIBRARY})
++
+   FIND_PACKAGE(Threads)
  
-   #Check to see if HDF5 library has collective metadata APIs, (HDF5 >= 1.10.0)
--  CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pset_all_coll_metadata_ops "" HDF5_HAS_COLL_METADATA_OPS)
-+  #CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pset_all_coll_metadata_ops "" HDF5_HAS_COLL_METADATA_OPS)
-+  set(HDF5_HAS_COLL_METADATA_OPS ON)
+   # There is a missing case in the above code so default it
+@@ -721,16 +733,16 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+   CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pset_all_coll_metadata_ops "" HDF5_HAS_COLL_METADATA_OPS)
  
    #Check to see if H5Z_SZIP exists in HDF5_Libraries. If so, we must use szip.
 -  CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Z_SZIP "" USE_SZIP)
@@ -62,18 +90,8 @@ index 1ce05e0fe..d1722ded6 100644
 +    #ENDIF()
    ENDIF()
  
-+    if(TARGET hdf5::hdf5-shared)
-+        set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared)
-+        set(HDF5_HL_LIBRARIES hdf5::hdf5_hl-shared)
-+      else()
-+        set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-static)
-+        set(HDF5_HL_LIBRARIES hdf5::hdf5_hl-static)
-+    endif()
-+    list(APPEND CMAKE_REQUIRED_LIBRARIES ${HDF5_C_LIBRARY_hdf5})
    CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pset_libver_bounds "" HAVE_H5PSET_LIBVER_BOUNDS)
-   CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5free_memory "" HAVE_H5FREE_MEMORY)
-   CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5allocate_memory "" HAVE_H5ALLOCATE_MEMORY)
-@@ -764,8 +774,8 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -764,8 +776,8 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
  ENDIF(USE_HDF5 OR ENABLE_NETCDF_4)
  
  # See if we have libcurl
@@ -84,7 +102,7 @@ index 1ce05e0fe..d1722ded6 100644
  INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
  
  # Check to see if CURLOPT_USERNAME is defined.
-@@ -1890,7 +1900,7 @@ ENDIF()
+@@ -1890,7 +1902,7 @@ ENDIF()
  
  STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
  
