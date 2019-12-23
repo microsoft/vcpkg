@@ -12,4 +12,4 @@ install(TARGETS sfsexp
   	ARCHIVE DESTINATION lib
   	LIBRARY DESTINATION lib
   	)
-install(FILES ${header_files} DESTINATION include)
+install(FILES ${header_files} DESTINATION include/sfsexp)
