@@ -44,11 +44,12 @@ vcpkg_extract_source_archive_ex(
     # REF 1.0.0
     # (Optional) Read the docs for how to generate patches at: 
     # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
-    PATCHES
-       add-cmake-configuration.patch 
+    # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch
 )
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 # # Check if one or more features are a part of a package installation.
 # # See /docs/maintainers/vcpkg_check_features.md for more details
