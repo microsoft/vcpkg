@@ -3,14 +3,16 @@ project(sexp)
 
 file(GLOB sources src/*.c src/*.h)
 
-set(header_files "src/cstring.h;src/faststack.h;src/sexp.h;src/sexp_errors.h;src/sexp_memory.h;src/sexp_ops.h;src/sexp_vis.h")
 
 include_directories(src/)
 
 add_library(sexp ${sources})
 
+set_target_properties(sexp PROPERTIES PUBLIC_HEADER "src/cstring.h;src/faststack.h;src/sexp.h;src/sexp_errors.h;src/sexp_memory.h;src/sexp_ops.h;src/sexp_vis.h")
+
 install(TARGETS sexp
   	ARCHIVE DESTINATION lib
   	LIBRARY DESTINATION lib
-  	)
-install(FILES ${header_files} DESTINATION include)
+	PUBLIC_HEADER DESTINATION include
+)
+
