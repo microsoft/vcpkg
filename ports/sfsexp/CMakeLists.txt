@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 project(sexp)
 
-file(GLOB sources src/*.c src/*.h)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+file(GLOB sources src/*.c src/*.h)
 include_directories(src/)
 
 add_library(sexp ${sources})
