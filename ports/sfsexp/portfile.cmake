@@ -16,6 +16,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
+IF (WIN32)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+ENDIF()
+
 vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfsexp RENAME copyright)
