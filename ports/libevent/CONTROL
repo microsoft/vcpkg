@@ -1,9 +1,9 @@
 Source: libevent
-Version: 2.1.11-1
-Build-Depends: openssl
+Version: 2.1.11-2
 Homepage: https://github.com/libevent/libevent
 Description: An event notification library
 Supports: !uwp
+Default-Features: thread
 
 Feature: openssl
 Description: Support for openssl
