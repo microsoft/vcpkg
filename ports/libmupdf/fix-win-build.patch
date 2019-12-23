@@ -1,0 +1,360 @@
+diff --git a/platform/win32/libmupdf.vcproj b/platform/win32/libmupdf.vcproj
+index 67eb95c..9ca55e5 100644
+--- a/platform/win32/libmupdf.vcproj
++++ b/platform/win32/libmupdf.vcproj
+@@ -43,7 +43,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg/src/lib/openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;_DEBUG;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -106,7 +106,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;_DEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;_DEBUG;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -171,7 +171,7 @@
+ 				EnableIntrinsicFunctions="true"
+ 				WholeProgramOptimization="false"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;NDEBUG;OPJ_STATIC"
+ 				RuntimeLibrary="0"
+ 				EnableFunctionLevelLinking="true"
+ 				WarningLevel="3"
+@@ -235,7 +235,7 @@
+ 				Optimization="2"
+ 				EnableIntrinsicFunctions="true"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;NDEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;NDEBUG;OPJ_STATIC"
+ 				RuntimeLibrary="0"
+ 				EnableFunctionLevelLinking="true"
+ 				WarningLevel="3"
+@@ -297,7 +297,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;MEMENTO=1;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;_DEBUG;MEMENTO=1;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -361,7 +361,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;_DEBUG;MEMENTO=1;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;_DEBUG;MEMENTO=1;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -424,7 +424,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\openssl\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;HAVE_LIBCRYPTO;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;_DEBUG;HAVE_LIBCRYPTO;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -488,7 +488,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\openssl\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\openssl\include;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;_DEBUG;HAVE_LIBCRYPTO;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;_DEBUG;HAVE_LIBCRYPTO;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -552,7 +552,7 @@
+ 				Optimization="2"
+ 				EnableIntrinsicFunctions="true"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\openssl\include;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;HAVE_LIBCRYPTO;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;NDEBUG;HAVE_LIBCRYPTO;OPJ_STATIC"
+ 				RuntimeLibrary="0"
+ 				EnableFunctionLevelLinking="true"
+ 				WarningLevel="3"
+@@ -616,7 +616,7 @@
+ 				Optimization="2"
+ 				EnableIntrinsicFunctions="true"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\openssl\include;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;NDEBUG;HAVE_LIBCRYPTO;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;NDEBUG;HAVE_LIBCRYPTO;OPJ_STATIC"
+ 				RuntimeLibrary="0"
+ 				EnableFunctionLevelLinking="true"
+ 				WarningLevel="3"
+@@ -678,7 +678,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg/src/lib/openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;_DEBUG;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="3"
+@@ -742,7 +742,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;_DEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;_DEBUG;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="3"
+@@ -807,7 +807,7 @@
+ 				EnableIntrinsicFunctions="true"
+ 				WholeProgramOptimization="false"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;NDEBUG;OPJ_STATIC"
+ 				RuntimeLibrary="2"
+ 				EnableFunctionLevelLinking="true"
+ 				WarningLevel="3"
+@@ -871,7 +871,7 @@
+ 				Optimization="2"
+ 				EnableIntrinsicFunctions="true"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;NDEBUG;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;NDEBUG;OPJ_STATIC"
+ 				RuntimeLibrary="2"
+ 				EnableFunctionLevelLinking="true"
+ 				WarningLevel="3"
+@@ -1315,7 +1315,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;HAVE_LIBCRYPTO;MEMENTO=1;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN32;_DEBUG;HAVE_LIBCRYPTO;MEMENTO=1;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -1379,7 +1379,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\scripts\freetype;..\..\scripts\libjpeg;..\..\include;..\..\thirdparty\jbig2dec;..\..\thirdparty\libjpeg;..\..\thirdparty\openjpeg\src\lib\openjp2;..\..\thirdparty\zlib;..\..\thirdparty\freetype\include;..\..\thirdparty\mujs;..\..\thirdparty\harfbuzz\src;..\..\thirdparty\lcms2\include"
+-				PreprocessorDefinitions="WIN64;_DEBUG;HAVE_LIBCRYPTO;MEMENTO=1;OPJ_STATIC;HAVE_LCMS2MT=1"
++				PreprocessorDefinitions="WIN64;_DEBUG;HAVE_LIBCRYPTO;MEMENTO=1;OPJ_STATIC"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+diff --git a/platform/win32/mupdf.sln b/platform/win32/mupdf.sln
+index 1e09bea..4e2a23c 100644
+--- a/platform/win32/mupdf.sln
++++ b/platform/win32/mupdf.sln
+@@ -2,91 +2,28 @@
+ Microsoft Visual Studio Solution File, Format Version 9.00
+ # Visual Studio 2005
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mupdf", "mupdf.vcproj", "{E74F29F0-FA43-4ADC-B92C-6AFA08E4A417}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-	EndProjectSection
+-EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libthirdparty", "libthirdparty.vcproj", "{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmupdf", "libmupdf.vcproj", "{5F615F91-DFF8-4F05-BF48-6222B7D86519}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{B0091365-C9BA-4F40-AE2B-EF93702871B2} = {B0091365-C9BA-4F40-AE2B-EF93702871B2}
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C} = {5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}
+-		{22462382-B30D-42A5-BF07-EE1A35E25D21} = {22462382-B30D-42A5-BF07-EE1A35E25D21}
+-		{52DCAB29-C8EE-4422-954C-29AFA6B33E22} = {52DCAB29-C8EE-4422-954C-29AFA6B33E22}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mudraw", "mudraw.vcproj", "{0B51171B-B10E-4EAC-8FFA-19226A1828A3}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B} = {DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B}
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mutool", "mutool.vcproj", "{00811970-815B-4F64-BC9D-219078B1F3AA}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{FA8ADE21-FC8A-47E0-87E4-DCE8808BFC9B} = {FA8ADE21-FC8A-47E0-87E4-DCE8808BFC9B}
+-	EndProjectSection
+-EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "..\..\thirdparty\curl\vs\vc8\lib\vc8libcurl.vcproj", "{87EE9DA4-DE1E-4448-8324-183C98DCA588}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mupdf-curl", "mupdf-curl.vcproj", "{27B53E5C-ACAB-423C-854E-BECE56D73544}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-		{87EE9DA4-DE1E-4448-8324-183C98DCA588} = {87EE9DA4-DE1E-4448-8324-183C98DCA588}
+-	EndProjectSection
+-EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libfreeglut", "libfreeglut.vcproj", "{A1B75D29-9F5C-4A0F-B368-322A10477D0C}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mupdf-gl", "mupdf-gl.vcproj", "{CE3A76A8-A28F-4991-8FB9-C9453D922037}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{A1B75D29-9F5C-4A0F-B368-322A10477D0C} = {A1B75D29-9F5C-4A0F-B368-322A10477D0C}
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libresources", "libresources.vcproj", "{52DCAB29-C8EE-4422-954C-29AFA6B33E22}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{BFE316B3-BD90-433A-A20D-C73975F1CAA7} = {BFE316B3-BD90-433A-A20D-C73975F1CAA7}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "muraster", "muraster.vcproj", "{0FDC74D7-D18C-45CE-94D6-EDFCC5A0CDF2}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-		{DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B} = {DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B}
+-		{52DCAB29-C8EE-4422-954C-29AFA6B33E22} = {52DCAB29-C8EE-4422-954C-29AFA6B33E22}
+-	EndProjectSection
+-EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "javaviewerlib", "javaviewerlib.vcproj", "{3DB35F2D-9679-4DED-BA0C-240A4E6E6674}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-	EndProjectSection
+-EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "javaviewer", "javaviewer.vcproj", "{FB8DC595-90A5-44D6-9FFF-2BDFA912FD8C}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-		{3DB35F2D-9679-4DED-BA0C-240A4E6E6674} = {3DB35F2D-9679-4DED-BA0C-240A4E6E6674}
+-		{52DCAB29-C8EE-4422-954C-29AFA6B33E22} = {52DCAB29-C8EE-4422-954C-29AFA6B33E22}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libluratech", "libluratech.vcproj", "{B0091365-C9BA-4F40-AE2B-EF93702871B2}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmuthreads", "libmuthreads.vcproj", "{DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mu-office-lib", "mu-office-lib.vcproj", "{FFF91365-C9BA-4F40-AE2B-EF93702871B2}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-		{DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B} = {DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B}
+-	EndProjectSection
+-EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mu-office-test", "mu-office-test.vcproj", "{FB51171B-B10E-4EAC-8FFA-19226A1828A3}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{FFF91365-C9BA-4F40-AE2B-EF93702871B2} = {FFF91365-C9BA-4F40-AE2B-EF93702871B2}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmutool", "libmutool.vcproj", "{FA8ADE21-FC8A-47E0-87E4-DCE8808BFC9B}"
+-	ProjectSection(ProjectDependencies) = postProject
+-		{5F615F91-DFF8-4F05-BF48-6222B7D86519} = {5F615F91-DFF8-4F05-BF48-6222B7D86519}
+-		{DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B} = {DE21FA8A-FC8A-47E0-87E4-DCE8808BFC9B}
+-	EndProjectSection
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpkcs7", "libpkcs7.vcproj", "{22462382-B30D-42A5-BF07-EE1A35E25D21}"
+ EndProject
+@@ -164,56 +101,6 @@ Global
+ 		{E74F29F0-FA43-4ADC-B92C-6AFA08E4A417}.ReleaseOpenssl|Win32.ActiveCfg = ReleaseOpenssl|Win32
+ 		{E74F29F0-FA43-4ADC-B92C-6AFA08E4A417}.ReleaseOpenssl|Win32.Build.0 = ReleaseOpenssl|Win32
+ 		{E74F29F0-FA43-4ADC-B92C-6AFA08E4A417}.ReleaseOpenssl|x64.ActiveCfg = ReleaseOpenssl|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Debug|Win32.ActiveCfg = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Debug|Win32.Build.0 = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Debug|x64.ActiveCfg = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Debug|x64.Build.0 = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugCommercial|Win32.ActiveCfg = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugCommercial|Win32.Build.0 = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugCommercial|x64.ActiveCfg = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugCommercial|x64.Build.0 = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugGSView|Win32.ActiveCfg = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugGSView|Win32.Build.0 = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugGSView|x64.ActiveCfg = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugGSView|x64.Build.0 = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugJava|Win32.ActiveCfg = DebugJava|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugJava|Win32.Build.0 = DebugJava|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugJava|x64.ActiveCfg = DebugJava|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugJava|x64.Build.0 = DebugJava|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugOpenssl|Win32.ActiveCfg = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugOpenssl|Win32.Build.0 = Debug|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.DebugOpenssl|x64.ActiveCfg = Debug|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Memento|Win32.ActiveCfg = Memento|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Memento|Win32.Build.0 = Memento|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Memento|x64.ActiveCfg = Memento|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Memento|x64.Build.0 = Memento|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoCommercial|Win32.ActiveCfg = Memento|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoCommercial|Win32.Build.0 = Memento|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoCommercial|x64.ActiveCfg = Memento|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoCommercial|x64.Build.0 = Memento|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoOpenSSL|Win32.ActiveCfg = Memento|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoOpenSSL|Win32.Build.0 = Memento|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoOpenSSL|x64.ActiveCfg = Memento|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.MementoOpenSSL|x64.Build.0 = Memento|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Release|Win32.ActiveCfg = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Release|Win32.Build.0 = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Release|x64.ActiveCfg = Release|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.Release|x64.Build.0 = Release|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseCommercial|Win32.ActiveCfg = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseCommercial|Win32.Build.0 = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseCommercial|x64.ActiveCfg = Release|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseCommercial|x64.Build.0 = Release|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseGSView|Win32.ActiveCfg = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseGSView|Win32.Build.0 = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseGSView|x64.ActiveCfg = Release|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseGSView|x64.Build.0 = Release|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseJava|Win32.ActiveCfg = ReleaseJava|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseJava|Win32.Build.0 = ReleaseJava|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseJava|x64.ActiveCfg = ReleaseJava|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseJava|x64.Build.0 = ReleaseJava|x64
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseOpenssl|Win32.ActiveCfg = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseOpenssl|Win32.Build.0 = Release|Win32
+-		{5EDCF4FD-0291-4FB9-8D96-D58957CA5E3C}.ReleaseOpenssl|x64.ActiveCfg = Release|x64
+ 		{5F615F91-DFF8-4F05-BF48-6222B7D86519}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{5F615F91-DFF8-4F05-BF48-6222B7D86519}.Debug|Win32.Build.0 = Debug|Win32
+ 		{5F615F91-DFF8-4F05-BF48-6222B7D86519}.Debug|x64.ActiveCfg = Debug|x64
+diff --git a/source/fitz/font.c b/source/fitz/font.c
+index 2f9a288..e56df55 100644
+--- a/source/fitz/font.c
++++ b/source/fitz/font.c
+@@ -4,8 +4,8 @@
+ #include "draw-imp.h"
+ 
+ #include <ft2build.h>
+-#include "hb.h"
+-#include "hb-ft.h"
++#include "harfbuzz/hb.h"
++#include "harfbuzz/hb-ft.h"
+ 
+ #include <assert.h>
+ 
+diff --git a/source/fitz/harfbuzz.c b/source/fitz/harfbuzz.c
+index 1e83b95..d2a421a 100644
+--- a/source/fitz/harfbuzz.c
++++ b/source/fitz/harfbuzz.c
+@@ -6,7 +6,7 @@
+ #include "mupdf/fitz.h"
+ #include "fitz-imp.h"
+ 
+-#include "hb.h"
++#include "harfbuzz/hb.h"
+ 
+ #include <assert.h>
+ 
+diff --git a/source/fitz/jmemcust.c b/source/fitz/jmemcust.c
+index d0cb304..071a932 100644
+--- a/source/fitz/jmemcust.c
++++ b/source/fitz/jmemcust.c
+@@ -16,9 +16,9 @@
+ 
+ #if !defined(SHARE_JPEG) || SHARE_JPEG==0
+ 
+-#include "jinclude.h"
++#include "gdcmjpeg/jinclude.h"
+ #include "jpeglib.h"
+-#include "jmemsys.h"
++#include "gdcmjpeg/jmemsys.h"
+ #include "jerror.h"
+ #include "jmemcust.h"
+ 
+diff --git a/source/html/html-layout.c b/source/html/html-layout.c
+index 9dc55c9..0f3eddb 100644
+--- a/source/html/html-layout.c
++++ b/source/html/html-layout.c
+@@ -2,8 +2,8 @@
+ #include "mupdf/ucdn.h"
+ #include "html-imp.h"
+ 
+-#include "hb.h"
+-#include "hb-ft.h"
++#include "harfbuzz/hb.h"
++#include "harfbuzz/hb-ft.h"
+ #include <ft2build.h>
+ 
+ #include <math.h>
