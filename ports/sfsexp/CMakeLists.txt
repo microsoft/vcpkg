@@ -3,7 +3,6 @@ project(sexp)
 
 file(GLOB sources src/*.c src/*.h)
 
-
 include_directories(src/)
 
 add_library(sexp ${sources})
@@ -13,6 +12,7 @@ set_target_properties(sexp PROPERTIES PUBLIC_HEADER "src/cstring.h;src/faststack
 install(TARGETS sexp
   	ARCHIVE DESTINATION lib
   	LIBRARY DESTINATION lib
+	RUNTIME DESTINATION bin
 	PUBLIC_HEADER DESTINATION include
 )
 
