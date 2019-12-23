@@ -9,7 +9,14 @@ vcpkg_from_github(
         destdir.patch
 )
 
-vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH}/QGLViewer/QGLViewer.pro)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(OPTIONS CONFIG*=staticlib)
+endif()
+
+vcpkg_configure_qmake(
+    SOURCE_PATH ${SOURCE_PATH}/QGLViewer/QGLViewer.pro
+    OPTIONS ${OPTIONS}
+)
 
 vcpkg_install_qmake()
 
