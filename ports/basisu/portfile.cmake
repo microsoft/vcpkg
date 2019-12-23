@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jherico/basis_universal
-    REF b0ec54562c215b2f9ed6d54dcaaca9d762d4aff3
-    SHA512 27ceb6076c79991639c16bd56a1f81f03fad6d6b4b0184f3f3b594bb163509525e03a7d5f1ba068d186f9cbba677e52972e0b364f4369eadf507fca6e6c60820
+    REF 497875f756ed0e3eb62e0ff08d55c62242f4be74
+    SHA512 2293b78620a7ed510dbecf48bcae5f4b8524fe9020f864c8e79cf94ea9d95d51dddf83a5b4ea29cc95db19f87137bfef1cb68b7fbc6387e08bb42898d81c9303
     HEAD_REF master
 )
 
