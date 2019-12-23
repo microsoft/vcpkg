@@ -31,11 +31,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH platform/win32/mupdf.sln
-        INCLUDES_SUBPATH include/mupdf
         TARGET libmupdf 
         PLATFORM ${BUILD_ARCH}
         USE_VCPKG_INTEGRATION
     )
+    
+    file(COPY ${SOURCE_PATH}/include/mupdf DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 else()
     vcpkg_configure_make(
