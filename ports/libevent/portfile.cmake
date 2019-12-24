@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,6 +10,12 @@ vcpkg_from_github(
         fix-crt_linkage.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    openssl EVENT__DISABLE_OPENSSL
+    thread  EVENT__DISABLE_THREAD_SUPPORT
+)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBEVENT_LIB_TYPE SHARED)
 else()
@@ -23,7 +25,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DEVENT_INSTALL_CMAKE_DIR:PATH=share/libevent
         -DEVENT__LIBRARY_TYPE=${LIBEVENT_LIB_TYPE}
         -DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}
@@ -51,5 +53,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libevent)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libevent/LICENSE ${CURRENT_PACKAGES_DIR}/share/libevent/copyright)
+#Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
