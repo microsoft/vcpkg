@@ -1,7 +1,27 @@
 set(OATPP_VERSION "0.19.11")
 
+function(dump_variables)
+    message(STATUS "#############################################################################")
+    message(STATUS "#############################################################################")
+    message(STATUS "#############################################################################")
+    get_cmake_property(_variableNames VARIABLES)
+    list (SORT _variableNames)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+    message(STATUS "#############################################################################")
+    message(STATUS "#############################################################################")
+    message(STATUS "#############################################################################")
+    execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
+    message(STATUS "###############################################################################")
+    message(STATUS "###############################################################################")
+    message(STATUS "###############################################################################")
+endfunction()
+
 # go to extraordinary measures to find pkg-config on windows and set the PKG_CONFIG environment variable.
-function(verify_pkg_config SUBMODULE_NAME)
+function(verify_pkg_config)
+endfunction()
+function(xverify_pkg_config SUBMODULE_NAME)
     if(NOT PKG_CONFIG_EXECUTABLE)
         if(NOT "$ENV{PKG_CONFIG}" STREQUAL "")
             set(PKG_CONFIG_EXECUTABLE "$ENV{PKG_CONFIG}" CACHE FILEPATH "pkg-config executable")
@@ -81,14 +101,8 @@ if("consul" IN_LIST FEATURES)
 endif()
 
 if("curl" IN_LIST FEATURES)
-    # Apparently the curl submodule hasn't caught up to the core module yet (classes that
-    # don't override abstract base classes accuratetly). When that is fixed, put the
-    # following into the CONTROL file:
-    #
-
     message(STATUS "Building submodule oatpp[curl]")
 
-    # this submodule requires pkg-config (boo)
     verify_pkg_config("curl")
 
     # get the source
@@ -98,22 +112,8 @@ if("curl" IN_LIST FEATURES)
         REF 5354e78707184cdfe3fb36af5735481d1159c3a6 # 0.19.11
         SHA512 3a40b6a6981253c7551c0784fed085403272497840874eb7ea09c7a83c9d86c5fcbf36cf6059d6f067c606fc65b2870806e20f8ffacfef605be4c824804b6bb9
         HEAD_REF master
+	PATCHES "no-pkg-config-in-vcpkg.patch"
     )
-
-    # This depends on libcurl which was built but it also needs pkg-config to be 
-    # able to find the libcurl.pc file.
-    set(_libcurl_pc_dir "${CURRENT_BUILDTREES_DIR}/../curl/${TARGET_TRIPLET}-rel")
-    get_filename_component(_libcurl_pc_dir "${_libcurl_pc_dir}" REALPATH)
-
-    # tell pkg-config where to find the pc files.
-    file(TO_NATIVE_PATH "${_libcurl_pc_dir}" _libcurl_pc_dir)
-    if("$ENV{PKG_CONFIG_PATH}" STREQUAL "")
-        set(ENV{PKG_CONFIG_PATH} "${_libcurl_pc_dir}")
-    elseif (WIN32)
-        set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH};${_libcurl_pc_dir}")
-    else()
-        set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${_libcurl_pc_dir}")
-    endif()  
 
     vcpkg_configure_cmake(
         SOURCE_PATH "${CURL_SOURCE_PATH}"
@@ -121,7 +121,7 @@ if("curl" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
-            "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+	    "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS -isystem ${CURRENT_INSTALLED_DIR}/include"
             ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
     vcpkg_install_cmake()
