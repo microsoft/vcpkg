@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/argparse
-    REF v1.9
-    SHA512 6cfc7fc274a11093fe5254f244adaacdcc81123b1d7e9b51110ffdfe9a344fb59044ec9d98017f25aa8ea417d57cfca330fdea7161226da26f1b4fc199fdc4fb
+    REF 473d550ea313ea315a820b3b1b426254ad17061a # v2.1
+    SHA512 59408a95e2ddb8d2e0f35229d58545569489f03b1a156fa9b9e92bbf7d669656045c3cffd8f2d939e1d749999cbc9ade7946eb2da1552b5edf2e069e893bdbaf
     HEAD_REF master
 )
 

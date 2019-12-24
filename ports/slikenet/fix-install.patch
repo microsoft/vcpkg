@@ -1,0 +1,49 @@
+diff --git a/Lib/DLL/CMakeLists.txt b/Lib/DLL/CMakeLists.txt
+index 2d1e078..7e705cf 100644
+--- a/Lib/DLL/CMakeLists.txt
++++ b/Lib/DLL/CMakeLists.txt
+@@ -50,13 +50,13 @@ ELSE(WIN32 AND NOT UNIX)
+ ENDIF(WIN32 AND NOT UNIX)
+ 
+ target_link_libraries(SLikeNetDLL ${SLIKENET_LIBRARY_LIBS})
+-IF(NOT WIN32 OR UNIX)
+-	configure_file(../../slikenet-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/slikenet-config-version.cmake @ONLY)
+-
+-	install(TARGETS SLikeNetDLL EXPORT SLikeNetDLL DESTINATION lib/slikenet-${SLikeNet_VERSION})
++IF(1)
++	install(TARGETS SLikeNetDLL 
++            EXPORT SLikeNetDLL 
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib)
+ 	INSTALL(FILES ${ALL_COMPATIBILITY_HEADER_SRC} DESTINATION include/slikenet-${SLikeNet_VERSION})
+ 	INSTALL(FILES ${ALL_COMPATIBILITY_HEADER_SRC_2} DESTINATION include/slikenet-${SLikeNet_VERSION}/slikenet/slikenet)
+ 	INSTALL(FILES ${ALL_HEADER_SRCS} DESTINATION include/slikenet-${SLikeNet_VERSION}/slikenet/include/slikenet)
+-	INSTALL(FILES ../../slikenet-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/slikenet-config-version.cmake DESTINATION lib/slikenet-${SLikeNet_VERSION})
+-	INSTALL(EXPORT SLikeNetDLL DESTINATION lib/slikenet-${SLikeNet_VERSION})
+-ENDIF(NOT WIN32 OR UNIX)
++ENDIF(1)
+diff --git a/Lib/LibStatic/CMakeLists.txt b/Lib/LibStatic/CMakeLists.txt
+index 955a99d..9211c45 100644
+--- a/Lib/LibStatic/CMakeLists.txt
++++ b/Lib/LibStatic/CMakeLists.txt
+@@ -54,13 +54,14 @@ IF(WIN32 AND NOT UNIX)
+ 	IF(NOT ${CMAKE_GENERATOR} STREQUAL "MSYS Makefiles")
+ 		set_target_properties(SLikeNetLibStatic PROPERTIES STATIC_LIBRARY_FLAGS "/NODEFAULTLIB:\"LIBCD.lib LIBCMTD.lib MSVCRT.lib\"" )
+ 	ENDIF(NOT ${CMAKE_GENERATOR} STREQUAL "MSYS Makefiles")
+-ELSE(WIN32 AND NOT UNIX)
+-	configure_file(../../slikenet-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/slikenet-config-version.cmake @ONLY)
++ENDIF(WIN32 AND NOT UNIX)
+ 
+ 	INSTALL(TARGETS SLikeNetLibStatic EXPORT SLikeNetLibStatic DESTINATION lib/slikenet-${SLikeNet_VERSION})
++	INSTALL(TARGETS SLikeNetLibStatic 
++            EXPORT SLikeNetLibStatic 
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION share/slikenet)
+ 	INSTALL(FILES ${ALL_COMPATIBILITY_HEADER_SRC} DESTINATION include/slikenet-${SLikeNet_VERSION})
+ 	INSTALL(FILES ${ALL_COMPATIBILITY_HEADER_SRC_2} DESTINATION include/slikenet-${SLikeNet_VERSION}/slikenet)
+ 	INSTALL(FILES ${ALL_HEADER_SRCS} DESTINATION include/slikenet-${SLikeNet_VERSION}/include/slikenet)
+-	INSTALL(FILES ../../slikenet-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/slikenet-config-version.cmake DESTINATION lib/slikenet-${SLikeNet_VERSION})
+-	INSTALL(EXPORT SLikeNetLibStatic FILE slikenet.cmake DESTINATION lib/slikenet-${SLikeNet_VERSION})
+-ENDIF(WIN32 AND NOT UNIX)
