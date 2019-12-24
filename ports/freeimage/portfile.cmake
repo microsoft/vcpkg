@@ -1,6 +1,5 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FreeImage)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/freeimage/FreeImage3180.zip"
     FILENAME "FreeImage3180.zip"

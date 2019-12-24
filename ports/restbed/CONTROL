@@ -1,5 +1,5 @@
 Source: restbed
-Version: 4.16-07-28-2018-1
+Version: 4.16-07-28-2018-2
 Description: Corvusoft's Restbed framework brings asynchronous RESTful functionality to C++11 applications.
 Build-Depends: asio
 

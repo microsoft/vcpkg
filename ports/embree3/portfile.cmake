@@ -3,12 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF v3.5.2
-    SHA512 f00403c8bc76428088a38990117245b5b11ac90a2df21fa12c2d5c2e8af45fb3708abb705c612e0d9d7b0cfe4edb51c8b9630b60081b39fcb4370f31ee37acc7
+    REF v3.6.1
+    SHA512 9da44dc658cb96cfbcd9b77417a2f30249aa089dd31efd52e8b2763aa25b3f1c04924ad2b7b43097e2bae9905f73b1412e7e95c029a7385991ccc6b41871f976
     HEAD_REF master
     PATCHES
         fix-InstallPath.patch
         fix-cmake-path.patch
+        fix-embree-path.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/common/cmake/FindTBB.cmake)
@@ -43,12 +44,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree3)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree3 TARGET_PATH share/embree)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree/doc)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

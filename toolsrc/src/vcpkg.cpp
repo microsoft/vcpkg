@@ -304,7 +304,6 @@ int main(const int argc, const char* const* const argv)
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
 
-    const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
 #endif
 
     Checks::register_global_shutdown_handler([]() {
@@ -335,9 +334,6 @@ int main(const int argc, const char* const* const argv)
     {
         auto locked_metrics = Metrics::g_metrics.lock();
         locked_metrics->track_property("version", Commands::Version::version());
-#if defined(_WIN32)
-        locked_metrics->track_property("cmdline", trimmed_command_line);
-#endif
     }
 
     System::register_console_ctrl_handler();

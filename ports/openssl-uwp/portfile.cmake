@@ -37,8 +37,7 @@ vcpkg_from_github(
     SHA512 3045693fca4b042b69675f6164d8cc82106582cf31081d65a0adbd528f04e77fa48b3761f3be7bdf8ab962a093b28fec0ae6d7da02058f2b049f79b784c39c2e
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-rs4.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-configure-unicode.patch
+        fix-uwp-configure-unicode.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)

@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62dbdba..55a3068 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -217,8 +217,10 @@ if(NOT ${CAPSTONE_FULL})
+ 	set(CAPSTONE_EVM_SUPPORT OFF CACHE BOOL "EVM support")
+ endif()
+ 
+-add_subdirectory(capstone)
+-target_link_libraries(${PROJECT_NAME} capstone-static)
++find_library(CAPSTONE_LIBRARY NAMES capstone_dll capstone)
++find_path(CAPSTONE_INCLUDE_DIR NAMES capstone/capstone.h)
++target_link_libraries(${PROJECT_NAME} ${CAPSTONE_LIBRARY})
++target_include_directories(${PROJECT_NAME} PRIVATE ${CAPSTONE_INCLUDE_DIR})
+ 
+ # ASMJIT
+ if(DEP_ASMJIT_NEED MATCHES ON)
+@@ -230,3 +232,13 @@ if(DEP_ASMJIT_NEED MATCHES ON)
+ 	add_subdirectory(${ASMJIT_DIR}) # build it
+ 	target_link_libraries(${PROJECT_NAME} asmjit)
+ endif()
++
++#Install targets
++install(TARGETS ${PROJECT_NAME}
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++
++#Install headers
++install(FILES ${HEADER_FILES} DESTINATION include)
+diff --git a/headers/CapstoneDisassembler.hpp b/headers/CapstoneDisassembler.hpp
+index 2c31bfe..5f3a8ee 100644
+--- a/headers/CapstoneDisassembler.hpp
++++ b/headers/CapstoneDisassembler.hpp
+@@ -7,7 +7,7 @@
+ 
+ #include "headers/ADisassembler.hpp"
+ 
+-#include <capstone/include/capstone/capstone.h>
++#include <capstone/capstone.h>
+ 
+ #include <string.h>
+ #include <iostream> //for debug printing
