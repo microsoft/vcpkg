@@ -1,4 +1,4 @@
 Source: clblas
-Version: 2.12-2
+Version: 2.12-3
 Build-Depends: opencl
 Description: clBLAS is an OpenCL 1.2 accelerated BLAS (Basic Linear Algebra Subsystem) library.

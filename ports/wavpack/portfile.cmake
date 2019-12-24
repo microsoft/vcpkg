@@ -1,5 +1,4 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/00d9a4ac58a52b52495736be614cb06ba102663c)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

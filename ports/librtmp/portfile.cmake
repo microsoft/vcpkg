@@ -1,25 +1,16 @@
-include(vcpkg_common_functions)
+set(RTMPDUMP_REVISION c5f04a58fc2aeea6296ca7c44ee4734c18401aa3)
 
-set(RTMPDUMP_VERSION 2.4)
-set(RTMPDUMP_FILENAME rtmpdump-${RTMPDUMP_VERSION}.tar.gz)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rtmpdump)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://rtmpdump.mplayerhq.hu/download/${RTMPDUMP_FILENAME}"
-    FILENAME "${RTMPDUMP_FILENAME}"
-    SHA512 a6253af95492739366dce620a2a6cc6f4f18d7f12f9ef2c747240259066ca135beeb02091d0f3dd8380c0c294a30d3f702ad3fad1dee1db4e70473078fb81609
+vcpkg_from_git(
+    OUT_SOURCE_PATH SOURCE_PATH
+    URL https://git.ffmpeg.org/rtmpdump
+    REF ${RTMPDUMP_REVISION}
+    PATCHES
+        fix_strncasecmp.patch
+        hide_netstackdump.patch
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/librtmp.def DESTINATION ${SOURCE_PATH}/librtmp)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix_strncasecmp.patch
-        ${CMAKE_CURRENT_LIST_DIR}/hide_netstackdump.patch
-)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

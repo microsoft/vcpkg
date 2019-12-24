@@ -5,7 +5,6 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(CHMLIB_VERSION chmlib-0.40)
 set(CHMLIB_FILENAME ${CHMLIB_VERSION}.zip)
 set(CHMLIB_URL http://www.jedrea.com/chmlib/${CHMLIB_FILENAME})
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${CHMLIB_VERSION})
 
 vcpkg_download_distfile(
     ARCHIVE
@@ -13,7 +12,11 @@ vcpkg_download_distfile(
     FILENAME ${CHMLIB_FILENAME}
     SHA512 ad3b0d49fcf99e724c0c38b9c842bae9508d0e4ad47122b0f489c113160f5344223d311abb79f25cbb0b662bb00e2925d338d60dd20a0c309bda2822cda4cd24
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

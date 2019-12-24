@@ -12,8 +12,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jherico/OpenXR-SDK
-    REF 4e618f467a40c25478a8dff5921c2ab57c06bec2
-    SHA512 428d5af7463fab1eb69b9f0d81f4d38c6f5f07540b018260e0afcba3944a8ec60d51ccab7317815997dfc4cff5c2545d7f855c9f1dd03dbd27d74a67046f5b08
+    REF e3dcdb820fae01fb8d25dfd32e15d14caa14b411
+    SHA512 421eb3651e388b69d70d3200a1c40d363c0ac9eb1d35c89a53430ea764dd3dd0e864b756dfff0e0f98ac574309331782c95a1cadcfe84eb5a6c34434737d7a38
     HEAD_REF master
 )
 

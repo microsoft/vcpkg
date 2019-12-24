@@ -1,21 +1,23 @@
 #.rst:
 # .. command:: vcpkg_fixup_cmake_targets
 #
-#  Transform all /debug/share/<port>/*targets-debug.cmake files and move them to /share/<port>.
+#  Transforms all /debug/share/<port>/*targets-debug.cmake files and move them to /share/<port>.
 #  Removes all /debug/share/<port>/*targets.cmake and /debug/share/<port>/*config.cmake
 #
-#  Transform all references matching /bin/*.exe to /tools/<port>/*.exe on Windows
-#  Transform all references matching /bin/* to /tools/<port>/* on other platforms
+#  Transforms all references matching /bin/*.exe to /tools/<port>/*.exe on Windows
+#  Transforms all references matching /bin/* to /tools/<port>/* on other platforms
 #
-#  Fix ${_IMPORT_PREFIX} in auto generated targets to be one folder deeper. 
-#  Replace ${CURRENT_INSTALLED_DIR} with ${_IMPORT_PREFIX} in configs/targets.
+#  Fixes ${_IMPORT_PREFIX} in auto generated targets to be one folder deeper. 
+#  Replaces ${CURRENT_INSTALLED_DIR} with ${_IMPORT_PREFIX} in configs/targets.
 #
 #  ::
 #  vcpkg_fixup_cmake_targets([CONFIG_PATH <config_path>])
 #
 #  ``CONFIG_PATH``
 #    *.cmake files subdirectory (like "lib/cmake/${PORT}").
-#
+# 
+#	Example usage:
+# 		vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/myPort")
 
 function(vcpkg_fixup_cmake_targets)
     cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
@@ -176,3 +178,5 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
 endfunction()
+
+ 

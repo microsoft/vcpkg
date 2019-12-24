@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8ba68c4a13..258a1609f6 100644
+index 48a0261825..2ba7077c4b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -90,6 +90,9 @@ if(UNIX)
+@@ -92,6 +92,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -12,7 +12,7 @@ index 8ba68c4a13..258a1609f6 100644
  endif()
  
  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-@@ -107,6 +110,9 @@ if (MSVC)
+@@ -109,6 +112,9 @@ if (MSVC)
    add_definitions(/wd4267)
    # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
    add_definitions(/wd4987 /wd4774 /wd4819 /wd4996 /wd4619)
@@ -22,7 +22,7 @@ index 8ba68c4a13..258a1609f6 100644
  endif()
  
  if (gRPC_USE_PROTO_LITE)
-@@ -177,6 +183,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+@@ -179,6 +185,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -33,7 +33,7 @@ index 8ba68c4a13..258a1609f6 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -218,6 +228,7 @@ function(protobuf_generate_grpc_cpp)
+@@ -220,6 +230,7 @@ function(protobuf_generate_grpc_cpp)
    endforeach()
  endfunction()
  
@@ -41,7 +41,7 @@ index 8ba68c4a13..258a1609f6 100644
  add_custom_target(plugins
    DEPENDS
    grpc_cpp_plugin
-@@ -247,6 +258,8 @@ add_custom_target(tools_cxx
+@@ -249,6 +260,8 @@ add_custom_target(tools_cxx
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)
  
@@ -50,7 +50,7 @@ index 8ba68c4a13..258a1609f6 100644
  if (gRPC_BUILD_TESTS)
  add_custom_target(buildtests_c)
  add_dependencies(buildtests_c algorithm_test)
-@@ -4029,7 +4042,6 @@ foreach(_hdr
+@@ -3532,7 +3545,6 @@ foreach(_hdr
      DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
    )
  endforeach()
@@ -58,7 +58,7 @@ index 8ba68c4a13..258a1609f6 100644
  
  if (gRPC_BUILD_CODEGEN)
  
-@@ -4040,6 +4052,7 @@ if (gRPC_INSTALL)
+@@ -3543,6 +3555,7 @@ if (gRPC_INSTALL)
      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
@@ -66,7 +66,23 @@ index 8ba68c4a13..258a1609f6 100644
  
  endif (gRPC_BUILD_CODEGEN)
  if (gRPC_BUILD_TESTS)
-@@ -4163,7 +4176,7 @@ foreach(_hdr
+@@ -3666,7 +3679,6 @@ foreach(_hdr
+     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
+   )
+ endforeach()
+-endif (gRPC_BUILD_CODEGEN)
+ 
+ if (gRPC_BUILD_CODEGEN)
+ 
+@@ -3677,6 +3689,7 @@ if (gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
++endif (gRPC_BUILD_CODEGEN)
+ 
+ endif (gRPC_BUILD_CODEGEN)
+ if (gRPC_BUILD_TESTS)
+@@ -4729,7 +4742,7 @@ foreach(_hdr
      DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
    )
  endforeach()
@@ -75,23 +91,7 @@ index 8ba68c4a13..258a1609f6 100644
  
  if (gRPC_BUILD_CODEGEN)
  
-@@ -4174,6 +4187,7 @@ if (gRPC_INSTALL)
-     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
-   )
- endif()
-+endif (gRPC_BUILD_CODEGEN)
- 
- endif (gRPC_BUILD_CODEGEN)
- if (gRPC_BUILD_TESTS)
-@@ -5196,7 +5210,6 @@ foreach(_hdr
-     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
-   )
- endforeach()
--endif (gRPC_BUILD_CODEGEN)
- 
- if (gRPC_BUILD_CODEGEN)
- 
-@@ -5207,6 +5220,7 @@ if (gRPC_INSTALL)
+@@ -4740,6 +4753,7 @@ if (gRPC_INSTALL)
      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
