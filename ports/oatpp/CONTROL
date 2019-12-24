@@ -1,7 +1,6 @@
 Source: oatpp
 Version: 0.19.11
 Description: Modern web framework
-Build-Depends:
 
 Feature:consul
 Description: Consul submodule
