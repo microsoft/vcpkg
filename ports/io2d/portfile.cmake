@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -10,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-linux-build.patch
+        Fix-FindCairo.patch
 )
 
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
