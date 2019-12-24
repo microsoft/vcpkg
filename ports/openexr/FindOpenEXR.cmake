@@ -49,7 +49,7 @@ endif()
 
 if(NOT OpenEXR_IEXMATH_LIBRARY)
   find_library(OpenEXR_IEXMATH_LIBRARY_RELEASE NAMES IexMath-${OpenEXR_LIB_SUFFIX})
-  find_library(OpenEXR_IEXMATH_LIBRARY_DEBUG NAMES IexMath-${OpenEXR_LIB_SUFFIX}d)
+  find_library(OpenEXR_IEXMATH_LIBRARY_DEBUG NAMES IexMath-${OpenEXR_LIB_SUFFIX}_d)
   select_library_configurations(OpenEXR_IEXMATH)
 endif()
 

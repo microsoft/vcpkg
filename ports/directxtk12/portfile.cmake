@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF aug2019
-    SHA512 e1f31a4d2d1963c9de507f723bdd6c1626c61c6b3c1585c6ed7c587d14dc090fec5114c7cec00eecb2c70f11e668581d423a68aa94444931370a0c93ca2daa24
+    REF dec2019
+    SHA512 2144c7a51ea73efea5ad4db3b0b92bfc5a2ca57c38e7f6702ce82a09049266a3aaad4500856a964c4069aa711973d3a10cb3b133397ec93bda3a4a0328b9d81c
     HEAD_REF master
 )
 
@@ -30,7 +30,7 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
     set(SLN_NAME "Desktop_${VS_VERSION}_Win10")

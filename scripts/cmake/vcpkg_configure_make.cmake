@@ -11,6 +11,7 @@
 ##     [DISABLE_AUTO_DST]
 ##     [GENERATOR]
 ##     [NO_DEBUG]
+##     [SKIP_CONFIGURE]
 ##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
@@ -31,6 +32,9 @@
 ##
 ## ### NO_DEBUG
 ## This port doesn't support debug mode.
+##
+## ### SKIP_CONFIGURE
+## Skip configure process
 ##
 ## ### AUTOCONFIG
 ## Need to use autoconfig to generate configure file.
@@ -71,7 +75,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG"
+        "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
         ${ARGN}
@@ -102,10 +106,6 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "${_csc_GENERATOR} not supported.")
     endif()
-    
-    if (_csc_AUTOCONFIG AND NOT CMAKE_HOST_WIN32)
-        find_program(autoreconf autoreconf REQUIRED)
-    endif()
 
     set(WIN_TARGET_ARCH )
     set(WIN_TARGET_COMPILER )
@@ -123,7 +123,11 @@ function(vcpkg_configure_make)
     if (CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(YASM)
         vcpkg_find_acquire_program(PERL)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
+        set(MSYS_REQUIRE_PACKAGES diffutils)
+        if (_csc_AUTOCONFIG)
+            set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} autoconf automake m4 libtool perl)
+        endif()
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
         get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
         
@@ -139,6 +143,8 @@ function(vcpkg_configure_make)
         set(WIN_TARGET_COMPILER CC=cl)
         set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
         set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    elseif (_csc_AUTOCONFIG)
+        find_program(autoreconf autoreconf REQUIRED)
     endif()
     
     if (NOT _csc_NO_DEBUG)
@@ -235,7 +241,6 @@ function(vcpkg_configure_make)
         if (NOT CMAKE_HOST_WIN32)
             file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
             foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${OBJ_DIR})
                 get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
                 string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
                 file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
@@ -253,19 +258,29 @@ function(vcpkg_configure_make)
         
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
-            vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi
-                WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME prerun-${TARGET_TRIPLET}-dbg
-            )
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_required_process(
+                    COMMAND ${base_cmd} autoreconf -vfi
+                    WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            else()
+                vcpkg_execute_required_process(
+                    COMMAND autoreconf -vfi
+                    WORKING_DIRECTORY ${PRJ_DIR}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            endif()
         endif()
         
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        vcpkg_execute_required_process(
-            COMMAND ${dbg_command}
-            WORKING_DIRECTORY ${PRJ_DIR}
-            LOGNAME config-${TARGET_TRIPLET}-dbg
-        )
+        if (NOT _csc_SKIP_CONFIGURE)
+            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+            vcpkg_execute_required_process(
+                COMMAND ${dbg_command}
+                WORKING_DIRECTORY ${PRJ_DIR}
+                LOGNAME config-${TARGET_TRIPLET}-dbg
+            )
+        endif()
     endif()
 
     # Configure release
@@ -318,19 +333,29 @@ function(vcpkg_configure_make)
         
         if (_csc_AUTOCONFIG)
             message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
-            vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi
-                WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME prerun-${TAR_TRIPLET_DIR}
-            )
+            if (CMAKE_HOST_WIN32)
+                vcpkg_execute_required_process(
+                    COMMAND ${base_cmd} autoreconf -vfi
+                    WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            else()
+                vcpkg_execute_required_process(
+                    COMMAND autoreconf -vfi
+                    WORKING_DIRECTORY ${PRJ_DIR}
+                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                )
+            endif()
         endif()
         
-        message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
-        vcpkg_execute_required_process(
-            COMMAND ${rel_command}
-            WORKING_DIRECTORY ${PRJ_DIR}
-            LOGNAME config-${TAR_TRIPLET_DIR}
-        )
+        if (NOT _csc_SKIP_CONFIGURE)
+            message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
+            vcpkg_execute_required_process(
+                COMMAND ${rel_command}
+                WORKING_DIRECTORY ${PRJ_DIR}
+                LOGNAME config-${TAR_TRIPLET_DIR}
+            )
+        endif()
     endif()
     
     # Restore envs
