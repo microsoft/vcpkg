@@ -1,0 +1,11 @@
+if (@SELECT_TRIPLETS@)
+    vcpkg_configure_qmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        #OPTIONS
+    )
+    
+    vcpkg_install_qmake(
+        #RELEASE_TARGETS release
+        #DEBUG_TARGETS debug
+    )
+endif()

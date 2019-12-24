@@ -1,0 +1,11 @@
+if (@SELECT_TRIPLETS@)
+    vcpkg_install_nmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        #PROJECT_SUBPATH ${SUB_PATH}
+        #PROJECT_NAME project.mak
+        #DISABLE_ALL
+        #OPTIONS
+        #OPTIONS_DEBUG
+        #OPTIONS_RELEASE
+    )
+endif()

@@ -1,0 +1,18 @@
+if (@SELECT_TRIPLETS@)
+    #if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        #set(PLATFORM x86)
+    #elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        #set(PLATFORM x64)
+    #else()
+        #message(FATAL_ERROR "Unsupported architecture")
+    #endif()
+
+    vcpkg_install_msbuild(
+        SOURCE_PATH ${SOURCE_PATH}
+        #PROJECT_SUBPATH project.sln
+        #TARGET project
+        #PLATFORM ${PLATFORM}
+        #RELEASE_CONFIGURATION "project-Release"
+        #DEBUG_CONFIGURATION "project-Debug"
+    )
+endif()
