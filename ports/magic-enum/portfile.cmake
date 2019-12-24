@@ -1,23 +1,26 @@
-include(vcpkg_common_functions)
+# header-only library
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO "Neargye/magic_enum"
-    REF v0.6.1
-    SHA512 546c2ea8f6aeda1b21484a3a90ec4338e15c5639b6da22350277534eeb16cfa8e987eaa1dcbb754dfaea58bd3217f95602944e2c61a694d50f9bfbaf6c5c12d6
+    REPO Neargye/magic_enum
+    REF v0.6.3
+    SHA512 ac5e1a08c491c380980b1ca928cd545f0f062818e5946904e6f17803f6e6578f4a7f882896b22681537ef7c559897b002aacc52f8fe35d22ea528d1b5e491e63
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
+    PREFER_NINJA
     OPTIONS
-      -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
-      -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
+        -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
+        -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/magic_enum)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/magic_enum TARGET_PATH share/magic_enum)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/magic-enum RENAME copyright)
+
+# Handle copyright
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
