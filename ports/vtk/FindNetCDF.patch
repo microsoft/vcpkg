@@ -1,0 +1,24 @@
+diff --git a/CMake/FindNetCDF.cmake b/CMake/FindNetCDF.cmake
+index 7e8117cac..926a3bfae 100644
+--- a/CMake/FindNetCDF.cmake
++++ b/CMake/FindNetCDF.cmake
+@@ -9,14 +9,17 @@ Provides the following variables:
+ #]==]
+ 
+ # Try to find a CMake-built NetCDF.
+-find_package(netCDF CONFIG QUIET)
++find_package(netCDF CONFIG REQUIRED)
+ if (netCDF_FOUND)
+   # Forward the variables in a consistent way.
+   set(NetCDF_FOUND "${netCDF_FOUND}")
+   set(NetCDF_INCLUDE_DIRS "${netCDF_INCLUDE_DIR}")
+   set(NetCDF_LIBRARIES "${netCDF_LIBRARIES}")
+   set(NetCDF_VERSION "${NetCDFVersion}")
+-  if (NOT TARGET NetCDF::NetCDF)
++  if(TARGET netCDF::netcdf)
++    set_target_properties(netCDF::netcdf PROPERTIES IMPORTED_GLOBAL TRUE)
++    add_library(NetCDF::NetCDF ALIAS netCDF::netcdf)
++  elseif (NOT TARGET NetCDF::NetCDF)
+     add_library(NetCDF::NetCDF INTERFACE IMPORTED)
+     set_target_properties(NetCDF::NetCDF PROPERTIES
+       INTERFACE_LINK_LIBRARIES "${NetCDF_LIBRARIES}")

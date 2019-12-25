@@ -96,10 +96,12 @@ vcpkg_from_github(
         FindLZMA.patch
         FindLZ4.patch
         Findproj.patch
+        FindNetCDF.patch
         vtkm.patch # To include an external VTKm build (v.1.3 required)
         exportalldependinfo.patch # This one is already in master and is seems to be required by paraview to wrap the client server code
         pythonwrapper.patch #
         NoUndefDebug.patch
+
         # Last patch TODO: Patch out internal loguru
 )
 
