@@ -57,11 +57,13 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO)
+
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc
+                    ${CURRENT_PACKAGES_DIR}/debug/doc
+                    ${CURRENT_PACKAGES_DIR}/debug/include
+                    ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
