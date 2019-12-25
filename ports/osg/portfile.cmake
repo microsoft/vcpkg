@@ -18,11 +18,11 @@ else()
     set(OSG_DYNAMIC ON)
 endif()
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DOSG_USE_UTF8_FILENAME=ON
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} OPTIONS -DOSG_USE_UTF8_FILENAME=ON)
+else()
+  vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+endif()
 
 vcpkg_install_cmake()
 
