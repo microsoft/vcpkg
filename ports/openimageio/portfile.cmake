@@ -1,11 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF 781bc97c35a74cb2e24387075b69414080bca9e1
-    SHA512 b75b7c3f36c7ba7daeb014312c3dfaeaae4d24e0826e439bdb19a4879866fb3eb4a09baf4eb8f706e68afcccf9409b6d168ded3dc8d81d0f3299b603958f8953
+    REF fdd982a9922ff508b8b22e5d024356b582572f46 #2.1.9.0
+    SHA512 1d076cb035b1b2cb603343465ed810ca47223211870d58f48c177d40d71a9cf82e53548b0c70127daf5dbd06f1b24772919e49e55110d914a542bcb62b99f6e8
     HEAD_REF master
     PATCHES
-        fix-dependency.patch
+        fix_libraw.patch
+        use-vcpkg-find-openexr.patch
+        fix_static_build.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -14,6 +16,12 @@ file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake")
 file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(LINKSTATIC ON)
+else()
+    set(LINKSTATIC OFF)
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     libraw USE_LIBRAW
@@ -59,4 +67,4 @@ file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${C
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
