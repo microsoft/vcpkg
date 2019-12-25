@@ -54,10 +54,38 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
 
       add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
     elseif(UNIX AND NOT APPLE)
-      add_qt_library(Qt5::Core
+      add_qt_library(Qt5::Core            
             Qt5GraphicsSupport
             Qt5ClipboardSupport
-            Qt5AccessibilitySupport)
+            Qt5LinuxAccessibilitySupport
+            Qt5AccessibilitySupport
+            Qt5ServiceSupport
+            Qt5FbSupport
+            Qt5EglSupport
+            Qt5InputSupport
+            Qt5DeviceDiscoverySupport
+            Qt5EdidSupport
+            Qt5KmsSupport
+            Qt5GlxSupport
+            Qt5EglFSDeviceIntegration
+            Qt5EglFsKmsSupport
+            Qt5XcbQpa
+            EGL
+            fontconfig expat
+            Qt5Gui
+            Qt5DBus
+            Qt5Core)
+       #find_package(X11 REQUIRED) 
+       set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+            xcb-glx X11-xcb xcb-xinput xcb-icccm xcb-image xcb-shm xcb-keysyms xcb-randr xcb-render-util 
+            xcb-render xcb-shape xcb-sync xcb-xfixes xcb-xinerama xcb-xkb xcb Xrender Xext X11 
+            m SM ICE mtdev input xkbcommon-x11 xkbcommon dl GL gbm udev
+            OpenSSL::SSL OpenSSL::Crypto Freetype::Freetype
+            dbus-1 drm gthread-2.0 glib-2.0 gtk-3 gdk-3 pangocairo-1.0 pango-1.0 atk-1.0 cairo-gobject cairo gdk_pixbuf-2.0 gio-2.0 gobject-2.0 glib-2.0 Xext X11
+            )
+            #xcb-damage xcb-glx
+            #${X11_LIBRARIES} Xau Xdmcp
+            #gthread-2.0 )
     elseif(APPLE)
        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
             "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices"
