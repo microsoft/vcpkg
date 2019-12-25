@@ -113,6 +113,7 @@ aws-lambda-cpp:x86-windows=fail
 aws-sdk-cpp:x64-linux=ignore
 azure-c-shared-utility:arm-uwp=fail
 azure-c-shared-utility:x64-uwp=fail
+azure-kinect-sensor-sdk:x64-windows-static=fail
 basisu:x64-linux=ignore
 bde:arm64-windows=fail
 bde:arm-uwp=fail
