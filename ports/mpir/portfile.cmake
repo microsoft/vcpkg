@@ -1,12 +1,12 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
+    message(FATAL_ERROR "${PORT} currently can only be built using the dynamic CRT when building DLLs")
 endif()
 
 set(MPIR_VERSION 3.0.0)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(
         ARCHIVE
         URLS "http://mpir.org/mpir-${MPIR_VERSION}.tar.bz2"
@@ -68,7 +68,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
     file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-else()
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO wbhart/mpir
@@ -138,6 +138,10 @@ else()
     file(INSTALL ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     file(INSTALL ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(INSTALL ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
     vcpkg_copy_pdbs()
 
