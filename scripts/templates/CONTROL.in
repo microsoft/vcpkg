@@ -1,6 +1,6 @@
 Source: @PORT@
 Version:
-Homepage: 
+Homepage: @URL@
 Description:
 Build-Depends:
 Default-Features:
