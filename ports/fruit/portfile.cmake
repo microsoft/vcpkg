@@ -13,6 +13,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DFRUIT_USES_BOOST=False
+        -DFRUIT_TESTS_USE_PRECOMPILED_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
