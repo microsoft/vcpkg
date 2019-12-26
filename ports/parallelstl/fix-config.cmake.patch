@@ -1,0 +1,13 @@
+diff --git a/cmake/ParallelSTLConfig.cmake.in b/cmake/ParallelSTLConfig.cmake.in
+index 0e16bfa..225b0ce 100644
+--- a/cmake/ParallelSTLConfig.cmake.in
++++ b/cmake/ParallelSTLConfig.cmake.in
+@@ -17,7 +17,7 @@ include(CMakeFindDependencyMacro)
+ set(PARALLELSTL_BACKEND "@PARALLELSTL_BACKEND@")
+ 
+ if (PARALLELSTL_BACKEND STREQUAL "tbb")
+-    find_dependency(TBB REQUIRED tbb)
++    find_dependency(TBB CONFIG REQUIRED tbb)
+ endif()
+ 
+ if (NOT TARGET pstl::ParallelSTL)
