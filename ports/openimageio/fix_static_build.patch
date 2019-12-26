@@ -7,7 +7,7 @@ index 4f4f31c..a18895e 100644
  option (BUILD_SHARED_LIBS "Build shared libraries (set to OFF to build static libs)" ON)
  if (NOT BUILD_SHARED_LIBS)
 -    add_definitions (-D${PROJECT_NAME}_STATIC_DEFINE=1)
-+    add_definitions (-D${PROJECT_NAME}_STATIC_DEFINE=1 -DOIIO_STATIC_DEFINE=1)
++    add_definitions (-DOIIO_STATIC_DEFINE=1)
  endif ()
  
  

@@ -36,10 +36,6 @@ Feature: openjpeg
 Build-Depends: openjpeg
 Description: Enable openjpeg support for openimageio
 
-Feature: ptex
-Build-Depends: ptex
-Description: Enable ptex support for openimageio
-
 Feature: webp
 Build-Depends: libwebp
 Description: Enable libwebp support for openimageio

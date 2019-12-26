@@ -5,15 +5,16 @@ vcpkg_from_github(
     SHA512 1d076cb035b1b2cb603343465ed810ca47223211870d58f48c177d40d71a9cf82e53548b0c70127daf5dbd06f1b24772919e49e55110d914a542bcb62b99f6e8
     HEAD_REF master
     PATCHES
-        fix_libraw.patch
-        use-vcpkg-find-openexr.patch
+        fix-dependency.patch
         fix_static_build.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
-file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake")
-file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake")
+file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
+            "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
+            "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
+            "${SOURCE_PATH}/src/cmake/modules/FindWebp.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
@@ -32,7 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     gif USE_GIF
     opencv USE_OPENCV
     openjpeg USE_OPENJPEG
-    ptex USE_PTEX
     webp USE_WEBP
 )
 
@@ -47,6 +47,7 @@ vcpkg_configure_cmake(
         -DUSE_NUKE=OFF
         -DUSE_PYTHON=OFF
         -DUSE_QT=OFF
+        -DUSE_PTEX=OFF
         -DLINKSTATIC=${LINKSTATIC}
         -DBUILD_MISSING_PYBIND11=OFF
         -DBUILD_MISSING_DEPS=OFF
