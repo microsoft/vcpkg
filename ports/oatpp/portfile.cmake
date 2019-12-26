@@ -1,34 +1,8 @@
 set(OATPP_VERSION "0.19.11")
 
-function(xverify_pkg_config SUBMODULE_NAME)
-    if(NOT PKG_CONFIG_EXECUTABLE)
-        if(NOT "$ENV{PKG_CONFIG}" STREQUAL "")
-            set(PKG_CONFIG_EXECUTABLE "$ENV{PKG_CONFIG}" CACHE FILEPATH "pkg-config executable")
-        elseif(NOT "$ENV{ProgramData}" STREQUAL "")
-            # for windows, assume chocolatey-installed which vcpkg keeps out of the path so we just tell it where it is
-            file(TO_CMAKE_PATH "$ENV{ProgramData}" _program_data)
-            find_program(PKG_CONFIG_EXECUTABLE NAMES pkg-config.exe HINTS "${_program_data}/chocolatey/bin" DOC "pkg-config executable")
-            if (PKG_CONFIG_EXECUTABLE)
-                set(ENV{PKG_CONFIG} "${PKG_CONFIG_EXECUTABLE}")
-            endif()
-        endif()
-    endif()
-    find_package(PkgConfig)
-
-    if (NOT PKG_CONFIG_FOUND)
-        execute_process(COMMAND "uname" "-s" OUTPUT_VARIABLE _system_name OUTPUT_STRIP_TRAILING_WHITESPACE)
-        if ("x${_system_name}x" STREQUAL "xLinuxx")
-            message(FATAL_ERROR "The ${SUBMODULE_NAME} submodule requires pkg-config. You can probably get it by installing the pkg-config package with your operating system's package manager (yum install pkgconfig, apt install pkg-config, etc.)")
-        elseif ("x${_system_name}x" STREQUAL "xDarwinx")
-            message(FATAL_ERROR "The ${SUBMODULE_NAME} submodule requires pkg-config. You can install it with brew: brew install pkg-config")
-        endif()
-        # Windows doesn't have uname and execute_process() sets _system_name to an emtpy string
-        message(FATAL_ERROR "The ${SUBMODULE_NAME} submodule requires pkg-config. You can install it with chocolatey: choco install pkgconfiglite")
-    endif()
-endfunction()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-# if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)	
+# For when OATPP dynamic linkage builds:
+# if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 #     set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "-DBUILD_SHARED_LIBS:BOOL=ON")
 # else()
 #     set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "-DBUILD_SHARED_LIBS:BOOL=OFF")
@@ -91,7 +65,7 @@ if("curl" IN_LIST FEATURES)
         REF 5354e78707184cdfe3fb36af5735481d1159c3a6 # 0.19.11
         SHA512 3a40b6a6981253c7551c0784fed085403272497840874eb7ea09c7a83c9d86c5fcbf36cf6059d6f067c606fc65b2870806e20f8ffacfef605be4c824804b6bb9
         HEAD_REF master
-	PATCHES "curl-submodule-no-pkg-config-in-vcpkg.patch"
+        PATCHES "curl-submodule-no-pkg-config-in-vcpkg.patch"
     )
 
     vcpkg_configure_cmake(
@@ -100,7 +74,7 @@ if("curl" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
-	    "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+            "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
             ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
     vcpkg_install_cmake()
@@ -110,6 +84,7 @@ endif()
 
 if("libressl" IN_LIST FEATURES)
     # Unfortunately, this submodule requires libressl 3.0 and vcpkg is at 2.9.1-2
+    # The available mbedtls or curl module probably cover most libressl scenarios.
     #
     # When we get past this problem, add the following to the CONTROL file:
     # Feature:libressl
@@ -130,42 +105,6 @@ if("libressl" IN_LIST FEATURES)
         SHA512 b09accccd65520dca8f850e48d1b7c3f22752abb733eb3b7ea13ad285079479ca8addeabec9054dc3dcba0632b94c4db98af3c99c3e99d159eaa32cf6dbe3c96
         HEAD_REF master
     )
-
-    # The libressl package does not populate its pc files. Do that here.
-    file(GLOB_RECURSE LIBTLS_PC_INS "${CURRENT_BUILDTREES_DIR}/../libressl/src/*/libtls.pc.in")
-    list(GET LIBTLS_PC_INS 0 LIBTLS_PC_IN)
-    file(GLOB_RECURSE LIBCRYPTO_PC_INS "${CURRENT_BUILDTREES_DIR}/../libressl/src/*/libcrypto.pc.in")
-    list(GET LIBCRYPTO_PC_INS 0 LIBCRYPTO_PC_IN)
-    file(GLOB_RECURSE LIBSSL_PC_INS "${CURRENT_BUILDTREES_DIR}/../libressl/src/*/libssl.pc.in")
-    list(GET LIBSSL_PC_INS 0 LIBSSL_PC_IN)
-    set(prefix "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}")
-    set(exec_prefix [[${prefix}]])
-    set(libdir [[${prefix}/lib]])
-    set(includedir [[${prefix}/include]])
-    set(VERSION "1.HMM")
-    file(GLOB TLS_LIB "${prefix}/lib/tls-*.lib" "${prefix}/lib/libtls-*.a")
-    get_filename_component(TLS_LIB "${TLS_LIB}" NAME_WE)
-    file(GLOB CRYPTO_LIB "${prefix}/lib/crypto-*.lib" "${prefix}/lib/libcrypto-*.a")
-    get_filename_component(CRYPTO_LIB "${CRYPTO_LIB}" NAME_WE)
-    file(GLOB SSL_LIB "${prefix}/lib/ssl-*.lib" "${prefix}/lib/libssl-*.a")
-    get_filename_component(SSL_LIB "${SSL_LIB}" NAME_WE)
-    set(LIBS "-l${TLS_LIB} -l${SSL_LIB} -l${CRYPTO_LIB}")
-    set(PLATFORM_LDADD "")
-    configure_file("${LIBTLS_PC_IN}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libtls.pc" @ONLY)
-    set(LIBS "-l${SSL_LIB} -l${CRYPTO_LIB}")
-    configure_file("${LIBSSL_PC_IN}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libssl.pc" @ONLY)
-    set(LIBS "-l${CRYPTO_LIB}")
-    configure_file("${LIBCRYPTO_PC_IN}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libcrypto.pc" @ONLY)
-
-    # tell pkg-config where to find the pc files.
-    file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}" _libressl_pc_dir)
-    if("$ENV{PKG_CONFIG_PATH}" STREQUAL "")
-        set(ENV{PKG_CONFIG_PATH} "${_libressl_pc_dir}")
-    elseif (WIN32)
-        set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH};${_libressl_pc_dir}")
-    else()
-        set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${_libressl_pc_dir}")
-    endif()  
 
     vcpkg_configure_cmake(
         SOURCE_PATH "${LIBRESSL_SOURCE_PATH}"
