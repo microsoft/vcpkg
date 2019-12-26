@@ -1,26 +1,5 @@
 set(OATPP_VERSION "0.19.11")
 
-function(dump_variables)
-    message(STATUS "#############################################################################")
-    message(STATUS "#############################################################################")
-    message(STATUS "#############################################################################")
-    get_cmake_property(_variableNames VARIABLES)
-    list (SORT _variableNames)
-    foreach (_variableName ${_variableNames})
-        message(STATUS "${_variableName}=${${_variableName}}")
-    endforeach()
-    message(STATUS "#############################################################################")
-    message(STATUS "#############################################################################")
-    message(STATUS "#############################################################################")
-    execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
-    message(STATUS "###############################################################################")
-    message(STATUS "###############################################################################")
-    message(STATUS "###############################################################################")
-endfunction()
-
-# go to extraordinary measures to find pkg-config on windows and set the PKG_CONFIG environment variable.
-function(verify_pkg_config)
-endfunction()
 function(xverify_pkg_config SUBMODULE_NAME)
     if(NOT PKG_CONFIG_EXECUTABLE)
         if(NOT "$ENV{PKG_CONFIG}" STREQUAL "")
@@ -103,7 +82,7 @@ endif()
 if("curl" IN_LIST FEATURES)
     message(STATUS "Building submodule oatpp[curl]")
 
-    verify_pkg_config("curl")
+    # find_package(CURL REQUIRED)
 
     # get the source
     vcpkg_from_github(
@@ -112,7 +91,7 @@ if("curl" IN_LIST FEATURES)
         REF 5354e78707184cdfe3fb36af5735481d1159c3a6 # 0.19.11
         SHA512 3a40b6a6981253c7551c0784fed085403272497840874eb7ea09c7a83c9d86c5fcbf36cf6059d6f067c606fc65b2870806e20f8ffacfef605be4c824804b6bb9
         HEAD_REF master
-	PATCHES "no-pkg-config-in-vcpkg.patch"
+	PATCHES "curl-submodule-no-pkg-config-in-vcpkg.patch"
     )
 
     vcpkg_configure_cmake(
@@ -121,7 +100,7 @@ if("curl" IN_LIST FEATURES)
         OPTIONS
             "-Doatpp_DIR=${CURRENT_PACKAGES_DIR}/share/oatpp"
             "-DOATPP_BUILD_TESTS:BOOL=OFF"
-	    "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS -isystem ${CURRENT_INSTALLED_DIR}/include"
+	    "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
             ${OATPP_BUILD_SHARED_LIBRARIES_OPTION}
     )
     vcpkg_install_cmake()
@@ -188,7 +167,6 @@ if("libressl" IN_LIST FEATURES)
         set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${_libressl_pc_dir}")
     endif()  
 
-    dump_variables()
     vcpkg_configure_cmake(
         SOURCE_PATH "${LIBRESSL_SOURCE_PATH}"
         PREFER_NINJA
