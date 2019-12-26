@@ -88,9 +88,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
         copy_tools(addr2line-pdb nm-pdb)
     endif()
 else()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(BUILD_OPTS --enable-shared --disable-static)
+    else()
+        set(BUILD_OPTS --enable-static --disable-shared)
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        OPTIONS
+            ${BUILD_OPTS}
     )
 
     vcpkg_install_make()
@@ -103,4 +111,4 @@ else()
     )
 endif()
 
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
