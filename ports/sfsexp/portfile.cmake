@@ -25,5 +25,3 @@ vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfsexp RENAME copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-
