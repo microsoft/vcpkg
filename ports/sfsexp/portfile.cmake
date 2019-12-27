@@ -1,3 +1,7 @@
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/mjsottile/sfsexp/releases/download/v1.3/sexpr-1.3.tar.gz"
     FILENAME "sexpr-1.3.tar.gz"
@@ -15,10 +19,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
-
-IF (WIN32)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-ENDIF()
 
 vcpkg_install_cmake()
 
