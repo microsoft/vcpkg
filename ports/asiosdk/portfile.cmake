@@ -1,9 +1,6 @@
-set(VERSION 2.3.3)
+vcpkg_fail_port_install(MESSAGE "asiosdk currently only supports Windows platforms" ON_TARGET "Linux" "OSX")
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    return()
-endif()
+set(VERSION 2.3.3)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.steinberg.net/sdk_downloads/asiosdk_2.3.3_2019-06-14.zip"
@@ -33,4 +30,3 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION $
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-vcpkg_copy_pdbs()
