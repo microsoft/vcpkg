@@ -39,3 +39,6 @@ Description: Enable openjpeg support for openimageio
 Feature: webp
 Build-Depends: libwebp
 Description: Enable libwebp support for openimageio
+
+Feature: tools
+Description: Build openimageio tools

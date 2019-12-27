@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency.patch
         fix_static_build.patch
+        fix-tools-path.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -34,13 +35,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencv USE_OPENCV
     openjpeg USE_OPENJPEG
     webp USE_WEBP
+    tools OIIO_BUILD_TOOLS
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
-        -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
         -DUSE_DCMTK=OFF
