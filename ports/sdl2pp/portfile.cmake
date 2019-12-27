@@ -7,6 +7,12 @@ vcpkg_from_github(
     PATCHES fix-dependencies.patch
 )
 
+file(REMOVE ${SOURCE_PATH}/cmake/FindSDL2.cmake
+            ${SOURCE_PATH}/cmake/FindSDL2_image.cmake
+            ${SOURCE_PATH}/cmake/FindSDL2_mixer.cmake
+            ${SOURCE_PATH}/cmake/FindSDL2_ttf.cmake
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL2PP_STATIC)
 
 vcpkg_configure_cmake(
