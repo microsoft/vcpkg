@@ -1813,5 +1813,7 @@ zeromq:x64-uwp=fail
 
 
 ## Add new items alphabetically
-
+akali:x64-uwp=fail
+akali:arm-uwp=fail
+akali:arm64-windows=fail
 
