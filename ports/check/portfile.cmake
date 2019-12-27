@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcheck/check
@@ -14,7 +13,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/check)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
