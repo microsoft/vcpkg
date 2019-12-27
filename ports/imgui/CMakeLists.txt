@@ -17,22 +17,42 @@ set(IMGUI_SOURCES
     imgui_widgets.cpp
 )
 
+set(IMGUI_CPP_PUBLIC
+    misc/cpp/imgui_stdlib.h
+)
+set(IMGUI_CPP_SOURCES
+    misc/cpp/imgui_stdlib.cpp
+)
+
+set(IMGUI_FONTS_RESOURCES
+    misc/fonts/Cousine-Regular.ttf
+    misc/fonts/DroidSans.ttf
+    misc/fonts/Karla-Regular.ttf
+    misc/fonts/ProggyClean.ttf
+    misc/fonts/ProggyTiny.ttf
+    misc/fonts/Roboto-Medium.ttf
+)
+set(IMGUI_FONTS_SOURCES
+    misc/fonts/binary_to_compressed_c.cpp
+)
+
+set(IMGUI_FT_PUBLIC
+    misc/freetype/imgui_freetype.h
+)
+set(IMGUI_FT_SOURCES
+    misc/freetype/imgui_freetype.cpp
+)
+
+set(IMGUI_NATVIS_RESOURCES
+    misc/natvis/imgui.natvis
+)
+
 file(GLOB IMGUI_INCLUDES_EXAMPLES examples/*.h)
 file(GLOB IMGUI_SOURCES_EXAMPLES examples/*.cpp)
 
-add_library(${PROJECT_NAME} INTERFACE)
-
-target_include_directories(${PROJECT_NAME} INTERFACE
-                           $<INSTALL_INTERFACE:include>
-                           $<BUILD_INTERFACE:.>)
-
-install(TARGETS ${PROJECT_NAME}
-    EXPORT IMGUIExport
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-)
-
-install(EXPORT IMGUIExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_NAME}:: DESTINATION share/${PROJECT_NAME})
-
-install(FILES ${IMGUI_INCLUDES_PUBLIC} ${IMGUI_SOURCES} ${IMGUI_INCLUDES_EXAMPLES} ${IMGUI_SOURCES_EXAMPLES} DESTINATION include)
+install(FILES ${IMGUI_INCLUDES_PUBLIC} ${IMGUI_SOURCES} DESTINATION include)
+install(FILES ${IMGUI_CPP_PUBLIC} ${IMGUI_CPP_SOURCES} DESTINATION include/misc/cpp)
+install(FILES ${IMGUI_FONTS_SOURCES} ${IMGUI_FONTS_RESOURCES} DESTINATION include/misc/fonts)
+install(FILES ${IMGUI_FT_PUBLIC} ${IMGUI_FT_SOURCES} DESTINATION include/misc/freetype)
+install(FILES ${IMGUI_NATVIS_RESOURCES} DESTINATION include/misc/natvis)
+install(FILES ${IMGUI_INCLUDES_EXAMPLES} ${IMGUI_SOURCES_EXAMPLES} DESTINATION include/examples)
