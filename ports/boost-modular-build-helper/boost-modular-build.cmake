@@ -253,7 +253,7 @@ function(boost_modular_build)
         file(TO_NATIVE_PATH "${PLATFORM_WINMD_DIR}" PLATFORM_WINMD_DIR)
         string(REPLACE "\\" "/" PLATFORM_WINMD_DIR ${PLATFORM_WINMD_DIR}) # escape backslashes
 
-        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags>\"/AI${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
+        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     else()
         set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <compileflags>-D_WIN32_WINNT=0x0602")
     endif()
@@ -357,7 +357,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_70" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_71" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do

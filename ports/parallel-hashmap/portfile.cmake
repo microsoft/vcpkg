@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO greg7mdp/parallel-hashmap
-    REF 1.24
-    SHA512 1d5ad02651fc64ab7dcddfee21cc97055828a881c2933fde34d3de19af20ae4b92fb631918b382c3bffed81335752690555aa03d7b204f8c6d7230f8a22d6718
+    REF 1.27
+    SHA512 2c142d111e79487d0e4fdd88841c38995f77112b1a4e3501ad91fdaf20be2f274a6b3fd6957bf41b96ff68b5d5274d40f4ac4b448a2ef4262efe8c409894d57e
     HEAD_REF master
 )
 
