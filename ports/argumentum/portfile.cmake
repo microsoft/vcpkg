@@ -10,13 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# vcpkg_from_git(
-#     OUT_SOURCE_PATH SOURCE_PATH
-#     URL https://localhost/mmahnic/argumentum.git
-#     REF 310a4dd0c936f36599f76d64d4b4ec68818d8bfe
-#     HEAD_REF name_change
-# )
-
 include( GNUInstallDirs )
 
 vcpkg_configure_cmake(
