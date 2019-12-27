@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 
 project(libmspack C)
 
-set(CMAKE_DEBUG_POSTFIX "d")
-
 add_definitions(-DHAVE_CONFIG_H)
 
 if(MSVC)
