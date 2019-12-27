@@ -9,9 +9,12 @@ vcpkg_from_github(
         disable-c4275.patch
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     docs K4A_BUILD_DOCS
-    test WITH_TEST
     tool BUILD_TOOLS
 )
 
@@ -22,9 +25,25 @@ vcpkg_configure_cmake(
     -DK4A_SOURCE_LINK=OFF
     -DK4A_MTE_VERSION=ON
     -DBUILD_EXAMPLES=OFF
+    -DWITH_TEST=OFF
 )
 
 vcpkg_install_cmake()
+
+if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
+         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+endif()
+if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
+         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+endif()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Avoid deleting debug/lib/cmake when fixing the first cmake
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake ${CURRENT_PACKAGES_DIR}/debug/share)
