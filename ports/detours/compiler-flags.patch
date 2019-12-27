@@ -1,0 +1,13 @@
+diff --git a/src/Makefile b/src/Makefile
+index 320f3b786..47f04058c 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -16,7 +16,7 @@ DETOURS_SOURCE_BROWSING = 0
+ 
+ #######################/#######################################################
+ ##
+-CFLAGS=/W4 /WX /Zi /MT /Gy /Gm- /Zl /Od
++CFLAGS=/WX /Gy /Gm- /Zl
+ 
+ !IF $(DETOURS_SOURCE_BROWSING)==1
+ CFLAGS=$(CFLAGS) /FR

@@ -10,6 +10,24 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         find-jmp-bounds-arm64.patch
+        compiler-flags.patch
+)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-detours TARGET_PATH share/unofficial-detours)
+vcpkg_copy_pdbs()
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/unofficial-detours-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/unofficial-detours/unofficial-detours-config.cmake
+    @ONLY
 )
 
 vcpkg_build_nmake(
@@ -17,11 +35,10 @@ vcpkg_build_nmake(
     PROJECT_SUBPATH "src"
     PROJECT_NAME "Makefile"
     OPTIONS "PROCESSOR_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
-    NO_DEBUG
 )
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/lib.${VCPKG_TARGET_ARCHITECTURE}/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/lib.${VCPKG_TARGET_ARCHITECTURE}/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME detours)
+file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib.${VCPKG_TARGET_ARCHITECTURE}/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib.${VCPKG_TARGET_ARCHITECTURE}/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME detours)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
