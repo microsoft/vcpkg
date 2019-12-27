@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set( VCPKG_LIBRARY_LINKAGE static )
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mmahnic/cpp-argparse
-    REF v0.2.0
-    SHA512 f2eb8c9aee8ce515d2ec3e973ceedd916458713055e1dd16e8a780cda7545b617ad0c64cd18c6356ad7584108aba3165a379ef0d3edfd89691a6343b4918e143
+    REF v0.2.1
+    SHA512 26d175cf86815ed2e1f9c73e8d0eb000f3bd71eaee80ffb5d6553c21eaba6ce7617d3d95cd61fa718408f10d8c024bc171096ed0e08c4bb93bb6ac6eee2cb657
     HEAD_REF master
 )
 
