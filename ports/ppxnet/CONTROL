@@ -1,4 +1,4 @@
 Source: ppxnet
 Version: 1.1
 Description: C++ Network library
-Build-Depends: ppxbase
+Build-Depends: akali
