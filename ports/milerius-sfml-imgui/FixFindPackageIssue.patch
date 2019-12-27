@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 27b8bd8..33fe623 100644
+index 27b8bd8..e701c71 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,7 +2,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
@@ -11,7 +11,25 @@ index 27b8bd8..33fe623 100644
  cmake_minimum_required(VERSION 3.9)
  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
  
-@@ -26,7 +26,7 @@ include(CMakePackageConfigHelpers)
+@@ -12,13 +12,15 @@ find_package(imgui CONFIG REQUIRED)
+ find_package(OpenGL REQUIRED)
+ 
+ ##! Library
+-add_library(${PROJECT_NAME} SHARED sfml-imgui/imgui-SFML.cpp)
+-target_link_libraries(${PROJECT_NAME} PUBLIC imgui::imgui sfml-graphics OpenGL::GL)
++add_library(${PROJECT_NAME} SHARED sfml-imgui/imgui-SFML.cpp ${IMGUI_SOURCES})
++target_link_libraries(${PROJECT_NAME} PUBLIC sfml-graphics OpenGL::GL)
+ 
+ target_include_directories(${PROJECT_NAME} PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/sfml-imgui>
+         $<INSTALL_INTERFACE:include/sfml-imgui>  # <prefix>/include/mylib
+         )
++        
++target_include_directories(${PROJECT_NAME} PUBLIC ${IMGUI_INCLUDE_DIRS})
+ 
+ include(GNUInstallDirs)
+ 
+@@ -26,7 +28,7 @@ include(CMakePackageConfigHelpers)
  
  install(TARGETS
          ${PROJECT_NAME}
@@ -20,7 +38,7 @@ index 27b8bd8..33fe623 100644
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -39,7 +39,7 @@ install(EXPORT ${PROJECT_NAME}-targets
+@@ -39,7 +41,7 @@ install(EXPORT ${PROJECT_NAME}-targets
          )
  
  configure_package_config_file(
@@ -29,7 +47,7 @@ index 27b8bd8..33fe623 100644
          "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
          INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
  )
-@@ -51,6 +51,6 @@ install(FILES
+@@ -51,6 +53,6 @@ install(FILES
  install(DIRECTORY
          ${CMAKE_CURRENT_SOURCE_DIR}/sfml-imgui
          DESTINATION
