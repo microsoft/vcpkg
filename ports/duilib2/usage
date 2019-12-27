@@ -1,6 +1,0 @@
-The package duilib2 is compatible with built-in CMake targets:
-
-    find_package(duilib2 REQUIRED)
-    target_link_libraries(main PRIVATE duilib2)
-or:
-    target_link_libraries(main PRIVATE duilib2-static)

@@ -8,19 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-	set(BUILD_SHARED_LIBS OFF)
-else()
-	set(BUILD_SHARED_LIBS ON)
-endif()
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TESTS=OFF
 	OPTIONS_RELEASE
 	OPTIONS_DEBUG
@@ -39,6 +30,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
