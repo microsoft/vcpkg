@@ -1,0 +1,3 @@
+Source: argumentum
+Version: 0.2.0
+Description: A C++17 command line argument parser inspired by Python argparse
