@@ -1,26 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/ppxbase
-    REF bff0968c6fcd71f68cf9a9aae5359b6fb98ab2d2
-    SHA512 a6259d6633e9173981d725628ac06b7e5faea9bbd04c6afbf6af3e2da0a461ec72ee45e0c1755781a48bc2c4bbd04892f042078a46816c37374450ee8827f453
+    REF 289f55183a76d924cbba650124e17efb4d9a9d7c
+    SHA512 57517cddb43ce0fad64aa4ce91e95174e2a1102bc17e548f02cfc9e9a3601ed14681be1cb214ed6afd8b69ce7cfb2964bd93d755d06e55d7da2e6ca6a9642aa2
     HEAD_REF master
 )
 
 
-if("VCPKG_LIBRARY_LINKAGE" STREQUAL "static")
-	set(BUILD_SHARED_LIBS OFF)
-else()
-	set(BUILD_SHARED_LIBS ON)
-endif()
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+	PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-        -DBUILD_TESTS=OFF
+        -DBUILD_TESTS:BOOL=OFF
 )
+
+vcpkg_fail_port_install(ON_TARGET "x64-uwp")
+vcpkg_fail_port_install(ON_TARGET "arm-uwp")
+vcpkg_fail_port_install(ON_TARGET "arm64-windows")
 
 vcpkg_install_cmake()
 
@@ -35,6 +32,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
