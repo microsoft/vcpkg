@@ -1,4 +1,4 @@
 Source: fruit
 Version: 3.4.0-2
+Homepage: https://github.com/google/fruit
 Description: Fruit, a dependency injection framework for C++ by Google
-
