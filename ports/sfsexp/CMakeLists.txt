@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 project(sexp)
 
+if(MSVC)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS)
+endif()
+
 file(GLOB sources src/*.c src/*.h)
 include_directories(src/)
 

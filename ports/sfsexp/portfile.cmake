@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "sfsexp currently only supports being built for desktop")
-endif()
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/mjsottile/sfsexp/releases/download/v1.3/sexpr-1.3.tar.gz"
     FILENAME "sexpr-1.3.tar.gz"
