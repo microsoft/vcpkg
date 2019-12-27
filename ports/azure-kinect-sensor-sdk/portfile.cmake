@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-builds.patch
         disable-c4275.patch
+        fix-components-path.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -29,21 +30,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
-         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/k4a${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-endif()
-if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
-         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/k4arecord${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
 
 # Avoid deleting debug/lib/cmake when fixing the first cmake
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake ${CURRENT_PACKAGES_DIR}/debug/share)
