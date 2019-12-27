@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "asiosdk currently only supports Windows platforms" ON_TARGET "Linux" "OSX")
+vcpkg_fail_port_install(MESSAGE "asiosdk currently only supports Windows platforms" ON_ARCH "arm" "arm64" ON_TARGET "Linux" "OSX" "uwp")
 
 set(VERSION 2.3.3)
 
