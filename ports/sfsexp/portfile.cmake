@@ -2,15 +2,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mjsottile/sfsexp/releases/download/v1.3/sexpr-1.3.tar.gz"
-    FILENAME "sexpr-1.3.tar.gz"
-    SHA512 ce02b18b9a48d8a29788f9c46f4693e5d0bb9b097bc6f6d03d79744bb9b3c312eff37d90275b02b9a64daf6e04feaeb97a8d657090b4f3a9818afc2f6b7d10da
-)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO mjsottile/sfsexp
+	REF  ad589f9e6e0eca20345320e9c82a3aecc0a5c8aa #v1.3
+	SHA512 cdd469e23de48a5d6cd633b7b97b394cbfcba330ac2c3ae549811d856f2eec0c8558f99313e56a9f1cc9d72d4f17077584b6cf15c87814b91fe44ddd76895a8c
+    HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
