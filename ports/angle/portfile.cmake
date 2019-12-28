@@ -1,8 +1,6 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "Building with a gcc version less than 6.1 is not supported.")
 endif()
 
@@ -23,6 +21,7 @@ vcpkg_from_github(
     SHA512 037ebe356371924088563180c4a37a31eaffa41ca21c42554391672c28e62fabc19d787516b88baa192b771e05c370c5a6cfec0863b70e08d65216f41d89923f
     PATCHES 
         001-fix-uwp.patch
+        002-fix-builder-error.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -42,4 +41,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/u
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/angle RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
