@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 set(GSL_VERSION 2.4)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.gnu.org/gnu/gsl/gsl-${GSL_VERSION}.tar.gz"
+    URLS "https://ftp.gnu.org/gnu/gsl/gsl-${GSL_VERSION}.tar.gz"
     FILENAME "gsl-${GSL_VERSION}.tar.gz"
     SHA512 12442b023dd959e8b22a9c486646b5cedec7fdba0daf2604cda365cf96d10d99aefdec2b42e59c536cc071da1525373454e5ed6f4b15293b305ca9b1dc6db130
 )
