@@ -4,9 +4,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mmahnic/cpp-argparse
+    REPO mmahnic/argumentum
     REF v0.2.1
-    SHA512 26d175cf86815ed2e1f9c73e8d0eb000f3bd71eaee80ffb5d6553c21eaba6ce7617d3d95cd61fa718408f10d8c024bc171096ed0e08c4bb93bb6ac6eee2cb657
+    SHA512 e2d452b5e4aa37a5b76b14ac905e040e1f0791aa687f912addcf949c64747aee21273a345a99851f64c9fad337cd11f74c408a3c6455346c30eea1aaee2244a6
     HEAD_REF master
 )
 
