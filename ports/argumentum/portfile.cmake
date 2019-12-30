@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -10,20 +8,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-include( GNUInstallDirs )
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    -DARGUMENTUM_BUILD_EXAMPLES=OFF
-    -DARGUMENTUM_BUILD_TESTS=OFF
+        -DARGUMENTUM_BUILD_EXAMPLES=OFF
+        -DARGUMENTUM_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH ${CMAKE_INSTALL_LIBDIR}/cmake/Argumentum)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Argumentum)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright)
