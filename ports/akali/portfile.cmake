@@ -13,9 +13,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS:BOOL=OFF
 )
 
-vcpkg_fail_port_install(ON_TARGET "x64-uwp")
-vcpkg_fail_port_install(ON_TARGET "arm-uwp")
-vcpkg_fail_port_install(ON_TARGET "arm64-windows")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_install_cmake()
 
