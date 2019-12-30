@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-dependency.patch
         fix_static_build.patch
         fix-tools-path.patch
+        fix-config-cmake.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
