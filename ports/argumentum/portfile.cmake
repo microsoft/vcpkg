@@ -19,6 +19,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Argumentum)
 
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
