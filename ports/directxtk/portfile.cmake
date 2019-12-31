@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -9,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF dec2019
-    SHA512 7a1f8e6b871552585ace70c2d40e02524c8aef274cec90cc93c25197c9eaa39f244d11082912083ad654df6f301da2076f36ac2195f3c9df278eefeda99af5a1
+    REF 9cac24555395925e3c1039bcbbae306da09742ed
+    SHA512 0cea14919cce3c31ec94826fbf65069fcd1a4654cbbf50caa9e44bad6087437e6bec4538627db18b1c5704ea27b056899040da4a7355abfbf35219b4552c07f2
     HEAD_REF master
 )
 
@@ -42,12 +40,12 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
 )
 
 file(INSTALL
-	${SOURCE_PATH}/Inc/
-	DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
+    ${SOURCE_PATH}/Inc/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
 )
 
 file(INSTALL
