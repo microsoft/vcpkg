@@ -1,4 +1,5 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -31,7 +32,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH platform/win32/mupdf.sln
-        TARGET libmupdf 
         PLATFORM ${BUILD_ARCH}
         USE_VCPKG_INTEGRATION
     )
