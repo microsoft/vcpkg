@@ -1,0 +1,7 @@
+Source: mmloader
+Version: 2019-12-31
+Description: A library for loading dll module bypassing windows PE loader from memory (x86/x64)
+Homepage: http://tishion.github.io/mmLoader/
+
+Feature: shellcode
+Description: Generate mmLoader shell code headers
