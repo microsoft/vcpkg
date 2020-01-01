@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mmahnic/argumentum
-    REF v0.2.1
-    SHA512 e2d452b5e4aa37a5b76b14ac905e040e1f0791aa687f912addcf949c64747aee21273a345a99851f64c9fad337cd11f74c408a3c6455346c30eea1aaee2244a6
+    REF v0.2.2
+    SHA512 750a26d021cdf243479a20d01924007cdca717a53f34e4969d2df6c2c10c2f41a4df4bcd0a9fdf3d75928290d31195fa490fe13d4f2cba391c9dbad48aa98184
     HEAD_REF master
 )
 
