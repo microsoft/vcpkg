@@ -1,8 +1,8 @@
 diff --git a/pngpriv.h b/pngpriv.h
-index fe3355d..5a049b5 100644
+index 583c26f..135651c 100644
 --- a/pngpriv.h
 +++ b/pngpriv.h
-@@ -457,11 +457,7 @@
+@@ -556,11 +556,7 @@
  
  /* Memory model/platform independent fns */
  #ifndef PNG_ABORT
