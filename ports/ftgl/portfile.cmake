@@ -16,7 +16,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if (VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+endif()
 vcpkg_test_cmake(PACKAGE_NAME FTGL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
