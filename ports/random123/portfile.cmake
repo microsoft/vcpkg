@@ -16,7 +16,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-# Copy the single reusable library header
+# Copy the headers that define this package to the install location.
 file(GLOB header_files 
      ${SOURCE_PATH}/include/Random123/*.h 
      ${SOURCE_PATH}/include/Random123/*.hpp ) 
@@ -26,7 +26,6 @@ file(COPY ${SOURCE_PATH}/include/Random123/conventional
      DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} )
 file(COPY ${SOURCE_PATH}/include/Random123/features
      DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} )
-#file(COPY ${SOURCE_PATH}/include/Random123 DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
