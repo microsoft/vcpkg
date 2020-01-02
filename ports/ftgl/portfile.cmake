@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 vcpkg_find_acquire_program(DOXYGEN)
 
 vcpkg_from_github(
@@ -18,14 +17,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 if (VCPKG_TARGET_IS_WINDOWS)
         vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-        vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+else ()
         vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 endif()
-vcpkg_test_cmake(PACKAGE_NAME FTGL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ftgl)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ftgl/COPYING ${CURRENT_PACKAGES_DIR}/share/ftgl/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
