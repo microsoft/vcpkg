@@ -40,7 +40,8 @@ if(APPLE)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation)
     find_library(FOUNDATION_LIBRARY Foundation)
     find_library(CORESERVICES_LIBRARY CoreServices)
-    link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY})
+    find_library(APPKIT_LIBRARY AppKit)
+    link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY} ${APPKIT_LIBRARY})
 endif()
 
 if(WIN32 OR APPLE)
@@ -82,6 +83,20 @@ else()
         set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_${UPPER_CONFIG}} -L${LIB_DIR}")
     endif()
 
+    if(APPLE)
+        set(LDFLAGS "${LDFLAGS} ${LIBINTL_LIBRARY} -framework Foundation -framework AppKit")
+
+        if ("$ENV{CPATH}" STREQUAL "")
+            execute_process(
+                COMMAND xcrun --show-sdk-path
+                OUTPUT_VARIABLE xc_sdk_path
+            )
+            string(STRIP "${xc_sdk_path}" xc_sdk_path)
+            set(ENV{CPATH} "${xc_sdk_path}/usr/include")
+            message(STATUS "set CPATH=$ENV{CPATH}")
+        endif()
+    endif()
+
     string(STRIP "${CXXFLAGS}" CXXFLAGS)
     string(STRIP "${CFLAGS}"   CFLAGS)
     string(STRIP "${LDFLAGS}"  LDFLAGS)
@@ -101,8 +116,14 @@ else()
 
     if (NOT HAVE_SELINUX)
         file(READ "${CMAKE_BINARY_DIR}/config/config.h" CONFIG_H)
-        string(REPLACE "#define HAVE_SELINUX 1"
-                    "#undef HAVE_SELINUX" CONFIG_H "${CONFIG_H}")
+        string(REPLACE "#define HAVE_SELINUX 1" "#undef HAVE_SELINUX" CONFIG_H "${CONFIG_H}")
+        file(WRITE "${CMAKE_BINARY_DIR}/config/config.h" "${CONFIG_H}")
+    endif()
+
+    if(APPLE)
+        file(READ "${CMAKE_BINARY_DIR}/config/config.h" CONFIG_H)
+        string(REPLACE "#define HAVE_DTRACE 1" "#undef HAVE_DTRACE" CONFIG_H "${CONFIG_H}")
+        string(REPLACE "/* #undef HAVE_COCOA */" "#define HAVE_COCOA 1" CONFIG_H "${CONFIG_H}")
         file(WRITE "${CMAKE_BINARY_DIR}/config/config.h" "${CONFIG_H}")
     endif()
     

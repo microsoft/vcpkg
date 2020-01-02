@@ -1,0 +1,116 @@
+diff --git a/glib/glib-init.c b/glib/glib-init.c
+index 30a9654..e3af9e6 100644
+--- a/glib/glib-init.c
++++ b/glib/glib-init.c
+@@ -275,11 +275,9 @@ glib_init (void)
+ 
+ #if defined (G_OS_WIN32)
+ 
+-BOOL WINAPI DllMain (HINSTANCE hinstDLL,
+-                     DWORD     fdwReason,
+-                     LPVOID    lpvReserved);
++HMODULE glib_dll = NULL;
+ 
+-HMODULE glib_dll;
++#if defined (DLL_EXPORT)
+ 
+ BOOL WINAPI
+ DllMain (HINSTANCE hinstDLL,
+@@ -290,11 +288,6 @@ DllMain (HINSTANCE hinstDLL,
+     {
+     case DLL_PROCESS_ATTACH:
+       glib_dll = hinstDLL;
+-      g_clock_win32_init ();
+-#ifdef THREADS_WIN32
+-      g_thread_win32_init ();
+-#endif
+-      glib_init ();
+       break;
+ 
+     case DLL_THREAD_DETACH:
+@@ -318,7 +311,10 @@ DllMain (HINSTANCE hinstDLL,
+   return TRUE;
+ }
+ 
+-#elif defined (G_HAS_CONSTRUCTORS)
++#endif /* DLL_EXPORT */
++#endif /* G_OS_WIN32 */
++
++#if defined (G_HAS_CONSTRUCTORS)
+ 
+ #ifdef G_DEFINE_CONSTRUCTOR_NEEDS_PRAGMA
+ #pragma G_DEFINE_CONSTRUCTOR_PRAGMA_ARGS(glib_init_ctor)
+@@ -328,9 +324,18 @@ G_DEFINE_CONSTRUCTOR(glib_init_ctor)
+ static void
+ glib_init_ctor (void)
+ {
++#if defined (G_OS_WIN32)
++  g_clock_win32_init ();
++#endif /* G_OS_WIN32 */
++
++#ifdef THREADS_WIN32
++  g_thread_win32_init ();
++#endif /* THREADS_WIN32 */
++
+   glib_init ();
+ }
+ 
+ #else
+ # error Your platform/compiler is missing constructor support
+ #endif
++
+diff --git a/gobject/gtype.c b/gobject/gtype.c
+index f381a78..046169e 100644
+--- a/gobject/gtype.c
++++ b/gobject/gtype.c
+@@ -4451,32 +4451,7 @@ gobject_init (void)
+   _g_signal_init ();
+ }
+ 
+-#if defined (G_OS_WIN32)
+-
+-BOOL WINAPI DllMain (HINSTANCE hinstDLL,
+-                     DWORD     fdwReason,
+-                     LPVOID    lpvReserved);
+-
+-BOOL WINAPI
+-DllMain (HINSTANCE hinstDLL,
+-         DWORD     fdwReason,
+-         LPVOID    lpvReserved)
+-{
+-  switch (fdwReason)
+-    {
+-    case DLL_PROCESS_ATTACH:
+-      gobject_init ();
+-      break;
+-
+-    default:
+-      /* do nothing */
+-      ;
+-    }
+-
+-  return TRUE;
+-}
+-
+-#elif defined (G_HAS_CONSTRUCTORS)
++#if defined (G_HAS_CONSTRUCTORS)
+ #ifdef G_DEFINE_CONSTRUCTOR_NEEDS_PRAGMA
+ #pragma G_DEFINE_CONSTRUCTOR_PRAGMA_ARGS(gobject_init_ctor)
+ #endif
+@@ -4488,6 +4463,16 @@ gobject_init_ctor (void)
+   gobject_init ();
+ }
+ 
++#elif defined (G_OS_WIN32) && defined (DLL_EXPORT)
++ 
++BOOL WINAPI DllMain (
++         HINSTANCE hinstDLL,
++         DWORD     fdwReason,
++         LPVOID    lpvReserved)
++{
++   return TRUE;
++}
++
+ #else
+ # error Your platform/compiler is missing constructor support
+ #endif
