@@ -13,8 +13,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.23.1
-    SHA512 c39a07554645402c36cb79eddfda7165dc26ce5f7f09cae7ee6f7bedcc2aca8873117ea401d40ce2e3246e3e5888bcce12d4746cba7ed75068ff145046754981
+    REF v1.24.3
+    SHA512 19afa8b1fd64c429317c85d8cf42d01af0ac6aec82508740c176e1fd4f92dea9531ea9812523215ed67466bae93a75e14dc34cd9cce5987a13c0104e0313c69c
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -24,7 +24,7 @@ vcpkg_from_github(
         00005-fix-uwp-error.patch
         00006-crypt32.patch
         00007-disable_grpcpp_channelz.patch
-        00008-fix-duplicate-gettid.patch
+        00008-uwp_upb_disable_C4146_error.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
