@@ -18,6 +18,10 @@ if(BUILD_SHARED_LIBS)
     add_definitions(-DDLL_EXPORT)
 endif()
 
+get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+message(STATUS "BUILD_SHARED_LIBS is ${BUILD_SHARED_LIBS}")
+message(STATUS "COMPILE_DEFINITIONS is ${DirDefs}")
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # find dependencies

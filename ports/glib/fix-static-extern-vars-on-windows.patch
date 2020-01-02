@@ -1,0 +1,15 @@
+diff --git a/glib/glibconfig.h.win32 b/glib/glibconfig.h.win32
+index b75a86f..4c4367a 100644
+--- a/glib/glibconfig.h.win32
++++ b/glib/glibconfig.h.win32
+@@ -167,6 +167,10 @@ typedef unsigned __int64 guintptr;
+ #define G_OS_WIN32
+ #define G_PLATFORM_WIN32
+ 
++#ifndef DLL_EXPORT
++#undef GLIB_STATIC_COMPILATION
++#define GLIB_STATIC_COMPILATION 1
++#endif
+ 
+ #if !defined (_MSC_VER) || (_MSC_VER >= 1800)
+ #define G_VA_COPY	va_copy

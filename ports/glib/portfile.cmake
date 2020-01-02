@@ -5,12 +5,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
-# Glib relies on DllMain on Windows
-if (NOT VCPKG_CMAKE_SYSTEM_NAME)
-	set(VCPKG_CRT_LINKAGE dynamic)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-endif()
-
 set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
@@ -25,6 +19,8 @@ vcpkg_extract_source_archive_ex(
         use-libiconv-on-windows.patch
         arm64-defines.patch
         fix-arm-builds.patch
+        fix-static-remove-dllmain-on-windows.patch
+        fix-static-extern-vars-on-windows.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
