@@ -1,0 +1,4 @@
+Source: msgpack11
+Version: v0.0.10
+Build-Depends: gtest
+Description: MessagePack is an efficient binary serialization format, which lets you exchange data among multiple languages like JSON, except that it's faster and smaller.
