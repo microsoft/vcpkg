@@ -31,7 +31,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(svm-predict svm-scale svm-toy svm-train)
+    vcpkg_copy_tools(TOOL_NAMES svm-predict svm-scale svm-toy svm-train AUTO_CLEAN)
 endif ()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
