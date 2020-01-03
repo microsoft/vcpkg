@@ -1,11 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.2.0
-    SHA512 035c138e1a7794760652906daaf3c8a42cb6431ad9062a42ec2f8d721ead25394407fdd52560c5f1fc8668a0167459fdbe47c6392de23c1474304ea26b8a3a33
+    REF 6.2.1
+    SHA512 43f0356a1f4df871e09a738fb8ac386c0fbe543b35c3c1b9c9685469ca7a2a540427edb9b17d4c010c06a4818d17d0421dfcdca9af9d091854da71690fddfbf3
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
+        disable-export-namespace.patch
+        disable-export-for-static-lib.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
@@ -65,4 +67,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/proj4 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
