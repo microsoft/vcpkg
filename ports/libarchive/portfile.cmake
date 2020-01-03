@@ -3,7 +3,6 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are not supported.")
 endif()
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
@@ -17,46 +16,20 @@ vcpkg_from_github(
         fix-zstd.patch
 )
 
-set(BUILD_libarchive_bzip2 OFF)
-if("bzip2" IN_LIST FEATURES)
-  set(BUILD_libarchive_bzip2 ON)
-endif()
-
-set(BUILD_libarchive_libxml2 OFF)
-if("libxml2" IN_LIST FEATURES)
-  set(BUILD_libarchive_libxml2 ON)
-endif()
-
-set(BUILD_libarchive_lz4 OFF)
-if("lz4" IN_LIST FEATURES)
-  set(BUILD_libarchive_lz4 ON)
-endif()
-
-set(BUILD_libarchive_lzma OFF)
-if("lzma" IN_LIST FEATURES)
-  set(BUILD_libarchive_lzma ON)
-endif()
-
-set(BUILD_libarchive_lzo OFF)
-if("lzo" IN_LIST FEATURES)
-  set(BUILD_libarchive_lzo ON)
-endif()
-
-set(BUILD_libarchive_openssl OFF)
-if("openssl" IN_LIST FEATURES)
-  set(BUILD_libarchive_openssl ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    bzip2    ENABLE_BZip2
+    libxml2  ENABLE_LIBXML2
+    lz4      ENABLE_LZ4
+    lzma     ENABLE_LZMA
+    lzo      ENABLE_LZO
+    openssl  ENABLE_OPENSSL
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_BZip2=${BUILD_libarchive_bzip2}
-        -DENABLE_LIBXML2=${BUILD_libarchive_libxml2}
-        -DENABLE_LZ4=${BUILD_libarchive_lz4}
-        -DENABLE_LZMA=${BUILD_libarchive_lzma}
-        -DENABLE_LZO=${BUILD_libarchive_lzo}
-        -DENABLE_OPENSSL=${BUILD_libarchive_openssl}
+        ${FEATURE_OPTIONS}
         -DENABLE_PCREPOSIX=OFF
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
@@ -84,5 +57,4 @@ foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}
 endforeach()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libarchive)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libarchive)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libarchive/COPYING ${CURRENT_PACKAGES_DIR}/share/libarchive/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

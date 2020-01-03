@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -22,21 +20,17 @@ if(VCPKG_LIBRARY_LINKAGE EQUAL "static")
 endif()
 
 # Handle CONTROL
-if("training_tools" IN_LIST FEATURES)
-    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=ON)
-else()
-    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=OFF)
-endif()
-if("independed_architecture" IN_LIST FEATURES)
+if("cpu_independed" IN_LIST FEATURES)
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=none)
 else()
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
 endif()
-if("libarchive" IN_LIST FEATURES)
-    list(APPEND OPTIONS_LIST -DBUILD_LIBARCHIVE=ON)
-else()
-    list(APPEND OPTIONS_LIST -DBUILD_LIBARCHIVE=OFF)
-endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    training_tools  BUILD_TRAINING_TOOLS
+    libarchive      BUILD_LIBARCHIVE
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -46,6 +40,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         ${OPTIONS_LIST}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -86,9 +81,6 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tesseract)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tesseract/LICENSE ${CURRENT_PACKAGES_DIR}/share/tesseract/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
