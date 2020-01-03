@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-dependencies.patch
         fix-lz4.patch
         fix-zstd.patch
+        fix-cpu-set.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
