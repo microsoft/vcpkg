@@ -1,8 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e433e8d..18f2fc9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -178,7 +178,7 @@ elseif(UNIX)
+ endif()
+ 
+ if(WIN32 AND MSVC)
+-  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32)
++  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 gdi32)
+ endif()
+ 
+ # Create directory for generated .proto files
 diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
-index d3480abaa8..b3e63b2433 100644
+index c0e2164..331e54c 100644
 --- a/src/core/lib/slice/slice.cc
 +++ b/src/core/lib/slice/slice.cc
-@@ -226,6 +226,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
+@@ -214,6 +214,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
                                          size_t len) {
    uint8_t* ptr = reinterpret_cast<uint8_t*>(p.get());
    grpc_slice slice;
