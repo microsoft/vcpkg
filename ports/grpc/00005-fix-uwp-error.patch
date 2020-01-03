@@ -1,8 +1,8 @@
 diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
-index eebf66b..6c6ee50 100644
+index d3480abaa8..b3e63b2433 100644
 --- a/src/core/lib/slice/slice.cc
 +++ b/src/core/lib/slice/slice.cc
-@@ -220,6 +220,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
+@@ -226,6 +226,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
                                          size_t len) {
    uint8_t* ptr = reinterpret_cast<uint8_t*>(p.get());
    grpc_slice slice;
