@@ -34,5 +34,6 @@
 - [vcpkg\_install\_make](vcpkg_install_make.md)
 - [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)
 - [vcpkg\_install\_nmake](vcpkg_install_nmake.md)
+- [vcpkg\_install\_qmake](vcpkg_install_qmake.md)
 - [vcpkg\_prettify\_command](vcpkg_prettify_command.md)
 - [vcpkg\_test\_cmake](vcpkg_test_cmake.md)
