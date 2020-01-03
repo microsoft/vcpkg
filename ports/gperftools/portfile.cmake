@@ -103,7 +103,9 @@ else()
 
     vcpkg_install_make()
 
-    copy_tools(pprof pprof-symbolize)
+    if(tools IN_LIST FEATURES)
+        copy_tools(pprof pprof-symbolize)
+    endif()
 
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/debug/include
