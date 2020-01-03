@@ -23,7 +23,6 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00006-crypt32.patch
-        00007-disable_grpcpp_channelz.patch
         00008-uwp_upb_disable_C4146_error.patch
 )
 
