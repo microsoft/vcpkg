@@ -5,8 +5,7 @@ vcpkg_from_github(
     SHA512 dc8c875f692043b6f10ce7faf034e07536978537ea2a3d545be499cfa047f0c362c5109eb744a41dc0c92bd0fc56d98505183444bd376aeb257c9204480e6668
     HEAD_REF master
     PATCHES 
-        fix-cmakelist.txt.patch
-        fix-config.cmake.patch
+        fix-cmakelist.patch
 )
 
 vcpkg_configure_cmake(
