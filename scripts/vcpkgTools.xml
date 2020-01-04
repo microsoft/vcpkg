@@ -15,7 +15,7 @@
         <archiveName>cmake-3.16.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.14.0</version>
+        <version>3.16.2</version>
         <exeRelativePath>cmake-3.16.2-Linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz</url>
         <sha512>073f987da63b83d424135af691591496048f0a702fb19db1ae7d5efb3f8fb1c8cf2dde3c1281355714c5eb4f01028c6d98126b887cbd418c3908fd60d57e1461</sha512>
