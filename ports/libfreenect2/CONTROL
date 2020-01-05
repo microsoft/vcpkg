@@ -12,7 +12,3 @@ Build-Depends: opengl, glfw3
 Feature: opencl
 Description: OpenCL support for libfreenect2
 Build-Depends: opencl
-
-Feature: cuda
-Description: CUDA support for libfreenect2
-Build-Depends: cuda
