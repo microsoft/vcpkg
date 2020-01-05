@@ -27,6 +27,11 @@ endif()
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
+if (WINDOWS_STORE)
+    set(WINRT_DEFINES -DANGLE_ENABLE_WINDOWS_STORE)
+else()
+    set(WINRT_DEFINES)
+endif()
 add_definitions(
     -D_CRT_SECURE_NO_DEPRECATE
     -D_SCL_SECURE_NO_WARNINGS
@@ -35,6 +40,7 @@ add_definitions(
     -DNOMINMAX
     -DANGLE_STANDALONE_BUILD
     -DANGLE_ENABLE_DEBUG_ANNOTATIONS
+    ${WINRT_DEFINES}
 )
 
 configure_file(commit.h include/id/commit.h COPYONLY)
@@ -42,8 +48,10 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
 # angle::common
-if(WIN32)
-    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix")
+if(WINDOWS_DESKTOP)
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_winuwp")
+elseif(WINDOWS_STORE)
+    set(ANGLE_COMMON_PLATFORM_FILTER "_linux|_mac|_posix|_win[^u]")
 elseif(LINUX)
     set(ANGLE_COMMON_PLATFORM_FILTER "_win|_mac")
 elseif(APPLE)
@@ -87,6 +95,7 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/tree_util/*.cpp"
     "src/third_party/compiler/ArrayBoundsClamper.cpp"
 )
+list(FILTER TRANSLATOR_SOURCES EXCLUDE REGEX "_unittest")
 add_library(angle_translator STATIC ${TRANSLATOR_SOURCES})
 target_compile_definitions(angle_translator PUBLIC
     -DANGLE_ENABLE_ESSL
@@ -249,7 +258,7 @@ file(GLOB LIBANGLE_SOURCES
 
     ${LIBANGLE_SOURCES_PLATFORM}
 )
-list(FILTER LIBANGLE_SOURCES EXCLUDE REGEX "_unittest")
+list(FILTER LIBANGLE_SOURCES EXCLUDE REGEX "_unittest|glslang_wrapper|capture|FrameCapture\.cpp")
 
 if(LINUX OR APPLE)
     set(LIBANGLE_RENDERER_PLATFORM
@@ -317,6 +326,8 @@ list(APPEND LIBGLESV2_SOURCES
   "src/libGLESv2/entry_points_gles_3_0_autogen.h"
   "src/libGLESv2/entry_points_gles_3_1_autogen.cpp"
   "src/libGLESv2/entry_points_gles_3_1_autogen.h"
+  "src/libGLESv2/entry_points_gles_3_2_autogen.cpp"
+  "src/libGLESv2/entry_points_gles_3_2_autogen.h"
   "src/libGLESv2/entry_points_gles_ext_autogen.cpp"
   "src/libGLESv2/entry_points_gles_ext_autogen.h"
   "src/libGLESv2/global_state.cpp"
