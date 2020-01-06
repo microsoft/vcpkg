@@ -1,0 +1,4 @@
+Source: libdeflate
+Version: 1.5
+Homepage: https://github.com/ebiggers/libdeflate
+Description: Heavily optimized library for DEFLATE/zlib/gzip compression and decompression
