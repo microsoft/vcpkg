@@ -880,7 +880,6 @@ libui:arm-uwp=fail
 libui:x64-linux=fail
 libui:x64-uwp=fail
 libusb:arm-uwp=fail
-libusb:x64-linux=fail
 libusb:x64-osx=fail
 libusb:x64-uwp=fail
 libusbmuxd:x64-uwp=fail

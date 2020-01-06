@@ -1,8 +1,6 @@
-if (VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "Error: the port is unsupported on your platform. Please open an issue on github.com/Microsoft/vcpkg to request a fix")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
 endif()
 
