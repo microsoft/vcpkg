@@ -1754,6 +1754,7 @@ wintoast:x64-uwp=fail
 woff2:x64-linux=fail
 woff2:x64-osx=fail
 woff2:x64-windows-static=fail
+wpilib:x64-osx=fail
 wxwidgets:x64-linux=fail
 wxwidgets:x64-osx=fail
 x264:arm64-windows=fail
