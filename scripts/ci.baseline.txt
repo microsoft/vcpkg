@@ -462,7 +462,6 @@ forge:x86-windows=fail
 freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
-freeimage:x64-linux=fail
 freeimage:x64-osx=fail
 freerdp:arm64-windows=fail
 freerdp:arm-uwp=fail
