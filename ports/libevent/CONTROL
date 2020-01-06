@@ -3,6 +3,7 @@ Version: 2.1.11-2
 Build-Depends: openssl
 Homepage: https://github.com/libevent/libevent
 Description: An event notification library
+Default-Features: thread
 
 Feature: openssl
 Description: Support for openssl
