@@ -13,8 +13,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.24.3
-    SHA512 19afa8b1fd64c429317c85d8cf42d01af0ac6aec82508740c176e1fd4f92dea9531ea9812523215ed67466bae93a75e14dc34cd9cce5987a13c0104e0313c69c
+    REF v1.26.0
+    SHA512 4f7d067c582d0a9be7b7d4dd1e08acdbe6ff0686dfe92b5db5b7927f779410a4237acfd1c61d9f79eb2d00f86cf93cc7492fa372c1877e57c1aa23e9bb2648bb
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -23,7 +23,6 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00006-crypt32.patch
-        00007-disable_grpcpp_channelz.patch
         00008-uwp_upb_disable_C4146_error.patch
 )
 
