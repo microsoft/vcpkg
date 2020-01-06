@@ -128,8 +128,8 @@ function(vcpkg_find_acquire_program VAR)
     set(SUBDIR "jom-1.1.3")
     set(PATHS ${DOWNLOADS}/tools/jom/${SUBDIR})
     set(URL 
-        "http://download.qt.io/official_releases/jom/jom_1_1_3.zip" 
-        "http://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
+      "http://download.qt.io/official_releases/jom/jom_1_1_3.zip" 
+      "http://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
     )
     set(ARCHIVE "jom_1_1_3.zip")
     set(HASH 5b158ead86be4eb3a6780928d9163f8562372f30bde051d8c281d81027b766119a6e9241166b91de0aa6146836cea77e5121290e62e31b7a959407840fc57b33)
