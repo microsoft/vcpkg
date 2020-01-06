@@ -1,0 +1,4 @@
+Source: moltenvk
+Version: 1.0.38-1
+Homepage: https://moltengl.com/moltenvk/
+Description: MoltenVK is a driver-level implementation of the Vulkan 1.0 graphics and compute API, that runs on Apple's Metal graphics and compute framework on both iOS and macOS.
