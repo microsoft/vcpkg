@@ -1588,6 +1588,8 @@ speexdsp:x64-linux=fail
 speexdsp:x64-osx=fail
 spirv-tools:arm-uwp=fail
 spirv-tools:x64-uwp=fail
+# conflicts with nanovg
+stb:x86-windows=ignore
 stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 string-theory:arm-uwp=fail
