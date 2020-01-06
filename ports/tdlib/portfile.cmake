@@ -6,15 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-)
-
-vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Td)
-
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(GPERF)
     get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
@@ -25,3 +16,13 @@ else()
         message(FATAL_ERROR "${PORT} requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
     endif()
 endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+)
+
+vcpkg_install_cmake()
+file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Td)
+
