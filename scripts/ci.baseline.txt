@@ -1358,7 +1358,6 @@ python3:x64-uwp=fail
 qca:x64-linux=fail
 qca:x64-osx=fail
 qca:x64-windows-static=fail
-qcustomplot:x64-linux=fail
 qcustomplot:x64-osx=fail
 qhull:arm-uwp=ignore
 qhull:x64-windows-static=ignore
