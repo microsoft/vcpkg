@@ -1,13 +1,13 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
-    REF 75dbbd97826e7191ee539f9934e607eb93247a42 #1.16.1-epub-prerelease
-    SHA512 6ef83cadd0fd0d681ffe7f377b795046da533cb4d2a33f0165a0c77d29cd764f8c68fc8ff69bab957bc599e72241f402cf8fbfc31c46bc5cfd2783c3511c414d
+    REF bc5f2b43dfbf05ef560ec094149c868227f58496
+    SHA512 a15af0dff1395edc683abcf12f770de95f55b7ccd276925cfb92ef5282dc94ab7d3a1da7276a90f33cdf44c4245f954d386ddd0a48f4330f17619db9eafe54b9
     HEAD_REF master
-	PATCHES
-        Fix-error-C2169.patch
+    PATCHES
         fix-win-build.patch
 )
 
@@ -18,17 +18,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
         set(BUILD_ARCH "x64")
     else()
         message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()
-    
-    if (NOT EXISTS ${SOURCE_PATH}/platform/win32/libmupdf.vcxproj AND NOT EXISTS ${SOURCE_PATH}/platform/win32/libmupdf.vcxproj.bak)
-        message(STATUS "Upgrading solution")
-        vcpkg_execute_required_process(
-            COMMAND "devenv.exe"
-                    "mupdf.sln"
-                    /Upgrade
-            WORKING_DIRECTORY ${SOURCE_PATH}/platform/win32
-            LOGNAME upgrade-Packet-${TARGET_TRIPLET}
-        )
     endif()
     
     # Bakup libmupdf project file to include gdcmjpeg include path
