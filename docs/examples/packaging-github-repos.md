@@ -10,13 +10,7 @@ Description: Ogg is a multimedia container format, and the native file and strea
 ```
 
 ### Create the portfile
-`portfile.cmake` describes how to build and install the package. First we include `vcpkg_common_functions` to give us utilities for carrying this out:
-
-```no-highlight
-include(vcpkg_common_functions)
-```
-
-Now we download the project from Github with [`vcpkg_from_github`](../maintainers/vcpkg_from_github.md):
+`portfile.cmake` describes how to build and install the package. First we download the project from Github with [`vcpkg_from_github`](../maintainers/vcpkg_from_github.md):
 
 ```no-highlight
 vcpkg_from_github(
