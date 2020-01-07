@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET UWP)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
@@ -12,7 +12,12 @@ vcpkg_extract_source_archive_ex(
     REF hdf5
     PATCHES
         hdf5_config.patch
+        fix-generate.patch
 )
+
+if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
+    message(FATAL_ERROR "Feature Parallel and C++ options are mutually exclusive.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES 
@@ -21,7 +26,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      szip         HDF5_ENABLE_SZIP_SUPPORT
      szip         HDF5_ENABLE_SZIP_ENCODING
      zlib         HDF5_ENABLE_Z_LIB_SUPPORT
-                    )
+)
 
 file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
 find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -54,5 +59,7 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
