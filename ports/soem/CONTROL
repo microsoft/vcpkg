@@ -2,3 +2,4 @@ Source: soem
 Version: 1.4.0-1
 Homepage: https://github.com/OpenEtherCATsociety/SOEM
 Description: Simple Open Source EtherCAT Master
+Build-Depends: winpcap (windows)
