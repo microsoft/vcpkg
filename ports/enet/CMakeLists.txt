@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(enet)
 
@@ -6,6 +6,7 @@ project(enet)
 include(CheckFunctionExists)
 include(CheckStructHasMember)
 include(CheckTypeSize)
+
 check_function_exists("fcntl" HAS_FCNTL)
 check_function_exists("poll" HAS_POLL)
 check_function_exists("getaddrinfo" HAS_GETADDRINFO)
@@ -18,64 +19,88 @@ check_struct_has_member("struct msghdr" "msg_flags" "sys/types.h;sys/socket.h" H
 set(CMAKE_EXTRA_INCLUDE_FILES "sys/types.h" "sys/socket.h")
 check_type_size("socklen_t" HAS_SOCKLEN_T BUILTIN_TYPES_ONLY)
 unset(CMAKE_EXTRA_INCLUDE_FILES)
+
+add_library(enet STATIC
+    callbacks.c
+    compress.c
+    host.c
+    list.c
+    packet.c
+    peer.c
+    protocol.c
+    unix.c
+    win32.c)
+
 if(MSVC)
-	add_definitions(-W3)
+    target_compile_definitions(enet PRIVATE -W3)
 else()
-	add_definitions(-Wno-error)
+    target_compile_definitions(enet PRIVATE -Wno-error)
 endif()
  
 if(HAS_FCNTL)
-    add_definitions(-DHAS_FCNTL=1)
+    target_compile_definitions(enet PRIVATE -DHAS_FCNTL=1)
 endif()
+
 if(HAS_POLL)
-    add_definitions(-DHAS_POLL=1)
+    target_compile_definitions(enet PRIVATE -DHAS_POLL=1)
 endif()
+
 if(HAS_GETNAMEINFO)
-    add_definitions(-DHAS_GETNAMEINFO=1)
+    target_compile_definitions(enet PRIVATE -DHAS_GETNAMEINFO=1)
 endif()
+
 if(HAS_GETADDRINFO)
-    add_definitions(-DHAS_GETADDRINFO=1)
+    target_compile_definitions(enet PRIVATE -DHAS_GETADDRINFO=1)
 endif()
+
 if(HAS_GETHOSTBYNAME_R)
-    add_definitions(-DHAS_GETHOSTBYNAME_R=1)
+    target_compile_definitions(enet PRIVATE -DHAS_GETHOSTBYNAME_R=1)
 endif()
+
 if(HAS_GETHOSTBYADDR_R)
-    add_definitions(-DHAS_GETHOSTBYADDR_R=1)
+    target_compile_definitions(enet PRIVATE -DHAS_GETHOSTBYADDR_R=1)
 endif()
+
 if(HAS_INET_PTON)
-    add_definitions(-DHAS_INET_PTON=1)
+    target_compile_definitions(enet PRIVATE -DHAS_INET_PTON=1)
 endif()
+
 if(HAS_INET_NTOP)
-    add_definitions(-DHAS_INET_NTOP=1)
+    target_compile_definitions(enet PRIVATE -DHAS_INET_NTOP=1)
 endif()
+
 if(HAS_MSGHDR_FLAGS)
-    add_definitions(-DHAS_MSGHDR_FLAGS=1)
+    target_compile_definitions(enet PRIVATE -DHAS_MSGHDR_FLAGS=1)
 endif()
+
 if(HAS_SOCKLEN_T)
-    add_definitions(-DHAS_SOCKLEN_T=1)
+    target_compile_definitions(enet PRIVATE -DHAS_SOCKLEN_T=1)
 endif()
- 
-include_directories(${PROJECT_SOURCE_DIR}/include)
- 
-add_library(enet STATIC
-        callbacks.c
-        compress.c
-        host.c
-        list.c
-        packet.c
-        peer.c
-        protocol.c
-        unix.c
-        win32.c
-    )
+
+target_include_directories(enet PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 if (WIN32)
-    target_link_libraries(enet winmm ws2_32)
+    target_link_libraries(enet PRIVATE winmm ws2_32)
 endif()
 
-install(TARGETS enet ARCHIVE DESTINATION lib
-                     LIBRARY DESTINATION lib
-                     RUNTIME DESTINATION bin)
+install(TARGETS enet
+    EXPORT enet
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin)
 
-install(DIRECTORY include/
-        DESTINATION include)
+install(EXPORT enet
+    FILE enet-targets.cmake
+    DESTINATION share/enet/
+)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/enet-config.cmake
+"include(\${CMAKE_CURRENT_LIST_DIR}/enet-targets.cmake)"
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/enet-config.cmake DESTINATION share/enet)
+
+install(DIRECTORY include/ DESTINATION include)
