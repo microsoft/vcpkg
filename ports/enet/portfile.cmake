@@ -1,19 +1,15 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
-    REPO  "lsalzman/enet"
-    REF f7c46f03fd8d883ac2811948aa71c7623069d070
+    REPO lsalzman/enet
+    REF 0eaf48eeb0d94a18d079378d8b76d588832ce838
     HEAD_REF master
-    SHA512 2d5593ea56473b38479921fd0849318bf3ecb233f92fa487ba395a0bb7e6a3997109287867a67c66721f761a30cceab4ba4709080a93ed977b7650b10cab1936
+    SHA512 9bf867742b4f0e31be30aed1c3b113b3495857af4db1daf54fce38d3b30cbf62348957c7f660f80a38a9b432cbb44e9068d7f579e55d34dc973bea02755eb3ae
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
