@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(SOEM_VERSION 1.4.0)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -32,5 +30,4 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/soem)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/soem/LICENSE ${CURRENT_PACKAGES_DIR}/share/soem/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
