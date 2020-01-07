@@ -2,10 +2,16 @@ _find_package(${ARGS})
 
 function(add_qt_library _target)
     foreach(_lib IN LISTS ARGN)
-        find_library(${_lib}_LIBRARY_DEBUG NAMES ${_lib}d PATH_SUFFIXES debug/plugins/platforms)
-        find_library(${_lib}_LIBRARY_RELEASE NAMES ${_lib} PATH_SUFFIXES plugins/platforms)
-        set_property(TARGET ${_target} APPEND PROPERTY INTERFACE_LINK_LIBRARIES
-        \$<\$<NOT:\$<CONFIG:DEBUG>>:${${_lib}_LIBRARY_RELEASE}>\$<\$<CONFIG:DEBUG>:${${_lib}_LIBRARY_DEBUG}>)
+        #The fact that we are within this file means we are using the VCPKG toolchain. Has such we only need to search in VCPKG paths!
+        find_library(${_lib}_LIBRARY_DEBUG NAMES ${_lib}d ${_lib} NAMES_PER_DIR PATH_SUFFIXES lib plugins/platforms PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
+        find_library(${_lib}_LIBRARY_RELEASE NAMES ${_lib} NAMES_PER_DIR PATH_SUFFIXES lib plugins/platforms PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
+        if(${_lib}_LIBRARY_RELEASE)
+            list(APPEND interface_lib \$<\$<NOT:\$<CONFIG:DEBUG>>:${${_lib}_LIBRARY_RELEASE}>)
+        endif()
+        if(${_lib}_LIBRARY_DEBUG)
+            list(APPEND interface_lib \$<\$<CONFIG:DEBUG>:${${_lib}_LIBRARY_DEBUG}>)
+        endif()
+        set_property(TARGET ${_target} APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${interface_lib})
     endforeach()
 endfunction()
 
@@ -23,12 +29,14 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
 
     set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
         ZLIB::ZLIB JPEG::JPEG PNG::PNG Freetype::Freetype sqlite3 harfbuzz::harfbuzz
-        double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto
+        double-conversion::double-conversion OpenSSL::SSL OpenSSL::Crypto PostgreSQL::PostgreSQL
     )
 
     add_qt_library(Qt5::Core
         pcre2-16
-        libpq
+        icuin icui18n
+        icutu icuuc icuio
+        icudt icudata
         Qt5ThemeSupport
         Qt5EventDispatcherSupport
         Qt5PlatformCompositorSupport
@@ -39,7 +47,11 @@ if("${_target_type}" STREQUAL "STATIC_LIBRARY")
            Netapi32.lib Ws2_32.lib Mincore.lib Winmm.lib Iphlpapi.lib Wtsapi32.lib Dwmapi.lib Imm32.lib)
 
       add_qt_library(Qt5::Core Qt5WindowsUIAutomationSupport qwindows qdirect2d)
-
+    elseif(UNIX AND NOT APPLE)
+      add_qt_library(Qt5::Core
+            Qt5GraphicsSupport
+            Qt5ClipboardSupport
+            Qt5AccessibilitySupport)
     elseif(APPLE)
        set_property(TARGET Qt5::Core APPEND PROPERTY INTERFACE_LINK_LIBRARIES
             "-weak_framework DiskArbitration" "-weak_framework IOKit" "-weak_framework Foundation" "-weak_framework CoreServices"
