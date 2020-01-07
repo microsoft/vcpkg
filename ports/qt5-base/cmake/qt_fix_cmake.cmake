@@ -13,7 +13,13 @@ function(qt_fix_cmake PACKAGE_DIR_TO_FIX PORT_TO_FIX)
             LOGNAME fix-cmake
         )
     endif()
-    
+    if(EXISTS ${PACKAGE_DIR_TO_FIX}/share/cmake)
+        vcpkg_execute_required_process(
+            COMMAND ${PYTHON2} ${CURRENT_INSTALLED_DIR}/share/qt5/fixcmake.py ${PORT_TO_FIX}
+            WORKING_DIRECTORY ${PACKAGE_DIR_TO_FIX}/share/cmake
+            LOGNAME fix-cmake
+        )
+    endif()
     #Install cmake files
     if(EXISTS ${PACKAGE_DIR_TO_FIX}/lib/cmake)
         file(MAKE_DIRECTORY ${PACKAGE_DIR_TO_FIX}/share)
