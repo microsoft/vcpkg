@@ -13,7 +13,7 @@ Build-Depends: opencolorio
 Description: Enable opencolorio support for openimageio
 
 Feature: ffmpeg
-Build-Depends: ffmpeg
+Build-Depends: ffmpeg[avresample]
 Description: Enable ffmpeg support for openimageio
 
 Feature: field3d

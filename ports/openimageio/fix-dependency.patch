@@ -1,5 +1,5 @@
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 2f4f7ce..7275804 100644
+index 2f4f7ce..16035df 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
 @@ -169,10 +169,17 @@ checked_find_package (PNG REQUIRED)
@@ -31,7 +31,15 @@ index 2f4f7ce..7275804 100644
                     DEFINITIONS  -DUSE_OPENCV=1)
  
  # Intel TBB
-@@ -233,12 +240,16 @@ checked_find_package (Field3D
+@@ -226,19 +233,23 @@ checked_find_package (TBB 2017
+                    ISDEPOF      OpenVDB)
+ 
+ checked_find_package (DCMTK 3.6.1)  # For DICOM images
+-checked_find_package (FFmpeg 2.6)
++checked_find_package (FFMPEG)
+ checked_find_package (Field3D
+                    DEPS         HDF5
+                    DEFINITIONS  -DUSE_FIELD3D=1)
  checked_find_package (GIF 4)
  checked_find_package (Libheif 1.3)  # For HEIF/HEIC format
  checked_find_package (LibRaw)
