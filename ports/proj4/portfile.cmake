@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.2.1
-    SHA512 43f0356a1f4df871e09a738fb8ac386c0fbe543b35c3c1b9c9685469ca7a2a540427edb9b17d4c010c06a4818d17d0421dfcdca9af9d091854da71690fddfbf3
+    REF 6.3.0
+    SHA512 603256c27fb73b82e9af245ad09b46e6bc6e1934cb6375bf476f8b63177e933fb210b932b6890c425722c509189a0323755e311466f226d64694013c6c4a52de
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
         disable-export-namespace.patch
-        disable-export-for-static-lib.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-sqlite-dependency-export.patch
