@@ -20,9 +20,9 @@ vcpkg_configure_make(
     [MAKE_OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [MAKE_OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [MAKE_OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [INSTALL_OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [INSTALL_OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [INSTALL_OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+    [MAKE_INSTALL_OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+    [MAKE_INSTALL_OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+    [MAKE_INSTALL_OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
 )
 ```
 
@@ -79,14 +79,14 @@ Additional options passed to make during the Release generation. These are in ad
 ### MAKE_OPTIONS_DEBUG
 Additional options passed to make during the Debug generation. These are in addition to `MAKE_OPTIONS`.
 
-### INSTALL_OPTIONS
+### MAKE_INSTALL_OPTIONS
 Additional options passed to make during the installation.
 
-### INSTALL_OPTIONS_RELEASE
-Additional options passed to make during the Release installation. These are in addition to `INSTALL_OPTIONS`.
+### MAKE_INSTALL_OPTIONS_RELEASE
+Additional options passed to make during the Release installation. These are in addition to `MAKE_INSTALL_OPTIONS`.
 
-### INSTALL_OPTIONS_DEBUG
-Additional options passed to make during the Debug installation. These are in addition to `INSTALL_OPTIONS`.
+### MAKE_INSTALL_OPTIONS_DEBUG
+Additional options passed to make during the Debug installation. These are in addition to `MAKE_INSTALL_OPTIONS`.
 
 ## Notes
 This command supplies many common arguments to configure. To see the full list, examine the source.
