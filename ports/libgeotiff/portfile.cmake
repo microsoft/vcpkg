@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         cmakelists.patch
         geotiff-config.patch
+        fix-proj4.patch
 )
 
 # Delete FindPROJ4.cmake
@@ -24,11 +25,11 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DWITH_TIFF=ON
-        -DWITH_PROJ4=ON
-        -DWITH_ZLIB=ON
-        -DWITH_JPEG=ON
-        -DWITH_UTILITIES=ON
+        -DWITH_TIFF=1
+        -DWITH_PROJ4=1
+        -DWITH_ZLIB=1
+        -DWITH_JPEG=1
+        -DWITH_UTILITIES=1
 )
 
 vcpkg_install_cmake()
@@ -55,6 +56,7 @@ endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF)
+
 file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
 file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
 file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
