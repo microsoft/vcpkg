@@ -1,10 +1,4 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-  message(FATAL_ERROR "This port is only for Windows Desktop")
-endif()
-
-find_program(NMAKE nmake)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -16,50 +10,45 @@ vcpkg_from_github(
         makefile.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(CRT_LINK_FLAG_PREFIX "/MD")
-elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(CRT_LINK_FLAG_PREFIX "/MT")
+vcpkg_install_nmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PROJECT_NAME Makefile.msc
+)
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+    file(COPY ${CURRENT_PACKAGES_DIR}/debug/bin/gzip.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+    file(COPY ${CURRENT_PACKAGES_DIR}/debug/bin/gunzip.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gzip.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gunzip.exe)
+
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libdeflatestatic.lib)
+    elseif (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libdeflate.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libdeflatestatic.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libdeflate.lib)
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/libdeflate.dll)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 endif()
 
-set(CL_FLAGS_REL "${CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG /Z7")
-set(CL_FLAGS_DBG "${CRT_LINK_FLAG_PREFIX}d /Z7 /Ob0 /Od /RTC1")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/gzip.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/gunzip.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-message(STATUS "Build ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} /f Makefile.msc clean all "CL_FLAGS=${CL_FLAGS_REL}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/gzip.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/gunzip.exe)
 
-file (COPY ${SOURCE_PATH}/gzip.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file (COPY ${SOURCE_PATH}/gunzip.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file (COPY ${SOURCE_PATH}/libdeflate.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file (COPY ${SOURCE_PATH}/libdeflate.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file (INSTALL ${SOURCE_PATH}/libdeflatestatic.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib RENAME libdeflate.lib)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libdeflatestatic.lib)
+    elseif (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libdeflate.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libdeflatestatic.lib ${CURRENT_PACKAGES_DIR}/lib/libdeflate.lib)
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libdeflate.dll)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    endif()
 endif()
 
-message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} /f Makefile.msc clean all "CL_FLAGS=${CL_FLAGS_DBG}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file (COPY ${SOURCE_PATH}/libdeflate.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file (COPY ${SOURCE_PATH}/libdeflate.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file (INSTALL ${SOURCE_PATH}/libdeflatestatic.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME libdeflate.lib)
-endif()
-
-file(
-    COPY ${SOURCE_PATH}/libdeflate.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libdeflate RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

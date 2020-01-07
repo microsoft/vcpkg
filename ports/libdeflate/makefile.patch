@@ -1,5 +1,5 @@
 diff --git a/Makefile.msc b/Makefile.msc
-index 901131d..f47cc6f 100644
+index 901131d..00f0568 100644
 --- a/Makefile.msc
 +++ b/Makefile.msc
 @@ -10,7 +10,7 @@
@@ -11,7 +11,7 @@ index 901131d..f47cc6f 100644
  LDFLAGS =
  
  STATIC_LIB = libdeflatestatic.lib
-@@ -60,6 +60,6 @@ gunzip.exe:gzip.exe
+@@ -60,6 +60,14 @@ gunzip.exe:gzip.exe
  	copy $** $@
  
  clean:
@@ -20,4 +20,12 @@ index 901131d..f47cc6f 100644
 -		programs\*.obj 2>nul
 +	-del /s /q *.dll *.exe *.exp libdeflate.lib libdeflatestatic.lib gzip.lib \
 +		lib\*.obj lib\*.dllobj \
-+		programs\*.obj >nul 2>&1
++		programs\*.obj
++
++install: all
++	-xcopy /i /y "gzip.exe" "$(INSTALLDIR)/bin\"
++	-xcopy /i /y "gunzip.exe" "$(INSTALLDIR)/bin\"
++	-xcopy /i /y "$(SHARED_LIB)" "$(INSTALLDIR)/bin\"
++	-xcopy /i /y "$(STATIC_LIB)" "$(INSTALLDIR)/lib\"
++	-xcopy /i /y "$(IMPORT_LIB)" "$(INSTALLDIR)/lib\"
++	-xcopy /i /y "libdeflate.h" "$(INSTALLDIR)/include\"
