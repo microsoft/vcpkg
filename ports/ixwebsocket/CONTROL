@@ -1,4 +1,4 @@
-Version: 7.9.2
+Version: 8.0.5
 Build-Depends: zlib
 Homepage: https://github.com/machinezone/IXWebSocket
 Description: Lightweight WebSocket Client and Server + HTTP Client and Server
