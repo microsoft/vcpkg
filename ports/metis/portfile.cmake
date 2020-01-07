@@ -22,6 +22,7 @@ vcpkg_extract_source_archive_ex(
         fix-metis-vs14-math.patch
         fix-gklib-vs14-math.patch
         fix-linux-build-error.patch
+        install-metisConfig.patch
 )
 
 vcpkg_configure_cmake(
@@ -32,6 +33,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/metis)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

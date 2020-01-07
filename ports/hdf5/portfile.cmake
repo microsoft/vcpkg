@@ -1,8 +1,5 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
     FILENAME "CMake-hdf5-1.10.5.tar.gz"
@@ -15,33 +12,28 @@ vcpkg_extract_source_archive_ex(
     REF hdf5
     PATCHES
         hdf5_config.patch
+        fix-generate.patch
 )
-set(SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5)
 
-if ("parallel" IN_LIST FEATURES)
-    set(ENABLE_PARALLEL ON)
-else()
-    set(ENABLE_PARALLEL OFF)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    parallel HDF5_ENABLE_PARALLEL
+    cpp HDF5_BUILD_CPP_LIB
+)
+
+if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
+    message(FATAL_ERROR "Feature Parallel and C++ options are mutually exclusive.")
 endif()
 
-if ("cpp" IN_LIST FEATURES)
-    set(ENABLE_CPP ON)
-else()
-    set(ENABLE_CPP OFF)
-endif()
-
-file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip 
+file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_BUILD_TOOLS=OFF
-        -DHDF5_BUILD_CPP_LIB=${ENABLE_CPP}
-        -DHDF5_ENABLE_PARALLEL=${ENABLE_PARALLEL}
         -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
         -DHDF5_ENABLE_SZIP_SUPPORT=ON
         -DHDF5_ENABLE_SZIP_ENCODING=ON
@@ -62,5 +54,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/hdf5/data/COPYING ${CURRENT_PACKAGES_DIR}/share/hdf5/copyright)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/hdf5/vcpkg-cmake-wrapper.cmake @ONLY)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/hdf5/data/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)

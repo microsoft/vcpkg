@@ -6,14 +6,8 @@ vcpkg_from_github(
     REF b897ea86dba8b61412dc48ac0cfb5ff34cdaf5f6
     SHA512 7284744d211dcdcb0cd321eec96f3632ccda690e8894261f4f09a06bc8faefb2de68f4f2f755f4eeef5bb586044e98ac65cdd18c15193a1a4632bd2f4208c52f
     HEAD_REF master
-)
-
-message(STATUS "MOOS Essential Source Path: ${SOURCE_PATH}")
-message(STATUS "MOOS Essential CMAKE_CURRENT_LIST_DIR: ${CMAKE_CURRENT_LIST_DIR}")
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix.patch
+    PATCHES
+        fix.patch
 )
 
 vcpkg_configure_cmake(
@@ -39,5 +33,3 @@ endif()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/fake_header.h "// fake header to pass vcpkg post install check \n")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "see moos-core for copyright\n" )
-#
-#

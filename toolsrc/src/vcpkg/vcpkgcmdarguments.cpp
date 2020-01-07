@@ -146,10 +146,10 @@ namespace vcpkg
                     parse_value(arg_begin, arg_end, "--vcpkg-root", args.vcpkg_root_dir);
                     continue;
                 }
-                if (Strings::starts_with(arg, "--scripts-root="))
+                if (Strings::starts_with(arg, "--x-scripts-root="))
                 {
                     parse_cojoined_value(
-                        arg.substr(sizeof("--scripts-root=") - 1), "--scripts-root", args.scripts_root_dir);
+                        arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
                     continue;
                 }
                 if (arg == "--triplet")
@@ -430,7 +430,7 @@ namespace vcpkg
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");
         System::printf("    %-40s %s\n",
-                       "--scripts-root=<path>",
-                       "Specify the scripts directory to use instead of default vcpkg scripts directory");
+                       "--x-scripts-root=<path>",
+                       "(Experimental) Specify the scripts directory to use instead of default vcpkg scripts directory");
     }
 }

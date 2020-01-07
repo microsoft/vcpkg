@@ -1,5 +1,4 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fluidsynth-1.1.10)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

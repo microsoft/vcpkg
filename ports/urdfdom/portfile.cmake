@@ -8,13 +8,9 @@ vcpkg_from_github(
   REF 1.0.3
   SHA512 240181d9c61dd7544f16a79a400d9a2c4dc0a682bef165b46529efcb4b31e2a34e27896933b60b9ddbaa5c4a8d575ebda42752599ff3b0a98d1eeef8f9b0b7a7
   HEAD_REF master
-)
-
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/0001_use_math_defines.patch
-    ${CMAKE_CURRENT_LIST_DIR}/0002_fix_exports.patch
+    0001_use_math_defines.patch
+    0002_fix_exports.patch
 )
 
 vcpkg_configure_cmake(

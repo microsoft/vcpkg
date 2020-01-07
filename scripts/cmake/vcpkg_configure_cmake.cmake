@@ -72,14 +72,11 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(CMAKE_HOST_WIN32)
-        set(_PATHSEP ";")
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
         else()
             set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
         endif()
-    else()
-        set(_PATHSEP ":")
     endif()
 
     set(NINJA_CAN_BE_USED ON) # Ninja as generator
@@ -154,7 +151,7 @@ function(vcpkg_configure_cmake)
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        vcpkg_add_to_path("${NINJA_PATH}")
         list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -198,15 +195,15 @@ function(vcpkg_configure_cmake)
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR _TARGETTING_UWP)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/linux.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${VCPKG_ROOT_DIR}/scripts/toolchains/freebsd.cmake")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
         endif()
     endif()
 
@@ -222,7 +219,7 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=TRUE"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DVCPKG_APPLOCAL_DEPS=OFF"
-        "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
+        "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
         "-DVCPKG_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
         "-DVCPKG_CXX_FLAGS_RELEASE=${VCPKG_CXX_FLAGS_RELEASE}"
@@ -265,7 +262,7 @@ function(vcpkg_configure_cmake)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        vcpkg_add_to_path("${NINJA_PATH}")
 
         #parallelize the configure step
         set(_contents

@@ -1,0 +1,163 @@
+diff --git a/common/lexers/CMakeLists.txt b/common/lexers/CMakeLists.txt
+index 10c8caf..95d96dc 100644
+--- a/common/lexers/CMakeLists.txt
++++ b/common/lexers/CMakeLists.txt
+@@ -23,7 +23,7 @@ SET_PROPERTY(TARGET lexers PROPERTY FOLDER common)
+ SET_PROPERTY(TARGET lexers APPEND PROPERTY COMPILE_FLAGS " ${FLAGS_LOWEST}")
+ 
+ IF (EMBREE_STATIC_LIB)
+-  INSTALL(TARGETS lexers EXPORT lexers-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-  INSTALL(EXPORT lexers-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++  INSTALL(TARGETS lexers EXPORT lexers-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++  INSTALL(EXPORT lexers-targets DESTINATION share/embree3 COMPONENT devel)
+   SIGN_TARGET(lexers)
+ ENDIF()
+diff --git a/common/math/CMakeLists.txt b/common/math/CMakeLists.txt
+index e7ed3b1..13247ca 100644
+--- a/common/math/CMakeLists.txt
++++ b/common/math/CMakeLists.txt
+@@ -19,8 +19,8 @@ SET_PROPERTY(TARGET math PROPERTY FOLDER common)
+ SET_PROPERTY(TARGET math APPEND PROPERTY COMPILE_FLAGS " ${FLAGS_LOWEST}")
+ 
+ IF (EMBREE_STATIC_LIB)
+-  INSTALL(TARGETS math EXPORT math-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-  INSTALL(EXPORT math-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++  INSTALL(TARGETS math EXPORT math-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++  INSTALL(EXPORT math-targets DESTINATION share/embree3 COMPONENT devel)
+   SIGN_TARGET(math)
+ ENDIF()
+ 
+diff --git a/common/simd/CMakeLists.txt b/common/simd/CMakeLists.txt
+index 5b1658c..81d7c80 100644
+--- a/common/simd/CMakeLists.txt
++++ b/common/simd/CMakeLists.txt
+@@ -19,7 +19,7 @@ SET_PROPERTY(TARGET simd PROPERTY FOLDER common)
+ SET_PROPERTY(TARGET simd APPEND PROPERTY COMPILE_FLAGS " ${FLAGS_LOWEST}")
+ 
+ IF (EMBREE_STATIC_LIB)
+-  INSTALL(TARGETS simd EXPORT simd-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-  INSTALL(EXPORT simd-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++  INSTALL(TARGETS simd EXPORT simd-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++  INSTALL(EXPORT simd-targets DESTINATION share/embree3 COMPONENT devel)
+   SIGN_TARGET(simd)
+ ENDIF()
+diff --git a/common/sys/CMakeLists.txt b/common/sys/CMakeLists.txt
+index e0e0848..b57e6be 100644
+--- a/common/sys/CMakeLists.txt
++++ b/common/sys/CMakeLists.txt
+@@ -35,7 +35,7 @@ SET_PROPERTY(TARGET sys PROPERTY FOLDER common)
+ SET_PROPERTY(TARGET sys APPEND PROPERTY COMPILE_FLAGS " ${FLAGS_LOWEST}")
+ 
+ IF (EMBREE_STATIC_LIB)
+-  INSTALL(TARGETS sys EXPORT sys-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-  INSTALL(EXPORT sys-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++  INSTALL(TARGETS sys EXPORT sys-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++  INSTALL(EXPORT sys-targets DESTINATION share/embree3 COMPONENT devel)
+   SIGN_TARGET(sys)
+ ENDIF()
+diff --git a/common/tasking/CMakeLists.txt b/common/tasking/CMakeLists.txt
+index f5db33f..b96671a 100644
+--- a/common/tasking/CMakeLists.txt
++++ b/common/tasking/CMakeLists.txt
+@@ -28,7 +28,7 @@ SET_PROPERTY(TARGET tasking PROPERTY FOLDER common)
+ SET_PROPERTY(TARGET tasking APPEND PROPERTY COMPILE_FLAGS " ${FLAGS_LOWEST}")
+ 
+ IF (EMBREE_STATIC_LIB)
+-  INSTALL(TARGETS tasking EXPORT tasking-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-  INSTALL(EXPORT tasking-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++  INSTALL(TARGETS tasking EXPORT tasking-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++  INSTALL(EXPORT tasking-targets DESTINATION share/embree3 COMPONENT devel)
+   SIGN_TARGET(tasking)
+ ENDIF()
+diff --git a/kernels/CMakeLists.txt b/kernels/CMakeLists.txt
+index a5774d2..b637321 100644
+--- a/kernels/CMakeLists.txt
++++ b/kernels/CMakeLists.txt
+@@ -255,8 +255,8 @@ IF (EMBREE_ISA_SSE42 AND EMBREE_LIBRARY_FILES_SSE42)
+   SET(EMBREE_LIBRARIES ${EMBREE_LIBRARIES} embree_sse42)
+   CheckGlobals(embree_sse42)
+   IF (EMBREE_STATIC_LIB)
+-    INSTALL(TARGETS embree_sse42 EXPORT embree_sse42-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-    INSTALL(EXPORT embree_sse42-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++    INSTALL(TARGETS embree_sse42 EXPORT embree_sse42-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++    INSTALL(EXPORT embree_sse42-targets DESTINATION share/embree3 COMPONENT devel)
+   ENDIF()
+ ENDIF ()
+ 
+@@ -268,8 +268,8 @@ IF (EMBREE_ISA_AVX  AND EMBREE_LIBRARY_FILES_AVX)
+   SET(EMBREE_LIBRARIES ${EMBREE_LIBRARIES} embree_avx)
+   CheckGlobals(embree_avx)
+   IF (EMBREE_STATIC_LIB)
+-    INSTALL(TARGETS embree_avx EXPORT embree_avx-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-    INSTALL(EXPORT embree_avx-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++    INSTALL(TARGETS embree_avx EXPORT embree_avx-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++    INSTALL(EXPORT embree_avx-targets DESTINATION share/embree3 COMPONENT devel)
+   ENDIF()
+ ENDIF()
+ 
+@@ -281,8 +281,8 @@ IF (EMBREE_ISA_AVX2 AND EMBREE_LIBRARY_FILES_AVX2)
+   SET(EMBREE_LIBRARIES ${EMBREE_LIBRARIES} embree_avx2)
+   CheckGlobals(embree_avx2)
+   IF (EMBREE_STATIC_LIB)
+-    INSTALL(TARGETS embree_avx2 EXPORT embree_avx2-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-    INSTALL(EXPORT embree_avx2-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++    INSTALL(TARGETS embree_avx2 EXPORT embree_avx2-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++    INSTALL(EXPORT embree_avx2-targets DESTINATION share/embree3 COMPONENT devel)
+   ENDIF()
+ ENDIF()
+ 
+@@ -294,8 +294,8 @@ IF (EMBREE_ISA_AVX512KNL AND EMBREE_LIBRARY_FILES_AVX512KNL)
+   SET(EMBREE_LIBRARIES ${EMBREE_LIBRARIES} embree_avx512knl)
+   CheckGlobals(embree_avx512knl)
+   IF (EMBREE_STATIC_LIB)
+-    INSTALL(TARGETS embree_avx512knl EXPORT embree_avx512knl-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-    INSTALL(EXPORT embree_avx512knl-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++    INSTALL(TARGETS embree_avx512knl EXPORT embree_avx512knl-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++    INSTALL(EXPORT embree_avx512knl-targets DESTINATION share/embree3 COMPONENT devel)
+   ENDIF()
+ ENDIF()
+ 
+@@ -307,8 +307,8 @@ IF (EMBREE_ISA_AVX512SKX AND EMBREE_LIBRARY_FILES_AVX512SKX)
+   SET(EMBREE_LIBRARIES ${EMBREE_LIBRARIES} embree_avx512skx)
+   CheckGlobals(embree_avx512skx)
+   IF (EMBREE_STATIC_LIB)
+-    INSTALL(TARGETS embree_avx512skx EXPORT embree_avx512skx-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
+-    INSTALL(EXPORT embree_avx512skx-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++    INSTALL(TARGETS embree_avx512skx EXPORT embree_avx512skx-targets DESTINATION share/embree3 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel)
++    INSTALL(EXPORT embree_avx512skx-targets DESTINATION share/embree3 COMPONENT devel)
+   ENDIF()
+ ENDIF()
+ 
+@@ -331,7 +331,7 @@ ELSE()
+   SET_TARGET_PROPERTIES(embree PROPERTIES VERSION ${EMBREE_VERSION} SOVERSION ${EMBREE_VERSION_MAJOR})
+ ENDIF()
+ 
+-INSTALL(TARGETS embree EXPORT embree-targets
++INSTALL(TARGETS embree EXPORT embree-targets DESTINATION share/embree3
+   LIBRARY NAMELINK_SKIP DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
+   # on Windows put the dlls into bin
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT examples
+@@ -340,7 +340,7 @@ INSTALL(TARGETS embree EXPORT embree-targets
+ )
+ 
+ IF (EMBREE_STATIC_LIB)
+-  INSTALL(EXPORT embree-targets DESTINATION ${EMBREE_CMAKECONFIG_DIR} COMPONENT devel)
++  INSTALL(EXPORT embree-targets DESTINATION share/embree3 COMPONENT devel)
+ ENDIF()
+ 
+ IF (NOT EMBREE_STATIC_LIB)
+diff --git a/common/cmake/package.cmake b/common/cmake/package.cmake
+index 0c365ac..7b140a5 100644
+--- a/common/cmake/package.cmake
++++ b/common/cmake/package.cmake
+@@ -124,8 +124,8 @@ CONFIGURE_FILE(common/cmake/embree-config-version.cmake embree-config-version.cm
+ # create a config file for the build directory
+ CONFIGURE_FILE(common/cmake/embree-config-builddir.cmake embree-config.cmake @ONLY)
+ 
+-INSTALL(FILES "${PROJECT_BINARY_DIR}/embree-config-install.cmake" DESTINATION ${EMBREE_CMAKECONFIG_DIR}/share/embree3 RENAME "embree-config.cmake" COMPONENT devel)
+-INSTALL(FILES "${PROJECT_BINARY_DIR}/embree-config-version.cmake" DESTINATION ${EMBREE_CMAKECONFIG_DIR}/share/embree3 COMPONENT devel)
++INSTALL(FILES "${PROJECT_BINARY_DIR}/embree-config-install.cmake" DESTINATION share/embree3 RENAME "embree-config.cmake" COMPONENT devel)
++INSTALL(FILES "${PROJECT_BINARY_DIR}/embree-config-version.cmake" DESTINATION share/embree3 COMPONENT devel)
+ 
+ ##############################################################
+ # CPack specific stuff

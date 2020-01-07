@@ -4,14 +4,14 @@ set(LIB_NAME nghttp2)
 set(LIB_VERSION 1.39.2)
 
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/nghttp2/nghttp2/releases/download/v${LIB_VERSION}/${LIB_FILENAME}"
-    FILENAME "${LIB_FILENAME}"
-    SHA512 1623a6bd9de1ca4d0742919b973eaefd570b250eb109697e5cf2240d2062789d1ca58632fdff32bb17f524b102fade0e30ab3f400dc2c128bfb91a75277f13e0 
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO nghttp2/nghttp2
+    REF v${LIB_VERSION}
+    SHA512 1ddfb8c6538e209e39199fb5e2f9c262d58d188f25c98cd03f9f733bb261055b7625f0f79863731b112e69bc40c9d6a7d10d4fe69f56c615127e03277ee3af1d
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -23,7 +23,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Remove unwanted files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
@@ -33,7 +32,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-# License and man
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${LIB_NAME} RENAME copyright)
 
 vcpkg_copy_pdbs()

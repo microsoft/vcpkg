@@ -2,13 +2,23 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Azure/umock-c
-    REF 1b2b14e9f45536894fe516b6dbb380b0507d779a
-    SHA512 4933408296a1e1095be967a434bc9572411e38b78592606c40f51a2e651ee105f4761f888e8db36dd579539c4ebc07c9ae28cd1ff8ef0b720ce9b01a23e8861d
-    HEAD_REF master
-)
+if("public-preview" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/umock-c
+        REF 87d2214384c886a1e2406ac0756a0b3786add8da
+        SHA512 230b6c79a8346727bbc124d1aefaa14da8ecd82b2a56d68b3d2511b8efa5931872da440137a5d266835ba8c5193b83b4bc5ee85abb5242d07904a0706727926c
+        HEAD_REF master
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/umock-c
+        REF 87d2214384c886a1e2406ac0756a0b3786add8da
+        SHA512 230b6c79a8346727bbc124d1aefaa14da8ecd82b2a56d68b3d2511b8efa5931872da440137a5d266835ba8c5193b83b4bc5ee85abb5242d07904a0706727926c
+        HEAD_REF master
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
