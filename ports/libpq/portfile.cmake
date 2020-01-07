@@ -1,4 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     message(FATAL_ERROR "${PORT} currently only supports being built for desktop")
 endif()
 
@@ -281,3 +281,4 @@ endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/postgresql)
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/postgresql)
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpq RENAME copyright)
+

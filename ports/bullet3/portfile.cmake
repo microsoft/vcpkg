@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF 2.88
     SHA512 15face1940d496c96fd19a44139d11d2cbb629526c40432be4a0eef5fa9a532c842ec7318248c0359a080f2034111bf1a3c2d3a6fd789bec675bd368fac7bd93
     HEAD_REF master
+    PATCHES cmake-fix.patch
 )
 
 set(BULLET_MULTITHREADING OFF)
@@ -32,8 +33,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/bullet3")
+
+# Clean up unneeded files
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bullet/BulletInverseDynamics/details)
 
