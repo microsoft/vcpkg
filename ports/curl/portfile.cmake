@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_cmake.patch
-#        0002_fix_uwp.patch
+        0002_fix_uwp.patch
         0003_fix_libraries.patch
         0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
