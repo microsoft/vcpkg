@@ -1,29 +1,29 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
-    FILENAME "fltk-1.3.5.tar.gz"
-    SHA512 db7ea7c5f3489195a48216037b9371a50f1119ae7692d66f71b6711e5ccf78814670581bae015e408dee15c4bba921728309372c1cffc90113cdc092e8540821
-)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        findlibsfix.patch
+vcpkg_from_github(ARCHIVE
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO fltk/fltk
+	REF ee9ada967806dae72aa1b9ddad7b95b94f4dd2a3 # Nov 9, 2019
+	SHA512 2e3c5bb06adcb0eaaaa9eb2d193353b0e792b1cc215686a79ab56486b11f7ea1aa7457fd51eb0bf65463536115b32cf02efc4ef83959842e9a9c17e122407afe
+	HEAD_REF master
+	PATCHES
+        find-lib-cairo.patch
+        find-lib-png.patch
         add-link-libraries.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED ON)
+    set(OPTION_BUILD_SHARED "-DOPTION_BUILD_SHARED_LIBS=ON")
 else()
-    set(BUILD_SHARED OFF)
+    set(OPTION_BUILD_SHARED "-DOPTION_BUILD_SHARED_LIBS=OFF")
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
 else()
     set(OPTION_USE_GL "-DOPTION_USE_GL=ON")
+endif()
+
+if ("cairo" IN_LIST FEATURES)
+    set(OPTION_USE_CAIRO "-DOPTION_CAIRO=ON")
 endif()
 
 vcpkg_configure_cmake(
@@ -36,7 +36,8 @@ vcpkg_configure_cmake(
         -DOPTION_USE_SYSTEM_ZLIB=ON
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
-        -DOPTION_BUILD_SHARED_LIBS=${BUILD_SHARED}
+        ${OPTION_BUILD_SHARED}
+        ${OPTION_USE_CAIRO}
         ${OPTION_USE_GL}
 )
 
@@ -46,14 +47,23 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share 
 )
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(FLUID_TARGET fluid.exe)
+elseif (VCPKG_TARGET_IS_OSX)
+    set(FLUID_TARGET fluid.app)
+endif()
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
+if (FLUID_TARGET)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/${FLUID_TARGET} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/${FLUID_TARGET})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
+
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${FLUID_TARGET})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
+endif()
 
 vcpkg_copy_pdbs()
 

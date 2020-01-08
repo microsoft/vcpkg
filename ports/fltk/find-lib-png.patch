@@ -1,0 +1,49 @@
+diff --git a/CMake/resources.cmake b/CMake/resources.cmake
+index 3676d3b..3e9cc1d 100644
+--- a/CMake/resources.cmake
++++ b/CMake/resources.cmake
+@@ -63,15 +63,25 @@ endmacro (fl_find_header)
+ fl_find_header (HAVE_ALSA_ASOUNDLIB_H alsa/asoundlib.h)
+ fl_find_header (HAVE_DLFCN_H dlfcn.h)
+ fl_find_header (HAVE_GL_GLU_H GL/glu.h)
+-fl_find_header (HAVE_LIBPNG_PNG_H libpng/png.h)
++#fl_find_header (HAVE_LIBPNG_PNG_H libpng/png.h)
+ fl_find_header (HAVE_LOCALE_H locale.h)
+ fl_find_header (HAVE_OPENGL_GLU_H OpenGL/glu.h)
+-fl_find_header (HAVE_PNG_H png.h)
++#fl_find_header (HAVE_PNG_H png.h)
+ fl_find_header (HAVE_STDIO_H stdio.h)
+ fl_find_header (HAVE_STRINGS_H strings.h)
+ fl_find_header (HAVE_SYS_SELECT_H sys/select.h)
+ fl_find_header (HAVE_SYS_STDTYPES_H sys/stdtypes.h)
+ 
++find_package(PNG REQUIRED)
++if(PNG_FOUND)
++ set(LIB_png ${PNG_LIBRARIES})
++ set(HAVE_PNG_H ${PNG_FOUND})
++endif()
++find_package(ZLIB REQUIRED)
++if(ZLIB_FOUND)
++ set(LIB_zlib ${ZLIB_LIBRARIES})
++endif()
++
+ if (USE_FIND_FILE)
+   fl_find_header (HAVE_X11_XREGION_H "X11/Xregion.h")
+   fl_find_header (HAVE_XDBE_H "X11/extensions/Xdbe.h")
+@@ -184,12 +194,13 @@ find_library(LIB_freetype freetype)
+ find_library(LIB_GL GL)
+ find_library(LIB_MesaGL MesaGL)
+ find_library(LIB_jpeg jpeg)
+-find_library(LIB_png png)
+-find_library(LIB_zlib z)
++#find_library(LIB_png png)
++#find_library(LIB_zlib z)
+ 
+ mark_as_advanced(LIB_CAIRO LIB_dl LIB_fontconfig LIB_freetype)
+ mark_as_advanced(LIB_GL LIB_MesaGL)
+-mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
++#mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
++mark_as_advanced(LIB_jpeg)
+ 
+ #######################################################################
+ # functions
