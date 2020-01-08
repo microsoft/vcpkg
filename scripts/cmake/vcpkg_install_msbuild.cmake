@@ -6,6 +6,7 @@
 ## ```cmake
 ## vcpkg_install_msbuild(
 ##     SOURCE_PATH <${SOURCE_PATH}>
+##     [NO_DEBUG]
 ##     PROJECT_SUBPATH <port.sln>
 ##     [INCLUDES_SUBPATH <include>]
 ##     [LICENSE_SUBPATH <LICENSE>]
@@ -37,6 +38,9 @@
 ##
 ## ### PROJECT_SUBPATH
 ## The subpath to the solution (`.sln`) or project (`.vcxproj`) file relative to `SOURCE_PATH`.
+##
+## ### NO_DEBUG
+## This port doesn't support debug mode.
 ##
 ## ### LICENSE_SUBPATH
 ## The subpath to the license file relative to `SOURCE_PATH`.
@@ -94,7 +98,7 @@ include(vcpkg_clean_msbuild)
 function(vcpkg_install_msbuild)
     cmake_parse_arguments(
         _csc
-        "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
+        "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
         ${ARGN}
@@ -152,17 +156,23 @@ function(vcpkg_install_msbuild)
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
+        # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
+        if (_csc_NO_DEBUG)
+            set(SHORT_BUILDTYPE "")
+        else()
+            set(SHORT_BUILDTYPE "-rel")
+        endif()
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+        set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}/${SOURCE_PATH_SUFFIX})
         vcpkg_execute_required_process(
             COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
                 /p:Configuration=${_csc_RELEASE_CONFIGURATION}
                 ${_csc_OPTIONS}
                 ${_csc_OPTIONS_RELEASE}
             WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
+            LOGNAME build-${TARGET_TRIPLET}${SHORT_BUILDTYPE}
         )
         file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
         file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
@@ -179,7 +189,7 @@ function(vcpkg_install_msbuild)
         endif()
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT _csc_NO_DEBUG AND (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug"))
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Debug")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)

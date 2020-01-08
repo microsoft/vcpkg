@@ -6,6 +6,7 @@ Build and install a msbuild-based project. This replaces `vcpkg_build_msbuild()`
 ```cmake
 vcpkg_install_msbuild(
     SOURCE_PATH <${SOURCE_PATH}>
+    [NO_DEBUG]
     PROJECT_SUBPATH <port.sln>
     [INCLUDES_SUBPATH <include>]
     [LICENSE_SUBPATH <LICENSE>]
@@ -37,6 +38,9 @@ By default, projects built with this command will not automatically link librari
 
 ### PROJECT_SUBPATH
 The subpath to the solution (`.sln`) or project (`.vcxproj`) file relative to `SOURCE_PATH`.
+
+### NO_DEBUG
+This port doesn't support debug mode.
 
 ### LICENSE_SUBPATH
 The subpath to the license file relative to `SOURCE_PATH`.
