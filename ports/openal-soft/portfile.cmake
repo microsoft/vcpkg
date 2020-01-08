@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF openal-soft-1.19.1
-    SHA512 4a64cc90ddeaa3773610b0bc8023d231100f3396f3fc5bd079db81600f80a789c75e6af03391bfc78a903c96bb71f8052a9ae802ea81422028e5b12b7eb6c47b
+    REF openal-soft-1.20.0
+    SHA512 d106bf8f96b32a61fadc0ee54882ce5041e4cbc35bf573296a210c83815b6c7be056ee3ed7617196dda5f89f2acd7163375f14b0cf24934faa0eda1fdb4f82a9
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
