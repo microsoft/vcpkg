@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(CAIRO_VERSION 1.16.0)
 
 vcpkg_download_distfile(ARCHIVE
@@ -41,6 +40,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cairo TARGET_PATH share/u
 
 # Copy the appropriate header files.
 foreach(FILE
+"${SOURCE_PATH}/cairo-version.h"
+"${SOURCE_PATH}/util/cairo-gobject/cairo-gobject.h"
 "${SOURCE_PATH}/src/cairo.h"
 "${SOURCE_PATH}/src/cairo-deprecated.h"
 "${SOURCE_PATH}/src/cairo-features.h"
@@ -48,9 +49,14 @@ foreach(FILE
 "${SOURCE_PATH}/src/cairo-ps.h"
 "${SOURCE_PATH}/src/cairo-script.h"
 "${SOURCE_PATH}/src/cairo-svg.h"
-"${SOURCE_PATH}/cairo-version.h"
+"${SOURCE_PATH}/src/cairo-tee.h"
+"${SOURCE_PATH}/src/cairo-xcb.h"
+"${SOURCE_PATH}/src/cairo-xlib.h"
+"${SOURCE_PATH}/src/cairo-xlib-xrender.h"
+"${SOURCE_PATH}/src/cairo-xml.h"
 "${SOURCE_PATH}/src/cairo-win32.h"
-"${SOURCE_PATH}/util/cairo-gobject/cairo-gobject.h"
+"${SOURCE_PATH}/src/cairo-quartz.h"
+"${SOURCE_PATH}/src/cairo-quartz-image.h"
 "${SOURCE_PATH}/src/cairo-ft.h")
   file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
   file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cairo)

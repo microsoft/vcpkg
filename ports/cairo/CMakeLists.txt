@@ -142,6 +142,13 @@ file(GLOB SOURCES
 "cairo-ft-font.c"
 )
 
+# OSX
+file(GLOB PLATFORM_SOURCES_OSX
+"cairo-quartz-font.c"
+"cairo-quartz-image-surface.c"
+"cairo-quartz-surface.c"
+)
+
 # win32
 file(GLOB PLATFORM_SOURCES_WIN32
 "win32/cairo-win32-debug.c"
@@ -153,6 +160,10 @@ file(GLOB PLATFORM_SOURCES_WIN32
 "win32/cairo-win32-printing-surface.c"
 "win32/cairo-win32-font.c"
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  list(APPEND SOURCES ${PLATFORM_SOURCES_OSX})
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   list(APPEND SOURCES ${PLATFORM_SOURCES_WIN32})
