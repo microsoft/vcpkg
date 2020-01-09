@@ -955,7 +955,6 @@ luafilesystem:x64-osx=fail
 luajit:arm64-windows      = skip
 luajit:arm-uwp            = skip
 luajit:x64-linux          = skip
-luajit:x64-osx            = skip
 luajit:x64-uwp            = skip
 luajit:x64-windows        = skip
 luajit:x64-windows-static = skip
