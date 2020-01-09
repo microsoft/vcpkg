@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tfussell/xlnt
-    REF v1.3.0
-    SHA512 716b93a6138daf1e293980a3c26801bfd00aa713afdd9cbe9be672ccff8c86b69b26eb0f3e8259bd0844e04d0e6148b64467d7db6815c76ecf412715d506786f
+    REF v1.4.0
+    SHA512 74abbee97994098fb7d8fd0839929db74fe01b8428f8bdb8edd28340d3b3ed04d4c7d6dd5d886ae766054ff1b0fe9a8275098a1462e7a5146ff09f1cdb063360
     HEAD_REF master
 )
 
@@ -21,6 +21,17 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        vcpkg_apply_patches(
+            SOURCE_PATH ${CURRENT_PACKAGES_DIR}
+            PATCHES ${CMAKE_CURRENT_LIST_DIR}/static-linking-for-windows.patch
+        )
+    endif()
+endif()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/xlnt)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
