@@ -733,7 +733,6 @@ libgit2:arm64-windows=fail
 libgit2:arm-uwp=fail
 libgit2:x64-uwp=fail
 libgo:x64-osx=fail
-libguarded:x64-osx=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
