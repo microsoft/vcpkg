@@ -65,7 +65,6 @@ include_directories(include)
 add_definitions(-DFFI_BUILDING)
 if(BUILD_SHARED_LIBS AND WIN32)
     add_definitions(-DFFI_BUILDING_DLL)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
 set(FFI_SOURCES
