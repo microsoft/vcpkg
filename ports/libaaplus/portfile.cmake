@@ -4,7 +4,7 @@ vcpkg_download_distfile(
     ARCHIVE_FILE
     URLS "http://www.naughter.com/download/aaplus.zip"
     FILENAME "aaplus.zip"
-    SHA512 ef814a36fa567e806be5e5345abd89e1a8d32da1c392c251e5b74aea86b866ebc74bc17885a0eff303b170cfe226670cd6f69095702396cc9d6fcbc1a769de4f
+    SHA512 ec3a3d1346637fbed3ec5093ded821c6d80950a6432378d9826ed842571d8670cd5d2a1c9ff58a18f308e18669d786f72d24961e26bd8e070ee35674688a39e7
 )
 
 vcpkg_extract_source_archive_ex(
