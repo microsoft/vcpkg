@@ -1466,7 +1466,6 @@ rpclib:x86-windows=ignore
 rpclib:x64-windows-static=ignore
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-scintilla:arm64-windows=fail
 scintilla:arm-uwp=fail
 scintilla:x64-linux=fail
 scintilla:x64-osx=fail
