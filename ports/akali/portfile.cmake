@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/akali
@@ -15,8 +17,6 @@ vcpkg_configure_cmake(
         -DAKALI_STATIC:BOOL=${AKALI_STATIC}
         -DBUILD_TESTS:BOOL=OFF
 )
-
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_install_cmake()
 
