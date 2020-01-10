@@ -180,6 +180,7 @@ bullet3:arm-uwp=fail
 bullet3:x64-uwp=fail
 butteraugli:x64-linux=ignore
 caf:arm-uwp=fail
+caf:arm64-windows=fail
 caf:x64-uwp=fail
 caf:x64-linux=ignore
 caffe2:x86-windows=fail
