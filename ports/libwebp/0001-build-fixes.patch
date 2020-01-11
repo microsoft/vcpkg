@@ -144,7 +144,7 @@ index 499ddce..895fda9 100644
 +  target_include_directories(webp_wasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
    set_target_properties(
      webp_wasm
-     PROPERTIES LINK_FLAGS "-s WASM=1 -s 'BINARYEN_METHOD=\"native-wasm\"' \
+     PROPERTIES LINK_FLAGS "-s WASM=1 \
 @@ -579,7 +590,7 @@ if(WEBP_BUILD_ANIM_UTILS)
                          libwebpmux
                          webpdemux
