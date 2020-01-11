@@ -24,8 +24,10 @@ vcpkg_from_github(
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-# disable assembly on OSX to fix broken build
+# disable assembly on OSX and ARM Windows to fix broken build
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CRYPTOPP_DISABLE_ASM "ON")
+elseif (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
     set(CRYPTOPP_DISABLE_ASM "ON")
 else()
     set(CRYPTOPP_DISABLE_ASM "OFF")
