@@ -68,6 +68,8 @@ set(CORE_OPTIONS
     #-optimized-tools
     #-force-debug-info
     #-verbose
+    #-list-features
+    #-list-libraries
 )
 
 ## 3rd Party Libs
@@ -136,7 +138,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND CORE_OPTIONS -appstore-compliant)
     endif()
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-        list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
+        list(APPEND CORE_OPTIONS -opengl dynamic -opengles3) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
     else()
         list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch 
     endif()
