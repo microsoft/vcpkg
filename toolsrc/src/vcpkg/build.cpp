@@ -662,7 +662,7 @@ namespace vcpkg::Build
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
         // Sorted here as the order of dependency_abis is the only
-        // non-deterministicly ordered set of AbiEntries
+        // non-deterministically ordered set of AbiEntries
         Util::sort(abi_tag_entries);
 
         // If there is an unusually large number of files in the port then
