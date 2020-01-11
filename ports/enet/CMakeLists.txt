@@ -32,9 +32,9 @@ add_library(enet STATIC
     win32.c)
 
 if(MSVC)
-    target_compile_definitions(enet PRIVATE -W3)
+    target_compile_options(enet PRIVATE -W3)
 else()
-    target_compile_definitions(enet PRIVATE -Wno-error)
+    target_compile_options(enet PRIVATE -Wno-error)
 endif()
  
 if(HAS_FCNTL)
