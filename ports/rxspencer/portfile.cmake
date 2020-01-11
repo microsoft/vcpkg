@@ -3,10 +3,9 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO garyhouston/rxspencer
-    REF ca9dface691015093c3c35e4693d512025e49dfa
-    SHA512 8c8e97949b17d1f286abfe03bcfdab0b455df9e71eca8489543857e47eb53e42cf09749cbc06973fa451aaa2855c44e3b0f2d5397949e89d0bdbe7fc09ee501d
+    REF e42b6a667f1385aedf49b533b9fbba58e5a26934
+    SHA512 2842e1c78c3ebbbd03d15fb85e55f861740bb446aa57157f3fc90876d931d9f865242f5eaefc94f31c8d78e0d531a008d4c579e9b4f9c7179f5c7a95a98359fd
     HEAD_REF master
-    PATCHES 0001-Add-CMake-build-scripts-derived-from-LuaDist.patch
 )
 
 vcpkg_configure_cmake(
