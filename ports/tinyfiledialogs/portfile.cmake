@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://git.code.sf.net/p/tinyfiledialogs/code
-    REF 331f93e903e0555399bf81479114dda978a77d7c
+    URL https://github.com/native-toolkit/tinyfiledialogs
+    REF f2379486f0e516cab528fc49991ad1b36c2e2831
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
