@@ -3,11 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
-    REF 3.3
-    SHA512 e74bb7ba0c1c3a524a193c4fb5a2d13ba0e75f8e309612ea19cdcc944859d6e2fe29d8b2e3db76236e1011b637564ddd5f4a176dcccfeb84d09bda060f08f774
+    REF 3.3.1
+    SHA512 f9376002314eae5518ca63738cf1558433007dbf628fb6093a6f54c330f72d85e0ac30049877c50bc99f029e3eb6f69e69508f412d1ec9bdde0ac721dbbeba1e
     HEAD_REF master
-    PATCHES
-        fix-config.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
