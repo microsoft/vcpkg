@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
-    REF v1.6.7
-    SHA512 bc10a70815a8962e0ead06c36b312ea84e43db4e7c05ad940db91cacea92387a3b4f59f7de1606c4df56cd8c829433957733aa4007111d62bc0134e9cbb9ff3f
+    REF v1.6.8
+    SHA512 0429f2bd906df3aeabe772c1643b551b33d82620faa3c98d1a25b5b162dd69578a71f9af4c5d0fbeeb2bce8b34be6eccbcc04362a844a5e2ac9e97be7abaf7eb
     HEAD_REF master
     PATCHES
         archive-dest.patch
