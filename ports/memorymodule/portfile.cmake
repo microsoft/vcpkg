@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET Android FreeBSD Linux OSX UWP)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
