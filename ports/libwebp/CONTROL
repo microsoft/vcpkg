@@ -5,4 +5,4 @@ Description: Lossy compression of digital photographic images.
 
 Feature: all
 Description: enable all webp features
-Build-Depends: giflib, libjpeg-turbo, zlib, libpng, tiff, freeglut (!osx), sdl1 (windows), opengl
+Build-Depends: giflib, libjpeg-turbo, zlib, libpng, tiff, freeglut (!osx), opengl
