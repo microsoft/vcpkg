@@ -1,0 +1,3 @@
+Source: aws-greengrass-core-sdk-c
+Version: 1.2.0
+Description: SDK to use with functions running on Greengrass Core using C.
