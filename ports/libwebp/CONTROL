@@ -1,5 +1,5 @@
 Source: libwebp
-Version: 1.0.3
+Version: 1.0.3-1
 Homepage: https://github.com/webmproject/libwebp
 Description: WebP codec: library to encode and decode images in WebP format
 Default-Features: simd, nearlossless
@@ -58,4 +58,4 @@ Description: Enable byte swap for 16 bit colorspaces.
 
 Feature: all
 Description: enable all features except for webp_js and swap16bitcsp
-Build-Depends: libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, simd, cwebp, dwebp], libwebp[vwebp_sdl, extras] (!osx)
+Build-Depends: libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, simd, cwebp, dwebp], libwebp[vwebp_sdl] (!osx), libwebp[extras] (!osx)
