@@ -1,11 +1,9 @@
-include(vcpkg_common_functions)
-
-set(GM_VERSION 1.3.33)
+set(GM_VERSION 1.3.34)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}-windows-source.7z"
     FILENAME "GraphicsMagick-${GM_VERSION}-windows-source.7z"
-	SHA512 856fafe36693a7963f5944f489f4b7a0d15d9dcc575f96d31486e3abd886f681854cbb2271feb4b4cb19668480904d473138a2d9c2ec95539de705d75e2f49c9
+	SHA512 bc770070d3e6b58ded1932050c1aa9f31edd89ac68e12055d7bb481ba9aa8e7509e69ad676a1624c262f9b55c0ceeea738b807005946ddd97b88d49b39b8a073
 )
 
 vcpkg_extract_source_archive_ex(
@@ -38,18 +36,15 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-graphicsmagick TARGET_PATH share/unofficial-graphicsmagick)
 
 # copy license
-file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/graphicsmagick)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # copy config
-file(COPY ${SOURCE_PATH}/config/colors.mgk DESTINATION ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config)
-file(COPY ${SOURCE_PATH}/config/log.mgk DESTINATION ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config)
-file(COPY ${SOURCE_PATH}/config/modules.mgk DESTINATION ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config)
+file(COPY ${SOURCE_PATH}/config/colors.mgk DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/config)
+file(COPY ${SOURCE_PATH}/config/log.mgk DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/config)
+file(COPY ${SOURCE_PATH}/config/modules.mgk DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/config)
 
 file(READ ${SOURCE_PATH}/config/type-windows.mgk.in TYPE_MGK)
 string(REPLACE "@windows_font_dir@" "$ENV{SYSTEMROOT}/Fonts/" TYPE_MGK "${TYPE_MGK}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config/type.mgk "${TYPE_MGK}")
 
 vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME unofficial-graphicsmagick)
