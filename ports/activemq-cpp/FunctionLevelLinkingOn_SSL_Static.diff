@@ -20,6 +20,22 @@ index a43f072..54b4822 100644
        <CreateHotpatchableImage>false</CreateHotpatchableImage>
        <RuntimeTypeInfo>true</RuntimeTypeInfo>
        <PrecompiledHeaderFile>
+@@ -2610,6 +2610,7 @@
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4355</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+@@ -2826,6 +2826,7 @@
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4355</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
 @@ -2628,7 +2628,7 @@
        <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <MinimalRebuild>false</MinimalRebuild>
@@ -38,6 +54,15 @@ index a43f072..54b4822 100644
        <CreateHotpatchableImage>false</CreateHotpatchableImage>
        <RuntimeTypeInfo>true</RuntimeTypeInfo>
        <PrecompiledHeaderFile>
+@@ -2670,7 +2670,7 @@
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>AdvAPI32.lib;ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
+    </Lib>
 @@ -2684,7 +2684,7 @@
        <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <MinimalRebuild>false</MinimalRebuild>
@@ -56,6 +81,14 @@ index a43f072..54b4822 100644
        <CreateHotpatchableImage>false</CreateHotpatchableImage>
        <RuntimeTypeInfo>true</RuntimeTypeInfo>
        <PrecompiledHeaderFile>
+@@ -2718,6 +2718,7 @@
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4355</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
 @@ -2736,7 +2736,7 @@
        <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <MinimalRebuild>false</MinimalRebuild>
@@ -74,3 +107,44 @@ index a43f072..54b4822 100644
        <CreateHotpatchableImage>false</CreateHotpatchableImage>
        <RuntimeTypeInfo>true</RuntimeTypeInfo>
        <PrecompiledHeaderFile>
+@@ -2778,7 +2778,7 @@
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>AdvAPI32.lib;ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
+    </Lib>
+@@ -2825,6 +2825,7 @@
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4355</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+@@ -2888,6 +2888,6 @@
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+-      <AdditionalDependencies>ws2_32.lib;libapr-1.lib</AdditionalDependencies>
++      <AdditionalDependencies>AdvAPI32.lib;ws2_32.lib;libapr-1.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+@@ -2937,6 +2937,7 @@
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4355</DisableSpecificWarnings>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+@@ -3000,6 +3000,6 @@
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>ws2_32.lib;libapr-1.lib</AdditionalDependencies>
++      <AdditionalDependencies>AdvAPI32.lib;ws2_32.lib;libapr-1.lib</AdditionalDependencies>
+    </Link>

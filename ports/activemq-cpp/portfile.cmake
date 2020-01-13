@@ -15,11 +15,31 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/FunctionLevelLinkingOn.diff
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/FunctionLevelLinkingOn_SSL_Static.diff
 )
 
-set(RELEASE_CONF "ReleaseDLL")
-set(DEBUG_CONF   "DebugDLL")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    ssl     WITH_SSL
+)
+
+if("ssl" IN_LIST FEATURES)
+     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+          set(RELEASE_CONF "ReleaseSSL")
+          set(DEBUG_CONF   "DebugSSL")
+     else()
+          set(RELEASE_CONF "ReleaseSSL-DLL")
+          set(DEBUG_CONF   "DebugSSL-DLL")
+     endif()
+else()
+     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+          set(RELEASE_CONF "Release")
+          set(DEBUG_CONF   "Debug")
+     else()
+          set(RELEASE_CONF "ReleaseDLL")
+          set(DEBUG_CONF   "DebugDLL")
+     endif()
+endif()
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
@@ -46,37 +66,49 @@ vcpkg_copy_pdbs()
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/activemq-cpp)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/copyright)
 
-
-file(
-    COPY
-    ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cppd.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cppd.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cppd.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/libactivemq-cpp.lib
+          DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+     )
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/libactivemq-cpp.lib
+          DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+     )
+else()
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.lib
+          DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+     )
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll
+          DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+     )
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb
+          DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+     )
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cppd.lib
+          DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+     )
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cppd.dll
+          DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+     )
+     file(
+          COPY
+          ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cppd.pdb
+          DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+     )
+endif()
 
 file(COPY ${SOURCE_PATH}/src/main/activemq DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
 file(COPY ${SOURCE_PATH}/src/main/cms      DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
