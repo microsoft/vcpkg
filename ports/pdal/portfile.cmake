@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
         0003-fix-copy-vendor.patch
         PDALConfig.patch
         fix-dependency.patch
+        libpq.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
