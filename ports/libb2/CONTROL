@@ -1,5 +1,5 @@
 Source: libb2
-Version: 0.98.1
+Version: 0.98.1-1
+Build-Depends: automake (osx), libtool (osx)
 Homepage: https://github.com/BLAKE2/libb2
 Description: C library providing BLAKE2b, BLAKE2s, BLAKE2bp, BLAKE2sp
-Build-Depends: automake (osx), libtool (osx)
