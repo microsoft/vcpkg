@@ -37,8 +37,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencv USE_OPENCV
     openjpeg USE_OPENJPEG
     webp USE_WEBP
+    python USE_PYTHON
     tools OIIO_BUILD_TOOLS
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -48,7 +53,6 @@ vcpkg_configure_cmake(
         -DHIDE_SYMBOLS=ON
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
-        -DUSE_PYTHON=OFF
         -DUSE_QT=OFF
         -DUSE_PTEX=OFF
         -DLINKSTATIC=${LINKSTATIC}
