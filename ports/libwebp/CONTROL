@@ -58,4 +58,4 @@ Description: Enable byte swap for 16 bit colorspaces.
 
 Feature: all
 Description: enable all features except for webp_js and swap16bitcsp
-Build-Depends: libwebp[anim, gif2webp, img2webp, vwebp_sdl, info, mux, extras, nearlossless, simd, cwebp, dwebp]
+Build-Depends: libwebp[anim, gif2webp, img2webp, vwebp_sdl (!osx), info, mux, extras (!osx), nearlossless, simd, cwebp, dwebp]

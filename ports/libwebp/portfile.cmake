@@ -33,14 +33,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     message("WebP currently requires the following library from the system package manager:\n    Xxf86vm\n\nThis can be installed on Ubuntu systems via apt-get install libxxf86vm-dev")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(WEBP_BUILD_VWEBP OFF)
-    set(WEBP_BUILD_EXTRAS OFF)
-    message("Due to GLUT Framework problems with CMake, at the moment it's not possible to build VWebP on Mac. It has been disabled together with extras.")
+if(VCPKG_TARGET_IS_OSX)
+    if("vwebp" IN_LIST FEATURES OR "extras" IN_LIST FEATURES)
+        message(FATAL_ERROR "Due to GLUT Framework problems with CMake, at the moment it's not possible to build VWebP or extras on Mac!")
+    endif()
 endif()
 
 vcpkg_configure_cmake(
