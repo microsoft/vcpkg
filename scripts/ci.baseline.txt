@@ -1636,7 +1636,6 @@ tfhe:x64-windows-static=fail
 tfhe:x64-uwp=fail
 tfhe:arm64-windows=fail
 tfhe:arm-uwp=fail
-tfhe:x64-osx=fail
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
 theia:x64-uwp            = skip
