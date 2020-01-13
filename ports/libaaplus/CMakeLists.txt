@@ -5,6 +5,8 @@ cmake_policy(VERSION 3.11)
 
 project(libaaplus LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 14)
+
 option(BUILD_TOOLS "Build libaaplus tools" OFF)
 
 file(GLOB LIBS_SRC RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
