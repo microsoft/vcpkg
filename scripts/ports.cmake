@@ -92,7 +92,7 @@ if(CMD MATCHES "^BUILD$")
     include(${SCRIPTS}/cmake/vcpkg_common_definitions.cmake)
     include(${SCRIPTS}/cmake/vcpkg_common_functions.cmake)
     include(${CURRENT_PORT_DIR}/portfile.cmake)
-    
+
     set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)
     file(WRITE  ${BUILD_INFO_FILE_PATH} "CRTLinkage: ${VCPKG_CRT_LINKAGE}\n")
     file(APPEND ${BUILD_INFO_FILE_PATH} "LibraryLinkage: ${VCPKG_LIBRARY_LINKAGE}\n")
