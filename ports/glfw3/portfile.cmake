@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
+if(VCPKG_TARGET_IS_LINUX)
     message(
 "GLFW3 currently requires the following libraries from the system package manager:
     xinerama
