@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux platform" ON_TARGET "Windows" "OSX")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Unix" ON_TARGET "Windows")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,6 +7,10 @@ vcpkg_from_github(
     SHA512 cf29cf9391ae37a978eb6618de6f856f3defa622b8f56c2d5a519ab34fd5e4d91f3bb868601a44e9c9164a2992e80dde188ccc4d1605dffbdf93687336226f8d
     HEAD_REF master
 )
+
+file(COPY ${CURRENT_PORT_DIR}/pkg.m4 DESTINATION ${SOURCE_PATH}/m4)
+
+set(ENV{PATH} "$ENV{PATH}:${CURRENT_INSTALLED_DIR}/tools")
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
