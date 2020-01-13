@@ -1,6 +1,5 @@
 Source: libevent
-Version: 2.1.11-3
-Build-Depends: openssl
+Version: 2.1.11-4
 Homepage: https://github.com/libevent/libevent
 Description: An event notification library
 Default-Features: thread
