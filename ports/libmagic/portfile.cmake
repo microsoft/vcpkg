@@ -10,14 +10,6 @@ vcpkg_from_github(
 
 set(ENV{PATH} "$ENV{PATH}:${CURRENT_INSTALLED_DIR}/tools")
 
-find_program(LIBTOOLIZE libtoolize)
-
-vcpkg_execute_required_process(
-    COMMAND ${LIBTOOLIZE}
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME setup-${TARGET_TRIPLET}
-)
-
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
