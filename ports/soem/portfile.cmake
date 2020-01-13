@@ -1,18 +1,14 @@
-set(SOEM_VERSION 1.4.0)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/OpenEtherCATsociety/SOEM/archive/v${SOEM_VERSION}.tar.gz"
-    FILENAME "SOEM-${SOEM_VERSION}.tar.gz"
-    SHA512 4f1118e48908552c664f45f369e6fde09aba11ce72fa6a3a15f5805a280d77d998e0c92f1647185981aebc717037f62bac8b362444317405e795988a2ddbddd3
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${SOEM_VERSION}
-    PATCHES
+    REPO OpenEtherCATsociety/SOEM
+    REF abbf0d42e38d6cfbaa4c1e9e8e07ace651c386fd #v1.4.0
+    SHA512 2967775c6746bb63becea5eb12f136c184bbf874e1e5e8753374bfc212ec9cefbf1159350e79627b978af3562d261b61c50f38936a425c4d9c70598a1d136817
+    HEAD_REF master
+    PATCHES 
         winpcap.patch
 )
 
