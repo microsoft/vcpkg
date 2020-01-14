@@ -2,7 +2,6 @@ Source: hdf5
 Version: 1.10.5-9
 Homepage: https://www.hdfgroup.org/downloads/hdf5/
 Description: HDF5 is a data model, library, and file format for storing and managing data
-Build-Depends: 
 Default-Features: szip, zlib
 
 Feature: parallel
@@ -26,3 +25,4 @@ Build-Depends: zlib
 Feature: fortran
 Description: Build with fortran (not implemented yet)
 Build-Depends: 
+

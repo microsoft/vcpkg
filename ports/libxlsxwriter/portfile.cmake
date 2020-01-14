@@ -1,18 +1,14 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH 
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO jmcnamara/libxlsxwriter
-    REF RELEASE_0.8.7
-    SHA512 20bf09f084808a8db00315848213c550fb809b587ea49ce3b25b310de981c176a44c518452507b6e00ca3f0a8e0056d88a6f575c031d54aa68791575cb9ab285
+    REF RELEASE_0.8.9
+    SHA512 0442323b8e55000aa78a689820f8e446b5e925b5077c6ed163ad181b5a8f0e19fe71cc12c4781f47f70f0c702faa27e49655e813f7e90a855ab73dd2bd9f5d66
 	HEAD_REF master
 	PATCHES
-        0001-fix-build-error.patch
-        0002-fix-uwp-build.patch
-        0003-fix-include-file.patch
+        0001-fix-cmake-file.patch
 )
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_UWP)
   set(USE_WINDOWSSTORE ON)
 else()
   set(USE_WINDOWSSTORE OFF)
@@ -30,5 +26,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/License.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

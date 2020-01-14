@@ -1,8 +1,5 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
     FILENAME "CMake-hdf5-1.10.5.tar.gz"
@@ -15,7 +12,12 @@ vcpkg_extract_source_archive_ex(
     REF hdf5
     PATCHES
         hdf5_config.patch
+        fix-generate.patch
 )
+
+if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
+    message(FATAL_ERROR "Feature Parallel and C++ options are mutually exclusive.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
@@ -23,10 +25,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      tools        HDF5_BUILD_TOOLS
      cpp          HDF5_BUILD_CPP_LIB
      szip         HDF5_ENABLE_SZIP_SUPPORT
+     szip         HDF5_ENABLE_SZIP_ENCODING
      zlib         HDF5_ENABLE_Z_LIB_SUPPORT
      fortran      HDF5_BUILD_FORTRAN
-#   INVERTED_FEATURES
-#     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 )
 
 file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
@@ -46,22 +47,19 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DHDF5_BUILD_EXAMPLES=OFF
-        -DHDF5_ENABLE_SZIP_ENCODING=${HDF5_ENABLE_SZIP_SUPPORT}
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
         "-DSZIP_LIBRARY_DEBUG:PATH=${SZIP_DEBUG}"
         "-DSZIP_LIBRARY_RELEASE:PATH=${SZIP_RELEASE}"
 )
 
-vcpkg_install_cmake(${COMPONENT})
+vcpkg_install_cmake()
+
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/hdf5/data/COPYING ${CURRENT_PACKAGES_DIR}/share/hdf5/copyright)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/hdf5/vcpkg-cmake-wrapper.cmake @ONLY)
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]] [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]] contents ${contents})
@@ -155,3 +153,6 @@ endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)

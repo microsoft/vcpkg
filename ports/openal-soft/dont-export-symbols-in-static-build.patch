@@ -1,5 +1,5 @@
 diff --git a/config.h.in b/config.h.in
-index a71b54f..8d84645 100644
+index 4a1e2b00..d5496972 100644
 --- a/config.h.in
 +++ b/config.h.in
 @@ -1,6 +1,8 @@
@@ -8,6 +8,7 @@ index a71b54f..8d84645 100644
  #define AL_API  ${EXPORT_DECL}
  #define ALC_API ${EXPORT_DECL}
 +#endif
+
+ /* Define a restrict macro for non-aliased pointers */
+ #define RESTRICT ${RESTRICT_DECL}
  
- /* Define any available alignment declaration */
- #define ALIGN(x) ${ALIGN_DECL}
