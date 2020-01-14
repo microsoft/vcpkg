@@ -27,12 +27,12 @@ if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         set(BIN_SUFFIX .exe)
         if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3-bin.exe)
+            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3.exe)
                 message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
             endif()
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
         elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
-            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3-bin.exe)
+            if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3.exe)
                 message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x64-windows first.")
             endif()
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
@@ -60,7 +60,7 @@ vcpkg_configure_cmake(
     -DBUILD_PROJ=OFF
     -DBUILD_PROJINFO=OFF
     -DPROJ_TESTS=OFF
-    -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3-bin${BIN_SUFFIX}
+    -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )
 
 vcpkg_install_cmake()
