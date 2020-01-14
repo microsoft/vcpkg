@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4daeec85e..34e5e197d 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -1822,7 +1822,7 @@ endif()
+ if (WINCE)
+ 	list(APPEND LIB_LIST ws2.lib)
+ elseif (WIN32)
+-	list(APPEND LIB_LIST ws2_32.lib userenv.lib psapi.lib iphlpapi.lib)
++	list(APPEND LIB_LIST ws2_32.lib userenv.lib psapi.lib iphlpapi.lib crypt32.lib)
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "QNX")
