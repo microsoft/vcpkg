@@ -1,5 +1,4 @@
 Source: duktape
-Version: 2.3.0-3
+Version: 2.4.0-6
 Homepage: https://github.com/svaarala/duktape
 Description: Embeddable Javascript engine with a focus on portability and compact footprint.
-Build-Depends:

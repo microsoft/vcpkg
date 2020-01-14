@@ -5,19 +5,18 @@ if(WIN32)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 endif()
 
+project(tinkerforge LANGUAGES C VERSION 2.1.25)
+
+if(NOT CONFIG_INSTALL_DIR)
+    set(CONFIG_INSTALL_DIR "share/${PROJECT_NAME}/")
+endif()
+if(NOT INCLUDE_INSTALL_DIR)
+    set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
+endif()
 if(NOT TARGET_INSTALL_DIR)
     set(TARGET_INSTALL_DIR "share/${PROJECT_NAME}")
 endif()
 
-if(NOT CONFIG_INSTALL_DIR)
-    set(CONFIG_INSTALL_DIR "share/${PROJECT_NAME}")
-endif()
-
-if(NOT INCLUDE_INSTALL_DIR)
-    set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
-endif()
-
-project(tinkerforge LANGUAGES C VERSION 2.1.25)
 
 file(GLOB CPP_FILES source/*.c)
 file(GLOB H_FILES source/*.h)
@@ -27,7 +26,13 @@ add_library(${PROJECT_NAME} ${CPP_FILES} ${H_FILES} ${DEF_FILE})
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source>
     $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} PUBLIC Ws2_32)
+    
+find_package(Threads)
+target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads)
+
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
+    target_link_libraries(${PROJECT_NAME} PUBLIC Ws2_32 advapi32)
+endif()
 ##---------------------------------------------------------------------------------------##
 ##----- Package definition. 
 ##---------------------------------------------------------------------------------------##

@@ -7,14 +7,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF v3.3.3
-    SHA512 10063764b610c0c966ba0177cac0d2cb781e297a45545cc8a587741513089af26f40769670894c86e7985b73c47e9cb985253bc3bef3a12fa83fe2a6a30acb6d
+    REF 614110e76d9dbb9ed3e159a71cbd75fa3b23efe3
+    SHA512 8feac2c0e22e5b7c05f3be97c774ad82d39bdea4b3fa3a2b297b85f8a5a9f548c528ef63f5495afd42fb75759e03a4108f3831b27103f899f8fe4ef7e8e2d1cf
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-dependencies.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-lz4.patch
-        ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
+        fix-buildsystem.patch
+        fix-dependencies.patch
+        fix-lz4.patch
+        fix-zstd.patch
+        fix-cpu-set.patch
 )
 
 set(BUILD_libarchive_bzip2 OFF)
@@ -69,7 +70,9 @@ vcpkg_configure_cmake(
         -DENABLE_ACL=OFF
         -DENABLE_TEST=OFF
         -DENABLE_ICONV=OFF
-        -DPOSIX_REGEX_LIB=NONE)
+        -DPOSIX_REGEX_LIB=NONE
+        -DENABLE_WERROR=OFF
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

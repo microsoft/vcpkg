@@ -13,8 +13,8 @@ vcpkg_from_github(
         include_pcre.patch
         # Fix embedded copy of pcre in static linking mode
         static_pcre.patch
-        # Fix source path of PDF
-        unbundled_pdf.patch
+        # Use vcpkg installed libharu for feature pdf
+        use-vcpkg-libharu.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
         fix_foundation_link.patch
@@ -23,6 +23,10 @@ vcpkg_from_github(
 # define Poco linkage type
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    pdf ENABLE_PDF
+)
 
 # MySQL / MariaDDB feature
 if("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
@@ -43,7 +47,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     #PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         # Set to OFF|ON (default is OFF) to control linking dependencies as external
         -DPOCO_UNBUNDLED=ON
         # Define linking feature
@@ -63,7 +67,6 @@ vcpkg_configure_cmake(
         -DENABLE_MONGODB=ON
         # -DPOCO_ENABLE_SQL_SQLITE=ON # SQLITE are not supported.
         -DENABLE_REDIS=ON
-        -DENABLE_PDF=ON
         -DENABLE_UTIL=ON
         -DENABLE_NET=ON
         -DENABLE_SEVENZIP=ON
@@ -118,7 +121,7 @@ endif()
 
 
 #
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin)

@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            luncliff/coroutine
-    REF             1.4.2
-    SHA512          fc2544116a5bee97b8ef1501fc7f1b805248f0a0c601111f1a317e813aa1d3f9a2e08ab1b140cc36e22d9c90249301110ec5b5e55a40fb39217cf5f40998920d
+    REF 74467cb470a6bf8b9559a56ebdcb68ff915d871e
+    SHA512 5d61a23c5fe33c544943659dedecff487bb20f288f9c99f137f37bb777317672f299599b740e53cae42c355595fdfdffe183ade39e828b1f3b4aa821a47cb50e
     HEAD_REF        master
 )
 

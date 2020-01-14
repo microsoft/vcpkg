@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO sobjectizerteam/restinio
-    REF v.0.5.1.1
-    SHA512 f5eedd53f4459936d4b32a4243c703a350a611bfc7b0c17c2bb047944cc054f8a93f9fd4904f76d601eb2ce0c9b078c33a6a545b5698ddaf63c3f5327dabd5f6
+    REPO stiffstream/restinio
+    REF 086c07eb4aaa59997489e5431d6279211347061a # v.0.6.2
+    SHA512 28cf20331749ca5dee75cd318d7b08ea6b7e26e8e59fde2de182683c0a3861e3a6f1957605cd61bf09e2ba9f05a04f08fabcbb140d73ffe72d8b5235b4df7746
 )
 
 vcpkg_configure_cmake(
@@ -18,5 +16,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restinio)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restinio)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/restinio/LICENSE ${CURRENT_PACKAGES_DIR}/share/restinio/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

@@ -1,27 +1,18 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    message(FATAL_ERROR "x86 is not supported. Please use pmdk:x64-windows instead.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" "x86")
 
-# Download source
+set(PMDK_VERSION "1.7")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF 1.6
-    SHA512 f66e4edf1937d51abfa7c087b65a64109cd3d2a8d9587d6c4fc28a1003d67ec1f35a0011c9a9d0bfe76ad7227be83e86582f8405c988eac828d8ae5d0a399483
+    REF bc5e309485df61c452d08367e4b13ba9dfed5071 #Commit id corresponding to the version 1.7
+    SHA512 15bee6a046746e4ab7e827bb36685bc5d9cdffdbc68ba86eb71e2c4bd84eb4fed4586c09174257bfd87ea178c8ee9865a8824842d7d1df67e0ae79ff80cf650e
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/addPowerShellExecutionPolicy.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/v141.patch"
+        remove-non-ascii-character.patch
 )
-
-get_filename_component(PMDK_VERSION "${SOURCE_PATH}" NAME)
-string(REPLACE "pmdk-" "" PMDK_VERSION "${PMDK_VERSION}")
 
 # Build only the selected projects
 vcpkg_build_msbuild(
@@ -64,6 +55,4 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/pmdk)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pmdk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pmdk/LICENSE ${CURRENT_PACKAGES_DIR}/share/pmdk/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,4 +1,4 @@
 Source: glad
-Version: 0.1.30
+Version: 0.1.31
 Description: Multi-Language Vulkan/GL/GLES/EGL/GLX/WGL Loader-Generator based on the official specs.
 Build-Depends: egl-registry, opengl-registry
