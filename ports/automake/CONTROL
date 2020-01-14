@@ -1,0 +1,5 @@
+Source: automake
+Version: 1.16.1
+Homepage: https://www.gnu.org/software/automake/
+Description: Automake is a tool for automatically generating Makefile.in files compliant with the GNU Coding Standards.
+Build-Depends: autoconf
