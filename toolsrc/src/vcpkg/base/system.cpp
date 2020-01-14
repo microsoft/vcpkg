@@ -157,11 +157,24 @@ namespace vcpkg
         std::vector<CPUArchitecture> supported_architectures;
         supported_architectures.push_back(get_host_processor());
 
-        // AMD64 machines support to run x86 applications
+        // AMD64 machines support running x86 applications and ARM64 machines support running ARM applications
         if (supported_architectures.back() == CPUArchitecture::X64)
         {
             supported_architectures.push_back(CPUArchitecture::X86);
         }
+        else if (supported_architectures.back() == CPUArchitecture::ARM64)
+        {
+            supported_architectures.push_back(CPUArchitecture::ARM);
+        }
+
+#if defined(_WIN32)
+        // On ARM32/64 Windows we can rely on x86 emulation
+        if (supported_architectures.front() == CPUArchitecture::ARM ||
+            supported_architectures.front() == CPUArchitecture::ARM64)
+        {
+            supported_architectures.push_back(CPUArchitecture::X86);
+        }
+#endif
 
         return supported_architectures;
     }

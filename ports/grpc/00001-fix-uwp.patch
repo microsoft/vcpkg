@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e49b3cc07d..74bbd3294f 100644
+index 3d4418a..a2f23d5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -92,6 +92,9 @@ if(UNIX)
+@@ -104,6 +104,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -12,17 +12,17 @@ index e49b3cc07d..74bbd3294f 100644
  endif()
  
  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-@@ -107,6 +110,9 @@ if (MSVC)
-   add_definitions(/wd4267)
+@@ -119,6 +122,9 @@ if(MSVC)
+   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4267")
    # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
-   add_definitions(/wd4987 /wd4774 /wd4819 /wd4996 /wd4619)
+   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
 +  if(_gRPC_PLATFORM_UWP)
 +    add_definitions(-DGRPC_ARES=0)
 +  endif()
  endif()
- 
- if (gRPC_USE_PROTO_LITE)
-@@ -172,6 +178,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_gRPC_C_CXX_FLAGS}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_gRPC_C_CXX_FLAGS}")
+@@ -186,6 +192,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -33,77 +33,27 @@ index e49b3cc07d..74bbd3294f 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -213,6 +223,7 @@ function(protobuf_generate_grpc_cpp)
-   endforeach()
- endfunction()
+@@ -258,6 +268,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
+   list(APPEND _gRPC_PLUGIN_LIST grpc_ruby_plugin)
+ endif ()
  
 +if(NOT _gRPC_PLATFORM_UWP)
  add_custom_target(plugins
-   DEPENDS
-   grpc_cpp_plugin
-@@ -242,6 +253,8 @@ add_custom_target(tools_cxx
+   DEPENDS ${_gRPC_PLUGIN_LIST}
+ )
+@@ -279,6 +290,7 @@ add_custom_target(tools_cxx
+ 
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)
- 
 +endif()
-+
- if (gRPC_BUILD_TESTS)
- add_custom_target(buildtests_c)
- add_dependencies(buildtests_c algorithm_test)
-@@ -3622,7 +3635,6 @@ foreach(_hdr
-     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
-   )
- endforeach()
--endif (gRPC_BUILD_CODEGEN)
  
- if (gRPC_BUILD_CODEGEN)
- 
-@@ -3633,6 +3645,7 @@ if (gRPC_INSTALL)
-     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
-   )
- endif()
-+endif (gRPC_BUILD_CODEGEN)
- 
- endif (gRPC_BUILD_CODEGEN)
- if (gRPC_BUILD_TESTS)
-@@ -3760,7 +3773,6 @@ foreach(_hdr
-     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
-   )
- endforeach()
--endif (gRPC_BUILD_CODEGEN)
- 
- if (gRPC_BUILD_CODEGEN)
- 
-@@ -3771,6 +3783,7 @@ if (gRPC_INSTALL)
-     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
-   )
- endif()
-+endif (gRPC_BUILD_CODEGEN)
- 
- endif (gRPC_BUILD_CODEGEN)
- if (gRPC_BUILD_TESTS)
-@@ -4845,7 +4858,7 @@ foreach(_hdr
-     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
-   )
- endforeach()
--endif (gRPC_BUILD_CODEGEN)
-+
- 
- if (gRPC_BUILD_CODEGEN)
- 
-@@ -4856,6 +4869,7 @@ if (gRPC_INSTALL)
-     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
-   )
- endif()
-+endif (gRPC_BUILD_CODEGEN)
- 
- endif (gRPC_BUILD_CODEGEN)
- if (gRPC_BUILD_TESTS)
+ protobuf_generate_grpc_cpp(
+   src/proto/grpc/channelz/channelz.proto
 diff --git a/src/core/lib/iomgr/resource_quota.cc b/src/core/lib/iomgr/resource_quota.cc
-index dffac348c5..a59becb046 100644
+index 0fc0279..aaf2b09 100644
 --- a/src/core/lib/iomgr/resource_quota.cc
 +++ b/src/core/lib/iomgr/resource_quota.cc
-@@ -940,7 +940,7 @@ void grpc_resource_user_alloc(grpc_resource_user* resource_user, size_t size,
+@@ -945,7 +945,7 @@ bool grpc_resource_user_alloc(grpc_resource_user* resource_user, size_t size,
  void grpc_resource_user_free(grpc_resource_user* resource_user, size_t size) {
    gpr_mu_lock(&resource_user->mu);
    grpc_resource_quota* resource_quota = resource_user->resource_quota;
@@ -113,36 +63,24 @@ index dffac348c5..a59becb046 100644
    bool was_zero_or_negative = resource_user->free_pool <= 0;
    resource_user->free_pool += static_cast<int64_t>(size);
 diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-index 55efe0e9dd..f538f26edf 100644
+index 59432cf..fed574d 100644
 --- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 +++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-@@ -60,6 +60,8 @@ bool check_bios_data(const char* bios_data_file) {
- 
- static void init_mu(void) { gpr_mu_init(&g_mu); }
- 
+@@ -39,6 +39,7 @@ bool check_bios_data(const char*) { return false; }
+ bool check_windows_registry_product_name(HKEY root_key,
+                                          const char* reg_key_path,
+                                          const char* reg_key_name) {
 +#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
-+
- static bool run_powershell() {
-   SECURITY_ATTRIBUTES sa;
-   sa.nLength = sizeof(sa);
-@@ -97,8 +99,12 @@ static bool run_powershell() {
-   CloseHandle(h);
-   return true;
- }
-+#endif
+   const size_t kProductNameBufferSize = 256;
+   char const expected_substr[] = "Google";
  
- bool grpc_alts_is_running_on_gcp() {
-+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
-+  g_is_on_compute_engine = false;
-+#else
-   gpr_once_init(&g_once, init_mu);
-   gpr_mu_lock(&g_mu);
-   if (!g_compute_engine_detection_done) {
-@@ -108,6 +114,7 @@ bool grpc_alts_is_running_on_gcp() {
-     g_compute_engine_detection_done = true;
+@@ -71,6 +72,9 @@ bool check_windows_registry_product_name(HKEY root_key,
    }
-   gpr_mu_unlock(&g_mu);
+ 
+   return strstr(buffer, expected_substr) != nullptr;
++#else
++  return false;
 +#endif
-   return g_is_on_compute_engine;
  }
  
+ }  // namespace internal

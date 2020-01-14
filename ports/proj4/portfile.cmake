@@ -26,13 +26,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         set(BIN_SUFFIX .exe)
-        if (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3-bin.exe)
+        if (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3.exe)
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
-        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools/sqlite3-bin.exe)
+        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools/sqlite3.exe)
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools)
-        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3-bin.exe AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3.exe AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
-        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/sqlite3-bin.exe AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/sqlite3.exe AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
             set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools)
         else()
             message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
@@ -58,7 +58,7 @@ vcpkg_configure_cmake(
     -DBUILD_PROJ=OFF
     -DBUILD_PROJINFO=OFF
     -DPROJ_TESTS=OFF
-    -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3-bin${BIN_SUFFIX}
+    -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )
 
 vcpkg_install_cmake()
