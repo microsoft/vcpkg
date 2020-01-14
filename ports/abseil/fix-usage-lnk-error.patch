@@ -1,12 +1,11 @@
 diff --git a/absl/strings/ascii.cc b/absl/strings/ascii.cc
-index c9481e8..5c155e1 100644
+index abea3e4..16d0bcc 100644
 --- a/absl/strings/ascii.cc
 +++ b/absl/strings/ascii.cc
-@@ -49,109 +49,6 @@ namespace ascii_internal {
- //     print ' //', Hex2(i & 0x78)
+@@ -51,108 +51,6 @@ namespace ascii_internal {
  //   elif i % 16 == 15:
  //     print
--
+ 
 -// clang-format off
 -// Array of bitfields holding character information. Each bit value corresponds
 -// to a particular character feature. For readability, and because the value
@@ -113,11 +112,11 @@ index c9481e8..5c155e1 100644
  
  void AsciiStrToLower(std::string* s) {
 diff --git a/absl/strings/ascii.h b/absl/strings/ascii.h
-index 48a9da2..9d70382 100644
+index 792aabe..989e464 100644
 --- a/absl/strings/ascii.h
 +++ b/absl/strings/ascii.h
-@@ -61,14 +61,105 @@
- namespace absl {
+@@ -62,14 +62,105 @@ namespace absl {
+ ABSL_NAMESPACE_BEGIN
  namespace ascii_internal {
  
 -// Declaration for an array of bitfields holding character information.

@@ -72,7 +72,17 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set(SQLITE_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib")
     
     set(PGSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpq.lib")
-    set(PGSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.lib")
+    set(PGSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib")
+
+    set(TMP_REL "${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib")
+    set(TMP_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib")
+    set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
+    set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
+    
+    set(TMP_REL "${CURRENT_INSTALLED_DIR}/lib/libpgport.lib")
+    set(TMP_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib")
+    set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
+    set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
     
     set(OPENJPEG_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/openjp2.lib")
     set(OPENJPEG_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/openjp2.lib")
@@ -86,8 +96,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set(LZMA_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/lzma.lib")
     set(LZMA_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib")
     
-    set(OPENSSL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/lib/ssleay32.lib")
-    set(OPENSSL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/debug/lib/ssleay32.lib")
+    set(OPENSSL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/lib/libssl.lib")
+    set(OPENSSL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.lib")
     
     set(ICONV_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib")
     set(ICONV_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib")
@@ -136,6 +146,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ZLIB_INC=-I${COMMON_INCLUDE_DIR}
         ZLIB_EXTERNAL_LIB=1
         ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
+        #WITH_PDB=1
     )
     
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
