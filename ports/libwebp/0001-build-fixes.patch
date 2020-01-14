@@ -8,7 +8,7 @@ index 499ddce..895fda9 100644
    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 +  add_definitions(-DWEBP_HAVE_JUST_SDL_H)
 +  if(BUILD_SHARED_LIBS)
-+    add_definitions(-DWEBP_EXTERN=__declspec\(dllexport\))
++    add_definitions(-DWEBP_EXTERN=__declspec\(dllexport\) -DWEBP_DLL)
 +  else()
 +    add_definitions(-DFREEGLUT_STATIC)
 +  endif()
