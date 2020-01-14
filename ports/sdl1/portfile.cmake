@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
@@ -53,62 +51,36 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/SDLmain.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDLmaind.lib)
     endif()
 else()
-    find_program(autoreconf autoreconf)
-    if (NOT autoreconf OR NOT EXISTS "/usr/share/doc/libgles2/copyright")
-        message(FATAL_ERROR "autoreconf and libgles2-mesa-dev must be installed before libepoxy can build. Install them with \"apt-get dh-autoreconf libgles2-mesa-dev\".")
-    endif()
+    message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
     
-    find_program(MAKE make)
-    if (NOT MAKE)
-        message(FATAL_ERROR "MAKE not found")
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(BUILD_SHARED yes)
+        set(BUILD_STATIC no)
+    else()
+        set(BUILD_SHARED no)
+        set(BUILD_STATIC yes)
     endif()
 
     file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
     file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
     
-    vcpkg_execute_required_process(
-        COMMAND "./autogen.sh"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME autoreconf-${TARGET_TRIPLET}
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        NO_DEBUG
+        PRERUN_SHELL autogen.sh
+        OPTIONS
+            --enable-shared=${BUILD_SHARED}
+            --enable-static=${BUILD_STATIC}
     )
     
-    message(STATUS "Configuring ${TARGET_TRIPLET}")
-    set(OUT_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/make-build-${TARGET_TRIPLET}-release)
+    vcpkg_install_make()
     
-    file(REMOVE_RECURSE ${OUT_PATH_RELEASE})
-    file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
-    
-    vcpkg_execute_required_process(
-        COMMAND "./configure" --prefix=${OUT_PATH_RELEASE}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME config-${TARGET_TRIPLET}
-    )
-    
-    message(STATUS "Building ${TARGET_TRIPLET}")
-    vcpkg_execute_build_process(
-        COMMAND "make -j ${VCPKG_CONCURRENCY}"
-        NO_PARALLEL_COMMAND "make"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "build-${TARGET_TRIPLET}-release"
-    )
-    
-    message(STATUS "Installing ${TARGET_TRIPLET}")
-    vcpkg_execute_required_process(
-        COMMAND "make install"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "install-${TARGET_TRIPLET}-release"
-    )
-    
-    file(INSTALL ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(INSTALL ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(INSTALL ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
-    
-    file(GLOB DYNAMIC_LIBS ${CURRENT_PACKAGES_DIR}/lib *.so*)
-    
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(COPY ${DYNAMIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    endif()
-    file(REMOVE ${DYNAMIC_LIBS})
+    file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
+    foreach (SDL1_TOOL ${SDL1_TOOLS})
+        file(COPY ${SDL1_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(REMOVE ${SDL1_TOOL})
+    endforeach()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()

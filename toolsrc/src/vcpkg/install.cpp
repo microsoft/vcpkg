@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
@@ -204,7 +205,7 @@ namespace vcpkg::Install
         {
             // The VS2015 standard library requires comparison operators of T and U
             // to also support comparison of T and T, and of U and U, due to debug checks.
-#if _MSC_VER < 1910
+#if _MSC_VER <= 1910
             bool operator()(const std::string& lhs, const std::string& rhs) { return lhs < rhs; }
             bool operator()(const file_pack& lhs, const file_pack& rhs) { return lhs.first < rhs.first; }
 #endif
@@ -690,13 +691,13 @@ namespace vcpkg::Install
         // log the plan
         const std::string specs_string = Strings::join(",", action_plan, [](const AnyAction& action) {
             if (auto iaction = action.install_action.get())
-                return iaction->spec.to_string();
+                return Hash::get_string_hash(iaction->spec.to_string(), Hash::Algorithm::Sha256);
             else if (auto raction = action.remove_action.get())
-                return "R$" + raction->spec.to_string();
+                return "R$" + Hash::get_string_hash(raction->spec.to_string(), Hash::Algorithm::Sha256);
             Checks::unreachable(VCPKG_LINE_INFO);
         });
 
-        Metrics::g_metrics.lock()->track_property("installplan", specs_string);
+        Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
         Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 

@@ -23,7 +23,11 @@ endif()
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
-    if(NOT VCPKG_ALLOW_APPLE_CLANG)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "11.0.0")
+        set(CLANG 1)
+        # Disable linking with libc++fs because this features are added in libc++ library
+        set(NO_LIBCXXFS 1)
+    elseif(NOT VCPKG_ALLOW_APPLE_CLANG)
         message(FATAL_ERROR
 "Building the vcpkg tool requires support for the C++ Filesystem TS.
 Apple clang versions 10.01 and below do not have support for it.
@@ -34,6 +38,10 @@ If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
     set(CLANG 1)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "9.0.0")
+        set(NO_LIBCXXFS 1)
+        add_compile_definitions(_LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_FILESYSTEM=1)
+    endif()
 elseif(NOT MSVC)
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
@@ -58,7 +66,7 @@ endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
     link_libraries(stdc++fs)
-elseif(CLANG AND NOT MSVC)
+elseif(CLANG AND NOT MSVC AND NOT NO_LIBCXXFS)
     link_libraries(c++fs)
 endif()
 
