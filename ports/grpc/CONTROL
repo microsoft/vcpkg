@@ -1,5 +1,5 @@
 Source: grpc
-Version: 1.23.1
+Version: 1.26.0
 Build-Depends: zlib, openssl, protobuf, c-ares (!uwp)
 Homepage: https://github.com/grpc/grpc
 Description: An RPC library and framework

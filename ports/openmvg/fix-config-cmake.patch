@@ -1,0 +1,13 @@
+diff --git a/src/cmakeFindModules/OpenMVGConfig.cmake.in b/src/cmakeFindModules/OpenMVGConfig.cmake.in
+index e7dfbfd..357a25c 100644
+--- a/src/cmakeFindModules/OpenMVGConfig.cmake.in
++++ b/src/cmakeFindModules/OpenMVGConfig.cmake.in
+@@ -61,7 +61,7 @@ set(CMAKE_MODULE_PATH ${CURRENT_CONFIG_INSTALL_DIR})
+ 
+ # Build the absolute root install directory as a relative path
+ get_filename_component(CURRENT_ROOT_INSTALL_DIR
+-  ${CMAKE_MODULE_PATH}/../../../ ABSOLUTE)
++  ${CMAKE_MODULE_PATH}/../../ ABSOLUTE)
+ if (NOT EXISTS ${CURRENT_ROOT_INSTALL_DIR})
+   OPENMVG_REPORT_NOT_FOUND(
+     "OpenMVG install root: ${CURRENT_ROOT_INSTALL_DIR}, "

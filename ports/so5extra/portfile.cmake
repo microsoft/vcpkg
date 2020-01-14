@@ -1,16 +1,12 @@
 include(vcpkg_common_functions)
 
-set(VERSION 1.3.1)
+set(VERSION 1.3.1.1)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/so_5_extra/so5extra-${VERSION}.tar.bz2/download"
-    FILENAME "so5extra-${VERSION}.tar.bz2"
-    SHA512 58532426f85121f8f6c3b18a70950c048c8a695a7fca7be5d9c95434bdabdb2bfcf73d755737434a8d8aa5f3051785e13e7e293e057527c72047dad293a56ae7
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO stiffstream/so5extra
+    REF v.${VERSION}
+    SHA512 aaf0d6bf86819a5c8c4e2c07318b46e34f22f0b4c2183690d8f21b8789a3c8c2533304998432397b8192193e32915ba4742eaff3481949add1a25602fb7347f1
 )
 
 vcpkg_configure_cmake(

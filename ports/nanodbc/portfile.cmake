@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # Only static libraries are supported.
 # See https://github.com/nanodbc/nanodbc/issues/13
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -23,7 +21,7 @@ vcpkg_configure_cmake(
 # /Legacy
         -DNANODBC_DISABLE_EXAMPLES=ON
         -DNANODBC_DISABLE_TESTS=ON
-        -DNANODBC_ENABLE_UNICODE=ON
+        -DNANODBC_ENABLE_UNICODE=OFF
 )
 
 vcpkg_install_cmake()
@@ -33,4 +31,4 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/nanodbc RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

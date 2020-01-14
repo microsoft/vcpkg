@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/fruit
@@ -13,10 +13,11 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DFRUIT_USES_BOOST=False
+        -DFRUIT_TESTS_USE_PRECOMPILED_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/fruit/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,6 +1,6 @@
 # vcpkg_configure_make
 
-Configure `configure` for Debug and Release builds of a project.
+Configure configure for Debug and Release builds of a project.
 
 ## Usage
 ```cmake
@@ -11,6 +11,7 @@ vcpkg_configure_make(
     [DISABLE_AUTO_DST]
     [GENERATOR]
     [NO_DEBUG]
+    [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
     [PRERUN_SHELL <${SHELL_PATH}>]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
@@ -31,6 +32,9 @@ Should use `GENERATOR NMake` first.
 
 ### NO_DEBUG
 This port doesn't support debug mode.
+
+### SKIP_CONFIGURE
+Skip configure process
 
 ### AUTOCONFIG
 Need to use autoconfig to generate configure file.
