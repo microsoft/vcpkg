@@ -468,7 +468,6 @@ freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
-freeimage:x64-osx=fail
 freerdp:arm64-windows=fail
 freerdp:arm-uwp=fail
 freerdp:x64-osx=fail
