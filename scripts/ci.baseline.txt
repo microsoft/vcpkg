@@ -1424,7 +1424,6 @@ qt5-macextras:x64-windows-static=fail
 qt5-macextras:x86-windows=fail
 qt5-winextras:x64-linux=fail
 qt5-winextras:x64-osx=fail
-quantlib:x64-osx=fail
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
