@@ -105,7 +105,7 @@ namespace vcpkg::Help
                        "  vcpkg create <pkg> <url>\n"
                        "             [archivename]        Create a new package\n"
                        "  vcpkg owns <pat>                Search for files in installed packages\n"
-                       "  vcpkg depend-info [pkg]...      Display a list of dependencies for packages\n"
+                       "  vcpkg depend-info <pkg>...      Display a list of dependencies for packages\n"
                        "  vcpkg env                       Creates a clean shell environment for development or "
                        "compiling.\n"
                        "  vcpkg version                   Display version information\n"

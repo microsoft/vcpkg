@@ -1,13 +1,9 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(MESSAGE "${PORT} only supports Unix currently." ON_TARGET "Windows")
 
 set(LIBOSIP2_VER "5.1.0")
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "libosio2 only support unix currently.")
-endif()
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz"
+    URLS "https://ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz"
     FILENAME "libosip2-${LIBOSIP2_VER}.tar.gz"
     SHA512 391c9a0ea399f789d7061b0216d327eecba5bbf0429659f4f167604b9e703e1678ba6f58079aa4f84b3636a937064ecfb92e985368164fcb679e95654e43d65b
 )
