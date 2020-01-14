@@ -54,7 +54,6 @@ activemq-cpp:x64-windows-static=fail
 akali:x64-uwp=fail
 akali:arm-uwp=fail
 akali:arm64-windows=fail
-akali:x64-osx=fail
 alac:arm-uwp=fail
 alac:x64-uwp=fail
 alembic:x64-linux=fail
