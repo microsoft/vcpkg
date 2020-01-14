@@ -76,6 +76,9 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         SKIP_CONFIGURE
+    )
+
+    vcpkg_install_make(
         MAKE_OPTIONS
             MACOSX_DEPLOYMENT_TARGET=10.6 # https://github.com/LuaJIT/LuaJIT/issues/484
         MAKE_INSTALL_OPTIONS_RELEASE
@@ -86,8 +89,6 @@ else()
             "PREFIX=${CURRENT_PACKAGES_DIR}/debug"
             "INSTALL_BIN=${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
     )
-
-    vcpkg_install_make()
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

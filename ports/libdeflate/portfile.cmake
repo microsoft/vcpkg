@@ -55,6 +55,9 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         SKIP_CONFIGURE
+    )
+
+    vcpkg_install_make(
         MAKE_INSTALL_OPTIONS_DEBUG
             "PREFIX=${CURRENT_PACKAGES_DIR}/debug"
             "BINDIR=${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
@@ -62,8 +65,6 @@ else()
             "PREFIX=${CURRENT_PACKAGES_DIR}"
             "BINDIR=${CURRENT_PACKAGES_DIR}/tools/${PORT}"
     )
-
-    vcpkg_install_make()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

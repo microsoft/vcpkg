@@ -4,8 +4,34 @@
 ##
 ## ## Usage:
 ## ```cmake
-## vcpkg_build_make([TARGET <target>])
+## vcpkg_build_make(
+##     [MAKE_OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+##     [MAKE_OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+##     [MAKE_OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+##     [MAKE_INSTALL_OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+##     [MAKE_INSTALL_OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+##     [MAKE_INSTALL_OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+##     [TARGET <target>])
 ## ```
+##
+## ## Parameters
+## ### MAKE_OPTIONS
+## Additional options passed to make during the generation.
+##
+## ### MAKE_OPTIONS_RELEASE
+## Additional options passed to make during the Release generation. These are in addition to `MAKE_OPTIONS`.
+##
+## ### MAKE_OPTIONS_DEBUG
+## Additional options passed to make during the Debug generation. These are in addition to `MAKE_OPTIONS`.
+##
+## ### MAKE_INSTALL_OPTIONS
+## Additional options passed to make during the installation.
+##
+## ### MAKE_INSTALL_OPTIONS_RELEASE
+## Additional options passed to make during the Release installation. These are in addition to `MAKE_INSTALL_OPTIONS`.
+##
+## ### MAKE_INSTALL_OPTIONS_DEBUG
+## Additional options passed to make during the Debug installation. These are in addition to `MAKE_INSTALL_OPTIONS`.
 ##
 ## ### TARGET
 ## The target passed to the configure/make build command (`./configure/make/make install`). If not specified, no target will
@@ -16,7 +42,7 @@
 ##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
+## You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your CMake script supports the
 ## "install" target
 ##
 ## ## Examples
@@ -26,11 +52,12 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
-
-    if (_VCPKG_MAKE_OPTIONS_DEBUG STREQUAL _VCPKG_MAKE_OPTIONS_RELEASE OR _VCPKG_MAKE_INSTALL_OPTIONS_DEBUG STREQUAL _VCPKG_MAKE_INSTALL_OPTIONS_RELEASE)
-        message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_configure_make")
-    endif()
+    cmake_parse_arguments(_bc
+        "ADD_BIN_TO_PATH;ENABLE_INSTALL"
+        "LOGFILE_ROOT"
+        "MAKE_OPTIONS;MAKE_OPTIONS_DEBUG;MAKE_OPTIONS_RELEASE;MAKE_INSTALL_OPTIONS;MAKE_INSTALL_OPTIONS_DEBUG;MAKE_INSTALL_OPTIONS_RELEASE"
+        ${ARGN}
+    )
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -58,19 +85,15 @@ function(vcpkg_build_make)
             # Set make command and install command
             set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS_BASE -j ${VCPKG_CONCURRENCY})
-            set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} ${_VCPKG_MAKE_OPTIONS})
-            set(INSTALL_OPTS_BASE install -j ${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS_BASE ${INSTALL_OPTS_BASE} ${_VCPKG_MAKE_INSTALL_OPTIONS})
+            set(MAKE_OPTS_BASE -j ${VCPKG_CONCURRENCY} ${_bc_MAKE_OPTIONS})
+            set(INSTALL_OPTS_BASE install -j ${VCPKG_CONCURRENCY} ${_bc_MAKE_INSTALL_OPTIONS})
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
             set(MAKE make;)
             # Set make command and install command
-            set(MAKE_OPTS_BASE -j;${VCPKG_CONCURRENCY})
-            set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE};${_VCPKG_MAKE_OPTIONS})
-            set(INSTALL_OPTS_BASE install;-j;${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS_BASE ${INSTALL_OPTS_BASE};${_VCPKG_MAKE_INSTALL_OPTIONS})
+            set(MAKE_OPTS_BASE -j;${VCPKG_CONCURRENCY};${_bc_MAKE_OPTIONS})
+            set(INSTALL_OPTS_BASE install;-j;${VCPKG_CONCURRENCY};${_bc_MAKE_INSTALL_OPTIONS})
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)
@@ -80,10 +103,8 @@ function(vcpkg_build_make)
         set(ENV{CL} "$ENV{CL} /MP")
         # Set make command and install command
         set(MAKE ${NMAKE} /NOLOGO /G /U)
-        set(MAKE_OPTS_BASE -f makefile all)
-        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} ${_VCPKG_MAKE_OPTIONS})
-        set(INSTALL_OPTS_BASE install)
-        set(INSTALL_OPTS_BASE ${INSTALL_OPTS_BASE} ${_VCPKG_MAKE_INSTALL_OPTIONS})
+        set(MAKE_OPTS_BASE -f makefile all ${_bc_MAKE_OPTIONS})
+        set(INSTALL_OPTS_BASE install ${_bc_MAKE_INSTALL_OPTIONS})
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
@@ -92,6 +113,7 @@ function(vcpkg_build_make)
     
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+            set(MAKE_OPTS ${MAKE_OPTS_BASE})
             if(BUILDTYPE STREQUAL "debug")
                 # Skip debug generate
                 if (_VCPKG_NO_DEBUG)
@@ -99,11 +121,7 @@ function(vcpkg_build_make)
                 endif()
                 set(SHORT_BUILDTYPE "-dbg")
                 # Add options
-                if (CMAKE_HOST_WIN32)
-                    set(MAKE_OPTS ${MAKE_OPTS_BASE} ${_VCPKG_MAKE_OPTIONS_DEBUG})
-                else()
-                    set(MAKE_OPTS ${MAKE_OPTS_BASE};${_VCPKG_MAKE_OPTIONS_DEBUG})
-                endif()
+                list(APPEND MAKE_OPTS ${_bc_MAKE_OPTIONS_DEBUG})
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                 if (_VCPKG_NO_DEBUG)
@@ -112,11 +130,7 @@ function(vcpkg_build_make)
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
                 # Add options
-                if (CMAKE_HOST_WIN32)
-                    set(MAKE_OPTS ${MAKE_OPTS_BASE} ${_VCPKG_MAKE_OPTIONS_RELEASE})
-                else()
-                    set(MAKE_OPTS ${MAKE_OPTS_BASE};${_VCPKG_MAKE_OPTIONS_RELEASE})
-                endif()
+                list(APPEND MAKE_OPTS ${_bc_MAKE_OPTIONS_RELEASE})
             endif()
             
             if (CMAKE_HOST_WIN32)
@@ -165,6 +179,7 @@ function(vcpkg_build_make)
     if (_bc_ENABLE_INSTALL)
         foreach(BUILDTYPE "debug" "release")
             if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+                set(INSTALL_OPTS ${INSTALL_OPTS_BASE})
                 if(BUILDTYPE STREQUAL "debug")
                     # Skip debug generate
                     if (_VCPKG_NO_DEBUG)
@@ -172,11 +187,7 @@ function(vcpkg_build_make)
                     endif()
                     set(SHORT_BUILDTYPE "-dbg")
                     # Add options
-                    if (CMAKE_HOST_WIN32)
-                        set(INSTALL_OPTS ${INSTALL_OPTS_BASE} ${_VCPKG_MAKE_INSTALL_OPTIONS_DEBUG})
-                    else()
-                        set(INSTALL_OPTS ${INSTALL_OPTS_BASE};${_VCPKG_MAKE_INSTALL_OPTIONS_DEBUG})
-                    endif()
+                    list(APPEND INSTALL_OPTS ${_bc_MAKE_INSTALL_OPTIONS_DEBUG})
                 else()
                     # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                     if (_VCPKG_NO_DEBUG)
@@ -185,11 +196,7 @@ function(vcpkg_build_make)
                         set(SHORT_BUILDTYPE "-rel")
                     endif()
                     # Add options
-                    if (CMAKE_HOST_WIN32)
-                        set(INSTALL_OPTS ${INSTALL_OPTS_BASE} ${_VCPKG_MAKE_INSTALL_OPTIONS_RELEASE})
-                    else()
-                        set(INSTALL_OPTS ${INSTALL_OPTS_BASE};${_VCPKG_MAKE_INSTALL_OPTIONS_RELEASE})
-                    endif()
+                    list(APPEND INSTALL_OPTS ${_bc_MAKE_INSTALL_OPTIONS_RELEASE})
                 endif()
             
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
