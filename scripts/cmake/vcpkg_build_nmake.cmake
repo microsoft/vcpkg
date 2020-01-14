@@ -77,11 +77,11 @@ function(vcpkg_build_nmake)
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
         ${ARGN}
     )
-    
+
     if (NOT CMAKE_HOST_WIN32)
         message(FATAL_ERROR "vcpkg_build_nmake only support windows.")
     endif()
-    
+
     if (_bn_OPTIONS_DEBUG STREQUAL _bn_OPTIONS_RELEASE)
         message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_build_nmake/vcpkg_install_nmake")
     endif()
@@ -89,17 +89,17 @@ function(vcpkg_build_nmake)
     if(NOT _bn_LOGFILE_ROOT)
         set(_bn_LOGFILE_ROOT "build")
     endif()
-    
+
     if (NOT _bn_PROJECT_NAME)
         set(MAKEFILE_NAME makefile.vc)
     else()
         set(MAKEFILE_NAME ${_bn_PROJECT_NAME})
     endif()
-    
+
     set(MAKE )
     set(MAKE_OPTS_BASE )
     set(INSTALL_OPTS_BASE )
-    
+
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
     # Load toolchains
@@ -120,7 +120,7 @@ function(vcpkg_build_nmake)
     else()
         set(_bn_PROJECT_SUBPATH )
     endif()
-    
+
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
@@ -138,7 +138,7 @@ function(vcpkg_build_nmake)
                     set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
                 set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_DEBUG})
-                
+
                 unset(ENV{CL})
                 set(TMP_CL_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
                 string(REPLACE "/" "-" TMP_CL_FLAGS "${TMP_CL_FLAGS}")
@@ -158,16 +158,16 @@ function(vcpkg_build_nmake)
                     set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
                 set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_RELEASE})
-                
+
                 unset(ENV{CL})
                 set(TMP_CL_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
                 string(REPLACE "/" "-" TMP_CL_FLAGS "${TMP_CL_FLAGS}")
                 set(ENV{CL} "$ENV{CL} ${TMP_CL_FLAGS}")
             endif()
-            
+
             set(CURRENT_TRIPLET_NAME ${TARGET_TRIPLET}${SHORT_BUILDTYPE})
             set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${CURRENT_TRIPLET_NAME})
-            
+
             file(REMOVE_RECURSE ${OBJ_DIR})
             file(MAKE_DIRECTORY ${OBJ_DIR})
             file(GLOB_RECURSE SOURCE_FILES ${_bn_SOURCE_PATH}/*)
@@ -176,9 +176,9 @@ function(vcpkg_build_nmake)
                 string(REPLACE "${_bn_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
                 file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
             endforeach()
-            
+
             if (_bn_PRERUN_SHELL)
-                message("Prerunning ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
                     COMMAND ${_bn_PRERUN_SHELL}
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
@@ -186,7 +186,7 @@ function(vcpkg_build_nmake)
                 )
             endif()
             if (BUILDTYPE STREQUAL "debug" AND _bn_PRERUN_SHELL_DEBUG)
-                message("Prerunning ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
                     COMMAND "${_bn_PRERUN_SHELL_DEBUG}"
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
@@ -194,11 +194,11 @@ function(vcpkg_build_nmake)
                 )
             endif()
             if (BUILDTYPE STREQUAL "release" AND _bn_PRERUN_SHELL_RELEASE)
-                message("Prerunning ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
                 vcpkg_execute_required_process(
                     COMMAND ${_bn_PRERUN_SHELL_RELEASE}
                     WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-dbg"
+                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-rel"
                 )
             endif()
 

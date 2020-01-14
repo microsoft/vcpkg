@@ -1,10 +1,6 @@
-include(vcpkg_common_functions)
-
 set(X264_VERSION 157)
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "x264 only support windows.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -32,7 +28,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_UWP)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
 endif()
@@ -59,5 +55,4 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/x264)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/x264/COPYING ${CURRENT_PACKAGES_DIR}/share/x264/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

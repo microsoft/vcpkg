@@ -72,14 +72,11 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(CMAKE_HOST_WIN32)
-        set(_PATHSEP ";")
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
         else()
             set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
         endif()
-    else()
-        set(_PATHSEP ":")
     endif()
 
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
@@ -156,7 +153,7 @@ function(vcpkg_configure_cmake)
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        vcpkg_add_to_path("${NINJA_PATH}")
         list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -267,7 +264,7 @@ function(vcpkg_configure_cmake)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
+        vcpkg_add_to_path("${NINJA_PATH}")
 
         #parallelize the configure step
         set(_contents

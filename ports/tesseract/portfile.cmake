@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -26,7 +24,7 @@ if("training_tools" IN_LIST FEATURES)
 else()
     list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=OFF)
 endif()
-if("independed_architecture" IN_LIST FEATURES)
+if("cpu_independed" IN_LIST FEATURES)
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=none)
 else()
     list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
@@ -84,5 +82,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tesseract)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tesseract/LICENSE ${CURRENT_PACKAGES_DIR}/share/tesseract/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

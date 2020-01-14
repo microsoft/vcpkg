@@ -1,9 +1,9 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
+# Glib uses winapi functions not available in WindowsStore
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
+# Glib relies on DllMain on Windows
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
 if (selinux IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")

@@ -26,7 +26,7 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;NO_PARALLEL_BUILD;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -54,19 +54,15 @@ function(vcpkg_build_make)
             # Set make command and install command
             set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
             # Must use absolute path to call make in windows
-            if(NOT _csc_NO_PARALLEL_BUILD)
-                set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
-                set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
-            endif()
+            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
+            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
         else()
             # Compiler requriements
             find_program(MAKE make REQUIRED)
             set(MAKE make;)
             # Set make command and install command
-            if(NOT _csc_NO_PARALLEL_BUILD)
-                set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
-                set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
-            endif()
+            set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
+            set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         find_program(NMAKE nmake REQUIRED)
@@ -146,37 +142,39 @@ function(vcpkg_build_make)
 
     if (_bc_ENABLE_INSTALL)
         foreach(BUILDTYPE "debug" "release")
-            if(BUILDTYPE STREQUAL "debug")
-                # Skip debug generate
-                if (_VCPKG_NO_DEBUG)
-                    continue()
-                endif()
-                set(SHORT_BUILDTYPE "-dbg")
-            else()
-                # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                if (_VCPKG_NO_DEBUG)
-                    set(SHORT_BUILDTYPE "")
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+                if(BUILDTYPE STREQUAL "debug")
+                    # Skip debug generate
+                    if (_VCPKG_NO_DEBUG)
+                        continue()
+                    endif()
+                    set(SHORT_BUILDTYPE "-dbg")
                 else()
-                    set(SHORT_BUILDTYPE "-rel")
+                    # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
+                    if (_VCPKG_NO_DEBUG)
+                        set(SHORT_BUILDTYPE "")
+                    else()
+                        set(SHORT_BUILDTYPE "-rel")
+                    endif()
                 endif()
-            endif()
 
-            message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-            if (CMAKE_HOST_WIN32)
-                # In windows we can remotely call make
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-                vcpkg_execute_build_process(
-                    COMMAND "${MAKE} ${INSTALL_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
-            else()
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-                vcpkg_execute_build_process(
-                    COMMAND "${MAKE};${INSTALL_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
+                message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+                if (CMAKE_HOST_WIN32)
+                    # In windows we can remotely call make
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                    vcpkg_execute_build_process(
+                        COMMAND "${MAKE} ${INSTALL_OPTS}"
+                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                    )
+                else()
+                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                    vcpkg_execute_build_process(
+                        COMMAND "${MAKE};${INSTALL_OPTS}"
+                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                    )
+                endif()
             endif()
         endforeach()
     endif()
