@@ -5,6 +5,7 @@ project(libunibreak)
 set(libunibreak_srcs
   src/linebreakdata.c
   src/linebreakdef.c
+  src/linebreak.c
   src/wordbreak.c
   src/graphemebreak.c
   src/unibreakbase.c
@@ -30,6 +31,8 @@ if(NOT DISABLE_INSTALL_HEADERS)
     src/linebreakdef.h
     src/wordbreak.h
     src/wordbreakdef.h
+    src/unibreakbase.h
+    src/unibreakdef.h
     DESTINATION include
   )
 endif()

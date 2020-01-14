@@ -1,0 +1,8 @@
+Source: mongoose
+Version: 6.15-2
+Description: Embedded web server / embedded networking library
+Homepage: https://cesanta.com/
+
+Feature: ssl
+Build-Depends: openssl
+Description: Build with openssl

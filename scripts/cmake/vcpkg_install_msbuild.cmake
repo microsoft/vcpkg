@@ -1,6 +1,6 @@
 ## # vcpkg_install_msbuild
 ##
-## Build and install an msbuild-based project. This replaces `vcpkg_build_msbuild()`.
+## Build and install a msbuild-based project. This replaces `vcpkg_build_msbuild()`.
 ##
 ## ## Usage
 ## ```cmake
@@ -52,12 +52,16 @@
 ## ### REMOVE_ROOT_INCLUDES
 ## Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
 ##
+## ### SKIP_CLEAN
+## Indicates that the intermediate files should not be removed.
+##
+## Ports using this option should later call [`vcpkg_clean_msbuild()`](vcpkg_clean_msbuild.md) to manually clean up.
+##
 ## ### RELEASE_CONFIGURATION
 ## The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
 ##
 ## ### DEBUG_CONFIGURATION
-## The configuration (``/p:Configuration`` msbuild parameter)
-## used for Debug builds.
+## The configuration (``/p:Configuration`` msbuild parameter) used for Debug builds.
 ##
 ## ### TARGET_PLATFORM_VERSION
 ## The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
@@ -82,12 +86,15 @@
 ##
 ## ## Examples
 ##
+## * [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
 ## * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
+
+include(vcpkg_clean_msbuild)
 
 function(vcpkg_install_msbuild)
     cmake_parse_arguments(
         _csc
-        "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES"
+        "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
         ${ARGN}
@@ -106,6 +113,8 @@ function(vcpkg_install_msbuild)
             set(_csc_PLATFORM  Win32)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL ARM)
             set(_csc_PLATFORM  ARM)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+            set(_csc_PLATFORM  arm64)
         else()
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
@@ -137,7 +146,7 @@ function(vcpkg_install_msbuild)
     endif()
 
     if(_csc_USE_VCPKG_INTEGRATION)
-        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
+        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
     endif()
 
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
@@ -196,10 +205,9 @@ function(vcpkg_install_msbuild)
 
     vcpkg_copy_pdbs()
 
-    file(REMOVE_RECURSE
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    )
+    if(NOT _csc_SKIP_CLEAN)
+        vcpkg_clean_msbuild()
+    endif()
 
     if(DEFINED _csc_INCLUDES_SUBPATH)
         file(COPY ${_csc_SOURCE_PATH}/${_csc_INCLUDES_SUBPATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/)

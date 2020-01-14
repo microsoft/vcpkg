@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(libpqxx VERSION 6.0.0 LANGUAGES CXX)
+project(libpqxx VERSION 6.4.3 LANGUAGES CXX)
 
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_CXX_STANDARD 14)

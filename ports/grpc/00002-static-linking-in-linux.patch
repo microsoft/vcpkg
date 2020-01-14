@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a2f23d5..e433e8d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,6 +111,11 @@ endif()
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+ 
++if (gRPC_STATIC_LINKING AND NOT _gRPC_PLATFORM_WINDOWS)
++  # Force to static link
++  set(CMAKE_EXE_LINKER_FLAGS "-Bstatic")
++endif()
++
+ if(MSVC)
+   include(cmake/msvc_static_runtime.cmake)
+   add_definitions(-D_WIN32_WINNT=0x600 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)

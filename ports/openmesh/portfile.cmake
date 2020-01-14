@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(VERSION 7.0)
+set(VERSION 8.0)
 
 # Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.tar.gz"
     FILENAME "OpenMesh-${VERSION}.tar.gz"
-    SHA512 29280c8fe7208d39bd923c4d0444a24463e36b95402e6a75f42adc27bc1b261df9113442f69e1001dc1a8b1198488069ffb049742dcf6eac6ac1ecf4f216fad8
+    SHA512 6c9cb323d83d48daca7ddefe51df67f611befd657655d8013c2c620ad53e0b8521e6b8e25ebf3f5321f94182252ae0c75795875ff7ac11585e4ffa79e16f8008
 )
 
 vcpkg_extract_source_archive_ex(

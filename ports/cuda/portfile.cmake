@@ -1,4 +1,4 @@
-# Due to the complexity involved, this package doesn't install CUDA. It instead verifies that CUDA is installed.
+# This package doesn't install CUDA. It instead verifies that CUDA is installed.
 # Other packages can depend on this package to declare a dependency on CUDA.
 # If this package is installed, we assume that CUDA is properly installed.
 
@@ -9,8 +9,7 @@ find_program(NVCC
       ENV CUDA_BIN_PATH
     PATH_SUFFIXES bin bin64
     DOC "Toolkit location."
-    NO_DEFAULT_PATH
-    )
+    NO_DEFAULT_PATH)
 
 set(error_code 1)
 if (NVCC)
@@ -20,12 +19,12 @@ if (NVCC)
         RESULT_VARIABLE error_code)
 endif()
 
-set(CUDA_REQUIRED_VERSION "V9.0.0")
+#note: this port must be kept in sync with CUDNN port: every time one is upgraded, the other must be too
+set(CUDA_REQUIRED_VERSION "V10.1.0")
 
 if (error_code)
-    message(FATAL_ERROR "Could not find CUDA. Before continuing, please download and install CUDA  (${CUDA_REQUIRED_VERSION} or higher) from:"
-                        "\n    https://developer.nvidia.com/cuda-downloads\n"
-                        "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
+    message(FATAL_ERROR "Could not find CUDA. Before continuing, please download and install CUDA (${CUDA_REQUIRED_VERSION} or higher) from:"
+                        "\n    https://developer.nvidia.com/cuda-downloads\n")
 endif()
 
 # Sample output:
@@ -36,11 +35,11 @@ endif()
 string(REGEX MATCH "V([0-9]+)\\.([0-9]+)\\.([0-9]+)" CUDA_VERSION ${NVCC_OUTPUT})
 message(STATUS "Found CUDA ${CUDA_VERSION}")
 set(CUDA_VERSION_MAJOR ${CMAKE_MATCH_1})
-#set(CUDA_VERSION_MINOR ${CMAKE_MATCH_2})
-#set(CUDA_VERSION_PATCH ${CMAKE_MATCH_3})
+set(CUDA_VERSION_MINOR ${CMAKE_MATCH_2})
+set(CUDA_VERSION_PATCH ${CMAKE_MATCH_3})
 
-if (CUDA_VERSION_MAJOR LESS 9)
-    message(FATAL_ERROR "CUDA ${CUDA_VERSION} but ${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
+if (CUDA_VERSION_MAJOR LESS 10 AND CUDA_VERSION_MINOR LESS 1)
+    message(FATAL_ERROR "CUDA ${CUDA_VERSION} found, but ${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
                         "\n    https://developer.nvidia.com/cuda-downloads\n")
 endif()
 

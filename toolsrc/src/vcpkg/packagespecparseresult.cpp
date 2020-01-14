@@ -18,4 +18,6 @@ namespace vcpkg
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
+
+    void to_string(std::string& out, PackageSpecParseResult p) { out.append(vcpkg::to_string(p).c_str()); }
 }

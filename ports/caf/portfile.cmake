@@ -1,21 +1,29 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-    message("CAF only supports static library linkage")
+set(CAF_TOOL_PATH )
+if (VCPKG_TARGET_IS_WINDOWS AND (TRIPLET_SYSTEM_ARCH STREQUAL arm OR TRIPLET_SYSTEM_ARCH STREQUAL arm64))
+    if (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/caf-generate-enum-strings.exe)
+        set(CAF_TOOL_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/)
+    elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools/caf-generate-enum-strings.exe)
+        set(CAF_TOOL_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools/)
+    elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/caf-generate-enum-strings.exe AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        set(CAF_TOOL_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/)
+    elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/caf-generate-enum-strings.exe AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        set(CAF_TOOL_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/)
+    else()
+        message(FATAL_ERROR "Since caf needs to run the built-in executable, please install caf:x86-windows or caf:x64-windows first.")
+    endif()
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF 0.15.7
-    SHA512 ff0fa205ad71677b84fa09a2e6ce6bb6d1bc9b790bbbc3ac51505467402ff61a218528004212efa2063c798cc512972d318a2c9423067ee51cef719de2b6b186
+    REF 4da751ab7a79bcdc6e9dd2157b9b5c5c6814e26d # 0.17.2
+    SHA512 4bd739c553fcbd6aa3b61372b42ad2ab40099c18959892553b9bc232b95740ba563d967d73e0695f0ce3d31409ae704eb578b6590431039f18291c896f535a36
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/openssl-version-override.patch
+	PATCHES
+		openssl-version-override.patch
+        fix-arm.patch
 )
 
 vcpkg_configure_cmake(
@@ -35,6 +43,7 @@ vcpkg_configure_cmake(
         -DCAF_NO_OPENSSL=OFF
         -DCAF_NO_CURL_EXAMPLES=ON
         -DCAF_OPENSSL_VERSION_OVERRIDE=ON
+        -DCAF_TOOL_PATH=${CAF_TOOL_PATH}
 )
 
 vcpkg_install_cmake()

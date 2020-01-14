@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
+vcpkg_buildpath_length_warning(37)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.6.12
-    SHA512 37cd573ea354394c170a081572f63dfe604bf631d0129a53f066f121680b92c8f64b343a4d841de9a178679a322755a858a1148fbfc99c3f525a1f025fdfbd84
+    REF d3ee022fea02e8e7e02f3cdd77904dc4c39ab79a
+    SHA512 6f146830f15864bb3770ad50a6ebcbc478235e9c2c59aa044353bbfc297bf26437e07b77b970974cc294782809aaa837a3407cbc846426b04e97447cd7f9e3cf
     HEAD_REF master
 )
 
@@ -29,6 +31,7 @@ vcpkg_configure_cmake(
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         "-DBUILD_ONLY=${BUILD_ONLY}"
+        -DBUILD_DEPS=OFF
 )
 
 vcpkg_install_cmake()

@@ -1,0 +1,31 @@
+IF (NOT VCPKG_TARGET_IS_LINUX)
+   set(USE_LIBUV ON)
+EndIF ()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO uNetworking/uSockets
+    REF 5ff9a6db51e480db149fac1db232dbd9d1d6d543 #v0.3.4
+    SHA512 053dd8b06977616859ab09bbbd5b7f800936b5b3e673c71752ef1ca1dfb5bae464e21dd8dba36ac47b946bf469419828d2c5e1bfcb1061582d3fd2ded79c05d8
+    HEAD_REF master
+)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+set(USE_OPENSSL OFF)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS 
+        -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+        -DLIBUS_USE_LIBUV=${USE_LIBUV}
+    OPTIONS_DEBUG
+        -DINSTALL_HEADERS=OFF
+)
+
+vcpkg_install_cmake()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_copy_pdbs()

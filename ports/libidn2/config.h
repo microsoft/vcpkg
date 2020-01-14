@@ -670,7 +670,7 @@
 /* #undef PACKAGE_PACKAGER_VERSION */
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libidn2 2.0.4"
+#define PACKAGE_STRING "libidn2 @IDN2_VERSION@"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libidn2"
@@ -679,7 +679,7 @@
 #define PACKAGE_URL "https://www.gnu.org/software/libidn/#libidn2"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.0.4"
+#define PACKAGE_VERSION "@IDN2_VERSION@"
 
 /* Define to l, ll, u, ul, ull, etc., as suitable for constants of type
    'ptrdiff_t'. */
@@ -771,7 +771,7 @@
 
 
 /* Version number of package */
-#define VERSION "2.0.4"
+#define VERSION "@IDN2_VERSION@"
 
 /* Define to l, ll, u, ul, ull, etc., as suitable for constants of type
    'wchar_t'. */

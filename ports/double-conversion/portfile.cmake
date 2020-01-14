@@ -1,23 +1,18 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/double-conversion
-    REF 3.1.0
-    SHA512 ba797a7203bc7eb8ba697dc758a3341578f0405b5ab42fbd5a22d9fac09d11dd8cb5ed9ff9ff369e8ae9397ec74c04c62fca29d1bc469c6d2ea1a84a6dff9188
+    REF v3.1.5
+    SHA512 0aeabdbfa06c3c4802905ac4bf8c2180840577677b47d45e1c91034fe07746428c9db79260ce6bdbdf8b584746066cea9247ba43a9c38155caf1ef44e214180a
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-arm.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=True
 )
 
 vcpkg_install_cmake()
@@ -29,9 +24,7 @@ endif()
 
 vcpkg_copy_pdbs()
 
-# Include files should not be duplicated into the /debug/include directory.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/double-conversion)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/double-conversion/LICENSE ${CURRENT_PACKAGES_DIR}/share/double-conversion/copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/double-conversion/copyright COPYONLY)

@@ -1,4 +1,8 @@
 Source: azure-uhttp-c
-Version: LTS_01_2018_Ref01
-Build-Depends: azure-c-shared-utility
+Version: 2019-11-27.1
+Build-Depends: azure-c-shared-utility, azure-macro-utils-c, umock-c
 Description: Azure HTTP Library written in C
+
+Feature: public-preview
+Description: Azure HTTP Library written in C (public preview)
+Build-Depends: azure-c-shared-utility[public-preview], azure-macro-utils-c[public-preview], umock-c[public-preview]

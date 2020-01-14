@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9a695fd..0667668 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,6 +129,33 @@ add_definitions(
+     -DQT_DISABLE_DEPRECATED_BEFORE=0x050c00
+ )
+ 
++if (BUILD_WIN_STATIC)
++    add_definitions(
++        -DCutelyst2Qt5_EXPORTS
++        -DActionRenderView_EXPORTS
++        -DActionREST_EXPORTS
++        -DActionRoleACL_EXPORTS
++        -DCutelyst2Qt5Authentication_EXPORTS
++        -DCutelyst2Qt5Session_EXPORTS
++        -DCutelyst2Qt5StaticSimple_EXPORTS
++        -DCutelyst2Qt5StaticCompressed_EXPORTS
++        -DCutelyst2Qt5UtilsPagination_EXPORTS
++        -DCutelyst2Qt5StatusMessage_EXPORTS
++        -DCutelyst2Qt5Memcached_EXPORTS
++        -DCutelyst2Qt5MemcachedSessionStore_EXPORTS
++        -DCutelyst2Qt5CSRFProtection_EXPORTS
++        -DCutelyst2Qt5UtilsSql_EXPORTS
++        -DCutelyst2Qt5UtilsValidator_EXPORTS
++        -DCutelyst2Qt5UtilsLangSelect_EXPORTS
++        -DCutelyst2Qt5ViewClearSilver_EXPORTS
++        -DCutelyst2Qt5ViewEmail_EXPORTS
++        -DCutelyst2Qt5ViewGrantlee_EXPORTS
++        -DCutelyst2Qt5ViewJson_EXPORTS
++        -DCutelyst2Qt5Wsgi_EXPORTS
++        -DCutelyst2Qt5UserAgent_EXPORTS
++    )
++endif()
++
+ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-integration
-    REF v2018.04
-    SHA512 ef22309dea452de8cf63d62f4b99f3e7b5b12b3580455e8fc1d53eabd921e24ec3824ce238a2b74cf0b6fd137e238b67c6b4653e750072b1105c6571e352d9fe
+    REF v2019.10
+    SHA512 be8b21da07b9720ad19263d6ee0a234ff97ee4a1d5770e3ab33047bc54711689532945b099431c24f6ae863bb55a0883b3ba34a48d7d17768082b26651a9621e
     HEAD_REF master
 )
 

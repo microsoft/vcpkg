@@ -1,3 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8011fb..9fc05c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -155,17 +155,6 @@ endif()
+ # Use solution folders.
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+ 
+-# build the parson library for json parsing
+-add_library(parson
+-    ./deps/parson/parson.c
+-    ./deps/parson/parson.h
+-)
+-if (MSVC)
+-    set_source_files_properties(../deps/parson/parson.c PROPERTIES COMPILE_FLAGS "/wd4244 /wd4232")
+-endif()
+-set(parson_h_install_files ./deps/parson/parson.h)
+-set(parson_install_libs parson)
+-
+ if (IN_OPENWRT)
+     ADD_DEFINITIONS("$ENV{TARGET_LDFLAGS}" "$ENV{TARGET_CPPFLAGS}" "$ENV{TARGET_CFLAGS}")
+     INCLUDE_DIRECTORIES("$ENV{TOOLCHAIN_DIR}/usr/include" "$ENV{TARGET_LDFLAGS}" "$ENV{TARGET_CPPFLAGS}" "$ENV{TARGET_CFLAGS}")
 diff --git a/configs/azure_iot_sdksConfig.cmake b/configs/azure_iot_sdksConfig.cmake
 index b9c62e8..edf5847 100644
 --- a/configs/azure_iot_sdksConfig.cmake
@@ -14,16 +36,17 @@ index b9c62e8..edf5847 100644
  include("${CMAKE_CURRENT_LIST_DIR}/azure_iot_sdksTargets.cmake")
  
 diff --git a/dependencies.cmake b/dependencies.cmake
-index 063733a..71bfc7d 100644
+index fd06df6..c0e06fa 100644
 --- a/dependencies.cmake
 +++ b/dependencies.cmake
-@@ -18,6 +18,8 @@ if(${use_installed_dependencies})
-         endif()
-     endif()	
+@@ -18,6 +18,9 @@ if(${use_installed_dependencies})
+         endif ()
+     endif ()
  
 +    find_package(unofficial-parson REQUIRED)
 +    link_libraries(unofficial::parson::parson)
- else()
++
+ else ()
      add_subdirectory(c-utility)
  
 diff --git a/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt b/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt
@@ -78,10 +101,10 @@ index d05d654..5872c8d 100644
  )
  
 diff --git a/iothub_service_client/CMakeLists.txt b/iothub_service_client/CMakeLists.txt
-index 11a9a9a..4097293 100644
+index e47473e..b073513 100644
 --- a/iothub_service_client/CMakeLists.txt
 +++ b/iothub_service_client/CMakeLists.txt
-@@ -72,9 +72,7 @@ endif()
+@@ -81,9 +81,7 @@ endif()
  setSdkTargetBuildProperties(iothub_service_client)
  
  if(NOT ${nuget_e2e_tests})

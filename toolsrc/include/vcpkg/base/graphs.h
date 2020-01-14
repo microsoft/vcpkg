@@ -2,10 +2,11 @@
 
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/span.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
 {
@@ -29,13 +30,36 @@ namespace vcpkg::Graphs
         virtual U load_vertex_data(const V& vertex) const = 0;
     };
 
+    struct Randomizer
+    {
+        virtual int random(int max_exclusive) = 0;
+
+    protected:
+        ~Randomizer() {}
+    };
+
     namespace details
     {
+        template<class Container>
+        void shuffle(Container& c, Randomizer* r)
+        {
+            if (!r) return;
+            for (auto i = c.size(); i > 1; --i)
+            {
+                std::size_t j = r->random(static_cast<int>(i));
+                if (j != i - 1)
+                {
+                    std::swap(c[i - 1], c[j]);
+                }
+            }
+        }
+
         template<class V, class U>
         void topological_sort_internal(const V& vertex,
                                        const AdjacencyProvider<V, U>& f,
                                        std::unordered_map<V, ExplorationStatus>& exploration_status,
-                                       std::vector<U>& sorted)
+                                       std::vector<U>& sorted,
+                                       Randomizer* randomizer)
         {
             ExplorationStatus& status = exploration_status[vertex];
             switch (status)
@@ -43,12 +67,12 @@ namespace vcpkg::Graphs
                 case ExplorationStatus::FULLY_EXPLORED: return;
                 case ExplorationStatus::PARTIALLY_EXPLORED:
                 {
-                    System::println("Cycle detected within graph:");
+                    System::print2("Cycle detected within graph at ", f.to_string(vertex), ":\n");
                     for (auto&& node : exploration_status)
                     {
                         if (node.second == ExplorationStatus::PARTIALLY_EXPLORED)
                         {
-                            System::println("    %s", f.to_string(node.first));
+                            System::print2("    ", f.to_string(node.first), '\n');
                         }
                     }
                     Checks::exit_fail(VCPKG_LINE_INFO);
@@ -57,8 +81,10 @@ namespace vcpkg::Graphs
                 {
                     status = ExplorationStatus::PARTIALLY_EXPLORED;
                     U vertex_data = f.load_vertex_data(vertex);
-                    for (const V& neighbour : f.adjacency_list(vertex_data))
-                        topological_sort_internal(neighbour, f, exploration_status, sorted);
+                    auto neighbours = f.adjacency_list(vertex_data);
+                    details::shuffle(neighbours, randomizer);
+                    for (const V& neighbour : neighbours)
+                        topological_sort_internal(neighbour, f, exploration_status, sorted, randomizer);
 
                     sorted.push_back(std::move(vertex_data));
                     status = ExplorationStatus::FULLY_EXPLORED;
@@ -69,15 +95,19 @@ namespace vcpkg::Graphs
         }
     }
 
-    template<class VertexRange, class V, class U>
-    std::vector<U> topological_sort(const VertexRange& starting_vertices, const AdjacencyProvider<V, U>& f)
+    template<class VertexContainer, class V, class U>
+    std::vector<U> topological_sort(VertexContainer starting_vertices,
+                                    const AdjacencyProvider<V, U>& f,
+                                    Randomizer* randomizer)
     {
         std::vector<U> sorted;
         std::unordered_map<V, ExplorationStatus> exploration_status;
 
+        details::shuffle(starting_vertices, randomizer);
+
         for (auto&& vertex : starting_vertices)
         {
-            details::topological_sort_internal(vertex, f, exploration_status, sorted);
+            details::topological_sort_internal(vertex, f, exploration_status, sorted, randomizer);
         }
 
         return sorted;

@@ -11,6 +11,9 @@
 *.userosscache
 *.sln.docstates
 
+toolsrc/out*
+toolsrc/CMakeSettings.json
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -284,6 +287,10 @@ __pycache__/
 /packages/
 /scripts/buildsystems/tmp/
 /toolsrc/build.rel/
+/toolsrc/msbuild.x86.debug/
+/toolsrc/msbuild.x86.release/
+/toolsrc/msbuild.x64.debug/
+/toolsrc/msbuild.x64.release/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
@@ -305,3 +312,4 @@ __pycache__/
 ############################################################
 # vcpkg - End
 ############################################################
+archives

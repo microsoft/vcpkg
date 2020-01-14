@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/polygon
-    REF boost-1.68.0
-    SHA512 ebb34e0d693215db2919096600ed9bea6b239a2486135f48a1a3bd683410b0c86c3b455bc2d58f7b6efad50020895d3fd8f4b4b0ee897eacdb7a980d0979e9ad
+    REF boost-1.71.0
+    SHA512 6b377bd22d9928bd460e4b1ec8894007c542e9b26c4d910e85eb1aae47bafc46260efa0e9d623064469838783ccedd811f8d4c9585d041cad938b75b43b87383
     HEAD_REF master
 )
 

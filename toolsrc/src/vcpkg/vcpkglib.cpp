@@ -21,7 +21,7 @@ namespace vcpkg
                 return StatusParagraphs();
             }
 
-            fs.rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
+            fs.rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file, VCPKG_LINE_INFO);
         }
 
         auto pghs = Paragraphs::get_paragraphs(fs, vcpkg_dir_status_file).value_or_exit(VCPKG_LINE_INFO);
@@ -72,15 +72,15 @@ namespace vcpkg
             }
         }
 
-        fs.write_contents(status_file_new, Strings::serialize(current_status_db));
+        fs.write_contents(status_file_new, Strings::serialize(current_status_db), VCPKG_LINE_INFO);
 
-        fs.rename(status_file_new, status_file);
+        fs.rename(status_file_new, status_file, VCPKG_LINE_INFO);
 
         for (auto&& file : update_files)
         {
             if (!fs.is_regular_file(file)) continue;
 
-            fs.remove(file);
+            fs.remove(file, VCPKG_LINE_INFO);
         }
 
         return current_status_db;
@@ -95,8 +95,8 @@ namespace vcpkg
         const auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
         const auto update_filename = paths.vcpkg_dir_updates / Strings::format("%010d", my_update_id);
 
-        fs.write_contents(tmp_update_filename, Strings::serialize(p));
-        fs.rename(tmp_update_filename, update_filename);
+        fs.write_contents(tmp_update_filename, Strings::serialize(p), VCPKG_LINE_INFO);
+        fs.rename(tmp_update_filename, update_filename, VCPKG_LINE_INFO);
     }
 
     static void upgrade_to_slash_terminated_sorted_format(Files::Filesystem& fs,
@@ -165,8 +165,8 @@ namespace vcpkg
 
         // Replace the listfile on disk
         const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
-        fs.write_lines(updated_listfile_path, *lines);
-        fs.rename(updated_listfile_path, listfile_path);
+        fs.write_lines(updated_listfile_path, *lines, VCPKG_LINE_INFO);
+        fs.rename(updated_listfile_path, listfile_path, VCPKG_LINE_INFO);
     }
 
     std::vector<InstalledPackageView> get_installed_ports(const StatusParagraphs& status_db)

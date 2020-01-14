@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/iterator
-    REF boost-1.68.0
-    SHA512 e8e223bc5b9334618d676e2aefdeffdde6f31097b634d2ca1fa3d6e73976c42dd123ed76081e13d1f023a7d39f49cc53d63b28e541c2aae858cbf569818bd14e
+    REF boost-1.71.0
+    SHA512 7ed3e0e63fc2f63e0972ce838736cad883617d759d8ea54122b7fabfd0b6c9aadc3d5d5c50a9738353a905a88f23bb8dd40e12efd431a53f51cf17e3ccf602f8
     HEAD_REF master
 )
 

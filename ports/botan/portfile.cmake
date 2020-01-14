@@ -1,16 +1,26 @@
-include(vcpkg_common_functions)
-
-set(BOTAN_VERSION 2.8.0)
+set(BOTAN_VERSION 2.12.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF cb14e9ce95bcaae2ada7ffe96ef0cce6a2b38593
-    SHA512 3d8fbf1c65e2b0259f225db46ffa4a7eb989a518b230574e94f82dc13afd7dc32cfe6a8a0127e7dd0dea30e06f3946db78db50e107937382eff8ed823e996dc3
+    REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
+    SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
     HEAD_REF master
+    PATCHES
+        fix-generate-build-path.patch
+        fix-msvc-build.patch # Remove this patch on next update
 )
 
-vcpkg_find_acquire_program(JOM)
+if(CMAKE_HOST_WIN32)
+    vcpkg_find_acquire_program(JOM)
+    set(build_tool "${JOM}")
+    set(parallel_build "/J${VCPKG_CONCURRENCY}")
+else()
+    find_program(MAKE make)
+    set(build_tool "${MAKE}")
+    set(parallel_build "-j${VCPKG_CONCURRENCY}")
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
@@ -57,37 +67,44 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     endif()
     make_directory(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
+    set(configure_arguments --cpu=${BOTAN_FLAG_CPU}
+                            ${BOTAN_FLAG_SHARED}
+                            ${BOTAN_FLAG_STATIC}
+                            ${BOTAN_FLAG_DEBUGMODE}
+                            "--distribution-info=vcpkg ${TARGET_TRIPLET}"
+                            --prefix=${BOTAN_FLAG_PREFIX}
+                            --link-method=copy)
+    if(CMAKE_HOST_WIN32)
+        list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+    endif()
+
     vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py"
-            --cc=msvc
-            --cpu=${BOTAN_FLAG_CPU}
-            ${BOTAN_FLAG_SHARED}
-            ${BOTAN_FLAG_STATIC}
-            ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX}
-            ${BOTAN_FLAG_DEBUGMODE}
-            "--distribution-info=vcpkg ${TARGET_TRIPLET}"
-            --prefix=${BOTAN_FLAG_PREFIX}
-            --link-method=copy
+        COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" ${configure_arguments}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME configure-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
-    vcpkg_execute_required_process(
-        COMMAND ${JOM}
+    vcpkg_execute_build_process(
+        COMMAND "${build_tool}" ${parallel_build}
+        NO_PARALLEL_COMMAND "${build_tool}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
-        LOGNAME jom-build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+        LOGNAME build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/src/scripts/install.py"
             --prefix=${BOTAN_FLAG_PREFIX}
-            --docdir=share
+            --bindir=${BOTAN_FLAG_PREFIX}/bin
+            --libdir=${BOTAN_FLAG_PREFIX}/lib
+            --pkgconfigdir=${BOTAN_FLAG_PREFIX}/lib
+            --includedir=${BOTAN_FLAG_PREFIX}/include
+            --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND CMAKE_HOST_WIN32)
         file(RENAME ${BOTAN_FLAG_PREFIX}/lib/botan${BOTAN_DEBUG_SUFFIX}.dll ${BOTAN_FLAG_PREFIX}/bin/botan${BOTAN_DEBUG_SUFFIX}.dll)
     endif()
 
@@ -98,8 +115,13 @@ BOTAN_BUILD(rel)
 BOTAN_BUILD(dbg)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/botan)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/botan-cli.exe ${CURRENT_PACKAGES_DIR}/tools/botan/botan-cli.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/botan-cli.exe)
+
+set(cli_exe_name "botan")
+if(CMAKE_HOST_WIN32)
+    set(cli_exe_name "botan-cli.exe")
+endif()
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${cli_exe_name} ${CURRENT_PACKAGES_DIR}/tools/botan/${cli_exe_name})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${cli_exe_name})
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/botan-2/botan ${CURRENT_PACKAGES_DIR}/include/botan)
 

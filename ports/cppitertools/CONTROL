@@ -1,0 +1,4 @@
+Source: cppitertools
+Version: 2019-04-14-2
+Description: Range-based for loop add-ons inspired by the Python builtins and itertools library
+Build-Depends: boost-optional

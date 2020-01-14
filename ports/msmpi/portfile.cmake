@@ -1,17 +1,23 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.1)
+
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    message(FATAL_ERROR "This port is only for building msmpi on Windows Desktop")
+endif()
+
+set(MSMPI_VERSION "10.0.12498")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisdk.msi"
-    FILENAME "msmpisdk-9.0.msi"
-    SHA512 f80cc7619c42a5a0975224c5a0ab6d4085a97ab9a1480318cd72db2f600db52fb81d3959a2a9e0dbd9412b02d0814b8191dd4745bbde397110210e05960628b4
+    URLS "https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi"
+    FILENAME "msmpisdk-${MSMPI_VERSION}.msi"
+    SHA512 36a31b2516f45fbc26167b31d2d6419f1928aef1591033f0430d36570159205e1a3134557a4ac0462f2d879add1fc6fee87a6997032e4438b528cd42a8bbe6b1
 )
 
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisetup.exe"
-        FILENAME "msmpisetup-9.0.exe"
-        SHA512 ad1cc3bc74e4c9c3c0f304395df9468e729e0acd9c77c8c6c806e88eadf4693811d29e608ffb459fcb6f4a20f61946ef4ac2e411aac49fb8f8d5aaddd10d4554
+        URLS "https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe"
+        FILENAME "msmpisetup-${MSMPI_VERSION}.exe"
+        SHA512 c272dc842eb1e693f25eb580e1caf0c1fdb385611a12c20cdc6a40cf592ccbdba434a1c16edb63eef14b1a2ac6e678ac1cd561ec5fd003a5d17191a0fad281ae
     )
 endmacro()
 
@@ -20,7 +26,6 @@ endmacro()
 # We always want the ProgramFiles folder even on a 64-bit machine (not the ProgramFilesx86 folder)
 vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
 set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
-set(MSMPI_EXPECTED_FULL_VERSION "9.0.12497")
 
 if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
@@ -32,12 +37,12 @@ if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
 
     if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+)\\.[0-9]+\\]")
-        if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_EXPECTED_FULL_VERSION)
+        if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_VERSION)
             download_msmpi_redistributable_package()
 
             message(FATAL_ERROR
                 "  The version of the installed MSMPI redistributable packages does not match the version to be installed\n"
-                "    Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
+                "    Expected version: ${MSMPI_VERSION}\n"
                 "    Found version: ${CMAKE_MATCH_1}\n"
                 "  Please upgrade the installed version on your system.\n"
                 "  The appropriate installer for the expected version has been downloaded to:\n"
@@ -94,42 +99,31 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/include
 )
 
-# Install release libraries
-file(INSTALL
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
-)
-if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
-    file(INSTALL
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/lib
-    )
-endif()
-
-# Install debug libraries
-# NOTE: since the binary distribution does not include any debug libraries we simply install the release libraries
+# NOTE: since the binary distribution does not include any debug libraries we always install the release libraries
 SET(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
+
+file(GLOB STATIC_LIBS
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib
+    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib
+)
+
 file(INSTALL
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
-        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
-if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
-    file(INSTALL
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
-            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
+file(INSTALL
+        "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+)
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    file(INSTALL ${STATIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${STATIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 endif()
 
 # Handle copyright
-file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/license_sdk.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/msmpi/copyright "See the accompanying license_sdk.rtf")
+file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/MicrosoftMPI-SDK-EULA.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
+file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/MPI-SDK-TPN.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/msmpi/copyright "See the accompanying MicrosoftMPI-SDK-EULA.rtf and MPI-SDK-TPN.txt")

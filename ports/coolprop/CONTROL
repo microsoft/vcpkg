@@ -1,4 +1,5 @@
 Source: coolprop
 Version: 6.1.0-4
+Homepage: https://github.com/CoolProp/CoolProp
 Description: Thermophysical properties for the masses
 Build-Depends: catch, eigen3, pybind11, if97, fmt, rapidjson, msgpack, refprop-headers

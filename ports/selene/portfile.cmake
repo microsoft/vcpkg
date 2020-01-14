@@ -1,30 +1,24 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/selene-0.1.1)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	set(SELENE_EXPORT_SYMBOLS TRUE)
-else()
-	set(SELENE_EXPORT_SYMBOLS FALSE)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kmhofmann/selene
-    REF v0.1.1
-    SHA512 7738c7b803ae6178f0099b2db2148d20edeff01c524e108e724896201800d82d3852a1ab7d0bd697907673d7030c55c81411f77bb957a0ee3811c46d07104c3e
+    REF v0.3.1
+    SHA512 7bc57ebe9e2442da2716eb5c1af11f8d610b0b09fe96e3122d1028575732b6045a987c499bbf7de53003edd627b8809d86c80ea4975fc2264a1c61d5891a46c3
     HEAD_REF master
+    PATCHES
+        disable_x86_intrinsics_on_arm.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS
-	  -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=${SELENE_EXPORT_SYMBOLS}
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/selene)
 vcpkg_copy_pdbs()
 
 # Include files should not be duplicated into the /debug/include directory.

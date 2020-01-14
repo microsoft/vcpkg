@@ -1,8 +1,9 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/system.debug.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/globalstate.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
 
@@ -115,7 +116,7 @@ namespace vcpkg::Paragraphs
             skip_spaces(ch);
         }
 
-        void get_paragraph(char& ch, std::unordered_map<std::string, std::string>& fields)
+        void get_paragraph(char& ch, RawParagraph& fields)
         {
             fields.clear();
             std::string fieldname;
@@ -140,9 +141,9 @@ namespace vcpkg::Paragraphs
         }
 
     public:
-        std::vector<std::unordered_map<std::string, std::string>> get_paragraphs()
+        std::vector<RawParagraph> get_paragraphs()
         {
-            std::vector<std::unordered_map<std::string, std::string>> paragraphs;
+            std::vector<RawParagraph> paragraphs;
 
             char ch;
             peek(ch);
@@ -163,8 +164,19 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const Files::Filesystem& fs,
-                                                                                const fs::path& control_path)
+    static Expected<RawParagraph> parse_single_paragraph(const std::string& str)
+    {
+        const std::vector<RawParagraph> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+
+        if (p.size() == 1)
+        {
+            return p.at(0);
+        }
+
+        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
+    }
+
+    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -175,8 +187,7 @@ namespace vcpkg::Paragraphs
         return contents.error();
     }
 
-    Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs,
-                                                                                       const fs::path& control_path)
+    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -187,40 +198,17 @@ namespace vcpkg::Paragraphs
         return contents.error();
     }
 
-    Expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str)
-    {
-        const std::vector<std::unordered_map<std::string, std::string>> p =
-            Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
-
-        if (p.size() == 1)
-        {
-            return p.at(0);
-        }
-
-        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
-    }
-
-    Expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str)
+    Expected<std::vector<RawParagraph>> parse_paragraphs(const std::string& str)
     {
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
+        Expected<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
-            auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
-            if (!GlobalState::feature_packages)
-            {
-                if (auto ptr = csf.get())
-                {
-                    Checks::check_exit(VCPKG_LINE_INFO, ptr->get() != nullptr);
-                    ptr->get()->core_paragraph->default_features.clear();
-                    ptr->get()->feature_paragraphs.clear();
-                }
-            }
-            return csf;
+            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = path.filename().generic_u8string();
@@ -230,7 +218,7 @@ namespace vcpkg::Paragraphs
 
     Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs =
+        Expected<std::vector<RawParagraph>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())
@@ -278,7 +266,7 @@ namespace vcpkg::Paragraphs
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
-            if (GlobalState::debugging)
+            if (Debug::g_debugging)
             {
                 print_error_message(results.errors);
             }
@@ -286,11 +274,11 @@ namespace vcpkg::Paragraphs
             {
                 for (auto&& error : results.errors)
                 {
-                    System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
+                    System::print2(
+                        System::Color::warning, "Warning: an error occurred while parsing '", error->name, "'\n");
                 }
-                System::println(System::Color::warning,
-                                "Use '--debug' to get more information about the parse failures.\n");
+                System::print2(System::Color::warning,
+                               "Use '--debug' to get more information about the parse failures.\n\n");
             }
         }
         return std::move(results.paragraphs);

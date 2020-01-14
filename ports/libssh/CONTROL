@@ -1,4 +1,9 @@
 Source: libssh
-Version: 0.7.5-4
+Version: 0.9.0
+Homepage: https://www.libssh.org/
 Description: libssh is a multiplatform C library implementing the SSHv2 and SSHv1 protocol on client and server side
-Build-Depends: zlib, openssl
+Build-Depends: openssl
+
+Feature: zlib
+Description: libssh with zlib
+Build-Depends: zlib

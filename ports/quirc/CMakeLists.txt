@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(quirc C)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_library(quirc
 	lib/decode.c
 	lib/identify.c

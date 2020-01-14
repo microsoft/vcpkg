@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/interprocess
-    REF boost-1.68.0
-    SHA512 f3899c4b6aa4619ff93715c2cca13782c7504cbb871adfb2e74e57534bd130b132a109726ecd5c3e9cf63794a90fd39c19f34f4011f702e6c427058bdaf9aad0
+    REF boost-1.71.0
+    SHA512 77eb6c9a04708655fc80e40492c40b1608e61e10f37b2bb66bbe69603bc38fc9588659a3980ee7d6b954e13d7216960df81304675573c7561eded1e5c06f547d
     HEAD_REF master
 )
 

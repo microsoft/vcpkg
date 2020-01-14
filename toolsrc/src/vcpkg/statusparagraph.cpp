@@ -24,7 +24,7 @@ namespace vcpkg
             .push_back('\n');
     }
 
-    StatusParagraph::StatusParagraph(std::unordered_map<std::string, std::string>&& fields)
+    StatusParagraph::StatusParagraph(Parse::RawParagraph&& fields)
         : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE)
     {
         auto status_it = fields.find(BinaryParagraphRequiredField::STATUS);
@@ -105,7 +105,7 @@ namespace vcpkg
         {
             dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
         }
-        Util::unstable_keep_if(deps, [&](auto&& e) { return e != l_spec.name(); });
+        Util::erase_remove_if(deps, [&](auto&& e) { return e == l_spec.name(); });
         // </hack>
         Util::sort_unique_erase(deps);
 

@@ -44,8 +44,18 @@ add_library(SDL2_image
     IMG_xpm.c
     IMG_xv.c
     IMG_xxx.c
+    IMG_WIC.c
     version.rc
     )
+
+if (APPLE)
+    target_sources(SDL2_image PRIVATE
+        IMG_ImageIO.m
+    )
+    target_compile_options(SDL2_image BEFORE PRIVATE
+        "-x" "objective-c"
+    )
+endif()
 
 set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 
@@ -55,13 +65,13 @@ endforeach(FORMAT)
 
 # SDL
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)
 include_directories(${CMAKE_SOURCE_DIR})
 
-target_link_libraries(SDL2_image ${SDL_LIBRARY})
+target_link_libraries(SDL2_image SDL2::SDL2)
 
 # external dependencies
 foreach(DEPENDENCY IN LISTS DEPENDENCIES)
@@ -93,15 +103,22 @@ endif()
 
 
 install(TARGETS SDL2_image
+    EXPORT SDL2_image
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
 install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
 
+install(EXPORT SDL2_image
+    DESTINATION share/sdl2-image/
+    FILE sdl2-image-config.cmake
+    NAMESPACE SDL2::
+)
+
 
 message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
+message(STATUS "  " SDL2::SDL2)
 foreach(DEPENDENCY ${DEPENDENCIES})
     if(${DEPENDENCY}_FOUND)
         message(STATUS "  " ${DEPENDENCY})

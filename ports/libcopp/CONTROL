@@ -1,0 +1,3 @@
+Source: libcopp
+Version: 1.2.1
+Description: A cross-platfrom coroutine library for C++

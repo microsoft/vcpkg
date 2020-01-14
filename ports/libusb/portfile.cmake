@@ -1,95 +1,118 @@
-include(vcpkg_common_functions)
+if (VCPKG_CMAKE_SYSTEM_NAME)
+    message(FATAL_ERROR "Error: the port is unsupported on your platform. Please open an issue on github.com/Microsoft/vcpkg to request a fix")
+endif()
 
-set(LIBUSB_REVISION fc9962027f2c4f22f2c5e7853d737ef89aa5b6a3)
-set(LIBUSB_HASH f8485b68feb7759ef4b469fa2fae10b93794bdb2c69d48aacd4a6fb87d7597779e06a15e8d9a72fe223a2f08c861c6f5023c4f6e869f13a8c4c92091fb38780e)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libusb)
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
-    REF ${LIBUSB_REVISION}
-    SHA512 ${LIBUSB_HASH}
+    REF e782eeb2514266f6738e242cdcb18e3ae1ed06fa # v1.0.23
+    SHA512 27cfff4bbf64d5ec5014acac0871ace74b6af76141bd951309206f4806e3e3f2c7ed32416f5b55fd18d033ca5494052eb2e50ed3cc0be10839be2bd4168a9d4c
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/libfreenect2.patch"
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+  if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+    set(MSVS_VERSION 2017)  #they are abi compatible, so it should work
+  elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    set(MSVS_VERSION 2017)
+  else()
+    set(MSVS_VERSION 2015)
+  endif()
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
-endif()
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+      set(LIBUSB_PROJECT_TYPE dll)
+      if (VCPKG_CRT_LINKAGE STREQUAL static)
+        file(READ "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" PROJ_FILE)
+        string(REPLACE "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        string(REPLACE "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        file(WRITE "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" "${PROJ_FILE}")
+      endif()
+  else()
+      set(LIBUSB_PROJECT_TYPE static)
+      if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+        file(READ "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" PROJ_FILE)
+        string(REPLACE "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        string(REPLACE "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" PROJ_FILE "${PROJ_FILE}")
+        file(WRITE "${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj" "${PROJ_FILE}")
+      endif()
+  endif()
 
-if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-  set(MSVS_VERSION 2017)
+  vcpkg_install_msbuild(
+      SOURCE_PATH ${SOURCE_PATH}
+      PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
+      LICENSE_SUBPATH COPYING
+  )
 else()
-  set(MSVS_VERSION 2015)
+    set(BASH /bin/bash)
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        # Copy sources
+        message(STATUS "Copying source files...")
+        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
+        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
+          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        endforeach()
+        message(STATUS "Copying source files... done")
+        # Configure release
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+        execute_process(
+            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        execute_process(
+            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}\""
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        # Copy sources
+        message(STATUS "Copying source files...")
+        file(GLOB PORT_SOURCE_FILES ${SOURCE_PATH}/*)
+        foreach(SOURCE_FILE ${PORT_SOURCE_FILES})
+          file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        endforeach()
+        message(STATUS "Copying source files... done")
+        # Configure debug
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        execute_process(
+            COMMAND "${BASH} --noprofile --norc -c \"./autogen.sh\""
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        execute_process(
+            COMMAND "${BASH} --noprofile --norc -c \"./configure --prefix=${CURRENT_PACKAGES_DIR}/debug\""
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+      # Build release
+      message(STATUS "Package ${TARGET_TRIPLET}-rel")
+      execute_process(
+          COMMAND "${BASH} --noprofile --norc -c \"make install\""
+          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+      message(STATUS "Package ${TARGET_TRIPLET}-rel done")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+      # Build debug
+      message(STATUS "Package ${TARGET_TRIPLET}-dbg")
+      execute_process(
+          COMMAND "${BASH} --noprofile --norc -c \"make install\""
+          WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+      message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
+    endif()
 endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBUSB_LIBFOLDER_NAME dll)
-    set(LIBUSB_PROJECT_TYPE dll)
-else()
-    set(LIBUSB_LIBFOLDER_NAME lib)
-    set(LIBUSB_PROJECT_TYPE static)
-endif()
-
-vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
-    )
-
-vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/msvc/libusb_usbdk_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
-    )
-   
-   
-file(
-    INSTALL
-        ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.lib
-        ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.lib
-    DESTINATION 
-        ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-
-file(
-    INSTALL
-        ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.lib
-        ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.lib
-    DESTINATION 
-        ${CURRENT_PACKAGES_DIR}/lib
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(
-        INSTALL
-            ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.dll
-            ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Debug/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.dll
-        DESTINATION 
-            ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-
-    file(
-        INSTALL
-            ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-1.0.dll
-            ${SOURCE_PATH}/${MSBUILD_PLATFORM}/Release/${LIBUSB_LIBFOLDER_NAME}/libusb-usbdk-1.0.dll
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/bin
-    )
-endif()
-
-vcpkg_copy_pdbs()
 
 file(INSTALL
     ${SOURCE_PATH}/libusb/libusb.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/libusb-1.0
 )
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libusb)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libusb/COPYING ${CURRENT_PACKAGES_DIR}/share/libusb/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

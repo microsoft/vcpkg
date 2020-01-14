@@ -1,24 +1,22 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("Dynamic linkage not supported. Building static instead.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(VERSION 1.3.1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lemon-${VERSION})
+set(VERSION ed2c21cbd6ef)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://lemon.cs.elte.hu/pub/sources/lemon-${VERSION}.zip"
+    URLS "http://lemon.cs.elte.hu/hg/lemon/archive/${VERSION}.zip"
     FILENAME "lemon-${VERSION}.zip"
-    SHA512 86d15914b8c3cd206a20c37dbe3b8ca4b553060567a07603db7b6f8dd7dcf9cb043cca31660ff1b7fb77e359b59fac5ca0aab57fd415fda5ecca0f42eade6567
+    SHA512 029640e4f791a18068cb2e2b4e794d09822d9d56fb957eb3e2cceae3a30065c0041a31c465637cfcadf7b2473564070b34adc88513439cdf9046831854e2aa70
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${VERSION}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fixup-targets.patch
+        "cmake.patch"
+        "fixup-targets.patch"
 )
 
 vcpkg_configure_cmake(
@@ -40,6 +38,7 @@ file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblemon/)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblemon)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 # Handle copyright

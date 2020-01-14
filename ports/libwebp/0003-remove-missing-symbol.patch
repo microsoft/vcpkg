@@ -1,0 +1,13 @@
+diff --git a/examples/gifdec.c b/examples/gifdec.c
+index 4219352..ab0592a 100644
+--- a/examples/gifdec.c
++++ b/examples/gifdec.c
+@@ -310,7 +310,7 @@ void GIFDisplayError(const GifFileType* const gif, int gif_error) {
+ #else
+   (void)gif;
+   fprintf(stderr, "GIFLib Error %d: ", gif_error);
+-  PrintGifError();
++  //PrintGifError();
+   fprintf(stderr, "\n");
+ #endif
+ }

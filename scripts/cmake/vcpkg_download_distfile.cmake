@@ -33,6 +33,11 @@
 ##
 ## This switch is only valid when building with the `--head` command line flag.
 ##
+## ### HEADERS
+## A list of headers to append to the download request. This can be used for authentication during a download.
+##
+## Headers should be specified as "<header-name>: <header-value>".
+##
 ## ## Notes
 ## The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downloading from GitHub projects.
 ##
@@ -40,11 +45,11 @@
 ##
 ## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
-## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512)
     set(oneValueArgs FILENAME SHA512)
-    set(multipleValuesArgs URLS)
+    set(multipleValuesArgs URLS HEADERS)
     cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
     if(NOT DEFINED vcpkg_download_distfile_URLS)
@@ -70,11 +75,14 @@ function(vcpkg_download_distfile VAR)
 
     # Works around issue #3399
     if(IS_DIRECTORY "${DOWNLOADS}/temp")
+        # Delete "temp0" directory created by the old version of vcpkg
         file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
-        file(RENAME "${DOWNLOADS}/temp" "${DOWNLOADS}/temp0")
-        file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
+
+        file(GLOB temp_files "${DOWNLOADS}/temp")
+        file(REMOVE_RECURSE ${temp_files})
+    else()
+      file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     endif()
-    file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)
         if(_VCPKG_INTERNAL_NO_HASH_CHECK)
@@ -110,10 +118,16 @@ function(vcpkg_download_distfile VAR)
         if(_VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT SAMPLE_URL MATCHES "aria2")
             vcpkg_find_acquire_program("ARIA2")
             message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
-            execute_process(
+            if(vcpkg_download_distfile_HEADERS)
+                foreach(header ${vcpkg_download_distfile_HEADERS})
+                    list(APPEND request_headers "--header=${header}")
+                endforeach()
+            endif()
+            _execute_process(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
                 -o temp/${vcpkg_download_distfile_FILENAME}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                ${request_headers}
                 OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
                 ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
                 RESULT_VARIABLE error_code
@@ -140,7 +154,12 @@ function(vcpkg_download_distfile VAR)
         else()
             foreach(url IN LISTS vcpkg_download_distfile_URLS)
                 message(STATUS "Downloading ${url}...")
-                file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status)
+                if(vcpkg_download_distfile_HEADERS)
+                    foreach(header ${vcpkg_download_distfile_HEADERS})
+                        list(APPEND request_headers HTTPHEADER ${header})
+                    endforeach()
+                endif()
+                file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status ${request_headers})
                 list(GET download_status 0 status_code)
                 if (NOT "${status_code}" STREQUAL "0")
                     message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")

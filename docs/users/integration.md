@@ -35,7 +35,7 @@ cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.c
 ```
 Projects configured with the Vcpkg toolchain file will have the appropriate Vcpkg folders added to the cmake search paths. This makes all libraries available to be found through `find_package()`, `find_path()`, and `find_library()`.
 
-See [Example: Using Sqlite](../examples/using-sqlite.md) for a fully worked example using our CMake toolchain.
+See [Installing and Using Packages Example: sqlite](../examples/installing-and-using-packages.md) for a fully worked example using our CMake toolchain.
 
 Note that we do not automatically add ourselves to your compiler include paths. To use a header-only library, simply use `find_path()`, which will correctly work on all platforms:
 ```cmake
@@ -50,7 +50,7 @@ The `CMAKE_TOOLCHAIN_FILE` setting simply must be set before the `project()` dir
 
 ```cmake
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+  set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "")
 endif()
 
@@ -135,9 +135,16 @@ To override the automatically chosen [triplet][], you can specify the MSBuild pr
 ```
 
 #### With CMake
-Simply set `VCPKG_TARGET_TRIPLET` on the configure line.
+You can set `VCPKG_TARGET_TRIPLET` on the configure line:
 ```no-highlight
 cmake ../my/project -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_TOOLCHAIN_FILE=...
+```
+If you use `VCPKG_DEFAULT_TRIPLET` [environment variable](config-environment.md) to control the unqualified triplet in vcpkg command lines you can default `VCPKG_TARGET_TRIPLET` in CMake like [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option):
+
+```cmake
+if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+  set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
+endif()
 ```
 
 [triplet]: triplets.md

@@ -1,3 +1,4 @@
 Source: ecm
-Version: 5.50.0
+Version: 5.60.0-2
+Homepage: https://github.com/KDE/extra-cmake-modules
 Description: Extra CMake Modules (ECM), extra modules and scripts for CMake

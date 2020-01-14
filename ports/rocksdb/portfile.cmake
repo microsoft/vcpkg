@@ -1,67 +1,51 @@
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v5.14.2
-  SHA512 44ea887157daa1b504205d73ec07ff2c74164973aa057e58a02f39e0540dc394af8218da8bda57152c2a3171262e7147a5dbc4b6dd2c25eb35388d0786de0e35
+  REF 2b38e2dd6602a17a2010308580fd5d8c91dea650
+  SHA512 82e9c2417bd0325b2402a64a56cfff25346e277a8174a33727517ada59502fee4bdeea40b0d20f9c6a86c52b66d57340b898096e39ad91bccc4f3a2245bd49b0
   HEAD_REF master
-)
-
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/0002-disable-gtest.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/0003-only-build-one-flavor.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/0004-zlib-findpackage.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/use-find-package.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/pass-major-version.patch"
+    0001-disable-gtest.patch
+    0002-only-build-one-flavor.patch
+    0003-zlib-findpackage.patch
+    0004-use-find-package.patch
+    0005-static-linking-in-linux.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")
 file(COPY
   "${CMAKE_CURRENT_LIST_DIR}/Findlz4.cmake"
   "${CMAKE_CURRENT_LIST_DIR}/Findsnappy.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/Findzstd.cmake"
   DESTINATION "${SOURCE_PATH}/cmake/modules"
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-  set(WITH_MD_LIBRARY OFF)
-else()
-  set(WITH_MD_LIBRARY ON)
-endif()
-
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ROCKSDB_DISABLE_INSTALL_SHARED_LIB)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_DISABLE_INSTALL_STATIC_LIB)
 
-set(WITH_LZ4 OFF)
-if("lz4" IN_LIST FEATURES)
-  set(WITH_LZ4 ON)
-endif()
-
-set(WITH_SNAPPY OFF)
-if("snappy" IN_LIST FEATURES)
-  set(WITH_SNAPPY ON)
-endif()
-
-set(WITH_ZLIB OFF)
-if("zlib" IN_LIST FEATURES)
-  set(WITH_ZLIB ON)
-endif()
-
-get_filename_component(ROCKSDB_VERSION "${SOURCE_PATH}" NAME)
-string(REPLACE "rocksdb-" "" ROCKSDB_VERSION "${ROCKSDB_VERSION}")
-string(REGEX REPLACE "^([0-9]+)." "\\1" ROCKSDB_MAJOR_VERSION "${ROCKSDB_VERSION}")
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    "lz4"     WITH_LZ4
+    "snappy"  WITH_SNAPPY
+    "zlib"    WITH_ZLIB
+    "zstd"    WITH_ZSTD
+    "tbb"     WITH_TBB
+  INVERTED_FEATURES
+    "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
+)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
   -DWITH_GFLAGS=0
-  -DWITH_SNAPPY=${WITH_SNAPPY}
-  -DWITH_LZ4=${WITH_LZ4}
-  -DWITH_ZLIB=${WITH_ZLIB}
   -DWITH_TESTS=OFF
+  -DUSE_RTTI=1
   -DROCKSDB_INSTALL_ON_WINDOWS=ON
   -DFAIL_ON_WARNINGS=OFF
   -DWITH_MD_LIBRARY=${WITH_MD_LIBRARY}
@@ -69,12 +53,10 @@ vcpkg_configure_cmake(
   -DCMAKE_DEBUG_POSTFIX=d
   -DROCKSDB_DISABLE_INSTALL_SHARED_LIB=${ROCKSDB_DISABLE_INSTALL_SHARED_LIB}
   -DROCKSDB_DISABLE_INSTALL_STATIC_LIB=${ROCKSDB_DISABLE_INSTALL_STATIC_LIB}
-  -DROCKSDB_VERSION=${ROCKSDB_VERSION}
-  -DROCKSDB_VERSION_MAJOR=${ROCKSDB_MAJOR_VERSION}
-  -DCMAKE_DISABLE_FIND_PACKAGE_TBB=TRUE
   -DCMAKE_DISABLE_FIND_PACKAGE_NUMA=TRUE
   -DCMAKE_DISABLE_FIND_PACKAGE_gtest=TRUE
   -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
+  ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -84,6 +66,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
 
 vcpkg_copy_pdbs()

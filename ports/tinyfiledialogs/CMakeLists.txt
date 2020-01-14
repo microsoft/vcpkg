@@ -5,7 +5,23 @@ add_library(tinyfiledialogs tinyfiledialogs.c)
 
 install(
     TARGETS tinyfiledialogs
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+    EXPORT tinyfiledialogsConfig
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+install(
+    FILES tinyfiledialogs.h
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/include/tinyfiledialogs"
+)
+
+export(
+    TARGETS tinyfiledialogs
+    NAMESPACE tinyfiledialogs::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/tinyfiledialogsConfig.cmake"
+)
+install(
+    EXPORT tinyfiledialogsConfig
+    NAMESPACE tinyfiledialogs::
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/tinyfiledialogs"
 )

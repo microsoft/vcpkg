@@ -56,7 +56,11 @@
 ##
 ## This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 ##
-
+## ## Examples:
+## * [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
+## * [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
+## * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
+##
 function(vcpkg_from_gitlab)
     set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF)
     set(multipleValuesArgs PATCHES)
@@ -146,7 +150,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
-    execute_process(COMMAND ${GIT} ls-remote
+    _execute_process(COMMAND ${GIT} ls-remote
         "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}.git" "${_vdud_HEAD_REF}"
         RESULT_VARIABLE _git_result
         OUTPUT_VARIABLE _git_output

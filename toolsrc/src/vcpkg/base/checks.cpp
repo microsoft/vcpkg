@@ -1,70 +1,40 @@
 #include "pch.h"
 
-#include <vcpkg/globalstate.h>
-#include <vcpkg/metrics.h>
-
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/system.debug.h>
 
-namespace vcpkg::Checks
+namespace vcpkg
 {
+    static void (*g_shutdown_handler)() = nullptr;
+    void Checks::register_global_shutdown_handler(void (*func)())
+    {
+        if (g_shutdown_handler)
+            // Setting the handler twice is a program error. Terminate.
+            std::abort();
+        g_shutdown_handler = func;
+    }
+
     [[noreturn]] static void cleanup_and_exit(const int exit_code)
     {
         static std::atomic<bool> have_entered{false};
         if (have_entered) std::terminate();
         have_entered = true;
 
-        const auto elapsed_us_inner = GlobalState::timer.lock()->microseconds();
-
-        bool debugging = GlobalState::debugging;
-
-        auto metrics = Metrics::g_metrics.lock();
-        metrics->track_metric("elapsed_us", elapsed_us_inner);
-        GlobalState::debugging = false;
-        metrics->flush();
-
-#if defined(_WIN32)
-        SetConsoleCP(GlobalState::g_init_console_cp);
-        SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
-#endif
-
-        auto elapsed_us = GlobalState::timer.lock()->microseconds();
-        if (debugging)
-            System::println("[DEBUG] Exiting after %d us (%d us)",
-                            static_cast<int>(elapsed_us),
-                            static_cast<int>(elapsed_us_inner));
+        if (g_shutdown_handler) g_shutdown_handler();
 
         fflush(nullptr);
 
 #if defined(_WIN32)
         ::TerminateProcess(::GetCurrentProcess(), exit_code);
-#else
+#endif
         std::exit(exit_code);
-#endif
     }
 
-#if defined(_WIN32)
-    static BOOL ctrl_handler(DWORD fdw_ctrl_type)
+    void Checks::unreachable(const LineInfo& line_info)
     {
-        {
-            auto locked_metrics = Metrics::g_metrics.lock();
-            locked_metrics->track_property("CtrlHandler", std::to_string(fdw_ctrl_type));
-            locked_metrics->track_property("error", "CtrlHandler was fired.");
-        }
-        cleanup_and_exit(EXIT_FAILURE);
-    }
-
-    void register_console_ctrl_handler()
-    {
-        SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
-    }
-#else
-    void register_console_ctrl_handler() {}
-#endif
-    void unreachable(const LineInfo& line_info)
-    {
-        System::println(System::Color::error, "Error: Unreachable code was reached");
-        System::println(System::Color::error, line_info.to_string()); // Always print line_info here
+        System::print2(System::Color::error, "Error: Unreachable code was reached\n");
+        System::print2(System::Color::error, line_info, '\n'); // Always print line_info here
 #ifndef NDEBUG
         std::abort();
 #else
@@ -72,19 +42,19 @@ namespace vcpkg::Checks
 #endif
     }
 
-    void exit_with_code(const LineInfo& line_info, const int exit_code)
+    void Checks::exit_with_code(const LineInfo& line_info, const int exit_code)
     {
-        Debug::println(System::Color::error, line_info.to_string());
+        Debug::print(System::Color::error, line_info, '\n');
         cleanup_and_exit(exit_code);
     }
 
-    void exit_with_message(const LineInfo& line_info, const CStringView error_message)
+    void Checks::exit_with_message(const LineInfo& line_info, StringView error_message)
     {
-        System::println(System::Color::error, error_message);
+        System::print2(System::Color::error, error_message, '\n');
         exit_fail(line_info);
     }
 
-    void check_exit(const LineInfo& line_info, bool expression)
+    void Checks::check_exit(const LineInfo& line_info, bool expression)
     {
         if (!expression)
         {
@@ -92,11 +62,27 @@ namespace vcpkg::Checks
         }
     }
 
-    void check_exit(const LineInfo& line_info, bool expression, const CStringView error_message)
+    void Checks::check_exit(const LineInfo& line_info, bool expression, StringView error_message)
     {
         if (!expression)
         {
             exit_with_message(line_info, error_message);
         }
+    }
+
+    std::string LineInfo::to_string() const
+    {
+        std::string ret;
+        this->to_string(ret);
+        return ret;
+    }
+    void LineInfo::to_string(std::string& out) const
+    {
+        out += m_file_name;
+        Strings::append(out, '(', m_line_number, ')');
+    }
+    namespace details
+    {
+        void exit_if_null(bool b, const LineInfo& line_info) { Checks::check_exit(line_info, b, "Value was null"); }
     }
 }

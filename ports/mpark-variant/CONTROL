@@ -1,3 +1,3 @@
 Source: mpark-variant
-Version: 1.3.0
+Version: 1.4.0
 Description: an implementation of C++17 std::variant for C++11/14/17.

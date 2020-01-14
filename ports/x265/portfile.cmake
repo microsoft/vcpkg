@@ -3,23 +3,31 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO multicoreware/x265
-    REF 2.7
-    SHA512 fd2f43830bbe4fa0ac98ac6d8e3689d0a8a5142da9d67c0dd16fbbde40500c52a370c5c5a30e93195c2e998660a51abab76b09baed87378c9e366cf2f694f2b9
+    REF 3.2
+    SHA512 e98e26a9d3c2eb7f147ba052d9d8009e1c47e54905375b29e813f33ffddf8b7fac55ea455ae6d28ed1ade2d90f887c7cafe374873cd48b6c5e2560ddd21ccb84
     HEAD_REF master
+    PATCHES
+        disable-install-pdb.patch
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-install-pdb.patch
-)
+set(ENABLE_ASSEMBLY OFF)
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+    set(ENABLE_ASSEMBLY ON)
+endif ()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/source
     PREFER_NINJA
-    OPTIONS -DENABLE_SHARED=${ENABLE_SHARED}
-    OPTIONS_DEBUG -DENABLE_CLI=OFF
+    OPTIONS
+        -DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}
+        -DENABLE_SHARED=${ENABLE_SHARED}
+    OPTIONS_DEBUG
+        -DENABLE_CLI=OFF
 )
 
 vcpkg_install_cmake()
@@ -29,7 +37,12 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x265)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265 ${CURRENT_PACKAGES_DIR}/tools/x265/x265)
+elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)

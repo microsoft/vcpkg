@@ -1,0 +1,12 @@
+diff --git a/include/mupdf/fitz/system.h b/include/mupdf/fitz/system.h
+index 0552771..42fd037 100644
+--- a/include/mupdf/fitz/system.h
++++ b/include/mupdf/fitz/system.h
+@@ -131,7 +131,6 @@ #define isnan(x) _isnan(x)
+ #define isinf(x) (!_finite(x))
+ #endif
+ 
+-#define hypotf _hypotf
+ #define atoll _atoi64
+ 
+ #endif

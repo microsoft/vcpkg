@@ -1,0 +1,63 @@
+diff --git a/src/tools/msvc.jam b/src/tools/msvc.jam
+index e6c0b60..62c3a41 100644
+--- a/src/tools/msvc.jam
++++ b/src/tools/msvc.jam
+@@ -466,6 +466,7 @@ rule configure-version-specific ( toolset : version : conditions )
+         toolset.flags $(toolset).link LINKFLAGS $(conditions)/$(.cpu-arch-i386)  : "/MACHINE:X86" ;
+         toolset.flags $(toolset).link LINKFLAGS $(conditions)/$(.cpu-arch-ia64)  : "/MACHINE:IA64" ;
+         toolset.flags $(toolset).link LINKFLAGS $(conditions)/$(.cpu-arch-arm)   : "/MACHINE:ARM" ;
++        toolset.flags $(toolset).link LINKFLAGS $(conditions)/$(.cpu-arch-arm64) : "/MACHINE:ARM64" ;
+ 
+         # Make sure that manifest will be generated even if there is no
+         # dependencies to put there.
+@@ -1256,7 +1257,7 @@ local rule configure-really ( version ? : options * )
+         local below-8.0 = [ MATCH "^([67]\\.)" : $(version) ] ;
+         local below-11.0 = [ MATCH "^([6789]\\.|10\\.)" : $(version) ] ;
+         
+-        local cpu = i386 amd64 ia64 arm ;
++        local cpu = i386 amd64 ia64 arm arm64 ;
+         if $(below-8.0)
+         {
+             cpu = i386 ;
+@@ -1270,6 +1271,7 @@ local rule configure-really ( version ? : options * )
+         local setup-i386 ;
+         local setup-ia64 ;
+         local setup-arm ;
++        local setup-arm64 ;
+         local setup-phone-i386 ;
+         local setup-phone-arm ;
+ 
+@@ -1327,6 +1329,7 @@ local rule configure-really ( version ? : options * )
+             local default-setup-i386  = vcvars32.bat ;
+             local default-setup-ia64  = vcvarsx86_ia64.bat ;
+             local default-setup-arm   = vcvarsx86_arm.bat ;
++            local default-setup-arm64 = vcvarsx86_arm64.bat ;
+             local default-setup-phone-i386 = vcvarsphonex86.bat ;
+             local default-setup-phone-arm = vcvarsphonex86_arm.bat ;
+ 
+@@ -1338,6 +1341,7 @@ local rule configure-really ( version ? : options * )
+             local default-global-setup-options-i386  = x86 ;
+             local default-global-setup-options-ia64  = x86_ia64 ;
+             local default-global-setup-options-arm   = x86_arm ;
++            local default-global-setup-options-arm64 = x86_arm64 ;
+ 
+             # When using 64-bit Windows, and targeting 64-bit, it is possible to
+             # use a native 64-bit compiler, selected by the "amd64" & "ia64"
+@@ -1418,6 +1422,7 @@ local rule configure-really ( version ? : options * )
+         local default-assembler-i386  = "ml -coff" ;
+         local default-assembler-ia64  = ias ;
+         local default-assembler-ia64  = armasm ;
++        local default-assembler-arm64 = armasm64 ;
+ 
+         assembler = [ feature.get-values <assembler> : $(options) ] ;
+ 
+@@ -1932,6 +1937,9 @@ if [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ]
+     <architecture>arm/<address-model>
+     <architecture>arm/<address-model>32 ;
+ 
++.cpu-arch-arm64 =
++    <architecture>arm/<address-model>
++    <architecture>arm/<address-model>64 ;
+ 
+ # Supported CPU types (only Itanium optimization options are supported from
+ # VC++ 2005 on). See

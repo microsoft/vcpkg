@@ -6,7 +6,8 @@
 #include <vcpkg/versiont.h>
 
 #include <vcpkg/base/sortedvector.h>
-#include <vcpkg/base/system.h>
+#include <vcpkg/base/system.print.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg::Commands::PortsDiff
@@ -71,7 +72,7 @@ namespace vcpkg::Commands::PortsDiff
         for (const std::string& name : ports_to_print)
         {
             const VersionT& version = names_and_versions.at(name);
-            System::println("    - %-14s %-16s", name, version);
+            System::printf("    - %-14s %-16s\n", name, version);
         }
     }
 
@@ -104,7 +105,7 @@ namespace vcpkg::Commands::PortsDiff
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : all_ports)
             names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
-        fs.remove_all(temp_checkout_path, ec);
+        fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;
     }
 
@@ -155,14 +156,14 @@ namespace vcpkg::Commands::PortsDiff
         const std::vector<std::string>& added_ports = setp.only_left;
         if (!added_ports.empty())
         {
-            System::println("\nThe following %zd ports were added:", added_ports.size());
+            System::printf("\nThe following %zd ports were added:\n", added_ports.size());
             do_print_name_and_version(added_ports, current_names_and_versions);
         }
 
         const std::vector<std::string>& removed_ports = setp.only_right;
         if (!removed_ports.empty())
         {
-            System::println("\nThe following %zd ports were removed:", removed_ports.size());
+            System::printf("\nThe following %zd ports were removed:\n", removed_ports.size());
             do_print_name_and_version(removed_ports, previous_names_and_versions);
         }
 
@@ -172,16 +173,16 @@ namespace vcpkg::Commands::PortsDiff
 
         if (!updated_ports.empty())
         {
-            System::println("\nThe following %zd ports were updated:", updated_ports.size());
+            System::printf("\nThe following %zd ports were updated:\n", updated_ports.size());
             for (const UpdatedPort& p : updated_ports)
             {
-                System::println("    - %-14s %-16s", p.port, p.version_diff.to_string());
+                System::printf("    - %-14s %-16s\n", p.port, p.version_diff.to_string());
             }
         }
 
         if (added_ports.empty() && removed_ports.empty() && updated_ports.empty())
         {
-            System::println("There were no changes in the ports between the two commits.");
+            System::print2("There were no changes in the ports between the two commits.\n");
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

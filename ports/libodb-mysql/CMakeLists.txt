@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(libodb-mysql VERSION 2.4.0 LANGUAGES CXX)
 find_package(odb 2.4.0 REQUIRED COMPONENTS libodb)
+configure_file(config.unix.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/odb/mysql/details/config.h COPYONLY)
+
 INCLUDE_DIRECTORIES(${MYSQL_INCLUDE_DIR})
 set(LIBODB_INSTALL_HEADERS ON CACHE BOOL "Install the header files (a debug install)")
 file(GLOB_RECURSE libodb_src

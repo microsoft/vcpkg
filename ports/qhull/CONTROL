@@ -1,3 +1,4 @@
 Source: qhull
-Version: 2015.2-2
+Version: 7.3.2-2
+Homepage: https://github.com/qhull/qhull
 Description: computes the convex hull, Delaunay triangulation, Voronoi diagram

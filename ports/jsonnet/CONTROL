@@ -1,3 +1,4 @@
 Source: jsonnet
-Version: 2018-09-18
+Version: 0.14.0
+Homepage: https://github.com/google/jsonnet
 Description: Jsonnet - The data templating language

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-extras
-    REF v2018.04
-    SHA512 2c933d0cad6f0b6580a84dba22bfdadf120a302246cab404a99749e0ba7bb0d799ee606ca43cc1c39f85ae37a00dcc7374b9fd05eb2bb07945c9371a9c8a8492
+    REF v2019.10
+    SHA512 75335a75f1662e6223d2be7bc2f3cdb12af0e13ed11f3551dbd68a9488ab2e37ba9cd7ee786cc13e545689ed213558b305bfaffbaf8fa7d3be61eb21eeeeba4a
     HEAD_REF master
 )
 
@@ -37,7 +37,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/MagnumExtras TARGET_PATH share/MagnumExtras)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/MagnumExtras TARGET_PATH share/magnumextras)
 
 # Messages to the user
 if("ui" IN_LIST FEATURES)

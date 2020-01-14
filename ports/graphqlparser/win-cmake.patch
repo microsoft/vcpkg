@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c4c8b3e..f19cda3 100644
+index c4c8b3e..3373d82 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -3,16 +3,37 @@ PROJECT(libgraphqlparser C CXX)
+@@ -3,9 +3,26 @@ PROJECT(libgraphqlparser C CXX)
  
  SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
  
@@ -31,19 +31,7 @@ index c4c8b3e..f19cda3 100644
  
  FIND_PACKAGE(PythonInterp 2 REQUIRED)
  IF (NOT PYTHON_VERSION_MAJOR EQUAL 2)
-   MESSAGE(FATAL_ERROR "Python 2 is required.")
- ENDIF()
- 
--FIND_PROGRAM(CTYPESGEN_FOUND ctypesgen.py)
-+IF(UNIX)
-+  SET(FLEX_COMPILE_FLAGS "--header-file=lexer.h")
-+ELSEIF(WIN32)
-+  SET(FLEX_COMPILE_FLAGS "--header-file=lexer.h --wincompat")
-+ENDIF()
- 
- FIND_PACKAGE(BISON 3)
- FIND_PACKAGE(FLEX)
-@@ -21,7 +42,7 @@ IF (BISON_FOUND)
+@@ -21,7 +38,7 @@ IF (BISON_FOUND)
  ENDIF()
  
  IF(FLEX_FOUND)
@@ -52,20 +40,27 @@ index c4c8b3e..f19cda3 100644
    IF (BISON_FOUND)
      ADD_FLEX_BISON_DEPENDENCY(GraphQLScanner graphqlparser)
    ENDIF()
-@@ -83,11 +104,8 @@ GENERATE_AST_FILE(cxx_json_visitor_header JsonVisitor.h.inc)
+@@ -31,7 +48,7 @@ FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/c)
+ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
  
- GENERATE_AST_FILE(cxx_json_visitor_impl JsonVisitor.cpp.inc)
+-ADD_LIBRARY(graphqlparser SHARED
++ADD_LIBRARY(graphqlparser
+   JsonVisitor.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/Ast.h
+   ${CMAKE_CURRENT_BINARY_DIR}/Ast.cpp
+@@ -87,7 +104,9 @@ ADD_SUBDIRECTORY(python)
  
--ADD_SUBDIRECTORY(python)
--
--OPTION(test "Build tests." OFF)
--
- INSTALL(DIRECTORY c ${CMAKE_CURRENT_BINARY_DIR}/c DESTINATION include/graphqlparser
+ OPTION(test "Build tests." OFF)
+ 
+-INSTALL(DIRECTORY c ${CMAKE_CURRENT_BINARY_DIR}/c DESTINATION include/graphqlparser
++INSTALL(DIRECTORY c ${CMAKE_CURRENT_BINARY_DIR}/c
++  DESTINATION include/graphqlparser
 +  CONFIGURATIONS Release
    FILES_MATCHING PATTERN "*.h"
    PATTERN "build" EXCLUDE)
  
-@@ -103,9 +121,12 @@ INSTALL(FILES
+@@ -103,9 +122,13 @@ INSTALL(FILES
    position.hh
    stack.hh
    syntaxdefs.h
@@ -75,12 +70,13 @@ index c4c8b3e..f19cda3 100644
 +
  INSTALL(TARGETS graphqlparser
 -  LIBRARY DESTINATION lib)
++  ARCHIVE DESTINATION lib
 +  LIBRARY DESTINATION lib
 +  RUNTIME DESTINATION bin)
  
  if (UNIX)
    # generate pkgconfig file
-@@ -116,16 +137,9 @@ if (UNIX)
+@@ -116,6 +139,11 @@ if (UNIX)
      install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/libgraphqlparser.pc"
              DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
    endif()
@@ -90,15 +86,15 @@ index c4c8b3e..f19cda3 100644
 +  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphqlparser.pdb
 +	DESTINATION bin)
  endif()
+ 
+ IF (test)
+@@ -126,6 +154,8 @@ IF (test)
+     ADD_CUSTOM_TARGET(memcheck
+       valgrind --leak-check=full --suppressions=./test/valgrind.supp --dsymutil=yes --error-exitcode=1 ./test/runTests  >/dev/null
+     )
++  else()
++    ADD_CUSTOM_TARGET(runTests
++	  ./test/runTests >/dev/null)
+   endif()
 -
--IF (test)
--  ADD_SUBDIRECTORY(test)
--
--  if(UNIX)
--    # setup valgrind
--    ADD_CUSTOM_TARGET(memcheck
--      valgrind --leak-check=full --suppressions=./test/valgrind.supp --dsymutil=yes --error-exitcode=1 ./test/runTests  >/dev/null
--    )
--  endif()
--
--ENDIF()
+ ENDIF()

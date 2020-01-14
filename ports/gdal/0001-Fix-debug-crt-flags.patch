@@ -1,9 +1,6 @@
-diff -Nuar a/nmake.opt b/nmake.opt
---- a/nmake.opt	2018-05-04 09:05:46.000000000 +0200
-+++ b/nmake.opt	2018-05-11 22:58:39.387603800 +0200
-@@ -120,11 +120,21 @@
- CXX_PDB_FLAGS=
- !ENDIF
+--- a/nmake.opt	Fri Dec 14 22:34:20 2018
++++ b/nmake.opt	Wed Mar 27 11:00:00 2019
+@@ -133,7 +133,17 @@
  
 +# Flags to choose CRT variant to link against (e.g. static: /MT, /MTd, dynamic: /MD, /MDd)
 +# Ensure MRSID_CONFIG in mrsid/nmake.opt is set appropriately as well
@@ -16,12 +13,10 @@ diff -Nuar a/nmake.opt b/nmake.opt
 +!ENDIF
 +
  !IFNDEF OPTFLAGS
- !IFNDEF DEBUG
+ !IF "$(DEBUG)" == "0"
 -OPTFLAGS= $(CXX_ANALYZE_FLAGS) $(CXX_PDB_FLAGS) /nologo /MP /MD /EHsc /Ox /FC /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DNDEBUG
 +OPTFLAGS= $(CXX_ANALYZE_FLAGS) $(CXX_PDB_FLAGS) /nologo /MP $(CXX_CRT_FLAGS) /EHsc /Ox /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DNDEBUG
  !ELSE
 -OPTFLAGS= $(CXX_ANALYZE_FLAGS) $(CXX_PDB_FLAGS) /nologo /MP /MDd /EHsc /FC /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DDEBUG
 +OPTFLAGS= $(CXX_ANALYZE_FLAGS) $(CXX_PDB_FLAGS) /nologo /MP $(CXX_CRT_FLAGS) /EHsc /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DDEBUG
  !ENDIF
- !ENDIF  # OPTFLAGS
- 

@@ -4,19 +4,24 @@ include(GNUInstallDirs)
 
 project(FreeImage C CXX)
 
-find_package(zlib REQUIRED)
-find_package(PNG REQUIRED)
-find_package(JPEG REQUIRED)
-find_package(TIFF REQUIRED)
-find_package(OPENJPEG REQUIRED)
+if(MSVC)
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
+  set(CMAKE_CXX_FLAGS "/wd4828 ${CMAKE_CXX_FLAGS}")
+endif()
 
-# Include some custom Find***.cmake modules 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+if(BUILD_SHARED_LIBS)
+  add_definitions("-DOPENEXR_DLL")
+endif()
 
-find_package(WEBP REQUIRED)
-find_package(JXR  REQUIRED)
-find_package(LibRaw REQUIRED)
-find_package(OpenEXR REQUIRED)
+find_package(ZLIB     REQUIRED)
+find_package(PNG      REQUIRED)
+find_package(JPEG     REQUIRED)
+find_package(TIFF     REQUIRED)
+find_package(OpenJPEG REQUIRED)
+find_package(WebP     REQUIRED)
+find_package(JXR      REQUIRED)
+find_package(LibRaw   REQUIRED)
+find_package(OpenEXR  REQUIRED)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(INSTALL_HEADERS "Install the development headers" ON)
@@ -30,15 +35,14 @@ set(CMAKE_DEBUG_POSTFIX "d")
 set(PUBLIC_HEADERS ${REAL_SOURCE_DIR}/FreeImage.h)
 
 # List the private header files
-set(ROOT_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/CacheFile.h 
-                         ${REAL_SOURCE_DIR}/FreeImageIO.h 
+set(ROOT_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/CacheFile.h
+                         ${REAL_SOURCE_DIR}/FreeImageIO.h
                          ${REAL_SOURCE_DIR}/MapIntrospector.h
-                         ${REAL_SOURCE_DIR}/Plugin.h 
-                         ${REAL_SOURCE_DIR}/Quantizers.h 
-                         ${REAL_SOURCE_DIR}/ToneMapping.h 
-                         ${REAL_SOURCE_DIR}/Utilities.h
-                         ${REAL_SOURCE_DIR}/DeprecationManager/DeprecationMgr.h)
-                         
+                         ${REAL_SOURCE_DIR}/Plugin.h
+                         ${REAL_SOURCE_DIR}/Quantizers.h
+                         ${REAL_SOURCE_DIR}/ToneMapping.h
+                         ${REAL_SOURCE_DIR}/Utilities.h)
+
 file(GLOB FREEIMAGE_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/FreeImage/*.h)
 file(GLOB FREEIMAGE_TOOLKIT_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/FreeImageToolkit/*.h)
 file(GLOB METADATA_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/Metadata/*.h)
@@ -57,7 +61,7 @@ file(GLOB METADATA_SRCS ${REAL_SOURCE_DIR}/Metadata/*.cpp)
 # The G3 plugin is disabled because it require the private copy of tiff
 list(REMOVE_ITEM FREEIMAGE_SRCS ${REAL_SOURCE_DIR}/FreeImage/PluginG3.cpp)
 
-# The JPEGTransform plugin is disable because it requires a private copy of jpeg 
+# The JPEGTransform plugin is disable because it requires a private copy of jpeg
 list(REMOVE_ITEM FREEIMAGE_TOOLKIT_SRCS ${REAL_SOURCE_DIR}/FreeImageToolkit/JPEGTransform.cpp)
 
 
@@ -67,8 +71,8 @@ set(SRCS ${DEPRECATION_SRCS}
          ${METADATA_SRCS}
 )
 
-# If FreeImage is used as a static library, FREEIMAGE_LIB 
-# needs to be defined (at the C preprocessor level) to correctly 
+# If FreeImage is used as a static library, FREEIMAGE_LIB
+# needs to be defined (at the C preprocessor level) to correctly
 # define (to nothing instead of _declspec(dllimport) ) the DLL_API macro.
 # For this purpouse we include (depending on the BUILD_SHARED_LIBS )
 # the appropriate FreeImageConfig.h .
@@ -88,7 +92,7 @@ else()
 endif()
 
 target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
-                                             ${ZLIB_INCLUDE_DIRS} 
+                                             ${ZLIB_INCLUDE_DIRS}
                                              ${JPEG_INCLUDE_DIRS}
                                              ${TIFF_INCLUDE_DIRS}
                                              ${PNG_INCLUDE_DIRS}

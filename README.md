@@ -5,12 +5,21 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 For short description of available commands, run `vcpkg help`.
 
+* Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
+* Slack: [https://cpplang.now.sh/](https://cpplang.now.sh/), the #vcpkg channel
+* Docs: [Documentation](docs/index.md)
+
+| Windows (x86, x64, arm, uwp)  | MacOS | Linux |
+| ------------- | ------------- | ------------- |
+| [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/vcpkg-Windows-master-CI?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=9&branchName=master)  | [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/vcpkg-osx-master-CI?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=11&branchName=master) | [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/vcpkg-Linux-master-CI?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=6&branchName=master) |
+
 ## Quick Start
 Prerequisites:
 - Windows 10, 8.1, 7, Linux, or MacOS
-- Visual Studio 2017 or Visual Studio 2015 Update 3 (on Windows)
+- Visual Studio 2015 Update 3 or newer (on Windows)
 - Git
-- *Optional:* CMake 3.10.2
+- gcc >= 7 or equivalent clang (on Linux)
+- *Optional:* CMake 3.12.4
 
 To get started:
 ```
@@ -37,20 +46,21 @@ The best way to use installed libraries with CMake is via the toolchain file `sc
 
 In Visual Studio, you can create a New Project (or open an existing one). All installed libraries are immediately ready to be `#include`'d and used in your project without additional configuration.
 
-For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics.
+For more information, see our [using a package](docs/examples/installing-and-using-packages.md) example for the specifics. If your library is not present in vcpkg catalog, you can open an [issue on the GitHub repo](https://github.com/microsoft/vcpkg/issues) where the dev team and the community can see it and potentially create the port file for this library.
 
 Additional notes on macOS and Linux support can be found in the [official announcement](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
 
 ## Tab-Completion / Auto-Completion
-`vcpkg` supports auto-completion of commands, package names, options etc. To enable tab-completion in Powershell, use
+`vcpkg` supports auto-completion of commands, package names, options etc in Powershell and bash. To enable tab-completion, use one of the following:
 ```
-.\vcpkg integrate powershell
+PS> .\vcpkg integrate powershell
+Linux:~/$ ./vcpkg integrate bash
 ```
-and restart Powershell.
+and restart your console.
 
 
 ## Examples
-See the [documentation](docs/index.md) for specific walkthroughs, including [using a package](docs/examples/using-sqlite.md) and [adding a new package](docs/examples/packaging-zlib.md).
+See the [documentation](docs/index.md) for specific walkthroughs, including [installing and using a package](docs/examples/installing-and-using-packages.md), [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md), and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
 
 Our docs are now also available online at ReadTheDocs: <https://vcpkg.readthedocs.io/>!
 

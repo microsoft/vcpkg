@@ -1,0 +1,4 @@
+Source: sqlpp11
+Version: 0.58-3
+Description: A type safe embedded domain specific language for SQL queries and results in C++.
+Build-Depends: date

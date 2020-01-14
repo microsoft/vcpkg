@@ -1,6 +1,6 @@
 # vcpkg_install_msbuild
 
-Build and install an msbuild-based project. This replaces `vcpkg_build_msbuild()`.
+Build and install a msbuild-based project. This replaces `vcpkg_build_msbuild()`.
 
 ## Usage
 ```cmake
@@ -52,12 +52,16 @@ Indicates that top-level include files (e.g. `include/zlib.h`) should be allowed
 ### REMOVE_ROOT_INCLUDES
 Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
 
+### SKIP_CLEAN
+Indicates that the intermediate files should not be removed.
+
+Ports using this option should later call [`vcpkg_clean_msbuild()`](vcpkg_clean_msbuild.md) to manually clean up.
+
 ### RELEASE_CONFIGURATION
 The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
 
 ### DEBUG_CONFIGURATION
-The configuration (``/p:Configuration`` msbuild parameter)
-used for Debug builds.
+The configuration (``/p:Configuration`` msbuild parameter) used for Debug builds.
 
 ### TARGET_PLATFORM_VERSION
 The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
@@ -82,6 +86,7 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 
 ## Examples
 
+* [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
 * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 
 ## Source

@@ -1,18 +1,20 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF v1.10.11
-    SHA512 2dfedd6f0a0de1a8c687c001439138b233200ca11e5c9940debf43d8a0380ca6472e0b5f4d599f0e22ca2049d0a5d34066ef41b6bc4912130694fa5d851fc900
+    REF 8083067c1835147de5d82015347d95c710e36bc0
+    SHA512 0690aaff0bea74c38598894939396cab8077b84bda166deb4790fba87566114bc5267660e8efc4de9babeb1b8bddf73530e1a1dbbc63c7e24b14bc012b033bc8
     HEAD_REF master
+    PATCHES
+        toolchain_fixes.patch
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/001-cmake-install-dir.patch"
-)
+file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OGRE_STATIC ON)
@@ -40,6 +42,12 @@ else()
     set(WITH_PYTHON OFF)
 endif()
 
+if("csharp" IN_LIST FEATURES)
+    set(WITH_CSHARP ON)
+else()
+    set(WITH_CSHARP OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -58,10 +66,7 @@ vcpkg_configure_cmake(
         -DOGRE_INSTALL_CMAKE=ON
         -DOGRE_INSTALL_VSPROPS=OFF
         -DOGRE_STATIC=${OGRE_STATIC}
-        -DOGRE_UNITY_BUILD=OFF
-        -DOGRE_USE_STD11=ON
         -DOGRE_CONFIG_THREAD_PROVIDER=std
-        -DOGRE_NODE_STORAGE_LEGACY=OFF
         -DOGRE_BUILD_RENDERSYSTEM_D3D11=ON
         -DOGRE_BUILD_RENDERSYSTEM_GL=ON
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
@@ -70,58 +75,61 @@ vcpkg_configure_cmake(
 # Optional stuff
         -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
         -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
+        -DOGRE_BUILD_COMPONENT_CSHARP=${WITH_CSHARP}
         -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
 # vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-# Remove unwanted files
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ogre)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
 file(GLOB REL_CFGS ${CURRENT_PACKAGES_DIR}/bin/*.cfg)
-file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if(REL_CFGS)
+  file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+  file(REMOVE ${REL_CFGS})
+endif()
 
 file(GLOB DBG_CFGS ${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg)
-file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-file(REMOVE ${REL_CFGS} ${DBG_CFGS})
+if(DBG_CFGS)
+  file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  file(REMOVE ${DBG_CFGS})
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+#Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
+#manual-link subfolder is here to the rescue!
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
+        else()
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
+        endif()
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)
+        else()
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib)
+        endif()
+    endif()
 
-file(GLOB MAIN_REL ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib)
-file(COPY ${MAIN_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-file(GLOB MAIN_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib)
-file(COPY ${MAIN_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-file(REMOVE ${MAIN_REL} ${MAIN_DBG})
-
-# Ogre installs custom cmake config files which don't follow the normal pattern.
-# This normally makes them completely incompatible with multi-config generators, but with some effort it can be done.
-file(READ "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" _contents)
-string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${PACKAGE_PREFIX_DIR}" _contents "${_contents}")
-string(REPLACE "SDL2main.lib" "SDL2main$<$<CONFIG:Debug>:d>.lib" _contents "${_contents}")
-string(REPLACE "SDL2.lib" "SDL2$<$<CONFIG:Debug>:d>.lib" _contents "${_contents}")
-string(REPLACE "\${PACKAGE_PREFIX_DIR}/lib" "\${PACKAGE_PREFIX_DIR}$<$<CONFIG:Debug>:/debug>/lib" _contents "${_contents}")
-string(REPLACE "{OGRE_PREFIX_DIR}/lib" "{OGRE_PREFIX_DIR}$<$<CONFIG:Debug>:/debug>/lib" _contents "${_contents}")
-
-string(REPLACE "\"Ogre\${COMPONENT}\"" "\"Ogre\${COMPONENT}$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
-string(REPLACE "\"Ogre\${COMPONENT}Static\"" "\"Ogre\${COMPONENT}Static$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
-
-string(REPLACE "\"\${TYPE}_\${COMPONENT}\"" "\"\${TYPE}_\${COMPONENT}$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
-string(REPLACE "\"\${TYPE}_\${COMPONENT}Static\"" "\"\${TYPE}_\${COMPONENT}Static$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
-
-string(REPLACE "\"OgreMain\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/OgreMain$<$<CONFIG:Debug>:_d>.lib\"" _contents "${_contents}")
-string(REPLACE "\"OgreMainStatic\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/OgreMainStatic$<$<CONFIG:Debug>:_d>.lib\"" _contents "${_contents}")
-
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" "${_contents}")
+    file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/ogre/*.cmake)
+    foreach(SHARE_FILE ${SHARE_FILES})
+        file(READ "${SHARE_FILE}" _contents)
+        string(REPLACE "lib/OgreMain" "lib/manual-link/OgreMain" _contents "${_contents}")
+        file(WRITE "${SHARE_FILE}" "${_contents}")
+    endforeach()
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)

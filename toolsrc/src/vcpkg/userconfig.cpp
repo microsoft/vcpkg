@@ -39,10 +39,7 @@ namespace vcpkg
 #endif
     }
 
-    static fs::path get_config_path()
-    {
-        return get_user_dir() / "config";
-    }
+    static fs::path get_config_path() { return get_user_dir() / "config"; }
 
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)
     {
@@ -54,7 +51,7 @@ namespace vcpkg
             {
                 const auto& pghs = *p_pghs;
 
-                std::unordered_map<std::string, std::string> keys;
+                Parse::RawParagraph keys;
                 if (pghs.size() > 0) keys = pghs[0];
 
                 for (size_t x = 1; x < pghs.size(); ++x)

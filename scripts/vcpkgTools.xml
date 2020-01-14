@@ -1,32 +1,39 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="cmake" os="windows">
-        <version>3.11.4</version>
-        <exeRelativePath>cmake-3.11.4-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://cmake.org/files/v3.11/cmake-3.11.4-win32-x86.zip</url>
-        <sha512>3d866ef3c41a9cf738427fccf4730ccf8fd86bb4d13e9a1671b156bbdb2bc6beeecc7e7e8190cea8297498cfd67366c71231e9e08b121d4cd6e5ceac04124c19</sha512>
-        <archiveName>cmake-3.11.4-win32-x86.zip</archiveName>
+        <version>3.14.0</version>
+        <exeRelativePath>cmake-3.14.0-win32-x86\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-win32-x86.zip</url>
+        <sha512>60eb6a0790883da4152a957bd1133405f620f4b7a073af3bea97695b3ef8c22c41d9b90e45815f2a896df5be0cd6dedb73a6df5f17a42761ca8f457c9f3b708c</sha512>
+        <archiveName>cmake-3.14.0-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.11.4</version>
-        <exeRelativePath>cmake-3.11.4-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://cmake.org/files/v3.11/cmake-3.11.4-Darwin-x86_64.tar.gz</url>
-        <sha512>eeb967dc5b6e46e8dee06939b8b416d40f644baad79ffd90f86ad18e1e3b58b50dec0f064e60467125be9bedb7de8c48fbcb8a97ca731645939539f97645db54</sha512>
-        <archiveName>cmake-3.11.4-Darwin-x86_64.tar.gz</archiveName>
+        <version>3.14.0</version>
+        <exeRelativePath>cmake-3.14.0-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Darwin-x86_64.tar.gz</url>
+        <sha512>a5a7217a049be3bb2ef5c93292b1d92eb4dd5ec6ab2dd04984aae01d2732eb343cea4f9741b333a5e21a27eb7934f568f780f3558e7ff870150c3309fc4656b3</sha512>
+        <archiveName>cmake-3.14.0-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.11.4</version>
-        <exeRelativePath>cmake-3.11.4-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.tar.gz</url>
-        <sha512>70d92eea972710684582154dc1b884536aba5abda130a431257750b54437c46397aea39c2cc31056ecf36ddadbc1cf5c22434794fb314ea67c15a9be3bd20092</sha512>
-        <archiveName>cmake-3.11.4-Linux-x86_64.tar.gz</archiveName>
+        <version>3.14.0</version>
+        <exeRelativePath>cmake-3.14.0-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.tar.gz</url>
+        <sha512>e687c0f3acfb15c880ddac67e2821907f833cb900c6ecedb4ab5df5102604d82753c948e3c7dca6e5bcce6278a09b7d577b1afade2e133aec5b2057ac48d3c74</sha512>
+        <archiveName>cmake-3.14.0-Linux-x86_64.tar.gz</archiveName>
+    </tool>
+    <tool name="cmake" os="freebsd">
+        <version>3.12.4</version>
+        <exeRelativePath>cmake-3.12.4-FreeBSD-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/ivysnow/CMake/releases/download/v3.12.4/cmake-3.12.4-FreeBSD-x86_64.tar.gz</url>
+        <sha512>b5aeb2de36f3c29757c9404e33756da88580ddfa07f29079c7f275ae0d6d018fdfe3f55d54d1403f38e359865cf93436e084c6b1ea91f26c88bc01dde3793479</sha512>
+        <archiveName>cmake-3.12.4-FreeBSD-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.17.1</version>
-        <exeRelativePath>cmd\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.17.1.windows.1/MinGit-2.17.1-32-bit.zip</url>
-        <sha512>8bf93f6d3b6eb8a4ccbf840ff0b8b11a8b3a28fc5cd27aaa98dab5964acebbd17307e8ecec4e0cdd8b8ba095491d39bc9d55f4330284089cf3dadcab1d3fb7a4</sha512>
-        <archiveName>MinGit-2.17.1-32-bit.zip</archiveName>
+        <version>2.21.0-1</version>
+        <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/PortableGit-2.21.0-32-bit.7z.exe</url>
+        <sha512>d5600fc35e91cfa84e3547e38a9da9798cf0a53810cc35ac9a0dee671c4ef0e9fbcbe3eda9c790f8db4eafce7ce58d7a168d28938a66cdcca000bf5a7f5267c1</sha512>
+        <archiveName>PortableGit-2.21.0-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
@@ -35,6 +42,12 @@
         <sha512></sha512>
     </tool>
     <tool name="git" os="osx">
+        <version>2.7.4</version>
+        <exeRelativePath></exeRelativePath>
+        <url></url>
+        <sha512></sha512>
+    </tool>
+    <tool name="git" os="freebsd">
         <version>2.7.4</version>
         <exeRelativePath></exeRelativePath>
         <url></url>
@@ -60,7 +73,7 @@
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>18.01.0</version>
+        <version>18.1.0</version>
         <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
         <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
         <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
@@ -73,18 +86,39 @@
         <sha512>2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3</sha512>
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
+    <tool name="ninja" os="windows">
+        <version>1.8.2</version>
+        <exeRelativePath>ninja.exe</exeRelativePath>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip</url>
+        <sha512>9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5</sha512>
+        <archiveName>ninja-win-1.8.2.zip</archiveName>
+    </tool>
     <tool name="ninja" os="linux">
         <version>1.8.2</version>
         <exeRelativePath>ninja</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
         <sha512>38fcb68e745c1f15b4b50f20069ffe686b1ef5baf93b74958e132ea5d30d155cf6970d6dc1b095aafd421ebd8bcc63acf4f64e305c496266b5182f99b815cca5</sha512>
-        <archiveName>ninja-linux.zip</archiveName>
+        <archiveName>ninja-linux-1.8.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
         <version>1.8.2</version>
         <exeRelativePath>ninja</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
         <sha512>acadfb286eb7d93676629701917fa0c3c39f36daa068c169e4a098c29f97380d1ea95abfd42b04798ff118fd9dc93fdb250fcda36086bac20bc5506354214fc3</sha512>
-        <archiveName>ninja-mac.zip</archiveName>
+        <archiveName>ninja-mac-1.8.2.zip</archiveName>
+    </tool>
+    <tool name="ninja" os="freebsd">
+        <version>1.8.2</version>
+        <exeRelativePath>ninja</exeRelativePath>
+        <url>https://github.com/ivysnow/ninja/releases/download/v1.8.2/ninja-freebsd.zip</url>
+        <sha512>56a55ae9a6b5dfad4f28f9fe9b8114f1475c999d2f07fff7efa7375f987e74b498e9b63c41fc6c577756f15f3a1459c6d5d367902de3bedebdf9a9fd49089a86</sha512>
+        <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
+    </tool>
+    <tool name="powershell-core" os="windows">
+        <version>6.2.1</version>
+        <exeRelativePath>pwsh.exe</exeRelativePath>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v6.2.1/PowerShell-6.2.1-win-x86.zip</url>
+        <sha512>ab1effc926b000a6adc12198a1886514ec203621a53b0cd7ec1cd9a8225dccda7e857feaabcfba4004bea73129b986abaad777c4573f44e0af70411226ce08b0</sha512>
+        <archiveName>PowerShell-6.2.1-win-x86.zip</archiveName>
     </tool>
 </tools>

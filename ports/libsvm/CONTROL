@@ -1,0 +1,7 @@
+Source: libsvm
+Version: 323
+Description: A library for Support Vector Machines
+Homepage: https://www.csie.ntu.edu.tw/~cjlin/libsvm/
+
+Feature: tools
+Description: Build libsvm tools

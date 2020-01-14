@@ -1,5 +1,5 @@
 diff --git a/similarity_search/src/method/hnsw.cc b/similarity_search/src/method/hnsw.cc
-index 30a7c8a..5ca07c5 100644
+index f5c7fca..4780746 100644
 --- a/similarity_search/src/method/hnsw.cc
 +++ b/similarity_search/src/method/hnsw.cc
 @@ -27,7 +27,7 @@
@@ -38,7 +38,7 @@ index b6473bd..6dcb00f 100644
  #include "portable_simd.h"
  #include "space.h"
 diff --git a/similarity_search/src/method/small_world_rand.cc b/similarity_search/src/method/small_world_rand.cc
-index 59e13f7..0f3e0b9 100644
+index e8280cb..6bdb0f7 100644
 --- a/similarity_search/src/method/small_world_rand.cc
 +++ b/similarity_search/src/method/small_world_rand.cc
 @@ -16,7 +16,7 @@
@@ -48,10 +48,10 @@ index 59e13f7..0f3e0b9 100644
 -#include <mmintrin.h>
 +#include <xmmintrin.h>
  
- #include "portable_simd.h"
- #include "space.h"
+ #if defined(_WIN32) || defined(WIN32)
+ #include <intrin.h>
 diff --git a/similarity_search/src/method/vptree.cc b/similarity_search/src/method/vptree.cc
-index d0262ad..0e5befc 100644
+index 04f481e..c71eed5 100644
 --- a/similarity_search/src/method/vptree.cc
 +++ b/similarity_search/src/method/vptree.cc
 @@ -20,7 +20,7 @@
@@ -60,9 +60,9 @@ index d0262ad..0e5befc 100644
  // This is only for _mm_prefetch
 -#include <mmintrin.h>
 +#include <xmmintrin.h>
- 
- #include "portable_simd.h"
- #include "space.h"
+ #if defined(_WIN32) || defined(WIN32)
+ #include <intrin.h>
+ #endif
 diff --git a/similarity_search/test/test_overlap.cc b/similarity_search/test/test_overlap.cc
 index 326b26b..413d66d 100644
 --- a/similarity_search/test/test_overlap.cc

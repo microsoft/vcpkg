@@ -56,6 +56,9 @@
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!). 
+    Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
+    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' and '$(VcpkgAutoLink)' == ''">false</VcpkgAutoLink>
     <IncludePath>$(IncludePath);$(VcpkgRoot)include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VcpkgRoot)$(VcpkgConfigSubdir)lib;$(VcpkgRoot)$(VcpkgConfigSubdir)lib\manual-link</LibraryPath>
   </PropertyGroup>

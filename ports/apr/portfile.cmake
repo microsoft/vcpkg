@@ -6,17 +6,31 @@ include(vcpkg_common_functions)
 
 set(VERSION 1.6.5)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
     SHA512 d3511e320457b5531f565813e626e7941f6b82864852db6aa03dd298a65dbccdcdc4bd580f5314f8be45d268388edab25efe88cf8340b7d2897a4dbe9d0a41fc
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
+
+if("private-headers" IN_LIST FEATURES)
+    set(INSTALL_PRIVATE_H ON)
+else()
+    set(INSTALL_PRIVATE_H OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DINSTALL_PDB=OFF -DMIN_WINDOWS_VER=Windows7 -DAPR_HAVE_IPV6=ON
+    PREFER_NINJA
+    OPTIONS
+        -DINSTALL_PDB=OFF
+        -DMIN_WINDOWS_VER=Windows7
+        -DAPR_HAVE_IPV6=ON
+        -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1

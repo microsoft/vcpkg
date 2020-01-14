@@ -1,35 +1,30 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Alembic does not support static linkage. Building dynamically.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+vcpkg_buildpath_length_warning(37)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.9
-    SHA512 8025c20525ffbd5bdc9dd5a33ad8238e49f063d244ab9d112e7d1ddb7ee7cf9b36ceb74cb45d658ce22d3033552c89bddf6b818cf466ea46aa1a70a41fdeddb2
+    REF 1.7.11
+    SHA512 94b9c218a2fe6e2e24205aff4a2f6bab784851c2aa15592fb60ea91f0e8038b0c0656a118f3a5cba0d3de8917dd90b74d0e2d1c4ac034b9ee3f5d0741d9f6b70
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/fix-hdf5link.patch
-    ${CMAKE_CURRENT_LIST_DIR}/bypass-findhdf5.patch
+        fix-C1083.patch
+        fix-find-openexr-ilmbase.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
     -DUSE_HDF5=ON
-    -DHDF5_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/Alembic")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Alembic)
 
 vcpkg_copy_pdbs()
 

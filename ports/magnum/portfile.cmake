@@ -2,17 +2,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF v2018.04
-    SHA512 6ad50e782c8cb10157cf969a571f8c0c0c91161de60ac25cf86eda09106f4de73168618a1a5fe0931c3fd293c718911e14d610bd4f86fe3e073620bd7619a9eb
+    REF v2019.10
+    SHA512 b1c991199fa9b09b780ea822de4b2251c70fcc95e7f28bb14a6184861d92fcd4c6e6fe43ad21acfbfd191cd46e79bf58b867240ad6f706b07cd1fbe145b8eaff
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch
-        ${CMAKE_CURRENT_LIST_DIR}/002-tools-path.patch
-        ${CMAKE_CURRENT_LIST_DIR}/003-glfw-find-module.patch
+        001-sdl-includes.patch
+        002-tools-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

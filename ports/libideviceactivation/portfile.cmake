@@ -5,9 +5,10 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libideviceactivation
-    REF 1.0.38
-    SHA512 2fd2d5636e83a6740251dca58c04429628f47661a56e573fc14f45ef68c54990717515305902cf04759a7c8fd19e66a30c8eb2ea20e6257d2c5405b690ea25a6
+    REF v1.2.68
+    SHA512 c2742bba2d90c21e853255c9ef1b9a63560c3e65541a0a3daaace9b0c48d236b7947008dbcd6e42622251015b686758ebc6b564e379d831cb4f52af812430140
     HEAD_REF msvc-master
+    PATCHES libcurl_d.patch
 )
 
 vcpkg_install_msbuild(

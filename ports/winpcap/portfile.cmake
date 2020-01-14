@@ -1,27 +1,21 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/winpcap)
+
+set(WINPCAP_VERSION 4_1_3)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.winpcap.org/install/bin/WpcapSrc_4_1_3.zip"
-    FILENAME "WpcapSrc_4_1_3.zip"
+    URLS "https://www.winpcap.org/install/bin/WpcapSrc_${WINPCAP_VERSION}.zip"
+    FILENAME "WpcapSrc_${WINPCAP_VERSION}.zip"
     SHA512 89a5109ed17f8069f7a43497f6fec817c58620dbc5fa506e52069b9113c5bc13f69c307affe611281cb727cfa0f8529d07044d41427e350b24468ccc89a87f33
+)
+
+vcpkg_download_distfile(COPYRIGHT
+    URLS "https://www.winpcap.org/misc/copyright.htm"
+    FILENAME "Wpcap_license.htm"
+    SHA512 661e848f229612a4354e8243cdb0cb7ef387abc8933412b8c09ccfcaa3335143a958ea9ec9da558f89afe71afea29f0548872e3544ea51144c297a1aa1276718
 )
 
 # MSBuild performs in-source builds, so to ensure reliability we must clear them each time
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
-
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(CRT_LINKAGE "MT")
@@ -30,19 +24,23 @@ elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-set(LIBRARY_LINKAGE "4")
+    set(LIBRARY_LINKAGE "4")
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-set(LIBRARY_LINKAGE "2")
+    set(LIBRARY_LINKAGE "2")
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch.in" "${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch" @ONLY)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/wpcap.patch.in" "${CMAKE_CURRENT_LIST_DIR}/wpcap.patch" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch.in" "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/wpcap.patch.in" "${CURRENT_BUILDTREES_DIR}/src/wpcap.patch" @ONLY)
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/wpcap.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/create_lib.patch"
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${WINPCAP_VERSION}
+    PATCHES
+        "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch"
+        "${CURRENT_BUILDTREES_DIR}/src/wpcap.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/create_lib.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-create-lib-batch.patch"
 )
 
 file(
@@ -66,8 +64,14 @@ vcpkg_execute_required_process(
     LOGNAME upgrade-Packet-${TARGET_TRIPLET}
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CURRENT_PORT_DIR}/Packet.vcxproj DESTINATION ${SOURCE_PATH}/packetNtx/Dll/Project/)
+endif()
+
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.sln"
+    RELEASE_CONFIGURATION "Release"
+    DEBUG_CONFIGURATION "Debug"
     PLATFORM ${PLATFORM}
 )
 
@@ -87,6 +91,10 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH}/wpcap/PRJ
     LOGNAME upgrade-wpcap-${TARGET_TRIPLET}
 )
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(COPY ${CURRENT_PORT_DIR}/wpcap.vcxproj DESTINATION ${SOURCE_PATH}/wpcap/PRJ/)
+endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/wpcap/PRJ/wpcap.sln"
@@ -150,8 +158,8 @@ file(
 
 file(
     INSTALL
-        "${PCAP_LIBRARY_PATH}/Packet.lib"
-        "${PCAP_LIBRARY_PATH}/wpcap.lib"
+        "${PCAP_LIBRARY_PATH}/debug/Packet.lib"
+        "${PCAP_LIBRARY_PATH}/debug/wpcap.lib"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
@@ -185,6 +193,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     )
 endif()
 
-# Handle copyright
-file(DOWNLOAD "https://www.winpcap.org/misc/copyright.htm" ${SOURCE_PATH}/copyright.htm)
-file(INSTALL ${SOURCE_PATH}/copyright.htm DESTINATION ${CURRENT_PACKAGES_DIR}/share/winpcap RENAME copyright)
+configure_file(${COPYRIGHT} ${CURRENT_PACKAGES_DIR}/share/winpcap/copyright COPYONLY)

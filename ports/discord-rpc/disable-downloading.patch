@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5dad9e9..961f02d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,7 @@ file(GLOB_RECURSE ALL_SOURCE_FILES
+     src/*.cpp src/*.h src/*.c
+ )
+ 
++if(0)
+ # Set CLANG_FORMAT_SUFFIX if you are using custom clang-format, e.g. clang-format-5.0
+ find_program(CLANG_FORMAT_CMD clang-format${CLANG_FORMAT_SUFFIX})
+ 
+@@ -43,7 +44,7 @@ if (NOT RAPIDJSONTEST)
+     )
+     file(REMOVE ${RJ_TAR_FILE})
+ endif(NOT RAPIDJSONTEST)
+-
++endif()
+ find_file(RAPIDJSON NAMES rapidjson rapidjson-1.1.0 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CMAKE_FIND_ROOT_PATH_BOTH)
+ 
+ add_library(rapidjson STATIC IMPORTED ${RAPIDJSON})

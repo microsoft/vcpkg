@@ -1,3 +1,14 @@
 Source: ace
-Version: 6.5.2
+Version: 6.5.7
+Homepage: https://www.dre.vanderbilt.edu/~schmidt/ACE.html
 Description: The ADAPTIVE Communication Environment
+
+Feature: wchar
+Description: Enable extra wide char functions in ACE
+
+Feature: ssl
+Description: Enable SSL/TLS features in ACE
+Build-Depends: openssl
+
+Feature: xml
+Description: Enable XML features in ACE

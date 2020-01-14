@@ -1,102 +1,75 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 73d9407..082fbc5 100644
+index 0128c7a..bd534e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -3,7 +3,11 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
- endif()
- 
+@@ -5,6 +5,18 @@ endif()
  cmake_minimum_required(VERSION 2.8.11)
--project(SDL2 C)
-+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-+  project(SDL2 C CXX)
-+else()
-+  project(SDL2 C)
-+endif()
+ project(SDL2 C CXX)
  
++if(WINDOWS_STORE)
++  enable_language(CXX)
++  cmake_minimum_required(VERSION 3.11)
++  add_definitions(-DSDL_BUILDING_WINRT=1 -ZW)
++  link_libraries(
++    -nodefaultlib:vccorlib$<$<CONFIG:Debug>:d>
++    -nodefaultlib:msvcrt$<$<CONFIG:Debug>:d>
++    vccorlib$<$<CONFIG:Debug>:d>.lib
++    msvcrt$<$<CONFIG:Debug>:d>.lib
++  )
++endif()
++
  # !!! FIXME: this should probably do "MACOSX_RPATH ON" as a target property
  # !!! FIXME:  for the SDL2 shared library (so you get an
-@@ -358,7 +362,6 @@ file(GLOB SOURCE_FILES
-   ${SDL2_SOURCE_DIR}/src/timer/*.c
-   ${SDL2_SOURCE_DIR}/src/video/*.c)
- 
--
- if(ASSERTIONS STREQUAL "auto")
-   # Do nada - use optimization settings to determine the assertion level
- elseif(ASSERTIONS STREQUAL "disabled")
-@@ -1132,6 +1135,22 @@ elseif(WINDOWS)
+ # !!! FIXME:  install_name ("soname") of "@rpath/libSDL-whatever.dylib"
+@@ -1209,6 +1221,11 @@ elseif(WINDOWS)
    file(GLOB CORE_SOURCES ${SDL2_SOURCE_DIR}/src/core/windows/*.c)
    set(SOURCE_FILES ${SOURCE_FILES} ${CORE_SOURCES})
  
 +  if(WINDOWS_STORE)
-+    cmake_minimum_required(VERSION 3.0)
-+    add_definitions(-DSDL_BUILDING_WINRT=1 -ZW)
-+    link_libraries(
-+      -nodefaultlib:vccorlib$<$<CONFIG:Debug>:d>
-+      -nodefaultlib:msvcrt$<$<CONFIG:Debug>:d>
-+      vccorlib$<$<CONFIG:Debug>:d>.lib
-+      msvcrt$<$<CONFIG:Debug>:d>.lib
-+    )
-+  endif()
-+
-+  if(WINDOWS_STORE)
 +    file(GLOB WINRT_SOURCE_FILES ${SDL2_SOURCE_DIR}/src/core/winrt/*.c ${SDL2_SOURCE_DIR}/src/core/winrt/*.cpp)
-+    set(SOURCE_FILES ${SOURCE_FILES} ${WINRT_SOURCE_FILES})
++    list(APPEND SOURCE_FILES ${WINRT_SOURCE_FILES})
 +  endif()
 +
    if(MSVC)
      # Prevent codegen that would use the VC runtime libraries.
      set_property(DIRECTORY . APPEND PROPERTY COMPILE_OPTIONS "/GS-")
-@@ -1176,7 +1195,11 @@ elseif(WINDOWS)
-     check_include_file(d3d11_1.h HAVE_D3D11_H)
+@@ -1254,6 +1271,9 @@ elseif(WINDOWS)
      check_include_file(ddraw.h HAVE_DDRAW_H)
      check_include_file(dsound.h HAVE_DSOUND_H)
--    check_include_file(dinput.h HAVE_DINPUT_H)
-+    if(WINDOWS_STORE)
+     check_include_file(dinput.h HAVE_DINPUT_H)
++    if(WINDOWS_STORE OR VCPKG_TARGET_TRIPLET MATCHES "arm-windows")
 +      set(HAVE_DINPUT_H 0)
-+    else()
-+      check_include_file(dinput.h HAVE_DINPUT_H)
 +    endif()
-     check_include_file(xaudio2.h HAVE_XAUDIO2_H)
-     check_include_file(mmdeviceapi.h HAVE_MMDEVICEAPI_H)
-     check_include_file(audioclient.h HAVE_AUDIOCLIENT_H)
-@@ -1193,12 +1216,14 @@ elseif(WINDOWS)
-   endif()
+     check_include_file(dxgi.h HAVE_DXGI_H)
+     if(HAVE_D3D_H OR HAVE_D3D11_H OR HAVE_DDRAW_H OR HAVE_DSOUND_H OR HAVE_DINPUT_H)
+       set(HAVE_DIRECTX TRUE)
+@@ -1272,18 +1292,20 @@ elseif(WINDOWS)
+   check_include_file(endpointvolume.h HAVE_ENDPOINTVOLUME_H)
  
    if(SDL_AUDIO)
--    set(SDL_AUDIO_DRIVER_WINMM 1)
--    file(GLOB WINMM_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/winmm/*.c)
--    set(SOURCE_FILES ${SOURCE_FILES} ${WINMM_AUDIO_SOURCES})
--    set(HAVE_SDL_AUDIO TRUE)
 +    if(NOT WINDOWS_STORE)
-+      set(SDL_AUDIO_DRIVER_WINMM 1)
-+      file(GLOB WINMM_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/winmm/*.c)
-+      set(SOURCE_FILES ${SOURCE_FILES} ${WINMM_AUDIO_SOURCES})
-+      set(HAVE_SDL_AUDIO TRUE)
+     set(SDL_AUDIO_DRIVER_WINMM 1)
+     file(GLOB WINMM_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/winmm/*.c)
+     set(SOURCE_FILES ${SOURCE_FILES} ${WINMM_AUDIO_SOURCES})
 +    endif()
+     set(HAVE_SDL_AUDIO TRUE)
  
 -    if(HAVE_DSOUND_H)
 +    if(HAVE_DSOUND_H AND NOT WINDOWS_STORE)
        set(SDL_AUDIO_DRIVER_DSOUND 1)
        file(GLOB DSOUND_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/directsound/*.c)
        set(SOURCE_FILES ${SOURCE_FILES} ${DSOUND_AUDIO_SOURCES})
-@@ -1208,9 +1233,10 @@ elseif(WINDOWS)
-       set(SDL_AUDIO_DRIVER_XAUDIO2 1)
-       file(GLOB XAUDIO2_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/xaudio2/*.c)
-       set(SOURCE_FILES ${SOURCE_FILES} ${XAUDIO2_AUDIO_SOURCES})
-+      set(HAVE_SDL_AUDIO TRUE)
      endif()
  
--    if(HAVE_AUDIOCLIENT_H AND HAVE_MMDEVICEAPI_H)
-+    if(HAVE_AUDIOCLIENT_H AND HAVE_MMDEVICEAPI_H AND NOT WINDOWS_STORE)
+-    if(WASAPI AND HAVE_AUDIOCLIENT_H AND HAVE_MMDEVICEAPI_H)
++    if(WASAPI AND HAVE_AUDIOCLIENT_H AND HAVE_MMDEVICEAPI_H AND NOT WINDOWS_STORE)
        set(SDL_AUDIO_DRIVER_WASAPI 1)
        file(GLOB WASAPI_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/wasapi/*.c)
        set(SOURCE_FILES ${SOURCE_FILES} ${WASAPI_AUDIO_SOURCES})
-@@ -1222,11 +1248,20 @@ elseif(WINDOWS)
+@@ -1295,11 +1317,20 @@ elseif(WINDOWS)
      if(NOT SDL_LOADSO)
        message_error("SDL_VIDEO requires SDL_LOADSO, which is not enabled")
      endif()
--    set(SDL_VIDEO_DRIVER_WINDOWS 1)
--    file(GLOB WIN_VIDEO_SOURCES ${SDL2_SOURCE_DIR}/src/video/windows/*.c)
 +    if(WINDOWS_STORE)
 +      set(SDL_VIDEO_DRIVER_WINRT 1)
 +      file(GLOB WIN_VIDEO_SOURCES
@@ -105,8 +78,8 @@ index 73d9407..082fbc5 100644
 +        ${SDL2_SOURCE_DIR}/src/render/direct3d11/*.cpp
 +        )
 +    else()
-+      set(SDL_VIDEO_DRIVER_WINDOWS 1)
-+      file(GLOB WIN_VIDEO_SOURCES ${SDL2_SOURCE_DIR}/src/video/windows/*.c)
+     set(SDL_VIDEO_DRIVER_WINDOWS 1)
+     file(GLOB WIN_VIDEO_SOURCES ${SDL2_SOURCE_DIR}/src/video/windows/*.c)
 +    endif()
      set(SOURCE_FILES ${SOURCE_FILES} ${WIN_VIDEO_SOURCES})
  
@@ -115,43 +88,39 @@ index 73d9407..082fbc5 100644
        set(SDL_VIDEO_RENDER_D3D 1)
        set(HAVE_RENDER_D3D TRUE)
      endif()
-@@ -1249,20 +1284,31 @@ elseif(WINDOWS)
+@@ -1322,20 +1353,31 @@ elseif(WINDOWS)
    endif()
  
    if(SDL_POWER)
--    set(SDL_POWER_WINDOWS 1)
--    set(SOURCE_FILES ${SOURCE_FILES} ${SDL2_SOURCE_DIR}/src/power/windows/SDL_syspower.c)
 +    if(WINDOWS_STORE)
 +      set(SDL_POWER_WINRT 1)
 +      set(SOURCE_FILES ${SOURCE_FILES} ${SDL2_SOURCE_DIR}/src/power/winrt/SDL_syspower.cpp)
 +    else()
-+      set(SDL_POWER_WINDOWS 1)
-+      set(SOURCE_FILES ${SOURCE_FILES} ${SDL2_SOURCE_DIR}/src/power/windows/SDL_syspower.c)
+     set(SDL_POWER_WINDOWS 1)
+     set(SOURCE_FILES ${SOURCE_FILES} ${SDL2_SOURCE_DIR}/src/power/windows/SDL_syspower.c)
 +    endif()
      set(HAVE_SDL_POWER TRUE)
    endif()
  
    if(SDL_FILESYSTEM)
      set(SDL_FILESYSTEM_WINDOWS 1)
--    file(GLOB FILESYSTEM_SOURCES ${SDL2_SOURCE_DIR}/src/filesystem/windows/*.c)
 +    if(WINDOWS_STORE)
 +      file(GLOB FILESYSTEM_SOURCES ${SDL2_SOURCE_DIR}/src/filesystem/winrt/*.cpp)
 +    else()
-+      file(GLOB FILESYSTEM_SOURCES ${SDL2_SOURCE_DIR}/src/filesystem/windows/*.c)
+     file(GLOB FILESYSTEM_SOURCES ${SDL2_SOURCE_DIR}/src/filesystem/windows/*.c)
 +    endif()
      set(SOURCE_FILES ${SOURCE_FILES} ${FILESYSTEM_SOURCES})
      set(HAVE_SDL_FILESYSTEM TRUE)
    endif()
  
    # Libraries for Win32 native and MinGW
--  list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
 +  if(NOT WINDOWS_STORE)
-+    list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
+   list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32)
 +  endif()
  
-   # TODO: in configure.in the check for timers is set on
+   # TODO: in configure.ac the check for timers is set on
    # cygwin | mingw32* - does this include mingw32CE?
-@@ -1284,7 +1330,7 @@ elseif(WINDOWS)
+@@ -1357,7 +1399,7 @@ elseif(WINDOWS)
    set(SOURCE_FILES ${SOURCE_FILES} ${CORE_SOURCES})
  
    if(SDL_VIDEO)
@@ -160,26 +129,26 @@ index 73d9407..082fbc5 100644
        set(SDL_VIDEO_OPENGL 1)
        set(SDL_VIDEO_OPENGL_WGL 1)
        set(SDL_VIDEO_RENDER_OGL 1)
-@@ -1688,9 +1734,11 @@ endif()
+@@ -1788,12 +1830,14 @@ endif()
  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
  
  # Always build SDLmain
--add_library(SDL2main STATIC ${SDLMAIN_SOURCES})
--target_include_directories(SDL2main PUBLIC $<INSTALL_INTERFACE:include>)
--set(_INSTALL_LIBS "SDL2main")
 +if(NOT WINDOWS_STORE)
-+  add_library(SDL2main STATIC ${SDLMAIN_SOURCES})
-+  target_include_directories(SDL2main PUBLIC $<INSTALL_INTERFACE:include>)
-+  set(_INSTALL_LIBS "SDL2main")
+ add_library(SDL2main STATIC ${SDLMAIN_SOURCES})
+ target_include_directories(SDL2main PUBLIC "$<BUILD_INTERFACE:${SDL2_SOURCE_DIR}/include>" $<INSTALL_INTERFACE:include/SDL2>)
+ set(_INSTALL_LIBS "SDL2main")
+ if (NOT ANDROID)
+   set_target_properties(SDL2main PROPERTIES DEBUG_POSTFIX ${SDL_CMAKE_DEBUG_POSTFIX})
+ endif()
 +endif()
  
  if(SDL_SHARED)
    add_library(SDL2 SHARED ${SOURCE_FILES} ${VERSION_SOURCES})
 diff --git a/include/SDL_config.h.cmake b/include/SDL_config.h.cmake
-index 9b20398..7ae6e35 100644
+index 48dd2d4..0c4fa28 100644
 --- a/include/SDL_config.h.cmake
 +++ b/include/SDL_config.h.cmake
-@@ -298,6 +298,7 @@
+@@ -326,6 +326,7 @@
  #cmakedefine SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC @SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC@
  #cmakedefine SDL_VIDEO_DRIVER_DUMMY @SDL_VIDEO_DRIVER_DUMMY@
  #cmakedefine SDL_VIDEO_DRIVER_WINDOWS @SDL_VIDEO_DRIVER_WINDOWS@
@@ -187,7 +156,7 @@ index 9b20398..7ae6e35 100644
  #cmakedefine SDL_VIDEO_DRIVER_WAYLAND @SDL_VIDEO_DRIVER_WAYLAND@
  #cmakedefine SDL_VIDEO_DRIVER_RPI @SDL_VIDEO_DRIVER_RPI@
  #cmakedefine SDL_VIDEO_DRIVER_VIVANTE @SDL_VIDEO_DRIVER_VIVANTE@
-@@ -365,6 +366,7 @@
+@@ -391,6 +392,7 @@
  #cmakedefine SDL_POWER_ANDROID @SDL_POWER_ANDROID@
  #cmakedefine SDL_POWER_LINUX @SDL_POWER_LINUX@
  #cmakedefine SDL_POWER_WINDOWS @SDL_POWER_WINDOWS@
@@ -195,7 +164,7 @@ index 9b20398..7ae6e35 100644
  #cmakedefine SDL_POWER_MACOSX @SDL_POWER_MACOSX@
  #cmakedefine SDL_POWER_HAIKU @SDL_POWER_HAIKU@
  #cmakedefine SDL_POWER_EMSCRIPTEN @SDL_POWER_EMSCRIPTEN@
-@@ -387,7 +389,7 @@
+@@ -413,7 +415,7 @@
  #cmakedefine SDL_LIBSAMPLERATE_DYNAMIC @SDL_LIBSAMPLERATE_DYNAMIC@
  
  /* Platform specific definitions */

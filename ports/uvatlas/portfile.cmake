@@ -1,22 +1,16 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "UVAtlas does not currently support static crt linkage")
-endif()
-if(VCPKG_CMAKE_SYSTEM_NAME)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(FATAL_ERROR "UVAtlas only supports Windows Desktop")
 endif()
 
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/UVAtlas-sept2016)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/UVAtlas/archive/sept2016.tar.gz"
-    FILENAME "UVAtlas-sept2016.tar.gz"
-    SHA512 326af26c151620cd5082daf3913cf3fbe7bca7d1aaf5cc44cacff54319ffe79b728c24519187c3f9393a846430d0fb9493ffe9473f87d220f5c9ae7dab73f69f
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/UVAtlas
+    REF 1a0a756e5ee4bc764ee89b1e30e6b73b24d2eb55 #dec2019
+    SHA512 810f320d51c11b79f211711d066873d4d082d88e0fdb662a15e105a05028b6e536f159730269865965b7eb33d8cdccb4622c5d945ab67df3e005569cb6df6e59
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 IF(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 	SET(BUILD_ARCH "Win32")
@@ -39,9 +33,17 @@ file(INSTALL
 	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Debug/UVAtlas.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/MIT.txt ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+vcpkg_download_distfile(uvatlastool
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe"
+    FILENAME "uvatlastool.exe"
+    SHA512 2583ba8179d0a58fb85d871368b17571e36242436b5a5dbaf6f99ec2f2ee09f4e11e8f922b29563da3cb3b5bacdb771036c84d5b94f405c7988bfe5f2881c3df
+)
 
-message(STATUS "Installing done, uvatlastool.exe can be downloaded at: ")
-message(STATUS " https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
+
+file(INSTALL
+	${DOWNLOADS}/uvatlastool.exe
+	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+
+	# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,6 +1,8 @@
 include(vcpkg_common_functions)
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 # This snippet is a workaround for users who are upgrading from an extremely old version of this
 # port, which cloned directly into `src\`
@@ -11,13 +13,20 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.14.1
-    SHA512 f0e4fe9777ebc3316a85cb581edad19fef785cdcd2859b1dc54bf7407aa2ba804718973661595e318ea62463620f30ca828e5d7638798cca154af5e1d456ed1e
+    REF v1.26.0
+    SHA512 4f7d067c582d0a9be7b7d4dd1e08acdbe6ff0686dfe92b5db5b7927f779410a4237acfd1c61d9f79eb2d00f86cf93cc7492fa372c1877e57c1aa23e9bb2648bb
     HEAD_REF master
-    PATCHES fix-uwp.patch
+    PATCHES
+        00001-fix-uwp.patch
+        00002-static-linking-in-linux.patch
+        00003-undef-base64-macro.patch
+        00004-link-gdi32-on-windows.patch
+        00005-fix-uwp-error.patch
+        00006-crypt32.patch
+        00008-uwp_upb_disable_C4146_error.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(gRPC_BUILD_CODEGEN OFF)
 else()
     set(gRPC_BUILD_CODEGEN ON)
@@ -27,6 +36,12 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(gRPC_MSVC_STATIC_RUNTIME ON)
 else()
     set(gRPC_MSVC_STATIC_RUNTIME OFF)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(gRPC_STATIC_LINKING ON)
+else()
+    set(gRPC_STATIC_LINKING OFF)
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -41,6 +56,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
+        -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
         -DgRPC_MSVC_STATIC_RUNTIME=${gRPC_MSVC_STATIC_RUNTIME}
         -DgRPC_ZLIB_PROVIDER=package
         -DgRPC_SSL_PROVIDER=package
@@ -50,7 +66,7 @@ vcpkg_configure_cmake(
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
-        -DgRPC_INSTALL_BINDIR:STRING=bin
+        -DgRPC_INSTALL_BINDIR:STRING=tools/grpc
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
@@ -59,22 +75,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 
-# Install tools
-file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
-if(TOOLS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/grpc)
-    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/grpc)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
-endif()
-
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 # Ignore the C# extension DLL in bin/
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)

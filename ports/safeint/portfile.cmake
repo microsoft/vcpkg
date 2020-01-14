@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dcleblanc/SafeInt
-    REF b1c48bd32b5e748ed57c153c418a5ed67538045a
-    SHA512 d0b59430da353e0af55a9ab83964e35bfb61edff00f8a2aef6df139720f271aae851ea9de54ca4280e220eff9946590a7b5c85c102f3c2e5f051a6cb7d7a3e5e
+    REF 3.21
+    SHA512 211885bccd768ccb175b1f672a4156642f9d75074059cf537b5e2f751a19e37983e6acf7c4bf936ddc8828e0c6510165722f02f76ec943e3c03ca486a48d3340
     HEAD_REF master
 )
 

@@ -1,27 +1,34 @@
 #header-only library
 include(vcpkg_common_functions)
 
-vcpkg_download_distfile(
-	ARCHIVE_FILE
-	URLS "https://sourceforge.net/projects/asio/files/asio/1.12.1%20%28Stable%29/asio-1.12.1.zip/download"
-	FILENAME "asio-1.12.1.zip"
-	SHA512 f35a519cde88824f65bde095c19d69449d0779e75da9e9ebb6a04f4847802213e8730715756a21632c4d27722cd5568ff7878d656ac79165a8bdf8652fbc1bd8
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO chriskohlhoff/asio
+    REF asio-1-12-2
+    SHA512 7c2e213ff154bb2e5776b37906d437a62206f973316c94706e6d42e3c2f0866e7d97f3e40225ab5f28bf2c4a33fa0b38a4b75421aef86ddf9f2da0811caa2d00
+    HEAD_REF master
 )
-
-vcpkg_extract_source_archive(
-	${ARCHIVE_FILE}
-)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/asio-1.12.1)
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
-# Copy the asio header files
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")
 
 # Always use "ASIO_STANDALONE" to avoid boost dependency
-file(READ "${CURRENT_PACKAGES_DIR}/include/asio/detail/config.hpp" _contents)
+file(READ "${SOURCE_PATH}/asio/include/asio/detail/config.hpp" _contents)
 string(REPLACE "defined(ASIO_STANDALONE)" "!defined(VCPKG_DISABLE_ASIO_STANDALONE)" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/asio/detail/config.hpp" "${_contents}")
+file(WRITE "${SOURCE_PATH}/asio/include/asio/detail/config.hpp" "${_contents}")
+
+# CMake install
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/asio")
+file(INSTALL
+    ${CMAKE_CURRENT_LIST_DIR}/asio-config.cmake
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/asio/
+)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/asio/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

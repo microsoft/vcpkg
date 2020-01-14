@@ -1,19 +1,16 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Sciter is only available under a free license as DLLs.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
+include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Sciter only supports Windows Desktop")
 endif()
 
-include(vcpkg_common_functions)
-
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 8add927504c84d72833973a659e834081672237f)
-set(SCITER_SHA 85aa711b51e7911f62162cf8c3b74e7693c92a02618e074ed24578da56cf7a589e8336a677b21e7359957bcd7357adfb5da54a9fafa12b7f0bee8e480115c84c)
+set(SCITER_REVISION c926703b2cce972875e7f6379c525eef66c95986)
+set(SCITER_SHA 9a87ce12db9b2ef1e3abce3e475a9413a8a9301bab3d17341c94d4281e3bf616347ba8a4089f756ec38fed311bb4ee9045c8f85d0c40039ed3c0b96413aceeb4)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH 64)
@@ -21,20 +18,13 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     set(SCITER_ARCH 32)
 endif()
 
-
-# check out the `https://github.com/c-smile/sciter-sdk/archive/${SCITER_REVISION}.tar.gz`
-# hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-smile/sciter-sdk
     REF ${SCITER_REVISION}
     SHA512 ${SCITER_SHA}
-)
-
-# disable stdafx.h
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001_patch_stdafx.patch
+    PATCHES
+        0001_patch_stdafx.patch
 )
 
 # install include directory

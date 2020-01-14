@@ -1,3 +1,8 @@
 Source: libwebp
-Version: 0.6.1-2
+Version: 1.0.2-8
+Homepage: https://github.com/webmproject/libwebp
 Description: Lossy compression of digital photographic images.
+
+Feature: all
+Description: enable all webp features
+Build-Depends: giflib, libjpeg-turbo, zlib, libpng, tiff, freeglut (!osx), sdl1 (windows), opengl

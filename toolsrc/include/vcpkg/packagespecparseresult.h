@@ -12,6 +12,8 @@ namespace vcpkg
         INVALID_CHARACTERS
     };
 
+    void to_string(std::string& out, ::vcpkg::PackageSpecParseResult p);
+
     CStringView to_string(PackageSpecParseResult ev) noexcept;
 
     template<>

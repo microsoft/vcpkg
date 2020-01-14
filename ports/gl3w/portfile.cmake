@@ -3,18 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO skaslev/gl3w
-  REF 8f7f459df8725c9614136b49a96023de276219f2
-  SHA512 7674008716accb25347c81f755f2db7a885ecb5c51b481e0e8f337bc8ee0949a5a58f5816b27a66535ed4da0b9438ba6a6a84712560c7b1a0f1b2908b4eb81e5
+  REF 99ed321100d37032cb6bfa7dd8dea85f10c86132
+  SHA512 217f65644c73c33383b09893fa5ede066cc4b1cddab051feac11d7e939dba14ed637b297ea42a0426bc0a1a3bc665998a91c27ca10d28704ce9e2d3d90e73595
   HEAD_REF master
+  PATCHES
+      0001-enable-shared-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CURRENT_INSTALLED_DIR}/include/GL/glcorearb.h DESTINATION ${SOURCE_PATH}/include/GL)
-
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
-  PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-enable-shared-build.patch
-)
 
 vcpkg_find_acquire_program(PYTHON3)
 
@@ -32,8 +29,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/gl3w)
+vcpkg_fixup_cmake_targets()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(HEADER ${CURRENT_PACKAGES_DIR}/include/GL/gl3w.h)

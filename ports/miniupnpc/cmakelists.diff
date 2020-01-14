@@ -1,0 +1,11 @@
+--- a/miniupnpc/CMakeLists.txt	2018-05-07 13:12:58.000000000 +0200
++++ b/miniupnpc/CMakeLists.txt	2018-11-13 11:51:57.897598000 +0100
+@@ -124,7 +124,7 @@
+   target_link_libraries (libminiupnpc-shared PRIVATE miniupnpc-private)
+   target_compile_definitions(libminiupnpc-shared PRIVATE MINIUPNP_EXPORTS)
+ 
+-  target_include_directories(libminiupnpc-static INTERFACE ../${CMAKE_CURRENT_SOURCE_DIR})
++  target_include_directories(libminiupnpc-shared INTERFACE ../${CMAKE_CURRENT_SOURCE_DIR})
+   if (WIN32)
+     target_link_libraries(libminiupnpc-shared INTERFACE ws2_32 iphlpapi)
+   endif()

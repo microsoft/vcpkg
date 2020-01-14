@@ -1,0 +1,13 @@
+Source: xtensor
+Version: 0.21.2
+Description: C++ tensors with broadcasting and lazy computing
+Homepage: https://github.com/xtensor-stack/xtensor
+Build-Depends: nlohmann-json, xtl
+
+Feature: xsimd
+Description: xtensor with xsimd support
+Build-Depends: xsimd
+
+Feature: tbb
+Description: xtensor with tbb support
+Build-Depends: tbb

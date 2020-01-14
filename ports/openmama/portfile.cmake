@@ -6,8 +6,8 @@ vcpkg_find_acquire_program(SCONS)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMAMA/OpenMAMA
-    REF OpenMAMA-6.2.2-release
-    SHA512 e12dbd911dbb5416178d5f2ca874ef8ea90edbea8edb64ad77f096ea491b3dea1cca1c3ac4fe73a59a154f56b570a4834cce0943e16a10a29c6d6af90c2ef6f1
+    REF OpenMAMA-6.2.3-release
+    SHA512 2d641a34f4301f8aa0a33cc6c1172e2d3215792955a56f13858d758cedfea1c2ec3ae466112f06f9be7a67d80569f12238eca98008e6623558183b08dcd954c0
     HEAD_REF next
 )
 

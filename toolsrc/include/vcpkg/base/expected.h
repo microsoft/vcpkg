@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/stringliteral.h>
 
 #include <system_error>
 
@@ -20,11 +21,32 @@ namespace vcpkg
         const Err& error() const { return m_err; }
         Err& error() { return m_err; }
 
-        CStringView to_string() const { return "value was error"; }
+        StringLiteral to_string() const { return "value was error"; }
 
     private:
         bool m_is_error;
         Err m_err;
+    };
+
+    template<>
+    struct ErrorHolder<std::string>
+    {
+        ErrorHolder() : m_is_error(false) {}
+        template<class U>
+        ErrorHolder(U&& err) : m_is_error(true), m_err(std::forward<U>(err))
+        {
+        }
+
+        bool has_error() const { return m_is_error; }
+
+        const std::string& error() const { return m_err; }
+        std::string& error() { return m_err; }
+
+        const std::string& to_string() const { return m_err; }
+
+    private:
+        bool m_is_error;
+        std::string m_err;
     };
 
     template<>
@@ -38,11 +60,20 @@ namespace vcpkg
         const std::error_code& error() const { return m_err; }
         std::error_code& error() { return m_err; }
 
-        CStringView to_string() const { return m_err.message(); }
+        std::string to_string() const { return m_err.message(); }
 
     private:
         std::error_code m_err;
     };
+
+    struct ExpectedLeftTag
+    {
+    };
+    struct ExpectedRightTag
+    {
+    };
+    constexpr ExpectedLeftTag expected_left_tag;
+    constexpr ExpectedRightTag expected_right_tag;
 
     template<class T, class S>
     class ExpectedT
@@ -52,11 +83,11 @@ namespace vcpkg
 
         // Constructors are intentionally implicit
 
-        ExpectedT(const S& s) : m_s(s) {}
-        ExpectedT(S&& s) : m_s(std::move(s)) {}
+        ExpectedT(const S& s, ExpectedRightTag = {}) : m_s(s) {}
+        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s)) {}
 
-        ExpectedT(const T& t) : m_t(t) {}
-        ExpectedT(T&& t) : m_t(std::move(t)) {}
+        ExpectedT(const T& t, ExpectedLeftTag = {}) : m_t(t) {}
+        ExpectedT(T&& t, ExpectedLeftTag = {}) : m_t(std::move(t)) {}
 
         ExpectedT(const ExpectedT&) = default;
         ExpectedT(ExpectedT&&) = default;

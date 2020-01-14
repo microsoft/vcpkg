@@ -6,8 +6,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/build/cmake")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 #get cairomm version
 file (STRINGS "configure.ac" CONFIGURE_AC_INIT REGEX "AC_INIT\\(\\[cairomm\\], \\[.*\\].*" )
 string(REGEX REPLACE "AC_INIT\\(\\[.*\\], \\[([0-9]+\\.[0-9]+\\.[0-9]+)\\].*" "\\1"  VERSION ${CONFIGURE_AC_INIT})

@@ -1,3 +1,6 @@
+#ifdef __linux__
+#define EH_FRAME_FLAGS "a"
+#endif
 #define HAVE_ALLOCA 1
 #ifndef _WIN64
 #define HAVE_AS_ASCII_PSEUDO_OP 1
@@ -7,6 +10,9 @@
 #endif
 #ifndef _WIN64
 #define HAVE_AS_X86_PCREL 1
+#endif
+#ifdef __linux__
+#define HAVE_HIDDEN_VISIBILITY_ATTRIBUTE 1
 #endif
 #define HAVE_INTTYPES_H 1
 #define HAVE_MEMORY_H 1
@@ -31,8 +37,10 @@
 #define SIZEOF_SIZE_T 8
 #endif
 #define STDC_HEADERS 1
+#ifndef __linux__
 #ifndef _WIN64
 #define SYMBOL_UNDERSCORE 1
+#endif
 #endif
 #define VERSION "3.1"
 #if defined AC_APPLE_UNIVERSAL_BUILD

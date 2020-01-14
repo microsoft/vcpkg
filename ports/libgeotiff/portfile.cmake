@@ -1,58 +1,69 @@
 include(vcpkg_common_functions)
 
 set(LIBGEOTIFF_VERSION 1.4.2)
-set(LIBGEOTIFF_HASH 059c6e05eb0c47f17b102c7217a2e1636e76d622c4d1bdcf0bd89fb3505f3130bffa881e21c73cfd2ca0d6863b81322f85784658ba3539b53b63c3a8f38d1deb)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/1/libgeotiff-${LIBGEOTIFF_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/geotiff/libgeotiff/libgeotiff-${LIBGEOTIFF_VERSION}.tar.gz"
     FILENAME "libgeotiff-${LIBGEOTIFF_VERSION}.tar.gz"
-    SHA512 ${LIBGEOTIFF_HASH})
-
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/1)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Updates-to-CMake-configuration-to-align-with-other-C.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0002-Fix-directory-output.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0004-Fix-libxtiff-installation.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0005-Control-shared-library-build-with-option.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0006-Fix-utility-link-error.patch"
+    SHA512 059c6e05eb0c47f17b102c7217a2e1636e76d622c4d1bdcf0bd89fb3505f3130bffa881e21c73cfd2ca0d6863b81322f85784658ba3539b53b63c3a8f38d1deb
 )
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${LIBGEOTIFF_VERSION}
+    PATCHES
+        cmakelists.patch
+        geotiff-config.patch
+        fix-proj4.patch
+)
+
+# Delete FindPROJ4.cmake
+file(REMOVE ${SOURCE_PATH}/cmake/FindPROJ4.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DWITH_TIFF=ON
-        -DWITH_PROJ4=ON
-        -DWITH_ZLIB=ON
-        -DWITH_JPEG=ON
-    OPTIONS_RELEASE -DWITH_UTILITIES=ON
-    OPTIONS_DEBUG   -DWITH_UTILITIES=OFF
+        -DWITH_TIFF=1
+        -DWITH_PROJ4=1
+        -DWITH_ZLIB=1
+        -DWITH_JPEG=1
+        -DWITH_UTILITIES=1
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgeotiff RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    file(GLOB GEOTIFF_UTILS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+    file(REMOVE ${GEOTIFF_UTILS_DEBUG})
 endif()
 
-file(INSTALL ${GEOTIFF_UTILS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/libgeotiff/)
+file(COPY ${GEOTIFF_UTILS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
+file(REMOVE ${GEOTIFF_UTILS})
 
-file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF)
+
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-config-version.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends-release.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(INSTALL ${CURRENT_PACKAGES_DIR}/share/libgeotiff/geotiff-depends.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgeotiff RENAME copyright)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/share/libgeotiff/doc)

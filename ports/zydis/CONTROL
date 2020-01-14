@@ -1,0 +1,3 @@
+Source: zydis
+Version: 2.0.3
+Description: Fast and lightweight x86/x86-64 disassembler library.

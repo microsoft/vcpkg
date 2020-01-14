@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/parse.h>
 
@@ -26,7 +27,7 @@ namespace vcpkg
 
     BinaryParagraph::BinaryParagraph() = default;
 
-    BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
+    BinaryParagraph::BinaryParagraph(Parse::RawParagraph fields)
     {
         using namespace vcpkg::Parse;
 
@@ -37,7 +38,7 @@ namespace vcpkg
             parser.required_field(Fields::PACKAGE, name);
             std::string architecture;
             parser.required_field(Fields::ARCHITECTURE, architecture);
-            this->spec = PackageSpec::from_name_and_triplet(name, Triplet::from_canonical_name(architecture))
+            this->spec = PackageSpec::from_name_and_triplet(name, Triplet::from_canonical_name(std::move(architecture)))
                              .value_or_exit(VCPKG_LINE_INFO);
         }
 
@@ -61,8 +62,7 @@ namespace vcpkg
 
         if (const auto err = parser.error_info(this->spec.to_string()))
         {
-            System::println(
-                System::Color::error, "Error: while parsing the Binary Paragraph for %s", this->spec.to_string());
+            System::print2(System::Color::error, "Error: while parsing the Binary Paragraph for ", this->spec, '\n');
             print_error_message(err);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

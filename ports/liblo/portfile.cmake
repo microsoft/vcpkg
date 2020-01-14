@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO radarsat1/liblo
-    REF 0.29
-    SHA512 45648f2b2280e056b045dc0f08491baa7c154a983af95cf79438ac8fafd8f03a44c337a4beb0e01dce1f4d7352a03dc9088244d8db77dcdbfa6e39874dd6250f
+    REF 0.30
+    SHA512 d36c141c513f869e6d1963bd0d584030038019b8be0b27bb9a684722b6e7a38e942ad2ee7c2e67ac13b965560937aad97259435ed86034aa2dc8cb92d23845d8
     HEAD_REF master
 )
 

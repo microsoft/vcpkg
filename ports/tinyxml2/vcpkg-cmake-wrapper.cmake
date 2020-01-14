@@ -1,5 +1,0 @@
-_find_package(${ARGS})
-if(TARGET tinyxml2_static AND NOT TARGET tinyxml2)
-    _add_library(tinyxml2 INTERFACE IMPORTED)
-    set_target_properties(tinyxml2 PROPERTIES INTERFACE_LINK_LIBRARIES "tinyxml2_static")
-endif()

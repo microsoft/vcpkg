@@ -1,0 +1,4 @@
+Source: xmsh
+Version: 0.5.2
+Description: Reference Implementation of XMSH Library
+Build-Depends: tl-expected, nlohmann-json

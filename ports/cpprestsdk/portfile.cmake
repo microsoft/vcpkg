@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.10.6
-    SHA512 f0848f329df80ced68132600914f0f4ba1ed42c7c16188e0f2bd41cf0c50173c27ca42c8db72ff239ca881bc8789fa4d1e3189c492832f6c22d36d504b7ce8dd
+    REF v2.10.14
+    SHA512 7208b8c31e42a9bda2bf1d5c65527e54e3f946ec57743aaf7058c12a311de78de354d5ff859f35b3a8936c8964ac5695a692e234f3365edc426cf9580f76cd4f
     HEAD_REF master
 )
 
@@ -16,6 +16,21 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
 endif()
 
+set(CPPREST_EXCLUDE_BROTLI ON)
+if ("brotli" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_BROTLI OFF)
+endif()
+
+set(CPPREST_EXCLUDE_COMPRESSION ON)
+if ("compression" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_COMPRESSION OFF)
+endif()
+
+set(CPPREST_EXCLUDE_WEBSOCKETS ON)
+if("websockets" IN_LIST FEATURES)
+    set(CPPREST_EXCLUDE_WEBSOCKETS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Release
     PREFER_NINJA
@@ -23,7 +38,9 @@ vcpkg_configure_cmake(
         ${OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-        -DCPPREST_EXCLUDE_WEBSOCKETS=OFF
+        -DCPPREST_EXCLUDE_BROTLI=${CPPREST_EXCLUDE_BROTLI}
+        -DCPPREST_EXCLUDE_COMPRESSION=${CPPREST_EXCLUDE_COMPRESSION}
+        -DCPPREST_EXCLUDE_WEBSOCKETS=${CPPREST_EXCLUDE_WEBSOCKETS}
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
     OPTIONS_DEBUG
@@ -32,11 +49,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
 
 vcpkg_copy_pdbs()
-

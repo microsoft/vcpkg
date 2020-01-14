@@ -3,14 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lcm-proj/lcm
-    REF 82bd3a223e3227c70832307e53a65c13c1e5f81b
-    SHA512 5d3abf457e18a3bb50489ed17393c5416a459134f73c264e67d174a29411d6deb70c754b5669422a438ea3e5793b9b1b91d67e9d842151c5a910245fede5879f
+    REF v1.4.0
+    SHA512 ca036aa2c31911e0bfaeab9665188c97726201267314693a1c333c4efe13ea598b39a55a19bc1d48e65462ac9d1716adfda5af86c645d59c3247192631247cc6
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/only-install-one-flavor.patch
+    PATCHES only-install-one-flavor.patch
+            fix-build-error.patch
 )
 
 vcpkg_configure_cmake(

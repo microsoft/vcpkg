@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/archives.h>
+#include <vcpkg/base/system.process.h>
 #include <vcpkg/commands.h>
 
 namespace vcpkg::Archives
@@ -8,11 +9,16 @@ namespace vcpkg::Archives
     void extract_archive(const VcpkgPaths& paths, const fs::path& archive, const fs::path& to_path)
     {
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path to_path_partial = to_path.u8string() + ".partial";
+        const fs::path to_path_partial = to_path.u8string() + ".partial"
+#if defined(_WIN32)
+                                         + "." + std::to_string(GetCurrentProcessId())
+#endif
+            ;
 
+        fs.remove_all(to_path, VCPKG_LINE_INFO);
+        fs.remove_all(to_path_partial, VCPKG_LINE_INFO);
+        // TODO: check this error code
         std::error_code ec;
-        fs.remove_all(to_path, ec);
-        fs.remove_all(to_path_partial, ec);
         fs.create_directories(to_path_partial, ec);
         const auto ext = archive.extension();
 #if defined(_WIN32)

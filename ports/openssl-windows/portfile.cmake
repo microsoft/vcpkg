@@ -1,28 +1,31 @@
+include(vcpkg_common_functions)
+
 if(VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "This port is only for building openssl on Windows Desktop")
 endif()
 
-include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2p)
-set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
+  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+  return()
+endif()
 
 vcpkg_find_acquire_program(PERL)
+
+set(OPENSSL_VERSION 1.1.1d)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
-vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 958c5a7c3324bbdc8f07dfb13e11329d9a1b4452c07cf41fbd2d42b5fe29c95679332a3476d24c2dc2b88be16e4a24744aba675a05a388c0905756c77a8a2f16
+    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
 )
 
-vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
-            ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
-            ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH SOURCE_PATH
+  ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -31,35 +34,47 @@ set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
+set(OPENSSL_SHARED no-shared)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set(OPENSSL_SHARED shared)
+endif()
+
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
     no-ssl2
     -utf-8
+    ${OPENSSL_SHARED}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
-    set(OPENSSL_DO "ms\\do_nasm.bat")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPENSSL_ARCH VC-WIN64A)
-    set(OPENSSL_DO "ms\\do_win64a.bat")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(OPENSSL_ARCH VC-WIN32-ARM)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(OPENSSL_ARCH VC-WIN64-ARM)
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OPENSSL_MAKEFILE "ms\\ntdll.mak")
-else()
-    set(OPENSSL_MAKEFILE "ms\\nt.mak")
-endif()
+set(OPENSSL_MAKEFILE "makefile")
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-${OPENSSL_VERSION})
+
+    # Copy openssl sources.
+    message(STATUS "Copying openssl release source files...")
+    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
+    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
+        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    endforeach()
+    message(STATUS "Copying openssl release source files... done")
+    set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+
     set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
     message(STATUS "Configure ${TARGET_TRIPLET}-rel")
@@ -67,11 +82,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${OPENSSL_DO}
-        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
     )
     message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
 
@@ -95,20 +105,22 @@ endif()
 
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
-    file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
+    # Copy openssl sources.
+    message(STATUS "Copying openssl debug source files...")
+    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
+    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
+        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    endforeach()
+    message(STATUS "Copying openssl debug source files... done")
+    set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+
     set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
 
+    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${OPENSSL_DO}
-        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
     )
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
@@ -128,16 +140,30 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 endif()
 
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/private)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/certs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/private)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+
+
 file(REMOVE
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist
+    ${CURRENT_PACKAGES_DIR}/openssl.cnf.dist
     ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf
+    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist
     ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
-    ${CURRENT_PACKAGES_DIR}/openssl.cnf
+    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/openssl/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/openssl.exe ${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe)
+file(RENAME ${CURRENT_PACKAGES_DIR}/openssl.cnf ${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openssl)
 
@@ -158,6 +184,6 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

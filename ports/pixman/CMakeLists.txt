@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
-project(pixman VERSION 0.32.0 LANGUAGES C)
+project(pixman VERSION 0.34.0 LANGUAGES C)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_DEBUG_POSTFIX "d")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    add_definitions(-DTLS=__thread)
+if(UNIX)
     add_definitions(-DHAVE_PTHREADS)
 endif()
 
@@ -42,20 +40,32 @@ file(GLOB SOURCES
 "pixman-timer.c"
 "pixman-trap.c"
 "pixman-utils.c"
-"pixman-sse2.c"
 )
+
+# pixman requires the three PACKAGE* definitions in order to compile.
+set(PIXMAN_DEFS 
+    PRIVATE
+    PACKAGE="pixman-1"
+    PACKAGE_VERSION="0.34.0"
+    PACKAGE_BUGREPORT=""
+)
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    # don't enable SSE2 for arm64-windows and arm-windows
+else()
+    # The USE_SSE2 definition lets it use SSE2 instructions for speed. Every x86/64 target machine should have SSE2 these days.
+    set(PIXMAN_DEFS ${PIXMAN_DEFS} USE_SSE2)
+    file(GLOB SSE2_SOURCES "pixman-sse2.c")
+    set(SOURCES ${SOURCES} ${SSE2_SOURCES})
+endif()
 
 add_library(pixman-1 ${SOURCES})
 target_include_directories(pixman-1 PUBLIC $<INSTALL_INTERFACE:include>)
+target_compile_definitions(pixman-1 ${PIXMAN_DEFS})
 
-# pixman requires the three PACKAGE* definitions in order to compile. The USE_SSE2 definition lets it use SSE2 instructions for speed. Every target machine should have SSE2 these days.
-target_compile_definitions(pixman-1
-    PRIVATE
-        PACKAGE="pixman-1"
-        PACKAGE_VERSION="0.34.0"
-        PACKAGE_BUGREPORT=""
-        USE_SSE2
-)
+if(UNIX AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    target_compile_options(pixman-1 PRIVATE -msse2)
+endif()
 
 # pixman produces a lot of warnings which are disabled here because they otherwise fill up the log files
 if(MSVC)

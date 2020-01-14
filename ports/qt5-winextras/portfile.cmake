@@ -1,5 +1,5 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtwinextras dbfb89833cc291fade8e9fe2ad9c7b7a78c2032de8dcbca1049d637f829811b99e1852ae39ca73a6eac2960df168765bee28023bb723e69c87e2f3bb50b7ef02)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "qt5-winextras only support Windows.")
+endif()
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()

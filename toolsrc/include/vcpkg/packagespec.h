@@ -35,6 +35,7 @@ namespace vcpkg
         std::string dir() const;
 
         std::string to_string() const;
+        void to_string(std::string& s) const;
 
         bool operator<(const PackageSpec& other) const
         {
@@ -65,6 +66,7 @@ namespace vcpkg
         const PackageSpec& spec() const { return m_spec; }
 
         std::string to_string() const;
+        void to_string(std::string& out) const;
 
         static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
                                                                  const Triplet& t);
