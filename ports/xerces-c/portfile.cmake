@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         disable-tests.patch
         remove-dll-export-macro.patch
+        no-symlinks-in-static-build.patch
 )
 
 set(DISABLE_ICU ON)
@@ -27,6 +28,7 @@ vcpkg_configure_cmake(
         -DDISABLE_DOC=ON
         -DDISABLE_SAMPLES=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_ICU=${DISABLE_ICU}
+        -DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON
         ${XMLCHTYPE}
 )
 

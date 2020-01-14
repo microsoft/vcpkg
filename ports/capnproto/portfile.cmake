@@ -15,7 +15,10 @@ vcpkg_from_github(
 	PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-capnpc-extension-handling-on-Windows.patch"
 )
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
 
 vcpkg_install_cmake()
 

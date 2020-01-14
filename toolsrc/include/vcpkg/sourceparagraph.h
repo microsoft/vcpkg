@@ -23,6 +23,7 @@ namespace vcpkg
 
     std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
     std::vector<FeatureSpec> filter_dependencies_to_specs(const std::vector<Dependency>& deps, const Triplet& t);
+    std::vector<Features> filter_dependencies_to_features(const std::vector<vcpkg::Dependency>& deps, const Triplet& t);
 
     // zlib[uwp] becomes Dependency{"zlib", "uwp"}
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
@@ -69,7 +70,8 @@ namespace vcpkg
     };
 
     /// <summary>
-    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was loaded from.
+    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was loaded
+    /// from.
     /// </summary>
     struct SourceControlFileLocation
     {

@@ -2,8 +2,6 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-7.0.2)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
@@ -19,7 +17,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR
     FILENAME "gbc-8.1.0-amd64.zip"
     SHA512 896c9a78fc714e0ea44c37ed36400ec8e5f52d495a8d81aa80834ff6cd6303c7c94e06129f7b2269416a9e0ffb61423e87406db798fb5be7ff00f14981530089
     )
-    
+
     # Extract the precompiled gbc
     vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
     set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc.exe)
@@ -27,24 +25,13 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR
     if (NOT EXISTS "${FETCHED_GBC_PATH}")
         message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
     endif()
-    
+
 else()
-    message(STATUS "Installing stack...")
-    vcpkg_download_distfile(
-        ARCHIVE
-        URLS "https://get.haskellstack.org/"
-        FILENAME "stack-install.sh"
-        SHA512 6db2008297416ad856aa498908bf695737cf3cc466440397720a458358e9661d07abdba762662080ee8bbd8171cdcb05eec6d3696382575c099adfb8427e05fd
-    )
-    
-    set(BASH /bin/bash)
-    
-    vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${ARCHIVE}" -f
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME install-stack
-    )
-    
+    # According to the readme on https://github.com/microsoft/bond/
+    # The build needs a version of the Haskel Tool stack that is newer than some distros ship with.
+    # For this reason the message is not guarded by checking to see if the tool is installed.
+    message("\nA recent version of Haskell Tool Stack is required to build.\n  For information on how to install see https://docs.haskellstack.org/en/stable/README/\n")
+
 endif()
 
 vcpkg_configure_cmake(

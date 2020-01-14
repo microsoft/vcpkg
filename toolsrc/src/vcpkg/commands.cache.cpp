@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Cache
         std::vector<BinaryParagraph> output;
         for (auto&& path : paths.get_filesystem().get_files_non_recursive(paths.packages))
         {
-            const Expected<std::unordered_map<std::string, std::string>> pghs =
+            const Expected<Parse::RawParagraph> pghs =
                 Paragraphs::get_single_paragraph(paths.get_filesystem(), path / "CONTROL");
             if (const auto p = pghs.get())
             {

@@ -19,8 +19,8 @@ namespace vcpkg::Commands::Autocomplete
         Checks::exit_success(line_info);
     }
 
-    std::vector<std::string> combine_port_with_triplets(const std::string& port,
-                                                        const std::vector<std::string>& triplets)
+    static std::vector<std::string> combine_port_with_triplets(const std::string& port,
+                                                               const std::vector<std::string>& triplets)
     {
         return Util::fmap(triplets,
                           [&](const std::string& triplet) { return Strings::format("%s:%s", port, triplet); });

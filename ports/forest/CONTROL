@@ -1,4 +1,4 @@
 Source: forest
-Version: 12.0.0
+Version: 12.0.4
 Homepage: https://github.com/xorz57/forest
-Description: Template library of tree data structures
+Description: Template Library of Tree Data Structures in C++17

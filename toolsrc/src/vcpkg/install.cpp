@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
@@ -174,7 +175,7 @@ namespace vcpkg::Install
         const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path) {
-            return std::move(std::string(path.generic_string(), package_remove_char_count));
+            return std::string(path.generic_string(), package_remove_char_count);
         });
 
         return SortedVector<std::string>(std::move(package_files));
@@ -202,6 +203,12 @@ namespace vcpkg::Install
 
         struct intersection_compare
         {
+            // The VS2015 standard library requires comparison operators of T and U
+            // to also support comparison of T and T, and of U and U, due to debug checks.
+#if _MSC_VER <= 1910
+            bool operator()(const std::string& lhs, const std::string& rhs) { return lhs < rhs; }
+            bool operator()(const file_pack& lhs, const file_pack& rhs) { return lhs.first < rhs.first; }
+#endif
             bool operator()(const std::string& lhs, const file_pack& rhs) { return lhs < rhs.first; }
             bool operator()(const file_pack& lhs, const std::string& rhs) { return lhs.first < rhs; }
         };
@@ -331,13 +338,17 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{*scfl.source_control_file,
-                                                             action.spec.triplet(),
-                                                             static_cast<fs::path>(scfl.source_location),
-                                                             action.build_options,
-                                                             action.feature_list};
+                const Build::BuildPackageConfig build_config{
+                    scfl, action.spec.triplet(), action.build_options, action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
             }();
+
+            if (BuildResult::DOWNLOADED == result.code)
+            {
+                System::print2(
+                    System::Color::success, "Downloaded sources for package ", display_name_with_features, "\n");
+                return result;
+            }
 
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
@@ -355,8 +366,7 @@ namespace vcpkg::Install
             {
                 auto& fs = paths.get_filesystem();
                 const fs::path package_dir = paths.package_dir(action.spec);
-                std::error_code ec;
-                fs.remove_all(package_dir, ec);
+                fs.remove_all(package_dir, VCPKG_LINE_INFO);
             }
 
             if (action.build_options.clean_downloads == Build::CleanDownloads::YES)
@@ -465,16 +475,18 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
     static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
+    static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "--only-downloads";
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
     static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
     static constexpr StringLiteral OPTION_CLEAN_AFTER_BUILD = "--clean-after-build";
 
-    static constexpr std::array<CommandSwitch, 7> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 8> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
+        {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
@@ -629,10 +641,12 @@ namespace vcpkg::Install
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
+        const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
-        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
+        const KeepGoing keep_going =
+            to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
 
         auto& fs = paths.get_filesystem();
 
@@ -645,11 +659,12 @@ namespace vcpkg::Install
         const Build::BuildPackageOptions install_plan_options = {
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
+            Util::Enum::to_enum<Build::OnlyDownloads>(only_downloads),
             clean_after_build ? Build::CleanBuildtrees::YES : Build::CleanBuildtrees::NO,
             clean_after_build ? Build::CleanPackages::YES : Build::CleanPackages::NO,
             clean_after_build ? Build::CleanDownloads::YES : Build::CleanDownloads::NO,
             download_tool,
-            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            (GlobalState::g_binary_caching && !only_downloads) ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::NO,
         };
 
@@ -676,13 +691,13 @@ namespace vcpkg::Install
         // log the plan
         const std::string specs_string = Strings::join(",", action_plan, [](const AnyAction& action) {
             if (auto iaction = action.install_action.get())
-                return iaction->spec.to_string();
+                return Hash::get_string_hash(iaction->spec.to_string(), Hash::Algorithm::Sha256);
             else if (auto raction = action.remove_action.get())
-                return "R$" + raction->spec.to_string();
+                return "R$" + Hash::get_string_hash(raction->spec.to_string(), Hash::Algorithm::Sha256);
             Checks::unreachable(VCPKG_LINE_INFO);
         });
 
-        Metrics::g_metrics.lock()->track_property("installplan", specs_string);
+        Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
         Dependencies::print_plan(action_plan, is_recursive, paths.ports);
 

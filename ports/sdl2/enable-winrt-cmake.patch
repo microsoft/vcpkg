@@ -4,7 +4,7 @@ index 0128c7a..bd534e4 100644
 +++ b/CMakeLists.txt
 @@ -5,6 +5,18 @@ endif()
  cmake_minimum_required(VERSION 2.8.11)
- project(SDL2 C)
+ project(SDL2 C CXX)
  
 +if(WINDOWS_STORE)
 +  enable_language(CXX)
@@ -21,7 +21,7 @@ index 0128c7a..bd534e4 100644
  # !!! FIXME: this should probably do "MACOSX_RPATH ON" as a target property
  # !!! FIXME:  for the SDL2 shared library (so you get an
  # !!! FIXME:  install_name ("soname") of "@rpath/libSDL-whatever.dylib"
-@@ -1166,6 +1178,11 @@ elseif(WINDOWS)
+@@ -1209,6 +1221,11 @@ elseif(WINDOWS)
    file(GLOB CORE_SOURCES ${SDL2_SOURCE_DIR}/src/core/windows/*.c)
    set(SOURCE_FILES ${SOURCE_FILES} ${CORE_SOURCES})
  
@@ -33,7 +33,7 @@ index 0128c7a..bd534e4 100644
    if(MSVC)
      # Prevent codegen that would use the VC runtime libraries.
      set_property(DIRECTORY . APPEND PROPERTY COMPILE_OPTIONS "/GS-")
-@@ -1211,6 +1228,9 @@ elseif(WINDOWS)
+@@ -1254,6 +1271,9 @@ elseif(WINDOWS)
      check_include_file(ddraw.h HAVE_DDRAW_H)
      check_include_file(dsound.h HAVE_DSOUND_H)
      check_include_file(dinput.h HAVE_DINPUT_H)
@@ -43,7 +43,7 @@ index 0128c7a..bd534e4 100644
      check_include_file(dxgi.h HAVE_DXGI_H)
      if(HAVE_D3D_H OR HAVE_D3D11_H OR HAVE_DDRAW_H OR HAVE_DSOUND_H OR HAVE_DINPUT_H)
        set(HAVE_DIRECTX TRUE)
-@@ -1229,18 +1249,20 @@ elseif(WINDOWS)
+@@ -1272,18 +1292,20 @@ elseif(WINDOWS)
    check_include_file(endpointvolume.h HAVE_ENDPOINTVOLUME_H)
  
    if(SDL_AUDIO)
@@ -66,7 +66,7 @@ index 0128c7a..bd534e4 100644
        set(SDL_AUDIO_DRIVER_WASAPI 1)
        file(GLOB WASAPI_AUDIO_SOURCES ${SDL2_SOURCE_DIR}/src/audio/wasapi/*.c)
        set(SOURCE_FILES ${SOURCE_FILES} ${WASAPI_AUDIO_SOURCES})
-@@ -1252,11 +1274,20 @@ elseif(WINDOWS)
+@@ -1295,11 +1317,20 @@ elseif(WINDOWS)
      if(NOT SDL_LOADSO)
        message_error("SDL_VIDEO requires SDL_LOADSO, which is not enabled")
      endif()
@@ -88,7 +88,7 @@ index 0128c7a..bd534e4 100644
        set(SDL_VIDEO_RENDER_D3D 1)
        set(HAVE_RENDER_D3D TRUE)
      endif()
-@@ -1279,20 +1310,31 @@ elseif(WINDOWS)
+@@ -1322,20 +1353,31 @@ elseif(WINDOWS)
    endif()
  
    if(SDL_POWER)
@@ -115,12 +115,12 @@ index 0128c7a..bd534e4 100644
  
    # Libraries for Win32 native and MinGW
 +  if(NOT WINDOWS_STORE)
-   list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 shell32)
+   list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32)
 +  endif()
  
-   # TODO: in configure.in the check for timers is set on
+   # TODO: in configure.ac the check for timers is set on
    # cygwin | mingw32* - does this include mingw32CE?
-@@ -1314,7 +1356,7 @@ elseif(WINDOWS)
+@@ -1357,7 +1399,7 @@ elseif(WINDOWS)
    set(SOURCE_FILES ${SOURCE_FILES} ${CORE_SOURCES})
  
    if(SDL_VIDEO)
@@ -129,7 +129,7 @@ index 0128c7a..bd534e4 100644
        set(SDL_VIDEO_OPENGL 1)
        set(SDL_VIDEO_OPENGL_WGL 1)
        set(SDL_VIDEO_RENDER_OGL 1)
-@@ -1731,12 +1773,14 @@ endif()
+@@ -1788,12 +1830,14 @@ endif()
  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
  
  # Always build SDLmain
@@ -148,7 +148,7 @@ diff --git a/include/SDL_config.h.cmake b/include/SDL_config.h.cmake
 index 48dd2d4..0c4fa28 100644
 --- a/include/SDL_config.h.cmake
 +++ b/include/SDL_config.h.cmake
-@@ -324,6 +324,7 @@
+@@ -326,6 +326,7 @@
  #cmakedefine SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC @SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC@
  #cmakedefine SDL_VIDEO_DRIVER_DUMMY @SDL_VIDEO_DRIVER_DUMMY@
  #cmakedefine SDL_VIDEO_DRIVER_WINDOWS @SDL_VIDEO_DRIVER_WINDOWS@
@@ -156,7 +156,7 @@ index 48dd2d4..0c4fa28 100644
  #cmakedefine SDL_VIDEO_DRIVER_WAYLAND @SDL_VIDEO_DRIVER_WAYLAND@
  #cmakedefine SDL_VIDEO_DRIVER_RPI @SDL_VIDEO_DRIVER_RPI@
  #cmakedefine SDL_VIDEO_DRIVER_VIVANTE @SDL_VIDEO_DRIVER_VIVANTE@
-@@ -392,6 +393,7 @@
+@@ -391,6 +392,7 @@
  #cmakedefine SDL_POWER_ANDROID @SDL_POWER_ANDROID@
  #cmakedefine SDL_POWER_LINUX @SDL_POWER_LINUX@
  #cmakedefine SDL_POWER_WINDOWS @SDL_POWER_WINDOWS@
@@ -164,7 +164,7 @@ index 48dd2d4..0c4fa28 100644
  #cmakedefine SDL_POWER_MACOSX @SDL_POWER_MACOSX@
  #cmakedefine SDL_POWER_HAIKU @SDL_POWER_HAIKU@
  #cmakedefine SDL_POWER_EMSCRIPTEN @SDL_POWER_EMSCRIPTEN@
-@@ -414,7 +416,7 @@
+@@ -413,7 +415,7 @@
  #cmakedefine SDL_LIBSAMPLERATE_DYNAMIC @SDL_LIBSAMPLERATE_DYNAMIC@
  
  /* Platform specific definitions */

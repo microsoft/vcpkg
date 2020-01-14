@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 
 #include <ctime>
 
@@ -156,11 +157,24 @@ namespace vcpkg
         std::vector<CPUArchitecture> supported_architectures;
         supported_architectures.push_back(get_host_processor());
 
-        // AMD64 machines support to run x86 applications
+        // AMD64 machines support running x86 applications and ARM64 machines support running ARM applications
         if (supported_architectures.back() == CPUArchitecture::X64)
         {
             supported_architectures.push_back(CPUArchitecture::X86);
         }
+        else if (supported_architectures.back() == CPUArchitecture::ARM64)
+        {
+            supported_architectures.push_back(CPUArchitecture::ARM);
+        }
+
+#if defined(_WIN32)
+        // On ARM32/64 Windows we can rely on x86 emulation
+        if (supported_architectures.front() == CPUArchitecture::ARM ||
+            supported_architectures.front() == CPUArchitecture::ARM64)
+        {
+            supported_architectures.push_back(CPUArchitecture::X86);
+        }
+#endif
 
         return supported_architectures;
     }
@@ -381,6 +395,8 @@ namespace vcpkg
             "CreateProcessW() returned ", exit_code, " after ", static_cast<int>(timer.microseconds()), " us\n");
         return static_cast<int>(exit_code);
 #else
+        // TODO: this should create a clean environment on Linux/macOS
+        Util::unused(extra_env, prepend_to_path);
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
         int rc = system(cmd_line.c_str());
@@ -549,10 +565,7 @@ namespace vcpkg
         return Strings::to_utf8(ret);
     }
 #else
-    Optional<std::string> System::get_registry_string(void* base_hkey, StringView sub_key, StringView valuename)
-    {
-        return nullopt;
-    }
+    Optional<std::string> System::get_registry_string(void*, StringView, StringView) { return nullopt; }
 #endif
 
     static const Optional<fs::path>& get_program_files()

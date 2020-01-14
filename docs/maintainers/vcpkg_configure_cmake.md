@@ -18,14 +18,15 @@ vcpkg_configure_cmake(
 
 ## Parameters
 ### SOURCE_PATH
-Specifies the directory containing the `CMakeLists.txt`. By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+Specifies the directory containing the `CMakeLists.txt`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
 
 ### PREFER_NINJA
-Indicates that, when available, Vcpkg should use Ninja to perform the build. This should be specified unless the port is known to not work under Ninja.
+Indicates that, when available, Vcpkg should use Ninja to perform the build.
+This should be specified unless the port is known to not work under Ninja.
 
 ### DISABLE_PARALLEL_CONFIGURE
 Disables running the CMake configure step in parallel.
-
 This is needed for libraries which write back into their source directory during configure.
 
 ### NO_CHARSET_FLAG
@@ -36,7 +37,8 @@ This is needed for libraries that set their own source code's character set.
 ### GENERATOR
 Specifies the precise generator to use.
 
-This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build. If used for this purpose, it should be set to "NMake Makefiles".
+This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
+If used for this purpose, it should be set to "NMake Makefiles".
 
 ### OPTIONS
 Additional options passed to CMake during the configuration.

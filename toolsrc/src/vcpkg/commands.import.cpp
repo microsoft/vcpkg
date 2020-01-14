@@ -108,7 +108,7 @@ namespace vcpkg::Commands::Import
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
-        const Expected<std::unordered_map<std::string, std::string>> pghs =
+        const Expected<Parse::RawParagraph> pghs =
             Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
         Checks::check_exit(VCPKG_LINE_INFO,
                            pghs.get() != nullptr,

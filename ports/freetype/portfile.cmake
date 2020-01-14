@@ -1,33 +1,27 @@
 include(vcpkg_common_functions)
 
-set(FT_VERSION 2.10.0)
+set(FT_VERSION 2.10.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.bz2"
-    FILENAME "freetype-${FT_VERSION}.tar.bz2"
-    SHA512 dfad66f419ea9577f09932e0730c0c887bdcbdbc8152fa7477a0c39d69a5b68476761deed6864ddcc5cf18d100a7a3f728049768e24afcb04b1a74b25b6acf7e
+    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.xz" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.xz"
+    FILENAME "freetype-${FT_VERSION}.tar.xz"
+    SHA512 c7a565b0ab3dce81927008a6965d5c7540f0dc973fcefdc1677c2e65add8668b4701c2958d25593cb41f706f4488765365d40b93da71dbfa72907394f28b2650
 )
 
+vcpkg_extract_source_archive_ex(
+OUT_SOURCE_PATH SOURCE_PATH
+ARCHIVE ${ARCHIVE}
+REF ${FT_VERSION}
+PATCHES
+    0001-Fix-install-command.patch
+    0002-Add-CONFIG_INSTALL_PATH-option.patch
+    0003-Fix-UWP.patch
+    0005-Fix-DLL-EXPORTS.patch
+)
+    
 if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
-    vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${FT_VERSION}
-    PATCHES
-        0001-Fix-install-command.patch
-        0002-Add-CONFIG_INSTALL_PATH-option.patch
-        0003-Fix-UWP.patch
-    )
+  set(ENABLE_DLL_EXPORT OFF)
 else()
-    vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${FT_VERSION}
-    PATCHES
-        0001-Fix-install-command.patch
-        0002-Add-CONFIG_INSTALL_PATH-option.patch
-        0003-Fix-UWP.patch
-        0005-Fix-DLL-EXPORTS.patch
-    )
+  set(ENABLE_DLL_EXPORT ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -40,6 +34,7 @@ vcpkg_configure_cmake(
         -DFT_WITH_PNG=ON
         -DFT_WITH_HARFBUZZ=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
+        -DENABLE_DLL_EXPORT=${ENABLE_DLL_EXPORT}
 )
 
 vcpkg_install_cmake()
@@ -77,7 +72,6 @@ file(COPY
     ${SOURCE_PATH}/docs/LICENSE.TXT
     ${SOURCE_PATH}/docs/FTL.TXT
     ${SOURCE_PATH}/docs/GPLv2.TXT
-    ${CMAKE_CURRENT_LIST_DIR}/usage
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/freetype
 )
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/freetype/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/freetype/copyright)
