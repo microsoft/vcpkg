@@ -11,7 +11,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES fix-define.patch
+    PATCHES
+        fix-define.patch
+        fix-static-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -26,5 +28,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+file(READ ${CURRENT_PACKAGES_DIR}/include/cgicc/CgiDefs.h CGI_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  string(REPLACE "#  ifdef CGICC_STATIC" "#  if 0" CGI_H "${CGI_H}")
+else()
+  string(REPLACE "#  ifdef CGICC_STATIC" "#  if 1" CGI_H "${CGI_H}")
+endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/cgicc/CgiDefs.h "${CGI_H}")
+
 
 file(INSTALL ${SOURCE_PATH}/COPYING.DOC DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -44,10 +44,10 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
         deployPlugins "styles"
     } elseif ($targetBinaryName -match "Qt5Networkd?.dll") {
         deployPlugins "bearer"
-        if (Test-Path "$binDir\libeay32.dll")
+        if (Test-Path "$binDir\libcrypto-1_1.dll")
         {
-            deployBinary "$targetBinaryDir" "$binDir" "libeay32.dll"
-            deployBinary "$targetBinaryDir" "$binDir" "ssleay32.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libssl-1_1.dll"
         }
     } elseif ($targetBinaryName -match "Qt5Sqld?.dll") {
         deployPlugins "sqldrivers"
