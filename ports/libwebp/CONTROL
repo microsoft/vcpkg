@@ -1,5 +1,5 @@
 Source: libwebp
-Version: 1.0.3-1
+Version: 1.1.0
 Homepage: https://github.com/webmproject/libwebp
 Description: WebP codec: library to encode and decode images in WebP format
 Default-Features: simd, nearlossless

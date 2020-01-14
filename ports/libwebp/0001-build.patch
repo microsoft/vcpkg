@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9503daacb..2fb9ef137 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -167,6 +167,9 @@ add_definitions(-DHAVE_CONFIG_H)
+ if(MSVC)
+   # avoid security warnings for e.g., fopen() used in the examples.
+   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++  if(BUILD_SHARED_LIBS)
++    add_definitions("-DWEBP_EXTERN=__declspec(dllexport)" "-DWEBP_DLL")
++  endif()
+ else()
+   add_definitions(-Wall)
+ endif()
+@@ -420,9 +423,9 @@ if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)
+                                    "${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux.h;\
+ ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux_types.h;\
+ ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/types.h;")
+-  set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
++  #set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
+   list(APPEND INSTALLED_LIBRARIES libwebpmux)
+   configure_pkg_config("src/mux/libwebpmux.pc")
+ endif()
+ 
+ if(WEBP_BUILD_GIF2WEBP)
+@@ -524,7 +528,10 @@ if(WEBP_BUILD_EXTRAS)
+ 
+   # webp_quality
+   add_executable(webp_quality ${WEBP_QUALITY_SRCS} ${WEBP_EXTRAS_SRCS})
+   target_link_libraries(webp_quality exampleutil imagedec)
++  if(BUILD_SHARED_LIBS)
++      target_link_libraries(webp_quality webpdspdecode)
++  endif()
+   target_include_directories(webp_quality
+                              PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+                                      ${CMAKE_CURRENT_BINARY_DIR})

@@ -1,15 +1,13 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO webmproject/libwebp
-  REF 0fe1a89dbf1930fc2554dbe76adad5d962054ead # v1.0.3
-  SHA512 824844a247d3d0d89f1721b08304624b3d3ba0060e218f5c172ffd19d19b96a71d41055fdcda7e6f01a846a95c2519f52e0f39e9f49878e74ca9bb8a1df5fb13
+  REF d7844e9762b61c9638c263657bd49e1690184832 # v1.1.0
+  SHA512 13692970e7dd909cd6aaa03c9a0c863243baac1885644794362dec0c0b0721d6807f281f746215bfd856c6e0cb742b01a731a33fe075a32ff24496e10c1a94b4
   HEAD_REF master
   PATCHES
-    0001-build-fixes.patch
+    0001-build.patch
     0002-cmake-config-add-backwards-compatibility.patch
-    0003-remove-missing-symbol.patch
     0004-add-missing-linked-library.patch
-    0005-fix-static-build.patch
     0006-fix-dependecies-platform.patch
     0007-fix-arm-build.patch
 )

@@ -6,7 +6,7 @@ index 83edb3a..f634094 100644
    find_package(SDL)
    if(SDL_FOUND)
      add_executable(vwebp_sdl ${VWEBP_SDL_SRCS})
--    target_link_libraries(vwebp_sdl ${SDL_LIBRARY} imageioutil webp dxguid winmm)
+-    target_link_libraries(vwebp_sdl ${SDL_LIBRARY} imageioutil webp)
 +    target_link_libraries(vwebp_sdl ${SDL_LIBRARY} imageioutil webp)
 +    if (MSVC)
 +        target_link_libraries(vwebp_sdl dxguid winmm)
