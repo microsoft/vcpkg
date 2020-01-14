@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(FREEXL_VERSION_STR "1.0.4")
 
 vcpkg_download_distfile(ARCHIVE
@@ -66,17 +65,7 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
     )
     
     vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS_DEBUG
-        INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-        "LINK_FLAGS=/debug"
-        "CL_FLAGS=${CL_FLAGS_DBG}"
-        "LIBS_ALL=${LIBS_ALL_DBG}"
-    OPTIONS_RELEASE
-        INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-        "LINK_FLAGS="
-        "CL_FLAGS=${CL_FLAGS_REL}"
-        "LIBS_ALL=${LIBS_ALL_REL}"
+        SOURCE_PATH ${SOURCE_PATH}
     )
     
     vcpkg_install_make()

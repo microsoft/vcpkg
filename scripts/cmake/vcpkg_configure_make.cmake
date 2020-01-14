@@ -14,9 +14,9 @@
 ##     [SKIP_CONFIGURE]
 ##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
-##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+##     [OPTIONS <--use-this-in-all-builds>...]
+##     [OPTIONS_RELEASE <--optimize>...]
+##     [OPTIONS_DEBUG <--debuggable>...]
 ## )
 ## ```
 ##
