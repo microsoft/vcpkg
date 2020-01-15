@@ -112,7 +112,7 @@ index b6e035d..c815863 100644
 -        [OPENJPEG_VERSION=;])
 -
 -  if test -n "$OPENJPEG_CFLAGS"; then
-+  OPENJPEG_LIBS="-lopenjp2 -lm -lpthread"
++  OPENJPEG_LIBS="-lopenjp2 -lm -pthread"
 +  OPENJPEG_CFLAGS="-I$with_openjpeg/include"
 +  
 +  if true; then
@@ -287,7 +287,7 @@ index b6e035d..c815863 100644
      SQLITE3_REQ_VERSION="3.0.0"
 -    AX_LIB_SQLITE3($SQLITE3_REQ_VERSION)
 -
-+    SQLITE3_LDFLAGS="-L$with_sqlite3/lib -lsqlite3 -lpthread -ldl"
++    SQLITE3_LDFLAGS="-L$with_sqlite3/lib -lsqlite3 -pthread -ldl"
 +    SQLITE3_CFLAGS="-I$with_sqlite3/include"
 +    AC_SUBST(SQLITE3_CFLAGS)
 +    AC_SUBST(SQLITE3_LDFLAGS)
@@ -300,7 +300,7 @@ index b6e035d..c815863 100644
  
  if test "$HAVE_SQLITE3" = "yes"; then
 -    AC_CHECK_LIB(sqlite3,sqlite3_column_table_name,SQLITE_HAS_COLUMN_METADATA=yes,SQLITE_HAS_COLUMN_METADATA=no,$LIBS)
-+    AC_CHECK_LIB(sqlite3,sqlite3_column_table_name,SQLITE_HAS_COLUMN_METADATA=yes,SQLITE_HAS_COLUMN_METADATA=no,$LIBS -lpthread -ldl)
++    AC_CHECK_LIB(sqlite3,sqlite3_column_table_name,SQLITE_HAS_COLUMN_METADATA=yes,SQLITE_HAS_COLUMN_METADATA=no,$LIBS -pthread -ldl)
  fi
  
  AC_SUBST([SQLITE_INC], $SQLITE3_CFLAGS)
