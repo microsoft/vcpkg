@@ -1,17 +1,16 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EABase
-    REF 6f27a2f7aa21f2d71ae8c6bc1d889d0119677a56
-    SHA512 9176fb2d508cf023c3c16c61a511196a2f6af36172145544bba44062a00ca7591e54e4fc16ac13562ef0e2d629b626f398bff3669b4cdb7ba0068548d6a53883
+    REF edbafca82e4c4e73302e0b5144c5d1f4710db9fa
+    SHA512 fb9bd07602fb308864506737813212e47385a164708cd9064fdd4d1893294b228718a2964a0b16d04483f4f4c8a156f7199b60f227e4fc9ac88352f7dcd59672
     HEAD_REF master
     PATCHES
     fix_cmake_install.patch
-    fix_uwp.patch
 )
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/EABaseConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
