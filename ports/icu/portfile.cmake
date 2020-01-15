@@ -2,8 +2,6 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
-include(vcpkg_common_functions)
-
 set(ICU_VERSION_MAJOR 65)
 set(ICU_VERSION_MINOR 1)
 set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
