@@ -356,6 +356,7 @@ namespace vcpkg::Dependencies
         }
 
         Util::sort_unique_erase(package_dependencies);
+        Util::sort_unique_erase(feature_list);
     }
 
     InstallPlanAction::InstallPlanAction(InstalledPackageView&& ipv, const RequestType& request_type)

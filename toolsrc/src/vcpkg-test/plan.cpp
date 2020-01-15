@@ -1212,7 +1212,7 @@ TEST_CASE ("basic upgrade scheme with self features", "[plan]")
 
     REQUIRE(plan.at(1).spec().name() == "a");
     REQUIRE(plan.at(1).install_action.has_value());
-    REQUIRE(plan.at(1).install_action.get()->feature_list == std::vector<std::string>{"core", "a1", "a2"});
+    REQUIRE(plan.at(1).install_action.get()->feature_list == std::vector<std::string>{"a1", "a2", "core"});
 }
 
 TEST_CASE ("basic export scheme", "[plan]")
