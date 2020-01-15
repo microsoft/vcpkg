@@ -39,7 +39,7 @@ namespace vcpkg
             SourceParagraphFields::BUILD_DEPENDS,
             SourceParagraphFields::HOMEPAGE,
             SourceParagraphFields::TYPE,
-			SourceParagraphFields::SUPPORTS,
+            SourceParagraphFields::SUPPORTS,
         };
 
         return valid_fields;
@@ -201,6 +201,18 @@ namespace vcpkg
         else
             return nullopt;
     }
+    Optional<const std::vector<Dependency>&> SourceControlFile::find_dependencies_for_feature(
+        const std::string& featurename) const
+    {
+        if (featurename == "core")
+        {
+            return core_paragraph->depends;
+        }
+        else if (auto p_feature = find_feature(featurename).get())
+            return p_feature->depends;
+        else
+            return nullopt;
+    }
 
     Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
     {
@@ -225,16 +237,39 @@ namespace vcpkg
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends)
     {
         return Util::fmap(depends, [&](const std::string& depend_string) -> Dependency {
-            auto pos = depend_string.find(' ');
-            if (pos == std::string::npos) return Dependency::parse_dependency(depend_string, "");
-            // expect of the form "\w+ \[\w+\]"
-            if (depend_string.c_str()[pos + 1] != '(' || depend_string[depend_string.size() - 1] != ')')
+            // First, try to find beginning and end of features list
+            auto end_of_features = depend_string.find(']');
+            if (end_of_features != std::string::npos)
             {
-                // Error, but for now just slurp the entire string.
-                return Dependency::parse_dependency(depend_string, "");
+                ++end_of_features;
             }
-            return Dependency::parse_dependency(depend_string.substr(0, pos),
-                                                depend_string.substr(pos + 2, depend_string.size() - pos - 3));
+            else
+            {
+                end_of_features = depend_string.find(' ');
+                if (end_of_features == std::string::npos) end_of_features = depend_string.size();
+            }
+
+            auto begin_of_qualifier = depend_string.find('(', end_of_features);
+            if (begin_of_qualifier == std::string::npos)
+            {
+                return Dependency::parse_dependency(depend_string.substr(0, end_of_features), "");
+            }
+            else
+            {
+                auto end_of_qualifier = depend_string.find(')', begin_of_qualifier + 1);
+                if (end_of_qualifier == std::string::npos)
+                {
+                    // Error; for now, use remaining string as qualifier
+                    return Dependency::parse_dependency(depend_string.substr(0, end_of_features),
+                                                        depend_string.substr(begin_of_qualifier + 1));
+                }
+                else
+                {
+                    return Dependency::parse_dependency(
+                        depend_string.substr(0, end_of_features),
+                        depend_string.substr(begin_of_qualifier + 1, end_of_qualifier - begin_of_qualifier - 1));
+                }
+            }
         });
     }
 
@@ -265,5 +300,4 @@ namespace vcpkg
     }
 
     std::string to_string(const Dependency& dep) { return dep.name(); }
-
 }

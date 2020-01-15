@@ -53,10 +53,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\vcpkg-tests\catch.h">
+    <ClInclude Include="..\include\vcpkg-test\catch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg-tests\util.h">
+    <ClInclude Include="..\include\vcpkg-test\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

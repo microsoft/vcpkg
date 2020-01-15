@@ -98,6 +98,7 @@ namespace vcpkg
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
 
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
+        Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;
     };
 
     /// <summary>

@@ -14,6 +14,8 @@
 
 namespace vcpkg::Dependencies
 {
+    using namespace vcpkg;
+
     namespace
     {
         struct ClusterInstalled
@@ -50,11 +52,10 @@ namespace vcpkg::Dependencies
             Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl) : m_spec(spec), m_scfl(scfl) {}
 
             // Returns dependencies which were added as a result of this call
-            std::vector<FeatureSpec> add_feature(const std::string& feature,
-                                                 const CMakeVars::CMakeVarProvider& var_provider)
+            void add_feature(const std::string& feature,
+                             const CMakeVars::CMakeVarProvider& var_provider,
+                             std::vector<FeatureSpec>& out_new_dependencies)
             {
-                std::vector<FeatureSpec> new_dependencies;
-
                 // If install_info is null we have never added a feature which hasn't already been installed to this
                 // cluster
                 if (!m_install_info.has_value())
@@ -66,48 +67,67 @@ namespace vcpkg::Dependencies
                         // If this is a new feature add all original features to the brand-new install_info. We need
                         // to rebuild this port and we can't trust the ipv's dependency vectors since the
                         // dependencies of a feature could have changed between runs of vcpkg.
-                        if (find_itr == inst->original_features.end())
+                        if (find_itr != inst->original_features.end())
                         {
-                            m_install_info = make_optional(ClusterInstallInfo{});
-
-                            for (const std::string& installed_feature : inst->original_features)
-                            {
-                                new_dependencies.emplace_back(m_spec, installed_feature);
-                            }
+                            // Feature was already installed, so nothing to do for now
+                            return;
                         }
-                        else
+
+                        for (const std::string& installed_feature : inst->original_features)
                         {
-                            return {};
+                            out_new_dependencies.emplace_back(m_spec, installed_feature);
                         }
                     }
-                    else
+
+                    m_install_info = make_optional(ClusterInstallInfo{});
+
+                    // If the user did not explicitly request this installation, we need to add all new default features
+                    if (request_type != RequestType::USER_REQUESTED)
                     {
-                        m_install_info = make_optional(ClusterInstallInfo{});
+                        auto&& new_defaults = m_scfl.source_control_file->core_paragraph->default_features;
+                        std::set<std::string> defaults_set{new_defaults.begin(), new_defaults.end()};
+
+                        // Install only features that were not previously available
+                        if (auto p_inst = m_installed.get())
+                        {
+                            for (auto&& prev_default : p_inst->ipv.core->package.default_features)
+                            {
+                                defaults_set.erase(prev_default);
+                            }
+                        }
+
+                        for (const std::string& feature : defaults_set)
+                        {
+                            // Instead of dealing with adding default features to each of our dependencies right
+                            // away we just defer to the next pass of the loop.
+                            out_new_dependencies.emplace_back(m_spec, feature);
+                        }
                     }
                 }
 
                 ClusterInstallInfo& info = m_install_info.value_or_exit(VCPKG_LINE_INFO);
-                auto maybe_vars = var_provider.get_dep_info_vars(m_spec);
+                if (Util::Sets::contains(info.build_edges, feature))
+                {
+                    // This feature has already been completely handled
+                    return;
+                }
 
-                const std::vector<Dependency>* qualified_deps = nullptr;
-                if (feature == "core")
-                {
-                    qualified_deps = &m_scfl.source_control_file->core_paragraph->depends;
-                }
-                else
-                {
-                    qualified_deps =
-                        &m_scfl.source_control_file->find_feature(feature).value_or_exit(VCPKG_LINE_INFO).depends;
-                }
+                auto maybe_vars = var_provider.get_dep_info_vars(m_spec);
+                const std::vector<Dependency>* qualified_deps =
+                    &m_scfl.source_control_file->find_dependencies_for_feature(feature).value_or_exit(VCPKG_LINE_INFO);
 
                 std::vector<FeatureSpec> dep_list;
                 if (maybe_vars)
                 {
+                    // Qualified dependency resolution is available
                     dep_list = filter_dependencies_to_specs(
                         *qualified_deps, m_spec.triplet(), maybe_vars.value_or_exit(VCPKG_LINE_INFO));
+                    Util::sort_unique_erase(dep_list);
+                    info.build_edges.emplace(feature, dep_list);
                 }
                 else
                 {
+                    bool requires_qualified_resolution = false;
                     for (const Dependency& dep : *qualified_deps)
                     {
                         if (dep.qualifier.empty())
@@ -129,43 +149,18 @@ namespace vcpkg::Dependencies
                                     dep_feature);
                             }
                         }
+                        else
+                        {
+                            requires_qualified_resolution = true;
+                        }
                     }
-                }
-                Util::sort(dep_list);
-
-                // If a change in cmake_vars or the initial addition of this feature results in dependencies being
-                // added inform the caller
-                auto find_itr = info.build_edges.find(feature);
-
-                if (find_itr == info.build_edges.end())
-                {
-                    new_dependencies.insert(new_dependencies.end(), dep_list.begin(), dep_list.end());
-                    info.build_edges.emplace(feature, dep_list);
-                    return new_dependencies;
-                }
-                else
-                {
-                    if (find_itr->second.empty())
+                    Util::sort_unique_erase(dep_list);
+                    if (!requires_qualified_resolution)
                     {
-                        new_dependencies.insert(new_dependencies.end(), dep_list.begin(), dep_list.end());
-                        find_itr->second = dep_list;
-                        return new_dependencies;
+                        info.build_edges.emplace(feature, dep_list);
                     }
-
-                    std::vector<FeatureSpec> new_specs;
-                    std::set_difference(dep_list.begin(),
-                                        dep_list.end(),
-                                        find_itr->second.begin(),
-                                        find_itr->second.end(),
-                                        std::inserter(new_specs, new_specs.begin()));
-
-                    new_dependencies.insert(new_dependencies.end(), new_specs.begin(), new_specs.end());
-                    auto mid = find_itr->second.insert(find_itr->second.end(), new_specs.begin(), new_specs.end());
-
-                    std::inplace_merge(find_itr->second.begin(), mid, find_itr->second.end());
                 }
-
-                return new_dependencies;
+                out_new_dependencies.insert(out_new_dependencies.end(), dep_list.begin(), dep_list.end());
             }
 
             PackageSpec m_spec;
@@ -378,9 +373,7 @@ namespace vcpkg::Dependencies
         }
 
         const std::string features =
-            Strings::join(",",
-                          Util::fmap(feature_dependencies,
-                                     [](const decltype(feature_dependencies)::value_type& kv) { return kv.first; }));
+            Strings::join(",", Util::fmap(feature_dependencies, [](const auto& kv) { return kv.first; }));
         return Strings::format("%s[%s]:%s", this->spec.name(), features, this->spec.triplet());
     }
 
@@ -597,11 +590,11 @@ namespace vcpkg::Dependencies
         }
         Util::sort_unique_erase(feature_specs);
 
-        pgraph.install(feature_specs);
         for (const FeatureSpec& spec : feature_specs)
         {
             pgraph.mark_user_requested(spec.spec());
         }
+        pgraph.install(feature_specs);
 
         return pgraph.serialize(options);
     }
@@ -626,20 +619,6 @@ namespace vcpkg::Dependencies
             {
                 dep_clust.visited = true;
                 m_graph_plan->install_graph.add_vertex({&dep_clust});
-
-                // Add default features
-                if (dep_spec.feature() != "core")
-                {
-                    for (const std::string& feature :
-                         dep_clust.m_scfl.source_control_file->core_paragraph->default_features)
-                    {
-                        // Instead of dealing with adding default features to each of our dependencies right
-                        // away we just defer to the next pass of the loop.
-                        next_dependencies.emplace_back(dep_spec.spec(), feature);
-                    }
-
-                    next_dependencies.emplace_back(dep_spec.spec(), "core");
-                }
             }
 
             if (dep_spec.spec() != clust.m_spec)
@@ -687,15 +666,20 @@ namespace vcpkg::Dependencies
         return removed;
     }
 
+    /// The list of specs to install should already have default features expanded
     void PackageGraph::install(Span<const FeatureSpec> specs)
     {
-        std::vector<FeatureSpec> qualified_specs;
+        // We batch resolving qualified dependencies, because it's an invocation of CMake which
+        // takes ~150ms per call.
+        std::vector<FeatureSpec> qualified_dependencies;
         std::vector<FeatureSpec> next_dependencies{specs.begin(), specs.end()};
 
-        // Mark all the clusters that are explicitly requested as visited so we don't add default features later
-        for (const FeatureSpec& explicit_spec : specs)
+        // Pre-add all explicitly referenced specs to the install graph so that they will show up in the printed output
+        // at the end
+        for (auto&& explicit_spec : specs)
         {
-            Cluster& clust = m_graph->get(explicit_spec.spec());
+            auto&& clust = m_graph->get(explicit_spec.spec());
+
             if (!clust.visited)
             {
                 clust.visited = true;
@@ -734,25 +718,23 @@ namespace vcpkg::Dependencies
                     paragraph_depends = &maybe_paragraph.value_or_exit(VCPKG_LINE_INFO).depends;
                 }
 
+                // If this spec hasn't already had its qualified dependencies resolved
                 if (!m_var_provider.get_dep_info_vars(spec.spec()).has_value())
                 {
-                    for (const Dependency& dep : *paragraph_depends)
+                    // And it has at least one qualified dependency
+                    if (std::any_of(paragraph_depends->begin(), paragraph_depends->end(), [](auto&& dep) {
+                            return !dep.qualifier.empty();
+                        }))
                     {
-                        // We need to keep track of qualified dependencies so that we can re-add to the cluster with
-                        // the updated CMakeVarProvider. We do this to load the triplet values in as few discrete
-                        // calls as possible. Every time we load a list of ports it's an invocation of CMake, which
-                        // takes ~150ms per call.
-                        if (!dep.qualifier.empty())
-                        {
-                            qualified_specs.emplace_back(spec);
-                            break;
-                        }
+                        // Add it to the next batch run
+                        qualified_dependencies.emplace_back(spec);
                     }
                 }
 
                 bool port_installed = clust.m_installed.has_value();
                 bool build_was_needed = clust.m_install_info.has_value();
-                auto new_dependencies = clust.add_feature(spec.feature(), m_var_provider);
+                std::vector<FeatureSpec> new_dependencies;
+                clust.add_feature(spec.feature(), m_var_provider, new_dependencies);
                 bool build_is_needed = clust.m_install_info.has_value();
 
                 // If the port was already installed and this is the first time we're adding features then we're
@@ -776,23 +758,23 @@ namespace vcpkg::Dependencies
                                          std::make_move_iterator(new_default_dependencies.end()));
             }
 
-            if (!qualified_specs.empty())
+            if (!qualified_dependencies.empty())
             {
-                Util::sort_unique_erase(qualified_specs);
+                Util::sort_unique_erase(qualified_dependencies);
 
                 // Extract the package specs we need to get dependency info from. We don't run the triplet on a per
                 // feature basis. We run it once for the whole port.
                 auto qualified_package_specs =
-                    Util::fmap(qualified_specs, [](const FeatureSpec& fspec) { return fspec.spec(); });
+                    Util::fmap(qualified_dependencies, [](const FeatureSpec& fspec) { return fspec.spec(); });
                 Util::sort_unique_erase(qualified_package_specs);
                 m_var_provider.load_dep_info_vars(qualified_package_specs);
 
                 // Put all the FeatureSpecs for which we had qualified dependencies back on the dependencies stack.
                 // We need to recheck if evaluating the triplet revealed any new dependencies.
                 next_dependencies.insert(next_dependencies.end(),
-                                         std::make_move_iterator(qualified_specs.begin()),
-                                         std::make_move_iterator(qualified_specs.end()));
-                qualified_specs.clear();
+                                         std::make_move_iterator(qualified_dependencies.begin()),
+                                         std::make_move_iterator(qualified_dependencies.end()));
+                qualified_dependencies.clear();
             }
         }
     }

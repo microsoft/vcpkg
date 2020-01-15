@@ -32,3 +32,21 @@ TEST_CASE ("filter depends", "[dependencies]")
     REQUIRE(v2.at(0) == "libB");
     REQUIRE(v2.at(1) == "libC");
 }
+
+TEST_CASE ("parse feature depends", "[dependencies]")
+{
+    auto u = parse_comma_list("libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, "
+                              "simd, cwebp, dwebp], libwebp[vwebp_sdl, extras] (!osx)");
+    REQUIRE(u.at(1) == "libwebp[vwebp_sdl, extras] (!osx)");
+    auto v = expand_qualified_dependencies(u);
+    REQUIRE(v.size() == 2);
+    auto&& a0 = v.at(0);
+    REQUIRE(a0.depend.name == "libwebp");
+    REQUIRE(a0.depend.features.size() == 9);
+    REQUIRE(a0.qualifier.empty());
+
+    auto&& a1 = v.at(1);
+    REQUIRE(a1.depend.name == "libwebp");
+    REQUIRE(a1.depend.features.size() == 2);
+    REQUIRE(a1.qualifier == "!osx");
+}
