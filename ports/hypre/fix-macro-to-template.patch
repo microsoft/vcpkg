@@ -1,5 +1,5 @@
---- a/struct_ls/pfmg3_setup_rap.c	Thu Jun 09 15:56:18 2016
-+++ b/struct_ls/pfmg3_setup_rap.c	Thu Dec 22 17:45:20 2016
+--- a/src/struct_ls/pfmg3_setup_rap.c	Thu Jun 09 15:56:18 2016
++++ b/src/struct_ls/pfmg3_setup_rap.c	Thu Dec 22 17:45:20 2016
 @@ -19,13 +19,28 @@
   * allow for coarsening to be done in the x- and y-directions also.
   *--------------------------------------------------------------------------*/

@@ -1,10 +1,21 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
-# This is a backport of CMAKE_TRY_COMPILE_PLATFORM_VARIABLES to cmake 3.0
-get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
-if( _CMAKE_IN_TRY_COMPILE )
-    include( "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL )
+# VCPKG toolchain options. 
+option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
+mark_as_advanced(VCPKG_VERBOSE)
+
+# Determine whether the toolchain is loaded during a try-compile configuration
+get_property(_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
+
+if (${CMAKE_VERSION} VERSION_LESS "3.6.0")
+    set(_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES ON)
+else()
+    set(_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES OFF)
+endif()
+
+if(_CMAKE_IN_TRY_COMPILE AND _CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL)
 endif()
 
 if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -13,6 +24,24 @@ endif()
 
 if(VCPKG_TOOLCHAIN)
     return()
+endif()
+
+if(DEFINED CMAKE_CONFIGURATION_TYPES) #Generating with a multi config generator
+    #If CMake does not have a mapping for MinSizeRel and RelWithDebInfo in imported targets
+    #it will map those configuration to the first valid configuration in CMAKE_CONFIGURATION_TYPES.
+    #By default this is the debug configuration which is wrong. 
+    if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL)
+        set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;")
+        if(VCPKG_VERBOSE)
+            message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL set to MinSizeRel;Release;")
+        endif()
+    endif()
+    if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
+        set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;")
+        if(VCPKG_VERBOSE)
+            message(STATUS "VCPKG-Info: CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO set to RelWithDebInfo;Release;")
+        endif()
+    endif()
 endif()
 
 if(VCPKG_TARGET_TRIPLET)
@@ -264,13 +293,23 @@ set(_UNUSED ${CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY})
 set(_UNUSED ${CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY})
 set(_UNUSED ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP})
 
+# Propogate these values to try-compile configurations so the triplet and toolchain load
 if(NOT _CMAKE_IN_TRY_COMPILE)
-    file(TO_CMAKE_PATH "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" _chainload_file)
-    file(TO_CMAKE_PATH "${_VCPKG_ROOT_DIR}" _root_dir)
-    file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
-        "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
-        "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
-        "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${_chainload_file}\" CACHE STRING \"\")\n"
-        "set(_VCPKG_ROOT_DIR \"${_root_dir}\" CACHE STRING \"\")\n"
+    if(_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES)
+        file(TO_CMAKE_PATH "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" _chainload_file)
+        file(TO_CMAKE_PATH "${_VCPKG_ROOT_DIR}" _root_dir)
+        file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
+            "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
+            "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
+            "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${_chainload_file}\" CACHE STRING \"\")\n"
+            "set(_VCPKG_ROOT_DIR \"${_root_dir}\" CACHE STRING \"\")\n"
         )
+    else()
+        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES 
+            VCPKG_TARGET_TRIPLET
+            VCPKG_APPLOCAL_DEPS
+            VCPKG_CHAINLOAD_TOOLCHAIN_FILE
+            _VCPKG_ROOT_DIR
+        )
+    endif()
 endif()

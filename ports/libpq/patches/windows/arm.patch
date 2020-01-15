@@ -1,0 +1,39 @@
+diff --git a/src/tools/msvc/Mkvcbuild.pm b/src/tools/msvc/Mkvcbuild.pm
+index 99f39caa5..4f51c12f2 100644
+--- a/src/tools/msvc/Mkvcbuild.pm
++++ b/src/tools/msvc/Mkvcbuild.pm
+@@ -110,8 +110,8 @@ sub mkvcbuild
+ 
+ 	if ($vsVersion >= '9.00')
+ 	{
+-		push(@pgportfiles, 'pg_crc32c_sse42_choose.c');
+-		push(@pgportfiles, 'pg_crc32c_sse42.c');
++		#push(@pgportfiles, 'pg_crc32c_sse42_choose.c');
++		#push(@pgportfiles, 'pg_crc32c_sse42.c');
+ 		push(@pgportfiles, 'pg_crc32c_sb8.c');
+ 	}
+ 	else
+diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
+index 823357c02..625f32bf8 100644
+--- a/src/tools/msvc/MSBuildProject.pm	
++++ b/src/tools/msvc/MSBuildProject.pm
+@@ -307,9 +307,8 @@ sub WriteItemDefinitionGroup
+ 	  : ($self->{type} eq "dll" ? 'DynamicLibrary' : 'StaticLibrary');
+ 	my $libs = $self->GetAdditionalLinkerDependencies($cfgname, ';');
+ 
+-	my $targetmachine =
+-	  $self->{platform} eq 'Win32' ? 'MachineX86' : 'MachineX64';
+-
++	my $targetmachine = $self->{platform} eq 'ARM64' ? 'MachineARM64' : 'MachineARM';
++    
+ 	my $includes = $self->{includes};
+ 	unless ($includes eq '' or $includes =~ /;$/)
+ 	{
+@@ -347,7 +349,6 @@ sub WriteItemDefinitionGroup
+       <ProgramDatabaseFile>.\\$cfgname\\$self->{name}\\$self->{name}.pdb</ProgramDatabaseFile>
+       <GenerateMapFile>false</GenerateMapFile>
+       <MapFileName>.\\$cfgname\\$self->{name}\\$self->{name}.map</MapFileName>
+-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+       <!-- Permit links to MinGW-built, 32-bit DLLs (default before VS2012). -->
+       <ImageHasSafeExceptionHandlers/>
+       <SubSystem>Console</SubSystem>

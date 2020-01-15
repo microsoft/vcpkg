@@ -1,9 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "PDCurses only supports dynamic CRT linkage")
-endif()
-
-include(vcpkg_common_functions)
 find_program(NMAKE nmake)
 
 vcpkg_from_github(
@@ -14,21 +10,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(REMOVE_RECURSE
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
-)
+set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)
 
-file(GLOB SOURCES ${SOURCE_PATH}/*)
-
-file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-
-set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)                                                          
-
-
-set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)                                                                                                   
-set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)   
+set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)
+set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
@@ -62,20 +47,27 @@ vcpkg_execute_required_process(
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
 file (
-    COPY ${PDC_PDCLIB}.lib
+    INSTALL ${PDC_PDCLIB}.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file (
-        COPY ${PDC_PDCLIB}.dll
+        INSTALL ${PDC_PDCLIB}.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 endif()
 
 file(
-    COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h 
+    INSTALL ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/curses.h _contents)
+    string(REPLACE "#ifdef PDC_DLL_BUILD" "#if 1" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/curses.h "${_contents}")
+endif()
+
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -1,27 +1,24 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_DYNAMIC_CRT ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libplist
-    REF f279ef534ab5adeb81f063dee5e8a8fc3ca6d3ab
-    SHA512 52001a46935693e3ac5f0b8c3d13d9bf51c5f34189f6f006bd697d7e965f402460060708c4fb54ed43f49a217ac442fcb8dca252fcbccd3e6a154b6c9a8c2104
+    REF f1b85c037693b5749a38473aa6c013ca45a663bf # v1.2.137
+    SHA512 b38d6dc3f4d480d35d847afeab4c90f90edf249fe506c95a30af40acfb7ecbd978334fa5557cf1421716054db748f6d1d540f2405001b9b597cd56cfbfe2c671
     HEAD_REF msvc-master
     PATCHES dllexport.patch
 )
 
-set(ENV{_CL_} "$ENV{_CL_} /GL-")
-set(ENV{_LINK_} "$ENV{_LINK_} /LTCG:OFF")
+configure_file(${CURRENT_PORT_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
 
-vcpkg_install_msbuild(
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH libplist.sln
-    INCLUDES_SUBPATH include
-    LICENSE_SUBPATH COPYING.lesser
-    REMOVE_ROOT_INCLUDES
+    PREFER_NINJA
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

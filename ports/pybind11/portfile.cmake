@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF e43e1cc01ae6d4e4e5ba10557a057d7f3d5ece0d
     SHA512 546a0501c420cbbb21fb458192bae6c8d34bdd4bdbfe47fed22869e09429d6404b4e399e30c36c6d658bf8002339d051efde33685b03a00797b9cfe476cfb98e
     HEAD_REF master
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/aliastemplates.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

@@ -8,7 +8,6 @@ set(VERSION 61.1)
 set(VERSION2 61_1)
 set(ICU_VERSION_MAJOR 61)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION}/icu)
 vcpkg_download_distfile(
     ARCHIVE
     URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.tgz"
