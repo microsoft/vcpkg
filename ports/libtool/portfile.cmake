@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "Linux")
+vcpkg_fail_port_install(ON_TARGET "Windows")
 
 set(VERSION 2.4.6)
 
