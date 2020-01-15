@@ -8,7 +8,7 @@ list(APPEND CORE_OPTIONS
     -jasper 
     -no-mng # must be explicitly disabled to not automatically pick up mng
     -verbose)
-    
+
 find_library(TIFF_RELEASE NAMES tiff PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on lzma
 find_library(TIFF_DEBUG NAMES tiffd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 

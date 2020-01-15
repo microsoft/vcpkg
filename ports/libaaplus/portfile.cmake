@@ -1,4 +1,4 @@
-set(VERSION 2.10.0)
+set(VERSION 2.12)
 
 vcpkg_download_distfile(
     ARCHIVE_FILE
