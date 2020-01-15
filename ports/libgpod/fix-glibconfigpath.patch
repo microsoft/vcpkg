@@ -1,0 +1,117 @@
+diff --git a/src/db-artwork-writer.c b/src/db-artwork-writer.c
+index c19f481..cca786f 100644
+--- a/src/db-artwork-writer.c
++++ b/src/db-artwork-writer.c
+@@ -22,7 +22,7 @@
+  *
+  */
+
+-#include <config.h>
++#include <glib/config.h>
+ #include "itdb.h"
+ #include "itdb_device.h"
+ #include "itdb_private.h"
+diff --git a/src/itdb_artwork.c b/src/itdb_artwork.c
+index 2328840..a7cdec4 100644
+--- a/src/itdb_artwork.c
++++ b/src/itdb_artwork.c
+@@ -26,7 +26,7 @@
+ |  $Id$
+ */
+
+-#include <config.h>
++#include <glib/config.h>
+
+ #include "itdb_device.h"
+ #include "itdb_private.h"
+diff --git a/src/itdb_chapterdata.c b/src/itdb_chapterdata.c
+index 469e8b5..cb53077 100644
+--- a/src/itdb_chapterdata.c
++++ b/src/itdb_chapterdata.c
+@@ -27,7 +27,7 @@
+ |  $Id: itdb_chapterdata.c 1612 2007-06-29 16:02:00Z jcsjcs $
+ */
+
+-#include <config.h>
++#include <glib/config.h>
+
+ #include "itdb_device.h"
+ #include <stdio.h>
+diff --git a/src/itdb_device.c b/src/itdb_device.c
+index 34b89fe..d776a64 100644
+--- a/src/itdb_device.c
++++ b/src/itdb_device.c
+@@ -29,7 +29,7 @@
+ |
+ |  $Id$
+ */
+-#include <config.h>
++#include <glib/config.h>
+
+ #include "db-itunes-parser.h"
+ #include "itdb_device.h"
+diff --git a/src/itdb_photoalbum.c b/src/itdb_photoalbum.c
+index a2c8c29..562cbb7 100644
+--- a/src/itdb_photoalbum.c
++++ b/src/itdb_photoalbum.c
+@@ -26,7 +26,7 @@
+ |
+ |  $Id$
+ */
+-#include <config.h>
++#include <glib/config.h>
+ 
+ #include "itdb_private.h"
+ #include "itdb_device.h"
+diff --git a/src/itdb_track.c b/src/itdb_track.c
+index 52a9fd4..d8a2ff3 100644
+--- a/src/itdb_track.c
++++ b/src/itdb_track.c
+@@ -26,7 +26,7 @@
+ |  $Id$
+ */
+ 
+-#include <config.h>
++#include <glib/config.h>
+ 
+ #include "itdb_private.h"
+ #include "itdb_device.h"
+diff --git a/src/itdb_tzinfo.c b/src/itdb_tzinfo.c
+index ded4dd2..594e312 100644
+--- a/src/itdb_tzinfo.c
++++ b/src/itdb_tzinfo.c
+@@ -27,7 +27,7 @@
+ |
+ |  $Id$
+ */
+-#include <config.h>
++#include <glib/config.h>
+ 
+ #include "itdb.h"
+ #include "itdb_device.h"
+diff --git a/src/itdb_zlib.c b/src/itdb_zlib.c
+index f6fa29b..43ec5e3 100644
+--- a/src/itdb_zlib.c
++++ b/src/itdb_zlib.c
+@@ -25,7 +25,7 @@
+ |
+ |  $Id$
+ */
+-#include <config.h>
++#include <glib/config.h>
+ #include <string.h>
+ #include <zlib.h>
+ 
+diff --git a/src/ithumb-writer.c b/src/ithumb-writer.c
+index 6b47aa6..e1c26e7 100644
+--- a/src/ithumb-writer.c
++++ b/src/ithumb-writer.c
+@@ -25,7 +25,7 @@
+  *  $Id$
+  */
+ 
+-#include <config.h>
++#include <glib/config.h>
+ #include "itdb.h"
+ #include "db-image-parser.h"
+ 

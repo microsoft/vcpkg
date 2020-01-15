@@ -2,7 +2,4 @@ Source: libgpod
 Version: 2019-08-29
 Homepage: https://github.com/fadingred/libgpod
 Description: libgpod is a library meant to abstract access to an iPod content.
-Build-Depends: glib, libplist (windows), sqlite3
-
-Feature: gchecksum
-Description: with internal gchecksum
+Build-Depends: glib, libplist, sqlite3
