@@ -1,7 +1,5 @@
-include(vcpkg_common_functions)
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "This portfile only supports UWP")
+if (NOT VCPKG_TARGET_IS_UWP)
+    message(FATAL_ERROR "${PORT} only supports UWP")
 endif()
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")

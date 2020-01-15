@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "This port is only for building openssl on Windows Desktop")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Desktop" ON_TARGET "UWP" "Linux" "OSX")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
