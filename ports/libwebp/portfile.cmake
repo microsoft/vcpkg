@@ -58,7 +58,6 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake TARGET_PATH share/webp) # find_package is called wit webp and not libwebp
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/WebP)
 
 set(BIN_NAMES get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/webp/")
