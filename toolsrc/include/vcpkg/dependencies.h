@@ -172,7 +172,7 @@ namespace vcpkg::Dependencies
 
         std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
 
-        std::vector<FeatureSpec> graph_removals(const PackageSpec& spec);
+        void graph_removals(const PackageSpec& spec, std::vector<FeatureSpec>& out_reinstall_requirements);
         std::vector<FeatureSpec> graph_installs(const PackageSpec& spec,
                                                 const std::vector<FeatureSpec>& new_dependencies);
 

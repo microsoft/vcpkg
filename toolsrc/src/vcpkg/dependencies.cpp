@@ -208,7 +208,6 @@ namespace vcpkg::Dependencies
 {
     struct GraphPlan
     {
-        Graphs::Graph<ClusterPtr> remove_graph;
         Graphs::Graph<ClusterPtr> install_graph;
     };
 
@@ -274,6 +273,20 @@ namespace vcpkg::Dependencies
             }
 
             return it->second;
+        }
+
+        const Cluster& find_or_exit(const PackageSpec& spec, LineInfo linfo) const
+        {
+            auto it = m_graph.find(spec);
+            Checks::check_exit(linfo, it != m_graph.end(), "Failed to locate spec in graph");
+            return it->second;
+        }
+
+        template<class F>
+        void for_each(F f) const
+        {
+            for (auto&& kv : m_graph)
+                f(kv.second);
         }
 
     private:
@@ -639,11 +652,11 @@ namespace vcpkg::Dependencies
         return next_dependencies;
     }
 
-    std::vector<FeatureSpec> PackageGraph::graph_removals(const PackageSpec& first_remove_spec)
+    void PackageGraph::graph_removals(const PackageSpec& first_remove_spec,
+                                      std::vector<FeatureSpec>& out_reinstall_requirements)
     {
         std::set<PackageSpec> removed;
         std::vector<PackageSpec> to_remove{first_remove_spec};
-        std::vector<FeatureSpec> reinstall_requirements;
 
         while (!to_remove.empty())
         {
@@ -655,23 +668,13 @@ namespace vcpkg::Dependencies
             Cluster& clust = m_graph->get(remove_spec);
             ClusterInstalled& info = clust.m_installed.value_or_exit(VCPKG_LINE_INFO);
 
-            m_graph_plan->remove_graph.add_vertex({&clust});
-
             if (!clust.m_install_info)
             {
-                clust.create_install_info(reinstall_requirements);
+                clust.create_install_info(out_reinstall_requirements);
             }
 
-            for (const PackageSpec& new_remove_spec : info.remove_edges)
-            {
-                Cluster& depend_cluster = m_graph->get(new_remove_spec);
-                to_remove.emplace_back(new_remove_spec);
-
-                m_graph_plan->remove_graph.add_edge({&clust}, {&depend_cluster});
-            }
+            to_remove.insert(to_remove.end(), info.remove_edges.begin(), info.remove_edges.end());
         }
-
-        return reinstall_requirements;
     }
 
     /// The list of specs to install should already have default features expanded
@@ -751,10 +754,7 @@ namespace vcpkg::Dependencies
                 // dependencies.
                 if (port_installed && !build_was_needed && build_is_needed)
                 {
-                    auto reinstall_features = graph_removals(spec.spec());
-                    next_dependencies.insert(next_dependencies.end(),
-                                             std::make_move_iterator(reinstall_features.begin()),
-                                             std::make_move_iterator(reinstall_features.end()));
+                    graph_removals(spec.spec(), next_dependencies);
                 }
 
                 auto new_default_dependencies = graph_installs(clust.m_spec, new_dependencies);
@@ -789,20 +789,17 @@ namespace vcpkg::Dependencies
 
     void PackageGraph::upgrade(Span<const PackageSpec> specs)
     {
-        std::vector<FeatureSpec> removals;
+        std::vector<FeatureSpec> reinstall_reqs;
 
         for (const PackageSpec& spec : specs)
         {
-            auto specific_removals = graph_removals(spec);
-            removals.insert(removals.end(),
-                            std::make_move_iterator(specific_removals.begin()),
-                            std::make_move_iterator(specific_removals.end()));
+            graph_removals(spec, reinstall_reqs);
             m_graph->get(spec).request_type = RequestType::USER_REQUESTED;
         }
 
-        Util::sort_unique_erase(removals);
+        Util::sort_unique_erase(reinstall_reqs);
 
-        install(removals);
+        install(reinstall_reqs);
     }
 
     std::vector<AnyAction> PackageGraph::create_upgrade_plan(const PortFileProvider::PortFileProvider& port_provider,
@@ -820,9 +817,31 @@ namespace vcpkg::Dependencies
 
     std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& options) const
     {
-        auto remove_vertex_list = m_graph_plan->remove_graph.vertex_list();
-        auto remove_toposort =
-            Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph, options.randomizer);
+        struct RemoveEdgeProvider : Graphs::AdjacencyProvider<PackageSpec, const Cluster*>
+        {
+            RemoveEdgeProvider(const ClusterGraph& parent) : m_parent(parent) {}
+
+            virtual std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
+            {
+                auto&& set = vertex->m_installed.value_or_exit(VCPKG_LINE_INFO).remove_edges;
+                return {set.begin(), set.end()};
+            }
+            virtual std::string to_string(const PackageSpec& spec) const { return spec.to_string(); }
+            virtual const Cluster* load_vertex_data(const PackageSpec& spec) const
+            {
+                return &m_parent.find_or_exit(spec, VCPKG_LINE_INFO);
+            }
+
+            const ClusterGraph& m_parent;
+        };
+
+        std::vector<PackageSpec> removed_vertices;
+        m_graph->for_each([&](const Cluster& cluster) {
+            if (cluster.m_installed.has_value() && cluster.m_install_info.has_value())
+                removed_vertices.push_back(cluster.m_spec);
+        });
+        RemoveEdgeProvider removeedgeprovider(*m_graph);
+        auto remove_toposort = Graphs::topological_sort(removed_vertices, removeedgeprovider, options.randomizer);
 
         auto insert_vertex_list = m_graph_plan->install_graph.vertex_list();
         auto insert_toposort =

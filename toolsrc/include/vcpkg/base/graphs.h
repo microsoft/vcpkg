@@ -34,8 +34,15 @@ namespace vcpkg::Graphs
     {
         virtual int random(int max_exclusive) = 0;
 
+        struct NotRandom;
+
     protected:
         ~Randomizer() {}
+    };
+
+    struct Randomizer::NotRandom : Randomizer
+    {
+        virtual int random(int) override { return 0; }
     };
 
     namespace details
@@ -112,6 +119,81 @@ namespace vcpkg::Graphs
 
         return sorted;
     }
+
+    template<class V, class U>
+    struct TopoWalk : AdjacencyProvider<V, U>
+    {
+        Graphs::Randomizer* randomizer = nullptr;
+        struct iterator
+        {
+            const U& operator*() const { return m_parent->m_stack.back().first; }
+            TopoWalk* m_parent;
+        };
+
+    private:
+        bool advance_into(V vertex)
+        {
+            ExplorationStatus& status = m_exploration_status[vertex];
+            switch (status)
+            {
+                case ExplorationStatus::FULLY_EXPLORED: return false;
+                case ExplorationStatus::PARTIALLY_EXPLORED:
+                {
+                    System::print2("Cycle detected within graph at ", this->to_string(vertex), ":\n");
+                    for (auto&& node : m_exploration_status)
+                    {
+                        if (node.second == ExplorationStatus::PARTIALLY_EXPLORED)
+                        {
+                            System::print2("    ", this->to_string(node.first), '\n');
+                        }
+                    }
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+                case ExplorationStatus::NOT_EXPLORED:
+                {
+                    status = ExplorationStatus::PARTIALLY_EXPLORED;
+                    U vertex_data = this->load_vertex_data(vertex);
+                    auto neighbours = this->adjacency_list(vertex_data);
+                    details::shuffle(neighbours, randomizer);
+                    m_stack.emplace_back(std::move(vertex_data), std::move(neighbours));
+                    while (!m_stack.back().second.empty())
+                    {
+                        auto n = m_stack.back().second.back();
+                        m_stack.back().second.pop_back();
+                        if (this->advance_into(n)) return true;
+                    }
+                    status = ExplorationStatus::FULLY_EXPLORED;
+                    // Visit this vertex
+                    return true;
+                }
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }
+        bool advance()
+        {
+            while (!m_stack.empty())
+            {
+                auto&& top = m_stack.back();
+                while (!top.second.empty())
+                {
+                    auto v = top.second.back();
+                    top.second.pop_back();
+                    if (advance_into(v)) return true;
+                }
+            }
+
+            while (!m_roots.empty())
+            {
+                auto v = m_roots.back();
+                m_roots.pop_back();
+                if (advance_into(v)) return true;
+            }
+        }
+
+        std::unordered_map<V, ExplorationStatus> m_exploration_status;
+        std::vector<std::pair<U, std::vector<V>>> m_stack;
+        std::vector<V> m_roots;
+    };
 
     template<class V>
     struct Graph final : AdjacencyProvider<V, V>
