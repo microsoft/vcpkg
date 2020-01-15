@@ -381,7 +381,9 @@ if(NOT DISABLE_INSTALL_HEADERS)
     install(
         DIRECTORY include/
         DESTINATION include
-        FILES_MATCHING PATTERN "*.h"
+        FILES_MATCHING
+        PATTERN "*.h"
+        PATTERN "*.inc"
         PATTERN "GLSLANG" EXCLUDE
         PATTERN "EGL" EXCLUDE
         PATTERN "KHR" EXCLUDE
