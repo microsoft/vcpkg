@@ -72,37 +72,9 @@ namespace vcpkg::Dependencies
                             // Feature was already installed, so nothing to do for now
                             return;
                         }
-
-                        for (const std::string& installed_feature : inst->original_features)
-                        {
-                            out_new_dependencies.emplace_back(m_spec, installed_feature);
-                        }
                     }
 
-                    m_install_info = make_optional(ClusterInstallInfo{});
-
-                    // If the user did not explicitly request this installation, we need to add all new default features
-                    if (request_type != RequestType::USER_REQUESTED)
-                    {
-                        auto&& new_defaults = m_scfl.source_control_file->core_paragraph->default_features;
-                        std::set<std::string> defaults_set{new_defaults.begin(), new_defaults.end()};
-
-                        // Install only features that were not previously available
-                        if (auto p_inst = m_installed.get())
-                        {
-                            for (auto&& prev_default : p_inst->ipv.core->package.default_features)
-                            {
-                                defaults_set.erase(prev_default);
-                            }
-                        }
-
-                        for (const std::string& feature : defaults_set)
-                        {
-                            // Instead of dealing with adding default features to each of our dependencies right
-                            // away we just defer to the next pass of the loop.
-                            out_new_dependencies.emplace_back(m_spec, feature);
-                        }
-                    }
+                    create_install_info(out_new_dependencies);
                 }
 
                 ClusterInstallInfo& info = m_install_info.value_or_exit(VCPKG_LINE_INFO);
@@ -161,6 +133,42 @@ namespace vcpkg::Dependencies
                     }
                 }
                 out_new_dependencies.insert(out_new_dependencies.end(), dep_list.begin(), dep_list.end());
+            }
+
+            void create_install_info(std::vector<FeatureSpec>& out_new_dependencies)
+            {
+                if (const ClusterInstalled* inst = m_installed.get())
+                {
+                    for (const std::string& installed_feature : inst->original_features)
+                    {
+                        out_new_dependencies.emplace_back(m_spec, installed_feature);
+                    }
+                }
+
+                m_install_info = make_optional(ClusterInstallInfo{});
+
+                // If the user did not explicitly request this installation, we need to add all new default features
+                if (request_type != RequestType::USER_REQUESTED)
+                {
+                    auto&& new_defaults = m_scfl.source_control_file->core_paragraph->default_features;
+                    std::set<std::string> defaults_set{new_defaults.begin(), new_defaults.end()};
+
+                    // Install only features that were not previously available
+                    if (auto p_inst = m_installed.get())
+                    {
+                        for (auto&& prev_default : p_inst->ipv.core->package.default_features)
+                        {
+                            defaults_set.erase(prev_default);
+                        }
+                    }
+
+                    for (const std::string& feature : defaults_set)
+                    {
+                        // Instead of dealing with adding default features to each of our dependencies right
+                        // away we just defer to the next pass of the loop.
+                        out_new_dependencies.emplace_back(m_spec, feature);
+                    }
+                }
             }
 
             PackageSpec m_spec;
@@ -632,38 +640,37 @@ namespace vcpkg::Dependencies
 
     std::vector<FeatureSpec> PackageGraph::graph_removals(const PackageSpec& first_remove_spec)
     {
+        std::set<PackageSpec> removed;
         std::vector<PackageSpec> to_remove{first_remove_spec};
-        std::vector<FeatureSpec> removed;
+        std::vector<FeatureSpec> reinstall_requirements;
 
         while (!to_remove.empty())
         {
             PackageSpec remove_spec = std::move(to_remove.back());
             to_remove.pop_back();
 
+            if (!removed.insert(remove_spec).second) continue;
+
             Cluster& clust = m_graph->get(remove_spec);
             ClusterInstalled& info = clust.m_installed.value_or_exit(VCPKG_LINE_INFO);
 
             m_graph_plan->remove_graph.add_vertex({&clust});
 
-            for (const std::string& orig_feature : info.original_features)
+            if (!clust.m_install_info)
             {
-                removed.emplace_back(remove_spec, orig_feature);
+                clust.create_install_info(reinstall_requirements);
             }
 
             for (const PackageSpec& new_remove_spec : info.remove_edges)
             {
                 Cluster& depend_cluster = m_graph->get(new_remove_spec);
-                if (!depend_cluster.m_install_info)
-                {
-                    depend_cluster.m_install_info = make_optional(ClusterInstallInfo{});
-                    to_remove.emplace_back(new_remove_spec);
-                }
+                to_remove.emplace_back(new_remove_spec);
 
                 m_graph_plan->remove_graph.add_edge({&clust}, {&depend_cluster});
             }
         }
 
-        return removed;
+        return reinstall_requirements;
     }
 
     /// The list of specs to install should already have default features expanded
