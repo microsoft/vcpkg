@@ -395,7 +395,6 @@ ecsutil:x64-uwp=fail
 embree2:x64-linux=fail
 embree2:x64-osx=fail
 embree2:x64-windows-static=fail
-embree3:x64-osx=fail
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
