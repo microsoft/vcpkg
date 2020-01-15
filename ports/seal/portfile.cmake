@@ -2,6 +2,17 @@ set(SEAL_VERSION_MAJOR 3)
 set(SEAL_VERSION_MINOR 4)
 set(SEAL_VERSION_MICRO 5)
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SEAL_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SEAL_BUILD_STATIC)
+
+if (SEAL_BUILD_STATIC)
+    set(SEAL_LIB_BUILD_TYPE "Static_PIC")
+endif ()
+
+if (SEAL_BUILD_DYNAMIC)
+    set(SEAL_LIB_BUILD_TYPE "Shared")
+endif ()
+
 string(TOUPPER ${PORT} PORT_UPPER)
 
 vcpkg_from_github(
@@ -15,6 +26,8 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/native/src
     PREFER_NINJA
+    OPTIONS
+        -DSEAL_LIB_BUILD_TYPE=${SEAL_LIB_BUILD_TYPE}
 )
 
 vcpkg_install_cmake()
