@@ -30,7 +30,7 @@ namespace vcpkg
     struct StatusParagraph
     {
         StatusParagraph() noexcept;
-        explicit StatusParagraph(std::unordered_map<std::string, std::string>&& fields);
+        explicit StatusParagraph(Parse::RawParagraph&& fields);
 
         bool is_installed() const { return want == Want::INSTALL && state == InstallState::INSTALLED; }
 

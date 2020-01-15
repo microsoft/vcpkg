@@ -1,0 +1,15 @@
+diff --git a/src/xalanc/Utils/MsgCreator/CMakeLists.txt b/src/xalanc/Utils/MsgCreator/CMakeLists.txt
+index 20215d4..dc74c1b 100644
+--- a/src/xalanc/Utils/MsgCreator/CMakeLists.txt
++++ b/src/xalanc/Utils/MsgCreator/CMakeLists.txt
+@@ -37,6 +37,10 @@ set(msgcreator_headers
+   NLSHandler.hpp
+   SAX2Handler.hpp)
+
++if(MSVC)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
++endif()
++
+ add_executable(MsgCreator ${msgcreator_sources} ${msgcreator_headers})
+ target_include_directories(MsgCreator PUBLIC
+   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>

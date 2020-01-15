@@ -146,11 +146,10 @@ namespace vcpkg
                     parse_value(arg_begin, arg_end, "--vcpkg-root", args.vcpkg_root_dir);
                     continue;
                 }
-                if (Strings::starts_with(arg, "--scripts-root="))
+                if (Strings::starts_with(arg, "--x-scripts-root="))
                 {
-                    parse_cojoined_value(arg.substr(sizeof("--scripts-root=") - 1),
-                                                    "--scripts-root",
-                                                    args.scripts_root_dir);
+                    parse_cojoined_value(
+                        arg.substr(sizeof("--x-scripts-root=") - 1), "--x-scripts-root", args.scripts_root_dir);
                     continue;
                 }
                 if (arg == "--triplet")
@@ -161,16 +160,14 @@ namespace vcpkg
                 }
                 if (Strings::starts_with(arg, "--overlay-ports="))
                 {
-                    parse_cojoined_multivalue(arg.substr(sizeof("--overlay-ports=") - 1),
-                                              "--overlay-ports",
-                                              args.overlay_ports);
+                    parse_cojoined_multivalue(
+                        arg.substr(sizeof("--overlay-ports=") - 1), "--overlay-ports", args.overlay_ports);
                     continue;
                 }
                 if (Strings::starts_with(arg, "--overlay-triplets="))
                 {
-                    parse_cojoined_multivalue(arg.substr(sizeof("--overlay-triplets=") - 1),
-                                              "--overlay-triplets",
-                                              args.overlay_triplets);
+                    parse_cojoined_multivalue(
+                        arg.substr(sizeof("--overlay-triplets=") - 1), "--overlay-triplets", args.overlay_triplets);
                     continue;
                 }
                 if (arg == "--debug")
@@ -224,11 +221,11 @@ namespace vcpkg
                 {
                     const auto& key = arg.substr(0, eq_pos);
                     const auto& value = arg.substr(eq_pos + 1);
-                    
+
                     auto it = args.optional_command_arguments.find(key);
                     if (args.optional_command_arguments.end() == it)
                     {
-                        args.optional_command_arguments.emplace(key, std::vector<std::string> { value });
+                        args.optional_command_arguments.emplace(key, std::vector<std::string>{value});
                     }
                     else
                     {
@@ -370,8 +367,9 @@ namespace vcpkg
                     {
                         if (v.empty())
                         {
-                            System::printf(
-                                System::Color::error, "Error: The option '%s' must be passed an argument.\n", option.name);
+                            System::printf(System::Color::error,
+                                           "Error: The option '%s' must be passed an argument.\n",
+                                           option.name);
                             failed = true;
                         }
                         else
@@ -389,7 +387,7 @@ namespace vcpkg
             System::printf(System::Color::error, "Unknown option(s) for command '%s':\n", this->command);
             for (auto&& option : options_copy)
             {
-                System::print2("    ", option.first, "\n");
+                System::print2("    '", option.first, "'\n");
             }
             System::print2("\n");
             failed = true;
@@ -425,17 +423,14 @@ namespace vcpkg
             System::printf("    %-40s %s\n", (option.name + "=..."), option.short_help_text);
         }
         System::printf("    %-40s %s\n", "--triplet <t>", "Set the default triplet for unqualified packages");
-        System::printf("    %-40s %s\n", 
-                       "--overlay-ports=<path>", 
-                       "Specify directories to be used when searching for ports");
-        System::printf("    %-40s %s\n",
-                       "--overlay-triplets=<path>",
-                       "Specify directories containing triplets files");
+        System::printf(
+            "    %-40s %s\n", "--overlay-ports=<path>", "Specify directories to be used when searching for ports");
+        System::printf("    %-40s %s\n", "--overlay-triplets=<path>", "Specify directories containing triplets files");
         System::printf("    %-40s %s\n",
                        "--vcpkg-root <path>",
                        "Specify the vcpkg directory to use instead of current directory or tool directory");
         System::printf("    %-40s %s\n",
-                       "--scripts-root=<path>",
-                       "Specify the scripts directory to use instead of default vcpkg scripts directory");
+                       "--x-scripts-root=<path>",
+                       "(Experimental) Specify the scripts directory to use instead of default vcpkg scripts directory");
     }
 }

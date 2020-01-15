@@ -55,7 +55,7 @@ namespace vcpkg
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
-        
+
         bool is_valid_triplet(const Triplet& t) const;
         const std::vector<std::string>& get_available_triplets() const;
         const fs::path get_triplet_file_path(const Triplet& triplet) const;

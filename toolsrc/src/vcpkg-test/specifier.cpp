@@ -1,4 +1,4 @@
-#include <vcpkg-test/catch.h>
+#include <catch2/catch.hpp>
 
 #include <vcpkg/base/util.h>
 #include <vcpkg/packagespec.h>
@@ -131,4 +131,4 @@ TEST_CASE ("specifier parsing", "[specifier]")
         REQUIRE(str == L"abc -x86-windows");
     }
 #endif
-};
+}

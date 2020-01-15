@@ -2,13 +2,20 @@ include(vcpkg_common_functions)
 
 set(MPG123_VERSION 1.25.8)
 set(MPG123_HASH f226317dddb07841a13753603fa13c0a867605a5a051626cb30d45cfba266d3d4296f5b8254f65b403bb5eef6addce1784ae8829b671a746854785cda1bad203)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpg123-${MPG123_VERSION})
 
 #architecture detection
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
    set(MPG123_ARCH Win32)
+   set(MPG123_CONFIGURATION _x86)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
    set(MPG123_ARCH x64)
+   set(MPG123_CONFIGURATION _x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+   set(MPG123_ARCH ARM)
+   set(MPG123_CONFIGURATION _Generic)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+   set(MPG123_ARCH ARM64)
+   set(MPG123_CONFIGURATION _Generic)
 else()
    message(FATAL_ERROR "unsupported architecture")
 endif()
@@ -23,23 +30,25 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_extract_source_archive_ex(
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
+        0001-fix-crt-linking.patch
+        0002-fix-x86-build.patch
+        0003-add-arm-configs.patch
+)
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch"
-            "${CURRENT_PORT_DIR}/0002-fix-x86-build.patch")
-
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
-        RELEASE_CONFIGURATION Release_x86${MPG123_CONFIGURATION_SUFFIX}
-        DEBUG_CONFIGURATION Debug_x86${MPG123_CONFIGURATION_SUFFIX}
+        RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
+        DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
     )
 
     message(STATUS "Installing")

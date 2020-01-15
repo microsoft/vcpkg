@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_65_2
-    SHA512 8e06377a6d8837a4c2cd96f978f0ac848b9472500fd25983bb1f9e5f52d9d6f7ff0c71d443587a979cf80fd19412bb64b9362b774cf91e02479fdfad7e085b16
+    REF curl-7_68_0
+    SHA512 d75ed39b121a5a04d5a4ba89779967a49e196a93325747b51399adf1afb5f5c13355d6dbe798b259d19245c83bb55f0b621b24b25d8f3ddb1914df30067b8737
     HEAD_REF master
     PATCHES
         0001_cmake.patch
@@ -12,6 +12,8 @@ vcpkg_from_github(
         0003_fix_libraries.patch
         0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
+        0006_fix_tool_depends.patch
+        0007_disable_tool_export_curl_target.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -175,6 +177,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+
+    file(GLOB FILES LIST_DIRECTORIES TRUE ${CURRENT_PACKAGES_DIR}/bin/*)
+    if (FILES STREQUAL "")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    endif()
+
+    file(GLOB FILES LIST_DIRECTORIES TRUE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+    if (FILES STREQUAL "")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
@@ -185,8 +197,8 @@ else()
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
+file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl)
+
 vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-vcpkg_test_cmake(PACKAGE_NAME CURL MODULE)
+vcpkg_test_cmake(PACKAGE_NAME CURL)

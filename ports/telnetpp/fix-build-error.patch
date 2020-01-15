@@ -1,0 +1,152 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09b4f9b..feb3746 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,9 +22,6 @@ message("Building Telnet++ with zlib: ${TELNETPP_WITH_ZLIB}")
+ message("Building Telnet++ with code coverage: ${TELNETPP_COVERAGE}")
+ message("Building Telnet++ with sanitizers: ${TELNETPP_SANITIZE}")
+ 
+-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+-conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
+-
+ # The required C++ Standard for Telnet++ is C++14.
+ set(CMAKE_CXX_STANDARD 14)
+ 
+@@ -154,18 +151,24 @@ add_library(telnetpp
+     ${TELNETPP_PRIVATE_INCLUDE_FILES}
+ )
+ 
++if (BUILD_SHARED_LIBS)
++    add_definitions(-Dtelnetpp_EXPORTS)
++else()
++    add_definitions(-DTELNETPP_STATIC_DEFINE)
++endif()
++
+ target_link_libraries(telnetpp
+     PUBLIC
+-        CONAN_PKG::gsl-lite
+-        CONAN_PKG::boost_container
+-        CONAN_PKG::boost_signals2
+-        CONAN_PKG::boost_variant
++        ${BOOST_CONTAINER_LIBRARY}
++        ${BOOST_SIGNALS2_LIBRARY}
++        ${BOOST_VARIANT_LIBRARY}
+ )
+ 
+ if (TELNETPP_WITH_ZLIB)
++    find_package(ZLIB REQUIRED)
+     target_link_libraries(telnetpp
+         PRIVATE
+-            CONAN_PKG::zlib
++            ${ZLIB_LIBRARIES}
+     )
+ endif()
+ 
+@@ -180,7 +183,8 @@ target_include_directories(telnetpp
+     PUBLIC
+         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include/telnetpp-${TELNETPP_VERSION}>
+-        "${Boost_INCLUDE_DIRS}"
++        $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
++        $<BUILD_INTERFACE:${GSL_INCLUDE_PATH}>
+ )
+ 
+ generate_export_header(telnetpp
+@@ -197,17 +201,19 @@ install(
+         telnetpp
+     EXPORT
+         telnetpp-config
++    RUNTIME DESTINATION
++        bin
+     ARCHIVE DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        lib
+     LIBRARY DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        lib
+ )
+ 
+ install(
+     DIRECTORY
+         include/
+     DESTINATION
+-        include/telnetpp-${TELNETPP_VERSION}
++        include
+ )
+ 
+ export(
+@@ -221,7 +227,7 @@ install(
+     EXPORT
+         telnetpp-config
+     DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        share/telnetpp
+ )
+ 
+ include(CMakePackageConfigHelpers)
+@@ -236,7 +242,7 @@ install(
+     FILES
+         "${CMAKE_CURRENT_BINARY_DIR}/telnetpp-config-version.cmake"
+     DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        share/telnetpp
+ )
+ 
+ if (TELNETPP_WITH_TESTS)
+@@ -299,13 +305,13 @@ if (TELNETPP_WITH_TESTS)
+     target_link_libraries(telnetpp_tester
+         PRIVATE
+             telnetpp
+-            CONAN_PKG::gtest
++            GTest::GTest GTest::Main
+     )
+ 
+     if (TELNETPP_WITH_ZLIB)
+         target_link_libraries(telnetpp_tester
+             PRIVATE
+-                CONAN_PKG::zlib
++                ${ZLIB_LIBRARIES}
+         )
+     endif()
+ 
+diff --git a/include/telnetpp/core.hpp b/include/telnetpp/core.hpp
+index 2362fac..48d340e 100644
+--- a/include/telnetpp/core.hpp
++++ b/include/telnetpp/core.hpp
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include "telnetpp/detail/export.hpp"
+-#include <gsl-lite.h>
++#include <gsl-lite.hpp>
+ #include <string>
+ #include <cstdint>
+ 
+diff --git a/include/telnetpp/subnegotiation.hpp b/include/telnetpp/subnegotiation.hpp
+index a209b72..1f24fc9 100644
+--- a/include/telnetpp/subnegotiation.hpp
++++ b/include/telnetpp/subnegotiation.hpp
+@@ -15,7 +15,11 @@ public:
+     //* =====================================================================
+     /// \brief Constructor
+     //* =====================================================================
++#if _WIN32
++    const subnegotiation(option_type option, bytes content) noexcept
++#else
+     constexpr subnegotiation(option_type option, bytes content) noexcept
++#endif
+       : option_(std::move(option)),
+         content_(std::move(content))
+     {
+@@ -32,7 +36,11 @@ public:
+     //* =====================================================================
+     /// \brief Returns the content for this subnegotiation.
+     //* =====================================================================
++#if _WIN32
++    const bytes content() const noexcept
++#else
+     constexpr bytes content() const noexcept
++#endif
+     {
+         return content_;
+     }

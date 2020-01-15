@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
     FILENAME "freeglut-3.0.0.tar.gz"

@@ -42,8 +42,8 @@ check_include_files (sys/types.h HAVE_SYS_TYPES_H)
 check_include_files (sys/utsname.h HAVE_SYS_UTSNAME_H)
 check_symbol_exists (uname sys/utsname.h HAVE_UNAME)
 check_include_files (unistd.h HAVE_UNISTD_H)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cgicc/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cgicc/CgiDefs.h.in ${CMAKE_CURRENT_BINARY_DIR}/CgiDefs.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cgicc/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cgicc/CgiDefs.h.in ${CMAKE_CURRENT_BINARY_DIR}/CgiDefs.h @ONLY)
 add_definitions (-DHAVE_CONFIG_H)
 set (cgicc_SOURCES
 	cgicc/CgiEnvironment.cpp
@@ -103,6 +103,12 @@ set (cgicc_HEADERS
 
 include_directories (. ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_library (cgicc ${cgicc_SOURCES} ${cgicc_HEADERS})
+
+if (BUILD_SHARED_LIBS)
+    add_definitions(-DCGICC_EXPORTS)
+else()
+    add_definitions(-DCGICC_STATIC)
+endif()
 
 install(TARGETS cgicc
     RUNTIME DESTINATION bin

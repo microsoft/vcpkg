@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zrax/string_theory
-    REF 2.1
-    SHA512 c20f481ba1bd3f1add2d7ee085db7dfa387e3675df5551e64bf294a96f4902551635e83faf2580fb0d6a55fd5ed1c906510d6cb39580a07234e5638e6c747fe0
+    REF 2.3
+    SHA512 2e0bae7aeeedf81343ee88482a3d9afc99cc2e8bede375cb191782bcd53044cfd4a16a79efd463b657914a5ddca8209210815a6549fe527d9cc60e9048d3c672
     HEAD_REF master
 )
 

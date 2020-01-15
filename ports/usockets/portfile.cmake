@@ -1,14 +1,12 @@
-include(vcpkg_common_functions)
-
-IF (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+IF (NOT VCPKG_TARGET_IS_LINUX)
    set(USE_LIBUV ON)
 EndIF ()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uSockets
-    REF v0.1.2
-    SHA512 fedfc50e3498320600247920360db38977f5be4aa9067146a5a0db13dc789b8fa39fa9315b19f56555915bcb818cd0f77ccf0b8cb40ed48e2b193b083d16b242
+    REF 5ff9a6db51e480db149fac1db232dbd9d1d6d543 #v0.3.4
+    SHA512 053dd8b06977616859ab09bbbd5b7f800936b5b3e673c71752ef1ca1dfb5bae464e21dd8dba36ac47b946bf469419828d2c5e1bfcb1061582d3fd2ded79c05d8
     HEAD_REF master
 )
 
@@ -28,7 +26,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/usockets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/usockets/LICENSE ${CURRENT_PACKAGES_DIR}/share/usockets/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

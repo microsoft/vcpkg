@@ -9,11 +9,11 @@
 
 namespace vcpkg::Commands::Edit
 {
+#if defined(_WIN32)
     static std::vector<fs::path> find_from_registry()
     {
         std::vector<fs::path> output;
 
-#if defined(_WIN32)
         struct RegKey
         {
             HKEY root;
@@ -42,9 +42,9 @@ namespace vcpkg::Commands::Edit
                 output.push_back(install_path / "Code.exe");
             }
         }
-#endif
         return output;
     }
+#endif
 
     static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 
@@ -167,6 +167,22 @@ namespace vcpkg::Commands::Edit
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
+
+        const auto txt_default = System::get_registry_string(HKEY_CLASSES_ROOT, R"(.txt\ShellNew)", "ItemName");
+        if(const auto entry = txt_default.get())
+        {
+            #ifdef UNICODE
+            LPWSTR dst = new wchar_t[MAX_PATH];
+            ExpandEnvironmentStrings(Strings::to_utf16(*entry).c_str(), dst, MAX_PATH);
+            auto full_path = Strings::to_utf8(dst);
+            #else
+            LPSTR dst = new char[MAX_PATH];
+            ExpandEnvironmentStrings(entry->c_str(), dst, MAX_PATH);
+            auto full_path = std::string(dst);
+            #endif
+            auto begin = full_path.find_first_not_of('@');
+            candidate_paths.push_back(fs::u8path(full_path.substr(begin, full_path.find_first_of(',')-begin)));
+        }
 #elif defined(__APPLE__)
         candidate_paths.push_back(
             fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
@@ -174,6 +190,22 @@ namespace vcpkg::Commands::Edit
 #elif defined(__linux__)
         candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
         candidate_paths.push_back(fs::path{"/usr/bin/code"});
+
+        if(System::cmd_execute("command -v xdg-mime") == 0)
+        {
+            auto mime_qry = Strings::format(R"(xdg-mime query default text/plain)");
+            auto execute_result = System::cmd_execute_and_capture_output(mime_qry);
+            if(execute_result.exit_code == 0 && !execute_result.output.empty())
+            {
+                mime_qry = Strings::format(R"(command -v %s)", execute_result.output.substr(0, execute_result.output.find('.')));
+                execute_result = System::cmd_execute_and_capture_output(mime_qry);
+                if(execute_result.exit_code == 0 && !execute_result.output.empty())
+                {
+                    execute_result.output.erase(std::remove(std::begin(execute_result.output), std::end(execute_result.output), '\n'), std::end(execute_result.output));
+                    candidate_paths.push_back(fs::path{execute_result.output});
+                }
+            }
+        }
 #endif
 
         const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });

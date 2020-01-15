@@ -39,7 +39,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
+    static Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
         static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -295,8 +295,10 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_exports_of_dlls(const std::vector<fs::path>& dlls, const fs::path& dumpbin_exe)
+    static LintStatus check_exports_of_dlls(const Build::BuildPolicies& policies, const std::vector<fs::path>& dlls, const fs::path& dumpbin_exe)
     {
+        if (policies.is_enabled(BuildPolicy::DLLS_WITHOUT_EXPORTS)) return LintStatus::SUCCESS;
+        
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
@@ -316,6 +318,10 @@ namespace vcpkg::PostBuildLint
             System::print2(System::Color::warning, "The following DLLs have no exports:\n");
             Files::print_paths(dlls_with_no_exports);
             System::print2(System::Color::warning, "DLLs without any exports are likely a bug in the build script.\n");
+            System::printf(System::Color::warning,
+                           "If this is intended, add the following line in the portfile:\n"
+                           "    SET(%s enabled)\n",
+                           to_cmake_variable(BuildPolicy::DLLS_WITHOUT_EXPORTS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -462,7 +468,7 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-
+        Util::unused(expected_architecture, files);
         return LintStatus::SUCCESS;
     }
 
@@ -809,7 +815,7 @@ namespace vcpkg::PostBuildLint
 
                 if (!toolset.dumpbin.empty())
                 {
-                    error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
+                    error_count += check_exports_of_dlls(build_info.policies, dlls, toolset.dumpbin);
                     error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                     error_count +=
                         check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);

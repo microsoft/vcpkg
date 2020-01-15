@@ -10,62 +10,90 @@ namespace fs
     namespace stdfs = std::experimental::filesystem;
 
     using stdfs::copy_options;
-    using stdfs::file_status;
-    using stdfs::file_type;
     using stdfs::path;
     using stdfs::perms;
     using stdfs::u8path;
 
-    /*
-        std::experimental::filesystem's file_status and file_type are broken in
-        the presence of symlinks -- a symlink is treated as the object it points
-        to for `symlink_status` and `symlink_type`
-    */
-
-    using stdfs::status;
-
-    // we want to poison ADL with these niebloids
-
-    namespace detail
+#if defined(_WIN32)
+    enum class file_type
     {
-        struct symlink_status_t
-        {
-            file_status operator()(const path& p, std::error_code& ec) const noexcept;
-            file_status operator()(vcpkg::LineInfo li, const path& p) const noexcept;
-        };
-        struct is_symlink_t
-        {
-            inline bool operator()(file_status s) const { return stdfs::is_symlink(s); }
-        };
-        struct is_regular_file_t
-        {
-            inline bool operator()(file_status s) const { return stdfs::is_regular_file(s); }
-        };
-        struct is_directory_t
-        {
-            inline bool operator()(file_status s) const { return stdfs::is_directory(s); }
-        };
-    }
+        none = 0,
+        not_found = -1,
+        regular = 1,
+        directory = 2,
+        symlink = 3,
+        block = 4,
+        character = 5,
+        fifo = 6,
+        socket = 7,
+        unknown = 8,
+        // also stands for a junction
+        directory_symlink = 42
+    };
 
-    constexpr detail::symlink_status_t symlink_status{};
-    constexpr detail::is_symlink_t is_symlink{};
-    constexpr detail::is_regular_file_t is_regular_file{};
-    constexpr detail::is_directory_t is_directory{};
+    struct file_status
+    {
+        explicit file_status(file_type type = file_type::none, perms permissions = perms::unknown) noexcept
+            : m_type(type), m_permissions(permissions)
+        {
+        }
+
+        file_type type() const noexcept { return m_type; }
+        void type(file_type type) noexcept { m_type = type; }
+
+        perms permissions() const noexcept { return m_permissions; }
+        void permissions(perms perm) noexcept { m_permissions = perm; }
+
+    private:
+        file_type m_type;
+        perms m_permissions;
+    };
+
+#else
+
+    using stdfs::file_type;
+    // to set up ADL correctly on `file_status` objects, we are defining
+    // this in our own namespace
+    struct file_status : private stdfs::file_status
+    {
+        using stdfs::file_status::file_status;
+        using stdfs::file_status::permissions;
+        using stdfs::file_status::type;
+    };
+
+#endif
+
+    inline bool is_symlink(file_status s) noexcept
+    {
+#if defined(_WIN32)
+        if (s.type() == file_type::directory_symlink) return true;
+#endif
+        return s.type() == file_type::symlink;
+    }
+    inline bool is_regular_file(file_status s) { return s.type() == file_type::regular; }
+    inline bool is_directory(file_status s) { return s.type() == file_type::directory; }
+    inline bool exists(file_status s) { return s.type() != file_type::not_found && s.type() != file_type::none; }
 }
 
 /*
     if someone attempts to use unqualified `symlink_status` or `is_symlink`,
     they might get the ADL version, which is broken.
-    Therefore, put `symlink_status` in the global namespace, so that they get
-    our symlink_status.
+    Therefore, put `(symlink_)?status` as deleted in the global namespace, so
+    that they get an error.
 
-    We also want to poison the ADL on is_regular_file and is_directory, because
+    We also want to poison the ADL on the other functions, because
     we don't want people calling these functions on paths
 */
-using fs::is_directory;
-using fs::is_regular_file;
-using fs::is_symlink;
-using fs::symlink_status;
+void status(const fs::path& p) = delete;
+void status(const fs::path& p, std::error_code& ec) = delete;
+void symlink_status(const fs::path& p) = delete;
+void symlink_status(const fs::path& p, std::error_code& ec) = delete;
+void is_symlink(const fs::path& p) = delete;
+void is_symlink(const fs::path& p, std::error_code& ec) = delete;
+void is_regular_file(const fs::path& p) = delete;
+void is_regular_file(const fs::path& p, std::error_code& ec) = delete;
+void is_directory(const fs::path& p) = delete;
+void is_directory(const fs::path& p, std::error_code& ec) = delete;
 
 namespace vcpkg::Files
 {
@@ -92,9 +120,13 @@ namespace vcpkg::Files
         bool remove(const fs::path& path, LineInfo linfo);
         virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
 
-        virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
-        std::uintmax_t remove_all(const fs::path& path, LineInfo li);
-        virtual bool exists(const fs::path& path) const = 0;
+        virtual void remove_all(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
+        void remove_all(const fs::path& path, LineInfo li);
+        bool exists(const fs::path& path, std::error_code& ec) const;
+        bool exists(LineInfo li, const fs::path& path) const;
+        // this should probably not exist, but would require a pass through of
+        // existing code to fix
+        bool exists(const fs::path& path) const;
         virtual bool is_directory(const fs::path& path) const = 0;
         virtual bool is_regular_file(const fs::path& path) const = 0;
         virtual bool is_empty(const fs::path& path) const = 0;
@@ -108,6 +140,10 @@ namespace vcpkg::Files
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
         virtual fs::file_status symlink_status(const fs::path& path, std::error_code& ec) const = 0;
+        fs::file_status status(LineInfo li, const fs::path& p) const noexcept;
+        fs::file_status symlink_status(LineInfo li, const fs::path& p) const noexcept;
+        virtual fs::path canonical(const fs::path& path, std::error_code& ec) const = 0;
+        fs::path canonical(LineInfo li, const fs::path& path) const;
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
     };

@@ -6,6 +6,9 @@ vcpkg_from_github(
     REF v7.3.2 # Qhull 2019.1
     SHA512 aea2c70179de10f648aba960129a3b9a3fe309a0eb085bdb86f697e3d4b214570c241e88d4f0b4d2974137759ee7086452d0a3957c4b2a256708402fb3c9eb3d
     HEAD_REF master
+    PATCHES
+        uwp.patch
+        mac-fix.patch
 )
 if(${TARGET_TRIPLET} STREQUAL "x64-windows-static") 
 # workaround for visual studio toolset regression LNK1201 (remove if solved)

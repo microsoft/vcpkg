@@ -27,13 +27,13 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-vcpkg_check_features(
-    draft ENABLE_DRAFTS
-    tool BUILD_TOOLS
-    curl CZMQ_WITH_LIBCURL
-    httpd CZMQ_WITH_LIBMICROHTTPD
-    lz4 CZMQ_WITH_LZ4
-    uuid CZMQ_WITH_UUID
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    draft   ENABLE_DRAFTS
+    tool    BUILD_TOOLS
+    curl    CZMQ_WITH_LIBCURL
+    httpd   CZMQ_WITH_LIBMICROHTTPD
+    lz4     CZMQ_WITH_LZ4
+    uuid    CZMQ_WITH_UUID
 )
 
 vcpkg_configure_cmake(
@@ -69,7 +69,7 @@ else()
     set(EXECUTABLE_SUFFIX "")
 endif()
 
-if (BUILD_TOOLS)
+if ("tool" IN_LIST FEATURES)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX}
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})

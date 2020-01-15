@@ -17,7 +17,7 @@ fi
 # Argument parsing
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
-vcpkgAllowAppleClang=OFF
+vcpkgAllowAppleClang=false
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -25,7 +25,7 @@ do
     elif [ "$var" = "-useSystemBinaries" -o "$var" = "--useSystemBinaries" ]; then
         vcpkgUseSystem=true
     elif [ "$var" = "-allowAppleClang" -o "$var" = "--allowAppleClang" ]; then
-        vcpkgAllowAppleClang=ON
+        vcpkgAllowAppleClang=true
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -242,15 +242,29 @@ else
     fetchTool "cmake" "$UNAME" cmakeExe || exit 1
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
-selectCXX CXX || exit 1
+if [ "$os" = "osx" ]; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
+        CXX=clang++
+    else
+        selectCXX CXX || exit 1
+    fi
+else
+    selectCXX CXX || exit 1
+fi
 
 # Do the build
 buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=OFF" "-DVCPKG_DEVELOPMENT_WARNINGS=Off" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+
+echo "Telemetry"
+echo "---------"
+echo "vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.sh with -disableMetrics"
+echo "Read more about vcpkg telemetry at docs/about/privacy.md"
+echo ""

@@ -1,20 +1,13 @@
 include(vcpkg_common_functions)
 
-string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
-    message(WARNING "${PORT}'s buildsystem uses very long paths and may fail on your system.\n"
-        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
-    )
-endif()
+vcpkg_buildpath_length_warning(37)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF releases/CGAL-4.14
-    SHA512 c70b3ad475f6b2c03ecb540e195b4d26a709205c511b0c705dfddb5b14ef372453ce1d4d49ed342fcd21ba654dea793e91c058afae626276bfb3cfd72bccb382
+    REF releases/CGAL-5.0
+    SHA512 c7462f1f5ca1ef154a3a20ce4c1b63e544ad7e62ea0afb9aee99872402362fa2001a52740d62ac779e75f1354ad9c955a895f3cad12186e3b75d91f0f3452847
     HEAD_REF master
-    PATCHES
-        cgal_target_fix.patch
 )
 
 set(WITH_CGAL_Qt5  OFF)
@@ -65,4 +58,5 @@ file(
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
 )
 
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
 vcpkg_test_cmake(PACKAGE_NAME CGAL)

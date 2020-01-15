@@ -39,6 +39,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class OnlyDownloads
+    {
+        NO = 0,
+        YES
+    };
+
     enum class CleanBuildtrees
     {
         NO = 0,
@@ -86,6 +92,7 @@ namespace vcpkg::Build
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
+        OnlyDownloads only_downloads;
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
         CleanDownloads clean_downloads;
@@ -103,6 +110,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        DOWNLOADED
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -126,8 +134,8 @@ namespace vcpkg::Build
         /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
         /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
-                const Triplet& triplet,
-                Optional<const SourceControlFileLocation&> port = nullopt);
+                                              const Triplet& triplet,
+                                              Optional<const SourceControlFileLocation&> port = nullopt);
 
         std::string triplet_abi_tag;
         std::string target_architecture;
@@ -137,6 +145,8 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
         Optional<ConfigurationType> build_type;
+        Optional<std::string> public_abi_override;
+        Optional<const SourceControlFileLocation&> port;
         std::vector<std::string> passthrough_env_vars;
     };
 
@@ -152,6 +162,7 @@ namespace vcpkg::Build
         CHAINLOAD_TOOLCHAIN_FILE,
         BUILD_TYPE,
         ENV_PASSTHROUGH,
+        PUBLIC_ABI_OVERRIDE,
     };
 
     const std::unordered_map<std::string, VcpkgTripletVar> VCPKG_OPTIONS = {
@@ -163,6 +174,7 @@ namespace vcpkg::Build
         {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
         {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
         {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+        {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
     };
 
     struct ExtendedBuildResult
@@ -207,6 +219,7 @@ namespace vcpkg::Build
     {
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
+        DLLS_WITHOUT_EXPORTS,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
@@ -217,6 +230,7 @@ namespace vcpkg::Build
     constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
         BuildPolicy::EMPTY_PACKAGE,
         BuildPolicy::DLLS_WITHOUT_LIBS,
+        BuildPolicy::DLLS_WITHOUT_EXPORTS,
         BuildPolicy::ONLY_RELEASE_CRT,
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
@@ -265,6 +279,9 @@ namespace vcpkg::Build
     {
         std::string key;
         std::string value;
+
+        AbiEntry() = default;
+        AbiEntry(const std::string& key, const std::string& value) : key(key), value(value) {}
 
         bool operator<(const AbiEntry& other) const
         {
