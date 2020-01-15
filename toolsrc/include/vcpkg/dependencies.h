@@ -129,7 +129,6 @@ namespace vcpkg::Dependencies
     };
 
     struct ClusterGraph;
-    struct GraphPlan;
 
     struct CreateInstallPlanOptions
     {
@@ -172,13 +171,9 @@ namespace vcpkg::Dependencies
 
         std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
 
-        void graph_removals(const PackageSpec& spec, std::vector<FeatureSpec>& out_reinstall_requirements);
-        std::vector<FeatureSpec> graph_installs(const PackageSpec& spec,
-                                                const std::vector<FeatureSpec>& new_dependencies);
-
+        void mark_for_reinstall(const PackageSpec& spec, std::vector<FeatureSpec>& out_reinstall_requirements);
         const CMakeVars::CMakeVarProvider& m_var_provider;
 
-        std::unique_ptr<GraphPlan> m_graph_plan;
         std::unique_ptr<ClusterGraph> m_graph;
     };
 

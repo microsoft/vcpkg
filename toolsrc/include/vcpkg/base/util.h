@@ -220,4 +220,10 @@ namespace vcpkg::Util
     void unused(const Ts&...)
     {
     }
+
+    template<class T>
+    T copy(const T& t)
+    {
+        return t;
+    }
 }

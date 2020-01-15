@@ -51,32 +51,30 @@ namespace vcpkg::Dependencies
 
             Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl) : m_spec(spec), m_scfl(scfl) {}
 
-            // Returns dependencies which were added as a result of this call
+            bool has_feature_installed(const std::string& feature)
+            {
+                if (const ClusterInstalled* inst = m_installed.get())
+                {
+                    auto find_itr = inst->original_features.find(feature);
+
+                    // If this is a new feature add all original features to the brand-new install_info. We need
+                    // to rebuild this port and we can't trust the ipv's dependency vectors since the
+                    // dependencies of a feature could have changed between runs of vcpkg.
+                    if (find_itr != inst->original_features.end())
+                    {
+                        // Feature was already installed, so nothing to do for now
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // Returns dependencies which were added as a result of this call.
+            // Precondition: must have called "mark_for_reinstall()" or "create_install_info()" on this cluster
             void add_feature(const std::string& feature,
                              const CMakeVars::CMakeVarProvider& var_provider,
                              std::vector<FeatureSpec>& out_new_dependencies)
             {
-                // If install_info is null we have never added a feature which hasn't already been installed to this
-                // cluster
-                if (!m_install_info.has_value())
-                {
-                    if (const ClusterInstalled* inst = m_installed.get())
-                    {
-                        auto find_itr = inst->original_features.find(feature);
-
-                        // If this is a new feature add all original features to the brand-new install_info. We need
-                        // to rebuild this port and we can't trust the ipv's dependency vectors since the
-                        // dependencies of a feature could have changed between runs of vcpkg.
-                        if (find_itr != inst->original_features.end())
-                        {
-                            // Feature was already installed, so nothing to do for now
-                            return;
-                        }
-                    }
-
-                    create_install_info(out_new_dependencies);
-                }
-
                 ClusterInstallInfo& info = m_install_info.value_or_exit(VCPKG_LINE_INFO);
                 if (Util::Sets::contains(info.build_edges, feature))
                 {
@@ -135,16 +133,17 @@ namespace vcpkg::Dependencies
                 out_new_dependencies.insert(out_new_dependencies.end(), dep_list.begin(), dep_list.end());
             }
 
-            void create_install_info(std::vector<FeatureSpec>& out_new_dependencies)
+            void create_install_info(std::vector<FeatureSpec>& out_reinstall_requirements)
             {
                 if (const ClusterInstalled* inst = m_installed.get())
                 {
                     for (const std::string& installed_feature : inst->original_features)
                     {
-                        out_new_dependencies.emplace_back(m_spec, installed_feature);
+                        out_reinstall_requirements.emplace_back(m_spec, installed_feature);
                     }
                 }
 
+                Checks::check_exit(VCPKG_LINE_INFO, !m_install_info.has_value());
                 m_install_info = make_optional(ClusterInstallInfo{});
 
                 // If the user did not explicitly request this installation, we need to add all new default features
@@ -166,7 +165,7 @@ namespace vcpkg::Dependencies
                     {
                         // Instead of dealing with adding default features to each of our dependencies right
                         // away we just defer to the next pass of the loop.
-                        out_new_dependencies.emplace_back(m_spec, feature);
+                        out_reinstall_requirements.emplace_back(m_spec, feature);
                     }
                 }
             }
@@ -178,7 +177,6 @@ namespace vcpkg::Dependencies
             Optional<ClusterInstallInfo> m_install_info;
 
             RequestType request_type = RequestType::AUTO_SELECTED;
-            bool visited = false;
         };
 
         struct ClusterPtr
@@ -206,11 +204,6 @@ namespace std
 
 namespace vcpkg::Dependencies
 {
-    struct GraphPlan
-    {
-        Graphs::Graph<ClusterPtr> install_graph;
-    };
-
     /// <summary>
     /// Directional graph representing a collection of packages with their features connected by their dependencies.
     /// </summary>
@@ -282,12 +275,8 @@ namespace vcpkg::Dependencies
             return it->second;
         }
 
-        template<class F>
-        void for_each(F f) const
-        {
-            for (auto&& kv : m_graph)
-                f(kv.second);
-        }
+        auto begin() const { return m_graph.begin(); }
+        auto end() const { return m_graph.end(); }
 
     private:
         std::unordered_map<PackageSpec, Cluster> m_graph;
@@ -389,13 +378,12 @@ namespace vcpkg::Dependencies
 
     std::string InstallPlanAction::displayname() const
     {
-        if (this->feature_dependencies.empty())
+        if (this->feature_list.empty())
         {
             return this->spec.to_string();
         }
 
-        const std::string features =
-            Strings::join(",", Util::fmap(feature_dependencies, [](const auto& kv) { return kv.first; }));
+        const std::string features = Strings::join(",", feature_list);
         return Strings::format("%s[%s]:%s", this->spec.name(), features, this->spec.triplet());
     }
 
@@ -621,39 +609,8 @@ namespace vcpkg::Dependencies
         return pgraph.serialize(options);
     }
 
-    std::vector<FeatureSpec> PackageGraph::graph_installs(const PackageSpec& spec,
-                                                          const std::vector<FeatureSpec>& new_dependencies)
-    {
-        std::vector<FeatureSpec> next_dependencies;
-        Cluster& clust = m_graph->get(spec);
-
-        // Create graph vertices for each of our dependencies and create an edge from us to each of our
-        // dependencies. If our dependency's cluster hasn't been visited in the past, add its default
-        // features. We assume the first time we visit a cluster is when we decide to add the default
-        // features or not. For a feature with qualified dependencies we can enter the body of this loop up
-        // to twice. Once to collect all the unqualified dependencies and once after we've run the triplet
-        // to collect dependency information for qualified dependencies.
-        for (const FeatureSpec& dep_spec : new_dependencies)
-        {
-            Cluster& dep_clust = m_graph->get(dep_spec.spec());
-
-            if (!dep_clust.visited)
-            {
-                dep_clust.visited = true;
-                m_graph_plan->install_graph.add_vertex({&dep_clust});
-            }
-
-            if (dep_spec.spec() != clust.m_spec)
-            {
-                m_graph_plan->install_graph.add_edge({&clust}, {&dep_clust});
-            }
-        }
-
-        return next_dependencies;
-    }
-
-    void PackageGraph::graph_removals(const PackageSpec& first_remove_spec,
-                                      std::vector<FeatureSpec>& out_reinstall_requirements)
+    void PackageGraph::mark_for_reinstall(const PackageSpec& first_remove_spec,
+                                          std::vector<FeatureSpec>& out_reinstall_requirements)
     {
         std::set<PackageSpec> removed;
         std::vector<PackageSpec> to_remove{first_remove_spec};
@@ -684,19 +641,6 @@ namespace vcpkg::Dependencies
         // takes ~150ms per call.
         std::vector<FeatureSpec> qualified_dependencies;
         std::vector<FeatureSpec> next_dependencies{specs.begin(), specs.end()};
-
-        // Pre-add all explicitly referenced specs to the install graph so that they will show up in the printed output
-        // at the end
-        for (auto&& explicit_spec : specs)
-        {
-            auto&& clust = m_graph->get(explicit_spec.spec());
-
-            if (!clust.visited)
-            {
-                clust.visited = true;
-                m_graph_plan->install_graph.add_vertex({&clust});
-            }
-        }
 
         // Keep running while there is any chance of finding more dependencies
         while (!next_dependencies.empty())
@@ -742,28 +686,26 @@ namespace vcpkg::Dependencies
                     }
                 }
 
-                bool port_installed = clust.m_installed.has_value();
-                bool build_was_needed = clust.m_install_info.has_value();
-                std::vector<FeatureSpec> new_dependencies;
-                clust.add_feature(spec.feature(), m_var_provider, new_dependencies);
-                bool build_is_needed = clust.m_install_info.has_value();
-
-                // If the port was already installed and this is the first time we're adding features then we're
-                // going to need to transiently uninstall it. Checking that the port is already installed and adding
-                // a feature resulted in more new dependencies is insufficient since a feature can have no
-                // dependencies.
-                if (port_installed && !build_was_needed && build_is_needed)
+                if (clust.m_install_info.has_value())
                 {
-                    graph_removals(spec.spec(), next_dependencies);
+                    clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
                 }
-
-                auto new_default_dependencies = graph_installs(clust.m_spec, new_dependencies);
-                next_dependencies.insert(next_dependencies.end(),
-                                         std::make_move_iterator(new_dependencies.begin()),
-                                         std::make_move_iterator(new_dependencies.end()));
-                next_dependencies.insert(next_dependencies.end(),
-                                         std::make_move_iterator(new_default_dependencies.begin()),
-                                         std::make_move_iterator(new_default_dependencies.end()));
+                else
+                {
+                    if (!clust.m_installed.has_value())
+                    {
+                        clust.create_install_info(next_dependencies);
+                        clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
+                    }
+                    else if (!clust.has_feature_installed(spec.feature()))
+                    {
+                        // If install_info is not present and it is already installed, we have never added a feature
+                        // which hasn't already been installed to this cluster. In this case, we need to reinstall the
+                        // port if the feature isn't already present.
+                        mark_for_reinstall(spec.spec(), next_dependencies);
+                        clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
+                    }
+                }
             }
 
             if (!qualified_dependencies.empty())
@@ -792,10 +734,7 @@ namespace vcpkg::Dependencies
         std::vector<FeatureSpec> reinstall_reqs;
 
         for (const PackageSpec& spec : specs)
-        {
-            graph_removals(spec, reinstall_reqs);
-            m_graph->get(spec).request_type = RequestType::USER_REQUESTED;
-        }
+            mark_for_reinstall(spec, reinstall_reqs);
 
         Util::sort_unique_erase(reinstall_reqs);
 
@@ -817,15 +756,10 @@ namespace vcpkg::Dependencies
 
     std::vector<AnyAction> PackageGraph::serialize(const CreateInstallPlanOptions& options) const
     {
-        struct RemoveEdgeProvider : Graphs::AdjacencyProvider<PackageSpec, const Cluster*>
+        struct BaseEdgeProvider : Graphs::AdjacencyProvider<PackageSpec, const Cluster*>
         {
-            RemoveEdgeProvider(const ClusterGraph& parent) : m_parent(parent) {}
+            BaseEdgeProvider(const ClusterGraph& parent) : m_parent(parent) {}
 
-            virtual std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
-            {
-                auto&& set = vertex->m_installed.value_or_exit(VCPKG_LINE_INFO).remove_edges;
-                return {set.begin(), set.end()};
-            }
             virtual std::string to_string(const PackageSpec& spec) const { return spec.to_string(); }
             virtual const Cluster* load_vertex_data(const PackageSpec& spec) const
             {
@@ -835,24 +769,60 @@ namespace vcpkg::Dependencies
             const ClusterGraph& m_parent;
         };
 
-        std::vector<PackageSpec> removed_vertices;
-        m_graph->for_each([&](const Cluster& cluster) {
-            if (cluster.m_installed.has_value() && cluster.m_install_info.has_value())
-                removed_vertices.push_back(cluster.m_spec);
-        });
-        RemoveEdgeProvider removeedgeprovider(*m_graph);
-        auto remove_toposort = Graphs::topological_sort(removed_vertices, removeedgeprovider, options.randomizer);
+        struct RemoveEdgeProvider : BaseEdgeProvider
+        {
+            using BaseEdgeProvider::BaseEdgeProvider;
 
-        auto insert_vertex_list = m_graph_plan->install_graph.vertex_list();
-        auto insert_toposort =
-            Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph, options.randomizer);
+            virtual std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
+            {
+                auto&& set = vertex->m_installed.value_or_exit(VCPKG_LINE_INFO).remove_edges;
+                return {set.begin(), set.end()};
+            }
+        } removeedgeprovider(*m_graph);
+
+        struct InstallEdgeProvider : BaseEdgeProvider
+        {
+            using BaseEdgeProvider::BaseEdgeProvider;
+
+            virtual std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
+            {
+                if (!vertex->m_install_info.has_value()) return {};
+
+                auto& info = vertex->m_install_info.value_or_exit(VCPKG_LINE_INFO);
+                std::vector<PackageSpec> deps;
+                for (auto&& kv : info.build_edges)
+                    for (auto&& e : kv.second)
+                    {
+                        auto spec = e.spec();
+                        if (spec != vertex->m_spec) deps.push_back(std::move(spec));
+                    }
+                Util::sort_unique_erase(deps);
+                return deps;
+            }
+        } installedgeprovider(*m_graph);
+
+        std::vector<PackageSpec> removed_vertices;
+        std::vector<PackageSpec> installed_vertices;
+        for (auto&& kv : *m_graph)
+        {
+            if (kv.second.m_install_info.has_value() && kv.second.m_installed.has_value())
+            {
+                removed_vertices.push_back(kv.first);
+            }
+            if (kv.second.m_install_info.has_value() || kv.second.request_type == RequestType::USER_REQUESTED)
+            {
+                installed_vertices.push_back(kv.first);
+            }
+        }
+        auto remove_toposort = Graphs::topological_sort(removed_vertices, removeedgeprovider, options.randomizer);
+        auto insert_toposort = Graphs::topological_sort(installed_vertices, installedgeprovider, options.randomizer);
 
         std::vector<AnyAction> plan;
 
         for (auto&& p_cluster : remove_toposort)
         {
             plan.emplace_back(RemovePlanAction{
-                std::move(p_cluster->m_spec),
+                p_cluster->m_spec,
                 RemovePlanType::REMOVE,
                 p_cluster->request_type,
             });
@@ -867,13 +837,13 @@ namespace vcpkg::Dependencies
                 auto&& scfl = p_cluster->m_scfl;
 
                 plan.emplace_back(InstallPlanAction{
-                    p_cluster->m_spec, scfl, p_cluster->request_type, std::move(info_ptr->build_edges)});
+                    p_cluster->m_spec, scfl, p_cluster->request_type, Util::copy(info_ptr->build_edges)});
             }
             else if (p_cluster->request_type == RequestType::USER_REQUESTED && p_cluster->m_installed.has_value())
             {
                 auto&& installed = p_cluster->m_installed.value_or_exit(VCPKG_LINE_INFO);
                 plan.emplace_back(InstallPlanAction{
-                    std::move(installed.ipv),
+                    Util::copy(installed.ipv),
                     p_cluster->request_type,
                 });
             }
@@ -916,9 +886,7 @@ namespace vcpkg::Dependencies
     PackageGraph::PackageGraph(const PortFileProvider::PortFileProvider& port_provider,
                                const CMakeVars::CMakeVarProvider& var_provider,
                                const StatusParagraphs& status_db)
-        : m_var_provider(var_provider)
-        , m_graph_plan(std::make_unique<GraphPlan>())
-        , m_graph(create_feature_install_graph(port_provider, status_db))
+        : m_var_provider(var_provider), m_graph(create_feature_install_graph(port_provider, status_db))
     {
     }
 
