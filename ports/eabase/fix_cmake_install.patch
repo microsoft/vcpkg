@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 89c6703..c946af9 100644
+index 89c6703..ab8e553 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,6 +4,9 @@
@@ -36,7 +36,7 @@ index 89c6703..c946af9 100644
 +    #-------------------------------------------------------------------------------------------
 +    target_include_directories(EABase INTERFACE
 +        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include/Common>
-+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Common>
 +    )
 +
 +    # create and install an export set for eabase target as EABase::EABase
