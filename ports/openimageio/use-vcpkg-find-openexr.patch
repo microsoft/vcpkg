@@ -1,0 +1,27 @@
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index 7ebc1cf..a920c72 100644
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -64,12 +64,19 @@ find_package (PNG REQUIRED)
+ ###########################################################################
+ # IlmBase & OpenEXR setup
+ 
++find_package (Threads)
++if (CMAKE_USE_PTHREADS_INIT)
++    set (ILMBASE_PTHREADS ${CMAKE_THREAD_LIBS_INIT})
++endif ()
++
+ find_package (OpenEXR 2.0 REQUIRED)
+ #OpenEXR 2.2 still has problems with importing ImathInt64.h unqualified
+ #thus need for ilmbase/OpenEXR
+-include_directories ("${OPENEXR_INCLUDE_DIR}"
+-                     "${ILMBASE_INCLUDE_DIR}"
+-                     "${ILMBASE_INCLUDE_DIR}/OpenEXR")
++set(ILMBASE_LIBRARIES ${OPENEXR_IMATH_LIBRARY} ${OPENEXR_IEX_LIBRARY} ${OPENEXR_HALF_LIBRARY} ${OPENEXR_ILMTHREAD_LIBRARY} ${ILMBASE_PTHREADS}  CACHE STRING "The libraries needed to use IlmBase")
++set(OPENEXR_LIBRARIES ${OPENEXR_ILMIMF_LIBRARY} ${ILMBASE_LIBRARIES}  CACHE STRING "The libraries needed to use OpenEXR")
++set(ILMBASE_INCLUDE_DIR ${OPENEXR_INCLUDE_DIR})
++set(ILMBASE_FOUND TRUE)
++include_directories ("${OPENEXR_INCLUDE_DIR}")
+ if (NOT OpenEXR_FIND_QUIETLY)
+     message (STATUS "OPENEXR_INCLUDE_DIR = ${OPENEXR_INCLUDE_DIR}")
+     message (STATUS "OPENEXR_LIBRARIES = ${OPENEXR_LIBRARIES}")

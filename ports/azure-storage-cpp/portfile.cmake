@@ -7,13 +7,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v6.1.0
-    SHA512 bc6a1da6287301b5bb5c31694d508c46447b71043d5b94a90ffe79b6dc045bc111ed0bcf3a7840e096ddc3ef6badbeef7fb905242e272a9f82f483d849a43e61
+    REF v7.1.0
+    SHA512 19ed12ee397141f2b5374857ff56514228cd6541307f754b2595507f8a81821fe49d3c8c4312c484678739432ad1a7d5202f1b2d48aa348e4601053dbb430ed9
     HEAD_REF master
-    PATCHES
-        # on osx use the uuid.h that is part of the osx sdk
-        builtin-uuid-osx.patch
-        remove-gcov-dependency.patch
 )
 
 vcpkg_configure_cmake(

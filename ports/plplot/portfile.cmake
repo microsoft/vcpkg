@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(PLPLOT_VERSION 5.13.0)
 set(PLPLOT_HASH 1d5cb5da17d4bde6d675585bff1f8dcb581719249a0b2687867e767703f8dab0870e7ea44b9549a497f4ac0141a3cabf6761c49520c0e2b26ffe581468512cbb)
 
@@ -14,9 +12,11 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${PLPLOT_VERSION}
     PATCHES
-      "${CMAKE_CURRENT_LIST_DIR}/0001-findwxwidgets-fixes.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/0002-wxwidgets-dev-fixes.patch"
-      "${CMAKE_CURRENT_LIST_DIR}/install-interface-include-directories.patch"
+      0001-findwxwidgets-fixes.patch
+      0002-wxwidgets-dev-fixes.patch
+      install-interface-include-directories.patch
+      use-math-h-nan.patch
+      fix_utils.patch
 )
 
 set(BUILD_with_wxwidgets OFF)
@@ -51,8 +51,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/plplot)
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/pltek.exe
     ${CURRENT_PACKAGES_DIR}/bin/pltek.exe
-	${CURRENT_PACKAGES_DIR}/debug/bin/wxPLViewer.exe
-	${CURRENT_PACKAGES_DIR}/bin/wxPLViewer.exe
+    ${CURRENT_PACKAGES_DIR}/debug/bin/wxPLViewer.exe
+    ${CURRENT_PACKAGES_DIR}/bin/wxPLViewer.exe
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -64,18 +64,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Remove unwanted and duplicate directories
-file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/debug/include
-)
-
-file(INSTALL
-    ${SOURCE_PATH}/Copyright
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/plplot
-    RENAME copyright
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/share
-)
+file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/plplot RENAME copyright)

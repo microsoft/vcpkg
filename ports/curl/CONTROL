@@ -1,5 +1,5 @@
 Source: curl
-Version: 7.65.2-1
+Version: 7.68.0
 Build-Depends: zlib
 Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs

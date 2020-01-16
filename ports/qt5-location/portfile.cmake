@@ -1,5 +1,2 @@
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtlocation 91b21e5bc78b960f15c60ae02827cd35292ab1a5dd5a47488d25ce6758177f0ce15545aef3ff9bd1456c6fd84f65cb74d385b726239e2f0be66de0f6fb9a7082)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation(PATCHES clipper.patch)

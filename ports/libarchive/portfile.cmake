@@ -14,6 +14,8 @@ vcpkg_from_github(
         fix-buildsystem.patch
         fix-dependencies.patch
         fix-lz4.patch
+        fix-zstd.patch
+        fix-cpu-set.patch
 )
 
 set(BUILD_libarchive_bzip2 OFF)

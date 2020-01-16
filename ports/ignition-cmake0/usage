@@ -1,0 +1,3 @@
+The package ignition-cmake0 provides CMake integration:
+
+    find_package(ignition-cmake0 CONFIG REQUIRED)

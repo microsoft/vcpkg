@@ -5,7 +5,6 @@ vcpkg_from_github(
     REF v1.4.0
     SHA512 8614934e25eb1e82b554c483bc9d2d055f51344697295e83b22a8d726321b12068cfa7f7d2a9fe28a2de7c9edda59733826277efc7046e13674d6f7f02af5671
     HEAD_REF dev
-    PATCHES enable-debug-mode.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
