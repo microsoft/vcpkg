@@ -447,6 +447,7 @@ namespace vcpkg::Commands::CI
             Build::DownloadTool::BUILT_IN,
             GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
             Build::FailOnTombstone::YES,
+            Build::PurgeDecompressFailure::YES,
         };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;

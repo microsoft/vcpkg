@@ -861,12 +861,22 @@ namespace vcpkg::Build
                 if (archive_result != 0)
                 {
                     System::print2("Failed to decompress archive package\n");
-                    return BuildResult::BUILD_FAILED;
+                    if (config.build_package_options.purge_decompress_failure == PurgeDecompressFailure::NO)
+                    {
+                        return BuildResult::BUILD_FAILED;
+                    }
+                    else
+                    {
+                        System::print2("Purging bad archive\n");
+                        fs.remove(archive_path, ec);
+                    }
                 }
-
-                auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
-                auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
-                return {BuildResult::SUCCEEDED, std::move(bcf)};
+                else
+                {
+                    auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
+                    auto bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
+                    return {BuildResult::SUCCEEDED, std::move(bcf)};
+                }
             }
 
             if (fs.exists(archive_tombstone_path))

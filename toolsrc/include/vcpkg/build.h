@@ -90,6 +90,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class PurgeDecompressFailure
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -101,6 +107,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
+        PurgeDecompressFailure purge_decompress_failure;
     };
 
     enum class BuildResult
