@@ -19,9 +19,8 @@ index c72989288..a88234dca 100644
      )
  
  !!IF !isEmpty(CMAKE_WINDOWS_BUILD)
--!!IF isEmpty(CMAKE_LIB_DIR_IS_ABSOLUTE)
+ !!IF isEmpty(CMAKE_LIB_DIR_IS_ABSOLUTE)
 -    set(imported_implib \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}${IMPLIB_LOCATION}\")
-+!!IF isEmpty(CMAKE_LIB_DIR_IS_ABSOLUTE)    
 +    if(${Configuration} STREQUAL \"DEBUG\")
 +        set(imported_implib \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}${IMPLIB_LOCATION}\")
 +    else()
@@ -30,14 +29,17 @@ index c72989288..a88234dca 100644
  !!ELSE
      set(imported_implib \"IMPORTED_IMPLIB_${Configuration}\" \"$${CMAKE_LIB_DIR}${IMPLIB_LOCATION}\")
  !!ENDIF
-@@ -270,7 +278,6 @@ if (NOT TARGET Qt5::$${CMAKE_MODULE_NAME})
+@@ -270,9 +278,8 @@ if (NOT TARGET Qt5::$${CMAKE_MODULE_NAME})
  !!ENDIF // CMAKE_STATIC_WINDOWS_BUILD
  
  !!IF !isEmpty(CMAKE_FIND_OTHER_LIBRARY_BUILD)
 -!!IF isEmpty(CMAKE_DEBUG_TYPE)
  !!IF !isEmpty(CMAKE_STATIC_WINDOWS_BUILD)
  !!IF isEmpty(CMAKE_LIB_DIR_IS_ABSOLUTE)
-     if (EXISTS \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" )
+-    if (EXISTS \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" )
++    if (EXISTS \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" )
+ !!ELSE // CMAKE_LIB_DIR_IS_ABSOLUTE
+     if (EXISTS \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" )
 @@ -281,20 +288,19 @@ if (NOT TARGET Qt5::$${CMAKE_MODULE_NAME})
  !!ELSE // CMAKE_STATIC_WINDOWS_BUILD
      if (EXISTS
