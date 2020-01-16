@@ -11,9 +11,8 @@
 #include <vcpkg/packagespec.h>
 #include <vector>
 
-using vcpkg::Dependencies::AnyAction;
+using vcpkg::Dependencies::ActionPlan;
 using vcpkg::Dependencies::InstallPlanAction;
-using vcpkg::Dependencies::PackageGraph;
 using vcpkg::PortFileProvider::PathsPortFileProvider;
 
 namespace vcpkg::Commands::DependInfo
@@ -258,15 +257,13 @@ namespace vcpkg::Commands::DependInfo
         // By passing an empty status_db, we should get a plan containing all dependencies.
         // All actions in the plan should be install actions, as there's no installed packages to remove.
         StatusParagraphs status_db;
-        std::vector<AnyAction> action_plan =
-            PackageGraph::create_feature_install_plan(provider, var_provider, specs, status_db);
-        std::vector<const InstallPlanAction*> install_actions = Util::fmap(action_plan, [&](const AnyAction& action) {
-            if (auto install_action = action.install_action.get())
-            {
-                return install_action;
-            }
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Only install actions should exist in the plan");
-        });
+        auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, action_plan.remove_actions.empty(), "Only install actions should exist in the plan");
+        std::vector<const InstallPlanAction*> install_actions =
+            Util::fmap(action_plan.already_installed, [&](const auto& action) { return &action; });
+        for (auto&& action : action_plan.install_actions)
+            install_actions.push_back(&action);
 
         std::vector<PackageDependInfo> depend_info = extract_depend_info(install_actions, max_depth);
 

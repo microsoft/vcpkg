@@ -47,7 +47,7 @@ namespace vcpkg::Build::Command
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        auto action_plan = Dependencies::PackageGraph::create_feature_install_plan(
+        auto action_plan = Dependencies::create_feature_install_plan(
             provider, var_provider, std::vector<FullPackageSpec>{full_spec}, status_db);
 
         const PackageSpec& spec = full_spec.package_spec;
@@ -74,11 +74,19 @@ namespace vcpkg::Build::Command
         std::unordered_map<std::string, std::vector<FeatureSpec>>* feature_dependencies = nullptr;
         std::vector<PackageSpec>* package_dependencies = nullptr;
         std::vector<std::string>* feature_list = nullptr;
-        for (auto& action : action_plan)
+        for (auto& install_action : action_plan.already_installed)
         {
-            if (action.spec() == full_spec.package_spec && action.install_action.has_value())
+            if (install_action.spec == full_spec.package_spec)
             {
-                InstallPlanAction& install_action = action.install_action.value_or_exit(VCPKG_LINE_INFO);
+                feature_dependencies = &install_action.feature_dependencies;
+                package_dependencies = &install_action.package_dependencies;
+                feature_list = &install_action.feature_list;
+            }
+        }
+        for (auto& install_action : action_plan.install_actions)
+        {
+            if (install_action.spec == full_spec.package_spec)
+            {
                 feature_dependencies = &install_action.feature_dependencies;
                 package_dependencies = &install_action.package_dependencies;
                 feature_list = &install_action.feature_list;

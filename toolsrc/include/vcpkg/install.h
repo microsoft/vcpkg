@@ -20,7 +20,7 @@ namespace vcpkg::Install
 
     struct SpecSummary
     {
-        SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action);
+        SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action);
 
         const BinaryParagraph* get_binary_paragraph() const;
 
@@ -28,7 +28,7 @@ namespace vcpkg::Install
         Build::ExtendedBuildResult build_result;
         vcpkg::Chrono::ElapsedTime timing;
 
-        const Dependencies::AnyAction* action;
+        const Dependencies::InstallPlanAction* action;
     };
 
     struct InstallSummary
@@ -75,7 +75,7 @@ namespace vcpkg::Install
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
 
-    InstallSummary perform(std::vector<Dependencies::AnyAction>& action_plan,
+    InstallSummary perform(Dependencies::ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,

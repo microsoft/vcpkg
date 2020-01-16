@@ -429,7 +429,7 @@ namespace vcpkg::Install
         }
     }
 
-    InstallSummary perform(std::vector<AnyAction>& action_plan,
+    InstallSummary perform(ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
@@ -439,44 +439,49 @@ namespace vcpkg::Install
 
         const auto timer = Chrono::ElapsedTimer::create_started();
         size_t counter = 0;
-        const size_t package_count = action_plan.size();
+        const size_t package_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
 
-        for (auto& action : action_plan)
-        {
+        auto with_tracking = [&](const PackageSpec& spec, auto f) {
             const auto build_timer = Chrono::ElapsedTimer::create_started();
             counter++;
 
-            const PackageSpec& spec = action.spec();
             const std::string display_name = spec.to_string();
             System::printf("Starting package %zd/%zd: %s\n", counter, package_count, display_name);
 
-            results.emplace_back(spec, &action);
+            results.emplace_back(spec, nullptr);
 
-            if (auto install_action = action.install_action.get())
-            {
-                auto result = perform_install_plan_action(paths, *install_action, status_db, var_provider);
+            f();
+
+            results.back().timing = build_timer.elapsed();
+            System::printf("Elapsed time for package %s: %s\n", display_name, results.back().timing);
+        };
+
+        for (auto&& action : action_plan.remove_actions)
+        {
+            with_tracking(action.spec,
+                          [&]() { Remove::perform_remove_plan_action(paths, action, Remove::Purge::YES, &status_db); });
+        }
+
+        for (auto&& action : action_plan.already_installed)
+        {
+            results.emplace_back(action.spec, &action);
+            results.back().build_result = perform_install_plan_action(paths, action, status_db, var_provider);
+        }
+
+        for (auto&& action : action_plan.install_actions)
+        {
+            with_tracking(action.spec, [&]() {
+                auto result = perform_install_plan_action(paths, action, status_db, var_provider);
 
                 if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
-                    System::print2(Build::create_user_troubleshooting_message(install_action->spec), '\n');
+                    System::print2(Build::create_user_troubleshooting_message(action.spec), '\n');
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
 
                 results.back().build_result = std::move(result);
-            }
-            else if (const auto remove_action = action.remove_action.get())
-            {
-                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, &status_db);
-            }
-            else
-            {
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
-
-            results.back().timing = build_timer.elapsed();
-            System::printf("Elapsed time for package %s: %s\n", display_name, results.back().timing);
+            });
         }
-
         return InstallSummary{std::move(results), timer.to_string()};
     }
 
@@ -681,20 +686,16 @@ namespace vcpkg::Install
         CMakeVars::TripletCMakeVarProvider var_provider(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
-        std::vector<AnyAction> action_plan =
-            PackageGraph::create_feature_install_plan(provider, var_provider, specs, status_db);
+        auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
 
         std::vector<FullPackageSpec> install_package_specs;
-        for (auto&& action : action_plan)
+        for (auto&& action : action_plan.install_actions)
         {
-            if (auto p_install = action.install_action.get())
-            {
-                p_install->build_options = install_plan_options;
-                if (p_install->request_type != RequestType::USER_REQUESTED)
-                    p_install->build_options.use_head_version = Build::UseHeadVersion::NO;
+            action.build_options = install_plan_options;
+            if (action.request_type != RequestType::USER_REQUESTED)
+                action.build_options.use_head_version = Build::UseHeadVersion::NO;
 
-                install_package_specs.emplace_back(FullPackageSpec{p_install->spec, p_install->feature_list});
-            }
+            install_package_specs.emplace_back(FullPackageSpec{action.spec, action.feature_list});
         }
 
         var_provider.load_tag_vars(install_package_specs, provider);
@@ -703,13 +704,17 @@ namespace vcpkg::Install
         Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty");
 
         // log the plan
-        const std::string specs_string = Strings::join(",", action_plan, [](const AnyAction& action) {
-            if (auto iaction = action.install_action.get())
-                return Hash::get_string_hash(iaction->spec.to_string(), Hash::Algorithm::Sha256);
-            else if (auto raction = action.remove_action.get())
-                return "R$" + Hash::get_string_hash(raction->spec.to_string(), Hash::Algorithm::Sha256);
-            Checks::unreachable(VCPKG_LINE_INFO);
-        });
+        std::string specs_string;
+        for (auto&& remove_action : action_plan.remove_actions)
+        {
+            if (!specs_string.empty()) specs_string += ",";
+            specs_string += "R$" + Hash::get_string_hash(remove_action.spec.to_string(), Hash::Algorithm::Sha256);
+        }
+        for (auto&& install_action : action_plan.install_actions)
+        {
+            if (!specs_string.empty()) specs_string += ",";
+            specs_string += Hash::get_string_hash(install_action.spec.to_string(), Hash::Algorithm::Sha256);
+        }
 
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
@@ -743,19 +748,16 @@ namespace vcpkg::Install
         for (auto&& result : summary.results)
         {
             if (!result.action) continue;
-            if (auto p_install_action = result.action->install_action.get())
-            {
-                if (p_install_action->request_type != RequestType::USER_REQUESTED) continue;
-                auto bpgh = result.get_binary_paragraph();
-                if (!bpgh) continue;
-                print_cmake_information(*bpgh, paths);
-            }
+            if (result.action->request_type != RequestType::USER_REQUESTED) continue;
+            auto bpgh = result.get_binary_paragraph();
+            if (!bpgh) continue;
+            print_cmake_information(*bpgh, paths);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action)
+    SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action)
         : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, action(action)
     {
     }
@@ -764,12 +766,9 @@ namespace vcpkg::Install
     {
         if (build_result.binary_control_file) return &build_result.binary_control_file->core_paragraph;
         if (action)
-            if (auto p_install_plan = action->install_action.get())
+            if (auto p_status = action->installed_package.get())
             {
-                if (auto p_status = p_install_plan->installed_package.get())
-                {
-                    return &p_status->core->package;
-                }
+                return &p_status->core->package;
             }
         return nullptr;
     }

@@ -44,6 +44,46 @@ namespace vcpkg::Util
         }
     }
 
+    /*
+    namespace Ranges
+    {
+        template<class... Iters>
+        struct ChainedRange;
+
+        // InputIterator
+        template<class... Iters>
+        struct ChainedRangeIterator
+        {
+            ChainedRangeIterator() : m_parent(nullptr) {}
+            ChainedRangeIterator(ChainedRange<Iters...>& parent) : m_parent(&parent)
+            {
+                if (m_parent->empty()) m_parent = nullptr;
+            }
+
+            auto operator*() const { return m_parent->; }
+
+        private:
+            ChainedRange<Iters...>* m_parent;
+        };
+
+        template<class Iter>
+        struct ChainedRange<Iter>
+        {
+            auto operator*() const { return *b; }
+            void next() { ++b; }
+            Iter b, e;
+        };
+
+        template<class Iter, class... Iters>
+        struct ChainedRange<Iter, Iters...> : ChainedRange<Iters...>
+        {
+            auto operator*() const { return b == e ? ChainedRange<Iters...>::operator*() : *b; }
+            void next() { b == e ? ChainedRange<Iters...>::next() : ++b; }
+
+            Iter b, e;
+        };
+    }*/
+
     template<class Range, class Func>
     using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
 

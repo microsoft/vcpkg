@@ -57,7 +57,7 @@ namespace vcpkg::Commands::Upgrade
             Input::check_triplet(spec.triplet(), paths);
         }
 
-        std::vector<Dependencies::AnyAction> action_plan;
+        Dependencies::ActionPlan action_plan;
         if (specs.empty())
         {
             // If no packages specified, upgrade all outdated packages.
@@ -69,7 +69,7 @@ namespace vcpkg::Commands::Upgrade
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
 
-            action_plan = Dependencies::PackageGraph::create_upgrade_plan(
+            action_plan = Dependencies::create_upgrade_plan(
                 provider,
                 var_provider,
                 Util::fmap(outdated_packages, [](const Update::OutdatedPackage& package) { return package.spec; }),
@@ -147,8 +147,7 @@ namespace vcpkg::Commands::Upgrade
 
             if (to_upgrade.empty()) Checks::exit_success(VCPKG_LINE_INFO);
 
-            action_plan =
-                Dependencies::PackageGraph::create_upgrade_plan(provider, var_provider, to_upgrade, status_db);
+            action_plan = Dependencies::create_upgrade_plan(provider, var_provider, to_upgrade, status_db);
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty());
@@ -166,12 +165,9 @@ namespace vcpkg::Commands::Upgrade
         };
 
         // Set build settings for all install actions
-        for (auto&& action : action_plan)
+        for (auto&& action : action_plan.install_actions)
         {
-            if (auto p_install = action.install_action.get())
-            {
-                p_install->build_options = install_plan_options;
-            }
+            action.build_options = install_plan_options;
         }
 
         Dependencies::print_plan(action_plan, true, paths.ports);

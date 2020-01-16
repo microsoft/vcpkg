@@ -88,15 +88,14 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    struct AnyAction
+    struct ActionPlan
     {
-        AnyAction(InstallPlanAction&& iplan) : install_action(std::move(iplan)) {}
-        AnyAction(RemovePlanAction&& rplan) : remove_action(std::move(rplan)) {}
+        bool empty() const { return remove_actions.empty() && already_installed.empty() && install_actions.empty(); }
+        size_t size() const { return remove_actions.size() + already_installed.size() + install_actions.size(); }
 
-        Optional<InstallPlanAction> install_action;
-        Optional<RemovePlanAction> remove_action;
-
-        const PackageSpec& spec() const;
+        std::vector<RemovePlanAction> remove_actions;
+        std::vector<InstallPlanAction> already_installed;
+        std::vector<InstallPlanAction> install_actions;
     };
 
     enum class ExportPlanType
@@ -135,49 +134,29 @@ namespace vcpkg::Dependencies
         Graphs::Randomizer* randomizer = nullptr;
     };
 
-    struct PackageGraph
-    {
-        static std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
-                                                                const StatusParagraphs& status_db);
+    std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
+                                                     const StatusParagraphs& status_db);
 
-        static std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
-                                                                const StatusParagraphs& status_db);
+    std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
+                                                     const StatusParagraphs& status_db);
 
-        /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
-        /// <param name="provider">Contains the ports of the current environment.</param>
-        /// <param name="specs">Feature specifications to resolve dependencies for.</param>
-        /// <param name="status_db">Status of installed packages in the current environment.</param>
-        static std::vector<AnyAction> create_feature_install_plan(const PortFileProvider::PortFileProvider& provider,
-                                                                  const CMakeVars::CMakeVarProvider& var_provider,
-                                                                  const std::vector<FullPackageSpec>& specs,
-                                                                  const StatusParagraphs& status_db,
-                                                                  const CreateInstallPlanOptions& options = {});
+    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
+    ActionPlan create_feature_install_plan(const PortFileProvider::PortFileProvider& provider,
+                                           const CMakeVars::CMakeVarProvider& var_provider,
+                                           const std::vector<FullPackageSpec>& specs,
+                                           const StatusParagraphs& status_db,
+                                           const CreateInstallPlanOptions& options = {});
 
-        static std::vector<AnyAction> create_upgrade_plan(const PortFileProvider::PortFileProvider& provider,
-                                                          const CMakeVars::CMakeVarProvider& var_provider,
-                                                          const std::vector<PackageSpec>& specs,
-                                                          const StatusParagraphs& status_db,
-                                                          const CreateInstallPlanOptions& options = {});
+    ActionPlan create_upgrade_plan(const PortFileProvider::PortFileProvider& provider,
+                                   const CMakeVars::CMakeVarProvider& var_provider,
+                                   const std::vector<PackageSpec>& specs,
+                                   const StatusParagraphs& status_db,
+                                   const CreateInstallPlanOptions& options = {});
 
-    private:
-        PackageGraph(const PortFileProvider::PortFileProvider& provider,
-                     const CMakeVars::CMakeVarProvider& var_provider,
-                     const StatusParagraphs& status_db);
-        ~PackageGraph();
-
-        void install(Span<const FeatureSpec> specs);
-        void upgrade(Span<const PackageSpec> specs);
-        void mark_user_requested(const PackageSpec& spec);
-
-        std::vector<AnyAction> serialize(const CreateInstallPlanOptions& options = {}) const;
-
-        void mark_for_reinstall(const PackageSpec& spec, std::vector<FeatureSpec>& out_reinstall_requirements);
-        const CMakeVars::CMakeVarProvider& m_var_provider;
-
-        std::unique_ptr<ClusterGraph> m_graph;
-    };
-
-    void print_plan(const std::vector<AnyAction>& action_plan,
+    void print_plan(const ActionPlan& action_plan,
                     const bool is_recursive = true,
                     const fs::path& default_ports_dir = "");
 }
