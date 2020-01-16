@@ -7,7 +7,7 @@ index c72989288..a88234dca 100644
  
  !!IF isEmpty(CMAKE_DLL_DIR_IS_ABSOLUTE)
 -    set(imported_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_DLL_DIR}${LIB_LOCATION}\")
-+    if(${Configuration} STREQUAL \"DEBUG\")
++    if(\"${Configuration}\" STREQUAL \"DEBUG\")
 +        set(imported_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_DLL_DIR}${LIB_LOCATION}\")
 +    else()
 +        set(imported_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_DLL_DIR}${LIB_LOCATION}\")
@@ -21,7 +21,7 @@ index c72989288..a88234dca 100644
  !!IF !isEmpty(CMAKE_WINDOWS_BUILD)
  !!IF isEmpty(CMAKE_LIB_DIR_IS_ABSOLUTE)
 -    set(imported_implib \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}${IMPLIB_LOCATION}\")
-+    if(${Configuration} STREQUAL \"DEBUG\")
++    if(\"${Configuration}\" STREQUAL \"DEBUG\")
 +        set(imported_implib \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}${IMPLIB_LOCATION}\")
 +    else()
 +        set(imported_implib \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}${IMPLIB_LOCATION}\")
@@ -67,7 +67,7 @@ index c72989288..a88234dca 100644
          set_property(TARGET Qt5::${Plugin} APPEND PROPERTY IMPORTED_CONFIGURATIONS ${Configuration})
  
  !!IF isEmpty(CMAKE_PLUGIN_DIR_IS_ABSOLUTE)
-+    if(${Configuration} STREQUAL \"DEBUG\")
++    if(\"${Configuration}\" STREQUAL \"DEBUG\")
 +        set(imported_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_PLUGIN_DIR}${PLUGIN_LOCATION}\")
 +    else()
          set(imported_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_PLUGIN_DIR}${PLUGIN_LOCATION}\")
