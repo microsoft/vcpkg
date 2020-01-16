@@ -40,6 +40,10 @@ else()
     set(SHARED_DEFINITION "")
 endif()
 
+IF(UNIX)
+    set(TARGET pqxx_static)
+ENDIF()
+
 add_library(${TARGET} ${SRCS})
 target_compile_definitions(${TARGET} PRIVATE -DPQXX_INTERNAL -DNOMINMAX ${SHARED_DEFINITION})
 target_include_directories(${TARGET} PRIVATE include ${LIBPQ_FE_H} ${POSTGRES_EXT_H} ${CMAKE_BINARY_DIR})
