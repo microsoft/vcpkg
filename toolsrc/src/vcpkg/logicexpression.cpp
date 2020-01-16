@@ -1,4 +1,3 @@
-
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
@@ -18,19 +17,17 @@ namespace vcpkg
         const std::string line;
         const std::string message;
 
-        void print_error() const
+        std::string format_error() const
         {
-            System::print2(System::Color::error,
-                           "Error: ",
-                           message,
-                           "\n"
-                           "   on expression: \"",
-                           line,
-                           "\"\n",
-                           "                   ",
-                           std::string(column, ' '),
-                           "^\n");
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            return Strings::concat("Error: ",
+                                   message,
+                                   "\n"
+                                   "   on expression: \"",
+                                   line,
+                                   "\"\n",
+                                   "                   ",
+                                   std::string(column, ' '),
+                                   "^\n");
         }
     };
 
@@ -105,17 +102,11 @@ namespace vcpkg
             {
                 add_error("Invalid logic expression");
             }
-
-            if (err)
-            {
-                err->print_error();
-                final_result = false;
-            }
         }
 
         bool get_result() const { return final_result; }
 
-        bool has_error() const { return err == nullptr; }
+        const ParseError* get_error() const { return err.get(); }
 
     private:
         const std::string& raw_text;
@@ -381,7 +372,7 @@ namespace vcpkg
                 bool result = logic_expression();
                 if (current() != ')')
                 {
-                    add_error("Error: missing closing )");
+                    add_error("missing closing )");
                     return result;
                 }
                 next_skip_whitespace();
@@ -392,9 +383,14 @@ namespace vcpkg
         }
     };
 
-    bool evaluate_expression(const std::string& expression, const ExpressionContext& context)
+    ExpectedT<bool, std::string> evaluate_expression(const std::string& expression, const ExpressionContext& context)
     {
         ExpressionParser parser(expression, context);
+
+        if (auto err = parser.get_error())
+        {
+            return err->format_error();
+        }
 
         return parser.get_result();
     }

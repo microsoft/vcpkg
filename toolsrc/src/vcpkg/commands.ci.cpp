@@ -234,7 +234,18 @@ namespace vcpkg::Commands::CI
 
         ExpressionContext context = {var_provider.get_tag_vars(install_plan->spec).value_or_exit(VCPKG_LINE_INFO),
                                      install_plan->spec.triplet().canonical_name()};
-        return evaluate_expression(supports_expression, context);
+        auto maybe_result = evaluate_expression(supports_expression, context);
+        if (auto b = maybe_result.get())
+            return *b;
+        else
+        {
+            System::print2(System::Color::error,
+                           "Error: while processing ",
+                           install_plan->spec.to_string(),
+                           "\n",
+                           maybe_result.error());
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
     }
 
     static std::unique_ptr<UnknownCIPortsResults> find_unknown_ports_for_ci(

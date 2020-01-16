@@ -119,7 +119,7 @@ namespace vcpkg
         return Type{Type::UNKNOWN};
     }
 
-    static ParseExpected<SourceParagraph> parse_source_paragraph(RawParagraph&& fields)
+    static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, RawParagraph&& fields)
     {
         ParagraphParser parser(std::move(fields));
 
@@ -136,14 +136,15 @@ namespace vcpkg
         spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
         spgh->supports_expression = parser.optional_field(SourceParagraphFields::SUPPORTS);
         spgh->type = Type::from_string(parser.optional_field(SourceParagraphFields::TYPE));
-        auto err = parser.error_info(spgh->name);
+        auto err = parser.error_info(spgh->name.empty() ? path_to_control.u8string() : spgh->name);
         if (err)
             return err;
         else
             return spgh;
     }
 
-    static ParseExpected<FeatureParagraph> parse_feature_paragraph(RawParagraph&& fields)
+    static ParseExpected<FeatureParagraph> parse_feature_paragraph(const fs::path& path_to_control,
+                                                                   RawParagraph&& fields)
     {
         ParagraphParser parser(std::move(fields));
 
@@ -155,7 +156,7 @@ namespace vcpkg
         fpgh->depends = expand_qualified_dependencies(
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
 
-        auto err = parser.error_info(fpgh->name);
+        auto err = parser.error_info(fpgh->name.empty() ? path_to_control.u8string() : fpgh->name);
         if (err)
             return err;
         else
@@ -163,16 +164,18 @@ namespace vcpkg
     }
 
     ParseExpected<SourceControlFile> SourceControlFile::parse_control_file(
-        std::vector<Parse::RawParagraph>&& control_paragraphs)
+        const fs::path& path_to_control, std::vector<Parse::RawParagraph>&& control_paragraphs)
     {
         if (control_paragraphs.size() == 0)
         {
-            return std::make_unique<Parse::ParseControlErrorInfo>();
+            auto ret = std::make_unique<Parse::ParseControlErrorInfo>();
+            ret->name = path_to_control.u8string();
+            return ret;
         }
 
         auto control_file = std::make_unique<SourceControlFile>();
 
-        auto maybe_source = parse_source_paragraph(std::move(control_paragraphs.front()));
+        auto maybe_source = parse_source_paragraph(path_to_control, std::move(control_paragraphs.front()));
         if (const auto source = maybe_source.get())
             control_file->core_paragraph = std::move(*source);
         else
@@ -182,7 +185,7 @@ namespace vcpkg
 
         for (auto&& feature_pgh : control_paragraphs)
         {
-            auto maybe_feature = parse_feature_paragraph(std::move(feature_pgh));
+            auto maybe_feature = parse_feature_paragraph(path_to_control, std::move(feature_pgh));
             if (const auto feature = maybe_feature.get())
                 control_file->feature_paragraphs.emplace_back(std::move(*feature));
             else

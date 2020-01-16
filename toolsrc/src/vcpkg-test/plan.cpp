@@ -37,7 +37,7 @@ static std::unique_ptr<SourceControlFile> make_control_file(
             {"Build-Depends", feature.second},
         });
     }
-    auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(scf_pghs));
+    auto m_pgh = vcpkg::SourceControlFile::parse_control_file("", std::move(scf_pghs));
     REQUIRE(m_pgh.has_value());
     return std::move(*m_pgh.get());
 }

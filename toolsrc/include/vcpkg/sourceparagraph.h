@@ -92,7 +92,7 @@ namespace vcpkg
         }
 
         static Parse::ParseExpected<SourceControlFile> parse_control_file(
-            std::vector<Parse::RawParagraph>&& control_paragraphs);
+            const fs::path& path_to_control, std::vector<Parse::RawParagraph>&& control_paragraphs);
 
         std::unique_ptr<SourceParagraph> core_paragraph;
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
