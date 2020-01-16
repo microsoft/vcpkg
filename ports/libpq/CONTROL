@@ -1,6 +1,83 @@
 Source: libpq
-Version: 9.6.3
+Version: 12.0
+Build-Depends: libpq[bonjour] (osx)
+Supports: !uwp
 Homepage: https://www.postgresql.org/
 Description: The official database access API of postgresql
-Build-Depends: openssl, zlib (linux)
-Supports: !uwp
+Default-Features: zlib, openssl
+
+Feature: openssl
+Build-Depends: openssl
+Description: support for encrypted client connections and random number generation on platforms that do not have "/dev/urandom" (except windows) (--with-openssl)
+
+Feature: zlib
+Build-Depends: zlib
+Description: Use zlib (else --without-zlib)
+
+Feature: readline
+Build-Depends: readline
+Description: Use readline (else --without-readline)
+
+Feature: libedit
+Build-Depends: libedit
+Description: prefer libedit (--with-libedit-preferred)
+
+Feature: perl
+Build-Depends: perl
+Description: build the server programming language PL/Perl (dynamic only?) (--with-perl)
+
+Feature: python
+Build-Depends: python
+Description: build the PL/Python server programming language (dynamic only?) (--with-python)
+
+Feature: tcl
+Build-Depends: tcl
+Description: build the PL/Tcl procedural language(dynamic only?) (--with-tcl)
+
+Feature: nls
+Build-Depends: gettext
+Description: Native Language Support (--enable-nls[=LANGUAGES])
+
+Feature: kerberos
+Build-Depends: kerberos
+Description: Kerberos Support (--with-gssapi)
+
+Feature: systemd
+Description: Build with support for systemd service notifications. (--with-systemd)
+
+Feature: ldap
+Build-Depends: openldap (linux)
+Description: LDAP Support (--with-ldap)
+
+Feature: bsd
+Build-Depends: openbsd
+Description: OpenBSD Support (--with-bsd-auth)
+
+Feature: pam
+Build-Depends: pam
+Description: Build with PAM (Pluggable Authentication Modules) support. (--with-pam)
+
+Feature: llvm
+Build-Depends: llvm
+Description: Build with support for LLVM based JIT compilation (--with-llvm)
+
+Feature: icu
+Build-Depends: icu
+Description: Build with support for the ICU library (--with-icu)
+
+Feature: bonjour
+Description: Build with Bonjour support (--with-bonjour)
+
+Feature: uuid
+Description: Build the uuid-ossp module (which provides functions to generate UUIDs) (--with-uuid=LIBRARY LIBRARY=(bsd|e2fs|ossp))
+
+Feature: xml
+Build-Depends: libxml2
+Description: Build with libxml (--with-libxml)
+
+Feature: xslt
+Build-Depends: libxslt
+Description: Build with libxslt (--with-libxslt)
+
+Feature: client
+Description: Build all client tools and libraries. 

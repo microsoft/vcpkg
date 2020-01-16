@@ -228,6 +228,7 @@ namespace vcpkg::Build
     {
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
+        DLLS_WITHOUT_EXPORTS,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
@@ -238,6 +239,7 @@ namespace vcpkg::Build
     constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
         BuildPolicy::EMPTY_PACKAGE,
         BuildPolicy::DLLS_WITHOUT_LIBS,
+        BuildPolicy::DLLS_WITHOUT_EXPORTS,
         BuildPolicy::ONLY_RELEASE_CRT,
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
