@@ -38,7 +38,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\vcpkg-test\catch.h" />
+    <ClInclude Include="..\include\catch2\catch.hpp" />
     <ClInclude Include="..\include\vcpkg-test\util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

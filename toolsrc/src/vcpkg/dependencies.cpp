@@ -502,7 +502,8 @@ namespace vcpkg::Dependencies
 
         auto installed_ports = get_installed_ports(status_db);
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
+        return Graphs::topological_sort(
+            std::move(specs), RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
     }
 
     std::vector<ExportPlanAction> Dependencies::create_export_plan(const std::vector<PackageSpec>& specs,
@@ -740,8 +741,8 @@ namespace vcpkg::Dependencies
         {
             BaseEdgeProvider(const ClusterGraph& parent) : m_parent(parent) {}
 
-            virtual std::string to_string(const PackageSpec& spec) const { return spec.to_string(); }
-            virtual const Cluster* load_vertex_data(const PackageSpec& spec) const
+            std::string to_string(const PackageSpec& spec) const override { return spec.to_string(); }
+            const Cluster* load_vertex_data(const PackageSpec& spec) const override
             {
                 return &m_parent.find_or_exit(spec, VCPKG_LINE_INFO);
             }
@@ -749,22 +750,22 @@ namespace vcpkg::Dependencies
             const ClusterGraph& m_parent;
         };
 
-        struct RemoveEdgeProvider : BaseEdgeProvider
+        struct RemoveEdgeProvider final : BaseEdgeProvider
         {
             using BaseEdgeProvider::BaseEdgeProvider;
 
-            virtual std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
+            std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
             {
                 auto&& set = vertex->m_installed.value_or_exit(VCPKG_LINE_INFO).remove_edges;
                 return {set.begin(), set.end()};
             }
         } removeedgeprovider(*m_graph);
 
-        struct InstallEdgeProvider : BaseEdgeProvider
+        struct InstallEdgeProvider final : BaseEdgeProvider
         {
             using BaseEdgeProvider::BaseEdgeProvider;
 
-            virtual std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
+            std::vector<PackageSpec> adjacency_list(const Cluster* const& vertex) const override
             {
                 if (!vertex->m_install_info.has_value()) return {};
 

@@ -1,11 +1,10 @@
 #pragma once
 
+#include <string>
 #include <unordered_map>
-#include <unordered_set>
-#include <utility>
+#include <vector>
 
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/span.h>
 #include <vcpkg/base/system.print.h>
 
 namespace vcpkg::Graphs
@@ -34,15 +33,8 @@ namespace vcpkg::Graphs
     {
         virtual int random(int max_exclusive) = 0;
 
-        struct NotRandom;
-
     protected:
         ~Randomizer() {}
-    };
-
-    struct Randomizer::NotRandom : Randomizer
-    {
-        virtual int random(int) override { return 0; }
     };
 
     namespace details
@@ -102,10 +94,8 @@ namespace vcpkg::Graphs
         }
     }
 
-    template<class VertexContainer, class V, class U>
-    std::vector<U> topological_sort(VertexContainer starting_vertices,
-                                    const AdjacencyProvider<V, U>& f,
-                                    Randomizer* randomizer)
+    template<class Range, class V, class U>
+    std::vector<U> topological_sort(Range starting_vertices, const AdjacencyProvider<V, U>& f, Randomizer* randomizer)
     {
         std::vector<U> sorted;
         std::unordered_map<V, ExplorationStatus> exploration_status;
@@ -119,120 +109,4 @@ namespace vcpkg::Graphs
 
         return sorted;
     }
-
-    template<class V, class U>
-    struct TopoWalk : AdjacencyProvider<V, U>
-    {
-        Graphs::Randomizer* randomizer = nullptr;
-        struct iterator
-        {
-            const U& operator*() const { return m_parent->m_stack.back().first; }
-            TopoWalk* m_parent;
-        };
-
-    private:
-        bool advance_into(V vertex)
-        {
-            ExplorationStatus& status = m_exploration_status[vertex];
-            switch (status)
-            {
-                case ExplorationStatus::FULLY_EXPLORED: return false;
-                case ExplorationStatus::PARTIALLY_EXPLORED:
-                {
-                    System::print2("Cycle detected within graph at ", this->to_string(vertex), ":\n");
-                    for (auto&& node : m_exploration_status)
-                    {
-                        if (node.second == ExplorationStatus::PARTIALLY_EXPLORED)
-                        {
-                            System::print2("    ", this->to_string(node.first), '\n');
-                        }
-                    }
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-                case ExplorationStatus::NOT_EXPLORED:
-                {
-                    status = ExplorationStatus::PARTIALLY_EXPLORED;
-                    U vertex_data = this->load_vertex_data(vertex);
-                    auto neighbours = this->adjacency_list(vertex_data);
-                    details::shuffle(neighbours, randomizer);
-                    m_stack.emplace_back(std::move(vertex_data), std::move(neighbours));
-                    while (!m_stack.back().second.empty())
-                    {
-                        auto n = m_stack.back().second.back();
-                        m_stack.back().second.pop_back();
-                        if (this->advance_into(n)) return true;
-                    }
-                    status = ExplorationStatus::FULLY_EXPLORED;
-                    // Visit this vertex
-                    return true;
-                }
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
-        }
-        bool advance()
-        {
-            while (!m_stack.empty())
-            {
-                auto&& top = m_stack.back();
-                while (!top.second.empty())
-                {
-                    auto v = top.second.back();
-                    top.second.pop_back();
-                    if (advance_into(v)) return true;
-                }
-            }
-
-            while (!m_roots.empty())
-            {
-                auto v = m_roots.back();
-                m_roots.pop_back();
-                if (advance_into(v)) return true;
-            }
-        }
-
-        std::unordered_map<V, ExplorationStatus> m_exploration_status;
-        std::vector<std::pair<U, std::vector<V>>> m_stack;
-        std::vector<V> m_roots;
-    };
-
-    template<class V>
-    struct Graph final : AdjacencyProvider<V, V>
-    {
-    public:
-        bool add_vertex(const V& v)
-        {
-            return m_edges.emplace(std::piecewise_construct, std::forward_as_tuple(v), std::forward_as_tuple()).second;
-        }
-
-        bool add_edge(const V& u, const V& v)
-        {
-            auto vertex = m_edges.emplace(std::piecewise_construct, std::forward_as_tuple(v), std::forward_as_tuple());
-            auto edge = m_edges[u].emplace(v);
-
-            return vertex.second || edge.second;
-        }
-
-        std::vector<V> vertex_list() const
-        {
-            std::vector<V> vertex_list;
-            for (auto&& vertex : this->m_edges)
-                vertex_list.emplace_back(vertex.first);
-            return vertex_list;
-        }
-
-        std::vector<V> adjacency_list(const V& vertex) const override
-        {
-            const std::unordered_set<V>& as_set = this->m_edges.at(vertex);
-            return std::vector<V>(as_set.cbegin(), as_set.cend()); // TODO: Avoid redundant copy
-        }
-
-        V load_vertex_data(const V& vertex) const override { return vertex; }
-
-        // Note: this function indicates how tied this template is to the exact type it will be templated upon.
-        // Possible fix: This type shouldn't implement to_string() and should instead be derived from?
-        std::string to_string(const V& spec) const override { return spec->m_spec.to_string(); }
-
-    private:
-        std::unordered_map<V, std::unordered_set<V>> m_edges;
-    };
 }

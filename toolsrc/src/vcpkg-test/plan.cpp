@@ -445,22 +445,18 @@ TEST_CASE ("basic feature test 8", "[plan]")
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     CMakeVars::MockCMakeVarProvider var_provider;
 
-    Graphs::Randomizer::NotRandom not_random;
-    Dependencies::CreateInstallPlanOptions opts;
-    opts.randomizer = &not_random;
     auto plan = Dependencies::create_feature_install_plan(map_port,
                                                           var_provider,
                                                           {spec_c_64, spec_a_86, spec_a_64, spec_c_86},
-                                                          StatusParagraphs(std::move(status_paragraphs)),
-                                                          opts);
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
-    remove_plan_check(plan.remove_actions.at(0), "a");
-    remove_plan_check(plan.remove_actions.at(1), "a", Triplet::X64_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(0), "a", Triplet::X64_WINDOWS);
+    remove_plan_check(plan.remove_actions.at(1), "a");
     auto& install_plan = plan.install_actions;
-    features_check(install_plan.at(0), "b", {"core"});
-    features_check(install_plan.at(1), "a", {"a1", "core"});
-    features_check(install_plan.at(2), "b", {"core"}, Triplet::X64_WINDOWS);
-    features_check(install_plan.at(3), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.at(0), "b", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.at(1), "a", {"a1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.at(2), "b", {"core"});
+    features_check(install_plan.at(3), "a", {"a1", "core"});
     features_check(install_plan.at(4), "c", {"core"}, Triplet::X64_WINDOWS);
     features_check(install_plan.at(5), "c", {"core"});
 }
