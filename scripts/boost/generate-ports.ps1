@@ -1,11 +1,15 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.71.0"
+    $version = "1.71.0",
+    $portsDir = $null
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$portsDir = "$scriptsDir/../../ports"
+if ($null -eq $portsDir)
+{
+    $portsDir = "$scriptsDir/../../ports"
+}
 
 function TransformReference()
 {
