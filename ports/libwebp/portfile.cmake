@@ -7,6 +7,7 @@ vcpkg_from_github(
   PATCHES
     0001-build.patch
     0002-cmake-config-add-backwards-compatibility.patch
+    0003-always-mux.patch #always build libwebpmux
     0004-add-missing-linked-library.patch
     0006-fix-dependecies-platform.patch
     0007-fix-arm-build.patch

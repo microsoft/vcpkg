@@ -17,7 +17,7 @@ index 9503daacb..2fb9ef137 100644
  ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux_types.h;\
  ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/types.h;")
 -  set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
-+  #set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
++  set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME $<$<PLATFORM_ID:Windows>:lib>webpmux)
    list(APPEND INSTALLED_LIBRARIES libwebpmux)
    configure_pkg_config("src/mux/libwebpmux.pc")
  endif()
