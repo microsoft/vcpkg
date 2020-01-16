@@ -49,7 +49,7 @@ function(vcpkg_apply_patches)
         )
 
         if(error_code AND NOT _ap_QUIET)
-            message(STATUS "Applying patch failed. This is expected if this patch was previously applied.")
+            message(FATAL_ERROR "Applying patch failed. Patch needs to be updated to work with source being used by vcpkg!")
         endif()
 
         math(EXPR PATCHNUM "${PATCHNUM}+1")

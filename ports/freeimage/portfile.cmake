@@ -1,6 +1,5 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FreeImage)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/freeimage/FreeImage3180.zip"
     FILENAME "FreeImage3180.zip"
@@ -53,8 +52,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeimage)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/freeimage/license-fi.txt ${CURRENT_PACKAGES_DIR}/share/freeimage/copyright)
-
 vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

@@ -35,25 +35,27 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 
 if(CMAKE_HOST_WIN32)
     # Must not modify system copy of python3 -- on CMAKE_HOST_WIN32, we have our own private copy
-    if(NOT EXISTS ${PYTHON3_DIR}/easy_install.exe)
-        if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip.exe)
+    if(NOT EXISTS ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX})
+        if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
             get_filename_component(PYTHON3_DIR_NAME "${PYTHON3_DIR}" NAME)
             vcpkg_download_distfile(GET_PIP
                 URLS "https://bootstrap.pypa.io/3.3/get-pip.py"
                 FILENAME "tools/python/${PYTHON3_DIR_NAME}/get-pip.py"
                 SHA512 92e68525830bb23955a31cb19ebc3021ef16b6337eab83d5db2961b791283d2867207545faf83635f6027f2f7b7f8fee2c85f2cfd8e8267df25406474571c741
             )
-            execute_process(COMMAND ${PYTHON3_DIR}/python.exe ${GET_PIP})
+            execute_process(COMMAND ${PYTHON3_DIR}/python${EXECUTABLE_SUFFIX} ${GET_PIP})
         endif()
-        execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip.exe install six)
+        execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${EXECUTABLE_SUFFIX} install six)
     else()
-        execute_process(COMMAND ${PYTHON3_DIR}/easy_install.exe six)
+        execute_process(COMMAND ${PYTHON3_DIR}/easy_install${EXECUTABLE_SUFFIX} six)
     endif()
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBIN_INSTALL_DIR:STRING=bin
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -70,5 +72,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/open62541/tools)
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/open62541)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/open62541/LICENSE ${CURRENT_PACKAGES_DIR}/share/open62541/copyright)
+vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

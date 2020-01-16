@@ -1,0 +1,26 @@
+diff --git a/src/SFML/System/CMakeLists.txt b/src/SFML/System/CMakeLists.txt
+index d1b712d..5c12801 100644
+--- a/src/SFML/System/CMakeLists.txt
++++ b/src/SFML/System/CMakeLists.txt
+@@ -96,7 +96,7 @@ endif()
+ if(SFML_OS_LINUX)
+     target_link_libraries(sfml-system PRIVATE rt)
+ elseif(SFML_OS_WINDOWS)
+-    target_link_libraries(sfml-system PRIVATE winmm)
++    target_link_libraries(sfml-system PUBLIC winmm)
+ elseif(SFML_OS_ANDROID)
+     target_link_libraries(sfml-system PRIVATE android log)
+ endif()
+diff --git a/src/SFML/Window/CMakeLists.txt b/src/SFML/Window/CMakeLists.txt
+index 98ea439..53c1ac7 100644
+--- a/src/SFML/Window/CMakeLists.txt
++++ b/src/SFML/Window/CMakeLists.txt
+@@ -276,7 +276,7 @@ if(SFML_OS_LINUX)
+     sfml_find_package(UDev INCLUDE "UDEV_INCLUDE_DIR" LINK "UDEV_LIBRARIES")
+     target_link_libraries(sfml-window PRIVATE UDev)
+ elseif(SFML_OS_WINDOWS)
+-    target_link_libraries(sfml-window PRIVATE winmm gdi32)
++    target_link_libraries(sfml-window PUBLIC winmm gdi32)
+ elseif(SFML_OS_FREEBSD)
+     target_link_libraries(sfml-window PRIVATE usbhid)
+ elseif(SFML_OS_MACOSX)

@@ -1,7 +1,3 @@
-SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
-include(vcpkg_common_functions)
-
-include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
-
-qt_modular_library(qtgraphicaleffects 3c5e6d7dc51a92d48cce8424ab1fe60ee75b71ebe2e6bb22e719a35bdaf2210b03f90ac066569f5c086ed67ed1463510625307328299310fad7c587e9fd8b385)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+qt_submodule_installation()
