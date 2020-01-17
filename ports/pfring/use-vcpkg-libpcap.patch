@@ -1,5 +1,5 @@
 diff --git a/userland/Makefile b/userland/Makefile
-index d5392c09..0d42c9a6 100644
+index d5392c09..982f3466 100644
 --- a/userland/Makefile
 +++ b/userland/Makefile
 @@ -1,4 +1,4 @@
@@ -21,9 +21,12 @@ index d5392c09..0d42c9a6 100644
  build_examples: config
  	cd examples; make
  
-@@ -35,22 +29,19 @@ build_c++: libpfring
+@@ -33,24 +27,21 @@ build_c++: libpfring
+ 	cd c++; make
+ 
  tcpdump/Makefile:
- 	cd tcpdump; ./configure
+-	cd tcpdump; ./configure
++	cd tcpdump; ./configure --with_system_libpcap=yes
  
 -build_tcpdump: libpfring pcap tcpdump/Makefile
 +build_tcpdump: libpfring tcpdump/Makefile
