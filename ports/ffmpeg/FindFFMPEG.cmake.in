@@ -156,10 +156,10 @@ if (FFMPEG_libavcodec_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavfilter_
     ${FFMPEG_libavdevice_LIBRARY}
     ${FFMPEG_libavfilter_LIBRARY}
     ${FFMPEG_libavformat_LIBRARY}
-    ${FFMPEG_libavresample_LIBRARY}
-    ${FFMPEG_libswresample_LIBRARY}
     ${FFMPEG_libswscale_LIBRARY}
     ${FFMPEG_libavcodec_LIBRARY}
+    ${FFMPEG_libswresample_LIBRARY}
+    ${FFMPEG_libavresample_LIBRARY}
     ${FFMPEG_libavutil_LIBRARY} 
     ${FFMPEG_libzlib_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
