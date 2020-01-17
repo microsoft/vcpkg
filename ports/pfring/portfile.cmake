@@ -6,12 +6,16 @@ vcpkg_from_github(
     REF 582fa09bc58411cfe6f27facd7e6438924f779d2
     SHA512 78dd2d2f9df259483196905f80a904534632a835f742d1f8b3ad645ea80f2dad78356960a2b35e2678525786a7344fa248b708bd3f86101c43fb36c7abc05598
     HEAD_REF dev
+    PATCHES
+        use-vcpkg-libpcap.patch
 )
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     SKIP_CONFIGURE
 )
+
+set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
 
 vcpkg_build_make()
 vcpkg_copy_pdbs()
