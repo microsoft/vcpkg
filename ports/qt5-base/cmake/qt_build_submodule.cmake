@@ -78,7 +78,12 @@ function(qt_build_submodule SOURCE_PATH)
     endforeach()
     if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt5/bin")
         file(COPY "${CURRENT_PACKAGES_DIR}/tools/qt5/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin) # This makes the tools at least useable for release
+        
+        set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
+        set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
+        configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/qt.conf) # This makes the tools at least useable for release
+        set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
+        
         vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
         if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(GLOB_RECURSE DLL_DEPS_AVAIL "${CURRENT_INSTALLED_DIR}/tools/qt5/bin/*.dll")
