@@ -31,13 +31,17 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
         message(FATAL_ERROR
 "Building the vcpkg tool requires support for the C++ Filesystem TS.
 Apple clang versions 10.01 and below do not have support for it.
-Please install gcc6 or newer from homebrew (brew install gcc6).
+Please install gcc6 or newer from homebrew (brew install gcc@6).
 If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
     else()
         set(CLANG 1)
     endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
     set(CLANG 1)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "9.0.0")
+        set(NO_LIBCXXFS 1)
+        add_compile_definitions(_LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_FILESYSTEM=1)
+    endif()
 elseif(NOT MSVC)
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
