@@ -335,7 +335,7 @@ else()
     endif()
     set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
     set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
-    configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf) # This makes the tools at least useable for release
+    configure_file(${CURRENT_PACKAGES_DIR}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf) # This makes the tools at least useable for release
     set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
     
     qt_install_copyright(${SOURCE_PATH})
