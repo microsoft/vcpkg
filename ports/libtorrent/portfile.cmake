@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-datetime-to-boost-libs.patch
+        add-executor_type.patch
 )
 
 vcpkg_configure_cmake(
