@@ -1,14 +1,14 @@
 diff --git a/userland/Makefile b/userland/Makefile
-index d5392c09..982f3466 100644
+index d5392c09..959470c0 100644
 --- a/userland/Makefile
 +++ b/userland/Makefile
 @@ -1,4 +1,4 @@
 -all: libpfring pcap build_examples build_examples_zc build_examples_ft build_extcap 
-+all: libpfring build_examples build_examples_zc build_examples_ft build_extcap 
++all: libpfring build_extcap 
  # build_tcpdump build_c++
  
  ###################
-@@ -14,12 +14,6 @@ libpfring: config
+@@ -14,52 +14,25 @@ libpfring: config
  build_nbpf: config
  	cd nbpf; make
  
@@ -18,10 +18,16 @@ index d5392c09..982f3466 100644
 -pcap: libpfring libpcap/Makefile
 -	cd libpcap; make
 -
- build_examples: config
- 	cd examples; make
- 
-@@ -33,24 +27,21 @@ build_c++: libpfring
+-build_examples: config
+-	cd examples; make
+-
+-build_examples_zc: config
+-	cd examples_zc; make
+-
+-build_examples_ft: config
+-	cd examples_ft; make
+-
+ build_c++: libpfring
  	cd c++; make
  
  tcpdump/Makefile:
@@ -39,7 +45,7 @@ index d5392c09..982f3466 100644
  ###################
  
 -clean: libpfring_clean pcap_clean examples_clean examples_ft_clean examples_zc_clean c++_clean tcpdump_clean nbpf_clean extcap_clean
-+clean: libpfring_clean examples_clean examples_ft_clean examples_zc_clean c++_clean tcpdump_clean nbpf_clean extcap_clean
++clean: libpfring_clean c++_clean tcpdump_clean nbpf_clean extcap_clean
  
  libpfring_clean:
  	cd lib; make clean
@@ -47,19 +53,28 @@ index d5392c09..982f3466 100644
 -pcap_clean:
 -	if test -f libpcap/config.status; then cd libpcap; make clean; fi
 -
- examples_clean:
- 	cd examples; make clean
+-examples_clean:
+-	cd examples; make clean
+-
+-examples_zc_clean:
+-	cd examples_zc; make clean
+-
+-examples_ft_clean:
+-	cd examples_ft; make clean
+-
+ c++_clean:
+ 	cd c++; make clean
  
-@@ -72,8 +63,7 @@ nbpf_clean:
+@@ -72,8 +45,5 @@ nbpf_clean:
  extcap_clean:
  	cd wireshark/extcap; make clean
  
 -install: libpfring pcap examples examples_zc examples_ft
-+install: libpfring examples examples_zc examples_ft
++install: libpfring
  	cd lib; make install
 -	cd libpcap; make install
- 	cd examples; make install
- 	cd examples_zc; make install
+-	cd examples; make install
+-	cd examples_zc; make install
 diff --git a/userland/c++/Makefile.in b/userland/c++/Makefile.in
 index 02bf5164..b0442d84 100644
 --- a/userland/c++/Makefile.in
