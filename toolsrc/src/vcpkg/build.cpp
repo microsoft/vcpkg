@@ -497,6 +497,8 @@ namespace vcpkg::Build
         else
         {
             const auto algo = Hash::Algorithm::Sha1;
+            // TODO: Use file path as part of hash.
+            // REASON: Copying a triplet file without modifying it produces the same hash as the original.
             hash = Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, algo);
 
             if (auto p = pre_build_info.external_toolchain_file.get())
