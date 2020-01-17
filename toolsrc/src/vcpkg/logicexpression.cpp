@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/checks.h>
+#include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/logicexpression.h>
 
@@ -271,7 +271,8 @@ namespace vcpkg
                 // cmake variables. This has the potential to break custom triplets.
                 // For now just print a message, this will need to change once we start introducing
                 // new variables that did not exist previously (such as host-*)
-                System::print2("Identifier logic evaluation does not match legacy evaluation:\n   ", name, '\n');
+                System::print2(
+                    "Warning: Identifier logic evaluation does not match legacy evaluation:\n   ", name, '\n');
             }
             return cmake;
         }

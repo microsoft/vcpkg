@@ -259,19 +259,21 @@ namespace vcpkg
             }
             else
             {
-                auto end_of_qualifier = depend_string.find(')', begin_of_qualifier + 1);
-                if (end_of_qualifier == std::string::npos)
+                int depth = 1;
+                auto i = begin_of_qualifier + 1;
+                for (; i != depend_string.size(); ++i)
                 {
-                    // Error; for now, use remaining string as qualifier
-                    return Dependency::parse_dependency(depend_string.substr(0, end_of_features),
-                                                        depend_string.substr(begin_of_qualifier + 1));
+                    auto ch = depend_string[i];
+                    if (ch == '(')
+                        ++depth;
+                    else if (ch == ')')
+                        --depth;
+
+                    if (depth == 0) break;
                 }
-                else
-                {
-                    return Dependency::parse_dependency(
-                        depend_string.substr(0, end_of_features),
-                        depend_string.substr(begin_of_qualifier + 1, end_of_qualifier - begin_of_qualifier - 1));
-                }
+                return Dependency::parse_dependency(
+                    depend_string.substr(0, end_of_features),
+                    depend_string.substr(begin_of_qualifier + 1, i - begin_of_qualifier - 1));
             }
         });
     }
