@@ -48,6 +48,15 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree3 TARGET_PATH share/embree)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+if (EXISTS ${CURRENT_PACKAGES_DIR}/uninstall.command)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/uninstall.command)
+endif()
+if (EXISTS ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
+endif()
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree/doc)
 
