@@ -457,6 +457,8 @@ namespace vcpkg::Build
         else
         {
             const auto algo = Hash::Algorithm::Sha1;
+            // TODO: Use file path as part of hash.
+            // REASON: Copying a triplet file without modifying it produces the same hash as the original.
             hash = Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, algo);
 
             if (auto p = pre_build_info.external_toolchain_file.get())
@@ -510,10 +512,16 @@ namespace vcpkg::Build
         const Triplet& triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
-        if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
+        if (Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.community_triplets.u8string()))
         {
-            System::printf("-- Loading triplet configuration from: %s\n", triplet_file_path);
+            System::printf(vcpkg::System::Color::warning, "-- Using community triplet %s. This triplet configuration is not guaranteed to succeed.\n", triplet.canonical_name());
+            System::printf("-- [COMMUNITY] Loading triplet configuration from: %s\n", triplet_file_path);
         }
+        else if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
+        {
+            System::printf("-- [OVERLAY] Loading triplet configuration from: %s\n", triplet_file_path);
+        }
+
         if (!Strings::case_insensitive_ascii_starts_with(config.port_dir.u8string(), paths.ports.u8string()))
         {
             System::printf("-- Installing port from location: %s\n", config.port_dir.u8string());
