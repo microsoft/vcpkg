@@ -12,10 +12,10 @@
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/vcpkgpaths.h>
 
+using namespace vcpkg;
+
 namespace vcpkg::Dependencies
 {
-    using namespace vcpkg;
-
     namespace
     {
         struct ClusterInstalled
@@ -447,8 +447,8 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    std::vector<RemovePlanAction> Dependencies::create_remove_plan(const std::vector<PackageSpec>& specs,
-                                                                   const StatusParagraphs& status_db)
+    std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
+                                                     const StatusParagraphs& status_db)
     {
         struct RemoveAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, RemovePlanAction>
         {
@@ -506,8 +506,8 @@ namespace vcpkg::Dependencies
             std::move(specs), RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
     }
 
-    std::vector<ExportPlanAction> Dependencies::create_export_plan(const std::vector<PackageSpec>& specs,
-                                                                   const StatusParagraphs& status_db)
+    std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
+                                                     const StatusParagraphs& status_db)
     {
         struct ExportAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, ExportPlanAction>
         {
@@ -554,11 +554,11 @@ namespace vcpkg::Dependencies
         m_graph->get(spec).request_type = RequestType::USER_REQUESTED;
     }
 
-    ActionPlan Dependencies::create_feature_install_plan(const PortFileProvider::PortFileProvider& port_provider,
-                                                         const CMakeVars::CMakeVarProvider& var_provider,
-                                                         const std::vector<FullPackageSpec>& specs,
-                                                         const StatusParagraphs& status_db,
-                                                         const CreateInstallPlanOptions& options)
+    ActionPlan create_feature_install_plan(const PortFileProvider::PortFileProvider& port_provider,
+                                           const CMakeVars::CMakeVarProvider& var_provider,
+                                           const std::vector<FullPackageSpec>& specs,
+                                           const StatusParagraphs& status_db,
+                                           const CreateInstallPlanOptions& options)
     {
         PackageGraph pgraph(port_provider, var_provider, status_db);
 
@@ -722,11 +722,11 @@ namespace vcpkg::Dependencies
         install(reinstall_reqs);
     }
 
-    ActionPlan Dependencies::create_upgrade_plan(const PortFileProvider::PortFileProvider& port_provider,
-                                                 const CMakeVars::CMakeVarProvider& var_provider,
-                                                 const std::vector<PackageSpec>& specs,
-                                                 const StatusParagraphs& status_db,
-                                                 const CreateInstallPlanOptions& options)
+    ActionPlan create_upgrade_plan(const PortFileProvider::PortFileProvider& port_provider,
+                                   const CMakeVars::CMakeVarProvider& var_provider,
+                                   const std::vector<PackageSpec>& specs,
+                                   const StatusParagraphs& status_db,
+                                   const CreateInstallPlanOptions& options)
     {
         PackageGraph pgraph(port_provider, var_provider, status_db);
 
