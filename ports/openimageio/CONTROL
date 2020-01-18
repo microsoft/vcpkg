@@ -2,7 +2,7 @@ Source: openimageio
 Version: 2019-08-08-4
 Homepage: https://github.com/OpenImageIO/oiio
 Description: A library for reading and writing images, and a bunch of related classes, utilities, and application
-Build-Depends: libjpeg-turbo, tiff, libpng, openexr, boost-thread, boost-smart-ptr, boost-foreach, boost-regex, boost-type-traits, boost-static-assert, boost-unordered, boost-config, boost-algorithm, boost-filesystem, boost-system, boost-thread, boost-asio, boost-random, robin-map, boost-stacktrace
+Build-Depends: libjpeg-turbo, tiff, libpng, openexr, boost-thread, boost-smart-ptr, boost-foreach, boost-regex, boost-type-traits, boost-static-assert, boost-unordered, boost-config, boost-algorithm, boost-filesystem, boost-system, boost-thread, boost-asio, boost-random, robin-map, boost-stacktrace, fmt
 
 Feature: libraw
 Build-Depends: libraw
@@ -11,3 +11,6 @@ Description: Enable RAW image files support
 Feature: opencolorio
 Build-Depends: opencolorio
 Description: Enable opencolorio support for openimageio
+
+Feature: tools
+Description: Build OpenImageIO tools

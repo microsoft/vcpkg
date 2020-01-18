@@ -30,14 +30,14 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     libraw USE_LIBRAW
-    opencolorio USE_OCIO 
+    opencolorio USE_OCIO
+    tools OIIO_BUILD_TOOLS
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
-        -DOIIO_BUILD_TOOLS=OFF
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
         -DUSE_DICOM=OFF
@@ -65,7 +65,30 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if("tools" IN_LIST FEATURES)
+    set(CURRENT_PACKAGES_TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_TOOL_DIR}")
+    foreach(TOOL iconvert idiff igrep iinfo maketx oiiotool)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+            file(RENAME
+                "${CURRENT_PACKAGES_DIR}/bin/${TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+                "${CURRENT_PACKAGES_TOOL_DIR}/${TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+            )
+        endif()
+    endforeach()
+endif()
+
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/OpenImageIO")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_TOOL_DIR}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
 
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
