@@ -1,3 +1,4 @@
+include(vcpkg_common_definitions)
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -30,14 +31,25 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     libraw USE_LIBRAW
-    opencolorio USE_OCIO 
+    opencolorio USE_OCIO
 )
+
+if("python3" IN_LIST FEATURES)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_PYTHON
+        python3 USE_PYTHON
+    )
+
+    vcpkg_find_acquire_program(PYTHON3)
+
+    get_filename_component(PYTHON3_DIR ${PYTHON3} PATH)
+    vcpkg_add_to_path(${PYTHON3_DIR})
+endif()
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        -DOIIO_BUILD_TOOLS=OFF
+    OPTIONS ${FEATURE_OPTIONS} ${FEATURE_OPTIONS_PYTHON}
         -DOIIO_BUILD_TESTS=OFF
         -DHIDE_SYMBOLS=ON
         -DUSE_DICOM=OFF
@@ -50,7 +62,6 @@ vcpkg_configure_cmake(
         -DUSE_OPENJPEG=OFF
         -DUSE_OPENSSL=OFF
         -DUSE_PTEX=OFF
-        -DUSE_PYTHON=OFF
         -DUSE_QT=OFF
         -DUSE_WEBP=OFF
         -DBUILDSTATIC=${BUILDSTATIC}

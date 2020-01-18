@@ -11,3 +11,7 @@ Description: Enable RAW image files support
 Feature: opencolorio
 Build-Depends: opencolorio
 Description: Enable opencolorio support for openimageio
+
+Feature: python3
+Build-Depends: python3, pybind11
+Description: Build OpenImageIO Python 3 bindings
