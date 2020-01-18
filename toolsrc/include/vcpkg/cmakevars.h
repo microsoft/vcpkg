@@ -27,33 +27,6 @@ namespace vcpkg::CMakeVars
                                    const PortFileProvider::PortFileProvider& port_provider) const = 0;
     };
 
-    struct MockCMakeVarProvider : CMakeVarProvider
-    {
-        void load_generic_triplet_vars(const Triplet& triplet) const override { Util::unused(triplet); }
-
-        void load_dep_info_vars(Span<const PackageSpec> specs) const override { Util::unused(specs); };
-
-        void load_tag_vars(Span<const FullPackageSpec> specs,
-                           const PortFileProvider::PortFileProvider& port_provider) const override
-        {
-            Util::unused(specs);
-            Util::unused(port_provider);
-        };
-
-        Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(
-            const Triplet& triplet) const override;
-
-        Optional<const std::unordered_map<std::string, std::string>&> get_dep_info_vars(
-            const PackageSpec& spec) const override;
-
-        Optional<const std::unordered_map<std::string, std::string>&> get_tag_vars(
-            const PackageSpec& spec) const override;
-
-        mutable std::unordered_map<PackageSpec, std::unordered_map<std::string, std::string>> dep_resolution_vars;
-        mutable std::unordered_map<PackageSpec, std::unordered_map<std::string, std::string>> tag_vars;
-        mutable std::unordered_map<Triplet, std::unordered_map<std::string, std::string>> generic_triplet_vars;
-    };
-
     struct TripletCMakeVarProvider : Util::ResourceBase, CMakeVarProvider
     {
     private:

@@ -23,6 +23,9 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
+        PackageSpec() noexcept = default;
+        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) {}
+
         static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
                                                                                     const Triplet& triplet);
 
@@ -103,9 +106,14 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
-        static std::vector<FeatureSpec> to_feature_specs(const FullPackageSpec& spec,
-                                                         const std::vector<std::string>& default_features, 
-                                                         const std::vector<std::string>& all_features);
+        FullPackageSpec() noexcept = default;
+        explicit FullPackageSpec(PackageSpec spec, std::vector<std::string> features = {})
+            : package_spec(std::move(spec)), features(std::move(features))
+        {
+        }
+
+        std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& default_features,
+                                                  const std::vector<std::string>& all_features) const;
 
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
                                                                               const Triplet& default_triplet);

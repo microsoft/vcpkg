@@ -51,12 +51,18 @@
     <ClCompile Include="..\src\vcpkg-test\strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg-test\mockcmakevarsprovider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\vcpkg-test\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\catch2\catch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg-test\mockcmakevarprovider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

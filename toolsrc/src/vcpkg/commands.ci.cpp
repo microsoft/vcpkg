@@ -14,7 +14,10 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/logicexpression.h>
+#include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkglib.h>
+
+using namespace vcpkg;
 
 namespace vcpkg::Commands::CI
 {
@@ -274,9 +277,20 @@ namespace vcpkg::Commands::CI
             Build::FailOnTombstone::YES,
         };
 
-        var_provider.load_dep_info_vars(
-            Util::fmap(specs, [](const FullPackageSpec& spec) { return spec.package_spec; }));
+        std::vector<PackageSpec> packages_with_qualified_deps;
+        auto has_qualifier = [](Dependency const& dep) { return !dep.qualifier.empty(); };
+        for (auto&& spec : specs)
+        {
+            auto&& scfl = provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
+            if (Util::any_of(scfl.source_control_file->core_paragraph->depends, has_qualifier) ||
+                Util::any_of(scfl.source_control_file->feature_paragraphs,
+                             [&](auto&& pgh) { return Util::any_of(pgh->depends, has_qualifier); }))
+            {
+                packages_with_qualified_deps.push_back(spec.package_spec);
+            }
+        }
 
+        var_provider.load_dep_info_vars(packages_with_qualified_deps);
         auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {}, {});
 
         std::vector<FullPackageSpec> install_specs;
@@ -294,6 +308,7 @@ namespace vcpkg::Commands::CI
         Checks::check_exit(VCPKG_LINE_INFO,
                            action_plan.already_installed.empty(),
                            "Cannot use CI command with packages already installed.");
+        std::string stdout_buffer;
         for (auto&& action : action_plan.install_actions)
         {
             auto p = &action;
@@ -371,8 +386,7 @@ namespace vcpkg::Commands::CI
                 ret->known.emplace(p->spec, BuildResult::EXCLUDED);
                 will_fail.emplace(p->spec);
             }
-            else if (std::any_of(p->package_dependencies.begin(),
-                                 p->package_dependencies.end(),
+            else if (Util::any_of(p->package_dependencies,
                                  [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
             {
                 state = "cascade";
@@ -392,12 +406,20 @@ namespace vcpkg::Commands::CI
             }
             else
             {
-                ret->unknown.push_back({p->spec, {p->feature_list.begin(), p->feature_list.end()}});
+                ret->unknown.push_back(FullPackageSpec{p->spec, {p->feature_list.begin(), p->feature_list.end()}});
                 b_will_build = true;
             }
 
-            System::printf("%40s: %1s %8s: %s\n", p->spec, (b_will_build ? "*" : " "), state, abi);
+            Strings::append(stdout_buffer,
+                            Strings::format("%40s: %1s %8s: %s\n", p->spec, (b_will_build ? "*" : " "), state, abi));
+            if (stdout_buffer.size() > 2048)
+            {
+                System::print2(stdout_buffer);
+                stdout_buffer.clear();
+            }
         }
+        System::print2(stdout_buffer);
+        stdout_buffer.clear();
 
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
 

@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+#include <vcpkg-test/mockcmakevarprovider.h>
 #include <vcpkg-test/util.h>
 
 #include <vcpkg/base/graphs.h>
@@ -13,34 +14,12 @@
 
 using namespace vcpkg;
 
+using Test::make_control_file;
 using Test::make_status_feature_pgh;
 using Test::make_status_pgh;
+using Test::MockCMakeVarProvider;
+using Test::PackageSpecMap;
 using Test::unsafe_pspec;
-
-static std::unique_ptr<SourceControlFile> make_control_file(
-    const char* name,
-    const char* depends,
-    const std::vector<std::pair<const char*, const char*>>& features = {},
-    const std::vector<const char*>& default_features = {})
-{
-    using Pgh = std::unordered_map<std::string, std::string>;
-    std::vector<Pgh> scf_pghs;
-    scf_pghs.push_back(Pgh{{"Source", name},
-                           {"Version", "0"},
-                           {"Build-Depends", depends},
-                           {"Default-Features", Strings::join(", ", default_features)}});
-    for (auto&& feature : features)
-    {
-        scf_pghs.push_back(Pgh{
-            {"Feature", feature.first},
-            {"Description", "feature"},
-            {"Build-Depends", feature.second},
-        });
-    }
-    auto m_pgh = vcpkg::SourceControlFile::parse_control_file("", std::move(scf_pghs));
-    REQUIRE(m_pgh.has_value());
-    return std::move(*m_pgh.get());
-}
 
 /// <summary>
 /// Assert that the given action an install of given features from given package.
@@ -80,33 +59,6 @@ static void remove_plan_check(Dependencies::RemovePlanAction& plan,
     REQUIRE(pkg_name == plan.spec.name());
 }
 
-/// <summary>
-/// Map of source control files by their package name.
-/// </summary>
-struct PackageSpecMap
-{
-    std::unordered_map<std::string, SourceControlFileLocation> map;
-    Triplet triplet;
-    PackageSpecMap(const Triplet& t = Triplet::X86_WINDOWS) noexcept { triplet = t; }
-
-    PackageSpec emplace(const char* name,
-                        const char* depends = "",
-                        const std::vector<std::pair<const char*, const char*>>& features = {},
-                        const std::vector<const char*>& default_features = {})
-    {
-        auto scfl = SourceControlFileLocation{make_control_file(name, depends, features, default_features), ""};
-        return emplace(std::move(scfl));
-    }
-
-    PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl)
-    {
-        auto spec = PackageSpec::from_name_and_triplet(scfl.source_control_file->core_paragraph->name, triplet);
-        REQUIRE(spec.has_value());
-        map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
-        return PackageSpec{*spec.get()};
-    }
-};
-
 TEST_CASE ("basic install scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
@@ -117,7 +69,7 @@ TEST_CASE ("basic install scheme", "[plan]")
     auto spec_c = spec_map.emplace("c");
 
     PortFileProvider::MapPortFileProvider map_port(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {FullPackageSpec{spec_a, {}}}, StatusParagraphs(std::move(status_paragraphs)));
@@ -143,7 +95,7 @@ TEST_CASE ("multiple install scheme", "[plan]")
     auto spec_h = spec_map.emplace("h");
 
     PortFileProvider::MapPortFileProvider map_port(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(
         map_port,
@@ -188,7 +140,7 @@ TEST_CASE ("existing package scheme", "[plan]")
     auto spec_a = FullPackageSpec{spec_map.emplace("a")};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -209,7 +161,7 @@ TEST_CASE ("user requested package scheme", "[plan]")
     const auto spec_b = FullPackageSpec{spec_map.emplace("b")};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     const auto install_plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -246,7 +198,7 @@ TEST_CASE ("long install scheme", "[plan]")
     auto spec_k = spec_map.emplace("k");
 
     PortFileProvider::MapPortFileProvider map_port(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {FullPackageSpec{spec_a}}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -274,7 +226,7 @@ TEST_CASE ("basic feature test 1", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}, {"b3", ""}})};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -296,7 +248,7 @@ TEST_CASE ("basic feature test 2", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}, {"b3", ""}})};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -319,7 +271,7 @@ TEST_CASE ("basic feature test 3", "[plan]")
     auto spec_c = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_c, spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -345,7 +297,7 @@ TEST_CASE ("basic feature test 4", "[plan]")
     auto spec_c = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_c}, StatusParagraphs(std::move(status_paragraphs)));
@@ -365,7 +317,7 @@ TEST_CASE ("basic feature test 5", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}})};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -385,7 +337,7 @@ TEST_CASE ("basic feature test 6", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}}), {"b1"}};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_a, spec_b}, StatusParagraphs(std::move(status_paragraphs)));
@@ -409,7 +361,7 @@ TEST_CASE ("basic feature test 7", "[plan]")
     auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}}), {"b1"}};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto plan = Dependencies::create_feature_install_plan(
         map_port, var_provider, {spec_b}, StatusParagraphs(std::move(status_paragraphs)));
@@ -443,7 +395,7 @@ TEST_CASE ("basic feature test 8", "[plan]")
     auto spec_c_86 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto plan = Dependencies::create_feature_install_plan(map_port,
                                                           var_provider,
@@ -473,7 +425,7 @@ TEST_CASE ("install all features test", "[plan]")
     if (!install_specs.has_value()) return;
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -496,7 +448,7 @@ TEST_CASE ("install default features test 1", "[plan]")
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -525,7 +477,7 @@ TEST_CASE ("install default features test 2", "[plan]")
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -551,7 +503,7 @@ TEST_CASE ("install default features test 3", "[plan]")
     auto install_specs = FullPackageSpec::from_string("a[core]", Triplet::X64_WINDOWS);
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -576,7 +528,7 @@ TEST_CASE ("install default features of dependency test 1", "[plan]")
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -585,6 +537,63 @@ TEST_CASE ("install default features of dependency test 1", "[plan]")
 
     // Expect "a" to get installed and defaults of "b" through the dependency,
     // as no explicit features of "b" are installed by the user.
+    REQUIRE(install_plan.size() == 2);
+    features_check(install_plan.install_actions.at(0), "b", {"b1", "core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+}
+
+TEST_CASE ("do not install default features of dependency test 1", "[plan]")
+{
+    std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+    // Add a port "a" which depends on the core of "b"
+    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    spec_map.emplace("a", "b[core]");
+    // "b" has two features, of which "b1" is default.
+    spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
+
+    // Install "a" (without explicit feature specification)
+    auto spec_a = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto spec_b = FullPackageSpec::from_string("b[core]", Triplet::X64_WINDOWS);
+    PortFileProvider::MapPortFileProvider map_port{spec_map.map};
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = Dependencies::create_feature_install_plan(
+        map_port,
+        var_provider,
+        {spec_a.value_or_exit(VCPKG_LINE_INFO), spec_b.value_or_exit(VCPKG_LINE_INFO)},
+        StatusParagraphs(std::move(status_paragraphs)));
+
+    // Expect "a" to get installed and defaults of "b" through the dependency,
+    // as no explicit features of "b" are installed by the user.
+    REQUIRE(install_plan.size() == 2);
+    features_check(install_plan.install_actions.at(0), "b", {"core"}, Triplet::X64_WINDOWS);
+    features_check(install_plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
+}
+
+TEST_CASE ("install default features of dependency test 2", "[plan]")
+{
+    std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+    // Add a port "a" which depends on the default features of "b"
+    PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+    spec_map.emplace("a", "b");
+    // "b" has two features, of which "b1" is default.
+    spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
+
+    // Install "a" (without explicit feature specification)
+    auto spec_a = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+    auto spec_b = FullPackageSpec::from_string("b[core]", Triplet::X64_WINDOWS);
+    PortFileProvider::MapPortFileProvider map_port{spec_map.map};
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = Dependencies::create_feature_install_plan(
+        map_port,
+        var_provider,
+        {spec_a.value_or_exit(VCPKG_LINE_INFO), spec_b.value_or_exit(VCPKG_LINE_INFO)},
+        StatusParagraphs(std::move(status_paragraphs)));
+
+    // Expect "a" to get installed and defaults of "b" through the dependency
     REQUIRE(install_plan.size() == 2);
     features_check(install_plan.install_actions.at(0), "b", {"b1", "core"}, Triplet::X64_WINDOWS);
     features_check(install_plan.install_actions.at(1), "a", {"core"}, Triplet::X64_WINDOWS);
@@ -607,7 +616,7 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -619,7 +628,7 @@ TEST_CASE ("do not install default features of existing dependency", "[plan]")
     features_check(install_plan.install_actions.at(0), "a", {"core"}, Triplet::X64_WINDOWS);
 }
 
-TEST_CASE ("install default features of dependency test 2", "[plan]")
+TEST_CASE ("install default features of dependency test 3", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
     status_paragraphs.push_back(make_status_pgh("b"));
@@ -636,7 +645,7 @@ TEST_CASE ("install default features of dependency test 2", "[plan]")
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -663,7 +672,7 @@ TEST_CASE ("install plan action dependencies", "[plan]")
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -695,7 +704,7 @@ TEST_CASE ("install plan action dependencies 2", "[plan]")
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -725,7 +734,7 @@ TEST_CASE ("install plan action dependencies 3", "[plan]")
     // Install "a" (without explicit feature specification)
     auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan = Dependencies::create_feature_install_plan(map_port,
                                                                   var_provider,
@@ -748,7 +757,7 @@ TEST_CASE ("install with default features", "[plan]")
     auto a_spec = spec_map.emplace("a", "b[core]", {{"0", ""}});
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
 
     auto install_plan =
         Dependencies::create_feature_install_plan(map_port,
@@ -775,7 +784,7 @@ TEST_CASE ("upgrade with default features 1", "[plan]")
     auto spec_a = spec_map.emplace("a", "", {{"0", ""}, {"1", ""}}, {"1"});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     // The upgrade should not install the default feature
@@ -799,7 +808,7 @@ TEST_CASE ("upgrade with default features 2", "[plan]")
     auto spec_b = spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b0", "b1"});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a, spec_b}, status_db);
 
     // The upgrade should install the new default feature b1 but not b0
@@ -824,7 +833,7 @@ TEST_CASE ("upgrade with default features 3", "[plan]")
     spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b0"});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     // The upgrade should install the default feature
@@ -845,7 +854,7 @@ TEST_CASE ("upgrade with new default feature", "[plan]")
     auto spec_a = spec_map.emplace("a", "", {{"0", ""}, {"1", ""}, {"2", ""}}, {"0", "1"});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     // The upgrade should install the new default feature but not the old default feature 0
@@ -868,7 +877,7 @@ TEST_CASE ("transitive features test", "[plan]")
     if (!install_specs.has_value()) return;
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto install_plan = Dependencies::create_feature_install_plan(provider,
                                                                   var_provider,
                                                                   {install_specs.value_or_exit(VCPKG_LINE_INFO)},
@@ -893,7 +902,7 @@ TEST_CASE ("no transitive features test", "[plan]")
     REQUIRE(install_specs.has_value());
     if (!install_specs.has_value()) return;
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto install_plan = Dependencies::create_feature_install_plan(provider,
                                                                   var_provider,
                                                                   {install_specs.value_or_exit(VCPKG_LINE_INFO)},
@@ -918,7 +927,7 @@ TEST_CASE ("only transitive features test", "[plan]")
     REQUIRE(install_specs.has_value());
     if (!install_specs.has_value()) return;
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto install_plan = Dependencies::create_feature_install_plan(provider,
                                                                   var_provider,
                                                                   {install_specs.value_or_exit(VCPKG_LINE_INFO)},
@@ -1046,7 +1055,7 @@ TEST_CASE ("basic upgrade scheme", "[plan]")
     auto spec_a = spec_map.emplace("a");
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 2);
@@ -1066,7 +1075,7 @@ TEST_CASE ("basic upgrade scheme with recurse", "[plan]")
     spec_map.emplace("b", "a");
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 4);
@@ -1088,7 +1097,7 @@ TEST_CASE ("basic upgrade scheme with bystander", "[plan]")
     spec_map.emplace("b", "a");
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 2);
@@ -1107,7 +1116,7 @@ TEST_CASE ("basic upgrade scheme with new dep", "[plan]")
     spec_map.emplace("b");
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 3);
@@ -1127,7 +1136,7 @@ TEST_CASE ("basic upgrade scheme with features", "[plan]")
     auto spec_a = spec_map.emplace("a", "", {{"a1", ""}});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 2);
@@ -1147,7 +1156,7 @@ TEST_CASE ("basic upgrade scheme with new default feature", "[plan]")
     auto spec_a = spec_map.emplace("a", "", {{"a1", ""}}, {"a1"});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 2);
@@ -1167,7 +1176,7 @@ TEST_CASE ("basic upgrade scheme with self features", "[plan]")
     auto spec_a = spec_map.emplace("a", "", {{"a1", ""}, {"a2", "a[a1]"}});
 
     PortFileProvider::MapPortFileProvider provider(spec_map.map);
-    CMakeVars::MockCMakeVarProvider var_provider;
+    MockCMakeVarProvider var_provider;
     auto plan = Dependencies::create_upgrade_plan(provider, var_provider, {spec_a}, status_db);
 
     REQUIRE(plan.size() == 2);

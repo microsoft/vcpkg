@@ -278,30 +278,23 @@ namespace vcpkg
         });
     }
 
-    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::Dependency>& deps,
-                                                 const Triplet& t,
-                                                 const std::unordered_map<std::string, std::string>& cmake_vars)
+    std::vector<FullPackageSpec> filter_dependencies(const std::vector<vcpkg::Dependency>& deps,
+                                                     const Triplet& t,
+                                                     const std::unordered_map<std::string, std::string>& cmake_vars)
     {
-        Util::unused(cmake_vars);
-
-        std::vector<std::string> ret;
+        std::vector<FullPackageSpec> ret;
         for (auto&& dep : deps)
         {
             const auto& qualifier = dep.qualifier;
-            if (qualifier.empty() || evaluate_expression(qualifier, {cmake_vars, t.canonical_name()}))
+            if (qualifier.empty() ||
+                evaluate_expression(qualifier, {cmake_vars, t.canonical_name()}).value_or_exit(VCPKG_LINE_INFO))
             {
-                ret.emplace_back(dep.name());
+                ret.emplace_back(FullPackageSpec(
+                    PackageSpec::from_name_and_triplet(dep.depend.name, t).value_or_exit(VCPKG_LINE_INFO),
+                    dep.depend.features));
             }
         }
         return ret;
-    }
-
-    std::vector<FeatureSpec> filter_dependencies_to_specs(
-        const std::vector<Dependency>& deps,
-        const Triplet& t,
-        const std::unordered_map<std::string, std::string>& cmake_vars)
-    {
-        return FeatureSpec::from_strings_and_triplet(filter_dependencies(deps, t, cmake_vars), t);
     }
 
     std::string to_string(const Dependency& dep) { return dep.name(); }

@@ -15,9 +15,9 @@ TEST_CASE ("specifier conversion", "[specifier]")
         auto a_spec = PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
         auto b_spec = PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
 
-        auto fspecs = FullPackageSpec::to_feature_specs({a_spec, {"0", "1"}}, {}, {});
-        auto fspecs2 = FullPackageSpec::to_feature_specs({b_spec, {"2", "3"}}, {}, {});
-        Util::Vectors::concatenate(&fspecs, fspecs2);
+        auto fspecs = FullPackageSpec{a_spec, {"0", "1"}}.to_feature_specs({}, {});
+        auto fspecs2 = FullPackageSpec{b_spec, {"2", "3"}}.to_feature_specs({}, {});
+        Util::Vectors::append(&fspecs, fspecs2);
         Util::sort(fspecs);
         REQUIRE(fspecs.size() == SPEC_SIZE);
 
@@ -26,8 +26,8 @@ TEST_CASE ("specifier conversion", "[specifier]")
 
         for (std::size_t i = 0; i < SPEC_SIZE; ++i)
         {
-             REQUIRE(features.at(i) == fspecs.at(i).feature());
-             REQUIRE(*specs.at(i) == fspecs.at(i).spec());
+            REQUIRE(features.at(i) == fspecs.at(i).feature());
+            REQUIRE(*specs.at(i) == fspecs.at(i).spec());
         }
     }
 }
@@ -104,9 +104,9 @@ TEST_CASE ("specifier parsing", "[specifier]")
         auto zlib = vcpkg::FullPackageSpec::from_string("zlib[0,1]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
         auto openssl =
             vcpkg::FullPackageSpec::from_string("openssl[*]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
-        auto specs = FullPackageSpec::to_feature_specs(zlib, {}, {});
-        auto specs2 = FullPackageSpec::to_feature_specs(openssl, {}, {});
-        Util::Vectors::concatenate(&specs, specs2);
+        auto specs = zlib.to_feature_specs({}, {});
+        auto specs2 = openssl.to_feature_specs({}, {});
+        Util::Vectors::append(&specs, specs2);
         Util::sort(specs);
 
         auto spectargets = FeatureSpec::from_strings_and_triplet(

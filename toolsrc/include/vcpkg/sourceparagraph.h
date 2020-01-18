@@ -23,14 +23,9 @@ namespace vcpkg
         static Dependency parse_dependency(std::string name, std::string qualifier);
     };
 
-    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps,
-                                                 const Triplet& t,
-                                                 const std::unordered_map<std::string, std::string>& cmake_vars);
-
-    std::vector<FeatureSpec> filter_dependencies_to_specs(
-        const std::vector<Dependency>& deps,
-        const Triplet& t,
-        const std::unordered_map<std::string, std::string>& cmake_vars);
+    std::vector<FullPackageSpec> filter_dependencies(const std::vector<Dependency>& deps,
+                                                     const Triplet& t,
+                                                     const std::unordered_map<std::string, std::string>& cmake_vars);
 
     // zlib[uwp] becomes Dependency{"zlib", "uwp"}
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);

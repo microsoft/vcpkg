@@ -6,32 +6,12 @@
 
 #include <vcpkg/cmakevars.h>
 
+using namespace vcpkg;
 using vcpkg::Optional;
 using vcpkg::CMakeVars::TripletCMakeVarProvider;
 
 namespace vcpkg::CMakeVars
 {
-    Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_generic_triplet_vars(
-        const Triplet& triplet) const
-    {
-        Util::unused(triplet);
-        return nullopt;
-    }
-
-    Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_dep_info_vars(
-        const PackageSpec& spec) const
-    {
-        Util::unused(spec);
-        return nullopt;
-    }
-
-    Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_tag_vars(
-        const PackageSpec& spec) const
-    {
-        Util::unused(spec);
-        return nullopt;
-    }
-
     fs::path TripletCMakeVarProvider::create_tag_extraction_file(
         const Span<const std::pair<const FullPackageSpec*, std::string>>& spec_abi_settings) const
     {
@@ -88,7 +68,7 @@ namespace vcpkg::CMakeVars
         }
 
         fs::path path = paths.buildtrees / (hasher->get_hash() + ".vcpkg_tags.cmake");
-        
+
         Files::Filesystem& fs = paths.get_filesystem();
 
         std::error_code ec;
@@ -215,6 +195,10 @@ namespace vcpkg::CMakeVars
     {
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(specs.size());
         const fs::path file_path = create_dep_info_extraction_file(specs);
+        if (specs.size() > 100)
+        {
+            System::print2("Loading dependency information for ", specs.size(), " packages...\n");
+        }
         launch_and_split(file_path, vars);
         paths.get_filesystem().remove(file_path, VCPKG_LINE_INFO);
 

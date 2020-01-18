@@ -59,26 +59,25 @@ namespace vcpkg
         return f_specs;
     }
 
-    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const FullPackageSpec& spec,
-                                                               const std::vector<std::string>& default_features,
-                                                               const std::vector<std::string>& all_features)
+    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<std::string>& default_features,
+                                                               const std::vector<std::string>& all_features) const
     {
         std::vector<FeatureSpec> feature_specs;
-        bool core = false;
 
-        if (Util::find(spec.features, "*") != spec.features.end())
+        if (Util::find(features, "*") != features.end())
         {
-            feature_specs.emplace_back(spec.package_spec, "core");
+            feature_specs.emplace_back(package_spec, "core");
             for (const std::string& feature : all_features)
             {
-                feature_specs.emplace_back(spec.package_spec, feature);
+                feature_specs.emplace_back(package_spec, feature);
             }
         }
         else
         {
-            for (const std::string& feature : spec.features)
+            bool core = false;
+            for (const std::string& feature : features)
             {
-                feature_specs.emplace_back(spec.package_spec, feature);
+                feature_specs.emplace_back(package_spec, feature);
 
                 if (!core)
                 {
@@ -88,11 +87,11 @@ namespace vcpkg
 
             if (!core)
             {
-                feature_specs.emplace_back(spec.package_spec, "core");
+                feature_specs.emplace_back(package_spec, "core");
 
                 for (const std::string& def : default_features)
                 {
-                    feature_specs.emplace_back(spec.package_spec, def);
+                    feature_specs.emplace_back(package_spec, def);
                 }
             }
         }

@@ -24,6 +24,7 @@
     <ClCompile Include="..\src\vcpkg-test\chrono.cpp" />
     <ClCompile Include="..\src\vcpkg-test\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg-test\files.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\mockcmakevarsprovider.cpp" />
     <ClCompile Include="..\src\vcpkg-test\paragraph.cpp" />
     <ClCompile Include="..\src\vcpkg-test\plan.cpp" />
     <ClCompile Include="..\src\vcpkg-test\specifier.cpp" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\catch2\catch.hpp" />
+    <ClInclude Include="..\include\vcpkg-test\mockcmakevarprovider.h" />
     <ClInclude Include="..\include\vcpkg-test\util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

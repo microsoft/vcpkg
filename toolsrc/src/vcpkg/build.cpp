@@ -23,6 +23,7 @@
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkglib.h>
 
+using namespace vcpkg;
 using vcpkg::Build::BuildResult;
 using vcpkg::Parse::ParseControlErrorInfo;
 using vcpkg::Parse::ParseExpected;
@@ -101,9 +102,9 @@ namespace vcpkg::Build::Command
                                                      spec.triplet(),
                                                      build_package_options,
                                                      var_provider,
-                                                     std::move(*feature_dependencies),
-                                                     std::move(*package_dependencies),
-                                                     std::move(*feature_list)};
+                                                     *feature_dependencies,
+                                                     *package_dependencies,
+                                                     *feature_list};
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -514,7 +515,9 @@ namespace vcpkg::Build
 
         if (Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.community_triplets.u8string()))
         {
-            System::printf(vcpkg::System::Color::warning, "-- Using community triplet %s. This triplet configuration is not guaranteed to succeed.\n", triplet.canonical_name());
+            System::printf(vcpkg::System::Color::warning,
+                           "-- Using community triplet %s. This triplet configuration is not guaranteed to succeed.\n",
+                           triplet.canonical_name());
             System::printf("-- [COMMUNITY] Loading triplet configuration from: %s\n", triplet_file_path);
         }
         else if (!Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.triplets.u8string()))
