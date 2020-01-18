@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
