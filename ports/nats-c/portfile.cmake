@@ -1,6 +1,6 @@
-# if("streaming" IN_LIST FEATURES)
-#     vcpkg_fail_port_install(MESSAGE "${PORT}[streaming] currently only supports Unix" ON_TARGET "Windows")
-# endif()
+#if("streaming" IN_LIST FEATURES)
+#    vcpkg_fail_port_install(MESSAGE "${PORT}[streaming] currently only supports Unix" ON_TARGET "Windows")
+#endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
