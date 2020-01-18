@@ -1,0 +1,17 @@
+Source: nats-c
+Version: 2.1.0
+Homepage: https://github.com/nats-io/nats.c
+Description: A C client for NATS
+Default-Features: full
+
+Feature: tls
+Build-Depends: openssl
+Description: Build nats-c with TLS support
+
+Feature: streaming
+Build-Depends: protobuf-c
+Description: Build nats-c with Streaming support
+
+Feature: full
+Build-Depends: nats-c[tls], nats-c[streaming]
+Description: Build nats-c fully-featured
