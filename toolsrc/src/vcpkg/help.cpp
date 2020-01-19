@@ -128,8 +128,10 @@ namespace vcpkg::Help
                        "  vcpkg edit <pkg>                Open up a port for editing (uses " ENVVAR(EDITOR) //
                        ", default 'code')\n"
                        "  vcpkg import <pkg>              Import a pre-built library\n"
-                       "  vcpkg create <pkg> <url>\n"
-                       "             [archivename]        Create a new package\n"
+                       "  vcpkg create <pkg> <url> <archivename/REF>\n"
+                       "               [TRPLET(windows/linux/osx)\n"
+                       "                BUILD_TYPE(cmake/make/nmake/msbuild/qmake)]\n"
+                       "                                  Create a new package\n"
                        "  vcpkg owns <pat>                Search for files in installed packages\n"
                        "  vcpkg depend-info <pkg>...      Display a list of dependencies for packages\n"
                        "  vcpkg env                       Creates a clean shell environment for development or "
