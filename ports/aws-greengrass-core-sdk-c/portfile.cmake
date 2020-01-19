@@ -14,21 +14,16 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-#vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-greengrass-core-sdk-c/cmake)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-	${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}
-	${CURRENT_PACKAGES_DIR}/lib/${PORT}
+    ${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}
+    ${CURRENT_PACKAGES_DIR}/lib/${PORT}
 )
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-
-
