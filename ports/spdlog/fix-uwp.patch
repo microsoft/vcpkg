@@ -1,26 +1,17 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 35425db..28c555a 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -128,7 +128,7 @@ if(SPDLOG_FMT_EXTERNAL)
-     target_link_libraries(spdlog_header_only INTERFACE fmt::fmt)
-     
-     if (WIN32)
--        target_compile_options(spdlog PRIVATE /wd4275)
-+        target_compile_options(spdlog PRIVATE /wd4275 /wd4100)
-     endif()
- 
-     set(PKG_CONFIG_REQUIRES fmt) # add dependecy to pkg-config
 diff --git a/include/spdlog/details/os-inl.h b/include/spdlog/details/os-inl.h
-index f436b0d..82f3510 100644
+index 8473eb09..6a4fd94b 100644
 --- a/include/spdlog/details/os-inl.h
 +++ b/include/spdlog/details/os-inl.h
-@@ -128,7 +128,7 @@ SPDLOG_INLINE void prevent_child_fd(FILE *f)
+@@ -130,9 +130,11 @@ SPDLOG_INLINE std::tm gmtime() SPDLOG_NOEXCEPT
+ SPDLOG_INLINE void prevent_child_fd(FILE *f)
  {
- 
  #ifdef _WIN32
--#if !defined(__cplusplus_winrt)
 +#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
-     auto file_handle = reinterpret_cast<HANDLE>(_get_osfhandle(_fileno(f)));
+     auto file_handle = reinterpret_cast<HANDLE>(_get_osfhandle(::_fileno(f)));
      if (!::SetHandleInformation(file_handle, HANDLE_FLAG_INHERIT, 0))
          SPDLOG_THROW(spdlog_ex("SetHandleInformation failed", errno));
++#endif
+ #else
+     auto fd = ::fileno(f);
+     if (::fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+

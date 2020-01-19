@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF 1549ff12f1aa61ffc4d9a8727c519034724392a0 #v1.4.2
-    SHA512 c159aea475baecad0a5a9eef965856203c96aa855b0480e82d751bcc050c6e08bb0aa458544da061f5d744e17dcd27bd9b6e31a62d502834f02d3591f29febec
+    REF v1.5.0
+    SHA512 78991c943dd95af563c4b29545b9b5d635caf1af5031262dde734ecf70c0b4ae866d954ee77b050f9f0cc089a3bc57ee9583895e51cb00dd1cc6c10ff905ca34
     HEAD_REF v1.x
     PATCHES
         disable-master-project-check.patch

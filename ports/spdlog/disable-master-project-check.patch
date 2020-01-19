@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 12320fb..70f611b 100644
+index 508a0b65..92846d4f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -33,13 +33,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+@@ -41,13 +41,7 @@ endif()
  # Set SPDLOG_MASTER_PROJECT to ON if we are building spdlog
  #---------------------------------------------------------------------------------------
  # Check if spdlog is being used directly or via add_subdirectory, but allow overriding
@@ -14,6 +14,6 @@ index 12320fb..70f611b 100644
 -    endif()
 -endif ()
 +set(SPDLOG_MASTER_PROJECT OFF)
- 
+
  # build shared option
  if(NOT WIN32)
