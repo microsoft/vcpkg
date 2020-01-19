@@ -262,3 +262,9 @@ mkdir -p "$buildDir"
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+
+echo "Telemetry"
+echo "---------"
+echo "vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.sh with -disableMetrics"
+echo "Read more about vcpkg telemetry at docs/about/privacy.md"
+echo ""
