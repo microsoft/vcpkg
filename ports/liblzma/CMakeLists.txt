@@ -142,7 +142,7 @@ if(BUILD_SHARED_LIBS)
 else()
     target_compile_definitions(LibLZMA PUBLIC -DLZMA_API_STATIC)
 endif()
-target_compile_definitions(LibLZMA PUBLIC -DHAVE_CONFIG_H)
+target_compile_definitions(LibLZMA PRIVATE -DHAVE_CONFIG_H)
 
 target_include_directories(LibLZMA PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>

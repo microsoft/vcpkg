@@ -22,11 +22,12 @@
 #   VCPKG_TARGET_IS_OSX
 #   VCPKG_TARGET_IS_FREEBSD
 #   VCPKG_TARGET_IS_ANDROID
+#   VCPKG_TARGET_IS_MINGW
 #   VCPKG_TARGET_EXECUTABLE_SUFFIX
 #   VCPKG_TARGET_STATIC_LIBRARY_SUFFIX
 #   VCPKG_TARGET_SHARED_LIBRARY_SUFFIX
 #
-# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md 
+# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
 # # Specifies if the port install should fail immediately given a condition
 # vcpkg_fail_port_install(MESSAGE "@PORT@ currently only supports Linux and Mac platforms" ON_TARGET "Windows")

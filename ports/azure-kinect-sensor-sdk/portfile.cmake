@@ -7,11 +7,15 @@ vcpkg_from_github(
     PATCHES
         fix-builds.patch
         disable-c4275.patch
+        fix-components-path.patch
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     docs K4A_BUILD_DOCS
-    test WITH_TEST
     tool BUILD_TOOLS
 )
 
@@ -22,6 +26,7 @@ vcpkg_configure_cmake(
     -DK4A_SOURCE_LINK=OFF
     -DK4A_MTE_VERSION=ON
     -DBUILD_EXAMPLES=OFF
+    -DWITH_TEST=OFF
 )
 
 vcpkg_install_cmake()
@@ -35,6 +40,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/k4arecord TARGET_PATH share/k4arecor
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
