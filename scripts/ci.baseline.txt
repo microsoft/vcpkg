@@ -387,6 +387,7 @@ easyloggingpp:x64-uwp=fail
 eathread:arm64-windows=fail
 eathread:arm-uwp=fail
 eathread:x64-uwp=fail
+eathread:x86-windows=fail
 ebml:arm-uwp=fail
 ebml:x64-uwp=fail
 ecm:arm64-windows      = skip
