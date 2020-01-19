@@ -11,3 +11,69 @@ index deec124..872032c 100644
    #define DLLImport __declspec(dllimport)
    #define DLLExport __declspec(dllexport)
  #else
+diff --git a/src/MQTTAsync.h b/src/MQTTAsync.h
+index 1b3593d..04718f8 100644
+--- a/src/MQTTAsync.h
++++ b/src/MQTTAsync.h
+@@ -92,7 +92,7 @@
+  extern "C" {
+ #endif
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN32) || defined(_WIN64)
+   #define DLLImport __declspec(dllimport)
+   #define DLLExport __declspec(dllexport)
+ #else
+@@ -1764,7 +1764,7 @@ int main(int argc, char* argv[])
+          "on topic %s for client with ClientID: %s\n",
+          PAYLOAD, TOPIC, CLIENTID);
+ 	while (!finished)
+-		#if defined(WIN32) || defined(WIN64)
++		#if defined(_WIN32) || defined(_WIN64)
+ 			Sleep(100);
+ 		#else
+ 			usleep(10000L);
+@@ -1914,7 +1914,7 @@ int main(int argc, char* argv[])
+ 	}
+ 
+ 	while	(!subscribed)
+-		#if defined(WIN32) || defined(WIN64)
++		#if defined(_WIN32) || defined(_WIN64)
+ 			Sleep(100);
+ 		#else
+ 			usleep(10000L);
+@@ -1935,7 +1935,7 @@ int main(int argc, char* argv[])
+ 		exit(EXIT_FAILURE);
+ 	}
+  	while	(!disc_finished)
+-		#if defined(WIN32) || defined(WIN64)
++		#if defined(_WIN32) || defined(_WIN64)
+ 			Sleep(100);
+ 		#else
+ 			usleep(10000L);
+diff --git a/src/MQTTClient.h b/src/MQTTClient.h
+index b3fadbe..130b804 100644
+--- a/src/MQTTClient.h
++++ b/src/MQTTClient.h
+@@ -110,7 +110,7 @@
+  extern "C" {
+ #endif
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN32) || defined(_WIN64)
+   #define DLLImport __declspec(dllimport)
+   #define DLLExport __declspec(dllexport)
+ #else
+diff --git a/src/MQTTReasonCodes.h b/src/MQTTReasonCodes.h
+index 369543b..38c299b 100644
+--- a/src/MQTTReasonCodes.h
++++ b/src/MQTTReasonCodes.h
+@@ -66,7 +66,7 @@ enum MQTTReasonCodes {
+   MQTTREASONCODE_WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED = 162
+ };
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN32) || defined(_WIN64)
+   #define DLLImport __declspec(dllimport)
+   #define DLLExport __declspec(dllexport)
+ #else
