@@ -52,8 +52,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeimage)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/freeimage/license-fi.txt ${CURRENT_PACKAGES_DIR}/share/freeimage/copyright)
-
 vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

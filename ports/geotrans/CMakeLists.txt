@@ -95,6 +95,9 @@ include/dtcc/CoordinateSystems/usng
 include/dtcc/CoordinateTuples
 )
 
+if(WIN32)
+    add_definitions(-DLITTLE_ENDIAN)
+endif()
 
 add_library(MSPdtcc ${DTCC_CPP})
 add_library(MSPCoordinateConversionService CCS/src/CoordinateConversion/CoordinateConversionService.cpp ${DTCC_CPP})
