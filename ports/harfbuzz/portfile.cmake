@@ -14,29 +14,12 @@ vcpkg_from_github(
         glib-cmake.patch
 )
 
-SET(HB_HAVE_ICU "OFF")
-if("icu" IN_LIST FEATURES)
-    SET(HB_HAVE_ICU "ON")
-endif()
-
-SET(HB_HAVE_GRAPHITE2 "OFF")
-if("graphite2" IN_LIST FEATURES)
-    SET(HB_HAVE_GRAPHITE2 "ON")
-endif()
-
-## Unicode callbacks
-
-# Builtin (UCDN)
-set(BUILTIN_UCDN OFF)
-if("ucdn" IN_LIST FEATURES)
-    set(BUILTIN_UCDN ON)
-endif()
-
-# Glib
-set(HAVE_GLIB OFF)
-if("glib" IN_LIST FEATURES)
-    set(HAVE_GLIB ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS(
+    "icu"           HB_HAVE_ICU
+    "graphite2"     HB_HAVE_GRAPHITE2
+    "ucdn"          BUILTIN_UCDN
+    "glib"          HAVE_GLIB
+)
 
 # At least one Unicode callback must be specified, or harfbuzz compilation fails
 if(NOT (BUILTIN_UCDN OR HAVE_GLIB))
