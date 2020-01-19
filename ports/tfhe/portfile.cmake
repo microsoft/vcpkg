@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux" ON_TARGET "Windows" "osx")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Unix" ON_TARGET "Windows")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v1.0.1
     SHA512 1d625eb00bf6a36fd86cfad8e1763d7030dd73d68f2422d1678f51352708e9275f0ce69c23fb0d9fec30fba00e1ca4a3df29fb4fc6dfe3b7f16e0d350aa7f170
     HEAD_REF master
+    PATCHES
+        mac-fix.patch
 )
 
 vcpkg_configure_cmake(
