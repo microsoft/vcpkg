@@ -7,7 +7,7 @@ index 508a0b65..c3482e43 100644
      target_compile_definitions(spdlog_header_only INTERFACE SPDLOG_FMT_EXTERNAL)
 
 +    if (WIN32)
-+        target_compile_options(spdlog PRIVATE /wd4275)
++        target_compile_options(spdlog PRIVATE /wd4275 /wd4100)
 +    endif()
 +
      # use external fmt-header-nly
