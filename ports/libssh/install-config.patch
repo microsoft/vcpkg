@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b9f6ef485..c910d37eb 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -145,8 +145,6 @@ install(
+         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+     DESTINATION
+         ${CMAKE_INSTALL_DIR}/${PROJECT_NAME}
+-    COMPONENT
+-        devel
+ )
+ 
+ if (WITH_EXAMPLES)
+diff --git a/0.9.0-daf25b6f84 - Kopie/libssh-config.cmake.in b/0.9.0-daf25b6f84/libssh-config.cmake.in
+index 11388f009..2f826a9b4 100644
+--- a/libssh-config.cmake.in	
++++ b/libssh-config.cmake.in
+@@ -6,7 +6,16 @@ if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/CMakeCache.txt")
+     set_and_check(LIBSSH_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/@LIBSSH_LIBRARY_NAME@")
+ else()
++ # Compute the installation prefix relative to this file.
++get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
++get_filename_component(PACKAGE_PREFIX_DIR "${PACKAGE_PREFIX_DIR}" PATH)
++get_filename_component(PACKAGE_PREFIX_DIR "${PACKAGE_PREFIX_DIR}" PATH)
++if(PACKAGE_PREFIX_DIR STREQUAL "/")
++  set(PACKAGE_PREFIX_DIR "")
++endif()
+     set_and_check(LIBSSH_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+-    set_and_check(LIBSSH_LIBRARIES "@PACKAGE_LIB_INSTALL_DIR@/@LIBSSH_LIBRARY_NAME@")
++    set_and_check(LIBSSH_LIBRARIES_RELEASE "@PACKAGE_LIB_INSTALL_DIR@/@LIBSSH_LIBRARY_NAME@")
++    set_and_check(LIBSSH_LIBRARIES_DEBUG "@PACKAGE_LIB_INSTALL_DIR@/../debug/lib/@LIBSSH_LIBRARY_NAME@")
++    set_and_check(LIBSSH_LIBRARIES "optimized;${LIBSSH_LIBRARIES_RELEASE};debug;${LIBSSH_LIBRARIES_DEBUG}")
+ endif()
+ 
+ # For backward compatibility
