@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF 6.1.2
     SHA512 8770bf4bd2bb6d938e75e0cf1e665c41930dbd9d2a6825274a5a43cd1d85b9c9ca621bb040ed099429f0e16bddbc3399361c453eb1bf3fc01376e6ad9dd875b7
     HEAD_REF master
-    PATCHES fix-warning4189.patch
 )
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
