@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 # Don't change to vcpkg_from_github! This points to a release and not an archive
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_6/ACE-src-6.5.6.zip"
-    FILENAME ACE-src-6.5.6.zip
-    SHA512 4ee42aafc86af159ab20dbb14c7c2a49bed733645f5cc3afa8cef3e9688ff929002f3420eb33e859afe10a534afc276340faa21d029fa56bd07bd9aed3403ab4
+    URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.zip"
+    FILENAME ACE-src-6.5.7.zip
+    SHA512 6ce6954941521b34ae8913dfe053d0f066632c55adf4091dae6bc180c79963d6f4ddfec7796cd6d9fc8ff59037ee162d20b017c4c296828913498bdbac2fc8a7
 )
 
 vcpkg_extract_source_archive_ex(
@@ -30,6 +30,7 @@ else()
 endif()
 if("ssl" IN_LIST FEATURES)
     list(APPEND ACE_FEATURE_LIST "ssl=1")
+    list(APPEND ACE_FEATURE_LIST "openssl11=1")
 else()
     list(APPEND ACE_FEATURE_LIST "ssl=0")
 endif()
