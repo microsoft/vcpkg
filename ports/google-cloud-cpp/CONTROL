@@ -1,5 +1,5 @@
 Source: google-cloud-cpp
-Version: 0.13.0
-Build-Depends: grpc, curl[ssl], crc32c, googleapis
+Version: 0.17.0
+Build-Depends: grpc, curl[ssl], crc32c, googleapis, google-cloud-cpp-common
 Description: C++ Client Libraries for Google Cloud Platform APIs.
 Homepage: https://github.com/googleapis/google-cloud-cpp

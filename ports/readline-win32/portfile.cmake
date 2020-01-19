@@ -8,13 +8,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(SOURCE_PATH "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src
     PREFER_NINJA
 )
 
@@ -22,10 +20,9 @@ vcpkg_install_cmake()
 
 # Copy headers
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/readline)
-file(GLOB headers "${SOURCE_PATH}/*.h")
+file(GLOB headers "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/*.h")
 file(COPY ${headers} DESTINATION ${CURRENT_PACKAGES_DIR}/include/readline)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

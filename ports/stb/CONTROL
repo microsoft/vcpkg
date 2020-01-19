@@ -1,4 +1,4 @@
 Source: stb
-Version: 2019-07-11
+Version: 2019-08-17
 Homepage: https://github.com/nothings/stb
-Description: stb single-file public domain libraries for C/C++
+Description: public domain header-only libraries

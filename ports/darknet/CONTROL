@@ -1,16 +1,31 @@
 Source: darknet
-Version: 0.2.5-6
+Version: 0.2.5.1-1
 Description: Darknet is an open source neural network framework written in C and CUDA. You only look once (YOLO) is a state-of-the-art, real-time object detection system, best example of darknet functionalities.
 Build-Depends: pthreads (windows), stb
-Default-Features: weights
-
-Feature: opencv
-Build-Depends: opencv[ffmpeg]
-Description: Build darknet with support for OpenCV
 
 Feature: cuda
 Build-Depends: cuda
 Description: Build darknet with support for CUDA
+
+Feature: cudnn
+Build-Depends: darknet[cuda], cudnn
+Description: Build darknet with support for CUDNN
+
+Feature: opencv-base
+Build-Depends: opencv[ffmpeg]
+Description: Build darknet with support for OpenCV
+
+Feature: opencv-cuda
+Build-Depends: opencv[ffmpeg], opencv[cuda]
+Description: Build darknet with support for a CUDA-enabled OpenCV
+
+Feature: opencv3-base
+Build-Depends: opencv3[ffmpeg]
+Description: Build darknet with support for OpenCV3
+
+Feature: opencv3-cuda
+Build-Depends: opencv3[ffmpeg], opencv3[cuda]
+Description: Build darknet with support for a CUDA-enabled OpenCV3
 
 Feature: weights
 Description: Download pre-built weights for test
@@ -18,6 +33,6 @@ Description: Download pre-built weights for test
 Feature: weights-train
 Description: Download pre-built weights for training
 
-Feature: opencv-cuda
-Build-Depends: darknet[opencv], darknet[cuda]
-Description: Build darknet with support for a CUDA-enabled OpenCV
+Feature: full
+Build-Depends: darknet[opencv-cuda], darknet[cudnn], darknet[weights], darknet[weights-train]
+Description: Build darknet fully-featured

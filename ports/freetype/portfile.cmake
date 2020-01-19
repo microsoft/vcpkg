@@ -72,7 +72,6 @@ file(COPY
     ${SOURCE_PATH}/docs/LICENSE.TXT
     ${SOURCE_PATH}/docs/FTL.TXT
     ${SOURCE_PATH}/docs/GPLv2.TXT
-    ${CMAKE_CURRENT_LIST_DIR}/usage
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/freetype
 )
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/freetype/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/freetype/copyright)

@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
     FILENAME "freeglut-3.0.0.tar.gz"
@@ -32,6 +32,14 @@ string(REGEX REPLACE "\"freeglut_static.lib\""
                      "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
 string(REGEX REPLACE "\"freeglut_staticd.lib\""
                      "\"freeglutd.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    string(REPLACE
+        "ifdef FREEGLUT_STATIC"
+        "if 1 //ifdef FREEGLUT_STATIC"
+        FREEGLUT_STDH
+        "${FREEGLUT_STDH}"
+    )
+endif()
 file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 vcpkg_configure_cmake(

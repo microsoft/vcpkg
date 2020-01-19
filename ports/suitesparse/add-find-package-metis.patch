@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8c2e63..d443390 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -199,12 +199,15 @@ if(LAPACK_FOUND AND BLAS_FOUND)
+ endif() # LAPACK is not found
+ 
+ IF(BUILD_METIS OR USE_VCPKG_METIS)
++	find_package(metis REQUIRED)
+ 	set(SuiteSparse_LINKER_METIS_LIBS "metis")
+ 	## namespaced library target for config
+-	set(SuiteSparse_EXPORTED_METIS_LIBS "SuiteSparse::metis")
++	set(SuiteSparse_EXPORTED_METIS_LIBS "metis")
++	set(SuiteSparse_FIND_PACKAGE_METIS "find_package(metis REQUIRED)")
+ else()
+ 	set(SuiteSparse_LINKER_METIS_LIBS "")
+ 	set(SuiteSparse_EXPORTED_METIS_LIBS "")
++	set(SuiteSparse_FIND_PACKAGE_METIS "")
+ ENDIF()
+ 
+ add_subdirectory(SuiteSparse)
+diff --git a/SuiteSparse/CMakeLists.txt b/SuiteSparse/CMakeLists.txt
+index 5ef08a6..6c7abfd 100644
+--- a/SuiteSparse/CMakeLists.txt
++++ b/SuiteSparse/CMakeLists.txt
+@@ -13,7 +13,7 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+ 
+ # Global flags:
+ IF (BUILD_METIS OR USE_VCPKG_METIS)
+-	INCLUDE_DIRECTORIES("${METIS_SOURCE_DIR}/include")
++	#INCLUDE_DIRECTORIES("${METIS_SOURCE_DIR}/include")
+ ELSE ()
+ 	ADD_DEFINITIONS(-DNPARTITION)
+ ENDIF ()
+diff --git a/cmake/SuiteSparse-config-install.cmake.in b/cmake/SuiteSparse-config-install.cmake.in
+index 49387b8..553d9c7 100644
+--- a/cmake/SuiteSparse-config-install.cmake.in
++++ b/cmake/SuiteSparse-config-install.cmake.in
+@@ -5,6 +5,7 @@ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+ 
+ find_package(LAPACK REQUIRED)
++@SuiteSparse_FIND_PACKAGE_METIS@
+ 
+ # Load targets from the install tree.
+ include(${_SuiteSparse_SELF_DIR}/suitesparse-targets.cmake)

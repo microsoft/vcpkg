@@ -18,6 +18,9 @@ else()
     ]])
 endif()
 
+# fixup Windows drive letter to uppercase.
+get_filename_component(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_CANDIDATE} ABSOLUTE)
+
 # Validate VCPKG_ROOT_DIR_CANDIDATE
 if (NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
     message(FATAL_ERROR "Could not find .vcpkg-root")
@@ -96,6 +99,9 @@ if(CMD MATCHES "^BUILD$")
 
     if (DEFINED VCPKG_POLICY_DLLS_WITHOUT_LIBS)
         file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyDLLsWithoutLIBs: ${VCPKG_POLICY_DLLS_WITHOUT_LIBS}\n")
+    endif()
+    if (DEFINED VCPKG_POLICY_DLLS_WITHOUT_EXPORTS)
+        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyDLLsWithoutExports: ${VCPKG_POLICY_DLLS_WITHOUT_EXPORTS}\n")
     endif()
     if (DEFINED VCPKG_POLICY_EMPTY_PACKAGE)
         file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyEmptyPackage: ${VCPKG_POLICY_EMPTY_PACKAGE}\n")
