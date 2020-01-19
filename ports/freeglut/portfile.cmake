@@ -29,6 +29,22 @@ else()
     set(FREEGLUT_DYNAMIC OFF)
 endif()
 
+# Patch header
+file(READ ${SOURCE_PATH}/include/GL/freeglut_std.h FREEGLUT_STDH)
+string(REGEX REPLACE "\"freeglut_static.lib\""
+                     "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
+string(REGEX REPLACE "\"freeglut_staticd.lib\""
+                     "\"freeglutd.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    string(REPLACE
+        "ifdef FREEGLUT_STATIC"
+        "if 1 //ifdef FREEGLUT_STATIC"
+        FREEGLUT_STDH
+        "${FREEGLUT_STDH}"
+    )
+endif()
+file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

@@ -48,7 +48,7 @@ To ensure archive content does not change, archives downloaded preferably have a
 </details>
 
 <details id=c000006>
-<summary><a href=#c000006>c000006</a>: New ports pass CI checks for triplets that the library officially supports
+<summary><a href=#c000006>c000006</a>: New ports pass CI checks for triplets that the library officially supports</summary>
 
 To ensure vcpkg ports are of a high quality, we ask that incoming ports support the official platforms for the library in question.
 
