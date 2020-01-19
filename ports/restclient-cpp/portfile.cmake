@@ -1,4 +1,6 @@
-include(vcpkg_common_functions)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -22,12 +24,9 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restclient-cpp)
 
-# Remove includes in debug
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restclient-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/restclient-cpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/restclient-cpp/copyright)
-
-# Copy pdb files
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
