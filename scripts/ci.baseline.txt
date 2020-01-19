@@ -113,6 +113,7 @@ aws-lambda-cpp:x64-uwp=fail
 aws-lambda-cpp:x64-windows=fail
 aws-lambda-cpp:x64-windows-static=fail
 aws-lambda-cpp:x86-windows=fail
+aws-lambda-cpp:x64-osx=fail
 aws-sdk-cpp:x64-linux=ignore
 azure-c-shared-utility:arm-uwp=fail
 azure-c-shared-utility:x64-uwp=fail

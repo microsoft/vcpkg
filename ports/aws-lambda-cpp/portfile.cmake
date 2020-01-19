@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "aws-lambda-cpp currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
