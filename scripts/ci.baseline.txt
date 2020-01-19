@@ -587,6 +587,7 @@ healpix:x64-windows-static=fail
 healpix:x64-uwp=fail
 healpix:arm64-windows=fail
 healpix:arm-uwp=fail
+healpix:x64-osx=fail
 hidapi:arm64-windows=fail
 hidapi:arm-uwp=fail
 hidapi:x64-linux=fail

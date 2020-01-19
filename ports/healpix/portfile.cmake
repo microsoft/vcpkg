@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "Windows")
+vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 
 set(HEALPIX_VER 3.50)
 set(HEALPIX_PACK_NAME  ${HEALPIX_VER}_2018Dec10)
