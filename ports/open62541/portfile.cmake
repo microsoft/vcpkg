@@ -4,10 +4,12 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
 
+set(VERSION v1.0)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF v1.0
+    REF ${VERSION}
     SHA512 a1cc614147ee7fc0b4246abb0dd1a3405e330760c1d9d76980700853f136f7562690906cb428bae81232355d03f27c1cdc71da85e23e0cf16167f42d4faff93b
     HEAD_REF master
 )
@@ -29,6 +31,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBIN_INSTALL_DIR:STRING=bin
+        -DOPEN62541_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
