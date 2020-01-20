@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
