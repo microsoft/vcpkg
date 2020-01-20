@@ -2,46 +2,43 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-include(vcpkg_common_functions)
-
-set(OPENCV_VERSION "3.4.7")
+set(OPENCV_VERSION "3.4.8")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 ba1336ad4e5208748aa09c99770392cc71ef72688560d0b03287ddafd36093ef30cbdf6422f87f8f878663ab8085cc0ff8a8c65fd1ff0ec6800855ea01309beb
+    SHA512 6c2dfa88e9a93747397f80e6a3dd7eed126bc14efe6c0ec5b064d10bc49f24fc6fb187029f3ac6f5d9f5c16465b96ba55e5d5cacc3584dce69e10567df423ccb
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0009-fix-uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
- "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUDA
- "cuda"     WITH_CUBLAS
- "dnn"      BUILD_opencv_dnn
- "eigen"    WITH_EIGEN
- "ffmpeg"   WITH_FFMPEG
- "flann"    BUILD_opencv_flann
- "gdcm"     WITH_GDCM
- "halide"   WITH_HALIDE
- "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
- "nonfree"  OPENCV_ENABLE_NONFREE
- "openexr"  WITH_OPENEXR
- "opengl"   WITH_OPENGL
- "png"      WITH_PNG
- "qt"       WITH_QT
- "sfm"      BUILD_opencv_sfm
- "tiff"     WITH_TIFF
- "webp"     WITH_WEBP
- "world"    BUILD_opencv_world
+    contrib WITH_CONTRIB
+    cuda    WITH_CUDA
+    cuda    WITH_CUBLAS
+    dnn     BUILD_opencv_dnn
+    eigen   WITH_EIGEN
+    ffmpeg  WITH_FFMPEG
+    flann   BUILD_opencv_flann
+    gdcm    WITH_GDCM
+    halide  WITH_HALIDE
+    jasper  WITH_JASPER
+    jpeg    WITH_JPEG
+    nonfree OPENCV_ENABLE_NONFREE
+    openexr WITH_OPENEXR
+    opengl  WITH_OPENGL
+    png     WITH_PNG
+    qt      WITH_QT
+    sfm     BUILD_opencv_sfm
+    tiff    WITH_TIFF
+    webp    WITH_WEBP
+    world   BUILD_opencv_world
 )
 
 # Cannot use vcpkg_check_features() for "ipp", "ovis", "tbb", and "vtk".
