@@ -1,28 +1,20 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ZYDIS_ARCHIVE
-  URLS "https://github.com/zyantific/zydis/archive/v3.0.0.zip"
-  FILENAME "zydis-3.0.0.zip"
-  SHA512 a9a75903553793a19164124e6b6b4f202ef928558ba094ce9e6a9290e4bce4a28a8bb1696b552560a9c093f2774e1f68310ea278b6533867712ba7b3e283d367
-)
-
-vcpkg_download_distfile(ZYCORE_ARCHIVE
-  URLS "https://github.com/zyantific/zycore-c/archive/ffcc3663200984e6cb54c2879f7b4de3f6112227.zip"
-  FILENAME "zycore-c-ffcc3663200984e6cb54c2879f7b4de3f611222.zip"
-  SHA512 157ad277462bf71fd111a367c9b192f58f1f8ba364bfdf17cfdec956d14b5b32545299cdd355fd4b7bd7ab07f83b3219c2bb2e9c7b958b857613ed2c5f26afe2
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ZYDIS_ARCHIVE}
+    REPO zyantific/zydis
+    REF ce4a42ffaffe4a5ff615665e05177c4c69eb4683
+    SHA512 dc7fab406219e88d981101f4d87e854069ca250996ace7f5284206e03154c969eb398db02ef13a0d2b504aadc34837aebf4afbc0f9163e5771c93380a813aa36
+    HEAD_REF master
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH ZYCORE_PATH
-    ARCHIVE ${ZYCORE_ARCHIVE}
+vcpkg_from_github(
+    OUT_SOURCE_PATH ZYCORE_SOURCE_PATH
+    REPO zyantific/zycore-c
+    REF ffcc3663200984e6cb54c2879f7b4de3f6112227
+    SHA512 dba3ad674225ab72bc16a6493f245cf6f72d2a06ebfd7781533088c5697511395c085e4e99ea95e46b828466dd0246452ef0d2086c6493dcd940478adeaed17c
+    HEAD_REF master
 )
 
-file(RENAME ${ZYCORE_PATH} ${SOURCE_PATH}/dependencies/zycore)
+file(RENAME ${ZYCORE_SOURCE_PATH} ${SOURCE_PATH}/dependencies/zycore)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(ZYDIS_BUILD_SHARED_LIB OFF)
@@ -50,5 +42,4 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

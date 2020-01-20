@@ -1,3 +1,4 @@
 Source: zydis
 Version: 3.0.0
+Homepage: https://zydis.re
 Description: Fast and lightweight x86/x86-64 disassembler library.
