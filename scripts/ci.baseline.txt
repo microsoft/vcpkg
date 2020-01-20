@@ -374,7 +374,6 @@ dxut:arm-uwp=fail
 dxut:x64-linux=fail
 dxut:x64-osx=fail
 dxut:x64-windows-static=fail
-eastl:arm64-windows=fail
 eastl:arm-uwp=fail
 easyhook:arm64-windows=fail
 easyhook:arm-uwp=fail
