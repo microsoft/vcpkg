@@ -586,13 +586,6 @@ hidapi:arm-uwp=fail
 hidapi:x64-linux=fail
 hidapi:x64-osx=fail
 hidapi:x64-uwp=fail
-<<<<<<< master
-=======
-<<<<<<< HEAD
-highfive:x64-osx=fail
-=======
->>>>>>> 299e8b4ac6008c057edb503eb218f0217e9c8f99
->>>>>>> local
 hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
@@ -1502,14 +1495,6 @@ rpclib:x64-uwp=fail
 rpclib:x64-windows=ignore
 rpclib:x86-windows=ignore
 rpclib:x64-windows-static=ignore
-<<<<<<< master
-=======
-<<<<<<< HEAD
-rtmidi:x64-uwp=fail
-rtmidi:arm-uwp=fail
-=======
->>>>>>> 299e8b4ac6008c057edb503eb218f0217e9c8f99
->>>>>>> local
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
 scintilla:arm-uwp=fail
