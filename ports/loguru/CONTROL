@@ -1,4 +1,4 @@
 Source: loguru
-Version: v2.0.0
+Version: v2.1.0
 Description: A lightweight and flexible C++ logging library
 Build-Depends:
