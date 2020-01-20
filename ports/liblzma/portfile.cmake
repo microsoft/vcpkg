@@ -76,6 +76,14 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/lzma.h"
+        "if !defined(LZMA_API_STATIC)"
+        "if 0"
+    )
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
 
 file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma RENAME copyright)
