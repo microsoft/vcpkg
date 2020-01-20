@@ -28,17 +28,17 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    libraw USE_LIBRAW
+    libraw      USE_LIBRAW
     opencolorio USE_OCIO
-    ffmpeg USE_FFMPEG
-    field3d USE_FIELD3D
-    freetype USE_FREETYPE
-    gif USE_GIF
-    opencv USE_OPENCV
-    openjpeg USE_OPENJPEG
-    webp USE_WEBP
-    python USE_PYTHON
-    tools OIIO_BUILD_TOOLS
+    ffmpeg      USE_FFMPEG
+    field3d     USE_FIELD3D
+    freetype    USE_FREETYPE
+    gif         USE_GIF
+    opencv      USE_OPENCV
+    openjpeg    USE_OPENJPEG
+    webp        USE_WEBP
+    pybind11    USE_PYTHON
+    tools       OIIO_BUILD_TOOLS
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -66,6 +66,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO)
+
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openimageio)
+endif()
 
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc

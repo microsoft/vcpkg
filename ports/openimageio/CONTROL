@@ -40,9 +40,9 @@ Feature: webp
 Build-Depends: libwebp
 Description: Enable libwebp support for openimageio
 
-Feature: python
+Feature: pybind11
 Build-Depends: pybind11
-Description: Enable pybind11 support for openimageio
+Description: Enable Python bindings support for openimageio
 
 Feature: tools
 Description: Build openimageio tools
