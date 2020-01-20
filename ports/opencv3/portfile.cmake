@@ -18,6 +18,11 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
+if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    # See https://stackoverflow.com/questions/33097558/cmake-cuda-libraries-not-found-when-compiling-opencv
+    message(FATAL_ERROR "Feature cuda only support x64 platform.")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     contrib WITH_CONTRIB
     cuda    WITH_CUDA
