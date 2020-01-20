@@ -1,4 +1,7 @@
-vcpkg_find_acquire_program(DOXYGEN)
+if (VCPKG_TARGET_IS_WINDOWS)
+    # doxygen only have windows package in vcpkg now.
+    vcpkg_find_acquire_program(DOXYGEN)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,7 +9,9 @@ vcpkg_from_github(
     REF 483639219095ad080538e07ceb5996de901d4e74
     SHA512 d5bf95db8db6a5c9f710bd274cb9bb82e3e67569e8f3ec55b36e068636a09252e6f191e36d8279e61b5d12408c065ce51829fc38d4d7afe5bda724752d2f084f
     HEAD_REF master
-    PATCHES Fix-headersFilePath.patch
+    PATCHES
+      Fix-headersFilePath.patch
+      01_disable_doxygen.patch
 )
 
 vcpkg_configure_cmake(
