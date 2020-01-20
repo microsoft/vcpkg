@@ -2,6 +2,8 @@ set(SEAL_VERSION_MAJOR 3)
 set(SEAL_VERSION_MINOR 4)
 set(SEAL_VERSION_MICRO 5)
 
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platform" ON_TARGET "Windows")
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SEAL_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SEAL_BUILD_STATIC)
 
