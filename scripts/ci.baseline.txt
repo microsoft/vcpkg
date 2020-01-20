@@ -1172,6 +1172,7 @@ ogdf:x64-uwp            = skip
 ogdf:x64-windows        = skip
 ogdf:x64-windows-static = skip
 ogdf:x86-windows        = skip
+ogre:x64-osx=fail
 # Conflicts with ogre
 ogre-next:arm64-windows      = skip
 ogre-next:arm-uwp            = skip
