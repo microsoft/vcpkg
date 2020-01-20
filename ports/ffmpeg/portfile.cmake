@@ -68,6 +68,10 @@ if("gpl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-gpl")
 endif()
 
+if("version3" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-version3")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
@@ -179,9 +183,9 @@ set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
 
 message(STATUS "Building Options: ${OPTIONS}")
 
-# Relase build
+# Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-    message(STATUS "Building Relase Options: ${OPTIONS_RELEASE}")
+    message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${SEP}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
     set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
@@ -261,8 +265,22 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 vcpkg_copy_pdbs()
 
 # Handle copyright
-# TODO: Examine build log and confirm that this license matches the build output
-file(INSTALL ${SOURCE_PATH}/COPYING.LGPLv2.1 DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
+if(${LICENSE_STRING} STREQUAL "License: LGPL version 2.1 or later")
+    set(LICENSE_FILE "COPYING.LGPLv2.1")
+elseif(${LICENSE_STRING} STREQUAL "License: LGPL version 3 or later")
+    set(LICENSE_FILE "COPYING.LGPLv3")
+elseif(${LICENSE_STRING} STREQUAL "License: GPL version 2 or later")
+    set(LICENSE_FILE "COPYING.GPLv2")
+elseif(${LICENSE_STRING} STREQUAL "License: GPL version 3 or later")
+    set(LICENSE_FILE "COPYING.GPLv3")
+elseif(${LICENSE_STRING} STREQUAL "License: nonfree and unredistributable")
+    set(LICENSE_FILE "COPYING.NONFREE")
+    file(WRITE ${SOURCE_PATH}/${LICENSE_FILE} ${LICENSE_STRING})
+else()
+    message(FATAL_ERROR "Failed to identify license (${LICENSE_STRING})")
+endif()
+file(INSTALL ${SOURCE_PATH}/${LICENSE_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake @ONLY)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

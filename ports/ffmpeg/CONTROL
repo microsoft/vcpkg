@@ -48,5 +48,8 @@ Description: allow nonfree and unredistributable libraries
 Feature: gpl
 Description: allow GPL licensed libraries
 
+Feature: version3
+Description: upgrade (L)GPL to version 3
+
 Feature: avresample
 Description: Libav audio resampling library support in ffmpeg

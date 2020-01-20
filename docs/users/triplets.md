@@ -8,6 +8,26 @@ We currently provide many triplets by default (run `vcpkg help triplet`). Howeve
 
 To change the triplet used by your project, such as to enable static linking, see our [Integration Document](integration.md#triplet-selection).
 
+
+## Community triplets
+
+Triplets contained in the `triplets\community` folder are not tested by continuous integration.
+
+These triplets contain configurations commonly requested by the community, but for which we lack the resources to properly test.
+
+Port updates may break compatibility with community triplets, such regressions won't get caught by our testing pipelines. Because of this, community involvement is paramount!
+
+We will gladly accept and review contributions that aim to solve issues with these triplets.
+
+### Usage
+
+Community Triplets are enabled by default, when using a community triplet a message like the following one will be printed during a package install:
+
+```bash
+-- Using community triplet x86-uwp. This triplet configuration is not guaranteed to succeed.
+-- [COMMUNITY] Loading triplet configuration from: D:\src\viromer\vcpkg\triplets\community\x86-uwp.cmake
+```
+
 ## Variables
 ### VCPKG_TARGET_ARCHITECTURE
 Specifies the target machine architecture.
