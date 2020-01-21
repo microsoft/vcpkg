@@ -22,11 +22,12 @@
 #   VCPKG_TARGET_IS_OSX
 #   VCPKG_TARGET_IS_FREEBSD
 #   VCPKG_TARGET_IS_ANDROID
+#   VCPKG_TARGET_IS_MINGW
 #   VCPKG_TARGET_EXECUTABLE_SUFFIX
 #   VCPKG_TARGET_STATIC_LIBRARY_SUFFIX
 #   VCPKG_TARGET_SHARED_LIBRARY_SUFFIX
 #
-# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md 
+# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
 # # Specifies if the port install should fail immediately given a condition
 # vcpkg_fail_port_install(MESSAGE "@PORT@ currently only supports Linux and Mac platforms" ON_TARGET "Windows")
@@ -39,10 +40,10 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE ${ARCHIVE}
     # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
     # REF 1.0.0
-    # (Optional) Read the docs for how to generate patches at: 
+    # (Optional) Read the docs for how to generate patches at:
     # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
     # PATCHES
     #   001_port_fixes.patch
