@@ -49,7 +49,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CM
 
 # =============================================================================
 # Collect CMake options for optional components
-if(VTK_WITH_QT)
+if("qt" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_Group_Qt=ON
         -DVTK_QT_VERSION=5
@@ -57,7 +57,7 @@ if(VTK_WITH_QT)
     )
 endif()
 
-if(VTK_WITH_PYTHON)
+if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
