@@ -1,0 +1,7 @@
+diff --git a/cmake/platforms/OpenCV-WindowsStore.cmake b/cmake/platforms/OpenCV-WindowsStore.cmake
+index 8b5dfa5..efc8b4f 100644
+--- a/cmake/platforms/OpenCV-WindowsStore.cmake
++++ b/cmake/platforms/OpenCV-WindowsStore.cmake
+@@ -1 +1 @@
+-include("${CMAKE_CURRENT_LIST_DIR}/OpenCV_WinRT.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/OpenCV-WinRT.cmake")
