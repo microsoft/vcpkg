@@ -90,7 +90,6 @@ arrow:x64-linux=fail
 arrow:x86-windows=fail
 asmjit:arm64-windows=fail
 asmjit:arm-uwp=fail
-asmjit:x64-uwp=fail
 asyncplusplus:arm-uwp=fail
 asyncplusplus:x64-uwp=fail
 atk:x64-osx=fail
