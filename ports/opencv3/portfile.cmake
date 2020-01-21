@@ -14,6 +14,7 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-fix-dynamic-install-path.patch
       0009-fix-uwp.patch
 )
 
@@ -306,38 +307,36 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
-  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-                 "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(Protobuf REQUIRED)
-if(Protobuf_FOUND)
-  if(TARGET protobuf::libprotobuf)
-    add_library(libprotobuf INTERFACE IMPORTED)
-    set_target_properties(libprotobuf PROPERTIES
-      INTERFACE_LINK_LIBRARIES protobuf::libprotobuf
-    )
-  else()
-    add_library(libprotobuf UNKNOWN IMPORTED)
-    set_target_properties(libprotobuf PROPERTIES
-      IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"
-      INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
-      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
-    )
-  endif()
-endif()
-find_package(TIFF QUIET)
-find_package(HDF5 QUIET)
-find_package(Freetype QUIET)
-find_package(Ogre QUIET)
-find_package(gflags QUIET)
-find_package(Ceres QUIET)
-find_package(ade QUIET)
-find_package(VTK QUIET)
-find_package(OpenMP QUIET)
-find_package(Tesseract QUIET)
-find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
-
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+  vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake
+    "set(CMAKE_IMPORT_FILE_VERSION 1)"
+    "set(CMAKE_IMPORT_FILE_VERSION 1)\n\
+find_package(Protobuf REQUIRED)\n\
+if(Protobuf_FOUND)\n\
+  if(TARGET protobuf::libprotobuf)\n\
+    add_library(libprotobuf INTERFACE IMPORTED)\n\
+    set_target_properties(libprotobuf PROPERTIES\n\
+      INTERFACE_LINK_LIBRARIES protobuf::libprotobuf\n\
+    )\n\
+  else()\n\
+    add_library(libprotobuf UNKNOWN IMPORTED)\n\
+    set_target_properties(libprotobuf PROPERTIES\n\
+      IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"\n\
+      INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"\n\
+      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"\n\
+    )\n\
+  endif()\n\
+endif()\n\
+find_package(TIFF QUIET)\n\
+find_package(HDF5 QUIET)\n\
+find_package(Freetype QUIET)\n\
+find_package(Ogre QUIET)\n\
+find_package(gflags QUIET)\n\
+find_package(Ceres QUIET)\n\
+find_package(ade QUIET)\n\
+find_package(VTK QUIET)\n\
+find_package(OpenMP QUIET)\n\
+find_package(Tesseract QUIET)\n\
+find_package(GDCM QUIET)\n")
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

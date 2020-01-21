@@ -1,0 +1,13 @@
+diff --git a/cmake/OpenCVInstallLayout.cmake b/cmake/OpenCVInstallLayout.cmake
+index 4995120..b2062f5 100644
+--- a/cmake/OpenCVInstallLayout.cmake
++++ b/cmake/OpenCVInstallLayout.cmake
+@@ -39,7 +39,7 @@ elseif(WIN32 AND CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+     set(_jni_suffix "")
+   endif()
+ 
+-  ocv_update(OPENCV_BIN_INSTALL_PATH           "${OPENCV_INSTALL_BINARIES_PREFIX}bin")
++  ocv_update(OPENCV_BIN_INSTALL_PATH           "bin/${OPENCV_INSTALL_BINARIES_PREFIX}")
+   ocv_update(OPENCV_TEST_INSTALL_PATH          "${OPENCV_BIN_INSTALL_PATH}")
+   ocv_update(OPENCV_SAMPLES_BIN_INSTALL_PATH   "${OPENCV_INSTALL_BINARIES_PREFIX}samples")
+   ocv_update(OPENCV_LIB_INSTALL_PATH           "${OPENCV_INSTALL_BINARIES_PREFIX}${OPENCV_INSTALL_BINARIES_SUFFIX}")
