@@ -1,0 +1,357 @@
+diff --git a/MemModLoader.sln b/MemModLoader.sln
+index 1303a62..56f8f1b 100644
+--- a/MemModLoader.sln
++++ b/MemModLoader.sln
+@@ -46,50 +46,94 @@ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|x64 = Debug|x64
+ 		Debug|x86 = Debug|x86
++		DebugStaticCRT|x64 = DebugStaticCRT|x64
++		DebugStaticCRT|x86 = DebugStaticCRT|x86
+ 		Release|x64 = Release|x64
+ 		Release|x86 = Release|x86
++		ReleaseStaticCRT|x64 = ReleaseStaticCRT|x64
++		ReleaseStaticCRT|x86 = ReleaseStaticCRT|x86
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Debug|x64.ActiveCfg = Debug|x64
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Debug|x64.Build.0 = Debug|x64
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Debug|x86.ActiveCfg = Debug|Win32
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Debug|x86.Build.0 = Debug|Win32
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.DebugStaticCRT|x64.ActiveCfg = DebugStaticCRT|x64
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.DebugStaticCRT|x64.Build.0 = DebugStaticCRT|x64
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.DebugStaticCRT|x86.ActiveCfg = DebugStaticCRT|Win32
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.DebugStaticCRT|x86.Build.0 = DebugStaticCRT|Win32
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Release|x64.ActiveCfg = Release|x64
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Release|x64.Build.0 = Release|x64
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Release|x86.ActiveCfg = Release|Win32
+ 		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.Release|x86.Build.0 = Release|Win32
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.ReleaseStaticCRT|x64.ActiveCfg = ReleaseStaticCRT|x64
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.ReleaseStaticCRT|x64.Build.0 = ReleaseStaticCRT|x64
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.ReleaseStaticCRT|x86.ActiveCfg = ReleaseStaticCRT|Win32
++		{4BAC5D92-9467-42CE-AECA-5BD5612EC82D}.ReleaseStaticCRT|x86.Build.0 = ReleaseStaticCRT|Win32
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Debug|x64.ActiveCfg = Debug|x64
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Debug|x64.Build.0 = Debug|x64
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Debug|x86.ActiveCfg = Debug|Win32
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Debug|x86.Build.0 = Debug|Win32
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.DebugStaticCRT|x64.ActiveCfg = DebugStaticCRT|x64
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.DebugStaticCRT|x64.Build.0 = DebugStaticCRT|x64
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.DebugStaticCRT|x86.ActiveCfg = DebugStaticCRT|Win32
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.DebugStaticCRT|x86.Build.0 = DebugStaticCRT|Win32
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Release|x64.ActiveCfg = Release|x64
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Release|x64.Build.0 = Release|x64
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Release|x86.ActiveCfg = Release|Win32
+ 		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.Release|x86.Build.0 = Release|Win32
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.ReleaseStaticCRT|x64.ActiveCfg = ReleaseStaticCRT|x64
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.ReleaseStaticCRT|x64.Build.0 = ReleaseStaticCRT|x64
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.ReleaseStaticCRT|x86.ActiveCfg = ReleaseStaticCRT|Win32
++		{F1E9D9CB-9BD8-45DF-B8C3-93D56C718EE5}.ReleaseStaticCRT|x86.Build.0 = ReleaseStaticCRT|Win32
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Debug|x64.ActiveCfg = Debug|x64
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Debug|x64.Build.0 = Debug|x64
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Debug|x86.ActiveCfg = Debug|Win32
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Debug|x86.Build.0 = Debug|Win32
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.DebugStaticCRT|x64.ActiveCfg = Debug|x64
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.DebugStaticCRT|x64.Build.0 = Debug|x64
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.DebugStaticCRT|x86.ActiveCfg = Debug|Win32
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.DebugStaticCRT|x86.Build.0 = Debug|Win32
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Release|x64.ActiveCfg = Release|x64
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Release|x64.Build.0 = Release|x64
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Release|x86.ActiveCfg = Release|Win32
+ 		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.Release|x86.Build.0 = Release|Win32
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.ReleaseStaticCRT|x64.ActiveCfg = Release|x64
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.ReleaseStaticCRT|x64.Build.0 = Release|x64
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.ReleaseStaticCRT|x86.ActiveCfg = Release|Win32
++		{F77E5305-41B1-4A6B-BEA2-981953C2C129}.ReleaseStaticCRT|x86.Build.0 = Release|Win32
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Debug|x64.ActiveCfg = Debug|x64
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Debug|x64.Build.0 = Debug|x64
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Debug|x86.ActiveCfg = Debug|Win32
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Debug|x86.Build.0 = Debug|Win32
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.DebugStaticCRT|x64.ActiveCfg = DebugStaticCRT|x64
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.DebugStaticCRT|x64.Build.0 = DebugStaticCRT|x64
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.DebugStaticCRT|x86.ActiveCfg = DebugStaticCRT|Win32
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.DebugStaticCRT|x86.Build.0 = DebugStaticCRT|Win32
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Release|x64.ActiveCfg = Release|x64
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Release|x64.Build.0 = Release|x64
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Release|x86.ActiveCfg = Release|Win32
+ 		{F68224B7-3965-405F-96CF-3C894DB54B2E}.Release|x86.Build.0 = Release|Win32
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.ReleaseStaticCRT|x64.ActiveCfg = ReleaseStaticCRT|x64
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.ReleaseStaticCRT|x64.Build.0 = ReleaseStaticCRT|x64
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.ReleaseStaticCRT|x86.ActiveCfg = ReleaseStaticCRT|Win32
++		{F68224B7-3965-405F-96CF-3C894DB54B2E}.ReleaseStaticCRT|x86.Build.0 = ReleaseStaticCRT|Win32
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Debug|x64.ActiveCfg = Debug|x64
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Debug|x64.Build.0 = Debug|x64
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Debug|x86.ActiveCfg = Debug|Win32
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Debug|x86.Build.0 = Debug|Win32
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.DebugStaticCRT|x64.ActiveCfg = DebugStaticCRT|x64
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.DebugStaticCRT|x64.Build.0 = DebugStaticCRT|x64
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.DebugStaticCRT|x86.ActiveCfg = DebugStaticCRT|Win32
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.DebugStaticCRT|x86.Build.0 = DebugStaticCRT|Win32
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Release|x64.ActiveCfg = Release|x64
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Release|x64.Build.0 = Release|x64
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Release|x86.ActiveCfg = Release|Win32
+ 		{D51BC152-624C-4290-8272-DB5D12A171CF}.Release|x86.Build.0 = Release|Win32
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.ReleaseStaticCRT|x64.ActiveCfg = ReleaseStaticCRT|x64
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.ReleaseStaticCRT|x64.Build.0 = ReleaseStaticCRT|x64
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.ReleaseStaticCRT|x86.ActiveCfg = ReleaseStaticCRT|Win32
++		{D51BC152-624C-4290-8272-DB5D12A171CF}.ReleaseStaticCRT|x86.Build.0 = ReleaseStaticCRT|Win32
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+diff --git a/projects/mmLoader-static.vcxproj b/projects/mmLoader-static.vcxproj
+index 3c71580..6699f19 100644
+--- a/projects/mmLoader-static.vcxproj
++++ b/projects/mmLoader-static.vcxproj
+@@ -1,6 +1,14 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup Label="ProjectConfigurations">
++    <ProjectConfiguration Include="DebugStaticCRT|Win32">
++      <Configuration>DebugStaticCRT</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="DebugStaticCRT|x64">
++      <Configuration>DebugStaticCRT</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|Win32">
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+@@ -9,6 +17,14 @@
+       <Configuration>Debug</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseStaticCRT|Win32">
++      <Configuration>ReleaseStaticCRT</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseStaticCRT|x64">
++      <Configuration>ReleaseStaticCRT</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|Win32">
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+@@ -31,12 +47,24 @@
+     <CharacterSet>Unicode</CharacterSet>
+     <PlatformToolset>v141_xp</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <CharacterSet>Unicode</CharacterSet>
++    <PlatformToolset>v141_xp</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+     <CharacterSet>Unicode</CharacterSet>
+     <PlatformToolset>v141_xp</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <CharacterSet>Unicode</CharacterSet>
++    <PlatformToolset>v141_xp</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+@@ -44,6 +72,13 @@
+     <CharacterSet>Unicode</CharacterSet>
+     <PlatformToolset>v141_xp</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticCRT|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <WholeProgramOptimization>true</WholeProgramOptimization>
++    <CharacterSet>Unicode</CharacterSet>
++    <PlatformToolset>v141_xp</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+@@ -51,6 +86,13 @@
+     <CharacterSet>Unicode</CharacterSet>
+     <PlatformToolset>v141_xp</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticCRT|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <WholeProgramOptimization>true</WholeProgramOptimization>
++    <CharacterSet>Unicode</CharacterSet>
++    <PlatformToolset>v141_xp</PlatformToolset>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+   </ImportGroup>
+@@ -61,24 +103,46 @@
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="mmLoader.static.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="mmLoader.static.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="mmLoader.static.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="mmLoader.static.props" />
++  </ImportGroup>
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="mmLoader.static.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticCRT|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="mmLoader.static.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="mmLoader.static.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticCRT|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="mmLoader.static.props" />
++  </ImportGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <TargetName>$(ProjectName)-$(PlatformShortName)-$(PlatformToolset)-d</TargetName>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|Win32'">
++    <TargetName>$(ProjectName)-$(PlatformShortName)-$(PlatformToolset)-d</TargetName>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <TargetName>$(ProjectName)-$(PlatformShortName)-$(PlatformToolset)-d</TargetName>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|x64'">
++    <TargetName>$(ProjectName)-$(PlatformShortName)-$(PlatformToolset)-d</TargetName>
++  </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+@@ -100,6 +164,28 @@
+       </Command>
+     </PreBuildEvent>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|Win32'">
++    <ClCompile>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <WarningLevel>Level3</WarningLevel>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++    </ClCompile>
++    <Link>
++      <SubSystem>Windows</SubSystem>
++    </Link>
++    <Lib>
++      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
++    </Lib>
++    <PostBuildEvent>
++      <Command>xcopy /s /e /y "$(SolutionDir)src\mmLoader\mmLoader.h" "$(SolutionDir)output\include\mmLoader\*"</Command>
++    </PostBuildEvent>
++    <PreBuildEvent>
++      <Command>
++      </Command>
++    </PreBuildEvent>
++  </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <ClCompile>
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+@@ -121,6 +207,28 @@
+       </Command>
+     </PreBuildEvent>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticCRT|x64'">
++    <ClCompile>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <WarningLevel>Level3</WarningLevel>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++    </ClCompile>
++    <Link>
++      <SubSystem>Windows</SubSystem>
++    </Link>
++    <Lib>
++      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
++    </Lib>
++    <PostBuildEvent>
++      <Command>xcopy /s /e /y "$(SolutionDir)src\mmLoader\mmLoader.h" "$(SolutionDir)output\include\mmLoader\*"</Command>
++    </PostBuildEvent>
++    <PreBuildEvent>
++      <Command>
++      </Command>
++    </PreBuildEvent>
++  </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <ClCompile>
+       <WarningLevel>Level3</WarningLevel>
+@@ -146,6 +254,32 @@
+       <Command>xcopy /s /e /y "$(SolutionDir)src\mmLoader\mmLoader.h" "$(SolutionDir)output\include\mmLoader\*"</Command>
+     </PostBuildEvent>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticCRT|Win32'">
++    <ClCompile>
++      <WarningLevel>Level3</WarningLevel>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <Optimization>MaxSpeed</Optimization>
++      <FunctionLevelLinking>true</FunctionLevelLinking>
++      <IntrinsicFunctions>true</IntrinsicFunctions>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++    </ClCompile>
++    <Link>
++      <SubSystem>Windows</SubSystem>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <OptimizeReferences>true</OptimizeReferences>
++    </Link>
++    <Lib>
++      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
++    </Lib>
++    <PreBuildEvent>
++      <Command>
++      </Command>
++    </PreBuildEvent>
++    <PostBuildEvent>
++      <Command>xcopy /s /e /y "$(SolutionDir)src\mmLoader\mmLoader.h" "$(SolutionDir)output\include\mmLoader\*"</Command>
++    </PostBuildEvent>
++  </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <ClCompile>
+       <WarningLevel>Level3</WarningLevel>
+@@ -171,6 +305,32 @@
+       <Command>xcopy /s /e /y "$(SolutionDir)src\mmLoader\mmLoader.h" "$(SolutionDir)output\include\mmLoader\*"</Command>
+     </PostBuildEvent>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticCRT|x64'">
++    <ClCompile>
++      <WarningLevel>Level3</WarningLevel>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <Optimization>MaxSpeed</Optimization>
++      <FunctionLevelLinking>true</FunctionLevelLinking>
++      <IntrinsicFunctions>true</IntrinsicFunctions>
++      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++    </ClCompile>
++    <Link>
++      <SubSystem>Windows</SubSystem>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <OptimizeReferences>true</OptimizeReferences>
++    </Link>
++    <Lib>
++      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
++    </Lib>
++    <PreBuildEvent>
++      <Command>
++      </Command>
++    </PreBuildEvent>
++    <PostBuildEvent>
++      <Command>xcopy /s /e /y "$(SolutionDir)src\mmLoader\mmLoader.h" "$(SolutionDir)output\include\mmLoader\*"</Command>
++    </PostBuildEvent>
++  </ItemDefinitionGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
