@@ -1,8 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 set(VERSION v1.0)
 
@@ -37,6 +33,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/open62541/tools)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
