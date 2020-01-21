@@ -28,7 +28,18 @@ vcpkg_build_cmake(TARGET MemoryModule)
 
 file(INSTALL ${SOURCE_PATH}/MemoryModule.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib)
+    file(INSTALL
+        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/MemoryModule.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+endif()
+
+if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib)
+    file(INSTALL
+        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/MemoryModule.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
