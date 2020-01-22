@@ -11,8 +11,10 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF hdf5
     PATCHES
-        hdf5_config.patch
-        fix-generate.patch
+        hdf5_config.patch       
+        fix-generate.patch      # removes the build of static targets in shared builds
+        static-targets.patch    # maps the internal static tagets to the shared targets if building as a dynamic library
+        export-private.patch    # exports two additional functions in shared builds to make hl/tools/h5watch build in shared builds. 
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -66,86 +68,25 @@ string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]] [[
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
 if(FEATURES MATCHES "tools")
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic") # waiting for single build PR to get merged
-            set(DEBUG_SHARED_BINS 
-                ${CURRENT_PACKAGES_DIR}/debug/bin/h5copy-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/h5diff-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/h5dump-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/h5ls-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/h5repack-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/debug/bin/h5stat-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-        else()
-            set(DEBUG_SHARED_BINS )
-        endif()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gif2h5${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h52gif${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5clear${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5copy${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5debug${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5diff${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5format_convert${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5import${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5jam${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5ls${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5mkgrp${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5repack${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5repart${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5stat${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5unjam${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${CURRENT_PACKAGES_DIR}/debug/bin/h5watch${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-            ${DEBUG_SHARED_BINS})
-    endif()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic") # waiting for single build PR to get merged
-        set(RELEASE_SHARED_BINS
-                ${CURRENT_PACKAGES_DIR}/bin/h5copy-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/bin/h5diff-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/bin/h5dump-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/bin/h5ls-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/bin/h5repack-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/bin/h5stat-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    set(TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(TOOL_SUFFIXES "-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX};${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     else()
-        set(RELEASE_SHARED_BINS )
+        set(TOOL_SUFFIXES "-static${VCPKG_TARGET_EXECUTABLE_SUFFIX};${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     endif()
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/gif2h5${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h52gif${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5clear${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5copy${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5debug${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5diff${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5format_convert${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5import${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5jam${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5ls${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5mkgrp${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5repack${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5repart${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5stat${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5unjam${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5watch${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${RELEASE_SHARED_BINS}
-        DESTINATION  ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/gif2h5${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h52gif${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5clear${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5copy${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5debug${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5diff${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5format_convert${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5import${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5jam${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5ls${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5mkgrp${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5repack${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5repart${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5stat${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5unjam${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/h5watch${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${RELEASE_SHARED_BINS}
-        )
+    
+    foreach(tool ${TOOLS})
+        foreach(suffix ${TOOL_SUFFIXES})
+            if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
+                file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
+            endif()
+            if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
+                file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}"
+                             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+                file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
+            endif()
+        endforeach()
+    endforeach()
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
