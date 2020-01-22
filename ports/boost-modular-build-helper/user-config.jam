@@ -2,10 +2,11 @@ import toolset ;
 
 if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 {
-    using msvc : : cl.exe :
-    <setup>"@NOTHING_BAT@"
-    @TOOLSET_OPTIONS@
-    ;
+    using msvc : : cl.exe
+        :
+        <setup>"@NOTHING_BAT@"
+        @TOOLSET_OPTIONS@
+        ;
 }
 else
 {
@@ -23,8 +24,8 @@ else
 
 if "@PORT@" = "boost-python"
 {
-    using python : @PYTHON_VERSION@ : : "@PYTHON_INCLUDE_PATH@" : "@PYTHONLIBS_RELEASE@" ;
-    using python : @PYTHON_VERSION@ : : "@PYTHON_INCLUDE_PATH@" : "@PYTHONLIBS_DEBUG@" : <python-debugging>on ;
+    using python : @VCPKG_PYTHON_VERSION@ : "@VCPKG_PYTHON_EXECUTABLE@" : "@VCPKG_PYTHON_INCLUDE@" : "@VCPKG_PYTHON_LIBS_RELEASE@" ;
+    using python : @VCPKG_PYTHON_VERSION@ : "@VCPKG_PYTHON_EXECUTABLE@" : "@VCPKG_PYTHON_INCLUDE@" : "@VCPKG_PYTHON_LIBS_DEBUG@" : <python-debugging>on ;
 }
 
 if "@PORT@" = "boost-mpi"
