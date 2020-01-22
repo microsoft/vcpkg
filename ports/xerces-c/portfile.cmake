@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
-    REF Xerces-C_3_2_2
-    SHA512 66f60fe9194376ac0ca99d13ea5bce23ada86e0261dde30686c21ceb5499e754dab8eb0a98adadd83522bda62709377715501f6dac49763e3a686f9171cc63ea
+    REF 71cc0e831b522933ae58253fcaf4423a166e6bec #3.2.2
+    SHA512 5ddaf84552cd1f685068352c12651780a9f4becd961d8efd0f1f6a21006df00ffb1afe9b9dd86a169f8c57c4f8b651d5477e1accfd7140a7a52aea14b23c9aed
     HEAD_REF trunk
     PATCHES
         disable-tests.patch
@@ -33,6 +31,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/xercesc)
@@ -64,7 +64,4 @@ file(REMOVE_RECURSE
 )
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/xerces-c)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/xerces-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/xerces-c/copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
