@@ -32,14 +32,6 @@ string(REGEX REPLACE "\"freeglut_static.lib\""
                      "\"freeglut.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
 string(REGEX REPLACE "\"freeglut_staticd.lib\""
                      "\"freeglutd.lib\"" FREEGLUT_STDH "${FREEGLUT_STDH}")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    string(REPLACE
-        "ifdef FREEGLUT_STATIC"
-        "if 1 //ifdef FREEGLUT_STATIC"
-        FREEGLUT_STDH
-        "${FREEGLUT_STDH}"
-    )
-endif()
 file(WRITE ${SOURCE_PATH}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 vcpkg_configure_cmake(
@@ -60,6 +52,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
     endif()
+
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h"
+        "ifdef FREEGLUT_STATIC"
+        "if 1 //ifdef FREEGLUT_STATIC"
+    )
 endif()
 
 # Clean
