@@ -20,13 +20,6 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
-#NC_EXTRA_DEPS 
-find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(SZIP_DEBUG NAMES libsz libszip szip sz libsz_D libszip_D szip_D sz_D szip_debug PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-#find_library(CURL_RELEASE NAMES curl libcurl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-#find_library(CURL_DEBUG NAMES curl_d libcurl_d curld libcurld curl libcurl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
