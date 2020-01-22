@@ -52,6 +52,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
     endif()
+
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h"
+        "ifdef FREEGLUT_STATIC"
+        "if 1 //ifdef FREEGLUT_STATIC"
+    )
 endif()
 
 # Clean
