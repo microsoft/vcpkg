@@ -12,6 +12,7 @@ vcpkg_from_github(
     PATCHES
       Fix-headersFilePath.patch
       01_disable_doxygen.patch
+      02_enable-cpp11-std.patch
 )
 
 vcpkg_configure_cmake(
