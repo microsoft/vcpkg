@@ -65,7 +65,14 @@ if(CLANG AND NOT MSVC)
 endif()
 
 if(GCC OR (CLANG AND USES_LIBSTDCXX))
-    link_libraries(stdc++fs)
+    include(CheckCXXSourceCompiles)
+    set(CMAKE_REQUIRED_LIBRARIES stdc++fs)
+    check_cxx_source_compiles("#include <experimental/filesystem>
+                               int main() { return 0; }" LINKS_TO_STDCXX_FS)
+    unset(CMAKE_REQUIRED_LIBRARIES)
+    if (LINKS_TO_STDCXX_FS)
+        link_libraries(stdc++fs)
+    endif()
 elseif(CLANG AND NOT MSVC AND NOT NO_LIBCXXFS)
     link_libraries(c++fs)
 endif()
@@ -94,7 +101,7 @@ elseif(GCC OR CLANG)
     add_compile_options(-std=c++1z)
 
     if(VCPKG_DEVELOPMENT_WARNINGS)
-        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-missing-field-initializers -Werror)
+        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move -Werror)
 
         # GCC and clang have different names for the same warning
         if (GCC)
@@ -142,4 +149,23 @@ if(MSVC)
   set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
   target_sources(vcpkg PRIVATE src/pch.cpp)
   target_compile_options(vcpkg PRIVATE /Yupch.h /FIpch.h /Zm200)
+endif()
+
+if (MINGW)
+  include(CheckCXXSourceCompiles)
+    check_cxx_source_compiles("#include <experimental/filesystem>
+                               int main() { return 0; }" USES_EXPERIMENTAL_FS)
+
+  if (NOT USES_EXPERIMENTAL_FS)
+    add_compile_definitions(USE_STD_FILESYSTEM)
+  endif()
+
+  add_compile_definitions(
+    UNICODE
+    _WIN32_WINNT=0x0601
+    WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
+    __fastfail=exit)
+  foreach(tgt vcpkg vcpkg-test)
+    target_link_libraries(${tgt} PRIVATE winhttp bcrypt version ole32 uuid)
+  endforeach()
 endif()
