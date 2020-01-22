@@ -2,11 +2,16 @@ Source: vtk
 Version: 8.90-PV-v5.7_1
 Description: Software system for 3D computer graphics, image processing, and visualization
 Homepage: https://github.com/Kitware/VTK
+Default-Features: selectvtkm
 Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, liblzma, libtheora, eigen3, double-conversion, pugixml, libharu[notiffsymbols], sqlite3, netcdf-c, utfcpp, libogg
+
+Feature: selectvtkm
+Description: Selector to decide if VTK will be build with VTK-m accelerators.
+Build-Depends: vtk[vtkm] (!arm&x64&!uwp)
 
 Feature: vtkm
 Description: Build with vtk-m accelerator and module.
-Build-Depends:  vtk-m
+Build-Depends: vtk-m (!arm&x64&!uwp)
 
 Feature: openvr
 Description: OpenVR functionality for VTK
