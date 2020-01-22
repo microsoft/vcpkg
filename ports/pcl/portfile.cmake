@@ -1,20 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.9.1
-    SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
+    REF af3ce2530b7ae8ed083a3515168626c587a5bbcd # version 1.10.0
+    SHA512 ed580fa3b365f575d51ac637701760ade64cb5f925f326e0acd016e25b2054b8e272094525a6a4104834c11e6ec8743452f8ad881f90f6f212b787fe0eea2475
     HEAD_REF master
     PATCHES
-        pcl_utils.patch
-        pcl_config.patch
-        use_flann_targets.patch
-        boost-1.70.patch
-        cuda_10_1.patch
+        #pcl_utils.patch
+        #pcl_config.patch
+        #use_flann_targets.patch
+        #boost-1.70.patch
+        #cuda_10_1.patch
 		# Patch for https://github.com/microsoft/vcpkg/issues/7660
-		use_target_link_libraries_in_pclconfig.patch
+		#use_target_link_libraries_in_pclconfig.patch
+        fix_cmakelists.patch 
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
+#file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
@@ -36,15 +37,15 @@ vcpkg_configure_cmake(
         # BUILD
         -DBUILD_surface_on_nurbs=ON
         # PCL
-        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
-        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
-        -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
+        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect
+        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect
+        -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         # WITH
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=ON
+        -DWITH_VTK=OFF # disable due to API changes in VTK 8.9
         # FEATURES
         ${FEATURE_OPTIONS}
 )
@@ -57,7 +58,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if("tools" IN_LIST FEATURES) 
-    file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe) # This only works on Windows....
     file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pcl)
     file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
