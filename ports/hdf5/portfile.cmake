@@ -21,6 +21,11 @@ if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
     message(FATAL_ERROR "Feature Parallel and C++ options are mutually exclusive.")
 endif()
 
+if ("fortran" IN_LIST FEATURE)
+    message(WARNING "Fortran is not yet official supported within VCPKG. Build will most likly fail.")
+    message(STATUS "It could work in a custom or community triplet by forwarding the required enviromnent/toolchain to make it work")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
      parallel     HDF5_ENABLE_PARALLEL
