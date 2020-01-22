@@ -5,9 +5,9 @@ index 8fd96a9..186341e 100644
 @@ -52,7 +52,7 @@ endif()
  # experimental
  
- if (NOT CPPAN_BUILD)
--    find_package(ICU COMPONENTS uc i18n)
-+    find_package(ICU REQUIRED COMPONENTS i18n uc)
+ if (NOT CPPAN_BUILD AND NOT SW_BUILD)
+-    find_package(ICU 52.1 COMPONENTS uc i18n)
++    find_package(ICU 52.1 REQUIRED COMPONENTS i18n uc)
  endif()
  
  ########################################
@@ -18,17 +18,17 @@ index 8fd96a9..186341e 100644
 +if(UNIX)
 +    list(APPEND ICU_LIBRARIES ${CMAKE_DL_LIBS})
 +endif()
- if (NOT CPPAN_BUILD)
- target_link_libraries       (unicharset_training common_training ${ICU_LIBRARIES})
- else()
-@@ -253,16 +256,27 @@ if (NOT CPPAN_BUILD)
+ if (CPPAN_BUILD)
+ target_link_libraries       (unicharset_training common_training pvt.cppan.demo.unicode.icu.i18n)
+ elseif (SW_BUILD)
+@@ -253,16 +256,27 @@ if (NOT CPPAN_BUILD AND NOT SW_BUILD)
  find_package(PkgConfig)
  endif()
  
--if (PKG_CONFIG_FOUND OR CPPAN_BUILD)
+-if (PKG_CONFIG_FOUND OR CPPAN_BUILD OR SW_BUILD)
 -
 -if (PKG_CONFIG_FOUND)
--pkg_check_modules(Pango REQUIRED pango)
+-pkg_check_modules(Pango REQUIRED pango>=1.22.0)
 -pkg_check_modules(Cairo REQUIRED cairo)
 -pkg_check_modules(PangoFt2 REQUIRED pangoft2)
 -pkg_check_modules(PangoCairo REQUIRED pangocairo)
