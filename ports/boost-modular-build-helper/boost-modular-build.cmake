@@ -126,15 +126,10 @@ function(boost_modular_build)
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     )
 
-    if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-        set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-    else()
-        execute_process(
-            COMMAND nproc
-            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-        )
-        string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    include(ProcessorCount)
+    ProcessorCount(NUMBER_OF_PROCESSORS)
+    if(NOT NUMBER_OF_PROCESSORS)
+        set(NUMBER_OF_PROCESSORS 1)
     endif()
 
     ######################
