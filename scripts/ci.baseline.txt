@@ -1749,6 +1749,7 @@ vlpp:x64-uwp=fail
 #unsuporrted archietectures
 vtk-m:arm-uwp=skip
 vtk-m:arm64-windows=skip
+vtk-m:x86-windows=skip
 vulkan:arm64-windows=fail
 vulkan:arm-uwp=fail
 vulkan:x64-linux=fail
