@@ -1746,10 +1746,11 @@ vlpp:arm64-windows=fail
 vlpp:arm-uwp=fail
 vlpp:x64-osx=fail
 vlpp:x64-uwp=fail
-#unsuporrted archietectures
+#unsupported architectures
 vtk-m:arm-uwp=skip
 vtk-m:arm64-windows=skip
 vtk-m:x86-windows=skip
+vtk-m:x64-uwp=skip
 vulkan:arm64-windows=fail
 vulkan:arm-uwp=fail
 vulkan:x64-linux=fail
