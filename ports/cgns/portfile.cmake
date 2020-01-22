@@ -47,40 +47,32 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DI
 
 file(INSTALL ${CURRENT_PORT_DIR}/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include) # we patched the config and the include is all that is needed
 
+set(TOOLS cgnscheck cgnscompress cgnsconvert cgnsdiff cgnslist cgnsnames)
+
+foreach(tool ${TOOLS})
+    set(suffix ${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}"
+                     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
+    endif()
+endforeach()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 IF(EXISTS ${CURRENT_PACKAGES_DIR}/debug) 
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/debug/include/cgnsconfig.h)
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/bin/cgnscheck${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/cgnscompress${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/cgnsconvert${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/cgnsdiff${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/cgnslist${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/cgnsnames${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 endif()
+
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h)
 file(GLOB_RECURSE BATCH_FILES ${CURRENT_PACKAGES_DIR}/bin/*.bat)
-file(INSTALL
-    ${BATCH_FILES}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnscheck${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnscompress${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnsconvert${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnsdiff${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnslist${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnsnames${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(REMOVE
-    ${BATCH_FILES}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnscheck${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnscompress${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnsconvert${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnsdiff${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnslist${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/bin/cgnsnames${VCPKG_TARGET_EXECUTABLE_SUFFIX}
-    )
-    
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
