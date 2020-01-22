@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         find-zlib.patch
+        fix-build_error.patch
 )
 
 # Prefer installed config files
