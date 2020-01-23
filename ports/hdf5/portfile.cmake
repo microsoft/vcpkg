@@ -39,7 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
 
-if(FEATURES MATCHES "tools" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(FEATURES MATCHES "tools" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
