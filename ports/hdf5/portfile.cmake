@@ -73,15 +73,15 @@ string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]] [[
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
 if(FEATURES MATCHES "tools")
-    set(TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import)
+    set(TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(TOOL_SUFFIXES "-shared${VCPKG_TARGET_EXECUTABLE_SUFFIX};${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     else()
         set(TOOL_SUFFIXES "-static${VCPKG_TARGET_EXECUTABLE_SUFFIX};${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     endif()
     
-    foreach(tool ${TOOLS})
-        foreach(suffix ${TOOL_SUFFIXES})
+    foreach(tool IN LISTS TOOLS)
+        foreach(suffix IN LISTS TOOL_SUFFIXES)
             if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
                 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
             endif()
@@ -95,7 +95,6 @@ if(FEATURES MATCHES "tools")
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
-#Linux build create additional scripts here. I dont know what they are doing so I am deleting them and hope for the best
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
