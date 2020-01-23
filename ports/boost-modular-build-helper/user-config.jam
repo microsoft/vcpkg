@@ -38,16 +38,30 @@ if "@PORT@" = "boost-mpi"
 
 project user-config : ;
 
-lib advapi32 ;
+if "@VCPKG_PLATFORM_TOOLSET@" != "external"
+{
+    lib advapi32 ;
 
-lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuuc.lib" <variant>release : : <library>advapi32 ;
-lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuucd.lib" <variant>debug : : <library>advapi32 ;
+    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuuc.lib" <variant>release : : <library>advapi32 ;
+    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuucd.lib" <variant>debug : : <library>advapi32 ;
 
-lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuin.lib" <variant>release : : ;
-lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuind.lib" <variant>debug : : ;
+    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuin.lib" <variant>release : : ;
+    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuind.lib" <variant>debug : : ;
 
-lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/icudt.lib" <variant>release : : ;
-lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icudtd.lib" <variant>debug : : ;
+    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/icudt.lib" <variant>release : : ;
+    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icudtd.lib" <variant>debug : : ;
+}
+else
+{
+    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/lib/libicuuc.a" <variant>release : : ;
+    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/libicuuc.a" <variant>debug : : ;
+
+    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/lib/libicui18n.a" <variant>release : : ;
+    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/libicui18n.a" <variant>debug : : ;
+
+    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/libicudata.a" <variant>release : : ;
+    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/libicudata.a" <variant>debug : : ;
+}
 
 lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
 lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>debug : : ;
