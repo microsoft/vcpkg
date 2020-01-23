@@ -12,13 +12,13 @@ vcpkg_from_github(
         avro.patch
         avro-pr-217.patch
         fix-build-error.patch # Since jansson updated, use jansson::jansson instead of the macro ${JANSSON_LIBRARIES}
+        snappy.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/lang/c
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_Snappy=ON
 )
 
 vcpkg_install_cmake()
