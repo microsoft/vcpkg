@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
         omp_test.patch
         patch_targets.patch
         fftw3_arch_fix.patch
+        aligned_malloc.patch
 )
 
 if ("openmp" IN_LIST FEATURES)
@@ -22,40 +23,40 @@ else()
 endif()
 
 if ("avx" IN_LIST FEATURES)
-    set(HAVE_AVX ON)
-    set(HAVE_SSE ON)
-    set(HAVE_SSE2 ON)
+    set(ENABLE_AVX ON)
+    set(ENABLE_SSE ON)
+    set(ENABLE_SSE2 ON)
 else()
-    set(HAVE_AVX OFF)
+    set(ENABLE_AVX OFF)
 endif()
 
 if ("avx2" IN_LIST FEATURES)
-    set(HAVE_AVX2 ON)
-    set(HAVE_FMA ON)
-    set(HAVE_SSE ON)
-    set(HAVE_SSE2 ON)
+    set(ENABLE_AVX2 ON)
+    set(ENABLE_FMA ON)
+    set(ENABLE_SSE ON)
+    set(ENABLE_SSE2 ON)
 else()
-    set(HAVE_AVX2 OFF)
-    set(HAVE_FMA OFF)
+    set(ENABLE_AVX2 OFF)
+    set(ENABLE_FMA OFF)
 endif()
 
 if ("sse" IN_LIST FEATURES)
-    set(HAVE_SSE ON)
+    set(ENABLE_SSE ON)
 else()
-    set(HAVE_SSE OFF)
+    set(ENABLE_SSE OFF)
 endif()
 
 if ("sse2" IN_LIST FEATURES)
-    set(HAVE_SSE2 ON)
-    set(HAVE_SSE ON)
+    set(ENABLE_SSE2 ON)
+    set(ENABLE_SSE ON)
 else()
-    set(HAVE_SSE2 OFF)
+    set(ENABLE_SSE2 OFF)
 endif()
 
 if ("threads" IN_LIST FEATURES)
-    set(HAVE_THREADS ON)
+    set(ENABLE_THREADS ON)
 else()
-    set(HAVE_THREADS OFF)
+    set(ENABLE_THREADS OFF)
 endif()
 
 set(ENABLE_FLOAT_CMAKE fftw3f)
@@ -81,13 +82,13 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE ENABLE_DEFAULT_PRECISION)
         OPTIONS 
             -D${PRECISION}=ON
             -DENABLE_OPENMP=${ENABLE_OPENMP}
-            -DHAVE_SSE=${HAVE_SSE}
-            -DHAVE_SSE2=${HAVE_SSE2}
-            -DHAVE_AVX=${HAVE_AVX}
-            -DHAVE_AVX2=${HAVE_AVX2}
-            -DHAVE_FMA=${HAVE_FMA}
-            -DENABLE_THREADS=${HAVE_THREADS}
-            -DWITH_COMBINED_THREADS=${HAVE_THREADS}
+            -DENABLE_SSE=${ENABLE_SSE}
+            -DENABLE_SSE2=${ENABLE_SSE2}
+            -DENABLE_AVX=${ENABLE_AVX}
+            -DENABLE_AVX2=${ENABLE_AVX2}
+            -DENABLE_FMA=${ENABLE_FMA}
+            -DENABLE_THREADS=${ENABLE_THREADS}
+            -DWITH_COMBINED_THREADS=${ENABLE_THREADS}
             -DBUILD_TESTS=OFF
         )
     endif()
