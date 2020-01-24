@@ -12,7 +12,7 @@ vcpkg_from_github(
         avro.patch
         avro-pr-217.patch
         fix-build-error.patch # Since jansson updated, use jansson::jansson instead of the macro ${JANSSON_LIBRARIES}
-        snappy.patch
+        snappy.patch # https://github.com/apache/avro/pull/793
 )
 
 vcpkg_configure_cmake(
