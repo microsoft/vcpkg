@@ -13,10 +13,8 @@ vcpkg_from_github(
 		# Patch for https://github.com/microsoft/vcpkg/issues/7660
 		#use_target_link_libraries_in_pclconfig.patch
         fix_cmakelists.patch 
+        findFLANN.patch # This is necessary to accomodate vcpkg changes to Flann. In an ideal world the flann port would not rename its targets and this would not be necessary. 
 )
-
-#file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,15 +35,15 @@ vcpkg_configure_cmake(
         # BUILD
         -DBUILD_surface_on_nurbs=ON
         # PCL
-        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect
-        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect
-        -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect
+        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect since VCPKG_LIBRARY_LINKAGE might be only set to dynamic for this port
+        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=OFF # this is incorrect since flann in vcpkg is currently always build as a static library. 
+        -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS} # this is incorrect since VCPKG_LIBRARY_LINKAGE might be only set to dynamic for this port
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         # WITH
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=OFF # disable due to API changes in VTK 8.9
+        -DWITH_VTK=OFF # disabled due to API changes in VTK 8.9
         # FEATURES
         ${FEATURE_OPTIONS}
 )

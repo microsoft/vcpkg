@@ -1,0 +1,24 @@
+diff --git a/cmake/Modules/FindFLANN.cmake b/cmake/Modules/FindFLANN.cmake
+index 782ee01c7..7598a62d0 100644
+--- a/cmake/Modules/FindFLANN.cmake
++++ b/cmake/Modules/FindFLANN.cmake
+@@ -48,7 +48,7 @@ if(flann_FOUND)
+   # Create interface library that effectively becomes an alias for the appropriate (static/dynamic) imported FLANN target
+   add_library(FLANN::FLANN INTERFACE IMPORTED)
+   if(FLANN_USE_STATIC)
+-    set_property(TARGET FLANN::FLANN APPEND PROPERTY INTERFACE_LINK_LIBRARIES flann::flann_cpp_s)
++    set_property(TARGET FLANN::FLANN APPEND PROPERTY INTERFACE_LINK_LIBRARIES flann::flann_cpp)
+   else()
+     set_property(TARGET FLANN::FLANN APPEND PROPERTY INTERFACE_LINK_LIBRARIES flann::flann_cpp)
+   endif()
+@@ -82,8 +82,8 @@ find_path(FLANN_INCLUDE_DIR
+ )
+ 
+ if(FLANN_USE_STATIC)
+-  set(FLANN_RELEASE_NAME flann_cpp_s)
+-  set(FLANN_DEBUG_NAME flann_cpp_s-gd)
++  set(FLANN_RELEASE_NAME flann_cpp)
++  set(FLANN_DEBUG_NAME flann_cpp-gd)
+   set(FLANN_LIBRARY_TYPE STATIC)
+ else()
+   set(FLANN_RELEASE_NAME flann_cpp)
