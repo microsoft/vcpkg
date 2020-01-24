@@ -5,7 +5,7 @@ diff -ru b/c/src/codec.c a/lang/c/src/codec.c
  #  if defined(__APPLE__)
  #    include <libkern/OSByteOrder.h>
  #    define __bswap_32 OSSwapInt32
-+#  elif defined(WIN32)
++#  elif defined(_WIN32)
 +#    include <stdlib.h>
 +#    define __bswap_32 _byteswap_ulong
  #  else
