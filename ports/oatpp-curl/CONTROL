@@ -1,0 +1,4 @@
+Source: oatpp-curl
+Version: 0.19.12
+Description: Oat++ Modern web framework curl module to use libcurl as a RequestExecutor on the oatpp's ApiClient
+Build-Depends: curl,oatpp

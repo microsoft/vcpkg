@@ -2,12 +2,13 @@ set(OATPP_VERSION "0.19.12")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-message(STATUS "Building oatpp[core]")
+message(STATUS "Building oatpp-websocket")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oatpp/oatpp
-    REF cb55324a78f1582d6bb0951be6833ea6290961d5 # 0.19.12
-    SHA512 d6fc88426d16f44ea860d8968b2bd23108c52d45512a350513bde9d28e4d23d93125ecd360110412b1e4e678ac6165374ba0dd759bccd27765f6fbc02fa20dd0
+    REPO oatpp/oatpp-websocket
+    REF a71fa8dbe836a31a5727ebbe331cbdb275e94716 # 0.19.12
+    SHA512 3e9fd165f8d00fb93ce019bde33fb687ade662776c2e1ab6f9edb756f13afceaa35c8c581ddba1a15dee8ae41a595b379dac5a28a77a83dbf252e3b9466d64df
     HEAD_REF master
 )
 
@@ -22,12 +23,11 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
         "-DBUILD_SHARED_LIBS:BOOL=${OATPP_BUILD_SHARED_LIBRARIES_OPTION}"
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-${OATPP_VERSION})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-websocket-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

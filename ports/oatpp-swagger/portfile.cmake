@@ -2,12 +2,13 @@ set(OATPP_VERSION "0.19.12")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-message(STATUS "Building oatpp[core]")
+message(STATUS "Building oatpp-swagger")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oatpp/oatpp
-    REF cb55324a78f1582d6bb0951be6833ea6290961d5 # 0.19.12
-    SHA512 d6fc88426d16f44ea860d8968b2bd23108c52d45512a350513bde9d28e4d23d93125ecd360110412b1e4e678ac6165374ba0dd759bccd27765f6fbc02fa20dd0
+    REPO oatpp/oatpp-swagger
+    REF a13bae1f32cea2ef011395ed92ae81f0f4b43aa7 # 0.19.12
+    SHA512 a7169970dde1c8c5d12a0fd9bf6a6af0a23e548e4e73a4d436aabcf088643cf7d193e9a2e31eac60fa97592c2904b473e624b189874705511f64686faecfc851
     HEAD_REF master
 )
 
@@ -27,7 +28,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-${OATPP_VERSION})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-swagger-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

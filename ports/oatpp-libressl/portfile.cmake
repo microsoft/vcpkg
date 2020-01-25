@@ -1,14 +1,24 @@
 set(OATPP_VERSION "0.19.12")
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  message(FATAL_ERROR "${PORT} does not support ARM")
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-message(STATUS "Building oatpp[core]")
+message(STATUS "Building oatpp-libressl")
+
+# get the source
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oatpp/oatpp
-    REF cb55324a78f1582d6bb0951be6833ea6290961d5 # 0.19.12
-    SHA512 d6fc88426d16f44ea860d8968b2bd23108c52d45512a350513bde9d28e4d23d93125ecd360110412b1e4e678ac6165374ba0dd759bccd27765f6fbc02fa20dd0
+    REPO oatpp/oatpp-libressl
+    REF 1fe8f1dd5d6586718885fce3ab23148c153d50dc # 0.19.12
+    SHA512 f1d513ed8eb66fac5bd408f97ddb87bb8141c7c58826b466f7b9f7a6dda79368ec80282d852c8da5ebf12bdd15e9e8564d4fea3d287554062f9dc6a86ffb4e9d
     HEAD_REF master
+    PATCHES "libress-submodule-downgrade-required-libressl-version.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -23,11 +33,12 @@ vcpkg_configure_cmake(
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
         "-DBUILD_SHARED_LIBS:BOOL=${OATPP_BUILD_SHARED_LIBRARIES_OPTION}"
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-${OATPP_VERSION})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-libressl-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
