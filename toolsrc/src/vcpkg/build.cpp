@@ -172,6 +172,7 @@ namespace vcpkg::Build
     static const std::string NAME_ONLY_RELEASE_CRT = "PolicyOnlyReleaseCRT";
     static const std::string NAME_EMPTY_INCLUDE_FOLDER = "PolicyEmptyIncludeFolder";
     static const std::string NAME_ALLOW_OBSOLETE_MSVCRT = "PolicyAllowObsoleteMsvcrt";
+    static const std::string NAME_ALLOW_RESTRICTED_HEADERS = "PolicyAllowRestrictedHeaders";
 
     const std::string& to_string(BuildPolicy policy)
     {
@@ -183,6 +184,7 @@ namespace vcpkg::Build
             case BuildPolicy::ONLY_RELEASE_CRT: return NAME_ONLY_RELEASE_CRT;
             case BuildPolicy::EMPTY_INCLUDE_FOLDER: return NAME_EMPTY_INCLUDE_FOLDER;
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return NAME_ALLOW_OBSOLETE_MSVCRT;
+            case BuildPolicy::ALLOW_RESTRICTED_HEADERS: return NAME_ALLOW_RESTRICTED_HEADERS;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -197,6 +199,7 @@ namespace vcpkg::Build
             case BuildPolicy::ONLY_RELEASE_CRT: return "VCPKG_POLICY_ONLY_RELEASE_CRT";
             case BuildPolicy::EMPTY_INCLUDE_FOLDER: return "VCPKG_POLICY_EMPTY_INCLUDE_FOLDER";
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return "VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT";
+            case BuildPolicy::ALLOW_RESTRICTED_HEADERS: return "VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS";
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -692,6 +695,7 @@ namespace vcpkg::Build
                                        paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake",
                                        Hash::Algorithm::Sha1));
 
+        abi_tag_entries.emplace_back("post_build_checks", "1");
         abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
         std::vector<std::string> sorted_feature_list(std::begin(config.feature_list), std::end(config.feature_list));
         Util::sort(sorted_feature_list);

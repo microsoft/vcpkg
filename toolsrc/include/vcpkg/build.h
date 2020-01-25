@@ -239,6 +239,7 @@ namespace vcpkg::Build
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
+        ALLOW_RESTRICTED_HEADERS,
         // Must be last
         COUNT,
     };
@@ -250,6 +251,7 @@ namespace vcpkg::Build
         BuildPolicy::ONLY_RELEASE_CRT,
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
+        BuildPolicy::ALLOW_RESTRICTED_HEADERS,
     };
 
     const std::string& to_string(BuildPolicy policy);
