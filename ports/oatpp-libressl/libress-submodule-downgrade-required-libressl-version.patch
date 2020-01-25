@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4663a65..22cb39d 100644
+index 4663a65..b91077a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -95,19 +95,44 @@ message("## ${OATPP_THIS_MODULE_NAME} module. Resolving dependencies...\n")
+@@ -95,19 +95,25 @@ message("## ${OATPP_THIS_MODULE_NAME} module. Resolving dependencies...\n")
  ##############################
  ## Find Libressl dependency
  
@@ -29,25 +29,6 @@ index 4663a65..22cb39d 100644
 +    endif()
 +endif()
 +get_filename_component(LIBRESSL_INCLUDE_DIR ${LIBRESSL_INCLUDE_DIR} DIRECTORY)
-+function(dump_variables)
-+    message(STATUS "#############################################################################")
-+    message(STATUS "#############################################################################")
-+    message(STATUS "#############################################################################")
-+    get_cmake_property(_variableNames VARIABLES)
-+    list (SORT _variableNames)
-+    foreach (_variableName ${_variableNames})
-+        message(STATUS "${_variableName}=${${_variableName}}")
-+    endforeach()
-+    message(STATUS "#############################################################################")
-+    message(STATUS "#############################################################################")
-+    message(STATUS "#############################################################################")
-+    execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
-+    message(STATUS "###############################################################################")
-+    message(STATUS "###############################################################################")
-+    message(STATUS "###############################################################################")
-+endfunction()
-+
-+dump_variables()
 +find_library(LIBRESSL_TLS_LIBRARY NAMES tls tls-21 tls-20 tls-19)
 +find_library(LIBRESSL_SSL_LIBRARY NAMES ssl ssl-49 ssl-48 ssl-47)
 +find_library(LIBRESSL_CRYPTO_LIBRARY NAMES crypto crypto-47 crypto-46 crypto-45)
