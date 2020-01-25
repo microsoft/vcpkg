@@ -725,12 +725,13 @@ namespace vcpkg::Build
 
         if (Debug::g_debugging)
         {
-            System::print2("[DEBUG] <abientries>\n");
+            std::string message = "[DEBUG] <abientries>\n";
             for (auto&& entry : abi_tag_entries)
             {
-                System::print2("[DEBUG] ", entry.key, "|", entry.value, "\n");
+                Strings::append(message, "[DEBUG] ", entry.key, "|", entry.value, "\n");
             }
-            System::print2("[DEBUG] </abientries>\n");
+            Strings::append(message, "[DEBUG] </abientries>\n");
+            System::print2(message);
         }
 
         auto abi_tag_entries_missing = abi_tag_entries;

@@ -19,6 +19,7 @@
 
 namespace vcpkg::Install
 {
+    using namespace vcpkg;
     using namespace Dependencies;
 
     using file_pack = std::pair<std::string, std::string>;
@@ -479,6 +480,7 @@ namespace vcpkg::Install
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
 
+                results.back().action = &action;
                 results.back().build_result = std::move(result);
             });
         }
@@ -527,7 +529,8 @@ namespace vcpkg::Install
 
     static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
     {
-        static const std::regex cmake_library_regex(R"(\badd_library\(([^\s\)]+)\s)", std::regex_constants::ECMAScript);
+        static const std::regex cmake_library_regex(R"(\badd_library\(([^\$\s\)]+)\s)",
+                                                    std::regex_constants::ECMAScript);
 
         auto& fs = paths.get_filesystem();
 
