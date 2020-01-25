@@ -218,6 +218,9 @@ chakracore:x64-linux=fail
 chakracore:x64-osx=fail
 chakracore:x64-uwp=fail
 chakracore:x64-windows-static=fail
+# DCMTK currently has a vendored copy of libcharls.a, which causes conflicts with charls (TODO: use charls' copy)
+charls:x64-linux=skip
+charls:x64-osx=skip
 chartdir:arm64-windows=fail
 chartdir:arm-uwp=fail
 chartdir:x64-uwp=fail
