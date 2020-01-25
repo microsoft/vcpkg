@@ -8,7 +8,7 @@ endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()	
+endif()
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   message(FATAL_ERROR "${PORT} does not support ARM")
 endif()
