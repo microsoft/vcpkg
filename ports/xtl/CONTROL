@@ -1,4 +1,5 @@
 Source: xtl
-Version: 0.6.5
+Version: 0.6.10
 Build-Depends: nlohmann-json
 Description: The x template library.
+Homepage: https://github.com/xtensor-stack/xtl
