@@ -1,12 +1,5 @@
 set(OATPP_VERSION "0.19.12")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  message(FATAL_ERROR "${PORT} does not support ARM")
-endif()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 message(STATUS "Building oatpp-libressl")
