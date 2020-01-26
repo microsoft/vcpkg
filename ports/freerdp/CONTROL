@@ -1,5 +1,5 @@
 Source: freerdp
-Version: 2.0.0-rc4-2
+Version: 2.0.0-rc4-4
 Homepage: https://github.com/FreeRDP/FreeRDP
 Description: A free implementation of the Remote Desktop Protocol (RDP)
-Build-Depends: openssl
+Build-Depends: openssl, glib (!windows)

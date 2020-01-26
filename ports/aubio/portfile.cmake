@@ -2,7 +2,6 @@ include(vcpkg_common_functions)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aubio-3c230fae309e9ea3298783368dd71bae6172359a)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aubio/aubio

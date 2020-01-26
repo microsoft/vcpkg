@@ -184,7 +184,7 @@ namespace vcpkg::Metrics
             if (buildtime_names.size() > 0)
             {
                 if (props_plus_buildtimes.size() > 0) props_plus_buildtimes.push_back(',');
-                props_plus_buildtimes.append(Strings::format(R"("buildnames": [%s], "buildtimes": [%s])",
+                props_plus_buildtimes.append(Strings::format(R"("buildnames_1": [%s], "buildtimes": [%s])",
                                                              Strings::join(",", buildtime_names, to_json_string),
                                                              Strings::join(",", buildtime_times)));
             }
@@ -266,7 +266,7 @@ namespace vcpkg::Metrics
             const auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                return vcpkg::Hash::get_string_hash(match[0], "SHA256");
+                return vcpkg::Hash::get_string_hash(match[0].str(), Hash::Algorithm::Sha256);
             }
             ++next;
         }

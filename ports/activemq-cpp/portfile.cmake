@@ -5,12 +5,11 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 set(VERSION 3.9.5)
-                                              
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/activemq-cpp-library-${VERSION})
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.apache.org/dist/activemq/activemq-cpp/${VERSION}/activemq-cpp-library-${VERSION}-src.tar.bz2"
     FILENAME "activemq-cpp-library-${VERSION}-src.tar.bz2"
-    SHA512 83692d3dfd5ecf557fc88d204a03bf169ce6180bcff27be41b09409b8f7793368ffbeed42d98ef6374c6b6b477d9beb8a4a9ac584df9e56725ec59ceceaa6ae2  
+    SHA512 83692d3dfd5ecf557fc88d204a03bf169ce6180bcff27be41b09409b8f7793368ffbeed42d98ef6374c6b6b477d9beb8a4a9ac584df9e56725ec59ceceaa6ae2
 )
 
 vcpkg_extract_source_archive_ex(
@@ -42,12 +41,12 @@ vcpkg_build_msbuild(
 )
 
 vcpkg_copy_pdbs()
- 
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/activemq-cpp)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/activemq-cpp/copyright)
 
-     
+
 file(
     COPY
     ${SOURCE_PATH}/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.lib

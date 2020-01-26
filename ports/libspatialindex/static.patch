@@ -1,0 +1,21 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e6b733bd..8f227ab0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -194,9 +194,13 @@ if (NOT WITH_STATIC_LASZIP)
+ endif()
+ endif()
+ 
+-add_library(${SIDX_LIB_NAME} SHARED ${SIDX_SOURCES})
+-
+-add_library(${SIDX_C_LIB_NAME} SHARED ${SIDX_CAPI_CPP})
++if(BUILD_SHARED_LIBS)
++	add_library(${SIDX_LIB_NAME} SHARED ${SIDX_SOURCES})
++	add_library(${SIDX_C_LIB_NAME} SHARED ${SIDX_CAPI_CPP})
++else(BUILD_SHARED_LIBS)
++	add_library(${SIDX_LIB_NAME} STATIC ${SIDX_SOURCES})
++	add_library(${SIDX_C_LIB_NAME} STATIC ${SIDX_CAPI_CPP})
++endif(BUILD_SHARED_LIBS)
+ 
+ target_link_libraries(${SIDX_C_LIB_NAME}
+   ${SIDX_LIB_NAME}
