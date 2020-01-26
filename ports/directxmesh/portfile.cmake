@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF jun2019
-    SHA512 6d42cd4d3e34e7f3bd5cee1a9ad90c9f89eafa55951a0a8d776034a05caa06b0fd17629547d14c8f2b4d0c5fafdbd24ae05c2a6582b5d069093d6b4dadac09a0
+    REF dec2019
+    SHA512 b48b144172574d56775f7607d7ee7370b427fd95ab4e3089cdaf79b6cbd7fc4bbc15264d9a6703840b763bc2f4a5974594afa39f113960df34e07adfd74561d6
     HEAD_REF master
 )
 
@@ -30,10 +30,14 @@ else()
     message(FATAL_ERROR "Unsupported platform toolset.")
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(SLN_NAME "Windows10_${VS_VERSION}")
 else()
-    set(SLN_NAME "Desktop_${VS_VERSION}")
+    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
+    else()
+        set(SLN_NAME "Desktop_${VS_VERSION}")
+    endif()
 endif()
 
 vcpkg_build_msbuild(
@@ -49,12 +53,14 @@ file(INSTALL
 
 file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.lib
+    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
     ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.lib
+    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
     set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxmesh)
     file(MAKE_DIRECTORY ${TOOL_PATH})
     file(INSTALL
@@ -62,6 +68,4 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         DESTINATION ${TOOL_PATH})
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxmesh)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/directxmesh/LICENSE ${CURRENT_PACKAGES_DIR}/share/directxmesh/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

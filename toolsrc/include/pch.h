@@ -31,7 +31,11 @@
 #include <cstdint>
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <cstring>
+#if USE_STD_FILESYSTEM
+#include <filesystem>
+#else
 #include <experimental/filesystem>
+#endif
 #include <fstream>
 #include <functional>
 #include <iomanip>

@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF 58c6cb390a9a18c98b2cbaac555d8ea9352a9e4f
     SHA512 1ec9c19faa87886786ce1589e2c66cab173b48e34d0e43487becc8606001f21f6ed17d0abd1c322fbbcaeb96a47ed882cad228be2e9beb019020ca2a475fc298
     HEAD_REF master
+    PATCHES fix-win-static-suffix.patch
 )
 
 vcpkg_configure_meson(

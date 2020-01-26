@@ -100,6 +100,11 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace PortHistory
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Autocomplete
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
