@@ -232,7 +232,7 @@ index 81db0d92c..51016f3fa 100644
              \"IMPORTED_LOCATION_${Configuration}\" ${imported_location}
          )
 +        _qt5_$${CMAKE_MODULE_NAME}_parse_prl(TARGET Qt5::$${Plugin} LIB_FILE \"${imported_location}\" CONFIGURATION \"${Configuration}\" OUT_DEPS PRL_DEPS OUT_FLAGS PRL_FLAGS)
-+        set_property(TARGET Qt5::${Plugin} APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${PRL_DEPS};${PRL_FLAGS}")
++        set_property(TARGET Qt5::${Plugin} APPEND PROPERTY INTERFACE_LINK_LIBRARIES \"${PRL_DEPS};${PRL_FLAGS}\")
      endmacro()
  
      if (pluginTargets)
