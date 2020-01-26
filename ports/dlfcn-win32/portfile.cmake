@@ -1,5 +1,5 @@
-include(vcpkg_common_functions)
 set(SOURCE_VERSION 1.1.1)
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

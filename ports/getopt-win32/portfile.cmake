@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 if(VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "getopt-win32 only supports building on Windows Desktop")

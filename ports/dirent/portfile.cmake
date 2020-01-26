@@ -3,7 +3,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStor
     return()
 endif()
 
-include(vcpkg_common_functions)
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tronkko/dirent
