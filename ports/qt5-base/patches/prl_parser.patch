@@ -11,7 +11,7 @@ index 81db0d92c..51016f3fa 100644
  endif()
  
  !!IF !isEmpty(CMAKE_USR_MOVE_WORKAROUND)
-@@ -34,6 +34,147 @@ set(Qt5$${CMAKE_MODULE_NAME}_VERSION_STRING "$$eval(QT.$${MODULE}.VERSION)")
+@@ -34,6 +34,146 @@ set(Qt5$${CMAKE_MODULE_NAME}_VERSION_STRING "$$eval(QT.$${MODULE}.VERSION)")
  set(Qt5$${CMAKE_MODULE_NAME}_LIBRARIES Qt5::$${CMAKE_MODULE_NAME})
  !!ENDIF // TEMPLATE != aux
  
@@ -57,7 +57,7 @@ index 81db0d92c..51016f3fa 100644
 +    else()
 +         string(REGEX REPLACE \" -l([^ ]+)\" [[;-l\$\$\\1;]] _static_depends \"${_static_depends}\") # - l case on targets other than windows
 +    endif()
-+    string(REGEX REPLACE \"[ \\t]+[^\\\\\\\"]([^( |\\\\\\\")]+)[^\\\\\\\"]([ \\t]|$)+\" \";\\\\0; \" _static_depends \"${_static_depends}\")
++    string(REGEX REPLACE \"[\\t ]+[^\\\\\\\"]([^( |\\\\\\\")]+)[^\\\\\\\"]([\\t ]+|[\\t ]*$)\" \";\\\\0; \" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \"[\\t ]*;[\\t ]*\" \";\" _static_depends \"${_static_depends}\")      # remove unnecessary whitespaces 
 +    string(REGEX REPLACE \"(;[\\t ]*;)+\" \";\" _static_depends \"${_static_depends}\")    # remove empty elements from the list
 +    #string(REGEX REPLACE \" [\\"]\" \";\\\\\\\"\" _static_depends \"${_static_depends}\")
@@ -69,7 +69,6 @@ index 81db0d92c..51016f3fa 100644
 +    else()
 +        set(_prl_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}${LIB_LOCATION}\")
 +    endif()
-+    string(REGEX REPLACE \"/[^/]+$\" \"\" _prl_location "${_prl_location}")
 +    string(REPLACE \"\$\$[QT_INSTALL_LIBS]\" \"${_prl_location}\" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \"[ \t]+\" \";\" _standard_libraries \"${CMAKE_CXX_STANDARD_LIBRARIES}\")
 +    foreach(_flag IN LISTS _static_depends)
