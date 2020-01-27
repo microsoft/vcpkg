@@ -51,7 +51,7 @@ index 81db0d92c..51016f3fa 100644
 +    string(REGEX REPLACE \" -L\\\\$\\\\$([^ ]+)\" [[ ;-L\$\$\\1; ]] _static_depends \"${_static_depends}\") # - L Normal Case
 +    if(WIN32)
 +         string(REGEX REPLACE \"-L\\\\\\\"([^\\\\\\\"]+)\\\\\\\"\" \" ;-L\\\"\\\\1\\\"; \" _static_depends \"${_static_depends}\") # -L Tricky Case with spaces
-+         string(REGEX REPLACE [[\\\"?[A-Z]:\\\\\\\\Program Files( \\(x86\\))*\\\\\\\\Windows Kits\\\\\\\\[0-9]+\\\\\\\\lib\\\\\\\\[0-9|.]+\\\\\\\\um\\\\\\\\x64\\\\\\\\([^\\\"]+)\\\"?]] \";\\\\2;\" _static_depends \"${_static_depends}\")
++         string(REGEX REPLACE [[\\\"?[A-Z]:\\\\\\\\Program Files( \\(x86\\))*\\\\\\\\Windows Kits\\\\\\\\[0-9]+\\\\\\\\lib\\\\\\\\[0-9|.]+\\\\\\\\um\\\\\\\\x64(\\\\\\\\|/)([^\\\"]+)\\\"?]] \";\\\\2;\" _static_depends \"${_static_depends}\")
 +         string(REGEX REPLACE [[ \\\"([^\\"]+)\\\" ]] \" ;\\\"\\\\1\\\"; \" _static_depends \"${_static_depends}\") 
 +         # Every path with a space in it should be handled now!
 +    else()
