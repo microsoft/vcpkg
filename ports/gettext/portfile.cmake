@@ -1,15 +1,15 @@
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_LINUX)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     if (NOT EXISTS "/usr/include/libintl.h")
         message(FATAL_ERROR "Please use command \"sudo apt-get install gettext\" to install gettext on linux.")
     endif()
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-gettext-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-gettext)
     return()
+else()
+    set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 endif()
 
 #Based on https://github.com/winlibs/gettext
-
-include(vcpkg_common_functions)
 
 set(GETTEXT_VERSION 0.19)
 
