@@ -1,4 +1,4 @@
 Source: coroutine
-Version: 1.4.3
+Version: 2020-01-13
 Build-Depends: ms-gsl
 Description: C++ coroutine helper/example library
