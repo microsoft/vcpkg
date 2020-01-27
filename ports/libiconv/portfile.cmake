@@ -3,8 +3,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-iconv-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
     return()
-else()
-    set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 endif()
 
 set(LIBICONV_VERSION 1.16)
@@ -42,3 +40,5 @@ vcpkg_copy_pdbs()
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_test_cmake(PACKAGE_NAME unofficial-iconv)
+
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
