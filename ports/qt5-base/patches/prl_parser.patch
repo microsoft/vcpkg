@@ -69,7 +69,7 @@ index 81db0d92c..51016f3fa 100644
 +    else()
 +        set(_prl_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/$${CMAKE_LIB_DIR}${LIB_LOCATION}\")
 +    endif()
-+    string(REPLACE \"\$\$[QT_INSTALL_LIBS]\" \"${_prl_location}\" _static_depends \"${_static_depends}\")
++    string(REPLACE \"\$\$[QT_INSTALL_LIBS]/\" \"${_prl_location}\" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \"[ \t]+\" \";\" _standard_libraries \"${CMAKE_CXX_STANDARD_LIBRARIES}\")
 +    foreach(_flag IN LISTS _static_depends)
 +      if(_flag MATCHES \"^-l(.*)$\")
