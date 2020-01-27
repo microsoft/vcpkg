@@ -55,7 +55,7 @@ index 81db0d92c..51016f3fa 100644
 +         string(REGEX REPLACE [[ \\\"([^\\"]+)\\\" ]] \" ;\\\"\\\\1\\\"; \" _static_depends \"${_static_depends}\") 
 +         # Every path with a space in it should be handled now!
 +    else()
-+         string(REGEX REPLACE \" -l([^ ]+)\" [[;-l\$\$\\1;]] _static_depends \"${_static_depends}\") # - l case on targets other than windows
++         string(REGEX REPLACE \" -l([^ ]+)\" [[;-l\\1;]] _static_depends \"${_static_depends}\") # - l case on targets other than windows
 +    endif()
 +    string(REGEX REPLACE \"[\\t ]+[^\\\\\\\"]([^( |\\\\\\\")]+)[^\\\\\\\"]([\\t ]+|[\\t ]*$)\" \";\\\\0; \" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \"[\\t ]*;[\\t ]*\" \";\" _static_depends \"${_static_depends}\")      # remove unnecessary whitespaces 
