@@ -1,0 +1,5 @@
+Source: dali-toolkit
+Version: 1.4.55
+Homepage: https://github.com/dalihub/dali-toolkit
+Description: DALi: Dynamic Animation Library - toolkit
+Build-Depends: dali-adaptor
