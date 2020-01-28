@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcpkg/packagespec.h>
-#include <vcpkg/parse.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/sourceparagraph.h>
 
 namespace vcpkg
@@ -14,12 +14,12 @@ namespace vcpkg
         BinaryParagraph();
         explicit BinaryParagraph(Parse::RawParagraph fields);
         BinaryParagraph(const SourceParagraph& spgh,
-                        const Triplet& triplet,
+                        Triplet triplet,
                         const std::string& abi_tag,
                         const std::vector<FeatureSpec>& deps);
         BinaryParagraph(const SourceParagraph& spgh,
                         const FeatureParagraph& fpgh,
-                        const Triplet& triplet,
+                        Triplet triplet,
                         const std::vector<FeatureSpec>& deps);
 
         std::string displayname() const;

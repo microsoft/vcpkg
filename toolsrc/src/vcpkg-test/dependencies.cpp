@@ -38,8 +38,8 @@ TEST_CASE ("filter depends", "[dependencies]")
 TEST_CASE ("parse feature depends", "[dependencies]")
 {
     auto u = parse_comma_list("libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, "
-                              "simd, cwebp, dwebp], libwebp[vwebp_sdl, extras] (!osx)");
-    REQUIRE(u.at(1) == "libwebp[vwebp_sdl, extras] (!osx)");
+                              "simd, cwebp, dwebp], libwebp[vwebp-sdl, extras] (!osx)");
+    REQUIRE(u.at(1) == "libwebp[vwebp-sdl, extras] (!osx)");
     auto v = expand_qualified_dependencies(u);
     REQUIRE(v.size() == 2);
     auto&& a0 = v.at(0);
@@ -67,9 +67,7 @@ TEST_CASE ("qualified dependency", "[dependencies]")
     REQUIRE(plan.install_actions.size() == 2);
     REQUIRE(plan.install_actions.at(0).feature_list == std::vector<std::string>{"core"});
 
-    FullPackageSpec linspec_a{PackageSpec::from_name_and_triplet("a", Triplet::from_canonical_name("x64-linux"))
-                                  .value_or_exit(VCPKG_LINE_INFO),
-                              {}};
+    FullPackageSpec linspec_a{{"a", Triplet::from_canonical_name("x64-linux")}, {}};
     var_provider.dep_info_vars[linspec_a.package_spec].emplace("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
     auto plan2 = vcpkg::Dependencies::create_feature_install_plan(map_port, var_provider, {linspec_a}, {});
     REQUIRE(plan2.install_actions.size() == 2);

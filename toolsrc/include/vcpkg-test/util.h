@@ -40,7 +40,7 @@ namespace vcpkg::Test
     {
         std::unordered_map<std::string, SourceControlFileLocation> map;
         Triplet triplet;
-        PackageSpecMap(const Triplet& t = Triplet::X86_WINDOWS) noexcept : triplet(t) {}
+        PackageSpecMap(Triplet t = Triplet::X86_WINDOWS) noexcept : triplet(t) {}
 
         PackageSpec emplace(const char* name,
                             const char* depends = "",
@@ -49,8 +49,6 @@ namespace vcpkg::Test
 
         PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl);
     };
-
-    vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);
 
     template<class T, class S>
     T&& unwrap(vcpkg::ExpectedT<T, S>&& p)

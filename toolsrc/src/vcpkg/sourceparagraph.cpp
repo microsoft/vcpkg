@@ -52,14 +52,10 @@ namespace vcpkg
         for (auto&& error_info : error_info_list)
         {
             Checks::check_exit(VCPKG_LINE_INFO, error_info != nullptr);
-            if (error_info->error)
+            if (!error_info->error.empty())
             {
-                System::print2(System::Color::error,
-                               "Error: while loading ",
-                               error_info->name,
-                               ": ",
-                               error_info->error.message(),
-                               '\n');
+                System::print2(
+                    System::Color::error, "Error: while loading ", error_info->name, ":\n", error_info->error, '\n');
             }
         }
 
@@ -217,15 +213,14 @@ namespace vcpkg
             return nullopt;
     }
 
-    Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
+    Dependency Dependency::parse_dependency(const std::string& name, std::string qualifier)
     {
         Dependency dep;
-        dep.qualifier = qualifier;
+        dep.qualifier = std::move(qualifier);
         if (auto maybe_features = Features::from_string(name))
             dep.depend = *maybe_features.get();
         else
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "error while parsing dependency: %s: %s", to_string(maybe_features.error()), name);
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Error while parsing dependency:\n%s", maybe_features.error());
         return dep;
     }
 
@@ -279,7 +274,7 @@ namespace vcpkg
     }
 
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<vcpkg::Dependency>& deps,
-                                                     const Triplet& t,
+                                                     Triplet t,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars)
     {
         std::vector<FullPackageSpec> ret;
@@ -289,9 +284,7 @@ namespace vcpkg
             if (qualifier.empty() ||
                 evaluate_expression(qualifier, {cmake_vars, t.canonical_name()}).value_or_exit(VCPKG_LINE_INFO))
             {
-                ret.emplace_back(FullPackageSpec(
-                    PackageSpec::from_name_and_triplet(dep.depend.name, t).value_or_exit(VCPKG_LINE_INFO),
-                    dep.depend.features));
+                ret.emplace_back(FullPackageSpec({dep.depend.name, t}, dep.depend.features));
             }
         }
         return ret;

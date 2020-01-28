@@ -321,8 +321,7 @@ namespace vcpkg::Export
         nullptr,
     };
 
-    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
-                                                           const Triplet& default_triplet)
+    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet)
     {
         ExportArguments ret;
 
@@ -513,7 +512,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const auto opts = handle_export_command_arguments(args, default_triplet);
         for (auto&& spec : opts.specs)

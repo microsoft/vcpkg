@@ -228,11 +228,20 @@ namespace vcpkg
             return this->m_base.has_value() ? this->m_base.value() : static_cast<T>(std::forward<U>(default_value));
         }
 
+        T value_or(T&& default_value) const&
+        {
+            return this->m_base.has_value() ? this->m_base.value() : static_cast<T&&>(default_value);
+        }
+
         template<class U>
         T value_or(U&& default_value) &&
         {
             return this->m_base.has_value() ? std::move(this->m_base.value())
                                             : static_cast<T>(std::forward<U>(default_value));
+        }
+        T value_or(T&& default_value) &&
+        {
+            return this->m_base.has_value() ? std::move(this->m_base.value()) : static_cast<T&&>(default_value);
         }
 
         typename std::add_pointer<const T>::type get() const

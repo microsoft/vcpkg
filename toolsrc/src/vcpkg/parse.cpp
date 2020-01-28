@@ -1,12 +1,59 @@
 #include "pch.h"
 
-#include <vcpkg/parse.h>
-
+#include <utility>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/paragraphparser.h>
+#include <vcpkg/parse.h>
+
+using namespace vcpkg;
 
 namespace vcpkg::Parse
 {
+    std::string ParseError::format() const
+    {
+        return Strings::concat("Error: ",
+                               origin,
+                               ":",
+                               row,
+                               ":",
+                               column,
+                               ": ",
+                               message,
+                               "\n"
+                               "   on expression: \"",
+                               line,
+                               "\"\n",
+                               "                   ",
+                               std::string(column - 1, ' '),
+                               "^\n");
+    }
+
+    void ParserBase::add_error(std::string message, const ParserBase::SourceLoc& loc)
+    {
+        // avoid cascading errors by only saving the first
+        if (!m_err)
+        {
+            // find beginning of line
+            auto linestart = loc.it;
+            while (linestart != m_text.c_str())
+            {
+                if (linestart[-1] == '\n') break;
+                --linestart;
+            }
+
+            // find end of line
+            auto lineend = loc.it;
+            while (*lineend != '\n' && *lineend != '\r' && *lineend != '\0')
+                ++lineend;
+            m_err.reset(
+                new ParseError(m_origin.c_str(), loc.row, loc.column, {linestart, lineend}, std::move(message)));
+        }
+
+        // Avoid error loops by skipping to the end
+        skip_to_eof();
+    }
+
     static Optional<std::string> remove_field(RawParagraph* fields, const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
@@ -45,8 +92,6 @@ namespace vcpkg::Parse
         return nullptr;
     }
 
-    static bool is_whitespace(char c) { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
-
     std::vector<std::string> parse_comma_list(const std::string& str)
     {
         if (str.empty())
@@ -61,7 +106,7 @@ namespace vcpkg::Parse
         do
         {
             // Trim leading whitespace of each element
-            while (iter != str.cend() && is_whitespace(*iter))
+            while (iter != str.cend() && ParserBase::is_whitespace(*iter))
             {
                 ++iter;
             }
@@ -106,7 +151,7 @@ namespace vcpkg::Parse
                 ++iter;
 
                 // Trim ending whitespace
-                if (!is_whitespace(value))
+                if (!ParserBase::is_whitespace(value))
                 {
                     // Update element_end after iter is incremented so it will be one past.
                     element_end = iter;

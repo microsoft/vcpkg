@@ -137,20 +137,6 @@ namespace vcpkg
         // </hack>
         Util::sort_unique_erase(deps);
 
-        return Util::fmap(deps, [&](const std::string& dep) -> PackageSpec {
-            auto maybe_dependency_spec = PackageSpec::from_name_and_triplet(dep, l_spec.triplet());
-            if (auto dependency_spec = maybe_dependency_spec.get())
-            {
-                return std::move(*dependency_spec);
-            }
-
-            const PackageSpecParseResult error_type = maybe_dependency_spec.error();
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Invalid dependency [%s] in package [%s]\n"
-                                      "%s",
-                                      dep,
-                                      l_spec.name(),
-                                      vcpkg::to_string(error_type));
-        });
+        return PackageSpec::to_package_specs(deps, l_spec.triplet());
     }
 }
