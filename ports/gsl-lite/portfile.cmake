@@ -12,13 +12,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/gsl-lite" TARGET_PATH "share/gsl-lite")
-
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/lib"
-    "${CURRENT_PACKAGES_DIR}/debug"
-)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/gsl-lite")
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/gsl-lite.hpp "#ifndef GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED
 #define GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED
@@ -26,7 +20,9 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/gsl-lite.hpp "#ifndef GSL_LITE_HPP_VC
 #include <gsl/gsl-lite.hpp>
 #endif // GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED")
 
-file(
-    INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/gsl-lite"
-    RENAME copyright)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/lib"
+    "${CURRENT_PACKAGES_DIR}/debug"
+)
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
