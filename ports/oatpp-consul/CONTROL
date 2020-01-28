@@ -1,4 +1,4 @@
 Source: oatpp-consul
-Version: 0.19.12
+Version: 1.0.0
 Description: OAT++ Modern web framework consul module
 Build-Depends: oatpp

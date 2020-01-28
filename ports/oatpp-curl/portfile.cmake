@@ -1,4 +1,4 @@
-set(OATPP_VERSION "0.19.12")
+set(OATPP_VERSION "1.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,8 +6,8 @@ message(STATUS "Building oatpp-curl")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-curl
-    REF ef94f5b044cd2cec29736697adbc9d0e686d413e # 0.19.12
-    SHA512 7616450a530d63e1512b6cc8c2aa1979473b510af0b97f904b6f4a062902b5e0c07a0d18d9d1c022d5c5f073bec7a31565c050f07f90d4af27c665f9d7e1654c
+    REF 03a3f336be70c71d0547489aa0ed50206f46dcf8 # 1.0.0
+    SHA512 799cbddeb6e9d90eb43911845dd33ee272c4e86c86a07bb710ceb8c0e1722cda15412fdca10c4228a77f38e3b9e3d5d5248c8cd4366cbb9c369db4a830e29496
     HEAD_REF master
     PATCHES "curl-submodule-no-pkg-config-in-vcpkg.patch"
 )

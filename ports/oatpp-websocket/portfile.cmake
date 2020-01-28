@@ -1,4 +1,4 @@
-set(OATPP_VERSION "0.19.12")
+set(OATPP_VERSION "1.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -7,8 +7,8 @@ message(STATUS "Building oatpp-websocket")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-websocket
-    REF a71fa8dbe836a31a5727ebbe331cbdb275e94716 # 0.19.12
-    SHA512 3e9fd165f8d00fb93ce019bde33fb687ade662776c2e1ab6f9edb756f13afceaa35c8c581ddba1a15dee8ae41a595b379dac5a28a77a83dbf252e3b9466d64df
+    REF d047321db5ca9194b0035eea481623983a59c82c # 1.0.0
+    SHA512 76e411557a790fccbd346241826a89a01f707ecb6bf3295fd4c7af706d376d5cb21070ee375b45ce1aa14ad8d79db753c1adbc2b503b79c8b8e5ae59a044b03b
     HEAD_REF master
 )
 

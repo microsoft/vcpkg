@@ -1,4 +1,4 @@
-set(OATPP_VERSION "0.19.12")
+set(OATPP_VERSION "1.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -7,8 +7,8 @@ message(STATUS "Building oatpp-swagger")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-swagger
-    REF a13bae1f32cea2ef011395ed92ae81f0f4b43aa7 # 0.19.12
-    SHA512 a7169970dde1c8c5d12a0fd9bf6a6af0a23e548e4e73a4d436aabcf088643cf7d193e9a2e31eac60fa97592c2904b473e624b189874705511f64686faecfc851
+    REF 8e4a5d32f82ff71ad645fbfb7e5257a6b611ecfd # 1.0.0
+    SHA512 9ae31686689862667871531e92625239fd8b54a6ed77b54ab85ecb09633afae0d450be5bcee6e266d01b2edc602bae6c0ab59dd12f926d689f7183373a39bb21
     HEAD_REF master
 )
 
