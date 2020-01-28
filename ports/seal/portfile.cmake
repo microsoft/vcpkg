@@ -29,6 +29,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/native/src
     PREFER_NINJA
     OPTIONS
+        -DALLOW_COMMAND_LINE_BUILD=ON
         -DSEAL_LIB_BUILD_TYPE=${SEAL_LIB_BUILD_TYPE}
 )
 
