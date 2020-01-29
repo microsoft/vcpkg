@@ -149,6 +149,8 @@ namespace vcpkg::PostBuildLint
             "json.h",
             "parser.h",
             "lexer.h",
+            "config.h",
+            "local.h",
         };
         static constexpr Span<const StringLiteral> restricted_lists[] = {
             restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};
@@ -226,10 +228,10 @@ namespace vcpkg::PostBuildLint
         const fs::path lib_cmake = package_dir / "lib" / "cmake";
         if (fs.exists(lib_cmake))
         {
-            System::printf(
-                System::Color::warning,
-                "The /lib/cmake folder should be merged with /debug/lib/cmake and moved to /share/%s/cmake.\n",
-                spec.name());
+            System::printf(System::Color::warning,
+                           "The /lib/cmake folder should be merged with /debug/lib/cmake and moved to "
+                           "/share/%s/cmake.\nPlease use the helper function `vcpkg_fixup_cmake_targets()`\n",
+                           spec.name());
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -657,7 +659,7 @@ namespace vcpkg::PostBuildLint
             R"(If the creation of bin\ and/or debug\bin\ cannot be disabled, use this in the portfile to remove them)"
             "\n"
             "\n"
-            R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL static))###"
+            R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static"))###"
             "\n"
             R"###(        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin))###"
             "\n"

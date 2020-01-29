@@ -695,7 +695,7 @@ namespace vcpkg::Build
                                        paths.scripts / "cmake" / "vcpkg_fixup_cmake_targets.cmake",
                                        Hash::Algorithm::Sha1));
 
-        abi_tag_entries.emplace_back("post_build_checks", "1");
+        abi_tag_entries.emplace_back("post_build_checks", "2");
         abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
         std::vector<std::string> sorted_feature_list(std::begin(config.feature_list), std::end(config.feature_list));
         Util::sort(sorted_feature_list);
