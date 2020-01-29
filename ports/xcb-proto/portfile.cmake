@@ -76,11 +76,12 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" _contents)
-string(REPLACE "$libdir=${CURRENT_PACKAGES_DIR}/lib" "$libdir=\${prefix}/lib" _contents "${_contents}")
+string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=\${prefix}/lib" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" "${_contents}")
 
 file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" _contents)
-string(REPLACE "$libdir=${CURRENT_PACKAGES_DIR}/debug/lib" "$libdir=\${prefix}/lib" _contents "${_contents}")
+string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/debug/lib" "libdir=\${prefix}/lib" _contents "${_contents}")
+string(REPLACE "datarootdir=\${prefix}/share" "datarootdir=\${prefix}/../share" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" "${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
