@@ -125,6 +125,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsSt
     )
     target_sources(libxml2 PRIVATE win32/libxml2.rc)
     set_source_files_properties(win32/libxml2.rc PROPERTIES COMPILE_FLAGS "-DLIBXML_MAJOR_VERSION=${LIBXML_MAJOR_VERSION} -DLIBXML_MINOR_VERSION=${LIBXML_MINOR_VERSION} -DLIBXML_MICRO_VERSION=${LIBXML_MICRO_VERSION} -DLIBXML_DOTTED_VERSION=\\\"${VERSION}\\\"")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        target_link_libraries(libxml2 INTERFACE m)    
 endif()
 
 target_compile_definitions(libxml2 PRIVATE
@@ -150,3 +152,16 @@ install(TARGETS libxml2
     ARCHIVE DESTINATION lib
     ${TARGET_INSTALL_OPTIONS}
 )
+
+option(BUILD_XMLLINT "Build XML lint tool" OFF)
+if(BUILD_XMLLINT)
+    add_executable(xmllint xmllint.c)
+    target_link_libraries(xmllint PRIVATE libxml2)
+    target_include_directories(xmllint PRIVATE "include" "${CMAKE_CURRENT_BINARY_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}")
+    install(TARGETS xmllint
+        RUNTIME DESTINATION tools/libxml2
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        ${TARGET_INSTALL_OPTIONS}
+    )
+endif()
