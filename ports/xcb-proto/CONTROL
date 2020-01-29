@@ -1,0 +1,10 @@
+Source: xcb-proto
+Version: 1.13
+Homepage: https://xcb.freedesktop.org/
+Description: XML-XCB protocol descriptions used by libxcb for the X11 protocol & extensions
+Build-Depends: bzip2, xorg-macros
+Default-Features:
+
+Feature: no-feature
+Description: just a dummy
+Build-Depends:

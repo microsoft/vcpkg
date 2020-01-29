@@ -2,7 +2,7 @@ Source: xlib
 Version: 11-1.6.9
 Homepage: https://www.x.org/wiki/
 Description: The X Window System is a network-transparent window system that was designed at MIT.
-Build-Depends: bzip2, icu
+Build-Depends: bzip2, xorg-macros
 Default-Features:
 
 Feature: no-feature

@@ -1,0 +1,10 @@
+Source: xcb
+Version: 1.13.1
+Homepage: https://xcb.freedesktop.org/
+Description: C interface to the X Window System protocol, which replaces the traditional Xlib interface.
+Build-Depends: xcb-proto, xorg-macros
+Default-Features:
+
+Feature: no-feature
+Description: just a dummy
+Build-Depends:
