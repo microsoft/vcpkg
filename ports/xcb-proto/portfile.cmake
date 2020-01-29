@@ -34,30 +34,19 @@
 vcpkg_fail_port_install(MESSAGE "Xlib currently only supports Linux and Mac platforms" ON_TARGET "Windows")
 
 ## requires AUTOCONF, LIBTOOL and PKCONF
-message(WARNING "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
+message(STATUS "----- ${PORT} requires autoconf, libtool, pkconf and xmllint from the system package manager! -----")
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH_MACROS
-    REPO freedesktop/xorg-macros
-    REF  4b6b1dfea16214b5104b5373341dc8bc7016d0b5 # xorg-macros v1.19.1
-    SHA512 af103ee80ab998701de63b2b0c3ce38b0d10417d1516bec15abe573876fcaa04eda8906f74697f5557de9b25f3c2309b677b35a5e99de8e52e8292e7b7d4ffca
-    HEAD_REF master
-)
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH_MACROS}
-    AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
-    OPTIONS
-    #    --enable-loadable-i18n # TODO
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
-)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-vcpkg_install_make()
+find_program(XMLLINT_PATH NAMES xmllint PATHS "${CURRENT_INSTALLED_DIR}/tools/libxml2")
+if(NOT XMLLINT_PATH)
+    message(FATAL_ERROR "${PORT} requires xmllint which was not found!")
+endif()
+
+string(REGEX REPLACE "/[^/]+$" "" XMLLINT_DIR "${XMLLINT_PATH}")
+file(TO_NATIVE_PATH "${XMLLINT_DIR}" XMLLINT_DIR_NATIVE)
+vcpkg_add_to_path("${XMLLINT_DIR_NATIVE}")
+#(also requires python2?)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
@@ -69,7 +58,7 @@ vcpkg_from_gitlab(
     #PATCHES example.patch #patch name
 ) 
 
-file(COPY "${CURRENT_INSTALLED_DIR}/share/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
@@ -86,8 +75,15 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" _contents)
+string(REPLACE "$libdir=${CURRENT_PACKAGES_DIR}/lib" "$libdir=\${prefix}/lib" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" "${_contents}")
+
+file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" _contents)
+string(REPLACE "$libdir=${CURRENT_PACKAGES_DIR}/debug/lib" "$libdir=\${prefix}/lib" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" "${_contents}")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # # Moves all .cmake files from /debug/share/Xlib/ to /share/Xlib/
 # # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
