@@ -29,37 +29,57 @@
 #
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 # # Specifies if the port install should fail immediately given a condition
-# vcpkg_fail_port_install(MESSAGE "Xlib currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-vcpkg_fail_port_install(MESSAGE "Xlib currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platforms" ON_TARGET "Windows")
 
 ## requires AUTOCONF, LIBTOOL and PKCONF
-message(WARNING "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
+message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! -----")
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH_MACROS
-    REPO freedesktop/xorg-macros
-    REF  4b6b1dfea16214b5104b5373341dc8bc7016d0b5 # xorg-macros v1.19.1
-    SHA512 af103ee80ab998701de63b2b0c3ce38b0d10417d1516bec15abe573876fcaa04eda8906f74697f5557de9b25f3c2309b677b35a5e99de8e52e8292e7b7d4ffca
-    HEAD_REF master
-)
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org/xorg
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO util/macros
+    REF  771b773b50717884b37f6b2473166b4be4670076 #v1.19.2
+    SHA512 7a4048fb609b4c83127758f0aa53163114da4a4a9f1414f3bda5d44cebcf49dfe41b1daa82f232420a25e6b3a7a163848f3ce30fd3c77bdb289d4ee00bec31a6
+    HEAD_REF master # branch name
+    #PATCHES example.patch #patch name
+) 
+
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH_MACROS}
+    SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
     #SKIP_CONFIGURE
     #NO_DEBUG
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL ${SHELL_PATH}
-    OPTIONS
-    #    --enable-loadable-i18n # TODO
+    #OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
 )
 
 vcpkg_install_make()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/util-macros/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/util-macros")
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" _contents)
+string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
+string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/${PORT}}" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" "${_contents}")
+#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
+
+file(READ "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" _contents)
+string(REPLACE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_INSTALLED_DIR}/debug" _contents "${_contents}")
+string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/${PORT}/debug}" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" "${_contents}")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/debug/")
+file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/debug/")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
