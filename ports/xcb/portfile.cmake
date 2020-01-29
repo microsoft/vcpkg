@@ -34,31 +34,6 @@
 vcpkg_fail_port_install(MESSAGE "Xlib currently only supports Linux and Mac platforms" ON_TARGET "Windows")
 
 ## requires AUTOCONF, LIBTOOL and PKCONF
-message(WARNING "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH_MACROS
-    REPO freedesktop/xorg-macros
-    REF  4b6b1dfea16214b5104b5373341dc8bc7016d0b5 # xorg-macros v1.19.1
-    SHA512 af103ee80ab998701de63b2b0c3ce38b0d10417d1516bec15abe573876fcaa04eda8906f74697f5557de9b25f3c2309b677b35a5e99de8e52e8292e7b7d4ffca
-    HEAD_REF master
-)
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH_MACROS}
-    AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
-    OPTIONS
-    #    --enable-loadable-i18n # TODO
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
-)
-
-vcpkg_install_make()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -69,8 +44,10 @@ vcpkg_from_gitlab(
     #PATCHES example.patch #patch name
 ) 
 
-file(COPY "${CURRENT_PACKAGES_DIR}/share/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
 
+set(PKG_PATHS "$ENV{PKG_CONFIG_PATH}")
+set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${CURRENT_INSTALLED_DIR}/share/xorg-macros/pkgconfig/:${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
 #Alternatively, you may set the environment variables XCBPROTO_CFLAGS
 #and XCBPROTO_LIBS to avoid the need to call pkg-config.
 #See the pkg-config man page for more details.
