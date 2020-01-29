@@ -47,7 +47,7 @@ vcpkg_from_gitlab(
 ) 
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
-
+#requires XTRANS
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
