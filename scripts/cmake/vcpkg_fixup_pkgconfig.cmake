@@ -25,7 +25,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         
-        string(REPLACE "prefix=\${prefix}" "${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
+        string(REPLACE "^prefix=\${prefix}" "${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endforeach()
     
