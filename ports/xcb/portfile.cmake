@@ -46,8 +46,8 @@ vcpkg_from_gitlab(
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
 
-set(PKG_PATHS "$ENV{PKG_CONFIG_PATH}")
-set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${CURRENT_INSTALLED_DIR}/share/xorg-macros/pkgconfig/:${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
+#set(PKG_PATHS "$ENV{PKG_CONFIG_PATH}")
+#set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${CURRENT_INSTALLED_DIR}/share/xorg-macros/pkgconfig/:${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
 #Alternatively, you may set the environment variables XCBPROTO_CFLAGS
 #and XCBPROTO_LIBS to avoid the need to call pkg-config.
 #See the pkg-config man page for more details.
@@ -67,9 +67,13 @@ vcpkg_configure_make(
     #OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
+    PKG_CONFIG_PATHS "${CURRENT_INSTALLED_DIR}/share/xorg-macros/pkgconfig/"
+    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
+    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
 )
 
 vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
