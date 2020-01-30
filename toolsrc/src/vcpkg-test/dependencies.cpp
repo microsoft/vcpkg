@@ -2,14 +2,17 @@
 #include <vcpkg-test/mockcmakevarprovider.h>
 #include <vcpkg-test/util.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/sourceparagraph.h>
 
 using namespace vcpkg;
-using Parse::parse_comma_list;
+using namespace vcpkg::Parse;
 
 TEST_CASE ("parse depends", "[dependencies]")
 {
-    auto v = expand_qualified_dependencies(parse_comma_list("liba (windows)"));
+    auto w = parse_dependencies_list("liba (windows)");
+    REQUIRE(w);
+    auto& v = *w.get();
     REQUIRE(v.size() == 1);
     REQUIRE(v.at(0).depend.name == "liba");
     REQUIRE(v.at(0).qualifier == "windows");
@@ -23,7 +26,9 @@ TEST_CASE ("filter depends", "[dependencies]")
     const std::unordered_map<std::string, std::string> arm_uwp_cmake_vars{{"VCPKG_TARGET_ARCHITECTURE", "arm"},
                                                                           {"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}};
 
-    auto deps = expand_qualified_dependencies(parse_comma_list("liba (windows), libb, libc (uwp)"));
+    auto deps_ = parse_dependencies_list("liba (windows), libb, libc (uwp)");
+    REQUIRE(deps_);
+    auto& deps = *deps_.get();
     auto v = filter_dependencies(deps, Triplet::X64_WINDOWS, x64_win_cmake_vars);
     REQUIRE(v.size() == 2);
     REQUIRE(v.at(0).package_spec.name() == "liba");
@@ -37,10 +42,10 @@ TEST_CASE ("filter depends", "[dependencies]")
 
 TEST_CASE ("parse feature depends", "[dependencies]")
 {
-    auto u = parse_comma_list("libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, "
-                              "simd, cwebp, dwebp], libwebp[vwebp-sdl, extras] (!osx)");
-    REQUIRE(u.at(1) == "libwebp[vwebp-sdl, extras] (!osx)");
-    auto v = expand_qualified_dependencies(u);
+    auto u_ = parse_dependencies_list("libwebp[anim, gif2webp, img2webp, info, mux, nearlossless, "
+                                      "simd, cwebp, dwebp], libwebp[vwebp-sdl, extras] (!osx)");
+    REQUIRE(u_);
+    auto& v = *u_.get();
     REQUIRE(v.size() == 2);
     auto&& a0 = v.at(0);
     REQUIRE(a0.depend.name == "libwebp");

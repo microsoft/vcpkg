@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/cstringview.h>
+#include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/textrowcol.h>
 

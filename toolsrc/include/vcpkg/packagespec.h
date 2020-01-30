@@ -121,6 +121,14 @@ namespace vcpkg
         static ExpectedS<Features> from_string(const std::string& input);
     };
 
+    struct Dependency
+    {
+        Features depend;
+        std::string qualifier;
+
+        static ExpectedS<Dependency> from_string(const std::string& input);
+    };
+
     struct ParsedQualifiedSpecifier
     {
         std::string name;
@@ -129,6 +137,8 @@ namespace vcpkg
         Optional<std::string> qualifier;
     };
 
+    Optional<std::string> parse_feature_name(Parse::ParserBase& parser);
+    Optional<std::string> parse_package_name(Parse::ParserBase& parser);
     ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(CStringView input);
     Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
 

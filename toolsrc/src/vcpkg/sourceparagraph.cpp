@@ -127,9 +127,11 @@ namespace vcpkg
         spgh->description = parser.optional_field(SourceParagraphFields::DESCRIPTION);
         spgh->maintainer = parser.optional_field(SourceParagraphFields::MAINTAINER);
         spgh->homepage = parser.optional_field(SourceParagraphFields::HOMEPAGE);
-        spgh->depends = expand_qualified_dependencies(
-            parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
-        spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
+        spgh->depends = parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS))
+                            .value_or_exit(VCPKG_LINE_INFO);
+        spgh->default_features =
+            parse_default_features_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES))
+                .value_or_exit(VCPKG_LINE_INFO);
         spgh->supports_expression = parser.optional_field(SourceParagraphFields::SUPPORTS);
         spgh->type = Type::from_string(parser.optional_field(SourceParagraphFields::TYPE));
         auto err = parser.error_info(spgh->name.empty() ? path_to_control.u8string() : spgh->name);
@@ -149,8 +151,8 @@ namespace vcpkg
         parser.required_field(SourceParagraphFields::FEATURE, fpgh->name);
         parser.required_field(SourceParagraphFields::DESCRIPTION, fpgh->description);
 
-        fpgh->depends = expand_qualified_dependencies(
-            parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
+        fpgh->depends = parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS))
+                            .value_or_exit(VCPKG_LINE_INFO);
 
         auto err = parser.error_info(fpgh->name.empty() ? path_to_control.u8string() : fpgh->name);
         if (err)
@@ -213,66 +215,6 @@ namespace vcpkg
             return nullopt;
     }
 
-    Dependency Dependency::parse_dependency(const std::string& name, std::string qualifier)
-    {
-        Dependency dep;
-        dep.qualifier = std::move(qualifier);
-        if (auto maybe_features = Features::from_string(name))
-            dep.depend = *maybe_features.get();
-        else
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Error while parsing dependency:\n%s", maybe_features.error());
-        return dep;
-    }
-
-    std::string Dependency::name() const
-    {
-        if (this->depend.features.empty()) return this->depend.name;
-
-        const std::string features = Strings::join(",", this->depend.features);
-        return Strings::format("%s[%s]", this->depend.name, features);
-    }
-
-    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends)
-    {
-        return Util::fmap(depends, [&](const std::string& depend_string) -> Dependency {
-            // First, try to find beginning and end of features list
-            auto end_of_features = depend_string.find(']');
-            if (end_of_features != std::string::npos)
-            {
-                ++end_of_features;
-            }
-            else
-            {
-                end_of_features = depend_string.find(' ');
-                if (end_of_features == std::string::npos) end_of_features = depend_string.size();
-            }
-
-            auto begin_of_qualifier = depend_string.find('(', end_of_features);
-            if (begin_of_qualifier == std::string::npos)
-            {
-                return Dependency::parse_dependency(depend_string.substr(0, end_of_features), "");
-            }
-            else
-            {
-                int depth = 1;
-                auto i = begin_of_qualifier + 1;
-                for (; i != depend_string.size(); ++i)
-                {
-                    auto ch = depend_string[i];
-                    if (ch == '(')
-                        ++depth;
-                    else if (ch == ')')
-                        --depth;
-
-                    if (depth == 0) break;
-                }
-                return Dependency::parse_dependency(
-                    depend_string.substr(0, end_of_features),
-                    depend_string.substr(begin_of_qualifier + 1, i - begin_of_qualifier - 1));
-            }
-        });
-    }
-
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<vcpkg::Dependency>& deps,
                                                      Triplet t,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars)
@@ -289,6 +231,4 @@ namespace vcpkg
         }
         return ret;
     }
-
-    std::string to_string(const Dependency& dep) { return dep.name(); }
 }

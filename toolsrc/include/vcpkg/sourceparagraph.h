@@ -11,23 +11,9 @@
 
 namespace vcpkg
 {
-    struct Dependency
-    {
-        Features depend;
-        std::string qualifier;
-
-        std::string name() const;
-        static Dependency parse_dependency(const std::string& name, std::string qualifier);
-    };
-
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<Dependency>& deps,
                                                      Triplet t,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars);
-
-    // "zlib[f] (osx)" becomes Dependency{{"zlib", "f"}, "osx"}
-    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
-
-    std::string to_string(const Dependency& dep);
 
     struct Type
     {

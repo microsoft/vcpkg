@@ -46,7 +46,7 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->maintainer == "m");
     REQUIRE(pgh.core_paragraph->description == "d");
     REQUIRE(pgh.core_paragraph->depends.size() == 1);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "bd");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "bd");
     REQUIRE(pgh.core_paragraph->default_features.size() == 1);
     REQUIRE(pgh.core_paragraph->default_features[0] == "df");
 }
@@ -64,8 +64,8 @@ TEST_CASE ("SourceParagraph two depends", "[paragraph]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->depends.size() == 2);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
-    REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "z");
+    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "openssl");
 }
 
 TEST_CASE ("SourceParagraph three depends", "[paragraph]")
@@ -81,9 +81,9 @@ TEST_CASE ("SourceParagraph three depends", "[paragraph]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->depends.size() == 3);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
-    REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
-    REQUIRE(pgh.core_paragraph->depends[2].name() == "xyz");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "z");
+    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "openssl");
+    REQUIRE(pgh.core_paragraph->depends[2].depend.name == "xyz");
 }
 
 TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
@@ -103,9 +103,9 @@ TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->maintainer == "");
     REQUIRE(pgh.core_paragraph->description == "");
     REQUIRE(pgh.core_paragraph->depends.size() == 2);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "liba");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "liba");
     REQUIRE(pgh.core_paragraph->depends[0].qualifier == "windows");
-    REQUIRE(pgh.core_paragraph->depends[1].name() == "libb");
+    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "libb");
     REQUIRE(pgh.core_paragraph->depends[1].qualifier == "uwp");
 }
 

@@ -88,27 +88,14 @@ namespace vcpkg
 
     std::unordered_map<std::string, std::vector<FeatureSpec>> InstalledPackageView::feature_dependencies() const
     {
-        auto extract_deps = [&](const std::string& dep) {
-            FullPackageSpec dependency =
-                FullPackageSpec::from_string(dep, spec().triplet()).value_or_exit(VCPKG_LINE_INFO);
-            std::vector<FeatureSpec> fspecs;
-
-            for (std::string& feature : dependency.features)
-            {
-                fspecs.emplace_back(dependency.package_spec, std::move(feature));
-            }
-
-            return fspecs;
-        };
+        auto extract_deps = [&](const std::string& name) { return FeatureSpec{{name, spec().triplet()}, "core"}; };
 
         std::unordered_map<std::string, std::vector<FeatureSpec>> deps;
 
-        for (const StatusParagraph* const& feature : features)
-        {
-            deps.emplace(feature->package.feature, Util::fmap_flatten(feature->package.depends, extract_deps));
-        }
+        deps.emplace("core", Util::fmap(core->package.depends, extract_deps));
 
-        deps.emplace("core", Util::fmap_flatten(core->package.depends, extract_deps));
+        for (const StatusParagraph* const& feature : features)
+            deps.emplace(feature->package.feature, Util::fmap(feature->package.depends, extract_deps));
 
         return deps;
     }
@@ -117,26 +104,17 @@ namespace vcpkg
     {
         // accumulate all features in installed dependencies
         // Todo: make this unneeded by collapsing all package dependencies into the core package
-        auto deps = Util::fmap_flatten(features, [](const StatusParagraph* pgh) -> std::vector<std::string> const& {
-            return pgh->package.depends;
-        });
+        std::vector<std::string> deps;
+        for (auto&& feature : features)
+            for (auto&& dep : feature->package.depends)
+                deps.push_back(dep);
 
         // Add the core paragraph dependencies to the list
-        deps.insert(deps.end(), core->package.depends.begin(), core->package.depends.end());
+        for (auto&& dep : core->package.depends)
+            deps.push_back(dep);
 
-        auto&& l_spec = spec();
-
-        // <hack>
-        // This is a hack to work around existing installations that put featurespecs into binary packages
-        // (example: curl[core])
-        for (auto&& dep : deps)
-        {
-            dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
-        }
-        Util::erase_remove_if(deps, [&](auto&& e) { return e == l_spec.name(); });
-        // </hack>
         Util::sort_unique_erase(deps);
 
-        return PackageSpec::to_package_specs(deps, l_spec.triplet());
+        return PackageSpec::to_package_specs(deps, spec().triplet());
     }
 }

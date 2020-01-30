@@ -6,8 +6,6 @@
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/parse.h>
 
-using vcpkg::Parse::parse_comma_list;
-
 namespace vcpkg
 {
     std::string FeatureSpec::to_string() const
@@ -114,27 +112,56 @@ namespace vcpkg
         Parse::ParserBase parser;
         parser.init(input, "<unknown>");
         auto maybe_pqs = parse_qualified_specifier(parser);
-        parser.skip_tabs_spaces();
         if (!parser.at_eof()) parser.add_error("expected eof");
         if (auto e = parser.get_error()) return e->format();
         return std::move(maybe_pqs).value_or_exit(VCPKG_LINE_INFO);
     }
-    Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser)
+
+    Optional<std::string> parse_feature_name(Parse::ParserBase& parser)
     {
         using Parse::ParserBase;
-        ParsedQualifiedSpecifier ret;
-        ret.name = parser.match_zero_or_more(is_package_name_char).to_string();
+        auto ret = parser.match_zero_or_more(is_package_name_char).to_string();
+        auto ch = parser.cur();
+        if (ParserBase::is_upper_alpha(ch) || ch == '_')
+        {
+            parser.add_error("invalid character in feature name (must be lowercase, digits, '-')");
+            return nullopt;
+        }
+        if (ret.empty())
+        {
+            parser.add_error("expected feature name (must be lowercase, digits, '-')");
+            return nullopt;
+        }
+        return ret;
+    }
+    Optional<std::string> parse_package_name(Parse::ParserBase& parser)
+    {
+        using Parse::ParserBase;
+        auto ret = parser.match_zero_or_more(is_package_name_char).to_string();
         auto ch = parser.cur();
         if (ParserBase::is_upper_alpha(ch) || ch == '_')
         {
             parser.add_error("invalid character in package name (must be lowercase, digits, '-')");
             return nullopt;
         }
-        if (ret.name.empty())
+        if (ret.empty())
         {
             parser.add_error("expected package name (must be lowercase, digits, '-')");
             return nullopt;
         }
+        return ret;
+    }
+
+    Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser)
+    {
+        using Parse::ParserBase;
+        ParsedQualifiedSpecifier ret;
+        auto name = parse_package_name(parser);
+        if (auto n = name.get())
+            ret.name = std::move(*n);
+        else
+            return nullopt;
+        auto ch = parser.cur();
         if (ch == '[')
         {
             std::vector<std::string> features;
@@ -149,12 +176,11 @@ namespace vcpkg
                 }
                 else
                 {
-                    features.push_back(parser.match_zero_or_more(is_package_name_char).to_string());
-                    if (features.back().empty())
-                    {
-                        parser.add_error("expected feature name (must be lowercase, digits, '-', or '*')");
+                    auto feature = parse_feature_name(parser);
+                    if (auto f = feature.get())
+                        features.push_back(std::move(*f));
+                    else
                         return nullopt;
-                    }
                 }
                 auto skipped_space = parser.skip_tabs_spaces();
                 ch = parser.cur();
@@ -207,6 +233,9 @@ namespace vcpkg
             ret.qualifier = StringView(loc.it + 1, parser.it()).to_string();
             parser.next();
         }
+        // This makes the behavior of the parser more consistent -- otherwise, it will skip tabs and spaces only if
+        // there isn't a qualifier.
+        parser.skip_tabs_spaces();
         return ret;
     }
 }

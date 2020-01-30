@@ -56,10 +56,16 @@ namespace vcpkg
         std::string multi_arch;
         parser.required_field(Fields::MULTI_ARCH, multi_arch);
 
-        this->depends = parse_comma_list(parser.optional_field(Fields::DEPENDS));
+        this->depends = Util::fmap(
+            parse_qualified_specifier_list(parser.optional_field(Fields::DEPENDS)).value_or_exit(VCPKG_LINE_INFO),
+            [](const ParsedQualifiedSpecifier& dep) {
+                // for compatibility with previous vcpkg versions, we discard all irrelevant information
+                return dep.name;
+            });
         if (this->feature.empty())
         {
-            this->default_features = parse_comma_list(parser.optional_field(Fields::DEFAULTFEATURES));
+            this->default_features = parse_default_features_list(parser.optional_field(Fields::DEFAULTFEATURES))
+                                         .value_or_exit(VCPKG_LINE_INFO);
         }
 
         this->type = Type::from_string(parser.optional_field(Fields::TYPE));
@@ -86,7 +92,7 @@ namespace vcpkg
         , type(spgh.type)
     {
         this->spec = PackageSpec(spgh.name, triplet);
-        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.to_string(); });
+        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
     }
 
@@ -97,7 +103,7 @@ namespace vcpkg
         : version(), description(fpgh.description), maintainer(), feature(fpgh.name), type(spgh.type)
     {
         this->spec = PackageSpec(spgh.name, triplet);
-        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.to_string(); });
+        this->depends = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
         Util::sort_unique_erase(this->depends);
     }
 

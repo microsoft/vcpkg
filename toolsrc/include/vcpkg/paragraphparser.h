@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
+#include <vcpkg/packagespec.h>
 
 #include <memory>
 #include <string>
@@ -35,5 +36,10 @@ namespace vcpkg::Parse
         std::vector<std::string> missing_fields;
     };
 
-    std::vector<std::string> parse_comma_list(const std::string& str);
+    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
+                                                                    CStringView origin = "<unknown>");
+    ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
+                                                                                    CStringView origin = "<unknown>");
+    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
+                                                               CStringView origin = "<unknown>");
 }
