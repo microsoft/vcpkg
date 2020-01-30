@@ -216,6 +216,7 @@ namespace vcpkg::CMakeVars
     void TripletCMakeVarProvider::load_tag_vars(Span<const FullPackageSpec> specs,
                                                 const PortFileProvider::PortFileProvider& port_provider) const
     {
+        if (specs.size() == 0) return;
         std::vector<std::pair<const FullPackageSpec*, std::string>> spec_abi_settings;
         spec_abi_settings.reserve(specs.size());
 
