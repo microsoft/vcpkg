@@ -1,0 +1,10 @@
+Source: xrender
+Version: 0.9.10
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxrender
+Description: library for the Render Extension to the X11 protocol
+Build-Depends: xorg-macros, x11
+Default-Features:
+
+Feature: no-feature
+Description: just a dummy
+Build-Depends:
