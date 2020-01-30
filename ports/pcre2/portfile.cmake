@@ -10,7 +10,9 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES fix-space.patch
-            fix-arm64-config.patch)
+            fix-arm64-config.patch
+            fix-uwp.patch
+)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     set(JIT OFF)
@@ -52,5 +54,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre2/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre2/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -7,11 +7,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v7.0.0
-    SHA512 2187bd4d640ff1630f4f20d2717ea0219f7835e524b1db5b89563b5b525a34200a33693030d9e004db9cfe1df905b6c76ffd709f9e6cb2e2861ba1c1f8d062db
+    REF v7.1.0
+    SHA512 19ed12ee397141f2b5374857ff56514228cd6541307f754b2595507f8a81821fe49d3c8c4312c484678739432ad1a7d5202f1b2d48aa348e4601053dbb430ed9
     HEAD_REF master
-    PATCHES
-        remove-gcov-dependency.patch
 )
 
 vcpkg_configure_cmake(
