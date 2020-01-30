@@ -306,16 +306,13 @@ namespace vcpkg
                                               STARTUPINFOW& startup_info) noexcept
     {
         ProcessInfo process_info;
-
-        // Wrapping the command in a single set of quotes causes cmd.exe to correctly execute
-        const std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
-        Debug::print("CreateProcessW(", actual_cmd_line, ")\n");
+        Debug::print("CreateProcessW(", cmd_line, ")\n");
 
         // Flush stdout before launching external process
         fflush(nullptr);
 
         bool succeeded = TRUE == CreateProcessW(nullptr,
-                                                Strings::to_utf16(actual_cmd_line).data(),
+                                                Strings::to_utf16(cmd_line).data(),
                                                 nullptr,
                                                 nullptr,
                                                 TRUE,
@@ -503,10 +500,9 @@ namespace vcpkg
 
 #if defined(_WIN32)
         using vcpkg::g_ctrl_c_state;
-        const auto redirect_cmd_line = Strings::format("%s 2>&1", cmd_line);
 
         g_ctrl_c_state.transition_to_spawn_process();
-        auto proc_info = windows_create_process_redirect(redirect_cmd_line, env, NULL);
+        auto proc_info = windows_create_process_redirect(cmd_line, env, NULL);
         auto exit_code = proc_info.wait_and_stream_output(data_cb);
         g_ctrl_c_state.transition_from_spawn_process();
 #else
