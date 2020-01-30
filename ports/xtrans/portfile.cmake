@@ -47,7 +47,7 @@ vcpkg_from_gitlab(
 #file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}")
 
 #set(PKG_PATHS "$ENV{PKG_CONFIG_PATH}")
-#set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${CURRENT_INSTALLED_DIR}/share/xorg-macros/pkgconfig/:${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
+#set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${CURRENT_INSTALLED_DIR}/share/xorg/pkgconfig/:${CURRENT_INSTALLED_DIR}/lib/pkgconfig/")
 #Alternatively, you may set the environment variables XCBPROTO_CFLAGS
 #and XCBPROTO_LIBS to avoid the need to call pkg-config.
 #See the pkg-config man page for more details.
