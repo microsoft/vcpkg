@@ -6,6 +6,9 @@ vcpkg_from_github(
     REF 15edb1705d18ee78b32516a8ae52d6b10507af62
     SHA512 7dbe917d48b1e8c4b004bad33d8a82524e501d8bec6cdeca4e89ebbe8ed79fa484028c3afd365347e31fa83f64a6f0f5a42ea0063baa7c0985824fb3dffcc8f2
     HEAD_REF master
+    PATCHES
+        # Installing "slice.h" to the root include directory causes build issues in many other libraries
+        adjust-install-dir.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TEEMO_STATIC)
