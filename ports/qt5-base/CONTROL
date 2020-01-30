@@ -2,11 +2,11 @@ Source: qt5-base
 Version: 5.12.5-10
 Homepage: https://www.qt.io/
 Description: Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.
-Build-Depends: zlib, libjpeg-turbo, libpng, freetype, pcre2, harfbuzz, sqlite3, libpq, double-conversion, openssl, angle (!windows), egl-registry, icu (!uwp), fontconfig (!windows), qt5-base[x11] (linux), glib (linux)
+Build-Depends: zlib, libjpeg-turbo, libpng, freetype, pcre2, harfbuzz, sqlite3, libpq, double-conversion, openssl, angle (!windows), egl-registry, icu (!uwp), fontconfig (!windows), qt5-base[x11] (linux), glib (linux), pthread (!windows)
 
 Feature: latest
 Description: Build latest qt version (5.13.1) instead of LTS
 
 Feature: x11
 Description: Build so that qt5-x11extras can be build
-Build-Depends: xlib, xrender, xcb-image, xfixes, xext, xi, xcb, xcb-wm
+Build-Depends: xlib, xrender, xcb-image, xfixes, xext, xi, xcb, xcb-wm, xkbcommon, sm, ice
