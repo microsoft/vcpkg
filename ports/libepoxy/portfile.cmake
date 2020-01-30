@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 e831f4f918f08fd5f799501efc0e23b8d404478651634f5e7b35f8ebcc29d91abc447ab20da062dde5be75e18cb39ffea708688e6534f7ab257b949f9c53ddc8
     HEAD_REF master)
 
-
+ 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
