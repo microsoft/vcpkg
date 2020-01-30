@@ -1,4 +1,4 @@
 Source: inedit
 Version: 0
 Description: Inedit Software dependencies
-Build-Depends: pango, cppunit (windows), curl, libexif, libjpeg-turbo, lcms, minizip, poco, tiff, muparser, wxwidgets (!osx&!windows)
+Build-Depends: librsvg, pango, cppunit (windows), curl, libexif, libjpeg-turbo, lcms, minizip, poco, tiff, muparser, wxwidgets (!osx&!windows)
