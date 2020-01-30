@@ -1071,6 +1071,8 @@ mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
 mongo-c-driver:arm64-windows=fail
+# Flaky strange linker error
+mongo-c-driver:x64-osx=skip
 mongoose:arm-uwp=fail
 mongoose:x64-uwp=fail
 monkeys-audio:arm64-windows=fail
