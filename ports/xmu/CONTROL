@@ -1,0 +1,5 @@
+Source: xmu
+Version: 1.1.3 
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxau
+Description: X miscellaneous utility routines library
+Build-Depends: xorg-macros, bzip2, xt
