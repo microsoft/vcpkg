@@ -1,0 +1,4 @@
+Source: xext
+Version: 1.3.4 
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxext
+Description: Xlib-based library for common extensions to the X11 protocol
