@@ -1,0 +1,5 @@
+Source: ice
+Version: 1.0.10
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libice
+Description: Inter-Client Exchange Library
+Build-Depends: xorg-macros, bzip2
