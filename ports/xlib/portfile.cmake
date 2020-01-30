@@ -55,9 +55,9 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 
+
 set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
-#file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/aclocal")
-#requires XTRANS
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
