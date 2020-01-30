@@ -61,25 +61,26 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/util-macros/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/util-macros")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal/" "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/util-macros/" "${CURRENT_PACKAGES_DIR}/share/xorg/util-macros")
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" _contents)
 string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
-string(REPLACE "datarootdir=\${prefix}/share" "datarootdir=\${prefix}/share/${PORT}" _contents "${_contents}")
+string(REPLACE "datarootdir=\${prefix}/share" "datarootdir=\${prefix}/share/xorg" _contents "${_contents}")
 string(REPLACE "includedir=${CURRENT_INSTALLED_DIR}/include" "includedir=\${prefix}/include" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" "${_contents}")
 #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/share/xorg/pkgconfig")
 
 file(READ "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" _contents)
 string(REPLACE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_INSTALLED_DIR}/debug" _contents "${_contents}")
-string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/${PORT}/debug}" _contents "${_contents}")
+string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/xorg/debug}" _contents "${_contents}")
 string(REPLACE "includedir=${CURRENT_INSTALLED_DIR}/debug/include" "includedir=\${prefix}/../include" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" "${_contents}")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/debug/")
-file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/debug/")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
+file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 

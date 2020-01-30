@@ -31,10 +31,20 @@
 
 # # Specifies if the port install should fail immediately given a condition
 # vcpkg_fail_port_install(MESSAGE "Xlib currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-vcpkg_fail_port_install(MESSAGE "Xlib currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platforms" ON_TARGET "Windows")
 
 ## requires AUTOCONF, LIBTOOL and PKCONF
-message(WARNING "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
+message(STATUS "${PORT} requires autoconf, libtool and pkconf from the system package manager!")
+
+#vcpkg_from_gitlab(
+#    GITLAB_URL https://gitlab.freedesktop.org/xorg
+#    OUT_SOURCE_PATH SOURCE_XTRANS
+#    REPO lib/libxtrans
+#    REF  c4262efc9688e495261d8b23a12f956ab38e006f #v1.4
+#    SHA512 137f0ffcae97f2375e5babbf21d336b67e7bf35f6a74377b14f035cdba66992d21f8d90f3c1dc243f8fd3d27d32af36c59af45443db59908969d0d65598865a2
+#    HEAD_REF master # branch name
+#    #PATCHES example.patch #patch name
+#) 
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
@@ -45,8 +55,8 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/m4")
+set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
+#file(COPY "${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/xorg-macros.m4" DESTINATION "${SOURCE_PATH}/aclocal")
 #requires XTRANS
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
@@ -55,11 +65,11 @@ vcpkg_configure_make(
     #NO_DEBUG
     #AUTO_HOST
     #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
+    #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
     #OPTIONS
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
-    PKG_CONFIG_PATHS "${CURRENT_INSTALLED_DIR}/share/xorg-macros/pkgconfig/"
+    PKG_CONFIG_PATHS "${CURRENT_INSTALLED_DIR}/share/xorg/pkgconfig/"
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
 )
@@ -75,7 +85,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/Xlib)
 
 # # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/xlib" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME Xlib)
