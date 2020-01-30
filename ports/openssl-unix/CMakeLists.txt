@@ -8,8 +8,8 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     set(PLATFORM android)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
-        set(PLATFORM linux-generic64)
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        set(PLATFORM linux-x86_64)
     else()
         set(PLATFORM linux-generic32)
     endif()
@@ -119,7 +119,6 @@ add_custom_command(
         ${SHARED}
         enable-static-engine
         no-ssl2
-        no-krb5
         no-idea
         no-bf
         no-cast
@@ -134,20 +133,13 @@ add_custom_command(
     WORKING_DIRECTORY "${BUILDDIR}"
 )
 
-add_custom_target(depend
-    COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
-    COMMAND "${MAKE}" links # depend MAKEDEPPROG=${CMAKE_C_COMPILER}
-    VERBATIM
-    WORKING_DIRECTORY "${BUILDDIR}"
-    DEPENDS "${BUILDDIR}/Makefile"
-)
 add_custom_target(build_libs ALL
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
     COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
     COMMAND "${MAKE}" build_libs
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
-    DEPENDS depend
+    DEPENDS "${BUILDDIR}/Makefile"
     BYPRODUCTS ${INSTALL_LIBS}
 )
 

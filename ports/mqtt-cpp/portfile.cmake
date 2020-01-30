@@ -1,0 +1,20 @@
+# header-only library
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO redboltz/mqtt_cpp
+    REF v7.0.1
+    SHA512 7128943e1136200debca344600b015b94a6e216f6136f2b432f4692fd8dabe1a7e50fa3d436d4df85950831f5ed776e03fc02c324afbf2178455770a33bff828
+    HEAD_REF master
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DMQTT_BUILD_EXAMPLES=OFF
+        -DMQTT_BUILD_TESTS=OFF
+)
+
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
