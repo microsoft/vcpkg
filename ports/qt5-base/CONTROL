@@ -9,4 +9,4 @@ Description: Build latest qt version (5.13.1) instead of LTS
 
 Feature: x11
 Description: Build so that qt5-x11extras can be build
-Build-Depends: xlib, xrender, xcb-image, xfixes, xext, xi
+Build-Depends: xlib, xrender, xcb-image, xfixes, xext, xi, xcb, xcb-wm
