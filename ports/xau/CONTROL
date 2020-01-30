@@ -1,0 +1,5 @@
+Source: xau
+Version: 1.0.9 
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxau
+Description: Functions for handling Xauthority files and entries.
+Build-Depends: xorg-macros, bzip2
