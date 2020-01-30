@@ -14,8 +14,8 @@ vcpkg_configure_meson(
     OPTIONS
         -Ddocs=false
         --backend=ninja
-)
-
+) 
+ 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
