@@ -5,21 +5,24 @@
 
 function(vcpkg_fixup_pkgconfig)
     cmake_parse_arguments(_vfpkg "" "" "RELEASE_FILES;DEBUG_FILES" ${ARGN})
-
+    
+    message(STATUS "Fixing pkgconfig")
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
     if(NOT _vfpkg_RELEASE_FILES)
-        file(GLOB_RECURSE _vfpkg_RELEASE_FILES **/*.pc)
+        file(GLOB_RECURSE _vfpkg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
         list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
     
     if(NOT _vfct_DEBUG_FILES)
-        file(GLOB_RECURSE _vfct_DEBUG_FILES **/*.pc)
+        file(GLOB_RECURSE _vfct_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
         list(FILTER _vfct_DEBUG_FILES INCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
-
+    
+    message(STATUS "Fixing pkgconfig - release")
+    message(STATUS "Files: ${_vfpkg_RELEASE_FILES}")
     foreach(_file ${_vfpkg_RELEASE_FILES})
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
@@ -29,7 +32,9 @@ function(vcpkg_fixup_pkgconfig)
         file(WRITE "${_file}" "${_contents}")
     endforeach()
     
-        foreach(_file ${_vfct_DEBUG_FILES})
+    message(STATUS "Fixing pkgconfig - debug")
+    message(STATUS "Files: ${_vfct_DEBUG_FILES}")
+    foreach(_file ${_vfct_DEBUG_FILES})
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
@@ -39,6 +44,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REGEX REPLACE "^prefix=\\\${prefix}" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endforeach()
+    message(STATUS "Fixing pkgconfig --- finished")
 endfunction()
 
  
