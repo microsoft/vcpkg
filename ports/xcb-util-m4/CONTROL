@@ -1,0 +1,4 @@
+Source: xcb-util-m4
+Version: 1
+Homepage: https://gitlab.freedesktop.org/xorg/util/xcb-util-m4
+Description: GNU autoconf macros shared across XCB projects
