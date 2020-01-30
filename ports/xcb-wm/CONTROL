@@ -1,0 +1,5 @@
+Source: xcb-wm
+Version: 0.4.1
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxcb-wm/
+Description: XCB client and window-manager helpers for ICCCM & EWMH.
+Build-Depends: xorg-macros, bzip2, xproto
