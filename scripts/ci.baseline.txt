@@ -1297,6 +1297,7 @@ pangolin:x64-windows-static=fail
 pangomm:x64-osx=fail
 pangomm:x64-windows=ignore
 pangomm:x86-windows=ignore
+pangomm:arm64-windows=fail
 parmetis:x64-linux=fail
 parmetis:x64-osx=fail
 pcre2:arm-uwp=fail

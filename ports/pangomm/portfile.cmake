@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/pangomm/2.40/pangomm-2.40.1.tar.xz"
     FILENAME "pangomm-2.40.1.tar.xz"
