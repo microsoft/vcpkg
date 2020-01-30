@@ -94,6 +94,7 @@ asmjit:x64-uwp=fail
 asyncplusplus:arm-uwp=fail
 asyncplusplus:x64-uwp=fail
 atk:x64-osx=fail
+atk:arm64-windows=fail
 atkmm:x64-linux=fail
 atlmfc:x64-linux=fail
 atlmfc:x64-osx=fail
