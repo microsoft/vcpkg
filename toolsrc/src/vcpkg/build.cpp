@@ -539,8 +539,8 @@ namespace vcpkg::Build
         std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
 
 #if defined(_WIN32)
-        const int return_code =
-            System::cmd_execute_clean(command, env, powershell_exe_path.parent_path().u8string() + ";");
+        const int return_code = System::cmd_execute(
+            command, System::get_modified_clean_environment(env, powershell_exe_path.parent_path().u8string() + ";"));
 #else
         const int return_code = System::cmd_execute_clean(command, env);
 #endif
