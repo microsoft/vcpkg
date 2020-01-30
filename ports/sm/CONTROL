@@ -1,0 +1,5 @@
+Source: sm
+Version: 1.2.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libsm
+Description: X Session Management Library
+Build-Depends: xorg-macros, bzip2, ice
