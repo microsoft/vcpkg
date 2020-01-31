@@ -667,6 +667,7 @@ namespace vcpkg::Install
         auto& fs = paths.get_filesystem();
 
         // create the plan
+        System::print2("Computing installation plan...\n");
         StatusParagraphs status_db = database_load_check(paths);
 
         Build::DownloadTool download_tool = Build::DownloadTool::BUILT_IN;

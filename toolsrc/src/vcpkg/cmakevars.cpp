@@ -15,65 +15,48 @@ namespace vcpkg::CMakeVars
     fs::path TripletCMakeVarProvider::create_tag_extraction_file(
         const Span<const std::pair<const FullPackageSpec*, std::string>>& spec_abi_settings) const
     {
-        constexpr StringLiteral COMMAND_START = "vcpkg_get_tags(";
-        constexpr StringLiteral COMMAND_END = ")\n";
-        constexpr size_t COMMAND_LENGTH = COMMAND_START.size() + COMMAND_END.size();
+        Files::Filesystem& fs = paths.get_filesystem();
+        static int tag_extract_id = 0;
 
-        std::vector<std::string> feature_lists(spec_abi_settings.size());
+        std::string extraction_file("include(" + get_tags_path.generic_u8string() + ")\n\n");
 
-        std::unique_ptr<Hash::Hasher> hasher = Hash::get_hasher_for(Hash::Algorithm::Sha1);
-
-        size_t parameter_chars = 0;
+        std::map<Triplet, int> emitted_triplets;
+        int emitted_triplet_id = 0;
         for (const auto& spec_abi_setting : spec_abi_settings)
         {
-            const FullPackageSpec& spec = *spec_abi_setting.first;
-
-            parameter_chars += spec.package_spec.name().size();
-            feature_lists.emplace_back(Strings::join(";", spec.features));
-            parameter_chars += feature_lists.back().size();
-            parameter_chars += paths.get_triplet_file_path(spec.package_spec.triplet()).u8string().size();
-            parameter_chars += spec_abi_setting.second.size();
+            emitted_triplets[spec_abi_setting.first->package_spec.triplet()] = emitted_triplet_id++;
         }
-
-        const size_t space_quote_chars = spec_abi_settings.size() * 11;
-
-        std::string extraction_file("include(" + get_tags_path.u8string() + ")\n\n");
-        extraction_file.reserve(extraction_file.length() + COMMAND_LENGTH + parameter_chars + space_quote_chars);
-
-        auto feature_list_itr = feature_lists.cbegin();
+        Strings::append(extraction_file, "macro(vcpkg_triplet_file VCPKG_TRIPLET_ID)\n");
+        for (auto& p : emitted_triplets)
+        {
+            Strings::append(extraction_file,
+                            "if(VCPKG_TRIPLET_ID EQUAL ",
+                            p.second,
+                            ")\n",
+                            fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO),
+                            "\nendif()\n");
+        }
+        Strings::append(extraction_file, "endmacro()\n");
         for (const auto& spec_abi_setting : spec_abi_settings)
         {
             const FullPackageSpec& spec = *spec_abi_setting.first;
-
-            hasher->add_bytes(spec.package_spec.name().c_str(),
-                              spec.package_spec.name().c_str() + spec.package_spec.name().length());
-            hasher->add_bytes(spec.package_spec.triplet().to_string().c_str(),
-                              spec.package_spec.triplet().to_string().c_str() +
-                                  spec.package_spec.triplet().to_string().length());
 
             Strings::append(extraction_file,
-                            COMMAND_START,
-                            "\"",
+                            "vcpkg_get_tags(\"",
                             spec.package_spec.name(),
                             "\" \"",
-                            *feature_list_itr,
+                            Strings::join(";", spec.features),
                             "\" \"",
-                            paths.get_triplet_file_path(spec.package_spec.triplet()).u8string(),
+                            emitted_triplets[spec.package_spec.triplet()],
                             "\" \"",
                             spec_abi_setting.second,
-                            "\"",
-                            COMMAND_END);
-
-            ++feature_list_itr;
+                            "\")\n");
         }
 
-        fs::path path = paths.buildtrees / (hasher->get_hash() + ".vcpkg_tags.cmake");
-
-        Files::Filesystem& fs = paths.get_filesystem();
+        fs::path path = paths.buildtrees / Strings::concat(tag_extract_id++, ".vcpkg_tags.cmake");
 
         std::error_code ec;
         fs.create_directories(paths.buildtrees, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory %s", paths.buildtrees.u8string());
         fs.write_contents(path, extraction_file, VCPKG_LINE_INFO);
 
         return path;
@@ -81,47 +64,39 @@ namespace vcpkg::CMakeVars
 
     fs::path TripletCMakeVarProvider::create_dep_info_extraction_file(const Span<const PackageSpec> specs) const
     {
-        constexpr StringLiteral COMMAND_START = "vcpkg_get_dep_info(";
-        constexpr StringLiteral COMMAND_END = ")\n";
-        constexpr size_t COMMAND_LENGTH = COMMAND_START.size() + COMMAND_END.size();
-
-        std::unique_ptr<Hash::Hasher> hasher = Hash::get_hasher_for(Hash::Algorithm::Sha1);
-        hasher->clear();
-
-        size_t parameter_chars = 0;
-        for (const PackageSpec& spec : specs)
-        {
-            parameter_chars += spec.name().size();
-            parameter_chars += paths.get_triplet_file_path(spec.triplet()).u8string().size();
-        }
-
-        const size_t space_chars = specs.size();
-
-        std::string extraction_file("include(" + get_dep_info_path.u8string() + ")\n\n");
-
-        extraction_file.reserve(extraction_file.length() + COMMAND_LENGTH + parameter_chars + space_chars);
-
-        for (const PackageSpec& spec : specs)
-        {
-            hasher->add_bytes(spec.name().c_str(), spec.name().c_str() + spec.name().length());
-            hasher->add_bytes(spec.triplet().to_string().c_str(),
-                              spec.triplet().to_string().c_str() + spec.triplet().to_string().length());
-
-            Strings::append(extraction_file,
-                            COMMAND_START,
-                            spec.name(),
-                            " ",
-                            paths.get_triplet_file_path(spec.triplet()).u8string(),
-                            COMMAND_END);
-        }
-
-        fs::path path = paths.buildtrees / (hasher->get_hash() + ".vcpkg_dep_info.cmake");
-
+        static int dep_info_id = 0;
         Files::Filesystem& fs = paths.get_filesystem();
+
+        std::string extraction_file("include(" + get_dep_info_path.generic_u8string() + ")\n\n");
+
+        std::map<Triplet, int> emitted_triplets;
+        int emitted_triplet_id = 0;
+        for (const auto& spec : specs)
+        {
+            emitted_triplets[spec.triplet()] = emitted_triplet_id++;
+        }
+        Strings::append(extraction_file, "macro(vcpkg_triplet_file VCPKG_TRIPLET_ID)\n");
+        for (auto& p : emitted_triplets)
+        {
+            Strings::append(extraction_file,
+                            "if(VCPKG_TRIPLET_ID EQUAL ",
+                            p.second,
+                            ")\n",
+                            fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO),
+                            "\nendif()\n");
+        }
+        Strings::append(extraction_file, "endmacro()\n");
+
+        for (const PackageSpec& spec : specs)
+        {
+            Strings::append(
+                extraction_file, "vcpkg_get_dep_info(", spec.name(), " ", emitted_triplets[spec.triplet()], ")\n");
+        }
+
+        fs::path path = paths.buildtrees / Strings::concat(dep_info_id++, ".vcpkg_dep_info.cmake");
 
         std::error_code ec;
         fs.create_directories(paths.buildtrees, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory %s", paths.buildtrees.u8string());
         fs.write_contents(path, extraction_file, VCPKG_LINE_INFO);
 
         return path;
@@ -193,6 +168,7 @@ namespace vcpkg::CMakeVars
 
     void TripletCMakeVarProvider::load_dep_info_vars(Span<const PackageSpec> specs) const
     {
+        if (specs.size() == 0) return;
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(specs.size());
         const fs::path file_path = create_dep_info_extraction_file(specs);
         if (specs.size() > 100)
@@ -224,7 +200,7 @@ namespace vcpkg::CMakeVars
         {
             auto& scfl = port_provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
             const fs::path override_path = scfl.source_location / "vcpkg-abi-settings.cmake";
-            spec_abi_settings.emplace_back(&spec, override_path.u8string());
+            spec_abi_settings.emplace_back(&spec, override_path.generic_u8string());
         }
 
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(spec_abi_settings.size());
