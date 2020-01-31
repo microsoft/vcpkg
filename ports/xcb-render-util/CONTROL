@@ -2,4 +2,4 @@ Source: xcb-render-util
 Version: 0.3.9
 Homepage: https://xcb.freedesktop.org/
 Description: XCB convenience functions for the Render extension.
-Build-Depends: xorg-macros, bzip2, xproto, xcb-util-m4
+Build-Depends: xcb
