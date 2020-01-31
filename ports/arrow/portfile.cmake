@@ -36,6 +36,7 @@ vcpkg_configure_cmake(
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
         -DARROW_WITH_BROTLI=ON
+        -DPARQUET_REQUIRE_ENCRYPTION=ON
 )
 
 vcpkg_install_cmake()
