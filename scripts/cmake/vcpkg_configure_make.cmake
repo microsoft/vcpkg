@@ -16,7 +16,10 @@
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]+
+##     [PKG_CONFIG_PATHS <$CONFIG_PATH>]
+##     [PKG_CONFIG_PATHS_DEBUG <$CONFIG_PATH>]
+##     [PKG_CONFIG_PATHS_RELEASE <$CONFIG_PATH>]
 ## )
 ## ```
 ##
@@ -64,6 +67,9 @@
 ## ### OPTIONS_DEBUG
 ## Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
 ##
+## ### PKG_CONFIG_PATHS(_RELEASE|_DEBUG)
+## Appends the listed PATHS to the enviorment variable PKG_CONFIG_PATH
+##
 ## ## Notes
 ## This command supplies many common arguments to configure. To see the full list, examine the source.
 ##
@@ -77,7 +83,7 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PKG_CONFIG_PATHS;PKG_CONFIG_PATHS_DEBUG;PKG_CONFIG_PATHS_RELEASE"
         ${ARGN}
     )
     
@@ -106,7 +112,13 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "${_csc_GENERATOR} not supported.")
     endif()
-
+    if(_csc_PKG_CONFIG_PATHS)
+        set(BACKUP_ENV_PKG_CONFIG_PATH $ENV{PKG_CONFIG_PATH})
+        foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS)
+            file(TO_NATIVE_PATH "${_path}" _path)
+            set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
+        endforeach()
+    endif()
     set(WIN_TARGET_ARCH )
     set(WIN_TARGET_COMPILER )
     # Detect compiler
@@ -208,6 +220,11 @@ function(vcpkg_configure_make)
         )
     else()
         set(base_cmd ./)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared --disable-static)
+        else()
+            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static --disable-shared)
+        endif()
         set(rel_command
             ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
         )
@@ -218,6 +235,15 @@ function(vcpkg_configure_make)
     
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
+        
+        if(_csc_PKG_CONFIG_PATHS_DEBUG)
+            set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
+            foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS_DEBUG)
+                file(TO_NATIVE_PATH "${_path}" _path)
+                set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
+            endforeach()
+        endif()
+    
         if (CMAKE_HOST_WIN32)
             unset(ENV{CFLAGS})
             unset(ENV{CXXFLAGS})
@@ -262,13 +288,13 @@ function(vcpkg_configure_make)
                 vcpkg_execute_required_process(
                     COMMAND ${base_cmd} autoreconf -vfi
                     WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TARGET_TRIPLET}-dbg
                 )
             else()
                 vcpkg_execute_required_process(
                     COMMAND autoreconf -vfi
                     WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TARGET_TRIPLET}-dbg
                 )
             endif()
         endif()
@@ -281,10 +307,21 @@ function(vcpkg_configure_make)
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
         endif()
+        if(_csc_PKG_CONFIG_PATHS_DEBUG)
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_DEBUG}")
+        endif()
     endif()
 
     # Configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        if(_csc_PKG_CONFIG_PATHS_RELEASE)
+            set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
+            foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS_RELEASE)
+                file(TO_NATIVE_PATH "${_path}" _path)
+                set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
+            endforeach()
+        endif()
+    
         if (CMAKE_HOST_WIN32)
             unset(ENV{CFLAGS})
             unset(ENV{CXXFLAGS})
@@ -356,6 +393,10 @@ function(vcpkg_configure_make)
                 LOGNAME config-${TAR_TRIPLET_DIR}
             )
         endif()
+        
+        if(_csc_PKG_CONFIG_PATHS_RELEASE)
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_RELEASE}")
+        endif()
     endif()
     
     # Restore envs
@@ -364,6 +405,11 @@ function(vcpkg_configure_make)
         set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL}")
         set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL}")
     endif()
+    
+    if(_csc_PKG_CONFIG_PATHS)
+        set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
+    endif()
+    
     
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
     set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
