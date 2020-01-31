@@ -156,7 +156,7 @@ install(TARGETS libxml2
 option(BUILD_XMLLINT "Build XML lint tool" OFF)
 if(BUILD_XMLLINT)
     add_executable(xmllint xmllint.c)
-    target_link_libraries(xmllint PRIVATE libxml2)
+    target_link_libraries(xmllint PRIVATE libxml2 unofficial::iconv::libcharset unofficial::iconv::libiconv)
     target_include_directories(xmllint PRIVATE "include" "${CMAKE_CURRENT_BINARY_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}")
     install(TARGETS xmllint
         RUNTIME DESTINATION tools/libxml2
