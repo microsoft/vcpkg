@@ -2,4 +2,4 @@ Source: xproto
 Version: 2019.2
 Homepage: https://gitlab.freedesktop.org/xorg/proto/xorgproto
 Description: X Window System unified protocol definitions
-Build-Depends: xorg-macros
+Build-Depends: xorg-macros 
