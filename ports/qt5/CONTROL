@@ -11,7 +11,7 @@ Description: Build the essential qt modules
 
 Feature: latest
 Build-Depends: qt5-base[latest]
-Description: Build latest qt version (5.13.1) instead of LTS
+Description: Build latest qt version (5.14.1) instead of LTS
 
 Feature: default
 Build-Depends: qt5[3d, webchannel, websockets, extras, sensors, serialport, speech, virtualkeyboard, purchasing, scxml, charts, datavis3d, gamepad, graphicaleffects, location, webglplugin, webview, translations, remoteobjects, connectivity, canvas3d]
@@ -19,7 +19,7 @@ Description: Build the essential qt modules
 
 Feature: all
 Build-Depends: qt5[3d, webchannel, websockets, extras, xmlpatterns, sensors, serialport, speech, svg, tools, virtualkeyboard, networkauth, purchasing, quickcontrols, quickcontrols2, script, scxml, activeqt, charts, datavis3d, declarative, gamepad, graphicaleffects, imageformats, location, multimedia, mqtt, webglplugin, webview, wayland, webengine, serialbus, translations, doc, remoteobjects, connectivity, canvas3d]
-Description: Install all Qt5 submodules (Warning: Could take a long time...)
+Description: Install all Qt5 submodules (Warning: Could take a long time and fail...)
 
 Feature: extras
 Build-Depends: qt5-winextras (windows), qt5-macextras (osx), qt5-x11extras (linux), qt5-androidextras (android)
