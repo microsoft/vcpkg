@@ -2,5 +2,5 @@ Source: xcb-image
 Version: 0.4.0
 Homepage: https://xcb.freedesktop.org/
 Description: XCB port of Xlib's XImage and XShmImage functions.
-Build-Depends: xcb
+Build-Depends: xcb, xcb-util
 
