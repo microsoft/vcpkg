@@ -307,7 +307,9 @@ function(vcpkg_configure_make)
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
         endif()
-        set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_DEBUG}")
+        if(_csc_PKG_CONFIG_PATHS_DEBUG)
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_DEBUG}")
+        endif()
     endif()
 
     # Configure release
@@ -392,7 +394,9 @@ function(vcpkg_configure_make)
             )
         endif()
         
-        set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_RELEASE}")
+        if(_csc_PKG_CONFIG_PATHS_RELEASE)
+            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_RELEASE}")
+        endif()
     endif()
     
     # Restore envs
@@ -401,7 +405,10 @@ function(vcpkg_configure_make)
         set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL}")
         set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL}")
     endif()
-    set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
+    
+    if(_csc_PKG_CONFIG_PATHS)
+        set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
+    endif()
     
     
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
