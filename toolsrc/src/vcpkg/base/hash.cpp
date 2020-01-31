@@ -123,9 +123,9 @@ namespace vcpkg::Hash
     void top_bits(T) = delete;
 
     static constexpr uchar top_bits(uchar x) noexcept { return x; }
-    static constexpr uchar top_bits(std::uint32_t x) noexcept { return (x >> 24) & 0xFF; }
-    static constexpr uchar top_bits(std::uint64_t x) noexcept { return (x >> 56) & 0xFF; }
-    static constexpr uchar top_bits(UInt128 x) noexcept { return top_bits(x.top); }
+    [[maybe_unused]] static constexpr uchar top_bits(std::uint32_t x) noexcept { return (x >> 24) & 0xFF; }
+    [[maybe_unused]] static constexpr uchar top_bits(std::uint64_t x) noexcept { return (x >> 56) & 0xFF; }
+    [[maybe_unused]] static constexpr uchar top_bits(UInt128 x) noexcept { return top_bits(x.top); }
 
     // treats UIntTy as big endian for the purpose of this mapping
     template<class UIntTy>
@@ -145,7 +145,7 @@ namespace vcpkg::Hash
             for (uchar& ch : buff)
             {
                 ch = top_bits(tmp);
-                tmp <<= 8;
+                tmp = UIntTy(tmp << 8);
             }
 
             for (const auto byte : buff)

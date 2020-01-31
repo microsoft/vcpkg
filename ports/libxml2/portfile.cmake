@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2.9.9
     SHA512 bfcc08bd033f538a968205f0f9e2da4c3438ec2f35f017289783903365e13ed93d83f2f63c7497344a362b7418170ee586a5ecb45493e30feaa0f62b22a57b54
     HEAD_REF master
+    PATCHES
+        RemoveIncludeFromWindowsRcFile.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

@@ -1,4 +1,4 @@
 Source: qt5-remoteobjects
-Version: 5.12.5-1
+Version: 5.12.7
 Description: Qt5 Remoteobjects module - Provides an easy to use mechanism for sharing a QObject's API (Properties/Signals/Slots) between processes or devices.
 Build-Depends:  qt5-base, qt5-declarative
