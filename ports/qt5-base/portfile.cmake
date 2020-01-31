@@ -46,6 +46,8 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/Qt5BasicConfig.patch
                             patches/Qt5PluginTarget.patch
                             patches/prl_parser.patch
+                            patches/xlib.patch
+                            patches/glib.patch
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build

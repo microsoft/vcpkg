@@ -1,0 +1,14 @@
+diff --git a/src/corelib/configure.json b/src/corelib/configure.json
+index 068b80c51..497450523 100644
+--- a/src/corelib/configure.json
++++ b/src/corelib/configure.json
+@@ -44,7 +44,8 @@
+             },
+             "headers": "glib.h",
+             "sources": [
+-                { "type": "pkgConfig", "args": "glib-2.0 gthread-2.0" }
++                { "type": "pkgConfig", "args": "glib-2.0 gthread-2.0" },
++                "-lglib-2.0 -lgthread-2.0"
+             ]
+         },
+         "posix_iconv": {
