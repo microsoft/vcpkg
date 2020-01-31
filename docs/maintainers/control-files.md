@@ -58,7 +58,7 @@ For example, given:
 
 Then if you update the source version today, you should give it version `2019-06-01`. If you need to make a change which doesn't adjust the source version, you should give it version `2019-02-14-2`.
 
-Example:
+##### Examples:
 ```no-highlight
 Version: 1.0.5-2
 ```
@@ -71,7 +71,7 @@ A description of the library.
 
 By convention the first line of the description is a summary of the library.  An optional detailed description follows.  The detailed description can be multiple lines, all starting with whitespace.
 
-Example:
+##### Examples:
 ```no-highlight
 Description: C++ header-only JSON library
 ```
@@ -96,17 +96,13 @@ Vcpkg does not distinguish between build-only dependencies and runtime dependenc
 
 *For example: websocketpp is a header only library, and thus does not require any dependencies at install time. However, downstream users need boost and openssl to make use of the library. Therefore, websocketpp lists boost and openssl as dependencies*
 
-Example:
-```no-highlight
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff
-```
-If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax.
+If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax. If the port does not require any features from the dependency, this should be specifed as `portname[core]`.
 
-Dependencies can be filtered based on the target triplet to support different requirements on Windows Desktop versus the Universal Windows Platform. Currently, the string inside parentheses is substring-compared against the triplet name.  There must be a space between the name of the port and the filter. __This will change in a future version to not depend on the triplet name.__
+Dependencies can be filtered based on the target triplet to support differing requirements. These filters use the same syntax as the Supports field below and are surrounded in parentheses following the portname and feature list.
 
-Example:
+##### Example:
 ```no-highlight
-Build-Depends: curl[openssl] (!windows&!osx), curl[winssl] (windows), curl[darwinssl] (osx)
+Build-Depends: rapidjson, curl[core,openssl] (!windows), curl[core,winssl] (windows)
 ```
 
 #### Default-Features
@@ -114,19 +110,40 @@ Comma separated list of optional port features to install by default.
 
 This field is optional.
 
+##### Example:
 ```no-highlight
 Default-Features: dynamodb, s3, kinesis
 ```
 
 #### Supports
-Expression that evalutates to true when the port is supported for a given triplet.  This field is currently only used in the CI testing to skip ports.
+Expression that evalutates to true when the port is expected to build successfully for a triplet.
+
+Currently, this field is only used in the CI testing to skip ports. In the future, this mechanism is intended to warn users in advance that a given install tree is not expected to succeed. Therefore, this field should be used optimistically; in cases where a port is expected to succeed 10% of the time, it should still be marked "supported".
+
+The grammar for the supports expression uses standard operators:
+- `!expr` - negation
+- `expr|expr` - or (`||` is also supported)
+- `expr&expr` - and (`&&` is also supported)
+- `(expr)` - grouping/precedence
+
+The predefined expressions are computed from standard triplet settings:
+- `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
+- `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
+- `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
+- `arm64` - `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
+- `windows` - `VCPKG_CMAKE_SYSTEM_NAME` == `""` || `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
+- `uwp` - `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
+- `linux` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Linux"`
+- `osx` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Darwin"`
+- `android` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Android"`
+- `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
 
 This field is optional and defaults to true.
 
+##### Example:
 ```no-highlight
-Supports: !(uwp||arm)
+Supports: !(uwp|arm)
 ```
-
 
 ## Feature Paragraphs
 
