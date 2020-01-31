@@ -17,7 +17,7 @@ function(vcpkg_fixup_pkgconfig)
     endif()
     
     if(NOT _vfpkg_DEBUG_FILES)
-        file(GLOB_RECURSE __vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
+        file(GLOB_RECURSE _vfpkg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
         list(FILTER _vfpkg_DEBUG_FILES INCLUDE REGEX "${CURRENT_PACKAGES_DIR}/debug/")
     endif()
     
