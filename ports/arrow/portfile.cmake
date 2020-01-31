@@ -30,6 +30,12 @@ vcpkg_configure_cmake(
         -DARROW_GFLAGS_USE_SHARED=off
         -DARROW_JEMALLOC=off
         -DARROW_BUILD_UTILITIES=OFF
+        -DARROW_WITH_BZ2=ON
+        -DARROW_WITH_ZLIB=ON
+        -DARROW_WITH_ZSTD=ON
+        -DARROW_WITH_LZ4=ON
+        -DARROW_WITH_SNAPPY=ON
+        -DARROW_WITH_BROTLI=ON
 )
 
 vcpkg_install_cmake()
