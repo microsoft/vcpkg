@@ -1,5 +1,6 @@
-include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)

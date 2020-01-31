@@ -1421,12 +1421,30 @@ qscintilla:x64-linux=fail
 #unsupported platforms/systems
 qt5-activeqt:x64-linux=skip
 qt5-activeqt:x64-osx=skip
+qt5-androidextras:x64-windows=skip
+qt5-androidextras:x64-windows-static=skip
+qt5-androidextras:x86-windows=skip
+qt5-androidextras:x64-osx=skip
 qt5-macextras:x64-linux=skip
 qt5-macextras:x64-windows=skip
 qt5-macextras:x64-windows-static=skip
 qt5-macextras:x86-windows=skip
 qt5-winextras:x64-linux=skip
 qt5-winextras:x64-osx=skip
+qt5-x11extras:x64-windows=skip
+qt5-x11extras:x64-windows-static=skip
+qt5-x11extras:x86-windows=skip
+qt5-x11extras:x64-osx=fail
+#Does not build anything on windows
+qt5-doc:x64-windows=skip
+qt5-doc:x64-windows-static=skip
+qt5-doc:x86-windows=skip
+#Wayland libraries are not yet in VCPKG so this port is just a placeholder
+qt5-wayland:x64-windows=skip
+qt5-wayland:x64-windows-static=skip
+qt5-wayland:x86-windows=skip
+qt5-wayland:x64-linux=fail
+qt5-wayland:x64-osx=fail
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
 quickfix:x64-windows=ignore
