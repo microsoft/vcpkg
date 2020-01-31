@@ -2,19 +2,61 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 1012ddf..612f0ba 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -225,6 +225,7 @@ include_directories(
-   ${LIBSSH_PRIVATE_INCLUDE_DIRS}
- )
+@@ -313,6 +313,7 @@ if (WITH_SYMBOL_VERSIONING AND HAVE_LD_VERSION_SCRIPT AND ABIMAP_FOUND)
+     )
+ endif (WITH_SYMBOL_VERSIONING AND HAVE_LD_VERSION_SCRIPT AND ABIMAP_FOUND)
  
 +if (NOT WITH_STATIC_LIB)
  add_library(${LIBSSH_SHARED_LIBRARY} SHARED ${libssh_SRCS})
- 
- target_link_libraries(${LIBSSH_SHARED_LIBRARY} ${LIBSSH_LINK_LIBRARIES})
-@@ -259,6 +260,7 @@ install(
+ target_compile_options(${LIBSSH_SHARED_LIBRARY}
+                        PRIVATE
+@@ -362,7 +363,7 @@ install(
    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
    COMPONENT libraries
  )
+-
 +endif()
- 
- if (WITH_STATIC_LIB)
+ if (BUILD_STATIC_LIB)
    add_library(${LIBSSH_STATIC_LIBRARY} STATIC ${libssh_SRCS})
+   target_compile_options(${LIBSSH_STATIC_LIBRARY}
+@@ -370,11 +371,7 @@ if (BUILD_STATIC_LIB)
+                             ${DEFAULT_C_COMPILE_FLAGS}
+                             -D_GNU_SOURCE)
+ 
+-  if (MSVC)
+-    set(OUTPUT_SUFFIX static)
+-  else (MSVC)
+-    set(OUTPUT_SUFFIX )
+-  endif (MSVC)
++
+   set_target_properties(
+     ${LIBSSH_STATIC_LIBRARY}
+       PROPERTIES
+@@ -385,23 +382,18 @@ if (BUILD_STATIC_LIB)
+         OUTPUT_NAME
+           ssh
+         ARCHIVE_OUTPUT_DIRECTORY
+-          ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_SUFFIX}
++          ${CMAKE_CURRENT_BINARY_DIR}
+   )
+ 
+   if (WIN32)
+-    set_target_properties(
+-      ${LIBSSH_STATIC_LIBRARY}
+-        PROPERTIES
+-          COMPILE_FLAGS
+-            "-DLIBSSH_STATIC"
+-    )
++    target_compile_definitions(${LIBSSH_STATIC_LIBRARY} PUBLIC LIBSSH_STATIC)
+   endif (WIN32)
+ 
+     if (WITH_STATIC_LIB)
+       install(TARGETS
+                 ${LIBSSH_STATIC_LIBRARY}
+               DESTINATION
+-                ${LIB_INSTALL_DIR}/${OUTPUT_SUFFIX}
++                ${LIB_INSTALL_DIR}
+               COMPONENT
+                 libraries)
+     endif (WITH_STATIC_LIB)
+

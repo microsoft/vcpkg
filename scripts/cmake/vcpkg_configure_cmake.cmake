@@ -59,7 +59,7 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc 
+    cmake_parse_arguments(_csc
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
@@ -177,13 +177,13 @@ function(vcpkg_configure_cmake)
             "Invalid setting for VCPKG_LIBRARY_LINKAGE: \"${VCPKG_LIBRARY_LINKAGE}\". "
             "It must be \"static\" or \"dynamic\"")
     endif()
-    
+
     macro(check_both_vars_are_set var1 var2)
         if((NOT DEFINED ${var1} OR NOT DEFINED ${var2}) AND (DEFINED ${var1} OR DEFINED ${var2}))
             message(FATAL_ERROR "Both ${var1} and ${var2} must be set.")
         endif()
     endmacro()
-    
+
     check_both_vars_are_set(VCPKG_CXX_FLAGS_DEBUG VCPKG_C_FLAGS_DEBUG)
     check_both_vars_are_set(VCPKG_CXX_FLAGS_RELEASE VCPKG_C_FLAGS_RELEASE)
     check_both_vars_are_set(VCPKG_CXX_FLAGS VCPKG_C_FLAGS)
@@ -204,6 +204,8 @@ function(vcpkg_configure_cmake)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
         endif()
     endif()
 
