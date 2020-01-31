@@ -33,7 +33,7 @@ function(vcpkg_fixup_pkgconfig)
     
     message(STATUS "Fixing pkgconfig - debug")
     message(STATUS "Files: ${_vfpkg_DEBUG_FILES}")
-    foreach(_file ${_vfct_DEBUG_FILES})
+    foreach(_file ${_vfpkg_DEBUG_FILES})
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
