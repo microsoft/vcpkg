@@ -2,4 +2,4 @@ Source: xfixes
 Version: 5.0.3 
 Homepage: https://gitlab.freedesktop.org/xorg/lib/libxfixes
 Description: Xlib-based library for the XFIXES Extension
-Build-Depends: 
+Build-Depends: xorg-macros
