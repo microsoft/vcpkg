@@ -220,6 +220,11 @@ function(vcpkg_configure_make)
         )
     else()
         set(base_cmd ./)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared --disable-static)
+        else()
+            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static --disable-shared)
+        endif()
         set(rel_command
             ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
         )
@@ -283,13 +288,13 @@ function(vcpkg_configure_make)
                 vcpkg_execute_required_process(
                     COMMAND ${base_cmd} autoreconf -vfi
                     WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TARGET_TRIPLET}-dbg
                 )
             else()
                 vcpkg_execute_required_process(
                     COMMAND autoreconf -vfi
                     WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TARGET_TRIPLET}-dbg
                 )
             endif()
         endif()
