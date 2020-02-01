@@ -11,7 +11,7 @@ index 81db0d92c..51016f3fa 100644
  endif()
  
  !!IF !isEmpty(CMAKE_USR_MOVE_WORKAROUND)
-@@ -34,6 +34,146 @@ set(Qt5$${CMAKE_MODULE_NAME}_VERSION_STRING "$$eval(QT.$${MODULE}.VERSION)")
+@@ -34,6 +34,167 @@ set(Qt5$${CMAKE_MODULE_NAME}_VERSION_STRING "$$eval(QT.$${MODULE}.VERSION)")
  set(Qt5$${CMAKE_MODULE_NAME}_LIBRARIES Qt5::$${CMAKE_MODULE_NAME})
  !!ENDIF // TEMPLATE != aux
  
@@ -64,6 +64,9 @@ index 81db0d92c..51016f3fa 100644
 +    message(STATUS \"QMAKE_PRL_LIBS as a list : ${_static_depends}\n\n\")
 +
 +    #Logic Backported from Qt 5.14
++    set(_search_paths)
++    set(_fw_search_paths)
++    set(_framework_flag)
 +    if(\"${_qt_prl_CONFIGURATION}\" STREQUAL \"DEBUG\")
 +        set(_prl_location \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}${LIB_LOCATION}\")
 +    else()
@@ -72,23 +75,40 @@ index 81db0d92c..51016f3fa 100644
 +    string(REPLACE \"\$\$[QT_INSTALL_LIBS]/\" \"${_prl_location}\" _static_depends \"${_static_depends}\")
 +    string(REGEX REPLACE \"[ \t]+\" \";\" _standard_libraries \"${CMAKE_CXX_STANDARD_LIBRARIES}\")
 +    foreach(_flag IN LISTS _static_depends)
-+      if(_flag MATCHES \"^-l(.*)$\")
-+          # Handle normal libraries passed as -lfoo
-+          set(_lib \"${CMAKE_MATCH_1}\")
-+          foreach(_standard_library ${_standard_libraries})
-+              if(_standard_library MATCHES \"^${_lib}(\\.lib)?$\")
-+                  set(_lib_is_default_linked TRUE)
-+                  break()
++        if(_flag MATCHES \"^-framework$\")
++           # Handle the next flag as framework name
++           set(_framework_flag 1)
++        elseif(_flag MATCHES \"^-F(.*)$\")
++           # Handle -F/foo/bar flags by recording the framework search paths to be used
++           # by find_library.
++           list(APPEND _fw_search_paths \"${CMAKE_MATCH_1}\")
++        elseif(_framework_flag OR _flag MATCHES \"^-l(.*)$\")
++          if(_framework_flag)
++            # Handle Darwin framework bundles passed as -framework Foo
++            unset(_framework_flag)
++            set(_lib ${_flag})
++          else()
++            # Handle normal libraries passed as -lfoo
++            set(_lib \"${CMAKE_MATCH_1}\")
++            foreach(_standard_library ${_standard_libraries})
++              if(_standard_library MATCHES \"^${_lib}(\\\\.lib)?$\")
++                 set(_lib_is_default_linked TRUE)
++                 break()
 +              endif()
-+          endforeach()
++            endforeach()
++          endif()
 +          if (_lib_is_default_linked)
 +              unset(_lib_is_default_linked)
 +          elseif(_lib MATCHES \"^pthread$\")
 +              find_package(Threads REQUIRED)
 +              list(APPEND _lib_deps Threads::Threads)
 +          else()
-+              if(_search_paths)
-+                  find_library(_Qt5$${CMAKE_MODULE_NAME}_${Configuration}_${_lib}_PATH ${_lib} HINTS ${_search_paths} NO_DEFAULT_PATH)
++              set(current_search_paths \"${_search_paths}\")
++              if(_framework_flag)
++                  set(current_search_paths \"${_fw_search_paths}\")
++              endif()
++              if(current_search_paths)
++                  find_library(_Qt5$${CMAKE_MODULE_NAME}_${Configuration}_${_lib}_PATH ${_lib} HINTS ${current_search_paths} NO_DEFAULT_PATH)
 +              endif()
 +              find_library(_Qt5$${CMAKE_MODULE_NAME}_${Configuration}_${_lib}_PATH ${_lib})
 +              mark_as_advanced(_Qt5$${CMAKE_MODULE_NAME}_${Configuration}_${_lib}_PATH)
@@ -99,6 +119,7 @@ index 81db0d92c..51016f3fa 100644
 +              else()
 +                  message(FATAL_ERROR \"Library not found: ${_lib}\")
 +              endif()
++              unset(_framework_flag)
 +          endif()
 +      elseif(EXISTS \"${_flag}\")
 +          # The flag is an absolute path to an existing library

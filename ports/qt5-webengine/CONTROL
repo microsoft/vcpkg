@@ -1,0 +1,4 @@
+Source: qt5-webengine
+Version: 5.12.5-2
+Description: Qt5 webengine Module; 
+Build-Depends:  qt5-base
