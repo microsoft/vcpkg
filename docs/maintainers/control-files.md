@@ -8,7 +8,7 @@ Field names are case-sensitive and start the line without leading whitespace.  P
 
 ## Source Paragraph
 
-The first paragraph in a `CONTROL` file is the Source paragraph.  It must have a `Source`, `Version`, and `Description` field.  It can optionally have a `Build-Depends` and `Default-Features` field.
+The first paragraph in a `CONTROL` file is the Source paragraph.  It must have a `Source`, `Version`, and `Description` field. The full set of fields is documented below.
 
 ### Examples:
 ```no-highlight
@@ -115,6 +115,7 @@ This field is optional.
 Default-Features: dynamodb, s3, kinesis
 ```
 
+<a name="Supports"></a>
 #### Supports
 Expression that evalutates to true when the port is expected to build successfully for a triplet.
 
@@ -131,14 +132,18 @@ The predefined expressions are computed from standard triplet settings:
 - `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
 - `arm64` - `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
-- `windows` - `VCPKG_CMAKE_SYSTEM_NAME` == `""` || `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
+- `windows` - `VCPKG_CMAKE_SYSTEM_NAME` == `""` or `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
 - `uwp` - `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
 - `linux` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Linux"`
 - `osx` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Darwin"`
 - `android` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Android"`
 - `static` - `VCPKG_LIBRARY_LINKAGE` == `"static"`
 
+These predefined expressions can be overridden in the triplet file via the [`VCPKG_DEP_INFO_OVERRIDE_VARS`](../users/triplets.md) option.
+
 This field is optional and defaults to true.
+
+> Implementers' Note: these terms are computed from the triplet via the `vcpkg_get_dep_info` mechanism.
 
 ##### Example:
 ```no-highlight

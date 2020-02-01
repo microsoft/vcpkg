@@ -710,7 +710,7 @@ namespace vcpkg::Build
         }
 
         // No need to sort, the variables are stored in the same order they are written down in the abi-settings file
-        for (const auto env_var : pre_build_info.passthrough_env_vars)
+        for (const auto& env_var : pre_build_info.passthrough_env_vars)
         {
             abi_tag_entries.emplace_back(
                 "ENV:" + env_var,
