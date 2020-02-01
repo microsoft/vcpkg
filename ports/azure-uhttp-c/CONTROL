@@ -1,5 +1,5 @@
 Source: azure-uhttp-c
-Version: 2019-11-27.1
+Version: 2020-01-22
 Build-Depends: azure-c-shared-utility, azure-macro-utils-c, umock-c
 Description: Azure HTTP Library written in C
 
