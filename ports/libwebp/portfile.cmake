@@ -13,6 +13,7 @@ vcpkg_from_github(
     0004-add-missing-linked-library.patch
     0005-fix-static-build.patch
     0006-fix-dependecies-platform.patch
+    0007-fix-arm-build.patch
 )
 
 set(WEBP_BUILD_ANIM_UTILS OFF)
