@@ -16,7 +16,7 @@
 ##     [PRERUN_SHELL <${SHELL_PATH}>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]+
+##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
 ##     [PKG_CONFIG_PATHS <$CONFIG_PATH>]
 ##     [PKG_CONFIG_PATHS_DEBUG <$CONFIG_PATH>]
 ##     [PKG_CONFIG_PATHS_RELEASE <$CONFIG_PATH>]
@@ -374,13 +374,13 @@ function(vcpkg_configure_make)
                 vcpkg_execute_required_process(
                     COMMAND ${base_cmd} autoreconf -vfi
                     WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TAR_TRIPLET_DIR}
                 )
             else()
                 vcpkg_execute_required_process(
                     COMMAND autoreconf -vfi
                     WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TAR_TRIPLET_DIR}
                 )
             endif()
         endif()
