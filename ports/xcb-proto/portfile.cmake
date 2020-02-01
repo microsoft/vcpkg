@@ -10,6 +10,7 @@ endif()
 
 string(REGEX REPLACE "/[^/]+$" "" XMLLINT_DIR "${XMLLINT_PATH}")
 file(TO_NATIVE_PATH "${XMLLINT_DIR}" XMLLINT_DIR_NATIVE)
+message(STATUS "Using xmlling at: ${XMLLINT_PATH}")
 vcpkg_add_to_path("${XMLLINT_DIR_NATIVE}")
 #(also requires python2?)
 
