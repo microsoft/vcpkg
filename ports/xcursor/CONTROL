@@ -1,0 +1,5 @@
+Source: xcursor
+Version: 1.2.0
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxcursor
+Description: Xlib-based Cursor management library
+Build-Depends: xorg-macros, bzip2, x11, xproto, xfixes, xrender

@@ -1,0 +1,5 @@
+Source: xrandrutils
+Version: 1
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxrandrutils
+Description: High level wrapper utility library for libXrandr
+Build-Depends: xorg-macros, bzip2, x11, xproto, xrandr 

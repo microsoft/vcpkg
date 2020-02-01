@@ -1,0 +1,5 @@
+Source: xscrnsaver
+Version: 1.2.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxscrnsaver
+Description: Xlib-based X11 Screen Saver extension client library
+Build-Depends: xorg-macros, bzip2, xproto, x11, xext

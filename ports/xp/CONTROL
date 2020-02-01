@@ -1,0 +1,5 @@
+Source: xp
+Version: 1.0.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxp
+Description: X Print Client Library
+Build-Depends: xorg-macros, bzip2, x11, xproto, xext, xau

@@ -1,0 +1,5 @@
+Source: xft
+Version: 2.3.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxft
+Description: X FreeType library
+Build-Depends: xorg-macros, bzip2, x11, xproto, xrender, freetype, fontconfig

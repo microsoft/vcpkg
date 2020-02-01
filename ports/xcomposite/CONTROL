@@ -1,0 +1,5 @@
+Source: xcomposite
+Version: 0.4.5
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxcomposite
+Description: Xlib-based client library for the Composite extension to the X11 protocol
+Build-Depends: xorg-macros, bzip2, x11, xproto, xfixes
