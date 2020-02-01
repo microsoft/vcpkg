@@ -45,6 +45,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             #CMake fixes
                             patches/Qt5BasicConfig.patch
                             patches/Qt5PluginTarget.patch
+                            patches/prl_parser.patch            # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
