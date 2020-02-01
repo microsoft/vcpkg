@@ -54,9 +54,19 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeGLUT)
 # Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(VCPKG_TARGET_IS_WINDOWS)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
+        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
+        endif()
+        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglutd.lib)
+        endif()
     endif()
+
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h"
+        "ifdef FREEGLUT_STATIC"
+        "if 1 //ifdef FREEGLUT_STATIC"
+    )
 endif()
 
 # Clean
