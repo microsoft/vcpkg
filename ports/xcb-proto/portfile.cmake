@@ -1,7 +1,7 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
 message(STATUS "----- ${PORT} requires autoconf, libtool, pkconf and xmllint from the system package manager! -----")
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) 
 
 find_program(XMLLINT_PATH NAMES xmllint PATHS "${CURRENT_INSTALLED_DIR}/tools/libxml2")
 if(NOT XMLLINT_PATH)
