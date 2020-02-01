@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 75d2da1..29a80ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -410,6 +410,7 @@ IF(FREEGLUT_BUILD_SHARED_LIBS)
+ ENDIF()
+ IF(FREEGLUT_BUILD_STATIC_LIBS)
+     ADD_LIBRARY(freeglut_static STATIC ${FREEGLUT_SRCS})
++    SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME "freeglut")
+     IF(UNIX AND NOT(ANDROID OR BLACKBERRY))
+         TARGET_LINK_LIBRARIES(freeglut_static PRIVATE X11::X11)
+     ENDIF()
+diff --git a/include/GL/freeglut_std.h b/include/GL/freeglut_std.h
+index 73db243..a1f0bf6 100644
+--- a/include/GL/freeglut_std.h
++++ b/include/GL/freeglut_std.h
+@@ -71,9 +71,9 @@
+         /* Link with Win32 static freeglut lib */
+ #       if FREEGLUT_LIB_PRAGMAS
+ #           if defined(NDEBUG) || !defined(_DEBUG)
+-#              pragma comment (lib, "freeglut_static.lib")
++#              pragma comment (lib, "freeglut.lib")
+ #           else
+-#              pragma comment (lib, "freeglut_staticd.lib")
++#              pragma comment (lib, "freeglutd.lib")
+ #           endif
+ #       endif
+ 
