@@ -1,3 +1,4 @@
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! -----")
 
 vcpkg_from_gitlab(

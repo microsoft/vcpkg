@@ -21,7 +21,7 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS
+    OPTIONS --enable-legacy
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"

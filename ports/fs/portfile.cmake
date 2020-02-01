@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libfs
     REF 02de7390e58f00a3701f656a2b205dc6c8dafb58 # 1.0.8
-    SHA512  d46d2be838b8ea7116ee0e312adafa80f6551762b5f7b5e503bd40e74fc0b43b45255e8135d03f831d5c483b98aac992fcd91a7e22119261e76778571a72ef07
+    SHA512  7395434c20cebc45213122c12dc272773d100ade606d6fb2cacf94e2d102c9869124a89dbd0ddf2fa9128e8b238cf2f52b89d356b296e8d95ff352be48a4bc54
     HEAD_REF master # branch name
     #PATCHES example.patch #patch name
 ) 
