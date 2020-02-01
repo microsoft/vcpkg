@@ -1,0 +1,6 @@
+Source: xcb-cursor
+Version: 0.1.3
+Homepage: https://xcb.freedesktop.org/
+Description: XCB port of libXcursor
+Build-Depends: xcb, xcb-util, xcb-render-util, xcb-image
+

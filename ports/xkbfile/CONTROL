@@ -1,0 +1,6 @@
+Source: xkbfile
+Version: 1.1.0
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxkbfile
+Description: XKB file handling routines
+Build-Depends: xorg-macros, x11, xproto
+

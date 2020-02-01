@@ -1,0 +1,5 @@
+Source: xinerama
+Version: 1.1.4
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxinerama
+Description: Xlib API for Xinerama extension to X11 Protocol
+Build-Depends: xorg-macros, x11, xext

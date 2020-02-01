@@ -1,0 +1,6 @@
+Source: xshmfence
+Version: 1.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxshmfence
+Description: Shared memory 'SyncFence' synchronization primitive
+Build-Depends: xorg-macros, bzip2, pthread, xproto
+

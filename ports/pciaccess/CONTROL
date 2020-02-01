@@ -1,0 +1,6 @@
+Source: pciaccess
+Version: 0.16
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libpciaccess
+Description: Generic PCI access library
+Build-Depends: xorg-macros, zlib
+
