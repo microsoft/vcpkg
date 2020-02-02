@@ -2,6 +2,8 @@
 
 file(GLOB_RECURSE _xorgfiles "${CURRENT_INSTALLED_DIR}/share/xorg/*")
 message(STATUS "############# xorg files: ${_xorgfiles}")
+file(GLOB_RECURSE _xcbfiles "${CURRENT_INSTALLED_DIR}/share/xcb/*")
+message(STATUS "############# xcb files: ${_xcbfiles}")
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -28,19 +30,12 @@ vcpkg_configure_make(
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
 )
-
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xcb/")
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# # Moves all .cmake files from /debug/share/Xlib/ to /share/Xlib/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
-# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/Xlib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-# # Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME Xlib)
