@@ -1,0 +1,5 @@
+Source: drm
+Version: 2.4.100
+Homepage: https://gitlab.freedesktop.org/mesa/drm
+Description: Direct Rendering Manager library and headers
+Build-Depends: pciaccess

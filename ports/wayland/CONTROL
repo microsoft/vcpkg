@@ -1,0 +1,5 @@
+Source: wayland
+Version: 1.17.92
+Homepage: https://wayland.freedesktop.org
+Description: Core Wayland window system code and protocol
+Build-Depends: libffi, expat, libxml2
