@@ -35,7 +35,8 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/KHR/khrplatform.h)
+#installed by egl-registry
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/egl.h)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h)
