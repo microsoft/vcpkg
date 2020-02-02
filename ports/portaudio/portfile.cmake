@@ -12,18 +12,13 @@ vcpkg_from_git(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_RELEASE
-        -DPA_USE_DS=ON
-        -DPA_USE_WASAPI=ON
-        -DPA_USE_WDMKS=ON
-        -DPA_USE_WMME=ON
-        -DPA_LIBNAME_ADD_SUFFIX=OFF
-    OPTIONS_DEBUG
+    OPTIONS
     	-DPA_USE_DS=ON
         -DPA_USE_WASAPI=ON
         -DPA_USE_WDMKS=ON
         -DPA_USE_WMME=ON
         -DPA_LIBNAME_ADD_SUFFIX=OFF
+    OPTIONS_DEBUG
         -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )
 
