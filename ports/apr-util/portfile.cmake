@@ -1,10 +1,12 @@
-if(VCPKG_TARGET_IS_WINDOWS)
 
-    vcpkg_download_distfile(ARCHIVE
-      URLS "https://archive.apache.org/dist/apr/apr-util-1.6.0-win32-src.zip"
-      FILENAME "apr-util-1.6.0-win32-src.zip"
-      SHA512 98679ea181d3132020713481703bbefa0c174e0b2a0df65dfdd176e9771935e1f9455c4242bac19dded9414abe2b9d293fcc674ab16f96d8987bcf26346fce3a
-    )
+vcpkg_download_distfile(ARCHIVE
+    URLS "http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
+    FILENAME "apr-util-1.6.1.tar.bz2"
+    SHA512 40eff8a37c0634f7fdddd6ca5e596b38de15fd10767a34c30bbe49c632816e8f3e1e230678034f578dd5816a94f246fb5dfdf48d644829af13bf28de3225205d
+
+)
+
+if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -44,12 +46,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/apu.h "${APU_H}")
 
 else(VCPKG_TARGET_IS_WINDOWS)
-
-    vcpkg_download_distfile(ARCHIVE
-        URLS "http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
-        FILENAME "apr-util-1.6.1.tar.bz2"
-        SHA512 40eff8a37c0634f7fdddd6ca5e596b38de15fd10767a34c30bbe49c632816e8f3e1e230678034f578dd5816a94f246fb5dfdf48d644829af13bf28de3225205d
-    )
 
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
