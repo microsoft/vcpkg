@@ -44,3 +44,16 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/u
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+#TODO: conflict with mesa!
+    # include/GLES/egl.h
+    # include/GLES/gl.h
+    # include/GLES/glext.h
+    # include/GLES/glplatform.h
+    # include/GLES2/gl2.h
+    # include/GLES2/gl2ext.h
+    # include/GLES2/gl2platform.h
+    # include/GLES3/gl3.h
+    # include/GLES3/gl31.h
+    # include/GLES3/gl32.h
+    # include/GLES3/gl3platform.h
