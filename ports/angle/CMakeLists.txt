@@ -19,9 +19,6 @@ else()
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    find_package(X11)
-    link_libraries(${X11_LIBRARIES})
-    include_directories(${X11_INCLUDE_DIR})
 endif()
 
 if (APPLE)
@@ -47,8 +44,8 @@ add_definitions(
 )
 
 configure_file(commit.h include/id/commit.h COPYONLY)
-include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
-
+#include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
+include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
 ##########
 # angle::common
 if(WINDOWS_DESKTOP)
@@ -75,7 +72,7 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
-target_include_directories(angle_common PUBLIC src/common/third_party/base)
+target_include_directories(angle_common PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/base>")
 add_library(angle::common ALIAS angle_common)
 
 ##########
@@ -154,7 +151,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     )
     list(FILTER LIBANGLE_GL_SOURCES EXCLUDE REGEX "_unittest")
     add_library(angle_renderer_opengl INTERFACE)
-    target_sources(angle_renderer_opengl INTERFACE ${LIBANGLE_GL_SOURCES})
+    target_sources(angle_renderer_opengl INTERFACE "$<BUILD_INTERFACE:${LIBANGLE_GL_SOURCES}>")
     target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL)
     add_library(angle::renderer::opengl ALIAS angle_renderer_opengl)
 endif()
@@ -174,7 +171,7 @@ if(WIN32)
         set(LIBANGLE_D3D_WINRT_SOURCES ${LIBANGLE_D3D_SOURCES})
         list(FILTER LIBANGLE_D3D_WINRT_SOURCES INCLUDE REGEX "winrt")
         add_library(angle_renderer_winrt INTERFACE)
-        target_sources(angle_renderer_winrt INTERFACE ${LIBANGLE_D3D_WINRT_SOURCES})
+        target_sources(angle_renderer_winrt INTERFACE "$<BUILD_INTERFACE:${LIBANGLE_D3D_WINRT_SOURCES}>")
         add_library(angle::renderer::winrt ALIAS angle_renderer_winrt)
     endif()
 
@@ -184,7 +181,7 @@ if(WIN32)
         list(FILTER LIBANGLE_D3D_DESKTOP_SOURCES INCLUDE REGEX "d3d9|win32|converged")
         find_library(D3D9_LIB NAMES d3d9)
         add_library(angle_renderer_win32 INTERFACE)
-        target_sources(angle_renderer_win32 INTERFACE ${LIBANGLE_D3D_DESKTOP_SOURCES})
+        target_sources(angle_renderer_win32 INTERFACE "$<BUILD_INTERFACE:${LIBANGLE_D3D_DESKTOP_SOURCES}>")
         target_compile_definitions(angle_renderer_win32 INTERFACE -DANGLE_ENABLE_D3D9)
         target_link_libraries(angle_renderer_win32 INTERFACE ${D3D9_LIB})
         add_library(angle::renderer::win32 ALIAS angle_renderer_win32)
@@ -195,7 +192,7 @@ if(WIN32)
     find_library(DXGUID_LIB NAMES dxguid)
     find_library(D3D11_LIB NAMES d3d11)
     add_library(angle_renderer_d3d INTERFACE)
-    target_sources(angle_renderer_d3d INTERFACE ${LIBANGLE_D3D_SOURCES})
+    target_sources(angle_renderer_d3d INTERFACE "$<BUILD_INTERFACE:${LIBANGLE_D3D_SOURCES}")
     target_compile_definitions(angle_renderer_d3d INTERFACE
         -DANGLE_ENABLE_D3D11
         "-DANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ \"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }"
@@ -284,6 +281,9 @@ else()
 endif()
 
 if(LINUX)
+    find_package(X11)
+    include_directories(${X11_INCLUDE_DIR})
+    list(APPEND LIBANGLE_RENDERER_PLATFORM ${X11_LIBRARIES})
     set(LIBANGLE_RENDERER_COMPILEDEF
         -DANGLE_USE_X11
     )
@@ -300,14 +300,24 @@ target_link_libraries(libANGLE PRIVATE
     angle::preprocessor
     ${LIBANGLE_RENDERER_PLATFORM}
 )
-target_include_directories(libANGLE PRIVATE "src/third_party/khronos")
+target_include_directories(libANGLE PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/khronos>")
 target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
     PUBLIC 
         -DLIBANGLE_IMPLEMENTATION 
-        ${LIBANGLE_RENDERER_COMPILEDEF}
+        ${LIBANGLE_RENDERER_COMPILEDEF} 
+        -DANGLE_EXPORT=
+        -DANGLE_UTIL_EXPORT=
+        -DEGLAPI=
+        -DGL_APICALL=
+        -DGL_API=
 )
 add_library(angle::libANGLE ALIAS libANGLE)
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(libANGLE
+        PRIVATE -DLIBANGLE_UTIL_IMPLEMENTATION
+    )
+endif()
 
 ##########
 # libGLESv2
@@ -347,12 +357,28 @@ target_link_libraries(libGLESv2 PRIVATE angle::common angle::libANGLE)
 target_compile_definitions(libGLESv2
     PRIVATE -DLIBGLESV2_IMPLEMENTATION
     PUBLIC
-        -DGL_GLEXT_PROTOTYPES
-        -DGL_API=
-        -DGL_APICALL=
-        -DEGLAPI=
-        -DGL_API=
+        "-DGL_GLES_PROTOTYPES=1"
+        "-DGL_GLEXT_PROTOTYPES"
+        "-DEGL_EGL_PROTOTYPES=1"
+        "-DEGL_EGLEXT_PROTOTYPES"
 )
+if(BUILD_SHARED_LIBS)
+else()
+    if(WIN32)
+        target_compile_definitions(libGLESv2 PRIVATE
+                "-DGL_API="
+                "-DGL_APICALL="
+                "-DEGLAPI="
+        )
+    else()
+        target_compile_definitions(libGLESv2 PRIVATE
+                "-DGL_API=__attribute__((visibility(\"default\")))"
+                "-DGL_APICALL=__attribute__((visibility(\"default\")))"
+                "-DEGLAPI=__attribute__((visibility(\"default\")))"
+        )
+    endif()
+endif()
+
 target_include_directories(libGLESv2 PUBLIC "$<INSTALL_INTERFACE:include>")
 
 ##########
@@ -364,15 +390,37 @@ add_library(libEGL
     "src/libEGL/resource.h"
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
-target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>")
-target_include_directories(libEGL PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
-
+target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
+target_compile_definitions(libEGL
+    PRIVATE -DLIBGLESV2_IMPLEMENTATION
+    PUBLIC
+        "-DGL_GLES_PROTOTYPES=1"
+        "-DGL_GLEXT_PROTOTYPES"
+        "-DEGL_EGL_PROTOTYPES=1"
+        "-DEGL_EGLEXT_PROTOTYPES"
+)
+if(BUILD_SHARED_LIBS)
+else()
+    if(WIN32)
+        target_compile_definitions(libEGL PRIVATE
+                "-DGL_API="
+                "-DGL_APICALL="
+                "-DEGLAPI="
+        )
+    else()
+        target_compile_definitions(libEGL PRIVATE
+                "-DGL_API=__attribute__((visibility(\"default\")))"
+                "-DGL_APICALL=__attribute__((visibility(\"default\")))"
+                "-DEGLAPI=__attribute__((visibility(\"default\")))"
+        )
+    endif()
+endif()
 
 SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
 SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
 SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
 
-install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
+install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_image_util angle_gpu_info_util angle_translator angle_preprocessor angle_renderer_opengl EXPORT ANGLEExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib

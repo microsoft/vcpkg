@@ -1,4 +1,11 @@
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(PATCHES meson.build.patch) 
+    # this patch is not 100% correct since xcb and xcb-xkb can be build dynamically in a custom triplet
+    # However, VCPKG currently is limited by the possibilities of meson and they have to fix their lib dependency detection
+    list(APPEND MESA_OPTIONS -Dshared-llvm=false) # add llvm to CONTROL?
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,9 +19,12 @@ vcpkg_from_gitlab(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        -D gles1=false 
+        -D gles1=true 
         -D gles2=true 
         -D shared-glapi=true
+        -D gles-lib-suffix=MESA
+        -D egl-lib-suffix=MESA
+        "${MESA_OPTIONS}"
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
 )
@@ -25,6 +35,13 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/include/KHR/khrplatform.h)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/egl.h)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h)
+
 # # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
