@@ -1,5 +1,5 @@
 Source: qt5
-Version: 5.12.5
+Version: 5.12.7
 Homepage: https://www.qt.io/
 Description: Qt5 Application Framework
 Build-Depends: qt5-base

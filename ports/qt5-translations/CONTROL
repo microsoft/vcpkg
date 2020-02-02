@@ -1,4 +1,4 @@
 Source: qt5-translations
-Version: 5.12.5-2
+Version: 5.12.7
 Description: Qt5 translations module
 Build-Depends:  qt5-base
