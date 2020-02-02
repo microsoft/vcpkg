@@ -71,14 +71,14 @@ file(GLOB ANGLE_COMMON_SOURCES
     "src/common/third_party/smhasher/src/*.h"
     "src/common/third_party/smhasher/src/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|${ANGLE_COMMON_PLATFORM_FILTER}")
-add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
+add_library(angle_common OBJECT ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/common/third_party/base>")
 add_library(angle::common ALIAS angle_common)
 
 ##########
 # angle::image_util
 file(GLOB ANGLE_IMAGE_UTIL_SOURCES "src/image_util/*.h" "src/image_util/*.inl" "src/image_util/*.cpp")
-add_library(angle_image_util STATIC ${ANGLE_IMAGE_UTIL_SOURCES})
+add_library(angle_image_util OBJECT ${ANGLE_IMAGE_UTIL_SOURCES})
 target_link_libraries(angle_image_util PRIVATE angle::common)
 add_library(angle::image_util ALIAS angle_image_util)
 
@@ -96,7 +96,7 @@ file(GLOB TRANSLATOR_SOURCES
     "src/third_party/compiler/ArrayBoundsClamper.cpp"
 )
 list(FILTER TRANSLATOR_SOURCES EXCLUDE REGEX "_unittest")
-add_library(angle_translator STATIC ${TRANSLATOR_SOURCES})
+add_library(angle_translator OBJECT ${TRANSLATOR_SOURCES})
 target_compile_definitions(angle_translator PUBLIC
     -DANGLE_ENABLE_ESSL
     -DANGLE_ENABLE_GLSL
@@ -111,7 +111,7 @@ file(GLOB PREPROCESSOR_SOURCES
     "src/compiler/preprocessor/*.h"
     "src/compiler/preprocessor/*.cpp"
 )
-add_library(angle_preprocessor STATIC ${PREPROCESSOR_SOURCES})
+add_library(angle_preprocessor OBJECT ${PREPROCESSOR_SOURCES})
 target_link_libraries(angle_preprocessor PRIVATE angle::common)
 add_library(angle::preprocessor ALIAS angle_preprocessor)
 
@@ -207,7 +207,7 @@ file(GLOB ANGLE_GPU_INFO_UTIL_SOURCES
     "src/gpu_info_util/SystemInfo_internal.h"
     "src/gpu_info_util/SystemInfo.cpp"
 )
-add_library(angle_gpu_info_util STATIC ${ANGLE_GPU_INFO_UTIL_SOURCES})
+add_library(angle_gpu_info_util OBJECT ${ANGLE_GPU_INFO_UTIL_SOURCES})
 if(WIN32)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_win.cpp")
     target_link_libraries(angle_gpu_info_util PRIVATE setupapi.lib dxgi.lib)
@@ -216,7 +216,7 @@ elseif(APPLE)
 	find_library(IOKit IOKit)
 	find_library(CoreFoundation CoreFoundation)
 	find_library(CoreGraphics CoreGraphics)
-	target_link_libraries(angle_gpu_info_util PRIVATE ${IOKit} ${CoreFoundation} ${CoreGraphics})
+	target_link_libraries(angle_gpu_info_util OBJECT ${IOKit} ${CoreFoundation} ${CoreGraphics})
 elseif(LINUX)
     target_sources(angle_gpu_info_util PRIVATE "src/gpu_info_util/SystemInfo_linux.cpp" "src/gpu_info_util/SystemInfo_x11.cpp")
     target_compile_definitions(angle_gpu_info_util PRIVATE GPU_INFO_USE_X11)
