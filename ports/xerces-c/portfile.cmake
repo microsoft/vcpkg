@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
-    REF 71cc0e831b522933ae58253fcaf4423a166e6bec #3.2.2
-    SHA512 5ddaf84552cd1f685068352c12651780a9f4becd961d8efd0f1f6a21006df00ffb1afe9b9dd86a169f8c57c4f8b651d5477e1accfd7140a7a52aea14b23c9aed
-    HEAD_REF trunk
+    REF v3.2.2
+    SHA512 e4b2d3499fb4d1d1bcaf991ee858f352112683084b9cc7855c0e52e7fc8cc982a8e3cd548fa30718af6a6dee40e460d82ffcd3480a50f7e7516b462b2c2080c6
+    HEAD_REF master
     PATCHES
         disable-tests.patch
         remove-dll-export-macro.patch

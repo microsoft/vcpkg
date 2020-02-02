@@ -53,7 +53,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0
     )
     # Install
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
         file(GLOB_RECURSE TOOLS
                 ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
                 ${CURRENT_PACKAGES_DIR}/lib/nmake/*
@@ -75,7 +75,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0
         )
     endif()
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4
                             ${CURRENT_PACKAGES_DIR}/debug/lib/nmake
                             ${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3
