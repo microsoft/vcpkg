@@ -265,7 +265,7 @@ else()
         OPTIONS_RELEASE ${RELEASE_OPTIONS}
         OPTIONS_DEBUG ${DEBUG_OPTIONS}
         )
-
+    message(FATAL_ERROR "MAKE qt5-base FAIL. NEED CONFIGURE LOGS FROM CI!")
     install_qt()
 
     #########################
