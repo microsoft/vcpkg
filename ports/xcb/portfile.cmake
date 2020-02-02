@@ -1,4 +1,7 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
+
+file(GLOB_RECURSE _xorgfiles "${CURRENT_INSTALLED_DIR}/share/xorg/*")
+message(STATUS "############# xorg files: ${_xorgfiles}")
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
