@@ -21,5 +21,5 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 
 function(vcpkg_install_make)
-    vcpkg_build_make(LOGFILE_ROOT ENABLE_INSTALL)
+    vcpkg_build_make(LOGFILE_ROOT ENABLE_INSTALL ${ARGN})
 endfunction()

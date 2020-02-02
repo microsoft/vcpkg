@@ -153,7 +153,7 @@ function(vcpkg_configure_make)
             endif()
         endif()
         set(WIN_TARGET_COMPILER CC=cl)
-        set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
+        vcpkg_add_to_path("${YASM_EXE_PATH}" "${MSYS_ROOT}/usr/bin" "${PERL_EXE_PATH}")
         set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     elseif (_csc_AUTOCONFIG)
         find_program(autoreconf autoreconf REQUIRED)
@@ -182,6 +182,18 @@ function(vcpkg_configure_make)
     endif()
     
     set(base_cmd )
+
+    set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
+    set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
+    set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
+    set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND C_FLAGS_GLOBAL " -fPIC")
+        string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
+    endif()
+
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc -c)
         
@@ -198,10 +210,6 @@ function(vcpkg_configure_make)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         endif()
         include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-
-        set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
-        set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
-        set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS}")
         
         if(VCPKG_TARGET_IS_UWP)
             set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
@@ -245,18 +253,21 @@ function(vcpkg_configure_make)
         endif()
     
         if (CMAKE_HOST_WIN32)
-            unset(ENV{CFLAGS})
-            unset(ENV{CXXFLAGS})
-            unset(ENV{LDFLAGS})
-            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
+            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
-            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+            
+            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
             string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
-            set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL}")
+            
+            set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
             string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
+        else()
+            set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
+            set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
+            set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
         endif()
         
         set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -323,20 +334,21 @@ function(vcpkg_configure_make)
         endif()
     
         if (CMAKE_HOST_WIN32)
-            unset(ENV{CFLAGS})
-            unset(ENV{CXXFLAGS})
-            unset(ENV{LDFLAGS})
-            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+            set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
             string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
             
-            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+            set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
             string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
             
-            set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
+            set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
             string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
+        else()
+            set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
+            set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
+            set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
         endif()
         
         if (_csc_NO_DEBUG)
@@ -374,13 +386,13 @@ function(vcpkg_configure_make)
                 vcpkg_execute_required_process(
                     COMMAND ${base_cmd} autoreconf -vfi
                     WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TAR_TRIPLET_DIR}
                 )
             else()
                 vcpkg_execute_required_process(
                     COMMAND autoreconf -vfi
                     WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-${TAR_TRIPLET_DIR}
+                    LOGNAME prerun-2-${TAR_TRIPLET_DIR}
                 )
             endif()
         endif()
@@ -400,11 +412,9 @@ function(vcpkg_configure_make)
     endif()
     
     # Restore envs
-    if (CMAKE_HOST_WIN32)
-        set(ENV{CFLAGS} "${C_FLAGS_GLOBAL}")
-        set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL}")
-        set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL}")
-    endif()
+    set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
+    set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
+    set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
     
     if(_csc_PKG_CONFIG_PATHS)
         set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")

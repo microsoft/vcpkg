@@ -78,6 +78,18 @@ function(vcpkg_build_make)
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
     
+    
+    set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
+    set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
+    set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
+    set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND C_FLAGS_GLOBAL " -fPIC")
+        string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
+    endif()
+    
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     
     foreach(BUILDTYPE "debug" "release")
@@ -88,6 +100,7 @@ function(vcpkg_build_make)
                     continue()
                 endif()
                 set(SHORT_BUILDTYPE "-dbg")
+                set(CMAKE_BUILDTYPE "DEBUG")
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
                 if (_VCPKG_NO_DEBUG)
@@ -95,41 +108,55 @@ function(vcpkg_build_make)
                 else()
                     set(SHORT_BUILDTYPE "-rel")
                 endif()
+                set(CMAKE_BUILDTYPE "RELEASE")
             endif()
             
             if (CMAKE_HOST_WIN32)
                 # In windows we can remotely call make
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
             else()
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}")
             endif()
     
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(CMAKE_HOST_WIN32)
-                    set(_PATHSEP ";")
-                else()
-                    set(_PATHSEP ":")
-                endif()
                 if(BUILDTYPE STREQUAL "debug")
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin${_PATHSEP}$ENV{PATH}")
+                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin")
                 else()
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
+                    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
                 endif()
+            endif()
+
+            if (CMAKE_HOST_WIN32)
+                set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
+                string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
+                set(ENV{CFLAGS} ${TMP_CFLAGS})
+                
+                set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
+                string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
+                set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
+                
+                set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
+                set(ENV{LDFLAGS} ${TMP_LDFLAGS})
+            else()
+                set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
+                set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
+                set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
 
             if (CMAKE_HOST_WIN32)
                 vcpkg_execute_build_process(
                     COMMAND "${MAKE} ${MAKE_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                    WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             else()
                 vcpkg_execute_build_process(
                     COMMAND "${MAKE};${MAKE_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                    WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             endif()
@@ -161,17 +188,17 @@ function(vcpkg_build_make)
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 if (CMAKE_HOST_WIN32)
                     # In windows we can remotely call make
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
+                    set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                     vcpkg_execute_build_process(
                         COMMAND "${MAKE} ${INSTALL_OPTS}"
-                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                        WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                         LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                     )
                 else()
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
+                    set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}")
                     vcpkg_execute_build_process(
                         COMMAND "${MAKE};${INSTALL_OPTS}"
-                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
+                        WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                         LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                     )
                 endif()
@@ -182,4 +209,8 @@ function(vcpkg_build_make)
     if (CMAKE_HOST_WIN32)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
+    
+    set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
+    set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
+    set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
 endfunction()
