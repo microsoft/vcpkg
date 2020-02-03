@@ -42,7 +42,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/sh
 vcpkg_test_cmake(PACKAGE_NAME BZip2 MODULE)
 
 set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}")
+set(bzname bz2)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/bzip2.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/bzip2.pc" DESTINATION @ONLY)
 set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(bzname bz2d)
+endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/bzip2.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/bzip2.pc" DESTINATION @ONLY)
 vcpkg_fixup_pkgconfig()
