@@ -1556,6 +1556,7 @@ shiva:x64-windows-static=fail
 shiva-sfml:x64-linux=fail
 shiva-sfml:x64-osx=fail
 shiva-sfml:x86-windows=fail
+shiva-sfml:x64-windows=fail
 shogun:arm64-windows      = skip
 shogun:arm-uwp            = skip
 shogun:x64-osx=fail
