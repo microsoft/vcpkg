@@ -1,0 +1,19 @@
+name: vcpkg (default packages)
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install required packages
+      run: sudo apt-get install -y build-essential curl unzip tar zlib1g-dev
+    - name: build vcpkg + default packages
+      run: |
+        which vcpkg
+        ./bootstrap-vcpkg.sh -disableMetrics
+        which vcpkg
+        ./vcpkg install python3
