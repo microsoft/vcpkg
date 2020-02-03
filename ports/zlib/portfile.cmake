@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         "cmake_dont_build_more_than_needed.patch"
+        "pkgconfig.patch"
 )
 
 # This is generated during the cmake build
@@ -30,7 +31,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
+vcpkg_fixup_pkgconfig()
 # Both dynamic and static are built, so keep only the one needed
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/zlibstatic.lib)

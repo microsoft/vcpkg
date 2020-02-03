@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8d2f5f15c..8f60286c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,7 @@ set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation direc
+ set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Installation directory for libraries")
+ set(INSTALL_INC_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "Installation directory for headers")
+ set(INSTALL_MAN_DIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE PATH "Installation directory for manual pages")
+-set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/share/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
++set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
+ 
+ include(CheckTypeSize)
+ include(CheckFunctionExists)
+@@ -231,7 +231,7 @@ endif()
+ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL )
+     install(FILES zlib.3 DESTINATION "${INSTALL_MAN_DIR}/man3")
+ endif()
+-if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL )
++if(NOT SKIP_INSTALL_PKGCONFIG AND NOT SKIP_INSTALL_ALL )
+     install(FILES ${ZLIB_PC} DESTINATION "${INSTALL_PKGCONFIG_DIR}")
+ endif()
+ 
