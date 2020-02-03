@@ -33,6 +33,7 @@ Description: Build the webpmux command line tool.
 
 Feature: extras
 Description: Build extras.
+Build-Depends: sdl1 (windows)
 
 Feature: nearlossless
 Description: Enable near-lossless encoding
