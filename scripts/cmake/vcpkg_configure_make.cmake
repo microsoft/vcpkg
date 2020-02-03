@@ -79,6 +79,7 @@
 ## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
+
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
@@ -133,11 +134,13 @@ function(vcpkg_configure_make)
     endif()
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
+        ##  Please read https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2
         vcpkg_find_acquire_program(YASM)
         vcpkg_find_acquire_program(PERL)
         set(MSYS_REQUIRE_PACKAGES diffutils)
         if (_csc_AUTOCONFIG)
             set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} autoconf automake m4 libtool perl pkg-config gcc)
+            #
             #set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} base-devel)
         endif()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
@@ -209,6 +212,12 @@ function(vcpkg_configure_make)
 
     set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib/manual-link")
     
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared --disable-static)
+    else()
+        set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static --disable-shared)
+    endif()
+        
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc)
         
@@ -241,11 +250,6 @@ function(vcpkg_configure_make)
             ${base_cmd} -c "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
     else()
         set(base_cmd ./)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared --disable-static)
-        else()
-            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static --disable-shared)
-        endif()
         set(rel_command
             "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_RELEASE}"
         )
