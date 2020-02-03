@@ -21,6 +21,7 @@ vcpkg_from_github(
     REPO google/angle
     REF 1fdf6ca5141d8e349e875eab6e51d93d929a7f0e
     SHA512 2553307f3d10b5c32166b9ed610b4b15310dccba00c644cd35026de86d87ea2e221c2e528f33b02f01c1ded2f08150e429de1fa300b73d655f8944f6f5047a82
+    # On update check headers against opengl-registry
     PATCHES
         001-fix-uwp.patch
         002-fix-builder-error.patch
@@ -44,6 +45,25 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/u
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+# File conflict with opengl-registry! Make sure headers are similar on Update!
+set(_double_files
+    include/GLES/egl.h
+    include/GLES/gl.h
+    include/GLES/glext.h
+    include/GLES/glplatform.h
+    include/GLES2/gl2.h
+    include/GLES2/gl2ext.h
+    include/GLES2/gl2platform.h
+    include/GLES3/gl3.h
+    include/GLES3/gl31.h
+    include/GLES3/gl32.h
+    include/GLES3/gl3platform.h
+foreach(_file ${_double_files})
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/${_file}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
+    endif()
+endforeach()
 
 #TODO: conflict with mesa!
     # include/GLES/egl.h
