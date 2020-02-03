@@ -44,12 +44,14 @@ function(vcpkg_build_make)
             # Compiler requriements
             vcpkg_find_acquire_program(YASM)
             vcpkg_find_acquire_program(PERL)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make gcc)
             get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
             get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
             
             set(PATH_GLOBAL "$ENV{PATH}")
-            set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
+            vcpkg_add_to_path("${YASM_EXE_PATH}")
+            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+            vcpkg_add_to_path("${PERL_EXE_PATH}")
             set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
             # Set make command and install command
             set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
@@ -91,6 +93,12 @@ function(vcpkg_build_make)
     endif()
     
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND C_FLAGS_GLOBAL " -I\"${MSYS_ROOT}/usr/include\"")
+        string(APPEND CXX_FLAGS_GLOBAL " -I\"${MSYS_ROOT}/usr/include\"")
+        set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;${MSYS_ROOT}/usr/include;$ENV{INCLUDE}")
+    endif()
+    
     
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
