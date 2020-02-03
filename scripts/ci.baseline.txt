@@ -1552,7 +1552,6 @@ sfgui:x64-linux=ignore
 sfml:arm64-windows=fail
 shapelib:arm-uwp=fail
 shapelib:x64-uwp=fail
-shiva:x64-windows=fail
 shiva:x64-windows-static=fail
 shiva-sfml:x64-linux=fail
 shiva-sfml:x64-osx=fail
