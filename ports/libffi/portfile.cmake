@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     message(FATAL_ERROR "Architecture not supported")
 endif()
@@ -43,3 +41,20 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libffi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libffi/copyright)
+
+set(_file "${SOURCE_PATH}/libffi.pc.in")
+file(READ "${_file}" _contents)
+string(REPLACE "includedir=\${libdir}/@PACKAGE_NAME@-@PACKAGE_VERSION@/include" "includedir=@includedir@" _contents "${_contents}")
+file(WRITE "${_file}" "${_contents}")
+
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(toolexeclibdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+set(PACKAGE_NAME ffi)
+set(PACKAGE_VERSION 3.1)
+configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" @ONLY)
+set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" @ONLY)
+vcpkg_fixup_pkgconfig()
