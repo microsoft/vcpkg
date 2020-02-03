@@ -12,6 +12,7 @@ vcpkg_from_github(
     0006-fix-dependecies-platform.patch
     0007-fix-arm-build.patch
     0008-sdl.patch
+    0009-glut.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
