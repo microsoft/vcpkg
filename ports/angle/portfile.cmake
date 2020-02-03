@@ -58,7 +58,7 @@ set(_double_files
     include/GLES3/gl3.h
     include/GLES3/gl31.h
     include/GLES3/gl32.h
-    include/GLES3/gl3platform.h
+    include/GLES3/gl3platform.h)
 foreach(_file ${_double_files})
     if(EXISTS "${CURRENT_PACKAGES_DIR}/${_file}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
