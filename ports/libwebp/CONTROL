@@ -50,10 +50,6 @@ Description: Build the cwebp command line tool.
 Feature: dwebp
 Description: Build the dwebp command line tool.
 
-Feature: webp_js
-Description: Emscripten only build of webp.js. Deactivates all other options.
-Build-Depends: sdl1 (windows)
-
 Feature: swap16bitcsp
 Description: Enable byte swap for 16 bit colorspaces.
 
