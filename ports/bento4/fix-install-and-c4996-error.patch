@@ -1,13 +1,3 @@
-From cfb574bc4f1c8cda9fd33216cab6c53f60e1d487 Mon Sep 17 00:00:00 2001
-From: Ramadan <ramadan.ahmedr93@gmail.com>
-Date: Sat, 30 Nov 2019 13:31:40 +0200
-Subject: [PATCH] Fix install
-
----
- CMakeLists.txt     | 32 ++++++++++++++++++++++++++++++--
- 1 files changed, 32 insertions(+), 2 deletions(-)
- create mode 100644 Bento4Config.cmake
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 2f08b2f..f116d53 100644
 --- a/CMakeLists.txt
