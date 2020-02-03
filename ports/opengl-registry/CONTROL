@@ -1,4 +1,4 @@
 Source: opengl-registry
-Version: 2019-08-22
+Version: 2019-02-03
 Build-Depends: egl-registry
 Description: the API and Extension registries for the OpenGL family APIs
