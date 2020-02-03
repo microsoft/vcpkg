@@ -38,6 +38,31 @@
 
 namespace vcpkg::Test
 {
+    std::unique_ptr<SourceControlFile> make_control_file(
+        const char* name,
+        const char* depends,
+        const std::vector<std::pair<const char*, const char*>>& features,
+        const std::vector<const char*>& default_features)
+    {
+        using Pgh = std::unordered_map<std::string, std::string>;
+        std::vector<Pgh> scf_pghs;
+        scf_pghs.push_back(Pgh{{"Source", name},
+                               {"Version", "0"},
+                               {"Build-Depends", depends},
+                               {"Default-Features", Strings::join(", ", default_features)}});
+        for (auto&& feature : features)
+        {
+            scf_pghs.push_back(Pgh{
+                {"Feature", feature.first},
+                {"Description", "feature"},
+                {"Build-Depends", feature.second},
+            });
+        }
+        auto m_pgh = vcpkg::SourceControlFile::parse_control_file("", std::move(scf_pghs));
+        REQUIRE(m_pgh.has_value());
+        return std::move(*m_pgh.get());
+    }
+
     std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                             const char* depends,
                                                             const char* default_features,
@@ -66,6 +91,23 @@ namespace vcpkg::Test
                                                      {"Multi-Arch", "same"},
                                                      {"Depends", depends},
                                                      {"Status", "install ok installed"}});
+    }
+
+    PackageSpec PackageSpecMap::emplace(const char* name,
+                                        const char* depends,
+                                        const std::vector<std::pair<const char*, const char*>>& features,
+                                        const std::vector<const char*>& default_features)
+    {
+        auto scfl = SourceControlFileLocation{make_control_file(name, depends, features, default_features), ""};
+        return emplace(std::move(scfl));
+    }
+
+    PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
+    {
+        auto spec = PackageSpec::from_name_and_triplet(scfl.source_control_file->core_paragraph->name, triplet);
+        REQUIRE(spec.has_value());
+        map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
+        return PackageSpec{*spec.get()};
     }
 
     PackageSpec unsafe_pspec(std::string name, Triplet t)

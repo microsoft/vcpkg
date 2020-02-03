@@ -223,6 +223,7 @@
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
+    <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
@@ -258,6 +259,7 @@
     <ClCompile Include="..\src\vcpkg\paragraphparseresult.cpp" />
     <ClCompile Include="..\src\vcpkg\paragraphs.cpp" />
     <ClCompile Include="..\src\vcpkg\parse.cpp" />
+    <ClCompile Include="..\src\vcpkg\portfileprovider.cpp" />
     <ClCompile Include="..\src\vcpkg\postbuildlint.buildtype.cpp" />
     <ClCompile Include="..\src\vcpkg\postbuildlint.cpp" />
     <ClCompile Include="..\src\vcpkg\remove.cpp" />
