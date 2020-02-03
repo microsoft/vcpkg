@@ -27,7 +27,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      simd         WEBP_ENABLE_SIMD
      cwebp        WEBP_BUILD_CWEBP
      dwebp        WEBP_BUILD_DWEBP
-     webp_js      WEBP_BUILD_WEBP_JS
      swap16bitcsp WEBP_ENABLE_SWAP_16BIT_CSP
      unicode      WEBP_UNICODE
 )
@@ -43,10 +42,6 @@ if(VCPKG_TARGET_IS_OSX)
     endif()
 endif()
 
-if("webp_js" IN_LIST FEATURES AND "${FEATURES}" MATCHES "(anim|gif2webp|img2webp|extras|info|vwebp|mux|cwebp|dwebp)")
-    message(FATAL_ERROR "Feature webp_js conflicts with features anim|gif2webp|img2webp|extras|info|vwebp|mux|cwebp|dwebp!")
-endif()
-    
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
