@@ -137,7 +137,7 @@ function(vcpkg_configure_make)
         vcpkg_find_acquire_program(PERL)
         set(MSYS_REQUIRE_PACKAGES diffutils)
         if (_csc_AUTOCONFIG)
-            set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} autoconf automake m4 libtool perl)
+            set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} autoconf automake m4 libtool perl pkg-config)
         endif()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
@@ -153,8 +153,10 @@ function(vcpkg_configure_make)
             endif()
         endif()
         set(WIN_TARGET_COMPILER CC=cl)
-        vcpkg_add_to_path("${YASM_EXE_PATH}" "${MSYS_ROOT}/usr/bin" "${PERL_EXE_PATH}")
-        set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+        vcpkg_add_to_path("${YASM_EXE_PATH}")
+        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+        vcpkg_add_to_path("${PERL_EXE_PATH}")
+        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
     elseif (_csc_AUTOCONFIG)
         find_program(autoreconf autoreconf REQUIRED)
     endif()
@@ -203,7 +205,7 @@ function(vcpkg_configure_make)
     set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib/manual-link")
     
     if(CMAKE_HOST_WIN32)
-        set(base_cmd ${BASH} --noprofile --norc -c)
+        set(base_cmd ${BASH} --noprofile --norc)
         
         if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared)
@@ -229,11 +231,9 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
         
         set(rel_command
-            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}"
-        )
+            ${base_cmd} -c "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
         set(dbg_command
-            ${base_cmd} "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}"
-        )
+            ${base_cmd} -c "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
     else()
         set(base_cmd ./)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -242,11 +242,11 @@ function(vcpkg_configure_make)
             set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static --disable-shared)
         endif()
         set(rel_command
-            ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+            "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_RELEASE}"
         )
         set(dbg_command
-            ${base_cmd}configure "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
-        )
+            "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_DEBUG}")
+        
     endif()
     
     # Configure debug
@@ -295,8 +295,8 @@ function(vcpkg_configure_make)
 
         if (_csc_PRERUN_SHELL)
             message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
+            vcpkg_execute_required_process2(
+                COMMAND ${base_cmd} -c "\"${_csc_PRERUN_SHELL}\""
                 WORKING_DIRECTORY ${PRJ_DIR}
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
@@ -306,15 +306,15 @@ function(vcpkg_configure_make)
             message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
             if (CMAKE_HOST_WIN32)
                 vcpkg_execute_required_process(
-                    COMMAND ${base_cmd} autoreconf -vfi
-                    WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME prerun-2-${TARGET_TRIPLET}-dbg
+                    COMMAND ${base_cmd} -c "autoreconf -vfi"
+                    WORKING_DIRECTORY "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}"
+                    LOGNAME autoconf-${TARGET_TRIPLET}-dbg
                 )
             else()
                 vcpkg_execute_required_process(
                     COMMAND autoreconf -vfi
-                    WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-2-${TARGET_TRIPLET}-dbg
+                    WORKING_DIRECTORY "${PRJ_DIR}"
+                    LOGNAME autoconf-${TARGET_TRIPLET}-dbg
                 )
             endif()
         endif()
@@ -395,13 +395,13 @@ function(vcpkg_configure_make)
                 vcpkg_execute_required_process(
                     COMMAND ${base_cmd} autoreconf -vfi
                     WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME prerun-2-${TAR_TRIPLET_DIR}
+                    LOGNAME autoconf-${TAR_TRIPLET_DIR}
                 )
             else()
                 vcpkg_execute_required_process(
                     COMMAND autoreconf -vfi
                     WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME prerun-2-${TAR_TRIPLET_DIR}
+                    LOGNAME autoconf-${TAR_TRIPLET_DIR}
                 )
             endif()
         endif()
