@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         install-one-flavor.patch
+        fix-dependency-freeglut.patch
 )
 
 vcpkg_configure_cmake(

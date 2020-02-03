@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ab356d1..3b5a73d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,7 +3,12 @@ cmake_minimum_required(VERSION 2.8.12)
+ project(glui)
+ set(PROJECT_VERSION 2.37)
+ 
+-find_package(GLUT REQUIRED)
++find_package(FreeGLUT CONFIG REQUIRED)
++set(GLUT_FOUND FreeGLUT_FOUND)
++get_target_property(GLUT_INCLUDE_DIR FreeGLUT::freeglut INTERFACE_INCLUDE_DIRECTORIES)
++set(GLUT_LIBRARIES FreeGLUT::freeglut)
++add_definitions(-DGLUI_FREEGLUT)
++
+ find_package(OpenGL REQUIRED)
+ 
+ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
