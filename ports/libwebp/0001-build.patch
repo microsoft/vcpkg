@@ -23,7 +23,7 @@ index 9503daacb..2fb9ef137 100644
  endif()
  
  if(WEBP_BUILD_GIF2WEBP)
-@@ -524,7 +528,10 @@ if(WEBP_BUILD_EXTRAS)
+@@ -524,7 +528,11 @@ if(WEBP_BUILD_EXTRAS)
  
    # webp_quality
    add_executable(webp_quality ${WEBP_QUALITY_SRCS} ${WEBP_EXTRAS_SRCS})
@@ -33,4 +33,5 @@ index 9503daacb..2fb9ef137 100644
 +  endif()
    target_include_directories(webp_quality
                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++                                     ${CMAKE_CURRENT_SOURCE_DIR}/src
                                       ${CMAKE_CURRENT_BINARY_DIR})
