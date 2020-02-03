@@ -225,6 +225,12 @@
     <ClCompile Include="..\src\vcpkg\commands.porthistory.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\cmakevars.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\portfileprovider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h">

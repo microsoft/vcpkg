@@ -10,10 +10,11 @@ namespace Strings = vcpkg::Strings;
 TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                     }});
 
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
@@ -28,15 +29,15 @@ TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "s"},
-            {"Version", "v"},
-            {"Maintainer", "m"},
-            {"Description", "d"},
-            {"Build-Depends", "bd"},
-            {"Default-Features", "df"},
-            {"Supports", "x64"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "s"},
+                                                         {"Version", "v"},
+                                                         {"Maintainer", "m"},
+                                                         {"Description", "d"},
+                                                         {"Build-Depends", "bd"},
+                                                         {"Default-Features", "df"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -48,18 +49,17 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[0].name() == "bd");
     REQUIRE(pgh.core_paragraph->default_features.size() == 1);
     REQUIRE(pgh.core_paragraph->default_features[0] == "df");
-    REQUIRE(pgh.core_paragraph->supports.size() == 1);
-    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
 }
 
 TEST_CASE ("SourceParagraph two depends", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Build-Depends", "z, openssl"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                         {"Build-Depends", "z, openssl"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -71,11 +71,12 @@ TEST_CASE ("SourceParagraph two depends", "[paragraph]")
 TEST_CASE ("SourceParagraph three depends", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Build-Depends", "z, openssl, xyz"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                         {"Build-Depends", "z, openssl, xyz"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -85,31 +86,15 @@ TEST_CASE ("SourceParagraph three depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->depends[2].name() == "xyz");
 }
 
-TEST_CASE ("SourceParagraph three supports", "[paragraph]")
-{
-    auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Supports", "x64, windows, uwp"},
-        }});
-    REQUIRE(m_pgh.has_value());
-    auto& pgh = **m_pgh.get();
-
-    REQUIRE(pgh.core_paragraph->supports.size() == 3);
-    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
-    REQUIRE(pgh.core_paragraph->supports[1] == "windows");
-    REQUIRE(pgh.core_paragraph->supports[2] == "uwp");
-}
-
 TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Build-Depends", "libA (windows), libB (uwp)"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                         {"Build-Depends", "libA (windows), libB (uwp)"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -127,11 +112,12 @@ TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 TEST_CASE ("SourceParagraph default features", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "a"},
-            {"Version", "1.0"},
-            {"Default-Features", "a1"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "a"},
+                                                         {"Version", "1.0"},
+                                                         {"Default-Features", "a1"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -380,11 +366,12 @@ TEST_CASE ("BinaryParagraph serialize min", "[paragraph]")
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0].size() == 4);
+    REQUIRE(pghs[0].size() == 5);
     REQUIRE(pghs[0]["Package"] == "zlib");
     REQUIRE(pghs[0]["Version"] == "1.2.8");
     REQUIRE(pghs[0]["Architecture"] == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
+    REQUIRE(pghs[0]["Type"] == "Port");
 }
 
 TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
@@ -402,13 +389,14 @@ TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
     auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0].size() == 7);
+    REQUIRE(pghs[0].size() == 8);
     REQUIRE(pghs[0]["Package"] == "zlib");
     REQUIRE(pghs[0]["Version"] == "1.2.8");
     REQUIRE(pghs[0]["Architecture"] == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
     REQUIRE(pghs[0]["Description"] == "first line\n second line");
     REQUIRE(pghs[0]["Depends"] == "dep");
+    REQUIRE(pghs[0]["Type"] == "Port");
 }
 
 TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
