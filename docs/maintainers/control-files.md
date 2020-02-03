@@ -117,7 +117,7 @@ Default-Features: dynamodb, s3, kinesis
 
 <a name="Supports"></a>
 #### Supports
-Expression that evalutates to true when the port is expected to build successfully for a triplet.
+Expression that evaluates to true when the port is expected to build successfully for a triplet.
 
 Currently, this field is only used in the CI testing to skip ports. In the future, this mechanism is intended to warn users in advance that a given install tree is not expected to succeed. Therefore, this field should be used optimistically; in cases where a port is expected to succeed 10% of the time, it should still be marked "supported".
 
