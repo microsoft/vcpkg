@@ -40,3 +40,9 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/bzip2/LICENSE ${CURRENT_PACKAGES_DIR}/
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_test_cmake(PACKAGE_NAME BZip2 MODULE)
+
+set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/bzip2.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/bzip2.pc" DESTINATION @ONLY)
+set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/bzip2.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/bzip2.pc" DESTINATION @ONLY)
+vcpkg_fixup_pkgconfig()
