@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 29a80ae..ace4619 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -409,10 +409,10 @@ IF(FREEGLUT_BUILD_SHARED_LIBS)
+     ENDIF()
+ ENDIF()
+ IF(FREEGLUT_BUILD_STATIC_LIBS)
+-    ADD_LIBRARY(freeglut_static STATIC ${FREEGLUT_SRCS})
+-    SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME "freeglut")
++    ADD_LIBRARY(freeglut STATIC ${FREEGLUT_SRCS})
++    SET_TARGET_PROPERTIES(freeglut PROPERTIES OUTPUT_NAME "freeglut")
+     IF(UNIX AND NOT(ANDROID OR BLACKBERRY))
+-        TARGET_LINK_LIBRARIES(freeglut_static PRIVATE X11::X11)
++        TARGET_LINK_LIBRARIES(freeglut PRIVATE X11::X11)
+     ENDIF()
+ ENDIF()
+ 
+@@ -429,15 +429,15 @@ IF(WIN32)
+         SET_TARGET_PROPERTIES(freeglut PROPERTIES OUTPUT_NAME ${LIBNAME})
+     ENDIF()
+     IF(FREEGLUT_BUILD_STATIC_LIBS)
+-        TARGET_COMPILE_DEFINITIONS(freeglut_static PUBLIC FREEGLUT_STATIC)
++        TARGET_COMPILE_DEFINITIONS(freeglut PUBLIC freeglut)
+         IF(FREEGLUT_REPLACE_GLUT)
+-            SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME ${LIBNAME})
++            SET_TARGET_PROPERTIES(freeglut PROPERTIES OUTPUT_NAME ${LIBNAME})
+         ENDIF()
+         # need to set machine:x64 for linker, at least for VC10, and
+         # doesn't hurt for older compilers:
+         # http://public.kitware.com/Bug/view.php?id=11240#c22768
+         IF (CMAKE_CL_64)
+-            SET_TARGET_PROPERTIES(freeglut_static PROPERTIES STATIC_LIBRARY_FLAGS "/machine:x64")
++            SET_TARGET_PROPERTIES(freeglut PROPERTIES STATIC_LIBRARY_FLAGS "/machine:x64")
+         ENDIF()
+     ENDIF()
+ ELSE()
+@@ -468,7 +468,7 @@ ELSE()
+       SET_TARGET_PROPERTIES(freeglut PROPERTIES VERSION ${SO_MAJOR}.${SO_MINOR}.${SO_REV} SOVERSION ${SO_MAJOR} OUTPUT_NAME ${LIBNAME})
+     ENDIF()
+     IF(FREEGLUT_BUILD_STATIC_LIBS)
+-      SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME ${LIBNAME})
++      SET_TARGET_PROPERTIES(freeglut PROPERTIES OUTPUT_NAME ${LIBNAME})
+     ENDIF()
+     IF(ANDROID)
+         # Not in CMake toolchain file, because the toolchain
+@@ -489,8 +489,8 @@ IF(FREEGLUT_BUILD_SHARED_LIBS)
+     TARGET_COMPILE_DEFINITIONS(freeglut PUBLIC ${PUBLIC_DEFINITIONS})
+ ENDIF()
+ IF(FREEGLUT_BUILD_STATIC_LIBS)
+-    TARGET_LINK_LIBRARIES(freeglut_static PUBLIC ${LIBS})
+-    TARGET_COMPILE_DEFINITIONS(freeglut_static PUBLIC ${PUBLIC_DEFINITIONS})
++    TARGET_LINK_LIBRARIES(freeglut PUBLIC ${LIBS})
++    TARGET_COMPILE_DEFINITIONS(freeglut PUBLIC ${PUBLIC_DEFINITIONS})
+ ENDIF()
+ 
+ IF(FREEGLUT_BUILD_SHARED_LIBS)
+@@ -515,7 +515,7 @@ IF(FREEGLUT_BUILD_SHARED_LIBS)
+     ENDIF()
+ ENDIF()
+ IF(FREEGLUT_BUILD_STATIC_LIBS)
+-    INSTALL(TARGETS freeglut_static EXPORT FreeGLUTTargets
++    INSTALL(TARGETS freeglut EXPORT FreeGLUTTargets
+             RUNTIME DESTINATION bin
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -546,7 +546,7 @@ MACRO(ADD_DEMO name)
+         ENDIF()
+         IF(FREEGLUT_BUILD_STATIC_LIBS)
+             ADD_EXECUTABLE(${name}_static ${ARGN})
+-            TARGET_LINK_LIBRARIES(${name}_static ${DEMO_LIBS} freeglut_static)
++            TARGET_LINK_LIBRARIES(${name}_static ${DEMO_LIBS} freeglut)
+             IF(WIN32 AND MSVC)
+                 SET_TARGET_PROPERTIES(${name}_static PROPERTIES DEBUG_POSTFIX d)
+             ENDIF()

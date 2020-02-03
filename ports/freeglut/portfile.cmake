@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
     fix-debug-macro.patch
     fix-link-property.patch
     fix-output-name.patch
+    fix-static-lib-name.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
