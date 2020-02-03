@@ -22,8 +22,8 @@ vcpkg_configure_meson(
         -D gles1=true 
         -D gles2=true 
         -D shared-glapi=true
-        -D gles-lib-suffix=MESA
-        -D egl-lib-suffix=MESA
+        -D gles-lib-suffix=_mesa
+        -D egl-lib-suffix=_mesa
         "${MESA_OPTIONS}"
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
