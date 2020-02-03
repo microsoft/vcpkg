@@ -193,7 +193,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 elseif(VCPKG_TARGET_IS_LINUX)
-    list(APPEND CORE_OPTIONS -fontconfig -system-xcb -xcb-xlib -linuxfb)
+    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -linuxfb) #-system-xcb
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
@@ -266,7 +266,7 @@ else()
         OPTIONS_RELEASE ${RELEASE_OPTIONS}
         OPTIONS_DEBUG ${DEBUG_OPTIONS}
         )
-    message(FATAL_ERROR "MAKE qt5-base FAIL. NEED CONFIGURE LOGS FROM CI!")
+    #message(FATAL_ERROR "MAKE qt5-base FAIL. NEED CONFIGURE LOGS FROM CI!")
     install_qt()
 
     #########################
