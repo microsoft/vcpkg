@@ -13,7 +13,7 @@ vcpkg_from_gitlab(
     REF  352037317b36c7ffd13aa3be8dc12e23a38a5bf2 #v19.3.3
     SHA512 9813c98b6b04186e510e16b76b29d0ec1be75bcc0eca758a115ab93c289c72d9103c69c8e4025f3c48d0350b7432aba42167b3768bbbc5877720c036681f1fec
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES ${PATCHES} #patch name
 ) 
 
 vcpkg_configure_meson(
