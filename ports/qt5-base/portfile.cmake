@@ -17,6 +17,7 @@ include(qt_port_functions)
 include(configure_qt)
 include(install_qt)
 
+
 #########################
 ## Find Host and Target mkspec name for configure
 include(find_qt_mkspec)
