@@ -14,6 +14,11 @@ message(STATUS "Using xmlling at: ${XMLLINT_PATH}")
 vcpkg_add_to_path("${XMLLINT_DIR_NATIVE}")
 #(also requires python2?)
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+file(TO_NATIVE_PATH "${PYTHON3_DIR}" PYTHON3_DIR_NATIVE)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
