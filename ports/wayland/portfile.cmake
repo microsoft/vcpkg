@@ -1,3 +1,8 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(PATCHES meson.build.patch) 
+    # this patch is not 100% correct since xcb and xcb-xkb can be build dynamically in a custom triplet
+    # However, VCPKG currently is limited by the possibilities of meson and they have to fix their lib dependency detection
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -6,7 +11,7 @@ vcpkg_from_gitlab(
     REF  367d2985f3242d12c16a4f9074254584a8739d1f #1.17.92
     SHA512 1244d81bd07d7a4608b5546971b4182070b8caa52278ca6a5ac0f7cdf51f94000ff8015dc9f23ce9f686592d97e9a8b5c1daf64778c0ad05e99af19b3968240e
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES ${PATCHES}
 ) 
 
 vcpkg_configure_meson(

@@ -1,0 +1,26 @@
+diff --git a/meson.build b/meson.build
+index ea01708f9..ef453b8f4 100644
+--- a/meson.build
++++ b/meson.build
+@@ -43,7 +43,7 @@ foreach f: have_funcs
+ endforeach
+ 
+ if get_option('libraries')
+-	ffi_dep = dependency('libffi')
++	ffi_dep = dependency('libffi', static: true)
+ 
+ 	decls = [
+ 		{ 'header': 'sys/signalfd.h', 'symbol': 'SFD_CLOEXEC' },
+@@ -58,10 +58,10 @@ if get_option('libraries')
+ 	endforeach
+ endif
+ 
+-scanner_deps = [ dependency('expat') ]
++scanner_deps = [ dependency('expat', static: true) ]
+ 
+ if get_option('dtd_validation')
+-	scanner_deps += dependency('libxml-2.0')
++	scanner_deps += dependency('libxml-2.0', static: true)
+ 	config_h.set('HAVE_LIBXML', 1)
+ endif
+ 
