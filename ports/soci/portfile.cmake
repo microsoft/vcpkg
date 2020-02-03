@@ -31,7 +31,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DSOCI_TESTS=OFF
-        -DSOCI_CXX_C11=ON
+        -DSOCI_CXX11=ON
         -DSOCI_LIBDIR:STRING=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
         -DLIBDIR:STRING=lib
         -DSOCI_STATIC=${SOCI_STATIC}
