@@ -1,0 +1,77 @@
+diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
+index e55e72d..ece7254 100644
+--- a/lang/c/CMakeLists.txt
++++ b/lang/c/CMakeLists.txt
+@@ -127,55 +127,15 @@ include_directories(${AvroC_SOURCE_DIR}/src)
+ 
+ # Enable codecs
+ 
+-find_package(ZLIB)
+-if (ZLIB_FOUND)
+-    set(ZLIB_PKG zlib)
+-    add_definitions(-DDEFLATE_CODEC)
+-    include_directories(${ZLIB_INCLUDE_DIR})
+-    message("Enabled deflate codec")
+-else (ZLIB_FOUND)
+-    set(ZLIB_PKG "")
+-    set(ZLIB_LIBRARIES "")
+-    message("Disabled deflate codec. zlib not found.")
+-endif (ZLIB_FOUND)
+-
+-find_package(Snappy)
+-if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
+-    set(SNAPPY_PKG libsnappy)
+-    add_definitions(-DSNAPPY_CODEC)
+-    include_directories(${SNAPPY_INCLUDE_DIR})
+-    message("Enabled snappy codec")
+-else (SNAPPY_FOUND AND ZLIB_FOUND)
+-    set(SNAPPY_PKG "")
+-    set(SNAPPY_LIBRARIES "")
+-    message("Disabled snappy codec. libsnappy not found or zlib not found.")
+-endif (SNAPPY_FOUND AND ZLIB_FOUND)
+-
+-find_package(LIBLZMA)
+-if (LIBLZMA_FOUND)
+-    set(LZMA_PKG liblzma)
+-    add_definitions(-DLZMA_CODEC)
+-    include_directories(${LIBLZMA_INCLUDE_DIRS})
+-    link_directories(${LIBLZMA_LIBRARY_DIRS})
+-    message("Enabled lzma codec")
+-else (LIBLZMA_FOUND)
+-    set(LZMA_PKG "")
+-    set(LZMA_LIBRARIES "")
+-    message("Disabled lzma codec. liblzma not found.")
+-endif (LIBLZMA_FOUND)
++find_package(ZLIB REQUIRED)
++find_package(Snappy CONFIG REQUIRED)
++find_package(LibLZMA CONFIG REQUIRED)
+ 
+ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+ set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
+ 
+ # Jansson JSON library
+-find_package(JANSSON REQUIRED)
+-if (JANSSON_FOUND)
+-    set(JANSSON_PKG libjansson)
+-    include_directories(${JANSSON_INCLUDE_DIR})
+-    link_directories(${JANSSON_LIBRARY_DIRS})
+-else (JANSSON_FOUND)
+-    message(FATAL_ERROR "libjansson >=2.3 not found")
+-endif (JANSSON_FOUND)
++find_package(jansson CONFIG REQUIRED)
+ 
+ 
+ add_subdirectory(src)
+diff --git a/lang/c/tests/test_avro_data.c b/lang/c/tests/test_avro_data.c
+index 8a0c013..1ebfb66 100644
+--- a/lang/c/tests/test_avro_data.c
++++ b/lang/c/tests/test_avro_data.c
+@@ -142,7 +142,7 @@ static void test_json(avro_datum_t datum, const char *expected)
+ {
+ 	char  *json = NULL;
+ 	avro_datum_to_json(datum, 1, &json);
+-	if (stricmp(json, expected) != 0) {
++	if (strcmp(json, expected) != 0) {
+ 		fprintf(stderr, "Unexpected JSON encoding: %s\n", json);
+ 		exit(EXIT_FAILURE);
+ 	}
