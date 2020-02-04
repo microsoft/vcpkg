@@ -200,7 +200,7 @@ namespace vcpkg::PostBuildLint
             System::print2(System::Color::warning,
                            "Include files should not be duplicated into the /debug/include directory. If this cannot "
                            "be disabled in the project cmake, use\n"
-                           "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)\n");
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/include)\"\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -215,7 +215,7 @@ namespace vcpkg::PostBuildLint
         {
             System::print2(System::Color::warning,
                            "/debug/share should not exist. Please reorganize any important files, then use\n"
-                           "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)\n");
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/share)\"\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -349,8 +349,8 @@ namespace vcpkg::PostBuildLint
             const fs::path relative_path = found_file.string().erase(
                 0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
             System::printf(
-                "\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
-                "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)\n",
+                "\n    file(COPY \"${CURRENT_BUILDTREES_DIR}/%s\" DESTINATION \"${CURRENT_PACKAGES_DIR}/share/%s\")\n"
+                "    file(RENAME \"${CURRENT_PACKAGES_DIR}/share/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\")\n",
                 relative_path.generic_string(),
                 spec.name(),
                 spec.name(),
@@ -662,7 +662,7 @@ namespace vcpkg::PostBuildLint
             "\n"
             R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static"))###"
             "\n"
-            R"###(        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin))###"
+            R"###(        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin"))###"
             "\n"
             R"###(    endif())###"
             "\n\n");
@@ -689,7 +689,7 @@ namespace vcpkg::PostBuildLint
                 "If the directories are not needed and their creation cannot be disabled, use something like this in "
                 "the portfile to remove them:\n"
                 "\n"
-                R"###(    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/a/dir ${CURRENT_PACKAGES_DIR}/some/other/dir))###"
+                R"###(    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/a/dir" "${CURRENT_PACKAGES_DIR}/some/other/dir"))###"
                 "\n"
                 "\n"
                 "\n");
@@ -903,7 +903,7 @@ namespace vcpkg::PostBuildLint
                 dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
                 dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                if (!toolset.dumpbin.empty())
+                if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {
                     error_count += check_exports_of_dlls(build_info.policies, dlls, toolset.dumpbin);
                     error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
@@ -924,7 +924,7 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!toolset.dumpbin.empty())
+                if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {
                     if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                     {

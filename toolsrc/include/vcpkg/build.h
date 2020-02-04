@@ -240,6 +240,7 @@ namespace vcpkg::Build
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
         ALLOW_RESTRICTED_HEADERS,
+        SKIP_DUMPBIN_CHECKS,
         // Must be last
         COUNT,
     };
@@ -252,6 +253,7 @@ namespace vcpkg::Build
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
+        BuildPolicy::SKIP_DUMPBIN_CHECKS
     };
 
     const std::string& to_string(BuildPolicy policy);
