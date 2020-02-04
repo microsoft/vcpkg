@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF v10.0.3
-    SHA512 6d102962fbfb61b239d243fd38f7519c28cf7098e2e1a2bfd19035fa7152f4dcc51875683c76c1fa7274b786dde4b90873ae4a1eb6e5d9e485e6614ab06bf0d2
+    REF v11.0.1
+    SHA512 22247e80d9e5710ce69ebac4327f8d632db5bdfe46121d5d3166ab8badd430742f21e559244baca3dc6e50260399d8a9dc8c56b390ca0549955c85212babc635
     HEAD_REF master
 )
 
@@ -24,10 +24,10 @@ foreach(TARGET reproc reprocxx)
         CONFIG_PATH share/${TARGET} 
         TARGET_PATH share/${TARGET}
     )
+    
+    file(
+        INSTALL ${SOURCE_PATH}/LICENSE 
+        DESTINATION ${CURRENT_PACKAGES_DIR}/share/${TARGET}
+        RENAME copyright
+    )
 endforeach()
-
-file(
-    INSTALL ${SOURCE_PATH}/LICENSE 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-    RENAME copyright
-)
