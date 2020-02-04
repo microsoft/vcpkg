@@ -1,0 +1,22 @@
+diff --git a/configure.ac b/configure.ac
+index 07d371c31..15552315c 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -383,7 +383,7 @@ AM_CONDITIONAL(TESTS_RPATH, test "$tests_use_rpath" = yes)
+ dnl zlib is mandatory.
+ save_LIBS="$LIBS"
+ LIBS=
+-eu_ZIPLIB(zlib,ZLIB,gzdirect,gzip)
++eu_ZIPLIB(zlib,ZLIB,zlibd,gzdirect,gzip)
+ AS_IF([test "x$with_zlib" = xno], [AC_MSG_ERROR([zlib not found but is required])])
+ LIBS="$save_LIBS"
+ 
+@@ -391,7 +391,7 @@ dnl Test for bzlib and xz/lzma, gives BZLIB/LZMALIB .am
+ dnl conditional and config.h USE_BZLIB/USE_LZMALIB #define.
+ save_LIBS="$LIBS"
+ LIBS=
+-eu_ZIPLIB(bzlib,BZLIB,bz2,BZ2_bzdopen,bzip2)
++eu_ZIPLIB(bzlib,BZLIB,bz2,bz2d,BZ2_bzdopen,bzip2)
+ # We need this since bzip2 doesn't have a pkgconfig file.
+ BZ2_LIB="$LIBS"
+ AC_SUBST([BZ2_LIB])

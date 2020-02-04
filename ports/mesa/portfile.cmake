@@ -41,6 +41,18 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/egl.h)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h)
 
+#installed by opengl-registry
+set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
+    include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
+    include/GLES2/gl2.h include/GLES2/gl2ext.h include/GLES2/gl2platform.h
+    include/GLES3/gl3.h  include/GLES3/gl31.h include/GLES3/gl32.h include/GLES3/gl3platform.h)
+foreach(_file ${_double_files})
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/${_file}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
+    endif()
+endforeach()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES2)
 # # Handle copyright
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

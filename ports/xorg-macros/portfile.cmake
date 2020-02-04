@@ -30,9 +30,12 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal/" "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
+ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
+if(NOT WIN32)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
+endif()
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal/" "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/util-macros/" "${CURRENT_PACKAGES_DIR}/share/xorg/util-macros")
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" _contents)
@@ -43,15 +46,19 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" "${_contents
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 
-file(READ "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" _contents)
-string(REPLACE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_INSTALLED_DIR}/debug" _contents "${_contents}")
-string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/xorg/debug}" _contents "${_contents}")
-string(REPLACE "includedir=${CURRENT_INSTALLED_DIR}/debug/include" "includedir=\${prefix}/../include" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" "${_contents}")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc")
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" _contents)
+    string(REPLACE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_INSTALLED_DIR}/debug" _contents "${_contents}")
+    string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/xorg/debug}" _contents "${_contents}")
+    string(REPLACE "includedir=${CURRENT_INSTALLED_DIR}/debug/include" "includedir=\${prefix}/../include" _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" "${_contents}")
+    if(NOT WIN32)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
+    endif()
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
 

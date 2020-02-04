@@ -12,6 +12,12 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
 
+if(WIN32)
+    SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # dumpbin will fail on GCC
+    set(OPTIONS --disable-dependency-tracking)
+    #string(APPEND VCPKG_C_FLAGS "/DX_NOT_POSIX")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
@@ -20,7 +26,7 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS
+    OPTIONS ${OPTIONS}
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
