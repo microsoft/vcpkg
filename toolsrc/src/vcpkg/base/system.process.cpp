@@ -30,57 +30,74 @@ namespace vcpkg
     {
         struct CtrlCStateMachine
         {
-            CtrlCStateMachine() : m_state(CtrlCState::normal) {}
+            CtrlCStateMachine() : m_number_of_external_processes(0) {}
 
             void transition_to_spawn_process() noexcept
             {
-                auto expected = CtrlCState::normal;
-                auto transitioned = m_state.compare_exchange_strong(expected, CtrlCState::blocked_on_child);
-                if (!transitioned)
+                int cur = 0;
+                while (!m_number_of_external_processes.compare_exchange_strong(cur, cur + 1))
                 {
-                    // Ctrl-C was hit and is asynchronously executing on another thread
-                    Checks::exit_fail(VCPKG_LINE_INFO);
+                    if (cur < 0)
+                    {
+                        // Ctrl-C was hit and is asynchronously executing on another thread.
+                        // Some other processes are outstanding.
+                        // Sleep forever -- the other process will complete and exit the program
+                        while (true)
+                        {
+                            std::this_thread::sleep_for(std::chrono::seconds(10));
+                            System::print2("Waiting for child processes to exit...\n");
+                        }
+                    }
                 }
             }
             void transition_from_spawn_process() noexcept
             {
-                auto expected = CtrlCState::blocked_on_child;
-                auto transitioned = m_state.compare_exchange_strong(expected, CtrlCState::normal);
-                if (!transitioned)
+                auto previous = m_number_of_external_processes.fetch_add(-1);
+                if (previous == INT_MIN + 1)
                 {
-                    // Ctrl-C was hit while blocked on the child process, so exit immediately
-                    Checks::exit_fail(VCPKG_LINE_INFO);
+                    // Ctrl-C was hit while blocked on the child process
+                    // This is the last external process to complete
+                    // Therefore, exit
+                    Checks::final_cleanup_and_exit(1);
+                }
+                else if (previous < 0)
+                {
+                    // Ctrl-C was hit while blocked on the child process
+                    // Some other processes are outstanding.
+                    // Sleep forever -- the other process will complete and exit the program
+                    while (true)
+                    {
+                        std::this_thread::sleep_for(std::chrono::seconds(10));
+                        System::print2("Waiting for child processes to exit...\n");
+                    }
                 }
             }
             void transition_handle_ctrl_c() noexcept
             {
-                auto prev_state = m_state.exchange(CtrlCState::exit_requested);
-
-                if (prev_state == CtrlCState::normal)
+                int old_value = 0;
+                while (!m_number_of_external_processes.compare_exchange_strong(old_value, old_value + INT_MIN))
                 {
-                    // Not currently blocked on a child process and Ctrl-C has not been hit.
-                    Checks::exit_fail(VCPKG_LINE_INFO);
+                    if (old_value < 0)
+                    {
+                        // Repeat calls to Ctrl-C -- a previous one succeeded.
+                        return;
+                    }
                 }
-                else if (prev_state == CtrlCState::exit_requested)
+
+                if (old_value == 0)
                 {
-                    // Ctrl-C was hit previously?
+                    // Not currently blocked on a child process
+                    Checks::final_cleanup_and_exit(1);
                 }
                 else
                 {
-                    // We are currently blocked on a child process. Upon return, transition_from_spawn_process() will be
-                    // called and exit.
+                    // We are currently blocked on a child process. Upon return, transition_from_spawn_process()
+                    // will be called and exit.
                 }
             }
 
         private:
-            enum class CtrlCState
-            {
-                normal,
-                blocked_on_child,
-                exit_requested,
-            };
-
-            std::atomic<CtrlCState> m_state;
+            std::atomic<int> m_number_of_external_processes;
         };
 
         static CtrlCStateMachine g_ctrl_c_state;
