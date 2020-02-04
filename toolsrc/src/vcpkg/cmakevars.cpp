@@ -18,7 +18,7 @@ namespace vcpkg::CMakeVars
         Files::Filesystem& fs = paths.get_filesystem();
         static int tag_extract_id = 0;
 
-        std::string extraction_file("include(" + get_tags_path.generic_u8string() + ")\n\n");
+        std::string extraction_file("include(\"" + get_tags_path.generic_u8string() + "\")\n\n");
 
         std::map<Triplet, int> emitted_triplets;
         int emitted_triplet_id = 0;
