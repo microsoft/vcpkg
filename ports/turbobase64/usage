@@ -1,0 +1,4 @@
+The package turbobase64 is compatible with built-in CMake targets:
+
+    FIND_PACKAGE(turbobase64 REQUIRED)
+    TARGET_LINK_LIBRARIES(main PRIVATE TURBO::base64) for linkage
