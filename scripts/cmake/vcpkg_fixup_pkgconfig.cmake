@@ -37,8 +37,13 @@ function(vcpkg_fixup_pkgconfig)
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
+        
         string(REPLACE "debug/include" "../include" _contents "${_contents}")
+        string(REPLACE "\${prefix}/include" "\${prefix}/../include" _contents "${_contents}")
+        
         string(REPLACE "debug/share" "../share" _contents "${_contents}")
+        string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
+        
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=\\\${prefix}" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
