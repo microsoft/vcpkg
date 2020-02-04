@@ -11,6 +11,7 @@ vcpkg_from_github(
 )
 
 file(COPY ${SOURCE_PATH}/cgltf.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/cgltf_write.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
