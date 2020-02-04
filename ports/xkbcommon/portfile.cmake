@@ -1,4 +1,3 @@
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(PATCHES meson.build.patch) 
     # this patch is not 100% correct since xcb and xcb-xkb can be build dynamically in a custom triplet
