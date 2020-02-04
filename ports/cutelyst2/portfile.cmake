@@ -14,7 +14,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_WIN_STATIC ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_configure_cmake( 
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
