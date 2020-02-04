@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cwzx/nngpp
-    REF 3351f54e6e774505d8d8b88064d04eb98e0b1cda
-    SHA512 6f72d1085b58ee7a8941294e7479661d8fc2c22cc8af2cee9c2cef11d508032a860c0061851bda07cf995ec8f57e5a25e241a15114a91c487d8aad6def2d4ce5
+    REF nng-v1.2.4
+    SHA512 6f30bacbf46c00c606099407e4d92d607c6010e8460b7abe25855befad1ecc67900bddcdb9aef86d7233dabb1feb8f94946618fc66cc37d2a7f982f470713f5a
     HEAD_REF master
 )
 
