@@ -135,7 +135,7 @@ function(vcpkg_configure_make)
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
         ##  Please read https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2
-        set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled) # since we cannot use dumpbin on the generated dll'ds
+        set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE) # since we cannot use dumpbin on the generated dll'ds
         vcpkg_find_acquire_program(YASM)
         vcpkg_find_acquire_program(PERL)
         set(MSYS_REQUIRE_PACKAGES diffutils)
