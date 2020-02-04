@@ -67,7 +67,7 @@ namespace vcpkg::CMakeVars
         static int dep_info_id = 0;
         Files::Filesystem& fs = paths.get_filesystem();
 
-        std::string extraction_file("include(" + get_dep_info_path.generic_u8string() + ")\n\n");
+        std::string extraction_file("include(\"" + get_dep_info_path.generic_u8string() + "\")\n\n");
 
         std::map<Triplet, int> emitted_triplets;
         int emitted_triplet_id = 0;
