@@ -16,20 +16,13 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${SOURCE_PATH})
 
-set(UNICODE_PATH FALSE)
-if("unicode" IN_LIST FEATURES)
-    set(UNICODE_PATH TRUE)
-endif()
-
-set(FAST_MATH FALSE)
-if("fast-fpu" IN_LIST FEATURES)
-    set(FAST_MATH TRUE)
-endif()
-
-set(BUILD_TOOLS FALSE)
-if("tools" IN_LIST FEATURES)
-    set(BUILD_TOOLS TRUE)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        unicode     IRR_UNICODE_PATH
+        fast-fpu    IRR_FAST_MATH
+        tools       IRR_BUILD_TOOLS
+)
 
 set(SHARED_LIB TRUE)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -41,16 +34,14 @@ vcpkg_configure_cmake(
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS 
         -DIRR_SHARED_LIB=${SHARED_LIB}
-        -DIRR_UNICODE_PATH=${UNICODE_PATH}
-        -DIRR_FAST_MATH=${FAST_MATH}
-        -DIRR_BUILD_TOOLS=${BUILD_TOOLS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
 
-if(BUILD_TOOLS)
+if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
 endif()
 
