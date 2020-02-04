@@ -1,15 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1d8f579..b9c6d20 100644
+index 5f59d19..a0b6e4f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -276,7 +276,9 @@ if (JAS_ENABLE_OPENGL AND OPENGL_FOUND)
+@@ -274,7 +274,13 @@ if (JAS_ENABLE_OPENGL AND OPENGL_FOUND)
  	set(JAS_HAVE_OPENGL 0)
  	message("OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
  	message("OpenGL libraries: ${OPENGL_LIBRARIES}")
--	find_package(GLUT ${JAS_REQUIRED})
-+	find_package(FreeGLUT CONFIG REQUIRED)
++    if (APPLE)
+ 	find_package(GLUT ${JAS_REQUIRED})
++    else()
++    find_package(FreeGLUT CONFIG REQUIRED)
 +    set(GLUT_FOUND FreeGLUT_FOUND)
 +    set(GLUT_LIBRARIES FreeGLUT::freeglut)
++    endif()
  	message("GLUT library found: ${GLUT_FOUND}")
  	if (GLUT_FOUND)
  		message("GLUT include directory: ${GLUT_INCLUDE_DIR}")
