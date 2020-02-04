@@ -1,9 +1,5 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
 set(VERSION 0.9.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.libssh.org/files/0.9/libssh-${VERSION}.tar.xz"
