@@ -2,6 +2,7 @@ Source: ace
 Version: 6.5.7-1
 Homepage: https://www.dre.vanderbilt.edu/~schmidt/ACE.html
 Description: The ADAPTIVE Communication Environment
+Supports: !uwp
 
 Feature: wchar
 Description: Enable extra wide char functions in ACE

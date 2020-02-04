@@ -46,7 +46,7 @@ namespace vcpkg
                 for (auto&& feature : spec->features)
                     f_specs.push_back(FeatureSpec{pspec, feature});
 
-                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
+                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, "core"});
             }
             else
             {
@@ -59,16 +59,44 @@ namespace vcpkg
         return f_specs;
     }
 
-    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<FullPackageSpec>& specs)
+    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<std::string>& default_features,
+                                                               const std::vector<std::string>& all_features) const
     {
-        std::vector<FeatureSpec> ret;
-        for (auto&& spec : specs)
+        std::vector<FeatureSpec> feature_specs;
+
+        if (Util::find(features, "*") != features.end())
         {
-            ret.emplace_back(spec.package_spec, "");
-            for (auto&& feature : spec.features)
-                ret.emplace_back(spec.package_spec, feature);
+            feature_specs.emplace_back(package_spec, "core");
+            for (const std::string& feature : all_features)
+            {
+                feature_specs.emplace_back(package_spec, feature);
+            }
         }
-        return ret;
+        else
+        {
+            bool core = false;
+            for (const std::string& feature : features)
+            {
+                feature_specs.emplace_back(package_spec, feature);
+
+                if (!core)
+                {
+                    core = feature == "core";
+                }
+            }
+
+            if (!core)
+            {
+                feature_specs.emplace_back(package_spec, "core");
+
+                for (const std::string& def : default_features)
+                {
+                    feature_specs.emplace_back(package_spec, def);
+                }
+            }
+        }
+
+        return feature_specs;
     }
 
     ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,

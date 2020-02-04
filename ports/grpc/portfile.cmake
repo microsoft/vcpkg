@@ -1,13 +1,5 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
-# This snippet is a workaround for users who are upgrading from an extremely old version of this
-# port, which cloned directly into `src\`
-if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
 
 vcpkg_from_github(
@@ -23,28 +15,19 @@ vcpkg_from_github(
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
         00006-crypt32.patch
-        00008-uwp_upb_disable_C4146_error.patch
+        00009-use-system-upb.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(gRPC_BUILD_CODEGEN OFF)
 else()
     set(gRPC_BUILD_CODEGEN ON)
 endif()
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(gRPC_MSVC_STATIC_RUNTIME ON)
-else()
-    set(gRPC_MSVC_STATIC_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" gRPC_MSVC_STATIC_RUNTIME)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" gRPC_STATIC_LINKING)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(gRPC_STATIC_LINKING ON)
-else()
-    set(gRPC_STATIC_LINKING OFF)
-endif()
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     set(cares_CARES_PROVIDER OFF)
 else()
     set(cares_CARES_PROVIDER "package")
