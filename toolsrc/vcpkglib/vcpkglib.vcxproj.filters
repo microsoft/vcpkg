@@ -226,10 +226,13 @@
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\portfileprovider.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\system.process.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
