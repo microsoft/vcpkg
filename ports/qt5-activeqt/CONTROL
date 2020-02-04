@@ -2,3 +2,4 @@ Source: qt5-activeqt
 Version: 5.12.7
 Description: Qt5 ActiveQt Module - ActiveX components
 Build-Depends:  qt5-base
+Supports: windows

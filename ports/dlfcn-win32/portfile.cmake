@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(SOURCE_VERSION 1.1.1)
 
 vcpkg_from_github(
@@ -27,3 +26,5 @@ vcpkg_copy_pdbs()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

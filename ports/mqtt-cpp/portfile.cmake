@@ -1,5 +1,3 @@
-# header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redboltz/mqtt_cpp
@@ -14,7 +12,10 @@ vcpkg_configure_cmake(
     OPTIONS
         -DMQTT_BUILD_EXAMPLES=OFF
         -DMQTT_BUILD_TESTS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

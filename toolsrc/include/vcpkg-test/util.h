@@ -17,6 +17,12 @@
 
 namespace vcpkg::Test
 {
+    std::unique_ptr<SourceControlFile> make_control_file(
+        const char* name,
+        const char* depends,
+        const std::vector<std::pair<const char*, const char*>>& features = {},
+        const std::vector<const char*>& default_features = {});
+
     std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                             const char* depends = "",
                                                             const char* default_features = "",
@@ -26,6 +32,23 @@ namespace vcpkg::Test
                                                                     const char* feature,
                                                                     const char* depends = "",
                                                                     const char* triplet = "x86-windows");
+
+    /// <summary>
+    /// Map of source control files by their package name.
+    /// </summary>
+    struct PackageSpecMap
+    {
+        std::unordered_map<std::string, SourceControlFileLocation> map;
+        Triplet triplet;
+        PackageSpecMap(const Triplet& t = Triplet::X86_WINDOWS) noexcept : triplet(t) {}
+
+        PackageSpec emplace(const char* name,
+                            const char* depends = "",
+                            const std::vector<std::pair<const char*, const char*>>& features = {},
+                            const std::vector<const char*>& default_features = {});
+
+        PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl);
+    };
 
     vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);
 
