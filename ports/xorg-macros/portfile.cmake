@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 ## requires AUTOCONF, LIBTOOL and PKCONF
-message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! -----")
+message(STATUS "----- ${PORT} requires autoconf, libtool and pkconf from the system package manager! \n ----- sudo apt-get install autogen autoconf libtool-----")
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
