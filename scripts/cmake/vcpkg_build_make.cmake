@@ -41,6 +41,7 @@ function(vcpkg_build_make)
     set(INSTALL_OPTS )
     if (_VCPKG_MAKE_GENERATOR STREQUAL "make")
         if (CMAKE_HOST_WIN32)
+            _vcpkg_get_mingw_vars()
             # Compiler requriements
             vcpkg_find_acquire_program(YASM)
             vcpkg_find_acquire_program(PERL)
@@ -50,32 +51,45 @@ function(vcpkg_build_make)
             
             set(PATH_GLOBAL "$ENV{PATH}")
             vcpkg_add_to_path("${YASM_EXE_PATH}")
+            if(NOT VCPKG_USE_POSIX_TOOLCHAIN)
+                if(HOST_ARCH MATCHES "x86|arm")                
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw32/bin")
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw32/i686-w64-mingw32/bin")
+            elseif(HOST_ARCH STREQUAL x64)
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin")
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw64/x86_64-w64-mingw32/bin")
+                endif()
+            endif()
             vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
             vcpkg_add_to_path("${PERL_EXE_PATH}")
-            set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+            find_program(MAKE make REQUIRED)
+            set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
             # Set make command and install command
-            set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
+            set(MAKE_BASH "${BASH}" --noprofile --norc -c)
+            set(MAKE_COMMAND "make")
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
+            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY} -f makefile all")
+            set(INSTALL_OPTS "install -j ${VCPKG_CONCURRENCY}")
         else()
             # Compiler requriements
+            set(MAKE_BASH)
             find_program(MAKE make REQUIRED)
-            set(MAKE make;)
+            set(MAKE_COMMAND ${MAKE})
             # Set make command and install command
-            set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
+            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY} -f makefile all")
+            set(INSTALL_OPTS "install")
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
+        set(MAKE_BASH)
         find_program(NMAKE nmake REQUIRED)
         get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
         set(PATH_GLOBAL "$ENV{PATH}")
         set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
         set(ENV{CL} "$ENV{CL} /MP")
         # Set make command and install command
-        set(MAKE ${NMAKE} /NOLOGO /G /U)
-        set(MAKE_OPTS -f makefile all)
-        set(INSTALL_OPTS install)
+        set(MAKE_COMMAND "${NMAKE} /NOLOGO /G /U")
+        set(MAKE_OPTS "-f makefile all")
+        set(INSTALL_OPTS "install")
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
@@ -91,15 +105,9 @@ function(vcpkg_build_make)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
     endif()
-    
+
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        string(APPEND C_FLAGS_GLOBAL " -I\"${MSYS_ROOT}/usr/include\"")
-        string(APPEND CXX_FLAGS_GLOBAL " -I\"${MSYS_ROOT}/usr/include\"")
-        set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;${MSYS_ROOT}/usr/include;$ENV{INCLUDE}")
-    endif()
-    
-    
+
     foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
@@ -139,15 +147,15 @@ function(vcpkg_build_make)
 
             if (CMAKE_HOST_WIN32)
                 set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
-                string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
+                string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
                 set(ENV{CFLAGS} ${TMP_CFLAGS})
                 
                 set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
-                string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
+                string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
                 set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
                 
                 set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
-                string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
+                string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
                 set(ENV{LDFLAGS} ${TMP_LDFLAGS})
             else()
                 set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
@@ -155,27 +163,19 @@ function(vcpkg_build_make)
                 set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
 
-            if (CMAKE_HOST_WIN32)
-                vcpkg_execute_build_process(
-                    COMMAND "${MAKE} ${MAKE_OPTS}"
+            vcpkg_execute_build_process(
+                    COMMAND ${MAKE_BASH} "${MAKE_COMMAND} ${MAKE_OPTS}"
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
-            else()
-                vcpkg_execute_build_process(
-                    COMMAND "${MAKE};${MAKE_OPTS}"
-                    WORKING_DIRECTORY "${WORKING_DIRECTORY}"
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                )
-            endif()
-    
+
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
             endif()
         endif()
     endforeach()
     
-    if (_bc_ENABLE_INSTALL)
+    if (_bc_ENABLE_INSTALL OR TRUE)
         foreach(BUILDTYPE "debug" "release")
             if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
                 if(BUILDTYPE STREQUAL "debug")
@@ -194,22 +194,14 @@ function(vcpkg_build_make)
                 endif()
             
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                if (CMAKE_HOST_WIN32)
-                    # In windows we can remotely call make
-                    set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                    vcpkg_execute_build_process(
-                        COMMAND "${MAKE} ${INSTALL_OPTS}"
-                        WORKING_DIRECTORY "${WORKING_DIRECTORY}"
-                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                    )
-                else()
-                    set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH}")
-                    vcpkg_execute_build_process(
-                        COMMAND "${MAKE};${INSTALL_OPTS}"
-                        WORKING_DIRECTORY "${WORKING_DIRECTORY}"
-                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                    )
-                endif()
+
+                set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+                vcpkg_execute_build_process(
+                    COMMAND ${MAKE_BASH} "${MAKE_COMMAND} ${INSTALL_OPTS}"
+                    WORKING_DIRECTORY "${WORKING_DIRECTORY}"
+                    LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                )
+
             endif()
         endforeach()
     endif()
