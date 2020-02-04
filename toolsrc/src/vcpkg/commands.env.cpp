@@ -2,7 +2,9 @@
 
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+
 #include <vcpkg/build.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 
@@ -30,13 +32,20 @@ namespace vcpkg::Commands::Env
         nullptr,
     };
 
+    // This command should probably optionally take a port
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& triplet)
     {
         const auto& fs = paths.get_filesystem();
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
-        const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, triplet);
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        CMakeVars::TripletCMakeVarProvider var_provider(paths);
+
+        var_provider.load_generic_triplet_vars(triplet);
+
+        const Build::PreBuildInfo pre_build_info(
+            paths, triplet, var_provider.get_generic_triplet_vars(triplet).value_or_exit(VCPKG_LINE_INFO));
         const Toolset& toolset = paths.get_toolset(pre_build_info);
         auto env_cmd = Build::make_build_env_cmd(pre_build_info, toolset);
 
