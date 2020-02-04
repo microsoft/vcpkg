@@ -79,6 +79,63 @@
 ## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
+macro(_vcpkg_get_mingw_vars)
+    set(HOST_ARCH $ENV{PROCESSOR_ARCHITECTURE})
+    set(MINGW_W w64)
+    set(MINGW_PACKAGES)
+    #message(STATUS "${HOST_ARCH}")
+    if(HOST_ARCH MATCHES "(amd|AMD)64")
+        set(HOST_ARCH x64)
+        set(BITS 64)
+    elseif(HOST_ARCH MATCHES "(x|X)86")
+        set(HOST_ARCH x86)
+        set(BITS 32)
+    elseif(HOST_ARCH MATCHES "^(ARM|arm)64$")
+        set(HOST_ARCH x86)
+        set(BITS 32)
+    elseif(HOST_ARCH MATCHES "^(ARM|arm)$")
+        set(HOST_ARCH x86)
+        set(BITS 32)
+        message(FATAL_ERROR "Unsupported host architecture ${HOST_ARCH} in _vcpkg_get_msys_toolchain!" )
+    else()
+        message(FATAL_ERROR "Unsupported host architecture ${HOST_ARCH} in _vcpkg_get_msys_toolchain!" )
+    endif()
+    set(TARGET_ARCH ${VCPKG_TARGET_ARCHITECTURE})
+    
+    if(NOT "${HOST_ARCH}" STREQUAL "${TARGET_ARCH}")
+        list(APPEND MINGW_PACKAGES mingw-w64-cross-gcc)
+        if(${HOST_ARCH} MATCHES "x64" AND ${TARGET_ARCH} MATCHES "x86")
+            set(MINGW_HOST i686)
+            set(MINGW_TOOLCHAIN i686)
+            set(MINGW_NAME mingw64)
+        elseif(${HOST_ARCH} MATCHES "x86|ARM64" AND ${TARGET_ARCH} MATCHES "x64")
+            set(MINGW_HOST i686)
+            set(MINGW_TOOLCHAIN x86_64)
+            set(MINGW_NAME mingw32)
+        else()
+            message(FATAL_ERROR "Unsupported host/target architecture combination ${HOST_ARCH}/${TARGET_ARCH} in _vcpkg_get_msys_toolchain!" )
+        endif()
+    else()
+        if(${TARGET_ARCH} MATCHES "x64")
+            set(MINGW_HOST i686)
+            set(MINGW_TOOLCHAIN x86_64)
+            set(MINGW_NAME mingw64)
+        elseif(${TARGET_ARCH} MATCHES "x86|ARM64")
+            set(MINGW_HOST i686)
+            set(MINGW_TOOLCHAIN i686)
+            set(MINGW_NAME mingw32)
+        endif()
+    endif()
+    
+    set(MINGW_TOOLCHAIN mingw-${MINGW_W}-${MINGW_TOOLCHAIN})
+    set(MINGW_PACKAGES_LIST gcc make pkg-config)
+    
+    foreach(_pack ${MINGW_PACKAGES_LIST})
+        list(APPEND MINGW_PACKAGES ${MINGW_TOOLCHAIN}-${_pack})
+    endforeach()    
+    message(STATUS "MINGW_PACKAGES:${MINGW_PACKAGES}")
+endmacro()
+
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
@@ -132,6 +189,7 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "${GENERATOR} not supported.")
     endif()
+    
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
         ##  Please read https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2
@@ -139,10 +197,12 @@ function(vcpkg_configure_make)
         vcpkg_find_acquire_program(YASM)
         vcpkg_find_acquire_program(PERL)
         set(MSYS_REQUIRE_PACKAGES diffutils)
+        _vcpkg_get_mingw_vars()
         if (_csc_AUTOCONFIG)
-            set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} autoconf automake m4 libtool perl pkg-config gcc)
-            #
-            #set(MSYS_REQUIRE_PACKAGES ${MSYS_REQUIRE_PACKAGES} base-devel)
+            list(APPEND MSYS_REQUIRE_PACKAGES autoconf automake m4 libtool perl pkg-config gcc)
+            if(NOT VCPKG_USE_POSIX_TOOLCHAIN)
+                list(APPEND MSYS_REQUIRE_PACKAGES ${MINGW_PACKAGES})
+            endif()
         endif()
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
@@ -150,27 +210,38 @@ function(vcpkg_configure_make)
         
         if (NOT _csc_DISABLE_AUTO_HOST)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-                set(WIN_TARGET_ARCH --host=i686-pc-mingw32)
+                set(BUILD_TARGET i686-w64-mingw32)
+                #set(HOST_TYPE --host=i686-w64-mingw32)
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                set(WIN_TARGET_ARCH --host=i686-pc-mingw64)
+                set(BUILD_TARGET x86_64-w64-mingw64)
+                #set(HOST_TYPE --host=x86_64-w64-mingw64)
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-                set(WIN_TARGET_ARCH --host=arm-pc-mingw32)
+                set(BUILD_TARGET --target=arm-pc-mingw32)
+                set(HOST_TYPE --host=i686-w64-mingw32)
             endif()
         endif()
-        set(WIN_TARGET_COMPILER CC=gcc)
+        
+        set(COMPILER_CC CC=gcc)
         vcpkg_add_to_path("${YASM_EXE_PATH}")
+        if(NOT VCPKG_USE_POSIX_TOOLCHAIN)
+            if(HOST_ARCH MATCHES "x86|arm")                
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw32/bin")
+                vcpkg_add_to_path("${MSYS_ROOT}/i686-w64-mingw32/bin")
+            elseif(HOST_ARCH STREQUAL x64)
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin")
+                vcpkg_add_to_path("${MSYS_ROOT}/x86_64-w64-mingw32/bin")
+                vcpkg_add_to_path("${MSYS_ROOT}/mingw32/bin")
+            endif()
+        endif()
         vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         vcpkg_add_to_path("${PERL_EXE_PATH}")
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
     elseif (_csc_AUTOCONFIG)
-        find_program(autoreconf autoreconf REQUIRED)
+        find_program(AUTORECONF autoreconf REQUIRED)
     endif()
-    
-    if (NOT _csc_NO_DEBUG)
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    else()
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-    endif()
+
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     if (NOT _csc_DISABLE_AUTO_DST)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
@@ -178,7 +249,9 @@ function(vcpkg_configure_make)
                                 --bindir=${CURRENT_PACKAGES_DIR}/bin
                                 --sbindir=${CURRENT_PACKAGES_DIR}/bin
                                 --libdir=${CURRENT_PACKAGES_DIR}/lib
-                                --includedir=${CURRENT_PACKAGES_DIR}/include)
+                                --includedir=${CURRENT_PACKAGES_DIR}/include
+                                --mandir=${CURRENT_PACKAGES_DIR}/share/${PORT}
+                                --docdir=${CURRENT_PACKAGES_DIR}/share/${PORT})
     
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                             --prefix=${CURRENT_PACKAGES_DIR}/debug
@@ -188,8 +261,6 @@ function(vcpkg_configure_make)
                             --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
     endif()
     
-    set(base_cmd )
-
     set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
     set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
     set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
@@ -206,13 +277,11 @@ function(vcpkg_configure_make)
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
-    else()
-        string(APPEND C_FLAGS_GLOBAL " -I\"${MSYS_ROOT}/usr/include\"")
-        string(APPEND CXX_FLAGS_GLOBAL " -I\"${MSYS_ROOT}/usr/include\"")
     endif()
 
     set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib/manual-link")
     
+    set(base_cmd)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared --disable-static)
     else()
@@ -223,12 +292,9 @@ function(vcpkg_configure_make)
         set(base_cmd ${BASH} --noprofile --norc)
         
         if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared)
             if (VCPKG_TARGET_IS_UWP)
                 set(_csc_OPTIONS ${_csc_OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
             endif()
-        else()
-            set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static)
         endif()
         # Load toolchains
         if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -246,9 +312,9 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
         
         set(rel_command
-            ${base_cmd} -c "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
+            ${base_cmd} -c "${COMPILER_CC} ${_csc_SOURCE_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
         set(dbg_command
-            ${base_cmd} -c "${WIN_TARGET_COMPILER} ${_csc_SOURCE_PATH}/configure ${WIN_TARGET_ARCH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
+            ${base_cmd} -c "${COMPILER_CC} ${_csc_SOURCE_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
     else()
         set(base_cmd ./)
         set(rel_command
@@ -261,7 +327,6 @@ function(vcpkg_configure_make)
     
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
-        
         if(_csc_PKG_CONFIG_PATHS_DEBUG)
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
             foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS_DEBUG)
@@ -269,18 +334,18 @@ function(vcpkg_configure_make)
                 set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
             endforeach()
         endif()
-    
+
         if (CMAKE_HOST_WIN32)
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
-            string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
+            string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
             
             set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
-            string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
+            string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
             
             set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
-            string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
+            string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
@@ -288,12 +353,12 @@ function(vcpkg_configure_make)
             set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} -L${CURRENT_INSTALLED_DIR}/debug/lib -L${CURRENT_INSTALLED_DIR}/debug/lib/manual-link ${VCPKG_LINKER_FLAGS_DEBUG}")
         endif()
         set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/lib/manual-link")
+
+        set(OBJ_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        set(PRJ_DIR "${OBJ_DIR}/${_csc_PROJECT_SUBPATH}")
         
-        set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
-        
-        file(MAKE_DIRECTORY ${OBJ_DIR})
-        
+        file(MAKE_DIRECTORY "${OBJ_DIR}")
+
         if (NOT CMAKE_HOST_WIN32)
             file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
             foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
@@ -305,9 +370,9 @@ function(vcpkg_configure_make)
 
         if (_csc_PRERUN_SHELL)
             message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
-            vcpkg_execute_required_process2(
-                COMMAND ${base_cmd} -c "\"${_csc_PRERUN_SHELL}\""
-                WORKING_DIRECTORY ${PRJ_DIR}
+            vcpkg_execute_required_process(
+                COMMAND ${base_cmd} -c "${_csc_PRERUN_SHELL}"
+                WORKING_DIRECTORY "${PRJ_DIR}"
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
         endif()
@@ -327,6 +392,7 @@ function(vcpkg_configure_make)
                     LOGNAME autoconf-${TARGET_TRIPLET}-dbg
                 )
             endif()
+
         endif()
         
         if (NOT _csc_SKIP_CONFIGURE)
@@ -354,15 +420,15 @@ function(vcpkg_configure_make)
     
         if (CMAKE_HOST_WIN32)
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
-            string(REPLACE "/" "-" TMP_CFLAGS "${TMP_CFLAGS}")
+            string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
             set(ENV{CFLAGS} ${TMP_CFLAGS})
             
             set(TMP_CXXFLAGS "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
-            string(REPLACE "/" "-" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
+            string(REGEX REPLACE "[ \t]+/" " -" TMP_CXXFLAGS "${TMP_CXXFLAGS}")
             set(ENV{CXXFLAGS} ${TMP_CXXFLAGS})
             
             set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
-            string(REPLACE "/" "-" TMP_LDFLAGS "${TMP_LDFLAGS}")
+            string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
@@ -382,6 +448,7 @@ function(vcpkg_configure_make)
         file(MAKE_DIRECTORY ${OBJ_DIR})
         
         if (NOT CMAKE_HOST_WIN32)
+            ##COPY SOURCES
             file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
             foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
                 get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
@@ -403,7 +470,7 @@ function(vcpkg_configure_make)
             message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
             if (CMAKE_HOST_WIN32)
                 vcpkg_execute_required_process(
-                    COMMAND ${base_cmd} autoreconf -vfi
+                    COMMAND ${base_cmd} -c "autoreconf -vfi"
                     WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
                     LOGNAME autoconf-${TAR_TRIPLET_DIR}
                 )
