@@ -9,24 +9,50 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_DIR})
 
-get_filename_component(PYPATH ${PYTHON3} PATH)
-set(ENV{PATH} "$ENV{PATH};${PYPATH}")
+find_path(_PATH_INCLUDE
+    NAMES
+        Python.h
+    PATHS
+        "${CURRENT_INSTALLED_DIR}/include"
+        "${CURRENT_INSTALLED_DIR}/include/python3.7"
+        "${CURRENT_INSTALLED_DIR}/include/python3.7m"
+)
+
+find_library(_PATH_LIBRARY_DEBUG
+    NAMES
+        python3.7dm
+        python37_d
+    PATHS
+        "${CURRENT_INSTALLED_DIR}/debug/lib"
+)
+
+find_library(_PATH_LIBRARY_RELEASE
+    NAMES
+        python3.7m
+        python37
+    PATHS
+        "${CURRENT_INSTALLED_DIR}/lib"
+)
+
+message(STATUS "_PATH_INCLUDE: ${_PATH_INCLUDE}")
+message(STATUS "_PATH_LIBRARY_DEBUG: ${_PATH_LIBRARY_DEBUG}")
+message(STATUS "_PATH_LIBRARY_RELEASE: ${_PATH_LIBRARY_RELEASE}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DPYBIND11_TEST=OFF
-        -DPYTHONLIBS_FOUND=ON
-        -DPYTHON_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
         -DPYTHON_MODULE_EXTENSION=.dll
+        -DPYTHON_VERSION:STRING=3.7
+        -DPYTHON_INCLUDE_DIR:PATH="${_PATH_INCLUDE}"
     OPTIONS_RELEASE
-        -DPYTHON_IS_DEBUG=OFF
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/python36.lib
+        -DPYTHON_LIBRARY:PATH="${_PATH_LIBRARY_RELEASE}"
     OPTIONS_DEBUG
-        -DPYTHON_IS_DEBUG=ON
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/python36_d.lib
+        -DPYTHON_LIBRARY:PATH="${_PATH_LIBRARY_DEBUG}"
 )
 
 vcpkg_install_cmake()
@@ -34,4 +60,4 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
 
 # copy license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pybind11/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pybind11 RENAME copyright)
