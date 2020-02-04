@@ -205,10 +205,11 @@ namespace vcpkg::Paragraphs
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        Expected<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path / "CONTROL");
+        const auto path_to_control = path / "CONTROL";
+        Expected<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path_to_control);
         if (auto vector_pghs = pghs.get())
         {
-            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = path.filename().generic_u8string();
