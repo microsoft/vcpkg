@@ -923,7 +923,6 @@ libusb:arm-uwp=fail
 libusb:x64-linux=fail
 libusb:x64-osx=fail
 libusb:x64-uwp=fail
-libusbmuxd:arm64-windows=fail
 libusbmuxd:arm-uwp=fail
 libusbmuxd:x64-uwp=fail
 libusbmuxd:x64-linux=fail
