@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/irrlicht/Irrlicht%20SDK/1.8/1.8.4/irrlicht-1.8.4.zip"
     FILENAME "irrlicht-1.8.4.zip"
@@ -10,14 +8,18 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF "1.8.4"
-    # [NO_REMOVE_ONE_LEVEL]
-    # [WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/src>]
-    # [PATCHES <a.patch>...]
+    PATCHES
+        "fix-encoding.patch"
 )
 
 # Copy CMakeLists.txt to the source, because Irrlicht does not have one.
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${SOURCE_PATH})
+
+set(UNICODE_PATH FALSE)
+if("unicode" IN_LIST FEATURES)
+    set(UNICODE_PATH TRUE)
+endif()
 
 set(FAST_MATH FALSE)
 if("fast-fpu" IN_LIST FEATURES)
@@ -38,11 +40,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS 
-        -DIRR_SHARED_LIB=${SHARED_LIB} 
+        -DIRR_SHARED_LIB=${SHARED_LIB}
+        -DIRR_UNICODE_PATH=${UNICODE_PATH}
         -DIRR_FAST_MATH=${FAST_MATH}
         -DIRR_BUILD_TOOLS=${BUILD_TOOLS}
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()

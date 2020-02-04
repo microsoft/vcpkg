@@ -19,6 +19,7 @@ if(DEFINED ENV{DXSDK_DIR})
     set(DXSDK "ENV{DXSDK_DIR}")
 endif()
 
+set(IRR_UNICODE_PATH 0 CACHE BOOL "Whether to enable unicode path support on windows")
 set(IRR_FAST_MATH 0 CACHE BOOL "Whether to enable fast maths (at the expense of precision)")
 set(IRR_SHARED_LIB 1 CACHE BOOL "Whether to generate shared libraries instead of static libraries")
 set(IRR_DIRECTX_SDK ${DXSDK} CACHE PATH "Path to the DirectX SDK (for DirectX 9, this folder should contain /Include, /Lib)")
@@ -160,6 +161,12 @@ if(WIN32)
 
     # Multi processor compilation
     target_compile_options(Irrlicht PRIVATE /MP)
+
+    # Unicode
+    if(${IRR_UNICODE_PATH})
+        target_compile_definitions(Irrlicht PRIVATE UNICODE _UNICODE)
+        target_compile_definitions(Irrlicht PUBLIC _IRR_WCHAR_FILESYSTEM)
+    endif()
 
     # Fast math options
     if(${IRR_FAST_MATH})
