@@ -8,9 +8,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
     
 # Irrlicht directories
 # -------------------------------------------------------------------------------------------------
-set(IRR_ROOT_DIR "")
 set(IRR_SRC_DIR "source/Irrlicht")
 set(IRR_INC_DIR "include")
+set(IRR_TOOL_DIR "tools")
 
 # Options
 # -------------------------------------------------------------------------------------------------
@@ -44,10 +44,10 @@ glob_c_cpp_sources(IRR_SRC_FILES_INTERFACE          ${IRR_INC_DIR})
 glob_c_cpp_sources(IRR_SRC_FILES_AESGLADMAN         ${IRR_SRC_DIR}/aesGladman)
 glob_c_cpp_sources(IRR_SRC_FILES_LZMA               ${IRR_SRC_DIR}/lzma)
 
-glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_ROOT_DIR}/tools/FileToHeader/)
-glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_ROOT_DIR}/tools/GUIEditor/)
-glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_ROOT_DIR}/tools/IrrFontTool/newFontTool/)
-glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_ROOT_DIR}/tools/MeshConverter/)
+glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_TOOL_DIR}/FileToHeader/)
+glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_TOOL_DIR}/GUIEditor/)
+glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_TOOL_DIR}/IrrFontTool/newFontTool/)
+glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_TOOL_DIR}/MeshConverter/)
     
 # Group files
 # -------------------------------------------------------------------------------------------------
