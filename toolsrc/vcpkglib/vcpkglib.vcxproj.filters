@@ -96,6 +96,9 @@
     <ClCompile Include="..\src\vcpkg\export.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\export.chocolatey.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\vcpkg\globalstate.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -221,6 +224,12 @@
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.porthistory.cpp">
       <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\cmakevars.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\portfileprovider.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
