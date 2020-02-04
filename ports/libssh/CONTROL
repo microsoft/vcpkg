@@ -3,6 +3,7 @@ Version: 0.9.3
 Homepage: https://www.libssh.org/
 Description: libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side
 Default-Features: crypto
+Supports: !uwp
 
 Feature: crypto
 Build-Depends: libssh[mbedtls]
