@@ -1,31 +1,24 @@
 set(LIBPNG_VER 1.6.37)
 
-set(LIBPNG_APNG_OPTION )
+set(LIBPNG_APNG_OPTION)
+
 if ("apng" IN_LIST FEATURES)
+    #This patch downloads from URL:https://downloads.sourceforge.net/project/libpng-apng/libpng16/1.6.37/libpng-1.6.37-apng.patch.gz
+    set(APNG_EXTRA_PATCH ${CMAKE_CURRENT_LIST_DIR}/libpng-1.6.37-apng.patch)
     set(LIBPNG_APNG_OPTION "-DPNG_PREFIX=a")
-    vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO glennrp/libpng
-    REF v${LIBPNG_VER}
-    SHA512 ccb3705c23b2724e86d072e2ac8cfc380f41fadfd6977a248d588a8ad57b6abe0e4155e525243011f245e98d9b7afbe2e8cc7fd4ff7d82fcefb40c0f48f88918
-    HEAD_REF master
-    PATCHES
-        use_abort.patch
-        cmake.patch
-        libpng-1.6.37-apng.patch #This patch downloads from URL:https://downloads.sourceforge.net/project/libpng-apng/libpng16/1.6.37/libpng-1.6.37-apng.patch.gz
-)
-else()
-    vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO glennrp/libpng
-    REF v${LIBPNG_VER}
-    SHA512 ccb3705c23b2724e86d072e2ac8cfc380f41fadfd6977a248d588a8ad57b6abe0e4155e525243011f245e98d9b7afbe2e8cc7fd4ff7d82fcefb40c0f48f88918
-    HEAD_REF master
-    PATCHES
-        use_abort.patch
-        cmake.patch
-)
 endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO glennrp/libpng
+    REF v${LIBPNG_VER}
+    SHA512 ccb3705c23b2724e86d072e2ac8cfc380f41fadfd6977a248d588a8ad57b6abe0e4155e525243011f245e98d9b7afbe2e8cc7fd4ff7d82fcefb40c0f48f88918
+    HEAD_REF master
+    PATCHES
+        use_abort.patch
+        cmake.patch
+        ${APNG_EXTRA_PATCH}
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PNG_STATIC_LIBS OFF)
