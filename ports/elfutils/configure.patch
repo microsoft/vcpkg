@@ -6,8 +6,8 @@ index 07d371c31..15552315c 100644
  dnl zlib is mandatory.
  save_LIBS="$LIBS"
  LIBS=
--eu_ZIPLIB(zlib,ZLIB,gzdirect,gzip)
-+eu_ZIPLIB(zlib,ZLIB,zlibd,gzdirect,gzip)
+-eu_ZIPLIB(zlib,ZLIB,z,gzdirect,gzip)
++eu_ZIPLIB(zlib,ZLIB,z,zlibd,gzdirect,gzip)
  AS_IF([test "x$with_zlib" = xno], [AC_MSG_ERROR([zlib not found but is required])])
  LIBS="$save_LIBS"
  
