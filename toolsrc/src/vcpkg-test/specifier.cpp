@@ -1,5 +1,6 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/packagespec.h>
 
@@ -14,11 +15,13 @@ TEST_CASE ("specifier conversion", "[specifier]")
         auto a_spec = PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
         auto b_spec = PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
 
-        auto fspecs = FullPackageSpec::to_feature_specs({{a_spec, {"0", "1"}}, {b_spec, {"2", "3"}}});
-
+        auto fspecs = FullPackageSpec{a_spec, {"0", "1"}}.to_feature_specs({}, {});
+        auto fspecs2 = FullPackageSpec{b_spec, {"2", "3"}}.to_feature_specs({}, {});
+        Util::Vectors::append(&fspecs, fspecs2);
+        Util::sort(fspecs);
         REQUIRE(fspecs.size() == SPEC_SIZE);
 
-        std::array<const char*, SPEC_SIZE> features = {"", "0", "1", "", "2", "3"};
+        std::array<const char*, SPEC_SIZE> features = {"0", "1", "core", "2", "3", "core"};
         std::array<PackageSpec*, SPEC_SIZE> specs = {&a_spec, &a_spec, &a_spec, &b_spec, &b_spec, &b_spec};
 
         for (std::size_t i = 0; i < SPEC_SIZE; ++i)
@@ -101,19 +104,20 @@ TEST_CASE ("specifier parsing", "[specifier]")
         auto zlib = vcpkg::FullPackageSpec::from_string("zlib[0,1]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
         auto openssl =
             vcpkg::FullPackageSpec::from_string("openssl[*]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
-        auto specs = FullPackageSpec::to_feature_specs({zlib, openssl});
+        auto specs = zlib.to_feature_specs({}, {});
+        auto specs2 = openssl.to_feature_specs({}, {});
+        Util::Vectors::append(&specs, specs2);
         Util::sort(specs);
+
         auto spectargets = FeatureSpec::from_strings_and_triplet(
             {
                 "openssl",
                 "zlib",
-                "openssl[*]",
                 "zlib[0]",
                 "zlib[1]",
             },
             Triplet::X86_UWP);
         Util::sort(spectargets);
-
         REQUIRE(specs.size() == spectargets.size());
         REQUIRE(Util::all_equal(specs, spectargets));
     }

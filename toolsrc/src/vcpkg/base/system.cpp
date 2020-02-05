@@ -444,7 +444,7 @@ namespace vcpkg
 
         Debug::print("_wpopen(", actual_cmd_line, ")\n");
         std::wstring output;
-        wchar_t buf[1024];
+        auto buf = std::make_unique<wchar_t[]>(1024 * 32);
         g_ctrl_c_state.transition_to_spawn_process();
         // Flush stdout before launching external process
         fflush(stdout);
@@ -454,9 +454,9 @@ namespace vcpkg
             g_ctrl_c_state.transition_from_spawn_process();
             return {1, Strings::to_utf8(output.c_str())};
         }
-        while (fgetws(buf, 1024, pipe))
+        while (fgetws(buf.get(), 1024 * 32, pipe))
         {
-            output.append(buf);
+            output.append(buf.get());
         }
         if (!feof(pipe))
         {
