@@ -200,7 +200,7 @@ namespace vcpkg::PostBuildLint
             System::print2(System::Color::warning,
                            "Include files should not be duplicated into the /debug/include directory. If this cannot "
                            "be disabled in the project cmake, use\n"
-                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/include)\"\n");
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/include\")\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -215,7 +215,7 @@ namespace vcpkg::PostBuildLint
         {
             System::print2(System::Color::warning,
                            "/debug/share should not exist. Please reorganize any important files, then use\n"
-                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/share)\"\n");
+                           "    file(REMOVE_RECURSE \"${CURRENT_PACKAGES_DIR}/debug/share\")\n");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -349,11 +349,8 @@ namespace vcpkg::PostBuildLint
             const fs::path relative_path = found_file.string().erase(
                 0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
             System::printf(
-                "\n    file(COPY \"${CURRENT_BUILDTREES_DIR}/%s\" DESTINATION \"${CURRENT_PACKAGES_DIR}/share/%s\")\n"
-                "    file(RENAME \"${CURRENT_PACKAGES_DIR}/share/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\")\n",
+                "\n    configure_file(\"${CURRENT_BUILDTREES_DIR}/%s/%s\" \"${CURRENT_PACKAGES_DIR}/share/%s/copyright\" COPYONLY)\n",
                 relative_path.generic_string(),
-                spec.name(),
-                spec.name(),
                 found_file.filename().generic_string(),
                 spec.name());
         }
