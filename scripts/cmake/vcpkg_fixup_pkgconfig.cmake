@@ -28,6 +28,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
         string(REGEX REPLACE "^prefix=\\\${prefix}" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
+        #string(REGEX REPLACE "^prefix=\\\${prefix}" "" _contents "${_contents}") # Removes prefix
         file(WRITE "${_file}" "${_contents}")
     endforeach()
     
@@ -46,6 +47,7 @@ function(vcpkg_fixup_pkgconfig)
         
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
         string(REGEX REPLACE "^prefix=\\\${prefix}" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
+        #string(REGEX REPLACE "^prefix=\\\${prefix}/debug" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}") # Removes prefix
         file(WRITE "${_file}" "${_contents}")
     endforeach()
     message(STATUS "Fixing pkgconfig --- finished")
