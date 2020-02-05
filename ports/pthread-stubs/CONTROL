@@ -2,4 +2,3 @@ Source: pthread-stubs
 Version: 0.4
 Homepage: https://gitlab.freedesktop.org/xorg/lib/pthread-stubs
 Description: Stub replacements for POSIX Threads functions.
-Build-Depends: 
