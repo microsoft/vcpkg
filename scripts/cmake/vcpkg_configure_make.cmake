@@ -144,7 +144,7 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PKG_CONFIG_PATHS;PKG_CONFIG_PATHS_DEBUG;PKG_CONFIG_PATHS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PKG_CONFIG_PATHS;PKG_CONFIG_PATHS_DEBUG;PKG_CONFIG_PATHS_RELEASE;CONFIGURE_PATCHES"
         ${ARGN}
     )
     
@@ -283,20 +283,6 @@ function(vcpkg_configure_make)
                                 "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/lib${EXTRA_QUOTES}"
                                 "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/include${EXTRA_QUOTES}")
     endif()
-    
-    set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
-    set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
-    set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
-    set(C_INCLUDE_PATH_BACKUP "$ENV{C_INCLUDE_PATH}")
-    set(CPLUS_INCLUDE_PATH_BACKUP "$ENV{CPLUS_INCLUDE_PATH}")
-    set(LD_LIBRARY_PATH_BACKUP "$ENV{LD_LIBRARY_PATH}")
-    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} -I\"${_VCPKG_INSTALLED}/include\" ${VCPKG_C_FLAGS}")
-    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} -I\"${_VCPKG_INSTALLED}/include\" ${VCPKG_CXX_FLAGS}")
-    set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        string(APPEND C_FLAGS_GLOBAL " -fPIC")
-        string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
-    endif()
 
     set(base_cmd)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -344,6 +330,32 @@ function(vcpkg_configure_make)
             "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_DEBUG}")
         
     endif()
+
+    # Backup enviromnent variables
+    set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
+    set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
+    set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
+    set(INCLUDE_PATH_BACKUP "$ENV{INCLUDE_PATH}")
+    set(INCLUDE_BACKUP "$ENV{INCLUDE}")
+    set(C_INCLUDE_PATH_BACKUP "$ENV{C_INCLUDE_PATH}")
+    set(CPLUS_INCLUDE_PATH_BACKUP "$ENV{CPLUS_INCLUDE_PATH}")
+    set(LD_LIBRARY_PATH_BACKUP "$ENV{LD_LIBRARY_PATH}")
+    set(LIBRARY_PATH_BACKUP "$ENV{LIBRARY_PATH}")
+
+    # Setup include enviromnent
+    set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
+    set(ENV{INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
+    set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
+    set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
+
+    # Setup global flags
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} -I\"${_VCPKG_INSTALLED}/include\" ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} -I\"${_VCPKG_INSTALLED}/include\" ${VCPKG_CXX_FLAGS}")
+    set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND C_FLAGS_GLOBAL " -fPIC")
+        string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
+    endif()
     
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
@@ -355,6 +367,7 @@ function(vcpkg_configure_make)
             endforeach()
         endif()
 
+        # Setup debug enviromnent
         if (CMAKE_HOST_WIN32)
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
@@ -370,12 +383,9 @@ function(vcpkg_configure_make)
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
-            # if(NOT WIN32)
-                # set(ENV{VCPKG_MANUAL_LINK_DEBUG} "${_VCPKG_INSTALLED}/debug/lib/manual-link")
-                # set(ENV{VCPKG_LIBS_DEBUG} "${_VCPKG_INSTALLED}/debug/lib/")
-                # set(ENV{LDFLAGS} "-L\$(VCPKG_LIBS_DEBUG) -L\$(VCPKG_MANUAL_LINK_DEBUG) ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
-            # else()
-            set(ENV{LDFLAGS} "-L\"${_VCPKG_INSTALLED}/debug/lib/\"  -L\"${_VCPKG_INSTALLED}/debug/lib/manual-link/\" ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
+            set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
+            set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/")
+            set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/")
             # endif()
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
         endif()
@@ -422,6 +432,9 @@ function(vcpkg_configure_make)
         endif()
         
         if (NOT _csc_SKIP_CONFIGURE)
+            if(_csc_CONFIGURE_PATCHES)
+                vcpkg_apply_patches(SOURCE_PATH "${PRJ_DIR}" PATCHES "${_csc_CONFIGURE_PATCHES}")
+            endif()
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
@@ -443,7 +456,8 @@ function(vcpkg_configure_make)
                 set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
             endforeach()
         endif()
-    
+
+        # Setup release enviromnent
         if (CMAKE_HOST_WIN32)
             set(TMP_CFLAGS "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_CFLAGS "${TMP_CFLAGS}")
@@ -459,12 +473,9 @@ function(vcpkg_configure_make)
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
-            # if(NOT WIN32)
-                # set(ENV{VCPKG_MANUAL_LINK_RELEASE} "${_VCPKG_INSTALLED}/lib/manual-link")
-                # set(ENV{VCPKG_LIBS_RELEASE} "${_VCPKG_INSTALLED}/lib/")
-                # set(ENV{LDFLAGS} "-L\$(VCPKG_LIBS_RELEASE)  -L\$(VCPKG_MANUAL_LINK_RELEASE) ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
-            # else()
-            set(ENV{LDFLAGS} "-L\"${_VCPKG_INSTALLED}/lib/\"  -L\"${_VCPKG_INSTALLED}/lib/manual-link/\" ${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
+            set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
+            set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/")
+            set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/")
             # endif()
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
         endif()
@@ -517,6 +528,9 @@ function(vcpkg_configure_make)
         endif()
         
         if (NOT _csc_SKIP_CONFIGURE)
+            if(_csc_CONFIGURE_PATCHES)
+                vcpkg_apply_patches(SOURCE_PATH "${PRJ_DIR}" PATCHES "${_csc_CONFIGURE_PATCHES}")
+            endif()
             message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
@@ -530,20 +544,22 @@ function(vcpkg_configure_make)
         endif()
     endif()
     
-    # Restore envs
+    # Restore enviromnent
     set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
     set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
     set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
-    
+
+    set(ENV{INCLUDE} "${INCLUDE_BACKUP}")
+    set(ENV{INCLUDE_PATH} "${INCLUDE_PATH_BACKUP}")
     set(ENV{C_INCLUDE_PATH} "${C_INCLUDE_PATH_BACKUP}")
     set(ENV{CPLUS_INCLUDE_PATH} "${CPLUS_INCLUDE_PATH_BACKUP}")
+    set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}")
     set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}")
-    
+
     if(_csc_PKG_CONFIG_PATHS)
         set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH}")
     endif()
-    
-    
+
     set(_VCPKG_MAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
     set(_VCPKG_NO_DEBUG ${_csc_NO_DEBUG} PARENT_SCOPE)
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
