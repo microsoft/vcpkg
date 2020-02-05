@@ -331,7 +331,7 @@ function(vcpkg_configure_make)
 
     else()
         set(base_cmd ./)
-        set(LD_FLAGS  "${LD_FLAGS_GLOBAL} \"-L\${_VCPKG_INSTALLED}/lib\\" \"-L${_VCPKG_INSTALLED}/lib/manual-link\" ${VCPKG_LINKER_FLAGS_RELEASE}")
+        set(LD_FLAGS  "${LD_FLAGS_GLOBAL} \"-L\${_VCPKG_INSTALLED}/lib\" \"-L${_VCPKG_INSTALLED}/lib/manual-link\" ${VCPKG_LINKER_FLAGS_RELEASE}")
         set(rel_command
             "LDFLAGS=${LD_FLAGS} ${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_RELEASE}"
         )
