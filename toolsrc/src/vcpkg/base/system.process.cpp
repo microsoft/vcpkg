@@ -317,17 +317,16 @@ namespace vcpkg
 
     /// <param name="maybe_environment">If non-null, an environment block to use for the new process. If null, the
     /// new process will inherit the current environment.</param>
-    static ProcessInfo windows_create_process(const StringView cmd_line,
-                                              const Environment& env,
-                                              DWORD dwCreationFlags,
-                                              STARTUPINFOW& startup_info) noexcept
+    static ExpectedT<ProcessInfo, unsigned long> windows_create_process(const StringView cmd_line,
+                                                                        const Environment& env,
+                                                                        DWORD dwCreationFlags,
+                                                                        STARTUPINFOW& startup_info) noexcept
     {
         ProcessInfo process_info;
         Debug::print("CreateProcessW(", cmd_line, ")\n");
 
         // Flush stdout before launching external process
         fflush(nullptr);
-
         bool succeeded = TRUE == CreateProcessW(nullptr,
                                                 Strings::to_utf16(cmd_line).data(),
                                                 nullptr,
@@ -338,15 +337,15 @@ namespace vcpkg
                                                 nullptr,
                                                 &startup_info,
                                                 &process_info.proc_info);
-
-        Checks::check_exit(VCPKG_LINE_INFO, succeeded, "Process creation failed with error code: %lu", GetLastError());
-
-        return process_info;
+        if (succeeded)
+            return process_info;
+        else
+            return GetLastError();
     }
 
-    static ProcessInfo windows_create_process(const StringView cmd_line,
-                                              const Environment& env,
-                                              DWORD dwCreationFlags) noexcept
+    static ExpectedT<ProcessInfo, unsigned long> windows_create_process(const StringView cmd_line,
+                                                                        const Environment& env,
+                                                                        DWORD dwCreationFlags) noexcept
     {
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
@@ -380,9 +379,9 @@ namespace vcpkg
         }
     };
 
-    static ProcessInfoAndPipes windows_create_process_redirect(const StringView cmd_line,
-                                                               const Environment& env,
-                                                               DWORD dwCreationFlags) noexcept
+    static ExpectedT<ProcessInfoAndPipes, unsigned long> windows_create_process_redirect(const StringView cmd_line,
+                                                                                         const Environment& env,
+                                                                                         DWORD dwCreationFlags) noexcept
     {
         ProcessInfoAndPipes ret;
 
@@ -407,12 +406,20 @@ namespace vcpkg
         if (!SetHandleInformation(ret.child_stdin, HANDLE_FLAG_INHERIT, 0)) Checks::exit_fail(VCPKG_LINE_INFO);
         startup_info.hStdError = startup_info.hStdOutput;
 
-        ret.proc_info = windows_create_process(cmd_line, env, dwCreationFlags, startup_info);
+        auto maybe_proc_info = windows_create_process(cmd_line, env, dwCreationFlags, startup_info);
 
         CloseHandle(startup_info.hStdInput);
         CloseHandle(startup_info.hStdOutput);
 
-        return ret;
+        if (auto proc_info = maybe_proc_info.get())
+        {
+            ret.proc_info = std::move(*proc_info);
+            return std::move(ret);
+        }
+        else
+        {
+            return maybe_proc_info.error();
+        }
     }
 #endif
 
@@ -422,7 +429,14 @@ namespace vcpkg
         auto timer = Chrono::ElapsedTimer::create_started();
 
         auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS);
-        process_info.close_handles();
+        if (auto p = process_info.get())
+        {
+            p->close_handles();
+        }
+        else
+        {
+            Debug::print("cmd_execute_no_wait() failed with error code ", process_info.error(), "\n");
+        }
 
         Debug::print("cmd_execute_no_wait() took ", static_cast<int>(timer.microseconds()), " us\n");
     }
@@ -469,7 +483,14 @@ namespace vcpkg
         using vcpkg::g_ctrl_c_state;
         g_ctrl_c_state.transition_to_spawn_process();
         auto proc_info = windows_create_process(cmd_line, env, NULL);
-        auto exit_code = static_cast<int>(proc_info.wait_and_close_handles());
+        auto long_exit_code = [&]() -> unsigned long {
+            if (auto p = proc_info.get())
+                return p->wait_and_close_handles();
+            else
+                return proc_info.error();
+        }();
+        if (long_exit_code > INT_MAX) long_exit_code = INT_MAX;
+        int exit_code = static_cast<int>(long_exit_code);
         g_ctrl_c_state.transition_from_spawn_process();
 
         Debug::print("cmd_execute() returned ", exit_code, " after ", static_cast<int>(timer.microseconds()), " us\n");
@@ -519,8 +540,13 @@ namespace vcpkg
         using vcpkg::g_ctrl_c_state;
 
         g_ctrl_c_state.transition_to_spawn_process();
-        auto proc_info = windows_create_process_redirect(cmd_line, env, NULL);
-        auto exit_code = proc_info.wait_and_stream_output(data_cb);
+        auto maybe_proc_info = windows_create_process_redirect(cmd_line, env, NULL);
+        auto exit_code = [&]() -> unsigned long {
+            if (auto p = maybe_proc_info.get())
+                return p->wait_and_stream_output(data_cb);
+            else
+                return maybe_proc_info.error();
+        }();
         g_ctrl_c_state.transition_from_spawn_process();
 #else
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
