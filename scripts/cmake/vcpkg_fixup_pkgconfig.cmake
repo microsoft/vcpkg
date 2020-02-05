@@ -27,8 +27,7 @@ function(vcpkg_fixup_pkgconfig)
         file(READ "${_file}" _contents)
         string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
-        string(REGEX REPLACE "^prefix=\\\${prefix}" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
-        #string(REGEX REPLACE "^prefix=\\\${prefix}" "" _contents "${_contents}") # Removes prefix
+        string(REGEX REPLACE "^prefix=\\\${prefix}" "#prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}") # Comment out prefix
         file(WRITE "${_file}" "${_contents}")
     endforeach()
     
@@ -46,8 +45,7 @@ function(vcpkg_fixup_pkgconfig)
         string(REPLACE "\${prefix}/share" "\${prefix}/../share" _contents "${_contents}")
         
         string(REPLACE "debug/lib" "lib" _contents "${_contents}") # the prefix will contain the debug keyword
-        string(REGEX REPLACE "^prefix=\\\${prefix}" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}")
-        #string(REGEX REPLACE "^prefix=\\\${prefix}/debug" "prefix=${CURRENT_INSTALLED_DIR}" _contents "${_contents}") # Removes prefix
+        string(REGEX REPLACE "^prefix=\\\${prefix}/debug" "#prefix=${CURRENT_INSTALLED_DIR}/debug" _contents "${_contents}") # Comment out prefix
         file(WRITE "${_file}" "${_contents}")
     endforeach()
     message(STATUS "Fixing pkgconfig --- finished")
