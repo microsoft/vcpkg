@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     #PATCHES example.patch #patch name
 ) 
 
-set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
 vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 

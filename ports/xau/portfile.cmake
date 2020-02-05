@@ -10,7 +10,7 @@ vcpkg_from_gitlab(
     #PATCHES example.patch #patch name
 ) 
 
-set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 if(WIN32)
     SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # dumpbin will fail on GCC

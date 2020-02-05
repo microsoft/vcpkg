@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     #PATCHES example.patch #patch name
 ) 
 #file(TOUCH ${SOURCE_PATH}/m4/dummy)
-set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}

@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
     #PATCHES example.patch #patch name
 ) 
 
-set(ENV{ACLOCAL} "aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/")
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS --enable-legacy) # has an build error on windows so I assume it is unsupported. 
