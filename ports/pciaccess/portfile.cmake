@@ -21,9 +21,11 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL ${SHELL_PATH}
-    OPTIONS --with-zlib
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
+    OPTIONS
+    OPTIONS_DEBUG
+        --with-zlib=${CURRENT_INSTALLED_DIR}
+    OPTIONS_RELEASE
+        --with-zlib=${CURRENT_INSTALLED_DIR}/debug
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
 )

@@ -12,7 +12,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES configure.patch
 )
 
 vcpkg_configure_make(
@@ -24,12 +23,32 @@ vcpkg_configure_make(
     #AUTO_DST
     #PRERUN_SHELL ${SHELL_PATH}
     OPTIONS --disable-debuginfod 
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
+    OPTIONS_DEBUG
+        --with-zlib=${CURRENT_INSTALLED_DIR}
+        --with-bzlib=${CURRENT_INSTALLED_DIR}
+        --with-lzma=${CURRENT_INSTALLED_DIR}
+    OPTIONS_RELEASE
+        --with-zlib=${CURRENT_INSTALLED_DIR}/debug
+        --with-bzlib=${CURRENT_INSTALLED_DIR}/debug
+        --with-lzma=${CURRENT_INSTALLED_DIR}/debug
+    CONFIGURE_PATCHES   configure.dep.patch
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
 )
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    #zlib patch required 
+    #zlibd patch required
+    #bz2d patch required
+    #lzmad patch required
+else()
+    #bz2d patch required
+    #lzmad patch required
+endif()
+#vcpkg_apply_patches()
+
 vcpkg_install_make()
+
 
 vcpkg_fixup_pkgconfig()
 
@@ -46,7 +65,6 @@ foreach(_tool ${TOOLS})
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${TOOL_PREFIX}-${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${TOOL_PREFIX}-${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 endforeach()
 file(MAKE_DIRECTORY  "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/man" "${CURRENT_PACKAGES_DIR}/share/${PORT}/man")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/locale" "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

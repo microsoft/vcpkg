@@ -43,7 +43,9 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include/" "${CURRENT_PACKAGES_DIR}/share/${
 # the include folder is moved since it contains source files. It is not meant as a traditional include folder but as a shared files folder for different x libraries. 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal/" "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/" "${CURRENT_PACKAGES_DIR}/share/xorg/doc")
+
+#file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/" "${CURRENT_PACKAGES_DIR}/share/xorg/doc")
+
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug")
