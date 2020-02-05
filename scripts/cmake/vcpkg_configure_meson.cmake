@@ -1,9 +1,19 @@
 function(vcpkg_configure_meson)
     cmake_parse_arguments(_vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PKG_CONFIG_PATHS;PKG_CONFIG_PATHS_DEBUG;PKG_CONFIG_PATHS_RELEASE" ${ARGN})
     
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+
+    if(WIN32)
+        set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
+        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+        set(EXTRA_QUOTES "\\\"")
+    else()
+        string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
+        set(EXTRA_QUOTES)
+    endif()
+
     # use the same compiler options as in vcpkg_configure_cmake
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(_MESON_FLAG_SUFFIX "_INIT")
@@ -64,8 +74,18 @@ function(vcpkg_configure_meson)
 
     vcpkg_add_to_path("${NINJA_PATH}")
     
+    if(NOT ENV{PKG_CONFIG})
+        find_program(PKGCONFIG pkg-config)
+    else()
+        message(STATUS "PKG_CONF ENV found: $ENV{PKG_CONFIG}")
+        set(PKGCONFIG $ENV{PKG_CONFIG})
+    endif()
+    
     # configure release
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        if(PKGCONFIG)
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
+        endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
         if(_vcm_PKG_CONFIG_PATHS_RELEASE)
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
@@ -92,6 +112,9 @@ function(vcpkg_configure_meson)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        if(PKGCONFIG)
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
+        endif()
         # configure debug
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         if(_vcm_PKG_CONFIG_PATHS_DEBUG)
