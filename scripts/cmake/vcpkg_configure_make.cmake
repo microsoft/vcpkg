@@ -213,10 +213,10 @@ function(vcpkg_configure_make)
         
         if (NOT _csc_DISABLE_AUTO_HOST)
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-                set(BUILD_TARGET "--build=${MINGW_TARGET} --target==${MINGW_TARGET} --enable-lib32 --disable-lib64")
+                set(BUILD_TARGET "--build=${MINGW_TARGET} --target==${MINGW_TARGET}")
                 set(HOST_TYPE --host=i686-w64-mingw32)
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                set(BUILD_TARGET "--build=${MINGW_TARGET}  --target==${MINGW_TARGET} --enable-lib64 --disable-lib32")
+                set(BUILD_TARGET "--build=${MINGW_TARGET}  --target==${MINGW_TARGET}")
                 set(HOST_TYPE --host=x86_64-w64-mingw64)
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
                 set(BUILD_TARGET --target=arm-pc-mingw32)
@@ -234,8 +234,9 @@ function(vcpkg_configure_make)
             elseif(HOST_ARCH STREQUAL x64)
                 vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin")
                 vcpkg_add_to_path("${MSYS_ROOT}/mingw64/x86_64-w64-mingw32/bin")
-            endif()
+            endif()            
         endif()
+        
         vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         vcpkg_add_to_path("${PERL_EXE_PATH}")
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
@@ -246,22 +247,31 @@ function(vcpkg_configure_make)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
+    if(WIN32)
+        set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
+        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+        set(EXTRA_QUOTES "\\\"")
+    else()
+        string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
+        set(EXTRA_QUOTES)
+    endif()
+
     if (NOT _csc_DISABLE_AUTO_DST)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
-                                --prefix=${CURRENT_PACKAGES_DIR}
-                                --bindir=${CURRENT_PACKAGES_DIR}/bin
-                                --sbindir=${CURRENT_PACKAGES_DIR}/bin
-                                --libdir=${CURRENT_PACKAGES_DIR}/lib
-                                --includedir=${CURRENT_PACKAGES_DIR}/include
-                                --mandir=${CURRENT_PACKAGES_DIR}/share/${PORT}
-                                --docdir=${CURRENT_PACKAGES_DIR}/share/${PORT})
-    
-        set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
-                            --prefix=${CURRENT_PACKAGES_DIR}/debug
-                            --bindir=${CURRENT_PACKAGES_DIR}/debug/bin
-                            --sbindir=${CURRENT_PACKAGES_DIR}/debug/bin
-                            --libdir=${CURRENT_PACKAGES_DIR}/debug/lib
-                            --includedir=${CURRENT_PACKAGES_DIR}/debug/include)
+                                "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}"
+                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/bin${EXTRA_QUOTES}"
+                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/bin${EXTRA_QUOTES}"
+                                "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/lib${EXTRA_QUOTES}"
+                                "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/include${EXTRA_QUOTES}"
+                                "--mandir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}"
+                                "--docdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}")
+        set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_RELEASE}
+                                "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
+                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/bin${EXTRA_QUOTES}"
+                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/bin${EXTRA_QUOTES}"
+                                "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/lib${EXTRA_QUOTES}"
+                                "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/include${EXTRA_QUOTES}")
     endif()
     
     set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
@@ -273,17 +283,15 @@ function(vcpkg_configure_make)
     
     #set(ENV{C_INCLUDE_PATH} "${C_INCLUDE_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/include")
     #set(ENV{CPLUS_INCLUDE_PATH} "${C_INCLUDE_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/include")
-    
-    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} -I${CURRENT_INSTALLED_DIR}/include ${VCPKG_C_FLAGS}")
-    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} -I${CURRENT_INSTALLED_DIR}/include ${VCPKG_CXX_FLAGS}")
+    set(ENV{VCPKG_INCLUDE} "${_VCPKG_INSTALLED}/include")
+    set(C_FLAGS_GLOBAL "$ENV{CFLAGS} -I\$VCPKG_INCLUDE ${VCPKG_C_FLAGS}")
+    set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} -I\$VCPKG_INCLUDE ${VCPKG_CXX_FLAGS}")
     set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
     endif()
 
-    set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib/manual-link")
-    
     set(base_cmd)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(_csc_OPTIONS ${_csc_OPTIONS} --enable-shared --disable-static)
@@ -314,14 +322,18 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
         
+        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}")
+        
         set(rel_command
-            ${base_cmd} -c "${COMPILER_CC} ${_csc_SOURCE_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}")
+            ${base_cmd} -c "${COMPILER_CC} eval ../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}\"")
         set(dbg_command
-            ${base_cmd} -c "${COMPILER_CC} ${_csc_SOURCE_PATH}/configure ${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}")
+            ${base_cmd} -c "${COMPILER_CC} eval ../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}\"")
+
     else()
         set(base_cmd ./)
+        set(LD_FLAGS  "${LD_FLAGS_GLOBAL} \"-L\${_VCPKG_INSTALLED}/lib\\" \"-L${_VCPKG_INSTALLED}/lib/manual-link\" ${VCPKG_LINKER_FLAGS_RELEASE}")
         set(rel_command
-            "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_RELEASE}"
+            "LDFLAGS=${LD_FLAGS} ${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_RELEASE}"
         )
         set(dbg_command
             "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_DEBUG}")
@@ -353,9 +365,16 @@ function(vcpkg_configure_make)
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
-            set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} -L${CURRENT_INSTALLED_DIR}/debug/lib -L${CURRENT_INSTALLED_DIR}/debug/lib/manual-link ${VCPKG_LINKER_FLAGS_DEBUG}")
+            if(NOT WIN32)
+                set(ENV{VCPKG_MANUAL_LINK} "${_VCPKG_INSTALLED}/debug/lib/manual-link")
+                set(ENV{VCPKG_LIBS} "${_VCPKG_INSTALLED}/debug/lib/manual-link")
+            else()
+                set(_VCPKG_INSTALLED_2 ${_VCPKG_INSTALLED})
+                set(EXTRA_QUOTES_2 \")
+            endif()
+            set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} -L\$VCPKG_LIBS  -L\$VCPKG_MANUAL_LINK  ${VCPKG_LINKER_FLAGS_DEBUG}")
+            message(STATUS "LDFLAGS:$ENV{LDFLAGS}")
         endif()
-        set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/lib/manual-link")
 
         set(OBJ_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         set(PRJ_DIR "${OBJ_DIR}/${_csc_PROJECT_SUBPATH}")
@@ -417,6 +436,7 @@ function(vcpkg_configure_make)
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
             foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS_RELEASE)
                 file(TO_NATIVE_PATH "${_path}" _path)
+                message(STATUS "${_path}")
                 set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
             endforeach()
         endif()
@@ -436,7 +456,7 @@ function(vcpkg_configure_make)
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
-            set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} -L${CURRENT_INSTALLED_DIR}/lib -L${CURRENT_INSTALLED_DIR}/lib/manual-link ${VCPKG_LINKER_FLAGS_RELEASE}")
+            #set(ENV{LDFLAGS}  "${LD_FLAGS_GLOBAL} -L\"${_VCPKG_INSTALLED}/lib\" -L\"${_VCPKG_INSTALLED}/lib/manual-link\" ${VCPKG_LINKER_FLAGS_RELEASE}")
         endif()
         
         if (_csc_NO_DEBUG)

@@ -68,16 +68,16 @@ function(vcpkg_build_make)
             set(MAKE_BASH "${BASH}" --noprofile --norc -c)
             set(MAKE_COMMAND "make")
             # Must use absolute path to call make in windows
-            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY} -f makefile all")
-            set(INSTALL_OPTS "install -j ${VCPKG_CONCURRENCY}")
+            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY} -f makefile all --no-silent")
+            set(INSTALL_OPTS "install -j ${VCPKG_CONCURRENCY} --no-silent")
         else()
             # Compiler requriements
             set(MAKE_BASH)
             find_program(MAKE make REQUIRED)
             set(MAKE_COMMAND ${MAKE})
             # Set make command and install command
-            set(MAKE_OPTS "-j ${VCPKG_CONCURRENCY} -f makefile all")
-            set(INSTALL_OPTS "install")
+            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY} -f makefile all)
+            set(INSTALL_OPTS install)
         endif()
     elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
         set(MAKE_BASH)
@@ -88,7 +88,7 @@ function(vcpkg_build_make)
         set(ENV{CL} "$ENV{CL} /MP")
         # Set make command and install command
         set(MAKE_COMMAND "${NMAKE} /NOLOGO /G /U")
-        set(MAKE_OPTS "-f makefile all")
+        set(MAKE_OPTS "-f makefile all ")
         set(INSTALL_OPTS "install")
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
@@ -162,9 +162,15 @@ function(vcpkg_build_make)
                 set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
                 set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
+            
+            if(MAKE_BASH)
+                set(MAKE_CMD_LINE "${MAKE_COMMAND} ${MAKE_OPTS}")
+            else()
+                set(MAKE_CMD_LINE ${MAKE_COMMAND} ${MAKE_OPTS})
+            endif()
 
             vcpkg_execute_build_process(
-                    COMMAND ${MAKE_BASH} "${MAKE_COMMAND} ${MAKE_OPTS}"
+                    COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
@@ -194,10 +200,16 @@ function(vcpkg_build_make)
                 endif()
             
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-
+                
+                if(MAKE_BASH)
+                    set(MAKE_CMD_LINE "${MAKE_COMMAND} ${INSTALL_OPTS}")
+                else()
+                    set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
+                endif()
+                
                 set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 vcpkg_execute_build_process(
-                    COMMAND ${MAKE_BASH} "${MAKE_COMMAND} ${INSTALL_OPTS}"
+                    COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                     LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
