@@ -35,7 +35,15 @@ function(vcpkg_build_make)
     if (_VCPKG_PROJECT_SUBPATH)
         set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH}/)
     endif()
-    
+
+    if(WIN32)
+        set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
+        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+    else()
+        string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
+    endif()
+
     set(MAKE )
     set(MAKE_OPTS )
     set(INSTALL_OPTS )
@@ -93,11 +101,24 @@ function(vcpkg_build_make)
     else()
         message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
     endif()
-    
-    
+
+    # Backup enviromnent variables
     set(C_FLAGS_BACKUP "$ENV{CFLAGS}")
     set(CXX_FLAGS_BACKUP "$ENV{CXXFLAGS}")
     set(LD_FLAGS_BACKUP "$ENV{LDFLAGS}")
+    set(INCLUDE_PATH_BACKUP "$ENV{INCLUDE_PATH}")
+    set(INCLUDE_BACKUP "$ENV{INCLUDE}")
+    set(C_INCLUDE_PATH_BACKUP "$ENV{C_INCLUDE_PATH}")
+    set(CPLUS_INCLUDE_PATH_BACKUP "$ENV{CPLUS_INCLUDE_PATH}")
+    set(LD_LIBRARY_PATH_BACKUP "$ENV{LD_LIBRARY_PATH}")
+    set(LIBRARY_PATH_BACKUP "$ENV{LIBRARY_PATH}")
+
+    # Setup include enviromnent
+    set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
+    set(ENV{INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_PATH_BACKUP}")
+    set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
+    set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
+
     set(C_FLAGS_GLOBAL "$ENV{CFLAGS} ${VCPKG_C_FLAGS}")
     set(CXX_FLAGS_GLOBAL "$ENV{CXXFLAGS} ${VCPKG_CXX_FLAGS}")
     set(LD_FLAGS_GLOBAL "$ENV{LDFLAGS} ${VCPKG_LINKER_FLAGS}")
@@ -161,6 +182,13 @@ function(vcpkg_build_make)
                 set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_${CMAKE_BUILDTYPE}}")
                 set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_${CMAKE_BUILDTYPE}}")
                 set(ENV{LDFLAGS} "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                if(BUILDTYPE STREQUAL "debug")
+                    set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/")
+                    set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/debug/lib/manual-link/")
+                else()
+                    set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/")
+                    set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}/lib/manual-link/")
+                endif()
             endif()
             
             if(MAKE_BASH)
@@ -217,12 +245,23 @@ function(vcpkg_build_make)
             endif()
         endforeach()
     endif()
-    
+
+    # Restore enviromnent
+    set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
+    set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
+    set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
+
+    set(ENV{INCLUDE} "${INCLUDE_BACKUP}")
+    set(ENV{INCLUDE_PATH} "${INCLUDE_PATH_BACKUP}")
+    set(ENV{C_INCLUDE_PATH} "${C_INCLUDE_PATH_BACKUP}")
+    set(ENV{CPLUS_INCLUDE_PATH} "${CPLUS_INCLUDE_PATH_BACKUP}")
+    set(ENV{LIBRARY_PATH} "${LIBRARY_PATH_BACKUP}")
+    set(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH_BACKUP}")
+
     if (CMAKE_HOST_WIN32)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
     
-    set(ENV{CFLAGS} "${C_FLAGS_BACKUP}")
-    set(ENV{CXXFLAGS} "${CXX_FLAGS_BACKUP}")
-    set(ENV{LDFLAGS} "${LD_FLAGS_BACKUP}")
+
+    
 endfunction()
