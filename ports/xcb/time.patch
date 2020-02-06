@@ -1,0 +1,12 @@
+diff --git a/src/xcb_auth.c b/src/xcb_auth.c
+index 29e2b6f84..26eebbb0c 100644
+--- a/src/xcb_auth.c	
++++ b/src/xcb_auth.c
+@@ -34,6 +34,7 @@
+ #include <sys/param.h>
+ #include <unistd.h>
+ #include <stdlib.h>
++#include <time.h>
+ 
+ #ifdef __INTERIX
+ /* _don't_ ask. interix has INADDR_LOOPBACK in here. */

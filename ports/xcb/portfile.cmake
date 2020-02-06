@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512 625939b67d129f681503a2f784daa75897b31b09daba0b9ea72457c9dffdab34a644c0b73068282de01ddfdcd5fc29242e4db5367d39b795984374846c1319c8
     HEAD_REF master # branch name
     PATCHES makefile.patch #without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
+            time.patch # missing include 
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
