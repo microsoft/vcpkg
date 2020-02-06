@@ -73,7 +73,7 @@ function(vcpkg_build_make)
             find_program(MAKE mingw32-make make REQUIRED)
             set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
             # Set make command and install command
-            set(MAKE_BASH "${BASH}" --noprofile --norc -c)
+            #set(MAKE_BASH "${BASH}" --noprofile --norc -c)
             set(MAKE_COMMAND "${MAKE}")
             message(STATUS ${MAKE_COMMAND})
             # Must use absolute path to call make in windows
