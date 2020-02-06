@@ -21,9 +21,9 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "ARM")
     set(TARGET ARM)
 elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_FREEBSD)
-elseif(VCPKG_TARGET_TRIPLET MATCHES "arm-windows")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM")
     set(TARGET ARM_WIN32)
-elseif(VCPKG_TARGET_TRIPLET MATCHES "arm64-windows")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
     set(TARGET ARM_WIN64)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_WIN32)
@@ -39,7 +39,7 @@ else()
     message(FATAL_ERROR "Cannot determine target. Please consult ${CMAKE_CURRENT_SOURCE_DIR}/configure.ac and add your platform to this CMake file.")
 endif()
 
-if(${TARGET} STREQUAL "X86_64")
+if(TARGET STREQUAL "X86_64")
     set(HAVE_LONG_DOUBLE 1)
 else()
     set(HAVE_LONG_DOUBLE 0)
@@ -50,9 +50,9 @@ set(FFI_EXEC_TRAMPOLINE_TABLE 0)
 configure_file(include/ffi.h.in ${CMAKE_BINARY_DIR}/include/ffi.h)
 file(COPY ${FFI_CONFIG_FILE} DESTINATION ${CMAKE_BINARY_DIR})
 
-if (${TARGET} STREQUAL "ARM_WIN64")
+if (TARGET STREQUAL "ARM_WIN64")
     file(COPY src/aarch64/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
-elseif (${TARGET} STREQUAL "ARM_WIN32")
+elseif (TARGET STREQUAL "ARM_WIN32")
     file(COPY src/arm/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 else()
     file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
@@ -72,11 +72,11 @@ set(FFI_SOURCES
     src/prep_cif.c
     src/types.c)
 
-if (${TARGET} STREQUAL "ARM_WIN64")
+if (TARGET STREQUAL "ARM_WIN64")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/aarch64/ffi.c)
-elseif(${TARGET} STREQUAL "ARM_WIN32")
+elseif(TARGET STREQUAL "ARM_WIN32")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/arm/ffi.c)
@@ -85,15 +85,15 @@ else()
         ${FFI_SOURCES}
         src/java_raw_api.c
         src/raw_api.c)
-    if(${TARGET} STREQUAL "X86_WIN32" OR ${TARGET} STREQUAL "X86_DARWIN" OR ${TARGET} STREQUAL "X86")
+    if(TARGET STREQUAL "X86_WIN32" OR TARGET STREQUAL "X86_DARWIN" OR TARGET STREQUAL "X86")
         set(FFI_SOURCES
             ${FFI_SOURCES}
             src/x86/ffi.c)
-    elseif(${TARGET} STREQUAL "X86_WIN64")
+    elseif(TARGET STREQUAL "X86_WIN64")
         set(FFI_SOURCES
             ${FFI_SOURCES}
             src/x86/ffiw64.c)
-    elseif(${TARGET} STREQUAL "X86_64")
+    elseif(TARGET STREQUAL "X86_64")
         set(FFI_SOURCES
             ${FFI_SOURCES}
             src/x86/ffi64.c
@@ -104,9 +104,9 @@ endif()
 macro(add_assembly ASMFILE)
     get_filename_component(ASMFILE_FULL "${ASMFILE}" ABSOLUTE)
     if(MSVC)
-        if (${TARGET} STREQUAL "ARM_WIN64")
+        if (TARGET STREQUAL "ARM_WIN64")
             set(ARCH_ASSEMBLER armasm64)
-        elseif (${TARGET} STREQUAL "ARM_WIN32")
+        elseif (TARGET STREQUAL "ARM_WIN32")
             set(ARCH_ASSEMBLER armasm)
         elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
             set(ARCH_ASSEMBLER ml /safeseh /c /Zi)
@@ -117,7 +117,7 @@ macro(add_assembly ASMFILE)
         get_filename_component(ARCH_ASM_NAME "${ASMFILE_FULL}" NAME_WE)
 
         execute_process(
-            COMMAND ${CMAKE_C_COMPILER} /nologo /EP /I. /Iinclude /I${CMAKE_CURRENT_SOURCE_DIR}/include ${ASMFILE_FULL}
+            COMMAND ${CMAKE_C_COMPILER} /nologo /EP /I. /Iinclude /I${CMAKE_CURRENT_SOURCE_DIR}/include "${ASMFILE_FULL}"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             OUTPUT_FILE ${ARCH_ASM_NAME}.asm
         )
@@ -137,22 +137,22 @@ macro(add_assembly ASMFILE)
     endif()
 endmacro()
 
-if(${TARGET} STREQUAL "X86")
+if(TARGET STREQUAL "X86")
     set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m32")
 endif()
 
-if(${TARGET} STREQUAL "X86" OR ${TARGET} STREQUAL "X86_DARWIN")
+if(TARGET STREQUAL "X86" OR TARGET STREQUAL "X86_DARWIN")
     add_assembly(src/x86/sysv.S)
-elseif(${TARGET} STREQUAL "X86_64")
+elseif(TARGET STREQUAL "X86_64")
     add_assembly(src/x86/unix64.S)
     add_assembly(src/x86/win64.S)
-elseif(${TARGET} STREQUAL "X86_WIN32")
+elseif(TARGET STREQUAL "X86_WIN32")
     add_assembly(src/x86/sysv_intel.S)
-elseif(${TARGET} STREQUAL "X86_WIN64")
+elseif(TARGET STREQUAL "X86_WIN64")
     add_assembly(src/x86/win64_intel.S)
-elseif(${TARGET} STREQUAL "ARM_WIN32")
+elseif(TARGET STREQUAL "ARM_WIN32")
     add_assembly(src/arm/sysv_msvc_arm32.S)
-elseif(${TARGET} STREQUAL "ARM_WIN64")
+elseif(TARGET STREQUAL "ARM_WIN64")
     add_assembly(src/aarch64/win64_armasm.S)
 else()
     message(FATAL_ERROR "Target not implemented")
