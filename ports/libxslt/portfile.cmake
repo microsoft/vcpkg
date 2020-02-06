@@ -23,7 +23,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
-        bindir=$(PREFIX)\\share\\tools\\${PORT}
+        bindir=$(PREFIX)\\tools\\${PORT}
         sodir=$(PREFIX)\\bin\\
     )
     # Debug params
@@ -77,8 +77,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     endif()
 else()
-    vcpkg_find_acquire_program(PYTHON2)
-    get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
     
     find_library(LibXml2_DEBUG_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
     find_library(LibXml2_RELEASE_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
@@ -90,7 +90,7 @@ else()
             --with-crypto
             --with-plugins
             --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include
-            --with-python=${PYTHON2_DIR}
+            --with-python=${PYTHON3_DIR}
         OPTIONS_DEBUG
             --with-mem-debug
             --with-debug
@@ -121,6 +121,8 @@ else()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libxslt-plugins ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt-plugins)
     endif()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.so)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/xsltproc" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/xsltproc")
 endif()
 #
 # Cleanup
@@ -145,6 +147,7 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPOR
 
 # Remove tools and debug include directories
 #file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
