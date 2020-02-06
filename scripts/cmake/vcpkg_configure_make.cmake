@@ -144,7 +144,7 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
         "AUTOCONFIG;DISABLE_AUTO_HOST;DISABLE_AUTO_DST;NO_DEBUG;SKIP_CONFIGURE"
         "SOURCE_PATH;PROJECT_SUBPATH;GENERATOR;PRERUN_SHELL"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PKG_CONFIG_PATHS;PKG_CONFIG_PATHS_DEBUG;PKG_CONFIG_PATHS_RELEASE;CONFIGURE_PATCHES"
+        "OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS;PKG_CONFIG_PATHS_DEBUG;PKG_CONFIG_PATHS_RELEASE;PKG_CONFIG_PATHS;CONFIGURE_PATCHES"
         ${ARGN}
     )
     
@@ -283,7 +283,7 @@ function(vcpkg_configure_make)
                                 "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/include${EXTRA_QUOTES}"
                                 "--mandir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}"
                                 "--docdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}")
-        set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_RELEASE}
+        set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                                 "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
                                 "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/bin${EXTRA_QUOTES}"
                                 "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/bin${EXTRA_QUOTES}"
@@ -326,11 +326,10 @@ function(vcpkg_configure_make)
             ${base_cmd} -c "${COMPILER_CC} eval ./../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}\"")
         set(dbg_command
             ${base_cmd} -c "${COMPILER_CC} eval ./../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}\"")
-
+            
     else()
         set(rel_command "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
         set(dbg_command "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
-        
     endif()
 
     # Backup enviromnent variables
