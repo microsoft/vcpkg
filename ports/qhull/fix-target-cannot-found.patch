@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14df8e9..97ec1d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -335,7 +335,7 @@ set(
+ 
+ include_directories(${CMAKE_SOURCE_DIR}/src)
+ 
+-if(CMAKE_BUILD_TYPE MATCHES "[dD]ebug")
++if(0)
+     set(qhull_CPP qhullcpp_d)
+     set(qhull_SHARED qhull_d) 
+     set(qhull_SHAREDP qhull_pd)
+@@ -354,9 +354,12 @@ endif()
+ set(
+     qhull_TARGETS_INSTALL
+         ${qhull_CPP} ${qhull_STATIC} ${qhull_STATICR} ${qhull_SHAREDR}
+-        qhull rbox qconvex qdelaunay qvoronoi qhalf
+         ${qhull_SHARED} ${qhull_SHAREDP}  # Deprecated, use qhull_r instead
+ )
++set(
++    qhull_TARGETS_TOOL
++        qhull rbox qconvex qdelaunay qvoronoi qhalf
++)
+ set(
+     qhull_TARGETS_TEST   # Unused
+         user_eg user_eg2 user_eg3 user_egp testqset testqset_r
+@@ -622,6 +625,9 @@ install(TARGETS ${qhull_TARGETS_INSTALL} EXPORT QhullTargets
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+         INCLUDES DESTINATION include)
++        
++install(TARGETS ${qhull_TARGETS_TOOL} EXPORT QhullTargets
++        RUNTIME DESTINATION tool)
+ 
+ include(CMakePackageConfigHelpers)
+ 
