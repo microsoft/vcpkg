@@ -208,16 +208,16 @@ set(CAIRO_GOBJECT_SOURCES
 
 # GObject support sources do not include header with export macro
 if(BUILD_SHARED_LIBS)
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(MSVC)
         set_source_files_properties(
-            "../util/cairo-gobject/cairo-gobject-enums.c"
-	    "../util/cairo-gobject/cairo-gobject-structs.c"
-	    PROPERTIES COMPILE_DEFINITIONS "cairo_public=__declspec(dllexport)")
+              "../util/cairo-gobject/cairo-gobject-enums.c"
+        "../util/cairo-gobject/cairo-gobject-structs.c"
+        PROPERTIES COMPILE_DEFINITIONS "cairo_public=__declspec(dllexport)")
     else()
-	set_source_files_properties(
-            "../util/cairo-gobject/cairo-gobject-enums.c"
-	    "../util/cairo-gobject/cairo-gobject-structs.c"
-	    PROPERTIES COMPILE_DEFINITIONS "cairo_public=__attribute__((visibility(\"default\")))")
+        set_source_files_properties(
+              "../util/cairo-gobject/cairo-gobject-enums.c"
+        "../util/cairo-gobject/cairo-gobject-structs.c"
+        PROPERTIES COMPILE_DEFINITIONS "cairo_public=__attribute__((visibility(\"default\")))")
     endif()
 endif()
 
