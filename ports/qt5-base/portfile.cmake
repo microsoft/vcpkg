@@ -267,7 +267,6 @@ else()
         OPTIONS_RELEASE ${RELEASE_OPTIONS}
         OPTIONS_DEBUG ${DEBUG_OPTIONS}
         )
-    #message(FATAL_ERROR "MAKE qt5-base FAIL. NEED CONFIGURE LOGS FROM CI!")
     install_qt()
 
     #########################
@@ -367,6 +366,6 @@ if(QT_BUILD_LATEST)
     )
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/Qt5GuiConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5GuiConfig.cmake.log")
-message(FATAL_ERROR "NEED CMakeScripts from MacOSX!")
+#file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
+#file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/Qt5GuiConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5GuiConfig.cmake.log")
+#message(FATAL_ERROR "NEED CMakeScripts from MacOSX!")
