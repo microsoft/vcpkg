@@ -33,6 +33,6 @@ vcpkg_install_make()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
 
 # # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 # # Post-build test for cmake libraries
 # vcpkg_test_cmake(PACKAGE_NAME Xlib)
