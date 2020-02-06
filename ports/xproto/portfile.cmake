@@ -8,7 +8,9 @@ vcpkg_from_gitlab(
     REF f61f9a3ee1aa77ebcc67730cda9bfde88e4e9c5f # 2019.2
     SHA512 52540660d22e80a40c16c0f36fe66d76ce738a32a31c294126f0ec4519cc696f553ab46abf889487295b3e2e32feff94be4ce2a1e74dd66d964a1ff903a58e1e
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
+    PATCHES 
+        xmd.h.patch #patch name
+        winsock2.patch # include winsock2.h before windows.h
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

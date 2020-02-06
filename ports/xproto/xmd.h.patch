@@ -1,0 +1,31 @@
+diff --git a/include/X11/Xmd.h b/include/X11/Xmd.h
+index 492465e6c..a7fbbbcdd 100644
+--- a/include/X11/Xmd.h
++++ b/include/X11/Xmd.h
+@@ -64,7 +64,7 @@ SOFTWARE.
+      defined(__s390x__) || \
+      defined(__amd64__) || defined(amd64) || \
+      defined(__powerpc64__)
+-#  if !defined(__ILP32__) /* amd64-x32 is 32bit */
++#  if !defined(__ILP32__) && !(defined(_WIN32) || defined(WIN32)) /* amd64-x32 is 32bit */
+ #   define LONG64				/* 32/64-bit architecture */
+ #  endif /* !__ILP32__ */
+ # endif
+@@ -93,7 +93,7 @@ SOFTWARE.
+  */
+ # define B32 /* bitfield not needed on architectures with native 32-bit type */
+ # define B16 /* bitfield not needed on architectures with native 16-bit type */
+-# ifdef LONG64
++# if defined(LONG64) || !(defined(_WIN32) || defined(WIN32))
+ typedef long INT64;
+ typedef int INT32;
+ # else
+@@ -103,7 +103,7 @@ typedef short INT16;
+ 
+ typedef signed char    INT8;
+ 
+-# ifdef LONG64
++# if defined(LONG64) || !(defined(_WIN32) || defined(WIN32))
+ typedef unsigned long CARD64;
+ typedef unsigned int CARD32;
+ # else
