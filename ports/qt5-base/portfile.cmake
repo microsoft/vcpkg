@@ -367,6 +367,6 @@ if(QT_BUILD_LATEST)
     )
 endif()
 
-file(COPY "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-file(COPY "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/Qt5GuiConfig.cmake" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/Qt5GuiConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5GuiConfig.cmake.log")
 message(FATAL_ERROR "NEED CMakeScripts from MacOSX!")
