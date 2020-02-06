@@ -2,4 +2,4 @@ Source: xserver
 Version: 1.20.7
 Homepage: https://gitlab.freedesktop.org/xorg/xserver
 Description: C interface to the X Window System protocol, which replaces the traditional Xlib interface.
-Build-Depends: xcb-proto, xcb-util-m4, xorg-macros, xproto, xtrans, x11
+Build-Depends: xcb-proto, xcb-util-m4, xorg-macros, xproto, xtrans, x11, pixman, xkbcommon, xkbfile, xfont, nettle

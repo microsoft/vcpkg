@@ -10,8 +10,11 @@ vcpkg_from_gitlab(
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
-vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+
+if(WIN32)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
