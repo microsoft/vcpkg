@@ -13,8 +13,6 @@ vcpkg_from_gitlab(
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS --disable-dependency-tracking)
-    list(APPEND VCPKG_CXX_FLAGS /D__ILP32__)
-    list(APPEND VCPKG_C_FLAGS /D__ILP32__)
 endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
