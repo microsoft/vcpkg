@@ -23,7 +23,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
-        bindir=$(PREFIX)\\tools\\
+        bindir=$(PREFIX)\\share\\tools\\${PORT}
         sodir=$(PREFIX)\\bin\\
     )
     # Debug params
@@ -144,7 +144,7 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPORTS_H}")
 
 # Remove tools and debug include directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
+#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
