@@ -17,6 +17,28 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS --enable-legacy) # has an build error on windows so I assume it is unsupported. 
 endif()
 
+if(NOT XLSTPROC)
+    if(WIN32)
+        set(HOST_TRIPLETS x64-windows x64-windows-static x86-windows x86-windows-static)
+    elseif(APPLE)
+        set(HOST_TRIPLETS x64-osx)
+    elseif(UNIX)
+        set(HOST_TRIPLETS x64-linux)
+    endif()
+        foreach(HOST_TRIPLET ${HOST_TRIPLETS})
+            find_program(XLSTPROC NAMES xsltproc${VCPKG_HOST_EXECUTABLE_SUFFIX} PATHS "${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/libxslt")
+            if(XLSTPROC)
+                break()
+            endif()
+        endforeach()
+endif()
+if(NOT XLSTPROC)
+    message(FATAL_ERROR "${PORT} requires xlstproc for the host system. Please install libxslt within vcpkg or your system package manager!")
+endif()
+get_filename_component(XLSTPROC_DIR "${XLSTPROC}" DIRECTORY)
+file(TO_NATIVE_PATH "${XLSTPROC_DIR}" XLSTPROC_DIR_NATIVE)
+vcpkg_add_to_path("${XLSTPROC_DIR}")
+set(ENV{XSLTPROC} ${XLSTPROC})
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
@@ -25,7 +47,7 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    OPTIONS ${OPTIONS}
+    OPTIONS ${OPTIONS} --with-xmlto=no --with-fop=no
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
