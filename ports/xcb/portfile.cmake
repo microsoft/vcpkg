@@ -44,6 +44,7 @@ endif()
 get_filename_component(XLSTPROC_DIR "${XLSTPROC}" DIRECTORY)
 file(TO_NATIVE_PATH "${XLSTPROC_DIR}" XLSTPROC_DIR_NATIVE)
 vcpkg_add_to_path("${XLSTPROC_DIR}")
+set(ENV{XLSTPROC} "${XLSTPROC}")
 
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 file(TO_NATIVE_PATH "${PYTHON3_DIR}" PYTHON3_DIR_NATIVE)
