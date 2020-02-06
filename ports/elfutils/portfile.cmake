@@ -32,8 +32,8 @@ vcpkg_configure_make(
         --with-bzlib=${CURRENT_INSTALLED_DIR}/debug
         --with-lzma=${CURRENT_INSTALLED_DIR}/debug
     CONFIGURE_PATCHES   configure.dep.patch
-    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/"
-    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/"
+    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
+    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
