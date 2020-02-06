@@ -9,13 +9,12 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     PATCHES makefile.patch #without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
             time.patch # missing include 
+            windefs.patch # avoid pulling in conflicting definitions. 
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS --disable-dependency-tracking)
-    #list(APPEND VCPKG_CXX_FLAGS /D__ILP32__)
-    #list(APPEND VCPKG_C_FLAGS /D__ILP32__)
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)

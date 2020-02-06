@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     SHA512 52540660d22e80a40c16c0f36fe66d76ce738a32a31c294126f0ec4519cc696f553ab46abf889487295b3e2e32feff94be4ce2a1e74dd66d964a1ff903a58e1e
     HEAD_REF master # branch name
     PATCHES 
-        #xmd.h.patch #patch name
+        xmd.h.patch #patch name
         windows-long64.patch
         winsock2.patch # include winsock2.h before windows.h
 ) 
