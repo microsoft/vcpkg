@@ -14,34 +14,51 @@ vcpkg_extract_source_archive_ex(
     REF ${PIXMAN_VERSION}
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/pixman)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/pixman
-    PREFER_NINJA
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+    PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
+    PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
 )
+vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
 
-vcpkg_install_cmake()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-pixman TARGET_PATH share/unofficial-pixman)
+# # Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# Copy the appropriate header files.
-file(COPY
-    "${SOURCE_PATH}/pixman/pixman.h"
-    "${SOURCE_PATH}/pixman/pixman-accessor.h"
-    "${SOURCE_PATH}/pixman/pixman-combine32.h"
-    "${SOURCE_PATH}/pixman/pixman-compiler.h"
-    "${SOURCE_PATH}/pixman/pixman-edge-imp.h"
-    "${SOURCE_PATH}/pixman/pixman-inlines.h"
-    "${SOURCE_PATH}/pixman/pixman-private.h"
-    "${SOURCE_PATH}/pixman/pixman-version.h"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+# file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/pixman)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pixman)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pixman/COPYING ${CURRENT_PACKAGES_DIR}/share/pixman/copyright)
+# vcpkg_configure_cmake(
+    # SOURCE_PATH ${SOURCE_PATH}/pixman
+    # PREFER_NINJA
+# )
 
-vcpkg_copy_pdbs()
+# vcpkg_install_cmake()
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-pixman)
+# #vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-pixman TARGET_PATH share/unofficial-pixman)
+
+# # Copy the appropriate header files.
+# file(COPY
+    # "${SOURCE_PATH}/pixman/pixman.h"
+    # "${SOURCE_PATH}/pixman/pixman-accessor.h"
+    # "${SOURCE_PATH}/pixman/pixman-combine32.h"
+    # "${SOURCE_PATH}/pixman/pixman-compiler.h"
+    # "${SOURCE_PATH}/pixman/pixman-edge-imp.h"
+    # "${SOURCE_PATH}/pixman/pixman-inlines.h"
+    # "${SOURCE_PATH}/pixman/pixman-private.h"
+    # "${SOURCE_PATH}/pixman/pixman-version.h"
+    # DESTINATION ${CURRENT_PACKAGES_DIR}/include
+# )
+
+# # Handle copyright
+# file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pixman)
+# file(RENAME ${CURRENT_PACKAGES_DIR}/share/pixman/COPYING ${CURRENT_PACKAGES_DIR}/share/pixman/copyright)
+
+# vcpkg_copy_pdbs()
+# vcpkg_fixup_pkgconfig()
+
+# vcpkg_test_cmake(PACKAGE_NAME unofficial-pixman)
