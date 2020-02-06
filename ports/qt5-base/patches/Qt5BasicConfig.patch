@@ -33,14 +33,14 @@ index c72989288..a88234dca 100644
  !!IF !isEmpty(CMAKE_RELEASE_TYPE)
  !!IF !isEmpty(CMAKE_STATIC_WINDOWS_BUILD)
      _populate_$${CMAKE_MODULE_NAME}_target_properties(RELEASE \"$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\" \"\" )
-+    #if(EXISTS  \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\")
-+        #_populate_$${CMAKE_MODULE_NAME}_target_properties(DEBUG \"$${CMAKE_LIB_FILE_LOCATION_DEBUG}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" ) # Linux?
-+    #endif()
++    if(EXISTS  \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\")
++        _populate_$${CMAKE_MODULE_NAME}_target_properties(DEBUG \"$${CMAKE_LIB_FILE_LOCATION_DEBUG}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" ) # X64/X86-WINDOWS-STATIC!
++    endif()
  !!ELSE
      _populate_$${CMAKE_MODULE_NAME}_target_properties(RELEASE \"$${CMAKE_LIB_FILE_LOCATION_RELEASE}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\" )
-+    #if(EXISTS  \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\")
-+        #_populate_$${CMAKE_MODULE_NAME}_target_properties(DEBUG \"$${CMAKE_LIB_FILE_LOCATION_DEBUG}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" ) ## Linux?
-+    #endif()
++    if(EXISTS  \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\")
++        _populate_$${CMAKE_MODULE_NAME}_target_properties(DEBUG \"$${CMAKE_LIB_FILE_LOCATION_DEBUG}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" ) ## OSX! LINUX! X64/X86-WINDOWS!
++    endif()
  !!ENDIF // CMAKE_STATIC_WINDOWS_BUILD
  
  !!IF !isEmpty(CMAKE_FIND_OTHER_LIBRARY_BUILD)
@@ -92,7 +92,7 @@ index c72989288..a88234dca 100644
  !!ENDIF
          _populate_$${CMAKE_MODULE_NAME}_target_properties(RELEASE \"$${CMAKE_LIB_FILE_LOCATION_RELEASE}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\" )
 +        if(EXISTS  \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/debug/$${CMAKE_LIB_DIR}$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\")
-+            _populate_$${CMAKE_MODULE_NAME}_target_properties(DEBUG \"$${CMAKE_LIB_FILE_LOCATION_DEBUG}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" ) ### Linux?
++            _populate_$${CMAKE_MODULE_NAME}_target_properties(DEBUG \"$${CMAKE_LIB_FILE_LOCATION_DEBUG}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_DEBUG}\" ) ### Never? Debug Config?
 +        endif()
  !!ENDIF // CMAKE_STATIC_WINDOWS_BUILD
      endif()
