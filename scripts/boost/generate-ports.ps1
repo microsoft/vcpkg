@@ -46,7 +46,7 @@ function Generate()
     $controlDeps = ($Depends | sort) -join ", "
 
     $versionSuffix = ""
-    if ($PortName -eq "python")
+    if ($PortName -eq "iostreams" -or $PortName -eq "python")
     {
         $versionSuffix = "-1"
     }
@@ -169,9 +169,6 @@ function Generate()
                 ")"
             )
         }
-        elseif ($PortName -eq "iostreams")
-        {
-        }
         else
         {
             $portfileLines += @(
@@ -180,13 +177,11 @@ function Generate()
                 )
         }
     }
-    if ($PortName -ne "iostreams")
-    {
-        $portfileLines += @(
-            "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
-            "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
-        )
-    }
+
+    $portfileLines += @(
+        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
+        "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
+    )
 
     if (Test-Path "$scriptsDir/post-build-stubs/$PortName.cmake")
     {

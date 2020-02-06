@@ -14,14 +14,11 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-if(CMAKE_HOST_WIN32)
-    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-else()
-    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-endif()
+string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DENABLE_UNITY_BUILD=ON

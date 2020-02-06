@@ -24,12 +24,12 @@
     <ClCompile Include="..\src\vcpkg-test\chrono.cpp" />
     <ClCompile Include="..\src\vcpkg-test\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg-test\files.cpp" />
+    <ClCompile Include="..\src\vcpkg-test\mockcmakevarsprovider.cpp" />
     <ClCompile Include="..\src\vcpkg-test\paragraph.cpp" />
     <ClCompile Include="..\src\vcpkg-test\plan.cpp" />
     <ClCompile Include="..\src\vcpkg-test\specifier.cpp" />
     <ClCompile Include="..\src\vcpkg-test\statusparagraphs.cpp" />
     <ClCompile Include="..\src\vcpkg-test\strings.cpp" />
-    <ClCompile Include="..\src\vcpkg-test\supports.cpp" />
     <ClCompile Include="..\src\vcpkg-test\update.cpp" />
     <ClCompile Include="..\src\vcpkg-test\util.cpp" />
   </ItemGroup>
@@ -39,7 +39,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\vcpkg-test\catch.h" />
+    <ClInclude Include="..\include\catch2\catch.hpp" />
+    <ClInclude Include="..\include\vcpkg-test\mockcmakevarprovider.h" />
     <ClInclude Include="..\include\vcpkg-test\util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -51,13 +52,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -70,7 +71,7 @@
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -151,6 +152,7 @@
       <UseFullPaths>true</UseFullPaths>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +173,7 @@
       <UseFullPaths>true</UseFullPaths>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

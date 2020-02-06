@@ -46,7 +46,7 @@ namespace vcpkg
             }
         }
         if (ipv.core != nullptr)
-            return std::move(ipv);
+            return ipv;
         else
             return nullopt;
     }

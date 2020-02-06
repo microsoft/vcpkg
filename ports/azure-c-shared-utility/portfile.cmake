@@ -10,7 +10,7 @@ if("public-preview" IN_LIST FEATURES)
         SHA512 dfe6ccede4bebdb3a39fbfea1dc55ddca57cced0d2656ee4bed1a5e5c9c434e1f2d892eb4e29bbb424cb9a02f2374a95fb9a020442bea580d39c242efad1b789
         HEAD_REF master
         PATCHES 
-            fix-utilityFunctions-conditions.patch
+            fix-utilityFunctions-conditions-preview.patch
     )
 else()
     vcpkg_from_github(
