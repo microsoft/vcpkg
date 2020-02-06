@@ -262,16 +262,16 @@ function(vcpkg_configure_make)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     if(WIN32)
-        string(REPLACE " " "\\\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         #string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
-        string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF "${_VCPKG_INSTALLED_PKGCONF}")
+        string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF ${CURRENT_INSTALLED_DIR})
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
+        string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
         set(EXTRA_QUOTES "\\\"")
     else()
-        string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
-        string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
+        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
+        string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
     endif()
 
@@ -298,7 +298,8 @@ function(vcpkg_configure_make)
     else()
         set(_csc_OPTIONS ${_csc_OPTIONS} --enable-static --disable-shared)
     endif()
-        
+    file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}")
+    
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc)
         
@@ -321,21 +322,15 @@ function(vcpkg_configure_make)
         list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
-        
-        file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}")
-        
+
         set(rel_command
-            ${base_cmd} -c "${COMPILER_CC} eval ../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}\"")
+            ${base_cmd} -c "${COMPILER_CC} eval ./../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}\"")
         set(dbg_command
-            ${base_cmd} -c "${COMPILER_CC} eval ../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}\"")
+            ${base_cmd} -c "${COMPILER_CC} eval ./../${RELATIVE_BUILD_PATH}/configure \"${BUILD_TARGET} ${HOST_TYPE} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}\"")
 
     else()
-        set(base_cmd ./)
-        set(rel_command
-            "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_RELEASE}"
-        )
-        set(dbg_command
-            "${base_cmd}configure;${_csc_OPTIONS};${_csc_OPTIONS_DEBUG}")
+        set(rel_command "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE})
+        set(dbg_command "./../${RELATIVE_BUILD_PATH}/configure" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG})
         
     endif()
 
@@ -364,14 +359,37 @@ function(vcpkg_configure_make)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
     endif()
-    
+
+    set(SRC_DIR "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
+    if (_csc_AUTOCONFIG)
+        message(STATUS "Generating configure for ${TARGET_TRIPLET}")
+        if (CMAKE_HOST_WIN32)
+            vcpkg_execute_required_process(
+                COMMAND ${base_cmd} -c "autoreconf -vfi"
+                WORKING_DIRECTORY "${SRC_DIR}"
+                LOGNAME autoconf-${TARGET_TRIPLET}
+            )
+        else()
+            vcpkg_execute_required_process(
+                COMMAND autoreconf -vfi
+                WORKING_DIRECTORY "${SRC_DIR}"
+                LOGNAME autoconf-${TARGET_TRIPLET}
+            )
+        endif()
+        message(STATUS "Finished configure for ${TARGET_TRIPLET}")
+    endif()
+
     # Configure debug
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT _csc_NO_DEBUG)
         if(_csc_PKG_CONFIG_PATHS_DEBUG)
             set(BACKUP_ENV_PKG_CONFIG_PATH_DEBUG $ENV{PKG_CONFIG_PATH})
             foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS_DEBUG)
                 file(TO_NATIVE_PATH "${_path}" _path)
-                set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")                
+                if(ENV{PKG_CONFIG_PATH})
+                    set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
+                else()
+                    set(ENV{PKG_CONFIG_PATH} "${_path}")
+                endif()
             endforeach()
         endif()
 
@@ -388,8 +406,7 @@ function(vcpkg_configure_make)
             set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_DEBUG}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
-            set(ENV{VCPKG_PKG_PREFIX} ${_VCPKG_INSTALLED_PKGCONF}/debug)
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=$(VCPKG_PKG_PREFIX)")
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_DEBUG}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_DEBUG}")
@@ -400,19 +417,19 @@ function(vcpkg_configure_make)
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}/debug")
         endif()
 
-        set(OBJ_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        set(PRJ_DIR "${OBJ_DIR}/${_csc_PROJECT_SUBPATH}")
+        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        set(PRJ_DIR "${TAR_DIR}/${_csc_PROJECT_SUBPATH}")
         
-        file(MAKE_DIRECTORY "${OBJ_DIR}")
+        file(MAKE_DIRECTORY "${TAR_DIR}")
 
-        if (NOT CMAKE_HOST_WIN32)
-            file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
-            foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-                get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
-                string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
-                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
-            endforeach()
-        endif()
+        # if (NOT CMAKE_HOST_WIN32)
+            # file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
+            # foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
+                # get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
+                # string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
+                # file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
+            # endforeach()
+        # endif()
 
         if (_csc_PRERUN_SHELL)
             message(STATUS "Prerun shell with ${TARGET_TRIPLET}-dbg")
@@ -422,25 +439,7 @@ function(vcpkg_configure_make)
                 LOGNAME prerun-${TARGET_TRIPLET}-dbg
             )
         endif()
-        
-        if (_csc_AUTOCONFIG)
-            message(STATUS "Generating configure with ${TARGET_TRIPLET}-dbg")
-            if (CMAKE_HOST_WIN32)
-                vcpkg_execute_required_process(
-                    COMMAND ${base_cmd} -c "autoreconf -vfi"
-                    WORKING_DIRECTORY "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}"
-                    LOGNAME autoconf-${TARGET_TRIPLET}-dbg
-                )
-            else()
-                vcpkg_execute_required_process(
-                    COMMAND autoreconf -vfi
-                    WORKING_DIRECTORY "${PRJ_DIR}"
-                    LOGNAME autoconf-${TARGET_TRIPLET}-dbg
-                )
-            endif()
 
-        endif()
-        
         if (NOT _csc_SKIP_CONFIGURE)
             if(_csc_CONFIGURE_PATCHES)
                 vcpkg_apply_patches(SOURCE_PATH "${PRJ_DIR}" PATCHES "${_csc_CONFIGURE_PATCHES}")
@@ -448,10 +447,11 @@ function(vcpkg_configure_make)
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
-                WORKING_DIRECTORY ${PRJ_DIR}
+                WORKING_DIRECTORY "${PRJ_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
         endif()
+        
         if(_csc_PKG_CONFIG_PATHS_DEBUG)
             set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_DEBUG}")
         endif()
@@ -463,7 +463,11 @@ function(vcpkg_configure_make)
             set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
             foreach(_path IN LISTS _csc_PKG_CONFIG_PATHS_RELEASE)
                 file(TO_NATIVE_PATH "${_path}" _path)
-                set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
+                if(ENV{PKG_CONFIG_PATH})
+                    set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}${VCPKG_HOST_PATH_SEPARATOR}${_path}")
+                else()
+                    set(ENV{PKG_CONFIG_PATH} "${_path}")
+                endif()
             endforeach()
         endif()
 
@@ -480,8 +484,7 @@ function(vcpkg_configure_make)
             set(TMP_LDFLAGS "${LD_FLAGS_GLOBAL} ${VCPKG_LINKER_FLAGS_RELEASE}")
             string(REGEX REPLACE "[ \t]+/" " -" TMP_LDFLAGS "${TMP_LDFLAGS}")
             set(ENV{LDFLAGS} ${TMP_LDFLAGS})
-            set(ENV{VCPKG_PKG_PREFIX} ${_VCPKG_INSTALLED_PKGCONF})
-            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=$(VCPKG_PKG_PREFIX)")
+            set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
         else()
             set(ENV{CFLAGS} "${C_FLAGS_GLOBAL} ${VCPKG_C_FLAGS_RELEASE}")
             set(ENV{CXXFLAGS} "${CXX_FLAGS_GLOBAL} ${VCPKG_CXX_FLAGS_RELEASE}")
@@ -492,52 +495,20 @@ function(vcpkg_configure_make)
             set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}")
         endif()
         
-        if (_csc_NO_DEBUG)
-            set(TAR_TRIPLET_DIR ${TARGET_TRIPLET})
-            set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
-        else()
-            set(TAR_TRIPLET_DIR ${TARGET_TRIPLET}-rel)
-            set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TAR_TRIPLET_DIR})
-        endif()
-        set(PRJ_DIR ${OBJ_DIR}/${_csc_PROJECT_SUBPATH})
+        set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        set(PRJ_DIR "${TAR_DIR}/${_csc_PROJECT_SUBPATH}")
         
-        file(MAKE_DIRECTORY ${OBJ_DIR})
+        file(MAKE_DIRECTORY ${TAR_DIR})
         
-        if (NOT CMAKE_HOST_WIN32)
-            ##COPY SOURCES
-            file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
-            foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-                get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
-                string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
-                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
-            endforeach()
-        endif()
-        
-        if (_csc_PRERUN_SHELL)
-            message(STATUS "Prerun shell with ${TAR_TRIPLET_DIR}")
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd}${_csc_PRERUN_SHELL}
-                WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME prerun-${TAR_TRIPLET_DIR}
-            )
-        endif()
-        
-        if (_csc_AUTOCONFIG)
-            message(STATUS "Generating configure with ${TAR_TRIPLET_DIR}")
-            if (CMAKE_HOST_WIN32)
-                vcpkg_execute_required_process(
-                    COMMAND ${base_cmd} -c "autoreconf -vfi"
-                    WORKING_DIRECTORY ${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}
-                    LOGNAME autoconf-${TAR_TRIPLET_DIR}
-                )
-            else()
-                vcpkg_execute_required_process(
-                    COMMAND autoreconf -vfi
-                    WORKING_DIRECTORY ${PRJ_DIR}
-                    LOGNAME autoconf-${TAR_TRIPLET_DIR}
-                )
-            endif()
-        endif()
+        # if (NOT CMAKE_HOST_WIN32)
+            # ##COPY SOURCES
+            # file(GLOB_RECURSE SOURCE_FILES ${_csc_SOURCE_PATH}/*)
+            # foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
+                # get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
+                # string(REPLACE "${_csc_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
+                # file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
+            # endforeach()
+        # endif()
         
         if (NOT _csc_SKIP_CONFIGURE)
             if(_csc_CONFIGURE_PATCHES)
@@ -546,8 +517,8 @@ function(vcpkg_configure_make)
             message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
-                WORKING_DIRECTORY ${PRJ_DIR}
-                LOGNAME config-${TAR_TRIPLET_DIR}
+                WORKING_DIRECTORY "${PRJ_DIR}"
+                LOGNAME config-${TARGET_TRIPLET}-rel
             )
         endif()
         
