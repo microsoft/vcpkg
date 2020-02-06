@@ -13,6 +13,9 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(OPTIONS --enable-malloc0returnsnull=no)
+endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
@@ -21,7 +24,7 @@ vcpkg_configure_make(
     #AUTO_HOST
     #AUTO_DST
     #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS
+    OPTIONS ${OPTIONS}
     #OPTIONS_DEBUG
     #OPTIONS_RELEASE
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
