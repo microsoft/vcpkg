@@ -375,6 +375,9 @@ function(vcpkg_configure_make)
                 LOGNAME autoconf-${TARGET_TRIPLET}
             )
         endif()
+        if(_csc_CONFIGURE_PATCHES)
+            vcpkg_apply_patches(SOURCE_PATH "${SRC_DIR}" PATCHES "${_csc_CONFIGURE_PATCHES}")
+        endif()
         message(STATUS "Finished configure for ${TARGET_TRIPLET}")
     endif()
 
@@ -440,9 +443,6 @@ function(vcpkg_configure_make)
         endif()
 
         if (NOT _csc_SKIP_CONFIGURE)
-            if(_csc_CONFIGURE_PATCHES)
-                vcpkg_apply_patches(SOURCE_PATH "${PRJ_DIR}" PATCHES "${_csc_CONFIGURE_PATCHES}")
-            endif()
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
@@ -510,9 +510,6 @@ function(vcpkg_configure_make)
         # endif()
         
         if (NOT _csc_SKIP_CONFIGURE)
-            if(_csc_CONFIGURE_PATCHES)
-                vcpkg_apply_patches(SOURCE_PATH "${PRJ_DIR}" PATCHES "${_csc_CONFIGURE_PATCHES}")
-            endif()
             message(STATUS "Configuring ${TAR_TRIPLET_DIR}")
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
