@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cwzx/nngpp
-    REF nng-v1.2.4
+    REF 85294eda3f584281439649a074f46e2d3516b2a1
     SHA512 6f30bacbf46c00c606099407e4d92d607c6010e8460b7abe25855befad1ecc67900bddcdb9aef86d7233dabb1feb8f94946618fc66cc37d2a7f982f470713f5a
     HEAD_REF master
 )
