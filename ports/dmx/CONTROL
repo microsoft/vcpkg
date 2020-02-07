@@ -1,0 +1,6 @@
+Source: dmx
+Version: 1.1.4
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libdmx
+Description: X Window System DMX (Distributed Multihead X) extension library
+Build-Depends: xorg-macros, xproto, xext
+
