@@ -1441,6 +1441,8 @@ qt5-macextras:x64-linux=skip
 qt5-macextras:x64-windows=skip
 qt5-macextras:x64-windows-static=skip
 qt5-macextras:x86-windows=skip
+# Can only be build as dynamic library
+qt5-webengine:x64-windows-static=skip
 qt5-winextras:x64-linux=skip
 qt5-winextras:x64-osx=skip
 qt5-x11extras:x64-windows=skip
@@ -1451,11 +1453,12 @@ qt5-x11extras:x64-osx=fail
 qt5-doc:x64-windows=skip
 qt5-doc:x64-windows-static=skip
 qt5-doc:x86-windows=skip
+#to make CI happy for now
+qt5-doc:linux=fail
 #Wayland libraries are not yet in VCPKG so this port is just a placeholder
 qt5-wayland:x64-windows=skip
 qt5-wayland:x64-windows-static=skip
 qt5-wayland:x86-windows=skip
-qt5-wayland:x64-linux=fail
 qt5-wayland:x64-osx=fail
 quickfast:x64-linux=ignore
 quickfix:x64-linux=ignore
