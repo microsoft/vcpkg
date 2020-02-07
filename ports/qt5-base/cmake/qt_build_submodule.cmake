@@ -99,4 +99,30 @@ function(qt_build_submodule SOURCE_PATH)
             endforeach()
         endif()
     endif()
+    
+    #This should be removed if somehow possible
+    # if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/bin")
+        # file(COPY "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+        
+        # set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
+        # #set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
+        # #configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/qt.conf) # This makes the tools at least useable for release
+        # #set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
+        
+        # vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+        # if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            # file(GLOB_RECURSE DLL_DEPS_AVAIL "${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/*.dll")
+            # string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/" "" DLL_DEPS_AVAIL "${DLL_DEPS_AVAIL}")
+            # file(GLOB_RECURSE DLL_DEPS_NEEDED "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/*.dll")
+            # string(REPLACE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" "" DLL_DEPS_NEEDED "${DLL_DEPS_NEEDED}")
+            # if(DLL_DEPS_AVAIL AND DLL_DEPS_NEEDED)
+                # list(REMOVE_ITEM DLL_DEPS_NEEDED ${DLL_DEPS_AVAIL})
+            # endif()
+            # foreach(dll_dep ${DLL_DEPS_NEEDED})
+                # string(REGEX REPLACE "[^/]+$" "" dll_subpath "${dll_dep}")
+                # file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/${dll_dep}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/bin/${dll_subpath}")
+            # endforeach()
+        # endif()
+    # endif()
+    
 endfunction()
