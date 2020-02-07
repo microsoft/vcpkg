@@ -1,0 +1,36 @@
+diff --git a/meson.build b/meson.build
+index 7e2295b59..8dabf2054 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1577,21 +1577,21 @@ dep_xcb_xrandr = null_dep
+ dep_xlib_xrandr = null_dep
+ if with_platform_x11
+   if with_glx == 'xlib' or with_glx == 'gallium-xlib'
+-    dep_x11 = dependency('x11')
+-    dep_xext = dependency('xext')
+-    dep_xcb = dependency('xcb')
++    dep_x11 = dependency('x11', static: true)
++    dep_xext = dependency('xext', static: true)
++    dep_xcb = dependency('xcb', static: true)
+   elif with_glx == 'dri'
+-    dep_x11 = dependency('x11')
+-    dep_xext = dependency('xext')
+-    dep_xdamage = dependency('xdamage', version : '>= 1.1')
+-    dep_xfixes = dependency('xfixes')
+-    dep_xcb_glx = dependency('xcb-glx', version : '>= 1.8.1')
++    dep_x11 = dependency('x11', static: true)
++    dep_xext = dependency('xext', static: true)
++    dep_xdamage = dependency('xdamage', version : '>= 1.1', static: true)
++    dep_xfixes = dependency('xfixes', static: true)
++    dep_xcb_glx = dependency('xcb-glx', version : '>= 1.8.1', static: true)
+   endif
+   if (with_any_vk or with_glx == 'dri' or with_egl or
+        (with_gallium_vdpau or with_gallium_xvmc or with_gallium_va or
+         with_gallium_omx != 'disabled'))
+-    dep_xcb = dependency('xcb')
+-    dep_x11_xcb = dependency('x11-xcb')
++    dep_xcb = dependency('xcb', static: true)
++    dep_x11_xcb = dependency('x11-xcb', static: true)
+     if with_dri_platform == 'drm' and not dep_libdrm.found()
+       error('libdrm required for gallium video statetrackers when using x11')
+     endif
