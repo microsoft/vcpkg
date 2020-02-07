@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VERSION 1.2.11)
 
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -14,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         "cmake_dont_build_more_than_needed.patch"
+        "pkgconfig.patch"
 )
 
 # This is generated during the cmake build
@@ -30,7 +29,20 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
+vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zlib.pc")
+    file(READ "${_file}" _contents)
+    string(REPLACE " -lz" " -lzlib" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+    
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zlib.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE " -lz" " -lzlibd" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+endif()
 # Both dynamic and static are built, so keep only the one needed
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/zlibstatic.lib)
@@ -42,7 +54,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zlib RENAME copyright)
-
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
