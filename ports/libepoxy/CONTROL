@@ -2,4 +2,4 @@ Source: libepoxy
 Version: 1.5.3-2
 Homepage: https://github.com/anholt/libepoxy
 Description: Epoxy is a library for handling OpenGL function pointer management for you
-Build-Depends: tool-meson
+Build-Depends: tool-meson, mesa (linux), x11 (linux)

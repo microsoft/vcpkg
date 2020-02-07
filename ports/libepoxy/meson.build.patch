@@ -1,0 +1,31 @@
+diff --git a/meson.build b/meson.build
+index e95de48ec..8427759dd 100644
+--- a/meson.build	
++++ b/meson.build
+@@ -163,21 +163,21 @@ endif
+ 
+ # Dependencies
+ dl_dep = cc.find_library('dl', required: false)
+-gl_dep = dependency('gl', required: false)
+-egl_dep = dependency('egl', required: false)
++gl_dep = dependency('gl', required: false, static:'true')
++egl_dep = dependency('egl', required: false, static:'true')
+ 
+ # Optional dependencies for tests
+-x11_dep = dependency('x11', required: false)
++x11_dep = dependency('x11', required: false, static:'true')
+ 
+ # GLES v2 and v1 may have pkg-config files, courtesy of downstream
+ # packagers; let's check those first, and fall back to find_library()
+ # if we fail
+-gles2_dep = dependency('glesv2', required: false)
++gles2_dep = dependency('glesv2', required: false, static:'true')
+ if not gles2_dep.found()
+   gles2_dep = cc.find_library('libGLESv2', required: false)
+ endif
+ 
+-gles1_dep = dependency('glesv1_cm', required: false)
++gles1_dep = dependency('glesv1_cm', required: false, static:'true')
+ if not gles1_dep.found()
+   gles1_dep = cc.find_library('libGLESv1_CM', required: false)
+ endif
