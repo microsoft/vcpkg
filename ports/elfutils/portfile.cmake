@@ -24,13 +24,13 @@ vcpkg_configure_make(
     #PRERUN_SHELL ${SHELL_PATH}
     OPTIONS --disable-debuginfod 
     OPTIONS_DEBUG
-        --with-zlib=${CURRENT_INSTALLED_DIR}
-        --with-bzlib=${CURRENT_INSTALLED_DIR}
-        --with-lzma=${CURRENT_INSTALLED_DIR}
-    OPTIONS_RELEASE
         --with-zlib=${CURRENT_INSTALLED_DIR}/debug
         --with-bzlib=${CURRENT_INSTALLED_DIR}/debug
         --with-lzma=${CURRENT_INSTALLED_DIR}/debug
+    OPTIONS_RELEASE
+        --with-zlib=${CURRENT_INSTALLED_DIR}
+        --with-bzlib=${CURRENT_INSTALLED_DIR}
+        --with-lzma=${CURRENT_INSTALLED_DIR}
     CONFIGURE_PATCHES configure.dep.patch
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
