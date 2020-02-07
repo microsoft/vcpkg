@@ -1,0 +1,5 @@
+Source: xaw
+Version: 1.0.13
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxaw
+Description: X Athena Widget Set, based on the X Toolkit Intrinsics (Xt) Library
+Build-Depends: xorg-macros, bzip2, xproto, x11, xext, xt, xmu, xpm

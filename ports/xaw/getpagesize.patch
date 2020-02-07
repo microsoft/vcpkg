@@ -1,0 +1,14 @@
+diff --git a/src/OS.c b/src/OS.c
+index 4c69005..cd0c517 100644
+--- a/src/OS.c
++++ b/src/OS.c
+@@ -37,6 +37,9 @@ _XawGetPageSize(void)
+ #endif
+ 
+ #ifdef HAVE_GETPAGESIZE
++# if defined(_WIN32)
++extern int getpagesize(void);
++# endif
+     if (pagesize == -1)
+ 	pagesize = getpagesize();
+ #endif
