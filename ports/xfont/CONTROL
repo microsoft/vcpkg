@@ -1,0 +1,5 @@
+Source: xfont
+Version: 2.0.4
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxp
+Description: X font handling library for server & utilities
+Build-Depends: xorg-macros, bzip2, x11, xproto, xext, freetype, zlib, xtrans, fontenc
