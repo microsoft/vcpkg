@@ -1,7 +1,31 @@
-#.rst:
-# .. command:: vcpkg_fixup_pkgconfig
-#
-# Tries to fix the paths found in *.pc files
+## # vcpkg_fixup_pkgconfig
+##
+## Fix common paths in *.pc files and make everything relativ to $(prefix)
+##
+## ## Usage
+## ```cmake
+## vcpkg_fixup_pkgconfig(
+##     [RELEASE_FILES <PATHS>...]
+##     [DEBUG_FILES <PATHS>...]
+## )
+## ```
+##
+## ## Parameters
+## ### RELEASE_FILES
+## Specifies a list of files to apply the fixes for release paths. 
+## Defaults to every *.pc file in the ${CURRENT_PACKAGES_DIR} without ${CURRENT_PACKAGES_DIR}/debug/
+##
+## ### RELEASE_FILES
+## Specifies a list of files to apply the fixes for debug paths.
+## Defaults to every *.pc file in the ${CURRENT_PACKAGES_DIR}/debug/
+##
+## ## Notes
+## Still work in progress. If there are more cases which can be handled here feel free to add them
+##
+## ## Examples
+##
+## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files. 
+
 
 function(vcpkg_fixup_pkgconfig)
     cmake_parse_arguments(_vfpkg "" "" "RELEASE_FILES;DEBUG_FILES" ${ARGN})
