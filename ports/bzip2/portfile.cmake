@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
         fix-import-export-macros.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -26,17 +26,27 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/bzlib.h BZLIB_H)
+file(READ "${CURRENT_PACKAGES_DIR}/include/bzlib.h" BZLIB_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     string(REPLACE "defined(BZ_IMPORT)" "0" BZLIB_H "${BZLIB_H}")
 else()
     string(REPLACE "defined(BZ_IMPORT)" "1" BZLIB_H "${BZLIB_H}")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/bzlib.h "${BZLIB_H}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/bzlib.h" "${BZLIB_H}")
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bzip2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/bzip2/LICENSE ${CURRENT_PACKAGES_DIR}/share/bzip2/copyright)
+file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/bzip2")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/bzip2/LICENSE" "${CURRENT_PACKAGES_DIR}/share/bzip2/copyright")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_test_cmake(PACKAGE_NAME BZip2 MODULE)
+
+set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}")
+set(bzname bz2)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/bzip2.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/bzip2.pc" @ONLY)
+set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(bzname bz2d)
+endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/bzip2.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/bzip2.pc" @ONLY)
+vcpkg_fixup_pkgconfig()
