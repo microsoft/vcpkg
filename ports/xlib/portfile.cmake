@@ -18,7 +18,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         --enable-malloc0returnsnull=no      #Configre fails to run the test for some reason
         --enable-loadable-i18n=no           #Pointer conversion errors
         )
-endif()
+        
+        #https://gitlab.freedesktop.org/xorg/xserver/merge_requests/191/diffs
 if(NOT XLSTPROC)
     if(WIN32)
         set(HOST_TRIPLETS x64-windows x64-windows-static x86-windows x86-windows-static)
