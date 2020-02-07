@@ -11,7 +11,7 @@ namespace vcpkg::CMakeVars
     struct CMakeVarProvider
     {
         virtual Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(
-            const Triplet& triplet) const = 0;
+            Triplet triplet) const = 0;
 
         virtual Optional<const std::unordered_map<std::string, std::string>&> get_dep_info_vars(
             const PackageSpec& spec) const = 0;
@@ -19,7 +19,7 @@ namespace vcpkg::CMakeVars
         virtual Optional<const std::unordered_map<std::string, std::string>&> get_tag_vars(
             const PackageSpec& spec) const = 0;
 
-        virtual void load_generic_triplet_vars(const Triplet& triplet) const = 0;
+        virtual void load_generic_triplet_vars(Triplet triplet) const = 0;
 
         virtual void load_dep_info_vars(Span<const PackageSpec> specs) const = 0;
 
@@ -41,7 +41,7 @@ namespace vcpkg::CMakeVars
     public:
         explicit TripletCMakeVarProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) {}
 
-        void load_generic_triplet_vars(const Triplet& triplet) const override;
+        void load_generic_triplet_vars(Triplet triplet) const override;
 
         void load_dep_info_vars(Span<const PackageSpec> specs) const override;
 
@@ -49,7 +49,7 @@ namespace vcpkg::CMakeVars
                            const PortFileProvider::PortFileProvider& port_provider) const override;
 
         Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(
-            const Triplet& triplet) const override;
+            Triplet triplet) const override;
 
         Optional<const std::unordered_map<std::string, std::string>&> get_dep_info_vars(
             const PackageSpec& spec) const override;

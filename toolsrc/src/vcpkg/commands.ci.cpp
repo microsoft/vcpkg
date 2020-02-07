@@ -387,7 +387,7 @@ namespace vcpkg::Commands::CI
                 will_fail.emplace(p->spec);
             }
             else if (Util::any_of(p->package_dependencies,
-                                 [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
+                                  [&](const PackageSpec& spec) { return Util::Sets::contains(will_fail, spec); }))
             {
                 state = "cascade";
                 ret->known.emplace(p->spec, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES);
@@ -426,7 +426,7 @@ namespace vcpkg::Commands::CI
         return ret;
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         if (!GlobalState::g_binary_caching)
         {
@@ -483,7 +483,7 @@ namespace vcpkg::Commands::CI
             });
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
-        for (const Triplet& triplet : triplets)
+        for (Triplet triplet : triplets)
         {
             Input::check_triplet(triplet, paths);
 

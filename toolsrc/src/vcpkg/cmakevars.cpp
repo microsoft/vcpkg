@@ -152,10 +152,11 @@ namespace vcpkg::CMakeVars
         }
     }
 
-    void TripletCMakeVarProvider::load_generic_triplet_vars(const Triplet& triplet) const
+    void TripletCMakeVarProvider::load_generic_triplet_vars(Triplet triplet) const
     {
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(1);
-        FullPackageSpec full_spec = FullPackageSpec::from_string("", triplet).value_or_exit(VCPKG_LINE_INFO);
+        // Hack: PackageSpecs should never have .name==""
+        FullPackageSpec full_spec({"", triplet});
         const fs::path file_path =
             create_tag_extraction_file(std::array<std::pair<const FullPackageSpec*, std::string>, 1>{
                 std::pair<const FullPackageSpec*, std::string>{&full_spec, ""}});
@@ -222,7 +223,7 @@ namespace vcpkg::CMakeVars
     }
 
     Optional<const std::unordered_map<std::string, std::string>&> TripletCMakeVarProvider::get_generic_triplet_vars(
-        const Triplet& triplet) const
+        Triplet triplet) const
     {
         auto find_itr = generic_triplet_vars.find(triplet);
         if (find_itr != generic_triplet_vars.end())

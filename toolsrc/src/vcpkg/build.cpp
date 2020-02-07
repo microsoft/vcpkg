@@ -143,7 +143,7 @@ namespace vcpkg::Build::Command
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // Build only takes a single package and all dependencies must already be installed
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -307,7 +307,7 @@ namespace vcpkg::Build
 
     static std::unique_ptr<BinaryControlFile> create_binary_control_file(
         const SourceParagraph& source_paragraph,
-        const Triplet& triplet,
+        Triplet triplet,
         const BuildInfo& build_info,
         const std::string& abi_tag,
         const std::vector<FeatureSpec>& core_dependencies)
@@ -353,7 +353,7 @@ namespace vcpkg::Build
 
     static std::vector<System::CMakeVariable> get_cmake_vars(const VcpkgPaths& paths,
                                                              const BuildPackageConfig& config,
-                                                             const Triplet& triplet,
+                                                             Triplet triplet,
                                                              const Toolset& toolset)
     {
 #if !defined(_WIN32)
@@ -422,7 +422,7 @@ namespace vcpkg::Build
     static std::string make_build_cmd(const VcpkgPaths& paths,
                                       const PreBuildInfo& pre_build_info,
                                       const BuildPackageConfig& config,
-                                      const Triplet& triplet)
+                                      Triplet triplet)
     {
         const Toolset& toolset = paths.get_toolset(pre_build_info);
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
@@ -445,9 +445,7 @@ namespace vcpkg::Build
         return command;
     }
 
-    static std::string get_triplet_abi(const VcpkgPaths& paths,
-                                       const PreBuildInfo& pre_build_info,
-                                       const Triplet& triplet)
+    static std::string get_triplet_abi(const VcpkgPaths& paths, const PreBuildInfo& pre_build_info, Triplet triplet)
     {
         static std::map<fs::path, std::string> s_hash_cache;
 
@@ -516,7 +514,7 @@ namespace vcpkg::Build
         }
 #endif
 
-        const Triplet& triplet = spec.triplet();
+        Triplet triplet = spec.triplet();
         const auto& triplet_file_path = paths.get_triplet_file_path(spec.triplet()).u8string();
 
         if (Strings::case_insensitive_ascii_starts_with(triplet_file_path, paths.community_triplets.u8string()))
@@ -644,7 +642,7 @@ namespace vcpkg::Build
                                             Span<const AbiEntry> dependency_abis)
     {
         auto& fs = paths.get_filesystem();
-        const Triplet& triplet = config.triplet;
+        Triplet triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
@@ -813,7 +811,7 @@ namespace vcpkg::Build
                                       const StatusParagraphs& status_db)
     {
         auto& fs = paths.get_filesystem();
-        const Triplet& triplet = config.triplet;
+        Triplet triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
 
         std::vector<FeatureSpec> missing_fspecs;
@@ -833,7 +831,7 @@ namespace vcpkg::Build
             return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_fspecs)};
         }
 
-        const PackageSpec spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
+        const PackageSpec spec(name, triplet);
 
         std::vector<AbiEntry> dependency_abis;
         for (auto&& pspec : config.package_dependencies)
@@ -1075,13 +1073,14 @@ namespace vcpkg::Build
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath)
     {
-        const Expected<Parse::RawParagraph> pghs = Paragraphs::get_single_paragraph(fs, filepath);
-        Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");
+        const ExpectedS<Parse::RawParagraph> pghs = Paragraphs::get_single_paragraph(fs, filepath);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package: %s", pghs.error());
         return inner_create_buildinfo(*pghs.get());
     }
 
     PreBuildInfo::PreBuildInfo(const VcpkgPaths& paths,
-                               const Triplet& triplet,
+                               Triplet triplet,
                                const std::unordered_map<std::string, std::string>& cmakevars)
     {
         for (auto&& kv : VCPKG_OPTIONS)

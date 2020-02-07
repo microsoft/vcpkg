@@ -11,10 +11,10 @@ namespace vcpkg::PortFileProvider
     {
     }
 
-    Optional<const SourceControlFileLocation&> MapPortFileProvider::get_control_file(const std::string& spec) const
+    ExpectedS<const SourceControlFileLocation&> MapPortFileProvider::get_control_file(const std::string& spec) const
     {
         auto scf = ports.find(spec);
-        if (scf == ports.end()) return nullopt;
+        if (scf == ports.end()) return std::string("does not exist in map");
         return scf->second;
     }
 
@@ -53,7 +53,7 @@ namespace vcpkg::PortFileProvider
         ports_dirs.emplace_back(paths.ports);
     }
 
-    Optional<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
+    ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
     {
         auto cache_it = cache.find(spec);
         if (cache_it != cache.end())
@@ -84,8 +84,7 @@ namespace vcpkg::PortFileProvider
                         VCPKG_LINE_INFO, "Error: Failed to load port from %s", spec, ports_dir.u8string());
                 }
             }
-
-            if (filesystem.exists(ports_dir / spec / "CONTROL"))
+            else if (filesystem.exists(ports_dir / spec / "CONTROL"))
             {
                 auto found_scf = Paragraphs::try_load_port(filesystem, ports_dir / spec);
                 if (auto scf = found_scf.get())
@@ -112,7 +111,7 @@ namespace vcpkg::PortFileProvider
             }
         }
 
-        return nullopt;
+        return std::string("Port definition not found");
     }
 
     std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files() const
