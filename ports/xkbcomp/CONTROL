@@ -1,0 +1,5 @@
+Source: xkbcomp
+Version: 1.4.2
+Homepage: https://gitlab.freedesktop.org/xorg/app/xkbcomp
+Description: XKB keyboard description compiler
+Build-Depends: x11, xkbfile, xproto
