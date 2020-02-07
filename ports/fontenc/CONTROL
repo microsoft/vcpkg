@@ -1,0 +1,6 @@
+Source: fontenc
+Version: 1.1.4
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libfontenc
+Description: X font encoding library
+Build-Depends: xorg-macros, zlib, xproto, font-util
+
