@@ -1,0 +1,5 @@
+Source: xrandr
+Version: 1.5.2
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxrandr
+Description: Xlib Resize, Rotate and Reflection (RandR) extension library
+Build-Depends: xorg-macros, bzip2, x11, xproto, xrender, xext
