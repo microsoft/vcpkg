@@ -20,6 +20,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
         
         #https://gitlab.freedesktop.org/xorg/xserver/merge_requests/191/diffs
+endif()
 if(NOT XLSTPROC)
     if(WIN32)
         set(HOST_TRIPLETS x64-windows x64-windows-static x86-windows x86-windows-static)
