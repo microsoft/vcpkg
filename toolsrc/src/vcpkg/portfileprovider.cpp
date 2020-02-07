@@ -96,6 +96,11 @@ namespace vcpkg::PortFileProvider
                                                 std::forward_as_tuple(std::move(*scf), ports_dir / spec));
                         return it.first->second;
                     }
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                              (ports_dir / spec).u8string(),
+                                              spec,
+                                              scf->get()->core_paragraph->name);
                 }
                 else
                 {
