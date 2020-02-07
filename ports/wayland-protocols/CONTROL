@@ -1,0 +1,5 @@
+Source: wayland-protocols
+Version: 1.18
+Homepage: https://wayland.freedesktop.org
+Description: wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.
+Build-Depends: wayland
