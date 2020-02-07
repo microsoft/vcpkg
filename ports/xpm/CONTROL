@@ -1,0 +1,5 @@
+Source: xpm
+Version: 3.5.13
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxpm
+Description:X Pixmap (XPM) image file format library
+Build-Depends: xorg-macros, bzip2, x11, xproto, xext
