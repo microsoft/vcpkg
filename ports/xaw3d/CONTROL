@@ -1,0 +1,5 @@
+Source: xaw3d
+Version: 1.6.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxaw3d
+Description: 3D appearance variant of the X Athena Widget Set, based on the X Toolkit Intrinsics (Xt) Library
+Build-Depends: xorg-macros, bzip2, xproto, x11, xext, xt, xmu
