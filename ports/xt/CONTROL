@@ -1,0 +1,5 @@
+Source: xt
+Version: 1.2
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxt
+Description: X Toolkit Intrinsics library
+Build-Depends: xorg-macros, bzip2, sm, ice, x11, xproto, glib
