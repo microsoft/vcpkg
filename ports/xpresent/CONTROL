@@ -1,0 +1,5 @@
+Source: xpresent
+Version: 1.0.0
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxpresent
+Description: Xlib-based library for the X Present Extension
+Build-Depends: xorg-macros, bzip2, x11, xproto, xrandr, xext, xfixes 
