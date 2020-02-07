@@ -80,6 +80,9 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 macro(_vcpkg_get_mingw_vars)
+    # --build: the machine you are building on
+    # --host: the machine you are building for
+    # --target: the machine that GCC will produce binary for
     set(HOST_ARCH $ENV{PROCESSOR_ARCHITECTURE})
     set(MINGW_W w64)
     set(MINGW_PACKAGES)
@@ -217,6 +220,9 @@ function(vcpkg_configure_make)
         get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
         
         if (NOT _csc_DISABLE_AUTO_HOST)
+                # --build: the machine you are building on
+                # --host: the machine you are building for
+                # --target: the machine that GCC will produce binary for
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
                 set(BUILD_TARGET "--build=${MINGW_TARGET} --target==${MINGW_TARGET}")
                 set(HOST_TYPE --host=i686-w64-mingw32)
