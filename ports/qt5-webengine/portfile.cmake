@@ -13,11 +13,13 @@ get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
 get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
 get_filename_component(NINJA_DIR "${GPERF}" DIRECTORY )
 
-if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-endif()
-if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
+    if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+    if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
 endif()
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
