@@ -1,0 +1,10 @@
+Source: xtrans
+Version: 1.4.0
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxtrans
+Description: xtrans - X Network Transport layer shared code
+Build-Depends: xorg-macros
+Default-Features:
+
+Feature: no-feature
+Description: just a dummy
+Build-Depends:

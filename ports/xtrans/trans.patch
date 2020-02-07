@@ -1,0 +1,201 @@
+diff --git a/Xtrans.c b/Xtrans.c
+index 0e09b25..790b4af 100644
+--- a/Xtrans.c
++++ b/Xtrans.c
+@@ -660,11 +660,7 @@ TRANS(SetOption) (XtransConnInfo ciptr, int option, int arg)
+ #else
+ #if defined(WIN32)
+ 	{
+-#ifdef WIN32
+ 	    u_long arg;
+-#else
+-	    int arg;
+-#endif
+ 	    arg = 1;
+ /* IBM TCP/IP understands this option too well: it causes TRANS(Read) to fail
+  * eventually with EWOULDBLOCK */
+diff --git a/Xtranslcl.c b/Xtranslcl.c
+index 26b7f63..3e1f487 100644
+--- a/Xtranslcl.c
++++ b/Xtranslcl.c
+@@ -72,8 +72,18 @@ from The Open Group.
+ 
+ #include <errno.h>
+ #include <ctype.h>
+-#include <sys/signal.h>
++#ifdef __MINGW32__
++#define _POSIX
++#define __USE_MINGW_ALARM
++#endif
++#include <signal.h>
++#ifdef __MINGW32__
++#undef _POSIX
++#undef __USE_MINGW_ALARM
++#endif
++#if !defined(__WIN32__) || defined(__CYGWIN__)
+ #include <sys/ioctl.h>
++#endif
+ #include <sys/stat.h>
+ #if defined(SVR4) || defined(__SVR4)
+ #include <sys/filio.h>
+@@ -81,9 +91,13 @@ from The Open Group.
+ #ifdef __sun
+ # include <stropts.h>
+ #else
+-# include <sys/stropts.h>
++# if !defined(__WIN32__) || defined(__CYGWIN__)
++#  include <sys/stropts.h>
++# endif
++#endif
++#if !defined(__WIN32__) || defined(__CYGWIN__)
++# include <sys/wait.h>
+ #endif
+-#include <sys/wait.h>
+ #include <sys/types.h>
+ 
+ /*
+@@ -93,9 +107,28 @@ from The Open Group.
+  * The X Server.
+  */
+ 
+-#include <sys/socket.h>
++#if !defined(__WIN32__) || defined(__CYGWIN__)
++# include <sys/socket.h>
++#else
++# include <X11/Xwinsock.h>
++# define ioctl ioctlsocket
++#endif
+ #ifndef X_NO_SYS_UN
+-#include <sys/un.h>
++# if !defined(__WIN32__) || defined(__CYGWIN__)
++#  include <sys/un.h>
++# else
++#  include <ws2tcpip.h>
++struct sockaddr_un {
++  short          sun_family;
++  unsigned short sun_port;
++  struct         in_addr sun_addr;
++/* This is a very generous path length.
++ * Most systems either use much less
++ * (around 108) or PATH_MAX.
++ */
++  char           sun_path[128];
++};
++# endif
+ #endif
+ 
+ 
+@@ -157,7 +190,6 @@ TRANS(LocalSendFdInvalid)(XtransConnInfo ciptr, int fd, int do_close)
+ }
+ #endif
+ 
+-
+ static int
+ TRANS(FillAddrInfo)(XtransConnInfo ciptr,
+                     const char *sun_path, const char *peer_sun_path)
+@@ -369,6 +401,7 @@ TRANS(PTSOpenClient)(XtransConnInfo ciptr, const char *port)
+ 	return(-1);
+     }
+ 
++#if !defined(__WIN32__) || defined(__CYGWIN__)
+     (void) grantpt(fd);
+     (void) unlockpt(fd);
+ 
+@@ -380,6 +413,7 @@ TRANS(PTSOpenClient)(XtransConnInfo ciptr, const char *port)
+ 	close(server);
+ 	return -1;
+     }
++#endif
+ 
+     /*
+      * This is neccesary for the case where a program is setuid to non-root.
+@@ -389,6 +423,7 @@ TRANS(PTSOpenClient)(XtransConnInfo ciptr, const char *port)
+      * cannot be changed back to its original condition, hence the fork().
+      */
+ 
++#if !defined(__WIN32__) || defined(__CYGWIN__)
+     if(!(saved_pid=fork())) {
+ 	uid_t       saved_euid;
+ 
+@@ -418,6 +453,7 @@ TRANS(PTSOpenClient)(XtransConnInfo ciptr, const char *port)
+ 	prmsg(1,"PTSOpenClient: Cannot chmod %s\n", slave);
+ 	return(-1);
+     }
++#endif
+ 
+     /*
+      * write slave name to server
+@@ -433,13 +469,17 @@ TRANS(PTSOpenClient)(XtransConnInfo ciptr, const char *port)
+      * wait for server to respond
+      */
+ 
++#if !defined(__WIN32__) || defined(__MINGW32__) || defined(__CYGWIN__)
+     savef = signal(SIGALRM, _dummy);
+     alarm_time = alarm (30); /* CONNECT_TIMEOUT */
++#endif
+ 
+     ret = read(fd, buf, 1);
+ 
++#if !defined(__WIN32__) || defined(__MINGW32__) || defined(__CYGWIN__)
+     (void) alarm(alarm_time);
+     (void) signal(SIGALRM, savef);
++#endif
+ 
+     if (ret != 1) {
+ 	prmsg(1,
+@@ -529,6 +569,7 @@ TRANS(PTSOpenServer)(XtransConnInfo ciptr, const char *port)
+ 	return(-1);
+     }
+ 
++#if !defined(__WIN32__) || defined(__CYGWIN__)
+     grantpt(fd);
+     unlockpt(fd);
+ 
+@@ -549,6 +590,7 @@ TRANS(PTSOpenServer)(XtransConnInfo ciptr, const char *port)
+ 	close(fd);
+ 	return(-1);
+     }
++#endif
+ 
+     if( (server=open(server_path, O_RDWR)) < 0 ) {
+ 	prmsg(1, "PTSOpenServer: Unable to open server device %s\n", server_path);
+diff --git a/Xtranssock.c b/Xtranssock.c
+index b06579c..c9449a3 100644
+--- a/Xtranssock.c
++++ b/Xtranssock.c
+@@ -2098,9 +2098,7 @@ TRANS(SocketRead) (XtransConnInfo ciptr, char *buf, int size)
+ #if defined(WIN32)
+     {
+ 	int ret = recv ((SOCKET)ciptr->fd, buf, size, 0);
+-#ifdef WIN32
+ 	if (ret == SOCKET_ERROR) errno = WSAGetLastError();
+-#endif
+ 	return ret;
+     }
+ #else
+@@ -2238,9 +2236,7 @@ TRANS(SocketWrite) (XtransConnInfo ciptr, char *buf, int size)
+ #if defined(WIN32)
+     {
+ 	int ret = send ((SOCKET)ciptr->fd, buf, size, 0);
+-#ifdef WIN32
+ 	if (ret == SOCKET_ERROR) errno = WSAGetLastError();
+-#endif
+ 	return ret;
+     }
+ #else
+diff --git a/transport.c b/transport.c
+index b62fc7b..1bed1d2 100644
+--- a/transport.c
++++ b/transport.c
+@@ -52,6 +52,11 @@ from The Open Group.
+ #define XTRANS_TRANSPORT_C  /* used to flag Xtransint.h that it's being used
+ 			       here, not just #included in another file */
+ 
++#if defined(_WIN32) && defined(IPv6)
++# include <sdkddkver.h>
++# define _WIN32_WINNT _WIN32_WINNT_VISTA
++#endif
++
+ #include "Xtransint.h"
+ 
+ #ifdef __clang__
