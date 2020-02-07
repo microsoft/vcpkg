@@ -1,0 +1,5 @@
+Source: xdamage
+Version: 1.1.5
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxdamage
+Description: X Damage Extension library
+Build-Depends: xorg-macros, bzip2, x11, xproto, xfixes
