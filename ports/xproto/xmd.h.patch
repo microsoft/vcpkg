@@ -1,0 +1,33 @@
+diff --git a/include/X11/Xmd.h b/include/X11/Xmd.h
+index 492465e6c..a7fbbbcdd 100644
+--- a/include/X11/Xmd.h
++++ b/include/X11/Xmd.h
+@@ -94,7 +94,13 @@ SOFTWARE.
+ # define B32 /* bitfield not needed on architectures with native 32-bit type */
+ # define B16 /* bitfield not needed on architectures with native 16-bit type */
+ # ifdef LONG64
++# if !defined(_WIN32) || !defined(WIN32)
++_Static_assert( sizeof(long) * 8 == 64, "Error!");
+ typedef long INT64;
++# else
++_Static_assert( sizeof(long long) * 8 == 64, "Error!");
++typedef long long INT64;
++# endif
+ typedef int INT32;
+ # else
+ typedef long INT32;
+@@ -104,7 +110,14 @@ typedef short INT16;
+ typedef signed char    INT8;
+ 
+ # ifdef LONG64
++# if !defined(_WIN32) || !defined(WIN32)
++_Static_assert( sizeof(long) * 8 == 64, "Error!");
+ typedef unsigned long CARD64;
++# else
++_Static_assert( sizeof(long long) * 8 == 64, "Error!");
++typedef unsigned long long CARD64;
++# endif
++
+ typedef unsigned int CARD32;
+ # else
+ typedef unsigned long long CARD64;
