@@ -1,0 +1,5 @@
+Source: xi
+Version: 1.7.10
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxi
+Description: Xlib library for the X Input Extension
+Build-Depends: xext, xfixes
