@@ -1,0 +1,31 @@
+diff --git a/configure b/configure
+index 84055e799..3fc7c0bbc 100644
+--- a/configure
++++ b/configure
+@@ -5986,7 +5986,7 @@ return gzdirect ();
+   return 0;
+ }
+ _ACEOF
+-for ac_lib in '' z; do
++for ac_lib in '' z zd zlib zlibd; do
+   if test -z "$ac_lib"; then
+     ac_res="none required"
+   else
+@@ -6077,7 +6077,7 @@ return BZ2_bzdopen ();
+   return 0;
+ }
+ _ACEOF
+-for ac_lib in '' bz2; do
++for ac_lib in '' bz2 bz2d; do
+   if test -z "$ac_lib"; then
+     ac_res="none required"
+   else
+@@ -6164,7 +6164,7 @@ return lzma_auto_decoder ();
+   return 0;
+ }
+ _ACEOF
+-for ac_lib in '' lzma; do
++for ac_lib in '' lzma lzmad; do
+   if test -z "$ac_lib"; then
+     ac_res="none required"
+   else
