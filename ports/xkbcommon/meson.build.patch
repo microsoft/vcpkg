@@ -1,0 +1,15 @@
+diff --git a/meson.build b/meson.build
+index ac706633e..9b1214bda 100644
+--- a/meson.build	
++++ b/meson.build
+@@ -230,8 +230,8 @@ pkgconfig.generate(
+ 
+ # libxkbcommon-x11.
+ if get_option('enable-x11')
+-    xcb_dep = dependency('xcb', version: '>=1.10', required: false)
+-    xcb_xkb_dep = dependency('xcb-xkb', version: '>=1.10', required: false)
++    xcb_dep = dependency('xcb', version: '>=1.10', required: false, static: true)
++    xcb_xkb_dep = dependency('xcb-xkb', version: '>=1.10', required: false, static: true)
+     if not xcb_dep.found() or not xcb_xkb_dep.found()
+         error('''X11 support requires xcb-xkb >= 1.10 which was not found.
+ You can disable X11 support with -Denable-x11=false.''')
