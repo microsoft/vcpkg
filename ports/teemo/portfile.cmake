@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/teemo
-    REF 15edb1705d18ee78b32516a8ae52d6b10507af62
-    SHA512 7dbe917d48b1e8c4b004bad33d8a82524e501d8bec6cdeca4e89ebbe8ed79fa484028c3afd365347e31fa83f64a6f0f5a42ea0063baa7c0985824fb3dffcc8f2
+    REF 905b61fafc31509bdec79cca78bf9662cd9f9e12
+    SHA512 0bab10f127cc486c2cfe2fb760515fc5c0462ff21c7627d983c04497503e2f72e4bffb679467ee542dc9fb14f27097e49dc305f738ec5e3cc42d83278bffc0ee
     HEAD_REF master
 )
 
