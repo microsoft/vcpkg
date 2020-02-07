@@ -36,6 +36,7 @@ vcpkg_from_github(
     PATCHES
         use_abort.patch
         cmake.patch
+        pkgconfig.patch
         ${APNG_EXTRA_PATCH}
 )
 
@@ -51,13 +52,14 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DPNG_MAN_DIR=share/${PORT}/man
         ${LIBPNG_APNG_OPTION}
         -DPNG_STATIC=${PNG_STATIC_LIBS}
         -DPNG_SHARED=${PNG_SHARED_LIBS}
         -DPNG_TESTS=OFF
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
-        -DSKIP_INSTALL_FILES=ON
+        -DSKIP_INSTALL_FILES=OFF
         OPTIONS_DEBUG
             -DSKIP_INSTALL_HEADERS=ON
 )
@@ -65,7 +67,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
-
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
