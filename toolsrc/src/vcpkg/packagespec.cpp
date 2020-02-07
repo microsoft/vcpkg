@@ -107,6 +107,12 @@ namespace vcpkg
         return Parse::ParserBase::is_lower_alpha(ch) || Parse::ParserBase::is_ascii_digit(ch) || ch == '-';
     }
 
+    static bool is_feature_name_char(char ch) {
+        // TODO: we do not intend underscores to be valid, however there is currently a feature using them (libwebp[vwebp_sdl]).
+        // TODO: we need to rename this feature, then remove underscores from this list.
+        return is_package_name_char(ch) || ch == '_';
+    }
+
     ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(CStringView input)
     {
         Parse::ParserBase parser;
@@ -120,7 +126,7 @@ namespace vcpkg
     Optional<std::string> parse_feature_name(Parse::ParserBase& parser)
     {
         using Parse::ParserBase;
-        auto ret = parser.match_zero_or_more(is_package_name_char).to_string();
+        auto ret = parser.match_zero_or_more(is_feature_name_char).to_string();
         auto ch = parser.cur();
         if (ParserBase::is_upper_alpha(ch) || ch == '_')
         {

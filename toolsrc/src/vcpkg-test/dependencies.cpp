@@ -26,7 +26,7 @@ TEST_CASE ("filter depends", "[dependencies]")
     const std::unordered_map<std::string, std::string> arm_uwp_cmake_vars{{"VCPKG_TARGET_ARCHITECTURE", "arm"},
                                                                           {"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}};
 
-    auto deps_ = parse_dependencies_list("liba (windows), libb, libc (uwp)");
+    auto deps_ = parse_dependencies_list("liba (!uwp), libb, libc (uwp)");
     REQUIRE(deps_);
     auto& deps = *deps_.get();
     auto v = filter_dependencies(deps, Triplet::X64_WINDOWS, x64_win_cmake_vars);
