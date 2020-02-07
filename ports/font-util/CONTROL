@@ -1,0 +1,6 @@
+Source: font-util
+Version: 1.3.2
+Homepage: https://gitlab.freedesktop.org/xorg/font/util
+Description: X.Org font package creation/installation utilities
+Build-Depends: xorg-macros
+
