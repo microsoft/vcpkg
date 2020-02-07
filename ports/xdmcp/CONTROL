@@ -1,0 +1,5 @@
+Source: xdmcp
+Version: 1.1.3
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxdmcp
+Description: X Display Manager Control Protocol library
+Build-Depends: xorg-macros, bzip2, xproto
