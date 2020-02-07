@@ -1,0 +1,5 @@
+Source: xres
+Version: 1.2.0
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxres
+Description: Xlib-based X-Resource extension client library
+Build-Depends: xorg-macros, bzip2, xproto, x11, xext
