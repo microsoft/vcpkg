@@ -1,0 +1,5 @@
+Source: xxf86dga
+Version: 1.1.5
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxxf86dga
+Description: Xlib-based library for the XFree86-DGA extension
+Build-Depends: xorg-macros, bzip2, xproto, xext

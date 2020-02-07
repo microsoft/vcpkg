@@ -1,0 +1,5 @@
+Source: xxf86vm
+Version: 1.1.4
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libxxf86vm
+Description: Xlib-based library for the XFree86-VidMode X extension
+Build-Depends: xorg-macros, bzip2, xproto, xext
