@@ -11,7 +11,7 @@ set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
 
 # Enable static build
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" TGUI_SHARED_LIBS)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TGUI_SHARED_LIBS)
 
 # gui-builder
 set(BUILD_GUI_BUILDER OFF)
@@ -21,6 +21,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DTGUI_BUILD_GUI_BUILDER=${BUILD_GUI_BUILDER}
