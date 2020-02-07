@@ -1,0 +1,6 @@
+Source: applewm
+Version: 1.4.1
+Homepage: https://gitlab.freedesktop.org/xorg/lib/libapplewm
+Description: Xlib-based library for the Apple-WM extension
+Build-Depends: xorg-macros, bzip2, xproto, x11, xext
+Supports: osx
