@@ -2,3 +2,4 @@ Source: qt5-androidextras
 Version: 5.12.7
 Description: Qt5 androidextras Module; 
 Build-Depends:  qt5-base
+Supports: android
