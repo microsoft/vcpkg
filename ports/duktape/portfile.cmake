@@ -1,6 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following tools from the system package manager:\n    python-yaml\n\nThis can be installed on Ubuntu systems via apt-get install python-yaml PYTHON2-yaml (depending on your current python default interpreter)")
 endif()
 
@@ -16,7 +14,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake.in DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS)
     set(EXECUTABLE_SUFFIX ".exe")
     set(PYTHON_OPTION "")
 else()
@@ -27,6 +25,7 @@ endif()
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
+
 if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
     if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
         vcpkg_from_github(
@@ -43,7 +42,11 @@ else()
     execute_process(COMMAND ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX} pyyaml)
 endif()
 
-execute_process(COMMAND ${PYTHON2} ${SOURCE_PATH}/tools/configure.py --source-directory ${SOURCE_PATH}/src-input --output-directory ${SOURCE_PATH}/src --config-metadata ${SOURCE_PATH}/config -DDUK_USE_FASTINT)
+vcpkg_execute_required_process(
+    COMMAND ${PYTHON2} tools/configure.py --source-directory src-input --output-directory src --config-metadata config -DDUK_USE_FASTINT
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME pre-configure
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(DUK_CONFIG_H_PATH "${SOURCE_PATH}/src/duk_config.h")
@@ -63,6 +66,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

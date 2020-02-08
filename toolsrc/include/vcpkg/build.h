@@ -26,7 +26,7 @@ namespace vcpkg::Build
                                  const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
     enum class UseHeadVersion
@@ -140,7 +140,7 @@ namespace vcpkg::Build
     struct PreBuildInfo
     {
         PreBuildInfo(const VcpkgPaths& paths,
-                     const Triplet& triplet,
+                     Triplet triplet,
                      const std::unordered_map<std::string, std::string>& cmakevars);
 
         std::string triplet_abi_tag;
@@ -197,7 +197,7 @@ namespace vcpkg::Build
     struct BuildPackageConfig
     {
         BuildPackageConfig(const SourceControlFileLocation& scfl,
-                           const Triplet& triplet,
+                           Triplet triplet,
                            const BuildPackageOptions& build_package_options,
                            const CMakeVars::CMakeVarProvider& var_provider,
                            const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies,
@@ -217,7 +217,7 @@ namespace vcpkg::Build
 
         const SourceControlFileLocation& scfl;
         const SourceControlFile& scf;
-        const Triplet& triplet;
+        Triplet triplet;
         const fs::path& port_dir;
         const BuildPackageOptions& build_package_options;
         const CMakeVars::CMakeVarProvider& var_provider;
@@ -240,6 +240,7 @@ namespace vcpkg::Build
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
         ALLOW_RESTRICTED_HEADERS,
+        SKIP_DUMPBIN_CHECKS,
         // Must be last
         COUNT,
     };
@@ -252,6 +253,7 @@ namespace vcpkg::Build
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
+        BuildPolicy::SKIP_DUMPBIN_CHECKS
     };
 
     const std::string& to_string(BuildPolicy policy);
