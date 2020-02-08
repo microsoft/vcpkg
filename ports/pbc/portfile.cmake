@@ -1,14 +1,4 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "PBC currently can only be built for desktop")
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "PBC currently can only be built using the dynamic CRT when building DLLs")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 set(PBC_VERSION 0.5.14)
 
@@ -78,8 +68,9 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     )
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/pbc/copyright COPYONLY)
+    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 else()
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO blynn/pbc

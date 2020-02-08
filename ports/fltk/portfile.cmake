@@ -1,17 +1,17 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.4-1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz"
-    FILENAME "fltk.tar.gz"
-    SHA512 0be1c8e6bb7a8c7ef484941a73868d5e40b90e97a8e5dc747bac2be53a350621975406ecfd4a9bcee8eeb7afd886e75bf7a6d6478fd6c56d16e54059f22f0891
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fltk-1.3.4-1
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
+    FILENAME "fltk-1.3.5.tar.gz"
+    SHA512 db7ea7c5f3489195a48216037b9371a50f1119ae7692d66f71b6711e5ccf78814670581bae015e408dee15c4bba921728309372c1cffc90113cdc092e8540821
+)
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/findlibsfix.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/add-link-libraries.patch"
+        findlibsfix.patch
+        add-link-libraries.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -23,7 +23,7 @@ endif()
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
 else()
-    set(OPTION_USE_GL)
+    set(OPTION_USE_GL "-DOPTION_USE_GL=ON")
 endif()
 
 vcpkg_configure_cmake(
@@ -31,6 +31,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DOPTION_BUILD_EXAMPLES=OFF
+        -DOPTION_LARGE_FILE=ON
+        -DOPTION_USE_THREADS=ON
         -DOPTION_USE_SYSTEM_ZLIB=ON
         -DOPTION_USE_SYSTEM_LIBPNG=ON
         -DOPTION_USE_SYSTEM_LIBJPEG=ON

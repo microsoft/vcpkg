@@ -1,23 +1,19 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gainput-1.0.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://github.com/jkuhlmann/gainput/archive/v1.0.0.zip"
-    FILENAME "gainput-1.0.0.zip"
-    SHA512 dab221290560298693f54bebced1da5ec3dfae2d2adbfd6ceb17b5b28dc2a637a49e479d49fe98680915b29beb5dd2d5c74258598233a053230696186593c88e
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO jkuhlmann/gainput
+    REF v1.0.0
+    SHA512 56fdc4c0613d7260861885b270ebe9e624e940175f41e3ac82516e2eb0d6d229e405fbcc2e54608e7d6751c1d8658b5b5e186153193badc6487274cb284a8cd6
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
+    PREFER_NINJA
     OPTIONS
         -DGAINPUT_TESTS=OFF
         -DGAINPUT_SAMPLES=OFF
-    # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()

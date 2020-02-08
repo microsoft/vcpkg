@@ -157,11 +157,24 @@ namespace vcpkg
         std::vector<CPUArchitecture> supported_architectures;
         supported_architectures.push_back(get_host_processor());
 
-        // AMD64 machines support to run x86 applications
+        // AMD64 machines support running x86 applications and ARM64 machines support running ARM applications
         if (supported_architectures.back() == CPUArchitecture::X64)
         {
             supported_architectures.push_back(CPUArchitecture::X86);
         }
+        else if (supported_architectures.back() == CPUArchitecture::ARM64)
+        {
+            supported_architectures.push_back(CPUArchitecture::ARM);
+        }
+
+#if defined(_WIN32)
+        // On ARM32/64 Windows we can rely on x86 emulation
+        if (supported_architectures.front() == CPUArchitecture::ARM ||
+            supported_architectures.front() == CPUArchitecture::ARM64)
+        {
+            supported_architectures.push_back(CPUArchitecture::X86);
+        }
+#endif
 
         return supported_architectures;
     }
@@ -365,7 +378,7 @@ namespace vcpkg
 
         g_ctrl_c_state.transition_to_spawn_process();
         auto clean_env = compute_clean_environment(extra_env, prepend_to_path);
-        windows_create_process(cmd_line, clean_env.data(), process_info, NULL);
+        windows_create_process(cmd_line, clean_env.data(), process_info, 0);
 
         CloseHandle(process_info.hThread);
 
@@ -431,7 +444,7 @@ namespace vcpkg
 
         Debug::print("_wpopen(", actual_cmd_line, ")\n");
         std::wstring output;
-        wchar_t buf[1024];
+        auto buf = std::make_unique<wchar_t[]>(1024 * 32);
         g_ctrl_c_state.transition_to_spawn_process();
         // Flush stdout before launching external process
         fflush(stdout);
@@ -441,9 +454,9 @@ namespace vcpkg
             g_ctrl_c_state.transition_from_spawn_process();
             return {1, Strings::to_utf8(output.c_str())};
         }
-        while (fgetws(buf, 1024, pipe))
+        while (fgetws(buf.get(), 1024 * 32, pipe))
         {
-            output.append(buf);
+            output.append(buf.get());
         }
         if (!feof(pipe))
         {
@@ -529,7 +542,7 @@ namespace vcpkg
     {
         HKEY k = nullptr;
         const LSTATUS ec =
-            RegOpenKeyExW(reinterpret_cast<HKEY>(base_hkey), Strings::to_utf16(sub_key).c_str(), NULL, KEY_READ, &k);
+            RegOpenKeyExW(reinterpret_cast<HKEY>(base_hkey), Strings::to_utf16(sub_key).c_str(), 0, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
         auto w_valuename = Strings::to_utf16(valuename);

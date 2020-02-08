@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
@@ -21,10 +22,11 @@ namespace vcpkg::Build
     {
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
+                                 const PortFileProvider::PathsPortFileProvider& provider,
                                  const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
     enum class UseHeadVersion
@@ -88,6 +90,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class PurgeDecompressFailure
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -99,6 +107,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         BinaryCaching binary_caching;
         FailOnTombstone fail_on_tombstone;
+        PurgeDecompressFailure purge_decompress_failure;
     };
 
     enum class BuildResult
@@ -130,12 +139,9 @@ namespace vcpkg::Build
     /// </summary>
     struct PreBuildInfo
     {
-        /// <summary>
-        /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
-        /// </summary>
-        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths,
-                                              const Triplet& triplet,
-                                              Optional<const SourceControlFileLocation&> port = nullopt);
+        PreBuildInfo(const VcpkgPaths& paths,
+                     Triplet triplet,
+                     const std::unordered_map<std::string, std::string>& cmakevars);
 
         std::string triplet_abi_tag;
         std::string target_architecture;
@@ -191,24 +197,34 @@ namespace vcpkg::Build
     struct BuildPackageConfig
     {
         BuildPackageConfig(const SourceControlFileLocation& scfl,
-                           const Triplet& triplet,
+                           Triplet triplet,
                            const BuildPackageOptions& build_package_options,
-                           const std::set<std::string>& feature_list)
+                           const CMakeVars::CMakeVarProvider& var_provider,
+                           const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies,
+                           const std::vector<PackageSpec>& package_dependencies,
+                           const std::vector<std::string>& feature_list)
             : scfl(scfl)
             , scf(*scfl.source_control_file)
             , triplet(triplet)
             , port_dir(scfl.source_location)
             , build_package_options(build_package_options)
+            , var_provider(var_provider)
+            , feature_dependencies(feature_dependencies)
+            , package_dependencies(package_dependencies)
             , feature_list(feature_list)
         {
         }
 
         const SourceControlFileLocation& scfl;
         const SourceControlFile& scf;
-        const Triplet& triplet;
-        fs::path port_dir;
+        Triplet triplet;
+        const fs::path& port_dir;
         const BuildPackageOptions& build_package_options;
-        const std::set<std::string>& feature_list;
+        const CMakeVars::CMakeVarProvider& var_provider;
+
+        const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies;
+        const std::vector<PackageSpec>& package_dependencies;
+        const std::vector<std::string>& feature_list;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
@@ -219,9 +235,12 @@ namespace vcpkg::Build
     {
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
+        DLLS_WITHOUT_EXPORTS,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
+        ALLOW_RESTRICTED_HEADERS,
+        SKIP_DUMPBIN_CHECKS,
         // Must be last
         COUNT,
     };
@@ -229,9 +248,12 @@ namespace vcpkg::Build
     constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
         BuildPolicy::EMPTY_PACKAGE,
         BuildPolicy::DLLS_WITHOUT_LIBS,
+        BuildPolicy::DLLS_WITHOUT_EXPORTS,
         BuildPolicy::ONLY_RELEASE_CRT,
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
+        BuildPolicy::ALLOW_RESTRICTED_HEADERS,
+        BuildPolicy::SKIP_DUMPBIN_CHECKS
     };
 
     const std::string& to_string(BuildPolicy policy);
