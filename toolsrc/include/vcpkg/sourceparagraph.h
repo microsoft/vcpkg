@@ -1,36 +1,19 @@
 #pragma once
 
-#include <vcpkg/packagespec.h>
-#include <vcpkg/parse.h>
-
+#include <string>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
-
 #include <vcpkg/base/system.print.h>
-
-#include <string>
+#include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphparser.h>
 #include <vector>
 
 namespace vcpkg
 {
-    struct Dependency
-    {
-        Features depend;
-        std::string qualifier;
-
-        std::string name() const;
-        static Dependency parse_dependency(std::string name, std::string qualifier);
-    };
-
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<Dependency>& deps,
-                                                     const Triplet& t,
+                                                     Triplet t,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars);
-
-    // zlib[uwp] becomes Dependency{"zlib", "uwp"}
-    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
-
-    std::string to_string(const Dependency& dep);
 
     struct Type
     {
