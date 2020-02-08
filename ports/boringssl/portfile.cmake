@@ -1,14 +1,10 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(FATAL_ERROR "BoringSSL doesn't currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   message(WARNING "Can't build BoringSSL if OpenSSL is installed. Please remove OpenSSL, and try to install BoringSSL again if you need it. Build will continue since BoringSSL is a drop-in replacement for OpenSSL")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
   return()
 endif()
-
-include(vcpkg_common_functions)
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
@@ -30,8 +26,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/boringssl
-  REF f10ea55e9139d444d277cd03da519a2076e975dc
-  SHA512 adf4374af906cf086cb2922a6a4d967376d0f66770f5dec943e4720e85fcf12ae7a658c95b415f93550c73b7737eb55fe33b7e5c69a1ccd87bb3314a26e1ac0f
+  REF 7e43e2e8eecc9114f829e6d75cc3c04d1af57504
+  SHA512 b49acc36d878730c29376f1bdd8b8d1c4ebfb7bcc6110e11401b479c36da62e93939a0702624d3d9ca0f40240346f0d30c6a7e48cc43084395fde8d8683ac5eb
   HEAD_REF master
   PATCHES
     0001-vcpkg.patch
