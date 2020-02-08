@@ -1,19 +1,171 @@
 name: vcpkg (default packages)
 
-on: [push]
+on:
+  - push
+  - pull_request
+
+env:
+  PORTS: python3[enable-shared]
+  # push:
+  #   branches-ignore:
+  #     - 'integration-*'
+  #   paths:
+  #     - 'ports/**'
+  #     - '.github/**'
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
+  build-vcpkg:
+    name: Build vcpkg on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+        include:
+          - os: windows-latest
+            script_suffix: .bat
+            executable_suffix: .exe
+          - os: ubuntu-latest
+            script_suffix: .sh
+            executable_suffix:
+          - os: macos-latest
+            script_suffix: .sh
+            executable_suffix:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install required packages
-      run: sudo apt-get install -y build-essential curl unzip tar zlib1g-dev
-    - name: build vcpkg + default packages
+
+    - name: cache vcpkg
+      id: cache-vcpkg
+      uses: actions/cache@v1.1.2
+      with:
+        path: .
+        key: ${{ runner.os }}-vcpkg-temp0-${{ hashFiles('toolsrc/src/**') }}
+
+    - name: build vcpkg
+      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       run: |
-        which vcpkg
-        ./bootstrap-vcpkg.sh -disableMetrics
-        which vcpkg
-        ./vcpkg install python3
+        ./bootstrap-vcpkg${{ matrix.script_suffix }} -disableMetrics
+
+    - name: upload vcpkg
+      uses: actions/upload-artifact@v1
+      with:
+        name: vcpkg-${{ runner.os }}-${{ hashFiles('toolsrc/src/**') }}
+        path: ./vcpkg${{ matrix.executable_suffix }}
+
+  install-ports:
+    needs: build-vcpkg
+    name: Ports ${{ matrix.os }}/${{ matrix.triplet }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          # - macos-latest
+        triplet:
+          - x86-windows
+          - x64-windows
+          - x64-windows-static
+          - x64-linux
+          - x64-osx
+        include:
+          - os: windows-latest
+            executable_suffix: .exe
+          - os: ubuntu-latest
+            executable_suffix:
+          - os: macos-latest
+            executable_suffix:
+        exclude:
+          - os: windows-latest
+            triplet: x64-linux
+          - os: windows-latest
+            triplet: x64-osx
+          - os: ubuntu-latest
+            triplet: x86-windows
+          - os: ubuntu-latest
+            triplet: x64-windows
+          - os: ubuntu-latest
+            triplet: x64-windows-static
+          - os: ubuntu-latest
+            triplet: x64-osx
+          - os: macos-latest
+            triplet: x86-windows
+          - os: macos-latest
+            triplet: x64-windows
+          - os: macos-latest
+            triplet: x64-windows-static
+          - os: macos-latest
+            triplet: x64-linux
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: download built vcpkg
+      uses: actions/download-artifact@v1
+      with:
+        name: vcpkg-${{ runner.os }}-${{ hashFiles('toolsrc/src/**') }}
+
+    - name: unpack build vcpkg
+      shell: bash
+      run: |
+        mv vcpkg-${{ runner.os }}-${{ hashFiles('toolsrc/src/**') }}/vcpkg${{ matrix.executable_suffix }} ./vcpkg${{ matrix.executable_suffix }}
+        rmdir vcpkg-${{ runner.os }}-${{ hashFiles('toolsrc/src/**') }}
+        chmod +x ./vcpkg${{ matrix.executable_suffix }}
+
+    - name: cache vcpkg downloads
+      id: cache-vcpkg-downloads
+      uses: actions/cache@v1.1.2
+      with:
+        path: downloads
+        key: ${{ runner.os }}-${{ matrix.triplet }}-vcpkg-temp0-downloads-${{ hashFiles('toolsrc/src/**') }}
+
+    - name: cache vcpkg buildtrees
+      id: cache-vcpkg-buildtrees
+      uses: actions/cache@v1.1.2
+      with:
+        path: buildtrees
+        key: ${{ runner.os }}-${{ matrix.triplet }}-vcpkg-temp0-buildtrees-${{ hashFiles('toolsrc/src/**') }}
+
+    - name: cache vcpkg packages
+      id: cache-vcpkg-packages
+      uses: actions/cache@v1.1.2
+      with:
+        path: packages
+        key: ${{ runner.os }}-${{ matrix.triplet }}-vcpkg-temp0-packages-${{ hashFiles('toolsrc/src/**') }}
+
+    - name: cache vcpkg installed
+      id: cache-vcpkg-installed
+      uses: actions/cache@v1.1.2
+      with:
+        path: installed
+        key: ${{ runner.os }}-${{ matrix.triplet }}-vcpkg-temp0-installed-${{ hashFiles('toolsrc/src/**') }}
+
+    - name: remove ports
+      run: |
+        ./vcpkg${{ matrix.executable_suffix }} remove --triplet ${{ matrix.triplet }} --recurse ${{ env.PORTS }}
+
+    - name: install ports
+      run: |
+        ./vcpkg${{ matrix.executable_suffix }} install --triplet ${{ matrix.triplet }} --keep-going --recurse ${{ env.PORTS }}
+
+    - name: upload buildtrees
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        name: vcpkg-buildtrees-${{ matrix.name }}-${{ matrix.triplet }}-${{ github.run_id }}
+        path: ./buildtrees
+
+    - name: export ports
+      run: |
+        ./vcpkg${{ matrix.executable_suffix }} export --triplet ${{ matrix.triplet }} --raw --output=vcpkg-export-${{ github.run_id }} ${{ env.PORTS }}
+
+    - name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+        name: vcpkg-export-${{ matrix.name }}-${{ matrix.triplet }}
+        path: ./vcpkg-export-${{ github.run_id }}
