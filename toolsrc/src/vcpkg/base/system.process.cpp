@@ -493,12 +493,14 @@ namespace vcpkg
         int exit_code = static_cast<int>(long_exit_code);
         g_ctrl_c_state.transition_from_spawn_process();
 
-        Debug::print("cmd_execute() returned ", exit_code, " after ", static_cast<int>(timer.microseconds()), " us\n");
+        Debug::print(
+            "cmd_execute() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #else
         Debug::print("system(", cmd_line, ")\n");
         fflush(nullptr);
         int exit_code = system(cmd_line.c_str());
-        Debug::print("system() returned ", rc, " after ", static_cast<int>(timer.microseconds()), " us\n");
+        Debug::print(
+            "system() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #endif
         return exit_code;
     }
