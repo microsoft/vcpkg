@@ -227,6 +227,7 @@
     <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />

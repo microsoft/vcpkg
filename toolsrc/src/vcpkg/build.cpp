@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/base/cache.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/enums.h>
@@ -266,21 +267,24 @@ namespace vcpkg::Build
                                   }));
     }
 
-    static auto make_env_passthrough(const PreBuildInfo& pre_build_info) -> std::unordered_map<std::string, std::string>
+    static const std::unordered_map<std::string, std::string>& make_env_passthrough(const PreBuildInfo& pre_build_info)
     {
-        std::unordered_map<std::string, std::string> env;
+        static Cache<std::vector<std::string>, std::unordered_map<std::string, std::string>> envs;
+        return envs.get_lazy(pre_build_info.passthrough_env_vars, [&]() {
+            std::unordered_map<std::string, std::string> env;
 
-        for (auto&& env_var : pre_build_info.passthrough_env_vars)
-        {
-            auto env_val = System::get_environment_variable(env_var);
-
-            if (env_val)
+            for (auto&& env_var : pre_build_info.passthrough_env_vars)
             {
-                env[env_var] = env_val.value_or_exit(VCPKG_LINE_INFO);
-            }
-        }
+                auto env_val = System::get_environment_variable(env_var);
 
-        return env;
+                if (env_val)
+                {
+                    env[env_var] = env_val.value_or_exit(VCPKG_LINE_INFO);
+                }
+            }
+
+            return env;
+        });
     }
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
@@ -297,7 +301,7 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
+        return Strings::format(R"(cmd /c ""%s" %s %s %s %s 2>&1 <NUL")",
                                toolset.vcvarsall.u8string(),
                                Strings::join(" ", toolset.vcvarsall_options),
                                arch,
@@ -419,32 +423,6 @@ namespace vcpkg::Build
         return variables;
     }
 
-    static std::string make_build_cmd(const VcpkgPaths& paths,
-                                      const PreBuildInfo& pre_build_info,
-                                      const BuildPackageConfig& config,
-                                      Triplet triplet)
-    {
-        const Toolset& toolset = paths.get_toolset(pre_build_info);
-        const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
-        std::vector<System::CMakeVariable> variables = get_cmake_vars(paths, config, triplet, toolset);
-
-        const std::string cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path, paths.ports_cmake, variables);
-
-        std::string command = make_build_env_cmd(pre_build_info, toolset);
-        if (!command.empty())
-        {
-#ifdef _WIN32
-            command.append(" & ");
-#else
-            command.append(" && ");
-#endif
-        }
-
-        command.append(cmd_launch_cmake);
-
-        return command;
-    }
-
     static std::string get_triplet_abi(const VcpkgPaths& paths, const PreBuildInfo& pre_build_info, Triplet triplet)
     {
         static std::map<fs::path, std::string> s_hash_cache;
@@ -536,14 +514,29 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        std::string command = make_build_cmd(paths, pre_build_info, config, triplet);
-        std::unordered_map<std::string, std::string> env = make_env_passthrough(pre_build_info);
-
+        auto command =
+            System::make_cmake_cmd(paths.get_tool_exe(Tools::CMAKE),
+                                   paths.ports_cmake,
+                                   get_cmake_vars(paths, config, triplet, paths.get_toolset(pre_build_info)));
 #if defined(_WIN32)
-        const int return_code =
-            System::cmd_execute_clean(command, env, powershell_exe_path.parent_path().u8string() + ";");
+        std::string build_env_cmd = make_build_env_cmd(pre_build_info, paths.get_toolset(pre_build_info));
+
+        const std::unordered_map<std::string, std::string>& base_env = make_env_passthrough(pre_build_info);
+        static Cache<std::pair<const std::unordered_map<std::string, std::string>*, std::string>, System::Environment>
+            build_env_cache;
+
+        const auto& env = build_env_cache.get_lazy({&base_env, build_env_cmd}, [&]() {
+            auto clean_env =
+                System::get_modified_clean_environment(base_env, powershell_exe_path.parent_path().u8string() + ";");
+            if (build_env_cmd.empty())
+                return clean_env;
+            else
+                return System::cmd_execute_modify_env(build_env_cmd, clean_env);
+        });
+
+        const int return_code = System::cmd_execute(command, env);
 #else
-        const int return_code = System::cmd_execute_clean(command, env);
+        const int return_code = System::cmd_execute_clean(command);
 #endif
         // With the exception of empty packages, builds in "Download Mode" always result in failure.
         if (config.build_package_options.only_downloads == Build::OnlyDownloads::YES)
@@ -757,7 +750,9 @@ namespace vcpkg::Build
         return nullopt;
     }
 
-    static int decompress_archive(const VcpkgPaths& paths, const PackageSpec& spec, const fs::path& archive_path)
+    static System::ExitCodeAndOutput decompress_archive(const VcpkgPaths& paths,
+                                                        const PackageSpec& spec,
+                                                        const fs::path& archive_path)
     {
         auto& fs = paths.get_filesystem();
 
@@ -770,14 +765,12 @@ namespace vcpkg::Build
 
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
-
-        int result = System::cmd_execute_clean(Strings::format(
-            R"("%s" x "%s" -o"%s" -y >nul)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string()));
+        auto cmd = Strings::format(
+            R"("%s" x "%s" -o"%s" -y)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string());
 #else
-        int result = System::cmd_execute_clean(
-            Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
+        auto cmd = Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string());
 #endif
-        return result;
+        return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
     }
 
     // Compress the source directory into the destination file.
@@ -793,8 +786,10 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_clean(Strings::format(
-            R"("%s" a "%s" "%s\*" >nul)", seven_zip_exe.u8string(), destination.u8string(), source.u8string()));
+        System::cmd_execute_and_capture_output(
+            Strings::format(
+                R"("%s" a "%s" "%s\*")", seven_zip_exe.u8string(), destination.u8string(), source.u8string()),
+            System::get_clean_environment());
 #else
         System::cmd_execute_clean(
             Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
@@ -873,7 +868,7 @@ namespace vcpkg::Build
             {
                 System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
 
-                int archive_result = decompress_archive(paths, spec, archive_path);
+                int archive_result = decompress_archive(paths, spec, archive_path).exit_code;
 
                 if (archive_result != 0)
                 {
