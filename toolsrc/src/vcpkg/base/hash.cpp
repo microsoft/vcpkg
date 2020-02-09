@@ -746,7 +746,7 @@ namespace vcpkg::Hash
         }
 
         return do_hash(algo, [&file, &ec](Hasher& hasher) {
-            constexpr std::size_t buffer_size = 4096;
+            constexpr std::size_t buffer_size = 1024 * 32;
             auto buffer = std::make_unique<char[]>(buffer_size);
             for (;;)
             {

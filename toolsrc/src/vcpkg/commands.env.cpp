@@ -78,7 +78,7 @@ namespace vcpkg::Commands::Env
             args.command_arguments.empty() ? "cmd" : Strings::format("cmd /c %s", args.command_arguments.at(0));
 
         const std::string cmd = Strings::format("%s%s", env_cmd_prefix, env_cmd_suffix);
-        System::cmd_execute_clean(cmd, extra_env);
+        System::cmd_execute(cmd, System::get_modified_clean_environment(extra_env));
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

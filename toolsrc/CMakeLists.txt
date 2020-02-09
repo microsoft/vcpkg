@@ -139,7 +139,7 @@ if (BUILD_TESTING)
 endif()
 
 if(MSVC)
-  get_target_property(_srcs vcpkg SOURCES)
+  get_target_property(_srcs vcpkglib SOURCES)
 
   if(NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
     set_property(SOURCE src/pch.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
@@ -147,8 +147,8 @@ if(MSVC)
   endif()
 
   set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
-  target_sources(vcpkg PRIVATE src/pch.cpp)
-  target_compile_options(vcpkg PRIVATE /Yupch.h /FIpch.h /Zm200)
+  target_sources(vcpkglib PRIVATE src/pch.cpp)
+  target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
 endif()
 
 if (MINGW)
