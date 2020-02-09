@@ -2,11 +2,12 @@ include(vcpkg_common_functions)
 
 vcpkg_buildpath_length_warning(37)
 
-vcpkg_from_github(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO eigenteam/eigen-git-mirror
+    REPO libeigen/eigen
     REF 3.3.7
-    SHA512 270ab9b5c22e09aa0e70d1a26995523c5c21fb0f09da45c137c11ab4c7700fe2bdb2b343c1e063bea4be5ae61d2313ff29ebbcad519dc355a568792b4a6e9e48
+    SHA512 4cc3717b9cbe78335e05f724919497214edd482d4812aeb1a9fd6da5b3f6d1b194bb93ed0dab9e734b4334a5b88e8f8c339c43c1b2044332286ef5e758f9ecf4
     HEAD_REF master
 )
 

@@ -1,8 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,7 +15,10 @@ vcpkg_configure_cmake(
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/include
+    OPTIONS_RELEASE
+        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/lib
+    OPTIONS_DEBUG
+        -DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
 vcpkg_install_cmake()
