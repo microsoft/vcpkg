@@ -1,4 +1,4 @@
 Source: qt5-serialbus
 Version: 5.12.7
 Description: Qt5 Serialbus Module; 
-Build-Depends:  qt5-base
+Build-Depends:  qt5-base, qt5-serialport

@@ -1,4 +1,4 @@
 Source: qt5-webengine
 Version: 5.12.7
 Description: Qt5 webengine Module; 
-Build-Depends:  qt5-base
+Build-Depends:  qt5-base, qt5-declarative, qt5-location, qt5-quickcontrols, qt5-quickcontrols2, qt5-tools, qt5-webchannel
