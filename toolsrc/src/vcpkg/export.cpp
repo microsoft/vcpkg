@@ -151,12 +151,13 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
                                               nuget_exe.u8string(),
                                               output_dir.u8string(),
                                               nuspec_file_path.u8string());
 
-        const int exit_code = System::cmd_execute_clean(cmd_line);
+        const int exit_code =
+            System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
         const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
