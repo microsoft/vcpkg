@@ -12,6 +12,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES configure.dep.patch
 )
 
 vcpkg_configure_make(
@@ -23,14 +24,9 @@ vcpkg_configure_make(
     #AUTO_DST
     #PRERUN_SHELL ${SHELL_PATH}
     OPTIONS --disable-debuginfod 
-    OPTIONS_DEBUG
-        --with-zlib=${CURRENT_INSTALLED_DIR}/debug
-        --with-bzlib=${CURRENT_INSTALLED_DIR}/debug
-        --with-lzma=${CURRENT_INSTALLED_DIR}/debug
-    OPTIONS_RELEASE
-        --with-zlib=${CURRENT_INSTALLED_DIR}
-        --with-bzlib=${CURRENT_INSTALLED_DIR}
-        --with-lzma=${CURRENT_INSTALLED_DIR}
+            --with-zlib
+            --with-bzlib
+            --with-lzma
     CONFIGURE_PATCHES configure.dep.patch
     PKG_CONFIG_PATHS_RELEASE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
     PKG_CONFIG_PATHS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
