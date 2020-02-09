@@ -105,9 +105,9 @@ function(qt_build_submodule SOURCE_PATH)
         file(COPY "${CURRENT_PACKAGES_DIR}/debug/tools/qt5/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
         
         set(CURRENT_INSTALLED_DIR_BACKUP "${CURRENT_INSTALLED_DIR}")
-        #set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
-        #configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/qt.conf) # This makes the tools at least useable for release
-        #set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
+        set(CURRENT_INSTALLED_DIR "./../../../.." ) # Making the qt.conf relative and not absolute
+        configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_debug.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/qt.conf) # This makes the tools at least useable for release
+        set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
         
         vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
         if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
