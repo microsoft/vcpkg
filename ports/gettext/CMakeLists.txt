@@ -120,13 +120,13 @@ if(NOT WIN32)
     target_link_libraries(libintl PRIVATE Threads::Threads)
 endif()
 if (WIN32)
-    target_link_libraries(libintl PRIVATE Advapi32.lib)
+    target_link_libraries(libintl PRIVATE kernel32.lib Advapi32.lib)
 endif()
 
 install(TARGETS libintl
   EXPORT unofficial-gettext-targets
   RUNTIME DESTINATION bin
-  LIBRARY DESTINATION bin
+  LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 

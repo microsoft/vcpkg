@@ -1,15 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_fail_port_install(MESSAGE "aws-lambda-cpp currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-#if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#    message(FATAL_ERROR "aws-lambda-cpp currently only supports Linux and Mac platforms")
-#endif()
+vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp
-    REF v0.1.0
-    SHA512 78b1ad1dcd88176a954c03b38cbb962c77488da6c75acb37a8b64cde147c030b02c6e51f0a974edb042e59c3c969d110d181ad097ef76f43255500b272a94454
+    REF 681652d9410bb4adb66e5afa9e8a3662a5f7b606 # v0.2.4
+    SHA512 c29ea2b8fb8b99a5d0a49f601406e14682e5133deeb871a750baa792becc91f22dac00c0ee3d8c056871a1f5035cdcd1a3bba3d9464dfa84e1ec00a270a9abd6
     HEAD_REF master
 )
 
@@ -25,5 +20,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-lambda-cpp RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

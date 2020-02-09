@@ -3,3 +3,4 @@ Version: 0.13.0-3
 Homepage: https://cpp-netlib.org/
 Build-Depends: boost
 Description: A collection of network-related routines/implementations geared towards providing a robust cross-platform networking library
+Supports: !uwp

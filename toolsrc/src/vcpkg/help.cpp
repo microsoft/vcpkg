@@ -74,10 +74,36 @@ namespace vcpkg::Help
 
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
-        System::print2("Available architecture triplets:\n");
-        for (auto&& triplet : paths.get_available_triplets())
+        std::map<std::string, std::vector<const VcpkgPaths::TripletFile*>> triplets_per_location;
+        vcpkg::Util::group_by(paths.get_available_triplets(),
+                              &triplets_per_location,
+                              [](const VcpkgPaths::TripletFile& triplet_file) -> std::string {
+                                  return triplet_file.location.u8string();
+                              });
+
+        System::print2("Available architecture triplets\n");
+
+        System::print2("VCPKG built-in triplets:\n");
+        for (auto* triplet : triplets_per_location[paths.triplets.u8string()])
         {
-            System::print2("  ", triplet, '\n');
+            System::print2("  ", triplet->name, '\n');
+        }
+        triplets_per_location.erase(paths.triplets.u8string());
+
+        System::print2("\nVCPKG community triplets:\n");
+        for (auto* triplet : triplets_per_location[paths.community_triplets.u8string()])
+        {
+            System::print2("  ", triplet->name, '\n');
+        }
+        triplets_per_location.erase(paths.community_triplets.u8string());
+
+        for (auto&& kv_pair : triplets_per_location)
+        {
+            System::print2("\nOverlay triplets from ", kv_pair.first, ":\n");
+            for (auto* triplet : kv_pair.second)
+            {
+                System::print2("  ", triplet->name, '\n');
+            }
         }
     }
 

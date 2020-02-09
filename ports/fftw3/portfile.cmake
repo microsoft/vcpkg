@@ -13,50 +13,19 @@ vcpkg_extract_source_archive_ex(
         omp_test.patch
         patch_targets.patch
         fftw3_arch_fix.patch
+        aligned_malloc.patch
 )
 
-if ("openmp" IN_LIST FEATURES)
-    set(ENABLE_OPENMP ON)
-else()
-    set(ENABLE_OPENMP OFF)
-endif()
-
-if ("avx" IN_LIST FEATURES)
-    set(HAVE_AVX ON)
-    set(HAVE_SSE ON)
-    set(HAVE_SSE2 ON)
-else()
-    set(HAVE_AVX OFF)
-endif()
-
-if ("avx2" IN_LIST FEATURES)
-    set(HAVE_AVX2 ON)
-    set(HAVE_FMA ON)
-    set(HAVE_SSE ON)
-    set(HAVE_SSE2 ON)
-else()
-    set(HAVE_AVX2 OFF)
-    set(HAVE_FMA OFF)
-endif()
-
-if ("sse" IN_LIST FEATURES)
-    set(HAVE_SSE ON)
-else()
-    set(HAVE_SSE OFF)
-endif()
-
-if ("sse2" IN_LIST FEATURES)
-    set(HAVE_SSE2 ON)
-    set(HAVE_SSE ON)
-else()
-    set(HAVE_SSE2 OFF)
-endif()
-
-if ("threads" IN_LIST FEATURES)
-    set(HAVE_THREADS ON)
-else()
-    set(HAVE_THREADS OFF)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    openmp ENABLE_OPENMP
+    threads ENABLE_THREADS
+    threads WITH_COMBINED_THREADS
+    avx2 ENABLE_AVX2
+    avx ENABLE_AVX
+    sse2 ENABLE_SSE2
+    sse ENABLE_SSE
+)
 
 set(ENABLE_FLOAT_CMAKE fftw3f)
 set(ENABLE_LONG_DOUBLE_CMAKE fftw3l)
@@ -80,14 +49,7 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE ENABLE_DEFAULT_PRECISION)
         PREFER_NINJA
         OPTIONS 
             -D${PRECISION}=ON
-            -DENABLE_OPENMP=${ENABLE_OPENMP}
-            -DHAVE_SSE=${HAVE_SSE}
-            -DHAVE_SSE2=${HAVE_SSE2}
-            -DHAVE_AVX=${HAVE_AVX}
-            -DHAVE_AVX2=${HAVE_AVX2}
-            -DHAVE_FMA=${HAVE_FMA}
-            -DENABLE_THREADS=${HAVE_THREADS}
-            -DWITH_COMBINED_THREADS=${HAVE_THREADS}
+            ${FEATURE_OPTIONS}
             -DBUILD_TESTS=OFF
         )
     endif()
