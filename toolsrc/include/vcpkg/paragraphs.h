@@ -8,11 +8,11 @@
 
 namespace vcpkg::Paragraphs
 {
-    using RawParagraph = Parse::RawParagraph;
+    using Paragraph = Parse::Paragraph;
 
-    ExpectedS<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path);
-    ExpectedS<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path);
-    ExpectedS<std::vector<RawParagraph>> parse_paragraphs(const std::string& str, const std::string& origin);
+    ExpectedS<Paragraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path);
+    ExpectedS<std::vector<Paragraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path);
+    ExpectedS<std::vector<Paragraph>> parse_paragraphs(const std::string& str, const std::string& origin);
 
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& control_path);
 

@@ -18,14 +18,20 @@ namespace vcpkg::Parse
 
     struct ParseError : IParseError
     {
-        ParseError(std::string origin, int row, int column, std::string line, std::string message)
-            : origin(std::move(origin)), row(row), column(column), line(std::move(line)), message(std::move(message))
+        ParseError(std::string origin, int row, int column, int caret_col, std::string line, std::string message)
+            : origin(std::move(origin))
+            , row(row)
+            , column(column)
+            , caret_col(caret_col)
+            , line(std::move(line))
+            , message(std::move(message))
         {
         }
 
         const std::string origin;
         const int row;
         const int column;
+        const int caret_col;
         const std::string line;
         const std::string message;
 
@@ -105,27 +111,8 @@ namespace vcpkg::Parse
         const char* it() const { return m_it; }
         char cur() const { return *m_it; }
         SourceLoc cur_loc() const { return {m_it, row, column}; }
-        char next()
-        {
-            char ch = *m_it;
-            // See https://www.gnu.org/prep/standards/standards.html#Errors
-            if (ch == '\t')
-                column = (column + 7) / 8 * 8 + 1; // round to next 8-width tab stop
-            else if (ch == '\n')
-            {
-                row++;
-                column = 1;
-            }
-            else if (ch == '\0')
-            {
-                return '\0';
-            }
-            else
-            {
-                ++column;
-            }
-            return *++m_it;
-        }
+        TextRowCol cur_rowcol() const { return {row, column}; }
+        char next();
         bool at_eof() const { return *m_it == 0; }
 
         void add_error(std::string message) { add_error(std::move(message), cur_loc()); }
