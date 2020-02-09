@@ -118,6 +118,7 @@ add_custom_command(
     COMMAND "${PERL}" Configure
         ${SHARED}
         enable-static-engine
+        no-zlib
         no-ssl2
         no-idea
         no-bf

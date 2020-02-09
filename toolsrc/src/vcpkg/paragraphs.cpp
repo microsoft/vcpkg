@@ -4,211 +4,139 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/paragraphparseresult.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/parse.h>
 
 using namespace vcpkg::Parse;
+using namespace vcpkg;
 
 namespace vcpkg::Paragraphs
 {
-    struct Parser
+    struct PghParser : private Parse::ParserBase
     {
-        Parser(const char* c, const char* e) : cur(c), end(e) {}
-
     private:
-        const char* cur;
-        const char* const end;
-
-        void peek(char& ch) const
-        {
-            if (cur == end)
-                ch = 0;
-            else
-                ch = *cur;
-        }
-
-        void next(char& ch)
-        {
-            if (cur == end)
-                ch = 0;
-            else
-            {
-                ++cur;
-                peek(ch);
-            }
-        }
-
-        void skip_comment(char& ch)
-        {
-            while (ch != '\r' && ch != '\n' && ch != '\0')
-                next(ch);
-            if (ch == '\r') next(ch);
-            if (ch == '\n') next(ch);
-        }
-
-        void skip_spaces(char& ch)
-        {
-            while (ch == ' ' || ch == '\t')
-                next(ch);
-        }
-
-        static bool is_alphanum(char ch)
-        {
-            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
-        }
-
-        static bool is_comment(char ch) { return (ch == '#'); }
-
-        static bool is_lineend(char ch) { return ch == '\r' || ch == '\n' || ch == 0; }
-
-        void get_fieldvalue(char& ch, std::string& fieldvalue)
+        void get_fieldvalue(std::string& fieldvalue)
         {
             fieldvalue.clear();
 
-            auto beginning_of_line = cur;
             do
             {
                 // scan to end of current line (it is part of the field value)
-                while (!is_lineend(ch))
-                    next(ch);
+                Strings::append(fieldvalue, match_until(is_lineend));
+                skip_newline();
 
-                fieldvalue.append(beginning_of_line, cur);
-
-                if (ch == '\r') next(ch);
-                if (ch == '\n') next(ch);
-
-                if (is_alphanum(ch) || is_comment(ch))
-                {
-                    // Line begins a new field.
-                    return;
-                }
-
-                beginning_of_line = cur;
-
-                // Line may continue the current field with data or terminate the paragraph,
-                // depending on first nonspace character.
-                skip_spaces(ch);
-
-                if (is_lineend(ch))
-                {
-                    // Line was whitespace or empty.
-                    // This terminates the field and the paragraph.
-                    // We leave the blank line's whitespace consumed, because it doesn't matter.
-                    return;
-                }
-
-                // First nonspace is not a newline. This continues the current field value.
-                // We forcibly convert all newlines into single '\n' for ease of text handling later on.
-                fieldvalue.push_back('\n');
+                if (cur() != ' ') return;
+                auto spacing = skip_tabs_spaces();
+                if (is_lineend(cur())) return add_error("unexpected end of line, to span a blank line use \"  .\"");
+                Strings::append(fieldvalue, "\n", spacing);
             } while (true);
         }
 
-        void get_fieldname(char& ch, std::string& fieldname)
+        void get_fieldname(std::string& fieldname)
         {
-            auto begin_fieldname = cur;
-            while (is_alphanum(ch) || ch == '-')
-                next(ch);
-            Checks::check_exit(VCPKG_LINE_INFO, ch == ':', "Expected ':'");
-            fieldname = std::string(begin_fieldname, cur);
-
-            // skip ': '
-            next(ch);
-            skip_spaces(ch);
+            fieldname = match_zero_or_more(is_alphanumdash).to_string();
+            if (fieldname.empty()) return add_error("expected fieldname");
         }
 
-        void get_paragraph(char& ch, RawParagraph& fields)
+        void get_paragraph(RawParagraph& fields)
         {
             fields.clear();
             std::string fieldname;
             std::string fieldvalue;
             do
             {
-                if (is_comment(ch))
+                if (cur() == '#')
                 {
-                    skip_comment(ch);
+                    skip_line();
                     continue;
                 }
 
-                get_fieldname(ch, fieldname);
+                auto loc = cur_loc();
+                get_fieldname(fieldname);
+                if (cur() != ':') return add_error("expected ':' after field name");
+                if (Util::Sets::contains(fields, fieldname)) return add_error("duplicate field", loc);
+                next();
+                skip_tabs_spaces();
 
-                auto it = fields.find(fieldname);
-                Checks::check_exit(VCPKG_LINE_INFO, it == fields.end(), "Duplicate field");
-
-                get_fieldvalue(ch, fieldvalue);
+                get_fieldvalue(fieldvalue);
 
                 fields.emplace(fieldname, fieldvalue);
-            } while (!is_lineend(ch));
+            } while (!is_lineend(cur()));
         }
 
     public:
-        std::vector<RawParagraph> get_paragraphs()
+        ExpectedS<std::vector<RawParagraph>> get_paragraphs(CStringView text, CStringView origin)
         {
             std::vector<RawParagraph> paragraphs;
 
-            char ch;
-            peek(ch);
+            init(text, origin);
 
-            while (ch != 0)
+            skip_whitespace();
+            while (!at_eof())
             {
-                if (ch == '\n' || ch == '\r' || ch == ' ' || ch == '\t')
-                {
-                    next(ch);
-                    continue;
-                }
-
                 paragraphs.emplace_back();
-                get_paragraph(ch, paragraphs.back());
+                get_paragraph(paragraphs.back());
+                match_zero_or_more(is_lineend);
             }
+            if (get_error()) return get_error()->format();
 
             return paragraphs;
         }
     };
 
-    static Expected<RawParagraph> parse_single_paragraph(const std::string& str)
+    static ExpectedS<RawParagraph> parse_single_paragraph(const std::string& str, const std::string& origin)
     {
-        const std::vector<RawParagraph> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        PghParser parser;
+        auto pghs = parser.get_paragraphs(str, origin);
 
-        if (p.size() == 1)
+        if (auto p = pghs.get())
         {
-            return p.at(0);
+            if (p->size() != 1) return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH).message();
+            return std::move(p->front());
         }
-
-        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
+        else
+        {
+            return pghs.error();
+        }
     }
 
-    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
+    ExpectedS<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_single_paragraph(*spgh);
+            return parse_single_paragraph(*spgh, control_path.u8string());
         }
 
-        return contents.error();
+        return contents.error().message();
     }
 
-    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
+    ExpectedS<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
         {
-            return parse_paragraphs(*spgh);
+            return parse_paragraphs(*spgh, control_path.u8string());
         }
 
-        return contents.error();
+        return contents.error().message();
     }
 
-    Expected<std::vector<RawParagraph>> parse_paragraphs(const std::string& str)
+    ExpectedS<std::vector<RawParagraph>> parse_paragraphs(const std::string& str, const std::string& origin)
     {
-        return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        PghParser parser;
+        return parser.get_paragraphs(str, origin);
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        Expected<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path / "CONTROL");
+        const auto path_to_control = path / "CONTROL";
+        ExpectedS<std::vector<RawParagraph>> pghs = get_paragraphs(fs, path_to_control);
         if (auto vector_pghs = pghs.get())
         {
-            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = path.filename().generic_u8string();
@@ -216,9 +144,9 @@ namespace vcpkg::Paragraphs
         return error_info;
     }
 
-    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
+    ExpectedS<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        Expected<std::vector<RawParagraph>> pghs =
+        ExpectedS<std::vector<RawParagraph>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())

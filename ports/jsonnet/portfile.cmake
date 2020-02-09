@@ -11,9 +11,10 @@ vcpkg_from_github(
   PATCHES
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
+    0003-use-upstream-nlohmann-json.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_execute_required_process(
     COMMAND Powershell -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -27,7 +28,7 @@ else()
   )
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(BUILD_SHARED ON)
     set(BUILD_STATIC OFF)
 else()
@@ -44,6 +45,7 @@ vcpkg_configure_cmake(
     -DBUILD_JSONNET=OFF
     -DBUILD_JSONNETFMT=OFF
     -DBUILD_TESTS=OFF
+    -DUSE_SYSTEM_JSON=ON
 )
 
 vcpkg_install_cmake()

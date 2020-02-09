@@ -15,7 +15,6 @@ vcpkg_install_cmake()
 
 file(
 	INSTALL 
-		${SOURCE_PATH}/config.h 
 		${SOURCE_PATH}/mcpp_lib.h
 		${SOURCE_PATH}/mcpp_out.h
 	DESTINATION 

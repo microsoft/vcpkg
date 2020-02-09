@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcpkg/binaryparagraph.h>
-#include <vcpkg/parse.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/vcpkgpaths.h>
 
 #include <vcpkg/base/expected.h>
@@ -10,13 +10,13 @@ namespace vcpkg::Paragraphs
 {
     using RawParagraph = Parse::RawParagraph;
 
-    Expected<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path);
-    Expected<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path);
-    Expected<std::vector<RawParagraph>> parse_paragraphs(const std::string& str);
+    ExpectedS<RawParagraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path);
+    ExpectedS<std::vector<RawParagraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path);
+    ExpectedS<std::vector<RawParagraph>> parse_paragraphs(const std::string& str, const std::string& origin);
 
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& control_path);
 
-    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
+    ExpectedS<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
     struct LoadResults
     {

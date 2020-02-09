@@ -8,6 +8,7 @@ vcpkg_from_github(
         DontInstallSystemRuntimeLibs.patch
         fix-linux-build.patch
         openssl_threads.patch
+        fix-include-install-path.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

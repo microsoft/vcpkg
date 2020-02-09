@@ -18,14 +18,15 @@ Architecture: x64-windows
 Multi-Arch: same
 Description:
 Status: install ok installed
-)");
+)",
+                                 "");
 
     REQUIRE(pghs);
 
     StatusParagraphs status_db(
         Util::fmap(*pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
-    auto it = status_db.find_installed(unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS));
+    auto it = status_db.find_installed({"ffmpeg", Triplet::X64_WINDOWS});
     REQUIRE(it != status_db.end());
 }
 
@@ -38,14 +39,15 @@ Architecture: x64-windows
 Multi-Arch: same
 Description:
 Status: purge ok not-installed
-)");
+)",
+                                 "");
 
     REQUIRE(pghs);
 
     StatusParagraphs status_db(
         Util::fmap(*pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
-    auto it = status_db.find_installed(unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS));
+    auto it = status_db.find_installed({"ffmpeg", Triplet::X64_WINDOWS});
     REQUIRE(it == status_db.end());
 }
 
@@ -66,18 +68,19 @@ Architecture: x64-windows
 Multi-Arch: same
 Description:
 Status: purge ok not-installed
-)");
+)",
+                                 "");
 
     REQUIRE(pghs);
 
     StatusParagraphs status_db(
         Util::fmap(*pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
-    auto it = status_db.find_installed(unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS));
+    auto it = status_db.find_installed({"ffmpeg", Triplet::X64_WINDOWS});
     REQUIRE(it != status_db.end());
 
     // Feature "openssl" is not installed and should not be found
-    auto it1 = status_db.find_installed({unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS), "openssl"});
+    auto it1 = status_db.find_installed({{"ffmpeg", Triplet::X64_WINDOWS}, "openssl"});
     REQUIRE(it1 == status_db.end());
 }
 
@@ -98,13 +101,14 @@ Architecture: x64-windows
 Multi-Arch: same
 Description:
 Status: install ok installed
-)");
+)",
+                                 "");
     REQUIRE(pghs);
 
     StatusParagraphs status_db(
         Util::fmap(*pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
     // Feature "openssl" is installed and should therefore be found
-    auto it = status_db.find_installed({unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS), "openssl"});
+    auto it = status_db.find_installed({{"ffmpeg", Triplet::X64_WINDOWS}, "openssl"});
     REQUIRE(it != status_db.end());
 }

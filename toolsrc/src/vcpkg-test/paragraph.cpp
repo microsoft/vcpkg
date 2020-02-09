@@ -10,10 +10,11 @@ namespace Strings = vcpkg::Strings;
 TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                     }});
 
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
@@ -28,15 +29,15 @@ TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
 TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "s"},
-            {"Version", "v"},
-            {"Maintainer", "m"},
-            {"Description", "d"},
-            {"Build-Depends", "bd"},
-            {"Default-Features", "df"},
-            {"Supports", "x64"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "s"},
+                                                         {"Version", "v"},
+                                                         {"Maintainer", "m"},
+                                                         {"Description", "d"},
+                                                         {"Build-Depends", "bd"},
+                                                         {"Default-Features", "df"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -45,71 +46,55 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->maintainer == "m");
     REQUIRE(pgh.core_paragraph->description == "d");
     REQUIRE(pgh.core_paragraph->depends.size() == 1);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "bd");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "bd");
     REQUIRE(pgh.core_paragraph->default_features.size() == 1);
     REQUIRE(pgh.core_paragraph->default_features[0] == "df");
-    REQUIRE(pgh.core_paragraph->supports.size() == 1);
-    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
 }
 
 TEST_CASE ("SourceParagraph two depends", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Build-Depends", "z, openssl"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                         {"Build-Depends", "z, openssl"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->depends.size() == 2);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
-    REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "z");
+    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "openssl");
 }
 
 TEST_CASE ("SourceParagraph three depends", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Build-Depends", "z, openssl, xyz"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                         {"Build-Depends", "z, openssl, xyz"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->depends.size() == 3);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "z");
-    REQUIRE(pgh.core_paragraph->depends[1].name() == "openssl");
-    REQUIRE(pgh.core_paragraph->depends[2].name() == "xyz");
-}
-
-TEST_CASE ("SourceParagraph three supports", "[paragraph]")
-{
-    auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Supports", "x64, windows, uwp"},
-        }});
-    REQUIRE(m_pgh.has_value());
-    auto& pgh = **m_pgh.get();
-
-    REQUIRE(pgh.core_paragraph->supports.size() == 3);
-    REQUIRE(pgh.core_paragraph->supports[0] == "x64");
-    REQUIRE(pgh.core_paragraph->supports[1] == "windows");
-    REQUIRE(pgh.core_paragraph->supports[2] == "uwp");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "z");
+    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "openssl");
+    REQUIRE(pgh.core_paragraph->depends[2].depend.name == "xyz");
 }
 
 TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "zlib"},
-            {"Version", "1.2.8"},
-            {"Build-Depends", "libA (windows), libB (uwp)"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "zlib"},
+                                                         {"Version", "1.2.8"},
+                                                         {"Build-Depends", "liba (windows), libb (uwp)"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -118,20 +103,21 @@ TEST_CASE ("SourceParagraph construct qualified depends", "[paragraph]")
     REQUIRE(pgh.core_paragraph->maintainer == "");
     REQUIRE(pgh.core_paragraph->description == "");
     REQUIRE(pgh.core_paragraph->depends.size() == 2);
-    REQUIRE(pgh.core_paragraph->depends[0].name() == "libA");
+    REQUIRE(pgh.core_paragraph->depends[0].depend.name == "liba");
     REQUIRE(pgh.core_paragraph->depends[0].qualifier == "windows");
-    REQUIRE(pgh.core_paragraph->depends[1].name() == "libB");
+    REQUIRE(pgh.core_paragraph->depends[1].depend.name == "libb");
     REQUIRE(pgh.core_paragraph->depends[1].qualifier == "uwp");
 }
 
 TEST_CASE ("SourceParagraph default features", "[paragraph]")
 {
     auto m_pgh =
-        vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-            {"Source", "a"},
-            {"Version", "1.0"},
-            {"Default-Features", "a1"},
-        }});
+        vcpkg::SourceControlFile::parse_control_file("",
+                                                     std::vector<std::unordered_map<std::string, std::string>>{{
+                                                         {"Source", "a"},
+                                                         {"Version", "1.0"},
+                                                         {"Default-Features", "a1"},
+                                                     }});
     REQUIRE(m_pgh.has_value());
     auto& pgh = **m_pgh.get();
 
@@ -224,14 +210,14 @@ TEST_CASE ("BinaryParagraph default features", "[paragraph]")
 TEST_CASE ("parse paragraphs empty", "[paragraph]")
 {
     const char* str = "";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs.empty());
 }
 
 TEST_CASE ("parse paragraphs one field", "[paragraph]")
 {
     const char* str = "f1: v1";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 1);
     REQUIRE(pghs[0]["f1"] == "v1");
@@ -241,7 +227,7 @@ TEST_CASE ("parse paragraphs one pgh", "[paragraph]")
 {
     const char* str = "f1: v1\n"
                       "f2: v2";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 2);
     REQUIRE(pghs[0]["f1"] == "v1");
@@ -255,7 +241,7 @@ TEST_CASE ("parse paragraphs two pgh", "[paragraph]")
                       "\n"
                       "f3: v3\n"
                       "f4: v4";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
     REQUIRE(pghs[0].size() == 2);
@@ -273,7 +259,7 @@ TEST_CASE ("parse paragraphs field names", "[paragraph]")
                       "F:\n"
                       "0:\n"
                       "F-2:\n";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 5);
@@ -287,7 +273,7 @@ TEST_CASE ("parse paragraphs multiple blank lines", "[paragraph]")
                       "\n"
                       "f3: v3\n"
                       "f4: v4";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
 }
@@ -296,7 +282,7 @@ TEST_CASE ("parse paragraphs empty fields", "[paragraph]")
 {
     const char* str = "f1:\n"
                       "f2: ";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0].size() == 2);
@@ -312,7 +298,7 @@ TEST_CASE ("parse paragraphs multiline fields", "[paragraph]")
                       "f2:\r\n"
                       " f2\r\n"
                       " continue\r\n";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0]["f1"] == "simple\n f1");
@@ -326,7 +312,7 @@ TEST_CASE ("parse paragraphs crlfs", "[paragraph]")
                       "\r\n"
                       "f3: v3\r\n"
                       "f4: v4";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
     REQUIRE(pghs[0].size() == 2);
@@ -348,7 +334,7 @@ TEST_CASE ("parse paragraphs comment", "[paragraph]")
                       "f3: v3\r\n"
                       "#comment\r\n"
                       "f4: v4";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 2);
     REQUIRE(pghs[0].size() == 2);
@@ -363,7 +349,7 @@ TEST_CASE ("parse comment before single line feed", "[paragraph]")
 {
     const char* str = "f1: v1\r\n"
                       "#comment\n";
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(str, "").value_or_exit(VCPKG_LINE_INFO);
     REQUIRE(pghs[0].size() == 1);
     REQUIRE(pghs[0]["f1"] == "v1");
 }
@@ -377,14 +363,15 @@ TEST_CASE ("BinaryParagraph serialize min", "[paragraph]")
         {"Multi-Arch", "same"},
     });
     std::string ss = Strings::serialize(pgh);
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0].size() == 4);
+    REQUIRE(pghs[0].size() == 5);
     REQUIRE(pghs[0]["Package"] == "zlib");
     REQUIRE(pghs[0]["Version"] == "1.2.8");
     REQUIRE(pghs[0]["Architecture"] == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
+    REQUIRE(pghs[0]["Type"] == "Port");
 }
 
 TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
@@ -399,16 +386,17 @@ TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
         {"Multi-Arch", "same"},
     });
     std::string ss = Strings::serialize(pgh);
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0].size() == 7);
+    REQUIRE(pghs[0].size() == 8);
     REQUIRE(pghs[0]["Package"] == "zlib");
     REQUIRE(pghs[0]["Version"] == "1.2.8");
     REQUIRE(pghs[0]["Architecture"] == "x86-windows");
     REQUIRE(pghs[0]["Multi-Arch"] == "same");
     REQUIRE(pghs[0]["Description"] == "first line\n second line");
     REQUIRE(pghs[0]["Depends"] == "dep");
+    REQUIRE(pghs[0]["Type"] == "Port");
 }
 
 TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
@@ -421,7 +409,7 @@ TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
         {"Depends", "a, b, c"},
     });
     std::string ss = Strings::serialize(pgh);
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0]["Depends"] == "a, b, c");
@@ -438,7 +426,7 @@ TEST_CASE ("BinaryParagraph serialize abi", "[paragraph]")
         {"Abi", "123abc"},
     });
     std::string ss = Strings::serialize(pgh);
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
 
     REQUIRE(pghs.size() == 1);
     REQUIRE(pghs[0]["Abi"] == "123abc");
