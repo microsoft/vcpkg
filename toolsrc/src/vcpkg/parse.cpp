@@ -11,8 +11,28 @@ using namespace vcpkg;
 
 namespace vcpkg::Parse
 {
+    static void advance_rowcol(char ch, int& row, int& column)
+    {
+        if (ch == '\t')
+            column = (column + 7) / 8 * 8 + 1; // round to next 8-width tab stop
+        else if (ch == '\n')
+        {
+            row++;
+            column = 1;
+        }
+        else
+        {
+            ++column;
+        }
+    }
+
     std::string ParseError::format() const
     {
+        int ignore_row = 1;
+        int spacing = 20;
+        for (int i = 0; i < caret_col; ++i)
+            advance_rowcol(line[i], ignore_row, spacing);
+
         return Strings::concat("Error: ",
                                origin,
                                ":",
@@ -22,12 +42,24 @@ namespace vcpkg::Parse
                                ": ",
                                message,
                                "\n"
-                               "   on expression: \"",
+                               "   on expression: \"", // 9 columns
                                line,
                                "\"\n",
-                               "                   ",
-                               std::string(column - 1, ' '),
+                               std::string(spacing - 1, ' '),
                                "^\n");
+    }
+
+    char ParserBase::next()
+    {
+        char ch = *m_it;
+        // See https://www.gnu.org/prep/standards/standards.html#Errors
+        if (ch == '\0')
+        {
+            return '\0';
+        }
+        else
+            advance_rowcol(ch, row, column);
+        return *++m_it;
     }
 
     void ParserBase::add_error(std::string message, const ParserBase::SourceLoc& loc)
@@ -47,15 +79,19 @@ namespace vcpkg::Parse
             auto lineend = loc.it;
             while (*lineend != '\n' && *lineend != '\r' && *lineend != '\0')
                 ++lineend;
-            m_err.reset(
-                new ParseError(m_origin.c_str(), loc.row, loc.column, {linestart, lineend}, std::move(message)));
+            m_err.reset(new ParseError(m_origin.c_str(),
+                                       loc.row,
+                                       loc.column,
+                                       static_cast<int>(loc.it - linestart),
+                                       {linestart, lineend},
+                                       std::move(message)));
         }
 
         // Avoid error loops by skipping to the end
         skip_to_eof();
     }
 
-    static Optional<std::string> remove_field(RawParagraph* fields, const std::string& fieldname)
+    static Optional<std::pair<std::string, TextRowCol>> remove_field(Paragraph* fields, const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
         if (it == fields->end())
@@ -63,12 +99,12 @@ namespace vcpkg::Parse
             return nullopt;
         }
 
-        const std::string value = std::move(it->second);
+        auto value = std::move(it->second);
         fields->erase(it);
         return value;
     }
 
-    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
+    void ParagraphParser::required_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
     {
         auto maybe_field = remove_field(&fields, fieldname);
         if (const auto field = maybe_field.get())
@@ -76,10 +112,24 @@ namespace vcpkg::Parse
         else
             missing_fields.push_back(fieldname);
     }
-    std::string ParagraphParser::optional_field(const std::string& fieldname) const
+    void ParagraphParser::optional_field(const std::string& fieldname, std::pair<std::string&, TextRowCol&> out)
     {
-        return remove_field(&fields, fieldname).value_or("");
+        auto maybe_field = remove_field(&fields, fieldname);
+        if (auto field = maybe_field.get()) out = std::move(*field);
     }
+    void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
+    {
+        TextRowCol ignore;
+        required_field(fieldname, {out, ignore});
+    }
+    std::string ParagraphParser::optional_field(const std::string& fieldname)
+    {
+        std::string out;
+        TextRowCol ignore;
+        optional_field(fieldname, {out, ignore});
+        return out;
+    }
+
     std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
     {
         if (!fields.empty() || !missing_fields.empty())
@@ -116,29 +166,34 @@ namespace vcpkg::Parse
         } while (true);
     }
 
-    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str, CStringView origin)
+    ExpectedS<std::vector<std::string>> parse_default_features_list(const std::string& str,
+                                                                    CStringView origin,
+                                                                    TextRowCol textrowcol)
     {
         Parse::ParserBase parser;
-        parser.init(str, origin);
+        parser.init(str, origin, textrowcol);
         auto opt = parse_list_until_eof<std::string>("default features", parser, &parse_feature_name);
         if (!opt) return {parser.get_error()->format(), expected_right_tag};
         return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
     ExpectedS<std::vector<ParsedQualifiedSpecifier>> parse_qualified_specifier_list(const std::string& str,
-                                                                                    CStringView origin)
+                                                                                    CStringView origin,
+                                                                                    TextRowCol textrowcol)
     {
         Parse::ParserBase parser;
-        parser.init(str, origin);
+        parser.init(str, origin, textrowcol);
         auto opt = parse_list_until_eof<ParsedQualifiedSpecifier>(
             "dependencies", parser, [](ParserBase& parser) { return parse_qualified_specifier(parser); });
         if (!opt) return {parser.get_error()->format(), expected_right_tag};
 
         return {std::move(opt).value_or_exit(VCPKG_LINE_INFO), expected_left_tag};
     }
-    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str, CStringView origin)
+    ExpectedS<std::vector<Dependency>> parse_dependencies_list(const std::string& str,
+                                                               CStringView origin,
+                                                               TextRowCol textrowcol)
     {
         Parse::ParserBase parser;
-        parser.init(str, origin);
+        parser.init(str, origin, textrowcol);
         auto opt = parse_list_until_eof<Dependency>("dependencies", parser, [](ParserBase& parser) {
             auto loc = parser.cur_loc();
             return parse_qualified_specifier(parser).then([&](ParsedQualifiedSpecifier&& pqs) -> Optional<Dependency> {

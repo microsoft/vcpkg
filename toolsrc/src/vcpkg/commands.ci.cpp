@@ -224,12 +224,10 @@ namespace vcpkg::Commands::CI
     };
 
     static bool supported_for_triplet(const CMakeVars::TripletCMakeVarProvider& var_provider,
-
                                       const InstallPlanAction* install_plan)
     {
-        const std::string& supports_expression =
-            install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
-                .source_control_file->core_paragraph->supports_expression;
+        auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
+        const std::string& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
         if (supports_expression.empty())
         {
             return true; // default to 'supported'
