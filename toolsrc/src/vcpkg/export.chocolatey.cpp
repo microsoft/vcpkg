@@ -218,12 +218,13 @@ if (Test-Path $installedDir)
             const fs::path chocolatey_uninstall_file_path = per_package_dir_path / "tools" / "chocolateyUninstall.ps1";
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
-            const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+            const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
                                                   nuget_exe.u8string(),
                                                   exported_dir_path.u8string(),
                                                   nuspec_file_path.u8string());
 
-            const int exit_code = System::cmd_execute_clean(cmd_line);
+            const int exit_code =
+                System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
             Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
         }
     }

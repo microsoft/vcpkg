@@ -1,17 +1,9 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    message(FATAL_ERROR "Architecture not supported")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF v3.1
-    SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
+    REF v3.3
+    SHA512 62798fb31ba65fa2a0e1f71dd3daca30edcf745dc562c6f8e7126e54db92572cc63f5aa36d927dd08375bb6f38a2380ebe6c5735f35990681878fc78fc9dbc83
     HEAD_REF master
-    PATCHES
-        export-global-data.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -30,14 +22,15 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
-string(REPLACE "/* *know* they are going to link with the static library. */"
-"/* *know* they are going to link with the static library. */
+string(REPLACE "   *know* they are going to link with the static library.  */"
+"   *know* they are going to link with the static library.  */
 
 #define FFI_BUILDING
-
 " FFI_H "${FFI_H}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
+endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libffi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libffi/copyright)
@@ -53,8 +46,11 @@ set(libdir "\${prefix}/lib")
 set(toolexeclibdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
 set(PACKAGE_NAME ffi)
-set(PACKAGE_VERSION 3.1)
+set(PACKAGE_VERSION 3.3)
 configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" @ONLY)
 set(prefix "${CURRENT_INSTALLED_DIR}/debug")
 configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" @ONLY)
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

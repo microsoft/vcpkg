@@ -104,17 +104,8 @@ namespace vcpkg::Test
 
     PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
     {
-        auto spec = PackageSpec::from_name_and_triplet(scfl.source_control_file->core_paragraph->name, triplet);
-        REQUIRE(spec.has_value());
         map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
-        return PackageSpec{*spec.get()};
-    }
-
-    PackageSpec unsafe_pspec(std::string name, Triplet t)
-    {
-        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
-        REQUIRE(m_ret.has_value());
-        return m_ret.value_or_exit(VCPKG_LINE_INFO);
+        return {scfl.source_control_file->core_paragraph->name, triplet};
     }
 
     static AllowSymlinks internal_can_create_symlinks() noexcept

@@ -146,7 +146,7 @@ namespace vcpkg::Install
 
     static std::vector<file_pack> extract_files_in_triplet(
         const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files,
-        const Triplet& triplet,
+        Triplet triplet,
         const size_t remove_chars = 0)
     {
         std::vector<file_pack> output;
@@ -184,7 +184,7 @@ namespace vcpkg::Install
     }
 
     static SortedVector<file_pack> build_list_of_installed_files(
-        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
+        const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, Triplet triplet)
     {
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
         std::vector<file_pack> installed_files =
@@ -196,7 +196,7 @@ namespace vcpkg::Install
     InstallResult install_package(const VcpkgPaths& paths, const BinaryControlFile& bcf, StatusParagraphs* status_db)
     {
         const fs::path package_dir = paths.package_dir(bcf.core_paragraph.spec);
-        const Triplet& triplet = bcf.core_paragraph.spec.triplet();
+        Triplet triplet = bcf.core_paragraph.spec.triplet();
         const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
         const SortedVector<std::string> package_files =
@@ -639,7 +639,7 @@ namespace vcpkg::Install
     /// Run "install" command.
     /// </summary>
     ///
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         // input sanitization
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
