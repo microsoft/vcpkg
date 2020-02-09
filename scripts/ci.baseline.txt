@@ -557,7 +557,6 @@ gmmlib:x86-windows=fail
 googleapis:arm64-windows=fail
 googleapis:arm-uwp=fail
 googleapis:x64-uwp=fail
-google-cloud-cpp:x64-linux=ignore
 google-cloud-cpp-spanner:x86-windows=fail
 gppanel:x64-osx=fail
 gperf:x64-uwp=fail
