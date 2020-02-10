@@ -4,16 +4,16 @@
 if(VCPKG_TARGET_IS_WINDOWS)
   # Don't change to vcpkg_from_github! This points to a release and not an archive
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.zip"
-      FILENAME ACE-src-6.5.7.zip
-      SHA512 6ce6954941521b34ae8913dfe053d0f066632c55adf4091dae6bc180c79963d6f4ddfec7796cd6d9fc8ff59037ee162d20b017c4c296828913498bdbac2fc8a7
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE-src-6.5.8.zip"
+      FILENAME ACE-src-6.5.8.zip
+      SHA512 e0fd30de81f0d6e629394fc9cb814ecb786c67fccd7e975a3d64cf0859d5a03ba5a5ae4bb0a6ce5e6d16395a48ffa28f5a1a92758e08a3fd7d55582680f94d82
   )
 else(VCPKG_TARGET_IS_WINDOWS)
   # VCPKG_TARGET_IS_LINUX
   vcpkg_download_distfile(ARCHIVE
-      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_7/ACE-src-6.5.7.tar.gz"
-      FILENAME ACE-src-6.5.7.tar.gz
-      SHA512 0116e269e2d49ba8afccc7abfc7492e5a6a286dcbdcfe850a21f86b4facb5fef2848985d803233f4b1fbb03457e592375ab24c62e7bbaab5c28cc240ccedbacb
+      URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_8/ACE-src-6.5.8.tar.gz"
+      FILENAME ACE-src-6.5.8.tar.gz
+      SHA512 45ee6cf4302892ac9de305f8454109fa17a8b703187cc76555ce3641b621909e0cfedf3cc4a7fe1a8f01454637279cc9c4afe9d67466d5253e0ba1f34431d97f
   )
 endif()
 
