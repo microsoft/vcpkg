@@ -1,0 +1,10 @@
+The package libbson is compatible with built-in CMake targets:
+	
+	find_package(libbson-1.0 CONFIG REQUIRED)
+
+For use dynamic library:
+	target_include_directories(${project} PRIVATE ${BSON_INCLUDE_DIRS})
+	target_link_libraries(${project} PRIVATE ${BSON_LIBRARIES})
+For use static library:
+	target_include_directories(${project} PRIVATE ${BSON_STATIC_INCLUDE_DIRS})
+	target_link_libraries(${project} PRIVATE ${BSON_STATIC_LIBRARY})

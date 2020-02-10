@@ -1,0 +1,119 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1a2b7ba..8537e4e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -151,16 +151,15 @@ if (ENABLE_BSON STREQUAL SYSTEM)
+    # The input variable BSON_ROOT_DIR is respected for backwards compatibility,
+    # but you should use the standard CMAKE_PREFIX_PATH instead.
+    message (STATUS "Searching for libbson CMake packages")
+-   find_package (bson-1.0
++   find_package (libbson
+       "${MONGOC_MAJOR_VERSION}.${MONGOC_MINOR_VERSION}.${MONGOC_MICRO_VERSION}"
+-      HINTS
+-      ${BSON_ROOT_DIR})
++      CONFIG)
+ 
+-   if (NOT bson-1.0_FOUND)
++   if (NOT libbson_FOUND)
+       message (FATAL_ERROR "System libbson not found")
+    endif ()
+ 
+-   message ("--   libbson found version \"${bson-1.0_VERSION}\"")
++   message ("--   libbson found version \"${libbson_VERSION}\"")
+    message ("--   disabling test-libmongoc since using system libbson")
+    SET (ENABLE_TESTS OFF)
+ 
+@@ -169,14 +168,6 @@ if (ENABLE_BSON STREQUAL SYSTEM)
+    endif ()
+ 
+    set (USING_SYSTEM_BSON TRUE)
+-   if (NOT TARGET mongo::bson_shared)
+-           message (FATAL_ERROR "System libbson built without shared library target")
+-   endif ()
+-   set (BSON_LIBRARIES mongo::bson_shared)
+-   if (NOT TARGET mongo::bson_static)
+-           message (FATAL_ERROR "System libbson built without static library target")
+-   endif ()
+-   set (BSON_STATIC_LIBRARIES mongo::bson_static)
+ endif ()
+ 
+ unset (dist_generated CACHE)
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index 0f9e50c..1c52d93 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -694,23 +694,26 @@ if (WIN32)
+    set (LIBRARIES ${LIBRARIES} ws2_32)
+ endif ()
+ 
++if (NOT MONGOC_ENABLE_STATIC)
+ add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ set_target_properties (mongoc_shared PROPERTIES CMAKE_CXX_VISIBILITY_PRESET hidden)
+ target_link_libraries (mongoc_shared PRIVATE ${LIBRARIES} PUBLIC ${BSON_LIBRARIES})
+ target_include_directories (mongoc_shared BEFORE PUBLIC ${MONGOC_INTERNAL_INCLUDE_DIRS})
+ target_include_directories (mongoc_shared PRIVATE ${PRIVATE_ZLIB_INCLUDES})
+ target_include_directories (mongoc_shared PRIVATE ${LIBMONGOCRYPT_INCLUDE_DIRECTORIES})
++target_include_directories (mongoc_shared PRIVATE ${BSON_INCLUDE_DIRS})
+ target_compile_definitions (mongoc_shared PRIVATE MONGOC_COMPILATION)
+ 
+ set_target_properties (mongoc_shared PROPERTIES VERSION 0.0.0 SOVERSION 0)
+ set_target_properties (mongoc_shared PROPERTIES OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-${MONGOC_API_VERSION}")
+ 
+-if (MONGOC_ENABLE_STATIC)
++else()
+    add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+    target_link_libraries (mongoc_static ${STATIC_LIBRARIES} ${BSON_STATIC_LIBRARIES})
+    target_include_directories (mongoc_static BEFORE PUBLIC ${MONGOC_INTERNAL_INCLUDE_DIRS})
+    target_include_directories (mongoc_static PRIVATE ${PRIVATE_ZLIB_INCLUDES})
+    target_include_directories (mongoc_static PRIVATE ${LIBMONGOCRYPT_INCLUDE_DIRECTORIES})
++   target_include_directories (mongoc_static PRIVATE ${BSON_STATIC_INCLUDE_DIRS})
+    target_compile_definitions (mongoc_static
+       PUBLIC MONGOC_STATIC ${BSON_STATIC_PUBLIC_DEFINITIONS}
+       PRIVATE MONGOC_COMPILATION
+@@ -731,7 +734,13 @@ if (ENABLE_APPLE_FRAMEWORK)
+ endif ()
+ 
+ add_executable (mongoc-stat ${PROJECT_SOURCE_DIR}/../../src/tools/mongoc-stat.c)
++if (NOT MONGOC_ENABLE_STATIC)
++target_include_directories (mongoc-stat PRIVATE ${BSON_INCLUDE_DIRS})
+ target_link_libraries (mongoc-stat mongoc_shared ${LIBRARIES})
++else()
++target_include_directories (mongoc-stat PRIVATE ${BSON_STATIC_INCLUDE_DIRS})
++target_link_libraries (mongoc-stat mongoc_static ${LIBRARIES})
++endif()
+ 
+ # mongoc-stat works if shared memory performance counters are enabled.
+ if (ENABLE_SHM_COUNTERS STREQUAL "ON")
+@@ -977,7 +986,7 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
+ file (COPY ${PROJECT_SOURCE_DIR}/tests/release_files DESTINATION ${PROJECT_BINARY_DIR}/tests)
+ 
+ if (MONGOC_ENABLE_STATIC)
+-   set (TARGETS_TO_INSTALL mongoc_shared mongoc_static)
++   set (TARGETS_TO_INSTALL mongoc_static)
+ else ()
+    set (TARGETS_TO_INSTALL mongoc_shared)
+ endif ()
+@@ -997,6 +1006,7 @@ install (
+ )
+ 
+ if (MSVC)
++   if (NOT MONGOC_ENABLE_STATIC)
+    add_custom_command (
+       TARGET mongoc_shared
+       POST_BUILD
+@@ -1008,6 +1018,7 @@ if (MSVC)
+       FILES $<TARGET_LINKER_FILE_DIR:mongoc_shared>/lib$<TARGET_LINKER_FILE_NAME:mongoc_shared>
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
++   else()
+    if (TARGET mongoc_static)
+       add_custom_command (
+          TARGET mongoc_static
+@@ -1021,6 +1032,7 @@ if (MSVC)
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       )
+    endif ()
++   endif()
+ endif ()
+ 
+ install (

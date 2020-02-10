@@ -1,9 +1,11 @@
+# This port needs to be updated at the same time as libbson
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
-    REF 541086adcf1eecf88ac09fda47d9a8ec1598015d # debian/1.15.1-1
-    SHA512 a57438dfae9d0993ae04b7a76677f79331699898f21e7645db5edd2c91014f33b738a0af67b58234d1ee03aab2ae3b58c183bbd043fc2bde5cc1a4e111755b70
+    REF 99d422877c5b5ea52006c13ee3b48297251b2b2d # debian/1.16.1-1
+    SHA512 e2f129439ff3697981774e0de35586a6afe98838acfc52d8a115bcb298350f2779b886dc6b27130e78b3b81f9b0a85b2bc6bcef246f9685c05f6789747c4739d
     HEAD_REF master
+    PATCHES fix-dependency-libbson.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,7 +34,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DENABLE_MONGOC=ON
-        -DENABLE_BSON=ON
+        -DENABLE_BSON=SYSTEM
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_SSL=${ENABLE_SSL}
