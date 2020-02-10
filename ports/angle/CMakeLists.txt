@@ -420,24 +420,24 @@ SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
 SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
 SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
 
-install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_image_util angle_gpu_info_util angle_translator angle_preprocessor angle_renderer_opengl EXPORT ANGLEExport
+install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_image_util angle_gpu_info_util angle_translator angle_preprocessor  EXPORT ANGLEExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
 if(WINDOWS_DESKTOP)
-install(TARGETS angle_renderer_d3d angle_renderer_win32 EXPORT ANGLEExport
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-)
+    install(TARGETS angle_renderer_d3d angle_renderer_win32 angle_renderer_opengl EXPORT ANGLEExport
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+    )
 elseif(WINDOWS_STORE)
-install(TARGETS angle_renderer_d3d angle_renderer_win32 EXPORT ANGLEExport
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-)
+    install(TARGETS angle_renderer_d3d angle_renderer_winrt EXPORT ANGLEExport
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+    )
 endif()
 
 install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
