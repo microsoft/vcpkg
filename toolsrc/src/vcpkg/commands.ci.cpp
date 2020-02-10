@@ -224,12 +224,10 @@ namespace vcpkg::Commands::CI
     };
 
     static bool supported_for_triplet(const CMakeVars::TripletCMakeVarProvider& var_provider,
-
                                       const InstallPlanAction* install_plan)
     {
-        const std::string& supports_expression =
-            install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
-                .source_control_file->core_paragraph->supports_expression;
+        auto&& scfl = install_plan->source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
+        const std::string& supports_expression = scfl.source_control_file->core_paragraph->supports_expression;
         if (supports_expression.empty())
         {
             return true; // default to 'supported'
@@ -321,16 +319,10 @@ namespace vcpkg::Commands::CI
 
                 auto triplet = p->spec.triplet();
 
-                const Build::BuildPackageConfig build_config{*scfl,
-                                                             triplet,
-                                                             build_options,
-                                                             var_provider,
-                                                             p->feature_dependencies,
-                                                             p->package_dependencies,
-                                                             p->feature_list};
+                p->build_options = build_options;
 
                 auto dependency_abis =
-                    Util::fmap(build_config.package_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
+                    Util::fmap(p->package_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
                         auto it = ret->abi_tag_map.find(spec);
 
                         if (it == ret->abi_tag_map.end())
@@ -342,7 +334,7 @@ namespace vcpkg::Commands::CI
                 const auto pre_build_info = Build::PreBuildInfo(
                     paths, triplet, var_provider.get_tag_vars(p->spec).value_or_exit(VCPKG_LINE_INFO));
 
-                auto maybe_tag_and_file = Build::compute_abi_tag(paths, build_config, pre_build_info, dependency_abis);
+                auto maybe_tag_and_file = Build::compute_abi_tag(paths, *p, pre_build_info, dependency_abis);
                 if (auto tag_and_file = maybe_tag_and_file.get())
                 {
                     abi = tag_and_file->tag;
