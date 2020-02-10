@@ -14,6 +14,7 @@ if("latest" IN_LIST FEATURES)
     set(PATCHES 
         patches/Qt5BasicConfig_latest.patch
         patches/Qt5PluginTarget_latest.patch
+        patches/create_cmake.patch
         )
 else()
     set(PATCHES 
