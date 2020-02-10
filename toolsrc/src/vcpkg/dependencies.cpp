@@ -115,7 +115,7 @@ namespace vcpkg::Dependencies
                     for (auto&& fspec : fullspec_list)
                     {
                         // TODO: this is incorrect and does not handle default features nor "*"
-                        Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {}));
+                        Util::Vectors::append(&dep_list, fspec.to_feature_specs({"default"}, {"default"}));
                     }
 
                     Util::sort_unique_erase(dep_list);
@@ -130,10 +130,8 @@ namespace vcpkg::Dependencies
                         {
                             Util::Vectors::append(
                                 &dep_list,
-                                FullPackageSpec(PackageSpec::from_name_and_triplet(dep.depend.name, m_spec.triplet())
-                                                    .value_or_exit(VCPKG_LINE_INFO),
-                                                dep.depend.features)
-                                    .to_feature_specs({"default"}, {}));
+                                FullPackageSpec({dep.depend.name, m_spec.triplet()}, dep.depend.features)
+                                    .to_feature_specs({"default"}, {"default"}));
                         }
                         else
                         {
@@ -261,16 +259,16 @@ namespace vcpkg::Dependencies
 
             if (it == m_graph.end())
             {
-                Optional<const SourceControlFileLocation&> maybe_scfl =
+                ExpectedS<const SourceControlFileLocation&> maybe_scfl =
                     m_port_provider.get_control_file(ipv.spec().name());
 
                 if (!maybe_scfl)
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "We could not find a CONTROL file for ",
-                                              ipv.spec().to_string(),
-                                              ". Please run \"vcpkg remove ",
-                                              ipv.spec().to_string(),
-                                              "\" and re-attempt.");
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO,
+                        "Error: while loading %s: %s.\nPlease run \"vcpkg remove %s\" and re-attempt.",
+                        ipv.spec().to_string(),
+                        maybe_scfl.error(),
+                        ipv.spec().to_string());
 
                 return m_graph
                     .emplace(std::piecewise_construct,
@@ -457,7 +455,7 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<PackageSpec> ExportPlanAction::dependencies(const Triplet&) const
+    std::vector<PackageSpec> ExportPlanAction::dependencies(Triplet) const
     {
         if (auto p_ip = m_installed_package.get())
             return p_ip->dependencies();
@@ -684,8 +682,8 @@ namespace vcpkg::Dependencies
                     }
 
                     // And it has at least one qualified dependency
-                    if (paragraph_depends && Util::any_of(*paragraph_depends,
-                                                         [](auto&& dep) { return !dep.qualifier.empty(); }))
+                    if (paragraph_depends &&
+                        Util::any_of(*paragraph_depends, [](auto&& dep) { return !dep.qualifier.empty(); }))
                     {
                         // Add it to the next batch run
                         qualified_dependencies.emplace_back(spec);
@@ -864,9 +862,9 @@ namespace vcpkg::Dependencies
                             continue;
                         }
                         auto&& dep_clust = m_graph->get(fspec.spec());
-                        const auto& default_features =
-                            [&]{
-                            if (dep_clust.m_install_info.has_value()) return dep_clust.m_scfl.source_control_file->core_paragraph->default_features;
+                        const auto& default_features = [&] {
+                            if (dep_clust.m_install_info.has_value())
+                                return dep_clust.m_scfl.source_control_file->core_paragraph->default_features;
                             if (auto p = dep_clust.m_installed.get()) return p->ipv.core->package.default_features;
                             Checks::unreachable(VCPKG_LINE_INFO);
                         }();

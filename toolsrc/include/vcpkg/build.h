@@ -16,6 +16,11 @@
 #include <set>
 #include <vector>
 
+namespace vcpkg::Dependencies
+{
+    struct InstallPlanAction;
+}
+
 namespace vcpkg::Build
 {
     namespace Command
@@ -26,7 +31,7 @@ namespace vcpkg::Build
                                  const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
     }
 
     enum class UseHeadVersion
@@ -140,7 +145,7 @@ namespace vcpkg::Build
     struct PreBuildInfo
     {
         PreBuildInfo(const VcpkgPaths& paths,
-                     const Triplet& triplet,
+                     Triplet triplet,
                      const std::unordered_map<std::string, std::string>& cmakevars);
 
         std::string triplet_abi_tag;
@@ -194,41 +199,9 @@ namespace vcpkg::Build
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
-    struct BuildPackageConfig
-    {
-        BuildPackageConfig(const SourceControlFileLocation& scfl,
-                           const Triplet& triplet,
-                           const BuildPackageOptions& build_package_options,
-                           const CMakeVars::CMakeVarProvider& var_provider,
-                           const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies,
-                           const std::vector<PackageSpec>& package_dependencies,
-                           const std::vector<std::string>& feature_list)
-            : scfl(scfl)
-            , scf(*scfl.source_control_file)
-            , triplet(triplet)
-            , port_dir(scfl.source_location)
-            , build_package_options(build_package_options)
-            , var_provider(var_provider)
-            , feature_dependencies(feature_dependencies)
-            , package_dependencies(package_dependencies)
-            , feature_list(feature_list)
-        {
-        }
-
-        const SourceControlFileLocation& scfl;
-        const SourceControlFile& scf;
-        const Triplet& triplet;
-        const fs::path& port_dir;
-        const BuildPackageOptions& build_package_options;
-        const CMakeVars::CMakeVarProvider& var_provider;
-
-        const std::unordered_map<std::string, std::vector<FeatureSpec>>& feature_dependencies;
-        const std::vector<PackageSpec>& package_dependencies;
-        const std::vector<std::string>& feature_list;
-    };
-
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
-                                      const BuildPackageConfig& config,
+                                      const Dependencies::InstallPlanAction& config,
+                                      const CMakeVars::CMakeVarProvider& var_provider,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
@@ -240,6 +213,7 @@ namespace vcpkg::Build
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
         ALLOW_RESTRICTED_HEADERS,
+        SKIP_DUMPBIN_CHECKS,
         // Must be last
         COUNT,
     };
@@ -252,6 +226,7 @@ namespace vcpkg::Build
         BuildPolicy::EMPTY_INCLUDE_FOLDER,
         BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
         BuildPolicy::ALLOW_RESTRICTED_HEADERS,
+        BuildPolicy::SKIP_DUMPBIN_CHECKS,
     };
 
     const std::string& to_string(BuildPolicy policy);
@@ -314,7 +289,7 @@ namespace vcpkg::Build
     };
 
     Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
-                                            const BuildPackageConfig& config,
+                                            const Dependencies::InstallPlanAction& config,
                                             const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis);
 }
