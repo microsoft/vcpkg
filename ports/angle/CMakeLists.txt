@@ -438,6 +438,12 @@ elseif(WINDOWS_STORE)
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
     )
+else()
+    install(TARGETS angle_renderer_opengl EXPORT ANGLEExport
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+    )
 endif()
 
 install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
