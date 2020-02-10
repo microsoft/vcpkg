@@ -11,9 +11,14 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
 if("latest" IN_LIST FEATURES)
     set(QT_BUILD_LATEST ON)
-    set(PATCHES )
+    set(PATCHES 
+        patches/Qt5BasicConfig_latest.patch
+        patches/Qt5PluginTarget_latest.patch
+        )
 else()
     set(PATCHES 
+        patches/Qt5BasicConfig.patch
+        patches/Qt5PluginTarget.patch
         patches/prl_parser.patch # Modified backport of the prl parser from Qt5.14.1 without using QMAKE_PRL_LIBS_FOR_CMAKE
         patches/qt_moc.patch # Already merged upstream https://codereview.qt-project.org/c/qt/qtbase/+/288359
     )
@@ -51,8 +56,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                                                          #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
                                                          #the windows supplied gl.h header and the angle gl.h otherwise. 
                             #CMake fixes
-                            patches/Qt5BasicConfig.patch
-                            patches/Qt5PluginTarget.patch
+
                             ${PATCHES}
                     )
 
