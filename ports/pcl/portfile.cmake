@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF af3ce2530b7ae8ed083a3515168626c587a5bbcd # pcl-1.10.0
-    SHA512 ed580fa3b365f575d51ac637701760ade64cb5f925f326e0acd016e25b2054b8e272094525a6a4104834c11e6ec8743452f8ad881f90f6f212b787fe0eea2475
+    REF pcl-1.9.1
+    SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
     HEAD_REF master
     PATCHES
         pcl_utils.patch

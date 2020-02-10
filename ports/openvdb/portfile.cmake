@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF c5e9e2944f085907e973b627843c49c838afe912 # v7.0.0
-    SHA512 351611b04a192bcc501da599e55892a5dc7570dce6c0aea287d800612a20f6cb2a0d7825e062aa99f12bc2a968c51c7fe6af61badfdbd746edbd4e9fc9e4f2a4
+    REF aebaf8d95be5e57fd33949281ec357db4a576c2e # v6.2.1
+    SHA512 e5cf03e77ed0600252cb97aa4bbf9468345ad037a3053626900bd8233e89720f981f0706e5103c2d33ea9c246ba1cf695af68e60d395e5be90e655f2e127db9b
     HEAD_REF master
     PATCHES
         0001-remove-pkgconfig.patch
