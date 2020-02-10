@@ -3,7 +3,7 @@
 namespace vcpkg::Test
 {
     Optional<const std::unordered_map<std::string, std::string>&> MockCMakeVarProvider::get_generic_triplet_vars(
-        const Triplet& triplet) const
+        Triplet triplet) const
     {
         auto it = generic_triplet_vars.find(triplet);
         if (it == generic_triplet_vars.end()) return nullopt;

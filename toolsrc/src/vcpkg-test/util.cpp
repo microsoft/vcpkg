@@ -58,7 +58,7 @@ namespace vcpkg::Test
                 {"Build-Depends", feature.second},
             });
         }
-        auto m_pgh = vcpkg::SourceControlFile::parse_control_file("", std::move(scf_pghs));
+        auto m_pgh = test_parse_control_file(std::move(scf_pghs));
         REQUIRE(m_pgh.has_value());
         return std::move(*m_pgh.get());
     }
@@ -68,14 +68,13 @@ namespace vcpkg::Test
                                                             const char* default_features,
                                                             const char* triplet)
     {
-        using Pgh = std::unordered_map<std::string, std::string>;
-        return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                     {"Version", "1"},
-                                                     {"Architecture", triplet},
-                                                     {"Multi-Arch", "same"},
-                                                     {"Depends", depends},
-                                                     {"Default-Features", default_features},
-                                                     {"Status", "install ok installed"}});
+        return std::make_unique<StatusParagraph>(Parse::Paragraph{{"Package", {name, {}}},
+                                                                  {"Version", {"1", {}}},
+                                                                  {"Architecture", {triplet, {}}},
+                                                                  {"Multi-Arch", {"same", {}}},
+                                                                  {"Depends", {depends, {}}},
+                                                                  {"Default-Features", {default_features, {}}},
+                                                                  {"Status", {"install ok installed", {}}}});
     }
 
     std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
@@ -83,14 +82,12 @@ namespace vcpkg::Test
                                                              const char* depends,
                                                              const char* triplet)
     {
-        using Pgh = std::unordered_map<std::string, std::string>;
-        return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                     {"Version", "1"},
-                                                     {"Feature", feature},
-                                                     {"Architecture", triplet},
-                                                     {"Multi-Arch", "same"},
-                                                     {"Depends", depends},
-                                                     {"Status", "install ok installed"}});
+        return std::make_unique<StatusParagraph>(Parse::Paragraph{{"Package", {name, {}}},
+                                                                  {"Feature", {feature, {}}},
+                                                                  {"Architecture", {triplet, {}}},
+                                                                  {"Multi-Arch", {"same", {}}},
+                                                                  {"Depends", {depends, {}}},
+                                                                  {"Status", {"install ok installed", {}}}});
     }
 
     PackageSpec PackageSpecMap::emplace(const char* name,
@@ -104,17 +101,8 @@ namespace vcpkg::Test
 
     PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
     {
-        auto spec = PackageSpec::from_name_and_triplet(scfl.source_control_file->core_paragraph->name, triplet);
-        REQUIRE(spec.has_value());
         map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
-        return PackageSpec{*spec.get()};
-    }
-
-    PackageSpec unsafe_pspec(std::string name, Triplet t)
-    {
-        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
-        REQUIRE(m_ret.has_value());
-        return m_ret.value_or_exit(VCPKG_LINE_INFO);
+        return {scfl.source_control_file->core_paragraph->name, triplet};
     }
 
     static AllowSymlinks internal_can_create_symlinks() noexcept
