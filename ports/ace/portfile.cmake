@@ -172,7 +172,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
   # Handle copyright
   file(COPY ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)?
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 else(VCPKG_TARGET_IS_WINDOWS)
   # VCPKG_TARGTE_IS_LINUX
   FIND_PROGRAM(MAKE make)
@@ -239,5 +239,5 @@ else(VCPKG_TARGET_IS_WINDOWS)
   set($ENV{PWD} _prev_env)
 
   # Handle copyright
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 endif()
