@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
@@ -55,6 +55,7 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
+# Acquire Perl and add it to PATH (for execution of MPC)
 if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
 else ()
