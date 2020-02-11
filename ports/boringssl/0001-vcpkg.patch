@@ -11,7 +11,7 @@ index 15d1df2ae..e39330007 100644
  target_include_directories(boringssl_gtest PRIVATE third_party/googletest)
  
  include_directories(third_party/googletest/include)
-@@ -609,3 +609,15 @@ add_custom_target(
+@@ -609,3 +609,18 @@ add_custom_target(
      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
      DEPENDS all_tests bssl_shim handshaker
      ${MAYBE_USES_TERMINAL})
@@ -21,9 +21,12 @@ index 15d1df2ae..e39330007 100644
 +  LIBRARY DESTINATION lib
 +  ARCHIVE DESTINATION lib)
 +
-+install(DIRECTORY include/ DESTINATION include)
++option(INSTALL_HEADERS "Install headers" ON)
++if(INSTALL_HEADERS)
++  install(DIRECTORY include/ DESTINATION include)
++endif()
 +
 +option(INSTALL_TOOLS "Install bssl executable" OFF)
 +if(INSTALL_TOOLS)
-+  install(TARGETS bssl DESTINATION bin)
++  install(TARGETS bssl DESTINATION tools/boringssl)
 +endif()
