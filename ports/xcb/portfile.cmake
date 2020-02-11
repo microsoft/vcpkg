@@ -1,5 +1,7 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
-
+if(VCPKG_TARGET_IS_WINDOWS)
+    SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -68,7 +70,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make(MAKE_OPTIONS -k --print-data-base)
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ws2_32)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

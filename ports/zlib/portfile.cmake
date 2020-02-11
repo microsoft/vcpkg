@@ -29,7 +29,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_pkgconfig()
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zlib.pc")
     file(READ "${_file}" _contents)
@@ -43,6 +42,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(WRITE "${_file}" "${_contents}")
     endif()
 endif()
+vcpkg_fixup_pkgconfig()
+
 # Both dynamic and static are built, so keep only the one needed
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/zlibstatic.lib)

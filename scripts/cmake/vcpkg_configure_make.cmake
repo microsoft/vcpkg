@@ -142,31 +142,33 @@ macro(_vcpkg_get_mingw_vars)
     message(STATUS "MINGW_PACKAGES:${MINGW_PACKAGES}")
 endmacro()
 
-function(vcpkg_fix_makefile_install BUILD_DIR)
-    #Fix the installation location
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
+# function(vcpkg_fix_makefile_install BUILD_DIR)
+    # #Fix the installation location
+    # if(NOT WIN32)
+        # file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
+        # file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
+    # else()
+        # set(NATIVE_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
+        # set(NATIVE_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
+    # endif()
     
-    if(WIN32)
-        string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-        string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
-    else()
-        set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
-        set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
-    endif()
+    # if(WIN32)
+        # string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+        # string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    # else()
+        # set(INSTALLED_DIR_WITHOUT_DRIVE ${NATIVE_INSTALLED_DIR})
+        # set(PACKAGES_DIR_WITHOUT_DRIVE ${NATIVE_PACKAGES_DIR})
+    # endif()
 
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
-    
-    file(GLOB_RECURSE MAKEFILES "${BUILD_DIR}/*Makefile*")
+    # file(GLOB_RECURSE MAKEFILES "${BUILD_DIR}/*Makefile*")
 
-    foreach(MAKEFILE ${MAKEFILES})
-        file(READ "${MAKEFILE}" _contents)
-        #Set the correct install directory to packages
-        string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
-        file(WRITE "${MAKEFILE}" "${_contents}")
-    endforeach()
-endfunction()
+    # foreach(MAKEFILE ${MAKEFILES})
+        # file(READ "${MAKEFILE}" _contents)
+        # #Set the correct install directory to packages
+        # string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
+        # file(WRITE "${MAKEFILE}" "${_contents}")
+    # endforeach()
+# endfunction()
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
@@ -225,7 +227,8 @@ function(vcpkg_configure_make)
         # Don't bother with whitespaces on Linux. The tools will fail anyway and I tried very hard to make it work!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
-
+    if(VCPKG_TARGET_IS_WINDOWS)
+    endif()
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
         ##  Please read https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2
@@ -255,22 +258,23 @@ function(vcpkg_configure_make)
                 set(BUILD_TARGET --target==${MINGW_TARGET})
                 set(HOST_TYPE --host=${MINGW_TARGET})
             elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)            
-                set(BUILD_TARGET --target=arm-pc-mingw32)
+                set(BUILD_TARGET --target=arm-pc-windows)
                 set(HOST_TYPE --host=i686-w64-mingw32)
             endif()
             #x86_64-pc-mingw32 #x86_64-w64-mingw32 #--enable-secure-api #--enable-64bit #
         endif()
 
         vcpkg_add_to_path("${YASM_EXE_PATH}")
-        if(NOT VCPKG_USE_POSIX_TOOLCHAIN)
-            if(HOST_ARCH MATCHES "x86|arm")
-                vcpkg_add_to_path(APPEND "${MSYS_ROOT}/mingw32/bin")
-                vcpkg_add_to_path(APPEND "${MSYS_ROOT}/mingw32/i686-w64-mingw32/bin")
-            elseif(HOST_ARCH STREQUAL x64)
-                vcpkg_add_to_path(APPEND "${MSYS_ROOT}/mingw64/bin")
-                vcpkg_add_to_path(APPEND "${MSYS_ROOT}/mingw64/x86_64-w64-mingw32/bin")
-            endif()
+        
+        #set(ENV{CC} cl)
+        if(HOST_ARCH MATCHES "x86|arm")
+            vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw32/i686-w64-mingw32/bin")
+            vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw32/bin")
+        elseif(HOST_ARCH STREQUAL x64)
+            vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/x86_64-w64-mingw32/bin")
+            vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/bin")
         endif()
+
         
         vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         vcpkg_add_to_path("${PERL_EXE_PATH}")
@@ -292,7 +296,7 @@ function(vcpkg_configure_make)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     if(WIN32)
-        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
+        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         #string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED_PKGCONF ${CURRENT_INSTALLED_DIR})
@@ -300,7 +304,7 @@ function(vcpkg_configure_make)
         string(REPLACE "\\" "/" _VCPKG_INSTALLED_PKGCONF ${_VCPKG_INSTALLED_PKGCONF})
         set(EXTRA_QUOTES "\\\"")
     else()
-        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
+        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_PACKAGES_DIR_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
     endif()
@@ -308,18 +312,18 @@ function(vcpkg_configure_make)
     if (NOT _csc_DISABLE_AUTO_DST)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                                 "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}"
-                                "--bindir=${EXTRA_QUOTES}${s_VCPKG_PREFIX}/bin${EXTRA_QUOTES}"
-                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/bin${EXTRA_QUOTES}"
+                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/tools/${PORT}/bin${EXTRA_QUOTES}"
+                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/tools/${PORT}/sbin${EXTRA_QUOTES}"
                                 "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/lib${EXTRA_QUOTES}"
                                 "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/include${EXTRA_QUOTES}"
                                 "--mandir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}"
                                 "--docdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/share/${PORT}${EXTRA_QUOTES}")
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                                 "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}"
-                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/bin${EXTRA_QUOTES}"
-                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/bin${EXTRA_QUOTES}"
+                                "--bindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/../tools/${PORT}/debug/bin${EXTRA_QUOTES}"
+                                "--sbindir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/../tools/${PORT}/debug/sbin${EXTRA_QUOTES}"
                                 "--libdir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/lib${EXTRA_QUOTES}"
-                                "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug/include${EXTRA_QUOTES}")
+                                "--includedir=${EXTRA_QUOTES}${_VCPKG_PREFIX}/include${EXTRA_QUOTES}")
     endif()
 
     set(base_cmd)
@@ -387,6 +391,9 @@ function(vcpkg_configure_make)
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND C_FLAGS_GLOBAL " -fPIC")
         string(APPEND CXX_FLAGS_GLOBAL " -fPIC")
+    else()
+        string(APPEND C_FLAGS_GLOBAL "-mwin32")
+        string(APPEND CXX_FLAGS_GLOBAL "-mwin32")
     endif()
 
     set(SRC_DIR "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
@@ -479,7 +486,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${PRJ_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
-            vcpkg_fix_makefile_install("${PRJ_DIR}")
+            # vcpkg_fix_makefile_install("${PRJ_DIR}")
         endif()
         
         if(_csc_PKG_CONFIG_PATHS_DEBUG)
@@ -545,9 +552,9 @@ function(vcpkg_configure_make)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${PRJ_DIR}"
-                LOGNAME config-${TARGET_TRIPLET}-rel
-                vcpkg_fix_makefile_install("${PRJ_DIR}")
+                LOGNAME config-${TARGET_TRIPLET}-rel                
             )
+            # vcpkg_fix_makefile_install("${PRJ_DIR}")
         endif()
         
         if(_csc_PKG_CONFIG_PATHS_RELEASE)

@@ -15,9 +15,12 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS 
-        --enable-malloc0returnsnull=no      #Configre fails to run the test for some reason
+        --enable-malloc0returnsnull=yes      #Configre fails to run the test for some reason
         --enable-loadable-i18n=no           #Pointer conversion errors
-        )
+        --enable-ipv6=no
+        --with-launchd=no
+        --with-lint=no
+        --disable-selective-werror)
         
         #https://gitlab.freedesktop.org/xorg/xserver/merge_requests/191/diffs
 endif()
