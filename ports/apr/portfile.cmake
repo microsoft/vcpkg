@@ -4,12 +4,12 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(VERSION 1.6.5)
+set(VERSION 1.7.0)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 d3511e320457b5531f565813e626e7941f6b82864852db6aa03dd298a65dbccdcdc4bd580f5314f8be45d268388edab25efe88cf8340b7d2897a4dbe9d0a41fc
+    SHA512 3dc42d5caf17aab16f5c154080f020d5aed761e22db4c5f6506917f6bfd2bf8becfb40af919042bd4ce1077d5de74aa666f5edfba7f275efba78e8893c115148
 )
 
 vcpkg_extract_source_archive_ex(
