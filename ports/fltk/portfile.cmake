@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
     FILENAME "fltk-1.3.5.tar.gz"
@@ -41,18 +39,26 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT} TARGET_PATH share/${PORT})
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
+if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid)
+else() 
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
+endif()
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
 
 vcpkg_copy_pdbs()
