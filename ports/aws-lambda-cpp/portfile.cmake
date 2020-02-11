@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp
-    REF 681652d9410bb4adb66e5afa9e8a3662a5f7b606 # v0.2.4
-    SHA512 c29ea2b8fb8b99a5d0a49f601406e14682e5133deeb871a750baa792becc91f22dac00c0ee3d8c056871a1f5035cdcd1a3bba3d9464dfa84e1ec00a270a9abd6
+    REF 55276cef2efe18fe13457ebf85df53a81d68be59 # v0.2.6
+    SHA512 a865b8c5715e884c0aeb0972d88919084a37b4837ade55d7f4373422c1ffa06a550f6bfe62b6f69b9eb3a352b9a1d4114c72d754bce2d6d3727bebd029fe6631
     HEAD_REF master
 )
 

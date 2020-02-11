@@ -58,7 +58,7 @@ namespace vcpkg::Test
                 {"Build-Depends", feature.second},
             });
         }
-        auto m_pgh = vcpkg::SourceControlFile::parse_control_file("", std::move(scf_pghs));
+        auto m_pgh = test_parse_control_file(std::move(scf_pghs));
         REQUIRE(m_pgh.has_value());
         return std::move(*m_pgh.get());
     }
@@ -68,14 +68,13 @@ namespace vcpkg::Test
                                                             const char* default_features,
                                                             const char* triplet)
     {
-        using Pgh = std::unordered_map<std::string, std::string>;
-        return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                     {"Version", "1"},
-                                                     {"Architecture", triplet},
-                                                     {"Multi-Arch", "same"},
-                                                     {"Depends", depends},
-                                                     {"Default-Features", default_features},
-                                                     {"Status", "install ok installed"}});
+        return std::make_unique<StatusParagraph>(Parse::Paragraph{{"Package", {name, {}}},
+                                                                  {"Version", {"1", {}}},
+                                                                  {"Architecture", {triplet, {}}},
+                                                                  {"Multi-Arch", {"same", {}}},
+                                                                  {"Depends", {depends, {}}},
+                                                                  {"Default-Features", {default_features, {}}},
+                                                                  {"Status", {"install ok installed", {}}}});
     }
 
     std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
@@ -83,14 +82,12 @@ namespace vcpkg::Test
                                                              const char* depends,
                                                              const char* triplet)
     {
-        using Pgh = std::unordered_map<std::string, std::string>;
-        return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                     {"Version", "1"},
-                                                     {"Feature", feature},
-                                                     {"Architecture", triplet},
-                                                     {"Multi-Arch", "same"},
-                                                     {"Depends", depends},
-                                                     {"Status", "install ok installed"}});
+        return std::make_unique<StatusParagraph>(Parse::Paragraph{{"Package", {name, {}}},
+                                                                  {"Feature", {feature, {}}},
+                                                                  {"Architecture", {triplet, {}}},
+                                                                  {"Multi-Arch", {"same", {}}},
+                                                                  {"Depends", {depends, {}}},
+                                                                  {"Status", {"install ok installed", {}}}});
     }
 
     PackageSpec PackageSpecMap::emplace(const char* name,

@@ -339,17 +339,7 @@ namespace vcpkg::Install
             else
                 System::printf("Building package %s...\n", display_name_with_features);
 
-            auto result = [&]() -> Build::ExtendedBuildResult {
-                const auto& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
-                const Build::BuildPackageConfig build_config{scfl,
-                                                             action.spec.triplet(),
-                                                             action.build_options,
-                                                             var_provider,
-                                                             std::move(action.feature_dependencies),
-                                                             std::move(action.package_dependencies),
-                                                             std::move(action.feature_list)};
-                return Build::build_package(paths, build_config, status_db);
-            }();
+            auto result = Build::build_package(paths, action, var_provider, status_db);
 
             if (BuildResult::DOWNLOADED == result.code)
             {
