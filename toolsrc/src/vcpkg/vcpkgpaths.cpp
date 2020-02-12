@@ -129,7 +129,7 @@ namespace vcpkg
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
-    bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
+    bool VcpkgPaths::is_valid_triplet(Triplet t) const
     {
         const auto it = Util::find_if(this->get_available_triplets(), [&](auto&& available_triplet) {
             return t.canonical_name() == available_triplet.name;
@@ -162,7 +162,7 @@ namespace vcpkg
         });
     }
 
-    const fs::path VcpkgPaths::get_triplet_file_path(const Triplet& triplet) const
+    const fs::path VcpkgPaths::get_triplet_file_path(Triplet triplet) const
     {
         return m_triplets_cache.get_lazy(
             triplet, [&]() -> auto {
