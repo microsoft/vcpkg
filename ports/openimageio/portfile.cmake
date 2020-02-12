@@ -1,14 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF fdd982a9922ff508b8b22e5d024356b582572f46 #2.1.9.0
-    SHA512 1d076cb035b1b2cb603343465ed810ca47223211870d58f48c177d40d71a9cf82e53548b0c70127daf5dbd06f1b24772919e49e55110d914a542bcb62b99f6e8
+    REF Release-2.1.11.2
+    SHA512 11ea3da1c19f1c4b9a101390fdf7411b6d7cf800e525766d3e37a36ee38489890f5a1417c171c139992a60cd01ee0b161065a3a14c75a0eb701685b11763aa46
     HEAD_REF master
     PATCHES
         fix-dependency.patch
-        fix_static_build.patch
         fix-tools-path.patch
-        fix-config-cmake.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")

@@ -1,5 +1,5 @@
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 2f4f7ce..16035df 100644
+index fc30448..b63be5c 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
 @@ -169,10 +169,17 @@ checked_find_package (PNG REQUIRED)
@@ -63,7 +63,7 @@ index 2f4f7ce..16035df 100644
      list (APPEND qt5_modules OpenGL)
  endif ()
  option (USE_QT "Use Qt if found" ON)
-+if (USE_QT)
++if(USE_QT)
  checked_find_package (Qt5 COMPONENTS ${qt5_modules})
 +endif()
  if (USE_QT AND NOT Qt5_FOUND AND APPLE)
