@@ -1,5 +1,5 @@
 Source: sciter
-Version: 4.2.6.9-1
+Version: 4.2.6.9-2
 Homepage: https://github.com/c-smile/sciter-sdk
 Description: Sciter is an embeddable HTML/CSS/scripting engine.
-Maintainer: andrew.fedoniouk@gmail.com, ehysta@gmail.com
+Supports: !uwp

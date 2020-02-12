@@ -74,10 +74,36 @@ namespace vcpkg::Help
 
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
-        System::print2("Available architecture triplets:\n");
-        for (auto&& triplet : paths.get_available_triplets())
+        std::map<std::string, std::vector<const VcpkgPaths::TripletFile*>> triplets_per_location;
+        vcpkg::Util::group_by(paths.get_available_triplets(),
+                              &triplets_per_location,
+                              [](const VcpkgPaths::TripletFile& triplet_file) -> std::string {
+                                  return triplet_file.location.u8string();
+                              });
+
+        System::print2("Available architecture triplets\n");
+
+        System::print2("VCPKG built-in triplets:\n");
+        for (auto* triplet : triplets_per_location[paths.triplets.u8string()])
         {
-            System::print2("  ", triplet, '\n');
+            System::print2("  ", triplet->name, '\n');
+        }
+        triplets_per_location.erase(paths.triplets.u8string());
+
+        System::print2("\nVCPKG community triplets:\n");
+        for (auto* triplet : triplets_per_location[paths.community_triplets.u8string()])
+        {
+            System::print2("  ", triplet->name, '\n');
+        }
+        triplets_per_location.erase(paths.community_triplets.u8string());
+
+        for (auto&& kv_pair : triplets_per_location)
+        {
+            System::print2("\nOverlay triplets from ", kv_pair.first, ":\n");
+            for (auto* triplet : kv_pair.second)
+            {
+                System::print2("  ", triplet->name, '\n');
+            }
         }
     }
 
@@ -91,6 +117,7 @@ namespace vcpkg::Help
                        "  vcpkg list                      List installed packages\n"
                        "  vcpkg update                    Display list of packages for updating\n"
                        "  vcpkg upgrade                   Rebuild all outdated packages\n"
+                       "  vcpkg x-history <pkg>           Shows the history of CONTROL versions of a package\n"
                        "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
                        "  vcpkg help topics               Display the list of help topics\n"
                        "  vcpkg help <topic>              Display help for a specific topic\n"
@@ -104,7 +131,7 @@ namespace vcpkg::Help
                        "  vcpkg create <pkg> <url>\n"
                        "             [archivename]        Create a new package\n"
                        "  vcpkg owns <pat>                Search for files in installed packages\n"
-                       "  vcpkg depend-info [pkg]...      Display a list of dependencies for packages\n"
+                       "  vcpkg depend-info <pkg>...      Display a list of dependencies for packages\n"
                        "  vcpkg env                       Creates a clean shell environment for development or "
                        "compiling.\n"
                        "  vcpkg version                   Display version information\n"
@@ -124,7 +151,7 @@ namespace vcpkg::Help
                        "                                  (default: " ENVVAR(VCPKG_ROOT) //
                        ")\n"
                        "\n"
-                       "  --scripts-root=<path>             Specify the scripts root directory\n"
+                       "  --x-scripts-root=<path>             (Experimental) Specify the scripts root directory\n"
                        "\n"
                        "  @response_file                  Specify a "
                        "response file to provide additional parameters\n"

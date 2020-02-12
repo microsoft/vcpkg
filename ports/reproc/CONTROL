@@ -1,3 +1,4 @@
 Source: reproc
-Version: 8.0.1
-Description: Cross-platform library that simplifies working with external CLI applications from C and C++ 
+Version: 11.0.1
+Description: Cross-platform (C99/C++11) process library
+Homepage: https://github.com/DaanDeMeyer/reproc

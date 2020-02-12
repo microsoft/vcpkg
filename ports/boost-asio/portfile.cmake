@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/asio
-    REF boost-1.70.0
-    SHA512 394c7e557d97bbb8b98453846a098c8ab7f4eb92d752bd4089d2020e0d5060cff1e53f5e50b2f8910e64b66c934b2bde4a7137bd1a6050e8b1279c2e4576b2e5
+    REF boost-1.72.0
+    SHA512 5d3ae95cf0261fddd037beb6225c51b6a575779f10e8125c7e2f069642f54c0935f6b048187f55c10569874b7d4de488efae058d43d92caf5b8661e13dbcaae5
     HEAD_REF master
     PATCHES windows_alloca_header.patch
 )

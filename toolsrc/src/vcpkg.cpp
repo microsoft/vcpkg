@@ -262,31 +262,19 @@ static void load_config()
 }
 
 #if defined(_WIN32)
-static std::string trim_path_from_command_line(const std::string& full_command_line)
+// note: this prevents a false positive for -Wmissing-prototypes on clang-cl
+int wmain(int, const wchar_t* const* const);
+
+#if !defined(_MSC_VER)
+#include <shellapi.h>
+int main(int argc, const char* const* const /*argv*/)
 {
-    Checks::check_exit(
-        VCPKG_LINE_INFO, !full_command_line.empty(), "Internal failure - cannot have empty command line");
-
-    if (full_command_line[0] == '"')
-    {
-        auto it = std::find(full_command_line.cbegin() + 1, full_command_line.cend(), '"');
-        if (it != full_command_line.cend()) // Skip over the quote
-            ++it;
-        while (it != full_command_line.cend() && *it == ' ') // Skip over a space
-            ++it;
-        return std::string(it, full_command_line.cend());
-    }
-
-    auto it = std::find(full_command_line.cbegin(), full_command_line.cend(), ' ');
-    while (it != full_command_line.cend() && *it == ' ')
-        ++it;
-    return std::string(it, full_command_line.cend());
+    wchar_t **wargv;
+    wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    return wmain(argc, wargv);
 }
 #endif
 
-#if defined(_WIN32)
-// note: this prevents a false positive for -Wmissing-prototypes on clang-cl
-int wmain(int, const wchar_t* const*);
 int wmain(const int argc, const wchar_t* const* const argv)
 #else
 int main(const int argc, const char* const* const argv)
@@ -304,7 +292,6 @@ int main(const int argc, const char* const* const argv)
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
 
-    const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
 #endif
 
     Checks::register_global_shutdown_handler([]() {
@@ -335,9 +322,6 @@ int main(const int argc, const char* const* const argv)
     {
         auto locked_metrics = Metrics::g_metrics.lock();
         locked_metrics->track_property("version", Commands::Version::version());
-#if defined(_WIN32)
-        locked_metrics->track_property("cmdline", trimmed_command_line);
-#endif
     }
 
     System::register_console_ctrl_handler();

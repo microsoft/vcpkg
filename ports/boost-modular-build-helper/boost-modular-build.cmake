@@ -151,6 +151,8 @@ function(boost_modular_build)
         -q
         "-sZLIB_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         "-sBZIP2_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sLZMA_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
+        "-sZSTD_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         threading=multi
     )
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -163,6 +165,10 @@ function(boost_modular_build)
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
          "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
+         -sLZMA_BINARY=lzmad
+         "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
+         -sZSTD_BINARY=zstdd
+         "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
  
     set(_bm_OPTIONS_REL
@@ -170,6 +176,10 @@ function(boost_modular_build)
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
          "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+         -sLZMA_BINARY=lzma
+         "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
+         -sZSTD_BINARY=zstd
+         "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
     )
 
     # Properly handle compiler and linker flags passed by VCPKG
@@ -253,9 +263,7 @@ function(boost_modular_build)
         file(TO_NATIVE_PATH "${PLATFORM_WINMD_DIR}" PLATFORM_WINMD_DIR)
         string(REPLACE "\\" "/" PLATFORM_WINMD_DIR ${PLATFORM_WINMD_DIR}) # escape backslashes
 
-        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags>\"/AI${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
-    else()
-        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <compileflags>-D_WIN32_WINNT=0x0602")
+        set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     endif()
 
     configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
@@ -357,8 +365,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_70" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
-        string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
+        string(REPLACE "-1_72" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})

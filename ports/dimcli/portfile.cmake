@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF v5.0.0
-    SHA512 504e6f53e83ce17e8e4b59ecf1a610c2249c2bf48a308b1ee5db0e0e85d3cb08178d24534b5dee8bfaac83fd44c68cbbe8d300283d0023467b724a9340b56e4c
+    REF v5.0.1
+    SHA512 ff005777230f9ded5e407f11ebed7d70db2a18ec60da8c80d36644b96c9d090d2f211e3c36b7d296a446c1b54d61c359a51082034b94e2398cc2305316f33d0f
     HEAD_REF master
 	PATCHES
 		fix-NameBoolean.patch

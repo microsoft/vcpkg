@@ -2,6 +2,7 @@
 
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/export.chocolatey.h>
 #include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
 #include <vcpkg/help.h>
@@ -73,6 +74,7 @@ namespace vcpkg::Export
         static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {
             Build::UseHeadVersion::NO,
             Build::AllowDownloads::YES,
+            Build::OnlyDownloads::NO,
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
             Build::CleanDownloads::NO,
@@ -149,12 +151,13 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
                                               nuget_exe.u8string(),
                                               output_dir.u8string(),
                                               nuspec_file_path.u8string());
 
-        const int exit_code = System::cmd_execute_clean(cmd_line);
+        const int exit_code =
+            System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
         const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
@@ -256,6 +259,7 @@ namespace vcpkg::Export
         bool ifw = false;
         bool zip = false;
         bool seven_zip = false;
+        bool chocolatey = false;
 
         Optional<std::string> maybe_output;
 
@@ -263,6 +267,7 @@ namespace vcpkg::Export
         Optional<std::string> maybe_nuget_version;
 
         IFW::Options ifw_options;
+        Chocolatey::Options chocolatey_options;
         std::vector<PackageSpec> specs;
     };
 
@@ -280,17 +285,21 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
     static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
     static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+    static constexpr StringLiteral OPTION_CHOCOLATEY = "--x-chocolatey";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_MAINTAINER = "--x-maintainer";
+    static constexpr StringLiteral OPTION_CHOCOLATEY_VERSION_SUFFIX = "--x-version-suffix";
 
-    static constexpr std::array<CommandSwitch, 6> EXPORT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 7> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
         {OPTION_IFW, "Export to an IFW-based installer"},
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
+        {OPTION_CHOCOLATEY, "Export a Chocolatey package (experimental feature)"},
     }};
 
-    static constexpr std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 10> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
         {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides --output)"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
@@ -299,6 +308,10 @@ namespace vcpkg::Export
         {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
         {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
         {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
+        {OPTION_CHOCOLATEY_MAINTAINER,
+         "Specify the maintainer for the exported Chocolatey package (experimental feature)"},
+        {OPTION_CHOCOLATEY_VERSION_SUFFIX,
+         "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -309,8 +322,7 @@ namespace vcpkg::Export
         nullptr,
     };
 
-    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
-                                                           const Triplet& default_triplet)
+    static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args, Triplet default_triplet)
     {
         ExportArguments ret;
 
@@ -326,13 +338,14 @@ namespace vcpkg::Export
         ret.ifw = options.switches.find(OPTION_IFW) != options.switches.cend();
         ret.zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         ret.seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
+        ret.chocolatey = options.switches.find(OPTION_CHOCOLATEY) != options.switches.cend();
 
         ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
 
-        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run)
+        if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run && !ret.chocolatey)
         {
             System::print2(System::Color::error,
-                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip\n");
+                           "Must provide at least one export type: --raw --nuget --ifw --zip --7zip --chocolatey\n");
             System::print2(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -383,6 +396,14 @@ namespace vcpkg::Export
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
                         });
+
+        options_implies(OPTION_CHOCOLATEY,
+                        ret.chocolatey,
+                        {
+                            {OPTION_CHOCOLATEY_MAINTAINER, ret.chocolatey_options.maybe_maintainer},
+                            {OPTION_CHOCOLATEY_VERSION_SUFFIX, ret.chocolatey_options.maybe_version_suffix},
+                        });
+
 #if defined(_MSC_VER) && _MSC_VER <= 1900
 #pragma warning(pop)
 #endif
@@ -492,7 +513,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const auto opts = handle_export_command_arguments(args, default_triplet);
         for (auto&& spec : opts.specs)
@@ -502,7 +523,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         const StatusParagraphs status_db = database_load_check(paths);
 
         // Load ports from ports dirs
-        Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+        PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
@@ -557,6 +578,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             IFW::do_export(export_plan, export_id, opts.ifw_options, paths);
 
             print_next_step_info("@RootDir@/src/vcpkg");
+        }
+
+        if (opts.chocolatey)
+        {
+            Chocolatey::do_export(export_plan, paths, opts.chocolatey_options);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

@@ -48,7 +48,6 @@ function(vcpkg_fixup_cmake_targets)
         set(_vfct_TARGET_PATH share/${PORT})
     endif()
 
-
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(EXECUTABLE_SUFFIX "\\.exe")
     else()
@@ -67,7 +66,6 @@ function(vcpkg_fixup_cmake_targets)
 
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
-
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             if(NOT EXISTS ${DEBUG_CONFIG})
                 message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
@@ -196,3 +194,5 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
 endfunction()
+
+ 

@@ -1,4 +1,4 @@
 Source: yaml-cpp
-Version: 0.6.2-2
+Version: 0.6.2-3
 Homepage: https://github.com/jbeder/yaml-cpp
 Description: yaml-cpp is a YAML parser and emitter in C++ matching the YAML 1.2 spec.
