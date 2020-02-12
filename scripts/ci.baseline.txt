@@ -378,6 +378,11 @@ duilib:arm-uwp=fail
 duilib:x64-linux=fail
 duilib:x64-osx=fail
 duilib:x64-uwp=fail
+
+# requires python@2 from brew, but that no longer exists
+# python2 EOL yay!
+duktape:x64-osx=skip
+
 dxut:arm64-windows=fail
 dxut:arm-uwp=fail
 dxut:x64-linux=fail
