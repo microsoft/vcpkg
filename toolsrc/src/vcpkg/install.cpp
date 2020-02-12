@@ -4,6 +4,7 @@
 #include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.h>
@@ -299,6 +300,7 @@ namespace vcpkg::Install
     ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                                     InstallPlanAction& action,
                                                     StatusParagraphs& status_db,
+                                                    IBinaryProvider* binaries_provider,
                                                     const CMakeVars::CMakeVarProvider& var_provider)
     {
         const InstallPlanType& plan_type = action.plan_type;
@@ -339,7 +341,7 @@ namespace vcpkg::Install
             else
                 System::printf("Building package %s...\n", display_name_with_features);
 
-            auto result = Build::build_package(paths, action, var_provider, status_db);
+            auto result = Build::build_package(paths, action, var_provider, binaries_provider, status_db);
 
             if (BuildResult::DOWNLOADED == result.code)
             {
@@ -456,13 +458,15 @@ namespace vcpkg::Install
         for (auto&& action : action_plan.already_installed)
         {
             results.emplace_back(action.spec, &action);
-            results.back().build_result = perform_install_plan_action(paths, action, status_db, var_provider);
+            results.back().build_result = perform_install_plan_action(paths, action, status_db, nullptr, var_provider);
         }
 
+        auto binary_provider = create_archives_provider();
         for (auto&& action : action_plan.install_actions)
         {
             with_tracking(action.spec, [&]() {
-                auto result = perform_install_plan_action(paths, action, status_db, var_provider);
+                auto result =
+                    perform_install_plan_action(paths, action, status_db, binary_provider.get(), var_provider);
 
                 if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {

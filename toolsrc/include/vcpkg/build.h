@@ -16,6 +16,11 @@
 #include <set>
 #include <vector>
 
+namespace vcpkg
+{
+    struct IBinaryProvider;
+}
+
 namespace vcpkg::Dependencies
 {
     struct InstallPlanAction;
@@ -28,7 +33,6 @@ namespace vcpkg::Build
         void perform_and_exit_ex(const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
-                                 const ParsedArguments& options,
                                  const VcpkgPaths& paths);
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
@@ -202,6 +206,7 @@ namespace vcpkg::Build
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
                                       const CMakeVars::CMakeVarProvider& var_provider,
+                                      IBinaryProvider* binaries_provider,
                                       const StatusParagraphs& status_db);
 
     enum class BuildPolicy
