@@ -24,6 +24,7 @@ namespace vcpkg
 namespace vcpkg::Dependencies
 {
     struct InstallPlanAction;
+    struct ActionPlan;
 }
 
 namespace vcpkg::Build
@@ -205,7 +206,6 @@ namespace vcpkg::Build
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
-                                      const CMakeVars::CMakeVarProvider& var_provider,
                                       IBinaryProvider* binaries_provider,
                                       const StatusParagraphs& status_db);
 
@@ -293,8 +293,12 @@ namespace vcpkg::Build
         fs::path tag_file;
     };
 
+    void compute_all_abis(const VcpkgPaths& paths,
+                          Dependencies::ActionPlan& action_plan,
+                          const CMakeVars::CMakeVarProvider& var_provider,
+                          const StatusParagraphs& status_db);
+
     Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
                                             const Dependencies::InstallPlanAction& config,
-                                            const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis);
 }

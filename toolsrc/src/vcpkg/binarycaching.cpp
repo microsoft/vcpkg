@@ -56,29 +56,21 @@ namespace
 #endif
     }
 
-    static void compress_archive(const VcpkgPaths& paths, const PackageSpec& spec, const fs::path& destination)
-    {
-        compress_directory(paths, paths.package_dir(spec), destination);
-    }
-
     struct ArchivesBinaryProvider : IBinaryProvider
     {
         ~ArchivesBinaryProvider() = default;
         void prefetch() override {}
-        RestoreResult try_restore(const VcpkgPaths& paths,
-                                  const PackageSpec& spec,
-                                  const Build::AbiTagAndFile& abi_tag_and_file,
-                                  const Build::BuildPackageOptions& build_options) override
+        RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
+            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
             const fs::path archives_root_dir = paths.root / "archives";
-            const std::string archive_name = abi_tag_and_file.tag + ".zip";
-            const fs::path archive_subpath = fs::u8path(abi_tag_and_file.tag.substr(0, 2)) / archive_name;
+            const std::string archive_name = abi_tag + ".zip";
+            const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
             const fs::path archive_path = archives_root_dir / archive_subpath;
             const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
-            const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
-            const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
             if (fs.exists(archive_path))
             {
                 System::print2("Using cached binary package: ", archive_path.u8string(), "\n");
@@ -88,7 +80,7 @@ namespace
                 if (archive_result != 0)
                 {
                     System::print2("Failed to decompress archive package\n");
-                    if (build_options.purge_decompress_failure == Build::PurgeDecompressFailure::NO)
+                    if (action.build_options.purge_decompress_failure == Build::PurgeDecompressFailure::NO)
                     {
                         return RestoreResult::BUILD_FAILED;
                     }
@@ -106,7 +98,7 @@ namespace
 
             if (fs.exists(archive_tombstone_path))
             {
-                if (build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
+                if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
                 {
                     System::print2("Found failure tombstone: ", archive_tombstone_path.u8string(), "\n");
                     return RestoreResult::BUILD_FAILED;
@@ -124,24 +116,20 @@ namespace
 
             return RestoreResult::MISSING;
         }
-        void push_success(const VcpkgPaths& paths,
-                          const Build::AbiTagAndFile& abi_tag_and_file,
-                          const Dependencies::InstallPlanAction& action) override
+        void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) override
         {
+            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
             auto& spec = action.spec;
             auto& fs = paths.get_filesystem();
             std::error_code ec;
             const fs::path archives_root_dir = paths.root / "archives";
-            const std::string archive_name = abi_tag_and_file.tag + ".zip";
-            const fs::path archive_subpath = fs::u8path(abi_tag_and_file.tag.substr(0, 2)) / archive_name;
+            const std::string archive_name = abi_tag + ".zip";
+            const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
             const fs::path archive_path = archives_root_dir / archive_subpath;
-            const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
-            const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
-            const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
 
             const auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
 
-            compress_archive(paths, spec, tmp_archive_path);
+            compress_directory(paths, paths.package_dir(spec), tmp_archive_path);
 
             fs.create_directories(archive_path.parent_path(), ec);
             fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
@@ -155,15 +143,13 @@ namespace
             else
                 System::printf("Stored binary cache: %s\n", archive_path.u8string());
         }
-        void push_failure(const VcpkgPaths& paths,
-                          const Build::AbiTagAndFile& abi_tag_and_file,
-                          const PackageSpec& spec) override
+        void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) override
         {
             auto& fs = paths.get_filesystem();
             std::error_code ec;
             const fs::path archives_root_dir = paths.root / "archives";
-            const std::string archive_name = abi_tag_and_file.tag + ".zip";
-            const fs::path archive_subpath = fs::u8path(abi_tag_and_file.tag.substr(0, 2)) / archive_name;
+            const std::string archive_name = abi_tag + ".zip";
+            const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
             const fs::path archive_path = archives_root_dir / archive_subpath;
             const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
             const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
@@ -196,6 +182,38 @@ namespace
                 // clean up temporary directory
                 fs.remove_all(tmp_log_path, VCPKG_LINE_INFO);
             }
+        }
+        RestoreResult precheck(const VcpkgPaths& paths,
+                               const Dependencies::InstallPlanAction& action,
+                               bool purge_tombstones) override
+        {
+            const auto& abi_tag = action.package_abi.value_or_exit(VCPKG_LINE_INFO);
+            auto& fs = paths.get_filesystem();
+            std::error_code ec;
+            const fs::path archives_root_dir = paths.root / "archives";
+            const std::string archive_name = abi_tag + ".zip";
+            const fs::path archive_subpath = fs::u8path(abi_tag.substr(0, 2)) / archive_name;
+            const fs::path archive_path = archives_root_dir / archive_subpath;
+            const fs::path archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
+
+            if (fs.exists(archive_path))
+            {
+                return RestoreResult::SUCCESS;
+            }
+
+            if (purge_tombstones)
+            {
+                fs.remove(archive_tombstone_path, ec); // Ignore error
+            }
+            else if (fs.exists(archive_tombstone_path))
+            {
+                if (action.build_options.fail_on_tombstone == Build::FailOnTombstone::YES)
+                {
+                    return RestoreResult::BUILD_FAILED;
+                }
+            }
+
+            return RestoreResult::MISSING;
         }
     };
 }

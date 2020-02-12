@@ -92,8 +92,7 @@ namespace vcpkg::Build::Command
         action->build_options = build_package_options;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
-        const auto result =
-            Build::build_package(paths, *action, var_provider, create_archives_provider().get(), status_db);
+        const auto result = Build::build_package(paths, *action, create_archives_provider().get(), status_db);
         System::print2("Elapsed time for package ", spec, ": ", build_timer, '\n');
 
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
@@ -462,11 +461,10 @@ namespace vcpkg::Build
         return hash;
     }
 
-    static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
-                                                const PreBuildInfo& pre_build_info,
-                                                const std::string& abi_tag,
-                                                const Dependencies::InstallPlanAction& action)
+    static ExtendedBuildResult do_build_package(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action)
     {
+        const auto& pre_build_info = *action.pre_build_info.value_or_exit(VCPKG_LINE_INFO).get();
+
         auto& fs = paths.get_filesystem();
         auto&& scfl = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO);
 
@@ -563,8 +561,11 @@ namespace vcpkg::Build
         auto find_itr = action.feature_dependencies.find("core");
         Checks::check_exit(VCPKG_LINE_INFO, find_itr != action.feature_dependencies.end());
 
-        std::unique_ptr<BinaryControlFile> bcf = create_binary_control_file(
-            *scfl.source_control_file->core_paragraph, triplet, build_info, abi_tag, std::move(find_itr->second));
+        std::unique_ptr<BinaryControlFile> bcf = create_binary_control_file(*scfl.source_control_file->core_paragraph,
+                                                                            triplet,
+                                                                            build_info,
+                                                                            action.public_abi(),
+                                                                            std::move(find_itr->second));
 
         if (error_count != 0)
         {
@@ -590,11 +591,9 @@ namespace vcpkg::Build
     }
 
     static ExtendedBuildResult do_build_package_and_clean_buildtrees(const VcpkgPaths& paths,
-                                                                     const PreBuildInfo& pre_build_info,
-                                                                     const std::string& abi_tag,
                                                                      const Dependencies::InstallPlanAction& action)
     {
-        auto result = do_build_package(paths, pre_build_info, abi_tag, action);
+        auto result = do_build_package(paths, action);
 
         if (action.build_options.clean_buildtrees == CleanBuildtrees::YES)
         {
@@ -617,12 +616,12 @@ namespace vcpkg::Build
 
     Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
                                             const Dependencies::InstallPlanAction& action,
-                                            const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis)
     {
         auto& fs = paths.get_filesystem();
         Triplet triplet = action.spec.triplet();
         const std::string& name = action.spec.name();
+        const auto& pre_build_info = *action.pre_build_info.value_or_exit(VCPKG_LINE_INFO);
 
         std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
@@ -736,9 +735,62 @@ namespace vcpkg::Build
         return nullopt;
     }
 
+    void compute_all_abis(const VcpkgPaths& paths,
+                          Dependencies::ActionPlan& action_plan,
+                          const CMakeVars::CMakeVarProvider& var_provider,
+                          const StatusParagraphs& status_db)
+    {
+        using Dependencies::InstallPlanAction;
+        for (auto it = action_plan.install_actions.begin(); it != action_plan.install_actions.end(); ++it)
+        {
+            auto& action = *it;
+            std::vector<AbiEntry> dependency_abis;
+            if (!Util::Enum::to_bool(action.build_options.only_downloads))
+            {
+                for (auto&& pspec : action.package_dependencies)
+                {
+                    if (pspec == action.spec) continue;
+
+                    auto pred = [&](const InstallPlanAction& ipa) { return ipa.spec == pspec; };
+                    auto it2 = std::find_if(action_plan.install_actions.begin(), it, pred);
+                    if (it2 == it)
+                    {
+                        // Finally, look in current installed
+                        auto status_it = status_db.find(pspec);
+                        if (status_it == status_db.end())
+                        {
+                            Checks::exit_with_message(
+                                VCPKG_LINE_INFO, "Failed to find dependency abi for %s -> %s", action.spec, pspec);
+                        }
+                        else
+                        {
+                            dependency_abis.emplace_back(AbiEntry{pspec.name(), status_it->get()->package.abi});
+                        }
+                    }
+                    else
+                    {
+                        dependency_abis.emplace_back(AbiEntry{pspec.name(), it2->public_abi()});
+                    }
+                }
+            }
+
+            action.pre_build_info = std::make_unique<PreBuildInfo>(
+                paths, action.spec.triplet(), var_provider.get_tag_vars(action.spec).value_or_exit(VCPKG_LINE_INFO));
+            auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, dependency_abis);
+            if (auto p = maybe_abi_tag_and_file.get())
+            {
+                action.abi_tag_file = std::move(p->tag_file);
+                action.package_abi = std::move(p->tag);
+            }
+            else
+            {
+                action.package_abi = "";
+            }
+        }
+    }
+
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& action,
-                                      const CMakeVars::CMakeVarProvider& var_provider,
                                       IBinaryProvider* binaries_provider,
                                       const StatusParagraphs& status_db)
     {
@@ -746,17 +798,18 @@ namespace vcpkg::Build
 
         auto& fs = paths.get_filesystem();
         Triplet triplet = action.spec.triplet();
+        auto& spec = action.spec;
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
                                       .source_control_file->core_paragraph->name;
 
         std::vector<FeatureSpec> missing_fspecs;
         for (const auto& kv : action.feature_dependencies)
         {
-            for (const FeatureSpec& spec : kv.second)
+            for (const FeatureSpec& fspec : kv.second)
             {
-                if (!(status_db.is_installed(spec) || spec.name() == name))
+                if (!(status_db.is_installed(fspec) || spec.name() == name))
                 {
-                    missing_fspecs.emplace_back(spec);
+                    missing_fspecs.emplace_back(fspec);
                 }
             }
         }
@@ -765,8 +818,6 @@ namespace vcpkg::Build
         {
             return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_fspecs)};
         }
-
-        const PackageSpec spec(name, triplet);
 
         std::vector<AbiEntry> dependency_abis;
         for (auto&& pspec : action.package_dependencies)
@@ -781,24 +832,19 @@ namespace vcpkg::Build
                 AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
         }
 
-        const std::unordered_map<std::string, std::string>& cmake_vars =
-            var_provider.get_tag_vars(spec).value_or_exit(VCPKG_LINE_INFO);
-        const PreBuildInfo pre_build_info(paths, triplet, cmake_vars);
-
-        auto maybe_abi_tag_and_file = compute_abi_tag(paths, action, pre_build_info, dependency_abis);
-        if (!maybe_abi_tag_and_file)
+        if (!action.abi_tag_file)
         {
-            return do_build_package_and_clean_buildtrees(
-                paths, pre_build_info, pre_build_info.public_abi_override.value_or(AbiTagAndFile{}.tag), action);
+            return do_build_package_and_clean_buildtrees(paths, action);
         }
 
+        auto& abi_file = *action.abi_tag_file.get();
+
         std::error_code ec;
-        const auto abi_tag_and_file = maybe_abi_tag_and_file.get();
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
         if (binary_caching_enabled)
         {
-            auto restore = binaries_provider->try_restore(paths, spec, *abi_tag_and_file, action.build_options);
+            auto restore = binaries_provider->try_restore(paths, action);
             if (restore == RestoreResult::BUILD_FAILED)
                 return BuildResult::BUILD_FAILED;
             else if (restore == RestoreResult::SUCCESS)
@@ -813,21 +859,20 @@ namespace vcpkg::Build
             }
         }
 
-        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
-            paths, pre_build_info, pre_build_info.public_abi_override.value_or(abi_tag_and_file->tag), action);
+        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(paths, action);
 
         fs.create_directories(abi_package_dir, ec);
-        fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
+        fs.copy_file(abi_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
         if (binary_caching_enabled && result.code == BuildResult::SUCCEEDED)
         {
-            binaries_provider->push_success(paths, *abi_tag_and_file, action);
+            binaries_provider->push_success(paths, action);
         }
         else if (binary_caching_enabled &&
                  (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED))
         {
-            binaries_provider->push_failure(paths, *abi_tag_and_file, spec);
+            binaries_provider->push_failure(paths, action.package_abi.value_or_exit(VCPKG_LINE_INFO), spec);
         }
 
         return result;

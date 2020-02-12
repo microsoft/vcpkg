@@ -27,16 +27,12 @@ namespace vcpkg
     {
         virtual ~IBinaryProvider() = default;
         virtual void prefetch() = 0;
-        virtual RestoreResult try_restore(const VcpkgPaths& paths,
-                                          const PackageSpec& spec,
-                                          const Build::AbiTagAndFile& abi_tag_and_file,
-                                          const Build::BuildPackageOptions& build_options) = 0;
-        virtual void push_success(const VcpkgPaths& paths,
-                                  const Build::AbiTagAndFile& abi_tag_and_file,
-                                  const Dependencies::InstallPlanAction& action) = 0;
-        virtual void push_failure(const VcpkgPaths& paths,
-                                  const Build::AbiTagAndFile& abi_tag_and_file,
-                                  const PackageSpec& spec) = 0;
+        virtual RestoreResult try_restore(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) = 0;
+        virtual void push_success(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action) = 0;
+        virtual void push_failure(const VcpkgPaths& paths, const std::string& abi_tag, const PackageSpec& spec) = 0;
+        virtual RestoreResult precheck(const VcpkgPaths& paths,
+                                       const Dependencies::InstallPlanAction& action,
+                                       bool purge_tombstones) = 0;
     };
 
     std::unique_ptr<IBinaryProvider> create_archives_provider();
