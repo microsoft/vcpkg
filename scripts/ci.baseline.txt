@@ -95,6 +95,7 @@ asiosdk:arm64-windows=fail
 asiosdk:arm-uwp=fail
 asmjit:arm64-windows=fail
 asmjit:arm-uwp=fail
+asmjit:x64-uwp=fail
 asyncplusplus:arm-uwp=fail
 asyncplusplus:x64-uwp=fail
 atk:x64-osx=fail
@@ -377,6 +378,11 @@ duilib:arm-uwp=fail
 duilib:x64-linux=fail
 duilib:x64-osx=fail
 duilib:x64-uwp=fail
+
+# requires python@2 from brew, but that no longer exists
+# python2 EOL yay!
+duktape:x64-osx=skip
+
 dxut:arm64-windows=fail
 dxut:arm-uwp=fail
 dxut:x64-linux=fail
@@ -662,9 +668,7 @@ jemalloc:x64-uwp=fail
 jemalloc:x64-windows-static=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-kd-soap:x64-linux=fail
 kd-soap:x64-osx=fail
-kd-soap:x64-windows-static=fail
 keystone:arm64-windows=fail
 keystone:arm-uwp=fail
 keystone:x64-uwp=fail
@@ -761,6 +765,12 @@ libgpod:x64-uwp=fail
 libgpod:x64-windows=fail
 libgpod:x64-windows-static=fail
 libgpod:x86-windows=fail
+libhdfs3:arm64-windows=fail
+libhdfs3:arm-uwp=fail
+libhdfs3:x64-uwp=fail
+libhdfs3:x64-windows=fail
+libhdfs3:x64-windows-static=fail
+libhdfs3:x86-windows=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
