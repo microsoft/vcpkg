@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
-    REF 4d6a463bca51bc316f9b565edd94e82388206093 #0.10.0
+    REF 4d6a463bca51bc316f9b565edd94e82388206093 # 0.10.0
     SHA512 5aede48a1c9cefe8b93912c039137407f6a264190db9111bdbfa86c22663d00af3f1bba9151f3e137195c9c1a8f6d4ad14ce82a154a6d6a37fc431ee0bf242c5
     HEAD_REF master
 )
