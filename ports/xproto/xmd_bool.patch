@@ -1,0 +1,16 @@
+diff --git a/include/X11/Xmd - Kopie.h b/include/X11/Xmd.h
+index ec98b893a..b49f3cde4 100644
+--- a/include/X11/Xmd - Kopie.h	
++++ b/include/X11/Xmd.h
+@@ -130,7 +130,11 @@ typedef CARD32		BITS32;
+ typedef CARD16		BITS16;
+ 
+ typedef CARD8		BYTE;
++# if defined(_WIN32) || defined(WIN32)
++typedef int		BOOL;
++# else
+ typedef CARD8		BOOL;
++# endif
+ 
+ /*
+  * was definitions for sign-extending bitfields on architectures without

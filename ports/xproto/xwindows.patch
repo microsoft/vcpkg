@@ -1,0 +1,301 @@
+diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
+index 5eff8570f..736bbe4db 100644
+--- a/include/X11/Xwindows.h	
++++ b/include/X11/Xwindows.h
+@@ -61,36 +61,276 @@ The Open Group.
+  * ... so try to come up with something which works with both :-)
+  */
+ #define _NO_BOOL_TYPEDEF
+-#define BOOL WINBOOL
+-#define INT32 wINT32
+-#ifdef __x86_64__
+-#define INT64 wINT64
+-#define LONG64 wLONG64
+-#endif
+-#undef Status
+-#define Status wStatus
+-#define ATOM wATOM
+-#define BYTE wBYTE
+-#define FreeResource wFreeResource
++#if defined(None)
++    #define X_XWINDOWS_DEFINE_GUARD_None_DEFINITION None
++    #if defined(wNone)
++        #undef None
++        #define None wNone 
++    #else 
++        #undef None
++    #endif 
++#endif
++#if defined(BOOL)
++    #define X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION BOOL
++    #if defined(WINBOOL)
++        #undef BOOL
++        #define BOOL WINBOOL 
++    #else 
++        #undef BOOL
++    #endif 
++#endif
++#if defined(VOID)
++    #define X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION VOID
++    #if defined(wVOID)
++        #undef VOID
++        #define VOID wVOID 
++    #else 
++        #undef VOID
++    #endif 
++#endif
++#if defined(INT8)
++    #define X_XWINDOWS_DEFINE_GUARD_INT8_DEFINITION INT8
++    #if defined(wINT8)
++        #undef INT8
++        #define INT8 wINT8 
++    #else 
++        #undef INT8
++    #endif 
++#endif
++#if defined(INT16)
++    #define X_XWINDOWS_DEFINE_GUARD_INT16_DEFINITION INT16
++    #if defined(wINT16)
++        #undef INT16
++        #define INT16 wINT16 
++    #else 
++        #undef INT16
++    #endif 
++#endif
++#if defined(INT32)
++    #define X_XWINDOWS_DEFINE_GUARD_INT32_DEFINITION INT32
++    #if defined(wINT32)
++        #undef INT32
++        #define INT32 wINT32 
++    #else 
++        #undef INT32
++    #endif 
++#endif
++#if defined(INT64)
++    #define X_XWINDOWS_DEFINE_GUARD_INT64_DEFINITION INT64
++    #if defined(wINT64)
++        #undef INT64
++        #define INT64 wINT64 
++    #else 
++        #undef INT64
++    #endif 
++#endif
++#if defined(UINT8)
++    #define X_XWINDOWS_DEFINE_GUARD_UINT8_DEFINITION UINT8
++    #if defined(wUINT8)
++        #undef UINT8
++        #define UINT8 wUINT8 
++    #else 
++        #undef UINT8
++    #endif 
++#endif
++#if defined(UINT16)
++    #define X_XWINDOWS_DEFINE_GUARD_UINT16_DEFINITION UINT16
++    #if defined(wUINT16)
++        #undef UINT16
++        #define UINT16 wUINT16 
++    #else 
++        #undef UINT16
++    #endif 
++#endif
++#if defined(UINT32)
++    #define X_XWINDOWS_DEFINE_GUARD_UINT32_DEFINITION UINT32
++    #if defined(wUINT32)
++        #undef UINT32
++        #define UINT32 wUINT32 
++    #else 
++        #undef UINT32
++    #endif 
++#endif
++#if defined(UINT64)
++    #define X_XWINDOWS_DEFINE_GUARD_UINT64_DEFINITION UINT64
++    #if defined(wUINT64)
++        #undef UINT64
++        #define UINT64 wUINT64 
++    #else 
++        #undef UINT64
++    #endif 
++#endif
++#if defined(LONG64)
++    #define X_XWINDOWS_DEFINE_GUARD_LONG64_DEFINITION LONG64
++    #if defined(wLONG64)
++        #undef LONG64
++        #define LONG64 wLONG64 
++    #else 
++        #undef LONG64
++    #endif 
++#endif
++#if defined(Status)
++    #define X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION Status
++    #if defined(wStatus)
++        #undef Status
++        #define Status wStatus 
++    #else 
++        #undef Status
++    #endif 
++#endif
++#if defined(ATOM)
++    #define X_XWINDOWS_DEFINE_GUARD_ATOM_DEFINITION ATOM
++    #if defined(wATOM)
++        #undef ATOM
++        #define ATOM wATOM 
++    #else 
++        #undef ATOM
++    #endif 
++#endif
++#if defined(BYTE)
++    #define X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION BYTE
++    #if defined(wBYTE)
++        #undef BYTE
++        #define BYTE wBYTE 
++    #else 
++        #undef BYTE
++    #endif 
++#endif
++#if defined(None)
++    #define X_XWINDOWS_DEFINE_GUARD_None_DEFINITION None
++    #if defined(wNone)
++        #undef None
++        #define None wNone 
++    #else 
++        #undef None
++    #endif 
++#endif
++#if defined(FreeResource)
++    #define X_XWINDOWS_DEFINE_GUARD_FreeResource_DEFINITION FreeResource
++    #if defined(wFreeResource)
++        #undef FreeResource
++        #define FreeResource wFreeResource 
++    #else 
++        #undef FreeResource
++    #endif 
++#endif
+ #ifdef WIN32_LEAN_AND_MEAN 
+ #define GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF
+ #else
+ #define WIN32_LEAN_AND_MEAN 
+ #endif
++#define _WINSOCKAPI_ // To avoid including winsocks.h with windows.h (same trick as winsock2.h)
+ #include <windows.h>
++#undef _WINSOCKAPI_
+ #ifndef GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF 
+ #undef WIN32_LEAN_AND_MEAN 
+ #endif
+ #undef NOMINMAX
+-#undef Status
+-#define Status int
+-#undef BYTE
+-#undef BOOL
+-#undef INT32
+-#undef INT64
+-#undef LONG64
+-#undef ATOM
+-#undef FreeResource
++#if defined(X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION)
++    #undef BOOL
++    #define BOOL X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
++#else 
++    #undef BOOL
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION)
++    #undef VOID
++    #define VOID X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION
++#else 
++    #undef VOID
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_INT8_DEFINITION)
++    #undef INT8
++    #define INT8 X_XWINDOWS_DEFINE_GUARD_INT8_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_INT8_DEFINITION
++#else 
++    #undef INT8
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_INT16_DEFINITION)
++    #undef INT16
++    #define INT16 X_XWINDOWS_DEFINE_GUARD_INT16_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_INT16_DEFINITION
++#else 
++    #undef INT16
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_INT32_DEFINITION)
++    #undef INT32
++    #define INT32 X_XWINDOWS_DEFINE_GUARD_INT32_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_INT32_DEFINITION
++#else 
++    #undef INT32
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_INT64_DEFINITION)
++    #undef INT64
++    #define INT64 X_XWINDOWS_DEFINE_GUARD_INT64_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_INT64_DEFINITION
++#else 
++    #undef INT64
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_UINT8_DEFINITION)
++    #undef UINT8
++    #define UINT8 X_XWINDOWS_DEFINE_GUARD_UINT8_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_UINT8_DEFINITION
++#else 
++    #undef UINT8
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_UINT16_DEFINITION)
++    #undef UINT16
++    #define UINT16 X_XWINDOWS_DEFINE_GUARD_UINT16_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_UINT16_DEFINITION
++#else 
++    #undef UINT16
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_UINT32_DEFINITION)
++    #undef UINT32
++    #define UINT32 X_XWINDOWS_DEFINE_GUARD_UINT32_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_UINT32_DEFINITION
++#else 
++    #undef UINT32
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_UINT64_DEFINITION)
++    #undef UINT64
++    #define UINT64 X_XWINDOWS_DEFINE_GUARD_UINT64_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_UINT64_DEFINITION
++#else 
++    #undef UINT64
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_LONG64_DEFINITION)
++    #undef LONG64
++    #define LONG64 X_XWINDOWS_DEFINE_GUARD_LONG64_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_LONG64_DEFINITION
++#else 
++    #undef LONG64
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION)
++    #undef Status
++    #define Status X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_Status_DEFINITION
++#else 
++    #undef Status
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_ATOM_DEFINITION)
++    #undef ATOM
++    #define ATOM X_XWINDOWS_DEFINE_GUARD_ATOM_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_ATOM_DEFINITION
++#else 
++    #undef ATOM
++#endif // use #define NOATOM instead?
++#if defined(X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION)
++    #undef BYTE
++    #define BYTE X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_BYTE_DEFINITION
++#else 
++    #undef BYTE
++#endif
++#if defined(X_XWINDOWS_DEFINE_GUARD_FreeResource_DEFINITION)
++    #undef FreeResource
++    #define FreeResource X_XWINDOWS_DEFINE_GUARD_FreeResource_DEFINITION
++    #undef X_XWINDOWS_DEFINE_GUARD_FreeResource_DEFINITION
++#else 
++    #undef FreeResource
++#endif
+ #undef CreateWindowA
+ 
+ /*

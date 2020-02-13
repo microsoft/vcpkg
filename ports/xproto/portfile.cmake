@@ -13,6 +13,10 @@ vcpkg_from_gitlab(
         windows-long64.patch
         windows_mean_and_lean.patch
         #winsock2.patch # include winsock2.h before windows.h
+        configure_msys.patch
+        xwindows.patch
+        xwinsock.patch 
+        xmd_bool.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
