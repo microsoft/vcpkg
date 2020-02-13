@@ -9,10 +9,6 @@ Feature: bzip2
 Build-Depends: bzip2
 Description: Support bzip2 compressed fonts.
 
-Feature: harfbuzz
-Build-Depends: harfbuzz
-Description: Improve auto-hinting of OpenType fonts.
-
 Feature: png
 Build-Depends: libpng
 Description: Support PNG compressed OpenType embedded bitmaps.

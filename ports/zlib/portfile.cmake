@@ -44,16 +44,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 vcpkg_fixup_pkgconfig()
 
-# Both dynamic and static are built, so keep only the one needed
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/zlibstatic.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/zlibstatic.lib ${CURRENT_PACKAGES_DIR}/lib/zlib.lib)
-    endif()
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/zlibstaticd.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/zlibstaticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/zlibd.lib)
-    endif()
-endif()
-
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zlib RENAME copyright)
 vcpkg_copy_pdbs()
 

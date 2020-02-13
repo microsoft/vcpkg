@@ -19,11 +19,9 @@ vcpkg_extract_source_archive_ex(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2       FT_WITH_BZIP2
-        harfbuzz    FT_WITH_HARFBUZZ
         png         FT_WITH_PNG
     INVERTED_FEATURES
         bzip2       CMAKE_DISABLE_FIND_PACKAGE_BZip2
-        harfbuzz    CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz
         png         CMAKE_DISABLE_FIND_PACKAGE_PNG
 )
 
