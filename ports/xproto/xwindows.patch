@@ -17,6 +17,15 @@ index 5eff8570f..736bbe4db 100644
 -#define ATOM wATOM
 -#define BYTE wBYTE
 -#define FreeResource wFreeResource
++#if defined(ControlMask)
++    #define X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION ControlMask
++    #if defined(wControlMask)
++        #undef ControlMask
++        #define ControlMask wControlMask 
++    #else 
++        #undef ControlMask
++    #endif 
++#endif
 +#if defined(None)
 +    #define X_XWINDOWS_DEFINE_GUARD_None_DEFINITION None
 +    #if defined(wNone)
@@ -33,15 +42,6 @@ index 5eff8570f..736bbe4db 100644
 +        #define BOOL WINBOOL 
 +    #else 
 +        #undef BOOL
-+    #endif 
-+#endif
-+#if defined(VOID)
-+    #define X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION VOID
-+    #if defined(wVOID)
-+        #undef VOID
-+        #define VOID wVOID 
-+    #else 
-+        #undef VOID
 +    #endif 
 +#endif
 +#if defined(INT8)
@@ -161,6 +161,15 @@ index 5eff8570f..736bbe4db 100644
 +        #undef None
 +    #endif 
 +#endif
++#if defined(ControlMask)
++    #define X_XWINDOWS_DEFINE_GUARD_ControlMask_DEFINITION ControlMask
++    #if defined(wControlMask)
++        #undef ControlMask
++        #define ControlMask wControlMask 
++    #else 
++        #undef ControlMask
++    #endif 
++#endif
 +#if defined(FreeResource)
 +    #define X_XWINDOWS_DEFINE_GUARD_FreeResource_DEFINITION FreeResource
 +    #if defined(wFreeResource)
@@ -197,13 +206,6 @@ index 5eff8570f..736bbe4db 100644
 +    #undef X_XWINDOWS_DEFINE_GUARD_BOOL_DEFINITION
 +#else 
 +    #undef BOOL
-+#endif
-+#if defined(X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION)
-+    #undef VOID
-+    #define VOID X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION
-+    #undef X_XWINDOWS_DEFINE_GUARD_VOID_DEFINITION
-+#else 
-+    #undef VOID
 +#endif
 +#if defined(X_XWINDOWS_DEFINE_GUARD_INT8_DEFINITION)
 +    #undef INT8
