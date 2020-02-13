@@ -1,25 +1,23 @@
 diff --git a/Foundation/src/Environment_WIN32.cpp b/Foundation/src/Environment_WIN32.cpp
-index 3cca5c7..8ed1df2 100644
+index 62845fa..edcf6fe 100644
 --- a/Foundation/src/Environment_WIN32.cpp
 +++ b/Foundation/src/Environment_WIN32.cpp
-@@ -23,7 +23,7 @@
+@@ -22,6 +22,7 @@
  #include <ws2ipdef.h>
- #include <wincrypt.h>
  #include <iphlpapi.h>
--
+ 
 +#pragma comment(lib, "IPHLPAPI.lib")
  
  namespace Poco {
  
 diff --git a/Foundation/src/Environment_WINCE.cpp b/Foundation/src/Environment_WINCE.cpp
-index 62f19bc..d409356 100644
+index afa59b6..c43767b 100644
 --- a/Foundation/src/Environment_WINCE.cpp
 +++ b/Foundation/src/Environment_WINCE.cpp
-@@ -22,7 +22,7 @@
- #include <cstring>
+@@ -23,6 +23,7 @@
  #include <windows.h>
  #include <iphlpapi.h>
--
+ 
 +#pragma comment(lib, "IPHLPAPI.lib")
  
  namespace Poco {

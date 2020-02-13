@@ -16,6 +16,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SX_SHARED_LIB)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DSX_BUILD_TESTS=OFF
         -DSX_SHARED_LIB=${SX_SHARED_LIB}

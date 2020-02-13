@@ -3,14 +3,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gracicot/kangaru
-    REF v4.1.3
-    SHA512 7cfec493dff475c8fe88e336638897096359d3781ab8944aa6bb8f5b68a4dbc993f769142d0143ae5db751159cee1b125ea2728e8b73747950572c84ea354090
+    REF 8b62cede3d66803ae7df5663eb52ff3f2a1f8bf5 # v4.2.2
+    SHA512 ae6730d5e7c59c4eec08d72e3bd311042c57e0a23cf5c26348cc21f4e08c1a4f58721cfcfaf81ec3f19db3540d49acc2a0816f5ba34d09cfb1f853de92481327
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DKANGARU_EXPORT=Off -DKANGARU_TEST=Off
+    PREFER_NINJA
+    OPTIONS -DKANGARU_EXPORT=Off -DKANGARU_TEST=Off -DKANGARU_REVERSE_DESTRUCTION=On
 )
 
 vcpkg_install_cmake()

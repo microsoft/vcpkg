@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "leveldb doesn't supports UWP")
+endif()
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -9,8 +13,10 @@ vcpkg_from_github(
     SHA512  f9bbf5f466e7f707b94e19261762319ea9f65d41911690e84f59098551e2e69beccf756a414d705ade74ee96fd979bdb8b94c171c6f2cc83873cbd4a9380dbab
     HEAD_REF master
     PATCHES
-        fix-install_path.patch
+        fix_config.patch
 )
+
+file(COPY ${CURRENT_PORT_DIR}/leveldbConfig.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -19,6 +25,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/leveldb)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

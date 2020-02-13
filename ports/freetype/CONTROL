@@ -1,5 +1,18 @@
 Source: freetype
-Version: 2.10.0-1
-Build-Depends: zlib, bzip2, libpng
+Version: 2.10.1-3
+Build-Depends: zlib
 Homepage: https://www.freetype.org/
 Description: A library to render fonts.
+Default-Features: bzip2, png
+
+Feature: bzip2
+Build-Depends: bzip2
+Description: Support bzip2 compressed fonts.
+
+Feature: harfbuzz
+Build-Depends: harfbuzz
+Description: Improve auto-hinting of OpenType fonts.
+
+Feature: png
+Build-Depends: libpng
+Description: Support PNG compressed OpenType embedded bitmaps.

@@ -1,4 +1,4 @@
 Source: string-theory
-Version: 2.1-1
+Version: 3.1
 Homepage: https://github.com/zrax/string_theory
-Description: Flexible C++11 string library with type-safe formatting.
+Description: Flexible modern C++ string library with type-safe formatting.

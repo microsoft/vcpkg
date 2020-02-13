@@ -90,22 +90,22 @@ namespace vcpkg::Commands::PortsDiff
         const auto checkout_this_dir =
             Strings::format(R"(.\%s)", ports_dir_name_as_string); // Must be relative to the root of the repository
 
-        const std::string cmd =
-            Strings::format(R"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s & "%s" reset >NUL)",
-                            git_exe.u8string(),
-                            dot_git_dir.u8string(),
-                            temp_checkout_path.u8string(),
-                            git_commit_id,
-                            checkout_this_dir,
-                            ".vcpkg-root",
-                            git_exe.u8string());
-        System::cmd_execute_clean(cmd);
+        const std::string cmd = Strings::format(R"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s)",
+                                                git_exe.u8string(),
+                                                dot_git_dir.u8string(),
+                                                temp_checkout_path.u8string(),
+                                                git_commit_id,
+                                                checkout_this_dir,
+                                                ".vcpkg-root");
+        System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
+        System::cmd_execute_and_capture_output(Strings::format(R"("%s" reset)", git_exe.u8string()),
+                                               System::get_clean_environment());
         const auto all_ports =
             Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : all_ports)
             names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
-        fs.remove_all(temp_checkout_path, ec);
+        fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;
     }
 

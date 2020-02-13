@@ -1,5 +1,6 @@
 Source: freetds
-Version: 1.1.6
+Version: 1.1.17
+Homepage: https://www.freetds.org
 Description: Implementation of the Tabular Data Stream protocol
 Default-Features: openssl
 

@@ -1,16 +1,23 @@
-include(vcpkg_common_functions)
+set(_RELEASE_ONLY_PATCHES)
+if(NOT VCPKG_USE_HEAD_VERSION)
+    vcpkg_download_distfile(
+        _RELEASE_ONLY_PATCHES
+        URLS "https://github.com/mosra/magnum-plugins/commit/c2a05465fa43befbb628b424378e328fa42923b7.diff"
+        FILENAME "c2a05465fa43befbb628b424378e328fa42923b7.diff"
+        SHA512 e03953ff7319b3b8e3644b8e25c006a856dd6a85cec6e4c033f9b2059af7ae39ed84b76c11c93c41ea6a681d7f34dd5980806f49f760d1c26778047c90cc76df
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF v2019.01
-    SHA512 482131372671ce0b86b6643f8c584f000db4324fe0f7e32bf9a31febded7b97ab7e947028fe21ce649554d2cff2bc11dfd94fad0006c465911c9f44b28c2d2a5
+    REF v2019.10
+    SHA512 702c43b0d323dc5b903ffee3dd9aaecf2de3b6bb00e7b243880e433df12efe337e512aac75a6f38adce02eb94f3065770ff6a03b7241198f27b5c46de63e5750
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-tools-path.patch
+        001-tools-path.patch
+        ${_RELEASE_ONLY_PATCHES}
+        003-use-outdated-basisu.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -6,13 +6,16 @@ if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
   message(FATAL_ERROR "DXUT only supports dynamic CRT linkage")
 endif()
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DXUT-sept2016)
-vcpkg_download_distfile(ARCHIVE_FILE
+vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Microsoft/DXUT/archive/sept2016.tar.gz"
     FILENAME "DXUT-sept2016.tar.gz"
     SHA512 190006c194284a1f5d614477896b0469a59ece05dff37477dadbe98808a5c33e274c0c1bb1390f22d1b5e06c9f534f4b50d6002157b2a391e01c2192b8e08869
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
 	SET(BUILD_ARCH "Win32")

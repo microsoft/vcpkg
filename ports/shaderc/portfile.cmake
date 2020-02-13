@@ -32,6 +32,7 @@ vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DSHADERC_SKIP_TESTS=true ${OPTIONS} -Dglslang_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include -Dspirv-tools_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include 
     OPTIONS_DEBUG -DSUFFIX_D=true
     OPTIONS_RELEASE -DSUFFIX_D=false

@@ -73,7 +73,7 @@ namespace vcpkg::Remove
                     if (ec)
                     {
 #if defined(_WIN32)
-                        fs::stdfs::permissions(target, fs::stdfs::perms::owner_all | fs::stdfs::perms::group_all, ec);
+                        fs::stdfs::permissions(target, fs::perms::owner_all | fs::perms::group_all, ec);
                         fs.remove(target, ec);
                         if (ec)
                         {
@@ -86,7 +86,7 @@ namespace vcpkg::Remove
 #endif
                     }
                 }
-                else if (!fs::stdfs::exists(status))
+                else if (!fs::exists(status))
                 {
                     System::printf(System::Color::warning, "Warning: %s: file not found\n", target.u8string());
                 }
@@ -179,8 +179,7 @@ namespace vcpkg::Remove
         {
             System::printf("Purging package %s...\n", display_name);
             Files::Filesystem& fs = paths.get_filesystem();
-            std::error_code ec;
-            fs.remove_all(paths.packages / action.spec.dir(), ec);
+            fs.remove_all(paths.packages / action.spec.dir(), VCPKG_LINE_INFO);
             System::printf(System::Color::success, "Purging package %s... done\n", display_name);
         }
     }
@@ -215,7 +214,7 @@ namespace vcpkg::Remove
         &valid_arguments,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -230,7 +229,7 @@ namespace vcpkg::Remove
             }
 
             // Load ports from ports dirs
-            Dependencies::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });

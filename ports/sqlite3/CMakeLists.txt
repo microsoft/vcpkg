@@ -36,7 +36,6 @@ endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
-    set_target_properties(sqlite3-bin PROPERTIES OUTPUT_NAME sqlite3)
     target_link_libraries(sqlite3-bin PRIVATE sqlite3)
     install(TARGETS sqlite3-bin sqlite3
       RUNTIME DESTINATION tools

@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
-    REF v19.05
-    SHA512 4d708835f6efd539d5fff5cbaf0ec4d68c6d0c4d813ee531c4b9589ee585b720c34e993ef0a7ad0104a921ebd7ab8dec46d0c9284ec7f11993057fe81d3729e0
+    REF be1a80f8cb91133ac75e1fc2a2e1832cd10d91c8 # v20.02
+    SHA512 12c7cf7e5320b168ddde870b1a68b482515b33bd29206c4f6cbb248b9071b866c47353bf496890e01950abb5f725157eca576f9dc403e15020474f9a653b43fe
     HEAD_REF master
 )
 
@@ -17,6 +17,7 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
