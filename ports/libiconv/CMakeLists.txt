@@ -15,7 +15,7 @@ if(WIN32)
   set(USE_MBSTATE_T "0 /*USE_MBSTATE_T*/")
   set(BROKEN_WCHAR_H "0 /*BROKEN_WCHAR_H*/")
   set(HAVE_VISIBILITY "0 /*HAVE_VISIBILITY*/")
-  set(ICONV_CONST "const")
+  set(ICONV_CONST "")
 
   configure_file(config.h.in config.h)
   file(READ "${CMAKE_CURRENT_BINARY_DIR}/config.h" _contents)
