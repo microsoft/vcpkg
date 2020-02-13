@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
     PATCHES 
         xmd.h.patch #patch name
         windows-long64.patch
+        windows_mean_and_lean.patch
         #winsock2.patch # include winsock2.h before windows.h
 ) 
 

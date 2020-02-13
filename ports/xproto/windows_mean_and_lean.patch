@@ -1,0 +1,20 @@
+diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
+index 70e1debd5..1c893abd7 100644
+--- a/include/X11/Xwindows.h	
++++ b/include/X11/Xwindows.h
+@@ -72,7 +72,15 @@ The Open Group.
+ #define ATOM wATOM
+ #define BYTE wBYTE
+ #define FreeResource wFreeResource
++#ifdef WIN32_LEAN_AND_MEAN 
++#define GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF
++#else
++#define WIN32_LEAN_AND_MEAN 
++#endif
+ #include <windows.h>
++#ifndef GUARD_WIN32_LEAN_AND_MEAN_NOUNDEF 
++#undef WIN32_LEAN_AND_MEAN 
++#endif
+ #undef NOMINMAX
+ #undef Status
+ #define Status int
