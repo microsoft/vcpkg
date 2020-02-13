@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 789b660..9223c67 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,10 +144,12 @@ if(CMAKE_COMPILER_IS_GNUCXX)
+ endif()
+ 
+ if(CMAKE_COMPILER_IS_MSVC)
+-  add_definitions("-DBOOST_ALL_NO_LIB -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -DNOMINMAX -DPCL_ONLY_CORE_POINT_TYPES /bigobj ${SSE_DEFINITIONS}")
++  add_definitions("-DBOOST_ALL_NO_LIB -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -DNOMINMAX -DPCL_ONLY_CORE_POINT_TYPES ${SSE_DEFINITIONS}")
++    
++  add_compile_options(/bigobj)
+ 
+   if("${CMAKE_CXX_FLAGS}" STREQUAL "${CMAKE_CXX_FLAGS_DEFAULT}")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /fp:precise /wd4800 /wd4521 /wd4251 /wd4275 /wd4305 /wd4355 ${SSE_FLAGS_STR}")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:precise /wd4800 /wd4521 /wd4251 /wd4275 /wd4305 /wd4355 ${SSE_FLAGS_STR}")
+ 
+     # Add extra code generation/link optimizations
+     if(CMAKE_MSVC_CODE_LINK_OPTIMIZATION)
+@@ -462,9 +464,6 @@ endif()
+ 
+ # Boost (required)
+ include("${PCL_SOURCE_DIR}/cmake/pcl_find_boost.cmake")
+-if (NOT APPLE)
+-    add_definitions(-fext-numeric-literals)
+-endif()
+ 
+ ### ---[ Create the config.h file
+ set(pcl_config_h_in "${CMAKE_CURRENT_SOURCE_DIR}/pcl_config.h.in")
