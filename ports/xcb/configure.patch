@@ -1,0 +1,32 @@
+diff --git a/configure.ac b/configure.ac
+index 8a05bf1aa..1f57cc688 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -22,6 +22,7 @@ AC_USE_SYSTEM_EXTENSIONS
+ # Initialize libtool
+ LT_PREREQ([2.2])
+ LT_INIT([win32-dll])
++AC_LIBTOOL_WIN32_DLL
+ 
+ # Require xorg-macros minimum of 1.18 - Initial version
+ m4_ifndef([XORG_MACROS_VERSION],
+@@ -140,6 +141,10 @@ mingw*)
+         have_win32="yes"
+         lt_enable_auto_import="-Wl,--enable-auto-import"
+         ;;
++msys*)
++        have_win32="yes"
++        lt_enable_auto_import="-Wl,--enable-auto-import"
++        ;;
+ linux*)
+         AC_DEFINE([HAVE_ABSTRACT_SOCKETS], 1, [Define if your platform supports abstract sockets])
+         ;;
+@@ -208,7 +213,7 @@ esac
+ 
+ dnl Link with winsock for socket functions on MinGW
+ case $host_os in
+-        *mingw*)
++        *mingw*| *msys* )
+                 AC_CHECK_LIB([ws2_32],[main])
+                 ;;
+         *)

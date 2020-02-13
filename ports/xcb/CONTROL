@@ -2,4 +2,4 @@ Source: xcb
 Version: 1.13.1
 Homepage: https://xcb.freedesktop.org/
 Description: C interface to the X Window System protocol, which replaces the traditional Xlib interface.
-Build-Depends: xcb-proto, xcb-util-m4, xorg-macros, xproto, bzip2, xau, pthread-stubs, xdmcp (!windows), libxslt, pthread
+Build-Depends: xcb-proto, xcb-util-m4, xorg-macros, xproto, bzip2, xau, pthread-stubs, xdmcp, libxslt, pthread

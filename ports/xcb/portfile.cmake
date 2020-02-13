@@ -1,7 +1,4 @@
 ## requires AUTOCONF, LIBTOOL and PKCONF
-if(VCPKG_TARGET_IS_WINDOWS)
-    SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,7 +8,8 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
     PATCHES makefile.patch #without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
             time.patch # missing include 
-           # windefs.patch # avoid pulling in conflicting definitions. 
+            build.patch # avoid pulling in conflicting definitions. 
+            configure.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -54,6 +52,10 @@ file(TO_NATIVE_PATH "${PYTHON3_DIR}" PYTHON3_DIR_NATIVE)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 set(ENV{PYTHONPATH} "$ENV{PYTHONPATH}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/lib/python3.7/site-packages/")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(APPEND VCPKG_LINKER_FLAGS_RELEASE " -lpthreadVC3")
+    string(APPEND VCPKG_LINKER_FLAGS_DEBUG " -lpthreadVC3d")
+endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG

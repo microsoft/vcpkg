@@ -1,0 +1,105 @@
+diff --git a/src/xcb.h b/src/xcb.h
+index cbc0f2bf2..643ab46f4 100644
+--- a/src/xcb.h	
++++ b/src/xcb.h
+@@ -50,8 +50,11 @@ extern "C" {
+ /**
+  * @file xcb.h
+  */
+-
++#ifndef _MSC_VER
+ #define XCB_PACKED __attribute__((__packed__))
++#else
++#define XCB_PACKED _declspec(align(1))
++#endif
+ 
+ /**
+  * @defgroup XCB_Core_API XCB Core API
+diff --git a/src/xcb_auth.c b/src/xcb_auth.c
+index 1ef7b1479..675b1fd87 100644
+--- a/src/xcb_auth.c	
++++ b/src/xcb_auth.c
+@@ -31,8 +31,14 @@
+ 
+ #include <assert.h>
+ #include <X11/Xauth.h>
++#ifndef _MSC_VER
+ #include <sys/param.h>
++#else
++#endif
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#else
++#endif
+ #include <stdlib.h>
+ #include <time.h>
+ 
+diff --git a/src/xcb_conn.c b/src/xcb_conn.c
+index 7d0963716..7529dc830 100644
+--- a/src/xcb_conn.c	
++++ b/src/xcb_conn.c
+@@ -32,7 +32,13 @@
+ #include <assert.h>
+ #include <string.h>
+ #include <stdio.h>
+-#include <unistd.h>
++
++#ifdef HAVE_UNISTD_H
++    #include <unistd.h>
++#else
++    #define STDERR_FILENO 2
++#endif
++
+ #include <stdlib.h>
+ #include <fcntl.h>
+ #include <errno.h>
+diff --git a/src/xcb_in.c b/src/xcb_in.c
+index 58fe8962e..5955bef85 100644
+--- a/src/xcb_in.c	
++++ b/src/xcb_in.c
+@@ -32,7 +32,15 @@
+ #include <assert.h>
+ #include <string.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#else
++    #ifdef _WIN64
++    #define ssize_t long long
++    #else
++    #define ssize_t long
++    #endif
++#endif
+ #include <stdio.h>
+ #include <errno.h>
+ 
+diff --git a/src/xcb_out.c b/src/xcb_out.c
+index c9593e5f2..a79c74798 100644
+--- a/src/xcb_out.c	
++++ b/src/xcb_out.c
+@@ -31,7 +31,10 @@
+ 
+ #include <assert.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#else
++#endif
+ #include <string.h>
+ 
+ #include "xcb.h"
+diff --git a/src/xcb_util.c b/src/xcb_util.c
+index a16270c63..f7fe44f08 100644
+--- a/src/xcb_util.c	
++++ b/src/xcb_util.c
+@@ -36,7 +36,10 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <stddef.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#else
++#endif
+ #include <string.h>
+ 
+ #ifdef _WIN32
