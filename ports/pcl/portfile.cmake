@@ -1,22 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.9.1
-    SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
+    REF af3ce2530b7ae8ed083a3515168626c587a5bbcd # pcl-1.10.0
+    SHA512 ed580fa3b365f575d51ac637701760ade64cb5f925f326e0acd016e25b2054b8e272094525a6a4104834c11e6ec8743452f8ad881f90f6f212b787fe0eea2475
     HEAD_REF master
     PATCHES
         pcl_utils.patch
         pcl_config.patch
         use_flann_targets.patch
         boost-1.70.patch
-        cuda_10_1.patch
-		# Patch for https://github.com/microsoft/vcpkg/issues/7660
-		use_target_link_libraries_in_pclconfig.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
+
+if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    message(FATAL_ERROR "Feature cuda only supports 64-bit compilation.")
+endif()
+
+if ("tools" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Feature tools only supports dynamic build")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openni2     WITH_OPENNI2
